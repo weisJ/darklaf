@@ -1,0 +1,60 @@
+#Latex
+*.log
+*.aux
+*.fdb_latexmk
+*.nav
+*.out
+*.snm
+cpt*.pdf
+*.gz
+*.toc
+*.fls
+
+#Images
+*.ai
+
+# SVN
+.svn
+repo/
+
+# VIM locks
+*.swp
+
+# LibreOffice locks
+.~lock.*#
+
+*.tmp
+
+# Word temporary
+~$*.doc*
+#
+# # Excel temporary
+~$*.xls*
+#
+# # Excel Backup File
+*.xlk
+
+# Eclipse
+.metadata/
+.classpath
+.project
+.settings
+bin/
+
+# intelliJ
+.idea/
+# VS Code
+.vscode/
+
+# maven
+target/
+
+# Python
+venv/
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+/.recommenders/
