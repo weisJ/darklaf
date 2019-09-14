@@ -1,5 +1,4 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.OverlayScrollPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
 import javax.swing.*;
@@ -16,7 +15,7 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
             LafManager.loadLaf(LafManager.Theme.Dark);
             final var frame = new JFrame();
             frame.setSize(500, 500);
-            var overlayScroll = new OverlayScrollPane(new JTextPane(){{
+            var overlayScroll = new JScrollPane(new JTextPane() {{
                 setText("orem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam"
                         + " auctor, erat non viverra commodo, libero orci aliquam quam, ac interdum nunc est sed "
                         + "ligula. Aliquam vel velit non dolor accumsan blandit id eu metus. Aenean iaculis urna in "
@@ -46,7 +45,7 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
 //                setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 setFont(Font.getFont(Font.MONOSPACED));
             }});
-            frame.setContentPane(new JPanel(new BorderLayout()){{
+            frame.setContentPane(new JPanel(new BorderLayout()) {{
                 add(overlayScroll, BorderLayout.CENTER);
             }});
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

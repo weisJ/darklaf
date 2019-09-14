@@ -16,7 +16,6 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,176 +34,184 @@ import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
 import java.util.Vector;
 
-public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstants {
+/**
+ * A Basic L&amp;F implementation of TabbedPaneUI.
+ *
+ * @author Amy Fowler
+ * @author Philip Milne
+ * @author Steve Wilson
+ * @author Tom Santos
+ * @author Dave Moore
+ */
+public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstants {
+
 
 // Instance variables initialized at installation
-    /**
-     * The tab pane
-     */
+
+    /** The tab pane */
     protected JTabbedPane tabPane;
 
-    /**
-     * Highlight color
-     */
+    /** Highlight color */
     protected Color highlight;
-    /**
-     * Light highlight color
-     */
+    /** Light highlight color */
     protected Color lightHighlight;
-    /**
-     * Shadow color
-     */
+    /** Shadow color */
     protected Color shadow;
-    /**
-     * Dark shadow color
-     */
+    /** Dark shadow color */
     protected Color darkShadow;
-    /**
-     * Focus color
-     */
+    /** Focus color */
     protected Color focus;
-    private Color selectedColor;
+    protected   Color selectedColor;
 
-    /**
-     * Text icon gap
-     */
+    /** Text icon gap */
     protected int textIconGap;
-    /**
-     * Tab run overlay
-     */
+    /** Tab run overlay */
     protected int tabRunOverlay;
 
-    /**
-     * Tab insets
-     */
+    /** Tab insets */
     protected Insets tabInsets;
-    /**
-     * Selected tab insets
-     */
+    /** Selected tab insets */
     protected Insets selectedTabPadInsets;
-    /**
-     * Tab area insets
-     */
+    /** Tab area insets */
     protected Insets tabAreaInsets;
-    /**
-     * Content border insets
-     */
+    /** Content border insets */
     protected Insets contentBorderInsets;
-    private boolean tabsOverlapBorder;
-    private boolean tabsOpaque = true;
-    private boolean contentOpaque = true;
+    protected boolean tabsOverlapBorder;
+    protected boolean tabsOpaque = true;
+    protected boolean contentOpaque = true;
+
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke upKey;
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke downKey;
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke leftKey;
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke rightKey;
+
 
 // Transient variables (recalculated each time TabbedPane is layed out)
-    /**
-     * Tab runs
-     */
+    /** Tab runs */
     protected int[] tabRuns = new int[10];
-    /**
-     * Run count
-     */
+    /** Run count */
     protected int runCount = 0;
-    /**
-     * Selected run
-     */
+    /** Selected run */
     protected int selectedRun = -1;
-    /**
-     * Tab rects
-     */
+    /** Tab rects */
     protected Rectangle[] rects = new Rectangle[0];
-    /**
-     * Maximum tab height
-     */
+    /** Maximum tab height */
     protected int maxTabHeight;
-    /**
-     * Maximum tab width
-     */
+    /** Maximum tab width */
     protected int maxTabWidth;
 
 // Listeners
 
-    /**
-     * Tab change listener
-     */
+    /** Tab change listener */
     protected ChangeListener tabChangeListener;
-    /**
-     * Property change listener
-     */
+    /** Property change listener */
     protected PropertyChangeListener propertyChangeListener;
-    /**
-     * Mouse change listener
-     */
+    /** Mouse change listener */
     protected MouseListener mouseListener;
-    /**
-     * Focus change listener
-     */
+    /** Focus change listener */
     protected FocusListener focusListener;
 
 // Private instance data
 
-    private final Insets currentPadInsets = new Insets(0, 0, 0, 0);
-    private final Insets currentTabAreaInsets = new Insets(0, 0, 0, 0);
+    protected Insets currentPadInsets = new Insets(0,0,0,0);
+    protected Insets currentTabAreaInsets = new Insets(0,0,0,0);
 
-    private Component visibleComponent;
+    protected Component visibleComponent;
     // PENDING(api): See comment for ContainerHandler
-    private Vector<View> htmlViews;
+    protected Vector<View> htmlViews;
 
-    private Hashtable<Integer, Integer> mnemonicToIndexMap;
+    protected Hashtable<Integer, Integer> mnemonicToIndexMap;
 
     /**
      * InputMap used for mnemonics. Only non-null if the JTabbedPane has
      * mnemonics associated with it. Lazily created in initMnemonics.
      */
-    private InputMap mnemonicInputMap;
+    protected InputMap mnemonicInputMap;
 
     // For use when tabLayoutPolicy = SCROLL_TAB_LAYOUT
-    private ScrollableTabSupport tabScroller;
+    protected ScrollableTabSupport tabScroller;
 
-    private TabContainer tabContainer;
+    protected TabContainer tabContainer;
 
     /**
      * A rectangle used for general layout calculations in order
      * to avoid constructing many new Rectangles on the fly.
      */
-    protected transient Rectangle calcRect = new Rectangle(0, 0, 0, 0);
+    protected transient Rectangle calcRect = new Rectangle(0,0,0,0);
 
     /**
      * Tab that has focus.
      */
-    private int focusIndex;
+    protected int focusIndex;
 
     /**
      * Combined listeners.
      */
-    private Handler handler;
+    protected Handler handler;
 
     /**
      * Index of the tab the mouse is over.
      */
-    private int rolloverTabIndex;
+    protected int rolloverTabIndex;
 
     /**
      * This is set to true when a component is added/removed from the tab
      * pane and set to false when layout happens.  If true it indicates that
      * tabRuns is not valid and shouldn't be used.
      */
-    private boolean isRunsDirty;
+    protected boolean isRunsDirty;
 
-    private boolean calculatedBaseline;
-    private int baseline;
+    protected boolean calculatedBaseline;
+    protected int baseline;
 
 // UI creation
 
     /**
      * Create a UI.
-     *
      * @param c a component
      * @return a UI
      */
-    public static ComponentUI createUI(final JComponent c) {
-        return new BasicTabbedPaneUI();
+    public static ComponentUI createUI(JComponent c) {
+        return new DarkTabbedPaneUIBridge();
     }
 
-    static void loadActionMap(final LazyActionMap map) {
+    static void loadActionMap(LazyActionMap map) {
         map.put(new Actions(Actions.NEXT));
         map.put(new Actions(Actions.PREVIOUS));
         map.put(new Actions(Actions.RIGHT));
@@ -223,8 +230,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
 // UI Installation/De-installation
 
-    public void installUI(final JComponent c) {
-        this.tabPane = (JTabbedPane) c;
+    public void installUI(JComponent c) {
+        this.tabPane = (JTabbedPane)c;
 
         calculatedBaseline = false;
         rolloverTabIndex = -1;
@@ -236,7 +243,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         installKeyboardActions();
     }
 
-    public void uninstallUI(final JComponent c) {
+    public void uninstallUI(JComponent c) {
         uninstallKeyboardActions();
         uninstallListeners();
         uninstallDefaults();
@@ -252,6 +259,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * the <code>JTabbedPane</code>.
      *
      * @return a layout manager object
+     *
      * @see TabbedPaneLayout
      * @see javax.swing.JTabbedPane#getTabLayoutPolicy
      */
@@ -268,7 +276,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * UI uses the installed layoutManager (and not tabLayoutPolicy) to
      * determine if scrollTabLayout is enabled.
      */
-    private boolean scrollableTabLayoutEnabled() {
+    protected boolean scrollableTabLayoutEnabled() {
         return (tabPane.getLayout() instanceof TabbedPaneScrollLayout);
     }
 
@@ -281,24 +289,24 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected void installComponents() {
         if (scrollableTabLayoutEnabled()) {
             if (tabScroller == null) {
-                tabScroller = new ScrollableTabSupport();
+                tabScroller = new ScrollableTabSupport(tabPane.getTabPlacement());
                 tabPane.add(tabScroller.viewport);
             }
         }
         installTabContainer();
     }
 
-    private void installTabContainer() {
+    protected void installTabContainer() {
         for (int i = 0; i < tabPane.getTabCount(); i++) {
             Component tabComponent = tabPane.getTabComponentAt(i);
             if (tabComponent != null) {
-                if (tabContainer == null) {
+                if(tabContainer == null) {
                     tabContainer = new TabContainer();
                 }
                 tabContainer.add(tabComponent);
             }
         }
-        if (tabContainer == null) {
+        if(tabContainer == null) {
             return;
         }
         if (scrollableTabLayoutEnabled()) {
@@ -314,15 +322,15 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * returned JButton must be instance of UIResource.
      *
      * @param direction One of the SwingConstants constants:
-     *                  SOUTH, NORTH, EAST or WEST
+     * SOUTH, NORTH, EAST or WEST
      * @return Widget for user to
-     * @throws IllegalArgumentException if direction is not one of
-     *                                  NORTH, SOUTH, EAST or WEST
      * @see javax.swing.JTabbedPane#setTabPlacement
      * @see javax.swing.SwingConstants
+     * @throws IllegalArgumentException if direction is not one of
+     *         NORTH, SOUTH, EAST or WEST
      * @since 1.5
      */
-    protected JButton createScrollButton(final int direction) {
+    protected JButton createScrollButton(int direction) {
         if (direction != SOUTH && direction != NORTH && direction != EAST &&
             direction != WEST) {
             throw new IllegalArgumentException("Direction must be one of: " +
@@ -347,15 +355,15 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
-    private void uninstallTabContainer() {
-        if (tabContainer == null) {
+    protected void uninstallTabContainer() {
+        if(tabContainer == null) {
             return;
         }
         // Remove all the tabComponents, making sure not to notify
         // the tabbedpane.
         tabContainer.notifyTabbedPane = false;
         tabContainer.removeAll();
-        if (scrollableTabLayoutEnabled()) {
+        if(scrollableTabLayoutEnabled()) {
             tabContainer.remove(tabScroller.croppedEdge);
             tabScroller.tabPanel.remove(tabContainer);
         } else {
@@ -395,10 +403,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         // Fix for 6711145 BasicTabbedPanuUI should not throw a NPE if these
         // keys are missing. So we are setting them to there default values here
         // if the keys are missing.
-        if (tabInsets == null) tabInsets = new Insets(0, 4, 1, 4);
-        if (selectedTabPadInsets == null) selectedTabPadInsets = new Insets(2, 2, 2, 1);
-        if (tabAreaInsets == null) tabAreaInsets = new Insets(3, 2, 0, 2);
-        if (contentBorderInsets == null) contentBorderInsets = new Insets(2, 2, 3, 3);
+        if (tabInsets == null) tabInsets = new Insets(0,4,1,4);
+        if (selectedTabPadInsets == null) selectedTabPadInsets = new Insets(2,2,2,1);
+        if (tabAreaInsets == null) tabAreaInsets = new Insets(3,2,0,2);
+        if (contentBorderInsets == null) contentBorderInsets = new Insets(2,2,3,3);
     }
 
     /**
@@ -434,7 +442,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             tabPane.addFocusListener(focusListener);
         }
         tabPane.addContainerListener(getHandler());
-        if (tabPane.getTabCount() > 0) {
+        if (tabPane.getTabCount()>0) {
             htmlViews = createHTMLVector();
         }
     }
@@ -454,7 +462,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
 
         tabPane.removeContainerListener(getHandler());
-        if (htmlViews != null) {
+        if (htmlViews!=null) {
             htmlViews.removeAllElements();
             htmlViews = null;
         }
@@ -471,7 +479,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Creates a mouse listener.
-     *
      * @return a mouse listener
      */
     protected MouseListener createMouseListener() {
@@ -480,7 +487,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Creates a focus listener.
-     *
      * @return a focus listener
      */
     protected FocusListener createFocusListener() {
@@ -489,7 +495,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Creates a change listener.
-     *
      * @return a change listener
      */
     protected ChangeListener createChangeListener() {
@@ -498,14 +503,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Creates a property change listener.
-     *
      * @return a property change listener
      */
     protected PropertyChangeListener createPropertyChangeListener() {
         return getHandler();
     }
 
-    private Handler getHandler() {
+    protected Handler getHandler() {
         if (handler == null) {
             handler = new Handler();
         }
@@ -525,17 +529,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         km = getInputMap(JComponent.WHEN_FOCUSED);
         SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_FOCUSED, km);
 
-        LazyActionMap.installLazyActionMap(tabPane, BasicTabbedPaneUI.class, "TabbedPane.actionMap");
+        LazyActionMap.installLazyActionMap(tabPane, DarkTabbedPaneUIBridge.class,
+                                           "TabbedPane.actionMap");
         updateMnemonics();
     }
 
-    InputMap getInputMap(final int condition) {
+    InputMap getInputMap(int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            return (InputMap) DefaultLookup.get(tabPane, this,
-                                                "TabbedPane.ancestorInputMap");
-        } else if (condition == JComponent.WHEN_FOCUSED) {
-            return (InputMap) DefaultLookup.get(tabPane, this,
-                                                "TabbedPane.focusInputMap");
+            return (InputMap)DefaultLookup.get(tabPane, this,
+                                               "TabbedPane.ancestorInputMap");
+        }
+        else if (condition == JComponent.WHEN_FOCUSED) {
+            return (InputMap)DefaultLookup.get(tabPane, this,
+                                               "TabbedPane.focusInputMap");
         }
         return null;
     }
@@ -561,7 +567,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Reloads the mnemonics. This should be invoked when a memonic changes,
      * when the title of a mnemonic changes, or when tabs are added/removed.
      */
-    private void updateMnemonics() {
+    protected void updateMnemonics() {
         resetMnemonics();
         for (int counter = tabPane.getTabCount() - 1; counter >= 0;
              counter--) {
@@ -576,7 +582,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Resets the mnemonics bindings to an empty state.
      */
-    private void resetMnemonics() {
+    protected void resetMnemonics() {
         if (mnemonicToIndexMap != null) {
             mnemonicToIndexMap.clear();
             mnemonicInputMap.clear();
@@ -586,24 +592,23 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Adds the specified mnemonic at the specified index.
      */
-    @SuppressWarnings("MagicConstant")
-    private void addMnemonic(final int index, final int mnemonic) {
+    protected void addMnemonic(int index, int mnemonic) {
         if (mnemonicToIndexMap == null) {
             initMnemonics();
         }
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, DarkUIUtil.getFocusAcceleratorKeyMask()),
                              "setSelectedIndex");
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic,
-                                                    SwingUtilities2
-                                                            .setAltGraphMask(DarkUIUtil.getFocusAcceleratorKeyMask())),
+                                                    SwingUtilities2.setAltGraphMask(
+                                                            DarkUIUtil.getFocusAcceleratorKeyMask())),
                              "setSelectedIndex");
-        mnemonicToIndexMap.put(mnemonic, index);
+        mnemonicToIndexMap.put(Integer.valueOf(mnemonic), Integer.valueOf(index));
     }
 
     /**
      * Installs the state needed for mnemonics.
      */
-    private void initMnemonics() {
+    protected void initMnemonics() {
         mnemonicToIndexMap = new Hashtable<Integer, Integer>();
         mnemonicInputMap = new ComponentInputMapUIResource(tabPane);
         mnemonicInputMap.setParent(SwingUtilities.getUIInputMap(tabPane,
@@ -617,7 +622,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Sets the tab the mouse is over by location. This is a cover method
      * for <code>setRolloverTab(tabForCoordinate(x, y, false))</code>.
      */
-    private void setRolloverTab(final int x, final int y) {
+    protected void setRolloverTab(int x, int y) {
         // NOTE:
         // This calls in with false otherwise it could trigger a validate,
         // which should NOT happen if the user is only dragging the
@@ -634,7 +639,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param index Index of the tab the mouse is over.
      * @since 1.5
      */
-    protected void setRolloverTab(final int index) {
+    protected void setRolloverTab(int index) {
         rolloverTabIndex = index;
     }
 
@@ -650,12 +655,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return rolloverTabIndex;
     }
 
-    public Dimension getMinimumSize(final JComponent c) {
+    public Dimension getMinimumSize(JComponent c) {
         // Default to LayoutManager's minimumLayoutSize
         return null;
     }
 
-    public Dimension getMaximumSize(final JComponent c) {
+    public Dimension getMaximumSize(JComponent c) {
         // Default to LayoutManager's maximumLayoutSize
         return null;
     }
@@ -663,19 +668,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Returns the baseline.
      *
-     * @throws NullPointerException     {@inheritDoc}
+     * @throws NullPointerException {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
-    public int getBaseline(final JComponent c, final int width, final int height) {
+    public int getBaseline(JComponent c, int width, int height) {
         super.getBaseline(c, width, height);
         int baseline = calculateBaselineIfNecessary();
         if (baseline != -1) {
             int placement = tabPane.getTabPlacement();
             Insets insets = tabPane.getInsets();
             Insets tabAreaInsets = getTabAreaInsets(placement);
-            switch (placement) {
+            switch(placement) {
                 case JTabbedPane.TOP:
                     baseline += insets.top + tabAreaInsets.top;
                     return baseline;
@@ -701,9 +706,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @since 1.6
      */
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-            final JComponent c) {
+            JComponent c) {
         super.getBaselineResizeBehavior(c);
-        switch (tabPane.getTabPlacement()) {
+        switch(tabPane.getTabPlacement()) {
             case JTabbedPane.LEFT:
             case JTabbedPane.RIGHT:
             case JTabbedPane.TOP:
@@ -718,13 +723,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Returns the baseline for the specified tab.
      *
      * @param tab index of tab to get baseline for
+     * @exception IndexOutOfBoundsException if index is out of range
+     *            (index &lt; 0 || index &gt;= tab count)
      * @return baseline or a value &lt; 0 indicating there is no reasonable
-     * baseline
-     * @throws IndexOutOfBoundsException if index is out of range
-     *                                   (index &lt; 0 || index &gt;= tab count)
+     *                  baseline
      * @since 1.6
      */
-    protected int getBaseline(final int tab) {
+    protected int getBaseline(int tab) {
         if (tabPane.getTabComponentAt(tab) != null) {
             int offset = getBaselineOffset();
             if (offset != 0) {
@@ -739,12 +744,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             int cellHeight = maxTabHeight - tabInsets.top - tabInsets.bottom;
             return c.getBaseline(pref.width, pref.height) +
                    (cellHeight - pref.height) / 2 + tabInsets.top;
-        } else {
+        }
+        else {
             View view = getTextViewForTab(tab);
             if (view != null) {
-                int viewHeight = (int) view.getPreferredSpan(View.Y_AXIS);
+                int viewHeight = (int)view.getPreferredSpan(View.Y_AXIS);
                 int baseline = BasicHTML.getHTMLBaseline(
-                        view, (int) view.getPreferredSpan(View.X_AXIS), viewHeight);
+                        view, (int)view.getPreferredSpan(View.X_AXIS), viewHeight);
                 if (baseline >= 0) {
                     return maxTabHeight / 2 - viewHeight / 2 + baseline +
                            getBaselineOffset();
@@ -767,17 +773,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @since 1.6
      */
     protected int getBaselineOffset() {
-        switch (tabPane.getTabPlacement()) {
+        switch(tabPane.getTabPlacement()) {
             case JTabbedPane.TOP:
                 if (tabPane.getTabCount() > 1) {
                     return 1;
-                } else {
+                }
+                else {
                     return -1;
                 }
             case JTabbedPane.BOTTOM:
                 if (tabPane.getTabCount() > 1) {
                     return -1;
-                } else {
+                }
+                else {
                     return 1;
                 }
             default: // RIGHT|LEFT
@@ -785,7 +793,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
-    private int calculateBaselineIfNecessary() {
+    protected int calculateBaselineIfNecessary() {
         if (!calculatedBaseline) {
             calculatedBaseline = true;
             baseline = -1;
@@ -796,25 +804,26 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return baseline;
     }
 
-    private void calculateBaseline() {
+    protected void calculateBaseline() {
         int tabCount = tabPane.getTabCount();
         int tabPlacement = tabPane.getTabPlacement();
         maxTabHeight = calculateMaxTabHeight(tabPlacement);
         baseline = getBaseline(0);
         if (isHorizontalTabPlacement()) {
-            for (int i = 1; i < tabCount; i++) {
+            for(int i = 1; i < tabCount; i++) {
                 if (getBaseline(i) != baseline) {
                     baseline = -1;
                     break;
                 }
             }
-        } else {
+        }
+        else {
             // left/right, tabs may be different sizes.
             FontMetrics fontMetrics = getFontMetrics();
             int fontHeight = fontMetrics.getHeight();
             int height = calculateTabHeight(tabPlacement, 0, fontHeight);
-            for (int i = 1; i < tabCount; i++) {
-                int newHeight = calculateTabHeight(tabPlacement, i, fontHeight);
+            for(int i = 1; i < tabCount; i++) {
+                int newHeight = calculateTabHeight(tabPlacement, i,fontHeight);
                 if (height != newHeight) {
                     // assume different baseline
                     baseline = -1;
@@ -826,7 +835,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
 // UI Rendering
 
-    public void paint(final Graphics g, final JComponent c) {
+    public void paint(Graphics g, JComponent c) {
         int selectedIndex = tabPane.getSelectedIndex();
         int tabPlacement = tabPane.getTabPlacement();
 
@@ -858,12 +867,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * tab count - 1, inclusive) or -1 if no tab is currently selected.
      * The handling of invalid parameters is unspecified.
      *
-     * @param g             the graphics object to use for rendering
-     * @param tabPlacement  the placement for the tabs within the JTabbedPane
+     * @param g the graphics object to use for rendering
+     * @param tabPlacement the placement for the tabs within the JTabbedPane
      * @param selectedIndex the tab index of the selected component
+     *
      * @since 1.4
      */
-    protected void paintTabArea(final Graphics g, final int tabPlacement, final int selectedIndex) {
+    protected void paintTabArea(Graphics g, int tabPlacement, int selectedIndex) {
         int tabCount = tabPane.getTabCount();
 
         Rectangle iconRect = new Rectangle(),
@@ -873,8 +883,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         // Paint tabRuns of tabs from back to front
         for (int i = runCount - 1; i >= 0; i--) {
             int start = tabRuns[i];
-            int next = tabRuns[(i == runCount - 1) ? 0 : i + 1];
-            int end = (next != 0 ? next - 1 : tabCount - 1);
+            int next = tabRuns[(i == runCount - 1)? 0 : i + 1];
+            int end = (next != 0? next - 1: tabCount - 1);
             for (int j = start; j <= end; j++) {
                 if (j != selectedIndex && rects[j].intersects(clipRect)) {
                     paintTab(g, tabPlacement, rects, j, iconRect, textRect);
@@ -891,17 +901,16 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Paints a tab.
-     *
-     * @param g            the graphics
+     * @param g the graphics
      * @param tabPlacement the tab placement
-     * @param rects        rectangles
-     * @param tabIndex     the tab index
-     * @param iconRect     the icon rectangle
-     * @param textRect     the text rectangle
+     * @param rects rectangles
+     * @param tabIndex the tab index
+     * @param iconRect the icon rectangle
+     * @param textRect the text rectangle
      */
-    protected void paintTab(final Graphics g, final int tabPlacement,
-                            final Rectangle[] rects, final int tabIndex,
-                            final Rectangle iconRect, final Rectangle textRect) {
+    protected void paintTab(Graphics g, int tabPlacement,
+                            Rectangle[] rects, int tabIndex,
+                            Rectangle iconRect, Rectangle textRect) {
         Rectangle tabRect = rects[tabIndex];
         int selectedIndex = tabPane.getSelectedIndex();
         boolean isSelected = selectedIndex == tabIndex;
@@ -943,28 +952,147 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                             iconRect, textRect, isSelected);
     }
 
-    private boolean isHorizontalTabPlacement() {
+    protected boolean isHorizontalTabPlacement() {
         return tabPane.getTabPlacement() == TOP || tabPane.getTabPlacement() == BOTTOM;
+    }
+
+    /* This method will create and return a polygon shape for the given tab rectangle
+     * which has been cropped at the specified cropline with a torn edge visual.
+     * e.g. A "File" tab which has cropped been cropped just after the "i":
+     *             -------------
+     *             |  .....     |
+     *             |  .          |
+     *             |  ...  .    |
+     *             |  .    .   |
+     *             |  .    .    |
+     *             |  .    .     |
+     *             --------------
+     *
+     * The x, y arrays below define the pattern used to create a "torn" edge
+     * segment which is repeated to fill the edge of the tab.
+     * For tabs placed on TOP and BOTTOM, this righthand torn edge is created by
+     * line segments which are defined by coordinates obtained by
+     * subtracting xCropLen[i] from (tab.x + tab.width) and adding yCroplen[i]
+     * to (tab.y).
+     * For tabs placed on LEFT or RIGHT, the bottom torn edge is created by
+     * subtracting xCropLen[i] from (tab.y + tab.height) and adding yCropLen[i]
+     * to (tab.x).
+     */
+    protected static int[] xCropLen = {1,1,0,0,1,1,2,2};
+    protected static int[] yCropLen = {0,3,3,6,6,9,9,12};
+    protected static final int CROP_SEGMENT = 12;
+
+    protected static Polygon createCroppedTabShape(int tabPlacement, Rectangle tabRect, int cropline) {
+        int rlen;
+        int start;
+        int end;
+        int ostart;
+
+        switch(tabPlacement) {
+            case LEFT:
+            case RIGHT:
+                rlen = tabRect.width;
+                start = tabRect.x;
+                end = tabRect.x + tabRect.width;
+                ostart = tabRect.y + tabRect.height;
+                break;
+            case TOP:
+            case BOTTOM:
+            default:
+                rlen = tabRect.height;
+                start = tabRect.y;
+                end = tabRect.y + tabRect.height;
+                ostart = tabRect.x + tabRect.width;
+        }
+        int rcnt = rlen/CROP_SEGMENT;
+        if (rlen%CROP_SEGMENT > 0) {
+            rcnt++;
+        }
+        int npts = 2 + (rcnt*8);
+        int[] xp = new int[npts];
+        int[] yp = new int[npts];
+        int pcnt = 0;
+
+        xp[pcnt] = ostart;
+        yp[pcnt++] = end;
+        xp[pcnt] = ostart;
+        yp[pcnt++] = start;
+        for(int i = 0; i < rcnt; i++) {
+            for(int j = 0; j < xCropLen.length; j++) {
+                xp[pcnt] = cropline - xCropLen[j];
+                yp[pcnt] = start + (i*CROP_SEGMENT) + yCropLen[j];
+                if (yp[pcnt] >= end) {
+                    yp[pcnt] = end;
+                    pcnt++;
+                    break;
+                }
+                pcnt++;
+            }
+        }
+        if (tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM) {
+            return new Polygon(xp, yp, pcnt);
+
+        } else { // LEFT or RIGHT
+            return new Polygon(yp, xp, pcnt);
+        }
+    }
+
+    /* If tabLayoutPolicy == SCROLL_TAB_LAYOUT, this method will paint an edge
+     * indicating the tab is cropped in the viewport display
+     */
+    protected void paintCroppedTabEdge(Graphics g) {
+        int tabIndex = tabScroller.croppedEdge.getTabIndex();
+        int cropline = tabScroller.croppedEdge.getCropline();
+        int x,y;
+        switch(tabPane.getTabPlacement()) {
+            case LEFT:
+            case RIGHT:
+                x = rects[tabIndex].x;
+                y = cropline;
+                int xx = x;
+                g.setColor(shadow);
+                while(xx <= x+rects[tabIndex].width) {
+                    for (int i=0; i < xCropLen.length; i+=2) {
+                        g.drawLine(xx+yCropLen[i],y-xCropLen[i],
+                                   xx+yCropLen[i+1]-1,y-xCropLen[i+1]);
+                    }
+                    xx+=CROP_SEGMENT;
+                }
+                break;
+            case TOP:
+            case BOTTOM:
+            default:
+                x = cropline;
+                y = rects[tabIndex].y;
+                int yy = y;
+                g.setColor(shadow);
+                while(yy <= y+rects[tabIndex].height) {
+                    for (int i=0; i < xCropLen.length; i+=2) {
+                        g.drawLine(x-xCropLen[i],yy+yCropLen[i],
+                                   x-xCropLen[i+1],yy+yCropLen[i+1]-1);
+                    }
+                    yy+=CROP_SEGMENT;
+                }
+        }
     }
 
     /**
      * Laysout a label.
-     *
      * @param tabPlacement the tab placement
-     * @param metrics      the font metric
-     * @param tabIndex     the tab index
-     * @param title        the title
-     * @param icon         the icon
-     * @param tabRect      the tab rectangle
-     * @param iconRect     the icon rectangle
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
+     * @param metrics the font metric
+     * @param tabIndex the tab index
+     * @param title the title
+     * @param icon the icon
+     * @param tabRect the tab rectangle
+     * @param iconRect the icon rectangle
+     * @param textRect the text rectangle
+     * @param isSelected selection status
      */
-    protected void layoutLabel(final int tabPlacement,
-                               final FontMetrics metrics, final int tabIndex,
-                               final String title, final Icon icon,
-                               final Rectangle tabRect, final Rectangle iconRect,
-                               final Rectangle textRect, final boolean isSelected) {
+    protected void layoutLabel(int tabPlacement,
+                               FontMetrics metrics, int tabIndex,
+                               String title, Icon icon,
+                               Rectangle tabRect, Rectangle iconRect,
+                               Rectangle textRect, boolean isSelected ) {
         textRect.x = textRect.y = iconRect.x = iconRect.y = 0;
 
         View v = getTextViewForTab(tabIndex);
@@ -995,21 +1123,20 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Paints an icon.
-     *
-     * @param g            the graphics
+     * @param g the graphics
      * @param tabPlacement the tab placement
-     * @param tabIndex     the tab index
-     * @param icon         the icon
-     * @param iconRect     the icon rectangle
-     * @param isSelected   selection status
+     * @param tabIndex the tab index
+     * @param icon the icon
+     * @param iconRect the icon rectangle
+     * @param isSelected selection status
      */
-    protected void paintIcon(final Graphics g, final int tabPlacement,
-                             final int tabIndex, final Icon icon, final Rectangle iconRect,
-                             final boolean isSelected) {
+    protected void paintIcon(Graphics g, int tabPlacement,
+                             int tabIndex, Icon icon, Rectangle iconRect,
+                             boolean isSelected ) {
         if (icon != null) {
             // Clip the icon within iconRect bounds
             Shape oldClip = g.getClip();
-            ((Graphics2D) g).clip(iconRect);
+            ((Graphics2D)g).clip(iconRect);
             icon.paintIcon(tabPane, g, iconRect.x, iconRect.y);
             g.setClip(oldClip);
         }
@@ -1017,20 +1144,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Paints text.
-     *
-     * @param g            the graphics
+     * @param g the graphics
      * @param tabPlacement the tab placement
-     * @param font         the font
-     * @param metrics      the font metrics
-     * @param tabIndex     the tab index
-     * @param title        the title
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
+     * @param font the font
+     * @param metrics the font metrics
+     * @param tabIndex the tab index
+     * @param title the title
+     * @param textRect the text rectangle
+     * @param isSelected selection status
      */
-    protected void paintText(final Graphics g, final int tabPlacement,
-                             final Font font, final FontMetrics metrics, final int tabIndex,
-                             final String title, final Rectangle textRect,
-                             final boolean isSelected) {
+    protected void paintText(Graphics g, int tabPlacement,
+                             Font font, FontMetrics metrics, int tabIndex,
+                             String title, Rectangle textRect,
+                             boolean isSelected) {
 
         g.setFont(font);
 
@@ -1072,13 +1198,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Returns the tab label shift x.
-     *
      * @param tabPlacement the tab placement
-     * @param tabIndex     the tab index
-     * @param isSelected   selection status
+     * @param tabIndex the tab index
+     * @param isSelected selection status
      * @return the tab label shift x
      */
-    protected int getTabLabelShiftX(final int tabPlacement, final int tabIndex, final boolean isSelected) {
+    protected int getTabLabelShiftX(int tabPlacement, int tabIndex, boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
         String propKey = (isSelected ? "selectedLabelShift" : "labelShift");
         int nudge = DefaultLookup.getInt(
@@ -1098,13 +1223,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Returns the tab label shift y.
-     *
      * @param tabPlacement the tab placement
-     * @param tabIndex     the tab index
-     * @param isSelected   selection status
+     * @param tabIndex the tab index
+     * @param isSelected selection status
      * @return the tab label shift y
      */
-    protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
+    protected int getTabLabelShiftY(int tabPlacement, int tabIndex, boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
         int nudge = (isSelected ? DefaultLookup.getInt(tabPane, this, "TabbedPane.selectedLabelShift", -1) :
                      DefaultLookup.getInt(tabPane, this, "TabbedPane.labelShift", 1));
@@ -1123,24 +1247,23 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Paints the focus indicator.
-     *
-     * @param g            the graphics
+     * @param g the graphics
      * @param tabPlacement the tab placement
-     * @param rects        rectangles
-     * @param tabIndex     the tab index
-     * @param iconRect     the icon rectangle
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
+     * @param rects rectangles
+     * @param tabIndex the tab index
+     * @param iconRect the icon rectangle
+     * @param textRect the text rectangle
+     * @param isSelected selection status
      */
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                       final Rectangle[] rects, final int tabIndex,
-                                       final Rectangle iconRect, final Rectangle textRect,
-                                       final boolean isSelected) {
+    protected void paintFocusIndicator(Graphics g, int tabPlacement,
+                                       Rectangle[] rects, int tabIndex,
+                                       Rectangle iconRect, Rectangle textRect,
+                                       boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
         if (tabPane.hasFocus() && isSelected) {
             int x, y, w, h;
             g.setColor(focus);
-            switch (tabPlacement) {
+            switch(tabPlacement) {
                 case LEFT:
                     x = tabRect.x + 3;
                     y = tabRect.y + 3;
@@ -1175,119 +1298,117 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * note that this function does now draw the background of the tab.
      * that is done elsewhere
      *
-     * @param g            the graphics context in which to paint
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param x            the x coordinate of tab
-     * @param y            the y coordinate of tab
-     * @param w            the width of the tab
-     * @param h            the height of the tab
-     * @param isSelected   a {@code boolean} which determines whether or not
-     *                     the tab is selected
+     * @param g             the graphics context in which to paint
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param tabIndex      the index of the tab with respect to other tabs
+     * @param x             the x coordinate of tab
+     * @param y             the y coordinate of tab
+     * @param w             the width of the tab
+     * @param h             the height of the tab
+     * @param isSelected    a {@code boolean} which determines whether or not
+     * the tab is selected
      */
-    protected void paintTabBorder(final Graphics g, final int tabPlacement,
-                                  final int tabIndex,
-                                  final int x, final int y, final int w, final int h,
-                                  final boolean isSelected) {
+    protected void paintTabBorder(Graphics g, int tabPlacement,
+                                  int tabIndex,
+                                  int x, int y, int w, int h,
+                                  boolean isSelected ) {
         g.setColor(lightHighlight);
 
         switch (tabPlacement) {
             case LEFT:
-                g.drawLine(x + 1, y + h - 2, x + 1, y + h - 2); // bottom-left highlight
-                g.drawLine(x, y + 2, x, y + h - 3); // left highlight
-                g.drawLine(x + 1, y + 1, x + 1, y + 1); // top-left highlight
-                g.drawLine(x + 2, y, x + w - 1, y); // top highlight
+                g.drawLine(x+1, y+h-2, x+1, y+h-2); // bottom-left highlight
+                g.drawLine(x, y+2, x, y+h-3); // left highlight
+                g.drawLine(x+1, y+1, x+1, y+1); // top-left highlight
+                g.drawLine(x+2, y, x+w-1, y); // top highlight
 
                 g.setColor(shadow);
-                g.drawLine(x + 2, y + h - 2, x + w - 1, y + h - 2); // bottom shadow
+                g.drawLine(x+2, y+h-2, x+w-1, y+h-2); // bottom shadow
 
                 g.setColor(darkShadow);
-                g.drawLine(x + 2, y + h - 1, x + w - 1, y + h - 1); // bottom dark shadow
+                g.drawLine(x+2, y+h-1, x+w-1, y+h-1); // bottom dark shadow
                 break;
             case RIGHT:
-                g.drawLine(x, y, x + w - 3, y); // top highlight
+                g.drawLine(x, y, x+w-3, y); // top highlight
 
                 g.setColor(shadow);
-                g.drawLine(x, y + h - 2, x + w - 3, y + h - 2); // bottom shadow
-                g.drawLine(x + w - 2, y + 2, x + w - 2, y + h - 3); // right shadow
+                g.drawLine(x, y+h-2, x+w-3, y+h-2); // bottom shadow
+                g.drawLine(x+w-2, y+2, x+w-2, y+h-3); // right shadow
 
                 g.setColor(darkShadow);
-                g.drawLine(x + w - 2, y + 1, x + w - 2, y + 1); // top-right dark shadow
-                g.drawLine(x + w - 2, y + h - 2, x + w - 2, y + h - 2); // bottom-right dark shadow
-                g.drawLine(x + w - 1, y + 2, x + w - 1, y + h - 3); // right dark shadow
-                g.drawLine(x, y + h - 1, x + w - 3, y + h - 1); // bottom dark shadow
+                g.drawLine(x+w-2, y+1, x+w-2, y+1); // top-right dark shadow
+                g.drawLine(x+w-2, y+h-2, x+w-2, y+h-2); // bottom-right dark shadow
+                g.drawLine(x+w-1, y+2, x+w-1, y+h-3); // right dark shadow
+                g.drawLine(x, y+h-1, x+w-3, y+h-1); // bottom dark shadow
                 break;
             case BOTTOM:
-                g.drawLine(x, y, x, y + h - 3); // left highlight
-                g.drawLine(x + 1, y + h - 2, x + 1, y + h - 2); // bottom-left highlight
+                g.drawLine(x, y, x, y+h-3); // left highlight
+                g.drawLine(x+1, y+h-2, x+1, y+h-2); // bottom-left highlight
 
                 g.setColor(shadow);
-                g.drawLine(x + 2, y + h - 2, x + w - 3, y + h - 2); // bottom shadow
-                g.drawLine(x + w - 2, y, x + w - 2, y + h - 3); // right shadow
+                g.drawLine(x+2, y+h-2, x+w-3, y+h-2); // bottom shadow
+                g.drawLine(x+w-2, y, x+w-2, y+h-3); // right shadow
 
                 g.setColor(darkShadow);
-                g.drawLine(x + 2, y + h - 1, x + w - 3, y + h - 1); // bottom dark shadow
-                g.drawLine(x + w - 2, y + h - 2, x + w - 2, y + h - 2); // bottom-right dark shadow
-                g.drawLine(x + w - 1, y, x + w - 1, y + h - 3); // right dark shadow
+                g.drawLine(x+2, y+h-1, x+w-3, y+h-1); // bottom dark shadow
+                g.drawLine(x+w-2, y+h-2, x+w-2, y+h-2); // bottom-right dark shadow
+                g.drawLine(x+w-1, y, x+w-1, y+h-3); // right dark shadow
                 break;
             case TOP:
             default:
-                g.drawLine(x, y + 2, x, y + h - 1); // left highlight
-                g.drawLine(x + 1, y + 1, x + 1, y + 1); // top-left highlight
-                g.drawLine(x + 2, y, x + w - 3, y); // top highlight
+                g.drawLine(x, y+2, x, y+h-1); // left highlight
+                g.drawLine(x+1, y+1, x+1, y+1); // top-left highlight
+                g.drawLine(x+2, y, x+w-3, y); // top highlight
 
                 g.setColor(shadow);
-                g.drawLine(x + w - 2, y + 2, x + w - 2, y + h - 1); // right shadow
+                g.drawLine(x+w-2, y+2, x+w-2, y+h-1); // right shadow
 
                 g.setColor(darkShadow);
-                g.drawLine(x + w - 1, y + 2, x + w - 1, y + h - 1); // right dark-shadow
-                g.drawLine(x + w - 2, y + 1, x + w - 2, y + 1); // top-right shadow
+                g.drawLine(x+w-1, y+2, x+w-1, y+h-1); // right dark-shadow
+                g.drawLine(x+w-2, y+1, x+w-2, y+1); // top-right shadow
         }
     }
 
     /**
      * Paints the tab background.
-     *
-     * @param g            the graphics context in which to paint
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param x            the x coordinate of tab
-     * @param y            the y coordinate of tab
-     * @param w            the width of the tab
-     * @param h            the height of the tab
-     * @param isSelected   a {@code boolean} which determines whether or not
-     *                     the tab is selected
+     * @param g             the graphics context in which to paint
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param tabIndex      the index of the tab with respect to other tabs
+     * @param x             the x coordinate of tab
+     * @param y             the y coordinate of tab
+     * @param w             the width of the tab
+     * @param h             the height of the tab
+     * @param isSelected    a {@code boolean} which determines whether or not
+     * the tab is selected
      */
-    protected void paintTabBackground(final Graphics g, final int tabPlacement,
-                                      final int tabIndex,
-                                      final int x, final int y, final int w, final int h,
-                                      final boolean isSelected) {
-        g.setColor(!isSelected || selectedColor == null ?
+    protected void paintTabBackground(Graphics g, int tabPlacement,
+                                      int tabIndex,
+                                      int x, int y, int w, int h,
+                                      boolean isSelected ) {
+        g.setColor(!isSelected || selectedColor == null?
                    tabPane.getBackgroundAt(tabIndex) : selectedColor);
-        switch (tabPlacement) {
+        switch(tabPlacement) {
             case LEFT:
-                g.fillRect(x + 1, y + 1, w - 1, h - 3);
+                g.fillRect(x+1, y+1, w-1, h-3);
                 break;
             case RIGHT:
-                g.fillRect(x, y + 1, w - 2, h - 3);
+                g.fillRect(x, y+1, w-2, h-3);
                 break;
             case BOTTOM:
-                g.fillRect(x + 1, y, w - 3, h - 1);
+                g.fillRect(x+1, y, w-3, h-1);
                 break;
             case TOP:
             default:
-                g.fillRect(x + 1, y + 1, w - 3, h - 1);
+                g.fillRect(x+1, y+1, w-3, h-1);
         }
     }
 
     /**
      * Paints the content border.
-     *
      * @param g             the graphics context in which to paint
      * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param selectedIndex the tab index of the selected component
      */
-    protected void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex) {
+    protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {
         int width = tabPane.getWidth();
         int height = tabPane.getHeight();
         Insets insets = tabPane.getInsets();
@@ -1298,7 +1419,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int w = width - insets.right - insets.left;
         int h = height - insets.top - insets.bottom;
 
-        switch (tabPlacement) {
+        switch(tabPlacement) {
             case LEFT:
                 x += calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
                 if (tabsOverlapBorder) {
@@ -1327,17 +1448,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 h -= (y - insets.top);
         }
 
-        if (tabPane.getTabCount() > 0 && (contentOpaque || tabPane.isOpaque())) {
+        if ( tabPane.getTabCount() > 0 && (contentOpaque || tabPane.isOpaque()) ) {
             // Fill region behind content area
             Color color = UIManager.getColor("TabbedPane.contentAreaColor");
             if (color != null) {
                 g.setColor(color);
-            } else if (selectedColor == null || selectedIndex == -1) {
+            }
+            else if ( selectedColor == null || selectedIndex == -1 ) {
                 g.setColor(tabPane.getBackground());
-            } else {
+            }
+            else {
                 g.setColor(selectedColor);
             }
-            g.fillRect(x, y, w, h);
+            g.fillRect(x,y,w,h);
         }
 
         paintContentBorderTopEdge(g, tabPlacement, selectedIndex, x, y, w, h);
@@ -1349,7 +1472,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Paints the content border top edge.
-     *
      * @param g             the graphics context in which to paint
      * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param selectedIndex the tab index of the selected component
@@ -1358,10 +1480,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param w             the width of the tab
      * @param h             the height of the tab
      */
-    protected void paintContentBorderTopEdge(final Graphics g, final int tabPlacement,
-                                             final int selectedIndex,
-                                             final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
+    protected void paintContentBorderTopEdge(Graphics g, int tabPlacement,
+                                             int selectedIndex,
+                                             int x, int y, int w, int h) {
+        Rectangle selRect = selectedIndex < 0? null :
                             getTabBounds(selectedIndex, calcRect);
 
         g.setColor(lightHighlight);
@@ -1373,23 +1495,22 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (tabPlacement != TOP || selectedIndex < 0 ||
             (selRect.y + selRect.height + 1 < y) ||
             (selRect.x < x || selRect.x > x + w)) {
-            g.drawLine(x, y, x + w - 2, y);
+            g.drawLine(x, y, x+w-2, y);
         } else {
             // Break line to show visual connection to selected tab
             g.drawLine(x, y, selRect.x - 1, y);
             if (selRect.x + selRect.width < x + w - 2) {
                 g.drawLine(selRect.x + selRect.width, y,
-                           x + w - 2, y);
+                           x+w-2, y);
             } else {
                 g.setColor(shadow);
-                g.drawLine(x + w - 2, y, x + w - 2, y);
+                g.drawLine(x+w-2, y, x+w-2, y);
             }
         }
     }
 
     /**
      * Paints the content border left edge.
-     *
      * @param g             the graphics context in which to paint
      * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param selectedIndex the tab index of the selected component
@@ -1398,10 +1519,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param w             the width of the tab
      * @param h             the height of the tab
      */
-    protected void paintContentBorderLeftEdge(final Graphics g, final int tabPlacement,
-                                              final int selectedIndex,
-                                              final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
+    protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
+                                              int selectedIndex,
+                                              int x, int y, int w, int h) {
+        Rectangle selRect = selectedIndex < 0? null :
                             getTabBounds(selectedIndex, calcRect);
 
         g.setColor(lightHighlight);
@@ -1413,20 +1534,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (tabPlacement != LEFT || selectedIndex < 0 ||
             (selRect.x + selRect.width + 1 < x) ||
             (selRect.y < y || selRect.y > y + h)) {
-            g.drawLine(x, y, x, y + h - 2);
+            g.drawLine(x, y, x, y+h-2);
         } else {
             // Break line to show visual connection to selected tab
             g.drawLine(x, y, x, selRect.y - 1);
             if (selRect.y + selRect.height < y + h - 2) {
                 g.drawLine(x, selRect.y + selRect.height,
-                           x, y + h - 2);
+                           x, y+h-2);
             }
         }
     }
 
     /**
      * Paints the content border bottom edge.
-     *
      * @param g             the graphics context in which to paint
      * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param selectedIndex the tab index of the selected component
@@ -1435,10 +1555,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param w             the width of the tab
      * @param h             the height of the tab
      */
-    protected void paintContentBorderBottomEdge(final Graphics g, final int tabPlacement,
-                                                final int selectedIndex,
-                                                final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
+    protected void paintContentBorderBottomEdge(Graphics g, int tabPlacement,
+                                                int selectedIndex,
+                                                int x, int y, int w, int h) {
+        Rectangle selRect = selectedIndex < 0? null :
                             getTabBounds(selectedIndex, calcRect);
 
         g.setColor(shadow);
@@ -1450,19 +1570,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (tabPlacement != BOTTOM || selectedIndex < 0 ||
             (selRect.y - 1 > h) ||
             (selRect.x < x || selRect.x > x + w)) {
-            g.drawLine(x + 1, y + h - 2, x + w - 2, y + h - 2);
+            g.drawLine(x+1, y+h-2, x+w-2, y+h-2);
             g.setColor(darkShadow);
-            g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
+            g.drawLine(x, y+h-1, x+w-1, y+h-1);
         } else {
             // Break line to show visual connection to selected tab
-            g.drawLine(x + 1, y + h - 2, selRect.x - 1, y + h - 2);
+            g.drawLine(x+1, y+h-2, selRect.x - 1, y+h-2);
             g.setColor(darkShadow);
-            g.drawLine(x, y + h - 1, selRect.x - 1, y + h - 1);
+            g.drawLine(x, y+h-1, selRect.x - 1, y+h-1);
             if (selRect.x + selRect.width < x + w - 2) {
                 g.setColor(shadow);
-                g.drawLine(selRect.x + selRect.width, y + h - 2, x + w - 2, y + h - 2);
+                g.drawLine(selRect.x + selRect.width, y+h-2, x+w-2, y+h-2);
                 g.setColor(darkShadow);
-                g.drawLine(selRect.x + selRect.width, y + h - 1, x + w - 1, y + h - 1);
+                g.drawLine(selRect.x + selRect.width, y+h-1, x+w-1, y+h-1);
             }
         }
 
@@ -1470,7 +1590,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Paints the content border right edge.
-     *
      * @param g             the graphics context in which to paint
      * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param selectedIndex the tab index of the selected component
@@ -1479,10 +1598,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param w             the width of the tab
      * @param h             the height of the tab
      */
-    protected void paintContentBorderRightEdge(final Graphics g, final int tabPlacement,
-                                               final int selectedIndex,
-                                               final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
+    protected void paintContentBorderRightEdge(Graphics g, int tabPlacement,
+                                               int selectedIndex,
+                                               int x, int y, int w, int h) {
+        Rectangle selRect = selectedIndex < 0? null :
                             getTabBounds(selectedIndex, calcRect);
 
         g.setColor(shadow);
@@ -1494,27 +1613,27 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (tabPlacement != RIGHT || selectedIndex < 0 ||
             (selRect.x - 1 > w) ||
             (selRect.y < y || selRect.y > y + h)) {
-            g.drawLine(x + w - 2, y + 1, x + w - 2, y + h - 3);
+            g.drawLine(x+w-2, y+1, x+w-2, y+h-3);
             g.setColor(darkShadow);
-            g.drawLine(x + w - 1, y, x + w - 1, y + h - 1);
+            g.drawLine(x+w-1, y, x+w-1, y+h-1);
         } else {
             // Break line to show visual connection to selected tab
-            g.drawLine(x + w - 2, y + 1, x + w - 2, selRect.y - 1);
+            g.drawLine(x+w-2, y+1, x+w-2, selRect.y - 1);
             g.setColor(darkShadow);
-            g.drawLine(x + w - 1, y, x + w - 1, selRect.y - 1);
+            g.drawLine(x+w-1, y, x+w-1, selRect.y - 1);
 
             if (selRect.y + selRect.height < y + h - 2) {
                 g.setColor(shadow);
-                g.drawLine(x + w - 2, selRect.y + selRect.height,
-                           x + w - 2, y + h - 2);
+                g.drawLine(x+w-2, selRect.y + selRect.height,
+                           x+w-2, y+h-2);
                 g.setColor(darkShadow);
-                g.drawLine(x + w - 1, selRect.y + selRect.height,
-                           x + w - 1, y + h - 2);
+                g.drawLine(x+w-1, selRect.y + selRect.height,
+                           x+w-1, y+h-2);
             }
         }
     }
 
-    private void ensureCurrentLayout() {
+    protected void ensureCurrentLayout() {
         if (!tabPane.isValid()) {
             tabPane.validate();
         }
@@ -1523,7 +1642,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
          * is still invalid.  See bug 4237677.
          */
         if (!tabPane.isValid()) {
-            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
+            TabbedPaneLayout layout = (TabbedPaneLayout)tabPane.getLayout();
             layout.calculateLayoutInfo();
         }
     }
@@ -1535,13 +1654,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Returns the bounds of the specified tab index.  The bounds are
      * with respect to the JTabbedPane's coordinate space.
      */
-    public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
+    public Rectangle getTabBounds(JTabbedPane pane, int i) {
         ensureCurrentLayout();
         Rectangle tabRect = new Rectangle();
         return getTabBounds(i, tabRect);
     }
 
-    public int getTabRunCount(final JTabbedPane pane) {
+    public int getTabRunCount(JTabbedPane pane) {
         ensureCurrentLayout();
         return runCount;
     }
@@ -1550,12 +1669,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Returns the tab index which intersects the specified point
      * in the JTabbedPane's coordinate space.
      */
-    public int tabForCoordinate(final JTabbedPane pane, final int x, final int y) {
+    public int tabForCoordinate(JTabbedPane pane, int x, int y) {
         return tabForCoordinate(pane, x, y, true);
     }
 
-    private int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
-                                 final boolean validateIfNecessary) {
+    protected int tabForCoordinate(JTabbedPane pane, int x, int y,
+                                 boolean validateIfNecessary) {
         if (validateIfNecessary) {
             ensureCurrentLayout();
         }
@@ -1597,11 +1716,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * The handling of invalid parameters is unspecified.
      *
      * @param tabIndex the index of the tab
-     * @param dest     the rectangle where the result should be placed
+     * @param dest the rectangle where the result should be placed
      * @return the resulting rectangle
+     *
      * @since 1.4
      */
-    protected Rectangle getTabBounds(final int tabIndex, final Rectangle dest) {
+    protected Rectangle getTabBounds(int tabIndex, Rectangle dest) {
         dest.width = rects[tabIndex].width;
         dest.height = rects[tabIndex].height;
 
@@ -1624,7 +1744,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Returns the index of the tab closest to the passed in location, note
      * that the returned tab may not contain the location x,y.
      */
-    private int getClosestTab(final int x, final int y) {
+    protected int getClosestTab(int x, int y) {
         int min = 0;
         int tabCount = Math.min(rects.length, tabPane.getTabCount());
         int max = tabCount;
@@ -1640,7 +1760,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             if (useX) {
                 minLoc = rects[current].x;
                 maxLoc = minLoc + rects[current].width;
-            } else {
+            }
+            else {
                 minLoc = rects[current].y;
                 maxLoc = minLoc + rects[current].height;
             }
@@ -1649,12 +1770,14 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 if (min == max) {
                     return Math.max(0, current - 1);
                 }
-            } else if (want >= maxLoc) {
+            }
+            else if (want >= maxLoc) {
                 min = current;
                 if (max - min <= 1) {
                     return Math.max(current + 1, tabCount - 1);
                 }
-            } else {
+            }
+            else {
                 return current;
             }
         }
@@ -1666,7 +1789,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * JTabbedPane's coordinate space to the coordinate space of the
      * ScrollableTabPanel.  This is used for SCROLL_TAB_LAYOUT ONLY.
      */
-    private Point translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
+    protected Point translatePointToTabPanel(int srcx, int srcy, Point dest) {
         Point vpp = tabScroller.viewport.getLocation();
         Point viewp = tabScroller.viewport.getViewPosition();
         dest.x = srcx - vpp.x + viewp.x;
@@ -1678,7 +1801,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Returns the visible component.
-     *
      * @return the visible component
      */
     protected Component getVisibleComponent() {
@@ -1687,10 +1809,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Sets the visible component.
-     *
      * @param component the component
      */
-    protected void setVisibleComponent(final Component component) {
+    protected void setVisibleComponent(Component component) {
         if (visibleComponent != null
             && visibleComponent != component
             && visibleComponent.getParent() == tabPane
@@ -1706,12 +1827,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Assure the rectangles are created.
-     *
      * @param tabCount the tab count
      */
-    protected void assureRectsCreated(final int tabCount) {
+    protected void assureRectsCreated(int tabCount) {
         int rectArrayLen = rects.length;
-        if (tabCount != rectArrayLen) {
+        if (tabCount != rectArrayLen ) {
             Rectangle[] tempRectArray = new Rectangle[tabCount];
             System.arraycopy(rects, 0, tempRectArray, 0,
                              Math.min(rectArrayLen, tabCount));
@@ -1728,19 +1848,18 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected void expandTabRunsArray() {
         int rectLen = tabRuns.length;
-        int[] newArray = new int[rectLen + 10];
+        int[] newArray = new int[rectLen+10];
         System.arraycopy(tabRuns, 0, newArray, 0, runCount);
         tabRuns = newArray;
     }
 
     /**
      * Returns the run for a tab.
-     *
      * @param tabCount the tab count
      * @param tabIndex the tab index.
      * @return the run for a tab
      */
-    protected int getRunForTab(final int tabCount, final int tabIndex) {
+    protected int getRunForTab(int tabCount, int tabIndex) {
         for (int i = 0; i < runCount; i++) {
             int first = tabRuns[i];
             int last = lastTabInRun(tabCount, i);
@@ -1753,72 +1872,66 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Returns the last tab in a run.
-     *
      * @param tabCount the tab count
-     * @param run      the run
+     * @param run the run
      * @return the last tab in a run
      */
-    protected int lastTabInRun(final int tabCount, final int run) {
+    protected int lastTabInRun(int tabCount, int run) {
         if (runCount == 1) {
             return tabCount - 1;
         }
-        int nextRun = (run == runCount - 1 ? 0 : run + 1);
+        int nextRun = (run == runCount - 1? 0 : run + 1);
         if (tabRuns[nextRun] == 0) {
             return tabCount - 1;
         }
-        return tabRuns[nextRun] - 1;
+        return tabRuns[nextRun]-1;
     }
 
     /**
      * Returns the tab run overlay.
-     *
      * @param tabPlacement the placement (left, right, bottom, top) of the tab
      * @return the tab run overlay
      */
-    protected int getTabRunOverlay(final int tabPlacement) {
+    protected int getTabRunOverlay(int tabPlacement) {
         return tabRunOverlay;
     }
 
     /**
      * Returns the tab run indent.
-     *
      * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param run          the tab run
+     * @param run the tab run
      * @return the tab run indent
      */
-    protected int getTabRunIndent(final int tabPlacement, final int run) {
+    protected int getTabRunIndent(int tabPlacement, int run) {
         return 0;
     }
 
     /**
      * Returns whether or not the tab run should be padded.
-     *
      * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param run          the tab run
+     * @param run the tab run
      * @return whether or not the tab run should be padded
      */
-    protected boolean shouldPadTabRun(final int tabPlacement, final int run) {
+    protected boolean shouldPadTabRun(int tabPlacement, int run) {
         return runCount > 1;
     }
 
     /**
      * Returns whether or not the tab run should be rotated.
-     *
      * @param tabPlacement the placement (left, right, bottom, top) of the tab
      * @return whether or not the tab run should be rotated
      */
-    protected boolean shouldRotateTabRuns(final int tabPlacement) {
+    protected boolean shouldRotateTabRuns(int tabPlacement) {
         return true;
     }
 
     /**
      * Returns the icon for a tab.
-     *
      * @param tabIndex the index of the tab
      * @return the icon for a tab
      */
-    protected Icon getIconForTab(final int tabIndex) {
-        return (!tabPane.isEnabled() || !tabPane.isEnabledAt(tabIndex)) ?
+    protected Icon getIconForTab(int tabIndex) {
+        return (!tabPane.isEnabled() || !tabPane.isEnabledAt(tabIndex))?
                tabPane.getDisabledIconAt(tabIndex) : tabPane.getIconAt(tabIndex);
     }
 
@@ -1829,10 +1942,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      *
      * @param tabIndex the index of the tab
      * @return the text view to render the tab's text or null if no
-     * specialized rendering is required
+     *         specialized rendering is required
+     *
      * @since 1.4
      */
-    protected View getTextViewForTab(final int tabIndex) {
+    protected View getTextViewForTab(int tabIndex) {
         if (htmlViews != null) {
             return htmlViews.elementAt(tabIndex);
         }
@@ -1841,13 +1955,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Calculates the tab height.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param fontHeight   the font height
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param tabIndex      the index of the tab with respect to other tabs
+     * @param fontHeight    the font height
      * @return the tab height
      */
-    protected int calculateTabHeight(final int tabPlacement, final int tabIndex, final int fontHeight) {
+    protected int calculateTabHeight(int tabPlacement, int tabIndex, int fontHeight) {
         int height = 0;
         Component c = tabPane.getTabComponentAt(tabIndex);
         if (c != null) {
@@ -1874,16 +1987,15 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Calculates the maximum tab height.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @return the maximum tab height
      */
-    protected int calculateMaxTabHeight(final int tabPlacement) {
+    protected int calculateMaxTabHeight(int tabPlacement) {
         FontMetrics metrics = getFontMetrics();
         int tabCount = tabPane.getTabCount();
         int result = 0;
         int fontHeight = metrics.getHeight();
-        for (int i = 0; i < tabCount; i++) {
+        for(int i = 0; i < tabCount; i++) {
             result = Math.max(calculateTabHeight(tabPlacement, i, fontHeight), result);
         }
         return result;
@@ -1891,13 +2003,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Calculates the tab width.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param metrics      the font metrics
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param tabIndex      the index of the tab with respect to other tabs
+     * @param metrics       the font metrics
      * @return the tab width
      */
-    protected int calculateTabWidth(final int tabPlacement, final int tabIndex, final FontMetrics metrics) {
+    protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
         Insets tabInsets = getTabInsets(tabPlacement, tabIndex);
         int width = tabInsets.left + tabInsets.right + 3;
         Component tabComponent = tabPane.getTabComponentAt(tabIndex);
@@ -1923,15 +2034,14 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Calculates the maximum tab width.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @return the maximum tab width
      */
-    protected int calculateMaxTabWidth(final int tabPlacement) {
+    protected int calculateMaxTabWidth(int tabPlacement) {
         FontMetrics metrics = getFontMetrics();
         int tabCount = tabPane.getTabCount();
         int result = 0;
-        for (int i = 0; i < tabCount; i++) {
+        for(int i = 0; i < tabCount; i++) {
             result = Math.max(calculateTabWidth(tabPlacement, i, metrics), result);
         }
         return result;
@@ -1939,84 +2049,77 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Calculates the tab area height.
-     *
      * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param horizRunCount horizontal run count
-     * @param maxTabHeight  maximum tab height
+     * @param maxTabHeight maximum tab height
      * @return the tab area height
      */
-    protected int calculateTabAreaHeight(final int tabPlacement, final int horizRunCount, final int maxTabHeight) {
+    protected int calculateTabAreaHeight(int tabPlacement, int horizRunCount, int maxTabHeight) {
         Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
-        return (horizRunCount > 0 ?
-                horizRunCount * (maxTabHeight - tabRunOverlay) + tabRunOverlay +
+        return (horizRunCount > 0?
+                horizRunCount * (maxTabHeight-tabRunOverlay) + tabRunOverlay +
                 tabAreaInsets.top + tabAreaInsets.bottom :
                 0);
     }
 
     /**
      * Calculates the tab area width.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param vertRunCount vertical run count
-     * @param maxTabWidth  maximum tab width
+     * @param maxTabWidth maximum tab width
      * @return the tab area width
      */
-    protected int calculateTabAreaWidth(final int tabPlacement, final int vertRunCount, final int maxTabWidth) {
+    protected int calculateTabAreaWidth(int tabPlacement, int vertRunCount, int maxTabWidth) {
         Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
-        return (vertRunCount > 0 ?
-                vertRunCount * (maxTabWidth - tabRunOverlay) + tabRunOverlay +
+        return (vertRunCount > 0?
+                vertRunCount * (maxTabWidth-tabRunOverlay) + tabRunOverlay +
                 tabAreaInsets.left + tabAreaInsets.right :
                 0);
     }
 
     /**
      * Returns the tab insets.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the tab index
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param tabIndex the tab index
      * @return the tab insets
      */
-    protected Insets getTabInsets(final int tabPlacement, final int tabIndex) {
+    protected Insets getTabInsets(int tabPlacement, int tabIndex) {
         return tabInsets;
     }
 
     /**
      * Returns the selected tab pad insets.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @return the selected tab pad insets
      */
-    protected Insets getSelectedTabPadInsets(final int tabPlacement) {
+    protected Insets getSelectedTabPadInsets(int tabPlacement) {
         rotateInsets(selectedTabPadInsets, currentPadInsets, tabPlacement);
         return currentPadInsets;
     }
 
     /**
      * Returns the tab area insets.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @return the pad area insets
      */
-    protected Insets getTabAreaInsets(final int tabPlacement) {
+    protected Insets getTabAreaInsets(int tabPlacement) {
         rotateInsets(tabAreaInsets, currentTabAreaInsets, tabPlacement);
         return currentTabAreaInsets;
     }
 
     /**
      * Returns the content border insets.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @return the content border insets
      */
-    protected Insets getContentBorderInsets(final int tabPlacement) {
+    protected Insets getContentBorderInsets(int tabPlacement) {
         return contentBorderInsets;
     }
 
     /**
      * Returns the font metrics.
-     *
      * @return the font metrics
      */
     protected FontMetrics getFontMetrics() {
@@ -2029,10 +2132,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Navigate the selected tab.
-     *
      * @param direction the direction
      */
-    protected void navigateSelectedTab(final int direction) {
+    protected void navigateSelectedTab(int direction) {
         int tabPlacement = tabPane.getTabPlacement();
         int current = DefaultLookup.getBoolean(tabPane, this,
                                                "TabbedPane.selectionFollowsFocus", true) ?
@@ -2046,10 +2148,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
 
         int offset;
-        switch (tabPlacement) {
+        switch(tabPlacement) {
             case LEFT:
             case RIGHT:
-                switch (direction) {
+                switch(direction) {
                     case NEXT:
                         selectNextTab(current);
                         break;
@@ -2076,7 +2178,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             case BOTTOM:
             case TOP:
             default:
-                switch (direction) {
+                switch(direction) {
                     case NEXT:
                         selectNextTab(current);
                         break;
@@ -2112,14 +2214,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Select the next tab in the run.
-     *
      * @param current the current tab
      */
-    protected void selectNextTabInRun(final int current) {
+    protected void selectNextTabInRun(int current) {
         int tabCount = tabPane.getTabCount();
         int tabIndex = getNextTabIndexInRun(tabCount, current);
 
-        while (tabIndex != current && !tabPane.isEnabledAt(tabIndex)) {
+        while(tabIndex != current && !tabPane.isEnabledAt(tabIndex)) {
             tabIndex = getNextTabIndexInRun(tabCount, tabIndex);
         }
         navigateTo(tabIndex);
@@ -2127,14 +2228,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Select the previous tab in the run.
-     *
      * @param current the current tab
      */
-    protected void selectPreviousTabInRun(final int current) {
+    protected void selectPreviousTabInRun(int current) {
         int tabCount = tabPane.getTabCount();
         int tabIndex = getPreviousTabIndexInRun(tabCount, current);
 
-        while (tabIndex != current && !tabPane.isEnabledAt(tabIndex)) {
+        while(tabIndex != current && !tabPane.isEnabledAt(tabIndex)) {
             tabIndex = getPreviousTabIndexInRun(tabCount, tabIndex);
         }
         navigateTo(tabIndex);
@@ -2142,10 +2242,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Select the next tab.
-     *
      * @param current the current tab
      */
-    protected void selectNextTab(final int current) {
+    protected void selectNextTab(int current) {
         int tabIndex = getNextTabIndex(current);
 
         while (tabIndex != current && !tabPane.isEnabledAt(tabIndex)) {
@@ -2156,10 +2255,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Select the previous tab.
-     *
      * @param current the current tab
      */
-    protected void selectPreviousTab(final int current) {
+    protected void selectPreviousTab(int current) {
         int tabIndex = getPreviousTabIndex(current);
 
         while (tabIndex != current && !tabPane.isEnabledAt(tabIndex)) {
@@ -2170,29 +2268,28 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Selects an adjacent run of tabs.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param offset       selection offset
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param tabIndex      the index of the tab with respect to other tabs
+     * @param offset        selection offset
      */
-    protected void selectAdjacentRunTab(final int tabPlacement,
-                                        final int tabIndex, final int offset) {
-        if (runCount < 2) {
+    protected void selectAdjacentRunTab(int tabPlacement,
+                                        int tabIndex, int offset) {
+        if ( runCount < 2 ) {
             return;
         }
         int newIndex;
         Rectangle r = rects[tabIndex];
-        switch (tabPlacement) {
+        switch(tabPlacement) {
             case LEFT:
             case RIGHT:
-                newIndex = tabForCoordinate(tabPane, r.x + r.width / 2 + offset,
-                                            r.y + r.height / 2);
+                newIndex = tabForCoordinate(tabPane, r.x + r.width/2 + offset,
+                                            r.y + r.height/2);
                 break;
             case BOTTOM:
             case TOP:
             default:
-                newIndex = tabForCoordinate(tabPane, r.x + r.width / 2,
-                                            r.y + r.height / 2 + offset);
+                newIndex = tabForCoordinate(tabPane, r.x + r.width/2,
+                                            r.y + r.height/2 + offset);
         }
         if (newIndex != -1) {
             while (!tabPane.isEnabledAt(newIndex) && newIndex != tabIndex) {
@@ -2202,7 +2299,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
-    private void navigateTo(final int index) {
+    protected void navigateTo(int index) {
         if (DefaultLookup.getBoolean(tabPane, this,
                                      "TabbedPane.selectionFollowsFocus", true)) {
             tabPane.setSelectedIndex(index);
@@ -2212,12 +2309,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
-    void setFocusIndex(final int index, final boolean repaint) {
+    void setFocusIndex(int index, boolean repaint) {
         if (repaint && !isRunsDirty) {
             repaintTab(focusIndex);
             focusIndex = index;
             repaintTab(focusIndex);
-        } else {
+        }
+        else {
             focusIndex = index;
         }
     }
@@ -2225,7 +2323,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Repaints the specified tab.
      */
-    private void repaintTab(final int index) {
+    protected void repaintTab(int index) {
         // If we're not valid that means we will shortly be validated and
         // painted, which means we don't have to do anything here.
         if (!isRunsDirty && index >= 0 && index < tabPane.getTabCount()) {
@@ -2236,7 +2334,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Makes sure the focusIndex is valid.
      */
-    private void validateFocusIndex() {
+    protected void validateFocusIndex() {
         if (focusIndex >= tabPane.getTabCount()) {
             setFocusIndex(tabPane.getSelectedIndex(), false);
         }
@@ -2254,73 +2352,72 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Returns the tab run offset.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabCount     the tab count
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param forward      forward or not
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param tabCount the tab count
+     * @param tabIndex      the index of the tab with respect to other tabs
+     * @param forward forward or not
      * @return the tab run offset
      */
-    protected int getTabRunOffset(final int tabPlacement, final int tabCount,
-                                  final int tabIndex, final boolean forward) {
+    protected int getTabRunOffset(int tabPlacement, int tabCount,
+                                  int tabIndex, boolean forward) {
         int run = getRunForTab(tabCount, tabIndex);
         int offset;
-        switch (tabPlacement) {
+        switch(tabPlacement) {
             case LEFT: {
                 if (run == 0) {
-                    offset = (forward ?
-                              -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth) :
+                    offset = (forward?
+                              -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth)-maxTabWidth) :
                               -maxTabWidth);
 
                 } else if (run == runCount - 1) {
-                    offset = (forward ?
+                    offset = (forward?
                               maxTabWidth :
-                              calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
+                              calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth)-maxTabWidth);
                 } else {
-                    offset = (forward ? maxTabWidth : -maxTabWidth);
+                    offset = (forward? maxTabWidth : -maxTabWidth);
                 }
                 break;
             }
             case RIGHT: {
                 if (run == 0) {
-                    offset = (forward ?
+                    offset = (forward?
                               maxTabWidth :
-                              calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
+                              calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth)-maxTabWidth);
                 } else if (run == runCount - 1) {
-                    offset = (forward ?
-                              -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth) :
+                    offset = (forward?
+                              -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth)-maxTabWidth) :
                               -maxTabWidth);
                 } else {
-                    offset = (forward ? maxTabWidth : -maxTabWidth);
+                    offset = (forward? maxTabWidth : -maxTabWidth);
                 }
                 break;
             }
             case BOTTOM: {
                 if (run == 0) {
-                    offset = (forward ?
+                    offset = (forward?
                               maxTabHeight :
-                              calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
+                              calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight)-maxTabHeight);
                 } else if (run == runCount - 1) {
-                    offset = (forward ?
-                              -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight) :
+                    offset = (forward?
+                              -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight)-maxTabHeight) :
                               -maxTabHeight);
                 } else {
-                    offset = (forward ? maxTabHeight : -maxTabHeight);
+                    offset = (forward? maxTabHeight : -maxTabHeight);
                 }
                 break;
             }
             case TOP:
             default: {
                 if (run == 0) {
-                    offset = (forward ?
-                              -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight) :
+                    offset = (forward?
+                              -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight)-maxTabHeight) :
                               -maxTabHeight);
                 } else if (run == runCount - 1) {
-                    offset = (forward ?
+                    offset = (forward?
                               maxTabHeight :
-                              calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
+                              calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight)-maxTabHeight);
                 } else {
-                    offset = (forward ? maxTabHeight : -maxTabHeight);
+                    offset = (forward? maxTabHeight : -maxTabHeight);
                 }
             }
         }
@@ -2329,33 +2426,30 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Returns the previous tab index.
-     *
      * @param base the base
      * @return the previous tab index
      */
-    protected int getPreviousTabIndex(final int base) {
-        int tabIndex = (base - 1 >= 0 ? base - 1 : tabPane.getTabCount() - 1);
-        return (Math.max(tabIndex, 0));
+    protected int getPreviousTabIndex(int base) {
+        int tabIndex = (base - 1 >= 0? base - 1 : tabPane.getTabCount() - 1);
+        return (tabIndex >= 0? tabIndex : 0);
     }
 
     /**
      * Returns the next tab index.
-     *
      * @param base the base
      * @return the next tab index
      */
-    protected int getNextTabIndex(final int base) {
-        return (base + 1) % tabPane.getTabCount();
+    protected int getNextTabIndex(int base) {
+        return (base+1)%tabPane.getTabCount();
     }
 
     /**
      * Returns the next tab index in the run.
-     *
      * @param tabCount the tab count
-     * @param base     the base
+     * @param base the base
      * @return the next tab index in the run
      */
-    protected int getNextTabIndexInRun(final int tabCount, final int base) {
+    protected int getNextTabIndexInRun(int tabCount, int base) {
         if (runCount < 2) {
             return getNextTabIndex(base);
         }
@@ -2369,54 +2463,50 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Returns the previous tab index in the run.
-     *
      * @param tabCount the tab count
-     * @param base     the base
+     * @param base the base
      * @return the previous tab index in the run
      */
-    protected int getPreviousTabIndexInRun(final int tabCount, final int base) {
+    protected int getPreviousTabIndexInRun(int tabCount, int base) {
         if (runCount < 2) {
             return getPreviousTabIndex(base);
         }
         int currentRun = getRunForTab(tabCount, base);
         if (base == tabRuns[currentRun]) {
-            int previous = tabRuns[getNextTabRun(currentRun)] - 1;
-            return (previous != -1 ? previous : tabCount - 1);
+            int previous = tabRuns[getNextTabRun(currentRun)]-1;
+            return (previous != -1? previous : tabCount-1);
         }
         return getPreviousTabIndex(base);
     }
 
     /**
      * Returns the previous tab run.
-     *
      * @param baseRun the base run
      * @return the previous tab run
      */
-    protected int getPreviousTabRun(final int baseRun) {
-        int runIndex = (baseRun - 1 >= 0 ? baseRun - 1 : runCount - 1);
-        return (Math.max(runIndex, 0));
+    protected int getPreviousTabRun(int baseRun) {
+        int runIndex = (baseRun - 1 >= 0? baseRun - 1 : runCount - 1);
+        return (runIndex >= 0? runIndex : 0);
     }
 
     /**
      * Returns the next tab run.
-     *
      * @param baseRun the base run
      * @return the next tab run
      */
-    protected int getNextTabRun(final int baseRun) {
-        return (baseRun + 1) % runCount;
+    protected int getNextTabRun(int baseRun) {
+        return (baseRun+1)%runCount;
     }
 
     /**
      * Rotates the insets.
-     *
-     * @param topInsets       the top insets
-     * @param targetInsets    the target insets
+     * @param topInsets the top insets
+     * @param targetInsets the target insets
      * @param targetPlacement the target placement
      */
-    protected static void rotateInsets(final Insets topInsets, final Insets targetInsets, final int targetPlacement) {
+    protected static void rotateInsets(Insets topInsets, Insets targetInsets, int targetPlacement) {
 
-        switch (targetPlacement) {
+        switch(targetPlacement) {
             case LEFT:
                 targetInsets.top = topInsets.left;
                 targetInsets.left = topInsets.top;
@@ -2451,7 +2541,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return SwingUtilities2.tabbedPaneChangeFocusTo(getVisibleComponent());
     }
 
-    private static class Actions extends UIAction {
+    protected static class Actions extends UIAction {
         static final String NEXT = "navigateNext";
         static final String PREVIOUS = "navigatePrevious";
         static final String RIGHT = "navigateRight";
@@ -2468,73 +2558,84 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         static final String SCROLL_FORWARD = "scrollTabsForwardAction";
         static final String SCROLL_BACKWARD = "scrollTabsBackwardAction";
 
-        Actions(final String key) {
+        Actions(String key) {
             super(key);
         }
 
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             String key = getName();
-            JTabbedPane pane = (JTabbedPane) e.getSource();
-            DarkTabbedPaneUIBridge ui = (DarkTabbedPaneUIBridge) DarkUIUtil
-                                                                         .getUIOfType(pane.getUI(),
-                                                                                      DarkTabbedPaneUIBridge.class);
+            JTabbedPane pane = (JTabbedPane)e.getSource();
+            DarkTabbedPaneUIBridge ui = (DarkTabbedPaneUIBridge) DarkUIUtil.getUIOfType(pane.getUI(), DarkTabbedPaneUIBridge.class);
 
             if (ui == null) {
                 return;
             }
-            if (NEXT.equals(key)) {
+            if (key == NEXT) {
                 ui.navigateSelectedTab(SwingConstants.NEXT);
-            } else if (PREVIOUS.equals(key)) {
+            }
+            else if (key == PREVIOUS) {
                 ui.navigateSelectedTab(SwingConstants.PREVIOUS);
-            } else if (RIGHT.equals(key)) {
+            }
+            else if (key == RIGHT) {
                 ui.navigateSelectedTab(SwingConstants.EAST);
-            } else if (LEFT.equals(key)) {
+            }
+            else if (key == LEFT) {
                 ui.navigateSelectedTab(SwingConstants.WEST);
-            } else if (UP.equals(key)) {
+            }
+            else if (key == UP) {
                 ui.navigateSelectedTab(SwingConstants.NORTH);
-            } else if (DOWN.equals(key)) {
+            }
+            else if (key == DOWN) {
                 ui.navigateSelectedTab(SwingConstants.SOUTH);
-            } else if (PAGE_UP.equals(key)) {
+            }
+            else if (key == PAGE_UP) {
                 int tabPlacement = pane.getTabPlacement();
-                if (tabPlacement == TOP || tabPlacement == BOTTOM) {
+                if (tabPlacement == TOP|| tabPlacement == BOTTOM) {
                     ui.navigateSelectedTab(SwingConstants.WEST);
                 } else {
                     ui.navigateSelectedTab(SwingConstants.NORTH);
                 }
-            } else if (PAGE_DOWN.equals(key)) {
+            }
+            else if (key == PAGE_DOWN) {
                 int tabPlacement = pane.getTabPlacement();
                 if (tabPlacement == TOP || tabPlacement == BOTTOM) {
                     ui.navigateSelectedTab(SwingConstants.EAST);
                 } else {
                     ui.navigateSelectedTab(SwingConstants.SOUTH);
                 }
-            } else if (REQUEST_FOCUS.equals(key)) {
+            }
+            else if (key == REQUEST_FOCUS) {
                 pane.requestFocus();
-            } else if (REQUEST_FOCUS_FOR_VISIBLE.equals(key)) {
+            }
+            else if (key == REQUEST_FOCUS_FOR_VISIBLE) {
                 ui.requestFocusForVisibleComponent();
-            } else if (SET_SELECTED.equals(key)) {
+            }
+            else if (key == SET_SELECTED) {
                 String command = e.getActionCommand();
 
                 if (command != null && command.length() > 0) {
-                    int mnemonic = e.getActionCommand().charAt(0);
-                    if (mnemonic >= 'a' && mnemonic <= 'z') {
-                        mnemonic -= ('a' - 'A');
+                    int mnemonic = (int)e.getActionCommand().charAt(0);
+                    if (mnemonic >= 'a' && mnemonic <='z') {
+                        mnemonic  -= ('a' - 'A');
                     }
-                    Integer index = ui.mnemonicToIndexMap.get(mnemonic);
-                    if (index != null && pane.isEnabledAt(index)) {
-                        pane.setSelectedIndex(index);
+                    Integer index = ui.mnemonicToIndexMap.get(Integer.valueOf(mnemonic));
+                    if (index != null && pane.isEnabledAt(index.intValue())) {
+                        pane.setSelectedIndex(index.intValue());
                     }
                 }
-            } else if (SELECT_FOCUSED.equals(key)) {
+            }
+            else if (key == SELECT_FOCUSED) {
                 int focusIndex = ui.getFocusIndex();
                 if (focusIndex != -1) {
                     pane.setSelectedIndex(focusIndex);
                 }
-            } else if (SCROLL_FORWARD.equals(key)) {
+            }
+            else if (key == SCROLL_FORWARD) {
                 if (ui.scrollableTabLayoutEnabled()) {
                     ui.tabScroller.scrollForward(pane.getTabPlacement());
                 }
-            } else if (SCROLL_BACKWARD.equals(key)) {
+            }
+            else if (key == SCROLL_BACKWARD) {
                 if (ui.scrollableTabLayoutEnabled()) {
                     ui.tabScroller.scrollBackward(pane.getTabPlacement());
                 }
@@ -2548,33 +2649,30 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     public class TabbedPaneLayout implements LayoutManager {
 
-        public void addLayoutComponent(final String name, final Component comp) {
-        }
+        public void addLayoutComponent(String name, Component comp) {}
 
-        public void removeLayoutComponent(final Component comp) {
-        }
+        public void removeLayoutComponent(Component comp) {}
 
-        public Dimension preferredLayoutSize(final Container parent) {
+        public Dimension preferredLayoutSize(Container parent) {
             return calculateSize(false);
         }
 
-        public Dimension minimumLayoutSize(final Container parent) {
+        public Dimension minimumLayoutSize(Container parent) {
             return calculateSize(true);
         }
 
         /**
          * Returns the calculated size.
-         *
          * @param minimum use the minimum size or preferred size
          * @return the calculated size
          */
-        protected Dimension calculateSize(final boolean minimum) {
+        protected Dimension calculateSize(boolean minimum) {
             int tabPlacement = tabPane.getTabPlacement();
             Insets insets = tabPane.getInsets();
             Insets contentInsets = getContentBorderInsets(tabPlacement);
             Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
 
-            Dimension zeroSize = new Dimension(0, 0);
+            Dimension zeroSize = new Dimension(0,0);
             int height = 0;
             int width = 0;
             int cWidth = 0;
@@ -2603,7 +2701,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             // Calculate how much space the tabs will need, based on the
             // minimum size required to display largest child + content border
             //
-            switch (tabPlacement) {
+            switch(tabPlacement) {
                 case LEFT:
                 case RIGHT:
                     height = Math.max(height, calculateMaxTabHeight(tabPlacement));
@@ -2624,12 +2722,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         /**
          * Returns the preferred tab area height.
-         *
          * @param tabPlacement the tab placement
-         * @param width        the width
+         * @param width the width
          * @return the preferred tab area height
          */
-        protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
+        protected int preferredTabAreaHeight(int tabPlacement, int width) {
             FontMetrics metrics = getFontMetrics();
             int tabCount = tabPane.getTabCount();
             int total = 0;
@@ -2655,12 +2752,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         /**
          * Returns the preferred tab area width.
-         *
          * @param tabPlacement the tab placement
-         * @param height       the height
+         * @param height the height
          * @return the preferred tab area widty
          */
-        protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
+        protected int preferredTabAreaWidth(int tabPlacement, int height) {
             FontMetrics metrics = getFontMetrics();
             int tabCount = tabPane.getTabCount();
             int total = 0;
@@ -2685,11 +2781,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             return total;
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         @SuppressWarnings("deprecation")
-        public void layoutContainer(final Container parent) {
+        public void layoutContainer(Container parent) {
             /* Some of the code in this method deals with changing the
              * visibility of components to hide and show the contents for the
              * selected tab. This is older code that has since been duplicated
@@ -2733,10 +2827,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             // explicitly state we support this in the spec, but since
             // programs are now depending on this, we're making it work.
             //
-            if (selectedComponent != null) {
-                if (selectedComponent != visibleComponent &&
-                    visibleComponent != null) {
-                    if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
+            if(selectedComponent != null) {
+                if(selectedComponent != visibleComponent &&
+                   visibleComponent != null) {
+                    if(SwingUtilities.findFocusOwner(visibleComponent) != null) {
                         shouldChangeFocus = true;
                     }
                 }
@@ -2746,9 +2840,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             Rectangle bounds = tabPane.getBounds();
             int numChildren = tabPane.getComponentCount();
 
-            if (numChildren > 0) {
+            if(numChildren > 0) {
 
-                switch (tabPlacement) {
+                switch(tabPlacement) {
                     case LEFT:
                         totalTabWidth = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
                         cx = insets.left + totalTabWidth + contentInsets.left;
@@ -2778,9 +2872,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                      insets.top - insets.bottom -
                      contentInsets.top - contentInsets.bottom;
 
-                for (int i = 0; i < numChildren; i++) {
+                for(int i = 0; i < numChildren; i++) {
                     Component child = tabPane.getComponent(i);
-                    if (child == tabContainer) {
+                    if(child == tabContainer) {
 
                         int tabContainerWidth = totalTabWidth == 0 ? bounds.width :
                                                 totalTabWidth + insets.left + insets.right +
@@ -2791,9 +2885,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
                         int tabContainerX = 0;
                         int tabContainerY = 0;
-                        if (tabPlacement == BOTTOM) {
+                        if(tabPlacement == BOTTOM) {
                             tabContainerY = bounds.height - tabContainerHeight;
-                        } else if (tabPlacement == RIGHT) {
+                        } else if(tabPlacement == RIGHT) {
                             tabContainerX = bounds.width - tabContainerWidth;
                         }
                         child.setBounds(tabContainerX, tabContainerY, tabContainerWidth, tabContainerHeight);
@@ -2803,8 +2897,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 }
             }
             layoutTabComponents();
-            if (shouldChangeFocus) {
-                if (!requestFocusForVisibleComponent()) {
+            if(shouldChangeFocus) {
+                if(!requestFocusForVisibleComponent()) {
                     tabPane.requestFocus();
                 }
             }
@@ -2820,7 +2914,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             isRunsDirty = false;
         }
 
-        private void layoutTabComponents() {
+        protected void layoutTabComponents() {
             if (tabContainer == null) {
                 return;
             }
@@ -2854,11 +2948,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         /**
          * Calculate the tab rectangles.
-         *
          * @param tabPlacement the tab placement
-         * @param tabCount     the tab count
+         * @param tabCount the tab count
          */
-        protected void calculateTabRects(final int tabPlacement, final int tabCount) {
+        protected void calculateTabRects(int tabPlacement, int tabCount) {
             FontMetrics metrics = getFontMetrics();
             Dimension size = tabPane.getSize();
             Insets insets = tabPane.getInsets();
@@ -2875,7 +2968,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             //
             // Calculate bounds within which a tab run must fit
             //
-            switch (tabPlacement) {
+            switch(tabPlacement) {
                 case LEFT:
                     maxTabWidth = calculateMaxTabWidth(tabPlacement);
                     x = insets.left + tabAreaInsets.left;
@@ -2920,7 +3013,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 if (!verticalTabRuns) {
                     // Tabs on TOP or BOTTOM....
                     if (i > 0) {
-                        rect.x = rects[i - 1].x + rects[i - 1].width;
+                        rect.x = rects[i-1].x + rects[i-1].width;
                     } else {
                         tabRuns[0] = 0;
                         runCount = 1;
@@ -2948,7 +3041,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 } else {
                     // Tabs on LEFT or RIGHT...
                     if (i > 0) {
-                        rect.y = rects[i - 1].y + rects[i - 1].height;
+                        rect.y = rects[i-1].y + rects[i-1].height;
                     } else {
                         tabRuns[0] = 0;
                         runCount = 1;
@@ -2981,7 +3074,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
             if (runCount > 1) {
                 // Re-distribute tabs in case last run has leftover space
-                normalizeTabRuns(tabPlacement, tabCount, verticalTabRuns ? y : x, returnAt);
+                normalizeTabRuns(tabPlacement, tabCount, verticalTabRuns? y : x, returnAt);
 
                 selectedRun = getRunForTab(tabCount, selectedIndex);
 
@@ -2995,8 +3088,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             // tab y locations and to pad runs appropriately
             for (i = runCount - 1; i >= 0; i--) {
                 int start = tabRuns[i];
-                int next = tabRuns[i == (runCount - 1) ? 0 : i + 1];
-                int end = (next != 0 ? next - 1 : tabCount - 1);
+                int next = tabRuns[i == (runCount - 1)? 0 : i + 1];
+                int end = (next != 0? next - 1 : tabCount - 1);
                 if (!verticalTabRuns) {
                     for (j = start; j <= end; j++) {
                         rect = rects[j];
@@ -3045,30 +3138,28 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         /**
          * Rotates the run-index array so that the selected run is run[0].
-         *
          * @param tabPlacement the tab placement
-         * @param selectedRun  the selected run
+         * @param selectedRun the selected run
          */
-        protected void rotateTabRuns(final int tabPlacement, final int selectedRun) {
+        protected void rotateTabRuns(int tabPlacement, int selectedRun) {
             for (int i = 0; i < selectedRun; i++) {
                 int save = tabRuns[0];
                 for (int j = 1; j < runCount; j++) {
                     tabRuns[j - 1] = tabRuns[j];
                 }
-                tabRuns[runCount - 1] = save;
+                tabRuns[runCount-1] = save;
             }
         }
 
         /**
          * Normalizes the tab runs.
-         *
          * @param tabPlacement the tab placement
-         * @param tabCount     the tab count
-         * @param start        the start
-         * @param max          the max
+         * @param tabCount the tab count
+         * @param start the start
+         * @param max the max
          */
-        protected void normalizeTabRuns(final int tabPlacement, final int tabCount,
-                                        final int start, final int max) {
+        protected void normalizeTabRuns(int tabPlacement, int tabCount,
+                                        int start, int max) {
             boolean verticalTabRuns = (tabPlacement == LEFT || tabPlacement == RIGHT);
             int run = runCount - 1;
             boolean keepAdjusting = true;
@@ -3087,16 +3178,16 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             //
             while (keepAdjusting) {
                 int last = lastTabInRun(tabCount, run);
-                int prevLast = lastTabInRun(tabCount, run - 1);
+                int prevLast = lastTabInRun(tabCount, run-1);
                 int end;
                 int prevLastLen;
 
                 if (!verticalTabRuns) {
                     end = rects[last].x + rects[last].width;
-                    prevLastLen = (int) (maxTabWidth * weight);
+                    prevLastLen = (int)(maxTabWidth*weight);
                 } else {
                     end = rects[last].y + rects[last].height;
-                    prevLastLen = (int) (maxTabHeight * weight * 2);
+                    prevLastLen = (int)(maxTabHeight*weight*2);
                 }
 
                 // Check if the run has enough extra space to fit the last tab
@@ -3110,11 +3201,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     } else {
                         rects[prevLast].y = start;
                     }
-                    for (int i = prevLast + 1; i <= last; i++) {
+                    for (int i = prevLast+1; i <= last; i++) {
                         if (!verticalTabRuns) {
-                            rects[i].x = rects[i - 1].x + rects[i - 1].width;
+                            rects[i].x = rects[i-1].x + rects[i-1].width;
                         } else {
-                            rects[i].y = rects[i - 1].y + rects[i - 1].height;
+                            rects[i].y = rects[i-1].y + rects[i-1].height;
                         }
                     }
 
@@ -3137,38 +3228,37 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         /**
          * Pads the tab run.
-         *
          * @param tabPlacement the tab placement
-         * @param start        the start
-         * @param end          the end
-         * @param max          the max
+         * @param start the start
+         * @param end the end
+         * @param max the max
          */
-        protected void padTabRun(final int tabPlacement, final int start, final int end, final int max) {
+        protected void padTabRun(int tabPlacement, int start, int end, int max) {
             Rectangle lastRect = rects[end];
             if (tabPlacement == TOP || tabPlacement == BOTTOM) {
                 int runWidth = (lastRect.x + lastRect.width) - rects[start].x;
                 int deltaWidth = max - (lastRect.x + lastRect.width);
-                float factor = (float) deltaWidth / (float) runWidth;
+                float factor = (float)deltaWidth / (float)runWidth;
 
                 for (int j = start; j <= end; j++) {
                     Rectangle pastRect = rects[j];
                     if (j > start) {
-                        pastRect.x = rects[j - 1].x + rects[j - 1].width;
+                        pastRect.x = rects[j-1].x + rects[j-1].width;
                     }
-                    pastRect.width += Math.round((float) pastRect.width * factor);
+                    pastRect.width += Math.round((float)pastRect.width * factor);
                 }
                 lastRect.width = max - lastRect.x;
             } else {
                 int runHeight = (lastRect.y + lastRect.height) - rects[start].y;
                 int deltaHeight = max - (lastRect.y + lastRect.height);
-                float factor = (float) deltaHeight / (float) runHeight;
+                float factor = (float)deltaHeight / (float)runHeight;
 
                 for (int j = start; j <= end; j++) {
                     Rectangle pastRect = rects[j];
                     if (j > start) {
-                        pastRect.y = rects[j - 1].y + rects[j - 1].height;
+                        pastRect.y = rects[j-1].y + rects[j-1].height;
                     }
-                    pastRect.height += Math.round((float) pastRect.height * factor);
+                    pastRect.height += Math.round((float)pastRect.height * factor);
                 }
                 lastRect.height = max - lastRect.y;
             }
@@ -3176,11 +3266,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         /**
          * Pads selected tab.
-         *
-         * @param tabPlacement  the tab placement
+         * @param tabPlacement the tab placement
          * @param selectedIndex the selected index
          */
-        protected void padSelectedTab(final int tabPlacement, final int selectedIndex) {
+        protected void padSelectedTab(int tabPlacement, int selectedIndex) {
 
             if (selectedIndex >= 0) {
                 Rectangle selRect = rects[selectedIndex];
@@ -3221,18 +3310,18 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
-    private class TabbedPaneScrollLayout extends TabbedPaneLayout {
+    protected class TabbedPaneScrollLayout extends TabbedPaneLayout {
 
-        protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
+        protected int preferredTabAreaHeight(int tabPlacement, int width) {
             return calculateMaxTabHeight(tabPlacement);
         }
 
-        protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
+        protected int preferredTabAreaWidth(int tabPlacement, int height) {
             return calculateMaxTabWidth(tabPlacement);
         }
 
         @SuppressWarnings("deprecation")
-        public void layoutContainer(final Container parent) {
+        public void layoutContainer(Container parent) {
             /* Some of the code in this method deals with changing the
              * visibility of components to hide and show the contents for the
              * selected tab. This is older code that has since been duplicated
@@ -3280,10 +3369,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             // explicitly state we support this in the spec, but since
             // programs are now depending on this, we're making it work.
             //
-            if (selectedComponent != null) {
-                if (selectedComponent != visibleComponent &&
-                    visibleComponent != null) {
-                    if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
+            if(selectedComponent != null) {
+                if(selectedComponent != visibleComponent &&
+                   visibleComponent != null) {
+                    if(SwingUtilities.findFocusOwner(visibleComponent) != null) {
                         shouldChangeFocus = true;
                     }
                 }
@@ -3295,8 +3384,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             Rectangle bounds = tabPane.getBounds();
             int numChildren = tabPane.getComponentCount();
 
-            if (numChildren > 0) {
-                switch (tabPlacement) {
+            if(numChildren > 0) {
+                switch(tabPlacement) {
                     case LEFT:
                         // calculate tab area bounds
                         tw = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
@@ -3359,23 +3448,23 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                              contentInsets.top - contentInsets.bottom;
                 }
 
-                for (int i = 0; i < numChildren; i++) {
+                for(int i = 0; i < numChildren; i++) {
                     Component child = tabPane.getComponent(i);
 
-                    if (tabScroller != null && child == tabScroller.viewport) {
+                    if(tabScroller != null && child == tabScroller.viewport) {
                         JViewport viewport = (JViewport) child;
                         Rectangle viewRect = viewport.getViewRect();
                         int vw = tw;
                         int vh = th;
                         Dimension butSize = tabScroller.scrollForwardButton.getPreferredSize();
-                        switch (tabPlacement) {
+                        switch(tabPlacement) {
                             case LEFT:
                             case RIGHT:
                                 int totalTabHeight = rects[tabCount - 1].y + rects[tabCount - 1].height;
-                                if (totalTabHeight > th) {
+                                if(totalTabHeight > th) {
                                     // Allow space for scrollbuttons
                                     vh = (th > 2 * butSize.height) ? th - 2 * butSize.height : 0;
-                                    if (totalTabHeight - viewRect.y <= vh) {
+                                    if(totalTabHeight - viewRect.y <= vh) {
                                         // Scrolled to the end, so ensure the viewport size is
                                         // such that the scroll offset aligns with a tab
                                         vh = totalTabHeight - viewRect.y;
@@ -3386,10 +3475,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                             case TOP:
                             default:
                                 int totalTabWidth = rects[tabCount - 1].x + rects[tabCount - 1].width;
-                                if (totalTabWidth > tw) {
+                                if(totalTabWidth > tw) {
                                     // Need to allow space for scrollbuttons
                                     vw = (tw > 2 * butSize.width) ? tw - 2 * butSize.width : 0;
-                                    if (totalTabWidth - viewRect.x <= vw) {
+                                    if(totalTabWidth - viewRect.x <= vw) {
                                         // Scrolled to the end, so ensure the viewport size is
                                         // such that the scroll offset aligns with a tab
                                         vw = totalTabWidth - viewRect.x;
@@ -3398,9 +3487,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                         }
                         child.setBounds(tx, ty, vw, vh);
 
-                    } else if (tabScroller != null &&
-                               (child == tabScroller.scrollForwardButton ||
-                                child == tabScroller.scrollBackwardButton)) {
+                    } else if(tabScroller != null &&
+                              (child == tabScroller.scrollForwardButton ||
+                               child == tabScroller.scrollBackwardButton)) {
                         Component scrollbutton = child;
                         Dimension bsize = scrollbutton.getPreferredSize();
                         int bx = 0;
@@ -3409,11 +3498,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                         int bh = bsize.height;
                         boolean visible = false;
 
-                        switch (tabPlacement) {
+                        switch(tabPlacement) {
                             case LEFT:
                             case RIGHT:
                                 int totalTabHeight = rects[tabCount - 1].y + rects[tabCount - 1].height;
-                                if (totalTabHeight > th) {
+                                if(totalTabHeight > th) {
                                     visible = true;
                                     bx = (tabPlacement == LEFT ? tx + tw - bsize.width : tx);
                                     by = (child == tabScroller.scrollForwardButton) ?
@@ -3427,7 +3516,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                             default:
                                 int totalTabWidth = rects[tabCount - 1].x + rects[tabCount - 1].width;
 
-                                if (totalTabWidth > tw) {
+                                if(totalTabWidth > tw) {
                                     visible = true;
                                     bx = (child == tabScroller.scrollForwardButton) ?
                                          bounds.width - insets.left - bsize.width :
@@ -3436,7 +3525,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                                 }
                         }
                         child.setVisible(visible);
-                        if (visible) {
+                        if(visible) {
                             child.setBounds(bx, by, bw, bh);
                         }
 
@@ -3447,15 +3536,15 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 }
                 super.layoutTabComponents();
                 layoutCroppedEdge();
-                if (shouldChangeFocus) {
-                    if (!requestFocusForVisibleComponent()) {
+                if(shouldChangeFocus) {
+                    if(!requestFocusForVisibleComponent()) {
                         tabPane.requestFocus();
                     }
                 }
             }
         }
 
-        private void layoutCroppedEdge() {
+        protected void layoutCroppedEdge() {
             tabScroller.croppedEdge.resetParams();
             Rectangle viewRect = tabScroller.viewport.getViewRect();
             int cropline;
@@ -3466,8 +3555,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     case RIGHT:
                         cropline = viewRect.y + viewRect.height;
                         if ((tabRect.y < cropline) && (tabRect.y + tabRect.height > cropline)) {
-                            tabScroller.croppedEdge.setParams(i, cropline - tabRect.y - 1
-                            );
+                            tabScroller.croppedEdge.setParams(i, cropline - tabRect.y - 1,
+                                                              -currentTabAreaInsets.left,  0);
                         }
                         break;
                     case TOP:
@@ -3475,14 +3564,14 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     default:
                         cropline = viewRect.x + viewRect.width;
                         if ((tabRect.x < cropline - 1) && (tabRect.x + tabRect.width > cropline)) {
-                            tabScroller.croppedEdge.setParams(i, cropline - tabRect.x - 1
-                            );
+                            tabScroller.croppedEdge.setParams(i, cropline - tabRect.x - 1,
+                                                              0, -currentTabAreaInsets.top);
                         }
                 }
             }
         }
 
-        protected void calculateTabRects(final int tabPlacement, final int tabCount) {
+        protected void calculateTabRects(int tabPlacement, int tabCount) {
             FontMetrics metrics = getFontMetrics();
             Dimension size = tabPane.getSize();
             Insets insets = tabPane.getInsets();
@@ -3500,7 +3589,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             //
             // Calculate bounds within which a tab run must fit
             //
-            switch (tabPlacement) {
+            switch(tabPlacement) {
                 case LEFT:
                 case RIGHT:
                     maxTabWidth = calculateMaxTabWidth(tabPlacement);
@@ -3529,7 +3618,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 if (!verticalTabRuns) {
                     // Tabs on TOP or BOTTOM....
                     if (i > 0) {
-                        rect.x = rects[i - 1].x + rects[i - 1].width;
+                        rect.x = rects[i-1].x + rects[i-1].width;
                     } else {
                         tabRuns[0] = 0;
                         maxTabWidth = 0;
@@ -3546,7 +3635,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 } else {
                     // Tabs on LEFT or RIGHT...
                     if (i > 0) {
-                        rect.y = rects[i - 1].y + rects[i - 1].height;
+                        rect.y = rects[i-1].y + rects[i-1].height;
                     } else {
                         tabRuns[0] = 0;
                         maxTabHeight = 0;
@@ -3582,7 +3671,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
-    private class ScrollableTabSupport implements ActionListener,
+    protected class ScrollableTabSupport implements ActionListener,
                                                   ChangeListener {
         public ScrollableTabViewport viewport;
         public ScrollableTabPanel tabPanel;
@@ -3591,9 +3680,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         public CroppedEdge croppedEdge;
         public int leadingTabIndex;
 
-        private final Point tabViewPosition = new Point(0, 0);
+        protected Point tabViewPosition = new Point(0,0);
 
-        ScrollableTabSupport() {
+        ScrollableTabSupport(int tabPlacement) {
             viewport = new ScrollableTabViewport();
             tabPanel = new ScrollableTabPanel();
             viewport.setView(tabPanel);
@@ -3623,13 +3712,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             }
             scrollForwardButton.addActionListener(this);
             scrollBackwardButton.addActionListener(this);
-            scrollBackwardButton.addActionListener(System.out::println);
-            scrollForwardButton.addActionListener(System.out::println);
             tabPane.add(scrollForwardButton);
             tabPane.add(scrollBackwardButton);
         }
 
-        public void scrollForward(final int tabPlacement) {
+        public void scrollForward(int tabPlacement) {
             Dimension viewSize = viewport.getViewSize();
             Rectangle viewRect = viewport.getViewRect();
 
@@ -3642,25 +3729,25 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     return;
                 }
             }
-            setLeadingTabIndex(tabPlacement, leadingTabIndex + 1);
+            setLeadingTabIndex(tabPlacement, leadingTabIndex+1);
         }
 
-        public void scrollBackward(final int tabPlacement) {
+        public void scrollBackward(int tabPlacement) {
             if (leadingTabIndex == 0) {
                 return; // no room left to scroll
             }
-            setLeadingTabIndex(tabPlacement, leadingTabIndex - 1);
+            setLeadingTabIndex(tabPlacement, leadingTabIndex-1);
         }
 
-        public void setLeadingTabIndex(final int tabPlacement, final int index) {
+        public void setLeadingTabIndex(int tabPlacement, int index) {
             leadingTabIndex = index;
             Dimension viewSize = viewport.getViewSize();
             Rectangle viewRect = viewport.getViewRect();
 
-            switch (tabPlacement) {
+            switch(tabPlacement) {
                 case TOP:
                 case BOTTOM:
-                    tabViewPosition.x = leadingTabIndex == 0 ? 0 : rects[leadingTabIndex].x;
+                    tabViewPosition.x = leadingTabIndex == 0? 0 : rects[leadingTabIndex].x;
 
                     if ((viewSize.width - tabViewPosition.x) < viewRect.width) {
                         // We've scrolled to the end, so adjust the viewport size
@@ -3672,7 +3759,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     break;
                 case LEFT:
                 case RIGHT:
-                    tabViewPosition.y = leadingTabIndex == 0 ? 0 : rects[leadingTabIndex].y;
+                    tabViewPosition.y = leadingTabIndex == 0? 0 : rects[leadingTabIndex].y;
 
                     if ((viewSize.height - tabViewPosition.y) < viewRect.height) {
                         // We've scrolled to the end, so adjust the viewport size
@@ -3685,13 +3772,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             viewport.setViewPosition(tabViewPosition);
         }
 
-        public void stateChanged(final ChangeEvent e) {
+        public void stateChanged(ChangeEvent e) {
             updateView();
         }
 
-        private void updateView() {
+        protected void updateView() {
             int tabPlacement = tabPane.getTabPlacement();
-            int tabCount = tabPane.getTabCount();
+           int tabCount = tabPane.getTabCount();
             assureRectsCreated(tabCount);
             Rectangle vpRect = viewport.getBounds();
             Dimension viewSize = viewport.getViewSize();
@@ -3717,71 +3804,82 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 }
             }
             Insets contentInsets = getContentBorderInsets(tabPlacement);
-            switch (tabPlacement) {
+            switch(tabPlacement) {
                 case LEFT:
-                    tabPane.repaint(vpRect.x + vpRect.width, vpRect.y,
+                    tabPane.repaint(vpRect.x+vpRect.width, vpRect.y,
                                     contentInsets.left, vpRect.height);
                     scrollBackwardButton.setEnabled(
                             viewRect.y > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
-                            leadingTabIndex < tabCount - 1 &&
-                            viewSize.height - viewRect.y > viewRect.height);
+                            leadingTabIndex < tabCount-1 &&
+                            viewSize.height-viewRect.y > viewRect.height);
                     break;
                 case RIGHT:
-                    tabPane.repaint(vpRect.x - contentInsets.right, vpRect.y,
+                    tabPane.repaint(vpRect.x-contentInsets.right, vpRect.y,
                                     contentInsets.right, vpRect.height);
                     scrollBackwardButton.setEnabled(
                             viewRect.y > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
-                            leadingTabIndex < tabCount - 1 &&
-                            viewSize.height - viewRect.y > viewRect.height);
+                            leadingTabIndex < tabCount-1 &&
+                            viewSize.height-viewRect.y > viewRect.height);
                     break;
                 case BOTTOM:
-                    tabPane.repaint(vpRect.x, vpRect.y - contentInsets.bottom,
+                    tabPane.repaint(vpRect.x, vpRect.y-contentInsets.bottom,
                                     vpRect.width, contentInsets.bottom);
                     scrollBackwardButton.setEnabled(
                             viewRect.x > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
-                            leadingTabIndex < tabCount - 1 &&
-                            viewSize.width - viewRect.x > viewRect.width);
+                            leadingTabIndex < tabCount-1 &&
+                            viewSize.width-viewRect.x > viewRect.width);
                     break;
                 case TOP:
                 default:
-                    tabPane.repaint(vpRect.x, vpRect.y + vpRect.height,
+                    tabPane.repaint(vpRect.x, vpRect.y+vpRect.height,
                                     vpRect.width, contentInsets.top);
                     scrollBackwardButton.setEnabled(
                             viewRect.x > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
-                            leadingTabIndex < tabCount - 1 &&
-                            viewSize.width - viewRect.x > viewRect.width);
+                            leadingTabIndex < tabCount-1 &&
+                            viewSize.width-viewRect.x > viewRect.width);
             }
         }
 
         /**
          * ActionListener for the scroll buttons.
          */
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             ActionMap map = tabPane.getActionMap();
+
             if (map != null) {
+                String actionKey;
+
                 if (e.getSource() == scrollForwardButton) {
-                    scrollForward(tabPane.getTabPlacement());
-                } else {
-                    scrollBackward(tabPane.getTabPlacement());
+                    actionKey = "scrollTabsForwardAction";
+                }
+                else {
+                    actionKey = "scrollTabsBackwardAction";
+                }
+                Action action = map.get(actionKey);
+
+                if (action != null && action.isEnabled()) {
+                    action.actionPerformed(new ActionEvent(tabPane,
+                                                           ActionEvent.ACTION_PERFORMED, null, e.getWhen(),
+                                                           e.getModifiers()));
                 }
             }
         }
 
         public String toString() {
             return "viewport.viewSize=" + viewport.getViewSize() + "\n" +
-                   "viewport.viewRectangle=" + viewport.getViewRect() + "\n" +
-                   "leadingTabIndex=" + leadingTabIndex + "\n" +
+                   "viewport.viewRectangle="+viewport.getViewRect()+"\n"+
+                   "leadingTabIndex="+leadingTabIndex+"\n"+
                    "tabViewPosition=" + tabViewPosition;
         }
 
     }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    private class ScrollableTabViewport extends JViewport implements UIResource {
+    protected class ScrollableTabViewport extends JViewport implements UIResource {
         public ScrollableTabViewport() {
             super();
             setName("TabbedPane.scrollableViewport");
@@ -3796,7 +3894,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    private class ScrollableTabPanel extends JPanel implements UIResource {
+    protected class ScrollableTabPanel extends JPanel implements UIResource {
         public ScrollableTabPanel() {
             super(null);
             setOpaque(tabPane.isOpaque());
@@ -3806,11 +3904,16 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             }
             setBackground(bgColor);
         }
-
-        public void paintComponent(final Graphics g) {
+        public void paintComponent(Graphics g) {
             super.paintComponent(g);
             DarkTabbedPaneUIBridge.this.paintTabArea(g, tabPane.getTabPlacement(),
                                                      tabPane.getSelectedIndex());
+            if (tabScroller.croppedEdge.isParamsSet() && tabContainer == null) {
+                Rectangle croppedRect = rects[tabScroller.croppedEdge.getTabIndex()];
+                g.translate(croppedRect.x, croppedRect.y);
+                tabScroller.croppedEdge.paintComponent(g);
+                g.translate(-croppedRect.x, -croppedRect.y);
+            }
         }
 
         public void doLayout() {
@@ -3822,9 +3925,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    private static class ScrollableTabButton extends BasicArrowButton implements UIResource,
-                                                                                 SwingConstants {
-        public ScrollableTabButton(final int direction) {
+    protected class ScrollableTabButton extends BasicArrowButton implements UIResource,
+                                                                          SwingConstants {
+        public ScrollableTabButton(int direction) {
             super(direction,
                   UIManager.getColor("TabbedPane.selected"),
                   UIManager.getColor("TabbedPane.shadow"),
@@ -3836,51 +3939,53 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
 // Controller: event listeners
 
-    private class Handler implements ChangeListener, ContainerListener,
+    protected class Handler implements ChangeListener, ContainerListener,
                                      FocusListener, MouseListener, MouseMotionListener,
                                      PropertyChangeListener {
         //
         // PropertyChangeListener
         //
-        public void propertyChange(final PropertyChangeEvent e) {
-            JTabbedPane pane = (JTabbedPane) e.getSource();
+        public void propertyChange(PropertyChangeEvent e) {
+            JTabbedPane pane = (JTabbedPane)e.getSource();
             String name = e.getPropertyName();
             boolean isScrollLayout = scrollableTabLayoutEnabled();
-            if ("mnemonicAt".equals(name)) {
+            if (name == "mnemonicAt") {
                 updateMnemonics();
                 pane.repaint();
-            } else if ("displayedMnemonicIndexAt".equals(name)) {
+            }
+            else if (name == "displayedMnemonicIndexAt") {
                 pane.repaint();
-            } else if ("indexForTitle".equals(name)) {
+            }
+            else if (name =="indexForTitle") {
                 calculatedBaseline = false;
                 Integer index = (Integer) e.getNewValue();
                 updateHtmlViews(index, false);
-            } else if ("tabLayoutPolicy".equals(name)) {
+            } else if (name == "tabLayoutPolicy") {
                 DarkTabbedPaneUIBridge.this.uninstallUI(pane);
                 DarkTabbedPaneUIBridge.this.installUI(pane);
                 calculatedBaseline = false;
-            } else if ("tabPlacement".equals(name)) {
+            } else if (name == "tabPlacement") {
                 if (scrollableTabLayoutEnabled()) {
                     tabScroller.createButtons();
                 }
                 calculatedBaseline = false;
-            } else if ("opaque".equals(name) && isScrollLayout) {
-                boolean newVal = (Boolean) e.getNewValue();
+            } else if (name == "opaque" && isScrollLayout) {
+                boolean newVal = ((Boolean)e.getNewValue()).booleanValue();
                 tabScroller.tabPanel.setOpaque(newVal);
                 tabScroller.viewport.setOpaque(newVal);
-            } else if ("background".equals(name) && isScrollLayout) {
-                Color newVal = (Color) e.getNewValue();
+            } else if (name == "background" && isScrollLayout) {
+                Color newVal = (Color)e.getNewValue();
                 tabScroller.tabPanel.setBackground(newVal);
                 tabScroller.viewport.setBackground(newVal);
                 Color newColor = selectedColor == null ? newVal : selectedColor;
                 tabScroller.scrollForwardButton.setBackground(newColor);
                 tabScroller.scrollBackwardButton.setBackground(newColor);
-            } else if ("indexForTabComponent".equals(name)) {
+            } else if (name == "indexForTabComponent") {
                 if (tabContainer != null) {
                     tabContainer.removeUnusedTabComponents();
                 }
                 Component c = tabPane.getTabComponentAt(
-                        (Integer) e.getNewValue());
+                        (Integer)e.getNewValue());
                 if (c != null) {
                     if (tabContainer == null) {
                         installTabContainer();
@@ -3891,33 +3996,33 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 tabPane.revalidate();
                 tabPane.repaint();
                 calculatedBaseline = false;
-            } else if ("indexForNullComponent".equals(name)) {
+            } else if (name == "indexForNullComponent") {
                 isRunsDirty = true;
-                updateHtmlViews((Integer) e.getNewValue(), true);
-            } else if ("font".equals(name) || SwingUtilities2.isScaleChanged(e)) {
+                updateHtmlViews((Integer)e.getNewValue(), true);
+            } else if (name == "font" || SwingUtilities2.isScaleChanged(e)) {
                 calculatedBaseline = false;
             }
         }
 
-        private void updateHtmlViews(final int index, final boolean inserted) {
+        protected void updateHtmlViews(int index, boolean inserted) {
             String title = tabPane.getTitleAt(index);
             boolean isHTML = BasicHTML.isHTMLString(title);
             if (isHTML) {
-                if (htmlViews == null) {    // Initialize vector
+                if (htmlViews==null) {    // Initialize vector
                     htmlViews = createHTMLVector();
                 } else {                  // Vector already exists
                     View v = BasicHTML.createHTMLView(tabPane, title);
                     setHtmlView(v, inserted, index);
                 }
             } else {                             // Not HTML
-                if (htmlViews != null) {           // Add placeholder
+                if (htmlViews!=null) {           // Add placeholder
                     setHtmlView(null, inserted, index);
                 }                                // else nada!
             }
             updateMnemonics();
         }
 
-        private void setHtmlView(final View v, final boolean inserted, final int index) {
+        protected void setHtmlView(View v, boolean inserted, int index) {
             if (inserted || index >= htmlViews.size()) {
                 htmlViews.insertElementAt(v, index);
             } else {
@@ -3928,8 +4033,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         //
         // ChangeListener
         //
-        public void stateChanged(final ChangeEvent e) {
-            JTabbedPane tabPane = (JTabbedPane) e.getSource();
+        public void stateChanged(ChangeEvent e) {
+            JTabbedPane tabPane = (JTabbedPane)e.getSource();
             tabPane.revalidate();
             tabPane.repaint();
 
@@ -3940,7 +4045,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 int index = tabPane.getSelectedIndex();
                 if (index < rects.length && index != -1) {
                     tabScroller.tabPanel.scrollRectToVisible(
-                            (Rectangle) rects[index].clone());
+                            (Rectangle)rects[index].clone());
                 }
             }
         }
@@ -3948,21 +4053,21 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         //
         // MouseListener
         //
-        public void mouseClicked(final MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
         }
 
-        public void mouseReleased(final MouseEvent e) {
+        public void mouseReleased(MouseEvent e) {
         }
 
-        public void mouseEntered(final MouseEvent e) {
+        public void mouseEntered(MouseEvent e) {
             setRolloverTab(e.getX(), e.getY());
         }
 
-        public void mouseExited(final MouseEvent e) {
+        public void mouseExited(MouseEvent e) {
             setRolloverTab(-1);
         }
 
-        public void mousePressed(final MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             if (!tabPane.isEnabled()) {
                 return;
             }
@@ -3974,7 +4079,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     // This will trigger the focusIndex to change by way
                     // of stateChanged.
                     tabPane.setSelectedIndex(tabIndex);
-                } else if (tabPane.isRequestFocusEnabled()) {
+                }
+                else if (tabPane.isRequestFocusEnabled()) {
                     // Clicking on selected tab, try and give the tabbedpane
                     // focus.  Repaint will occur in focusGained.
                     tabPane.requestFocus();
@@ -3985,21 +4091,20 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         //
         // MouseMotionListener
         //
-        public void mouseDragged(final MouseEvent e) {
+        public void mouseDragged(MouseEvent e) {
         }
 
-        public void mouseMoved(final MouseEvent e) {
+        public void mouseMoved(MouseEvent e) {
             setRolloverTab(e.getX(), e.getY());
         }
 
         //
         // FocusListener
         //
-        public void focusGained(final FocusEvent e) {
+        public void focusGained(FocusEvent e) {
             setFocusIndex(tabPane.getSelectedIndex(), true);
         }
-
-        public void focusLost(final FocusEvent e) {
+        public void focusLost(FocusEvent e) {
             repaintTab(focusIndex);
         }
 
@@ -4037,8 +4142,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
        changes to tab text, this code should be removed and
        replaced by something which uses that.  */
 
-        public void componentAdded(final ContainerEvent e) {
-            JTabbedPane tp = (JTabbedPane) e.getContainer();
+        public void componentAdded(ContainerEvent e) {
+            JTabbedPane tp = (JTabbedPane)e.getContainer();
             Component child = e.getChild();
             if (child instanceof UIResource) {
                 return;
@@ -4046,9 +4151,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             isRunsDirty = true;
             updateHtmlViews(tp.indexOfComponent(child), true);
         }
-
-        public void componentRemoved(final ContainerEvent e) {
-            JTabbedPane tp = (JTabbedPane) e.getContainer();
+        public void componentRemoved(ContainerEvent e) {
+            JTabbedPane tp = (JTabbedPane)e.getContainer();
             Component child = e.getChild();
             if (child instanceof UIResource) {
                 return;
@@ -4059,9 +4163,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             // currently no IndexPropertyChangeEvent.  Once
             // IndexPropertyChangeEvents have been added this code should be
             // modified to use it.
-            Integer indexObj = (Integer) tp.getClientProperty("__index_to_remove__");
+            Integer indexObj =
+                    (Integer)tp.getClientProperty("__index_to_remove__");
             if (indexObj != null) {
-                int index = indexObj;
+                int index = indexObj.intValue();
                 if (htmlViews != null && htmlViews.size() > index) {
                     htmlViews.removeElementAt(index);
                 }
@@ -4083,7 +4188,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         // its functionality has been moved into Handler. If you need to add
         // new functionality add it to the Handler, but make sure this
         // class calls into the Handler.
-        public void propertyChange(final PropertyChangeEvent e) {
+        public void propertyChange(PropertyChangeEvent e) {
             getHandler().propertyChange(e);
         }
     }
@@ -4097,7 +4202,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         // its functionality has been moved into Handler. If you need to add
         // new functionality add it to the Handler, but make sure this
         // class calls into the Handler.
-        public void stateChanged(final ChangeEvent e) {
+        public void stateChanged(ChangeEvent e) {
             getHandler().stateChanged(e);
         }
     }
@@ -4111,7 +4216,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         // its functionality has been moved into Handler. If you need to add
         // new functionality add it to the Handler, but make sure this
         // class calls into the Handler.
-        public void mousePressed(final MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             getHandler().mousePressed(e);
         }
     }
@@ -4125,20 +4230,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         // its functionality has been moved into Handler. If you need to add
         // new functionality add it to the Handler, but make sure this
         // class calls into the Handler.
-        public void focusGained(final FocusEvent e) {
+        public void focusGained(FocusEvent e) {
             getHandler().focusGained(e);
         }
-
-        public void focusLost(final FocusEvent e) {
+        public void focusLost(FocusEvent e) {
             getHandler().focusLost(e);
         }
     }
 
-    private Vector<View> createHTMLVector() {
+    protected Vector<View> createHTMLVector() {
         Vector<View> htmlViews = new Vector<View>();
         int count = tabPane.getTabCount();
-        if (count > 0) {
-            for (int i = 0; i < count; i++) {
+        if (count>0) {
+            for (int i=0 ; i<count; i++) {
                 String title = tabPane.getTitleAt(i);
                 if (BasicHTML.isHTMLString(title)) {
                     htmlViews.addElement(BasicHTML.createHTMLView(tabPane, title));
@@ -4151,15 +4255,15 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    private class TabContainer extends JPanel implements UIResource {
-        private boolean notifyTabbedPane = true;
+    protected class TabContainer extends JPanel implements UIResource {
+        protected boolean notifyTabbedPane = true;
 
         public TabContainer() {
             super(null);
             setOpaque(false);
         }
 
-        public void remove(final Component comp) {
+        public void remove(Component comp) {
             int index = tabPane.indexOfTabComponent(comp);
             super.remove(comp);
             if (notifyTabbedPane && index != -1) {
@@ -4167,7 +4271,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             }
         }
 
-        private void removeUnusedTabComponents() {
+        protected void removeUnusedTabComponents() {
             for (Component c : getComponents()) {
                 if (!(c instanceof UIResource)) {
                     int index = tabPane.indexOfTabComponent(c);
@@ -4196,20 +4300,24 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    private class CroppedEdge extends JPanel implements UIResource {
-        private Rectangle shape;
-        private int tabIndex;
-        private int cropline;
+    protected class CroppedEdge extends JPanel implements UIResource {
+        protected Shape shape;
+        protected int tabIndex;
+        protected int cropline;
+        protected int cropx, cropy;
 
         public CroppedEdge() {
             setOpaque(false);
         }
 
-        public void setParams(final int tabIndex, final int cropline) {
+        public void setParams(int tabIndex, int cropline, int cropx, int cropy) {
             this.tabIndex = tabIndex;
             this.cropline = cropline;
-            shape = rects[tabIndex];
-            setBounds(shape);
+            this.cropx = cropx;
+            this.cropy = cropy;
+            Rectangle tabRect = rects[tabIndex];
+            setBounds(tabRect);
+            shape = createCroppedTabShape(tabPane.getTabPlacement(), tabRect, cropline);
             if (getParent() == null && tabContainer != null) {
                 tabContainer.add(this, 0);
             }
@@ -4223,7 +4331,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
 
         public boolean isParamsSet() {
-            return true;
+            return shape != null;
         }
 
         public int getTabIndex() {
@@ -4235,7 +4343,31 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
 
         public int getCroppedSideWidth() {
-            return 0;
+            return 3;
+        }
+
+        protected Color getBgColor() {
+            Component parent = tabPane.getParent();
+            if (parent != null) {
+                Color bg = parent.getBackground();
+                if (bg != null) {
+                    return bg;
+                }
+            }
+            return UIManager.getColor("control");
+        }
+
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (isParamsSet() && g instanceof Graphics2D) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.clipRect(0, 0, getWidth(), getHeight());
+                g2.setColor(getBgColor());
+                g2.translate(cropx, cropy);
+                g2.fill(shape);
+                paintCroppedTabEdge(g);
+                g2.translate(-cropx, -cropy);
+            }
         }
     }
 }

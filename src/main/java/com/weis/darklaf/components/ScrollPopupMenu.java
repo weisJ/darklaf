@@ -34,7 +34,7 @@ public class ScrollPopupMenu extends JPopupMenu {
 
         }
     };
-    private final int maxHeight;
+    private int maxHeight;
     private final JPanel contentPane;
     private final JScrollPane scrollPane;
     private JWindow popWin;
@@ -50,6 +50,10 @@ public class ScrollPopupMenu extends JPopupMenu {
         contentPane.setBorder(getBorder());
         setDoubleBuffered(true);
         addMenuKeyListener(menuKeyListener);
+    }
+
+    public void setMaxHeight(final int maxHeight) {
+        this.maxHeight = maxHeight;
     }
 
     @NotNull

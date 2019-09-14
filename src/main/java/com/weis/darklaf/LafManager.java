@@ -16,7 +16,7 @@ import java.awt.*;
  */
 public final class LafManager {
 
-    private static Theme currentLaf;
+    private static Theme currentLaf = Theme.Dark;
 
     static void setCurrentLaf(final Theme currentLaf) {
         LafManager.currentLaf = currentLaf;

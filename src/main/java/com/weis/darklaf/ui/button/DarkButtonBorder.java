@@ -28,7 +28,7 @@ public class DarkButtonBorder implements Border, UIResource {
     @Override
     public void paintBorder(final Component c, @NotNull final Graphics g,
                             final int x, final int y, final int width, final int height) {
-        if (DarkButtonUI.isShadowVariant(c)) {
+        if (DarkButtonUI.isShadowVariant(c) || DarkButtonUI.isLabelButton(c)) {
             return;
         }
         Graphics2D g2 = (Graphics2D) g;

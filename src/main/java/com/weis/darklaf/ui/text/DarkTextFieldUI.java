@@ -24,8 +24,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class DarkTextFieldUI extends DarkTextFieldUIBridge {
+public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener {
 
     public static final int ARC_SIZE = 3;
     public static final int SEARCH_ARC_SIZE = 5;
@@ -61,7 +63,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge {
         @Override
         public void popupMenuWillBecomeInvisible(@NotNull final PopupMenuEvent e) {
             lastSearchEvent = System.currentTimeMillis();
-            ((JPopupMenu) e.getSource()).removePopupMenuListener(this);
         }
     };
 
@@ -112,7 +113,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge {
         if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
             var menu = getSearchPopup(getComponent());
             if (menu != null) {
-                menu.addPopupMenuListener(searchPopupListener);
                 menu.show(getComponent(), getSearchIconCoord().x, getComponent().getHeight());
             }
         }
@@ -265,6 +265,21 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge {
     @Override
     protected DarkCaret.CaretStyle getDefaultCaretStyle() {
         return DarkCaret.CaretStyle.THICK_VERTICAL_LINE_STYLE;
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if ("JTextField.Search.FindPopup".equals(key)) {
+            var oldVal = evt.getOldValue();
+            var newVal = evt.getNewValue();
+            if (oldVal instanceof JPopupMenu) {
+                ((JPopupMenu)oldVal).removePopupMenuListener(searchPopupListener);
+            }
+            if (newVal instanceof JPopupMenu) {
+                ((JPopupMenu)newVal).addPopupMenuListener(searchPopupListener);
+            }
+        }
     }
 
     private enum ClickAction {

@@ -58,6 +58,11 @@ public final class UIDemo {
                                 putClientProperty("JButton.variant", "shadow");
                             }});
                         }});
+                        add(new JToggleButton("toggle"){{
+                            putClientProperty("ToggleButton.variant", "slider");
+                            setEnabled(false);
+                            setSelected(true);
+                        }});
                     }});
                     panel.add(new JPanel() {{
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -113,13 +118,14 @@ public final class UIDemo {
                     panel.add(new JPanel() {{
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
                         add(new JButton("enabled") {{
-                            setRolloverEnabled(true);
                         }});
                         add(new JButton("disabled") {{
                             setEnabled(false);
                         }});
                         add(defaultButton);
-                        add(new JToggleButton("toggle"));
+                        add(new JToggleButton("toggle"){{
+                            putClientProperty("ToggleButton.variant", "slider");
+                        }});
                         add(new JButton("square") {{
                             putClientProperty("JButton.buttonType", "square");
                         }});

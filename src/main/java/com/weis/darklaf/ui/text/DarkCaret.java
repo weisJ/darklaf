@@ -48,9 +48,9 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     private void adjustCaretLocation(@NotNull final MouseEvent e) {
-        if ((e.getModifiersEx() & ActionEvent.SHIFT_MASK) != 0 && getDot() != -1) {
+        if (e.isShiftDown() && getDot() != -1) {
             moveCaret(e);
-        } else {
+        } else{
             positionCaret(e);
         }
     }

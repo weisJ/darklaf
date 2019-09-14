@@ -161,7 +161,7 @@ public class DarkLaf extends BasicLookAndFeel {
         Properties properties = LafUtil.loadProperties(this);
 
         final HashMap<String, Object> darculaGlobalSettings = new HashMap<>();
-        final String prefix = getPrefix();
+        final String prefix = getPrefix() + '.';
         for (final String key : properties.stringPropertyNames()) {
             if (key.startsWith(prefix)) {
                 darculaGlobalSettings

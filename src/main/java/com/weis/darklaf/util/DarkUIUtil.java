@@ -18,6 +18,7 @@ import java.awt.geom.RoundRectangle2D;
 public final class DarkUIUtil {
 
     public final static AlphaComposite ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f);
+    public final static AlphaComposite ALPHA_COMPOSITE_2 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     public final static AlphaComposite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
     public static final boolean USE_QUARTZ = "true".equals(System.getProperty("apple.awt.graphics.UseQuartz"));
 

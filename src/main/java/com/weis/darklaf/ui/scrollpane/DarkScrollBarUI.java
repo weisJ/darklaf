@@ -42,8 +42,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()) {
             return;
         }
-        if (scrollbar.getOrientation() == VERTICAL && e.getModifiersEx() == 0
-            || scrollbar.getOrientation() == HORIZONTAL && e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK) {
+        if (scrollbar.getOrientation() == VERTICAL && !e.isShiftDown()
+            || scrollbar.getOrientation() == HORIZONTAL && e.isShiftDown()) {
             scrollbar.setValueIsAdjusting(true);
             if (scrollbar.getParent() instanceof JScrollPane) {
                 doScroll(scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
@@ -448,10 +448,10 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     public static void doScroll(@NotNull final JScrollBar toScroll, final JViewport vp,
                                 @NotNull final MouseWheelEvent e, final boolean leftToRight) {
         int direction = e.getWheelRotation() < 0 ? -1 : 1;
-        if (!leftToRight) {
+        int orientation = toScroll.getOrientation();
+        if (!leftToRight && orientation == JScrollBar.HORIZONTAL) {
             direction *= -1;
         }
-        int orientation = toScroll.getOrientation();
 
         if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
             int units = Math.abs(e.getUnitsToScroll());

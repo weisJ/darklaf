@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollPaneUI;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeListener;
 
@@ -25,8 +24,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         scrollbar.setValueIsAdjusting(false);
     };
     private final MouseWheelListener horizontalMouseWheelListener = e -> {
-        if (!scrollpane.isWheelScrollingEnabled() ||
-            e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK || !verticalScrollBarEnabled()) {
+        if (!scrollpane.isWheelScrollingEnabled() || e.isShiftDown() || !verticalScrollBarEnabled()) {
             return;
         }
         var scrollbar = scrollpane.getVerticalScrollBar();
@@ -39,8 +37,8 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         if (!scrollpane.isWheelScrollingEnabled()) {
             return;
         }
-        var scrollbar = e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK ? scrollpane.getHorizontalScrollBar()
-                                                                       : scrollpane.getVerticalScrollBar();
+        var scrollbar = e.isShiftDown() ? scrollpane.getHorizontalScrollBar()
+                                        : scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         DarkScrollBarUI.doScroll(scrollbar, scrollpane.getViewport(), e,
                                  scrollpane.getComponentOrientation().isLeftToRight());
@@ -117,6 +115,13 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                         if (lowerLeft == null && hsb.isVisible()) {
                             vertBounds.height += horBounds.height;
                         }
+                    }
+                    Insets barInsets = UIManager.getInsets("ScrollPane.barInsets");
+                    if (barInsets != null) {
+                        vertBounds.height -= barInsets.top + barInsets.bottom;
+                        vertBounds.y += barInsets.top;
+                        horBounds.width -= barInsets.left + barInsets.right;
+                        horBounds.x += barInsets.left;
                     }
                     vsb.setBounds(vertBounds);
                     hsb.setBounds(horBounds);

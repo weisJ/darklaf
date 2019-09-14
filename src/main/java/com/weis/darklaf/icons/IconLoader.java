@@ -159,7 +159,7 @@ public final class IconLoader {
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
         } else {
-            System.err.println("Couldn't find file: " + path);
+            LOGGER.severe("Could not find icon file: '" + path + "'");
             return null;
         }
     }
