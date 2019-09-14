@@ -18,11 +18,15 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class DarkSpinnerUI extends BasicSpinnerUI {
+public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListener {
 
     private static final int BUTTON_PAD = 7;
 
+    private Component component;
+    private Color compColor;
     private JButton nextButton;
     private JButton prevButton;
 
@@ -44,6 +48,17 @@ public class DarkSpinnerUI extends BasicSpinnerUI {
         return new DarkSpinnerUI();
     }
 
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        spinner.addPropertyChangeListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        spinner.removePropertyChangeListener(this);
+    }
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -53,15 +68,16 @@ public class DarkSpinnerUI extends BasicSpinnerUI {
             oldEditor.getComponents()[0].removeFocusListener(focusListener);
         }
         if (newEditor != null && newEditor.getComponents().length > 0) {
-            newEditor.getComponents()[0].addFocusListener(focusListener);
+            var comp = newEditor.getComponents()[0];
+           comp.addFocusListener(focusListener);
         }
     }
 
     @Override
     protected JComponent createEditor() {
         final JComponent editor = super.createEditor();
-        JTextField text = ((JSpinner.DefaultEditor) editor).getTextField();
-        text.addFocusListener(focusListener);
+        component = ((JSpinner.DefaultEditor) editor).getTextField();
+        component.addFocusListener(focusListener);
         return editor;
     }
 
@@ -72,11 +88,23 @@ public class DarkSpinnerUI extends BasicSpinnerUI {
         int arc = DarkSpinnerBorder.ARC_SIZE;
         int width = c.getWidth();
         int height = c.getHeight();
+        JComponent editor = spinner.getEditor();
         if (c.isOpaque()) {
-            g.setColor(getBackground(c));
+            if (component != null) {
+                if (!component.isEnabled()) {
+                    if (compColor == null) {
+                        compColor = component.getBackground();
+                        component.setBackground(getBackground(c));
+                    } else {
+                        compColor = null;
+                    }
+                }
+                g.setColor(component.getBackground());
+            } else {
+                g.setColor(getBackground(c));
+            }
             g.fillRoundRect(size, size, width - 2 * size, height - 2 * size, arc, arc);
         }
-        JComponent editor = spinner.getEditor();
         if (editor != null) {
             paintSpinBackground((Graphics2D) g, width, height, size, arc);
         }
@@ -84,7 +112,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI {
 
     private void paintSpinBackground(@NotNull final Graphics2D g, final int width, final int height,
                                      final int bSize, final int arc) {
-
         var bounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
         int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
@@ -168,4 +195,15 @@ public class DarkSpinnerUI extends BasicSpinnerUI {
                                            : UIManager.getColor("Spinner.activeBackground");
     }
 
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        var key = evt.getPropertyName();
+        if ("opaque".equals(key)) {
+            var val = Boolean.TRUE.equals(evt.getNewValue());
+            spinner.getEditor().setOpaque(val);
+            if (component instanceof JComponent) {
+                ((JComponent)component).setOpaque(val);
+            }
+        }
+    }
 }
