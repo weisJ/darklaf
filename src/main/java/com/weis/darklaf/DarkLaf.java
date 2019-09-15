@@ -11,9 +11,15 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
@@ -25,12 +31,14 @@ import java.util.logging.Logger;
  */
 public class DarkLaf extends BasicLookAndFeel {
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
+
     static {
         LOGGER.setUseParentHandlers(false);
         ConsoleHandler handler = new ConsoleHandler();
         handler.setFormatter(new LogFormatter());
         LOGGER.addHandler(handler);
     }
+
     private static final String NAME = "Darklaf";
     private BasicLookAndFeel base;
 
@@ -63,6 +71,18 @@ public class DarkLaf extends BasicLookAndFeel {
         defaults.remove("ComboBox.actionMap");
         defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));
         defaults.put("ComboBox.actionMap", metalDefaults.get("ComboBox.actionMap"));
+    }
+
+    private static void patchStyledEditorKit() {
+        StyleSheet defaultStyles = new StyleSheet();
+        try (Reader r = new BufferedReader(
+                new InputStreamReader(DarkLaf.class.getResourceAsStream("darcula.css"),
+                                      StandardCharsets.UTF_8))) {
+            defaultStyles.loadRules(r, null);
+            new HTMLEditorKit().setStyleSheet(defaultStyles);
+        } catch (Throwable e) {
+            LOGGER.severe(e.getMessage());
+        }
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
@@ -143,7 +163,7 @@ public class DarkLaf extends BasicLookAndFeel {
             initInputMapDefaults(defaults);
             initIdeaDefaults(defaults);
             patchComboBox(metalDefaults, defaults);
-            defaults.remove("Spinner.arrowButtonBorder");
+            patchStyledEditorKit();
 
             if (SystemInfo.isMac
                 && !"true".equalsIgnoreCase(System.getProperty("apple.laf.useScreenMenuBar", "false"))) {

@@ -15,8 +15,8 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
             LafManager.loadLaf(LafManager.Theme.Dark);
             final var frame = new JFrame();
             frame.setSize(500, 500);
-            var overlayScroll = new JScrollPane(new JTextPane() {{
-                setText("orem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam"
+            var overlayScroll = new JScrollPane(new JEditorPane() {{
+                setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam"
                         + " auctor, erat non viverra commodo, libero orci aliquam quam, ac interdum nunc est sed "
                         + "ligula. Aliquam vel velit non dolor accumsan blandit id eu metus. Aenean iaculis urna in "
                         + "placerat aliquam. Aliquam dui quam, bibendum sed magna in, cursus ornare est. Quisque "
@@ -44,6 +44,7 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
                         + "sapien.");
 //                setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 setFont(Font.getFont(Font.MONOSPACED));
+
             }});
             frame.setContentPane(new JPanel(new BorderLayout()) {{
                 add(overlayScroll, BorderLayout.CENTER);
