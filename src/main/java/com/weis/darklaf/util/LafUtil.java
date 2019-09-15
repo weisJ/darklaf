@@ -98,12 +98,12 @@ public final class LafUtil {
         }
         if (path.charAt(path.length() - 1) == ']') {
             String tag = path.endsWith(DUAL_KEY) ? DUAL_KEY
-                                                  : path.endsWith(AWARE_KEY) ? AWARE_KEY : null;
+                                                 : path.endsWith(AWARE_KEY) ? AWARE_KEY : null;
             if (tag == null) {
                 throw new IllegalArgumentException("Invalid tag on icon path: '" + value + "'");
             }
             UIAwareIcon icon = ICON_LOADER.getUIAwareIcon(path.substring(0, path.length() - tag.length()),
-                                                         dim.width, dim.height);
+                                                          dim.width, dim.height);
             if (tag.equals(DUAL_KEY)) {
                 return icon.getDual();
             } else {
