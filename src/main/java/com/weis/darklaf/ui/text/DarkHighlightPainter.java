@@ -18,7 +18,7 @@ import java.awt.geom.Rectangle2D;
 
 public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
 
-    private static final boolean DEBUG_COLOR = true;
+    private static final boolean DEBUG_COLOR = false;
 
     private Paint paint;
     private boolean roundedEdges;

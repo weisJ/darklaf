@@ -73,7 +73,7 @@ public class DarkLaf extends BasicLookAndFeel {
         defaults.put("ComboBox.actionMap", metalDefaults.get("ComboBox.actionMap"));
     }
 
-    private static void patchStyledEditorKit() {
+    private static void loadStyleSheet() {
         StyleSheet defaultStyles = new StyleSheet();
         try (Reader r = new BufferedReader(
                 new InputStreamReader(DarkLaf.class.getResourceAsStream("darcula.css"),
@@ -163,7 +163,7 @@ public class DarkLaf extends BasicLookAndFeel {
             initInputMapDefaults(defaults);
             initIdeaDefaults(defaults);
             patchComboBox(metalDefaults, defaults);
-            patchStyledEditorKit();
+            loadStyleSheet();
 
             if (SystemInfo.isMac
                 && !"true".equalsIgnoreCase(System.getProperty("apple.laf.useScreenMenuBar", "false"))) {

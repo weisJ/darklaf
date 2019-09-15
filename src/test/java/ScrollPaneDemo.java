@@ -2,6 +2,7 @@ import com.weis.darklaf.LafManager;
 import org.jdesktop.swingx.MultiSplitLayout;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 
 /**
@@ -16,7 +17,8 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
             final var frame = new JFrame();
             frame.setSize(500, 500);
             var overlayScroll = new JScrollPane(new JEditorPane() {{
-                setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam"
+                setEditorKit(new HTMLEditorKit());
+                setText("<body>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam"
                         + " auctor, erat non viverra commodo, libero orci aliquam quam, ac interdum nunc est sed "
                         + "ligula. Aliquam vel velit non dolor accumsan blandit id eu metus. Aenean iaculis urna in "
                         + "placerat aliquam. Aliquam dui quam, bibendum sed magna in, cursus ornare est. Quisque "
