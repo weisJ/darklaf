@@ -3,7 +3,6 @@ package com.weis.darklaf.ui.tabbedpane;
 import com.weis.darklaf.components.ScrollPopupMenu;
 import com.weis.darklaf.decorators.PopupMenuAdapter;
 import com.weis.darklaf.icons.EmptyIcon;
-import com.weis.darklaf.icons.IconLoader;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -30,6 +29,8 @@ import java.util.TooManyListenersException;
 import java.util.function.Function;
 
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
+
+    private static final int FOCUS_SIZE = 4;
 
     private static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler();
     private final FocusListener focusListener = new FocusListener() {
@@ -81,10 +82,18 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                                   final boolean isSelected) {
         g.setColor(getTabBorderColor());
         switch (tabPlacement) {
-            case TOP -> g.fillRect(x, y + h - 1, w, 1);
-            case BOTTOM -> g.fillRect(x, y, w, 1);
-            case LEFT -> g.fillRect(x + w - 1, y, 1, h);
-            case RIGHT -> g.fillRect(x, y, 1, h);
+            case TOP:
+                g.fillRect(x, y + h - 1, w, 1);
+                break;
+            case BOTTOM:
+                g.fillRect(x, y, w, 1);
+                break;
+            case LEFT:
+                g.fillRect(x + w - 1, y, 1, h);
+                break;
+            case RIGHT:
+                g.fillRect(x, y, 1, h);
+                break;
         }
     }
 
@@ -104,10 +113,18 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int y = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
         int x = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
         switch (tabPlacement) {
-            case TOP -> paintTabAreaBorder(g, tabPlacement, 0, 0, width, y);
-            case BOTTOM -> paintTabAreaBorder(g, tabPlacement, 0, height - y, width, y + 1);
-            case LEFT -> paintTabAreaBorder(g, tabPlacement, 0, 0, x, height);
-            case RIGHT -> paintTabAreaBorder(g, tabPlacement, width - x, 0, x, height);
+            case TOP:
+                paintTabAreaBorder(g, tabPlacement, 0, 0, width, y);
+                break;
+            case BOTTOM:
+                paintTabAreaBorder(g, tabPlacement, 0, height - y, width, y + 1);
+                break;
+            case LEFT:
+                paintTabAreaBorder(g, tabPlacement, 0, 0, x, height);
+                break;
+            case RIGHT:
+                paintTabAreaBorder(g, tabPlacement, width - x, 0, x, height);
+                break;
         }
 
         // If scrollable tabs are enabled, the tab area will be
@@ -131,10 +148,18 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             ((Graphics2D) g).setComposite(DarkUIUtil.ALPHA_COMPOSITE_2);
         }
         switch (tabPane.getTabPlacement()) {
-            case TOP -> g.fillRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height - 1);
-            case BOTTOM -> g.fillRect(dropRect.x, dropRect.y + 1, dropRect.width, dropRect.height - 1);
-            case LEFT -> g.fillRect(dropRect.x, dropRect.y, dropRect.width - 1, dropRect.height);
-            case RIGHT -> g.fillRect(dropRect.x + 1, dropRect.y, dropRect.width - 1, dropRect.height);
+            case TOP:
+                g.fillRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height - 1);
+                break;
+            case BOTTOM:
+                g.fillRect(dropRect.x, dropRect.y + 1, dropRect.width, dropRect.height - 1);
+                break;
+            case LEFT:
+                g.fillRect(dropRect.x, dropRect.y, dropRect.width - 1, dropRect.height);
+                break;
+            case RIGHT:
+                g.fillRect(dropRect.x + 1, dropRect.y, dropRect.width - 1, dropRect.height);
+                break;
         }
         context.restore();
     }
@@ -143,10 +168,18 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                                       final int x, final int y, final int w, final int h) {
         g.setColor(getTabBorderColor());
         switch (tabPlacement) {
-            case TOP -> g.fillRect(x, y + h - 1, w, 1);
-            case BOTTOM -> g.fillRect(x, y, w, 1);
-            case LEFT -> g.fillRect(w - 1, y, 1, h);
-            case RIGHT -> g.fillRect(x, y, 1, h);
+            case TOP:
+                g.fillRect(x, y + h - 1, w, 1);
+                break;
+            case BOTTOM:
+                g.fillRect(x, y, w, 1);
+                break;
+            case LEFT:
+                g.fillRect(w - 1, y, 1, h);
+                break;
+            case RIGHT:
+                g.fillRect(x, y, 1, h);
+                break;
         }
     }
 
@@ -200,9 +233,18 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             g.setColor(getAccentColor(DarkUIUtil.hasFocus(tabPane)));
             var r = rects[tabIndex];
             switch (tabPlacement) {
-                case LEFT -> g.fillRect(r.x, r.y + r.height - 4, r.width - 1, 4);
-                case RIGHT -> g.fillRect(r.x + 1, r.y + r.height - 4, r.width - 1, 4);
-                default -> g.fillRect(r.x, r.y + r.height - 4, r.width, 4);
+                case LEFT:
+                    g.fillRect(r.x + r.width - FOCUS_SIZE - 1, r.y, FOCUS_SIZE, r.height);
+                    break;
+                case RIGHT:
+                    g.fillRect(r.x + 1, r.y, FOCUS_SIZE, r.height);
+                    break;
+                case BOTTOM:
+                    g.fillRect(r.x, r.y + 1, r.width, FOCUS_SIZE);
+                    break;
+                default:
+                    g.fillRect(r.x, r.y + r.height - FOCUS_SIZE, r.width, FOCUS_SIZE);
+                    break;
             }
         }
     }
@@ -410,19 +452,17 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         var rect = super.getTabBounds(pane, i);
         if (scrollableTabLayoutEnabled() && rect != null
             && dropTargetIndex >= 0 && i == dropTargetIndex) {
-            switch (pane.getTabPlacement()) {
-                case TOP, BOTTOM -> {
-                    if (pane.getComponentOrientation().isLeftToRight()) {
-                        rect.x -= dropRect.width;
-                        rect.width += dropRect.width;
-                    } else {
-                        rect.width += dropRect.width;
-                    }
+            int tabPlacement = pane.getTabPlacement();
+            if (tabPlacement == TOP || tabPlacement == BOTTOM) {
+                if (pane.getComponentOrientation().isLeftToRight()) {
+                    rect.x -= dropRect.width;
+                    rect.width += dropRect.width;
+                } else {
+                    rect.width += dropRect.width;
                 }
-                case LEFT, RIGHT -> {
-                    rect.y -= dropRect.height;
-                    rect.height += dropRect.height;
-                }
+            } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+                rect.y -= dropRect.height;
+                rect.height += dropRect.height;
             }
         }
         return rect;
@@ -545,9 +585,14 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
-    private Icon getNewTabIcon() {
+    protected Icon getNewTabIcon() {
         return UIManager.getIcon("TabbedPane.newTab.icon");
     }
+
+    protected Icon getMoreTabsIcon() {
+        return UIManager.getIcon("TabbedPane.moreTabs.icon");
+    }
+
 
     protected class MoreTabsButton extends DarkTabAreaButton {
 
@@ -556,7 +601,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         private final static int PAD = 2;
 
         protected MoreTabsButton() {
-            icon = IconLoader.get().getUIAwareIcon("navigation/moreTabs.svg");
+            icon = getMoreTabsIcon();
             setIcon(EmptyIcon.create(icon.getIconWidth(), icon.getIconHeight()));
             putClientProperty("JButton.variant", "onlyLabel");
             putClientProperty("JButton.buttonType", "square");
@@ -578,11 +623,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
              * A different icon might need a different offset.
              */
             int off = 5;
-            switch (tabPane.getTabPlacement()) {
-                case TOP -> y += 2;
-                case BOTTOM -> y -= 1;
-                default -> {
-                }
+            int tabPlacement = tabPane.getTabPlacement();
+            if (tabPlacement == TOP) {
+                y += 2;
+            } else if (tabPlacement == BOTTOM) {
+                y -= 1;
             }
 
             icon.paintIcon(this, g, x, y);
@@ -662,26 +707,30 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                     var pref = scrollPopupMenu.getPreferredSize();
                     boolean leftToRight = tabPane.getComponentOrientation().isLeftToRight();
                     switch (tabPane.getTabPlacement()) {
-                        case LEFT -> scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth(),
-                                                          moreTabsButton.getHeight() - pref.height);
-                        case RIGHT -> scrollPopupMenu.show(moreTabsButton, -pref.width,
-                                                           moreTabsButton.getHeight() - pref.height);
-                        case TOP -> {
+                        case LEFT:
+                            scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth(),
+                                                 moreTabsButton.getHeight() - pref.height);
+                            break;
+                        case RIGHT:
+                            scrollPopupMenu.show(moreTabsButton, -pref.width,
+                                                 moreTabsButton.getHeight() - pref.height);
+                            break;
+                        case TOP:
                             if (leftToRight) {
                                 scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
                                                      moreTabsButton.getHeight());
                             } else {
                                 scrollPopupMenu.show(moreTabsButton, 0, moreTabsButton.getHeight());
                             }
-                        }
-                        case BOTTOM -> {
+                            break;
+                        case BOTTOM:
                             if (leftToRight) {
                                 scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
                                                      -pref.height);
                             } else {
                                 scrollPopupMenu.show(moreTabsButton, 0, -pref.height);
                             }
-                        }
+                            break;
                     }
                 }
             }
@@ -866,27 +915,24 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             // Calculate how much space the tabs will need, based on the
             // minimum size required to display largest child + content border
             //
-            switch (tabPlacement) {
-                case LEFT, RIGHT -> {
-                    int tabHeight = calculateTabHeight(tabPlacement, tabPane.getSelectedIndex(),
-                                                       getFontMetrics().getHeight());
-                    if (scrollableTabSupport.moreTabsButton.isVisible()) {
-                        tabHeight += scrollableTabSupport.moreTabsButton.getPreferredSize().height;
-                    }
-                    height = Math.max(height, tabHeight);
-                    tabExtent = preferredTabAreaWidth(tabPlacement,
-                                                      height - tabAreaInsets.top - tabAreaInsets.bottom);
-                    width += tabExtent;
+            if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+                int tabHeight = calculateTabHeight(tabPlacement, tabPane.getSelectedIndex(),
+                                                   getFontMetrics().getHeight());
+                if (scrollableTabSupport.moreTabsButton.isVisible()) {
+                    tabHeight += scrollableTabSupport.moreTabsButton.getPreferredSize().height;
                 }
-                default -> {
-                    int tabWidth = calculateTabWidth(tabPlacement, tabPane.getSelectedIndex(), getFontMetrics());
-                    if (scrollableTabSupport.moreTabsButton.isVisible()) {
-                        tabWidth += scrollableTabSupport.moreTabsButton.getPreferredSize().width;
-                    }
-                    width = Math.max(width, tabWidth);
-                    tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
-                    height += tabExtent;
+                height = Math.max(height, tabHeight);
+                tabExtent = preferredTabAreaWidth(tabPlacement,
+                                                  height - tabAreaInsets.top - tabAreaInsets.bottom);
+                width += tabExtent;
+            } else {
+                int tabWidth = calculateTabWidth(tabPlacement, tabPane.getSelectedIndex(), getFontMetrics());
+                if (scrollableTabSupport.moreTabsButton.isVisible()) {
+                    tabWidth += scrollableTabSupport.moreTabsButton.getPreferredSize().width;
                 }
+                width = Math.max(width, tabWidth);
+                tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
+                height += tabExtent;
             }
             return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
                                  height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
@@ -902,9 +948,10 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             boolean verticalTabRuns = !isHorizontalTabPlacement();
             boolean leftToRight = tabPane.getComponentOrientation().isLeftToRight();
 
-            switch (tabPlacement) {
-                case LEFT, RIGHT -> maxTabWidth = calculateMaxTabWidth(tabPlacement);
-                default -> maxTabHeight = calculateMaxTabHeight(tabPlacement);
+            if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+                maxTabWidth = calculateMaxTabWidth(tabPlacement);
+            } else {
+                maxTabHeight = calculateMaxTabHeight(tabPlacement);
             }
 
             runCount = 0;
@@ -1347,59 +1394,51 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
             if (numChildren > 0) {
                 switch (tabPlacement) {
-                    case LEFT -> {
+                    case LEFT:
                         tw = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
                         th = bounds.height - insets.top - insets.bottom - tabAreaInsets.top - tabAreaInsets.bottom;
                         tx = insets.left + tabAreaInsets.left;
                         ty = insets.top + tabAreaInsets.top;
-
                         cx = insets.left + tw + contentInsets.left + tabAreaInsets.left + tabAreaInsets.right;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - tw - contentInsets.left - contentInsets.right
                              - tabAreaInsets.left - tabAreaInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
-
                         tw -= tabAreaInsets.left + tabAreaInsets.right;
-                    }
-                    case RIGHT -> {
+                        break;
+                    case RIGHT:
                         tw = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
                         th = bounds.height - insets.top - insets.bottom - tabAreaInsets.top - tabAreaInsets.bottom;
                         tx = bounds.width - insets.right - tw + tabAreaInsets.left;
                         ty = insets.top + tabAreaInsets.top;
-
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - tw - contentInsets.left - contentInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
-
                         tw -= tabAreaInsets.left + tabAreaInsets.right;
-                    }
-                    case BOTTOM -> {
+                        break;
+                    case BOTTOM:
                         tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
                         th = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
                         tx = insets.left + tabAreaInsets.left;
                         ty = bounds.height - insets.bottom - th + tabAreaInsets.top;
-
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - th - contentInsets.top - contentInsets.bottom;
-
                         th -= tabAreaInsets.top + tabAreaInsets.bottom;
-                    }
-                    default -> {
+                        break;
+                    default:
                         tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
                         th = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
                         tx = insets.left + tabAreaInsets.left;
                         ty = insets.top + tabAreaInsets.top;
-
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + th + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - th - contentInsets.top - contentInsets.bottom;
-
                         th -= tabAreaInsets.top + tabAreaInsets.bottom;
-                    }
+                        break;
                 }
                 JButton moreTabs = scrollableTabSupport.moreTabsButton;
                 JComponent newTab = scrollableTabSupport.newTabButton;
@@ -1418,29 +1457,26 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                                              ? newTab.getPreferredSize()
                                              : new Dimension(0, 0);
                         boolean leftToRight = tabPane.getComponentOrientation().isLeftToRight();
-                        switch (tabPlacement) {
-                            case LEFT, RIGHT -> {
-                                vh = th - butSize.height - butSize2.height;
-                                moreTabs.setBounds(tx, ty + vh + butSize2.height, maxTabWidth, butSize.height);
-                                if (showNewTabButton) {
-                                    newTab.setBounds(tx, ty + vh, maxTabWidth, butSize2.height);
-                                }
+                        if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+                            vh = th - butSize.height - butSize2.height;
+                            moreTabs.setBounds(tx, ty + vh + butSize2.height, maxTabWidth, butSize.height);
+                            if (showNewTabButton) {
+                                newTab.setBounds(tx, ty + vh, maxTabWidth, butSize2.height);
                             }
-                            default -> {
-                                if (leftToRight) {
-                                    vw = tw - butSize.width - butSize2.width;
-                                    moreTabs.setBounds(tx + vw + butSize2.width, ty, butSize.width, maxTabHeight);
-                                    if (showNewTabButton) {
-                                        newTab.setBounds(tx + vw, ty, butSize2.width, maxTabHeight);
-                                    }
-                                } else {
-                                    vw = tw - butSize.width - butSize2.width;
-                                    moreTabs.setBounds(tx, ty, butSize.width, maxTabHeight);
-                                    if (showNewTabButton) {
-                                        newTab.setBounds(tx + butSize.width, ty, butSize2.width, maxTabHeight);
-                                    }
-                                    tx += butSize.width + butSize2.width;
+                        } else {
+                            if (leftToRight) {
+                                vw = tw - butSize.width - butSize2.width;
+                                moreTabs.setBounds(tx + vw + butSize2.width, ty, butSize.width, maxTabHeight);
+                                if (showNewTabButton) {
+                                    newTab.setBounds(tx + vw, ty, butSize2.width, maxTabHeight);
                                 }
+                            } else {
+                                vw = tw - butSize.width - butSize2.width;
+                                moreTabs.setBounds(tx, ty, butSize.width, maxTabHeight);
+                                if (showNewTabButton) {
+                                    newTab.setBounds(tx + butSize.width, ty, butSize2.width, maxTabHeight);
+                                }
+                                tx += butSize.width + butSize2.width;
                             }
                         }
                         child.setBounds(tx, ty, vw, vh);
@@ -1515,53 +1551,49 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
             if (numChildren > 0) {
                 switch (tabPlacement) {
-                    case LEFT -> {
+                    case LEFT:
                         tw = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
                         tx = insets.left + tabAreaInsets.left;
                         ty = insets.top + tabAreaInsets.top;
                         th = bounds.height - insets.top - tabAreaInsets.top - insets.bottom - tabAreaInsets.bottom;
-
                         cx = insets.left + tw + contentInsets.left + tabAreaInsets.left + tabAreaInsets.right;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
                              - tabAreaInsets.left - tabAreaInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
-                    }
-                    case RIGHT -> {
+                        break;
+                    case RIGHT:
                         tw = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
                         tx = bounds.width - insets.left - tw - tabAreaInsets.right - tabAreaInsets.left;
                         ty = insets.top + tabAreaInsets.top;
                         th = bounds.height - insets.top - tabAreaInsets.top - insets.bottom - tabAreaInsets.bottom;
-
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
                              - tabAreaInsets.left - tabAreaInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
-                    }
-                    case BOTTOM -> {
+                        break;
+                    case BOTTOM:
                         th = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
                         ty = bounds.height - insets.bottom - th;
                         tx = insets.left + tabAreaInsets.left;
                         tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
-
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                         ch = bounds.height - th - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
-                    }
-                    default -> {
+                        break;
+                    default:
                         ty = insets.top + tabAreaInsets.top;
                         tx = insets.left + tabAreaInsets.left;
                         tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
                         th = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
-
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + th + contentInsets.top + tabAreaInsets.top + tabAreaInsets.bottom;
                         cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                         ch = bounds.height - th - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom
                              - tabAreaInsets.top - tabAreaInsets.bottom;
-                    }
+                        break;
                 }
 
                 tabAreaBounds.setRect(tx, ty, tw, th);
@@ -1599,12 +1631,20 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int centerY = (tabHeight - h) / 2;
         int centerX = (tabWidth - w) / 2;
         switch (tabPlacement) {
-            case LEFT -> comp.setBounds(insets.left + centerX, ty - b.height, w, b.height);
-            case RIGHT -> comp.setBounds(tx - tabAreaInsets.left + centerX, ty - b.height,
-                                         w, b.height);
-            case TOP -> comp.setBounds(tx - b.width, insets.top + centerY, b.width, h);
-            case BOTTOM -> comp.setBounds(tx - b.width, ty - tabAreaInsets.bottom + centerY,
-                                          b.width, h);
+            case LEFT:
+                comp.setBounds(insets.left + centerX, ty - b.height, w, b.height);
+                break;
+            case RIGHT:
+                comp.setBounds(tx - tabAreaInsets.left + centerX, ty - b.height,
+                               w, b.height);
+                break;
+            case TOP:
+                comp.setBounds(tx - b.width, insets.top + centerY, b.width, h);
+                break;
+            case BOTTOM:
+                comp.setBounds(tx - b.width, ty - tabAreaInsets.bottom + centerY,
+                               b.width, h);
+                break;
         }
     }
 
@@ -1617,12 +1657,20 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int centerY = (tabHeight - h) / 2;
         int centerX = (tabWidth - w) / 2;
         switch (tabPlacement) {
-            case LEFT -> comp.setBounds(insets.left + centerX, ty + th, w, b.height);
-            case RIGHT -> comp.setBounds(tx - tabAreaInsets.left + centerX, ty + th,
-                                         w, b.height);
-            case TOP -> comp.setBounds(tx + tw, insets.top + centerY, b.width, h);
-            case BOTTOM -> comp.setBounds(tx + tw, ty - tabAreaInsets.bottom + centerY,
-                                          b.width, h);
+            case LEFT:
+                comp.setBounds(insets.left + centerX, ty + th, w, b.height);
+                break;
+            case RIGHT:
+                comp.setBounds(tx - tabAreaInsets.left + centerX, ty + th,
+                               w, b.height);
+                break;
+            case TOP:
+                comp.setBounds(tx + tw, insets.top + centerY, b.width, h);
+                break;
+            case BOTTOM:
+                comp.setBounds(tx + tw, ty - tabAreaInsets.bottom + centerY,
+                               b.width, h);
+                break;
         }
     }
 

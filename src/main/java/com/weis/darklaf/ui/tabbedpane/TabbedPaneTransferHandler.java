@@ -201,7 +201,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                     }
 
                     switch (tabPlacement) {
-                        case TOP, BOTTOM -> {
+                        case TOP:
+                        case BOTTOM:
                             if (destTabbedPane.getComponentOrientation().isLeftToRight()) {
                                 if (tab >= destTabbedPane.getTabCount() && !lastInSource) {
                                     destRect.x += destRect.width;
@@ -223,8 +224,9 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                                 }
                             }
                             dropRect.y = destRect.y + destRect.height - dropRect.height;
-                        }
-                        case LEFT, RIGHT -> {
+                            break;
+                        case LEFT:
+                        case RIGHT:
                             if (tab >= destTabbedPane.getTabCount()) {
                                 destRect.y += destRect.height;
                             }
@@ -233,48 +235,45 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                             if (lastTab != -1 && lastTab < tab) {
                                 dropRect.y -= dropRect.height;
                             }
-                        }
+                            break;
                     }
                 } else {
                     if (source == destTabbedPane && (tab == sourceIndex || tab == sourceIndex + 1)) {
                         dropRect.setRect(0, 0, 0, 0);
                     } else {
-                        switch (destTabbedPane.getTabPlacement()) {
-                            case TOP, BOTTOM -> {
-                                var b = ui.getTabAreaBounds();
-                                if (tab == destTabbedPane.getTabCount()) {
-                                    dropRect.x = destRect.x + destRect.width / 2;
-                                    dropRect.width = Math.min(b.x + b.width - dropRect.x, dropRect.width);
-                                } else if (tab == 0) {
-                                    dropRect.x = destRect.x;
-                                    dropRect.width = Math.min(dropRect.width / 2, destRect.width / 2);
-                                } else {
-                                    var prev = destTabbedPane.getBoundsAt(tab - 1);
-                                    if (destRect.y + destRect.height <= mouseLocation.y &&
-                                        prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
-                                        destRect.x = prev.x + prev.width;
-                                        destRect.y = prev.y;
-                                        destRect.height = prev.height;
-                                    }
-
-                                    dropRect.x = destRect.x;
-                                    dropRect.setLocation(destRect.getLocation());
-                                    dropRect.x -= dropRect.width / 2;
-                                    if (dropRect.x < b.x) {
-                                        int diff = b.x - dropRect.x;
-                                        dropRect.width -= diff;
-                                        dropRect.x = b.x;
-                                    }
-                                    if (dropRect.x + dropRect.width > b.x + b.width) {
-                                        int diff = dropRect.width + dropRect.x - b.width - b.x;
-                                        dropRect.width -= diff;
-                                    }
+                        int placement = destTabbedPane.getTabPlacement();
+                        if (placement == TOP || placement == BOTTOM) {
+                            var b = ui.getTabAreaBounds();
+                            if (tab == destTabbedPane.getTabCount()) {
+                                dropRect.x = destRect.x + destRect.width / 2;
+                                dropRect.width = Math.min(b.x + b.width - dropRect.x, dropRect.width);
+                            } else if (tab == 0) {
+                                dropRect.x = destRect.x;
+                                dropRect.width = Math.min(dropRect.width / 2, destRect.width / 2);
+                            } else {
+                                var prev = destTabbedPane.getBoundsAt(tab - 1);
+                                if (destRect.y + destRect.height <= mouseLocation.y &&
+                                    prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
+                                    destRect.x = prev.x + prev.width;
+                                    destRect.y = prev.y;
+                                    destRect.height = prev.height;
                                 }
-                                dropRect.y = destRect.y + destRect.height - dropRect.height;
-                            }
-                            case LEFT, RIGHT -> {
 
+                                dropRect.x = destRect.x;
+                                dropRect.setLocation(destRect.getLocation());
+                                dropRect.x -= dropRect.width / 2;
+                                if (dropRect.x < b.x) {
+                                    int diff = b.x - dropRect.x;
+                                    dropRect.width -= diff;
+                                    dropRect.x = b.x;
+                                }
+                                if (dropRect.x + dropRect.width > b.x + b.width) {
+                                    int diff = dropRect.width + dropRect.x - b.width - b.x;
+                                    dropRect.width -= diff;
+                                }
                             }
+                            dropRect.y = destRect.y + destRect.height - dropRect.height;
+                        } else if (placement == LEFT || placement == RIGHT) {
                         }
                     }
                 }
@@ -333,15 +332,15 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                         bounds.height = Math.min(bounds.y + bounds.height - y, maxb.x + maxb.height - y);
                     }
 
-                    switch (tabbedPane.getTabPlacement()) {
-                        case TOP, BOTTOM -> {
-                            if (tabbedPane.getComponentOrientation().isLeftToRight()) {
-                                tab = p.x <= bounds.x + bounds.width / 2 ? 0 : tabbedPane.getTabCount();
-                            } else {
-                                tab = p.x >= bounds.x + bounds.width / 2 ? 1 : tabbedPane.getTabCount();
-                            }
+                    int tabPlacement = tabbedPane.getTabPlacement();
+                    if (tabPlacement == TOP || tabPlacement == BOTTOM) {
+                        if (tabbedPane.getComponentOrientation().isLeftToRight()) {
+                            tab = p.x <= bounds.x + bounds.width / 2 ? 0 : tabbedPane.getTabCount();
+                        } else {
+                            tab = p.x >= bounds.x + bounds.width / 2 ? 1 : tabbedPane.getTabCount();
                         }
-                        case LEFT, RIGHT -> tab = p.y <= bounds.y + bounds.height / 2 ? 0 : tabbedPane.getTabCount();
+                    } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+                        tab = p.y <= bounds.y + bounds.height / 2 ? 0 : tabbedPane.getTabCount();
                     }
                 }
             } else {
@@ -359,7 +358,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
 
                     var sb = (ui.scrollableTabLayoutEnabled()) ? t.getTabBounds() : EMPTY_RECT;
                     switch (tabbedPane.getTabPlacement()) {
-                        case TOP, BOTTOM -> {
+                        case TOP:
+                        case BOTTOM:
                             if (tabbedPane.getComponentOrientation().isLeftToRight()) {
                                 if (p.x >= b.x + sb.width + (b.width - sb.width) / 2) {
                                     tab += 1;
@@ -369,12 +369,13 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                                     tab += 1;
                                 }
                             }
-                        }
-                        case LEFT, RIGHT -> {
+                            break;
+                        case LEFT:
+                        case RIGHT:
                             if (p.y >= b.y + sb.height + (b.height - sb.height) / 2) {
                                 tab += 1;
                             }
-                        }
+                            break;
                     }
                 }
             }
