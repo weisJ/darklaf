@@ -16,8 +16,6 @@ import javax.swing.text.html.StyleSheet;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Method;
@@ -25,25 +23,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
  * CustomDarcula Look and Feel to allow for better extension.
  */
 public class DarkLaf extends BasicLookAndFeel {
-
-    static {
-        try (InputStream inputStream = DarkLaf.class.getClassLoader()
-                                                    .getResourceAsStream("logging.properties")) {
-            if (inputStream != null) {
-                LogManager.getLogManager().readConfiguration(inputStream);
-            }
-        } catch (IOException e) {
-            Logger.getGlobal().log(Level.SEVERE, "init logging system", e);
-        }
-    }
-
 
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";

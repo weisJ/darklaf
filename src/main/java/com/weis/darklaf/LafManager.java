@@ -7,6 +7,11 @@ import javax.swing.*;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Manager for the Look and Feel.
@@ -15,6 +20,10 @@ import java.awt.*;
  * @since 2018
  */
 public final class LafManager {
+
+    static {
+        setLogEnabled(true);
+    }
 
     private static Theme currentLaf = Theme.Dark;
 
@@ -25,6 +34,21 @@ public final class LafManager {
     @Contract(pure = true)
     public static Theme getCurrentLafTheme() {
         return currentLaf;
+    }
+
+    public static void setLogEnabled(boolean logEnabled) {
+        if (!logEnabled) {
+            LogManager.getLogManager().reset();
+        } else {
+            try (InputStream inputStream = DarkLaf.class.getClassLoader()
+                                                        .getResourceAsStream("logging.properties")) {
+                if (inputStream != null) {
+                    LogManager.getLogManager().readConfiguration(inputStream);
+                }
+            } catch (IOException e) {
+                Logger.getGlobal().log(Level.SEVERE, "init logging system", e);
+            }
+        }
     }
 
     /**
