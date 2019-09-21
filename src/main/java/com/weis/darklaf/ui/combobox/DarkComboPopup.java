@@ -22,6 +22,7 @@ public class DarkComboPopup extends BasicComboPopup {
             }
         }
     };
+    private double lastEvent;
     private boolean visible = false;
     private OverlayScrollPane overlayScrollPane;
 
@@ -60,18 +61,22 @@ public class DarkComboPopup extends BasicComboPopup {
             int height = list.getUI().getCellBounds(list, 0, 0).height;
             overlayScrollPane.getVerticalScrollBar().setUnitIncrement(height);
         }
+        visible = true;
         overlayScrollPane.getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
         super.firePopupMenuWillBecomeVisible();
     }
 
     @Override
     protected void firePopupMenuWillBecomeInvisible() {
+        lastEvent = System.currentTimeMillis();
+        visible = false;
         overlayScrollPane.getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
         super.firePopupMenuWillBecomeInvisible();
     }
 
     @Override
     protected void firePopupMenuCanceled() {
+        visible = false;
         overlayScrollPane.getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
         super.firePopupMenuCanceled();
     }
@@ -88,7 +93,7 @@ public class DarkComboPopup extends BasicComboPopup {
         if (visible) {
             visible = false;
             hide();
-        } else {
+        } else if (lastEvent == 0 || (System.currentTimeMillis() - lastEvent) > 250) {
             visible = true;
             show();
         }
