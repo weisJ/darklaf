@@ -103,67 +103,111 @@ public enum Alignment {
     @NotNull
     @SuppressWarnings("Duplicates")
     public Alignment opposite() {
-        return switch (this) {
-            case NORTH -> SOUTH;
-            case NORTH_EAST -> SOUTH_WEST;
-            case EAST -> WEST;
-            case SOUTH_EAST -> NORTH_WEST;
-            case SOUTH -> NORTH;
-            case SOUTH_WEST -> NORTH_EAST;
-            case WEST -> EAST;
-            case NORTH_WEST -> SOUTH_EAST;
-            case CENTER -> CENTER;
-        };
+        switch (this) {
+            case NORTH:
+                return SOUTH;
+            case NORTH_EAST:
+                return SOUTH_WEST;
+            case EAST:
+                return WEST;
+            case SOUTH_EAST:
+                return NORTH_WEST;
+            case SOUTH:
+                return NORTH;
+            case SOUTH_WEST:
+                return NORTH_EAST;
+            case WEST:
+                return EAST;
+            case NORTH_WEST:
+                return SOUTH_EAST;
+            case CENTER:
+                return CENTER;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @NotNull
     @Contract(pure = true)
     @SuppressWarnings("Duplicates")
     public Alignment anticlockwise() {
-        return switch (this) {
-            case NORTH -> NORTH_WEST;
-            case NORTH_EAST -> NORTH;
-            case EAST -> NORTH_EAST;
-            case SOUTH_EAST -> EAST;
-            case SOUTH -> SOUTH_EAST;
-            case SOUTH_WEST -> SOUTH;
-            case WEST -> SOUTH_WEST;
-            case NORTH_WEST -> WEST;
-            case CENTER -> CENTER;
-        };
+        switch (this) {
+            case NORTH:
+                return NORTH_WEST;
+            case NORTH_EAST:
+                return NORTH;
+            case EAST:
+                return NORTH_EAST;
+            case SOUTH_EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH_EAST;
+            case SOUTH_WEST:
+                return SOUTH;
+            case WEST:
+                return SOUTH_WEST;
+            case NORTH_WEST:
+                return WEST;
+            case CENTER:
+                return CENTER;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @NotNull
     @Contract(pure = true)
     @SuppressWarnings("Duplicates")
     public Alignment clockwise() {
-        return switch (this) {
-            case NORTH -> NORTH_EAST;
-            case NORTH_EAST -> EAST;
-            case EAST -> SOUTH_EAST;
-            case SOUTH_EAST -> SOUTH;
-            case SOUTH -> SOUTH_WEST;
-            case SOUTH_WEST -> WEST;
-            case WEST -> NORTH_WEST;
-            case NORTH_WEST -> NORTH;
-            case CENTER -> CENTER;
-        };
+        switch (this) {
+            case NORTH:
+                return NORTH_EAST;
+            case NORTH_EAST:
+                return EAST;
+            case EAST:
+                return SOUTH_EAST;
+            case SOUTH_EAST:
+                return SOUTH;
+            case SOUTH:
+                return SOUTH_WEST;
+            case SOUTH_WEST:
+                return WEST;
+            case WEST:
+                return NORTH_WEST;
+            case NORTH_WEST:
+                return NORTH;
+            case CENTER:
+                return CENTER;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @NotNull
     @Contract(pure = true)
     public Insets maskInsets(@NotNull final Insets insets) {
-        return switch (this) {
-            case NORTH -> new Insets(insets.top, 0, 0, 0);
-            case NORTH_EAST -> new Insets(insets.top, 0, 0, insets.right);
-            case EAST -> new Insets(0, 0, 0, insets.right);
-            case SOUTH_EAST -> new Insets(0, 0, insets.bottom, insets.right);
-            case SOUTH -> new Insets(0, 0, insets.bottom, 0);
-            case SOUTH_WEST -> new Insets(0, insets.left, insets.bottom, 0);
-            case WEST -> new Insets(0, insets.left, 0, 0);
-            case NORTH_WEST -> new Insets(insets.top, insets.left, 0, 0);
-            case CENTER -> new Insets(0, 0, 0, 0);
-        };
+        switch (this) {
+            case NORTH:
+                return new Insets(insets.top, 0, 0, 0);
+            case NORTH_EAST:
+                return new Insets(insets.top, 0, 0, insets.right);
+            case EAST:
+                return new Insets(0, 0, 0, insets.right);
+            case SOUTH_EAST:
+                return new Insets(0, 0, insets.bottom, insets.right);
+            case SOUTH:
+                return new Insets(0, 0, insets.bottom, 0);
+            case SOUTH_WEST:
+                return new Insets(0, insets.left, insets.bottom, 0);
+            case WEST:
+                return new Insets(0, insets.left, 0, 0);
+            case NORTH_WEST:
+                return new Insets(insets.top, insets.left, 0, 0);
+            case CENTER:
+                return new Insets(0, 0, 0, 0);
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     /**
