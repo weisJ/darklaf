@@ -10,8 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>12</maven.compiler.source>
-        <maven.compiler.target>12</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -28,14 +28,27 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.kitfox.svg</groupId>
+            <groupId>com.metsci.ext.com.kitfox.svg</groupId>
             <artifactId>svg-salamander</artifactId>
-            <version>1.0</version>
+            <version>[0.1.19,)</version>
         </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>16.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>net.java.dev.jna</groupId>-->
+        <!--            <artifactId>jna</artifactId>-->
+        <!--            <version>4.1.0</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-compiler</artifactId>
+            <version>1.3.21</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -52,13 +65,11 @@
                 <version>3.8.0</version>
                 <configuration>
                     <compilerArgs>
-                        <arg>--enable-preview</arg>
+                        <!--                        <arg>&#45;&#45;enable-preview</arg>-->
                         <arg>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</arg>
                         <arg>--add-exports=java.desktop/com.sun.java.swing=ALL-UNNAMED</arg>
                         <arg>--add-exports=java.desktop/sun.swing=ALL-UNNAMED</arg>
                     </compilerArgs>
-                    <source>12</source>
-                    <target>12</target>
                 </configuration>
             </plugin>
             <plugin>
