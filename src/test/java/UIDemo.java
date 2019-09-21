@@ -19,8 +19,9 @@ public final class UIDemo {
         SwingUtilities.invokeLater(
                 () -> {
                     LafManager.loadLaf(LafManager.Theme.Dark);
-                    JFrame frame = new JFrame();
+                    JFrame.setDefaultLookAndFeelDecorated(true);
 
+                    JFrame frame = new JFrame("UIDemo");
                     Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg");
 
                     var panel = new JPanel(new GridLayout(2, 5));
@@ -57,8 +58,11 @@ public final class UIDemo {
                                 putClientProperty("JButton.forceRoundCorner", Boolean.TRUE);
                                 putClientProperty("JButton.variant", "shadow");
                             }});
+                            add(new JButton(folderIcon) {{
+                                putClientProperty("JButton.variant", "onlyLabel");
+                            }});
                         }});
-                        add(new JToggleButton("toggle"){{
+                        add(new JToggleButton("toggle") {{
                             putClientProperty("ToggleButton.variant", "slider");
                             setEnabled(false);
                             setSelected(true);
@@ -123,7 +127,7 @@ public final class UIDemo {
                             setEnabled(false);
                         }});
                         add(defaultButton);
-                        add(new JToggleButton("toggle"){{
+                        add(new JToggleButton("toggle") {{
                             putClientProperty("ToggleButton.variant", "slider");
                         }});
                         add(new JButton("square") {{
@@ -344,8 +348,8 @@ public final class UIDemo {
                     menuBar.add(menu);
                     frame.setJMenuBar(menuBar);
 
+                    frame.setMinimumSize(new Dimension(100, 100));
                     frame.getRootPane().setDefaultButton(defaultButton);
-
                     frame.pack();
                     frame.setLocationRelativeTo(null);
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

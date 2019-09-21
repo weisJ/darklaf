@@ -3,6 +3,7 @@
  *  to create a table of key/value pairs for each Swing component.
  */
 
+import com.weis.darklaf.DarkLafInfo;
 import com.weis.darklaf.LafManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -340,6 +341,12 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
                 mi.setSelected(true);
             }
         }
+        var info = new DarkLafInfo();
+        Action action = new ChangeLookAndFeelAction(this, info.getClassName(), info.getName());
+        var mi = new JRadioButtonMenuItem(action);
+        menu.add(mi);
+        bg.add(mi);
+        mi.setSelected(true);
         return menu;
     }
 
@@ -609,7 +616,6 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
                 }
                 frame.setVisible(true);
             } catch (@NotNull final Exception ex) {
-                System.out.println("Failed loading L&F: " + laf);
                 ex.printStackTrace();
             }
         }
