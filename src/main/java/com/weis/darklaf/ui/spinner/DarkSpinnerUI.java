@@ -16,6 +16,9 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
@@ -41,6 +44,13 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             spinner.repaint();
         }
     };
+    private final MouseListener mouseListener = new MouseAdapter() {
+        @Override
+        public void mousePressed(final MouseEvent e) {
+            super.mousePressed(e);
+            spinner.getEditor().requestFocus();
+        }
+    };
 
     @NotNull
     @Contract("_ -> new")
@@ -51,12 +61,14 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     @Override
     protected void installListeners() {
         super.installListeners();
+        spinner.addMouseListener(mouseListener);
         spinner.addPropertyChangeListener(this);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
+        spinner.removeMouseListener(mouseListener);
         spinner.removePropertyChangeListener(this);
     }
 

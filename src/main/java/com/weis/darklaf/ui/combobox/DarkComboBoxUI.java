@@ -19,6 +19,9 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 
@@ -28,6 +31,13 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     private static final int BORDER_SIZE = DarkTextBorder.BORDER_SIZE;
     private static final int ARC_SIZE = DarkTextFieldUI.SEARCH_ARC_SIZE;
 
+    private final MouseListener mouseListener = new MouseAdapter() {
+        @Override
+        public void mousePressed(final MouseEvent e) {
+            super.mousePressed(e);
+            comboBox.getEditor().getEditorComponent().requestFocus();
+        }
+    };
     private Insets boxPadding;
 
     @NotNull
@@ -41,6 +51,18 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         super.installUI(c);
         comboBox.setBorder(this);
         boxPadding = UIManager.getInsets("ComboBox.padding");
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        comboBox.addMouseListener(mouseListener);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        comboBox.removeMouseListener(mouseListener);
     }
 
     @Override
