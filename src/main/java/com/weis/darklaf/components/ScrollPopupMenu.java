@@ -1,6 +1,6 @@
 package com.weis.darklaf.components;
 
-import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,14 +66,9 @@ public class ScrollPopupMenu extends JPopupMenu {
 
         JScrollBar bar = overlayScrollPane.getVerticalScrollBar();
         bar.putClientProperty("ScrollBar.thin", Boolean.TRUE);
-        doNotCancelPopupSetup(bar);
-        doNotCancelPopupSetup(overlayScrollPane.getScrollPane());
+        DarkUIUtil.doNotCancelPopupSetup(bar);
+        DarkUIUtil.doNotCancelPopupSetup(overlayScrollPane.getScrollPane());
         return overlayScrollPane;
-    }
-
-    private static void doNotCancelPopupSetup(@NotNull final JComponent component) {
-        component.putClientProperty("doNotCancelPopup", DarkPopupMenuUI.HIDE_POPUP_KEY);
-        component.putClientProperty("doNotCancelOnScroll", Boolean.TRUE);
     }
 
     @Override
