@@ -1,6 +1,7 @@
 package com.weis.darklaf.icons;
 
 import com.kitfox.svg.app.beans.SVGIcon;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -16,8 +17,7 @@ import java.net.URI;
  */
 public class DarkSVGIcon implements Icon {
 
-    private final int displayWidth;
-    private final int displayHeight;
+    private final Dimension size;
     private final SVGIcon icon;
 
     /**
@@ -28,22 +28,22 @@ public class DarkSVGIcon implements Icon {
      * @param displayHeight display height of icon.
      */
     public DarkSVGIcon(@NotNull final URI uri, final int displayWidth, final int displayHeight) {
-        this.displayHeight = displayHeight;
-        this.displayWidth = displayWidth;
+        size = new Dimension(displayWidth, displayHeight);
 
         icon = new SVGIcon();
         icon.setSvgURI(uri);
         icon.setScaleToFit(true);
-        icon.setPreferredSize(new Dimension(displayWidth, displayHeight));
         icon.setAntiAlias(true);
     }
 
-    private void renderIcon(@NotNull final Graphics2D gc, final Component c,
-                            final double width, final double height, final double angleRadians) {
-        if (angleRadians != 0) {
-            gc.setTransform(AffineTransform.getRotateInstance(angleRadians, width / 2, height / 2));
-        }
-        icon.paintIcon(c, gc, 0, 0);
+    @Contract(pure = true)
+    private DarkSVGIcon(final int width, final int height, @NotNull final DarkSVGIcon icon) {
+        this.size = new Dimension(width, height);
+        this.icon = icon.icon;
+    }
+
+    public DarkSVGIcon derive(final int width, final int height) {
+        return new DarkSVGIcon(width, height, this);
     }
 
     /**
@@ -59,7 +59,12 @@ public class DarkSVGIcon implements Icon {
                           final double rotation) {
         var g2 = (Graphics2D) g.create();
         g2.translate(x, y);
-        renderIcon(g2, c, displayWidth, displayHeight, rotation);
+        if (rotation != 0) {
+            g2.setTransform(AffineTransform.getRotateInstance(rotation, size.width / 2.0,
+                                                              size.height / 2.0));
+        }
+        icon.setPreferredSize(size);
+        icon.paintIcon(c, g2, 0, 0);
         g2.dispose();
     }
 
@@ -70,11 +75,11 @@ public class DarkSVGIcon implements Icon {
 
     @Override
     public int getIconWidth() {
-        return displayWidth;
+        return size.width;
     }
 
     @Override
     public int getIconHeight() {
-        return displayHeight;
+        return size.height;
     }
 }

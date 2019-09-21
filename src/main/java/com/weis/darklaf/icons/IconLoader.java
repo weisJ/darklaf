@@ -1,6 +1,5 @@
 package com.weis.darklaf.icons;
 
-import com.weis.darklaf.LogFormatter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,53 +9,20 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class IconLoader {
-
-    static {
-
-    }
-
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
 
-    static {
-        LOGGER.setUseParentHandlers(false);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new LogFormatter());
-        LOGGER.addHandler(handler);
-    }
-
-    public static final class IconKey {
-        String path;
-        int w;
-        int h;
-
-        @Contract(pure = true)
-        private IconKey(final String path, final int w, final int h) {
-            this.path = path;
-            this.w = w;
-            this.h = h;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(path, w, h);
-        }
-
-        @Contract(value = "null -> false", pure = true)
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            IconKey iconKey = (IconKey) o;
-
-            if (w != iconKey.w) return false;
-            if (h != iconKey.h) return false;
-            return Objects.equals(path, iconKey.path);
+    public UIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
+        IconKey key = new IconKey(path, w, h);
+        if (awareIconMap.containsKey(key)) {
+            return awareIconMap.get(key);
+        } else {
+            UIAwareIcon icon = create(path, w, h);
+            awareIconMap.put(key, icon);
+            return icon;
         }
     }
 
@@ -90,21 +56,6 @@ public final class IconLoader {
         return getUIAwareIcon(path, 16, 16);
     }
 
-    public UIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
-        IconKey key = new IconKey(path, w, h);
-        if (awareIconMap.containsKey(key)) {
-            return awareIconMap.get(key);
-        } else {
-            UIAwareIcon icon = create(path, w, h);
-            awareIconMap.put(new IconKey(path, w, h), icon);
-            return icon;
-        }
-    }
-
-    public Icon getIcon(final String path) {
-        return getIcon(path, 16, 16);
-    }
-
     public Icon getIcon(final String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
         if (iconMap.containsKey(key)) {
@@ -112,15 +63,74 @@ public final class IconLoader {
         } else if (awareIconMap.containsKey(key)) {
             return awareIconMap.get(key);
         } else {
+            key.w = -1; //Enable wild card search. Find any icon that matches path.
+            if (iconMap.containsKey(key)) {
+                var icon = iconMap.get(key);
+                if (icon instanceof DarkSVGIcon) {
+                    //If the desired icon is an DarkSVGIcon we can create a view that shares the underlying svg with
+                    //the existing icon.
+                    Icon derived = ((DarkSVGIcon) icon).derive(w, h);
+                    key.w = w;
+                    iconMap.put(key, derived);
+                    return derived;
+                }
+            }
+            key.w = w; //Restore key.
             if (path.endsWith(".svg")) {
                 Icon icon = loadIcon(path, w, h);
                 iconMap.put(key, icon);
                 return icon;
             } else {
-                Icon icon = new LazyIcon(path, key, IconLoader.class);
+                Icon icon = new LazyImageIcon(path, key, IconLoader.class);
                 iconMap.put(key, icon);
                 return icon;
             }
+        }
+    }
+
+    public Icon getIcon(final String path) {
+        return getIcon(path, 16, 16);
+    }
+
+    public static final class IconKey {
+        String path;
+        int w;
+        int h;
+
+        @Contract(pure = true)
+        private IconKey(final String path, final int w, final int h) {
+            this.path = path;
+            this.w = w;
+            this.h = h;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(path, w, h);
+        }
+
+        @Contract(value = "null -> false", pure = true)
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            IconKey iconKey = (IconKey) o;
+
+            if (iconKey.w == -1 || iconKey.h == -1) {
+                //Math any size.
+                return Objects.equals(path, iconKey.path);
+            }
+            if (w != iconKey.w) return false;
+            if (h != iconKey.h) return false;
+            return Objects.equals(path, iconKey.path);
+        }
+
+        @NotNull
+        @Contract(pure = true)
+        @Override
+        public String toString() {
+            return "[path=" + path + ", w=" + w + ", h=" + h + "]";
         }
     }
 

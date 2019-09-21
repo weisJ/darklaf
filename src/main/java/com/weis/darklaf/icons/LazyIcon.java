@@ -6,13 +6,14 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
-public class LazyIcon implements Icon, UIResource {
+public abstract class LazyIcon implements Icon, UIResource {
 
     private boolean loaded;
-    private final String path;
-    private final IconLoader.IconKey key;
-    private final Class<?> parentClass;
     private Icon icon;
+
+    protected final String path;
+    protected final IconLoader.IconKey key;
+    protected final Class<?> parentClass;
 
     @Contract(pure = true)
     public LazyIcon(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
@@ -23,7 +24,7 @@ public class LazyIcon implements Icon, UIResource {
 
     private void ensureLoaded() {
         if (!loaded) {
-            icon = IconLoader.get(parentClass).createImageIcon(path, path);
+            icon = loadIcon();
             loaded = true;
             if (icon == null) {
                 throw new IllegalStateException("Could not load icon '" + path + "'");
@@ -33,10 +34,12 @@ public class LazyIcon implements Icon, UIResource {
         }
     }
 
+    protected abstract Icon loadIcon();
+
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         ensureLoaded();
-        icon.paintIcon(c,g,x,y);
+        icon.paintIcon(c, g, x, y);
     }
 
     @Override
