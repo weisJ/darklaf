@@ -119,15 +119,15 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 if (clickCount > 2) {
                     clickCount %= 2; // Alternate selecting word/line.
                     switch (clickCount) {
-                        case 0 -> {
+                        case 0:
                             selectWord(e);
                             selectedWordEvent = null;
-                        }
-                        case 1 -> {
+                            break;
+                        case 1:
                             selectLine.actionPerformed(new ActionEvent(textArea,
                                                                        ActionEvent.ACTION_PERFORMED,
                                                                        null, e.getWhen(), e.getModifiersEx()));
-                        }
+                            break;
                     }
                 }
             } else if (SwingUtilities.isMiddleMouseButton(e) &&
@@ -209,28 +209,32 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
                 Color textAreaBg = textArea.getBackground();
                 switch (style) {
-                    case BLOCK_STYLE -> {
+                    case BLOCK_STYLE:
                         if (textAreaBg == null) {
                             textAreaBg = Color.white;
                         }
                         g.setXORMode(textAreaBg);
                         g.fillRect(r.x, r.y, r.width, r.height);
-                    }
-                    case BLOCK_BORDER_STYLE -> g.drawRect(r.x, r.y, r.width - 1, r.height);
-                    case UNDERLINE_STYLE -> {
+                        break;
+                    case BLOCK_BORDER_STYLE:
+                        g.drawRect(r.x, r.y, r.width - 1, r.height);
+                        break;
+                    case UNDERLINE_STYLE:
                         if (textAreaBg == null) {
                             textAreaBg = Color.white;
                         }
                         g.setXORMode(textAreaBg);
                         int y = r.y + r.height;
                         g.drawLine(r.x, y, r.x + r.width - 1, y);
-                    }
-                    case THICK_VERTICAL_LINE_STYLE -> {
+                        break;
+                    case THICK_VERTICAL_LINE_STYLE:
                         g.drawLine(r.x, r.y, r.x, r.y + r.height);
                         r.x++;
                         g.drawLine(r.x, r.y, r.x, r.y + r.height);
-                    }
-                    case VERTICAL_LINE_STYLE -> g.drawLine(r.x, r.y, r.x, r.y + r.height);
+                        break;
+                    case VERTICAL_LINE_STYLE:
+                        g.drawLine(r.x, r.y, r.x, r.y + r.height);
+                        break;
                 }
             } catch (BadLocationException ble) {
                 ble.printStackTrace();

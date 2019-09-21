@@ -43,9 +43,11 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         }
     };
     private final MouseListener mouseListener = (MouseClickListener) e -> {
-        switch (getActionUnder(e.getPoint())) {
-            case CLEAR -> getComponent().setText("");
-            case SEARCH_POPUP -> showSearchPopup();
+        ClickAction actionUnder = getActionUnder(e.getPoint());
+        if (actionUnder == ClickAction.CLEAR) {
+            getComponent().setText("");
+        } else if (actionUnder == ClickAction.SEARCH_POPUP) {
+            showSearchPopup();
         }
     };
     private final MouseMotionListener mouseMotionListener = (MouseMovementListener) e -> updateCursor(e.getPoint());
