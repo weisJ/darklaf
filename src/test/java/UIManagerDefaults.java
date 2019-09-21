@@ -382,7 +382,7 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
         //  Create a new model for the requested item
         //  and addAtHead the attributes of the item to the model
         model = new DefaultTableModel(COLUMN_NAMES, 0);
-        final Map attributes = items.get(itemName);
+        final Map<String, Object> attributes = items.get(itemName);
         for (final Object o : attributes.keySet()) {
             final String attribute = (String) o;
             Object value = attributes.get(attribute);
@@ -441,7 +441,7 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
      * into the graphics of a bufferedImage and create an ImageIcon from it. In subsequent calls the
      * ImageIcon is used.
      */
-    private static class SafeIcon implements Icon {
+    private static final class SafeIcon implements Icon {
         private final Icon wrappee;
         private Icon standIn;
 
@@ -532,13 +532,14 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
     /*
      *  Render the value based on its class.
      */
-    private class SampleRenderer extends JLabel implements TableCellRenderer {
+    private static final class SampleRenderer extends JLabel implements TableCellRenderer {
         private SampleRenderer() {
             super();
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
         }
 
+        @Contract("_, _, _, _, _, _ -> this")
         @NotNull
         public Component getTableCellRendererComponent(
                 final JTable table,
@@ -583,7 +584,7 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
      *  Change the LAF and recreate the UIManagerDefaults so that the properties
      *  of the new LAF are correctly displayed.
      */
-    private final class ChangeLookAndFeelAction extends AbstractAction {
+    private static final class ChangeLookAndFeelAction extends AbstractAction {
         private final UIManagerDefaults defaults;
         private final String laf;
 
