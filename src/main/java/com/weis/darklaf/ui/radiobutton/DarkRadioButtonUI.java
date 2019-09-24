@@ -1,6 +1,7 @@
-package com.weis.darklaf.ui.button;
+package com.weis.darklaf.ui.radiobutton;
 
 import com.weis.darklaf.icons.EmptyIcon;
+import com.weis.darklaf.ui.checkbox.DarkCheckBoxUI;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -57,13 +58,14 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
                                                          viewRect, iconRect, textRect, b.getIconTextGap());
 
         paintBackground(c, g);
+        var config = GraphicsUtil.setupStrokePainting(g);
         Icon icon = DarkCheckBoxUI.getIconBullet(c, g, b);
         if (icon != null) {
             icon.paintIcon(c, g, iconRect.x, iconRect.y);
         } else {
             paintDarkBullet(c, g, b);
         }
-
+        config.restore();
         if (text != null) {
             DarkCheckBoxUI.paintText(g, b, textRect, text, fm, getDisabledTextColor());
         }

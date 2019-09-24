@@ -1,6 +1,6 @@
 package com.weis.darklaf.ui.menu;
 
-import com.weis.darklaf.ui.DarkSeparatorUI;
+import com.weis.darklaf.ui.separator.DarkSeparatorUI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

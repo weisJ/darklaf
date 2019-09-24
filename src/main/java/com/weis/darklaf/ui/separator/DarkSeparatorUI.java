@@ -1,4 +1,4 @@
-package com.weis.darklaf.ui;
+package com.weis.darklaf.ui.separator;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

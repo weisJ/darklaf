@@ -1,4 +1,4 @@
-package com.weis.darklaf.ui.button;
+package com.weis.darklaf.ui.checkbox;
 
 import com.bulenkov.iconloader.util.UIUtil;
 import com.weis.darklaf.icons.EmptyIcon;

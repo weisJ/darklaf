@@ -1,4 +1,4 @@
-package com.weis.darklaf.ui;
+package com.weis.darklaf.ui.statusbar;
 
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI;
