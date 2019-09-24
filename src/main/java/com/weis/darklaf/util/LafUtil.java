@@ -54,20 +54,28 @@ public final class LafUtil {
         if ("null".equals(value)) {
             return null;
         }
+        Object returnVal = new LoadError("Could not parse value '" + value + "' for key '" + key + "'");
         if (key.endsWith("Insets")) {
-            return parseInsets(value);
-        } else if (key.endsWith(".border")) {
-            return parseBorder(value);
+            returnVal = parseInsets(value);
+        } else if (key.endsWith(".border") || key.endsWith("Border")) {
+            returnVal = parseBorder(value);
+        } else if (key.endsWith(".component") || key.endsWith("Component")) {
+            returnVal = parseComponent(value);
         } else if (key.endsWith(".font")) {
-            return parseFont(value);
+            returnVal = parseFont(value);
         } else if (key.endsWith(".icon") || key.endsWith("Icon")) {
-            return parseIcon(value);
+            returnVal = parseIcon(value);
         } else if (key.endsWith("Size") || key.endsWith(".size")) {
-            return parseSize(value);
-        } else {
+            returnVal = parseSize(value);
+        } else if ("null".equalsIgnoreCase(value)) {
+            returnVal = null;
+        }
+        if (returnVal instanceof LoadError) {
             final Color color = ColorUtil.fromHex(value, null);
             final Integer invVal = getInteger(value);
-            final Boolean boolVal = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
+            final Boolean boolVal = "true".equalsIgnoreCase(value)
+                                    ? Boolean.TRUE
+                                    : "false".equalsIgnoreCase(value) ? Boolean.FALSE : null;
             if (color != null) {
                 return new ColorUIResource(color);
             } else if (invVal != null) {
@@ -75,6 +83,8 @@ public final class LafUtil {
             } else if (boolVal != null) {
                 return boolVal;
             }
+        } else {
+            return returnVal;
         }
         return value;
     }
@@ -110,7 +120,7 @@ public final class LafUtil {
                 return icon;
             }
         }
-        if (value.equals("empty")) {
+        if (path.equals("empty")) {
             return EmptyIcon.create(dim.width, dim.height);
         }
         return ICON_LOADER.getIcon(path, dim.width, dim.height);
@@ -128,15 +138,25 @@ public final class LafUtil {
         }
     }
 
-    @Nullable
+    @NotNull
+    private static Object parseComponent(final String value) {
+        return parseObject(value);
+    }
+
+    @NotNull
     private static Object parseBorder(final String value) {
+        return parseObject(value);
+    }
+
+    @NotNull
+    private static Object parseObject(final String value) {
         try {
             return Class.forName(value).getDeclaredConstructor().newInstance();
         } catch (@NotNull final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            return null;
+            return new LoadError(e.getMessage());
         }
     }
+
 
     @NotNull
     private static Object parseInsets(final String value) {
@@ -155,5 +175,16 @@ public final class LafUtil {
         } catch (@NotNull final NumberFormatException ignored) {
             return null;
         }
+    }
+
+    private static final class LoadError {
+
+        private final String message;
+
+        @Contract(pure = true)
+        private LoadError(final String message) {
+            this.message = message;
+        }
+
     }
 }
