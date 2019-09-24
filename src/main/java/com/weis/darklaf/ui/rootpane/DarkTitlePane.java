@@ -217,8 +217,8 @@ public class DarkTitlePane extends JComponent {
         titleLabel = new JLabel();
         add(titleLabel);
         if (decorationStyle == JRootPane.FRAME) {
-            createActions();
             createIcons();
+            createActions();
             createButtons();
 
             windowIconButton = createWindowIcon();
@@ -294,13 +294,21 @@ public class DarkTitlePane extends JComponent {
     }
 
     private void addMenuItems(@NotNull final JPopupMenu menu) {
-        menu.add(restoreAction);
-        menu.add(minimizeAction);
+        menu.add(new JMenuItem(restoreAction) {{
+            setDisabledIcon(restoreIcon);
+        }});
+        menu.add(new JMenuItem(minimizeAction) {{
+            setDisabledIcon(minimizeIcon);
+        }});
         if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
-            menu.add(maximizeAction);
+            menu.add(new JMenuItem(maximizeAction) {{
+                setDisabledIcon(maximizeIcon);
+            }});
         }
         menu.add(new JSeparator());
-        menu.add(closeAction);
+        menu.add(new JMenuItem(closeAction) {{
+            setDisabledIcon(closeIcon);
+        }});
     }
 
     private void close() {
@@ -362,8 +370,6 @@ public class DarkTitlePane extends JComponent {
     private void createButtons() {
         closeButton = createButton("Close", closeIcon, closeAction);
         closeButton.setRolloverIcon(UIManager.getIcon("TitlePane.closeHover.icon"));
-        closeButton.putClientProperty("rolloverColor", Color.RED);
-        closeButton.putClientProperty("rolloverArmedColor", Color.RED);
         closeButton.setUI(new CloseButtonUI());
 
         if (getWindowDecorationStyle() == JRootPane.FRAME) {
@@ -524,7 +530,7 @@ public class DarkTitlePane extends JComponent {
 
     private class CloseAction extends AbstractAction {
         public CloseAction() {
-            super("Close");
+            super("Close", closeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -536,7 +542,7 @@ public class DarkTitlePane extends JComponent {
     private class MinimizeAction extends AbstractAction {
         public MinimizeAction() {
             //UIManager.getString("Minimize", getLocale())
-            super("Minimize");
+            super("Minimize", minimizeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -546,7 +552,7 @@ public class DarkTitlePane extends JComponent {
 
     private class MaximizeAction extends AbstractAction {
         public MaximizeAction() {
-            super("Maximize");
+            super("Maximize", maximizeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -556,7 +562,7 @@ public class DarkTitlePane extends JComponent {
 
     private class RestoreAction extends AbstractAction {
         public RestoreAction() {
-            super("Restore");
+            super("Restore", restoreIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
