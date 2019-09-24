@@ -83,8 +83,13 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     private Animator thumbFadeinAnimator;
     private final AdjustmentListener adjustmentListener = new AdjustmentListener() {
         @Override
-        public void adjustmentValueChanged(final AdjustmentEvent e) {
+        public void adjustmentValueChanged(@NotNull final AdjustmentEvent e) {
             if (!e.getValueIsAdjusting()) return;
+
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int extent = scrollBar.getModel().getExtent();
+            int value = scrollBar.getValue() + extent;
+            if (value == extent || value == scrollBar.getMaximum()) return;
 
             var p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, scrollbar);
