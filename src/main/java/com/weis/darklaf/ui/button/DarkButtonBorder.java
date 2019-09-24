@@ -1,8 +1,8 @@
 package com.weis.darklaf.ui.button;
 
 import com.bulenkov.darcula.ui.DarculaButtonPainter;
-import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.DarkUIUtil;
+import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -99,6 +99,9 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
+        if (DarkButtonUI.isFullShadow(c)) {
+            return new InsetsUIResource(0, 0, 0, 0);
+        }
         int shadow = DarkButtonUI.isShadowVariant(c) ? 0 : SHADOW_HEIGHT;
         int pad = isThin(c) ? 4 : 8;
         if (DarkButtonUI.isSquare(c)) {

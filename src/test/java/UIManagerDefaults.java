@@ -137,6 +137,7 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
     /*
      *  This panel is added to the Center of the content pane
      */
+    @Contract(" -> new")
     @NotNull
     private JComponent buildCenterComponent() {
         final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0);
@@ -150,7 +151,13 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
         d.height = 350;
         table.setPreferredScrollableViewportSize(d);
 
-        return new JScrollPane(table);
+//        table.setShowHorizontalLines(false);
+//        table.setShowVerticalLines(false);
+//        table.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+        return new JScrollPane(table) {{
+            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        }};
     }
 
     /*

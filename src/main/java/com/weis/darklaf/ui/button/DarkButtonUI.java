@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
@@ -33,7 +32,6 @@ public class DarkButtonUI extends BasicButtonUI {
     protected static final Rectangle textRect = new Rectangle();
     protected static final Rectangle iconRect = new Rectangle();
     protected AbstractButton button;
-    private BasicButtonListener listener;
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -47,12 +45,11 @@ public class DarkButtonUI extends BasicButtonUI {
         super.installUI(c);
     }
 
-    @Override
-    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
-        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
-        int bs = DarkButtonBorder.BORDER_SIZE;
-        return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getWidth() - 2 * bs, getArcSize(c),
-                                          getArcSize(c)).contains(x, y);
+    @Contract("null -> false")
+    public static boolean isShadowVariant(final Component c) {
+        if (isFullShadow(c)) return true;
+        return c instanceof JButton
+               && "shadow".equals(((JButton) c).getClientProperty("JButton.variant"));
     }
 
     @Override
@@ -107,31 +104,10 @@ public class DarkButtonUI extends BasicButtonUI {
         }
     }
 
-
-    protected void paintButton(final Graphics g, @NotNull final JComponent c) {
-        Graphics2D g2 = (Graphics2D) g;
-        int borderSize = DarkButtonBorder.BORDER_SIZE;
-        if (shouldDrawBackground(c)) {
-            int arc = getArcSize(c);
-            if (isShadowVariant(c)) {
-                var b = (AbstractButton) c;
-                if (b.isEnabled() && b.getModel().isRollover()) {
-                    GraphicsUtil.setupAAPainting(g2);
-                    g.setColor(getShadowColor(b));
-                    g.fillRoundRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                    c.getHeight() - 2 * borderSize, arc, arc);
-                }
-            } else {
-                g2.setColor(getBackgroundColor(c));
-                if (isSquare(c) && !isForceRoundCorner(c)) {
-                    g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                c.getHeight() - 2 * borderSize - DarkButtonBorder.SHADOW_HEIGHT);
-                } else {
-                    g2.fillRoundRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                     c.getHeight() - 2 * borderSize - DarkButtonBorder.SHADOW_HEIGHT, arc, arc);
-                }
-            }
-        }
+    @Contract("null -> false")
+    public static boolean isFullShadow(final Component c) {
+        return c instanceof JButton
+               && "fullShadow".equals(((JButton) c).getClientProperty("JButton.variant"));
     }
 
     protected int getArcSize(final JComponent c) {
@@ -211,10 +187,45 @@ public class DarkButtonUI extends BasicButtonUI {
         return c instanceof JButton && "square".equals(((JButton) c).getClientProperty("JButton.buttonType"));
     }
 
-    @Contract("null -> false")
-    public static boolean isShadowVariant(final Component c) {
-        return c instanceof JButton
-               && "shadow".equals(((JButton) c).getClientProperty("JButton.variant"));
+    @Override
+    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+        if (isLabelButton(c)) {
+            return super.contains(c, x, y);
+        }
+        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
+        int bs = DarkButtonBorder.BORDER_SIZE;
+        return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getWidth() - 2 * bs, getArcSize(c),
+                                          getArcSize(c)).contains(x, y);
+    }
+
+    protected void paintButton(final Graphics g, @NotNull final JComponent c) {
+        Graphics2D g2 = (Graphics2D) g;
+        int borderSize = DarkButtonBorder.BORDER_SIZE;
+        if (shouldDrawBackground(c)) {
+            int arc = getArcSize(c);
+            if (isShadowVariant(c)) {
+                var b = (AbstractButton) c;
+                if (b.isEnabled() && b.getModel().isRollover()) {
+                    GraphicsUtil.setupAAPainting(g2);
+                    g.setColor(getShadowColor(b));
+                    if (isFullShadow(c)) {
+                        g.fillRect(0, 0, c.getWidth(), c.getHeight());
+                    } else {
+                        g.fillRoundRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                        c.getHeight() - 2 * borderSize, arc, arc);
+                    }
+                }
+            } else {
+                g2.setColor(getBackgroundColor(c));
+                if (isSquare(c) && !isForceRoundCorner(c)) {
+                    g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                c.getHeight() - 2 * borderSize - DarkButtonBorder.SHADOW_HEIGHT);
+                } else {
+                    g2.fillRoundRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                     c.getHeight() - 2 * borderSize - DarkButtonBorder.SHADOW_HEIGHT, arc, arc);
+                }
+            }
+        }
     }
 
     @Contract("null -> false")
