@@ -3,10 +3,13 @@ package com.weis.darklaf.util;
 import com.bulenkov.iconloader.util.ColorUtil;
 import com.bulenkov.iconloader.util.DoubleColor;
 import com.bulenkov.iconloader.util.Gray;
+import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sun.awt.SunToolkit;
 
+import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
@@ -139,10 +142,19 @@ public final class DarkUIUtil {
     }
 
     public static boolean hasFocus(final Component c) {
+        if (c instanceof Window) {
+            return hasFocus(c);
+        }
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         final Component owner2 = FocusManager.getCurrentManager().getFocusOwner();
         return (owner != null && SwingUtilities.isDescendingFrom(owner, c))
                || (owner2 != null && SwingUtilities.isDescendingFrom(owner2, c));
+    }
+
+    public static boolean hasFocus(final Window w) {
+        var owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (owner == null) return false;
+        return SwingUtilities.getWindowAncestor(owner) == w;
     }
 
     @Nullable
@@ -166,7 +178,7 @@ public final class DarkUIUtil {
 
     public static Color getTreeUnfocusedSelectionBackground() {
         Color background = getTreeTextBackground();
-        return (Color) (ColorUtil.isDark(background) ? new DoubleColor(Gray._30, new Color(13, 41, 62)) : Gray._212);
+        return ColorUtil.isDark(background) ? new DoubleColor(Gray._30, new Color(13, 41, 62)) : Gray._212;
     }
 
     public static Color getTreeTextBackground() {
@@ -176,18 +188,33 @@ public final class DarkUIUtil {
     public static int getFocusAcceleratorKeyMask() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         if (tk instanceof SunToolkit) {
-            return ((SunToolkit)tk).getFocusAcceleratorKeyMask();
+            return ((SunToolkit) tk).getFocusAcceleratorKeyMask();
         }
         return ActionEvent.ALT_MASK;
     }
 
-    public static Object getUIOfType(final ComponentUI ui, final Class<?> klass) {
+    @Nullable
+    @Contract(pure = true)
+    public static Object getUIOfType(final ComponentUI ui, @NotNull final Class<?> klass) {
         if (klass.isInstance(ui)) {
             return ui;
         }
         return null;
     }
 
+    public static void doNotCancelPopupSetup(@NotNull final JComponent component) {
+        component.putClientProperty("doNotCancelPopup", DarkPopupMenuUI.HIDE_POPUP_KEY);
+        component.putClientProperty("doNotCancelOnScroll", Boolean.TRUE);
+    }
+
+    @Contract("null -> null")
+    @Nullable
+    public static Window getWindow(@Nullable final Component component) {
+        if (component == null) {
+            return null;
+        }
+        return component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);
+    }
 
     public enum Outline {
         error {
