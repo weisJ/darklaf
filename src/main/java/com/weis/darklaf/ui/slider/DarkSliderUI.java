@@ -63,7 +63,7 @@ public class DarkSliderUI extends BasicSliderUI {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-        slider.putClientProperty("Slider.paintFocusBorder", UIManager.getBoolean("Slider.paintFocusBorder"));
+        slider.putClientProperty("Slider.paintFocusGlow", UIManager.getBoolean("Slider.paintFocusGlow"));
     }
 
     @Override
@@ -252,7 +252,7 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     private boolean paintFocus() {
-        return slider.hasFocus() && Boolean.TRUE.equals(slider.getClientProperty("Slider.paintFocusBorder"));
+        return slider.hasFocus() && Boolean.TRUE.equals(slider.getClientProperty("Slider.paintFocusGlow"));
     }
 
     private Path2D getThumbShape() {

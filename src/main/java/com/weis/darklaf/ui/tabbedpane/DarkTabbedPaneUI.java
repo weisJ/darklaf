@@ -204,7 +204,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Color getTabBorderColor() {
-        return UIManager.getColor("TabbedPane.tabBorder");
+        return UIManager.getColor("TabbedPane.tabBorderColor");
     }
 
     protected Color getAccentColor(final boolean focus) {

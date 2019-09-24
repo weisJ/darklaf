@@ -206,16 +206,15 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             // If the scroll is done inside a combobox, menuitem,
             // or inside a Popup#HeavyWeightWindow or inside a frame
             // popup should not close which is the standard behaviour
-            switch (me.getID()) {
-                case MouseEvent.MOUSE_PRESSED -> {
+            switch (me.getID()) {/*
+             * Changed here: Make doNotCancelPopup accessible to all component.
+             *               Allows for more versatile PopupMenus.
+             */
+                case MouseEvent.MOUSE_PRESSED:
                     if (isInPopup(src) ||
                         (src instanceof JMenu && ((JMenu) src).isSelected())) {
                         return;
                     }
-                    /*
-                     * Changed here: Make doNotCancelPopup accessible to all component.
-                     *               Allows for more versatile PopupMenus.
-                     */
                     if (!(src instanceof JComponent) ||
                         !HIDE_POPUP_KEY.equals(((JComponent) src).getClientProperty("doNotCancelPopup"))) {
                         // Cancel popup only if this property was not set.
@@ -230,8 +229,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                             me.consume();
                         }
                     }
-                }
-                case MouseEvent.MOUSE_RELEASED -> {
+                    break;
+                case MouseEvent.MOUSE_RELEASED:
                     if (!(src instanceof MenuElement)) {
                         // Do not forward event to MSM, let component handle it
                         if (isInPopup(src)) {
@@ -241,8 +240,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                     if (src instanceof JMenu || !(src instanceof JMenuItem)) {
                         MenuSelectionManager.defaultManager().processMouseEvent(me);
                     }
-                }
-                case MouseEvent.MOUSE_DRAGGED -> {
+                    break;
+                case MouseEvent.MOUSE_DRAGGED:
                     if (!(src instanceof MenuElement)) {
                         // For the MOUSE_DRAGGED event the src is
                         // the Component in which mouse button was pressed.
@@ -253,17 +252,18 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                         }
                     }
                     MenuSelectionManager.defaultManager().processMouseEvent(me);
-                }
-                case MouseEvent.MOUSE_WHEEL -> {
+                    break;
+                case MouseEvent.MOUSE_WHEEL:
                     if (isInPopup(src)
                         || ((src instanceof JComboBox) && ((JComboBox) src).isPopupVisible())
                         || ((src instanceof JWindow) && src.isVisible())
                         || ((src instanceof JMenuItem) && src.isVisible())
-                        || (src instanceof JFrame)) {
+                        || (src instanceof JFrame)
+                        || (src instanceof JDialog)) {
                         return;
                     }
                     cancelPopupMenu();
-                }
+                    break;
             }
         }
 

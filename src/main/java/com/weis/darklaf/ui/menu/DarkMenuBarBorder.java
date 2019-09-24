@@ -11,8 +11,9 @@ import java.awt.*;
 public class DarkMenuBarBorder implements Border, UIResource {
 
     @Override
-    public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y, int w, int h) {
-        g.setColor(UIManager.getColor("MenuBar.darcula.borderColor"));
+    public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y,
+                            final int w, final int h) {
+        g.setColor(UIManager.getColor("MenuBar.borderColor"));
         g.fillRect(x, y + h - 1, w, 1);
     }
 
