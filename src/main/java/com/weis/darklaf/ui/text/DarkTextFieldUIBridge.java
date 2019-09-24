@@ -1,6 +1,6 @@
 package com.weis.darklaf.ui.text;
 
-import com.weis.darklaf.DarkHTML;
+import com.weis.darklaf.ui.html.DarkHTML;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

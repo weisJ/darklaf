@@ -5,6 +5,7 @@
 
 import com.weis.darklaf.DarkLafInfo;
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.ui.table.DarkTableCellRendererCheckBox;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +24,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
+import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -108,6 +110,7 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
     @NotNull
     private JComponent buildNorthComponent() {
         comboBox = new JComboBox<>();
+        comboBox.setPreferredSize(new Dimension(200, comboBox.getPreferredSize().height));
 
         final JLabel label = new JLabel("Select Item:");
         label.setDisplayedMnemonic('S');
@@ -147,17 +150,17 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
         table.getColumnModel().getColumn(1).setPreferredWidth(500);
         table.getColumnModel().getColumn(2).setPreferredWidth(100);
         table.getColumnModel().getColumn(2).setCellRenderer(new SampleRenderer());
+        table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JTextField()) {
+            @Override
+            public boolean isCellEditable(final EventObject anEvent) {
+                return false;
+            }
+        });
         final Dimension d = table.getPreferredSize();
         d.height = 350;
         table.setPreferredScrollableViewportSize(d);
 
-//        table.setShowHorizontalLines(false);
-//        table.setShowVerticalLines(false);
-//        table.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-
-        return new JScrollPane(table) {{
-            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        }};
+        return new JScrollPane(table);
     }
 
     /*
@@ -180,7 +183,6 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
         comboBox.setModel(new DefaultComboBoxModel<>(comboBoxItems));
         comboBox.setSelectedIndex(-1);
         comboBox.addItemListener(this);
-        comboBox.requestFocusInWindow();
 
         if (selectedItem != null) {
             comboBox.setSelectedItem(selectedItem);
@@ -192,7 +194,7 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
      *  items for each attribute type.
      */
     @NotNull
-    private TreeMap buildItemsMap() {
+    private TreeMap<String, TreeMap<String, Object>> buildItemsMap() {
         final UIDefaults defaults = UIManager.getLookAndFeelDefaults();
         //  Build of Map of items and a Map of attributes for each item
         for (final Object key : new HashSet<>(defaults.keySet())) {
@@ -362,8 +364,11 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
      */
     public void actionPerformed(final ActionEvent e) {
         selectedItem = null;
+        if (table.isEditing()) {
+            table.getCellEditor().stopCellEditing();
+        }
+        table.clearSelection();
         resetComponents();
-        comboBox.requestFocusInWindow();
     }
 
     /*
@@ -396,7 +401,7 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
             final Vector<Object> row = new Vector<>(3);
             row.add(attribute);
             if (value != null) {
-                row.add(value.toString());
+                row.add(value instanceof Boolean ? value : value.toString());
                 if (value instanceof Icon) {
                     value = new SafeIcon((Icon) value);
                 }
@@ -540,6 +545,9 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
      *  Render the value based on its class.
      */
     private static final class SampleRenderer extends JLabel implements TableCellRenderer {
+
+        private final DarkTableCellRendererCheckBox booleanRenderer = new DarkTableCellRendererCheckBox();
+
         private SampleRenderer() {
             super();
             setHorizontalAlignment(SwingConstants.CENTER);
@@ -569,6 +577,8 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
                 setFont((Font) sample);
             } else if (sample instanceof Icon) {
                 setIcon((Icon) sample);
+            } else if (sample instanceof Boolean) {
+                return booleanRenderer.getTableCellRendererComponent(table, sample, isSelected, hasFocus, row, column);
             }
             return this;
         }

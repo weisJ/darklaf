@@ -7,7 +7,6 @@ import sun.swing.SwingUtilities2;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -31,7 +30,11 @@ public class DarkTableUI extends DarkTableUIBridge {
         public void focusLost(final FocusEvent e) {
             var bg = table.getSelectionBackground();
             if (bg instanceof UIResource) {
-                table.setSelectionBackground(UIManager.getColor("Table.selectionBackground"));
+                if (table.isEditing()) {
+                    table.setSelectionBackground(table.getBackground());
+                } else {
+                    table.setSelectionBackground(UIManager.getColor("Table.selectionBackground"));
+                }
             }
             table.repaint();
         }
@@ -57,10 +60,22 @@ public class DarkTableUI extends DarkTableUIBridge {
         return dist;
     }
 
+    protected static void setupRendererComponents(@NotNull final JTable table) {
+        var cellRenderer = new DarkTableCellRenderer();
+        table.setDefaultRenderer(Object.class, cellRenderer);
+        table.setDefaultRenderer(String.class, cellRenderer);
+        table.setDefaultRenderer(Integer.class, cellRenderer);
+        table.setDefaultRenderer(Double.class, cellRenderer);
+        table.setDefaultRenderer(Float.class, cellRenderer);
+        table.setDefaultRenderer(Boolean.class, cellRenderer);
+    }
+
     @Override
     protected void installDefaults() {
         super.installDefaults();
         table.setRowHeight(ROW_HEIGHT);
+        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
+        setupRendererComponents(table);
     }
 
     @Override
@@ -320,22 +335,6 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
         }
-
-        if (table.isEditing() && table.getEditingRow() == row &&
-            table.getEditingColumn() == column) {
-            Component component = table.getEditorComponent();
-            if (component instanceof JComponent) {
-                //Todo
-                var border = UIManager.getBorder("Table.cellEditorBorder");
-                ((JComponent) component).setBorder(border);
-            }
-            component.setBounds(r);
-            component.validate();
-        } else {
-            TableCellRenderer renderer = table.getCellRenderer(row, column);
-            Component component = table.prepareRenderer(renderer, row, column);
-            rendererPane.paintComponent(g, component, table, r.x, r.y,
-                                        r.width, r.height, true);
-        }
+        super.paintCell(g, r, row, column, cMin, cMax);
     }
 }

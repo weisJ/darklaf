@@ -81,6 +81,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         GraphicsContext config = new GraphicsContext(g);
         boolean enabled = b.isEnabled();
         g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
+
         paintCheckBorder(g, enabled, b.hasFocus());
         if (b.isSelected()) {
             paintCheckArrow(g, enabled);
