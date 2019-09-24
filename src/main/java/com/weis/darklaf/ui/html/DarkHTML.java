@@ -1,4 +1,4 @@
-package com.weis.darklaf;
+package com.weis.darklaf.ui.html;
 
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.AttributeSet;
@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class DarkHTML extends BasicHTML {
 
-    public static int getBaseline(View view, int w, int h) {
+    public static int getBaseline(final View view, final int w, final int h) {
         if (hasParagraph(view)) {
             view.setSize(w, h);
             return getBaseline(view, new Rectangle(0, 0, w, h));
@@ -17,7 +17,7 @@ public class DarkHTML extends BasicHTML {
         return -1;
     }
 
-    private static int getBaseline(View view, Shape bounds) {
+    private static int getBaseline(final View view, Shape bounds) {
         if (view.getViewCount() == 0) {
             return -1;
         }
@@ -50,7 +50,7 @@ public class DarkHTML extends BasicHTML {
         return getBaseline(child, bounds);
     }
 
-    private static boolean hasParagraph(View view) {
+    private static boolean hasParagraph(final View view) {
         if (view instanceof javax.swing.text.ParagraphView) {
             return true;
         }
