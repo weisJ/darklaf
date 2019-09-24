@@ -1,13 +1,14 @@
 package com.weis.darklaf.util;
 
-import com.weis.darklaf.LogFormatter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+
+import static com.weis.darklaf.util.GraphicsUtil.SCALE_X;
+import static com.weis.darklaf.util.GraphicsUtil.SCALE_Y;
 
 /**
  * Image utilities.
@@ -16,26 +17,6 @@ import java.util.logging.Logger;
  * @since 2018
  */
 public final class ImageUtil {
-
-    /**
-     * The scaling factor.
-     */
-    public static final double SCALE_X;
-    public static final double SCALE_Y;
-    private static final Logger LOGGER = Logger.getLogger(ImageUtil.class.getName());
-
-    static {
-        LOGGER.setUseParentHandlers(false);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new LogFormatter());
-        LOGGER.addHandler(handler);
-
-        var mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
-        var screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        SCALE_X = mode.getWidth() / (double) screenSize.width;
-        SCALE_Y = mode.getHeight() / (double) screenSize.height;
-        LOGGER.info("Using screen scaling SCALE_X=" + SCALE_X + ", SCALE_Y=" + SCALE_Y);
-    }
 
     @Contract(pure = true)
     private ImageUtil() {
@@ -59,5 +40,68 @@ public final class ImageUtil {
 
         g2d.dispose();
         return image;
+    }
+
+    public static Image toImage(final Icon icon) {
+        if (icon instanceof ImageIcon) {
+            return ((ImageIcon) icon).getImage();
+        } else {
+            BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(),
+                                                    BufferedImage.TYPE_INT_RGB);
+            icon.paintIcon(null, image.getGraphics(), 0, 0);
+            return image;
+        }
+    }
+
+    @NotNull
+    @Contract("null -> fail")
+    public static BufferedImage toBufferedImage(final Image image) {
+        if (image == null) {
+            throw new NullPointerException("Can't covert null image");
+        }
+        if (image instanceof BufferedImage) {
+            return (BufferedImage) image;
+        } else {
+            BufferedImage bufferedImage = new BufferedImage(image.getWidth(null),
+                                                            image.getHeight(null),
+                                                            BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = bufferedImage.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            return bufferedImage;
+        }
+    }
+
+    @NotNull
+    public static Icon cropIcon(@NotNull final Icon icon, int maxWidth, int maxHeight) {
+        if (icon.getIconHeight() <= maxHeight && icon.getIconWidth() <= maxWidth) {
+            return icon;
+        }
+
+        Image image = toImage(icon);
+        if (image == null) return icon;
+
+        double scale = 1f;
+        BufferedImage bi = ImageUtil.toBufferedImage(image);
+        final Graphics2D g = bi.createGraphics();
+
+        int imageWidth = image.getWidth(null);
+        int imageHeight = image.getHeight(null);
+
+        maxWidth = maxWidth == Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) Math.round(maxWidth * scale);
+        maxHeight = maxHeight == Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) Math.round(maxHeight * scale);
+        final int w = Math.min(imageWidth, maxWidth);
+        final int h = Math.min(imageHeight, maxHeight);
+
+        final BufferedImage img = new BufferedImage(w, h, Transparency.TRANSLUCENT);
+        final int offX = imageWidth > maxWidth ? (imageWidth - maxWidth) / 2 : 0;
+        final int offY = imageHeight > maxHeight ? (imageHeight - maxHeight) / 2 : 0;
+        for (int col = 0; col < w; col++) {
+            for (int row = 0; row < h; row++) {
+                img.setRGB(col, row, bi.getRGB(col + offX, row + offY));
+            }
+        }
+        g.dispose();
+        return new ImageIcon(img);
     }
 }
