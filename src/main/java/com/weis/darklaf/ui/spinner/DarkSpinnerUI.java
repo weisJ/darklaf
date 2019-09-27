@@ -29,6 +29,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     private static final int BUTTON_PAD = 7;
 
     private Component component;
+    private JComponent editor;
     private Color compColor;
     private JButton nextButton;
     private JButton prevButton;
@@ -72,54 +73,31 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         spinner.removePropertyChangeListener(this);
     }
 
+    protected static boolean isTableCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void replaceEditor(final JComponent oldEditor, final JComponent newEditor) {
         super.replaceEditor(oldEditor, newEditor);
+        editor = newEditor;
         if (oldEditor != null && oldEditor.getComponents().length > 0) {
             oldEditor.getComponents()[0].removeFocusListener(focusListener);
         }
         if (newEditor != null && newEditor.getComponents().length > 0) {
             var comp = newEditor.getComponents()[0];
-           comp.addFocusListener(focusListener);
+            comp.addFocusListener(focusListener);
         }
     }
 
     @Override
     protected JComponent createEditor() {
-        final JComponent editor = super.createEditor();
+        editor = super.createEditor();
         component = ((JSpinner.DefaultEditor) editor).getTextField();
         component.addFocusListener(focusListener);
         return editor;
-    }
-
-
-    @Override
-    public void paint(final Graphics g, @NotNull final JComponent c) {
-        int size = DarkSpinnerBorder.BORDER_SIZE;
-        int arc = DarkSpinnerBorder.ARC_SIZE;
-        int width = c.getWidth();
-        int height = c.getHeight();
-        JComponent editor = spinner.getEditor();
-        if (c.isOpaque()) {
-            if (component != null) {
-                if (!component.isEnabled()) {
-                    if (compColor == null) {
-                        compColor = component.getBackground();
-                        component.setBackground(getBackground(c));
-                    } else {
-                        compColor = null;
-                    }
-                }
-                g.setColor(component.getBackground());
-            } else {
-                g.setColor(getBackground(c));
-            }
-            g.fillRoundRect(size, size, width - 2 * size, height - 2 * size, arc, arc);
-        }
-        if (editor != null) {
-            paintSpinBackground((Graphics2D) g, width, height, size, arc);
-        }
     }
 
     private void paintSpinBackground(@NotNull final Graphics2D g, final int width, final int height,
@@ -173,6 +151,45 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         return button;
     }
 
+    @Override
+    public void paint(final Graphics g, @NotNull final JComponent c) {
+        int size = DarkSpinnerBorder.BORDER_SIZE;
+        int arc = DarkSpinnerBorder.ARC_SIZE;
+        int width = c.getWidth();
+        int height = c.getHeight();
+        JComponent editor = spinner.getEditor();
+        if (c.isOpaque()) {
+            if (component != null) {
+                if (!component.isEnabled()) {
+                    if (compColor == null) {
+                        compColor = component.getBackground();
+                        component.setBackground(getBackground(c));
+                    } else {
+                        compColor = null;
+                    }
+                }
+                g.setColor(component.getBackground());
+            } else {
+                g.setColor(getBackground(c));
+            }
+            if (!isTableCellEditor(c)) {
+                g.fillRoundRect(size, size, width - 2 * size, height - 2 * size, arc, arc);
+            } else {
+                var bounds = prevButton.getBounds();
+                boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
+                int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
+                if (leftToRight) {
+                    g.fillRect(0, 0, off, height);
+                } else {
+                    g.fillRect(off, 0, width - off, height);
+                }
+            }
+        }
+        if (editor != null) {
+            paintSpinBackground((Graphics2D) g, width, height, size, arc);
+        }
+    }
+
     protected LayoutManager createLayout() {
         return new LayoutManagerDelegate(super.createLayout()) {
             private Component editor = null;
@@ -214,7 +231,20 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             var val = Boolean.TRUE.equals(evt.getNewValue());
             spinner.getEditor().setOpaque(val);
             if (component instanceof JComponent) {
-                ((JComponent)component).setOpaque(val);
+                ((JComponent) component).setOpaque(val);
+            }
+        } else if ("JSpinner.isTableCellEditor".equals(key)) {
+            if (Boolean.FALSE.equals(evt.getNewValue())) {
+                if (editor instanceof JSpinner.DefaultEditor) {
+                    // if editor alignment isn't set in LAF, we get 0 (CENTER) here
+                    int alignment = UIManager.getInt("Spinner.editorAlignment");
+                    JTextField text = ((JSpinner.DefaultEditor) editor).getTextField();
+                    text.setHorizontalAlignment(alignment);
+                }
+            }
+        } else if ("JSpinner.cellEditorAlignment".equals(key) && isTableCellEditor(spinner)) {
+            if (component instanceof JTextField && evt.getNewValue() instanceof Integer) {
+                ((JTextField) component).setHorizontalAlignment((Integer) evt.getNewValue());
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.weis.darklaf.ui.checkbox;
+package com.weis.darklaf.ui.radiobutton;
 
 import com.bulenkov.iconloader.util.SystemInfo;
 import com.weis.darklaf.util.DarkUIUtil;
@@ -8,7 +8,7 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
-public class DarkCheckBoxBorder implements Border, UIResource {
+public class DarkRadioButtonBorder implements Border, UIResource {
 
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y,

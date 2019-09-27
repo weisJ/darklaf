@@ -88,14 +88,23 @@ public class DarkComboPopup extends BasicComboPopup {
         scroller.setBorder(null);
     }
 
+    protected void reset() {
+        lastEvent = 0;
+        if (visible) {
+            hide();
+        }
+        visible = false;
+    }
+
     @Override
     protected void togglePopup() {
+        if (comboBox.getItemCount() == 0) return;
         if (visible) {
             visible = false;
             hide();
         } else if (lastEvent == 0 || (System.currentTimeMillis() - lastEvent) > 250) {
             visible = true;
-            show();
+            SwingUtilities.invokeLater(this::show);
         }
     }
 }

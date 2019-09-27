@@ -3,6 +3,7 @@ package com.weis.darklaf.util;
 import com.bulenkov.iconloader.util.ColorUtil;
 import com.bulenkov.iconloader.util.DoubleColor;
 import com.bulenkov.iconloader.util.Gray;
+import com.weis.darklaf.decorators.CellRenderer;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import sun.awt.SunToolkit;
 import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Ellipse2D;
@@ -205,6 +207,13 @@ public final class DarkUIUtil {
     public static void doNotCancelPopupSetup(@NotNull final JComponent component) {
         component.putClientProperty("doNotCancelPopup", DarkPopupMenuUI.HIDE_POPUP_KEY);
         component.putClientProperty("doNotCancelOnScroll", Boolean.TRUE);
+    }
+
+    public static boolean isInTableCell(final Component c) {
+        return getParentOfType(CellRendererPane.class, c) != null
+               || getParentOfType(TableCellRenderer.class, c) != null
+               || getParentOfType(CellRenderer.class, c) != null
+               || getParentOfType(CellEditor.class, c) != null;
     }
 
     @Contract("null -> null")

@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 /**
@@ -12,18 +13,27 @@ import java.awt.*;
  */
 public class DarkTableCellRenderer extends DefaultTableCellRenderer {
 
-    private final DarkTableCellRendererCheckBox booleanRenderer = new DarkTableCellRendererCheckBox();
+    private final DarkTableCellRendererCheckBox checkBoxRenderer = new DarkTableCellRendererCheckBox();
+    private final DarkTableCellRendererRadioButton radioRenderer = new DarkTableCellRendererRadioButton();
 
     protected static boolean isBooleanRenderingEnabled(@NotNull final JTable table) {
         return Boolean.TRUE.equals(table.getClientProperty("JTable.renderBooleanAsCheckBox"));
     }
 
+    protected TableCellRenderer getBooleanRenderer(@NotNull final JTable table) {
+        if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
+            return radioRenderer;
+        }
+        return checkBoxRenderer;
+    }
+
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value,
-                                                   final boolean isSelected, final boolean hasFocus, final int row,
-                                                   final int column) {
+                                                   final boolean isSelected, final boolean hasFocus,
+                                                   final int row, final int column) {
         if (value instanceof Boolean && isBooleanRenderingEnabled(table)) {
-            return booleanRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            return getBooleanRenderer(table).getTableCellRendererComponent(table, value, isSelected,
+                                                                           hasFocus, row, column);
         }
 
         JComponent component = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,

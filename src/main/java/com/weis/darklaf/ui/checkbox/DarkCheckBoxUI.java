@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.checkbox;
 
-import com.bulenkov.iconloader.util.UIUtil;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
@@ -33,14 +32,6 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkCheckBoxUI();
-    }
-
-    @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        if (UIUtil.getParentOfType(CellRendererPane.class, c) != null) {
-            c.setBorder(null);
-        }
     }
 
     @Override

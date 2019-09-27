@@ -105,12 +105,18 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     }
 
 
+    private static boolean isTableCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
+    }
+
     @Override
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
                             final int height) {
         if (comboBox == null || arrowButton == null) {
             return;
         }
+        final boolean isTableCellEditor = isTableCellEditor(comboBox);
         int bSize = BORDER_SIZE;
         int arc = ARC_SIZE;
         checkFocus();
@@ -122,58 +128,38 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             var arrowBounds = arrowButton.getBounds();
             boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
             int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width - 1;
-            Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize, height - 2 * bSize,
-                                                             arc, arc));
-            Area iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1, height - 2 * bSize));
-            if (leftToRight) {
-                rect.intersect(iconRect);
-            } else {
-                rect.subtract(iconRect);
+            if (!isTableCellEditor) {
+                Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
+                                                                 height - 2 * bSize, arc, arc));
+                Area iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1,
+                                                       height - 2 * bSize));
+                if (leftToRight) {
+                    rect.intersect(iconRect);
+                } else {
+                    rect.subtract(iconRect);
+                }
+                g.setColor(getBackground());
+                g.fill(rect);
             }
-            g.setColor(getBackground());
-            g.fill(rect);
             g.setColor(getBorderColor());
-            g.fillRect(off, BORDER_SIZE, 1, height - 2 * BORDER_SIZE);
+            if (!isTableCellEditor) {
+                g.fillRect(off, BORDER_SIZE, 1, height - 2 * BORDER_SIZE);
+            } else {
+                g.fillRect(off, 0, 1, height);
+            }
         }
-        g.setColor(getBorderColor());
-        DarkUIUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize, arc, true);
+        if (!isTableCellEditor) {
+            g.setColor(getBorderColor());
+            DarkUIUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize,
+                                       height - 2 * bSize, arc, true);
 
-        if (hasFocus) {
-            g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
-            DarkUIUtil.paintFocusBorder(g, width, height, ARC_SIZE, true);
+            if (hasFocus) {
+                g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
+                DarkUIUtil.paintFocusBorder(g, width, height, ARC_SIZE, true);
+            }
         }
         g.translate(-x, -y);
         config.restore();
-    }
-
-    public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
-        ListCellRenderer<Object> renderer = comboBox.getRenderer();
-        Component c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(),
-                                                            -1, false, false);
-        c.setFont(comboBox.getFont());
-        if (hasFocus && !isPopupVisible(comboBox)) {
-            c.setForeground(listBox.getForeground());
-            c.setBackground(listBox.getBackground());
-        } else {
-            c.setForeground(getForeground());
-            c.setBackground(getBackground());
-        }
-
-        // paint selection in table-cell-editor mode correctly
-        boolean changeOpaque = c instanceof JComponent && isTableCellEditor(comboBox) && c.isOpaque();
-        if (changeOpaque) {
-            ((JComponent) c).setOpaque(false);
-        }
-
-        boolean shouldValidate = c instanceof JPanel;
-        Rectangle r = new Rectangle(bounds);
-        DarkUIUtil.applyInsets(r, boxPadding);
-        currentValuePane.paintComponent(g, c, comboBox, r.x, r.y, r.width, r.height, shouldValidate);
-
-        // return opaque for combobox popup items painting
-        if (changeOpaque) {
-            ((JComponent) c).setOpaque(true);
-        }
     }
 
     @Override
@@ -243,22 +229,56 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
                                     : UIManager.getColor("ComboBox.disabledForeground");
     }
 
-    @Override
-    public boolean isBorderOpaque() {
-        return true;
+    public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
+        ListCellRenderer<Object> renderer = comboBox.getRenderer();
+        Component c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(),
+                                                            -1, false, false);
+        c.setFont(comboBox.getFont());
+        if (hasFocus && !isPopupVisible(comboBox)) {
+            c.setForeground(listBox.getForeground());
+            c.setBackground(listBox.getBackground());
+        } else {
+            c.setForeground(getForeground());
+            c.setBackground(getBackground());
+        }
+
+        // paint selection in table-cell-editor mode correctly
+        boolean changeOpaque = isTableCellEditor(comboBox) && c.isOpaque();
+        if (changeOpaque) {
+            ((JComponent) c).setOpaque(false);
+        }
+
+        boolean shouldValidate = c instanceof JPanel;
+        Rectangle r = new Rectangle(bounds);
+        DarkUIUtil.applyInsets(r, boxPadding);
+        if (isTableCellEditor(comboBox)) {
+            r.x--;
+        }
+        currentValuePane.paintComponent(g, c, comboBox, r.x, r.y, r.width, r.height, shouldValidate);
+        // return opaque for combobox popup items painting
+        if (changeOpaque) {
+            ((JComponent) c).setOpaque(true);
+        }
     }
 
-    private static boolean isTableCellEditor(@NotNull final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty("JComboBox.isTableCellEditor"));
+    @Override
+    public boolean isBorderOpaque() {
+        return !isTableCellEditor(comboBox);
     }
 
     @Override
     public Insets getBorderInsets(final Component c) {
+        if (isTableCellEditor(c)) {
+            return new InsetsUIResource(0, 0, 0, 0);
+        }
         return new InsetsUIResource(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
     }
 
     @Override
     protected Insets getInsets() {
+        if (isTableCellEditor(comboBox)) {
+            return new Insets(2, 5, 2, 5);
+        }
         if (comboBox.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(BORDER_SIZE + 4, BORDER_SIZE + 6,
                                         BORDER_SIZE + 4, BORDER_SIZE);
@@ -299,5 +319,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         isMinimumSizeDirty = false;
 
         return new Dimension(size);
+    }
+
+    public void resetPopup() {
+        ((DarkComboPopup) popup).reset();
     }
 }

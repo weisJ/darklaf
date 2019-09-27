@@ -325,7 +325,7 @@ public class DarkTableUIBridge extends BasicTableUI {
                     columnWidth = aColumn.getWidth();
                     cellRect.width = columnWidth - columnMargin;
                     if (aColumn != draggedColumn) {
-                        paintCell(g, cellRect, row, column, cMin, cMax);
+                        paintCell(g, cellRect, row, column);
                     }
                     cellRect.x += columnWidth;
                 }
@@ -337,7 +337,7 @@ public class DarkTableUIBridge extends BasicTableUI {
                 if (aColumn != draggedColumn) {
                     columnWidth = aColumn.getWidth();
                     cellRect.width = columnWidth - columnMargin;
-                    paintCell(g, cellRect, row, cMin, cMin, cMax);
+                    paintCell(g, cellRect, row, cMin);
                 }
                 for (int column = cMin + 1; column <= cMax; column++) {
                     aColumn = cm.getColumn(column);
@@ -345,7 +345,7 @@ public class DarkTableUIBridge extends BasicTableUI {
                     cellRect.width = columnWidth - columnMargin;
                     cellRect.x -= columnWidth;
                     if (aColumn != draggedColumn) {
-                        paintCell(g, cellRect, row, column, cMin, cMax);
+                        paintCell(g, cellRect, row, column);
                     }
                 }
             }
@@ -399,7 +399,7 @@ public class DarkTableUIBridge extends BasicTableUI {
             // Render the cell value
             Rectangle r = table.getCellRect(row, draggedColumnIndex, false);
             r.x += distance;
-            paintCell(g, r, row, draggedColumnIndex, cMin, cMax);
+            paintCell(g, r, row, draggedColumnIndex);
 
             // Paint the (lower) horizontal grid line if necessary.
             if (table.getShowHorizontalLines()) {
@@ -415,8 +415,7 @@ public class DarkTableUIBridge extends BasicTableUI {
         }
     }
 
-    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column,
-                             final int cMin, final int cMax) {
+    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
         if (table.isEditing() && table.getEditingRow() == row &&
             table.getEditingColumn() == column) {
             Component component = table.getEditorComponent();

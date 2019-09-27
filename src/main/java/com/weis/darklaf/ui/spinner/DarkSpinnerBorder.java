@@ -1,9 +1,9 @@
 package com.weis.darklaf.ui.spinner;
 
-import com.weis.darklaf.util.GraphicsContext;
-import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.ui.text.DarkTextBorder;
 import com.weis.darklaf.ui.text.DarkTextFieldUI;
+import com.weis.darklaf.util.DarkUIUtil;
+import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -20,17 +20,21 @@ public class DarkSpinnerBorder implements Border, UIResource {
     @Override
     public void paintBorder(@NotNull final Component c, final Graphics g2,
                             final int x, final int y, final int width, final int height) {
+        boolean tableCellEditor = DarkSpinnerUI.isTableCellEditor(c);
+
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = new GraphicsContext(g);
         g.translate(x, y);
 
-        int size = BORDER_SIZE;
+        int size = tableCellEditor ? 0 : BORDER_SIZE;
         int arc = ARC_SIZE;
-        g.setColor(getBorderColor(c));
-        DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
+        if (!tableCellEditor) {
+            g.setColor(getBorderColor(c));
+            DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
+        }
 
         if (c instanceof JSpinner) {
-            JSpinner spinner = (JSpinner)c;
+            JSpinner spinner = (JSpinner) c;
             JComponent editor = spinner.getEditor();
             if (editor != null) {
                 int off = spinner.getComponentOrientation().isLeftToRight()
@@ -41,7 +45,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
             }
         }
 
-        if (DarkUIUtil.hasFocus(c)) {
+        if (!tableCellEditor && DarkUIUtil.hasFocus(c)) {
             g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
             DarkUIUtil.paintFocusBorder(g, width, height, arc, true);
         }
@@ -56,6 +60,9 @@ public class DarkSpinnerBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
+        if (DarkSpinnerUI.isTableCellEditor(c)) {
+            return new InsetsUIResource(2, 5, 2, 5);
+        }
         return new InsetsUIResource(7, 7, 7, 7);
     }
 

@@ -1,9 +1,15 @@
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.ui.combobox.DarkComboBoxUI;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.EventObject;
 
 /**
@@ -12,7 +18,12 @@ import java.util.EventObject;
  */
 public class DarkTableCellEditor extends DefaultCellEditor {
 
-    private final DarkTableCellEditorCheckBox booleanEditor = new DarkTableCellEditorCheckBox(this);
+    private static final JCheckBox dummyCheckBox = new JCheckBox();
+
+    private final DarkTableCellEditorToggleButton checkBoxEditor =
+            new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellCheckBox());
+    private final DarkTableCellEditorToggleButton radioButtonEditor =
+            new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellRadioButton());
     private boolean value;
     private boolean isBooleanEditor;
 
@@ -24,8 +35,62 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         super(comboBox);
     }
 
+    public DarkTableCellEditor(@NotNull final JSpinner spinner) {
+        super(dummyCheckBox);
+        editorComponent = spinner;
+        spinner.putClientProperty("JSpinner.isTableCellEditor", Boolean.TRUE);
+        setClickCountToStart(2);
+        delegate = new EditorDelegate() {
+            public void setValue(final Object value) {
+                try {
+                    spinner.setValue(NumberFormat.getInstance().parse(value.toString()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public Object getCellEditorValue() {
+                return spinner.getValue();
+            }
+
+            public boolean shouldSelectCell(final EventObject anEvent) {
+                if (anEvent instanceof MouseEvent) {
+                    MouseEvent e = (MouseEvent) anEvent;
+                    return e.getID() != MouseEvent.MOUSE_DRAGGED;
+                }
+                return true;
+            }
+        };
+    }
+
     public DarkTableCellEditor(final JCheckBox checkBox) {
-        super(checkBox);
+        this((JToggleButton) checkBox);
+    }
+
+    public DarkTableCellEditor(final JRadioButton checkBox) {
+        this((JToggleButton) checkBox);
+    }
+
+    public DarkTableCellEditor(@NotNull final JToggleButton toggleButton) {
+        super(dummyCheckBox);
+        editorComponent = toggleButton;
+        delegate = new EditorDelegate() {
+            public void setValue(final Object value) {
+                boolean selected = false;
+                if (value instanceof Boolean) {
+                    selected = (Boolean) value;
+                } else if (value instanceof String) {
+                    selected = value.equals("true");
+                }
+                toggleButton.setSelected(selected);
+            }
+
+            public Object getCellEditorValue() {
+                return toggleButton.isSelected();
+            }
+        };
+        toggleButton.addActionListener(delegate);
+        toggleButton.setRequestFocusEnabled(false);
     }
 
     public DarkTableCellEditor(final JTextField textField) {
@@ -42,18 +107,36 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Component getTableCellEditorComponent(final JTable table, final Object value,
                                                  final boolean isSelected, final int row, final int column) {
 
-        if (value instanceof Boolean && DarkTableCellRenderer.isBooleanRenderingEnabled(table)) {
+        if (useBooleanEditor(value, table)) {
             isBooleanEditor = true;
-            return booleanEditor.getTableCellEditorComponent(table, value, isSelected, row, column);
+            return getBooleanEditor(table).getTableCellEditorComponent(table, value, isSelected, row, column);
         } else {
             isBooleanEditor = false;
         }
 
-        super.getTableCellEditorComponent(table, value, isSelected, row, column);
+        delegate.setValue(value);
+
+        if (editorComponent instanceof JComboBox) {
+            ((JComboBox<?>) editorComponent).removeAllItems();
+            ((JComboBox<Object>) editorComponent).addItem(value);
+            ((JComboBox<?>) editorComponent).setSelectedItem(value);
+        } else if (editorComponent instanceof JSpinner) {
+            var rendererComp = table.getCellRenderer(row, column)
+                                    .getTableCellRendererComponent(table, value, isSelected, false, row, column);
+            if (rendererComp instanceof JTextField) {
+                editorComponent.putClientProperty("JSpinner.cellEditorAlignment",
+                                                  ((JTextField) rendererComp).getHorizontalAlignment());
+            } else if (rendererComp instanceof JLabel) {
+                editorComponent.putClientProperty("JSpinner.cellEditorAlignment",
+                                                  ((JLabel) rendererComp).getHorizontalAlignment());
+            }
+        }
+
         boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
@@ -69,6 +152,19 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         return editorComponent;
     }
 
+    @Contract("null, _ -> false")
+    private boolean useBooleanEditor(final Object value, final JTable table) {
+        return value instanceof Boolean && DarkTableCellRenderer.isBooleanRenderingEnabled(table)
+               && !(editorComponent instanceof JCheckBox || editorComponent instanceof JRadioButton);
+    }
+
+    protected TableCellEditor getBooleanEditor(@NotNull final JTable table) {
+        if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
+            return radioButtonEditor;
+        }
+        return checkBoxEditor;
+    }
+
     @Override
     public Object getCellEditorValue() {
         if (isBooleanEditor) {
@@ -79,13 +175,23 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     }
 
     @Override
+    public boolean stopCellEditing() {
+        if (editorComponent instanceof JComboBox) {
+            ((DarkComboBoxUI) ((JComboBox<?>) editorComponent).getUI()).resetPopup();
+        }
+        return super.stopCellEditing();
+    }
+
+    @Override
     public boolean isCellEditable(@NotNull final EventObject anEvent) {
         var table = ((JTable) anEvent.getSource());
         if (DarkTableCellRenderer.isBooleanRenderingEnabled(table)) {
             var p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, table);
             var value = table.getValueAt(table.rowAtPoint(p), table.columnAtPoint(p));
-            if (value instanceof Boolean) return true;
+            if (useBooleanEditor(value, table)) {
+                return true;
+            }
         }
         return super.isCellEditable(anEvent);
     }
