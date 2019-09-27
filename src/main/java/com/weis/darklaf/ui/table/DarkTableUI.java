@@ -60,11 +60,10 @@ public class DarkTableUI extends DarkTableUIBridge {
         return dist;
     }
 
-    int iCount = 0;
-
     protected static void setupRendererComponents(@NotNull final JTable table) {
         var cellRenderer = new DarkTableCellRenderer();
         var cellEditor = new DarkTableCellEditor();
+        var colorRendererEditor = new DarkColorTableCellRendererEditor();
 
         table.setDefaultRenderer(Object.class, cellRenderer);
         table.setDefaultRenderer(String.class, cellRenderer);
@@ -72,6 +71,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         table.setDefaultRenderer(Double.class, cellRenderer);
         table.setDefaultRenderer(Float.class, cellRenderer);
         table.setDefaultRenderer(Boolean.class, cellRenderer);
+        table.setDefaultRenderer(Color.class, colorRendererEditor);
 
         table.setDefaultEditor(Object.class, cellEditor);
         table.setDefaultEditor(String.class, cellEditor);
@@ -79,6 +79,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         table.setDefaultEditor(Double.class, cellEditor);
         table.setDefaultEditor(Float.class, cellEditor);
         table.setDefaultEditor(Boolean.class, cellEditor);
+        table.setDefaultEditor(Color.class, colorRendererEditor);
     }
 
     @Override
@@ -98,8 +99,8 @@ public class DarkTableUI extends DarkTableUIBridge {
         super.installDefaults();
         table.setRowHeight(ROW_HEIGHT);
         table.setDefaultEditor(Object.class, new DarkTableCellEditor());
-//        table.putClientProperty("JTable.renderBooleanAsCheckBox",
-//                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
+        table.putClientProperty("JTable.renderBooleanAsCheckBox",
+                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
         table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
         setupRendererComponents(table);
     }
@@ -321,7 +322,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
         var bounds = table.getVisibleRect();
         Point upperLeft = bounds.getLocation();
-        Point lowerRight = new Point(upperLeft.x + bounds.width, upperLeft.y + bounds.height);
+        Point lowerRight = new Point(upperLeft.x + bounds.width - 1, upperLeft.y + bounds.height - 1);
         int cMin = table.columnAtPoint(upperLeft);
         int cMax = table.columnAtPoint(lowerRight);
 
