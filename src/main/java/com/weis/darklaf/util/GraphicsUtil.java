@@ -38,8 +38,9 @@ public final class GraphicsUtil {
     private GraphicsUtil() {
     }
 
-    public static void setupAntialiasing(final Graphics g2) {
-        setupAntialiasing(g2, true, false);
+    @NotNull
+    public static GraphicsContext setupAntialiasing(final Graphics g2) {
+        return setupAntialiasing(g2, true, false);
     }
 
     @NotNull

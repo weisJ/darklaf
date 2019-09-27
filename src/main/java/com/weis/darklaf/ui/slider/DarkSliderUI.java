@@ -21,11 +21,11 @@ import java.awt.geom.RoundRectangle2D;
 
 public class DarkSliderUI extends BasicSliderUI {
 
-    private static final int TRACK_SIZE = 6;
-    private static final int ARC_SIZE = 6;
-    private static final int PLAIN_THUMB_SIZE = 14;
-    private static final int THUMB_SIZE_1 = 12;
-    private static final int THUMB_SIZE_2 = 20;
+    private static final int TRACK_SIZE = 4;
+    private static final int ARC_SIZE = 4;
+    private static final int PLAIN_THUMB_SIZE = 12;
+    private static final int THUMB_SIZE_1 = 10;
+    private static final int THUMB_SIZE_2 = 18;
     private static final int ICON_BAR_EXT = 5;
     private static final int ICON_PAD = 10;
 
@@ -89,10 +89,11 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
 
+
     @Override
     public void paintTrack(final Graphics g2d) {
         Graphics2D g = (Graphics2D) g2d;
-        GraphicsContext config = new GraphicsContext(g);
+        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
 
         Color bgColor = getTrackBackground();
         Color selectionColor = getSelectedTrackColor();
@@ -321,14 +322,14 @@ public class DarkSliderUI extends BasicSliderUI {
         super.calculateContentRect();
         if (showVolumeIcon(slider)) {
             if (isHorizontal()) {
-                contentRect.width -=  getVolumeIcon().getIconWidth() + ICON_PAD;
+                contentRect.width -= getVolumeIcon().getIconWidth() + ICON_PAD;
                 if (!slider.getComponentOrientation().isLeftToRight()) {
-                    contentRect.x +=  getVolumeIcon().getIconWidth() + ICON_PAD;
+                    contentRect.x += getVolumeIcon().getIconWidth() + ICON_PAD;
                 }
             } else {
-                contentRect.height -=  getVolumeIcon().getIconHeight() + ICON_PAD;
+                contentRect.height -= getVolumeIcon().getIconHeight() + ICON_PAD;
                 if (!slider.getComponentOrientation().isLeftToRight()) {
-                    contentRect.y +=  getVolumeIcon().getIconHeight() + ICON_PAD;
+                    contentRect.y += getVolumeIcon().getIconHeight() + ICON_PAD;
                 }
             }
         }
@@ -420,12 +421,14 @@ public class DarkSliderUI extends BasicSliderUI {
         String prefix = slider.isEnabled() ? "enabled_" : "disabled_";
         if (Math.abs(percentage) < 1E-6) {
             return UIManager.getIcon("Slider.volume." + prefix + "level_0.icon");
-        } else if (percentage < 0.4) {
+        } else if (percentage < 0.25) {
             return UIManager.getIcon("Slider.volume." + prefix + "level_1.icon");
-        } else if (percentage < 0.75) {
+        } else if (percentage < 0.5) {
             return UIManager.getIcon("Slider.volume." + prefix + "level_2.icon");
-        } else {
+        } else if (percentage < 0.75) {
             return UIManager.getIcon("Slider.volume." + prefix + "level_3.icon");
+        } else {
+            return UIManager.getIcon("Slider.volume." + prefix + "level_4.icon");
         }
     }
 
@@ -465,7 +468,9 @@ public class DarkSliderUI extends BasicSliderUI {
     @Override
     public void paintLabels(final Graphics g) {
         checkDisabled(g);
+        var config = GraphicsUtil.setupAntialiasing(g);
         super.paintLabels(g);
+        config.restore();
     }
 
     @Override

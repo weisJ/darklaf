@@ -631,6 +631,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             }
 
             icon.paintIcon(this, g, x, y);
+            config.restore();
+            config = GraphicsUtil.setupAntialiasing(g);
             g.drawString(label, x + icon.getIconWidth() + PAD, y + icon.getIconHeight() - off);
             config.restore();
         }

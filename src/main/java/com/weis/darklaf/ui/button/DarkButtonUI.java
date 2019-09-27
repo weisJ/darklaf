@@ -87,7 +87,7 @@ public class DarkButtonUI extends BasicButtonUI {
     }
 
     protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
-        GraphicsUtil.setupAAPainting(g);
+        var context = GraphicsUtil.setupAntialiasing(g);
         if (text != null && !text.equals("")) {
             View v = (View) c.getClientProperty(BasicHTML.propertyKey);
             if (v != null) {
@@ -96,6 +96,7 @@ public class DarkButtonUI extends BasicButtonUI {
                 paintText(g, b, textRect, text);
             }
         }
+        context.restore();
     }
 
     protected void paintIcon(final Graphics g, @NotNull final AbstractButton b, final JComponent c) {
