@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.io.Serializable;
 import java.net.URI;
 
 /**
@@ -15,7 +16,7 @@ import java.net.URI;
  * @author Jannis Weis
  * @since 2019
  */
-public class DarkSVGIcon implements Icon {
+public class DarkSVGIcon implements Icon, Serializable {
 
     private final Dimension size;
     private final SVGIcon icon;

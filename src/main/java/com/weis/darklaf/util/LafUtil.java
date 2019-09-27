@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class LafUtil {
@@ -37,13 +36,13 @@ public final class LafUtil {
         try (InputStream stream = laf.getClass().getResourceAsStream(laf.getPrefix() + ".properties")) {
             properties.load(stream);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+            LOGGER.severe(e.getMessage());
         }
-        try (InputStream stream = laf.getClass()
-                                     .getResourceAsStream(laf.getPrefix() + "_" + osSuffix + ".properties")) {
+        try (InputStream stream = laf.getClass().getResourceAsStream(
+                laf.getPrefix() + "_" + osSuffix + ".properties")) {
             properties.load(stream);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+            LOGGER.severe(e.getMessage());
         }
         return properties;
     }
@@ -58,9 +57,11 @@ public final class LafUtil {
         if (key.endsWith("Insets")) {
             returnVal = parseInsets(value);
         } else if (key.endsWith(".border") || key.endsWith("Border")) {
-            returnVal = parseBorder(value);
+            returnVal = parseObject(value);
         } else if (key.endsWith(".component") || key.endsWith("Component")) {
-            returnVal = parseComponent(value);
+            returnVal = parseObject(value);
+        } else if (key.endsWith("Renderer")) {
+            returnVal = parseObject(value);
         } else if (key.endsWith(".font")) {
             returnVal = parseFont(value);
         } else if (key.endsWith(".icon") || key.endsWith("Icon")) {
@@ -136,16 +137,6 @@ public final class LafUtil {
         } catch (@NotNull final Exception e) {
             return new Font("Monospaced", Font.PLAIN, 12);
         }
-    }
-
-    @NotNull
-    private static Object parseComponent(final String value) {
-        return parseObject(value);
-    }
-
-    @NotNull
-    private static Object parseBorder(final String value) {
-        return parseObject(value);
     }
 
     @NotNull

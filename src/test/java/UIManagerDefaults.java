@@ -5,6 +5,7 @@
 
 import com.weis.darklaf.DarkLafInfo;
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.ui.table.DarkColorTableCellRendererEditor;
 import com.weis.darklaf.ui.table.DarkTableCellRendererCheckBox;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -18,20 +19,18 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
-import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-public class UIManagerDefaults implements ActionListener, ItemListener {
+public class UIManagerDefaults implements ItemListener {
     private static final String[] COLUMN_NAMES = {"Key", "Value", "Sample"};
     @Nullable
     private static String selectedItem;
@@ -116,13 +115,22 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
         label.setDisplayedMnemonic('S');
         label.setLabelFor(comboBox);
 
+        ItemListener itemListener = e -> {
+            selectedItem = null;
+            if (table.isEditing()) {
+                table.getCellEditor().stopCellEditing();
+            }
+            table.clearSelection();
+            resetComponents();
+        };
+
         byComponent = new JRadioButton("By Component", true);
         byComponent.setMnemonic('C');
-        byComponent.addActionListener(this);
+        byComponent.addItemListener(itemListener);
 
         final JRadioButton byValueType = new JRadioButton("By Value Type");
         byValueType.setMnemonic('V');
-        byValueType.addActionListener(this);
+        byValueType.addItemListener(itemListener);
 
         final ButtonGroup group = new ButtonGroup();
         group.add(byComponent);
@@ -150,12 +158,8 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
         table.getColumnModel().getColumn(1).setPreferredWidth(500);
         table.getColumnModel().getColumn(2).setPreferredWidth(100);
         table.getColumnModel().getColumn(2).setCellRenderer(new SampleRenderer());
-        table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JTextField()) {
-            @Override
-            public boolean isCellEditable(final EventObject anEvent) {
-                return false;
-            }
-        });
+        table.getColumnModel().getColumn(2).setCellEditor(new DarkColorTableCellRendererEditor());
+
         final Dimension d = table.getPreferredSize();
         d.height = 350;
         table.setPreferredScrollableViewportSize(d);
@@ -359,17 +363,6 @@ public class UIManagerDefaults implements ActionListener, ItemListener {
         return menu;
     }
 
-    /*
-     *  Implement the ActionListener interface
-     */
-    public void actionPerformed(final ActionEvent e) {
-        selectedItem = null;
-        if (table.isEditing()) {
-            table.getCellEditor().stopCellEditing();
-        }
-        table.clearSelection();
-        resetComponents();
-    }
 
     /*
      *  Implement the ItemListener interface

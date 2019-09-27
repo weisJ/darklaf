@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Icon that is aware of the current ui theme and adjusts the icon accordingly. Icons are loaded
@@ -15,7 +16,7 @@ import java.awt.*;
  * @author Jannis Weis
  * @since 2019
  */
-public class UIAwareIcon implements Icon, UIResource {
+public class UIAwareIcon implements Icon, UIResource, Serializable {
 
     private final UIAwareIcon dual;
     private final String darkKey;
@@ -23,17 +24,17 @@ public class UIAwareIcon implements Icon, UIResource {
     private final int w;
     private final int h;
     private final Class<?> parentClass;
-    private boolean loaded;
     private LafManager.Theme currentTheme;
-    private Icon icon;
+    private transient boolean loaded;
+    private transient Icon icon;
 
     /**
      * Create new ui aware icon.
      *
-     * @param darkKey  key to load icon for dark mode.
-     * @param lightKey key to load icon for light mode.
-     * @param w        width of icon.
-     * @param h        height of icon.
+     * @param darkKey     key to load icon for dark mode.
+     * @param lightKey    key to load icon for light mode.
+     * @param w           width of icon.
+     * @param h           height of icon.
      * @param parentClass the class to resolve the path while lazy loading.
      */
     @Contract(pure = true)
