@@ -1,12 +1,14 @@
 package com.weis.darklaf.components.border;
 
 import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.geom.Area;
+import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 
 /**
@@ -17,10 +19,6 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class TextBubbleBorder extends AbstractBorder {
 
-    private static final long serialVersionUID = 1L;
-    @NotNull
-    private final RenderingHints hints;
-    @NotNull
     private final Insets insets;
     private Alignment pointerSide = Alignment.NORTH;
     private Color color;
@@ -58,9 +56,6 @@ public class TextBubbleBorder extends AbstractBorder {
         this.radius = radius;
         this.pointerSize = pointerSize;
         this.pointerWidth = pointerSize;
-
-        hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
-                                   RenderingHints.VALUE_ANTIALIAS_ON);
         insets = new Insets(0, 0, 0, 0);
         setThickness(thickness);
     }
@@ -147,7 +142,7 @@ public class TextBubbleBorder extends AbstractBorder {
      */
     @NotNull
     public TextBubbleBorder setThickness(final int n) {
-        thickness = n < 0 ? 0 : n;
+        thickness = Math.max(n, 0);
         stroke = new BasicStroke(thickness);
         return setPointerSize(pointerSize);
     }
@@ -190,30 +185,28 @@ public class TextBubbleBorder extends AbstractBorder {
      */
     @NotNull
     public TextBubbleBorder setPointerSize(final int size) {
-        pointerSize = size < 0 ? 0 : size;
-        final int pad = radius / 2 + thickness;
-        final int pointerSidePad = pad + pointerSize + thickness;
-        int left = pad;
-        int right = pad;
-        int bottom = pad;
-        int top = pad;
+        pointerSize = Math.max(size, 0);
+        int left = thickness;
+        int right = thickness;
+        int bottom = thickness;
+        int top = thickness;
 
         switch (pointerSide) {
             case NORTH:
             case NORTH_WEST:
             case NORTH_EAST:
-                top = pointerSidePad;
+                top += pointerSize;
                 break;
             case SOUTH:
             case SOUTH_WEST:
             case SOUTH_EAST:
-                bottom = pointerSidePad;
+                bottom += pointerSize;
                 break;
             case WEST:
-                left = pointerSidePad;
+                left += pointerSize;
                 break;
             case EAST:
-                right = pointerSidePad;
+                right += pointerSize;
                 break;
             default:
                 break;
@@ -259,107 +252,99 @@ public class TextBubbleBorder extends AbstractBorder {
         return getBorderInsets(c);
     }
 
+    public void paintBorder(final Graphics g, final Area innerArea) {
+        final Graphics2D g2 = (Graphics2D) g;
+        var config = GraphicsUtil.setupStrokePainting(g);
+        g2.setColor(color);
+        g2.setStroke(stroke);
+        g2.draw(innerArea);
+        config.restore();
+    }
+
     @Override
     public void paintBorder(@NotNull final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
-        final Graphics2D g2 = (Graphics2D) g;
-        var bubble = calculateBubbleRect(width, height);
-        int pointerPad;
+        var area = getInnerArea(x, y, width, height);
+        paintBorder(g, area);
+    }
+
+    @Contract(pure = true)
+    private double calculatePointerPad(final int width, final int height) {
+        double pointerPad;
         switch (pointerSide) {
             case WEST:
             case EAST:
-                pointerPad = (int) (pointerPadPercent * (height - 2 * radius - 5 * pointerSize));
+                pointerPad = radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
                 break;
-            case CENTER:
+            case NORTH:
+            case NORTH_WEST:
+            case NORTH_EAST:
+            case SOUTH:
+            case SOUTH_WEST:
+            case SOUTH_EAST:
+                pointerPad = radius + (pointerPadPercent * (width - insets.left - insets.right - 2 * radius));
+                break;
+            default:
                 pointerPad = 0;
                 break;
-            default:
-                pointerPad = (int) (pointerPadPercent * (width - 2 * radius - 5 * pointerSize));
-                break;
         }
-        final Polygon pointer = creatPointerShape(width, height, pointerPad, bubble);
+        return pointerPad;
+    }
+
+
+    public Area getInnerArea(final int x, final int y, final int width, final int height) {
+        var bubble = calculateBubbleRect(x, y, width, height);
         final Area area = new Area(bubble);
-        area.add(new Area(pointer));
-        g2.setRenderingHints(hints);
-        g2.setColor(c.getBackground());
-        g2.fill(area);
-        g2.setColor(color);
-        g2.setStroke(stroke);
-        g2.draw(area);
+        if (pointerSide != Alignment.CENTER) {
+            double pointerPad = calculatePointerPad(width, height);
+            Path2D pointer = creatPointerShape(pointerPad, bubble);
+            area.add(new Area(pointer));
+        }
+        return area;
+    }
+
+    @Contract("_, _, _, _ -> new")
+    public RoundRectangle2D.@NotNull Double calculateBubbleRect(final int x, final int y,
+                                                                final int width, final int height) {
+        return new RoundRectangle2D.Double(x + insets.left, y + insets.top, width - insets.left - insets.right,
+                                           height - insets.top - insets.bottom, radius, radius);
     }
 
     @NotNull
-    @Contract("_, _ -> new")
-    private RoundRectangle2D.Double calculateBubbleRect(final int width, final int height) {
-        int rx = thickness;
-        int ry = thickness;
-        int rw = width - thickness;
-        int rh = height - thickness;
+    private Path2D creatPointerShape(final double pointerPad, @NotNull final RoundRectangle2D.Double bubble) {
+        final double w = pointerWidth / 2.0;
+        final Path2D pointer = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        double x = bubble.x;
+        double y = bubble.y;
         switch (pointerSide) {
             case WEST:
-                rx += pointerSize;
-                rw -= pointerSize + thickness;
-                rh -= thickness;
+                pointer.moveTo(x, y + pointerPad - w); //Top
+                pointer.lineTo(x - pointerSize, y + pointerPad);
+                pointer.lineTo(x, y + pointerPad + w);// bottom
                 break;
             case EAST:
-                rw -= pointerSize;
-                rh -= thickness;
+                pointer.moveTo(x + bubble.width, y + pointerPad - w);// top
+                pointer.lineTo(x + bubble.width + pointerSize, y + pointerPad);
+                pointer.lineTo(x + bubble.width, y + pointerPad + w);// bottom
                 break;
             case NORTH:
             case NORTH_WEST:
             case NORTH_EAST:
-                ry += pointerSize;
-                rh -= pointerSize + thickness;
-                rw -= thickness;
+                pointer.moveTo(x + pointerPad - w, y);// left
+                pointer.lineTo(x + pointerPad, y - pointerSize);
+                pointer.lineTo(x + pointerPad + w, y);// right
                 break;
             case SOUTH:
             case SOUTH_WEST:
             case SOUTH_EAST:
-                rh -= pointerSize;
-                rw -= thickness;
+                pointer.moveTo(x + pointerPad - w, y + bubble.height);// left
+                pointer.lineTo(x + pointerPad, y + bubble.height + pointerSize);
+                pointer.lineTo(x + pointerPad + w, y + bubble.height);// right
                 break;
             default:
                 break;
         }
-        return new RoundRectangle2D.Double(rx, ry, rw, rh, radius, radius);
-    }
-
-    @NotNull
-    private Polygon creatPointerShape(final int width, final int height, final int pointerPad,
-                                      @NotNull final RoundRectangle2D.Double bubble) {
-        final int basePad = 2 * pointerSize + thickness + radius + pointerPad;
-        final int widthPad = pointerWidth / 2;
-        final Polygon pointer = new Polygon();
-        switch (pointerSide) {
-            case WEST:
-                pointer.addPoint((int) bubble.x, basePad - widthPad);// top
-                pointer.addPoint((int) bubble.x, basePad + pointerSize + widthPad);// bottom
-                pointer.addPoint(thickness, basePad + pointerSize / 2);
-                break;
-            case EAST:
-                int x = (int) (bubble.x + bubble.width);
-                pointer.addPoint(x, basePad - widthPad);// top
-                pointer.addPoint(x, basePad + pointerSize + widthPad);// bottom
-                pointer.addPoint(width - thickness, basePad + pointerSize / 2);
-                break;
-            case NORTH:
-            case NORTH_WEST:
-            case NORTH_EAST:
-                pointer.addPoint(basePad - widthPad, (int) bubble.y);// left
-                pointer.addPoint(basePad + pointerSize + widthPad, (int) bubble.y);// right
-                pointer.addPoint(basePad + (pointerSize / 2), thickness);
-                break;
-            case SOUTH:
-            case SOUTH_WEST:
-            case SOUTH_EAST:
-                int y = (int) (bubble.y + bubble.height);
-                pointer.addPoint(basePad - widthPad, y);// left
-                pointer.addPoint(basePad + pointerSize + widthPad, y);// right
-                pointer.addPoint(basePad + (pointerSize / 2), height - thickness);
-                break;
-            default:
-                break;
-        }
+        pointer.closePath();
         return pointer;
     }
 }

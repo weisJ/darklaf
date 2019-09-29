@@ -1,8 +1,11 @@
 package com.weis.darklaf.ui.colorchooser;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 class RecentSwatchPanel extends SwatchPanel {
     private Color defaultRecentColor;
@@ -25,16 +28,16 @@ class RecentSwatchPanel extends SwatchPanel {
     }
 
     public void setMostRecentColor(final Color c) {
-        if (colors[0].equals(c)) return;
+        if (Objects.equals(colors[0], c)) return;
         System.arraycopy(colors, 0, colors, 1, colors.length - 1);
         colors[0] = c;
         repaint();
     }
 
     @Override
-    public String getToolTipText(final MouseEvent e) {
+    public String getToolTipText(@NotNull final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
-        if (color == defaultRecentColor) return null;
+        if (color == defaultRecentColor || color == null) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
     }
 }

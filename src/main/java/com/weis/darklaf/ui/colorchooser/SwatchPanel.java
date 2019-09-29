@@ -1,6 +1,10 @@
 package com.weis.darklaf.ui.colorchooser;
 
+import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.util.GraphicsUtil;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +12,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 abstract class SwatchPanel extends JPanel {
@@ -19,6 +24,7 @@ abstract class SwatchPanel extends JPanel {
 
     private int selRow;
     private int selCol;
+    private JToolTip tooltip;
 
     public SwatchPanel() {
         initValues();
@@ -28,7 +34,16 @@ abstract class SwatchPanel extends JPanel {
         setBackground(UIManager.getColor("ColorChooser.swatchGridColor"));
         setFocusable(true);
         setInheritsPopupMenu(true);
-
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(final MouseEvent e) {
+                var p = e.getPoint();
+                p = SwingUtilities.convertPoint(e.getComponent(), p, SwatchPanel.this);
+                if (tooltip != null && !contains(p)) {
+                    tooltip.setVisible(false);
+                }
+            }
+        });
         addFocusListener(new FocusAdapter() {
             public void focusGained(final FocusEvent e) {
                 repaint();
@@ -101,32 +116,40 @@ abstract class SwatchPanel extends JPanel {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
         for (int row = 0; row < numSwatches.height; row++) {
-            int y = row * (swatchSize.height + gap.height);
+            int y = getYForRow(row);
             for (int column = 0; column < numSwatches.width; column++) {
                 Color c = getColorForCell(column, row);
+
                 g.setColor(c);
-                int x;
-                if (!this.getComponentOrientation().isLeftToRight()) {
-                    x = (numSwatches.width - column - 1) * (swatchSize.width + gap.width);
-                } else {
-                    x = column * (swatchSize.width + gap.width);
-                }
+                int x = getXForColumn(column);
                 g.fillRect(x, y, swatchSize.width, swatchSize.height);
 
-                if (selRow == row && selCol == column && this.isFocusOwner()) {
-                    Color c2 = new Color(c.getRed() < 125 ? 225 : 30,
-                                         c.getGreen() < 125 ? 225 : 30,
-                                         c.getBlue() < 125 ? 225 : 30);
+                if (selRow == row && selCol == column && this.isFocusOwner() && c != null) {
+                    Color c2 = new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
                     g.setColor(c2);
+                    g.fillRect(x, y, swatchSize.width, 1);
+                    g.fillRect(x, y + swatchSize.height - 1, swatchSize.width - 1, 1);
+                    g.fillRect(x, y, 1, swatchSize.height);
+                    g.fillRect(x + swatchSize.width - 1, y, 1, swatchSize.height);
 
-                    g.drawLine(x, y, x + swatchSize.width, y);
-                    g.drawLine(x, y, x, y + swatchSize.height);
-                    g.drawLine(x + swatchSize.width, y, x + swatchSize.width, y + swatchSize.height);
-                    g.drawLine(x, y + swatchSize.height, x + swatchSize.width, y + swatchSize.height);
-                    g.drawLine(x, y, x + swatchSize.width, y + swatchSize.height);
-                    g.drawLine(x, y + swatchSize.height, x + swatchSize.width, y);
+                    GraphicsUtil.setupStrokePainting(g);
+                    g.drawLine(x + 1, y + 1, x + swatchSize.width - 1, y + swatchSize.height - 1);
+                    g.drawLine(x + 1, y + swatchSize.height - 1, x + swatchSize.width - 1, y + 1);
                 }
             }
+        }
+    }
+
+    @Contract(pure = true)
+    private int getYForRow(final int row) {
+        return row * (swatchSize.height + gap.height);
+    }
+
+    private int getXForColumn(final int column) {
+        if (!this.getComponentOrientation().isLeftToRight()) {
+            return (numSwatches.width - column - 1) * (swatchSize.width + gap.width);
+        } else {
+            return column * (swatchSize.width + gap.width);
         }
     }
 
@@ -139,9 +162,34 @@ abstract class SwatchPanel extends JPanel {
     protected void initColors() {
     }
 
-    public String getToolTipText(final MouseEvent e) {
+    public String getToolTipText(@NotNull final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
+        if (color == null) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
+    }
+
+    @Override
+    public Point getToolTipLocation(final MouseEvent e) {
+        if (tooltip == null) {
+            createToolTip();
+            tooltip.setTipText(getToolTipText(e));
+        }
+        var p = getCoordinatesForLocation(e.getX(), e.getY());
+        int x = getXForColumn(p.x);
+        int y = getYForRow(p.y);
+        x += swatchSize.width / 2;
+        y += swatchSize.height / 2;
+        x -= tooltip.getPreferredSize().width / 2;
+        return new Point(x, y);
+    }
+
+    @Override
+    public JToolTip createToolTip() {
+        tooltip = super.createToolTip();
+//        tooltip.putClientProperty("JToolTip.pointerWidth", 10);
+//        tooltip.putClientProperty("JToolTip.pointerHeight", 7);
+        tooltip.putClientProperty("JToolTip.pointerLocation", Alignment.NORTH);
+        return tooltip;
     }
 
     public void setSelectedColorFromLocation(final int x, final int y) {
@@ -154,7 +202,7 @@ abstract class SwatchPanel extends JPanel {
         repaint();
     }
 
-    public Color getColorForLocation(final int x, final int y) {
+    public Point getCoordinatesForLocation(final int x, final int y) {
         int column;
         if (!this.getComponentOrientation().isLeftToRight()) {
             column = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
@@ -162,10 +210,19 @@ abstract class SwatchPanel extends JPanel {
             column = x / (swatchSize.width + gap.width);
         }
         int row = y / (swatchSize.height + gap.height);
-        return getColorForCell(column, row);
+        return new Point(column, row);
     }
 
+    public Color getColorForLocation(final int x, final int y) {
+        var p = getCoordinatesForLocation(x, y);
+        return getColorForCell(p.x, p.y);
+    }
+
+    @Nullable
+    @Contract(pure = true)
     private Color getColorForCell(final int column, final int row) {
-        return colors[(row * numSwatches.width) + column]; // (STEVE) - change data orientation here
+        int index = (row * numSwatches.width) + column;
+        if (index >= colors.length) return null;
+        return colors[(row * numSwatches.width) + column];
     }
 }

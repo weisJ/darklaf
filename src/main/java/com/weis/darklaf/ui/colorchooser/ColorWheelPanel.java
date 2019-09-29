@@ -29,7 +29,7 @@ public class ColorWheelPanel extends JPanel {
         myBrightnessComponent = new SlideComponent("Brightness", true);
         myBrightnessComponent.setToolTipText("Brightness");
         myBrightnessComponent.addListener(value -> {
-            myColorWheel.setBrightness(1f - (value / 255f));
+            myColorWheel.setBrightness(1 - (value / 255f));
             myColorWheel.repaint();
         });
 

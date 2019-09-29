@@ -9,7 +9,7 @@ public final class ColorChooserDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.loadLaf(LafManager.Theme.Dark);
             JColorChooser.showDialog(null, "Color Chooser without transparency",
-                                     Color.RED, false);
+                                     Color.RED, true);
         });
     }
 }

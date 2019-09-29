@@ -2,15 +2,18 @@ import com.weis.darklaf.color.DarkColorModelHSL;
 
 import java.awt.*;
 
-public class GenerateColors {
+/**
+ * Usd to generate the color swatches for ColorChooser.
+ */
+public final class GenerateColors {
 
     public static void main(final String[] args) {
         int cols = 30;
         int rows = 20;
         System.out.println("{");
-        int r = 255;
-        int g = 255;
-        int b = 255;
+        int r;
+        int g;
+        int b;
         for (int i = 1; i < rows + 1; i++) {
             r = g = b = (int) ((i - 1) * 255.0 / (rows - 1));
             System.out.println(r + "," + g + "," + b + ",");

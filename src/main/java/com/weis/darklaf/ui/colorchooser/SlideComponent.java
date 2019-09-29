@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.colorchooser;
 
+import com.weis.darklaf.components.alignment.Alignment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,12 +23,10 @@ class SlideComponent extends JComponent {
     private final boolean myVertical;
     private final String myTitle;
     private final List<Consumer<Integer>> myListeners = new ArrayList<>();
-    //Todo.
-//    private LightweightHint myTooltipHint;
-    private final JLabel myLabel = new JLabel();
     private int myPointerValue = 0;
     private int myValue = 0;
     private Unit myUnit = Unit.LEVEL;
+    private JToolTip tooltip;
 
     SlideComponent(final String title, final boolean vertical) {
         myTitle = title;
@@ -42,27 +41,12 @@ class SlideComponent extends JComponent {
 
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(final MouseEvent e) {
-                processMouse(e);
-            }
-
-            @Override
-            public void mouseEntered(final MouseEvent e) {
-                updateBalloonText();
-            }
-
-            @Override
-            public void mouseMoved(final MouseEvent e) {
-                updateBalloonText();
-            }
-
-            @Override
             public void mouseExited(final MouseEvent e) {
-                //Todo
-//                if (myTooltipHint != null) {
-//                    myTooltipHint.hide();
-//                    myTooltipHint = null;
-//                }
+                var p = e.getPoint();
+                p = SwingUtilities.convertPoint(e.getComponent(), p, SlideComponent.this);
+                if (tooltip != null && !contains(p)) {
+                    tooltip.setVisible(false);
+                }
             }
         });
 
@@ -89,15 +73,14 @@ class SlideComponent extends JComponent {
                 repaint();
             }
         });
+
+        setToolTipText(getToolTipText(null));
     }
 
     private static void drawKnob(@NotNull final Graphics2D g2d, int x, int y, final boolean vertical) {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        //Todo Colors
         if (vertical) {
             y -= 6;
-
             Polygon arrowShadow = new Polygon();
             arrowShadow.addPoint(x - 5, y + 1);
             arrowShadow.addPoint(x + 7, y + 7);
@@ -138,36 +121,39 @@ class SlideComponent extends JComponent {
         myUnit = unit;
     }
 
-    private void updateBalloonText() {
-        final Point point = myVertical ? new Point(0, myPointerValue) : new Point(myPointerValue, 0);
-        myLabel.setText(myTitle + ": " + Unit.formatValue(myValue, myUnit));
-        //Todo
-//        if (myTooltipHint == null) {
-//            myTooltipHint = new LightweightHint(myLabel);
-//            myTooltipHint.setCancelOnClickOutside(false);
-//            myTooltipHint.setCancelOnOtherWindowOpen(false);
-//
-//            final HintHint hint = new HintHint(this, point)
-//                                          .setPreferredPosition(myVertical ? Balloon.Position.atLeft : Balloon
-//                                          .Position.above)
-//                                          .setBorderColor(Color.BLACK)
-//                                          .setAwtTooltip(true)
-//                                          .setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD))
-//                                          .setTextBg(HintUtil.getInformationColor())
-//                                          .setShowImmediately(true);
-//
-//            final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-//            myTooltipHint.show(this, point.x, point.y, owner instanceof JComponent ? (JComponent)owner : null, hint);
-//        }
-//        else {
-//            myTooltipHint.setLocation(new RelativePoint(this, point));
-//        }
+    @Override
+    public String getToolTipText(final MouseEvent event) {
+        return myTitle + ": " + Unit.formatValue(myValue, myUnit);
     }
 
     @Override
-    protected void processMouseMotionEvent(final MouseEvent e) {
-        super.processMouseMotionEvent(e);
-        updateBalloonText();
+    public Point getToolTipLocation(final MouseEvent e) {
+        if (tooltip == null) {
+            createToolTip();
+            tooltip.setTipText(getToolTipText(e));
+        }
+        final Point point = myVertical ? new Point(0, myPointerValue) : new Point(myPointerValue, 0);
+        if (myVertical) {
+            point.x -= tooltip.getPreferredSize().width - 7;
+            point.y -= (tooltip.getPreferredSize().height) / 2 - 4;
+        } else {
+            point.x -= tooltip.getPreferredSize().width / 2;
+            point.y -= tooltip.getPreferredSize().height - 7;
+        }
+        return point;
+    }
+
+    @Override
+    public JToolTip createToolTip() {
+        tooltip = super.createToolTip();
+        if (myVertical) {
+            tooltip.setPreferredSize(new Dimension(130, 39));
+        } else {
+            tooltip.setPreferredSize(new Dimension(120, 46));
+        }
+        tooltip.putClientProperty("JToolTip.insets", new Insets(3, 0, 3, 0));
+        tooltip.putClientProperty("JToolTip.pointerLocation", myVertical ? Alignment.EAST : Alignment.SOUTH);
+        return tooltip;
     }
 
     private void processMouse(final MouseEvent e) {
@@ -198,8 +184,10 @@ class SlideComponent extends JComponent {
         return myValue;
     }
 
-    // 0 - 255
     public void setValue(final int value) {
+        if (value < 0 || value > 255) {
+            throw new IllegalArgumentException("Value " + value + " not in range [0,255]");
+        }
         myPointerValue = valueToPointerValue(value);
         myValue = value;
     }
@@ -207,8 +195,8 @@ class SlideComponent extends JComponent {
     private int pointerValueToValue(int pointerValue) {
         pointerValue -= OFFSET;
         final int size = myVertical ? getHeight() : getWidth();
-        float proportion = (size - 23) / 255f;
-        return Math.round((pointerValue / proportion));
+        double proportion = (size - 23) / 255f;
+        return (int) Math.round((pointerValue / proportion));
     }
 
     private int valueToPointerValue(final int value) {
@@ -227,11 +215,6 @@ class SlideComponent extends JComponent {
     public Dimension getMinimumSize() {
         return myVertical ? new Dimension(22, 50)
                           : new Dimension(50, 22);
-    }
-
-    @Override
-    public final void setToolTipText(final String text) {
-        //disable tooltips
     }
 
     @Override
@@ -274,8 +257,11 @@ class SlideComponent extends JComponent {
         }
 
         private static String formatValue(final int value, final Unit unit) {
-            return String.format("%d%s", (int) (getMaxValue(unit) / LEVEL_MAX_VALUE * value),
-                                 unit.equals(PERCENT) ? "%" : "");
+            if (unit == PERCENT) {
+                return String.format("%d%s", (int) ((getMaxValue(unit) / LEVEL_MAX_VALUE * value)), "%");
+            } else {
+                return String.format("%d", (int) (LEVEL_MAX_VALUE - ((getMaxValue(unit) / LEVEL_MAX_VALUE * value))));
+            }
         }
     }
 }
