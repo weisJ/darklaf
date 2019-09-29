@@ -16,6 +16,7 @@ package com.weis.darklaf.ui.rootpane;
  * limitations under the License.
  */
 
+import com.sun.jna.Structure;
 import com.weis.darklaf.ui.button.DarkButtonUI;
 import com.weis.darklaf.util.GraphicsUtil;
 import com.weis.darklaf.util.WindowsFrameUtil;
@@ -172,12 +173,35 @@ public class DarkTitlePane extends JComponent {
 
     public void addNotify() {
         super.addNotify();
-
         uninstallListeners();
 
         window = SwingUtilities.getWindowAncestor(this);
         if (window != null) {
-            WindowsFrameUtil.enableTitleBar(window, false);
+            if (window instanceof Dialog || window instanceof Frame) {
+                //rootPane.getWindowDecorationStyle() == JRootPane.FRAME
+                WindowsFrameUtil.enableTitleBar(window, false, true);
+            }
+
+//            var hwnd = WindowsFrameUtil.getHWND(window);
+//            NativeLibrary dwm = NativeLibrary.getInstance("dwmapi");
+//            dwm.getFunction("DwmExtendFrameIntoClientArea").invoke(WinNT.HRESULT.class,
+//                                                                   new Object[]{hwnd, new MARGINS(0, 0, 0, 0)});
+//            WindowsFrameUtil.User32dll.INSTANCE.SetWindowPos(hwnd, new WinDef.HWND(new Pointer(0)), 0, 0, 0, 0,
+//                                                             WinUser.SWP_NOZORDER |
+//                                                             WinUser.SWP_NOOWNERZORDER |
+//                                                             WinUser.SWP_NOMOVE |
+//                                                             WinUser.SWP_NOSIZE |
+//                                                             WinUser.SWP_FRAMECHANGED);
+//            WindowsFrameUtil.setWindowCallback(window, new WindowsFrameUtil.WindowProc() {
+//                @Override
+//                public WinDef.LRESULT callback(final WinDef.HWND hWnd, final int uMsg, final WinDef.WPARAM uParam,
+//                                               final WinDef.LPARAM lParam) throws LastErrorException {
+//                    if (uMsg == 0x0083 && uParam.intValue() != 0) {
+//                        return new WinDef.LRESULT(0);
+//                    }
+//                    return parent.callback(hWnd, uMsg, uParam, lParam);
+//                }
+//            });
 
             if (window instanceof Frame) {
                 titleLabel.setText(((Frame) window).getTitle());
@@ -194,6 +218,26 @@ public class DarkTitlePane extends JComponent {
             updateSystemIcon();
         }
     }
+
+    public class MARGINS extends Structure implements Structure.ByReference {
+        public int cxLeftWidth;
+        public int cxRightWidth;
+        public int cyTopHeight;
+        public int cyBottomHeight;
+
+        public MARGINS(final int a, final int b, final int c, final int d) {
+            cxLeftWidth = a;
+            cxRightWidth = b;
+            cyTopHeight = c;
+            cyBottomHeight = d;
+        }
+
+        @Override
+        protected List<String> getFieldOrder() {
+            return List.of("cxLeftWidth", "cxRightWidth", "cyTopHeight", "cyBottomHeight");
+        }
+    }
+
 
     @NotNull
     private Rectangle getMaximizedBounds() {

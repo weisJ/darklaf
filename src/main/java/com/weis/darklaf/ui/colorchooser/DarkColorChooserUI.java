@@ -34,10 +34,6 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
         }
     };
 
-    public DarkColorChooserUI() {
-        var c = new Color(25, 60, 2);
-    }
-
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
@@ -50,7 +46,8 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
                 new DarkColorChooserPanel(new DarkColorModel(),
                                           new DarkColorModelHSL(),
 //                                          new DarkColorModelHSB(),
-                                          new DarkColorModelCMYK())};
+                                          new DarkColorModelCMYK()),
+                new DarkSwatchesChooserPanel(),};
     }
 
     @Override

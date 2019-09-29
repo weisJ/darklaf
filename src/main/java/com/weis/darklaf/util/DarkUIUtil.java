@@ -226,6 +226,11 @@ public final class DarkUIUtil {
         return component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);
     }
 
+    public static boolean isTooltipShowing(final JComponent component) {
+        AbstractAction hideTipAction = (AbstractAction) component.getActionMap().get("hideTip");
+        return hideTipAction.isEnabled();
+    }
+
     public enum Outline {
         error {
             @Override

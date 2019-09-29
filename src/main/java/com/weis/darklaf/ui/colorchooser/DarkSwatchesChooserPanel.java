@@ -1,9 +1,34 @@
 package com.weis.darklaf.ui.colorchooser;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.colorchooser.ColorSelectionModel;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.Serializable;
 
 public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
+
+
+    private SwatchPanel swatchPanel;
+    private RecentSwatchPanel recentSwatchPanel;
+    private MouseListener mainSwatchListener;
+    private MouseListener recentSwatchListener;
+    private KeyListener mainSwatchKeyListener;
+    private KeyListener recentSwatchKeyListener;
+
+    public DarkSwatchesChooserPanel() {
+        setInheritsPopupMenu(true);
+    }
+
     @Override
     public void updateChooser() {
 
@@ -11,12 +36,124 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
     @Override
     protected void buildChooser() {
+        String recentStr = UIManager.getString("ColorChooser.swatchesRecentText", getLocale());
 
+        JPanel superHolder = new JPanel();
+        superHolder.setLayout(new BoxLayout(superHolder, BoxLayout.Y_AXIS));
+
+        swatchPanel = new MainSwatchPanel();
+        swatchPanel.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, getDisplayName());
+        swatchPanel.setInheritsPopupMenu(true);
+
+        recentSwatchPanel = new RecentSwatchPanel();
+        recentSwatchPanel.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, recentStr);
+
+        mainSwatchKeyListener = new MainSwatchKeyListener();
+        mainSwatchListener = new MainSwatchListener();
+        swatchPanel.addMouseListener(mainSwatchListener);
+        swatchPanel.addKeyListener(mainSwatchKeyListener);
+        recentSwatchListener = new RecentSwatchListener();
+        recentSwatchKeyListener = new RecentSwatchKeyListener();
+        recentSwatchPanel.addMouseListener(recentSwatchListener);
+        recentSwatchPanel.addKeyListener(recentSwatchKeyListener);
+
+        JPanel mainHolder = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        Border border = new LineBorder(UIManager.getColor("ColorChooser.swatchBorderColor"));
+        swatchPanel.setBorder(border);
+        mainHolder.add(swatchPanel);
+
+        superHolder.add(mainHolder);
+
+        recentSwatchPanel.setInheritsPopupMenu(true);
+        JPanel recentHolder = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        recentSwatchPanel.setBorder(border);
+        recentHolder.setInheritsPopupMenu(true);
+        recentHolder.add(recentSwatchPanel);
+
+        JLabel l = new JLabel(recentStr);
+        l.setLabelFor(recentSwatchPanel);
+        var labelHolder = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        labelHolder.add(l);
+        superHolder.add(labelHolder);
+
+        superHolder.add(recentHolder);
+        superHolder.setInheritsPopupMenu(true);
+
+        add(superHolder);
     }
 
-    @Override
+    protected void setSelectedColor(final Color color) {
+        ColorSelectionModel model = getColorSelectionModel();
+        if (model != null) {
+            model.setSelectedColor(color);
+        }
+    }
+
+    public void uninstallChooserPanel(final JColorChooser enclosingChooser) {
+        super.uninstallChooserPanel(enclosingChooser);
+        swatchPanel.removeMouseListener(mainSwatchListener);
+        swatchPanel.removeKeyListener(mainSwatchKeyListener);
+        recentSwatchPanel.removeMouseListener(recentSwatchListener);
+        recentSwatchPanel.removeKeyListener(recentSwatchKeyListener);
+
+        swatchPanel = null;
+        recentSwatchPanel = null;
+        mainSwatchListener = null;
+        mainSwatchKeyListener = null;
+        recentSwatchListener = null;
+        recentSwatchKeyListener = null;
+
+        removeAll();  // strip out all the sub-components
+    }
+
     public String getDisplayName() {
-        return null;
+        return UIManager.getString("ColorChooser.swatchesNameText", getLocale());
+    }
+
+    public void installChooserPanel(final JColorChooser enclosingChooser) {
+        super.installChooserPanel(enclosingChooser);
+    }
+
+    protected class RecentSwatchKeyListener extends KeyAdapter {
+        public void keyPressed(final KeyEvent e) {
+            if (KeyEvent.VK_SPACE == e.getKeyCode()) {
+                Color color = recentSwatchPanel.getSelectedColor();
+                setSelectedColor(color);
+            }
+        }
+    }
+
+    protected class MainSwatchKeyListener extends KeyAdapter {
+        public void keyPressed(final KeyEvent e) {
+            if (KeyEvent.VK_SPACE == e.getKeyCode()) {
+                Color color = swatchPanel.getSelectedColor();
+                setSelectedColor(color);
+                recentSwatchPanel.setMostRecentColor(color);
+            }
+        }
+    }
+
+    protected class RecentSwatchListener extends MouseAdapter implements Serializable {
+        public void mousePressed(final MouseEvent e) {
+            if (isEnabled()) {
+                Color color = recentSwatchPanel.getColorForLocation(e.getX(), e.getY());
+                recentSwatchPanel.setSelectedColorFromLocation(e.getX(), e.getY());
+                setSelectedColor(color);
+                recentSwatchPanel.requestFocusInWindow();
+            }
+        }
+    }
+
+    protected class MainSwatchListener extends MouseAdapter implements Serializable {
+        public void mousePressed(final MouseEvent e) {
+            if (isEnabled()) {
+                Color color = swatchPanel.getColorForLocation(e.getX(), e.getY());
+                setSelectedColor(color);
+                swatchPanel.setSelectedColorFromLocation(e.getX(), e.getY());
+                recentSwatchPanel.setMostRecentColor(color);
+                swatchPanel.requestFocusInWindow();
+            }
+        }
     }
 
     @Override
@@ -28,4 +165,5 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
     public Icon getLargeDisplayIcon() {
         return null;
     }
+
 }

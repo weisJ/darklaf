@@ -11,6 +11,7 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class DarkColorChooserPanel extends AbstractColorChooserPanel implements ColorListener {
 
@@ -72,12 +73,10 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
             @Override
             public void ancestorRemoved(final AncestorEvent event) {
-
             }
 
             @Override
             public void ancestorMoved(final AncestorEvent event) {
-
             }
         });
 
@@ -96,7 +95,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-        add(buildTopPanel(true), BorderLayout.NORTH);
+        add(buildTopPanel(UIManager.getBoolean("ColorChooser.pipetteEnabled")), BorderLayout.NORTH);
         add(colorWheelPanel, BorderLayout.CENTER);
         add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
         updateValueFields();
@@ -254,17 +253,17 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
     @Override
     public String getDisplayName() {
-        return "Test";
+        return "Color Wheel";
     }
 
     @Override
     public int getMnemonic() {
-        return 0;
+        return KeyEvent.VK_W;
     }
 
     @Override
     public int getDisplayedMnemonicIndex() {
-        return 0;
+        return 6;
     }
 
     @Override
@@ -284,8 +283,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
             }
             currentColor = color;
             hexFormatter.setTransparencyEnabled(b);
-            applyColorToHEX(getColorFromModel());
             colorWheelPanel.setColorTransparencySelectionEnabled(b);
+            applyColorToHEX(getColorFromModel());
             firePropertyChange(TRANSPARENCY_ENABLED_PROPERTY,
                                oldValue, b);
         }
@@ -312,7 +311,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         isChanging = true;
         if (color != null && !color.equals(currentColor)) {
             var newColor = !isColorTransparencySelectionEnabled()
-                           ? new Color(color.getRed(), color.getBlue(), color.getGreen()) : color;
+                           ? new Color(color.getRed(), color.getGreen(), color.getBlue()) : color;
             var model = getColorSelectionModel();
             if (model != null) {
                 model.setSelectedColor(newColor);
