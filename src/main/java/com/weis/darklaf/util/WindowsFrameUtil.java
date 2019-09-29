@@ -60,6 +60,8 @@ public final class WindowsFrameUtil {
 
         LONG_PTR SetWindowLongPtr(HWND hWnd, int nIndex, WNDPROC wndProc) throws LastErrorException;
 
+        int ShowCursor(boolean bShow);
+
         void DisableProcessWindowsGhosting() throws LastErrorException;
 
         INT_PTR GetWindowDC(HWND hwnd);

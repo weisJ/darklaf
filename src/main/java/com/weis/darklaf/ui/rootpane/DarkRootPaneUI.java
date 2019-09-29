@@ -77,11 +77,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI {
     public void installUI(final JComponent c) {
         super.installUI(c);
         rootPane = (JRootPane) c;
-        int style = rootPane.getWindowDecorationStyle();
-
-        if (style != JRootPane.NONE) {
-            installClientDecorations(rootPane);
-        }
     }
 
     @Override
@@ -102,7 +97,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI {
             LookAndFeel.uninstallBorder(root);
         } else {
             LookAndFeel.uninstallBorder(root);
-//            LookAndFeel.installBorder(root, "RootPane.border");
         }
     }
 
@@ -261,6 +255,10 @@ public class DarkRootPaneUI extends BasicRootPaneUI {
                     currWindow.addComponentListener(windowComponentListener);
                 }
 
+                if (currWindow != window) {
+                    installClientDecorations(rootPane);
+                }
+
                 window = currWindow;
             }
             currentWindow = currWindow;
@@ -313,7 +311,11 @@ public class DarkRootPaneUI extends BasicRootPaneUI {
         installWindowListeners(root, root.getParent());
         installLayout(root);
         if (window != null) {
-            ((Frame) window).setUndecorated(false);
+            if (window instanceof Frame) {
+                ((Frame) window).setUndecorated(root.getWindowDecorationStyle() == JRootPane.NONE);
+            } else if (window instanceof Dialog) {
+                ((Dialog) window).setUndecorated(root.getWindowDecorationStyle() == JRootPane.NONE);
+            }
             root.revalidate();
             root.repaint();
         }

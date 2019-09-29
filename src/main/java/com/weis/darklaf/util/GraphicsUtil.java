@@ -78,7 +78,7 @@ public final class GraphicsUtil {
 
         GraphicsContext config = new GraphicsContext(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setComposite(AlphaComposite.getInstance(3, alpha));
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         return config;
     }
 

@@ -39,7 +39,6 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
         if (color != null) {
             savedColor = color;
             label.setBackground(color);
-            System.out.println(color);
         }
     }
 

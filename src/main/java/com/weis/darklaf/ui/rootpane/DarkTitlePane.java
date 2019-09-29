@@ -216,11 +216,11 @@ public class DarkTitlePane extends JComponent {
         int decorationStyle = getWindowDecorationStyle();
         titleLabel = new JLabel();
         add(titleLabel);
-        if (decorationStyle == JRootPane.FRAME) {
-            createIcons();
-            createActions();
-            createButtons();
 
+        createIcons();
+        createActions();
+        createButtons();
+        if (decorationStyle == JRootPane.FRAME) {
             windowIconButton = createWindowIcon();
             add(windowIconButton);
             add(minimizeButton);
@@ -233,8 +233,6 @@ public class DarkTitlePane extends JComponent {
                    decorationStyle == JRootPane.FILE_CHOOSER_DIALOG ||
                    decorationStyle == JRootPane.QUESTION_DIALOG ||
                    decorationStyle == JRootPane.WARNING_DIALOG) {
-            createActions();
-            createButtons();
             add(closeButton);
         }
     }
@@ -409,7 +407,6 @@ public class DarkTitlePane extends JComponent {
             maximizeIcon.setActive(active);
             restoreIcon.setActive(active);
         }
-
         getRootPane().repaint();
     }
 

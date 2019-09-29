@@ -157,6 +157,7 @@ public class DarkLaf extends BasicLookAndFeel {
             patchComboBox(metalDefaults, defaults);
             loadStyleSheet();
             JFrame.setDefaultLookAndFeelDecorated(true);
+            JDialog.setDefaultLookAndFeelDecorated(true);
 
             if (SystemInfo.isMac
                 && !"true".equalsIgnoreCase(System.getProperty("apple.laf.useScreenMenuBar", "false"))) {

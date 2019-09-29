@@ -104,4 +104,17 @@ public final class ImageUtil {
         g.dispose();
         return new ImageIcon(img);
     }
+
+    @NotNull
+    @Contract("_, _, _ -> new")
+    public static BufferedImage createImage(final int width, final int height, final int type) {
+        return new BufferedImage((int) (width * SCALE_X), (int) (height * SCALE_Y), type) {
+            @Override
+            public Graphics2D createGraphics() {
+                var g = super.createGraphics();
+                g.scale(SCALE_X, SCALE_Y);
+                return g;
+            }
+        };
+    }
 }

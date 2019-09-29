@@ -31,7 +31,7 @@ public class GraphicsContext {
         return this;
     }
 
-    public Graphics2D getG() {
+    public Graphics2D getGraphics() {
         return this.graphics2D;
     }
 
