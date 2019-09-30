@@ -1,8 +1,8 @@
 package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.color.DarkColorModel;
+import com.weis.darklaf.components.DefaultColorPipette;
 import com.weis.darklaf.util.ColorUtil;
-import com.weis.darklaf.util.DefaultColorPipette;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

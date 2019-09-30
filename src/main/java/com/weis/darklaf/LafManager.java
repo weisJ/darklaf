@@ -36,7 +36,7 @@ public final class LafManager {
         return currentLaf;
     }
 
-    public static void setLogEnabled(boolean logEnabled) {
+    public static void setLogEnabled(final boolean logEnabled) {
         if (!logEnabled) {
             LogManager.getLogManager().reset();
         } else {

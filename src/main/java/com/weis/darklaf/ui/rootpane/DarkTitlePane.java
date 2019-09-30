@@ -17,9 +17,9 @@ package com.weis.darklaf.ui.rootpane;
  */
 
 import com.sun.jna.Structure;
+import com.weis.darklaf.platform.windows.WindowsFrameUtil;
 import com.weis.darklaf.ui.button.DarkButtonUI;
 import com.weis.darklaf.util.GraphicsUtil;
-import com.weis.darklaf.util.WindowsFrameUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

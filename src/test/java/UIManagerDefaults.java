@@ -32,14 +32,10 @@ import java.util.Vector;
 
 public class UIManagerDefaults implements ItemListener {
     private static final String[] COLUMN_NAMES = {"Key", "Value", "Sample"};
-    @Nullable
     private static String selectedItem;
 
-    @NotNull
     private final JComponent contentPane;
-    @NotNull
     private final TreeMap<String, TreeMap<String, Object>> items;
-    @NotNull
     private final HashMap<String, DefaultTableModel> models;
     private JMenuBar menuBar;
     private JComboBox<String> comboBox;
@@ -154,6 +150,7 @@ public class UIManagerDefaults implements ItemListener {
         final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0);
         table = new JTable(model);
         table.setAutoCreateColumnsFromModel(false);
+        table.setShowHorizontalLines(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(250);
         table.getColumnModel().getColumn(1).setPreferredWidth(500);
         table.getColumnModel().getColumn(2).setPreferredWidth(100);

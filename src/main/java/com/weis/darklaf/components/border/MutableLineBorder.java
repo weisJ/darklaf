@@ -26,10 +26,10 @@ public class MutableLineBorder extends EmptyBorder {
                             final int width, final int height) {
         g.setColor(getColor());
         var insets = getBorderInsets();
-        g.fillRect(0, 0, width - insets.right, insets.top);
-        g.fillRect(0, insets.top, insets.left, height - insets.top);
-        g.fillRect(insets.left, height - insets.bottom, width - insets.left, insets.bottom);
-        g.fillRect(width - insets.right, 0, insets.right, height - insets.bottom);
+        g.fillRect(x, y, width - insets.right, insets.top);
+        g.fillRect(x, y + insets.top, insets.left, height - insets.top);
+        g.fillRect(x + insets.left, y + height - insets.bottom, width - insets.left, insets.bottom);
+        g.fillRect(x + width - insets.right, y, insets.right, height - insets.bottom);
     }
 
     public void setLeft(final int left) {

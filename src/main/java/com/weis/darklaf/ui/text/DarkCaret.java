@@ -330,6 +330,6 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         UNDERLINE_STYLE,
         BLOCK_STYLE,
         BLOCK_BORDER_STYLE,
-        THICK_VERTICAL_LINE_STYLE;
+        THICK_VERTICAL_LINE_STYLE
     }
 }

@@ -1,9 +1,9 @@
 package com.weis.darklaf.ui.text;
 
 import com.bulenkov.darcula.ui.DarculaTextBorder;
+import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
-import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;

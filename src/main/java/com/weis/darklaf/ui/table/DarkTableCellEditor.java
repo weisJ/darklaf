@@ -188,9 +188,13 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         if (DarkTableCellRenderer.isBooleanRenderingEnabled(table)) {
             var p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, table);
-            var value = table.getValueAt(table.rowAtPoint(p), table.columnAtPoint(p));
-            if (useBooleanEditor(value, table)) {
-                return true;
+            int row = table.rowAtPoint(p);
+            int col = table.columnAtPoint(p);
+            if (row >= 0 && row < table.getRowCount() && col >= 0 && col < table.getColumnCount()) {
+                var value = table.getValueAt(row, col);
+                if (useBooleanEditor(value, table)) {
+                    return true;
+                }
             }
         }
         return super.isCellEditable(anEvent);

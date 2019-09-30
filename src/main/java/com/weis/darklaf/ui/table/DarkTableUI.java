@@ -12,6 +12,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.beans.PropertyChangeListener;
 
 public class DarkTableUI extends DarkTableUIBridge {
 
@@ -37,6 +38,16 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
             table.repaint();
+        }
+    };
+    private final PropertyChangeListener propertyChangeListener = e -> {
+        var key = e.getPropertyName();
+        if ("showHorizontalLines".equals(key)) {
+            var b = (boolean) e.getNewValue();
+            table.setRowMargin(b ? 1 : 0);
+        } else if ("showVerticalLines".equals(key)) {
+            var b = (boolean) e.getNewValue();
+            table.getColumnModel().setColumnMargin(b ? 1 : 0);
         }
     };
 
@@ -86,12 +97,14 @@ public class DarkTableUI extends DarkTableUIBridge {
     protected void installListeners() {
         super.installListeners();
         table.addFocusListener(focusListener);
+        table.addPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
         table.removeFocusListener(focusListener);
+        table.addPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
@@ -168,7 +181,10 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
         if (!table.getShowHorizontalLines() && table.getRowCount() != 0 && !scrollVisible) {
             g.setColor(getBorderColor());
-            int y = table.getHeight() - 1;
+            var clip = g.getClipBounds();
+            clip.height += 1;
+            g.setClip(clip);
+            int y = table.getHeight();
             g.fillRect(0, y, table.getWidth(), 1);
         }
     }

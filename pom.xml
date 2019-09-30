@@ -32,7 +32,6 @@
             <artifactId>svg-salamander</artifactId>
             <version>[0.1.19,)</version>
         </dependency>
-
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -65,10 +64,10 @@
                 <version>3.8.0</version>
                 <configuration>
                     <compilerArgs>
-                        <!--                        <arg>&#45;&#45;enable-preview</arg>-->
                         <arg>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</arg>
                         <arg>--add-exports=java.desktop/com.sun.java.swing=ALL-UNNAMED</arg>
                         <arg>--add-exports=java.desktop/sun.swing=ALL-UNNAMED</arg>
+                        <!--                        <arg>-h</arg>-->
                     </compilerArgs>
                 </configuration>
             </plugin>

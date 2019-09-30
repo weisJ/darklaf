@@ -1,6 +1,8 @@
-package com.weis.darklaf.util;
+package com.weis.darklaf.components;
 
 import com.weis.darklaf.ui.colorchooser.ColorListener;
+import com.weis.darklaf.util.GraphicsUtil;
+import com.weis.darklaf.util.TimerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

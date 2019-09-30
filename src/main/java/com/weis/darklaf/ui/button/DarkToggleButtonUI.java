@@ -18,7 +18,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     private static final int SLIDER_HEIGHT = 17;
     private static final int SLIDER_WIDTH = 35;
-    private static Rectangle rect = new Rectangle();
+    private static final Rectangle rect = new Rectangle();
 
     private final PropertyChangeListener propertyChangeListener = evt -> {
         if ("ToggleButton.variant".equals(evt.getPropertyName())) {

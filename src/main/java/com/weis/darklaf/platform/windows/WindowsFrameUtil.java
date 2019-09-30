@@ -1,4 +1,4 @@
-package com.weis.darklaf.util;
+package com.weis.darklaf.platform.windows;
 
 import com.sun.jna.LastErrorException;
 import com.sun.jna.Native;

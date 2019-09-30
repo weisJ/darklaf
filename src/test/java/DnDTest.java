@@ -42,17 +42,16 @@ public class DnDTest extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private class DragMouseAdapter extends MouseAdapter {
+    public static void main(final String[] args) {
 
-        public void mousePressed(MouseEvent e) {
+        EventQueue.invokeLater(() -> {
 
-            var c = (JComponent) e.getSource();
-            var handler = c.getTransferHandler();
-            handler.exportAsDrag(c, e, TransferHandler.COPY);
-        }
+            var ex = new DnDTest();
+            ex.setVisible(true);
+        });
     }
 
-    private void createLayout(JComponent... arg) {
+    private void createLayout(final JComponent... arg) {
 
         var pane = getContentPane();
         var gl = new GroupLayout(pane);
@@ -85,12 +84,13 @@ public class DnDTest extends JFrame {
         pack();
     }
 
-    public static void main(String[] args) {
+    private class DragMouseAdapter extends MouseAdapter {
 
-        EventQueue.invokeLater(() -> {
+        public void mousePressed(final MouseEvent e) {
 
-            var ex = new DnDTest();
-            ex.setVisible(true);
-        });
+            var c = (JComponent) e.getSource();
+            var handler = c.getTransferHandler();
+            handler.exportAsDrag(c, e, TransferHandler.COPY);
+        }
     }
 }
