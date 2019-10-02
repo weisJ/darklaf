@@ -1,7 +1,9 @@
 package com.weis.darklaf.ui.tabbedpane;
 
 import com.weis.darklaf.util.DarkUIUtil;
-import org.jdesktop.swingx.plaf.basic.core.LazyActionMap;
+import com.weis.darklaf.util.LazyActionMap;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
@@ -253,11 +255,13 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * @param c a component
      * @return a UI
      */
+    @NotNull
+    @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabbedPaneUIBridge();
     }
 
-    static void loadActionMap(final LazyActionMap map) {
+    static void loadActionMap(@NotNull final LazyActionMap map) {
         map.put(new Actions(Actions.NEXT));
         map.put(new Actions(Actions.PREVIOUS));
         map.put(new Actions(Actions.RIGHT));

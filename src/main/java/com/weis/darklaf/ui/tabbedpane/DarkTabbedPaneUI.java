@@ -665,9 +665,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
         private static final int SCROLL_REWIND_DELAY = 1200;
         private long lastClickEvent;
-        protected ScrollPopupMenu scrollPopupMenu;
-        protected JButton moreTabsButton;
-        protected JComponent newTabButton;
+        protected final ScrollPopupMenu scrollPopupMenu;
+        protected final JButton moreTabsButton;
+        protected final JComponent newTabButton;
         private final Timer timer;
 
         public DarkScrollableTabSupport(final int tabPlacement) {
@@ -1374,7 +1374,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
             // In order to allow programs to use a single component
             // as the display for multiple tabs, we will not change
-            // the visible compnent if the currently selected tab
+            // the visible component if the currently selected tab
             // has a null component.  This is a bit dicey, as we don't
             // explicitly state we support this in the spec, but since
             // programs are now depending on this, we're making it work.
@@ -1382,7 +1382,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             if (selectedComponent != null) {
                 if (selectedComponent != visibleComponent &&
                     visibleComponent != null) {
-                    if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
+
+                    var owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                    if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
                         shouldChangeFocus = true;
                     }
                 }
@@ -1533,7 +1535,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
             // In order to allow programs to use a single component
             // as the display for multiple tabs, we will not change
-            // the visible compnent if the currently selected tab
+            // the visible component if the currently selected tab
             // has a null component.  This is a bit dicey, as we don't
             // explicitly state we support this in the spec, but since
             // programs are now depending on this, we're making it work.
@@ -1541,7 +1543,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             if (selectedComponent != null) {
                 if (selectedComponent != visibleComponent &&
                     visibleComponent != null) {
-                    if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
+                    var owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                    if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
                         shouldChangeFocus = true;
                     }
                 }
@@ -1768,7 +1771,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
 
         @Override
-        public void mousePressed(@NotNull final MouseEvent e) {
+        public void mousePressed(final MouseEvent e) {
             super.mousePressed(e);
             tabPane.requestFocus();
         }
@@ -1789,7 +1792,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     public class DarkScrollHandler extends DarkHandler {
 
         @Override
-        public void mousePressed(final MouseEvent e) {
+        public void mousePressed(@NotNull final MouseEvent e) {
             scrollableTabSupport.timer.stop();
             super.mousePressed(convertEvent(e));
             scrollableTabSupport.endScroll();

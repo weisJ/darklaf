@@ -3,7 +3,7 @@ package com.weis.darklaf.platform.windows;
 import com.bulenkov.iconloader.util.SystemInfo;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.WinDef;
+import com.weis.darklaf.DarkLaf;
 import com.weis.darklaf.platform.NativeUtil;
 import org.jetbrains.annotations.Contract;
 
@@ -31,25 +31,54 @@ public class JNIDecorations {
     public static native void uninstallDecorations(final long hwnd);
 
     public static long getHWND(final Component component) {
-        var hwnd = new WinDef.HWND();
-        hwnd.setPointer(Native.getComponentPointer(component));
-        return Pointer.nativeValue(hwnd.getPointer());
+        return Pointer.nativeValue(Native.getComponentPointer(component));
     }
 
     private static final Logger LOGGER = Logger.getLogger(JNIDecorations.class.getName());
-    private static boolean supported = false;
+    private static final String X86 = "32";
+    private static final String X64 = "64";
+    private static boolean supported;
+    private static boolean loaded;
 
     static {
-        if (SystemInfo.isWindows) {
-            try {
-                NativeUtil.loadLibraryFromJar("/library/jniplatform.dll");
-                supported = true;
-                LOGGER.info("Loaded jniplatform.dll. Decorations are enabled.");
-            } catch (IOException e) {
-                supported = false;
-                LOGGER.log(Level.SEVERE, "Could not load decorations library. Decorations will be disabled",
-                           e.getMessage());
+        updateLibrary();
+    }
+
+    /**
+     * Load the decorations library if necessary.
+     *
+     * @return true if successful and library wasn't already loaded.
+     */
+    public static boolean updateLibrary() {
+        boolean oldLoaded = loaded;
+        if (!supported) {
+            supported = loadLibrary();
+        }
+        return supported && !oldLoaded;
+    }
+
+    private static boolean loadLibrary() {
+        if (!SystemInfo.isWindows || !DarkLaf.isDecorationsEnabled()) {
+            return false;
+        }
+        if (loaded) return true;
+        try {
+            String model = System.getProperty("sun.arch.data.model");
+            if (X86.equals(model)) {
+                NativeUtil.loadLibraryFromJar("/library/x86/jniplatform.dll");
+            } else if (X64.equals(model)) {
+                NativeUtil.loadLibraryFromJar("/library/x64/jniplatform.dll");
+            } else {
+                LOGGER.warning("Could not determine jre model '" + model + "'. Decorations will be disabled");
+                return false;
             }
+            loaded = true;
+            LOGGER.info("Loaded jniplatform.dll. Decorations are enabled.");
+            return true;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not load decorations library. Decorations will be disabled",
+                       e.getMessage());
+            return false;
         }
     }
 

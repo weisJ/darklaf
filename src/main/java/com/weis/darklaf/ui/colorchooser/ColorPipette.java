@@ -16,7 +16,7 @@ package com.weis.darklaf.ui.colorchooser;
  * limitations under the License.
  */
 
-import com.intellij.openapi.Disposable;
+import com.weis.darklaf.components.Disposable;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;

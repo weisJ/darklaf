@@ -5,6 +5,7 @@ import com.bulenkov.iconloader.util.SystemInfo;
 import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
 import com.weis.darklaf.util.LafUtil;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 
@@ -33,6 +34,7 @@ public class DarkLaf extends BasicLookAndFeel {
 
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
+    private static boolean decorationsEnabled = true;
     private BasicLookAndFeel base;
 
     /**
@@ -129,6 +131,21 @@ public class DarkLaf extends BasicLookAndFeel {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), copyActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), pasteActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
+    }
+
+    @Contract(pure = true)
+    public static boolean isDecorationsEnabled() {
+        return decorationsEnabled;
+    }
+
+    public static void setDecorationsEnabled(boolean decorationsEnabled) {
+        if (DarkLaf.decorationsEnabled != decorationsEnabled) {
+            DarkLaf.decorationsEnabled = decorationsEnabled;
+            boolean update = JNIDecorations.updateLibrary();
+            if (update) {
+                LafManager.updateLaf();
+            }
+        }
     }
 
     @NotNull

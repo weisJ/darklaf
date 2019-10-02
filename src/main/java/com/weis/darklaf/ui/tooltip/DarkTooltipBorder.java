@@ -1,8 +1,8 @@
 package com.weis.darklaf.ui.tooltip;
 
 import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.components.border.DropShadowBorder;
 import com.weis.darklaf.components.border.TextBubbleBorder;
-import org.jdesktop.swingx.border.DropShadowBorder;
 
 import javax.swing.*;
 import javax.swing.border.Border;

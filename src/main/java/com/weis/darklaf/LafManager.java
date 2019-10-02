@@ -78,7 +78,7 @@ public final class LafManager {
         }
     }
 
-    private static void updateLaf() {
+    public static void updateLaf() {
         for (final Frame f : Frame.getFrames()) {
             updateLafRecursively(f);
         }

@@ -1,6 +1,5 @@
 package com.weis.darklaf.util;
 
-import com.intellij.openapi.util.text.StringUtilRt;
 import org.jetbrains.annotations.Contract;
 
 public final class StringUtil {
@@ -11,7 +10,7 @@ public final class StringUtil {
 
     @Contract("null -> null; !null -> !null")
     public static String toUpperCase(final String a) {
-        return a == null ? null : StringUtilRt.toUpperCase(a).toString();
+        return a == null ? null : toUpperCase((CharSequence) a).toString();
     }
 
     @Contract("null -> fail")

@@ -4,7 +4,6 @@ import com.weis.darklaf.color.DarkColorModel;
 import com.weis.darklaf.util.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.ir.expressions.IrConstKind;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
