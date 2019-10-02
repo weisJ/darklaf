@@ -51,6 +51,7 @@ public class DarkTitlePane extends JComponent {
     private static final int ICON_WIDTH = (int) (65 / GraphicsUtil.SCALE_X);
     private static final int IMAGE_HEIGHT = 16;
     private static final int IMAGE_WIDTH = 16;
+    private boolean oldResizable;
 
     private final ContainerListener layeredPaneContainerListener = new ContainerListener() {
         @Override
@@ -122,6 +123,7 @@ public class DarkTitlePane extends JComponent {
         rootPane.addContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
         state = -1;
+        oldResizable = true;
         installSubcomponents();
         determineColors();
         installDefaults();
@@ -182,8 +184,8 @@ public class DarkTitlePane extends JComponent {
             if (window instanceof Dialog || window instanceof Frame) {
                 windowHandle = JNIDecorations.getHWND(window);
                 JNIDecorations.installDecorations(windowHandle);
-                JNIDecorations.setResizable(windowHandle, isResizable(rootPane));
-                var color = UIManager.getColor("RootPane.background");
+                updateResizeBehaviour();
+                var color = window.getBackground();
                 JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
 
@@ -202,8 +204,25 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-    protected boolean isResizable(@NotNull final JRootPane rootPane) {
-        return JRootPane.NONE != rootPane.getWindowDecorationStyle();
+    protected boolean isResizable(final Window window, @NotNull final JRootPane rootPane) {
+        if (JRootPane.NONE == rootPane.getWindowDecorationStyle()) {
+            return false;
+        } else {
+            if (window instanceof Dialog) {
+                return ((Dialog)window).isResizable();
+            } else if (window instanceof Frame) {
+                return ((Frame)window).isResizable();
+            }
+        }
+        return false;
+    }
+
+    protected void updateResizeBehaviour() {
+        boolean res = isResizable(window, rootPane);
+        if (oldResizable != res) {
+            oldResizable = res;
+            JNIDecorations.setResizable(windowHandle, res);
+        }
     }
 
     public void removeNotify() {
@@ -399,7 +418,6 @@ public class DarkTitlePane extends JComponent {
 
     private void setState(final int state, final boolean updateRegardless) {
         Window wnd = getWindow();
-
         if (wnd != null && getWindowDecorationStyle() == JRootPane.FRAME) {
             if (this.state == state && !updateRegardless) {
                 return;
@@ -483,6 +501,7 @@ public class DarkTitlePane extends JComponent {
         if (getFrame() != null) {
             setState(getFrame().getExtendedState());
         }
+        updateResizeBehaviour();
         Window window = getWindow();
         boolean active = window == null || window.isActive();
         int width = getWidth();
@@ -655,6 +674,9 @@ public class DarkTitlePane extends JComponent {
                 updateSystemIcon();
                 revalidate();
                 repaint();
+            } else if ("background".equals(name) && pce.getNewValue() instanceof Color) {
+                var color = (Color) pce.getNewValue();
+                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
         }
     }
