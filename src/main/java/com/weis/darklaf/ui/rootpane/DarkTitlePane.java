@@ -16,8 +16,7 @@ package com.weis.darklaf.ui.rootpane;
  * limitations under the License.
  */
 
-import com.sun.jna.Structure;
-import com.weis.darklaf.platform.windows.WindowsFrameUtil;
+import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.ui.button.DarkButtonUI;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -107,6 +106,7 @@ public class DarkTitlePane extends JComponent {
     private JLabel titleLabel;
 
     private Window window;
+    private long windowHandle;
     private final JRootPane rootPane;
     private JMenuBar menuBar;
     private int state;
@@ -117,7 +117,7 @@ public class DarkTitlePane extends JComponent {
     private Color activeForeground;
     private Color border;
 
-    public DarkTitlePane(final JRootPane root, final DarkRootPaneUI ui) {
+    public DarkTitlePane(final JRootPane root) {
         this.rootPane = root;
         rootPane.addContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
@@ -131,6 +131,8 @@ public class DarkTitlePane extends JComponent {
     public void uninstall() {
         uninstallListeners();
         window = null;
+        JNIDecorations.uninstallDecorations(windowHandle);
+        windowHandle = 0;
         rootPane.removeContainerListener(rootPaneContainerListener);
         removeAll();
     }
@@ -178,34 +180,15 @@ public class DarkTitlePane extends JComponent {
         window = SwingUtilities.getWindowAncestor(this);
         if (window != null) {
             if (window instanceof Dialog || window instanceof Frame) {
-                //rootPane.getWindowDecorationStyle() == JRootPane.FRAME
-                WindowsFrameUtil.enableTitleBar(window, false, true);
+                windowHandle = JNIDecorations.getHWND(window);
+                JNIDecorations.installDecorations(windowHandle);
+                JNIDecorations.setResizable(windowHandle, isResizable(rootPane));
+                var color = UIManager.getColor("RootPane.background");
+                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
-
-//            var hwnd = WindowsFrameUtil.getHWND(window);
-//            NativeLibrary dwm = NativeLibrary.getInstance("dwmapi");
-//            dwm.getFunction("DwmExtendFrameIntoClientArea").invoke(WinNT.HRESULT.class,
-//                                                                   new Object[]{hwnd, new MARGINS(0, 0, 0, 0)});
-//            WindowsFrameUtil.User32dll.INSTANCE.SetWindowPos(hwnd, new WinDef.HWND(new Pointer(0)), 0, 0, 0, 0,
-//                                                             WinUser.SWP_NOZORDER |
-//                                                             WinUser.SWP_NOOWNERZORDER |
-//                                                             WinUser.SWP_NOMOVE |
-//                                                             WinUser.SWP_NOSIZE |
-//                                                             WinUser.SWP_FRAMECHANGED);
-//            WindowsFrameUtil.setWindowCallback(window, new WindowsFrameUtil.WindowProc() {
-//                @Override
-//                public WinDef.LRESULT callback(final WinDef.HWND hWnd, final int uMsg, final WinDef.WPARAM uParam,
-//                                               final WinDef.LPARAM lParam) throws LastErrorException {
-//                    if (uMsg == 0x0083 && uParam.intValue() != 0) {
-//                        return new WinDef.LRESULT(0);
-//                    }
-//                    return parent.callback(hWnd, uMsg, uParam, lParam);
-//                }
-//            });
 
             if (window instanceof Frame) {
                 titleLabel.setText(((Frame) window).getTitle());
-                ((Frame) window).setMaximizedBounds(getMaximizedBounds());
                 setState(((Frame) window).getExtendedState());
             } else {
                 setState(0);
@@ -219,41 +202,13 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-    public class MARGINS extends Structure implements Structure.ByReference {
-        public int cxLeftWidth;
-        public int cxRightWidth;
-        public int cyTopHeight;
-        public int cyBottomHeight;
-
-        public MARGINS(final int a, final int b, final int c, final int d) {
-            cxLeftWidth = a;
-            cxRightWidth = b;
-            cyTopHeight = c;
-            cyBottomHeight = d;
-        }
-
-        @Override
-        protected List<String> getFieldOrder() {
-            return List.of("cxLeftWidth", "cxRightWidth", "cyTopHeight", "cyBottomHeight");
-        }
-    }
-
-
-    @NotNull
-    private Rectangle getMaximizedBounds() {
-        Insets screenInsets = getToolkit().getScreenInsets(getGraphicsConfiguration());
-        Rectangle screenSize = getGraphicsConfiguration().getBounds();
-        return new Rectangle(screenInsets.left + screenSize.x,
-                             screenInsets.top + screenSize.y,
-                             screenSize.x + screenSize.width - screenInsets.right - screenInsets.left,
-                             screenSize.y + screenSize.height - screenInsets.bottom - screenInsets.top);
+    protected boolean isResizable(@NotNull final JRootPane rootPane) {
+        return JRootPane.NONE != rootPane.getWindowDecorationStyle();
     }
 
     public void removeNotify() {
         super.removeNotify();
-
         uninstallListeners();
-        window = null;
     }
 
     private void installSubcomponents() {
@@ -271,12 +226,12 @@ public class DarkTitlePane extends JComponent {
             add(maximizeToggleButton);
             add(closeButton);
         } else if (decorationStyle == JRootPane.PLAIN_DIALOG ||
-                   decorationStyle == JRootPane.INFORMATION_DIALOG ||
-                   decorationStyle == JRootPane.ERROR_DIALOG ||
-                   decorationStyle == JRootPane.COLOR_CHOOSER_DIALOG ||
-                   decorationStyle == JRootPane.FILE_CHOOSER_DIALOG ||
-                   decorationStyle == JRootPane.QUESTION_DIALOG ||
-                   decorationStyle == JRootPane.WARNING_DIALOG) {
+                decorationStyle == JRootPane.INFORMATION_DIALOG ||
+                decorationStyle == JRootPane.ERROR_DIALOG ||
+                decorationStyle == JRootPane.COLOR_CHOOSER_DIALOG ||
+                decorationStyle == JRootPane.FILE_CHOOSER_DIALOG ||
+                decorationStyle == JRootPane.QUESTION_DIALOG ||
+                decorationStyle == JRootPane.WARNING_DIALOG) {
             add(closeButton);
         }
     }
@@ -316,10 +271,11 @@ public class DarkTitlePane extends JComponent {
         windowIconButton = new JButton();
         windowIconButton.setComponentPopupMenu(createMenu());
         windowIconButton.putClientProperty("JButton.variant", "onlyLabel");
-        windowIconButton.addActionListener(
-                e -> windowIconButton.getComponentPopupMenu().show(windowIconButton,
-                                                                   windowIconButton.getWidth() / 2,
-                                                                   windowIconButton.getHeight() / 2));
+        windowIconButton.addActionListener(e -> windowIconButton
+                .getComponentPopupMenu()
+                .show(windowIconButton,
+                      windowIconButton.getWidth() / 2,
+                      windowIconButton.getHeight() / 2));
         windowIconButton.setFocusable(false);
         windowIconButton.setBorderPainted(false);
         return windowIconButton;
@@ -355,38 +311,21 @@ public class DarkTitlePane extends JComponent {
 
     private void close() {
         Window window = getWindow();
-
         if (window != null) {
             window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
         }
     }
 
     private void minimize() {
-        Frame frame = getFrame();
-        if (frame != null) {
-            frame.setExtendedState(state | Frame.ICONIFIED);
-        }
+        JNIDecorations.minimize(windowHandle);
     }
 
     private void maximize() {
-        Frame frame = getFrame();
-        if (frame != null) {
-            frame.setExtendedState(state | Frame.MAXIMIZED_BOTH);
-        }
+        JNIDecorations.maximize(windowHandle);
     }
 
     private void restore() {
-        Frame frame = getFrame();
-
-        if (frame == null) {
-            return;
-        }
-
-        if ((state & Frame.ICONIFIED) != 0) {
-            frame.setExtendedState(state & ~Frame.ICONIFIED);
-        } else {
-            frame.setExtendedState(state & ~Frame.MAXIMIZED_BOTH);
-        }
+        JNIDecorations.restore(windowHandle);
     }
 
     private void createActions() {
@@ -470,17 +409,13 @@ public class DarkTitlePane extends JComponent {
             if (frame != null) {
                 JRootPane rootPane = getRootPane();
 
-                if (((state & Frame.MAXIMIZED_BOTH) != 0) &&
-                    (rootPane.getBorder() == null ||
-                     (rootPane.getBorder() instanceof UIResource)) &&
-                    frame.isShowing()) {
+                if (((state & Frame.MAXIMIZED_BOTH) != 0)
+                        && (rootPane.getBorder() == null
+                        || (rootPane.getBorder() instanceof UIResource))
+                        && frame.isShowing()) {
                     rootPane.setBorder(null);
-                } else if ((state & Frame.MAXIMIZED_BOTH) == 0) {
-                    // This is a croak, if state becomes bound, this can
-                    // be nuked.
-                    //Todo
-//                    rootPaneUI.installBorder(rootPane);
                 }
+
                 if (frame.isResizable()) {
                     if ((state & Frame.MAXIMIZED_BOTH) != 0) {
                         updateToggleButton(restoreAction, restoreIcon);
@@ -491,8 +426,7 @@ public class DarkTitlePane extends JComponent {
                         maximizeAction.setEnabled(true);
                         restoreAction.setEnabled(false);
                     }
-                    if (maximizeToggleButton.getParent() == null ||
-                        minimizeButton.getParent() == null) {
+                    if (maximizeToggleButton.getParent() == null || minimizeButton.getParent() == null) {
                         add(maximizeToggleButton);
                         add(minimizeButton);
                         revalidate();
@@ -653,36 +587,46 @@ public class DarkTitlePane extends JComponent {
             int start = 0;
             int y = 0;
             int height = computeHeight();
+            int left = 0;
+            int right = 0;
 
             if (leftToRight) {
                 if (windowIconButton != null) {
                     windowIconButton.setBounds(start + PAD, y, ICON_WIDTH, height);
                     start += ICON_WIDTH + PAD;
+                    left = start;
                 }
                 if (menuBar != null) {
                     int menuWidth = getPreferredMenuSize().width;
                     Insets menuInsets = menuBar.getInsets();
                     menuBar.setBounds(start + PAD, y, menuWidth, height + menuInsets.bottom);
                     start += menuWidth + PAD;
+                    left += menuWidth;
                 }
                 x = w;
                 if (closeButton != null) {
                     x -= BUTTON_WIDTH;
+                    right += BUTTON_WIDTH;
                     closeButton.setBounds(x, y, BUTTON_WIDTH, height);
                 }
                 if (getWindowDecorationStyle() == JRootPane.FRAME) {
                     if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
                         if (minimizeButton != null && maximizeToggleButton.getParent() != null) {
                             x -= BUTTON_WIDTH;
+                            right += BUTTON_WIDTH;
                             maximizeToggleButton.setBounds(x, y, BUTTON_WIDTH, height);
                         }
                         if (minimizeButton != null && minimizeButton.getParent() != null) {
                             x -= BUTTON_WIDTH;
+                            right += BUTTON_WIDTH;
                             minimizeButton.setBounds(x, y, BUTTON_WIDTH, height);
                         }
                     }
                 }
                 titleLabel.setBounds(start + TITLE_PAD, 0, x - start - 2 * TITLE_PAD, height);
+                JNIDecorations.updateValues(windowHandle, (int) (left * GraphicsUtil.SCALE_X),
+                                            (int) (right * GraphicsUtil.SCALE_X),
+                                            (int) (height * GraphicsUtil.SCALE_Y));
             } else {
                 //Todo.
             }
@@ -698,6 +642,7 @@ public class DarkTitlePane extends JComponent {
                     setState(frame.getExtendedState(), true);
                 }
                 if ("resizable".equals(name)) {
+                    JNIDecorations.setResizable(windowHandle, Boolean.TRUE.equals(pce.getNewValue()));
                     getRootPane().repaint();
                 }
             } else if ("title".equals(name)) {

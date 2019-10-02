@@ -8,9 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicColorChooserUI;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeListener;
 
 public class DarkColorChooserUI extends BasicColorChooserUI {
@@ -31,6 +36,26 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
                 }
                 children[1].doLayout();
             }
+        }
+    };
+    private final AncestorListener ancestorListener = new AncestorListener() {
+        @Override
+        public void ancestorAdded(AncestorEvent event) {
+            var win = SwingUtilities.getWindowAncestor(chooser);
+            if (win instanceof Dialog) {
+                ((Dialog)win).setResizable(false);
+                chooser.removeAncestorListener(ancestorListener);
+            }
+        }
+
+        @Override
+        public void ancestorRemoved(AncestorEvent event) {
+
+        }
+
+        @Override
+        public void ancestorMoved(AncestorEvent event) {
+
         }
     };
 
@@ -54,12 +79,14 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     protected void installListeners() {
         super.installListeners();
         chooser.addPropertyChangeListener(propertyChangeListener);
+        chooser.addAncestorListener(ancestorListener);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
         chooser.removePropertyChangeListener(propertyChangeListener);
+        chooser.removeAncestorListener(ancestorListener);
     }
 
     @Override

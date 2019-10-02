@@ -160,6 +160,7 @@ public final class DarkUIUtil {
         return SwingUtilities.getWindowAncestor(owner) == w;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {
         for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {

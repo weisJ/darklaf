@@ -10,6 +10,7 @@ public final class ColorChooserDemo {
             LafManager.loadLaf(LafManager.Theme.Dark);
             JColorChooser.showDialog(null, "Color Chooser without transparency",
                                      Color.RED, true);
+//            JOptionPane.showMessageDialog(null, "This is a test!","THis is a test!", JOptionPane.ERROR_MESSAGE);
         });
     }
 }

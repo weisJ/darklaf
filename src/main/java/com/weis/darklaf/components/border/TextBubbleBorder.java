@@ -304,7 +304,7 @@ public class TextBubbleBorder extends AbstractBorder {
     }
 
     @Contract("_, _, _, _ -> new")
-    public RoundRectangle2D.@NotNull Double calculateBubbleRect(final int x, final int y,
+    public RoundRectangle2D.Double calculateBubbleRect(final int x, final int y,
                                                                 final int width, final int height) {
         return new RoundRectangle2D.Double(x + insets.left, y + insets.top, width - insets.left - insets.right,
                                            height - insets.top - insets.bottom, radius, radius);

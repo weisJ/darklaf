@@ -1,0 +1,111 @@
+import org.gradle.internal.jvm.Jvm
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'idea'
+    id 'cpp'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url = 'http://repo.maven.apache.org/maven2'
+    }
+}
+
+dependencies {
+    compile 'darcula:darcula.laf:1.0.0'
+    compile 'com.metsci.ext.com.kitfox.svg:svg-salamander:[0.1.19,)'
+    compile 'org.jetbrains:annotations:16.0.1'
+    compile 'org.jetbrains.kotlin:kotlin-compiler:1.3.21'
+    compile 'org.swinglabs:swingx:1.6.1'
+    testCompileOnly 'org.swinglabs:swingx:1.6.1'
+    testCompile 'junit:junit:4.12'
+}
+
+group = 'com.weis'
+version = '1.0-SNAPSHOT'
+
+compileJava {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
+
+test {
+    dependsOn 'jniplatformSharedLibrary'
+    systemProperty "java.library.path", file("${buildDir}/libs/jniplatform/shared").absolutePath + '\\'
+}
+
+println "Building on OS: " + System.properties['os.name']
+println "Using JDK: " + System.properties['java.home']
+
+model {
+    platforms {
+        x86 {
+            architecture 'x86'
+        }
+        x64 {
+            architecture 'x86_64'
+        }
+    }
+}
+
+model {
+    components {
+        jniplatform(NativeLibrarySpec) {
+//            targetPlatform "x86"
+            targetPlatform "x64"
+            binaries.all {
+                if (targetPlatform.operatingSystem.macOsX) {
+                    cppCompiler.args '-I', "${Jvm.current().javaHome}/include"
+                    cppCompiler.args '-I', "${Jvm.current().javaHome}/include/darwin"
+                    cppCompiler.args '-mmacosx-version-min=10.4'
+                    linker.args '-mmacosx-version-min=10.4'
+                } else if (targetPlatform.operatingSystem.linux) {
+                    cppCompiler.args '-I', "${Jvm.current().javaHome}/include"
+                    cppCompiler.args '-I', "${Jvm.current().javaHome}/include/linux"
+                    cppCompiler.args '-D_FILE_OFFSET_BITS=64'
+                } else if (targetPlatform.operatingSystem.windows) {
+                    cppCompiler.args "-I${Jvm.current().javaHome}/include"
+                    cppCompiler.args "-I${Jvm.current().javaHome}/include/win32"
+                    cppCompiler.args "-std=c++11"
+                    linker.args "-ldwmapi"
+                    linker.args "-lGdi32"
+                } else if (targetPlatform.operatingSystem.freeBSD) {
+                    cppCompiler.args '-I', "${Jvm.current().javaHome}/include"
+                    cppCompiler.args '-I', "${Jvm.current().javaHome}/include/freebsd"
+                }
+            }
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+
+tasks.withType(JavaCompile) {
+    configure(options) {
+        options.encoding = 'UTF-8'
+        options.compilerArgs += [
+                '-h', file("${projectDir}/src/jniplatform/cpp"),
+        ]
+        options.compilerArgs += [
+                '--add-exports=java.desktop/sun.awt=ALL-UNNAMED',
+                '--add-exports=java.desktop/com.sun.java.swing=ALL-UNNAMED',
+                '--add-exports=java.desktop/sun.swing=ALL-UNNAMED'
+        ]
+    }
+}
+
+tasks.withType(JavaExec) {
+    dependsOn 'jniplatformSharedLibrary'
+    systemProperty "java.library.path", file("${buildDir}/libs/jniplatform/shared").absolutePath + '\\'
+}

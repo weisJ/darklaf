@@ -49,6 +49,10 @@ bin/
 # maven
 target/
 
+# gradle
+/build
+/.gradle
+
 # Python
 venv/
 
