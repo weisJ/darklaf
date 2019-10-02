@@ -1,8 +1,10 @@
 package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.color.DarkColorModel;
+import com.weis.darklaf.util.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.ir.expressions.IrConstKind;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -55,7 +57,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         public void insertString(@NotNull final FilterBypass fb, final int offset,
                                  @NotNull final String text, final AttributeSet set) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length())
-                && isValid(text)) {
+                    && isValid(text)) {
                 var newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.insert(offset, text);
                 if (hex || isValidValue(newText.toString())) {
@@ -112,15 +114,24 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 return model.getDefault(fieldIndex);
             }
             if (hex) {
-                return String.format("%-8s", text).replace(' ', '0');
+                var hexStr = text;
+                if (hexStr.length() == 6) {
+                    hexStr += "FF";
+                }
+                int r = Integer.valueOf(hexStr.substring(0, 2), 16);
+                checkRange(r, 0, 255);
+                int g = Integer.valueOf(hexStr.substring(2, 4), 16);
+                checkRange(g, 0, 255);
+                int b = Integer.valueOf(hexStr.substring(4, 6), 16);
+                checkRange(b, 0, 255);
+                return Integer.valueOf(text, radix);
+            } else {
+                var value = Integer.valueOf(text, this.radix);
+                var min = model.getMinimum(fieldIndex);
+                var max = model.getMaximum(fieldIndex);
+                checkRange(value, min, max);
+                return value;
             }
-            var value = Integer.valueOf(text, this.radix);
-            var min = model.getMinimum(fieldIndex);
-            var max = model.getMaximum(fieldIndex);
-            if (value > max || value < min) {
-                throw new ParseException("Value not in range [" + min + "," + max + "]", 0);
-            }
-            return ((Number) value).intValue();
         } catch (NumberFormatException nfe) {
             ParseException pe = new ParseException("illegal format", 0);
             pe.initCause(nfe);
@@ -128,11 +139,21 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
     }
 
+    protected void checkRange(final int value, final int min, final int max) throws ParseException {
+        if (value > max || value < min) {
+            throw new ParseException("Value not in range [" + min + "," + max + "]", 0);
+        }
+    }
+
+    @Contract("null -> fail")
     @Override
     public String valueToString(final Object object) throws ParseException {
         if (object instanceof Integer) {
-            if (this.radix == 10) {
+            if (radix == 10) {
                 return object.toString();
+            }
+            if (hex) {
+                return StringUtil.toUpperCase(Integer.toHexString((Integer) object));
             }
             int value = (Integer) object;
             int index = getLength();

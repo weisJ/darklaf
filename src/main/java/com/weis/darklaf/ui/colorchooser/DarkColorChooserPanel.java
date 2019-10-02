@@ -11,6 +11,8 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 
 public class DarkColorChooserPanel extends AbstractColorChooserPanel implements ColorListener {
@@ -329,12 +331,15 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     private void applyColorToHEX(@NotNull final Color c) {
+        boolean changingOld = isChanging;
+        isChanging = true;
         boolean transparencyEnabled = isColorTransparencySelectionEnabled();
         if (transparencyEnabled) {
-            textHex.setText(String.format("%02X%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()));
+            textHex.setValue(c.getRGB());
         } else {
-            textHex.setText(String.format("%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue()));
+            textHex.setValue(new Color(c.getRed(), c.getGreen(), c.getBlue()).getRGB());
         }
+        isChanging = changingOld;
     }
 
     private void applyColorToFields(final Color color) {
