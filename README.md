@@ -5,9 +5,9 @@ Gradually all the custom UI and more from the darcula project wil be ported over
 
 
 # Screenshot
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/weisJ/darklaf/master/img/preview.png" width="400" align="center">
-
+</p>
 
 # Usage & Features
 The LookAndFeel can be easily installed using the 'LafManager'
