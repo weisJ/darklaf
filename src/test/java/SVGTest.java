@@ -16,9 +16,9 @@ public class SVGTest {
         };
         frame.setContentPane(svgPanel);
         svgPanel.setAntiAlias(true);
-        svgPanel.setScaleToFit(false);
+        svgPanel.setScaleToFit(true);
         svgPanel.setSvgURI(SVGTest.class.getClassLoader()
-                                        .getResource("com/weis/darklaf/icons/shadow/bottomLeft.svg")
+                                        .getResource("com/weis/darklaf/icons/shadow/bottom.svg")
                                         .toURI());
         SVGUniverse svgUniverse = svgPanel.getSvgUniverse();
         SVGDiagram diagram = svgUniverse.getDiagram(svgPanel.getSvgURI());
@@ -37,8 +37,7 @@ public class SVGTest {
 //        root.loaderAddChild(null, defs2);
 //        defs2.loaderAddChild(null, grad);
 
-        frame.setSize(100, 100);
-        frame.pack();
+        frame.setSize(500, 500);
         frame.setVisible(true);
     }
 }
