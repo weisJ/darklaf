@@ -23,8 +23,8 @@ public class DarkTableUIBridge extends BasicTableUI {
     }
 
     protected static int getAdjustedLead(final JTable table, final boolean row) {
-        return row ? getAdjustedLead(table, row, table.getSelectionModel())
-                   : getAdjustedLead(table, row, table.getColumnModel().getSelectionModel());
+        return row ? getAdjustedLead(table, true, table.getSelectionModel())
+                   : getAdjustedLead(table, false, table.getColumnModel().getSelectionModel());
     }
 
     /**
@@ -233,7 +233,7 @@ public class DarkTableUIBridge extends BasicTableUI {
 
     protected Rectangle extendRect(final Rectangle rect, final boolean horizontal) {
         if (rect == null) {
-            return rect;
+            return null;
         }
 
         if (horizontal) {

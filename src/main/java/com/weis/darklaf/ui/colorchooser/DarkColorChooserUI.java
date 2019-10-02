@@ -13,9 +13,6 @@ import javax.swing.event.AncestorListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicColorChooserUI;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeListener;
 
 public class DarkColorChooserUI extends BasicColorChooserUI {

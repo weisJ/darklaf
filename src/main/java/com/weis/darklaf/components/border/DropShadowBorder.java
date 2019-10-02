@@ -46,7 +46,7 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     private static final Map<Double, Map<Position, BufferedImage>> CACHE
-            = new HashMap<Double, Map<Position, BufferedImage>>();
+            = new HashMap<>();
 
     private Color shadowColor;
 
@@ -146,9 +146,9 @@ public class DropShadowBorder implements Border, Serializable {
                 topLeftShadowPoint = new Point();
                 if (showLeftShadow && !showTopShadow) {
                     topLeftShadowPoint.setLocation(x, y + shadowOffset);
-                } else if (showLeftShadow && showTopShadow) {
+                } else if (showLeftShadow) {
                     topLeftShadowPoint.setLocation(x, y);
-                } else if (!showLeftShadow && showTopShadow) {
+                } else {
                     topLeftShadowPoint.setLocation(x + shadowSize, y);
                 }
             }
@@ -158,9 +158,9 @@ public class DropShadowBorder implements Border, Serializable {
                 bottomLeftShadowPoint = new Point();
                 if (showLeftShadow && !showBottomShadow) {
                     bottomLeftShadowPoint.setLocation(x, y + height - shadowSize - shadowSize);
-                } else if (showLeftShadow && showBottomShadow) {
+                } else if (showLeftShadow) {
                     bottomLeftShadowPoint.setLocation(x, y + height - shadowSize);
-                } else if (!showLeftShadow && showBottomShadow) {
+                } else {
                     bottomLeftShadowPoint.setLocation(x + shadowSize, y + height - shadowSize);
                 }
             }
@@ -170,9 +170,9 @@ public class DropShadowBorder implements Border, Serializable {
                 bottomRightShadowPoint = new Point();
                 if (showRightShadow && !showBottomShadow) {
                     bottomRightShadowPoint.setLocation(x + width - shadowSize, y + height - shadowSize - shadowSize);
-                } else if (showRightShadow && showBottomShadow) {
+                } else if (showRightShadow) {
                     bottomRightShadowPoint.setLocation(x + width - shadowSize, y + height - shadowSize);
-                } else if (!showRightShadow && showBottomShadow) {
+                } else {
                     bottomRightShadowPoint.setLocation(x + width - shadowSize - shadowSize, y + height - shadowSize);
                 }
             }
@@ -182,9 +182,9 @@ public class DropShadowBorder implements Border, Serializable {
                 topRightShadowPoint = new Point();
                 if (showRightShadow && !showTopShadow) {
                     topRightShadowPoint.setLocation(x + width - shadowSize, y + shadowOffset);
-                } else if (showRightShadow && showTopShadow) {
+                } else if (showRightShadow) {
                     topRightShadowPoint.setLocation(x + width - shadowSize, y);
-                } else if (!showRightShadow && showTopShadow) {
+                } else {
                     topRightShadowPoint.setLocation(x + width - shadowSize - shadowSize, y);
                 }
             }
@@ -256,11 +256,12 @@ public class DropShadowBorder implements Border, Serializable {
         }
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     @NotNull
     private Map<Position, BufferedImage> getImages(Graphics2D g2) {
         //first, check to see if an image for this size has already been rendered
         //if so, use the cache. Else, draw and save
-        Map<Position, BufferedImage> images = CACHE.get(shadowSize + (shadowColor.hashCode() * .3) + (shadowOpacity * .12));//TODO do a real hash
+        Map<Position, BufferedImage> images = CACHE.get(shadowSize + (shadowColor.hashCode() * .3) + (shadowOpacity * .12));//(TUDU) do a real hash
         if (images == null) {
             images = new HashMap<>();
 
@@ -344,7 +345,7 @@ public class DropShadowBorder implements Border, Serializable {
 
             image.flush();
             CACHE.put(shadowSize + (shadowColor.hashCode() * .3) + (shadowOpacity * .12),
-                      images); //TODO do a real hash
+                      images); //TUDU do a real hash
         }
         return images;
     }

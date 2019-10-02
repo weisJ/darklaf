@@ -941,6 +941,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
         }
 
+        @SuppressWarnings("SuspiciousNameCombination")
         @Override
         protected void calculateTabRects(final int tabPlacement, final int tabCount) {
             FontMetrics metrics = getFontMetrics();

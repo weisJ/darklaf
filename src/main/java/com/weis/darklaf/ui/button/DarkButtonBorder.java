@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.button;
 
-import com.bulenkov.darcula.ui.DarculaButtonPainter;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
@@ -15,8 +14,6 @@ import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 
 /**
- * Custom adaption of {@link DarculaButtonPainter}.
- *
  * @author Jannis Weis
  * @since 2019
  */

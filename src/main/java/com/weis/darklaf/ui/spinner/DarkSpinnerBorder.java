@@ -14,8 +14,8 @@ import java.awt.*;
 
 public class DarkSpinnerBorder implements Border, UIResource {
 
-    public static int BORDER_SIZE = DarkTextBorder.BORDER_SIZE;
-    public static int ARC_SIZE = DarkTextFieldUI.SEARCH_ARC_SIZE;
+    public static final int BORDER_SIZE = DarkTextBorder.BORDER_SIZE;
+    public static final int ARC_SIZE = DarkTextFieldUI.SEARCH_ARC_SIZE;
 
     @Override
     public void paintBorder(@NotNull final Component c, final Graphics g2,

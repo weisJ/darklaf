@@ -1,6 +1,6 @@
 package com.weis.darklaf.ui.table;
 
-import com.bulenkov.iconloader.util.GraphicsConfig;
+import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +50,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     @Override
     public void paint(final Graphics g2, final @NotNull JComponent c) {
         final Graphics2D g = (Graphics2D) g2;
-        final GraphicsConfig config = new GraphicsConfig(g);
+        final GraphicsContext config = new GraphicsContext(g);
 
         int h = c.getHeight();
         int w = c.getWidth();

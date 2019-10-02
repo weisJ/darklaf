@@ -9,7 +9,7 @@ public class ColorWheelImageProducer extends MemoryImageSource {
     private final int[] myPixels;
     private final int myWidth;
     private final int myHeight;
-    private float myBrightness = 1f;
+    private float myBrightness;
 
     private float[] myHues;
     private float[] mySat;

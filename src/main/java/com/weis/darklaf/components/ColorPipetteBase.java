@@ -1,6 +1,6 @@
 package com.weis.darklaf.components;
 
-import com.bulenkov.iconloader.util.SystemInfo;
+
 import com.weis.darklaf.ui.colorchooser.ColorListener;
 import com.weis.darklaf.ui.colorchooser.ColorPipette;
 import com.weis.darklaf.util.DarkUIUtil;
@@ -224,12 +224,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
             Cursor blankCursor = Toolkit.getDefaultToolkit()
                                         .createCustomCursor(cursorImg, new Point(), "BlankCursor");
             setCursor(blankCursor);
-        }
-
-        @NotNull
-        @Override
-        public Cursor getCursor() {
-            return super.getCursor();
         }
 
         @Override

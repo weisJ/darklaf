@@ -31,7 +31,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     private Component component;
     private JComponent editor;
     private Color compColor;
-    private JButton nextButton;
     private JButton prevButton;
 
     private final FocusListener focusListener = new FocusAdapter() {
@@ -128,7 +127,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
     @Override
     protected Component createNextButton() {
-        nextButton = createArrow(SwingConstants.NORTH);
+        JButton nextButton = createArrow(SwingConstants.NORTH);
         nextButton.setName("Spinner.nextButton");
         nextButton.setBorder(new EmptyBorder(1, 1, 1, 1));
         installNextButtonListeners(nextButton);

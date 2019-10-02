@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 
 public class SelectWordAction extends TextAction {
 
-    protected Action start;
-    protected Action end;
+    protected final Action start;
+    protected final Action end;
 
     public SelectWordAction() {
         super(DefaultEditorKit.selectWordAction);

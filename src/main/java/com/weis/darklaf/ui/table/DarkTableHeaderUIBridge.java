@@ -19,15 +19,16 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
+import java.util.Objects;
 
 public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
-    protected static Cursor resizeCursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
+    protected static final Cursor resizeCursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
 
     //
 // Instance Variables
 //
-    protected static FocusListener focusListener = new FocusListener() {
+    protected static final FocusListener focusListener = new FocusListener() {
         public void focusGained(@NotNull final FocusEvent e) {
             repaintHeader(e.getSource());
         }
@@ -242,7 +243,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         if (doScroll) {
             scrollToColumn(newColIndex);
         }
-        return;
     }
 
     /**
@@ -585,16 +585,16 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 DarkTableHeaderUIBridge ui =
                         (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
                 if (ui != null) {
-                    if (key == MOVE_COLUMN_LEFT) {
+                    if (Objects.equals(key, MOVE_COLUMN_LEFT)) {
                         return th.getReorderingAllowed()
                                && maybeMoveColumn(true, th, ui, false);
-                    } else if (key == MOVE_COLUMN_RIGHT) {
+                    } else if (Objects.equals(key, MOVE_COLUMN_RIGHT)) {
                         return th.getReorderingAllowed()
                                && maybeMoveColumn(false, th, ui, false);
-                    } else if (key == RESIZE_LEFT ||
-                               key == RESIZE_RIGHT) {
+                    } else if (Objects.equals(key, RESIZE_LEFT) ||
+                            Objects.equals(key, RESIZE_RIGHT)) {
                         return canResize(cm.getColumn(ui.getSelectedColumnIndex()), th);
-                    } else if (key == FOCUS_TABLE) {
+                    } else if (Objects.equals(key, FOCUS_TABLE)) {
                         return (th.getTable() != null);
                     }
                 }
@@ -611,7 +611,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             }
 
             String name = getName();
-            if (TOGGLE_SORT_ORDER == name) {
+            if (Objects.equals(TOGGLE_SORT_ORDER, name)) {
                 JTable table = th.getTable();
                 RowSorter<?> sorter = table == null ? null : table.getRowSorter();
                 if (sorter != null) {
@@ -620,27 +620,27 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                             columnIndex);
                     sorter.toggleSortOrder(columnIndex);
                 }
-            } else if (SELECT_COLUMN_TO_LEFT == name) {
+            } else if (Objects.equals(SELECT_COLUMN_TO_LEFT, name)) {
                 if (th.getComponentOrientation().isLeftToRight()) {
                     ui.selectPreviousColumn(true);
                 } else {
                     ui.selectNextColumn(true);
                 }
-            } else if (SELECT_COLUMN_TO_RIGHT == name) {
+            } else if (Objects.equals(SELECT_COLUMN_TO_RIGHT, name)) {
                 if (th.getComponentOrientation().isLeftToRight()) {
                     ui.selectNextColumn(true);
                 } else {
                     ui.selectPreviousColumn(true);
                 }
-            } else if (MOVE_COLUMN_LEFT == name) {
+            } else if (Objects.equals(MOVE_COLUMN_LEFT, name)) {
                 moveColumn(true, th, ui);
-            } else if (MOVE_COLUMN_RIGHT == name) {
+            } else if (Objects.equals(MOVE_COLUMN_RIGHT, name)) {
                 moveColumn(false, th, ui);
-            } else if (RESIZE_LEFT == name) {
+            } else if (Objects.equals(RESIZE_LEFT, name)) {
                 resize(true, th, ui);
-            } else if (RESIZE_RIGHT == name) {
+            } else if (Objects.equals(RESIZE_RIGHT, name)) {
                 resize(false, th, ui);
-            } else if (FOCUS_TABLE == name) {
+            } else if (Objects.equals(FOCUS_TABLE, name)) {
                 JTable table = th.getTable();
                 if (table != null) {
                     table.requestFocusInWindow();

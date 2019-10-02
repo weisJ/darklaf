@@ -1,8 +1,5 @@
 package com.weis.darklaf.util;
 
-import com.bulenkov.iconloader.util.ColorUtil;
-import com.bulenkov.iconloader.util.StringUtil;
-import com.bulenkov.iconloader.util.SystemInfo;
 import com.weis.darklaf.DarkLaf;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.icons.IconLoader;
@@ -170,11 +167,8 @@ public final class LafUtil {
 
     private static final class LoadError {
 
-        private final String message;
-
         @Contract(pure = true)
         private LoadError(final String message) {
-            this.message = message;
         }
 
     }

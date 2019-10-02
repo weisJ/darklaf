@@ -274,6 +274,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                             }
                             dropRect.y = destRect.y + destRect.height - dropRect.height;
                         } else if (placement == LEFT || placement == RIGHT) {
+                            //Todo
                         }
                     }
                 }
@@ -525,6 +526,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             return new Rectangle(transferData.tabBounds);
         }
 
+        @NotNull
         @Override
         public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
             if (!isDataFlavorSupported(flavor)) {

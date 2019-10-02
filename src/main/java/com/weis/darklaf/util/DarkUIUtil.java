@@ -1,8 +1,5 @@
 package com.weis.darklaf.util;
 
-import com.bulenkov.iconloader.util.ColorUtil;
-import com.bulenkov.iconloader.util.DoubleColor;
-import com.bulenkov.iconloader.util.Gray;
 import com.weis.darklaf.decorators.CellRenderer;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
 import org.jetbrains.annotations.Contract;
@@ -181,8 +178,8 @@ public final class DarkUIUtil {
     }
 
     public static Color getTreeUnfocusedSelectionBackground() {
-        Color background = getTreeTextBackground();
-        return ColorUtil.isDark(background) ? new DoubleColor(Gray._30, new Color(13, 41, 62)) : Gray._212;
+//        Color background = getTreeTextBackground();
+        return  new Color(13, 41, 62);
     }
 
     public static Color getTreeTextBackground() {

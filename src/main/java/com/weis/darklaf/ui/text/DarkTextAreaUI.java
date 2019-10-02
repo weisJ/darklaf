@@ -46,11 +46,6 @@ public class DarkTextAreaUI extends DarkTextUI {
         return "TextArea";
     }
 
-    protected void installDefaults() {
-        super.installDefaults();
-        //the fix for 4785160 is undone
-    }
-
     /**
      * This method gets called when a bound property is changed
      * on the associated JTextComponent.  This is a hook

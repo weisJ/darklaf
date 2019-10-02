@@ -93,7 +93,7 @@ public final class IconLoader {
     }
 
     public static final class IconKey {
-        String path;
+        final String path;
         int w;
         int h;
 

@@ -1,9 +1,8 @@
 package com.weis.darklaf.ui.button;
 
-import com.bulenkov.darcula.ui.DarculaButtonUI;
-import com.bulenkov.iconloader.util.SystemInfo;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
+import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
@@ -19,8 +18,6 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 /**
- * Custom adaption of {@link DarculaButtonUI}.
- *
  * @author Jannis Weis
  * @since 2019
  */

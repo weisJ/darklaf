@@ -173,16 +173,14 @@ public class DarkEditorPaneUI extends DarkTextUI {
 
     void removeActions(final ActionMap map, final Action[] actions) {
         int n = actions.length;
-        for (int i = 0; i < n; i++) {
-            Action a = actions[i];
+        for (Action a : actions) {
             map.remove(a.getValue(Action.NAME));
         }
     }
 
     void addActions(final ActionMap map, final Action[] actions) {
         int n = actions.length;
-        for (int i = 0; i < n; i++) {
-            Action a = actions[i];
+        for (Action a : actions) {
             map.put(a.getValue(Action.NAME), a);
         }
     }

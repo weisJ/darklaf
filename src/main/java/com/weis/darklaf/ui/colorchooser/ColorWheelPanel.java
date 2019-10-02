@@ -9,7 +9,6 @@ import java.awt.*;
 public class ColorWheelPanel extends JPanel {
     private final ColorWheel myColorWheel;
     private final SlideComponent myBrightnessComponent;
-    private final boolean opacityInPercent;
     private SlideComponent myOpacityComponent = null;
     private boolean enableOpacity;
 
@@ -19,7 +18,6 @@ public class ColorWheelPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
         this.enableOpacity = enableOpacity;
-        this.opacityInPercent = opacityInPercent;
 
         myColorWheel = new ColorWheel();
         add(myColorWheel, BorderLayout.CENTER);

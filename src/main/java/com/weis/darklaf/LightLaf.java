@@ -1,6 +1,7 @@
 package com.weis.darklaf;
 
-import com.bulenkov.iconloader.util.SystemInfo;
+
+import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -19,7 +20,6 @@ public class LightLaf extends DarkLaf {
      * Create new light Darcula LaF.
      */
     public LightLaf() {
-        super();
         if (SystemInfo.isWindows || SystemInfo.isLinux) {
             MetalLookAndFeel.setCurrentTheme(new LightMetalTheme());
         }

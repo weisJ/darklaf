@@ -11,8 +11,6 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 
 public class DarkColorChooserPanel extends AbstractColorChooserPanel implements ColorListener {

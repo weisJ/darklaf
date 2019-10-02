@@ -48,11 +48,11 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
             if (!isSelected) {
                 if (row % 2 == 1) {
                     component.setBackground(alternativeRowColor);
-                    setDefaultCellRenderWithAllType(table, value, isSelected, hasFocus, row, column,
+                    setDefaultCellRenderWithAllType(table, value, false, hasFocus, row, column,
                                                     alternativeRowColor);
                 } else {
                     component.setBackground(normalColor);
-                    setDefaultCellRenderWithAllType(table, value, isSelected, hasFocus, row, column, normalColor);
+                    setDefaultCellRenderWithAllType(table, value, false, hasFocus, row, column, normalColor);
                 }
                 component.setForeground(table.getSelectionForeground());
             }

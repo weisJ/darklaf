@@ -1,10 +1,10 @@
 package com.weis.darklaf.platform.windows;
 
-import com.bulenkov.iconloader.util.SystemInfo;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.weis.darklaf.DarkLaf;
 import com.weis.darklaf.platform.NativeUtil;
+import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
@@ -35,8 +35,6 @@ public class JNIDecorations {
     }
 
     private static final Logger LOGGER = Logger.getLogger(JNIDecorations.class.getName());
-    private static final String X86 = "32";
-    private static final String X64 = "64";
     private static boolean supported;
     private static boolean loaded;
 
@@ -63,13 +61,14 @@ public class JNIDecorations {
         }
         if (loaded) return true;
         try {
-            String model = System.getProperty("sun.arch.data.model");
-            if (X86.equals(model)) {
+            if (SystemInfo.isX86) {
                 NativeUtil.loadLibraryFromJar("/library/x86/jniplatform.dll");
-            } else if (X64.equals(model)) {
+            } else if (SystemInfo.isX64) {
                 NativeUtil.loadLibraryFromJar("/library/x64/jniplatform.dll");
             } else {
-                LOGGER.warning("Could not determine jre model '" + model + "'. Decorations will be disabled");
+                LOGGER.warning("Could not determine jre model '"
+                                       + SystemInfo.jreArchitecture
+                                       + "'. Decorations will be disabled");
                 return false;
             }
             loaded = true;

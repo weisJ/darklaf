@@ -35,6 +35,7 @@ import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -196,8 +197,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
 // Private instance data
 
-    protected Insets currentPadInsets = new Insets(0, 0, 0, 0);
-    protected Insets currentTabAreaInsets = new Insets(0, 0, 0, 0);
+    protected final Insets currentPadInsets = new Insets(0, 0, 0, 0);
+    protected final Insets currentTabAreaInsets = new Insets(0, 0, 0, 0);
 
     protected Component visibleComponent;
     // PENDING(api): See comment for ContainerHandler
@@ -220,7 +221,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * A rectangle used for general layout calculations in order
      * to avoid constructing many new Rectangles on the fly.
      */
-    protected transient Rectangle calcRect = new Rectangle(0, 0, 0, 0);
+    protected final transient Rectangle calcRect = new Rectangle(0, 0, 0, 0);
 
     /**
      * Tab that has focus.
@@ -644,6 +645,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     /**
      * Adds the specified mnemonic at the specified index.
      */
+    @SuppressWarnings("MagicConstant")
     protected void addMnemonic(final int index, final int mnemonic) {
         if (mnemonicToIndexMap == null) {
             initMnemonics();
@@ -653,14 +655,14 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_GRAPH_DOWN_MASK
                                                               | DarkUIUtil.getFocusAcceleratorKeyMask()),
                              "setSelectedIndex");
-        mnemonicToIndexMap.put(Integer.valueOf(mnemonic), Integer.valueOf(index));
+        mnemonicToIndexMap.put(mnemonic, index);
     }
 
     /**
      * Installs the state needed for mnemonics.
      */
     protected void initMnemonics() {
-        mnemonicToIndexMap = new Hashtable<Integer, Integer>();
+        mnemonicToIndexMap = new Hashtable<>();
         mnemonicInputMap = new ComponentInputMapUIResource(tabPane);
         mnemonicInputMap.setParent(SwingUtilities.getUIInputMap(tabPane,
                                                                 JComponent.WHEN_IN_FOCUSED_WINDOW));
@@ -733,15 +735,13 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             Insets tabAreaInsets = getTabAreaInsets(placement);
             switch (placement) {
                 case JTabbedPane.TOP:
+                case JTabbedPane.LEFT:
+                case JTabbedPane.RIGHT:
                     baseline += insets.top + tabAreaInsets.top;
                     return baseline;
                 case JTabbedPane.BOTTOM:
                     baseline = height - insets.bottom -
                                tabAreaInsets.bottom - maxTabHeight + baseline;
-                    return baseline;
-                case JTabbedPane.LEFT:
-                case JTabbedPane.RIGHT:
-                    baseline += insets.top + tabAreaInsets.top;
                     return baseline;
             }
         }
@@ -1025,8 +1025,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * subtracting xCropLen[i] from (tab.y + tab.height) and adding yCropLen[i]
      * to (tab.x).
      */
-    protected static int[] xCropLen = {1, 1, 0, 0, 1, 1, 2, 2};
-    protected static int[] yCropLen = {0, 3, 3, 6, 6, 9, 9, 12};
+    protected static final int[] xCropLen = {1, 1, 0, 0, 1, 1, 2, 2};
+    protected static final int[] yCropLen = {0, 3, 3, 6, 6, 9, 9, 12};
     protected static final int CROP_SEGMENT = 12;
 
     protected static Polygon createCroppedTabShape(final int tabPlacement, final Rectangle tabRect, final int cropline) {
@@ -2511,7 +2511,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      */
     protected int getPreviousTabIndex(final int base) {
         int tabIndex = (base - 1 >= 0 ? base - 1 : tabPane.getTabCount() - 1);
-        return (tabIndex >= 0 ? tabIndex : 0);
+        return (Math.max(tabIndex, 0));
     }
 
     /**
@@ -2570,7 +2570,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      */
     protected int getPreviousTabRun(final int baseRun) {
         int runIndex = (baseRun - 1 >= 0 ? baseRun - 1 : runCount - 1);
-        return (runIndex >= 0 ? runIndex : 0);
+        return (Math.max(runIndex, 0));
     }
 
     /**
@@ -2590,6 +2590,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * @param targetInsets    the target insets
      * @param targetPlacement the target placement
      */
+    @SuppressWarnings("SuspiciousNameCombination")
     protected static void rotateInsets(final Insets topInsets, final Insets targetInsets, final int targetPlacement) {
 
         switch (targetPlacement) {
@@ -2658,37 +2659,37 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             if (ui == null) {
                 return;
             }
-            if (key == NEXT) {
+            if (Objects.equals(key, NEXT)) {
                 ui.navigateSelectedTab(SwingConstants.NEXT);
-            } else if (key == PREVIOUS) {
+            } else if (Objects.equals(key, PREVIOUS)) {
                 ui.navigateSelectedTab(SwingConstants.PREVIOUS);
-            } else if (key == RIGHT) {
+            } else if (Objects.equals(key, RIGHT)) {
                 ui.navigateSelectedTab(SwingConstants.EAST);
-            } else if (key == LEFT) {
+            } else if (Objects.equals(key, LEFT)) {
                 ui.navigateSelectedTab(SwingConstants.WEST);
-            } else if (key == UP) {
+            } else if (Objects.equals(key, UP)) {
                 ui.navigateSelectedTab(SwingConstants.NORTH);
-            } else if (key == DOWN) {
+            } else if (Objects.equals(key, DOWN)) {
                 ui.navigateSelectedTab(SwingConstants.SOUTH);
-            } else if (key == PAGE_UP) {
+            } else if (Objects.equals(key, PAGE_UP)) {
                 int tabPlacement = pane.getTabPlacement();
                 if (tabPlacement == TOP || tabPlacement == BOTTOM) {
                     ui.navigateSelectedTab(SwingConstants.WEST);
                 } else {
                     ui.navigateSelectedTab(SwingConstants.NORTH);
                 }
-            } else if (key == PAGE_DOWN) {
+            } else if (Objects.equals(key, PAGE_DOWN)) {
                 int tabPlacement = pane.getTabPlacement();
                 if (tabPlacement == TOP || tabPlacement == BOTTOM) {
                     ui.navigateSelectedTab(SwingConstants.EAST);
                 } else {
                     ui.navigateSelectedTab(SwingConstants.SOUTH);
                 }
-            } else if (key == REQUEST_FOCUS) {
+            } else if (Objects.equals(key, REQUEST_FOCUS)) {
                 pane.requestFocus();
-            } else if (key == REQUEST_FOCUS_FOR_VISIBLE) {
+            } else if (Objects.equals(key, REQUEST_FOCUS_FOR_VISIBLE)) {
                 ui.requestFocusForVisibleComponent();
-            } else if (key == SET_SELECTED) {
+            } else if (Objects.equals(key, SET_SELECTED)) {
                 String command = e.getActionCommand();
 
                 if (command != null && command.length() > 0) {
@@ -2696,21 +2697,21 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                     if (mnemonic >= 'a' && mnemonic <= 'z') {
                         mnemonic -= ('a' - 'A');
                     }
-                    Integer index = ui.mnemonicToIndexMap.get(Integer.valueOf(mnemonic));
-                    if (index != null && pane.isEnabledAt(index.intValue())) {
-                        pane.setSelectedIndex(index.intValue());
+                    Integer index = ui.mnemonicToIndexMap.get(mnemonic);
+                    if (index != null && pane.isEnabledAt(index)) {
+                        pane.setSelectedIndex(index);
                     }
                 }
-            } else if (key == SELECT_FOCUSED) {
+            } else if (Objects.equals(key, SELECT_FOCUSED)) {
                 int focusIndex = ui.getFocusIndex();
                 if (focusIndex != -1) {
                     pane.setSelectedIndex(focusIndex);
                 }
-            } else if (key == SCROLL_FORWARD) {
+            } else if (Objects.equals(key, SCROLL_FORWARD)) {
                 if (ui.scrollableTabLayoutEnabled()) {
                     ui.tabScroller.scrollForward(pane.getTabPlacement());
                 }
-            } else if (key == SCROLL_BACKWARD) {
+            } else if (Objects.equals(key, SCROLL_BACKWARD)) {
                 if (ui.scrollableTabLayoutEnabled()) {
                     ui.tabScroller.scrollBackward(pane.getTabPlacement());
                 }
@@ -3228,9 +3229,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         protected void rotateTabRuns(final int tabPlacement, final int selectedRun) {
             for (int i = 0; i < selectedRun; i++) {
                 int save = tabRuns[0];
-                for (int j = 1; j < runCount; j++) {
-                    tabRuns[j - 1] = tabRuns[j];
-                }
+                if (runCount - 1 >= 0) System.arraycopy(tabRuns, 1, tabRuns, 0, runCount - 1);
                 tabRuns[runCount - 1] = save;
             }
         }
@@ -3577,8 +3576,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                     } else if (tabScroller != null &&
                                (child == tabScroller.scrollForwardButton ||
                                 child == tabScroller.scrollBackwardButton)) {
-                        Component scrollbutton = child;
-                        Dimension bsize = scrollbutton.getPreferredSize();
+                        Dimension bsize = child.getPreferredSize();
                         int bx = 0;
                         int by = 0;
                         int bw = bsize.width;
@@ -3764,10 +3762,10 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         public ScrollableTabPanel tabPanel;
         public JButton scrollForwardButton;
         public JButton scrollBackwardButton;
-        public CroppedEdge croppedEdge;
+        public final CroppedEdge croppedEdge;
         public int leadingTabIndex;
 
-        protected Point tabViewPosition = new Point(0, 0);
+        protected final Point tabViewPosition = new Point(0, 0);
 
         ScrollableTabSupport(final int tabPlacement) {
             viewport = new ScrollableTabViewport();
@@ -4012,7 +4010,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected class ScrollableTabButton extends BasicArrowButton implements UIResource,
+    protected static class ScrollableTabButton extends BasicArrowButton implements UIResource,
                                                                             SwingConstants {
         public ScrollableTabButton(final int direction) {
             super(direction,
@@ -4036,36 +4034,36 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             JTabbedPane pane = (JTabbedPane) e.getSource();
             String name = e.getPropertyName();
             boolean isScrollLayout = scrollableTabLayoutEnabled();
-            if (name == "mnemonicAt") {
+            if (Objects.equals(name, "mnemonicAt")) {
                 updateMnemonics();
                 pane.repaint();
-            } else if (name == "displayedMnemonicIndexAt") {
+            } else if (Objects.equals(name, "displayedMnemonicIndexAt")) {
                 pane.repaint();
-            } else if (name == "indexForTitle") {
+            } else if (Objects.equals(name, "indexForTitle")) {
                 calculatedBaseline = false;
                 Integer index = (Integer) e.getNewValue();
                 updateHtmlViews(index, false);
-            } else if (name == "tabLayoutPolicy") {
+            } else if (Objects.equals(name, "tabLayoutPolicy")) {
                 DarkTabbedPaneUIBridge.this.uninstallUI(pane);
                 DarkTabbedPaneUIBridge.this.installUI(pane);
                 calculatedBaseline = false;
-            } else if (name == "tabPlacement") {
+            } else if (Objects.equals(name, "tabPlacement")) {
                 if (scrollableTabLayoutEnabled()) {
                     tabScroller.createButtons();
                 }
                 calculatedBaseline = false;
-            } else if (name == "opaque" && isScrollLayout) {
-                boolean newVal = ((Boolean) e.getNewValue()).booleanValue();
+            } else if (Objects.equals(name, "opaque") && isScrollLayout) {
+                boolean newVal = (Boolean) e.getNewValue();
                 tabScroller.tabPanel.setOpaque(newVal);
                 tabScroller.viewport.setOpaque(newVal);
-            } else if (name == "background" && isScrollLayout) {
+            } else if (Objects.equals(name, "background") && isScrollLayout) {
                 Color newVal = (Color) e.getNewValue();
                 tabScroller.tabPanel.setBackground(newVal);
                 tabScroller.viewport.setBackground(newVal);
                 Color newColor = selectedColor == null ? newVal : selectedColor;
                 tabScroller.scrollForwardButton.setBackground(newColor);
                 tabScroller.scrollBackwardButton.setBackground(newColor);
-            } else if (name == "indexForTabComponent") {
+            } else if (Objects.equals(name, "indexForTabComponent")) {
                 if (tabContainer != null) {
                     tabContainer.removeUnusedTabComponents();
                 }
@@ -4081,10 +4079,10 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                 tabPane.revalidate();
                 tabPane.repaint();
                 calculatedBaseline = false;
-            } else if (name == "indexForNullComponent") {
+            } else if (Objects.equals(name, "indexForNullComponent")) {
                 isRunsDirty = true;
                 updateHtmlViews((Integer) e.getNewValue(), true);
-            } else if (name == "font" || SwingUtilities2.isScaleChanged(e)) {
+            } else if (Objects.equals(name, "font") || SwingUtilities2.isScaleChanged(e)) {
                 calculatedBaseline = false;
             }
         }
@@ -4252,7 +4250,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             Integer indexObj =
                     (Integer) tp.getClientProperty("__index_to_remove__");
             if (indexObj != null) {
-                int index = indexObj.intValue();
+                int index = indexObj;
                 if (htmlViews != null && htmlViews.size() > index) {
                     htmlViews.removeElementAt(index);
                 }
@@ -4326,7 +4324,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     protected Vector<View> createHTMLVector() {
-        Vector<View> htmlViews = new Vector<View>();
+        Vector<View> htmlViews = new Vector<>();
         int count = tabPane.getTabCount();
         if (count > 0) {
             for (int i = 0; i < count; i++) {

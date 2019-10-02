@@ -1,12 +1,13 @@
 package com.weis.darklaf.ui.text;
 
-import com.bulenkov.darcula.ui.DarculaTextBorder;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 
 /**
@@ -15,7 +16,7 @@ import java.awt.*;
  * @author Jannis Weis
  * @since 2019
  */
-public class DarkTextBorder extends DarculaTextBorder {
+public class DarkTextBorder implements Border, UIResource {
 
     public final static int BORDER_SIZE = 2;
     public final static int PADDING = 4;
@@ -76,5 +77,10 @@ public class DarkTextBorder extends DarculaTextBorder {
             insets.right += PADDING + eyeWidth;
         }
         return insets;
+    }
+
+    @Override
+    public boolean isBorderOpaque() {
+        return false;
     }
 }

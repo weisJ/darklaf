@@ -39,7 +39,7 @@ public class SelectLineAction extends TextAction {
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            int newPos = 0;
+            int newPos;
             try {
                 var textArea = getTextComponent(e);
                 int caretPosition = textArea.getCaretPosition();

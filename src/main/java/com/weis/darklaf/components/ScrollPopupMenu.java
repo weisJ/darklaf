@@ -11,29 +11,6 @@ import java.awt.*;
 
 public class ScrollPopupMenu extends JPopupMenu {
 
-    private final MenuKeyListener menuKeyListener = new MenuKeyListener() {
-        @Override
-        public void menuKeyTyped(final MenuKeyEvent e) {
-        }
-
-        @Override
-        public void menuKeyPressed(final MenuKeyEvent e) {
-            SwingUtilities.invokeLater(() -> {
-                var path = e.getMenuSelectionManager().getSelectedPath();
-                if (path.length == 0) {
-                    return;
-                }
-                var bounds = path[path.length - 1].getComponent().getBounds();
-                var r = SwingUtilities.convertRectangle(ScrollPopupMenu.this, bounds, scrollPane);
-                scrollPane.getViewport().scrollRectToVisible(r);
-            });
-        }
-
-        @Override
-        public void menuKeyReleased(final MenuKeyEvent e) {
-
-        }
-    };
     private int maxHeight;
     private final JPanel contentPane;
     private final JScrollPane scrollPane;
@@ -49,6 +26,29 @@ public class ScrollPopupMenu extends JPopupMenu {
         contentPane.add(overlayScrollPane, BorderLayout.CENTER);
         contentPane.setBorder(getBorder());
         setDoubleBuffered(true);
+        MenuKeyListener menuKeyListener = new MenuKeyListener() {
+            @Override
+            public void menuKeyTyped(final MenuKeyEvent e) {
+            }
+
+            @Override
+            public void menuKeyPressed(final MenuKeyEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    var path = e.getMenuSelectionManager().getSelectedPath();
+                    if (path.length == 0) {
+                        return;
+                    }
+                    var bounds = path[path.length - 1].getComponent().getBounds();
+                    var r = SwingUtilities.convertRectangle(ScrollPopupMenu.this, bounds, scrollPane);
+                    scrollPane.getViewport().scrollRectToVisible(r);
+                });
+            }
+
+            @Override
+            public void menuKeyReleased(final MenuKeyEvent e) {
+
+            }
+        };
         addMenuKeyListener(menuKeyListener);
     }
 

@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.text;
 
-import com.bulenkov.darcula.ui.DarculaTextBorder;
 import com.weis.darklaf.decorators.MouseClickListener;
 import com.weis.darklaf.decorators.MouseMovementListener;
 import com.weis.darklaf.decorators.PopupMenuAdapter;
@@ -134,7 +133,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         Border border = c.getBorder();
         if (isSearchField(c)) {
             paintSearchField(g, c);
-        } else if (border instanceof DarculaTextBorder) {
+        } else if (border instanceof DarkTextBorder) {
             paintBorderBackground(g, c);
         } else {
             super.paintBackground(g);

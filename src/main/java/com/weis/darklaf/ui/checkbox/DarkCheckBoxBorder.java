@@ -1,7 +1,8 @@
 package com.weis.darklaf.ui.checkbox;
 
-import com.bulenkov.iconloader.util.SystemInfo;
+
 import com.weis.darklaf.util.DarkUIUtil;
+import com.weis.darklaf.util.SystemInfo;
 
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;

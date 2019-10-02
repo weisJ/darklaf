@@ -1,10 +1,9 @@
 package com.weis.darklaf;
 
-import com.bulenkov.darcula.DarculaMetalTheme;
-import com.bulenkov.iconloader.util.SystemInfo;
 import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
 import com.weis.darklaf.util.LafUtil;
+import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
@@ -45,7 +44,7 @@ public class DarkLaf extends BasicLookAndFeel {
         try {
             if (SystemInfo.isWindows || SystemInfo.isLinux) {
                 base = new MetalLookAndFeel();
-                MetalLookAndFeel.setCurrentTheme(new DarculaMetalTheme());
+                MetalLookAndFeel.setCurrentTheme(new DarkMetalTheme());
             } else {
                 final String name = UIManager.getSystemLookAndFeelClassName();
                 base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
