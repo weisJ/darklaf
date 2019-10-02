@@ -26,6 +26,8 @@ import sun.awt.SunToolkit;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,7 +47,6 @@ import java.util.List;
  */
 public class DarkTitlePane extends JComponent {
     private static final int PAD = 5;
-    private static final int TITLE_PAD = 15;
     private static final int BAR_HEIGHT = (int) (56 / GraphicsUtil.SCALE_Y);
     private static final int BUTTON_WIDTH = (int) (92.5 / GraphicsUtil.SCALE_X);
     private static final int ICON_WIDTH = (int) (65 / GraphicsUtil.SCALE_X);
@@ -209,9 +210,9 @@ public class DarkTitlePane extends JComponent {
             return false;
         } else {
             if (window instanceof Dialog) {
-                return ((Dialog)window).isResizable();
+                return ((Dialog) window).isResizable();
             } else if (window instanceof Frame) {
-                return ((Frame)window).isResizable();
+                return ((Frame) window).isResizable();
             }
         }
         return false;
@@ -233,6 +234,7 @@ public class DarkTitlePane extends JComponent {
     private void installSubcomponents() {
         int decorationStyle = getWindowDecorationStyle();
         titleLabel = new JLabel();
+        titleLabel.setHorizontalAlignment(JLabel.LEFT);
         add(titleLabel);
 
         createIcons();
@@ -611,14 +613,14 @@ public class DarkTitlePane extends JComponent {
 
             if (leftToRight) {
                 if (windowIconButton != null) {
-                    windowIconButton.setBounds(start + PAD, y, ICON_WIDTH, height);
+                    windowIconButton.setBounds(start, y, ICON_WIDTH, height);
                     start += ICON_WIDTH + PAD;
                     left = start;
                 }
                 if (menuBar != null) {
                     int menuWidth = getPreferredMenuSize().width;
                     Insets menuInsets = menuBar.getInsets();
-                    menuBar.setBounds(start + PAD, y, menuWidth, height + menuInsets.bottom);
+                    menuBar.setBounds(start, y, menuWidth, height + menuInsets.bottom);
                     start += menuWidth + PAD;
                     left += menuWidth;
                 }
@@ -642,7 +644,8 @@ public class DarkTitlePane extends JComponent {
                         }
                     }
                 }
-                titleLabel.setBounds(start + TITLE_PAD, 0, x - start - 2 * TITLE_PAD, height);
+                start = Math.max(start, PAD);
+                titleLabel.setBounds(start, 0, x - start - PAD, height);
                 JNIDecorations.updateValues(windowHandle, (int) (left * GraphicsUtil.SCALE_X),
                                             (int) (right * GraphicsUtil.SCALE_X),
                                             (int) (height * GraphicsUtil.SCALE_Y));
@@ -711,6 +714,18 @@ public class DarkTitlePane extends JComponent {
 
         public void windowDeactivated(final WindowEvent ev) {
             setActive(false);
+        }
+
+        @Override
+        public void windowOpened(WindowEvent e) {
+            if (window != null) {
+                //Force window to recalculate bounds.
+                var size = window.getSize();
+                size.width += 1;
+                window.setSize(size);
+                size.width -= 1;
+                window.setSize(size);
+            }
         }
     }
 

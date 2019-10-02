@@ -69,7 +69,8 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
                                           new DarkColorModelHSL(),
 //                                          new DarkColorModelHSB(),
                                           new DarkColorModelCMYK()),
-                new DarkSwatchesChooserPanel(),};
+                new DarkSwatchesChooserPanel(),
+        };
     }
 
     @Override

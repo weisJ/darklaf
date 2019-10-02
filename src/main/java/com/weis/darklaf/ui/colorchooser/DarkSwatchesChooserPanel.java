@@ -3,6 +3,7 @@ package com.weis.darklaf.ui.colorchooser;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
@@ -20,6 +21,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
     private SwatchPanel swatchPanel;
     private RecentSwatchPanel recentSwatchPanel;
+    private ColorPreviewComponent previewPanel;
     private MouseListener mainSwatchListener;
     private MouseListener recentSwatchListener;
     private KeyListener mainSwatchKeyListener;
@@ -39,7 +41,10 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         String recentStr = UIManager.getString("ColorChooser.swatchesRecentText", getLocale());
 
         JPanel superHolder = new JPanel();
-        superHolder.setLayout(new BoxLayout(superHolder, BoxLayout.Y_AXIS));
+        superHolder.setLayout(new BorderLayout());
+
+        previewPanel = new ColorPreviewComponent();
+        previewPanel.setColor(getColorFromModel());
 
         swatchPanel = new MainSwatchPanel();
         swatchPanel.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, getDisplayName());
@@ -62,8 +67,6 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         swatchPanel.setBorder(border);
         mainHolder.add(swatchPanel);
 
-        superHolder.add(mainHolder);
-
         recentSwatchPanel.setInheritsPopupMenu(true);
         JPanel recentHolder = new JPanel(new FlowLayout(FlowLayout.CENTER));
         recentSwatchPanel.setBorder(border);
@@ -74,9 +77,20 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         l.setLabelFor(recentSwatchPanel);
         var labelHolder = new JPanel(new FlowLayout(FlowLayout.LEFT));
         labelHolder.add(l);
-        superHolder.add(labelHolder);
 
-        superHolder.add(recentHolder);
+        JPanel previewHolder = new JPanel(new BorderLayout());
+        previewHolder.setBorder(new EmptyBorder(0,5,10,5));
+        previewHolder.add(previewPanel, BorderLayout.CENTER);
+
+        JPanel swatches = new JPanel();
+        swatches.setInheritsPopupMenu(true);
+        swatches.setLayout(new BoxLayout(swatches, BoxLayout.Y_AXIS));
+        swatches.add(mainHolder);
+        swatches.add(labelHolder);
+        swatches.add(recentHolder);
+
+        superHolder.add(previewHolder, BorderLayout.NORTH);
+        superHolder.add(swatches, BorderLayout.CENTER);
         superHolder.setInheritsPopupMenu(true);
 
         add(superHolder);
@@ -84,6 +98,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
     protected void setSelectedColor(final Color color) {
         ColorSelectionModel model = getColorSelectionModel();
+        previewPanel.setColor(color);
         if (model != null) {
             model.setSelectedColor(color);
         }

@@ -9,7 +9,7 @@ public final class GenerateColors {
 
     public static void main(final String[] args) {
         int cols = 30;
-        int rows = 20;
+        int rows = 15;
         System.out.println("{");
         int r;
         int g;

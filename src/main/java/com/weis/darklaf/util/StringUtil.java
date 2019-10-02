@@ -18,25 +18,22 @@ public final class StringUtil {
         return a == null ? null : toUpperCase((CharSequence) a).toString();
     }
 
+    @NotNull
     @Contract("null -> fail")
     public static CharSequence toUpperCase(final CharSequence s) {
         if (s == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("CharSequence can't be null");
+        }
+        if (s.length() == 0) {
+            return s;
         }
 
-        StringBuilder answer = null;
+        StringBuilder answer = new StringBuilder();
 
         for (int i = 0; i < s.length(); ++i) {
             char c = s.charAt(i);
             char upCased = toUpperCase(c);
-            if (answer == null && upCased != c) {
-                answer = new StringBuilder(s.length());
-                answer.append(s.subSequence(0, i));
-            }
-
-            if (answer != null) {
-                answer.append(upCased);
-            }
+            answer.append(upCased);
         }
         return answer;
     }

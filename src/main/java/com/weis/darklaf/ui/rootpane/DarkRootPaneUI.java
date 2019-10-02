@@ -16,6 +16,8 @@ package com.weis.darklaf.ui.rootpane;
  * limitations under the License.
  */
 
+import com.bulenkov.darcula.ui.DarculaRootPaneUI;
+import com.weis.darklaf.DarkLaf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,6 +55,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public void installUI(final JComponent c) {
         super.installUI(c);
         rootPane = (JRootPane) c;
+        if (rootPane.getWindowDecorationStyle() != JRootPane.NONE) {
+            installClientDecorations(rootPane);
+        }
     }
 
     @Override
