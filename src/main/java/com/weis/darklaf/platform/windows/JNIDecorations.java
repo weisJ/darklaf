@@ -1,10 +1,16 @@
 package com.weis.darklaf.platform.windows;
 
+import com.bulenkov.iconloader.util.SystemInfo;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.WinDef;
+import com.weis.darklaf.platform.NativeUtil;
+import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JNIDecorations {
 
@@ -30,7 +36,25 @@ public class JNIDecorations {
         return Pointer.nativeValue(hwnd.getPointer());
     }
 
+    private static final Logger LOGGER = Logger.getLogger(JNIDecorations.class.getName());
+    private static boolean supported = false;
+
     static {
-        System.loadLibrary("jniplatform");
+        if (SystemInfo.isWindows) {
+            try {
+                NativeUtil.loadLibraryFromJar("/library/jniplatform.dll");
+                supported = true;
+                LOGGER.info("Loaded jniplatform.dll. Decorations are enabled.");
+            } catch (IOException e) {
+                supported = false;
+                LOGGER.log(Level.SEVERE, "Could not load decorations library. Decorations will be disabled",
+                           e.getMessage());
+            }
+        }
+    }
+
+    @Contract(pure = true)
+    public static boolean isCustomDecorationSupported() {
+        return supported;
     }
 }

@@ -2,6 +2,7 @@ package com.weis.darklaf;
 
 import com.bulenkov.darcula.DarculaMetalTheme;
 import com.bulenkov.iconloader.util.SystemInfo;
+import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
 import com.weis.darklaf.util.LafUtil;
 import org.jetbrains.annotations.NotNull;
@@ -284,7 +285,7 @@ public class DarkLaf extends BasicLookAndFeel {
 
     @Override
     public boolean getSupportsWindowDecorations() {
-        return SystemInfo.isWindows;
+        return JNIDecorations.isCustomDecorationSupported();
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
