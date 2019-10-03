@@ -23,7 +23,7 @@ public class DarkTooltipBorder implements Border, UIResource {
         bubbleBorder.setThickness(1);
         bubbleBorder.setPointerSize(8);
         bubbleBorder.setPointerWidth(12);
-        bubbleBorder.setPointerSide(Alignment.EAST);
+        bubbleBorder.setPointerSide(Alignment.CENTER);
     }
 
 

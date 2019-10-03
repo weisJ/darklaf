@@ -1,7 +1,10 @@
+import com.bulenkov.darcula.ui.DarculaToolBarUI;
 import com.weis.darklaf.LafManager;
 import com.weis.darklaf.components.TextFieldHistory;
 import com.weis.darklaf.icons.IconLoader;
 import org.jdesktop.swingx.JXStatusBar;
+import org.jdesktop.swingx.JXTaskPane;
+import org.jdesktop.swingx.JXTaskPaneContainer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +23,11 @@ public final class UIDemo {
                 () -> {
                     LafManager.loadLaf(LafManager.Theme.Dark);
                     JFrame.setDefaultLookAndFeelDecorated(true);
+
+                    JXTaskPaneContainer taskpanecontainer = new JXTaskPaneContainer();
+                    JXTaskPane taskpane = new JXTaskPane();
+                    taskpane.setTitle("My Tasks");
+                    taskpanecontainer.add(taskpane);
 
                     JFrame frame = new JFrame("UIDemo");
                     Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg");
@@ -134,7 +142,7 @@ public final class UIDemo {
                             putClientProperty("JButton.buttonType", "square");
                         }});
                     }});
-                    panel.add(new JPanel());
+                    panel.add(taskpanecontainer);
                     panel.add(new JPanel());
                     panel.add(new JPanel() {{
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

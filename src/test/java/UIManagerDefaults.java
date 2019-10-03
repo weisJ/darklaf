@@ -45,7 +45,7 @@ public class UIManagerDefaults implements ItemListener {
     /*
      * Constructor
      */
-    public UIManagerDefaults() {
+    private UIManagerDefaults() {
         items = new TreeMap<>();
         models = new HashMap<>();
 
@@ -83,7 +83,7 @@ public class UIManagerDefaults implements ItemListener {
      *  The content pane should be added to a high level container
      */
     @NotNull
-    public JComponent getContentPane() {
+    private JComponent getContentPane() {
         return contentPane;
     }
 
@@ -194,8 +194,7 @@ public class UIManagerDefaults implements ItemListener {
      *	The item map will contain items for each component or
      *  items for each attribute type.
      */
-    @NotNull
-    private TreeMap<String, TreeMap<String, Object>> buildItemsMap() {
+    private void buildItemsMap() {
         final UIDefaults defaults = UIManager.getLookAndFeelDefaults();
         //  Build of Map of items and a Map of attributes for each item
         for (final Object key : new HashSet<>(defaults.keySet())) {
@@ -211,7 +210,6 @@ public class UIManagerDefaults implements ItemListener {
             //  Add the attribute to the map for this componenent
             attributeMap.put(key.toString(), value);
         }
-        return items;
     }
 
     /*
@@ -462,7 +460,7 @@ public class UIManagerDefaults implements ItemListener {
                 try {
                     wrappee.paintIcon(c, g, x, y);
                 } catch (@NotNull final ClassCastException e) {
-                    createStandIn(e, x, y);
+                    createStandIn(e);
                     standIn.paintIcon(c, g, x, y);
                 }
             }
@@ -478,20 +476,20 @@ public class UIManagerDefaults implements ItemListener {
             return wrappee.getIconHeight();
         }
 
-        private void createStandIn(@NotNull final ClassCastException e, final int x, final int y) {
+        private void createStandIn(@NotNull final ClassCastException e) {
             try {
                 final Class<?> clazz = getClass(e);
                 final JComponent standInComponent = getSubstitute(clazz);
-                standIn = createImageIcon(standInComponent, x, y);
+                standIn = createImageIcon(standInComponent);
             } catch (@NotNull final Exception e1) {
                 // something went wrong - fallback to this painting
                 standIn = this;
             }
         }
 
-        @Contract("_, _, _ -> new")
+        @Contract("_ -> new")
         @NotNull
-        private Icon createImageIcon(final JComponent standInComponent, final int x, final int y) {
+        private Icon createImageIcon(final JComponent standInComponent) {
             final BufferedImage image =
                     new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
             final Graphics g = image.createGraphics();
