@@ -1,0 +1,608 @@
+package com.weis.darklaf.ui.tree;
+
+import com.weis.darklaf.util.SystemInfo;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
+import javax.swing.plaf.basic.BasicTreeUI;
+import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Enumeration;
+
+/**
+ * Adaption of DarculaTreeUI to allow a Tree to not be skinny.
+ *
+ * @author Jannis Weis
+ * @since 2019
+ */
+public class DarkTreeUI extends BasicTreeUI {
+
+    public static final String TREE_TABLE_TREE_KEY = "JTree.treeTableTree";
+    public static final String STRIPED_CLIENT_PROPERTY = "JTree.alternateRowColor";
+
+    private final MouseListener mySelectionListener = new MouseAdapter() {
+        boolean handled = false;
+
+        @Override
+        public void mousePressed(final MouseEvent e) {
+            handled = false;
+            tree.repaint();
+            if (!isSelected(e)) {
+                handled = true;
+                handle(e);
+            }
+        }
+
+        @Override
+        public void mouseReleased(final MouseEvent e) {
+            if (!handled) {
+                handle(e);
+            }
+        }
+
+        private void handle(@NotNull final MouseEvent e) {
+            final JTree tree = (JTree) e.getSource();
+            if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
+                // if we can't stop any ongoing editing, do nothing
+                if (isEditing(tree) && tree.getInvokesStopCellEditing() && !stopEditing(tree)) {
+                    return;
+                }
+                final TreePath pressedPath = getClosestPathForLocation(tree, e.getX(), e.getY());
+                if (pressedPath != null) {
+                    Rectangle bounds = getPathBounds(tree, pressedPath);
+                    if (e.getY() >= bounds.y + bounds.height) {
+                        return;
+                    }
+                    if (bounds.contains(e.getPoint()) || isLocationInExpandControl(pressedPath, e.getX(), e.getY())) {
+                        return;
+                    }
+                    if (tree.getDragEnabled() || !startEditing(pressedPath, e)) {
+                        selectPathForEvent(pressedPath, e);
+                    }
+                }
+            }
+        }
+    };
+
+    private boolean myOldRepaintAllRowValue;
+
+
+    @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkTreeUI();
+    }
+
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        if (tree != c) {
+            throw new InternalError("incorrect component");
+        }
+        // Should never happen if installed for a UI
+        if (treeState == null) {
+            return;
+        }
+
+        Rectangle paintBounds = g.getClipBounds();
+
+        Insets insets = tree.getInsets();
+        TreePath initialPath = getClosestPathForLocation(tree, 0, paintBounds.y);
+        Enumeration<?> paintingEnumerator = treeState.getVisiblePathsFrom(initialPath);
+        int row = treeState.getRowForPath(initialPath);
+        int endY = paintBounds.y + paintBounds.height;
+
+        drawingCache.clear();
+
+        if (initialPath != null && paintingEnumerator != null) {
+            TreePath parentPath = initialPath;
+
+            // Draw the lines, knobs, and rows
+
+            boolean done = false;
+            // Information for the node being rendered.
+            boolean isExpanded;
+            boolean hasBeenExpanded;
+            boolean isLeaf;
+            Rectangle boundsBuffer = new Rectangle();
+            Rectangle bounds;
+            TreePath path;
+            boolean rootVisible = isRootVisible();
+
+            //Paint row backgrounds
+            Enumeration<?> backgroundEnumerator = treeState.getVisiblePathsFrom(initialPath);
+            while (backgroundEnumerator != null && backgroundEnumerator.hasMoreElements()) {
+                path = (TreePath) backgroundEnumerator.nextElement();
+                if (path != null) {
+                    isLeaf = treeModel.isLeaf(path.getLastPathComponent());
+                    if (isLeaf) {
+                        isExpanded = hasBeenExpanded = false;
+                    } else {
+                        isExpanded = treeState.getExpandedState(path);
+                        hasBeenExpanded = tree.hasBeenExpanded(path);
+                    }
+                    bounds = getPathBounds(path, insets, boundsBuffer);
+                    if (bounds == null) return;
+                    paintRowBackground(g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+                }
+            }
+
+            // Find each parent and have them draw a line to their last child
+            while (parentPath != null) {
+                paintVerticalPartOfLeg(g, paintBounds, insets, parentPath);
+                drawingCache.put(parentPath, Boolean.TRUE);
+                parentPath = parentPath.getParentPath();
+            }
+
+            while (!done && paintingEnumerator.hasMoreElements()) {
+                path = (TreePath) paintingEnumerator.nextElement();
+                if (path != null) {
+                    isLeaf = treeModel.isLeaf(path.getLastPathComponent());
+                    if (isLeaf) { isExpanded = hasBeenExpanded = false; } else {
+                        isExpanded = treeState.getExpandedState(path);
+                        hasBeenExpanded = tree.hasBeenExpanded(path);
+                    }
+                    bounds = getPathBounds(path, insets, boundsBuffer);
+                    if (bounds == null)
+                    // This will only happen if the model changes out
+                    // from under us (usually in another thread).
+                    // Swing isn't multithreaded, but I'll put this
+                    // check in anyway.
+                    { return; }
+
+                    // See if the vertical line to the parent has been drawn.
+                    parentPath = path.getParentPath();
+                    if (parentPath != null) {
+                        if (drawingCache.get(parentPath) == null) {
+                            paintVerticalPartOfLeg(g, paintBounds, insets, parentPath);
+                            drawingCache.put(parentPath, Boolean.TRUE);
+                        }
+                        paintHorizontalPartOfLeg(g, paintBounds, insets, bounds, path, row, isExpanded,
+                                                 hasBeenExpanded, isLeaf);
+                    } else if (rootVisible && row == 0) {
+                        paintHorizontalPartOfLeg(g, paintBounds, insets, bounds, path, row, isExpanded,
+                                                 hasBeenExpanded, isLeaf);
+                    }
+                    if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
+                        paintExpandControl(g, paintBounds, insets, bounds, path, row, isExpanded,
+                                           hasBeenExpanded, isLeaf);
+                    }
+                    paintRow(g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+                    if ((bounds.y + bounds.height) >= endY) { done = true; }
+                } else {
+                    done = true;
+                }
+                row++;
+            }
+        }
+        paintDropLine(g);
+        // Empty out the renderer pane, allowing renderers to be gc'ed.
+        rendererPane.removeAll();
+        drawingCache.clear();
+    }
+
+    protected void paintRowBackground(final Graphics g, final Rectangle clipBounds,
+                                      final Insets insets, final Rectangle bounds, final TreePath path,
+                                      final int row, final boolean isExpanded,
+                                      final boolean hasBeenExpanded, final boolean isLeaf) {
+        final int containerWidth = tree.getParent() instanceof JViewport
+                                   ? tree.getParent().getWidth() : tree.getWidth();
+        final int xOffset = tree.getParent() instanceof JViewport
+                            ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
+
+        if (path != null) {
+            boolean selected = tree.isPathSelected(path);
+            Graphics2D rowGraphics = (Graphics2D) g.create();
+            rowGraphics.setClip(clipBounds);
+
+            rowGraphics.setColor(getRowBackground(row, selected));
+            rowGraphics.fillRect(xOffset, bounds.y, containerWidth, bounds.height);
+
+            super.paintRow(rowGraphics, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+            rowGraphics.dispose();
+        }
+    }
+
+    protected Rectangle getPathBounds(final TreePath path, final Insets insets, Rectangle bounds) {
+        bounds = treeState.getBounds(path, bounds);
+        if (bounds != null) {
+            if (tree.getComponentOrientation().isLeftToRight()) {
+                bounds.x += insets.left;
+            } else {
+                bounds.x = tree.getWidth() - (bounds.x + bounds.width) -
+                        insets.right;
+            }
+            bounds.y += insets.top;
+        }
+        return bounds;
+    }
+
+    protected Color getRowBackground(final int row, final boolean selected) {
+        if (selected) {
+            boolean isTableTree = Boolean.TRUE.equals(tree.getClientProperty(TREE_TABLE_TREE_KEY));
+            return getTreeSelectionBackground(tree.hasFocus() || isTableTree || tree.isEditing());
+        }
+        if (Boolean.TRUE.equals(tree.getClientProperty(STRIPED_CLIENT_PROPERTY)) && row % 2 == 1) {
+            return UIManager.getColor("Tree.alternateRowBackground");
+        } else {
+            return tree.getBackground();
+        }
+    }
+
+    @Override
+    protected void paintHorizontalPartOfLeg(final Graphics g, final Rectangle clipBounds, final Insets insets,
+                                            final Rectangle bounds, final TreePath path, final int row,
+                                            final boolean isExpanded, final boolean hasBeenExpanded,
+                                            final boolean isLeaf) {
+
+    }
+
+    @Override
+    protected void paintVerticalPartOfLeg(final Graphics g, final Rectangle clipBounds,
+                                          final Insets insets, final TreePath path) {
+        if (!shouldPaintLines()) return;
+        int depth = path.getPathCount() - 1;
+        if (depth == 0 && !getShowsRootHandles() && !isRootVisible()) {
+            return;
+        }
+        if (treeModel.isLeaf(path.getLastPathComponent()) || !tree.isExpanded(path)) return;
+
+        int clipLeft = clipBounds.x;
+        int clipRight = clipBounds.x + (clipBounds.width - 1);
+        int clipTop = clipBounds.y;
+        int clipBottom = clipBounds.y + tree.getHeight();
+
+        Rectangle parentBounds = getPathBounds(tree, path);
+
+        int top;
+        int bottom;
+        int lineX = getRowX(-1, depth);
+
+        if (tree.getComponentOrientation().isLeftToRight()) {
+            lineX = lineX - getRightChildIndent() + insets.left;
+        } else {
+            lineX = tree.getWidth() - lineX - insets.right + getRightChildIndent() - 1;
+        }
+
+        if (lineX > clipRight || lineX < clipLeft) return;
+
+        if (parentBounds == null) {
+            top = Math.max(insets.top + getVerticalLegBuffer(), clipTop);
+        } else {
+            top = Math.max(parentBounds.y + parentBounds.height + getVerticalLegBuffer(), clipTop);
+        }
+
+        if (depth == 0 && !isRootVisible()) {
+            TreeModel model = getModel();
+
+            if (model != null) {
+                Object root = model.getRoot();
+
+                if (model.getChildCount(root) > 0) {
+                    parentBounds = getPathBounds(tree, path.pathByAddingChild(model.getChild(root, 0)));
+                    if (parentBounds != null) {
+                        top = Math.max(insets.top + getVerticalLegBuffer(), parentBounds.y + parentBounds.height / 2);
+                    }
+                }
+            }
+        }
+
+        int childCount = treeModel.getChildCount(path.getLastPathComponent());
+        g.setColor(getLineColor(path));
+        for (int i = 0; i < childCount - 1; i++) {
+            var childPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), i));
+            Rectangle childBounds = getPathBounds(tree, childPath);
+            if (childBounds != null) {
+                bottom = Math.min(childBounds.y + childBounds.height, clipBottom);
+                paintVerticalLine(g, tree, lineX, top, bottom);
+                top = bottom;
+                if (clipBottom < top) return;
+            }
+        }
+
+        //Descend to deepest last child.
+        var lastChildPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), childCount - 1));
+        while (tree.isExpanded(lastChildPath)) {
+            int count = treeModel.getChildCount(lastChildPath.getLastPathComponent());
+            lastChildPath = lastChildPath.pathByAddingChild(treeModel.getChild(lastChildPath.getLastPathComponent(),
+                                                                               count - 1));
+        }
+        Rectangle childBounds = getPathBounds(tree, lastChildPath);
+        if (childBounds != null) {
+            bottom = Math.min(childBounds.y + childBounds.height, clipBottom);
+            paintVerticalLine(g, tree, lineX, top, bottom);
+        }
+    }
+
+    protected Color getLineColor(final TreePath path) {
+        if (selectedChildOf(path)) {
+            if (tree.hasFocus() || tree.isEditing()) {
+                return UIManager.getColor("Tree.lineFocusSelected");
+            } else {
+                return UIManager.getColor("Tree.lineSelected");
+            }
+        }
+        return UIManager.getColor("Tree.lineUnselected");
+    }
+
+    protected boolean selectedChildOf(final TreePath path) {
+        TreePath p = tree.getSelectionPath();
+        if (p == null) return false;
+        if (p == path) return true;
+        if (tree.isExpanded(p)) return false;
+        return p.getParentPath() == path;
+    }
+
+    @Override
+    protected void paintVerticalLine(final Graphics g, final JComponent c, final int x,
+                                     final int top, final int bottom) {
+        if (isDashedLine()) {
+            drawDashedLine(g, x, top, bottom);
+        } else {
+            g.fillRect(x, top, 1, bottom - top);
+        }
+    }
+
+    private void drawDashedLine(final Graphics g, final int x, int y1, final int y2) {
+        if (y1 >= y2) {
+            return;
+        }
+        y1 += (y1 % 2);
+        Graphics2D g2d = (Graphics2D) g;
+        Stroke oldStroke = g2d.getStroke();
+
+        BasicStroke dashedStroke = new BasicStroke(2, BasicStroke.CAP_BUTT,
+                                                   BasicStroke.JOIN_ROUND, 0, new float[]{1.0f}, 0);
+        g2d.setStroke(dashedStroke);
+        g2d.drawLine(x, y1, x, y2);
+        g2d.setStroke(oldStroke);
+    }
+
+    protected boolean isDashedLine() {
+        return UIManager.getBoolean("Tree.lineTypeDashed") || "Dashed".equals(getLineStyle());
+    }
+
+    protected String getLineStyle() {
+        return String.valueOf(tree.getClientProperty("JTree.lineStyle"));
+    }
+
+    protected boolean shouldPaintLines() {
+        return !"None".equals(getLineStyle());
+    }
+
+    protected Color getTreeSelectionBackground(final boolean focused) {
+        return focused ? UIManager.getColor("Tree.selectionBackground")
+                       : UIManager.getColor("Tree.unfocusedSelectionBackground");
+    }
+
+    @Override
+    protected void paintExpandControl(final Graphics g, final Rectangle clipBounds, final Insets insets,
+                                      final Rectangle bounds, final TreePath path, final int row,
+                                      final boolean isExpanded, final boolean hasBeenExpanded, final boolean isLeaf) {
+        if (!isLeaf(row)) {
+            boolean isPathSelected = tree.getSelectionModel().isPathSelected(path);
+            setExpandedIcon(getExpandedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
+            setCollapsedIcon(getCollapsedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
+        }
+        super.paintExpandControl(g, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+    }
+
+    protected Icon getCollapsedIcon(final boolean selected, final boolean focused) {
+        if (selected) {
+            if (focused) {
+                return UIManager.getIcon("Tree.collapsed.selected.focused.icon");
+            } else {
+                return UIManager.getIcon("Tree.collapsed.selected.unfocused.icon");
+            }
+        } else {
+            if (focused) {
+                return UIManager.getIcon("Tree.collapsed.unselected.focused.icon");
+            } else {
+                return UIManager.getIcon("Tree.collapsed.unselected.unfocused.icon");
+            }
+        }
+    }
+
+    protected Icon getExpandedIcon(final boolean selected, final boolean focused) {
+        if (selected) {
+            if (focused) {
+                return UIManager.getIcon("Tree.expanded.selected.focused.icon");
+            } else {
+                return UIManager.getIcon("Tree.expanded.selected.unfocused.icon");
+            }
+        } else {
+            if (focused) {
+                return UIManager.getIcon("Tree.expanded.unselected.focused.icon");
+            } else {
+                return UIManager.getIcon("Tree.expanded.unselected.unfocused.icon");
+            }
+        }
+    }
+
+    protected boolean isSelected(@NotNull final MouseEvent e) {
+        final JTree tree = (JTree) e.getSource();
+        final int selected = tree.getClosestRowForLocation(e.getX(), e.getY());
+        final int[] rows = tree.getSelectionRows();
+        if (rows != null) {
+            for (int row : rows) {
+                if (row == selected) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean isToggleSelectionEvent(final MouseEvent e) {
+        return SwingUtilities.isLeftMouseButton(e)
+                && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
+    }
+
+    @Override
+    protected void completeEditing() {
+        /* If should invoke stopCellEditing, try that */
+        if (tree.getInvokesStopCellEditing() &&
+                stopEditingInCompleteEditing && editingComponent != null) {
+            cellEditor.stopCellEditing();
+        }
+        /* Invoke cancelCellEditing, this will do nothing if stopCellEditing
+           was successful. */
+        completeEditing(false, true, true);
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        tree.putClientProperty("JTree.renderBooleanAsCheckBox",
+                               UIManager.getBoolean("Tree.renderBooleanAsCheckBox"));
+        tree.putClientProperty("JTree.booleanRenderType", UIManager.getString("Tree.booleanRenderType"));
+    }
+
+    @Override
+    protected void completeUIInstall() {
+        super.completeUIInstall();
+
+        myOldRepaintAllRowValue = UIManager.getBoolean("Tree.repaintWholeRow");
+        UIManager.put("Tree.repaintWholeRow", true);
+
+        tree.setShowsRootHandles(true);
+        tree.addMouseListener(mySelectionListener);
+    }
+
+    @Override
+    protected FocusListener createFocusListener() {
+        return new FocusListener() {
+            @Override
+            public void focusGained(final FocusEvent e) {
+                tree.repaint();
+            }
+
+            @Override
+            public void focusLost(final FocusEvent e) {
+                tree.repaint();
+            }
+        };
+    }
+
+    @Override
+    protected TreeCellRenderer createDefaultCellRenderer() {
+        return new DarkTreeCellRenderer();
+    }
+
+    @Override
+    protected TreeCellEditor createDefaultCellEditor() {
+        if (currentCellRenderer != null && (currentCellRenderer instanceof DarkTreeCellRenderer)) {
+            return new DarkDefaultTreeEditor(tree, (DarkTreeCellRenderer) currentCellRenderer);
+        }
+        return new DarkDefaultTreeEditor(tree, null);
+    }
+
+    @Override
+    public void uninstallUI(final JComponent c) {
+        super.uninstallUI(c);
+
+        UIManager.put("Tree.repaintWholeRow", myOldRepaintAllRowValue);
+        c.removeMouseListener(mySelectionListener);
+    }
+
+
+    @Override
+    protected void installKeyboardActions() {
+        super.installKeyboardActions();
+
+        if (Boolean.TRUE.equals(tree.getClientProperty("MacTreeUi.actionsInstalled"))) return;
+
+        tree.putClientProperty("MacTreeUi.actionsInstalled", Boolean.TRUE);
+
+        final InputMap inputMap = tree.getInputMap(JComponent.WHEN_FOCUSED);
+        inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
+        inputMap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "expand");
+
+        final ActionMap actionMap = tree.getActionMap();
+
+        final Action expandAction = actionMap.get("expand");
+        if (expandAction != null) {
+            actionMap.put("expand", new TreeUIAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    final Object source = e.getSource();
+                    if (source instanceof JTree) {
+                        JTree tree = (JTree) source;
+                        int selectionRow = tree.getLeadSelectionRow();
+                        if (selectionRow != -1) {
+                            TreePath selectionPath = tree.getPathForRow(selectionRow);
+                            if (selectionPath != null) {
+                                boolean leaf = tree.getModel().isLeaf(selectionPath.getLastPathComponent());
+                                int toSelect = -1;
+                                int toScroll = -1;
+                                if (!leaf && tree.isExpanded(selectionRow)) {
+                                    if (selectionRow + 1 < tree.getRowCount()) {
+                                        toSelect = selectionRow + 1;
+                                        toScroll = toSelect;
+                                    }
+                                } else if (leaf) {
+                                    toScroll = selectionRow;
+                                }
+
+                                if (toSelect != -1) {
+                                    tree.setSelectionInterval(toSelect, toSelect);
+                                }
+
+                                if (toScroll != -1) {
+                                    tree.scrollRowToVisible(toScroll);
+                                }
+
+                                if (toSelect != -1 || toScroll != -1) return;
+                            }
+                        }
+                    }
+                    expandAction.actionPerformed(e);
+                }
+            });
+        }
+
+        actionMap.put("collapse_or_move_up", new TreeUIAction() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final Object source = e.getSource();
+                if (source instanceof JTree) {
+                    JTree tree = (JTree) source;
+                    int selectionRow = tree.getLeadSelectionRow();
+                    if (selectionRow == -1) return;
+
+                    TreePath selectionPath = tree.getPathForRow(selectionRow);
+                    if (selectionPath == null) return;
+
+                    if (tree.getModel().isLeaf(selectionPath.getLastPathComponent()) || tree.isCollapsed(selectionRow)) {
+                        final TreePath parentPath = tree.getPathForRow(selectionRow).getParentPath();
+                        if (parentPath != null) {
+                            if (parentPath.getParentPath() != null || tree.isRootVisible()) {
+                                final int parentRow = tree.getRowForPath(parentPath);
+                                tree.scrollRowToVisible(parentRow);
+                                tree.setSelectionInterval(parentRow, parentRow);
+                            }
+                        }
+                    } else {
+                        tree.collapseRow(selectionRow);
+                    }
+                }
+            }
+        });
+    }
+
+
+    private abstract static class TreeUIAction extends AbstractAction implements UIResource {
+    }
+}

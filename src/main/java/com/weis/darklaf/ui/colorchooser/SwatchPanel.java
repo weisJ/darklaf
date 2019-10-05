@@ -1,6 +1,7 @@
 package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -127,10 +128,7 @@ abstract class SwatchPanel extends JPanel {
                 if (selRow == row && selCol == column && this.isFocusOwner() && c != null) {
                     Color c2 = new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
                     g.setColor(c2);
-                    g.fillRect(x, y, swatchSize.width, 1);
-                    g.fillRect(x, y + swatchSize.height - 1, swatchSize.width - 1, 1);
-                    g.fillRect(x, y, 1, swatchSize.height);
-                    g.fillRect(x + swatchSize.width - 1, y, 1, swatchSize.height);
+                    DarkUIUtil.drawRect(g, x,y, swatchSize.width, swatchSize.height, 1);
 
                     GraphicsUtil.setupStrokePainting(g);
                     g.drawLine(x + 1, y + 1, x + swatchSize.width - 1, y + swatchSize.height - 1);

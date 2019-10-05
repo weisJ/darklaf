@@ -14,6 +14,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 public class DarkRadioButtonUI extends MetalRadioButtonUI {
 
@@ -25,6 +26,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     private static final Rectangle viewRect = new Rectangle();
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
+
+    private final Ellipse2D hitArea = new Ellipse2D.Float();
 
 
     @NotNull
@@ -42,20 +45,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         g.setFont(f);
         FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, f);
 
-        Insets i = c.getInsets();
-        size = b.getSize(size);
-        viewRect.x = i.left;
-        viewRect.y = i.top;
-        viewRect.width = size.width - (i.right + viewRect.x);
-        viewRect.height = size.height - (i.bottom + viewRect.y);
-        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
-        textRect.x = textRect.y = textRect.width = textRect.height = 0;
-
-
-        String text = SwingUtilities.layoutCompoundLabel(c, fm, b.getText(), getDefaultIcon(),
-                                                         b.getVerticalAlignment(), b.getHorizontalAlignment(),
-                                                         b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-                                                         viewRect, iconRect, textRect, b.getIconTextGap());
+        String text = layoutRadioButton(b, fm);
 
         paintBackground(c, g);
         var config = GraphicsUtil.setupStrokePainting(g);
@@ -71,12 +61,33 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         }
     }
 
+    protected String layoutRadioButton(final AbstractButton b, final FontMetrics fm) {
+        Insets i = b.getInsets();
+        size = b.getSize(size);
+        viewRect.x = i.left;
+        viewRect.y = i.top;
+        viewRect.width = size.width - (i.right + viewRect.x);
+        viewRect.height = size.height - (i.bottom + viewRect.y);
+        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
+        textRect.x = textRect.y = textRect.width = textRect.height = 0;
+
+        String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), getDefaultIcon(),
+                                                         b.getVerticalAlignment(), b.getHorizontalAlignment(),
+                                                         b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+                                                         viewRect, iconRect, textRect, b.getIconTextGap());
+
+        hitArea.setFrame(Math.max(iconRect.x, 0) + ICON_OFF,
+                         Math.max(iconRect.y, 0) + ICON_OFF,
+                         SIZE, SIZE);
+        return text;
+    }
+
     protected void paintDarkBullet(final JComponent c, final Graphics2D g, @NotNull final AbstractButton b) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         boolean enabled = b.isEnabled();
         g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
         g.translate(-0.25, 0);
-        paintCheckBorder(g, enabled, b.hasFocus());
+        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted());
         if (b.isSelected()) {
             paintCheckBullet(g, enabled);
         }
@@ -123,5 +134,13 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     @Override
     public Icon getDefaultIcon() {
         return new IconUIResource(EmptyIcon.create(20));
+    }
+
+    @Override
+    public boolean contains(final JComponent c, final int x, final int y) {
+        if (hitArea.isEmpty() && c instanceof JRadioButton) {
+            layoutRadioButton((JRadioButton) c, c.getFontMetrics(c.getFont()));
+        }
+        return hitArea.contains(x, y);
     }
 }

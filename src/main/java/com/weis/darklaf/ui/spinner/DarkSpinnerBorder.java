@@ -21,6 +21,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
     public void paintBorder(@NotNull final Component c, final Graphics g2,
                             final int x, final int y, final int width, final int height) {
         boolean tableCellEditor = DarkSpinnerUI.isTableCellEditor(c);
+        boolean treeCellEditor = !tableCellEditor && DarkSpinnerUI.isTreeCellEditor(c);
 
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = new GraphicsContext(g);
@@ -28,9 +29,21 @@ public class DarkSpinnerBorder implements Border, UIResource {
 
         int size = tableCellEditor ? 0 : BORDER_SIZE;
         int arc = ARC_SIZE;
-        if (!tableCellEditor) {
-            g.setColor(getBorderColor(c));
+        g.setColor(getBorderColor(c));
+        if (!tableCellEditor && !treeCellEditor) {
             DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
+        } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
+            var table = (JTable)c.getParent();
+            if (!table.getShowHorizontalLines()) {
+                g.fillRect(0, 0, width, 1);
+                g.fillRect(0, height - 1, width, 1);
+            }
+            if (!table.getShowVerticalLines()) {
+                g.fillRect(0, 0, 1, height);
+                g.fillRect(width - 1, 0, 1, height);
+            }
+        } else {
+            DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
         }
 
         if (c instanceof JSpinner) {
@@ -41,11 +54,15 @@ public class DarkSpinnerBorder implements Border, UIResource {
                           ? editor.getBounds().x + editor.getWidth()
                           : editor.getBounds().x - 1 - BORDER_SIZE;
                 g.setColor(getBorderColor(spinner));
-                g.fillRect(off, size, 1, height - 2 * size);
+                if (!treeCellEditor) {
+                    g.fillRect(off, size, 1, height - 2 * size);
+                } else {
+                    g.fillRect(off, 0, 1, height);
+                }
             }
         }
 
-        if (!tableCellEditor && DarkUIUtil.hasFocus(c)) {
+        if (!tableCellEditor && !treeCellEditor && DarkUIUtil.hasFocus(c)) {
             g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
             DarkUIUtil.paintFocusBorder(g, width, height, arc, true);
         }
@@ -60,7 +77,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        if (DarkSpinnerUI.isTableCellEditor(c)) {
+        if (DarkSpinnerUI.isTableCellEditor(c) || DarkSpinnerUI.isTreeCellEditor(c)) {
             return new InsetsUIResource(2, 5, 2, 5);
         }
         return new InsetsUIResource(7, 7, 7, 7);

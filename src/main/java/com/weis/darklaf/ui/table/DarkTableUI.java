@@ -7,6 +7,7 @@ import sun.swing.SwingUtilities2;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -371,6 +372,16 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
         }
-        super.paintCell(g, r, row, column);
+        if (table.isEditing() && table.getEditingRow() == row &&
+                table.getEditingColumn() == column) {
+            Component component = table.getEditorComponent();
+            component.setBounds(cellRect);
+            component.validate();
+        } else {
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component component = table.prepareRenderer(renderer, row, column);
+            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
+                                        cellRect.width, cellRect.height, true);
+        }
     }
 }

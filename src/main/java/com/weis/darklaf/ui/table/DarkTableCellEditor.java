@@ -5,9 +5,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.EventObject;
@@ -26,6 +29,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellRadioButton());
     private boolean value;
     private boolean isBooleanEditor;
+    private JTable table;
 
     public DarkTableCellEditor() {
         this(new JTextField());
@@ -33,6 +37,23 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
     public DarkTableCellEditor(final JComboBox<?> comboBox) {
         super(comboBox);
+        comboBox.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
+                if (table != null) table.repaint();
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
+                if (table != null) table.repaint();
+            }
+
+            @Override
+            public void popupMenuCanceled(final PopupMenuEvent e) {
+
+            }
+        });
+        setClickCountToStart(2);
     }
 
     public DarkTableCellEditor(@NotNull final JSpinner spinner) {
@@ -43,7 +64,14 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         delegate = new EditorDelegate() {
             public void setValue(final Object value) {
                 try {
-                    spinner.setValue(NumberFormat.getInstance().parse(value.toString()));
+                    var model = spinner.getModel();
+                    if (model instanceof SpinnerNumberModel) {
+                        spinner.setValue(NumberFormat.getInstance().parse(value.toString()));
+                    } else if (model instanceof SpinnerDateModel) {
+                        spinner.setValue(DateFormat.getInstance().parse(value.toString()));
+                    } else {
+                        spinner.setValue(value);
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -61,6 +89,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                 return true;
             }
         };
+        setClickCountToStart(2);
     }
 
     public DarkTableCellEditor(final JCheckBox checkBox) {
@@ -96,9 +125,10 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     public DarkTableCellEditor(final JTextField textField) {
         super(textField);
         textField.setBorder(new DarkTableCellBorder());
+        setClickCountToStart(2);
     }
 
-    protected void setValue(final Object value) {
+    public void setValue(final Object value) {
         delegate.setValue(value);
         if (value instanceof Boolean) {
             this.value = (boolean) value;
@@ -111,7 +141,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     @Override
     public Component getTableCellEditorComponent(final JTable table, final Object value,
                                                  final boolean isSelected, final int row, final int column) {
-
+        this.table = table;
         if (useBooleanEditor(value, table)) {
             isBooleanEditor = true;
             return getBooleanEditor(table).getTableCellEditorComponent(table, value, isSelected, row, column);
@@ -185,15 +215,19 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     @Override
     public boolean isCellEditable(@NotNull final EventObject anEvent) {
         var table = ((JTable) anEvent.getSource());
-        if (DarkTableCellRenderer.isBooleanRenderingEnabled(table)) {
-            var p = MouseInfo.getPointerInfo().getLocation();
-            SwingUtilities.convertPointFromScreen(p, table);
+        if (DarkTableCellRenderer.isBooleanRenderingEnabled(table) && anEvent instanceof MouseEvent) {
+            var p = ((MouseEvent)anEvent).getPoint();
             int row = table.rowAtPoint(p);
             int col = table.columnAtPoint(p);
             if (row >= 0 && row < table.getRowCount() && col >= 0 && col < table.getColumnCount()) {
                 var value = table.getValueAt(row, col);
                 if (useBooleanEditor(value, table)) {
-                    return true;
+                    var rect = table.getCellRect(row, col, false);
+                    p.x -= rect.x;
+                    p.y -= rect.y;
+                    var editor = getBooleanEditor(table).getTableCellEditorComponent(table, true,
+                                                                                     false, row, col);
+                    return editor.contains(p);
                 }
             }
         }

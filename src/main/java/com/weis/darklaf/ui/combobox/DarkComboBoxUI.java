@@ -99,15 +99,24 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         } else {
             g.setColor(getBackground());
         }
-        g.fillRoundRect(BORDER_SIZE, BORDER_SIZE,
-                        width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE,
-                        ARC_SIZE, ARC_SIZE);
+        if (!isTableCellEditor(c) && !isTreeCellEditor(c)) {
+            g.fillRoundRect(BORDER_SIZE, BORDER_SIZE,
+                            width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE,
+                            ARC_SIZE, ARC_SIZE);
+        } else {
+            g.fillRect(0, 0, width, height);
+        }
     }
 
 
-    private static boolean isTableCellEditor(@NotNull final Component c) {
+    protected static boolean isTableCellEditor(@NotNull final Component c) {
         return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
+    }
+
+    protected static boolean isTreeCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTreeCellEditor"));
     }
 
     @Override
@@ -117,6 +126,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             return;
         }
         final boolean isTableCellEditor = isTableCellEditor(comboBox);
+        final boolean isTreeCellEditor = isTreeCellEditor(comboBox);
         int bSize = BORDER_SIZE;
         int arc = ARC_SIZE;
         checkFocus();
@@ -128,36 +138,54 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             var arrowBounds = arrowButton.getBounds();
             boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
             int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width - 1;
-            if (!isTableCellEditor) {
-                Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
-                                                                 height - 2 * bSize, arc, arc));
-                Area iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1,
-                                                       height - 2 * bSize));
-                if (leftToRight) {
-                    rect.intersect(iconRect);
-                } else {
-                    rect.subtract(iconRect);
-                }
-                g.setColor(getBackground());
-                g.fill(rect);
-            }
-            g.setColor(getBorderColor());
-            if (!isTableCellEditor) {
-                g.fillRect(off, BORDER_SIZE, 1, height - 2 * BORDER_SIZE);
+            Area rect;
+            Area iconRect;
+            if (!isTableCellEditor && !isTreeCellEditor) {
+                rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
+                                                            height - 2 * bSize, arc, arc));
+                iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1,
+                                                  height - 2 * bSize));
             } else {
-                g.fillRect(off, 0, 1, height);
+                rect = new Area(new Rectangle(0, 0, width, height));
+                iconRect = new Area(new Rectangle(off, 0, width - off + 1, height));
             }
-        }
-        if (!isTableCellEditor) {
+            if (leftToRight) {
+                rect.intersect(iconRect);
+            } else {
+                rect.subtract(iconRect);
+            }
+            g.setColor(getBackground());
+            g.fill(rect);
+
             g.setColor(getBorderColor());
+            g.fillRect(off, 0, 1, height);
+        }
+
+        g.setColor(getBorderColor());
+        if (!isTableCellEditor && !isTreeCellEditor) {
             DarkUIUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize,
                                        height - 2 * bSize, arc, true);
-
             if (hasFocus) {
                 g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
                 DarkUIUtil.paintFocusBorder(g, width, height, ARC_SIZE, true);
             }
+        } else {
+            var parent = c.getParent();
+            if (isTableCellEditor(c) && parent instanceof JTable) {
+                var table = ((JTable) parent);
+                if (!table.getShowHorizontalLines()) {
+                    g.fillRect(0, 0, width, 1);
+                    g.fillRect(0, height - 1, width, 1);
+                }
+                if (!table.getShowVerticalLines()) {
+                    g.fillRect(0, 0, 1, height);
+                    g.fillRect(width - 1, 0, 1, height);
+                }
+            } else {
+                DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
+            }
         }
+
         g.translate(-x, -y);
         config.restore();
     }
@@ -268,7 +296,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        if (isTableCellEditor(c)) {
+        if (isTableCellEditor(c) || isTreeCellEditor(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
         return new InsetsUIResource(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
@@ -310,7 +338,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         int buttonWidth = squareButton
                           ? buttonHeight
                           : arrowButton.getPreferredSize().width
-                            + arrowButton.getInsets().left + arrowButton.getInsets().right;
+                                  + arrowButton.getInsets().left + arrowButton.getInsets().right;
         //adjust the size based on the button width
         size.height += insets.top + insets.bottom;
         size.width += insets.left + insets.right + buttonWidth;
@@ -324,4 +352,5 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     public void resetPopup() {
         ((DarkComboPopup) popup).reset();
     }
+
 }

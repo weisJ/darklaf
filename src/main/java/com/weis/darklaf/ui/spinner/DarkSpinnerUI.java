@@ -77,6 +77,11 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
     }
 
+    protected static boolean isTreeCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTreeCellEditor"));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void replaceEditor(final JComponent oldEditor, final JComponent newEditor) {
@@ -171,7 +176,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             } else {
                 g.setColor(getBackground(c));
             }
-            if (!isTableCellEditor(c)) {
+            if (!isTableCellEditor(c) && !isTreeCellEditor(c)) {
                 g.fillRoundRect(size, size, width - 2 * size, height - 2 * size, arc, arc);
             } else {
                 var bounds = prevButton.getBounds();

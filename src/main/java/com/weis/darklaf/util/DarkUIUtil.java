@@ -11,6 +11,7 @@ import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Ellipse2D;
@@ -132,6 +133,14 @@ public final class DarkUIUtil {
         return new Color(redPart, greenPart, bluePart);
     }
 
+    public static void drawRect(final Graphics g, final int x, final int y, final int width, final int height,
+                                final int thickness) {
+        g.fillRect(x, y, width, thickness);
+        g.fillRect(x, y, thickness, height);
+        g.fillRect(x + width - thickness, y, thickness, height);
+        g.fillRect(x, y + height - thickness, width, thickness);
+    }
+
     public static void applyInsets(final Rectangle rect, final Insets insets) {
         if (insets != null && rect != null) {
             rect.x += insets.left;
@@ -148,7 +157,7 @@ public final class DarkUIUtil {
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         final Component owner2 = FocusManager.getCurrentManager().getFocusOwner();
         return (owner != null && SwingUtilities.isDescendingFrom(owner, c))
-               || (owner2 != null && SwingUtilities.isDescendingFrom(owner2, c));
+                || (owner2 != null && SwingUtilities.isDescendingFrom(owner2, c));
     }
 
     public static boolean hasFocus(final Window w) {
@@ -166,20 +175,6 @@ public final class DarkUIUtil {
             }
         }
         return null;
-    }
-
-    //Todo: COlors
-    public static Color getTreeSelectionBackground(final boolean focused) {
-        return focused ? getTreeSelectionBackground() : getTreeUnfocusedSelectionBackground();
-    }
-
-    private static Color getTreeSelectionBackground() {
-        return UIManager.getColor("Tree.selectionBackground");
-    }
-
-    public static Color getTreeUnfocusedSelectionBackground() {
-//        Color background = getTreeTextBackground();
-        return  new Color(13, 41, 62);
     }
 
     public static Color getTreeTextBackground() {
@@ -208,11 +203,12 @@ public final class DarkUIUtil {
         component.putClientProperty("doNotCancelOnScroll", Boolean.TRUE);
     }
 
-    public static boolean isInTableCell(final Component c) {
+    public static boolean isInCell(final Component c) {
         return getParentOfType(CellRendererPane.class, c) != null
-               || getParentOfType(TableCellRenderer.class, c) != null
-               || getParentOfType(CellRenderer.class, c) != null
-               || getParentOfType(CellEditor.class, c) != null;
+                || getParentOfType(TableCellRenderer.class, c) != null
+                || getParentOfType(TreeCellRenderer.class, c) != null
+                || getParentOfType(CellRenderer.class, c) != null
+                || getParentOfType(CellEditor.class, c) != null;
     }
 
     @Contract("null -> null")

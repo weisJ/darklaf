@@ -5,8 +5,8 @@
 
 import com.weis.darklaf.DarkLafInfo;
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.weis.darklaf.ui.table.DarkColorTableCellRendererEditor;
-import com.weis.darklaf.ui.table.DarkTableCellRendererCheckBox;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -153,6 +153,7 @@ public class UIManagerDefaults implements ItemListener {
         table.setShowHorizontalLines(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(250);
         table.getColumnModel().getColumn(1).setPreferredWidth(500);
+
         table.getColumnModel().getColumn(2).setPreferredWidth(100);
         table.getColumnModel().getColumn(2).setCellRenderer(new SampleRenderer());
         table.getColumnModel().getColumn(2).setCellEditor(new DarkColorTableCellRendererEditor());
@@ -534,7 +535,8 @@ public class UIManagerDefaults implements ItemListener {
      */
     private static final class SampleRenderer extends JLabel implements TableCellRenderer {
 
-        private final DarkTableCellRendererCheckBox booleanRenderer = new DarkTableCellRendererCheckBox();
+        private final DarkCellRendererToggleButton booleanRenderer =
+                new DarkCellRendererToggleButton(new DarkCellRendererToggleButton.CellEditorCheckBox());
 
         private SampleRenderer() {
             super();

@@ -16,6 +16,7 @@ import javax.swing.plaf.metal.MetalCheckBoxUI;
 import javax.swing.text.View;
 import java.awt.*;
 import java.awt.geom.Path2D;
+import java.awt.geom.RoundRectangle2D;
 
 public class DarkCheckBoxUI extends MetalCheckBoxUI {
 
@@ -27,6 +28,8 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     private static final Rectangle viewRect = new Rectangle();
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
+
+    private final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
 
     @NotNull
     @Contract("_ -> new")
@@ -40,7 +43,24 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         JCheckBox b = (JCheckBox) c;
         FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, c.getFont());
 
-        Insets i = c.getInsets();
+        String text = layoutCheckBox(b, fm);
+
+        paintBackground(c, g);
+
+        Icon icon = getIconBullet(c, g, b);
+        if (icon != null) {
+            icon.paintIcon(c, g, iconRect.x, iconRect.y);
+        } else {
+            paintDarkCheck(c, g, b);
+        }
+
+        if (text != null) {
+            paintText(g, b, textRect, text, fm, getDisabledTextColor());
+        }
+    }
+
+    protected String layoutCheckBox(@NotNull final JCheckBox b, final FontMetrics fm) {
+        Insets i = b.getInsets();
         size = b.getSize(size);
         viewRect.x = i.left;
         viewRect.y = i.top;
@@ -49,23 +69,14 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
 
-
-        String text = SwingUtilities.layoutCompoundLabel(c, fm, b.getText(), getDefaultIcon(),
+        String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), getDefaultIcon(),
                                                          b.getVerticalAlignment(), b.getHorizontalAlignment(),
                                                          b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
                                                          viewRect, iconRect, textRect, b.getIconTextGap());
-        paintBackground(c, g);
-
-        Icon icon = getIconBullet(c, g, b);
-        if (icon != null) {
-            icon.paintIcon(c, g, iconRect.x, iconRect.y);
-        } else {
-            paintDarkCheck(c,g,b);
-        }
-
-        if (text != null) {
-            paintText(g, b, textRect, text, fm, getDisabledTextColor());
-        }
+        hitArea.setRoundRect(Math.max(iconRect.x, 0) + ICON_OFF,
+                             Math.max(iconRect.y, 0) + ICON_OFF,
+                             SIZE, SIZE, ARC_SIZE, ARC_SIZE);
+        return text;
     }
 
     protected void paintDarkCheck(final JComponent c, final Graphics2D g, @NotNull final JCheckBox b) {
@@ -73,7 +84,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         boolean enabled = b.isEnabled();
         g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
 
-        paintCheckBorder(g, enabled, b.hasFocus());
+        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted());
         if (b.isSelected()) {
             paintCheckArrow(g, enabled);
         }
@@ -112,14 +123,12 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         if (icon == null) {
             icon = b.getIcon();
         }
-       return icon;
+        return icon;
     }
 
-
-
     public static void paintText(@NotNull final Graphics2D g, @NotNull final AbstractButton b,
-                           final Rectangle textRect, final String text, final FontMetrics fm,
-                          final Color disabledTextColor) {
+                                 final Rectangle textRect, final String text, final FontMetrics fm,
+                                 final Color disabledTextColor) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g, true, false);
         g.setFont(b.getFont());
         View view = (View) b.getClientProperty(BasicHTML.propertyKey);
@@ -151,7 +160,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     }
 
     static void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
-        var g2 = (Graphics2D)g.create();
+        var g2 = (Graphics2D) g.create();
         Color bgColor = enabled ? UIManager.getColor("CheckBox.darcula.activeFillColor")
                                 : UIManager.getColor("CheckBox.darcula.inactiveFillColor");
         Color borderColor = enabled ? UIManager.getColor("CheckBox.darcula.activeBorderColor")
@@ -163,7 +172,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         DarkUIUtil.paintLineBorder(g, 0, 0, SIZE, SIZE, ARC_SIZE, true);
 
         if (focus) {
-            g2.translate(-2,-2);
+            g2.translate(-2, -2);
             g2.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
             DarkUIUtil.paintFocusBorder(g2, SIZE + 4, SIZE + 4, ARC_SIZE, true);
         }
@@ -180,5 +189,13 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     @Override
     public Icon getDefaultIcon() {
         return new IconUIResource(EmptyIcon.create(20));
+    }
+
+    @Override
+    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+        if (hitArea.isEmpty() && c instanceof JCheckBox) {
+            layoutCheckBox((JCheckBox) c, c.getFontMetrics(c.getFont()));
+        }
+        return hitArea.contains(x, y);
     }
 }
