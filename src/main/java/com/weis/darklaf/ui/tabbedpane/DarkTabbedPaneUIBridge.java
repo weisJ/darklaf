@@ -1177,7 +1177,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Laysout a label.
+     * Laysout a label.properties.
      *
      * @param tabPlacement the tab placement
      * @param metrics      the font metric
@@ -1300,12 +1300,12 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Returns the tab label shift x.
+     * Returns the tab label.properties shift x.
      *
      * @param tabPlacement the tab placement
      * @param tabIndex     the tab index
      * @param isSelected   selection status
-     * @return the tab label shift x
+     * @return the tab label.properties shift x
      */
     protected int getTabLabelShiftX(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
@@ -1326,12 +1326,12 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Returns the tab label shift y.
+     * Returns the tab label.properties shift y.
      *
      * @param tabPlacement the tab placement
      * @param tabIndex     the tab index
      * @param isSelected   selection status
-     * @return the tab label shift y
+     * @return the tab label.properties shift y
      */
     protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];

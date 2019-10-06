@@ -676,7 +676,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             var config = GraphicsUtil.setupAAPainting(g);
             /*
              * These offsets are due to the nature of the used icon. They are applied to match the baseline of
-             * the label text.
+             * the label.properties text.
              * A different icon might need a different offset.
              */
             int off = 5;

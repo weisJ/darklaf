@@ -16,6 +16,7 @@ package com.weis.darklaf.ui.rootpane;
  * limitations under the License.
  */
 
+import com.weis.darklaf.platform.windows.JNIDecorations;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -225,10 +226,16 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
         if (currWindow != null) {
             if (currWindow != window) {
-                uninstallClientDecorations(rootPane);
-                installClientDecorations(rootPane);
+                if (!JNIDecorations.isCustomDecorationSupported()) return;
+                if (rootPane.getWindowDecorationStyle() == JRootPane.NONE) return;
+                updateClientDecoration();
             }
             window = currWindow;
         }
+    }
+
+    protected void updateClientDecoration() {
+        uninstallClientDecorations(rootPane);
+        installClientDecorations(rootPane);
     }
 }

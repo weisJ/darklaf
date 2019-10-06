@@ -22,7 +22,7 @@ public class ComboDemo {
         JTextArea textArea = new JTextArea();
         JComboBox comboBox4 = new JComboBox();
 
-        label.setText("label");
+        label.setText("label.properties");
         comboBox.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         textField.setText("textfield");
         comboBox2.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));

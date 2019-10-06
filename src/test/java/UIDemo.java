@@ -14,8 +14,6 @@ import java.awt.*;
  */
 public final class UIDemo {
 
-    private static final int SIZE = 10;
-
     public static void main(final String[] args) {
         System.setProperty("org.apache.batik.warn_destination", "false");
         SwingUtilities.invokeLater(
@@ -46,8 +44,20 @@ public final class UIDemo {
 
                     panel.add(new JPanel() {{
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JCheckBox("checkBox"));
-                        add(new JRadioButton("radioButton"));
+                        add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
+                            add(new JCheckBox("disabled") {{
+                                setSelected(true);
+                                setEnabled(false);
+                            }});
+                            add(new JCheckBox("enabled"));
+                        }});
+                        add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
+                            add(new JRadioButton("disabled") {{
+                                setSelected(true);
+                                setEnabled(false);
+                            }});
+                            add(new JRadioButton("enabled"));
+                        }});
                         add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
                             add(new JButton("IconButton", folderIcon) {{
                                 setRolloverEnabled(true);

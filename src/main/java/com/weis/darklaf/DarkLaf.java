@@ -31,6 +31,13 @@ import java.util.logging.Logger;
  */
 public class DarkLaf extends BasicLookAndFeel {
 
+
+    private static final String[] PROPERTIES = new String[]{
+            "theme", "base", "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser",
+            "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "optionPane", "panel", "popupMenu",
+            "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator", "slider", "spinner",
+            "splitPane", "statusBar", "tabbedPane", "table", "text", "toggleButton", "toolBar", "toolTip", "tree",
+    };
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
     private static boolean decorationsEnabled = true;
@@ -56,7 +63,7 @@ public class DarkLaf extends BasicLookAndFeel {
 
     public static void loadCustomProperties(@NotNull final Properties properties) {
         for (final String key : properties.stringPropertyNames()) {
-            UIManager.put(key, LafUtil.parseValue(key, properties.getProperty(key)));
+            UIManager.put(key, LafUtil.parseValue(key, properties.getProperty(key), UIManager.getDefaults()));
         }
     }
 
@@ -68,9 +75,11 @@ public class DarkLaf extends BasicLookAndFeel {
     public static void setDecorationsEnabled(final boolean decorationsEnabled) {
         if (DarkLaf.decorationsEnabled != decorationsEnabled) {
             DarkLaf.decorationsEnabled = decorationsEnabled;
-            boolean update = JNIDecorations.updateLibrary();
-            if (update) {
-                LafManager.updateLaf();
+            if (decorationsEnabled) {
+                boolean update = JNIDecorations.updateLibrary();
+                if (update) {
+                    LafManager.updateLaf();
+                }
             }
         }
     }
@@ -212,7 +221,7 @@ public class DarkLaf extends BasicLookAndFeel {
             defaultStyles.loadRules(r, null);
             new HTMLEditorKit().setStyleSheet(defaultStyles);
         } catch (Throwable e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -232,42 +241,77 @@ public class DarkLaf extends BasicLookAndFeel {
     }
 
     private void loadDefaults(@NotNull final UIDefaults defaults) {
-        Properties properties = LafUtil.loadProperties(this);
+        var uiProps = new Properties();
+        for (var property : PROPERTIES) {
+            Properties properties = LafUtil.loadProperties(this, property, getResourcePath());
+            for (final String key : properties.stringPropertyNames()) {
+                final String value = properties.getProperty(key);
+                var parsed = LafUtil.parseValue(key, value, uiProps);
+                if (parsed != null) {
+                    uiProps.put(key, parsed);
+                } else {
+                    defaults.remove(key);
+                }
+            }
+        }
 
-        final HashMap<String, Object> darculaGlobalSettings = new HashMap<>();
-        final String prefix = getPrefix() + '.';
+        final String osPrefix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
+        Properties properties = LafUtil.loadProperties(this, osPrefix, getResourcePath() + "/platform");
         for (final String key : properties.stringPropertyNames()) {
-            if (key.startsWith(prefix)) {
-                darculaGlobalSettings
-                        .put(key.substring(prefix.length()), LafUtil.parseValue(key, properties.getProperty(key)));
+            final String value = properties.getProperty(key);
+            var parsed = LafUtil.parseValue(key, value, uiProps);
+            if (parsed != null) {
+                uiProps.put(key, parsed);
+            } else {
+                defaults.remove(key);
+            }
+        }
+
+        final HashMap<String, Object> globalSettings = new HashMap<>();
+        final String prefix = "global.";
+        for (final Object key : uiProps.keySet()) {
+            if (key instanceof String && ((String) key).startsWith(prefix)) {
+                globalSettings.put(((String) key).substring(prefix.length()), uiProps.get(key));
             }
         }
 
         for (final Object key : defaults.keySet()) {
             if (key instanceof String && ((String) key).contains(".")) {
                 final String s = (String) key;
-                final String darculaKey = s.substring(s.lastIndexOf('.') + 1);
-                if (darculaGlobalSettings.containsKey(darculaKey)) {
-                    defaults.put(key, darculaGlobalSettings.get(darculaKey));
+                final String globalKey = s.substring(s.lastIndexOf('.') + 1);
+                if (globalSettings.containsKey(globalKey)) {
+                    defaults.put(key, globalSettings.get(globalKey));
                 }
             }
         }
 
-        for (final String key : properties.stringPropertyNames()) {
-            final String value = properties.getProperty(key);
-            defaults.put(key, LafUtil.parseValue(key, value));
-        }
+//        var colors = uiProps.values().stream().filter(c -> c instanceof Color).collect(Collectors.toSet());
+//        for (var c : colors) {
+//            System.out.println("Color: " + c + " " + String.format("%02x%02x%02x", ((Color) c).getRed(),
+//                                                                   ((Color) c).getGreen(), ((Color) c).getBlue()));
+//            var keys = uiProps.entrySet().stream()
+//                    .filter(e -> e.getValue().equals(c))
+//                    .map(Map.Entry::getKey)
+//                    .map(Object::toString)
+//                    .collect(Collectors.joining("\n"));
+//            System.out.println(keys);
+//            System.out.println("\n");
+//        }
+
+        defaults.putAll(uiProps);
     }
 
     @NotNull
-    public String getPrefix() {
-        return "darcula";
+    public String getResourcePath() {
+        return "properties/dark";
     }
 
     @Override
     public void initialize() {
         call("initialize");
-    }    @NotNull
+    }
+
+    @NotNull
     @Override
     public String getName() {
         return NAME;
@@ -283,7 +327,9 @@ public class DarkLaf extends BasicLookAndFeel {
                 ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
             }
         }
-    }    @NotNull
+    }
+
+    @NotNull
     @Override
     public String getID() {
         return getName();
@@ -292,7 +338,9 @@ public class DarkLaf extends BasicLookAndFeel {
     @Override
     protected void initClassDefaults(final UIDefaults defaults) {
         callInit("initClassDefaults", defaults);
-    }    @NotNull
+    }
+
+    @NotNull
     @Override
     public String getDescription() {
         return "Dark Look and feel based on Darcula-LAF";
@@ -301,7 +349,9 @@ public class DarkLaf extends BasicLookAndFeel {
     @Override
     protected void initSystemColorDefaults(final UIDefaults defaults) {
         callInit("initSystemColorDefaults", defaults);
-    }    @Override
+    }
+
+    @Override
     public boolean isNativeLookAndFeel() {
         return true;
     }
@@ -314,7 +364,9 @@ public class DarkLaf extends BasicLookAndFeel {
         } catch (@NotNull final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
-    }    @Override
+    }
+
+    @Override
     public boolean isSupportedLookAndFeel() {
         return true;
     }
@@ -346,19 +398,8 @@ public class DarkLaf extends BasicLookAndFeel {
     }
 
 
-
-
-
-
-
-
-
-
     @Override
     public boolean getSupportsWindowDecorations() {
         return JNIDecorations.isCustomDecorationSupported();
     }
-
-
-
 }

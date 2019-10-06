@@ -13,7 +13,8 @@ import java.awt.geom.Rectangle2D;
 
 public class DarkTooltipBorder implements Border, UIResource {
 
-    private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK, 10, 0.4f, 10,
+    private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK,
+                                                                       10, 0.4f, 10,
                                                                        false, true,
                                                                        true, true);
     private final TextBubbleBorder bubbleBorder;
@@ -48,6 +49,7 @@ public class DarkTooltipBorder implements Border, UIResource {
         g.setClip(clip);
 
         ins = bubbleBorder.getBorderInsets(c);
+        shadowBorder.setShadowColor(UIManager.getColor("ToolTip.borderShadowColor"));
         shadowBorder.paintBorder(c, g, x + ins.left, y + ins.top,
                                  width - ins.left - ins.right, height - ins.top - ins.bottom);
 

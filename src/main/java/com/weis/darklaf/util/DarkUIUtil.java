@@ -27,19 +27,19 @@ public final class DarkUIUtil {
     public static final boolean USE_QUARTZ = "true".equals(System.getProperty("apple.awt.graphics.UseQuartz"));
 
     private static Color getErrorGlow() {
-        return UIManager.getColor("Glow.error");
+        return UIManager.getColor("glowError");
     }
 
     private static Color getErrorFocusGlow() {
-        return UIManager.getColor("Glow.errorFocus");
+        return UIManager.getColor("glowFocusError");
     }
 
     private static Color getFocusGlow() {
-        return UIManager.getColor("Glow.focus");
+        return UIManager.getColor("glowFocus");
     }
 
     private static Color getWarningGlow() {
-        return UIManager.getColor("Glow.warning");
+        return UIManager.getColor("glowWarning");
     }
 
     public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
@@ -219,9 +219,61 @@ public final class DarkUIUtil {
         return component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);
     }
 
-    public static boolean isTooltipShowing(final JComponent component) {
+    public static boolean isTooltipShowing(@NotNull final JComponent component) {
         AbstractAction hideTipAction = (AbstractAction) component.getActionMap().get("hideTip");
         return hideTipAction.isEnabled();
+    }
+
+    public static MenuElement findEnabledChild(final MenuElement[] e, final int fromIndex, final boolean forward) {
+        MenuElement result;
+        if (forward) {
+            result = nextEnabledChild(e, fromIndex + 1, e.length - 1);
+            if (result == null) result = nextEnabledChild(e, 0, fromIndex - 1);
+        } else {
+            result = previousEnabledChild(e, fromIndex - 1, 0);
+            if (result == null) result = previousEnabledChild(e, e.length - 1, fromIndex + 1);
+        }
+        return result;
+    }
+
+    @Nullable
+    public static MenuElement findEnabledChild(final MenuElement[] e, final MenuElement elem, final boolean forward) {
+        for (int i = 0; i < e.length; i++) {
+            if (e[i] == elem) {
+                return findEnabledChild(e, i, forward);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static MenuElement nextEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
+        for (int i = fromIndex; i <= toIndex; i++) {
+            if (e[i] != null) {
+                Component comp = e[i].getComponent();
+                if (comp != null
+                        && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                        && comp.isVisible()) {
+                    return e[i];
+                }
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static MenuElement previousEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
+        for (int i = fromIndex; i >= toIndex; i--) {
+            if (e[i] != null) {
+                Component comp = e[i].getComponent();
+                if (comp != null
+                        && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                        && comp.isVisible()) {
+                    return e[i];
+                }
+            }
+        }
+        return null;
     }
 
     public enum Outline {

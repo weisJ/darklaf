@@ -79,7 +79,7 @@ public class DarkButtonUI extends BasicButtonUI {
     protected Color getForeground(@NotNull final AbstractButton button) {
         Color fg = button.getForeground();
         if (fg instanceof UIResource && button instanceof JButton && ((JButton) button).isDefaultButton()) {
-            Color selectedFg = UIManager.getColor("Button.darcula.selectedButtonForeground");
+            Color selectedFg = UIManager.getColor("Button.selectedButtonForeground");
             if (selectedFg != null) {
                 fg = selectedFg;
             }
@@ -175,8 +175,12 @@ public class DarkButtonUI extends BasicButtonUI {
     }
 
     protected Color getShadowColor(@NotNull final AbstractButton c) {
-        return c.getModel().isArmed() ? UIManager.getColor("Button.shadow.click")
-                                      : UIManager.getColor("Button.shadow.hover");
+        var colorHover = c.getClientProperty("JButton.shadow.hover");
+        var colorClick = c.getClientProperty("JButton.shadow.click");
+        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick
+                                                                    : UIManager.getColor("Button.shadow.click")
+                                      : colorHover instanceof Color ? (Color) colorHover
+                                                                    : UIManager.getColor("Button.shadow.hover");
     }
 
     @Contract("null -> false")
@@ -193,23 +197,23 @@ public class DarkButtonUI extends BasicButtonUI {
         if (c.isEnabled()) {
             if (defaultButton) {
                 if (clicked) {
-                    return UIManager.getColor("Button.darcula.defaultFillColorClick");
+                    return UIManager.getColor("Button.defaultFillColorClick");
                 } else if (rollOver) {
-                    return UIManager.getColor("Button.darcula.defaultFillColorRollOver");
+                    return UIManager.getColor("Button.defaultFillColorRollOver");
                 } else {
-                    return UIManager.getColor("Button.darcula.defaultFillColor");
+                    return UIManager.getColor("Button.defaultFillColor");
                 }
             } else {
                 if (clicked) {
-                    return UIManager.getColor("Button.darcula.activeFillColorClick");
+                    return UIManager.getColor("Button.activeFillColorClick");
                 } else if (rollOver) {
-                    return UIManager.getColor("Button.darcula.activeFillColorRollOver");
+                    return UIManager.getColor("Button.activeFillColorRollOver");
                 } else {
-                    return UIManager.getColor("Button.darcula.activeFillColor");
+                    return UIManager.getColor("Button.activeFillColor");
                 }
             }
         } else {
-            return UIManager.getColor("Button.darcula.inactiveFillColor");
+            return UIManager.getColor("Button.inactiveFillColor");
         }
     }
 

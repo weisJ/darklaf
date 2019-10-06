@@ -17,7 +17,6 @@ package com.weis.darklaf.ui.rootpane;
  */
 
 import com.weis.darklaf.platform.windows.JNIDecorations;
-import com.weis.darklaf.ui.button.DarkButtonUI;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -537,52 +536,6 @@ public class DarkTitlePane extends JComponent {
         }
         if (windowIconButton != null) {
             windowIconButton.setIcon(systemIcon);
-        }
-    }
-
-    protected static class TitlePaneIcon implements Icon {
-
-        private final Icon activeIcon;
-        private final Icon inactiveIcon;
-        private boolean active = true;
-
-        @Contract(pure = true)
-        protected TitlePaneIcon(final Icon active, final Icon inactive) {
-            this.activeIcon = active;
-            this.inactiveIcon = inactive;
-        }
-
-        public void setActive(final boolean active) {
-            this.active = active;
-        }
-
-        @Override
-        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-            currentIcon().paintIcon(c, g, x, y);
-        }
-
-        @Contract(pure = true)
-        private Icon currentIcon() {
-            return active ? activeIcon : inactiveIcon;
-        }
-
-        @Override
-        public int getIconWidth() {
-            return currentIcon().getIconWidth();
-        }
-
-        @Override
-        public int getIconHeight() {
-            return currentIcon().getIconHeight();
-        }
-    }
-
-    protected static class CloseButtonUI extends DarkButtonUI {
-
-        @Override
-        protected Color getShadowColor(@NotNull final AbstractButton c) {
-            return c.getModel().isArmed() ? UIManager.getColor("TitlePane.close.clickColor")
-                                          : UIManager.getColor("TitlePane.close.rollOverColor");
         }
     }
 

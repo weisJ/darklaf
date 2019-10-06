@@ -56,7 +56,8 @@ public class DropShadowBorder implements Border, Serializable {
 
     @Contract(pure = true)
     public DropShadowBorder(final Color shadowColor, final int shadowSize) {
-        this(shadowColor, shadowSize, .5f, 12, false, false, true, true);
+        this(shadowColor, shadowSize, .5f, 12, false, true,
+             true, true);
     }
 
     @Contract(pure = true)

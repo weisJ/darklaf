@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class LafUtil {
@@ -27,26 +29,20 @@ public final class LafUtil {
     private static final String AWARE_KEY = "[aware]";
 
     @NotNull
-    public static Properties loadProperties(@NotNull final DarkLaf laf) {
+    public static Properties loadProperties(@NotNull final DarkLaf laf, final String name, final String path) {
         final Properties properties = new Properties();
-        final String osSuffix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
-        try (InputStream stream = laf.getClass().getResourceAsStream(laf.getPrefix() + ".properties")) {
+        try (InputStream stream = laf.getClass().getResourceAsStream(path + "/" + name + ".properties")) {
             properties.load(stream);
         } catch (IOException e) {
-            LOGGER.severe(e.getMessage());
-        }
-        try (InputStream stream = laf.getClass().getResourceAsStream(
-                laf.getPrefix() + "_" + osSuffix + ".properties")) {
-            properties.load(stream);
-        } catch (IOException e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.log(Level.SEVERE, "Could not load" + name + ".properties", e.getMessage());
         }
         return properties;
     }
 
 
     @Nullable
-    public static Object parseValue(@NotNull final String key, @NotNull final String value) {
+    public static Object parseValue(@NotNull final String key, @NotNull final String value,
+                                    final Map<Object, Object> defaults) {
         if ("null".equals(value)) {
             return null;
         }
@@ -67,6 +63,13 @@ public final class LafUtil {
             returnVal = parseSize(value);
         } else if ("null".equalsIgnoreCase(value)) {
             returnVal = null;
+        } else if (value.startsWith("%")) {
+            var val = value.substring(1);
+            if (!defaults.containsKey(val)) {
+                LOGGER.warning("Could not reference value '" + val + "'while loading '" + key + "' " +
+                                       ". May be a forward reference");
+            }
+            returnVal = defaults.get(val);
         }
         if (returnVal instanceof LoadError) {
             final Color color = ColorUtil.fromHex(value, null);
@@ -74,7 +77,7 @@ public final class LafUtil {
             final Boolean boolVal = "true".equalsIgnoreCase(value)
                                     ? Boolean.TRUE
                                     : "false".equalsIgnoreCase(value) ? Boolean.FALSE : null;
-            if (color != null) {
+            if (color != null && (value.length() == 6 || value.length() == 8)) {
                 return new ColorUIResource(color);
             } else if (invVal != null) {
                 return invVal;

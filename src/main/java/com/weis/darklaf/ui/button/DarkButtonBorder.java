@@ -70,18 +70,18 @@ public class DarkButtonBorder implements Border, UIResource {
                                                               arc, arc));
         shadowShape.subtract(innerArea);
         g2.setComposite(DarkUIUtil.SHADOW_COMPOSITE);
-        g2.setColor(UIManager.getColor("Button.darcula.shadow"));
+        g2.setColor(UIManager.getColor("Button.shadow"));
         g2.fill(shadowShape);
         context.restore();
     }
 
     private Color getBorderColor(final Component c) {
         if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
-            return UIManager.getColor("Button.darcula.defaultBorderColor");
+            return UIManager.getColor("Button.defaultBorderColor");
         } else if (c.isEnabled()) {
-            return UIManager.getColor("Button.darcula.activeBorderColor");
+            return UIManager.getColor("Button.activeBorderColor");
         } else {
-            return UIManager.getColor("Button.darcula.inactiveBorderColor");
+            return UIManager.getColor("Button.inactiveBorderColor");
         }
     }
 

@@ -35,7 +35,7 @@ public class DarkTableUI extends DarkTableUIBridge {
                 if (table.isEditing()) {
                     table.setSelectionBackground(table.getBackground());
                 } else {
-                    table.setSelectionBackground(UIManager.getColor("Table.selectionBackground"));
+                    table.setSelectionBackground(UIManager.getColor("Table.selectionNoFocusBackground"));
                 }
             }
             table.repaint();

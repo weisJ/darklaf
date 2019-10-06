@@ -108,10 +108,10 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
 
     static void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
         var g2 = (Graphics2D) g.create();
-        Color bgColor = enabled ? UIManager.getColor("RadioButton.darcula.activeFillColor")
-                                : UIManager.getColor("RadioButton.darcula.inactiveFillColor");
-        Color borderColor = enabled ? UIManager.getColor("RadioButton.darcula.activeBorderColor")
-                                    : UIManager.getColor("RadioButton.darcula.inactiveBorderColor");
+        Color bgColor = enabled ? UIManager.getColor("RadioButton.activeFillColor")
+                                : UIManager.getColor("RadioButton.inactiveFillColor");
+        Color borderColor = enabled ? UIManager.getColor("RadioButton.activeBorderColor")
+                                    : UIManager.getColor("RadioButton.inactiveBorderColor");
         g.setColor(bgColor);
         g.fillOval(0, 0, SIZE, SIZE);
         g.setColor(borderColor);
@@ -126,8 +126,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     }
 
     static void paintCheckBullet(@NotNull final Graphics2D g, final boolean enabled) {
-        Color color = enabled ? UIManager.getColor("RadioButton.darcula.selectionEnabledColor")
-                              : UIManager.getColor("RadioButton.darcula.selectionDisabledColor");
+        Color color = enabled ? UIManager.getColor("RadioButton.selectionEnabledColor")
+                              : UIManager.getColor("RadioButton.selectionDisabledColor");
         g.setColor(color);
         g.translate(0.2, 0.2);
         g.fillOval((SIZE - BULLET_RAD) / 2, (SIZE - BULLET_RAD) / 2, BULLET_RAD, BULLET_RAD);

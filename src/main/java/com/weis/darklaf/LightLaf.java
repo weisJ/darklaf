@@ -27,7 +27,7 @@ public class LightLaf extends DarkLaf {
 
     @NotNull
     @Override
-    public String getPrefix() {
+    public String getResourcePath() {
         return "darcula_light";
     }
 

@@ -267,7 +267,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         }
         final boolean isTableCellEditor = isTableCellEditor(comboBox);
         final boolean isTreeCellEditor = isTreeCellEditor(comboBox);
-        int bSize = BORDER_SIZE;
+        int bSize = !isTableCellEditor && !isTreeCellEditor ? BORDER_SIZE : 0;
         int arc = ARC_SIZE;
         checkFocus();
         Graphics2D g = (Graphics2D) g2;
@@ -298,7 +298,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             g.fill(rect);
 
             g.setColor(getBorderColor());
-            g.fillRect(off, 0, 1, height);
+            g.fillRect(off, bSize, 1, height - 2 * bSize);
         }
 
         g.setColor(getBorderColor());

@@ -104,9 +104,9 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     protected Color getBackgroundColor(@NotNull final JComponent c) {
         if ((c instanceof JToggleButton && ((JToggleButton) c).isSelected())) {
-            return UIManager.getColor("Button.darcula.activeFillColor");
+            return UIManager.getColor("Button.activeFillColor");
         } else {
-            return UIManager.getColor("Button.darcula.inactiveFillColor");
+            return UIManager.getColor("Button.inactiveFillColor");
         }
     }
 

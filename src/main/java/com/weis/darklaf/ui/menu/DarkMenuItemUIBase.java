@@ -1,21 +1,38 @@
 package com.weis.darklaf.ui.menu;
 
 import com.weis.darklaf.util.DarkUIUtil;
+import com.weis.darklaf.util.LazyActionMap;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import sun.swing.MenuItemCheckIconFactory;
 import sun.swing.MenuItemLayoutHelper;
 import sun.swing.SwingUtilities2;
+import sun.swing.UIAction;
 
 import javax.swing.*;
+import javax.swing.event.MenuDragMouseEvent;
+import javax.swing.event.MenuDragMouseListener;
+import javax.swing.event.MouseInputListener;
+import javax.swing.plaf.ComponentInputMapUIResource;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
+import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 /**
  * @author Jannis Weis
  * @since 2019
  */
 public class DarkMenuItemUIBase extends BasicMenuItemUI {
+
+    protected Handler handler;
 
     @NotNull
     @Contract("_ -> new")
@@ -31,6 +48,13 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
         acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
         arrowIcon = null;
+    }
+
+    protected DarkMenuItemUIBase.Handler getHandler() {
+        if (handler == null) {
+            handler = new DarkMenuItemUIBase.Handler();
+        }
+        return handler;
     }
 
     protected void paintMenuItem(@NotNull final Graphics g, final JComponent c,
@@ -74,7 +98,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         int menuWidth = menuItem.getWidth();
         int menuHeight = menuItem.getHeight() + 1;
 
-        if (menuItem.isOpaque()) {
+        boolean parentOpaque = menuItem.getParent().isOpaque();
+        if (menuItem.isOpaque() && parentOpaque) {
             if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
                 g.setColor(bgColor);
                 g.fillRect(0, 0, menuWidth, menuHeight);
@@ -186,7 +211,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         }
     }
 
-    protected void paintArrowIcon(final Graphics g, final MenuItemLayoutHelper lh,
+    protected void paintArrowIcon(final Graphics g, @NotNull final MenuItemLayoutHelper lh,
                                   final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color foreground) {
         if (lh.getArrowIcon() != null) {
@@ -209,6 +234,239 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         if (model.isEnabled()) {
             accRect.x = lh.getViewRect().x + lh.getViewRect().width
                     - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
+        }
+    }
+
+    /*
+     * Code from BasicMenuItemUI.
+     */
+
+    protected class Handler implements MenuDragMouseListener, MouseInputListener, PropertyChangeListener {
+        //
+        // MouseInputListener
+        //
+        public void mouseClicked(final MouseEvent e) {
+        }
+
+        public void mousePressed(final MouseEvent e) {
+        }
+
+        public void mouseReleased(final MouseEvent e) {
+            if (!menuItem.isEnabled()) {
+                return;
+            }
+            MenuSelectionManager manager =
+                    MenuSelectionManager.defaultManager();
+            Point p = e.getPoint();
+            if (p.x >= 0 && p.x < menuItem.getWidth() &&
+                    p.y >= 0 && p.y < menuItem.getHeight()) {
+                doClick(manager);
+            } else {
+                manager.processMouseEvent(e);
+            }
+        }
+
+        @SuppressWarnings("deprecation")
+        public void mouseEntered(@NotNull final MouseEvent e) {
+            MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+            int modifiers = e.getModifiers();
+            // 4188027: drag enter/exit added in JDK 1.1.7A, JDK1.2
+            if ((modifiers & (InputEvent.BUTTON1_MASK |
+                    InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK)) != 0) {
+                MenuSelectionManager.defaultManager().processMouseEvent(e);
+            } else {
+                manager.setSelectedPath(getPath());
+            }
+        }
+
+        @SuppressWarnings("deprecation")
+        public void mouseExited(@NotNull final MouseEvent e) {
+            MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+
+            int modifiers = e.getModifiers();
+            // 4188027: drag enter/exit added in JDK 1.1.7A, JDK1.2
+            if ((modifiers & (InputEvent.BUTTON1_MASK |
+                    InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK)) != 0) {
+                MenuSelectionManager.defaultManager().processMouseEvent(e);
+            } else {
+
+                MenuElement[] path = manager.getSelectedPath();
+                if (path.length > 1 && path[path.length - 1] == menuItem) {
+                    MenuElement[] newPath = new MenuElement[path.length - 1];
+                    int i, c;
+                    for (i = 0, c = path.length - 1; i < c; i++) { newPath[i] = path[i]; }
+                    manager.setSelectedPath(newPath);
+                }
+            }
+        }
+
+        public void mouseDragged(final MouseEvent e) {
+            MenuSelectionManager.defaultManager().processMouseEvent(e);
+        }
+
+        public void mouseMoved(final MouseEvent e) {
+        }
+
+        //
+        // MenuDragListener
+        //
+        public void menuDragMouseEntered(@NotNull final MenuDragMouseEvent e) {
+            MenuSelectionManager manager = e.getMenuSelectionManager();
+            MenuElement[] path = e.getPath();
+            manager.setSelectedPath(path);
+        }
+
+        public void menuDragMouseDragged(@NotNull final MenuDragMouseEvent e) {
+            MenuSelectionManager manager = e.getMenuSelectionManager();
+            MenuElement[] path = e.getPath();
+            manager.setSelectedPath(path);
+        }
+
+        public void menuDragMouseExited(final MenuDragMouseEvent e) {
+        }
+
+        public void menuDragMouseReleased(final MenuDragMouseEvent e) {
+            if (!menuItem.isEnabled()) {
+                return;
+            }
+            MenuSelectionManager manager = e.getMenuSelectionManager();
+            e.getPath();
+            Point p = e.getPoint();
+            if (p.x >= 0 && p.x < menuItem.getWidth() &&
+                    p.y >= 0 && p.y < menuItem.getHeight()) {
+                doClick(manager);
+            } else {
+                manager.clearSelectedPath();
+            }
+        }
+
+
+        //
+        // PropertyChangeListener
+        //
+        public void propertyChange(final PropertyChangeEvent e) {
+            String name = e.getPropertyName();
+
+            if (Objects.equals(name, "labelFor") || Objects.equals(name, "displayedMnemonic") ||
+                    Objects.equals(name, "accelerator")) {
+                updateAcceleratorBinding();
+            } else if (Objects.equals(name, "text") || "font".equals(name) || "foreground".equals(name)
+                    || SwingUtilities2.isScaleChanged(e)) {
+                // remove the old html view client property if one
+                // existed, and install a new one if the text installed
+                // into the JLabel is html source.
+                JMenuItem lbl = ((JMenuItem) e.getSource());
+                String text = lbl.getText();
+                BasicHTML.updateRenderer(lbl, text);
+            } else if (Objects.equals(name, "iconTextGap")) {
+                defaultTextIconGap = ((Number) e.getNewValue()).intValue();
+            } else if (Objects.equals(name, "horizontalTextPosition")) {
+                updateCheckIcon();
+            }
+        }
+    }
+
+    protected void updateAcceleratorBinding() {
+        KeyStroke accelerator = menuItem.getAccelerator();
+        InputMap windowInputMap = SwingUtilities.getUIInputMap(menuItem, JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        if (windowInputMap != null) {
+            windowInputMap.clear();
+        }
+        if (accelerator != null) {
+            if (windowInputMap == null) {
+                windowInputMap = createInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+                SwingUtilities.replaceUIInputMap(menuItem, JComponent.WHEN_IN_FOCUSED_WINDOW, windowInputMap);
+            }
+            windowInputMap.put(accelerator, "doClick");
+
+            int modifiers = accelerator.getModifiers();
+            if (((modifiers & InputEvent.ALT_DOWN_MASK) != 0) &&
+                    ((modifiers & InputEvent.ALT_GRAPH_DOWN_MASK) != 0)) {
+                //When both ALT and ALT_GRAPH are set, add the ALT only
+                // modifier keystroke which is used for left ALT key.
+                // Unsetting the ALT_GRAPH will do that as ALT is already set
+                modifiers &= ~InputEvent.ALT_GRAPH_DOWN_MASK;
+                modifiers &= ~InputEvent.ALT_GRAPH_MASK;
+                KeyStroke keyStroke = KeyStroke.getKeyStroke(accelerator.getKeyCode(),
+                                                             modifiers, accelerator.isOnKeyRelease());
+                windowInputMap.put(keyStroke, "doClick");
+            } else if (((modifiers & InputEvent.ALT_DOWN_MASK) != 0) && (
+                    (modifiers & InputEvent.ALT_GRAPH_DOWN_MASK) == 0)) {
+                //When only ALT modifier is set, add the ALT + ALT_GRAPH
+                // modifier keystroke which is used for right ALT key
+                modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
+                KeyStroke keyStroke = KeyStroke.getKeyStroke(accelerator.getKeyCode(),
+                                                             modifiers, accelerator.isOnKeyRelease());
+                windowInputMap.put(keyStroke, "doClick");
+            } else if ((modifiers & InputEvent.ALT_GRAPH_DOWN_MASK) != 0) {
+                //When only ALT_GRAPH is set, remove the ALT_GRAPH only
+                // modifier and add the ALT and ALT+ALT_GRAPH modifiers
+                // keystroke which are used for left ALT key and right ALT
+                // respectively
+                modifiers &= ~InputEvent.ALT_GRAPH_DOWN_MASK;
+                modifiers &= ~InputEvent.ALT_GRAPH_MASK;
+
+                modifiers |= InputEvent.ALT_DOWN_MASK;
+                KeyStroke keyStroke = KeyStroke.getKeyStroke(accelerator.getKeyCode(),
+                                                             modifiers, accelerator.isOnKeyRelease());
+                windowInputMap.put(keyStroke, "doClick");
+
+                //Add ALT+ALT_GRAPH modifier which is used for right ALT key
+                modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
+                keyStroke = KeyStroke.getKeyStroke(accelerator.getKeyCode(),
+                                                   modifiers, accelerator.isOnKeyRelease());
+                windowInputMap.put(keyStroke, "doClick");
+            }
+        }
+    }
+
+    protected InputMap createInputMap(final int condition) {
+        if (condition == JComponent.WHEN_IN_FOCUSED_WINDOW) {
+            return new ComponentInputMapUIResource(menuItem);
+        }
+        return null;
+    }
+
+    protected void updateCheckIcon() {
+        String prefix = getPropertyPrefix();
+
+        if (checkIcon == null ||
+                checkIcon instanceof UIResource) {
+            checkIcon = UIManager.getIcon(prefix + ".checkIcon");
+            //In case of column layout, .checkIconFactory is defined for this UI,
+            //the icon is compatible with it and useCheckAndArrow() is true,
+            //then the icon is handled by the checkIcon.
+            boolean isColumnLayout = MenuItemLayoutHelper.isColumnLayout(
+                    menuItem.getComponentOrientation().isLeftToRight(), menuItem);
+            if (isColumnLayout) {
+                MenuItemCheckIconFactory iconFactory =
+                        (MenuItemCheckIconFactory) UIManager.get(prefix
+                                                                         + ".checkIconFactory");
+                if (iconFactory != null
+                        && MenuItemLayoutHelper.useCheckAndArrow(menuItem)
+                        && iconFactory.isCompatible(checkIcon, prefix)) {
+                    checkIcon = iconFactory.getIcon(menuItem);
+                }
+            }
+        }
+    }
+
+    protected static void loadActionMap(@NotNull final LazyActionMap map) {
+        map.put(new Actions(Actions.CLICK));
+    }
+
+    private static class Actions extends UIAction {
+        private static final String CLICK = "doClick";
+
+        Actions(final String key) {
+            super(key);
+        }
+
+        public void actionPerformed(final ActionEvent e) {
+            JMenuItem mi = (JMenuItem) e.getSource();
+            MenuSelectionManager.defaultManager().clearSelectedPath();
+            mi.doClick();
         }
     }
 }

@@ -156,10 +156,10 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
 
     static void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
         var g2 = (Graphics2D) g.create();
-        Color bgColor = enabled ? UIManager.getColor("CheckBox.darcula.activeFillColor")
-                                : UIManager.getColor("CheckBox.darcula.inactiveFillColor");
-        Color borderColor = enabled ? UIManager.getColor("CheckBox.darcula.activeBorderColor")
-                                    : UIManager.getColor("CheckBox.darcula.inactiveBorderColor");
+        Color bgColor = enabled ? UIManager.getColor("CheckBox.activeFillColor")
+                                : UIManager.getColor("CheckBox.inactiveFillColor");
+        Color borderColor = enabled ? UIManager.getColor("CheckBox.activeBorderColor")
+                                    : UIManager.getColor("CheckBox.inactiveBorderColor");
         g.setColor(bgColor);
         g.fillRoundRect(0, 0, SIZE, SIZE, ARC_SIZE, ARC_SIZE);
 
@@ -177,8 +177,8 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     static void paintCheckArrow(@NotNull final Graphics2D g, final boolean enabled) {
         var config = GraphicsUtil.setupStrokePainting(g);
         g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        Color color = enabled ? UIManager.getColor("CheckBox.darcula.selectionEnabledColor")
-                              : UIManager.getColor("CheckBox.darcula.selectionDisabledColor");
+        Color color = enabled ? UIManager.getColor("CheckBox.selectionEnabledColor")
+                              : UIManager.getColor("CheckBox.selectionDisabledColor");
 
         g.setPaint(color);
         Path2D check = new Path2D.Float(Path2D.WIND_EVEN_ODD);
