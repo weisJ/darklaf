@@ -38,7 +38,7 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
             @Override
             public boolean isCellEditable(final EventObject anEvent) {
-                if (isBooleanRenderer(tree, lastRow)) {
+                if (isBooleanRenderer(tree, tree.getLeadSelectionRow())) {
                     return getBooleanEditor(tree).isCellEditable(anEvent);
                 }
                 return super.isCellEditable(anEvent);

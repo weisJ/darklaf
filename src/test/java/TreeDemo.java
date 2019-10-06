@@ -1,4 +1,3 @@
-import com.bulenkov.darcula.ui.DarculaTreeUI;
 import com.weis.darklaf.LafManager;
 import com.weis.darklaf.components.SelectableTreeNode;
 

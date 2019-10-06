@@ -18,6 +18,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
     private static final JCheckBox dummyCheckBox = new JCheckBox();
     private JTree tree;
+    private boolean adjustBoolValue;
 
 
     public DarkTreeCellEditor(final JTextField textField) {
@@ -93,7 +94,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
                 boolean selected = Boolean.TRUE.equals(DarkTreeCellRenderer.unwrapBooleanIfPossible(value));
                 toggleButton.setSelected(selected);
                 if (value instanceof SelectableTreeNode) {
-                    toggleButton.setText(((SelectableTreeNode)value).getLabel());
+                    toggleButton.setText(((SelectableTreeNode) value).getLabel());
                 }
             }
 
@@ -119,6 +120,9 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             ((JComboBox<?>) editorComponent).removeAllItems();
             ((JComboBox<Object>) editorComponent).addItem(value);
             ((JComboBox<?>) editorComponent).setSelectedItem(value);
+        } else if (editorComponent instanceof JToggleButton && adjustBoolValue) {
+            ((JToggleButton) editorComponent).setSelected(!(((JToggleButton) editorComponent).isSelected()));
+            SwingUtilities.invokeLater(tree::stopEditing);
         }
         editorComponent.setOpaque(false);
         return editorComponent;
@@ -126,5 +130,11 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
     public boolean isBooleanEditor(final JTree tree) {
         return editorComponent instanceof JToggleButton && DarkTreeCellRenderer.isBooleanRenderingEnabled(tree);
+    }
+
+    @Override
+    public boolean isCellEditable(final EventObject anEvent) {
+        adjustBoolValue = anEvent == null;
+        return super.isCellEditable(anEvent);
     }
 }
