@@ -52,12 +52,12 @@ public class TreeRendererComponent extends Container {
     public void doLayout() {
         if (renderComponent != null) {
             int offset = getOffset();
-            int width = renderComponent.getPreferredSize().width + offset;
+            int width = renderComponent.getPreferredSize().width;
             int height = getHeight();
             if (getComponentOrientation().isLeftToRight()) {
-                renderComponent.setBounds(getOffset(), 0, width - offset, height);
+                renderComponent.setBounds(offset, 0, width, height);
             } else {
-                renderComponent.setBounds(0, 0, width - offset, height);
+                renderComponent.setBounds(getWidth() - width - offset, 0, width, height);
             }
         }
     }

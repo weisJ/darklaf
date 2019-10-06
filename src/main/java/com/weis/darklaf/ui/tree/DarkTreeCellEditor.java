@@ -125,6 +125,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             SwingUtilities.invokeLater(tree::stopEditing);
         }
         editorComponent.setOpaque(false);
+        editorComponent.setComponentOrientation(tree.getComponentOrientation());
         return editorComponent;
     }
 

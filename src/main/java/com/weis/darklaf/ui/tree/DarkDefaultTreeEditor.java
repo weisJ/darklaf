@@ -50,10 +50,12 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
                                                 final boolean expanded, final boolean leaf, final int row) {
         var comp = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+        comp.setComponentOrientation(tree.getComponentOrientation());
         if (isBooleanRenderer(tree, row)) {
             ((Container) comp).remove(editingComponent);
             editingComponent = getBooleanEditor(tree).getTreeCellEditorComponent(tree, value, isSelected,
                                                                                  expanded, leaf, row);
+            editingComponent.setFont(tree.getFont());
             ((Container) comp).add(editingComponent);
         }
         return comp;

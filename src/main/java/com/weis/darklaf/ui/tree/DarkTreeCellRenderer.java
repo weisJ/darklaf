@@ -37,6 +37,9 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             super.getTreeCellRendererComponent(tree, val, sel, expanded, leaf, row, hasFocus);
             var comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
                                                                              row, hasFocus);
+            rendererComponent.setComponentOrientation(tree.getComponentOrientation());
+            comp.setComponentOrientation(tree.getComponentOrientation());
+            comp.setFont(tree.getFont());
             rendererComponent.setRenderer(this);
             rendererComponent.setRenderComponent(comp);
             return rendererComponent;
