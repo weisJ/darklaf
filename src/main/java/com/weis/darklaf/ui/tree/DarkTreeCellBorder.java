@@ -15,7 +15,7 @@ public class DarkTreeCellBorder implements Border, UIResource {
     public void paintBorder(final Component c, @NotNull final Graphics g, final int x,
                             final int y, final int width, final int height) {
         g.setColor(UIManager.getColor("Tree.editorBorderColor"));
-        DarkUIUtil.drawRect(g, 0,0, width, height, 1);
+        DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
     }
 
     @Override

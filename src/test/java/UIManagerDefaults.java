@@ -57,6 +57,14 @@ public class UIManagerDefaults implements ItemListener {
     }
 
     /*
+     *  UIManagerDefaults Main. Called only if we're an application.
+     */
+    public static void main(final String[] args) {
+        LafManager.loadLaf(LafManager.Theme.Dark);
+        SwingUtilities.invokeLater(UIManagerDefaults::createAndShowGUI);
+    }
+
+    /*
      *  Build a GUI using the content pane and menu bar of UIManagerDefaults
      */
     private static void createAndShowGUI() {
@@ -72,11 +80,15 @@ public class UIManagerDefaults implements ItemListener {
     }
 
     /*
-     *  UIManagerDefaults Main. Called only if we're an application.
+     *  A menu can also be added which provides the ability to switch
+     *  between different LAF's.
      */
-    public static void main(final String[] args) {
-        LafManager.loadLaf(LafManager.Theme.Dark);
-        SwingUtilities.invokeLater(UIManagerDefaults::createAndShowGUI);
+    private JMenuBar getMenuBar() {
+        if (menuBar == null) {
+            menuBar = createMenuBar();
+        }
+
+        return menuBar;
     }
 
     /*
@@ -87,16 +99,58 @@ public class UIManagerDefaults implements ItemListener {
         return contentPane;
     }
 
-    /*
-     *  A menu can also be added which provides the ability to switch
-     *  between different LAF's.
+    /**
+     * Create menu bar
      */
-    private JMenuBar getMenuBar() {
-        if (menuBar == null) {
-            menuBar = createMenuBar();
-        }
-
+    @NotNull
+    private JMenuBar createMenuBar() {
+        final JMenuBar menuBar = new JMenuBar();
+        menuBar.add(createFileMenu());
+        menuBar.add(createLAFMenu());
         return menuBar;
+    }
+
+    /**
+     * Create menu items for the Application menu
+     */
+    @NotNull
+    private JMenu createFileMenu() {
+        final JMenu menu = new JMenu("Application");
+        menu.setMnemonic('A');
+        var item = new ExitAction();
+        menu.add(item);
+        return menu;
+    }
+
+    /**
+     * Create menu items for the Look & Feel menu
+     */
+    @NotNull
+    private JMenu createLAFMenu() {
+        final ButtonGroup bg = new ButtonGroup();
+        final JMenu menu = new JMenu("Look & Feel");
+        menu.setMnemonic('L');
+        final String lafId = UIManager.getLookAndFeel().getID();
+        final UIManager.LookAndFeelInfo[] lafInfo = UIManager.getInstalledLookAndFeels();
+
+        for (final UIManager.LookAndFeelInfo lookAndFeelInfo : lafInfo) {
+            final String laf = lookAndFeelInfo.getClassName();
+            final String name = lookAndFeelInfo.getName();
+            final Action action = new ChangeLookAndFeelAction(this, laf, name);
+            final JRadioButtonMenuItem mi = new JRadioButtonMenuItem(action);
+            menu.add(mi);
+            bg.add(mi);
+            if (name.equals(lafId)) {
+                mi.setSelected(true);
+            }
+        }
+        var info = new DarkLafInfo();
+        Action action = new ChangeLookAndFeelAction(this, info.getClassName(), info.getName());
+        var mi = new JRadioButtonMenuItem(action);
+        menu.add(mi);
+        bg.add(mi);
+        mi.setSelected(true);
+        return menu;
     }
 
     /*
@@ -305,61 +359,6 @@ public class UIManagerDefaults implements ItemListener {
         }
     }
 
-    /**
-     * Create menu bar
-     */
-    @NotNull
-    private JMenuBar createMenuBar() {
-        final JMenuBar menuBar = new JMenuBar();
-        menuBar.add(createFileMenu());
-        menuBar.add(createLAFMenu());
-        return menuBar;
-    }
-
-    /**
-     * Create menu items for the Application menu
-     */
-    @NotNull
-    private JMenu createFileMenu() {
-        final JMenu menu = new JMenu("Application");
-        menu.setMnemonic('A');
-        var item = new ExitAction();
-        menu.add(item);
-        return menu;
-    }
-
-    /**
-     * Create menu items for the Look & Feel menu
-     */
-    @NotNull
-    private JMenu createLAFMenu() {
-        final ButtonGroup bg = new ButtonGroup();
-        final JMenu menu = new JMenu("Look & Feel");
-        menu.setMnemonic('L');
-        final String lafId = UIManager.getLookAndFeel().getID();
-        final UIManager.LookAndFeelInfo[] lafInfo = UIManager.getInstalledLookAndFeels();
-
-        for (final UIManager.LookAndFeelInfo lookAndFeelInfo : lafInfo) {
-            final String laf = lookAndFeelInfo.getClassName();
-            final String name = lookAndFeelInfo.getName();
-            final Action action = new ChangeLookAndFeelAction(this, laf, name);
-            final JRadioButtonMenuItem mi = new JRadioButtonMenuItem(action);
-            menu.add(mi);
-            bg.add(mi);
-            if (name.equals(lafId)) {
-                mi.setSelected(true);
-            }
-        }
-        var info = new DarkLafInfo();
-        Action action = new ChangeLookAndFeelAction(this, info.getClassName(), info.getName());
-        var mi = new JRadioButtonMenuItem(action);
-        menu.add(mi);
-        bg.add(mi);
-        mi.setSelected(true);
-        return menu;
-    }
-
-
     /*
      *  Implement the ItemListener interface
      */
@@ -477,6 +476,13 @@ public class UIManagerDefaults implements ItemListener {
             return wrappee.getIconHeight();
         }
 
+        private void paintFallback(
+                final Component c, @NotNull final Graphics g, final int x, final int y) {
+            g.drawRect(x, y, getIconWidth(), getIconHeight());
+            g.drawLine(x, y, x + getIconWidth(), y + getIconHeight());
+            g.drawLine(x + getIconWidth(), y, x, y + getIconHeight());
+        }
+
         private void createStandIn(@NotNull final ClassCastException e) {
             try {
                 final Class<?> clazz = getClass(e);
@@ -488,18 +494,10 @@ public class UIManagerDefaults implements ItemListener {
             }
         }
 
-        @Contract("_ -> new")
-        @NotNull
-        private Icon createImageIcon(final JComponent standInComponent) {
-            final BufferedImage image =
-                    new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-            final Graphics g = image.createGraphics();
-            try {
-                wrappee.paintIcon(standInComponent, g, 0, 0);
-                return new ImageIcon(image);
-            } finally {
-                g.dispose();
-            }
+        private Class<?> getClass(@NotNull final ClassCastException e) throws ClassNotFoundException {
+            String className = e.getMessage();
+            className = className.substring(className.lastIndexOf(" ") + 1);
+            return Class.forName(className);
         }
 
         private JComponent getSubstitute(@NotNull final Class<?> clazz) throws IllegalAccessException {
@@ -516,17 +514,18 @@ public class UIManagerDefaults implements ItemListener {
             return standInComponent;
         }
 
-        private Class<?> getClass(@NotNull final ClassCastException e) throws ClassNotFoundException {
-            String className = e.getMessage();
-            className = className.substring(className.lastIndexOf(" ") + 1);
-            return Class.forName(className);
-        }
-
-        private void paintFallback(
-                final Component c, @NotNull final Graphics g, final int x, final int y) {
-            g.drawRect(x, y, getIconWidth(), getIconHeight());
-            g.drawLine(x, y, x + getIconWidth(), y + getIconHeight());
-            g.drawLine(x + getIconWidth(), y, x, y + getIconHeight());
+        @Contract("_ -> new")
+        @NotNull
+        private Icon createImageIcon(final JComponent standInComponent) {
+            final BufferedImage image =
+                    new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+            final Graphics g = image.createGraphics();
+            try {
+                wrappee.paintIcon(standInComponent, g, 0, 0);
+                return new ImageIcon(image);
+            } finally {
+                g.dispose();
+            }
         }
     }
 

@@ -27,17 +27,17 @@ class RecentSwatchPanel extends SwatchPanel {
         }
     }
 
-    public void setMostRecentColor(final Color c) {
-        if (Objects.equals(colors[0], c)) return;
-        System.arraycopy(colors, 0, colors, 1, colors.length - 1);
-        colors[0] = c;
-        repaint();
-    }
-
     @Override
     public String getToolTipText(@NotNull final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
         if (color == defaultRecentColor || color == null) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
+    }
+
+    public void setMostRecentColor(final Color c) {
+        if (Objects.equals(colors[0], c)) return;
+        System.arraycopy(colors, 0, colors, 1, colors.length - 1);
+        colors[0] = c;
+        repaint();
     }
 }

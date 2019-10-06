@@ -37,14 +37,14 @@ public class DropPreviewPanel extends JComponent {
     }
 
     @Override
-    public Dimension getMinimumSize() {
-        if (toolBar != null) { return toolBar.getMinimumSize(); }
+    public Dimension getMaximumSize() {
+        if (toolBar != null) { return toolBar.getMaximumSize(); }
         return super.getMinimumSize();
     }
 
     @Override
-    public Dimension getMaximumSize() {
-        if (toolBar != null) { return toolBar.getMaximumSize(); }
+    public Dimension getMinimumSize() {
+        if (toolBar != null) { return toolBar.getMinimumSize(); }
         return super.getMinimumSize();
     }
 }

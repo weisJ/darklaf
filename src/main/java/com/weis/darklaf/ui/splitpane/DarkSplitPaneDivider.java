@@ -29,12 +29,22 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         }
     }
 
+    protected Icon getVerticalSplitIcon() {
+        return UIManager.getIcon("SplitPane.verticalGlue.icon");
+    }
+
     protected Icon getHorizontalSplitIcon() {
         return UIManager.getIcon("SplitPane.horizontalGlue.icon");
     }
 
-    protected Icon getVerticalSplitIcon() {
-        return UIManager.getIcon("SplitPane.verticalGlue.icon");
+    @Override
+    protected JButton createLeftOneTouchButton() {
+        return new OneTouchLeftButton();
+    }
+
+    @Override
+    protected JButton createRightOneTouchButton() {
+        return new OneTouchRightButton();
     }
 
     protected Icon getLeftOneTouchIcon() {
@@ -51,16 +61,6 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
 
     protected Icon getBottomOneTouchIcon() {
         return UIManager.getIcon("SplitPaneDivider.bottomOneTouch.icon");
-    }
-
-    @Override
-    protected JButton createLeftOneTouchButton() {
-        return new OneTouchLeftButton();
-    }
-
-    @Override
-    protected JButton createRightOneTouchButton() {
-        return new OneTouchRightButton();
     }
 
     protected static class OneTouchButton extends JButton implements UIResource {
@@ -80,12 +80,12 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         }
 
         @Override
-        public Icon getDisabledIcon() {
+        public Icon getPressedIcon() {
             return getIcon();
         }
 
         @Override
-        public Icon getPressedIcon() {
+        public Icon getDisabledIcon() {
             return getIcon();
         }
     }

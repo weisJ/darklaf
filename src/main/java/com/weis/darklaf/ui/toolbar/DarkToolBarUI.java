@@ -17,10 +17,9 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     private static final Robot robot = createRobot();
 
     private final DropPreviewPanel previewPanel = new DropPreviewPanel();
-    private Timer timer = new Timer(5, e -> dragTo());
-
     private Dimension verticalDim = new Dimension(0, 0);
     private Dimension horizontalDim = new Dimension(0, 0);
+    private Timer timer = new Timer(5, e -> dragTo());
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -55,65 +54,23 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         super.uninstallListeners();
     }
 
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
-        g.setColor(UIManager.getColor("ToolBar.background"));
-        g.fillRect(0, 0, c.getWidth(), c.getHeight());
-    }
-
-
     @Override
-    protected void dragTo() {
-        if (toolBar.isFloatable()) {
-            Point offset = dragWindow.getOffset();
-            Point global = MouseInfo.getPointerInfo().getLocation();
-            Point dragPoint = new Point(global.x - offset.x, global.y - offset.y);
-            ensureDockingSource();
-
-            Point dockingPosition = dockingSource.getLocationOnScreen();
-            Point comparisonPoint = new Point(global.x - dockingPosition.x, global.y - dockingPosition.y);
-
-            if (canDock(dockingSource, comparisonPoint)) {
-                String constraint = getDockingConstraint(dockingSource, comparisonPoint);
-                setOrientation(mapConstraintToOrientation(constraint));
-                dockingSource.add(previewPanel, constraint);
-            } else {
-                setOrientation(mapConstraintToOrientation(constraintBeforeFloating));
-                dockingSource.remove(previewPanel);
+    protected DragWindow createDragWindow(final JToolBar toolbar) {
+        Window frame = null;
+        if (toolBar != null) {
+            Container p = toolbar.getParent();
+            while (p != null && !(p instanceof Window)) {
+                p = p.getParent();
             }
-            updateDockingSource();
-
-            dragWindow.setLocation(dragPoint.x, dragPoint.y);
-            startDrag();
+            if (p != null) {
+                frame = (Window) p;
+            }
         }
+        if (floatingToolBar instanceof Window) { frame = (Window) floatingToolBar; }
+        return new DarkDragWindow(frame);
     }
 
-    protected void startDrag() {
-        if (!dragWindow.isVisible()) {
-            dragWindow.getContentPane().add(toolBar);
-            updateDockingSource();
-            dragWindow.setVisible(true);
-            //Is needed to intercept ongoing drag.
-            SwingUtilities.invokeLater(() -> robot.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK));
-
-            var oldOrientation = toolBar.getOrientation();
-            toolBar.setOrientation(SwingConstants.VERTICAL);
-            verticalDim = toolBar.getPreferredSize();
-            toolBar.setOrientation(SwingConstants.HORIZONTAL);
-            horizontalDim = toolBar.getPreferredSize();
-            toolBar.setOrientation(oldOrientation);
-            timer.start();
-        }
-    }
-
-    protected void stopDrag() {
-        dragWindow.setVisible(false);
-        timer.stop();
-    }
-
-    private void ensureDockingSource() {
-        if (dockingSource == null) {
-            dockingSource = toolBar.getParent();
-        }
+    protected void setBorderToNonRollover(final Component c) {
     }
 
     @Override
@@ -172,36 +129,17 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     @Override
-    protected void floatAt() {
-        if (toolBar.isFloatable()) {
-            try {
-                Point offset = dragWindow.getOffset();
-                Point global = MouseInfo.getPointerInfo().getLocation();
-                setFloatingLocation(global.x - offset.x, global.y - offset.y);
-
-                if (dockingSource != null) {
-                    Point dockingPosition = dockingSource.getLocationOnScreen();
-                    Point comparisonPoint = new Point(global.x - dockingPosition.x,
-                                                      global.y - dockingPosition.y);
-                    if (canDock(dockingSource, comparisonPoint)) {
-                        setFloating(false, comparisonPoint);
-                    } else {
-                        setFloating(true, null);
-                    }
-                } else {
-                    setFloating(true, null);
-                }
-                dockingSource.remove(previewPanel);
-            } catch (IllegalComponentStateException ignored) {
+    protected boolean isBlocked(final Component comp, final Object constraint) {
+        if (comp instanceof Container) {
+            Container cont = (Container) comp;
+            LayoutManager lm = cont.getLayout();
+            if (lm instanceof BorderLayout) {
+                BorderLayout blm = (BorderLayout) lm;
+                Component c = blm.getLayoutComponent(cont, constraint);
+                return (c != null && c != toolBar && c != previewPanel);
             }
         }
-    }
-
-    protected void updateDockingSource() {
-        dockingSource.invalidate();
-        Container dockingSourceParent = dockingSource.getParent();
-        if (dockingSourceParent != null) { dockingSourceParent.validate(); }
-        dockingSource.repaint();
+        return false;
     }
 
     protected String getDockingConstraint(final Component c, final Point p) {
@@ -228,20 +166,91 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     @Override
-    protected boolean isBlocked(final Component comp, final Object constraint) {
-        if (comp instanceof Container) {
-            Container cont = (Container) comp;
-            LayoutManager lm = cont.getLayout();
-            if (lm instanceof BorderLayout) {
-                BorderLayout blm = (BorderLayout) lm;
-                Component c = blm.getLayoutComponent(cont, constraint);
-                return (c != null && c != toolBar && c != previewPanel);
+    protected void dragTo() {
+        if (toolBar.isFloatable()) {
+            Point offset = dragWindow.getOffset();
+            Point global = MouseInfo.getPointerInfo().getLocation();
+            Point dragPoint = new Point(global.x - offset.x, global.y - offset.y);
+            ensureDockingSource();
+
+            Point dockingPosition = dockingSource.getLocationOnScreen();
+            Point comparisonPoint = new Point(global.x - dockingPosition.x, global.y - dockingPosition.y);
+
+            if (canDock(dockingSource, comparisonPoint)) {
+                String constraint = getDockingConstraint(dockingSource, comparisonPoint);
+                setOrientation(mapConstraintToOrientation(constraint));
+                dockingSource.add(previewPanel, constraint);
+            } else {
+                setOrientation(mapConstraintToOrientation(constraintBeforeFloating));
+                dockingSource.remove(previewPanel);
             }
+            updateDockingSource();
+
+            dragWindow.setLocation(dragPoint.x, dragPoint.y);
+            startDrag();
         }
-        return false;
     }
 
-    protected void setBorderToNonRollover(final Component c) {
+    private void ensureDockingSource() {
+        if (dockingSource == null) {
+            dockingSource = toolBar.getParent();
+        }
+    }
+
+    protected void updateDockingSource() {
+        dockingSource.invalidate();
+        Container dockingSourceParent = dockingSource.getParent();
+        if (dockingSourceParent != null) { dockingSourceParent.validate(); }
+        dockingSource.repaint();
+    }
+
+    protected void startDrag() {
+        if (!dragWindow.isVisible()) {
+            dragWindow.getContentPane().add(toolBar);
+            updateDockingSource();
+            dragWindow.setVisible(true);
+            //Is needed to intercept ongoing drag.
+            SwingUtilities.invokeLater(() -> robot.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK));
+
+            var oldOrientation = toolBar.getOrientation();
+            toolBar.setOrientation(SwingConstants.VERTICAL);
+            verticalDim = toolBar.getPreferredSize();
+            toolBar.setOrientation(SwingConstants.HORIZONTAL);
+            horizontalDim = toolBar.getPreferredSize();
+            toolBar.setOrientation(oldOrientation);
+            timer.start();
+        }
+    }
+
+    @Override
+    protected void floatAt() {
+        if (toolBar.isFloatable()) {
+            try {
+                Point offset = dragWindow.getOffset();
+                Point global = MouseInfo.getPointerInfo().getLocation();
+                setFloatingLocation(global.x - offset.x, global.y - offset.y);
+
+                if (dockingSource != null) {
+                    Point dockingPosition = dockingSource.getLocationOnScreen();
+                    Point comparisonPoint = new Point(global.x - dockingPosition.x,
+                                                      global.y - dockingPosition.y);
+                    if (canDock(dockingSource, comparisonPoint)) {
+                        setFloating(false, comparisonPoint);
+                    } else {
+                        setFloating(true, null);
+                    }
+                } else {
+                    setFloating(true, null);
+                }
+                dockingSource.remove(previewPanel);
+            } catch (IllegalComponentStateException ignored) {
+            }
+        }
+    }
+
+    protected void stopDrag() {
+        dragWindow.setVisible(false);
+        timer.stop();
     }
 
     @Override
@@ -257,20 +266,9 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         g.fillRect(0, h - 1, w, 1);
     }
 
-    @Override
-    protected DragWindow createDragWindow(final JToolBar toolbar) {
-        Window frame = null;
-        if (toolBar != null) {
-            Container p = toolbar.getParent();
-            while (p != null && !(p instanceof Window)) {
-                p = p.getParent();
-            }
-            if (p != null) {
-                frame = (Window) p;
-            }
-        }
-        if (floatingToolBar instanceof Window) { frame = (Window) floatingToolBar; }
-        return new DarkDragWindow(frame);
+    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+        g.setColor(UIManager.getColor("ToolBar.background"));
+        g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }
 
     protected class DarkDragWindow extends DragWindow {

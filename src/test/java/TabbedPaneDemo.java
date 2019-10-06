@@ -14,7 +14,7 @@ public class TabbedPaneDemo extends JFrame {
             final JFrame frame = new JFrame();
             int tabCount = 2;
             frame.setSize(500 * tabCount, 500);
-            var c = new JPanel(new GridLayout(1,2));
+            var c = new JPanel(new GridLayout(1, 2));
             for (int j = 0; j < tabCount; j++) {
                 var p = new JPanel(new BorderLayout());
                 final var tabbedPane = new JTabbedPane();
@@ -23,7 +23,7 @@ public class TabbedPaneDemo extends JFrame {
                 for (int i = 0; i < 3; i++) {
                     var editor = new JTextPane();
                     editor.setText("TabPaneDemo TabPane-" + j + "\n".repeat(i + 1));
-                    tabbedPane.addTab("Tab (" + i + "," + j +")", editor);
+                    tabbedPane.addTab("Tab (" + i + "," + j + ")", editor);
                 }
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
                 tabbedPane.putClientProperty("JTabbedPane.showNewTabButton", Boolean.TRUE);
@@ -99,7 +99,7 @@ public class TabbedPaneDemo extends JFrame {
     private static final class Label extends JLabel implements UIResource {
         private Label(final String title) {
             super(title);
-            setBorder(new EmptyBorder(5, 5,5,5));
+            setBorder(new EmptyBorder(5, 5, 5, 5));
         }
     }
 }

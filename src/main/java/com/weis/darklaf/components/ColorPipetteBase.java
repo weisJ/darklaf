@@ -54,15 +54,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         this.closeAction = closeAction;
     }
 
-    @Override
-    public void pickAndClose() {
-        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-        Color pixelColor = getPixelColor(pointerInfo.getLocation());
-        cancelPipette();
-        notifyListener(pixelColor);
-        setInitialColor(pixelColor);
-    }
-
     protected Color getPixelColor(@NotNull final Point location) {
         return robot.getPixelColor(location.x, location.y);
     }
@@ -93,11 +84,48 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         Window picker = getOrCreatePickerWindow();
         Toolkit.getDefaultToolkit().addAWTEventListener(this,
                                                         AWTEvent.MOUSE_MOTION_EVENT_MASK
-                                                        | AWTEvent.MOUSE_EVENT_MASK
-                                                        | AWTEvent.KEY_EVENT_MASK);
+                                                                | AWTEvent.MOUSE_EVENT_MASK
+                                                                | AWTEvent.KEY_EVENT_MASK);
         updateLocation();
         picker.setVisible(true);
         return picker;
+    }
+
+    @Override
+    public void pickAndClose() {
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        Color pixelColor = getPixelColor(pointerInfo.getLocation());
+        cancelPipette();
+        notifyListener(pixelColor);
+        setInitialColor(pixelColor);
+    }
+
+    @Override
+    public void cancelPipette() {
+        Window pickerWindow = getPickerWindow();
+        if (pickerWindow != null) {
+            pickerWindow.setVisible(false);
+        }
+        Color initialColor = getInitialColor();
+        if (initialColor != null) {
+            notifyListener(initialColor);
+        }
+        if (closeAction != null) {
+            closeAction.run();
+        }
+        Toolkit.getDefaultToolkit().removeAWTEventListener(this);
+    }
+
+    @NotNull
+    protected Window getOrCreatePickerWindow() {
+        if (pickerWindow == null) {
+            Window owner = SwingUtilities.getWindowAncestor(parent);
+            pickerWindow = createPickerWindow(owner);
+            pickerWindow.setName("DarkLafPickerDialog");
+            JRootPane rootPane = pickerWindow.getRootPane();
+            rootPane.putClientProperty("Window.shadow", Boolean.FALSE);
+        }
+        return pickerWindow;
     }
 
     @Nullable
@@ -113,9 +141,8 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         return mouseLocation;
     }
 
-    protected Point adjustPickerLocation(@NotNull final Point mouseLocation, @NotNull final Window pickerWindow) {
-        return new Point(mouseLocation.x - pickerWindow.getWidth() / 2,
-                         mouseLocation.y - pickerWindow.getHeight() / 2);
+    protected JWindow createPickerWindow(final Window parent) {
+        return new PickerWindow(parent);
     }
 
     @Nullable
@@ -123,16 +150,9 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         return pickerWindow;
     }
 
-    @NotNull
-    protected Window getOrCreatePickerWindow() {
-        if (pickerWindow == null) {
-            Window owner = SwingUtilities.getWindowAncestor(parent);
-            pickerWindow = createPickerWindow(owner);
-            pickerWindow.setName("DarkLafPickerDialog");
-            JRootPane rootPane = pickerWindow.getRootPane();
-            rootPane.putClientProperty("Window.shadow", Boolean.FALSE);
-        }
-        return pickerWindow;
+    protected Point adjustPickerLocation(@NotNull final Point mouseLocation, @NotNull final Window pickerWindow) {
+        return new Point(mouseLocation.x - pickerWindow.getWidth() / 2,
+                         mouseLocation.y - pickerWindow.getHeight() / 2);
     }
 
     @Override
@@ -188,31 +208,11 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
     }
 
     @Override
-    public void cancelPipette() {
-        Window pickerWindow = getPickerWindow();
-        if (pickerWindow != null) {
-            pickerWindow.setVisible(false);
-        }
-        Color initialColor = getInitialColor();
-        if (initialColor != null) {
-            notifyListener(initialColor);
-        }
-        if (closeAction != null) {
-            closeAction.run();
-        }
-        Toolkit.getDefaultToolkit().removeAWTEventListener(this);
-    }
-
-    @Override
     public void dispose() {
         pickerWindow.dispose();
         pickerWindow = null;
         setInitialColor(null);
         setColor(null);
-    }
-
-    protected JWindow createPickerWindow(final Window parent) {
-        return new PickerWindow(parent);
     }
 
     protected static class PickerWindow extends JWindow {
@@ -222,7 +222,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
             setBackground(DarkUIUtil.TRANSPARENT_COLOR);
             BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
             Cursor blankCursor = Toolkit.getDefaultToolkit()
-                                        .createCustomCursor(cursorImg, new Point(), "BlankCursor");
+                    .createCustomCursor(cursorImg, new Point(), "BlankCursor");
             setCursor(blankCursor);
         }
 
@@ -230,13 +230,13 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         protected JRootPane createRootPane() {
             return new JRootPane() {
                 @Override
-                public void updateUI() {
-                    setUI(new BasicRootPaneUI());
+                public int getWindowDecorationStyle() {
+                    return NONE;
                 }
 
                 @Override
-                public int getWindowDecorationStyle() {
-                    return NONE;
+                public void updateUI() {
+                    setUI(new BasicRootPaneUI());
                 }
             };
         }

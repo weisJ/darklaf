@@ -15,6 +15,20 @@ import javax.swing.text.View;
 public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
 
     /**
+     * Installs the necessary properties on the JPasswordField.
+     *
+     * @since 1.6
+     */
+    protected void installDefaults() {
+        super.installDefaults();
+        String prefix = getPropertyPrefix();
+        Character echoChar = (Character) UIManager.getDefaults().get(prefix + ".echoChar");
+        if (echoChar != null) {
+            LookAndFeel.installProperty(getComponent(), "echoChar", echoChar);
+        }
+    }
+
+    /**
      * Fetches the name used as a key to look up properties through the
      * UIManager.  This is used as a prefix to all the standard
      * text properties.
@@ -23,20 +37,6 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
      */
     protected String getPropertyPrefix() {
         return "PasswordField";
-    }
-
-
-    /**
-     * Installs the necessary properties on the JPasswordField.
-     * @since 1.6
-     */
-    protected void installDefaults() {
-        super.installDefaults();
-        String prefix = getPropertyPrefix();
-        Character echoChar = (Character)UIManager.getDefaults().get(prefix + ".echoChar");
-        if(echoChar != null) {
-            LookAndFeel.installProperty(getComponent(), "echoChar", echoChar);
-        }
     }
 
     /**

@@ -28,7 +28,7 @@ public class DarkSliderUI extends BasicSliderUI {
     private static final int THUMB_SIZE_2 = 18;
     private static final int ICON_BAR_EXT = 5;
     private static final int ICON_PAD = 10;
-
+    private final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
     private final MouseListener mouseListener = new MouseClickListener() {
         private boolean muted = false;
         private int oldValue;
@@ -48,8 +48,6 @@ public class DarkSliderUI extends BasicSliderUI {
         }
     };
 
-    private final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
-
     public DarkSliderUI(final JSlider b) {
         super(b);
     }
@@ -67,6 +65,11 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     @Override
+    protected TrackListener createTrackListener(final JSlider slider) {
+        return new SnapTrackListener();
+    }
+
+    @Override
     protected void installListeners(final JSlider slider) {
         super.installListeners(slider);
         slider.addMouseListener(mouseListener);
@@ -79,16 +82,51 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     @Override
-    protected TrackListener createTrackListener(final JSlider slider) {
-        return new SnapTrackListener();
+    protected void calculateGeometry() {
+        super.calculateGeometry();
+        calculateIconRect();
+    }
+
+    @Override
+    protected void calculateContentRect() {
+        super.calculateContentRect();
+        if (showVolumeIcon(slider)) {
+            if (isHorizontal()) {
+                contentRect.width -= getVolumeIcon().getIconWidth() + ICON_PAD;
+                if (!slider.getComponentOrientation().isLeftToRight()) {
+                    contentRect.x += getVolumeIcon().getIconWidth() + ICON_PAD;
+                }
+            } else {
+                contentRect.height -= getVolumeIcon().getIconHeight() + ICON_PAD;
+                if (!slider.getComponentOrientation().isLeftToRight()) {
+                    contentRect.y += getVolumeIcon().getIconHeight() + ICON_PAD;
+                }
+            }
+        }
+    }
+
+    @Override
+    protected Dimension getThumbSize() {
+        if (isPlainThumb()) {
+            return new Dimension(PLAIN_THUMB_SIZE + 6, PLAIN_THUMB_SIZE + 6);
+        }
+        return isHorizontal()
+               ? new Dimension(THUMB_SIZE_1, THUMB_SIZE_2)
+               : new Dimension(THUMB_SIZE_2, THUMB_SIZE_1);
+    }
+
+    @Override
+    public void paint(@NotNull final Graphics g2, final JComponent c) {
+        super.paint(g2, c);
+        if (showVolumeIcon(c)) {
+            getVolumeIcon().paintIcon(c, g2, iconRect.x, iconRect.y);
+        }
     }
 
     @Override
     public void paintFocus(final Graphics g2) {
         //Do nothing
     }
-
-
 
     @Override
     public void paintTrack(final Graphics g2d) {
@@ -114,6 +152,152 @@ public class DarkSliderUI extends BasicSliderUI {
             g.fill(selection);
         }
         config.restore();
+    }
+
+    @Override
+    protected void paintMinorTickForHorizSlider(final Graphics g, final Rectangle tickBounds, final int x) {
+        checkDisabled(g);
+        super.paintMinorTickForHorizSlider(g, tickBounds, x);
+    }
+
+    @Override
+    protected void paintMajorTickForHorizSlider(final Graphics g, final Rectangle tickBounds, final int x) {
+        checkDisabled(g);
+        super.paintMajorTickForHorizSlider(g, tickBounds, x);
+    }
+
+    @Override
+    protected void paintMinorTickForVertSlider(final Graphics g, final Rectangle tickBounds, final int y) {
+        checkDisabled(g);
+        super.paintMinorTickForVertSlider(g, tickBounds, y);
+    }
+
+    @Override
+    protected void paintMajorTickForVertSlider(final Graphics g, final Rectangle tickBounds, final int y) {
+        checkDisabled(g);
+        super.paintMajorTickForVertSlider(g, tickBounds, y);
+    }
+
+    @Override
+    public void paintLabels(final Graphics g) {
+        checkDisabled(g);
+        var config = GraphicsUtil.setupAntialiasing(g);
+        super.paintLabels(g);
+        config.restore();
+    }
+
+    @Override
+    protected void paintHorizontalLabel(final Graphics g, final int value, final Component label) {
+        checkDisabled(g);
+        super.paintHorizontalLabel(g, value, label);
+    }
+
+    @Override
+    protected void paintVerticalLabel(final Graphics g, final int value, final Component label) {
+        checkDisabled(g);
+        super.paintVerticalLabel(g, value, label);
+    }
+
+    @Override
+    public void paintThumb(final Graphics g2) {
+        Graphics2D g = (Graphics2D) g2;
+        GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
+        g.translate(thumbRect.x, thumbRect.y);
+
+        if (isPlainThumb()) {
+            paintPlainSliderThumb(g);
+        } else {
+            paintSliderThumb(g);
+        }
+
+        g.translate(-thumbRect.x, -thumbRect.y);
+        context.restore();
+    }
+
+    @Override
+    protected void scrollDueToClickInTrack(final int dir) {
+        Point p = MouseInfo.getPointerInfo().getLocation();
+        SwingUtilities.convertPointFromScreen(p, slider);
+        var area = isHorizontal() ? getHorizontalTrackShape() : getVerticalTrackShape();
+        if (!area.getBounds().contains(p)) {
+            return;
+        }
+        if (instantScrollEnabled(slider)) {
+            int value = isHorizontal() ? valueForXPosition(p.x) : valueForYPosition(p.y);
+            slider.setValue(value);
+        } else {
+            super.scrollDueToClickInTrack(dir);
+        }
+    }
+
+    private void checkDisabled(final Graphics g) {
+        if (!slider.isEnabled()) {
+            g.setColor(getDisabledTickColor());
+        }
+    }
+
+    @NotNull
+    protected Color getDisabledTickColor() {
+        return UIManager.getColor("Slider.disabledTickColor");
+    }
+
+    private static boolean showVolumeIcon(final JComponent c) {
+        return isVolumeSlider(c)
+                && Boolean.TRUE.equals(c.getClientProperty("Slider.volume.showIcon"));
+    }
+
+    protected Icon getVolumeIcon() {
+        int range = slider.getMaximum() - slider.getMinimum();
+        int value = slider.getValue() - slider.getMinimum();
+        double percentage = value / (double) range;
+        String prefix = slider.isEnabled() ? "enabled_" : "disabled_";
+        if (Math.abs(percentage) < 1E-6) {
+            return UIManager.getIcon("Slider.volume." + prefix + "level_0.icon");
+        } else if (percentage < 0.25) {
+            return UIManager.getIcon("Slider.volume." + prefix + "level_1.icon");
+        } else if (percentage < 0.5) {
+            return UIManager.getIcon("Slider.volume." + prefix + "level_2.icon");
+        } else if (percentage < 0.75) {
+            return UIManager.getIcon("Slider.volume." + prefix + "level_3.icon");
+        } else {
+            return UIManager.getIcon("Slider.volume." + prefix + "level_4.icon");
+        }
+    }
+
+    private static boolean isVolumeSlider(@NotNull final JComponent c) {
+        return "volume".equals(c.getClientProperty("Slider.variant"));
+    }
+
+    protected boolean isPlainThumb() {
+        Boolean paintThumbArrowShape = (Boolean) slider.getClientProperty("Slider.paintThumbArrowShape");
+        return (!slider.getPaintTicks() && paintThumbArrowShape == null) ||
+                paintThumbArrowShape == Boolean.FALSE;
+    }
+
+    protected void calculateIconRect() {
+        iconRect.width = getVolumeIcon().getIconWidth();
+        iconRect.height = getVolumeIcon().getIconHeight();
+        if (isHorizontal()) {
+            if (slider.getComponentOrientation().isLeftToRight()) {
+                iconRect.x = trackRect.x + trackRect.width + ICON_PAD;
+                iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
+            } else {
+                iconRect.x = trackRect.x - iconRect.width - ICON_PAD;
+                iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
+            }
+        } else {
+            if (slider.getComponentOrientation().isLeftToRight()) {
+                iconRect.x = trackRect.x + (trackRect.width - iconRect.width) / 2;
+                iconRect.y = trackRect.y + trackRect.height + ICON_PAD;
+            } else {
+                iconRect.x = trackRect.x + (trackRect.width - iconRect.width) / 2;
+                iconRect.y = trackRect.y - iconRect.height - ICON_PAD;
+            }
+        }
+    }
+
+    private boolean isHorizontal() {
+        return slider.getOrientation() == JSlider.HORIZONTAL;
     }
 
     @NotNull
@@ -185,30 +369,6 @@ public class DarkSliderUI extends BasicSliderUI {
             track.intersect(new Area(new Rectangle2D.Double(0, y, slider.getWidth(), slider.getHeight() - y)));
         }
         return track;
-    }
-
-    @Override
-    public void paint(@NotNull final Graphics g2, final JComponent c) {
-        super.paint(g2, c);
-        if (showVolumeIcon(c)) {
-            getVolumeIcon().paintIcon(c, g2, iconRect.x, iconRect.y);
-        }
-    }
-
-    @Override
-    public void paintThumb(final Graphics g2) {
-        Graphics2D g = (Graphics2D) g2;
-        GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
-        g.translate(thumbRect.x, thumbRect.y);
-
-        if (isPlainThumb()) {
-            paintPlainSliderThumb(g);
-        } else {
-            paintSliderThumb(g);
-        }
-
-        g.translate(-thumbRect.x, -thumbRect.y);
-        context.restore();
     }
 
     private void paintPlainSliderThumb(@NotNull final Graphics2D g) {
@@ -311,66 +471,6 @@ public class DarkSliderUI extends BasicSliderUI {
         return shape;
     }
 
-    @Override
-    protected void calculateGeometry() {
-        super.calculateGeometry();
-        calculateIconRect();
-    }
-
-    @Override
-    protected void calculateContentRect() {
-        super.calculateContentRect();
-        if (showVolumeIcon(slider)) {
-            if (isHorizontal()) {
-                contentRect.width -= getVolumeIcon().getIconWidth() + ICON_PAD;
-                if (!slider.getComponentOrientation().isLeftToRight()) {
-                    contentRect.x += getVolumeIcon().getIconWidth() + ICON_PAD;
-                }
-            } else {
-                contentRect.height -= getVolumeIcon().getIconHeight() + ICON_PAD;
-                if (!slider.getComponentOrientation().isLeftToRight()) {
-                    contentRect.y += getVolumeIcon().getIconHeight() + ICON_PAD;
-                }
-            }
-        }
-    }
-
-    protected void calculateIconRect() {
-        iconRect.width = getVolumeIcon().getIconWidth();
-        iconRect.height = getVolumeIcon().getIconHeight();
-        if (isHorizontal()) {
-            if (slider.getComponentOrientation().isLeftToRight()) {
-                iconRect.x = trackRect.x + trackRect.width + ICON_PAD;
-                iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
-            } else {
-                iconRect.x = trackRect.x - iconRect.width - ICON_PAD;
-                iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
-            }
-        } else {
-            if (slider.getComponentOrientation().isLeftToRight()) {
-                iconRect.x = trackRect.x + (trackRect.width - iconRect.width) / 2;
-                iconRect.y = trackRect.y + trackRect.height + ICON_PAD;
-            } else {
-                iconRect.x = trackRect.x + (trackRect.width - iconRect.width) / 2;
-                iconRect.y = trackRect.y - iconRect.height - ICON_PAD;
-            }
-        }
-    }
-
-    @Override
-    protected Dimension getThumbSize() {
-        if (isPlainThumb()) {
-            return new Dimension(PLAIN_THUMB_SIZE + 6, PLAIN_THUMB_SIZE + 6);
-        }
-        return isHorizontal()
-               ? new Dimension(THUMB_SIZE_1, THUMB_SIZE_2)
-               : new Dimension(THUMB_SIZE_2, THUMB_SIZE_1);
-    }
-
-    private boolean isHorizontal() {
-        return slider.getOrientation() == JSlider.HORIZONTAL;
-    }
-
     @NotNull
     protected Color getTrackBackground() {
         return UIManager.getColor("Slider.trackBackground");
@@ -409,116 +509,19 @@ public class DarkSliderUI extends BasicSliderUI {
                : UIManager.getColor("Slider.thumbBorderColorDisabled");
     }
 
-    @NotNull
-    protected Color getDisabledTickColor() {
-        return UIManager.getColor("Slider.disabledTickColor");
-    }
-
-    protected Icon getVolumeIcon() {
-        int range = slider.getMaximum() - slider.getMinimum();
-        int value = slider.getValue() - slider.getMinimum();
-        double percentage = value / (double) range;
-        String prefix = slider.isEnabled() ? "enabled_" : "disabled_";
-        if (Math.abs(percentage) < 1E-6) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_0.icon");
-        } else if (percentage < 0.25) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_1.icon");
-        } else if (percentage < 0.5) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_2.icon");
-        } else if (percentage < 0.75) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_3.icon");
-        } else {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_4.icon");
-        }
-    }
-
-    private static boolean isVolumeSlider(@NotNull final JComponent c) {
-        return "volume".equals(c.getClientProperty("Slider.variant"));
-    }
-
-    private static boolean showVolumeIcon(final JComponent c) {
-        return isVolumeSlider(c)
-               && Boolean.TRUE.equals(c.getClientProperty("Slider.volume.showIcon"));
-    }
-
-    @Override
-    protected void paintMinorTickForHorizSlider(final Graphics g, final Rectangle tickBounds, final int x) {
-        checkDisabled(g);
-        super.paintMinorTickForHorizSlider(g, tickBounds, x);
-    }
-
-    @Override
-    protected void paintMajorTickForHorizSlider(final Graphics g, final Rectangle tickBounds, final int x) {
-        checkDisabled(g);
-        super.paintMajorTickForHorizSlider(g, tickBounds, x);
-    }
-
-    @Override
-    protected void paintMinorTickForVertSlider(final Graphics g, final Rectangle tickBounds, final int y) {
-        checkDisabled(g);
-        super.paintMinorTickForVertSlider(g, tickBounds, y);
-    }
-
-    @Override
-    protected void paintMajorTickForVertSlider(final Graphics g, final Rectangle tickBounds, final int y) {
-        checkDisabled(g);
-        super.paintMajorTickForVertSlider(g, tickBounds, y);
-    }
-
-    @Override
-    public void paintLabels(final Graphics g) {
-        checkDisabled(g);
-        var config = GraphicsUtil.setupAntialiasing(g);
-        super.paintLabels(g);
-        config.restore();
-    }
-
-    @Override
-    protected void paintHorizontalLabel(final Graphics g, final int value, final Component label) {
-        checkDisabled(g);
-        super.paintHorizontalLabel(g, value, label);
-    }
-
-    @Override
-    protected void paintVerticalLabel(final Graphics g, final int value, final Component label) {
-        checkDisabled(g);
-        super.paintVerticalLabel(g, value, label);
-    }
-
-    private void checkDisabled(final Graphics g) {
-        if (!slider.isEnabled()) {
-            g.setColor(getDisabledTickColor());
-        }
-    }
-
-    protected boolean isPlainThumb() {
-        Boolean paintThumbArrowShape = (Boolean) slider.getClientProperty("Slider.paintThumbArrowShape");
-        return (!slider.getPaintTicks() && paintThumbArrowShape == null) ||
-               paintThumbArrowShape == Boolean.FALSE;
-    }
-
-    @Override
-    protected void scrollDueToClickInTrack(final int dir) {
-        Point p = MouseInfo.getPointerInfo().getLocation();
-        SwingUtilities.convertPointFromScreen(p, slider);
-        var area = isHorizontal() ? getHorizontalTrackShape() : getVerticalTrackShape();
-        if (!area.getBounds().contains(p)) {
-            return;
-        }
-        if (instantScrollEnabled(slider)) {
-            int value = isHorizontal() ? valueForXPosition(p.x) : valueForYPosition(p.y);
-            slider.setValue(value);
-        } else {
-            super.scrollDueToClickInTrack(dir);
-        }
-    }
-
     private boolean instantScrollEnabled(@NotNull final JComponent c) {
         return Boolean.TRUE.equals(c.getClientProperty("Slider.instantScrollEnabled"));
     }
 
     public class SnapTrackListener extends TrackListener {
         private int offset;
+
+        public void mousePressed(final MouseEvent evt) {
+            int pos = isHorizontal() ? evt.getX() : evt.getY();
+            int loc = getLocationForValue(getSnappedValue(evt));
+            offset = (loc < 0) ? 0 : pos - loc;
+            super.mousePressed(evt);
+        }
 
         @Override
         public void mouseDragged(final MouseEvent e) {
@@ -533,14 +536,6 @@ public class DarkSliderUI extends BasicSliderUI {
             super.mouseDragged(e);
             slider.repaint();
         }
-
-        public void mousePressed(final MouseEvent evt) {
-            int pos = isHorizontal() ? evt.getX() : evt.getY();
-            int loc = getLocationForValue(getSnappedValue(evt));
-            offset = (loc < 0) ? 0 : pos - loc;
-            super.mousePressed(evt);
-        }
-
 
         private int getLocationForValue(final int value) {
             return isHorizontal() ? xPositionForValue(value) : yPositionForValue(value);
@@ -563,9 +558,9 @@ public class DarkSliderUI extends BasicSliderUI {
             if (tickSpacing != 0) {
                 if ((value - slider.getMinimum()) % tickSpacing != 0) {
                     float temp = (float) (value - slider.getMinimum())
-                                 / (float) tickSpacing;
+                            / (float) tickSpacing;
                     snappedValue = slider.getMinimum() +
-                                   (Math.round(temp) * tickSpacing);
+                            (Math.round(temp) * tickSpacing);
                 }
             }
             return snappedValue;

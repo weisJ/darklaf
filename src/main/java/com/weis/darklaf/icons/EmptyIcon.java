@@ -14,6 +14,22 @@ public final class EmptyIcon implements Icon, UIResource {
     private final int width;
     private final int height;
 
+    @Contract(pure = true)
+    private EmptyIcon(final int width, final int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    @NotNull
+    public static Icon create(@NotNull final Icon base) {
+        return create(base.getIconWidth(), base.getIconHeight());
+    }
+
+    @NotNull
+    public static Icon create(final int width, final int height) {
+        return width == height ? create(width) : new EmptyIcon(width, height);
+    }
+
     @NotNull
     public static Icon create(final int size) {
         Icon icon = cache.get(size);
@@ -23,20 +39,7 @@ public final class EmptyIcon implements Icon, UIResource {
         return icon == null ? new EmptyIcon(size, size) : icon;
     }
 
-    @NotNull
-    public static Icon create(final int width, final int height) {
-        return width == height ? create(width) : new EmptyIcon(width, height);
-    }
-
-    @NotNull
-    public static Icon create(@NotNull final Icon base) {
-        return create(base.getIconWidth(), base.getIconHeight());
-    }
-
-    @Contract(pure = true)
-    private EmptyIcon(final int width, final int height) {
-        this.width = width;
-        this.height = height;
+    public void paintIcon(final Component component, final Graphics g, final int i, final int j) {
     }
 
     public int getIconWidth() {
@@ -47,7 +50,9 @@ public final class EmptyIcon implements Icon, UIResource {
         return this.height;
     }
 
-    public void paintIcon(final Component component, final Graphics g, final int i, final int j) {
+    public int hashCode() {
+        int sum = this.width + this.height;
+        return sum * (sum + 1) / 2 + this.width;
     }
 
     @Contract(value = "null -> false", pure = true)
@@ -60,10 +65,5 @@ public final class EmptyIcon implements Icon, UIResource {
             EmptyIcon icon = (EmptyIcon) o;
             return this.height == icon.height && this.width == icon.width;
         }
-    }
-
-    public int hashCode() {
-        int sum = this.width + this.height;
-        return sum * (sum + 1) / 2 + this.width;
     }
 }

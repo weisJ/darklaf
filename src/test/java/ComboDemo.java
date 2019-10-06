@@ -31,7 +31,7 @@ public class ComboDemo {
         textArea.setRows(5);
         textArea.setColumns(10);
         textArea.setText("textArea\nother text\nanother text");
-        comboBox4.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBox4.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         GroupLayout layout = new GroupLayout(contentPane);
         contentPane.setLayout(layout);
         layout.setHorizontalGroup(
@@ -81,7 +81,7 @@ public class ComboDemo {
         f.pack();
         f.doLayout();
         f.setVisible(true);
-        System.out.printf("comboBox baseline %d%n",comboBox.getBaseline(comboBox.getWidth(), comboBox3.getHeight()));
+        System.out.printf("comboBox baseline %d%n", comboBox.getBaseline(comboBox.getWidth(), comboBox3.getHeight()));
         System.out.printf("comboBox baseline resize behaviour %s%n", comboBox.getBaselineResizeBehavior());
     }
 

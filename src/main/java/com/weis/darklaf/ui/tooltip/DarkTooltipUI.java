@@ -31,17 +31,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     @Override
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
-        if (((JToolTip) c).getTipText() == null) return;
-        g.setColor(c.getBackground());
-        if (c.getBorder() instanceof DarkTooltipBorder) {
-            var area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c.getWidth(), c.getHeight());
-            ((Graphics2D) g).fill(area);
-        }
-        super.paint(g, c);
-    }
-
-    @Override
     protected void installDefaults(final JComponent c) {
         super.installDefaults(c);
         c.setOpaque(false);
@@ -59,14 +48,15 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         c.addPropertyChangeListener(this);
     }
 
-    protected boolean isDecorated(final Window w) {
-        if (w instanceof Dialog) {
-            return !((Dialog) w).isUndecorated();
+    @Override
+    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+        if (((JToolTip) c).getTipText() == null) return;
+        g.setColor(c.getBackground());
+        if (c.getBorder() instanceof DarkTooltipBorder) {
+            var area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c.getWidth(), c.getHeight());
+            ((Graphics2D) g).fill(area);
         }
-        if (w instanceof Frame) {
-            return !((Frame) w).isUndecorated();
-        }
-        return false;
+        super.paint(g, c);
     }
 
     public Dimension getPreferredSize(@NotNull final JComponent c) {
@@ -89,6 +79,16 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             }
         }
         return prefSize;
+    }
+
+    protected boolean isDecorated(final Window w) {
+        if (w instanceof Dialog) {
+            return !((Dialog) w).isUndecorated();
+        }
+        if (w instanceof Frame) {
+            return !((Frame) w).isUndecorated();
+        }
+        return false;
     }
 
     @Override

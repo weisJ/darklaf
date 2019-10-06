@@ -18,8 +18,8 @@ public class SVGTest {
         svgPanel.setAntiAlias(true);
         svgPanel.setScaleToFit(true);
         svgPanel.setSvgURI(SVGTest.class.getClassLoader()
-                                        .getResource("com/weis/darklaf/icons/shadow/bottom.svg")
-                                        .toURI());
+                                   .getResource("com/weis/darklaf/icons/shadow/bottom.svg")
+                                   .toURI());
         SVGUniverse svgUniverse = svgPanel.getSvgUniverse();
         SVGDiagram diagram = svgUniverse.getDiagram(svgPanel.getSvgURI());
 //        var root = diagram.getRoot();

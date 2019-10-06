@@ -39,6 +39,13 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
         }
     }
 
+    private void changeColor(final Color color) {
+        if (color != null) {
+            savedColor = color;
+            label.setBackground(color);
+        }
+    }
+
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
         if (anEvent instanceof MouseEvent) {
@@ -50,13 +57,6 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
     @Override
     public Object getCellEditorValue() {
         return savedColor;
-    }
-
-    private void changeColor(final Color color) {
-        if (color != null) {
-            savedColor = color;
-            label.setBackground(color);
-        }
     }
 
     @Override

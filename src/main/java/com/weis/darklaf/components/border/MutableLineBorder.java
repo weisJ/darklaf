@@ -32,6 +32,19 @@ public class MutableLineBorder extends EmptyBorder {
         g.fillRect(x + width - insets.right, y, insets.right, height - insets.bottom);
     }
 
+    @Override
+    public boolean isBorderOpaque() {
+        return true;
+    }
+
+    protected Color getColor() {
+        return color;
+    }
+
+    public void setColor(final Color color) {
+        this.color = color;
+    }
+
     public void setLeft(final int left) {
         this.left = left;
     }
@@ -46,18 +59,5 @@ public class MutableLineBorder extends EmptyBorder {
 
     public void setBottom(final int bottom) {
         this.bottom = bottom;
-    }
-
-    @Override
-    public boolean isBorderOpaque() {
-        return true;
-    }
-
-    protected Color getColor() {
-        return color;
-    }
-
-    public void setColor(final Color color) {
-        this.color = color;
     }
 }

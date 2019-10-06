@@ -239,17 +239,34 @@ public class TextBubbleBorder extends AbstractBorder {
         return setPointerSize(pointerSize);
     }
 
+    @Override
+    public void paintBorder(@NotNull final Component c, final Graphics g,
+                            final int x, final int y, final int width, final int height) {
+        var area = getInnerArea(x, y, width, height);
+        paintBorder(g, area);
+    }
+
     @NotNull
     @Override
     public Insets getBorderInsets(final Component c) {
         return insets;
     }
 
-
     @NotNull
     @Override
     public Insets getBorderInsets(final Component c, final Insets insets) {
         return getBorderInsets(c);
+    }
+
+    public Area getInnerArea(final int x, final int y, final int width, final int height) {
+        var bubble = calculateBubbleRect(x, y, width, height);
+        final Area area = new Area(bubble);
+        if (pointerSide != Alignment.CENTER) {
+            double pointerPad = calculatePointerPad(width, height);
+            Path2D pointer = creatPointerShape(pointerPad, bubble);
+            area.add(new Area(pointer));
+        }
+        return area;
     }
 
     public void paintBorder(final Graphics g, final Area innerArea) {
@@ -261,11 +278,11 @@ public class TextBubbleBorder extends AbstractBorder {
         config.restore();
     }
 
-    @Override
-    public void paintBorder(@NotNull final Component c, final Graphics g,
-                            final int x, final int y, final int width, final int height) {
-        var area = getInnerArea(x, y, width, height);
-        paintBorder(g, area);
+    @Contract("_, _, _, _ -> new")
+    public RoundRectangle2D.Double calculateBubbleRect(final int x, final int y,
+                                                       final int width, final int height) {
+        return new RoundRectangle2D.Double(x + insets.left, y + insets.top, width - insets.left - insets.right,
+                                           height - insets.top - insets.bottom, radius, radius);
     }
 
     @Contract(pure = true)
@@ -289,25 +306,6 @@ public class TextBubbleBorder extends AbstractBorder {
                 break;
         }
         return pointerPad;
-    }
-
-
-    public Area getInnerArea(final int x, final int y, final int width, final int height) {
-        var bubble = calculateBubbleRect(x, y, width, height);
-        final Area area = new Area(bubble);
-        if (pointerSide != Alignment.CENTER) {
-            double pointerPad = calculatePointerPad(width, height);
-            Path2D pointer = creatPointerShape(pointerPad, bubble);
-            area.add(new Area(pointer));
-        }
-        return area;
-    }
-
-    @Contract("_, _, _, _ -> new")
-    public RoundRectangle2D.Double calculateBubbleRect(final int x, final int y,
-                                                                final int width, final int height) {
-        return new RoundRectangle2D.Double(x + insets.left, y + insets.top, width - insets.left - insets.right,
-                                           height - insets.top - insets.bottom, radius, radius);
     }
 
     @NotNull

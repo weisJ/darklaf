@@ -21,11 +21,10 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     private static Action selectWord;
     private static Action selectLine;
-    private MouseEvent selectedWordEvent;
-
     private final Segment seg;
-    private CaretStyle style;
     private final DarkHighlightPainter selectionPainter;
+    private MouseEvent selectedWordEvent;
+    private CaretStyle style;
     private boolean alwaysVisible;
     private boolean pasteOnMiddleMouseClick;
 
@@ -42,23 +41,29 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         pasteOnMiddleMouseClick = true;
     }
 
-    @Override
+    public boolean getRoundedSelectionEdges() {
+        return ((DarkHighlightPainter) getSelectionPainter()).getRoundedEdges();
+    }    @Override
     protected void positionCaret(final MouseEvent e) {
         super.positionCaret(e);
     }
 
-    private void adjustCaretLocation(@NotNull final MouseEvent e) {
+    public void setRoundedSelectionEdges(final boolean rounded) {
+        ((DarkHighlightPainter) getSelectionPainter()).setRoundedEdges(rounded);
+    }    private void adjustCaretLocation(@NotNull final MouseEvent e) {
         if (e.isShiftDown() && getDot() != -1) {
             moveCaret(e);
-        } else{
+        } else {
             positionCaret(e);
         }
     }
 
-    private void adjustFocus(final boolean inWindow) {
+    public CaretStyle getStyle() {
+        return style;
+    }    private void adjustFocus(final boolean inWindow) {
         JTextComponent textArea = getComponent();
         if ((textArea != null) && textArea.isEnabled() &&
-            textArea.isRequestFocusEnabled()) {
+                textArea.isRequestFocusEnabled()) {
             if (inWindow) {
                 textArea.requestFocusInWindow();
             } else {
@@ -67,8 +72,16 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-
-    @Override
+    public void setStyle(final CaretStyle style) {
+        var s = style;
+        if (s == null) {
+            s = CaretStyle.THICK_VERTICAL_LINE_STYLE;
+        }
+        if (s != this.style) {
+            this.style = s;
+            repaint();
+        }
+    }    @Override
     protected synchronized void damage(final Rectangle r) {
         if (r != null) {
             validateWidth(r); // Check for "0" or "1" caret width
@@ -80,27 +93,46 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-
-    public boolean getPasteOnMiddleMouseClick() {
+    public boolean isAlwaysVisible() {
+        return alwaysVisible;
+    }    public boolean getPasteOnMiddleMouseClick() {
         return pasteOnMiddleMouseClick;
     }
 
-    public boolean getRoundedSelectionEdges() {
-        return ((DarkHighlightPainter) getSelectionPainter()).getRoundedEdges();
+    /**
+     * Toggles whether this caret should always be visible (as opposed to
+     * blinking, or not visible when the editor's window is not focused).
+     * This can be used by popup windows that want the caret's location
+     * to still be visible for contextual purposes while they are displayed.
+     *
+     * @param alwaysVisible Whether this caret should always be visible.
+     * @see #isAlwaysVisible()
+     */
+    public void setAlwaysVisible(final boolean alwaysVisible) {
+        if (alwaysVisible != this.alwaysVisible) {
+            this.alwaysVisible = alwaysVisible;
+            if (!isVisible()) {
+                // Force painting of caret since super class's "flasher" timer
+                // won't fire when the window doesn't have focus
+                repaint();
+            }
+        }
     }
 
-    @Override
+    public enum CaretStyle {
+        VERTICAL_LINE_STYLE,
+        UNDERLINE_STYLE,
+        BLOCK_STYLE,
+        BLOCK_BORDER_STYLE,
+        THICK_VERTICAL_LINE_STYLE
+    }    @Override
     protected Highlighter.HighlightPainter getSelectionPainter() {
         return selectionPainter;
     }
 
-    public CaretStyle getStyle() {
-        return style;
-    }
 
-    public boolean isAlwaysVisible() {
-        return alwaysVisible;
-    }
+
+
 
     /**
      * Called when the mouse is clicked.  If the click was generated from
@@ -131,7 +163,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                     }
                 }
             } else if (SwingUtilities.isMiddleMouseButton(e) &&
-                       getPasteOnMiddleMouseClick()) {
+                    getPasteOnMiddleMouseClick()) {
                 if (clickCount == 1 && textArea.isEditable() && textArea.isEnabled()) {
                     // Paste the system selection, if it exists (e.g., on UNIX
                     // platforms, the user can select text, the middle-mouse click
@@ -192,7 +224,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 validateWidth(r);
 
                 if (width > 0 && height > 0 &&
-                    !contains(r.x, r.y, r.width, r.height)) {
+                        !contains(r.x, r.y, r.width, r.height)) {
                     Rectangle clip = g.getClipBounds();
                     if (clip != null && !clip.contains(this)) {
                         // Clip doesn't contain the old location, force it
@@ -248,8 +280,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
      */
     private void selectWord(final MouseEvent e) {
         if (selectedWordEvent != null &&
-            selectedWordEvent.getX() == e.getX() &&
-            selectedWordEvent.getY() == e.getY()) {
+                selectedWordEvent.getX() == e.getX() &&
+                selectedWordEvent.getY() == e.getY()) {
             // We've already the done selection for this.
             return;
         }
@@ -260,49 +292,20 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
 
-    /**
-     * Toggles whether this caret should always be visible (as opposed to
-     * blinking, or not visible when the editor's window is not focused).
-     * This can be used by popup windows that want the caret's location
-     * to still be visible for contextual purposes while they are displayed.
-     *
-     * @param alwaysVisible Whether this caret should always be visible.
-     * @see #isAlwaysVisible()
-     */
-    public void setAlwaysVisible(final boolean alwaysVisible) {
-        if (alwaysVisible != this.alwaysVisible) {
-            this.alwaysVisible = alwaysVisible;
-            if (!isVisible()) {
-                // Force painting of caret since super class's "flasher" timer
-                // won't fire when the window doesn't have focus
-                repaint();
-            }
-        }
-    }
+
 
     public void setPasteOnMiddleMouseClick(final boolean paste) {
         pasteOnMiddleMouseClick = paste;
     }
 
-    public void setRoundedSelectionEdges(final boolean rounded) {
-        ((DarkHighlightPainter) getSelectionPainter()).setRoundedEdges(rounded);
-    }
+
 
     @Override
     public void setSelectionVisible(final boolean visible) {
         super.setSelectionVisible(true);
     }
 
-    public void setStyle(final CaretStyle style) {
-        var s = style;
-        if (s == null) {
-            s = CaretStyle.THICK_VERTICAL_LINE_STYLE;
-        }
-        if (s != this.style) {
-            this.style = s;
-            repaint();
-        }
-    }
+
 
     private void validateWidth(final Rectangle rect) {
         if (rect != null && rect.width <= 1) {
@@ -325,11 +328,5 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-    public enum CaretStyle {
-        VERTICAL_LINE_STYLE,
-        UNDERLINE_STYLE,
-        BLOCK_STYLE,
-        BLOCK_BORDER_STYLE,
-        THICK_VERTICAL_LINE_STYLE
-    }
+
 }

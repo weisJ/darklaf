@@ -100,14 +100,14 @@ public class ColorWheel extends JComponent {
         repaint();
     }
 
-    public void addListener(final ColorListener listener) {
-        myListeners.add(listener);
-    }
-
     private void fireColorChanged(final Object source) {
         for (ColorListener listener : myListeners) {
             listener.colorChanged(myColor, source);
         }
+    }
+
+    public void addListener(final ColorListener listener) {
+        myListeners.add(listener);
     }
 
     public void setBrightness(final float brightness) {
@@ -121,16 +121,6 @@ public class ColorWheel extends JComponent {
         if (opacity != myOpacity) {
             setHSBValue(myHue, mySaturation, myBrightness, opacity);
         }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return getMinimumSize();
-    }
-
-    @Override
-    public Dimension getMinimumSize() {
-        return new Dimension(300, 300);
     }
 
     @Override
@@ -177,6 +167,16 @@ public class ColorWheel extends JComponent {
         g2d.fillRect(x - 2, y - 2, 4, 4);
         g2d.setColor(UIManager.getColor("ColorChooser.colorWheelDropBorderColor"));
         g2d.drawRect(x - 2, y - 2, 4, 4);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return getMinimumSize();
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(300, 300);
     }
 
     public void dropImage() {

@@ -11,7 +11,7 @@ public final class ListDemo {
             JPanel p = new JPanel();
 
             String[] week = {"Monday", "Tuesday", "Wednesday",
-                             "Thursday", "Friday", "Saturday", "Sunday"};
+                    "Thursday", "Friday", "Saturday", "Sunday"};
             var list = new JList<>(week);
 
             list.setSelectedIndex(2);

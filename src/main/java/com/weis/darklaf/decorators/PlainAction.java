@@ -16,7 +16,7 @@ public class PlainAction extends AbstractAction {
         this.action = action;
     }
 
-    public PlainAction(final String name, final Icon icon,  final Runnable action) {
+    public PlainAction(final String name, final Icon icon, final Runnable action) {
         super(name, icon);
         this.action = action;
     }

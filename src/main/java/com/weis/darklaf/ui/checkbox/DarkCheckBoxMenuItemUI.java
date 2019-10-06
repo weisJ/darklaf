@@ -32,22 +32,6 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
         c.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 
-    @Override
-    protected void installListeners() {
-        super.installListeners();
-        menuItem.addMouseListener(clickListener);
-    }
-
-    @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        menuItem.removeMouseListener(clickListener);
-    }
-
-    protected String getPropertyPrefix() {
-        return "CheckBoxMenuItem";
-    }
-
     protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
                                   @NotNull final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
@@ -64,5 +48,21 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
         g.translate(-lr.getCheckRect().x, -lr.getCheckRect().y - 2);
         config.restore();
         g.setColor(foreground);
+    }
+
+    protected String getPropertyPrefix() {
+        return "CheckBoxMenuItem";
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        menuItem.addMouseListener(clickListener);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        menuItem.removeMouseListener(clickListener);
     }
 }

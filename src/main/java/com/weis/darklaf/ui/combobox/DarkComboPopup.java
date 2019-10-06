@@ -36,26 +36,6 @@ public class DarkComboPopup extends BasicComboPopup {
     }
 
     @Override
-    protected JScrollPane createScroller() {
-        overlayScrollPane = new OverlayScrollPane(list, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                                  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        overlayScrollPane.getVerticalScrollBar().putClientProperty("ScrollBar.thin", Boolean.TRUE);
-        return overlayScrollPane.getScrollPane();
-    }
-
-
-    @Override
-    protected void configurePopup() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorderPainted(true);
-        setOpaque(false);
-        add(overlayScrollPane);
-        setDoubleBuffered(true);
-        setFocusable(false);
-    }
-
-
-    @Override
     protected void firePopupMenuWillBecomeVisible() {
         if (list.getModel().getSize() != 0) {
             int height = list.getUI().getCellBounds(list, 0, 0).height;
@@ -82,18 +62,28 @@ public class DarkComboPopup extends BasicComboPopup {
     }
 
     @Override
+    protected JScrollPane createScroller() {
+        overlayScrollPane = new OverlayScrollPane(list, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                                  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        overlayScrollPane.getVerticalScrollBar().putClientProperty("ScrollBar.thin", Boolean.TRUE);
+        return overlayScrollPane.getScrollPane();
+    }
+
+    @Override
     protected void configureScroller() {
         scroller.setFocusable(false);
         scroller.getVerticalScrollBar().setFocusable(false);
         scroller.setBorder(null);
     }
 
-    protected void reset() {
-        lastEvent = 0;
-        if (visible) {
-            hide();
-        }
-        visible = false;
+    @Override
+    protected void configurePopup() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBorderPainted(true);
+        setOpaque(false);
+        add(overlayScrollPane);
+        setDoubleBuffered(true);
+        setFocusable(false);
     }
 
     @Override
@@ -106,5 +96,13 @@ public class DarkComboPopup extends BasicComboPopup {
             visible = true;
             SwingUtilities.invokeLater(this::show);
         }
+    }
+
+    protected void reset() {
+        lastEvent = 0;
+        if (visible) {
+            hide();
+        }
+        visible = false;
     }
 }

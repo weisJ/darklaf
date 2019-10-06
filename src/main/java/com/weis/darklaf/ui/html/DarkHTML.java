@@ -39,13 +39,12 @@ public class DarkHTML extends BasicHTML {
         if (view instanceof javax.swing.text.ParagraphView) {
             Rectangle rect;
             if (bounds instanceof Rectangle) {
-                rect = (Rectangle)bounds;
-            }
-            else {
+                rect = (Rectangle) bounds;
+            } else {
                 rect = bounds.getBounds();
             }
-            return rect.y + (int)(rect.height *
-                                  child.getAlignment(View.Y_AXIS));
+            return rect.y + (int) (rect.height *
+                    child.getAlignment(View.Y_AXIS));
         }
         return getBaseline(child, bounds);
     }

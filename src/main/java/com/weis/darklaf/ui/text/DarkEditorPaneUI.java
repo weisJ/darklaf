@@ -21,21 +21,13 @@ import java.beans.PropertyChangeEvent;
 
 public class DarkEditorPaneUI extends DarkTextUI {
 
-    @NotNull
-    @Contract("_ -> new")
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkEditorPaneUI();
-    }
-
-
-    @Override
-    protected DarkCaret.CaretStyle getDefaultCaretStyle() {
-        return DarkCaret.CaretStyle.THICK_VERTICAL_LINE_STYLE;
-    }
-
-    /*
-     * Implementation of DarkEditorPaneUI
+    /**
+     * Attribute key to reference the default font.
+     * used in javax.swing.text.StyleContext.getFont
+     * to resolve the default font.
      */
+    private static final String FONT_ATTRIBUTE_KEY = "FONT_ATTRIBUTE_KEY";
+
 
     /**
      * Creates a new BasicEditorPaneUI.
@@ -44,15 +36,19 @@ public class DarkEditorPaneUI extends DarkTextUI {
         super();
     }
 
-    /**
-     * Fetches the name used as a key to lookup properties through the
-     * UIManager.  This is used as a prefix to all the standard
-     * text properties.
-     *
-     * @return the name ("EditorPane")
+    /*
+     * Implementation of DarkEditorPaneUI
      */
-    protected String getPropertyPrefix() {
-        return "EditorPane";
+
+    @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkEditorPaneUI();
+    }
+
+    @Override
+    protected DarkCaret.CaretStyle getDefaultCaretStyle() {
+        return DarkCaret.CaretStyle.THICK_VERTICAL_LINE_STYLE;
     }
 
     /**
@@ -64,125 +60,6 @@ public class DarkEditorPaneUI extends DarkTextUI {
         super.installUI(c);
         updateDisplayProperties(c.getFont(),
                                 c.getForeground());
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.5
-     */
-    public void uninstallUI(final JComponent c) {
-        cleanDisplayProperties();
-        super.uninstallUI(c);
-    }
-
-    /**
-     * Fetches the EditorKit for the UI.  This is whatever is
-     * currently set in the associated JEditorPane.
-     *
-     * @return the editor capabilities
-     */
-    public EditorKit getEditorKit(final JTextComponent tc) {
-        JEditorPane pane = (JEditorPane) getComponent();
-        return pane.getEditorKit();
-    }
-
-    /**
-     * Fetch an action map to use.  The map for a JEditorPane
-     * is not shared because it changes with the EditorKit.
-     */
-    ActionMap getActionMap() {
-        ActionMap am = new ActionMapUIResource();
-        am.put("requestFocus", new FocusAction());
-        EditorKit editorKit = getEditorKit(getComponent());
-        if (editorKit != null) {
-            Action[] actions = editorKit.getActions();
-            if (actions != null) {
-                addActions(am, actions);
-            }
-        }
-        am.put(TransferHandler.getCutAction().getValue(Action.NAME),
-               TransferHandler.getCutAction());
-        am.put(TransferHandler.getCopyAction().getValue(Action.NAME),
-               TransferHandler.getCopyAction());
-        am.put(TransferHandler.getPasteAction().getValue(Action.NAME),
-               TransferHandler.getPasteAction());
-        return am;
-    }
-
-    /**
-     * This method gets called when a bound property is changed
-     * on the associated JTextComponent.  This is a hook
-     * which UI implementations may change to reflect how the
-     * UI displays bound properties of JTextComponent subclasses.
-     * This is implemented to rebuild the ActionMap based upon an
-     * EditorKit change.
-     *
-     * @param evt the property change event
-     */
-    protected void propertyChange(final PropertyChangeEvent evt) {
-        super.propertyChange(evt);
-        String name = evt.getPropertyName();
-        if ("editorKit".equals(name)) {
-            ActionMap map = SwingUtilities.getUIActionMap(getComponent());
-            if (map != null) {
-                Object oldValue = evt.getOldValue();
-                if (oldValue instanceof EditorKit) {
-                    Action[] actions = ((EditorKit) oldValue).getActions();
-                    if (actions != null) {
-                        removeActions(map, actions);
-                    }
-                }
-                Object newValue = evt.getNewValue();
-                if (newValue instanceof EditorKit) {
-                    Action[] actions = ((EditorKit) newValue).getActions();
-                    if (actions != null) {
-                        addActions(map, actions);
-                    }
-                }
-            }
-            updateFocusTraversalKeys();
-        } else if ("editable".equals(name)) {
-            updateFocusTraversalKeys();
-        } else if ("foreground".equals(name)
-                   || "font".equals(name)
-                   || "document".equals(name)
-                   || JEditorPane.W3C_LENGTH_UNITS.equals(name)
-                   || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
-        ) {
-            JComponent c = getComponent();
-            updateDisplayProperties(c.getFont(), c.getForeground());
-            if (JEditorPane.W3C_LENGTH_UNITS.equals(name)
-                || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
-                modelChanged();
-            }
-            if ("foreground".equals(name)) {
-                Object honorDisplayPropertiesObject = c.getClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
-                boolean honorDisplayProperties = false;
-                if (honorDisplayPropertiesObject instanceof Boolean) {
-                    honorDisplayProperties = (Boolean) honorDisplayPropertiesObject;
-                }
-                if (honorDisplayProperties) {
-                    modelChanged();
-                }
-            }
-
-
-        }
-    }
-
-    void removeActions(final ActionMap map, final Action[] actions) {
-        int n = actions.length;
-        for (Action a : actions) {
-            map.remove(a.getValue(Action.NAME));
-        }
-    }
-
-    void addActions(final ActionMap map, final Action[] actions) {
-        int n = actions.length;
-        for (Action a : actions) {
-            map.put(a.getValue(Action.NAME), a);
-        }
     }
 
     void updateDisplayProperties(final Font font, final Color fg) {
@@ -227,37 +104,6 @@ public class DarkEditorPaneUI extends DarkTextUI {
         }
     }
 
-    /**
-     * Attribute key to reference the default font.
-     * used in javax.swing.text.StyleContext.getFont
-     * to resolve the default font.
-     */
-    private static final String FONT_ATTRIBUTE_KEY = "FONT_ATTRIBUTE_KEY";
-
-    void cleanDisplayProperties() {
-        Document document = getComponent().getDocument();
-        if (document instanceof HTMLDocument) {
-            StyleSheet documentStyleSheet = ((HTMLDocument) document).getStyleSheet();
-            StyleSheet[] styleSheets = documentStyleSheet.getStyleSheets();
-            if (styleSheets != null) {
-                for (StyleSheet s : styleSheets) {
-                    if (s instanceof StyleSheetUIResource) {
-                        documentStyleSheet.removeStyleSheet(s);
-                        documentStyleSheet.addRule("BASE_SIZE_DISABLE");
-                        break;
-                    }
-                }
-            }
-            Style style = ((StyledDocument) document).getStyle(StyleContext.DEFAULT_STYLE);
-            if (style.getAttribute(FONT_ATTRIBUTE_KEY) != null) {
-                style.removeAttribute(FONT_ATTRIBUTE_KEY);
-            }
-        }
-    }
-
-    static class StyleSheetUIResource extends StyleSheet implements UIResource {
-    }
-
     private void updateCSS(final Font font, final Color fg) {
         JTextComponent component = getComponent();
         Document document = component.getDocument();
@@ -277,7 +123,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
             styleSheet.addRule(cssRule);
             documentStyleSheet.addStyleSheet(styleSheet);
             documentStyleSheet.addRule("BASE_SIZE " +
-                                       component.getFont().getSize());
+                                               component.getFont().getSize());
             Style style = ((StyledDocument) document).getStyle(StyleContext.DEFAULT_STYLE);
             if (!font.equals(style.getAttribute(FONT_ATTRIBUTE_KEY))) {
                 style.addAttribute(FONT_ATTRIBUTE_KEY, font);
@@ -290,27 +136,23 @@ public class DarkEditorPaneUI extends DarkTextUI {
         updateForeground(fg);
     }
 
-    /**
-     * Update the color in the default style of the document.
-     *
-     * @param color the new color to use or null to remove the color attribute
-     *              from the document's style
-     */
-    private void updateForeground(final Color color) {
-        StyledDocument doc = (StyledDocument) getComponent().getDocument();
-        Style style = doc.getStyle(StyleContext.DEFAULT_STYLE);
-
-        if (style == null) {
-            return;
-        }
-
-        if (color == null) {
-            if (style.getAttribute(StyleConstants.Foreground) != null) {
-                style.removeAttribute(StyleConstants.Foreground);
+    void cleanDisplayProperties() {
+        Document document = getComponent().getDocument();
+        if (document instanceof HTMLDocument) {
+            StyleSheet documentStyleSheet = ((HTMLDocument) document).getStyleSheet();
+            StyleSheet[] styleSheets = documentStyleSheet.getStyleSheets();
+            if (styleSheets != null) {
+                for (StyleSheet s : styleSheets) {
+                    if (s instanceof StyleSheetUIResource) {
+                        documentStyleSheet.removeStyleSheet(s);
+                        documentStyleSheet.addRule("BASE_SIZE_DISABLE");
+                        break;
+                    }
+                }
             }
-        } else {
-            if (!color.equals(StyleConstants.getForeground(style))) {
-                StyleConstants.setForeground(style, color);
+            Style style = ((StyledDocument) document).getStyle(StyleContext.DEFAULT_STYLE);
+            if (style.getAttribute(FONT_ATTRIBUTE_KEY) != null) {
+                style.removeAttribute(FONT_ATTRIBUTE_KEY);
             }
         }
     }
@@ -367,5 +209,163 @@ public class DarkEditorPaneUI extends DarkTextUI {
                 style.addAttribute(FONT_ATTRIBUTE_KEY, font);
             }
         }
+    }
+
+    /**
+     * Update the color in the default style of the document.
+     *
+     * @param color the new color to use or null to remove the color attribute
+     *              from the document's style
+     */
+    private void updateForeground(final Color color) {
+        StyledDocument doc = (StyledDocument) getComponent().getDocument();
+        Style style = doc.getStyle(StyleContext.DEFAULT_STYLE);
+
+        if (style == null) {
+            return;
+        }
+
+        if (color == null) {
+            if (style.getAttribute(StyleConstants.Foreground) != null) {
+                style.removeAttribute(StyleConstants.Foreground);
+            }
+        } else {
+            if (!color.equals(StyleConstants.getForeground(style))) {
+                StyleConstants.setForeground(style, color);
+            }
+        }
+    }
+
+    /**
+     * Fetch an action map to use.  The map for a JEditorPane
+     * is not shared because it changes with the EditorKit.
+     */
+    ActionMap getActionMap() {
+        ActionMap am = new ActionMapUIResource();
+        am.put("requestFocus", new FocusAction());
+        EditorKit editorKit = getEditorKit(getComponent());
+        if (editorKit != null) {
+            Action[] actions = editorKit.getActions();
+            if (actions != null) {
+                addActions(am, actions);
+            }
+        }
+        am.put(TransferHandler.getCutAction().getValue(Action.NAME),
+               TransferHandler.getCutAction());
+        am.put(TransferHandler.getCopyAction().getValue(Action.NAME),
+               TransferHandler.getCopyAction());
+        am.put(TransferHandler.getPasteAction().getValue(Action.NAME),
+               TransferHandler.getPasteAction());
+        return am;
+    }
+
+    void addActions(final ActionMap map, final Action[] actions) {
+        int n = actions.length;
+        for (Action a : actions) {
+            map.put(a.getValue(Action.NAME), a);
+        }
+    }
+
+    /**
+     * This method gets called when a bound property is changed
+     * on the associated JTextComponent.  This is a hook
+     * which UI implementations may change to reflect how the
+     * UI displays bound properties of JTextComponent subclasses.
+     * This is implemented to rebuild the ActionMap based upon an
+     * EditorKit change.
+     *
+     * @param evt the property change event
+     */
+    protected void propertyChange(final PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+        String name = evt.getPropertyName();
+        if ("editorKit".equals(name)) {
+            ActionMap map = SwingUtilities.getUIActionMap(getComponent());
+            if (map != null) {
+                Object oldValue = evt.getOldValue();
+                if (oldValue instanceof EditorKit) {
+                    Action[] actions = ((EditorKit) oldValue).getActions();
+                    if (actions != null) {
+                        removeActions(map, actions);
+                    }
+                }
+                Object newValue = evt.getNewValue();
+                if (newValue instanceof EditorKit) {
+                    Action[] actions = ((EditorKit) newValue).getActions();
+                    if (actions != null) {
+                        addActions(map, actions);
+                    }
+                }
+            }
+            updateFocusTraversalKeys();
+        } else if ("editable".equals(name)) {
+            updateFocusTraversalKeys();
+        } else if ("foreground".equals(name)
+                || "font".equals(name)
+                || "document".equals(name)
+                || JEditorPane.W3C_LENGTH_UNITS.equals(name)
+                || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
+        ) {
+            JComponent c = getComponent();
+            updateDisplayProperties(c.getFont(), c.getForeground());
+            if (JEditorPane.W3C_LENGTH_UNITS.equals(name)
+                    || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
+                modelChanged();
+            }
+            if ("foreground".equals(name)) {
+                Object honorDisplayPropertiesObject = c.getClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
+                boolean honorDisplayProperties = false;
+                if (honorDisplayPropertiesObject instanceof Boolean) {
+                    honorDisplayProperties = (Boolean) honorDisplayPropertiesObject;
+                }
+                if (honorDisplayProperties) {
+                    modelChanged();
+                }
+            }
+
+
+        }
+    }
+
+    /**
+     * Fetches the name used as a key to lookup properties through the
+     * UIManager.  This is used as a prefix to all the standard
+     * text properties.
+     *
+     * @return the name ("EditorPane")
+     */
+    protected String getPropertyPrefix() {
+        return "EditorPane";
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.5
+     */
+    public void uninstallUI(final JComponent c) {
+        cleanDisplayProperties();
+        super.uninstallUI(c);
+    }
+
+    /**
+     * Fetches the EditorKit for the UI.  This is whatever is
+     * currently set in the associated JEditorPane.
+     *
+     * @return the editor capabilities
+     */
+    public EditorKit getEditorKit(final JTextComponent tc) {
+        JEditorPane pane = (JEditorPane) getComponent();
+        return pane.getEditorKit();
+    }
+
+    void removeActions(final ActionMap map, final Action[] actions) {
+        int n = actions.length;
+        for (Action a : actions) {
+            map.remove(a.getValue(Action.NAME));
+        }
+    }
+
+    static class StyleSheetUIResource extends StyleSheet implements UIResource {
     }
 }

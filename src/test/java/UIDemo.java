@@ -1,4 +1,3 @@
-import com.bulenkov.darcula.ui.DarculaToolBarUI;
 import com.weis.darklaf.LafManager;
 import com.weis.darklaf.components.TextFieldHistory;
 import com.weis.darklaf.icons.IconLoader;

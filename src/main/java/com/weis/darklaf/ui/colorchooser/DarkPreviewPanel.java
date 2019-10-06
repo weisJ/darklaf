@@ -19,8 +19,21 @@ public class DarkPreviewPanel extends JPanel {
 
     private Color oldColor = null;
 
-    private JColorChooser getColorChooser() {
-        return (JColorChooser) SwingUtilities.getAncestorOfClass(JColorChooser.class, this);
+    public void paintComponent(final Graphics g) {
+        if (oldColor == null) oldColor = getForeground();
+
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        if (this.getComponentOrientation().isLeftToRight()) {
+            int squareWidth = paintSquares(g, 0);
+            int textWidth = paintText(g, squareWidth);
+            paintSwatch(g, squareWidth + textWidth);
+        } else {
+            int swatchWidth = paintSwatch(g, 0);
+            int textWidth = paintText(g, swatchWidth);
+            paintSquares(g, swatchWidth + textWidth);
+        }
     }
 
     public Dimension getPreferredSize() {
@@ -39,64 +52,15 @@ public class DarkPreviewPanel extends JPanel {
         return new Dimension(x, y);
     }
 
-    public void paintComponent(final Graphics g) {
-        if (oldColor == null) oldColor = getForeground();
-
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        if (this.getComponentOrientation().isLeftToRight()) {
-            int squareWidth = paintSquares(g, 0);
-            int textWidth = paintText(g, squareWidth);
-            paintSwatch(g, squareWidth + textWidth);
-        } else {
-            int swatchWidth = paintSwatch(g, 0);
-            int textWidth = paintText(g, swatchWidth);
-            paintSquares(g, swatchWidth + textWidth);
-        }
+    private JColorChooser getColorChooser() {
+        return (JColorChooser) SwingUtilities.getAncestorOfClass(JColorChooser.class, this);
     }
 
-    private int paintSwatch(@NotNull final Graphics g, final int offsetX) {
-        g.setColor(oldColor);
-        g.fillRect(offsetX, 0, SWATCH_WIDTH, SQUARE_SIZE + SQUARE_GAP / 2);
-        g.setColor(getForeground());
-        g.fillRect(offsetX, SQUARE_SIZE + SQUARE_GAP / 2, SWATCH_WIDTH, SQUARE_SIZE + SQUARE_GAP / 2);
-        return (offsetX + SWATCH_WIDTH);
-    }
-
-    private int paintText(@NotNull final Graphics g, final int offsetX) {
-        g.setFont(getFont());
-        JComponent host = getColorChooser();
-        if (host == null) {
-            host = this;
+    private String getSampleText() {
+        if (this.sampleText == null) {
+            this.sampleText = UIManager.getString("ColorChooser.sampleText", getLocale());
         }
-        FontMetrics fm = SwingUtilities2.getFontMetrics(host, g);
-
-        int ascent = fm.getAscent();
-        int height = fm.getHeight();
-        int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
-        int textXOffset = offsetX + TEXT_GAP;
-
-        Color color = getForeground();
-        g.setColor(color);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), ascent);
-
-        g.fillRect(textXOffset, (height) + TEXT_GAP, width + (TEXT_GAP), height + 2);
-
-        g.setColor(Color.black);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
-                                   height + ascent + TEXT_GAP + 2);
-
-
-        g.setColor(Color.white);
-
-        g.fillRect(textXOffset, (height + TEXT_GAP) * 2, width + (TEXT_GAP), height + 2);
-
-        g.setColor(color);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
-                                   ((height + TEXT_GAP) * 2) + ascent + 2);
-
-        return width + TEXT_GAP * 3;
+        return this.sampleText;
     }
 
     private int paintSquares(@NotNull final Graphics g, final int offsetX) {
@@ -173,10 +137,46 @@ public class DarkPreviewPanel extends JPanel {
 
     }
 
-    private String getSampleText() {
-        if (this.sampleText == null) {
-            this.sampleText = UIManager.getString("ColorChooser.sampleText", getLocale());
+    private int paintText(@NotNull final Graphics g, final int offsetX) {
+        g.setFont(getFont());
+        JComponent host = getColorChooser();
+        if (host == null) {
+            host = this;
         }
-        return this.sampleText;
+        FontMetrics fm = SwingUtilities2.getFontMetrics(host, g);
+
+        int ascent = fm.getAscent();
+        int height = fm.getHeight();
+        int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
+        int textXOffset = offsetX + TEXT_GAP;
+
+        Color color = getForeground();
+        g.setColor(color);
+        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), ascent);
+
+        g.fillRect(textXOffset, (height) + TEXT_GAP, width + (TEXT_GAP), height + 2);
+
+        g.setColor(Color.black);
+        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
+                                   height + ascent + TEXT_GAP + 2);
+
+
+        g.setColor(Color.white);
+
+        g.fillRect(textXOffset, (height + TEXT_GAP) * 2, width + (TEXT_GAP), height + 2);
+
+        g.setColor(color);
+        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
+                                   ((height + TEXT_GAP) * 2) + ascent + 2);
+
+        return width + TEXT_GAP * 3;
+    }
+
+    private int paintSwatch(@NotNull final Graphics g, final int offsetX) {
+        g.setColor(oldColor);
+        g.fillRect(offsetX, 0, SWATCH_WIDTH, SQUARE_SIZE + SQUARE_GAP / 2);
+        g.setColor(getForeground());
+        g.fillRect(offsetX, SQUARE_SIZE + SQUARE_GAP / 2, SWATCH_WIDTH, SQUARE_SIZE + SQUARE_GAP / 2);
+        return (offsetX + SWATCH_WIDTH);
     }
 }

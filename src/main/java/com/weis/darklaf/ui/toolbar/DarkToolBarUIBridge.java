@@ -38,6 +38,12 @@ import java.util.Objects;
  * @author Jeff Shapiro
  */
 public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingConstants {
+    // Rollover button implementation.
+    protected static String IS_ROLLOVER = "JToolBar.isRollover";
+    protected static Border rolloverBorder;
+    protected static Border nonRolloverBorder;
+    protected static Border nonRolloverToggleBorder;
+    protected static String FOCUSED_COMP_INDEX = "JToolBar.focusedCompIndex";
     /**
      * The instance of {@code JToolBar}.
      */
@@ -56,7 +62,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * The index of the focused component.
      */
     protected int focusedCompIndex = -1;
-
     /**
      * The background color of the docking border.
      */
@@ -73,7 +78,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * The color of the not docking border.
      */
     protected Color floatingBorderColor = null;
-
     /**
      * The instance of a {@code MouseInputListener}.
      */
@@ -82,7 +86,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * The instance of a {@code PropertyChangeListener}.
      */
     protected PropertyChangeListener propertyListener;
-
     /**
      * The instance of a {@code ContainerListener}.
      */
@@ -92,23 +95,13 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      */
     protected FocusListener toolBarFocusListener;
     protected Handler handler;
-
     /**
      * The layout before floating.
      */
     protected String constraintBeforeFloating = BorderLayout.NORTH;
-
-    // Rollover button implementation.
-    protected static String IS_ROLLOVER = "JToolBar.isRollover";
-    protected static Border rolloverBorder;
-    protected static Border nonRolloverBorder;
-    protected static Border nonRolloverToggleBorder;
     protected boolean rolloverBorders = false;
-
     protected HashMap<AbstractButton, Border> borderTable = new HashMap<>();
     protected Hashtable<AbstractButton, Boolean> rolloverTable = new Hashtable<>();
-
-
     /**
      * As of Java 2 platform v1.3 this previously undocumented field is no
      * longer used.
@@ -150,8 +143,12 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     @Deprecated
     protected KeyStroke rightKey;
 
-
-    protected static String FOCUSED_COMP_INDEX = "JToolBar.focusedCompIndex";
+    static void loadActionMap(final LazyActionMap map) {
+        map.put(new Actions(Actions.NAVIGATE_RIGHT));
+        map.put(new Actions(Actions.NAVIGATE_LEFT));
+        map.put(new Actions(Actions.NAVIGATE_UP));
+        map.put(new Actions(Actions.NAVIGATE_DOWN));
+    }
 
     public void installUI(final JComponent c) {
         toolBar = (JToolBar) c;
@@ -192,6 +189,126 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         dockingSource = null;
 
         c.putClientProperty(FOCUSED_COMP_INDEX, focusedCompIndex);
+    }
+
+    /**
+     * Uninstalls default properties.
+     */
+    protected void uninstallDefaults() {
+        LookAndFeel.uninstallBorder(toolBar);
+        dockingColor = null;
+        floatingColor = null;
+        dockingBorderColor = null;
+        floatingBorderColor = null;
+
+        installNormalBorders(toolBar);
+
+        rolloverBorder = null;
+        nonRolloverBorder = null;
+        nonRolloverToggleBorder = null;
+    }
+
+    /**
+     * Unregisters components.
+     */
+    protected void uninstallComponents() {
+    }
+
+    /**
+     * Unregisters listeners.
+     */
+    protected void uninstallListeners() {
+        if (dockingListener != null) {
+            toolBar.removeMouseMotionListener(dockingListener);
+            toolBar.removeMouseListener(dockingListener);
+
+            dockingListener = null;
+        }
+
+        if (propertyListener != null) {
+            toolBar.removePropertyChangeListener(propertyListener);
+            propertyListener = null;  // removed in setFloating
+        }
+
+        if (toolBarContListener != null) {
+            toolBar.removeContainerListener(toolBarContListener);
+            toolBarContListener = null;
+        }
+
+        if (toolBarFocusListener != null) {
+            // Remove focus listener from all components in toolbar
+            Component[] components = toolBar.getComponents();
+
+            for (Component component : components) {
+                component.removeFocusListener(toolBarFocusListener);
+            }
+
+            toolBarFocusListener = null;
+        }
+        handler = null;
+    }
+
+    /**
+     * Unregisters keyboard actions.
+     */
+    protected void uninstallKeyboardActions() {
+        SwingUtilities.replaceUIActionMap(toolBar, null);
+        SwingUtilities.replaceUIInputMap(toolBar, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
+    }
+
+    /**
+     * Returns {@code true} if the {@code JToolBar} is floating
+     *
+     * @return {@code true} if the {@code JToolBar} is floating
+     */
+    public boolean isFloating() {
+        return floating;
+    }
+
+    public abstract void setFloating(final boolean b, final Point p);
+
+    /**
+     * Installs normal borders on all the child components of the JComponent.
+     * A normal border is the original border that was installed on the child
+     * component before it was added to the toolbar.
+     * <p>
+     * This is a convenience method to call <code>setBorderNormal</code>
+     * for each child component.
+     *
+     * @param c container which holds the child components (usually a JToolBar)
+     * @see #setBorderToNonRollover
+     * @since 1.4
+     */
+    protected void installNormalBorders(final JComponent c) {
+        // Put back the normal borders on buttons
+        Component[] components = c.getComponents();
+
+        for (Component component : components) {
+            setBorderToNormal(component);
+        }
+    }
+
+    /**
+     * Sets the border of the component to have a normal border.
+     * A normal border is the original border that was installed on the child
+     * component before it was added to the toolbar.
+     *
+     * @param c component which will have a normal border re-installed
+     * @see #createNonRolloverBorder
+     * @since 1.4
+     */
+    protected void setBorderToNormal(final Component c) {
+        if (c instanceof AbstractButton) {
+            AbstractButton b = (AbstractButton) c;
+
+            Border border = borderTable.remove(b);
+            b.setBorder(border);
+
+            Boolean value = rolloverTable.remove(b);
+            if (value != null) {
+                b.setRolloverEnabled(value);
+            }
+        }
     }
 
     /**
@@ -243,32 +360,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Uninstalls default properties.
-     */
-    protected void uninstallDefaults() {
-        LookAndFeel.uninstallBorder(toolBar);
-        dockingColor = null;
-        floatingColor = null;
-        dockingBorderColor = null;
-        floatingBorderColor = null;
-
-        installNormalBorders(toolBar);
-
-        rolloverBorder = null;
-        nonRolloverBorder = null;
-        nonRolloverToggleBorder = null;
-    }
-
-    /**
      * Registers components.
      */
     protected void installComponents() {
-    }
-
-    /**
-     * Unregisters components.
-     */
-    protected void uninstallComponents() {
     }
 
     /**
@@ -305,40 +399,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Unregisters listeners.
-     */
-    protected void uninstallListeners() {
-        if (dockingListener != null) {
-            toolBar.removeMouseMotionListener(dockingListener);
-            toolBar.removeMouseListener(dockingListener);
-
-            dockingListener = null;
-        }
-
-        if (propertyListener != null) {
-            toolBar.removePropertyChangeListener(propertyListener);
-            propertyListener = null;  // removed in setFloating
-        }
-
-        if (toolBarContListener != null) {
-            toolBar.removeContainerListener(toolBarContListener);
-            toolBarContListener = null;
-        }
-
-        if (toolBarFocusListener != null) {
-            // Remove focus listener from all components in toolbar
-            Component[] components = toolBar.getComponents();
-
-            for (Component component : components) {
-                component.removeFocusListener(toolBarFocusListener);
-            }
-
-            toolBarFocusListener = null;
-        }
-        handler = null;
-    }
-
-    /**
      * Registers keyboard actions.
      */
     protected void installKeyboardActions() {
@@ -349,68 +409,15 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         LazyActionMap.installLazyActionMap(toolBar, BasicToolBarUI.class, "ToolBar.actionMap");
     }
 
-    InputMap getInputMap(final int condition) {
-        if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            return (InputMap) DefaultLookup.get(toolBar, this, "ToolBar.ancestorInputMap");
-        }
-        return null;
-    }
-
-    static void loadActionMap(final LazyActionMap map) {
-        map.put(new Actions(Actions.NAVIGATE_RIGHT));
-        map.put(new Actions(Actions.NAVIGATE_LEFT));
-        map.put(new Actions(Actions.NAVIGATE_UP));
-        map.put(new Actions(Actions.NAVIGATE_DOWN));
-    }
-
     /**
-     * Unregisters keyboard actions.
-     */
-    protected void uninstallKeyboardActions() {
-        SwingUtilities.replaceUIActionMap(toolBar, null);
-        SwingUtilities.replaceUIInputMap(toolBar, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
-    }
-
-    /**
-     * Navigates the focused component.
+     * Sets the tool bar's orientation.
      *
-     * @param direction a direction
+     * @param orientation the new orientation
      */
-    @SuppressWarnings("deprecation")
-    protected void navigateFocusedComp(final int direction) {
-        int nComp = toolBar.getComponentCount();
-        int j;
-        switch (direction) {
-            case EAST:
-            case SOUTH:
-                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) { break; }
-                j = focusedCompIndex + 1;
-                while (j != focusedCompIndex) {
-                    if (j >= nComp) { j = 0; }
-                    Component comp = toolBar.getComponentAtIndex(j++);
-                    if (comp != null && comp.isFocusTraversable() && comp.isEnabled()) {
-                        comp.requestFocus();
-                        break;
-                    }
-                }
-                break;
-            case WEST:
-            case NORTH:
-                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) { break; }
-                j = focusedCompIndex - 1;
-                while (j != focusedCompIndex) {
-                    if (j < 0) { j = nComp - 1; }
-                    Component comp = toolBar.getComponentAtIndex(j--);
+    public void setOrientation(final int orientation) {
+        toolBar.setOrientation(orientation);
 
-                    if (comp != null && comp.isFocusTraversable() && comp.isEnabled()) {
-                        comp.requestFocus();
-                        break;
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+        if (dragWindow != null) { dragWindow.setOrientation(orientation); }
     }
 
     /**
@@ -475,6 +482,259 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
+     * Returns a flag to determine whether rollover button borders
+     * are enabled.
+     *
+     * @return true if rollover borders are enabled; false otherwise
+     * @see #setRolloverBorders
+     * @since 1.4
+     */
+    public boolean isRolloverBorders() {
+        return rolloverBorders;
+    }
+
+    /**
+     * Sets the flag for enabling rollover borders on the toolbar and it will
+     * also install the appropriate border depending on the state of the flag.
+     *
+     * @param rollover if true, rollover borders are installed.
+     *                 Otherwise non-rollover borders are installed
+     * @see #isRolloverBorders
+     * @since 1.4
+     */
+    public void setRolloverBorders(final boolean rollover) {
+        rolloverBorders = rollover;
+
+        if (rolloverBorders) {
+            installRolloverBorders(toolBar);
+        } else {
+            installNonRolloverBorders(toolBar);
+        }
+    }
+
+    /**
+     * Returns an instance of {@code MouseInputListener}.
+     *
+     * @return an instance of {@code MouseInputListener}
+     */
+    protected MouseInputListener createDockingListener() {
+        getHandler().tb = toolBar;
+        return getHandler();
+    }
+
+    /**
+     * Returns an instance of {@code PropertyChangeListener}.
+     *
+     * @return an instance of {@code PropertyChangeListener}
+     */
+    protected PropertyChangeListener createPropertyListener() {
+        return getHandler();
+    }
+
+    /**
+     * Returns an instance of {@code ContainerListener}.
+     *
+     * @return an instance of {@code ContainerListener}
+     */
+    protected ContainerListener createToolBarContListener() {
+        return getHandler();
+    }
+
+    /**
+     * Returns an instance of {@code FocusListener}.
+     *
+     * @return an instance of {@code FocusListener}
+     */
+    protected FocusListener createToolBarFocusListener() {
+        return getHandler();
+    }
+
+    InputMap getInputMap(final int condition) {
+        if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
+            return (InputMap) DefaultLookup.get(toolBar, this, "ToolBar.ancestorInputMap");
+        }
+        return null;
+    }
+
+    /**
+     * Installs rollover borders on all the child components of the JComponent.
+     * <p>
+     * This is a convenience method to call <code>setBorderToRollover</code>
+     * for each child component.
+     *
+     * @param c container which holds the child components (usually a JToolBar)
+     * @see #setBorderToRollover
+     * @since 1.4
+     */
+    protected void installRolloverBorders(final JComponent c) {
+        // Put rollover borders on buttons
+        Component[] components = c.getComponents();
+
+        for (Component component : components) {
+            if (component instanceof JComponent) {
+                ((JComponent) component).updateUI();
+                setBorderToRollover(component);
+            }
+        }
+    }
+
+    /**
+     * Installs non-rollover borders on all the child components of the JComponent.
+     * A non-rollover border is the border that is installed on the child component
+     * while it is in the toolbar.
+     * <p>
+     * This is a convenience method to call <code>setBorderToNonRollover</code>
+     * for each child component.
+     *
+     * @param c container which holds the child components (usually a JToolBar)
+     * @see #setBorderToNonRollover
+     * @since 1.4
+     */
+    protected void installNonRolloverBorders(final JComponent c) {
+        // Put non-rollover borders on buttons. These borders reduce the margin.
+        Component[] components = c.getComponents();
+
+        for (Component component : components) {
+            if (component instanceof JComponent) {
+                ((JComponent) component).updateUI();
+                setBorderToNonRollover(component);
+            }
+        }
+    }
+
+    protected Handler getHandler() {
+        if (handler == null) {
+            handler = new Handler();
+        }
+        return handler;
+    }
+
+    /**
+     * Sets the border of the component to have a rollover border which
+     * was created by the {@link #createRolloverBorder} method.
+     *
+     * @param c component which will have a rollover border installed
+     * @see #createRolloverBorder
+     * @since 1.4
+     */
+    protected void setBorderToRollover(final Component c) {
+        if (c instanceof AbstractButton) {
+            AbstractButton b = (AbstractButton) c;
+
+            Border border = borderTable.get(b);
+            if (border == null || border instanceof UIResource) {
+                borderTable.put(b, b.getBorder());
+            }
+
+            // Only set the border if its the default border
+            if (b.getBorder() instanceof UIResource) {
+                b.setBorder(getRolloverBorder(b));
+            }
+
+            rolloverTable.put(b, b.isRolloverEnabled() ?
+                                 Boolean.TRUE : Boolean.FALSE);
+            b.setRolloverEnabled(true);
+        }
+    }
+
+    /**
+     * Sets the border of the component to have a non-rollover border which
+     * was created by the {@link #createNonRolloverBorder} method.
+     *
+     * @param c component which will have a non-rollover border installed
+     * @see #createNonRolloverBorder
+     * @since 1.4
+     */
+    protected void setBorderToNonRollover(final Component c) {
+        if (c instanceof AbstractButton) {
+            AbstractButton b = (AbstractButton) c;
+
+            Border border = borderTable.get(b);
+            if (border == null || border instanceof UIResource) {
+                borderTable.put(b, b.getBorder());
+            }
+
+            // Only set the border if its the default border
+            if (b.getBorder() instanceof UIResource) {
+                b.setBorder(getNonRolloverBorder(b));
+            }
+            rolloverTable.put(b, b.isRolloverEnabled() ?
+                                 Boolean.TRUE : Boolean.FALSE);
+            b.setRolloverEnabled(false);
+        }
+    }
+
+    /**
+     * Returns a rollover border for the button.
+     *
+     * @param b the button to calculate the rollover border for
+     * @return the rollover border
+     * @see #setBorderToRollover
+     * @since 1.6
+     */
+    protected Border getRolloverBorder(final AbstractButton b) {
+        return rolloverBorder;
+    }
+
+    /**
+     * Returns a non-rollover border for the button.
+     *
+     * @param b the button to calculate the non-rollover border for
+     * @return the non-rollover border
+     * @see #setBorderToNonRollover
+     * @since 1.6
+     */
+    protected Border getNonRolloverBorder(final AbstractButton b) {
+        if (b instanceof JToggleButton) {
+            return nonRolloverToggleBorder;
+        } else {
+            return nonRolloverBorder;
+        }
+    }
+
+    /**
+     * Navigates the focused component.
+     *
+     * @param direction a direction
+     */
+    @SuppressWarnings("deprecation")
+    protected void navigateFocusedComp(final int direction) {
+        int nComp = toolBar.getComponentCount();
+        int j;
+        switch (direction) {
+            case EAST:
+            case SOUTH:
+                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) { break; }
+                j = focusedCompIndex + 1;
+                while (j != focusedCompIndex) {
+                    if (j >= nComp) { j = 0; }
+                    Component comp = toolBar.getComponentAtIndex(j++);
+                    if (comp != null && comp.isFocusTraversable() && comp.isEnabled()) {
+                        comp.requestFocus();
+                        break;
+                    }
+                }
+                break;
+            case WEST:
+            case NORTH:
+                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) { break; }
+                j = focusedCompIndex - 1;
+                while (j != focusedCompIndex) {
+                    if (j < 0) { j = nComp - 1; }
+                    Component comp = toolBar.getComponentAtIndex(j--);
+
+                    if (comp != null && comp.isFocusTraversable() && comp.isEnabled()) {
+                        comp.requestFocus();
+                        break;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * Creates a window which contains the toolbar after it has been
      * dragged out from its container
      *
@@ -533,211 +793,16 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         return dialog;
     }
 
+    /**
+     * Constructs a new instance of {@code WindowListener}.
+     *
+     * @return a new instance of {@code WindowListener}
+     */
+    protected WindowListener createFrameListener() {
+        return new FrameListener();
+    }
+
     protected abstract DragWindow createDragWindow(final JToolBar toolbar);
-
-    /**
-     * Returns a flag to determine whether rollover button borders
-     * are enabled.
-     *
-     * @return true if rollover borders are enabled; false otherwise
-     * @see #setRolloverBorders
-     * @since 1.4
-     */
-    public boolean isRolloverBorders() {
-        return rolloverBorders;
-    }
-
-    /**
-     * Sets the flag for enabling rollover borders on the toolbar and it will
-     * also install the appropriate border depending on the state of the flag.
-     *
-     * @param rollover if true, rollover borders are installed.
-     *                 Otherwise non-rollover borders are installed
-     * @see #isRolloverBorders
-     * @since 1.4
-     */
-    public void setRolloverBorders(final boolean rollover) {
-        rolloverBorders = rollover;
-
-        if (rolloverBorders) {
-            installRolloverBorders(toolBar);
-        } else {
-            installNonRolloverBorders(toolBar);
-        }
-    }
-
-    /**
-     * Installs rollover borders on all the child components of the JComponent.
-     * <p>
-     * This is a convenience method to call <code>setBorderToRollover</code>
-     * for each child component.
-     *
-     * @param c container which holds the child components (usually a JToolBar)
-     * @see #setBorderToRollover
-     * @since 1.4
-     */
-    protected void installRolloverBorders(final JComponent c) {
-        // Put rollover borders on buttons
-        Component[] components = c.getComponents();
-
-        for (Component component : components) {
-            if (component instanceof JComponent) {
-                ((JComponent) component).updateUI();
-                setBorderToRollover(component);
-            }
-        }
-    }
-
-    /**
-     * Installs non-rollover borders on all the child components of the JComponent.
-     * A non-rollover border is the border that is installed on the child component
-     * while it is in the toolbar.
-     * <p>
-     * This is a convenience method to call <code>setBorderToNonRollover</code>
-     * for each child component.
-     *
-     * @param c container which holds the child components (usually a JToolBar)
-     * @see #setBorderToNonRollover
-     * @since 1.4
-     */
-    protected void installNonRolloverBorders(final JComponent c) {
-        // Put non-rollover borders on buttons. These borders reduce the margin.
-        Component[] components = c.getComponents();
-
-        for (Component component : components) {
-            if (component instanceof JComponent) {
-                ((JComponent) component).updateUI();
-                setBorderToNonRollover(component);
-            }
-        }
-    }
-
-    /**
-     * Installs normal borders on all the child components of the JComponent.
-     * A normal border is the original border that was installed on the child
-     * component before it was added to the toolbar.
-     * <p>
-     * This is a convenience method to call <code>setBorderNormal</code>
-     * for each child component.
-     *
-     * @param c container which holds the child components (usually a JToolBar)
-     * @see #setBorderToNonRollover
-     * @since 1.4
-     */
-    protected void installNormalBorders(final JComponent c) {
-        // Put back the normal borders on buttons
-        Component[] components = c.getComponents();
-
-        for (Component component : components) {
-            setBorderToNormal(component);
-        }
-    }
-
-    /**
-     * Sets the border of the component to have a rollover border which
-     * was created by the {@link #createRolloverBorder} method.
-     *
-     * @param c component which will have a rollover border installed
-     * @see #createRolloverBorder
-     * @since 1.4
-     */
-    protected void setBorderToRollover(final Component c) {
-        if (c instanceof AbstractButton) {
-            AbstractButton b = (AbstractButton) c;
-
-            Border border = borderTable.get(b);
-            if (border == null || border instanceof UIResource) {
-                borderTable.put(b, b.getBorder());
-            }
-
-            // Only set the border if its the default border
-            if (b.getBorder() instanceof UIResource) {
-                b.setBorder(getRolloverBorder(b));
-            }
-
-            rolloverTable.put(b, b.isRolloverEnabled() ?
-                                 Boolean.TRUE : Boolean.FALSE);
-            b.setRolloverEnabled(true);
-        }
-    }
-
-    /**
-     * Returns a rollover border for the button.
-     *
-     * @param b the button to calculate the rollover border for
-     * @return the rollover border
-     * @see #setBorderToRollover
-     * @since 1.6
-     */
-    protected Border getRolloverBorder(final AbstractButton b) {
-        return rolloverBorder;
-    }
-
-    /**
-     * Sets the border of the component to have a non-rollover border which
-     * was created by the {@link #createNonRolloverBorder} method.
-     *
-     * @param c component which will have a non-rollover border installed
-     * @see #createNonRolloverBorder
-     * @since 1.4
-     */
-    protected void setBorderToNonRollover(final Component c) {
-        if (c instanceof AbstractButton) {
-            AbstractButton b = (AbstractButton) c;
-
-            Border border = borderTable.get(b);
-            if (border == null || border instanceof UIResource) {
-                borderTable.put(b, b.getBorder());
-            }
-
-            // Only set the border if its the default border
-            if (b.getBorder() instanceof UIResource) {
-                b.setBorder(getNonRolloverBorder(b));
-            }
-            rolloverTable.put(b, b.isRolloverEnabled() ?
-                                 Boolean.TRUE : Boolean.FALSE);
-            b.setRolloverEnabled(false);
-        }
-    }
-
-    /**
-     * Returns a non-rollover border for the button.
-     *
-     * @param b the button to calculate the non-rollover border for
-     * @return the non-rollover border
-     * @see #setBorderToNonRollover
-     * @since 1.6
-     */
-    protected Border getNonRolloverBorder(final AbstractButton b) {
-        if (b instanceof JToggleButton) {
-            return nonRolloverToggleBorder;
-        } else {
-            return nonRolloverBorder;
-        }
-    }
-
-    /**
-     * Sets the border of the component to have a normal border.
-     * A normal border is the original border that was installed on the child
-     * component before it was added to the toolbar.
-     *
-     * @param c component which will have a normal border re-installed
-     * @see #createNonRolloverBorder
-     * @since 1.4
-     */
-    protected void setBorderToNormal(final Component c) {
-        if (c instanceof AbstractButton) {
-            AbstractButton b = (AbstractButton) c;
-
-            Border border = borderTable.remove(b);
-            b.setBorder(border);
-
-            Boolean value = rolloverTable.remove(b);
-            if (value != null) {
-                b.setRolloverEnabled(value);
-            }
-        }
-    }
 
     /**
      * Sets the floating location.
@@ -749,17 +814,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         floatingX = x;
         floatingY = y;
     }
-
-    /**
-     * Returns {@code true} if the {@code JToolBar} is floating
-     *
-     * @return {@code true} if the {@code JToolBar} is floating
-     */
-    public boolean isFloating() {
-        return floating;
-    }
-
-    public abstract void setFloating(final boolean b, final Point p);
 
     protected int mapConstraintToOrientation(final String constraint) {
         int orientation = toolBar.getOrientation();
@@ -773,17 +827,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         }
 
         return orientation;
-    }
-
-    /**
-     * Sets the tool bar's orientation.
-     *
-     * @param orientation the new orientation
-     */
-    public void setOrientation(final int orientation) {
-        toolBar.setOrientation(orientation);
-
-        if (dragWindow != null) { dragWindow.setOrientation(orientation); }
     }
 
     /**
@@ -835,6 +878,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         return (p != null && getDockingConstraint(c, p) != null);
     }
 
+    protected abstract String getDockingConstraint(final Component c, final Point p);
+
     protected String calculateConstraint() {
         String constraint = null;
         LayoutManager lm = dockingSource.getLayout();
@@ -844,75 +889,17 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         return (constraint != null) ? constraint : constraintBeforeFloating;
     }
 
-
-    protected abstract String getDockingConstraint(final Component c, final Point p);
-
     /**
      * The method is used to drag {@code DragWindow} during the {@code JToolBar}
      * is being dragged.
-     *
      */
     protected abstract void dragTo();
 
     /**
      * The method is called at end of dragging to place the frame in either
      * its original place or in its floating frame.
-     *
      */
     protected abstract void floatAt();
-
-    protected Handler getHandler() {
-        if (handler == null) {
-            handler = new Handler();
-        }
-        return handler;
-    }
-
-    /**
-     * Returns an instance of {@code ContainerListener}.
-     *
-     * @return an instance of {@code ContainerListener}
-     */
-    protected ContainerListener createToolBarContListener() {
-        return getHandler();
-    }
-
-    /**
-     * Returns an instance of {@code FocusListener}.
-     *
-     * @return an instance of {@code FocusListener}
-     */
-    protected FocusListener createToolBarFocusListener() {
-        return getHandler();
-    }
-
-    /**
-     * Returns an instance of {@code PropertyChangeListener}.
-     *
-     * @return an instance of {@code PropertyChangeListener}
-     */
-    protected PropertyChangeListener createPropertyListener() {
-        return getHandler();
-    }
-
-    /**
-     * Returns an instance of {@code MouseInputListener}.
-     *
-     * @return an instance of {@code MouseInputListener}
-     */
-    protected MouseInputListener createDockingListener() {
-        getHandler().tb = toolBar;
-        return getHandler();
-    }
-
-    /**
-     * Constructs a new instance of {@code WindowListener}.
-     *
-     * @return a new instance of {@code WindowListener}
-     */
-    protected WindowListener createFrameListener() {
-        return new FrameListener();
-    }
 
     /**
      * Paints the contents of the window used for dragging.
@@ -965,6 +952,12 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             FocusListener, MouseInputListener, PropertyChangeListener {
 
         //
+        // MouseInputListener (DockingListener)
+        //
+        JToolBar tb;
+        boolean isDragging = false;
+
+        //
         // ContainerListener
         //
         public void componentAdded(final ContainerEvent evt) {
@@ -992,7 +985,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             setBorderToNormal(c);
         }
 
-
         //
         // FocusListener
         //
@@ -1004,12 +996,19 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         public void focusLost(final FocusEvent evt) {
         }
 
+        public void mouseDragged(final MouseEvent evt) {
+            if (!tb.isEnabled()) {
+                return;
+            }
+            isDragging = true;
+            dragTo();
+        }
 
-        //
-        // MouseInputListener (DockingListener)
-        //
-        JToolBar tb;
-        boolean isDragging = false;
+        public void mouseMoved(final MouseEvent evt) {
+        }
+
+        public void mouseClicked(final MouseEvent evt) {
+        }
 
         public void mousePressed(final MouseEvent evt) {
             if (!tb.isEnabled()) {
@@ -1028,26 +1027,11 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             isDragging = false;
         }
 
-        public void mouseDragged(final MouseEvent evt) {
-            if (!tb.isEnabled()) {
-                return;
-            }
-            isDragging = true;
-            dragTo();
-        }
-
-        public void mouseClicked(final MouseEvent evt) {
-        }
-
         public void mouseEntered(final MouseEvent evt) {
         }
 
         public void mouseExited(final MouseEvent evt) {
         }
-
-        public void mouseMoved(final MouseEvent evt) {
-        }
-
 
         //
         // PropertyChangeListener
@@ -1175,6 +1159,15 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         }
 
         /**
+         * Returns the border color.
+         *
+         * @return the border color
+         */
+        public Color getBorderColor() {
+            return this.borderColor;
+        }
+
+        /**
          * Sets the border color.
          *
          * @param c the new border color
@@ -1183,15 +1176,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             if (this.borderColor == c) { return; }
             this.borderColor = c;
             repaint();
-        }
-
-        /**
-         * Returns the border color.
-         *
-         * @return the border color
-         */
-        public Color getBorderColor() {
-            return this.borderColor;
         }
 
         public void paint(final Graphics g) {

@@ -75,14 +75,14 @@ abstract class SwatchPanel extends JPanel {
                             selCol--;
                             repaint();
                         } else if (selCol < numSwatches.width - 1
-                                   && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+                                && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol++;
                             repaint();
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
                         if (selCol < numSwatches.width - 1
-                            && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+                                && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol++;
                             repaint();
                         } else if (selCol > 0 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
@@ -105,12 +105,23 @@ abstract class SwatchPanel extends JPanel {
         });
     }
 
+    protected void initValues() {
+
+    }
+
+    protected void initColors() {
+    }
+
     public Color getSelectedColor() {
         return getColorForCell(selCol, selRow);
     }
 
-    protected void initValues() {
-
+    @Nullable
+    @Contract(pure = true)
+    private Color getColorForCell(final int column, final int row) {
+        int index = (row * numSwatches.width) + column;
+        if (index >= colors.length) return null;
+        return colors[(row * numSwatches.width) + column];
     }
 
     public void paintComponent(@NotNull final Graphics g) {
@@ -128,7 +139,7 @@ abstract class SwatchPanel extends JPanel {
                 if (selRow == row && selCol == column && this.isFocusOwner() && c != null) {
                     Color c2 = new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
                     g.setColor(c2);
-                    DarkUIUtil.drawRect(g, x,y, swatchSize.width, swatchSize.height, 1);
+                    DarkUIUtil.drawRect(g, x, y, swatchSize.width, swatchSize.height, 1);
 
                     GraphicsUtil.setupStrokePainting(g);
                     g.drawLine(x + 1, y + 1, x + swatchSize.width - 1, y + swatchSize.height - 1);
@@ -155,9 +166,6 @@ abstract class SwatchPanel extends JPanel {
         int x = numSwatches.width * (swatchSize.width + gap.width) - 1;
         int y = numSwatches.height * (swatchSize.height + gap.height) - 1;
         return new Dimension(x, y);
-    }
-
-    protected void initColors() {
     }
 
     public String getToolTipText(@NotNull final MouseEvent e) {
@@ -190,16 +198,6 @@ abstract class SwatchPanel extends JPanel {
         return tooltip;
     }
 
-    public void setSelectedColorFromLocation(final int x, final int y) {
-        if (!this.getComponentOrientation().isLeftToRight()) {
-            selCol = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
-        } else {
-            selCol = x / (swatchSize.width + gap.width);
-        }
-        selRow = y / (swatchSize.height + gap.height);
-        repaint();
-    }
-
     public Point getCoordinatesForLocation(final int x, final int y) {
         int column;
         if (!this.getComponentOrientation().isLeftToRight()) {
@@ -216,11 +214,13 @@ abstract class SwatchPanel extends JPanel {
         return getColorForCell(p.x, p.y);
     }
 
-    @Nullable
-    @Contract(pure = true)
-    private Color getColorForCell(final int column, final int row) {
-        int index = (row * numSwatches.width) + column;
-        if (index >= colors.length) return null;
-        return colors[(row * numSwatches.width) + column];
+    public void setSelectedColorFromLocation(final int x, final int y) {
+        if (!this.getComponentOrientation().isLeftToRight()) {
+            selCol = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
+        } else {
+            selCol = x / (swatchSize.width + gap.width);
+        }
+        selRow = y / (swatchSize.height + gap.height);
+        repaint();
     }
 }

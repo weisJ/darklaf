@@ -21,12 +21,10 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     private static final int ICON_OFF = 4;
     private static final int SIZE = 13;
     private static final int BULLET_RAD = 5;
-
-    private static Dimension size = new Dimension();
     private static final Rectangle viewRect = new Rectangle();
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
-
+    private static Dimension size = new Dimension();
     private final Ellipse2D hitArea = new Ellipse2D.Float();
 
 
@@ -82,6 +80,13 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         return text;
     }
 
+    private void paintBackground(@NotNull final JComponent c, final Graphics2D g) {
+        if (c.isOpaque()) {
+            g.setColor(c.getBackground());
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        }
+    }
+
     protected void paintDarkBullet(final JComponent c, final Graphics2D g, @NotNull final AbstractButton b) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         boolean enabled = b.isEnabled();
@@ -94,6 +99,11 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         g.translate(0.25, 0);
         g.translate(-iconRect.x - ICON_OFF, -iconRect.y - ICON_OFF);
         config.restore();
+    }
+
+    @Override
+    public Icon getDefaultIcon() {
+        return new IconUIResource(EmptyIcon.create(20));
     }
 
     static void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
@@ -122,18 +132,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         g.translate(0.2, 0.2);
         g.fillOval((SIZE - BULLET_RAD) / 2, (SIZE - BULLET_RAD) / 2, BULLET_RAD, BULLET_RAD);
         g.translate(-0.2, -0.2);
-    }
-
-    private void paintBackground(@NotNull final JComponent c, final Graphics2D g) {
-        if (c.isOpaque()) {
-            g.setColor(c.getBackground());
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        }
-    }
-
-    @Override
-    public Icon getDefaultIcon() {
-        return new IconUIResource(EmptyIcon.create(20));
     }
 
     @Override

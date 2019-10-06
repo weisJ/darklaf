@@ -30,6 +30,29 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         this((JToggleButton) checkBox);
     }
 
+    public DarkTreeCellEditor(@NotNull final JToggleButton toggleButton) {
+        super(dummyCheckBox);
+        editorComponent = toggleButton;
+        delegate = new EditorDelegate() {
+            public Object getCellEditorValue() {
+                return toggleButton.isSelected();
+            }
+
+            public void setValue(final Object value) {
+                boolean selected = Boolean.TRUE.equals(DarkTreeCellRenderer.unwrapBooleanIfPossible(value));
+                toggleButton.setSelected(selected);
+                if (value instanceof SelectableTreeNode) {
+                    toggleButton.setText(((SelectableTreeNode) value).getLabel());
+                }
+            }
+        };
+        toggleButton.setFocusPainted(false);
+        toggleButton.putClientProperty("JToggleButton.isTreeCellEditor", Boolean.TRUE);
+        toggleButton.addActionListener(delegate);
+        toggleButton.setRequestFocusEnabled(false);
+        setClickCountToStart(1);
+    }
+
     public DarkTreeCellEditor(final JComboBox<?> comboBox) {
         super(comboBox);
         comboBox.addPopupMenuListener(new PopupMenuListener() {
@@ -57,6 +80,10 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         spinner.putClientProperty("JSpinner.isTreeCellEditor", Boolean.TRUE);
         setClickCountToStart(2);
         delegate = new EditorDelegate() {
+            public Object getCellEditorValue() {
+                return spinner.getValue();
+            }
+
             public void setValue(final Object value) {
                 try {
                     var model = spinner.getModel();
@@ -72,10 +99,6 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
                 }
             }
 
-            public Object getCellEditorValue() {
-                return spinner.getValue();
-            }
-
             public boolean shouldSelectCell(final EventObject anEvent) {
                 if (anEvent instanceof MouseEvent) {
                     MouseEvent e = (MouseEvent) anEvent;
@@ -86,27 +109,14 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         };
     }
 
-    public DarkTreeCellEditor(@NotNull final JToggleButton toggleButton) {
-        super(dummyCheckBox);
-        editorComponent = toggleButton;
-        delegate = new EditorDelegate() {
-            public void setValue(final Object value) {
-                boolean selected = Boolean.TRUE.equals(DarkTreeCellRenderer.unwrapBooleanIfPossible(value));
-                toggleButton.setSelected(selected);
-                if (value instanceof SelectableTreeNode) {
-                    toggleButton.setText(((SelectableTreeNode) value).getLabel());
-                }
-            }
+    public boolean isBooleanEditor(final JTree tree) {
+        return editorComponent instanceof JToggleButton && DarkTreeCellRenderer.isBooleanRenderingEnabled(tree);
+    }
 
-            public Object getCellEditorValue() {
-                return toggleButton.isSelected();
-            }
-        };
-        toggleButton.setFocusPainted(false);
-        toggleButton.putClientProperty("JToggleButton.isTreeCellEditor", Boolean.TRUE);
-        toggleButton.addActionListener(delegate);
-        toggleButton.setRequestFocusEnabled(false);
-        setClickCountToStart(1);
+    @Override
+    public boolean isCellEditable(final EventObject anEvent) {
+        adjustBoolValue = anEvent == null;
+        return super.isCellEditable(anEvent);
     }
 
     @SuppressWarnings("unchecked")
@@ -127,15 +137,5 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         editorComponent.setOpaque(false);
         editorComponent.setComponentOrientation(tree.getComponentOrientation());
         return editorComponent;
-    }
-
-    public boolean isBooleanEditor(final JTree tree) {
-        return editorComponent instanceof JToggleButton && DarkTreeCellRenderer.isBooleanRenderingEnabled(tree);
-    }
-
-    @Override
-    public boolean isCellEditable(final EventObject anEvent) {
-        adjustBoolValue = anEvent == null;
-        return super.isCellEditable(anEvent);
     }
 }

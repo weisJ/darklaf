@@ -36,22 +36,6 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     }
 
     @Override
-    protected void installListeners() {
-        super.installListeners();
-        menuItem.addMouseListener(clickListener);
-    }
-
-    @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        menuItem.removeMouseListener(clickListener);
-    }
-
-    protected String getPropertyPrefix() {
-        return "RadioButtonMenuItem";
-    }
-
-    @Override
     protected void paintMenuItem(@NotNull final Graphics g, final JComponent c, final Icon checkIcon, final Icon arrowIcon, final Color background, final Color foreground, final int defaultTextIconGap) {
         super.paintMenuItem(g, c, checkIcon, arrowIcon, background, foreground, defaultTextIconGap);
     }
@@ -71,5 +55,21 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
 
         g.translate(-lr.getCheckRect().x, -lr.getCheckRect().y - 2);
         config.restore();
+    }
+
+    protected String getPropertyPrefix() {
+        return "RadioButtonMenuItem";
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        menuItem.addMouseListener(clickListener);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        menuItem.removeMouseListener(clickListener);
     }
 }

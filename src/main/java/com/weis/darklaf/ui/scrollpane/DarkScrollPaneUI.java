@@ -14,7 +14,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
 
     private final MouseWheelListener verticalMouseWheelListener = e -> {
         if (!scrollpane.isWheelScrollingEnabled()
-            || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
+                || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
             return;
         }
         var scrollbar = scrollpane.getHorizontalScrollBar();
@@ -70,6 +70,12 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     };
     private ScrollPaneLayout oldLayout;
 
+    @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkScrollPaneUI();
+    }
+
     private boolean horizontalScrollBarEnabled() {
         var sb = scrollpane.getHorizontalScrollBar();
         if (sb == null) {
@@ -86,10 +92,12 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         return sb.isVisible();
     }
 
-    @NotNull
-    @Contract("_ -> new")
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkScrollPaneUI();
+    @Override
+    protected void installListeners(final JScrollPane c) {
+        super.installListeners(c);
+        scrollpane.addPropertyChangeListener(propertyChangeListener);
+        scrollpane.getVerticalScrollBar().addMouseWheelListener(verticalMouseWheelListener);
+        scrollpane.getHorizontalScrollBar().addMouseWheelListener(horizontalMouseWheelListener);
     }
 
     @Override
@@ -131,29 +139,21 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     }
 
     @Override
+    protected void uninstallListeners(final JComponent c) {
+        super.uninstallListeners(c);
+        scrollpane.addPropertyChangeListener(propertyChangeListener);
+        scrollpane.getVerticalScrollBar().removeMouseWheelListener(verticalMouseWheelListener);
+        scrollpane.getHorizontalScrollBar().removeMouseWheelListener(horizontalMouseWheelListener);
+    }
+
+    @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
         c.setLayout(oldLayout);
     }
 
     @Override
-    protected void installListeners(final JScrollPane c) {
-        super.installListeners(c);
-        scrollpane.addPropertyChangeListener(propertyChangeListener);
-        scrollpane.getVerticalScrollBar().addMouseWheelListener(verticalMouseWheelListener);
-        scrollpane.getHorizontalScrollBar().addMouseWheelListener(horizontalMouseWheelListener);
-    }
-
-    @Override
     protected MouseWheelListener createMouseWheelListener() {
         return mouseWheelListener;
-    }
-
-    @Override
-    protected void uninstallListeners(final JComponent c) {
-        super.uninstallListeners(c);
-        scrollpane.addPropertyChangeListener(propertyChangeListener);
-        scrollpane.getVerticalScrollBar().removeMouseWheelListener(verticalMouseWheelListener);
-        scrollpane.getHorizontalScrollBar().removeMouseWheelListener(horizontalMouseWheelListener);
     }
 }

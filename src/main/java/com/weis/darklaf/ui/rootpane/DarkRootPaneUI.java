@@ -16,8 +16,6 @@ package com.weis.darklaf.ui.rootpane;
  * limitations under the License.
  */
 
-import com.bulenkov.darcula.ui.DarculaRootPaneUI;
-import com.weis.darklaf.DarkLaf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,36 +66,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         rootPane = null;
     }
 
-    public void installBorder(@NotNull final JRootPane root) {
-        int style = root.getWindowDecorationStyle();
-        if (style == JRootPane.NONE) {
-            LookAndFeel.uninstallBorder(root);
-        } else {
-            LookAndFeel.uninstallBorder(root);
-        }
-    }
-
-    private static void uninstallBorder(final JRootPane root) {
-        LookAndFeel.uninstallBorder(root);
-    }
-
-
-    private void updateWindow(final Component parent) {
-        if (parent instanceof Window) {
-            window = (Window) parent;
-        } else {
-            window = SwingUtilities.getWindowAncestor(parent);
-        }
-    }
-
-    private void installLayout(final JRootPane root) {
-        if (layoutManager == null) {
-            layoutManager = createLayoutManager();
-        }
-        oldLayout = root.getLayout();
-        root.setLayout(layoutManager);
-    }
-
     @Override
     protected void installListeners(final JRootPane root) {
         super.installListeners(root);
@@ -114,6 +82,48 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         propertyChangeListener = null;
 
         super.uninstallListeners(root);
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent e) {
+        super.propertyChange(e);
+        String propertyName = e.getPropertyName();
+        if ("windowDecorationStyle".equals(propertyName)) {
+            JRootPane root = (JRootPane) e.getSource();
+            int style = root.getWindowDecorationStyle();
+
+            uninstallClientDecorations(root);
+            if (style != JRootPane.NONE) {
+                installClientDecorations(root);
+            }
+        } else if ("ancestor".equals(propertyName)) {
+            if (((JRootPane) e.getSource()).getWindowDecorationStyle() != JRootPane.NONE) {
+                updateWindow(rootPane.getParent());
+            }
+        }
+    }
+
+    private void uninstallClientDecorations(final JRootPane root) {
+        uninstallBorder(root);
+        setTitlePane(root, null);
+        uninstallLayout(root);
+        int style = root.getWindowDecorationStyle();
+        if (style == JRootPane.NONE) {
+            root.repaint();
+            root.revalidate();
+        }
+        if (titlePane != null) {
+            titlePane.uninstall();
+            titlePane = null;
+        }
+        if (window != null) {
+            window.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+        window = null;
+    }
+
+    private static void uninstallBorder(final JRootPane root) {
+        LookAndFeel.uninstallBorder(root);
     }
 
     private void uninstallLayout(final JRootPane root) {
@@ -140,31 +150,17 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         }
     }
 
-    private void uninstallClientDecorations(final JRootPane root) {
-        uninstallBorder(root);
-        setTitlePane(root, null);
-        uninstallLayout(root);
+    public void installBorder(@NotNull final JRootPane root) {
         int style = root.getWindowDecorationStyle();
         if (style == JRootPane.NONE) {
-            root.repaint();
-            root.revalidate();
+            LookAndFeel.uninstallBorder(root);
+        } else {
+            LookAndFeel.uninstallBorder(root);
         }
-        if (titlePane != null) {
-            titlePane.uninstall();
-            titlePane = null;
-        }
-        if (window != null) {
-            window.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        }
-        window = null;
     }
 
     protected DarkTitlePane createTitlePane(final JRootPane root) {
         return new DarkTitlePane(root);
-    }
-
-    protected LayoutManager createLayoutManager() {
-        return new SubstanceRootLayout();
     }
 
     private void setTitlePane(@NotNull final JRootPane root, final DarkTitlePane titlePane) {
@@ -181,32 +177,33 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         this.titlePane = titlePane;
     }
 
+    private void updateWindow(final Component parent) {
+        if (parent instanceof Window) {
+            window = (Window) parent;
+        } else {
+            window = SwingUtilities.getWindowAncestor(parent);
+        }
+    }
+
+    private void installLayout(final JRootPane root) {
+        if (layoutManager == null) {
+            layoutManager = createLayoutManager();
+        }
+        oldLayout = root.getLayout();
+        root.setLayout(layoutManager);
+    }
+
     @Contract(pure = true)
     protected JComponent getTitlePane() {
         return titlePane;
     }
 
-    @Override
-    public void propertyChange(final PropertyChangeEvent e) {
-        super.propertyChange(e);
-        String propertyName = e.getPropertyName();
-        if ("windowDecorationStyle".equals(propertyName)) {
-            JRootPane root = (JRootPane) e.getSource();
-            int style = root.getWindowDecorationStyle();
-
-            uninstallClientDecorations(root);
-            if (style != JRootPane.NONE) {
-                installClientDecorations(root);
-            }
-        } else if ("ancestor".equals(propertyName)) {
-            if (((JRootPane) e.getSource()).getWindowDecorationStyle() != JRootPane.NONE) {
-                updateWindow(rootPane.getParent());
-            }
-        }
+    protected LayoutManager createLayoutManager() {
+        return new SubstanceRootLayout();
     }
 
     @Override
-    public void hierarchyChanged(HierarchyEvent e) {
+    public void hierarchyChanged(final HierarchyEvent e) {
         Component parent = rootPane.getParent();
         if (parent == null) {
             return;

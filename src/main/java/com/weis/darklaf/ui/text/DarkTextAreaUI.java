@@ -36,17 +36,6 @@ public class DarkTextAreaUI extends DarkTextUI {
      */
 
     /**
-     * Fetches the name used as a key to look up properties through the
-     * UIManager.  This is used as a prefix to all the standard
-     * text properties.
-     *
-     * @return the name ("TextArea")
-     */
-    protected String getPropertyPrefix() {
-        return "TextArea";
-    }
-
-    /**
      * This method gets called when a bound property is changed
      * on the associated JTextComponent.  This is a hook
      * which UI implementations may change to reflect how the
@@ -59,8 +48,8 @@ public class DarkTextAreaUI extends DarkTextUI {
     protected void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         if (evt.getPropertyName().equals("lineWrap") ||
-            evt.getPropertyName().equals("wrapStyleWord") ||
-            evt.getPropertyName().equals("tabSize")) {
+                evt.getPropertyName().equals("wrapStyleWord") ||
+                evt.getPropertyName().equals("tabSize")) {
             // rebuild the view
             modelChanged();
         } else if ("editable".equals(evt.getPropertyName())) {
@@ -68,6 +57,16 @@ public class DarkTextAreaUI extends DarkTextUI {
         }
     }
 
+    /**
+     * Fetches the name used as a key to look up properties through the
+     * UIManager.  This is used as a prefix to all the standard
+     * text properties.
+     *
+     * @return the name ("TextArea")
+     */
+    protected String getPropertyPrefix() {
+        return "TextArea";
+    }
 
     /**
      * The method is overridden to take into account caret width.
@@ -75,7 +74,6 @@ public class DarkTextAreaUI extends DarkTextUI {
      * @param c the editor component
      * @return the preferred size
      * @throws IllegalArgumentException if invalid value is passed
-     *
      * @since 1.5
      */
     public Dimension getPreferredSize(final JComponent c) {
@@ -89,7 +87,6 @@ public class DarkTextAreaUI extends DarkTextUI {
      * @param c the editor component
      * @return the minimum size
      * @throws IllegalArgumentException if invalid value is passed
-     *
      * @since 1.5
      */
     public Dimension getMinimumSize(final JComponent c) {
@@ -141,17 +138,17 @@ public class DarkTextAreaUI extends DarkTextUI {
     /**
      * Returns the baseline.
      *
-     * @throws NullPointerException {@inheritDoc}
+     * @throws NullPointerException     {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
     public int getBaseline(final JComponent c, final int width, int height) {
         super.getBaseline(c, width, height);
-        Object i18nFlag = ((JTextComponent)c).getDocument().getProperty("i18n");
+        Object i18nFlag = ((JTextComponent) c).getDocument().getProperty("i18n");
         Insets insets = c.getInsets();
         if (Boolean.TRUE.equals(i18nFlag)) {
-            View rootView = getRootView((JTextComponent)c);
+            View rootView = getRootView((JTextComponent) c);
             if (rootView.getViewCount() > 0) {
                 height = height - insets.top - insets.bottom;
                 int baseline = insets.top;
@@ -209,7 +206,7 @@ public class DarkTextAreaUI extends DarkTextUI {
 
         protected void setPropertiesFromAttributes() {
             Component c = getContainer();
-            if ((c != null) && (! c.getComponentOrientation().isLeftToRight())) {
+            if ((c != null) && (!c.getComponentOrientation().isLeftToRight())) {
                 setJustification(StyleConstants.ALIGN_RIGHT);
             } else {
                 setJustification(StyleConstants.ALIGN_LEFT);
@@ -224,7 +221,7 @@ public class DarkTextAreaUI extends DarkTextUI {
             Component c = getContainer();
             if (c instanceof JTextArea) {
                 JTextArea area = (JTextArea) c;
-                if (! area.getLineWrap()) {
+                if (!area.getLineWrap()) {
                     // no limit if unwrapped
                     return Integer.MAX_VALUE;
                 }
@@ -238,7 +235,7 @@ public class DarkTextAreaUI extends DarkTextUI {
             Component c = getContainer();
             if (c instanceof JTextArea) {
                 JTextArea area = (JTextArea) c;
-                if (! area.getLineWrap()) {
+                if (!area.getLineWrap()) {
                     // min is pref if unwrapped
                     req.minimum = req.preferred;
                 } else {
@@ -259,7 +256,7 @@ public class DarkTextAreaUI extends DarkTextUI {
          * is redone.  The size is the full size of the view including
          * the inset areas.
          *
-         * @param width the width >= 0
+         * @param width  the width >= 0
          * @param height the height >= 0
          */
         public void setSize(final float width, final float height) {
@@ -282,19 +279,6 @@ public class DarkTextAreaUI extends DarkTextUI {
                 super(elem);
             }
 
-            protected int getViewIndexAtPosition(final int pos) {
-                Element elem = getElement();
-                if (elem.getElementCount() > 0) {
-                    return elem.getElementIndex(pos);
-                }
-                return 0;
-            }
-
-            protected boolean updateChildren(final DocumentEvent.ElementChange ec,
-                                             final DocumentEvent e, final ViewFactory f) {
-                return false;
-            }
-
             protected void loadChildren(final ViewFactory f) {
                 Element elem = getElement();
                 if (elem.getElementCount() > 0) {
@@ -305,12 +289,45 @@ public class DarkTextAreaUI extends DarkTextUI {
                 }
             }
 
+            protected boolean isBefore(final int x, final int y, final Rectangle alloc) {
+                return false;
+            }
+
+            protected boolean isAfter(final int x, final int y, final Rectangle alloc) {
+                return false;
+            }
+
+            protected View getViewAtPoint(final int x, final int y, final Rectangle alloc) {
+                return null;
+            }
+
+            protected void childAllocation(final int index, final Rectangle a) {
+            }
+
+            // The following methods don't do anything useful, they
+            // simply keep the class from being abstract.
+
+            protected int getViewIndexAtPosition(final int pos) {
+                Element elem = getElement();
+                if (elem.getElementCount() > 0) {
+                    return elem.getElementIndex(pos);
+                }
+                return 0;
+            }
+
             public float getPreferredSpan(final int axis) {
-                if( getViewCount() != 1 )
-                    throw new Error("One child view is assumed.");
+                if (getViewCount() != 1) { throw new Error("One child view is assumed."); }
 
                 View v = getView(0);
                 return v.getPreferredSpan(axis);
+            }
+
+            public void paint(final Graphics g, final Shape allocation) {
+            }
+
+            protected boolean updateChildren(final DocumentEvent.ElementChange ec,
+                                             final DocumentEvent e, final ViewFactory f) {
+                return false;
             }
 
             /**
@@ -331,27 +348,6 @@ public class DarkTextAreaUI extends DarkTextUI {
                                                final Shape a, final ViewFactory f) {
                 v.setParent(this);
                 super.forwardUpdateToView(v, e, a, f);
-            }
-
-            // The following methods don't do anything useful, they
-            // simply keep the class from being abstract.
-
-            public void paint(final Graphics g, final Shape allocation) {
-            }
-
-            protected boolean isBefore(final int x, final int y, final Rectangle alloc) {
-                return false;
-            }
-
-            protected boolean isAfter(final int x, final int y, final Rectangle alloc) {
-                return false;
-            }
-
-            protected View getViewAtPoint(final int x, final int y, final Rectangle alloc) {
-                return null;
-            }
-
-            protected void childAllocation(final int index, final Rectangle a) {
             }
         }
     }

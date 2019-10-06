@@ -13,6 +13,11 @@ import java.awt.*;
 
 public class DarkTableUIBridge extends BasicTableUI {
 
+    protected static int getAdjustedLead(final JTable table, final boolean row) {
+        return row ? getAdjustedLead(table, true, table.getSelectionModel())
+                   : getAdjustedLead(table, false, table.getColumnModel().getSelectionModel());
+    }
+
     protected static int getAdjustedLead(final JTable table,
                                          final boolean row,
                                          final ListSelectionModel model) {
@@ -20,11 +25,6 @@ public class DarkTableUIBridge extends BasicTableUI {
         int index = model.getLeadSelectionIndex();
         int compare = row ? table.getRowCount() : table.getColumnCount();
         return index < compare ? index : -1;
-    }
-
-    protected static int getAdjustedLead(final JTable table, final boolean row) {
-        return row ? getAdjustedLead(table, true, table.getSelectionModel())
-                   : getAdjustedLead(table, false, table.getColumnModel().getSelectionModel());
     }
 
     /**
@@ -40,9 +40,9 @@ public class DarkTableUIBridge extends BasicTableUI {
         bounds.x = bounds.y = 0;
 
         if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 ||
-            // this check prevents us from painting the entire table
-            // when the clip doesn't intersect our bounds at all
-            !bounds.intersects(clip)) {
+                // this check prevents us from painting the entire table
+                // when the clip doesn't intersect our bounds at all
+                !bounds.intersects(clip)) {
 
             paintDropLines(g);
             return;
@@ -107,7 +107,7 @@ public class DarkTableUIBridge extends BasicTableUI {
             // but not when rmax is already pointing to index of last row
             // and if there is any selected rows
             if (rMax != (table.getRowCount() - 1) &&
-                (table.getSelectedRow() == -1)) {
+                    (table.getSelectedRow() == -1)) {
                 // Do not decrement rMax if rMax becomes
                 // less than or equal to rMin
                 // else cells will not be painted
@@ -171,88 +171,6 @@ public class DarkTableUIBridge extends BasicTableUI {
         }
     }
 
-    protected Rectangle getHDropLineRect(final JTable.DropLocation loc) {
-        if (!loc.isInsertRow()) {
-            return null;
-        }
-
-        int row = loc.getRow();
-        int col = loc.getColumn();
-        if (col >= table.getColumnCount()) {
-            col--;
-        }
-
-        Rectangle rect = table.getCellRect(row, col, true);
-
-        if (row >= table.getRowCount()) {
-            row--;
-            Rectangle prevRect = table.getCellRect(row, col, true);
-            rect.y = prevRect.y + prevRect.height;
-        }
-
-        if (rect.y == 0) {
-            rect.y = -1;
-        } else {
-            rect.y -= 2;
-        }
-
-        rect.height = 3;
-
-        return rect;
-    }
-
-    protected Rectangle getVDropLineRect(final JTable.DropLocation loc) {
-        if (!loc.isInsertColumn()) {
-            return null;
-        }
-
-        boolean ltr = table.getComponentOrientation().isLeftToRight();
-        int col = loc.getColumn();
-        Rectangle rect = table.getCellRect(loc.getRow(), col, true);
-
-        if (col >= table.getColumnCount()) {
-            col--;
-            rect = table.getCellRect(loc.getRow(), col, true);
-            if (ltr) {
-                rect.x = rect.x + rect.width;
-            }
-        } else if (!ltr) {
-            rect.x = rect.x + rect.width;
-        }
-
-        if (rect.x == 0) {
-            rect.x = -1;
-        } else {
-            rect.x -= 2;
-        }
-
-        rect.width = 3;
-
-        return rect;
-    }
-
-    protected Rectangle extendRect(final Rectangle rect, final boolean horizontal) {
-        if (rect == null) {
-            return null;
-        }
-
-        if (horizontal) {
-            rect.x = 0;
-            rect.width = table.getWidth();
-        } else {
-            rect.y = 0;
-
-            if (table.getRowCount() != 0) {
-                Rectangle lastRect = table.getCellRect(table.getRowCount() - 1, 0, true);
-                rect.height = lastRect.y + lastRect.height;
-            } else {
-                rect.height = table.getHeight();
-            }
-        }
-
-        return rect;
-    }
-
     /*
      * Paints the grid lines within <I>aRect</I>, using the grid
      * color set with <I>setGridColor</I>. Paints vertical lines
@@ -295,16 +213,6 @@ public class DarkTableUIBridge extends BasicTableUI {
                 }
             }
         }
-    }
-
-    protected int viewIndexForColumn(final TableColumn aColumn) {
-        TableColumnModel cm = table.getColumnModel();
-        for (int column = 0; column < cm.getColumnCount(); column++) {
-            if (cm.getColumn(column) == aColumn) {
-                return column;
-            }
-        }
-        return -1;
     }
 
     protected void paintCells(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax) {
@@ -358,6 +266,102 @@ public class DarkTableUIBridge extends BasicTableUI {
 
         // Remove any renderers that may be left in the rendererPane.
         rendererPane.removeAll();
+    }
+
+    protected Rectangle getHDropLineRect(final JTable.DropLocation loc) {
+        if (!loc.isInsertRow()) {
+            return null;
+        }
+
+        int row = loc.getRow();
+        int col = loc.getColumn();
+        if (col >= table.getColumnCount()) {
+            col--;
+        }
+
+        Rectangle rect = table.getCellRect(row, col, true);
+
+        if (row >= table.getRowCount()) {
+            row--;
+            Rectangle prevRect = table.getCellRect(row, col, true);
+            rect.y = prevRect.y + prevRect.height;
+        }
+
+        if (rect.y == 0) {
+            rect.y = -1;
+        } else {
+            rect.y -= 2;
+        }
+
+        rect.height = 3;
+
+        return rect;
+    }
+
+    protected Rectangle extendRect(final Rectangle rect, final boolean horizontal) {
+        if (rect == null) {
+            return null;
+        }
+
+        if (horizontal) {
+            rect.x = 0;
+            rect.width = table.getWidth();
+        } else {
+            rect.y = 0;
+
+            if (table.getRowCount() != 0) {
+                Rectangle lastRect = table.getCellRect(table.getRowCount() - 1, 0, true);
+                rect.height = lastRect.y + lastRect.height;
+            } else {
+                rect.height = table.getHeight();
+            }
+        }
+
+        return rect;
+    }
+
+    protected Rectangle getVDropLineRect(final JTable.DropLocation loc) {
+        if (!loc.isInsertColumn()) {
+            return null;
+        }
+
+        boolean ltr = table.getComponentOrientation().isLeftToRight();
+        int col = loc.getColumn();
+        Rectangle rect = table.getCellRect(loc.getRow(), col, true);
+
+        if (col >= table.getColumnCount()) {
+            col--;
+            rect = table.getCellRect(loc.getRow(), col, true);
+            if (ltr) {
+                rect.x = rect.x + rect.width;
+            }
+        } else if (!ltr) {
+            rect.x = rect.x + rect.width;
+        }
+
+        if (rect.x == 0) {
+            rect.x = -1;
+        } else {
+            rect.x -= 2;
+        }
+
+        rect.width = 3;
+
+        return rect;
+    }
+
+    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
+        if (table.isEditing() && table.getEditingRow() == row &&
+                table.getEditingColumn() == column) {
+            Component component = table.getEditorComponent();
+            component.setBounds(cellRect);
+            component.validate();
+        } else {
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component component = table.prepareRenderer(renderer, row, column);
+            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
+                                        cellRect.width, cellRect.height, true);
+        }
     }
 
     protected void paintDraggedArea(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax,
@@ -415,17 +419,13 @@ public class DarkTableUIBridge extends BasicTableUI {
         }
     }
 
-    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
-        if (table.isEditing() && table.getEditingRow() == row &&
-            table.getEditingColumn() == column) {
-            Component component = table.getEditorComponent();
-            component.setBounds(cellRect);
-            component.validate();
-        } else {
-            TableCellRenderer renderer = table.getCellRenderer(row, column);
-            Component component = table.prepareRenderer(renderer, row, column);
-            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
-                                        cellRect.width, cellRect.height, true);
+    protected int viewIndexForColumn(final TableColumn aColumn) {
+        TableColumnModel cm = table.getColumnModel();
+        for (int column = 0; column < cm.getColumnCount(); column++) {
+            if (cm.getColumn(column) == aColumn) {
+                return column;
+            }
         }
+        return -1;
     }
 }

@@ -28,6 +28,7 @@ public class TreeDemo extends JFrame {
         // Adding root to JTree
         JTree tree = new JTree(root);
         tree.setEditable(true);
+//        tree.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
         getContentPane().add(new JScrollPane(tree));
         setSize(300, 300);
@@ -35,7 +36,7 @@ public class TreeDemo extends JFrame {
         setVisible(true);
     }
 
-    public static void main(final String args[]) {
+    public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.loadLaf(LafManager.Theme.Dark);
             new TreeDemo();

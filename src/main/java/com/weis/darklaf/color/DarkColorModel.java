@@ -12,14 +12,14 @@ public class DarkColorModel {
     private final String[] labels;
 
     @Contract(pure = true)
-    public DarkColorModel(final String name, final String... labels) {
-        this.prefix = "ColorChooser." + name;
-        this.labels = labels;
+    public DarkColorModel() {
+        this("rgb", "Red", "Green", "Blue");
     }
 
     @Contract(pure = true)
-    public DarkColorModel() {
-        this("rgb", "Red", "Green", "Blue");
+    public DarkColorModel(final String name, final String... labels) {
+        this.prefix = "ColorChooser." + name;
+        this.labels = labels;
     }
 
     public int getCount() {

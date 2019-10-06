@@ -6,6 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 
 class SubstanceRootLayout implements LayoutManager2 {
+    public void addLayoutComponent(final String name, final Component comp) {
+    }
+
+    public void removeLayoutComponent(final Component comp) {
+    }
+
     public Dimension preferredLayoutSize(@NotNull final Container parent) {
         Dimension cpd, mbd, tpd;
         int cpWidth = 0;
@@ -98,6 +104,48 @@ class SubstanceRootLayout implements LayoutManager2 {
                                      + i.bottom);
     }
 
+    public void layoutContainer(final Container parent) {
+        JRootPane root = (JRootPane) parent;
+        Rectangle b = root.getBounds();
+        Insets i = root.getInsets();
+        int nextY = 0;
+        int w = b.width - i.right - i.left;
+        int h = b.height - i.top - i.bottom;
+
+        if (root.getLayeredPane() != null) {
+            root.getLayeredPane().setBounds(i.left, i.top, w, h);
+        }
+        if (root.getGlassPane() != null) {
+            root.getGlassPane().setBounds(i.left, i.top, w, h);
+        }
+
+        if ((root.getWindowDecorationStyle() != JRootPane.NONE)
+                && (root.getUI() instanceof DarkRootPaneUI)) {
+            JComponent titlePane = ((DarkRootPaneUI) root.getUI())
+                    .getTitlePane();
+            if (titlePane != null) {
+                Dimension tpd = titlePane.getPreferredSize();
+                if (tpd != null) {
+                    int tpHeight = tpd.height;
+                    titlePane.setBounds(0, 0, w, tpHeight);
+                    nextY += tpHeight;
+                }
+            }
+        }
+        if (root.getJMenuBar() != null) {
+            Dimension mbd = root.getJMenuBar().getPreferredSize();
+            root.getJMenuBar().setBounds(0, nextY, w, mbd.height);
+            nextY += mbd.height;
+        }
+        if (root.getContentPane() != null) {
+
+            root.getContentPane().setBounds(0, nextY, w, h < nextY ? 0 : h - nextY);
+        }
+    }
+
+    public void addLayoutComponent(final Component comp, final Object constraints) {
+    }
+
     public Dimension maximumLayoutSize(@NotNull final Container target) {
         Dimension cpd, mbd, tpd;
         int cpWidth = Integer.MAX_VALUE;
@@ -150,54 +198,6 @@ class SubstanceRootLayout implements LayoutManager2 {
         }
 
         return new Dimension(maxWidth, maxHeight);
-    }
-
-    public void layoutContainer(final Container parent) {
-        JRootPane root = (JRootPane) parent;
-        Rectangle b = root.getBounds();
-        Insets i = root.getInsets();
-        int nextY = 0;
-        int w = b.width - i.right - i.left;
-        int h = b.height - i.top - i.bottom;
-
-        if (root.getLayeredPane() != null) {
-            root.getLayeredPane().setBounds(i.left, i.top, w, h);
-        }
-        if (root.getGlassPane() != null) {
-            root.getGlassPane().setBounds(i.left, i.top, w, h);
-        }
-
-        if ((root.getWindowDecorationStyle() != JRootPane.NONE)
-                && (root.getUI() instanceof DarkRootPaneUI)) {
-            JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                    .getTitlePane();
-            if (titlePane != null) {
-                Dimension tpd = titlePane.getPreferredSize();
-                if (tpd != null) {
-                    int tpHeight = tpd.height;
-                    titlePane.setBounds(0, 0, w, tpHeight);
-                    nextY += tpHeight;
-                }
-            }
-        }
-        if (root.getJMenuBar() != null) {
-            Dimension mbd = root.getJMenuBar().getPreferredSize();
-            root.getJMenuBar().setBounds(0, nextY, w, mbd.height);
-            nextY += mbd.height;
-        }
-        if (root.getContentPane() != null) {
-
-            root.getContentPane().setBounds(0, nextY, w, h < nextY ? 0 : h - nextY);
-        }
-    }
-
-    public void addLayoutComponent(final String name, final Component comp) {
-    }
-
-    public void removeLayoutComponent(final Component comp) {
-    }
-
-    public void addLayoutComponent(final Component comp, final Object constraints) {
     }
 
     public float getLayoutAlignmentX(final Container target) {

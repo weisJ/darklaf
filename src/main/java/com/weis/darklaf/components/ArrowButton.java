@@ -48,10 +48,14 @@ public final class ArrowButton implements SwingConstants {
                 paintTriangle(g, x, y, 0, direction, parent.isEnabled());
             }
 
-            @Contract(pure = true)
             @Override
-            public boolean isOpaque() {
-                return false;
+            public Dimension getPreferredSize() {
+                if (!applyInsetsOnSize) {
+                    return new DimensionUIResource(icon.getIconWidth(), icon.getIconHeight());
+                } else {
+                    return new DimensionUIResource(icon.getIconWidth() + insets.left + insets.right,
+                                                   icon.getIconHeight() + insets.top + insets.bottom);
+                }
             }
 
             @Override
@@ -61,16 +65,6 @@ public final class ArrowButton implements SwingConstants {
                     icon.paintIcon(parent, g, x, y);
                 } else {
                     icon.getDual().paintIcon(parent, g, x, y);
-                }
-            }
-
-            @Override
-            public Dimension getPreferredSize() {
-                if (!applyInsetsOnSize) {
-                    return new DimensionUIResource(icon.getIconWidth(), icon.getIconHeight());
-                } else {
-                    return new DimensionUIResource(icon.getIconWidth() + insets.left + insets.right,
-                                                   icon.getIconHeight() + insets.top + insets.bottom);
                 }
             }
 
@@ -89,6 +83,12 @@ public final class ArrowButton implements SwingConstants {
                 i.top = insets.top;
                 i.bottom = insets.bottom;
                 return i;
+            }
+
+            @Contract(pure = true)
+            @Override
+            public boolean isOpaque() {
+                return false;
             }
         };
     }

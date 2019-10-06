@@ -55,7 +55,7 @@ public class SelectLineAction extends TextAction {
                     document.getText(currentLineStart, count, currentLine);
                     int firstNonWhitespace = getFirstNonWhitespacePos();
                     firstNonWhitespace = currentLineStart +
-                                         (firstNonWhitespace - currentLine.offset);
+                            (firstNonWhitespace - currentLine.offset);
                     if (caretPosition != firstNonWhitespace) {
                         newPos = firstNonWhitespace;
                     } else {

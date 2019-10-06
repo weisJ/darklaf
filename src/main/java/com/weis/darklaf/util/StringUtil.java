@@ -56,26 +56,26 @@ public final class StringUtil {
         }
     }
 
-    public static List<String> split(String s, String separator) {
+    public static List<String> split(final String s, final String separator) {
         return split(s, separator, true);
     }
 
-    public static List<String> split(String s, String separator, boolean excludeSeparator) {
+    public static List<String> split(final String s, final String separator, final boolean excludeSeparator) {
         return split(s, separator, excludeSeparator, true);
     }
 
-    public static List<String> split(String s, @NotNull String separator, boolean excludeSeparator, boolean excludeEmptyStrings) {
+    public static List<String> split(final String s, @NotNull final String separator, final boolean excludeSeparator, final boolean excludeEmptyStrings) {
         if (separator.isEmpty()) {
             return Collections.singletonList(s);
         } else {
             List<String> result = new ArrayList<>();
             int pos = 0;
 
-            while(true) {
+            while (true) {
                 int index = s.indexOf(separator, pos);
                 if (index == -1) {
                     if (pos < s.length() || !excludeEmptyStrings && pos == s.length()) {
-                        result.add(s.substring(pos, s.length()));
+                        result.add(s.substring(pos));
                     }
 
                     return result;

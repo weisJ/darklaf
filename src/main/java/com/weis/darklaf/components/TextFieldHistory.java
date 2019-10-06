@@ -15,8 +15,8 @@ import java.util.LinkedList;
  */
 public class TextFieldHistory extends ScrollPopupMenu implements ActionListener {
 
-    private JTextField textField;
     private final LinkedHashSet<String> history;
+    private JTextField textField;
 
     /**
      * Create Scroll Popup Menu.
@@ -58,7 +58,7 @@ public class TextFieldHistory extends ScrollPopupMenu implements ActionListener 
         this.removeAll();
         LinkedList<String> list = new LinkedList<>(history);
         Iterator<String> itr = list.descendingIterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             String item = itr.next();
             add(new JMenuItem(new PlainAction(item, () -> textField.setText(item))));
         }

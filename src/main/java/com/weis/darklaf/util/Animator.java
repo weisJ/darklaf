@@ -49,6 +49,11 @@ public abstract class Animator {
         reset();
     }
 
+    public void reset() {
+        currentFrame = 0;
+        startTime = -1;
+    }
+
     @NotNull
     private static ScheduledExecutorService createScheduler() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, r -> {
@@ -63,41 +68,9 @@ public abstract class Animator {
 
     }
 
-    private void onTick() {
-        if (isDisposed()) return;
-
-        if (startTime == -1) {
-            startTime = System.currentTimeMillis();
-            stopTime = startTime + cycleDuration * (totalFrames - currentFrame) / totalFrames;
-        }
-
-        final double passedTime = System.currentTimeMillis() - startTime;
-        final double totalTime = stopTime - startTime;
-
-        final int newFrame = (int) (passedTime * totalFrames / totalTime) + startFrame;
-        if (currentFrame > 0 && newFrame == currentFrame) return;
-        currentFrame = newFrame;
-
-        if (currentFrame >= totalFrames) {
-            if (repeatable) {
-                reset();
-            } else {
-                animationDone();
-                return;
-            }
-        }
-
-        paint();
-    }
-
-    private void paint() {
-        paintNow(forward ? currentFrame : totalFrames - currentFrame - 1, totalFrames, cycleDuration);
-    }
-
-    private void animationDone() {
+    public void suspend() {
+        startTime = -1;
         stopTicker();
-
-        SwingUtilities.invokeLater(this::paintCycleEnd);
     }
 
     private void stopTicker() {
@@ -105,15 +78,6 @@ public abstract class Animator {
             ticker.cancel(false);
             ticker = null;
         }
-    }
-
-    protected void paintCycleEnd() {
-
-    }
-
-    public void suspend() {
-        startTime = -1;
-        stopTicker();
     }
 
     public void resume() {
@@ -146,7 +110,52 @@ public abstract class Animator {
         }
     }
 
+    private void paint() {
+        paintNow(forward ? currentFrame : totalFrames - currentFrame - 1, totalFrames, cycleDuration);
+    }
+
+    private void animationDone() {
+        stopTicker();
+
+        SwingUtilities.invokeLater(this::paintCycleEnd);
+    }
+
+    public boolean isDisposed() {
+        return disposed;
+    }
+
+    private void onTick() {
+        if (isDisposed()) return;
+
+        if (startTime == -1) {
+            startTime = System.currentTimeMillis();
+            stopTime = startTime + cycleDuration * (totalFrames - currentFrame) / totalFrames;
+        }
+
+        final double passedTime = System.currentTimeMillis() - startTime;
+        final double totalTime = stopTime - startTime;
+
+        final int newFrame = (int) (passedTime * totalFrames / totalTime) + startFrame;
+        if (currentFrame > 0 && newFrame == currentFrame) return;
+        currentFrame = newFrame;
+
+        if (currentFrame >= totalFrames) {
+            if (repeatable) {
+                reset();
+            } else {
+                animationDone();
+                return;
+            }
+        }
+
+        paint();
+    }
+
     public abstract void paintNow(int frame, int totalFrames, int cycle);
+
+    protected void paintCycleEnd() {
+
+    }
 
     public void dispose() {
         disposed = true;
@@ -157,18 +166,9 @@ public abstract class Animator {
         return ticker != null;
     }
 
-    public void reset() {
-        currentFrame = 0;
-        startTime = -1;
-    }
-
     @Contract(pure = true)
     public final boolean isForward() {
         return forward;
-    }
-
-    public boolean isDisposed() {
-        return disposed;
     }
 
     public int getCurrentFrame() {

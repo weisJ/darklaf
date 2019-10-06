@@ -79,7 +79,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         labelHolder.add(l);
 
         JPanel previewHolder = new JPanel(new BorderLayout());
-        previewHolder.setBorder(new EmptyBorder(0,5,10,5));
+        previewHolder.setBorder(new EmptyBorder(0, 5, 10, 5));
         previewHolder.add(previewPanel, BorderLayout.CENTER);
 
         JPanel swatches = new JPanel();
@@ -96,12 +96,22 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         add(superHolder);
     }
 
-    protected void setSelectedColor(final Color color) {
-        ColorSelectionModel model = getColorSelectionModel();
-        previewPanel.setColor(color);
-        if (model != null) {
-            model.setSelectedColor(color);
-        }
+    public String getDisplayName() {
+        return UIManager.getString("ColorChooser.swatchesNameText", getLocale());
+    }
+
+    @Override
+    public Icon getSmallDisplayIcon() {
+        return null;
+    }
+
+    @Override
+    public Icon getLargeDisplayIcon() {
+        return null;
+    }
+
+    public void installChooserPanel(final JColorChooser enclosingChooser) {
+        super.installChooserPanel(enclosingChooser);
     }
 
     public void uninstallChooserPanel(final JColorChooser enclosingChooser) {
@@ -121,12 +131,12 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         removeAll();  // strip out all the sub-components
     }
 
-    public String getDisplayName() {
-        return UIManager.getString("ColorChooser.swatchesNameText", getLocale());
-    }
-
-    public void installChooserPanel(final JColorChooser enclosingChooser) {
-        super.installChooserPanel(enclosingChooser);
+    protected void setSelectedColor(final Color color) {
+        ColorSelectionModel model = getColorSelectionModel();
+        previewPanel.setColor(color);
+        if (model != null) {
+            model.setSelectedColor(color);
+        }
     }
 
     protected class RecentSwatchKeyListener extends KeyAdapter {
@@ -169,16 +179,6 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
                 swatchPanel.requestFocusInWindow();
             }
         }
-    }
-
-    @Override
-    public Icon getSmallDisplayIcon() {
-        return null;
-    }
-
-    @Override
-    public Icon getLargeDisplayIcon() {
-        return null;
     }
 
 }

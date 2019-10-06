@@ -26,11 +26,11 @@ public class SelectableTreeNode extends DefaultMutableTreeNode {
         this.userObject = selected;
     }
 
-    public void setLabel(final String label) {
-        this.label = label;
-    }
-
     public String getLabel() {
         return label;
+    }
+
+    public void setLabel(final String label) {
+        this.label = label;
     }
 }

@@ -26,8 +26,6 @@ import sun.awt.SunToolkit;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -52,26 +50,6 @@ public class DarkTitlePane extends JComponent {
     private static final int ICON_WIDTH = (int) (65 / GraphicsUtil.SCALE_X);
     private static final int IMAGE_HEIGHT = 16;
     private static final int IMAGE_WIDTH = 16;
-    private boolean oldResizable;
-
-    private final ContainerListener layeredPaneContainerListener = new ContainerListener() {
-        @Override
-        public void componentAdded(@NotNull final ContainerEvent e) {
-            if (e.getChild() instanceof JMenuBar) {
-                menuBar = getRootPane().getJMenuBar();
-                menuBar.setPreferredSize(new Dimension(0, 0));
-                add(menuBar);
-            }
-            if (getRootPane().getJMenuBar() == null && menuBar != null) {
-                remove(menuBar);
-                menuBar = null;
-            }
-        }
-
-        @Override
-        public void componentRemoved(final ContainerEvent e) {
-        }
-    };
     private final ContainerListener rootPaneContainerListener = new ContainerListener() {
         @Override
         public void componentAdded(@NotNull final ContainerEvent e) {
@@ -87,6 +65,8 @@ public class DarkTitlePane extends JComponent {
             }
         }
     };
+    private final JRootPane rootPane;
+    private boolean oldResizable;
     private PropertyChangeListener propertyChangeListener;
     private WindowListener windowListener;
 
@@ -109,8 +89,25 @@ public class DarkTitlePane extends JComponent {
 
     private Window window;
     private long windowHandle;
-    private final JRootPane rootPane;
     private JMenuBar menuBar;
+    private final ContainerListener layeredPaneContainerListener = new ContainerListener() {
+        @Override
+        public void componentAdded(@NotNull final ContainerEvent e) {
+            if (e.getChild() instanceof JMenuBar) {
+                menuBar = getRootPane().getJMenuBar();
+                menuBar.setPreferredSize(new Dimension(0, 0));
+                add(menuBar);
+            }
+            if (getRootPane().getJMenuBar() == null && menuBar != null) {
+                remove(menuBar);
+                menuBar = null;
+            }
+        }
+
+        @Override
+        public void componentRemoved(final ContainerEvent e) {
+        }
+    };
     private int state;
 
     private Color inactiveBackground;
@@ -131,6 +128,21 @@ public class DarkTitlePane extends JComponent {
         setLayout(createLayout());
     }
 
+    @NotNull
+    private static JButton createButton(final String accessibleName, final Icon icon, final Action action) {
+        JButton button = new JButton();
+        button.setFocusable(false);
+        button.setOpaque(true);
+        button.setRolloverEnabled(true);
+        button.putClientProperty("JButton.variant", "fullShadow");
+        button.putClientProperty("paintActive", Boolean.TRUE);
+        button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
+        button.setAction(action);
+        button.setIcon(icon);
+        button.setText(null);
+        return button;
+    }
+
     public void uninstall() {
         uninstallListeners();
         window = null;
@@ -140,19 +152,19 @@ public class DarkTitlePane extends JComponent {
         removeAll();
     }
 
+    private void uninstallListeners() {
+        if (window != null) {
+            window.removeWindowListener(windowListener);
+            window.removePropertyChangeListener(propertyChangeListener);
+        }
+    }
+
     private void installListeners() {
         if (window != null) {
             windowListener = createWindowListener();
             window.addWindowListener(windowListener);
             propertyChangeListener = createWindowPropertyChangeListener();
             window.addPropertyChangeListener(propertyChangeListener);
-        }
-    }
-
-    private void uninstallListeners() {
-        if (window != null) {
-            window.removeWindowListener(windowListener);
-            window.removePropertyChangeListener(propertyChangeListener);
         }
     }
 
@@ -166,69 +178,6 @@ public class DarkTitlePane extends JComponent {
     @Contract(value = " -> new", pure = true)
     private PropertyChangeListener createWindowPropertyChangeListener() {
         return new PropertyChangeHandler();
-    }
-
-    public JRootPane getRootPane() {
-        return rootPane;
-    }
-
-    private int getWindowDecorationStyle() {
-        return getRootPane().getWindowDecorationStyle();
-    }
-
-    public void addNotify() {
-        super.addNotify();
-        uninstallListeners();
-
-        window = SwingUtilities.getWindowAncestor(this);
-        if (window != null) {
-            if (window instanceof Dialog || window instanceof Frame) {
-                windowHandle = JNIDecorations.getHWND(window);
-                JNIDecorations.installDecorations(windowHandle);
-                updateResizeBehaviour();
-                var color = window.getBackground();
-                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
-            }
-
-            if (window instanceof Frame) {
-                titleLabel.setText(((Frame) window).getTitle());
-                setState(((Frame) window).getExtendedState());
-            } else {
-                setState(0);
-            }
-            if (window instanceof Dialog) {
-                titleLabel.setText(((Dialog) window).getTitle());
-            }
-            setActive(window.isActive());
-            installListeners();
-            updateSystemIcon();
-        }
-    }
-
-    protected boolean isResizable(final Window window, @NotNull final JRootPane rootPane) {
-        if (JRootPane.NONE == rootPane.getWindowDecorationStyle()) {
-            return false;
-        } else {
-            if (window instanceof Dialog) {
-                return ((Dialog) window).isResizable();
-            } else if (window instanceof Frame) {
-                return ((Frame) window).isResizable();
-            }
-        }
-        return false;
-    }
-
-    protected void updateResizeBehaviour() {
-        boolean res = isResizable(window, rootPane);
-        if (oldResizable != res) {
-            oldResizable = res;
-            JNIDecorations.setResizable(windowHandle, res);
-        }
-    }
-
-    public void removeNotify() {
-        super.removeNotify();
-        uninstallListeners();
     }
 
     private void installSubcomponents() {
@@ -287,7 +236,6 @@ public class DarkTitlePane extends JComponent {
         setFont(UIManager.getFont("InternalFrame.titleFont", getLocale()));
     }
 
-
     protected JButton createWindowIcon() {
         windowIconButton = new JButton();
         windowIconButton.setComponentPopupMenu(createMenu());
@@ -301,7 +249,6 @@ public class DarkTitlePane extends JComponent {
         windowIconButton.setBorderPainted(false);
         return windowIconButton;
     }
-
 
     @NotNull
     private JPopupMenu createMenu() {
@@ -335,6 +282,11 @@ public class DarkTitlePane extends JComponent {
         if (window != null) {
             window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
         }
+    }
+
+    @Contract(pure = true)
+    private Window getWindow() {
+        return window;
     }
 
     private void minimize() {
@@ -380,23 +332,6 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-
-    @NotNull
-    private static JButton createButton(final String accessibleName, final Icon icon, final Action action) {
-        JButton button = new JButton();
-        button.setFocusable(false);
-        button.setOpaque(true);
-        button.setRolloverEnabled(true);
-        button.putClientProperty("JButton.variant", "fullShadow");
-        button.putClientProperty("paintActive", Boolean.TRUE);
-        button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
-        button.setAction(action);
-        button.setIcon(icon);
-        button.setText(null);
-        return button;
-    }
-
-
     @NotNull
     @Contract(value = " -> new", pure = true)
     private LayoutManager createLayout() {
@@ -414,8 +349,84 @@ public class DarkTitlePane extends JComponent {
         getRootPane().repaint();
     }
 
+    public void paintComponent(final Graphics g) {
+        if (getFrame() != null) {
+            setState(getFrame().getExtendedState());
+        }
+        updateResizeBehaviour();
+        Window window = getWindow();
+        boolean active = window == null || window.isActive();
+        int width = getWidth();
+        int height = getHeight();
+
+        Color background = active ? activeBackground : inactiveBackground;
+
+        g.setColor(background);
+        g.fillRect(0, 0, width, height);
+
+        g.setColor(border);
+        g.fillRect(0, height - 1, width, 1);
+    }
+
+    public void addNotify() {
+        super.addNotify();
+        uninstallListeners();
+
+        window = SwingUtilities.getWindowAncestor(this);
+        if (window != null) {
+            if (window instanceof Dialog || window instanceof Frame) {
+                windowHandle = JNIDecorations.getHWND(window);
+                JNIDecorations.installDecorations(windowHandle);
+                updateResizeBehaviour();
+                var color = window.getBackground();
+                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+            }
+
+            if (window instanceof Frame) {
+                titleLabel.setText(((Frame) window).getTitle());
+                setState(((Frame) window).getExtendedState());
+            } else {
+                setState(0);
+            }
+            if (window instanceof Dialog) {
+                titleLabel.setText(((Dialog) window).getTitle());
+            }
+            setActive(window.isActive());
+            installListeners();
+            updateSystemIcon();
+        }
+    }
+
+    public void removeNotify() {
+        super.removeNotify();
+        uninstallListeners();
+    }
+
+    public JRootPane getRootPane() {
+        return rootPane;
+    }
+
+    @Nullable
+    @Contract(pure = true)
+    private Frame getFrame() {
+        Window window = getWindow();
+
+        if (window instanceof Frame) {
+            return (Frame) window;
+        }
+        return null;
+    }
+
     private void setState(final int state) {
         setState(state, false);
+    }
+
+    protected void updateResizeBehaviour() {
+        boolean res = isResizable(window, rootPane);
+        if (oldResizable != res) {
+            oldResizable = res;
+            JNIDecorations.setResizable(windowHandle, res);
+        }
     }
 
     private void setState(final int state, final boolean updateRegardless) {
@@ -477,51 +488,102 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
+    protected boolean isResizable(final Window window, @NotNull final JRootPane rootPane) {
+        if (JRootPane.NONE == rootPane.getWindowDecorationStyle()) {
+            return false;
+        } else {
+            if (window instanceof Dialog) {
+                return ((Dialog) window).isResizable();
+            } else if (window instanceof Frame) {
+                return ((Frame) window).isResizable();
+            }
+        }
+        return false;
+    }
+
+    private int getWindowDecorationStyle() {
+        return getRootPane().getWindowDecorationStyle();
+    }
+
     private void updateToggleButton(final Action action, final Icon icon) {
         maximizeToggleButton.setAction(action);
         maximizeToggleButton.setIcon(icon);
         maximizeToggleButton.setText(null);
     }
 
-    @Nullable
-    @Contract(pure = true)
-    private Frame getFrame() {
-        Window window = getWindow();
-
-        if (window instanceof Frame) {
-            return (Frame) window;
-        }
-        return null;
-    }
-
-    @Contract(pure = true)
-    private Window getWindow() {
-        return window;
-    }
-
-    public void paintComponent(final Graphics g) {
-        if (getFrame() != null) {
-            setState(getFrame().getExtendedState());
-        }
-        updateResizeBehaviour();
-        Window window = getWindow();
-        boolean active = window == null || window.isActive();
-        int width = getWidth();
-        int height = getHeight();
-
-        Color background = active ? activeBackground : inactiveBackground;
-
-        g.setColor(background);
-        g.fillRect(0, 0, width, height);
-
-        g.setColor(border);
-        g.fillRect(0, height - 1, width, 1);
-    }
-
     protected boolean isLeftToRight(final Window window) {
         return (window == null) ?
                getRootPane().getComponentOrientation().isLeftToRight() :
                window.getComponentOrientation().isLeftToRight();
+    }
+
+    private void updateSystemIcon() {
+        Window window = getWindow();
+        if (window == null) {
+            windowIconButton.setIcon(null);
+            return;
+        }
+
+        List<Image> icons = window.getIconImages();
+        assert icons != null;
+
+        Icon systemIcon;
+        if (icons.size() == 0) {
+            systemIcon = UIManager.getIcon("TitlePane.icon");
+        } else if (icons.size() == 1) {
+            systemIcon = new ImageIcon(icons.get(0));
+        } else {
+            systemIcon = new ImageIcon(SunToolkit.getScaledIconImage(icons, IMAGE_WIDTH, IMAGE_HEIGHT));
+        }
+        if (windowIconButton != null) {
+            windowIconButton.setIcon(systemIcon);
+        }
+    }
+
+    protected static class TitlePaneIcon implements Icon {
+
+        private final Icon activeIcon;
+        private final Icon inactiveIcon;
+        private boolean active = true;
+
+        @Contract(pure = true)
+        protected TitlePaneIcon(final Icon active, final Icon inactive) {
+            this.activeIcon = active;
+            this.inactiveIcon = inactive;
+        }
+
+        public void setActive(final boolean active) {
+            this.active = active;
+        }
+
+        @Override
+        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+            currentIcon().paintIcon(c, g, x, y);
+        }
+
+        @Contract(pure = true)
+        private Icon currentIcon() {
+            return active ? activeIcon : inactiveIcon;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return currentIcon().getIconWidth();
+        }
+
+        @Override
+        public int getIconHeight() {
+            return currentIcon().getIconHeight();
+        }
+    }
+
+    protected static class CloseButtonUI extends DarkButtonUI {
+
+        @Override
+        protected Color getShadowColor(@NotNull final AbstractButton c) {
+            return c.getModel().isArmed() ? UIManager.getColor("TitlePane.close.clickColor")
+                                          : UIManager.getColor("TitlePane.close.rollOverColor");
+        }
     }
 
     private class CloseAction extends AbstractAction {
@@ -533,7 +595,6 @@ public class DarkTitlePane extends JComponent {
             close();
         }
     }
-
 
     private class MinimizeAction extends AbstractAction {
         public MinimizeAction() {
@@ -591,15 +652,6 @@ public class DarkTitlePane extends JComponent {
             return Math.max(BAR_HEIGHT, height);
         }
 
-        private Dimension getPreferredMenuSize() {
-            var menuBarLayout = menuBar.getLayout();
-            Dimension size = null;
-            if (menuBarLayout != null) {
-                size = menuBarLayout.preferredLayoutSize(menuBar);
-            }
-            return (size != null) ? size : menuBar.getPreferredSize();
-        }
-
         public void layoutContainer(final Container c) {
             boolean leftToRight = isLeftToRight(window);
 
@@ -653,6 +705,15 @@ public class DarkTitlePane extends JComponent {
                 //Todo.
             }
         }
+
+        private Dimension getPreferredMenuSize() {
+            var menuBarLayout = menuBar.getLayout();
+            Dimension size = null;
+            if (menuBarLayout != null) {
+                size = menuBarLayout.preferredLayoutSize(menuBar);
+            }
+            return (size != null) ? size : menuBar.getPreferredSize();
+        }
     }
 
     protected class PropertyChangeHandler implements PropertyChangeListener {
@@ -684,40 +745,9 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-    private void updateSystemIcon() {
-        Window window = getWindow();
-        if (window == null) {
-            windowIconButton.setIcon(null);
-            return;
-        }
-
-        List<Image> icons = window.getIconImages();
-        assert icons != null;
-
-        Icon systemIcon;
-        if (icons.size() == 0) {
-            systemIcon = UIManager.getIcon("TitlePane.icon");
-        } else if (icons.size() == 1) {
-            systemIcon = new ImageIcon(icons.get(0));
-        } else {
-            systemIcon = new ImageIcon(SunToolkit.getScaledIconImage(icons, IMAGE_WIDTH, IMAGE_HEIGHT));
-        }
-        if (windowIconButton != null) {
-            windowIconButton.setIcon(systemIcon);
-        }
-    }
-
     protected class WindowHandler extends WindowAdapter {
-        public void windowActivated(final WindowEvent ev) {
-            setActive(true);
-        }
-
-        public void windowDeactivated(final WindowEvent ev) {
-            setActive(false);
-        }
-
         @Override
-        public void windowOpened(WindowEvent e) {
+        public void windowOpened(final WindowEvent e) {
             if (window != null) {
                 //Force window to recalculate bounds.
                 var size = window.getSize();
@@ -727,51 +757,13 @@ public class DarkTitlePane extends JComponent {
                 window.setSize(size);
             }
         }
-    }
 
-    protected static class TitlePaneIcon implements Icon {
-
-        private final Icon activeIcon;
-        private final Icon inactiveIcon;
-        private boolean active = true;
-
-        @Contract(pure = true)
-        protected TitlePaneIcon(final Icon active, final Icon inactive) {
-            this.activeIcon = active;
-            this.inactiveIcon = inactive;
+        public void windowActivated(final WindowEvent ev) {
+            setActive(true);
         }
 
-        public void setActive(final boolean active) {
-            this.active = active;
-        }
-
-        @Override
-        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-            currentIcon().paintIcon(c, g, x, y);
-        }
-
-        @Contract(pure = true)
-        private Icon currentIcon() {
-            return active ? activeIcon : inactiveIcon;
-        }
-
-        @Override
-        public int getIconWidth() {
-            return currentIcon().getIconWidth();
-        }
-
-        @Override
-        public int getIconHeight() {
-            return currentIcon().getIconHeight();
-        }
-    }
-
-    protected static class CloseButtonUI extends DarkButtonUI {
-
-        @Override
-        protected Color getShadowColor(@NotNull final AbstractButton c) {
-            return c.getModel().isArmed() ? UIManager.getColor("TitlePane.close.clickColor")
-                                          : UIManager.getColor("TitlePane.close.rollOverColor");
+        public void windowDeactivated(final WindowEvent ev) {
+            setActive(false);
         }
     }
 }

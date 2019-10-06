@@ -42,36 +42,6 @@ public final class ImageUtil {
         return image;
     }
 
-    public static Image toImage(final Icon icon) {
-        if (icon instanceof ImageIcon) {
-            return ((ImageIcon) icon).getImage();
-        } else {
-            BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(),
-                                                    BufferedImage.TYPE_INT_RGB);
-            icon.paintIcon(null, image.getGraphics(), 0, 0);
-            return image;
-        }
-    }
-
-    @NotNull
-    @Contract("null -> fail")
-    public static BufferedImage toBufferedImage(final Image image) {
-        if (image == null) {
-            throw new NullPointerException("Can't covert null image");
-        }
-        if (image instanceof BufferedImage) {
-            return (BufferedImage) image;
-        } else {
-            BufferedImage bufferedImage = new BufferedImage(image.getWidth(null),
-                                                            image.getHeight(null),
-                                                            BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = bufferedImage.createGraphics();
-            g.drawImage(image, 0, 0, null);
-            g.dispose();
-            return bufferedImage;
-        }
-    }
-
     @NotNull
     public static Icon cropIcon(@NotNull final Icon icon, int maxWidth, int maxHeight) {
         if (icon.getIconHeight() <= maxHeight && icon.getIconWidth() <= maxWidth) {
@@ -105,6 +75,36 @@ public final class ImageUtil {
         return new ImageIcon(img);
     }
 
+    public static Image toImage(final Icon icon) {
+        if (icon instanceof ImageIcon) {
+            return ((ImageIcon) icon).getImage();
+        } else {
+            BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(),
+                                                    BufferedImage.TYPE_INT_RGB);
+            icon.paintIcon(null, image.getGraphics(), 0, 0);
+            return image;
+        }
+    }
+
+    @NotNull
+    @Contract("null -> fail")
+    public static BufferedImage toBufferedImage(final Image image) {
+        if (image == null) {
+            throw new NullPointerException("Can't covert null image");
+        }
+        if (image instanceof BufferedImage) {
+            return (BufferedImage) image;
+        } else {
+            BufferedImage bufferedImage = new BufferedImage(image.getWidth(null),
+                                                            image.getHeight(null),
+                                                            BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = bufferedImage.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            return bufferedImage;
+        }
+    }
+
     @NotNull
     @Contract("_, _, _ -> new")
     public static BufferedImage createImage(final int width, final int height, final int type) {
@@ -118,8 +118,8 @@ public final class ImageUtil {
         };
     }
 
-    public static BufferedImage createCompatibleTranslucentImage(int width,
-                                                                 int height) {
+    public static BufferedImage createCompatibleTranslucentImage(final int width,
+                                                                 final int height) {
         return isHeadless() ?
                new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB) :
                getGraphicsConfiguration().createCompatibleImage(width, height,

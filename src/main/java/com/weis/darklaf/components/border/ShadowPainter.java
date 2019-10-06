@@ -38,6 +38,14 @@ public class ShadowPainter {
     @Nullable
     private Color myBorderColor;
 
+    @Contract(pure = true)
+    public ShadowPainter(final Icon top, final Icon topRight, final Icon right,
+                         final Icon bottomRight, final Icon bottom, final Icon bottomLeft,
+                         final Icon left, final Icon topLeft, @Nullable final Color borderColor) {
+        this(top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
+        myBorderColor = borderColor;
+    }
+
     public ShadowPainter(final Icon top, final Icon topRight, final Icon right,
                          final Icon bottomRight, final Icon bottom, final Icon bottomLeft,
                          final Icon left, final Icon topLeft) {
@@ -52,50 +60,6 @@ public class ShadowPainter {
         updateIcons();
     }
 
-    @Contract(pure = true)
-    public ShadowPainter(final Icon top, final Icon topRight, final Icon right,
-                         final Icon bottomRight, final Icon bottom, final Icon bottomLeft,
-                         final Icon left, final Icon topLeft, @Nullable final Color borderColor) {
-        this(top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
-        myBorderColor = borderColor;
-    }
-
-    private static void fill(final Graphics g, final Icon pattern, final int x, final int y, final int from,
-                             final int to, final boolean horizontally) {
-        double scale = SCALE;
-        if (GraphicsUtil.isHighDpiEnabled() && Math.ceil(scale) > scale) {
-            // Direct painting for fractional scale
-            BufferedImage img = ImageUtil.toBufferedImage(ImageUtil.toImage(pattern));
-            int patternSize = horizontally ? img.getWidth() : img.getHeight();
-            Graphics2D g2d = (Graphics2D) g.create();
-            try {
-                g2d.scale(1 / scale, 1 / scale);
-                g2d.translate(x * scale, y * scale);
-                for (int at = (int) Math.floor(from * scale); at < to * scale; at += patternSize) {
-                    if (horizontally) {
-                        g2d.drawImage(img, at, 0, null);
-                    } else {
-                        g2d.drawImage(img, 0, at, null);
-                    }
-                }
-            } finally {
-                g2d.dispose();
-            }
-        } else {
-            for (int at = from; at < to; at++) {
-                if (horizontally) {
-                    pattern.paintIcon(null, g, x + at, y);
-                } else {
-                    pattern.paintIcon(null, g, x, y + at);
-                }
-            }
-        }
-    }
-
-    public void setBorderColor(@Nullable final Color borderColor) {
-        myBorderColor = borderColor;
-    }
-
     private void updateIcons() {
         myCroppedTop = ImageUtil.cropIcon(myTop, 1, Integer.MAX_VALUE);
         myCroppedRight = ImageUtil.cropIcon(myRight, Integer.MAX_VALUE, 1);
@@ -103,9 +67,13 @@ public class ShadowPainter {
         myCroppedLeft = ImageUtil.cropIcon(myLeft, Integer.MAX_VALUE, 1);
     }
 
+    public void setBorderColor(@Nullable final Color borderColor) {
+        myBorderColor = borderColor;
+    }
+
     public BufferedImage createShadow(@NotNull final JComponent c, final int width, final int height) {
         final BufferedImage image = c.getGraphicsConfiguration()
-                                     .createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+                .createCompatibleImage(width, height, Transparency.TRANSLUCENT);
         final Graphics2D g = image.createGraphics();
         paintShadow(c, g, 0, 0, width, height);
         g.dispose();
@@ -167,6 +135,38 @@ public class ShadowPainter {
             g.setColor(myBorderColor);
             g.drawRect(x + leftSize - 1, y + topSize - 1, width - leftSize - rightSize + 1,
                        height - topSize - bottomSize + 1);
+        }
+    }
+
+    private static void fill(final Graphics g, final Icon pattern, final int x, final int y, final int from,
+                             final int to, final boolean horizontally) {
+        double scale = SCALE;
+        if (GraphicsUtil.isHighDpiEnabled() && Math.ceil(scale) > scale) {
+            // Direct painting for fractional scale
+            BufferedImage img = ImageUtil.toBufferedImage(ImageUtil.toImage(pattern));
+            int patternSize = horizontally ? img.getWidth() : img.getHeight();
+            Graphics2D g2d = (Graphics2D) g.create();
+            try {
+                g2d.scale(1 / scale, 1 / scale);
+                g2d.translate(x * scale, y * scale);
+                for (int at = (int) Math.floor(from * scale); at < to * scale; at += patternSize) {
+                    if (horizontally) {
+                        g2d.drawImage(img, at, 0, null);
+                    } else {
+                        g2d.drawImage(img, 0, at, null);
+                    }
+                }
+            } finally {
+                g2d.dispose();
+            }
+        } else {
+            for (int at = from; at < to; at++) {
+                if (horizontally) {
+                    pattern.paintIcon(null, g, x + at, y);
+                } else {
+                    pattern.paintIcon(null, g, x, y + at);
+                }
+            }
         }
     }
 }

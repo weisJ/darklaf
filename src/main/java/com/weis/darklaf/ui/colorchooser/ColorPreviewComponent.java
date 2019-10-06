@@ -13,13 +13,6 @@ final class ColorPreviewComponent extends JComponent {
         setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
     }
 
-    @NotNull
-    @Contract(value = " -> new", pure = true)
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(100, 32);
-    }
-
     public void setColor(final Color c) {
         myColor = c;
         repaint();
@@ -44,5 +37,12 @@ final class ColorPreviewComponent extends JComponent {
         g.fillRect(i.left, i.top, 1, height);
         g.fillRect(i.left + width - 1, i.top, 1, height);
         g.fillRect(i.left, i.top + height - 1, width, 1);
+    }
+
+    @NotNull
+    @Contract(value = " -> new", pure = true)
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(100, 32);
     }
 }

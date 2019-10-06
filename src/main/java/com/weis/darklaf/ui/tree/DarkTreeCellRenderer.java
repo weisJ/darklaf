@@ -16,18 +16,6 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton());
     private TreeRendererComponent rendererComponent = new TreeRendererComponent();
 
-
-    protected static boolean isBooleanRenderingEnabled(@NotNull final JTree tree) {
-        return Boolean.TRUE.equals(tree.getClientProperty("JTree.renderBooleanAsCheckBox"));
-    }
-
-    protected DarkCellRendererToggleButton getBooleanRenderer(@NotNull final JTree table) {
-        if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
-            return radioRenderer;
-        }
-        return checkBoxRenderer;
-    }
-
     @Override
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
                                                   final boolean expanded, final boolean leaf, final int row,
@@ -59,5 +47,16 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             if ("false".equals(str)) val = false;
         }
         return val;
+    }
+
+    protected static boolean isBooleanRenderingEnabled(@NotNull final JTree tree) {
+        return Boolean.TRUE.equals(tree.getClientProperty("JTree.renderBooleanAsCheckBox"));
+    }
+
+    protected DarkCellRendererToggleButton getBooleanRenderer(@NotNull final JTree table) {
+        if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
+            return radioRenderer;
+        }
+        return checkBoxRenderer;
     }
 }

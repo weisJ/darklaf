@@ -1,11 +1,10 @@
 import com.weis.darklaf.LafManager;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class DarklafDemo {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.loadLaf(LafManager.Theme.Dark);
 

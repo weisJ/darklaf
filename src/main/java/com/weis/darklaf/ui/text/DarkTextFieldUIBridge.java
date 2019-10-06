@@ -132,6 +132,11 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
             super(elem);
         }
 
+        protected void setJustification(final int j) {
+            // Justification is done in adjustAllocation(), so disable
+            // ParagraphView's justification handling by doing nothing here.
+        }
+
         /**
          * Fetch the constraining span to flow against for
          * the given child index.  There is no limit for
@@ -142,13 +147,19 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
             return Integer.MAX_VALUE;
         }
 
-        protected void setJustification(final int j) {
-            // Justification is done in adjustAllocation(), so disable
-            // ParagraphView's justification handling by doing nothing here.
-        }
-
-        static boolean isLeftToRight(final java.awt.Component c) {
-            return c.getComponentOrientation().isLeftToRight();
+        /**
+         * Renders using the given rendering surface and area on that surface.
+         * The view may need to do layout and create child views to enable
+         * itself to render into the given allocation.
+         *
+         * @param g the rendering surface to use
+         * @param a the allocated region to render into
+         * @see View#paint
+         */
+        public void paint(final Graphics g, final Shape a) {
+            Rectangle r = (Rectangle) a;
+            g.clipRect(r.x, r.y, r.width, r.height);
+            super.paint(g, adjustAllocation(a));
         }
 
         /**
@@ -229,49 +240,11 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
             return null;
         }
 
-        /**
-         * Update the visibility model with the associated JTextField
-         * (if there is one) to reflect the current visibility as a
-         * result of changes to the document model.  The bounded
-         * range properties are updated.  If the view hasn't yet been
-         * shown the extent will be zero and we just set it to be full
-         * until determined otherwise.
-         */
-        void updateVisibilityModel() {
-            Component c = getContainer();
-            if (c instanceof JTextField) {
-                JTextField field = (JTextField) c;
-                BoundedRangeModel vis = field.getHorizontalVisibility();
-                int hspan = (int) getPreferredSpan(X_AXIS);
-                int extent = vis.getExtent();
-                int maximum = Math.max(hspan, extent);
-                extent = (extent == 0) ? maximum : extent;
-                int value = maximum - extent;
-                int oldValue = vis.getValue();
-                if ((oldValue + extent) > maximum) {
-                    oldValue = maximum - extent;
-                }
-                value = Math.max(0, Math.min(value, oldValue));
-                vis.setRangeProperties(value, extent, 0, maximum, false);
-            }
+        static boolean isLeftToRight(final java.awt.Component c) {
+            return c.getComponentOrientation().isLeftToRight();
         }
 
         // --- View methods -------------------------------------------
-
-        /**
-         * Renders using the given rendering surface and area on that surface.
-         * The view may need to do layout and create child views to enable
-         * itself to render into the given allocation.
-         *
-         * @param g the rendering surface to use
-         * @param a the allocated region to render into
-         * @see View#paint
-         */
-        public void paint(final Graphics g, final Shape a) {
-            Rectangle r = (Rectangle) a;
-            g.clipRect(r.x, r.y, r.width, r.height);
-            super.paint(g, adjustAllocation(a));
-        }
 
         /**
          * Determines the resizability of the view along the
@@ -303,6 +276,21 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
+         * Provides a mapping from the view coordinate space to the logical
+         * coordinate space of the model.
+         *
+         * @param fx the X coordinate >= 0.0f
+         * @param fy the Y coordinate >= 0.0f
+         * @param a  the allocated region to render into
+         * @return the location within the model that best represents the
+         * given point in the view
+         * @see View#viewToModel
+         */
+        public int viewToModel(final float fx, final float fy, final Shape a, final Position.Bias[] bias) {
+            return super.viewToModel(fx, fy, adjustAllocation(a), bias);
+        }
+
+        /**
          * Provides a mapping from the document model coordinate space
          * to the coordinate space of the view mapped to it.
          *
@@ -328,21 +316,6 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Provides a mapping from the view coordinate space to the logical
-         * coordinate space of the model.
-         *
-         * @param fx the X coordinate >= 0.0f
-         * @param fy the Y coordinate >= 0.0f
-         * @param a  the allocated region to render into
-         * @return the location within the model that best represents the
-         * given point in the view
-         * @see View#viewToModel
-         */
-        public int viewToModel(final float fx, final float fy, final Shape a, final Position.Bias[] bias) {
-            return super.viewToModel(fx, fy, adjustAllocation(a), bias);
-        }
-
-        /**
          * Gives notification that something was inserted into the document
          * in a location that this view is responsible for.
          *
@@ -354,6 +327,33 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         public void insertUpdate(final DocumentEvent changes, final Shape a, final ViewFactory f) {
             super.insertUpdate(changes, adjustAllocation(a), f);
             updateVisibilityModel();
+        }
+
+        /**
+         * Update the visibility model with the associated JTextField
+         * (if there is one) to reflect the current visibility as a
+         * result of changes to the document model.  The bounded
+         * range properties are updated.  If the view hasn't yet been
+         * shown the extent will be zero and we just set it to be full
+         * until determined otherwise.
+         */
+        void updateVisibilityModel() {
+            Component c = getContainer();
+            if (c instanceof JTextField) {
+                JTextField field = (JTextField) c;
+                BoundedRangeModel vis = field.getHorizontalVisibility();
+                int hspan = (int) getPreferredSpan(X_AXIS);
+                int extent = vis.getExtent();
+                int maximum = Math.max(hspan, extent);
+                extent = (extent == 0) ? maximum : extent;
+                int value = maximum - extent;
+                int oldValue = vis.getValue();
+                if ((oldValue + extent) > maximum) {
+                    oldValue = maximum - extent;
+                }
+                value = Math.max(0, Math.min(value, oldValue));
+                vis.setRangeProperties(value, extent, 0, maximum, false);
+            }
         }
 
         /**

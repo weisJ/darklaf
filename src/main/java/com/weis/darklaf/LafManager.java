@@ -21,11 +21,11 @@ import java.util.logging.Logger;
  */
 public final class LafManager {
 
+    private static Theme currentLaf = Theme.Dark;
+
     static {
         setLogEnabled(true);
     }
-
-    private static Theme currentLaf = Theme.Dark;
 
     static void setCurrentLaf(final Theme currentLaf) {
         LafManager.currentLaf = currentLaf;
@@ -41,7 +41,7 @@ public final class LafManager {
             LogManager.getLogManager().reset();
         } else {
             try (InputStream inputStream = DarkLaf.class.getClassLoader()
-                                                        .getResourceAsStream("logging.properties")) {
+                    .getResourceAsStream("logging.properties")) {
                 if (inputStream != null) {
                     LogManager.getLogManager().readConfiguration(inputStream);
                 }
@@ -71,9 +71,9 @@ public final class LafManager {
             UIManager.setLookAndFeel(loaf);
             updateLaf();
         } catch (@NotNull final ClassNotFoundException
-                                        | InstantiationException
-                                        | IllegalAccessException
-                                        | UnsupportedLookAndFeelException e) {
+                | InstantiationException
+                | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
     }

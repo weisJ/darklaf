@@ -47,6 +47,11 @@ public class DarkSVGIcon implements Icon, Serializable {
         return new DarkSVGIcon(width, height, this);
     }
 
+    @Override
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        paintIcon(c, g, x, y, 0);
+    }
+
     /**
      * Paint the icon with rotation.
      *
@@ -67,11 +72,6 @@ public class DarkSVGIcon implements Icon, Serializable {
         icon.setPreferredSize(size);
         icon.paintIcon(c, g2, 0, 0);
         g2.dispose();
-    }
-
-    @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        paintIcon(c, g, x, y, 0);
     }
 
     @Override

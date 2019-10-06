@@ -85,16 +85,6 @@ public class DarkButtonBorder implements Border, UIResource {
         }
     }
 
-    public boolean isBorderOpaque() {
-        return false;
-    }
-
-    @Contract("null -> false")
-    public static boolean isThin(final Component c) {
-        return c instanceof JButton
-               && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.thin"));
-    }
-
     public Insets getBorderInsets(final Component c) {
         if (DarkButtonUI.isFullShadow(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
@@ -106,5 +96,15 @@ public class DarkButtonBorder implements Border, UIResource {
         } else {
             return new InsetsUIResource(pad, 2 * pad, pad + shadow, 2 * pad);
         }
+    }
+
+    public boolean isBorderOpaque() {
+        return false;
+    }
+
+    @Contract("null -> false")
+    public static boolean isThin(final Component c) {
+        return c instanceof JButton
+                && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.thin"));
     }
 }

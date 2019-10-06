@@ -23,12 +23,10 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     private static final int ICON_OFF = 4;
     private static final int ARC_SIZE = 3;
     private static final int SIZE = 13;
-
-    private static Dimension size = new Dimension();
     private static final Rectangle viewRect = new Rectangle();
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
-
+    private static Dimension size = new Dimension();
     private final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
 
     @NotNull
@@ -79,17 +77,11 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         return text;
     }
 
-    protected void paintDarkCheck(final JComponent c, final Graphics2D g, @NotNull final JCheckBox b) {
-        GraphicsContext config = new GraphicsContext(g);
-        boolean enabled = b.isEnabled();
-        g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
-
-        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted());
-        if (b.isSelected()) {
-            paintCheckArrow(g, enabled);
+    private void paintBackground(@NotNull final JComponent c, final Graphics2D g) {
+        if (c.isOpaque()) {
+            g.setColor(c.getBackground());
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
-        g.translate(-iconRect.x - ICON_OFF, -iconRect.y - ICON_OFF);
-        config.restore();
     }
 
     public static Icon getIconBullet(final JComponent c, final Graphics2D g, @NotNull final AbstractButton b) {
@@ -126,6 +118,19 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         return icon;
     }
 
+    protected void paintDarkCheck(final JComponent c, final Graphics2D g, @NotNull final JCheckBox b) {
+        GraphicsContext config = new GraphicsContext(g);
+        boolean enabled = b.isEnabled();
+        g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
+
+        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted());
+        if (b.isSelected()) {
+            paintCheckArrow(g, enabled);
+        }
+        g.translate(-iconRect.x - ICON_OFF, -iconRect.y - ICON_OFF);
+        config.restore();
+    }
+
     public static void paintText(@NotNull final Graphics2D g, @NotNull final AbstractButton b,
                                  final Rectangle textRect, final String text, final FontMetrics fm,
                                  final Color disabledTextColor) {
@@ -144,19 +149,9 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         context.restore();
     }
 
-    static void paintCheckArrow(@NotNull final Graphics2D g, final boolean enabled) {
-        var config = GraphicsUtil.setupStrokePainting(g);
-        g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        Color color = enabled ? UIManager.getColor("CheckBox.darcula.selectionEnabledColor")
-                              : UIManager.getColor("CheckBox.darcula.selectionDisabledColor");
-
-        g.setPaint(color);
-        Path2D check = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        check.moveTo(2.5, 8);
-        check.lineTo(5.5, SIZE - 3);
-        check.lineTo(SIZE - 2.7, 3);
-        g.draw(check);
-        config.restore();
+    @Override
+    public Icon getDefaultIcon() {
+        return new IconUIResource(EmptyIcon.create(20));
     }
 
     static void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
@@ -179,16 +174,19 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         g2.dispose();
     }
 
-    private void paintBackground(@NotNull final JComponent c, final Graphics2D g) {
-        if (c.isOpaque()) {
-            g.setColor(c.getBackground());
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        }
-    }
+    static void paintCheckArrow(@NotNull final Graphics2D g, final boolean enabled) {
+        var config = GraphicsUtil.setupStrokePainting(g);
+        g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        Color color = enabled ? UIManager.getColor("CheckBox.darcula.selectionEnabledColor")
+                              : UIManager.getColor("CheckBox.darcula.selectionDisabledColor");
 
-    @Override
-    public Icon getDefaultIcon() {
-        return new IconUIResource(EmptyIcon.create(20));
+        g.setPaint(color);
+        Path2D check = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+        check.moveTo(2.5, 8);
+        check.lineTo(5.5, SIZE - 3);
+        check.lineTo(SIZE - 2.7, 3);
+        g.draw(check);
+        config.restore();
     }
 
     @Override

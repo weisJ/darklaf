@@ -32,29 +32,8 @@ public class DefaultColorPipette extends ColorPipetteBase {
         timer = TimerUtil.createNamedTimer("DefaultColorPipette", 5, e -> updatePipette());
     }
 
-    @Override
-    public Window show() {
-        Window picker = super.show();
-        timer.start();
-        return picker;
-    }
-
-
-    @Override
-    protected Point adjustPickerLocation(@NotNull final Point mouseLocation, @NotNull final Window pickerWindow) {
-        var p = super.adjustPickerLocation(mouseLocation, pickerWindow);
-        p.x += DIALOG_SIZE / 2 - MOUSE_OFF_X;
-        p.y -= DIALOG_SIZE / 2 + MOUSE_OFF_Y;
-        return p;
-    }
-
-    @Override
-    public boolean isAvailable() {
-        if (robot != null) {
-            robot.createScreenCapture(new Rectangle(0, 0, 1, 1));
-            return true;
-        }
-        return false;
+    protected void updatePipette() {
+        updatePipette(false);
     }
 
     @Override
@@ -62,10 +41,17 @@ public class DefaultColorPipette extends ColorPipetteBase {
         return super.getPixelColor(getHotSPot(location));
     }
 
-    protected Point getHotSPot(@NotNull final Point location) {
-        location.x -= MOUSE_OFF_X - 2;
-        location.y -= MOUSE_OFF_Y + 2;
-        return location;
+    @Override
+    public Window show() {
+        Window picker = super.show();
+        timer.start();
+        return picker;
+    }
+
+    @Override
+    public void cancelPipette() {
+        timer.stop();
+        super.cancelPipette();
     }
 
     @Override
@@ -104,16 +90,17 @@ public class DefaultColorPipette extends ColorPipetteBase {
         return pickerWindow;
     }
 
-    protected Icon getPipetteIcon() {
-        return UIManager.getIcon("ColorChooser.pipette.icon");
+    @Override
+    protected JWindow createPickerWindow(final Window parent) {
+        return new DefaultPickerWindow(parent, this);
     }
 
-    protected Color getPipetteBorderColor() {
-        return UIManager.getColor("ColorChooser.pipetteBorderColor");
-    }
-
-    protected void updatePipette() {
-        updatePipette(false);
+    @Override
+    protected Point adjustPickerLocation(@NotNull final Point mouseLocation, @NotNull final Window pickerWindow) {
+        var p = super.adjustPickerLocation(mouseLocation, pickerWindow);
+        p.x += DIALOG_SIZE / 2 - MOUSE_OFF_X;
+        p.y -= DIALOG_SIZE / 2 + MOUSE_OFF_Y;
+        return p;
     }
 
     protected void updatePipette(final boolean force) {
@@ -142,12 +129,6 @@ public class DefaultColorPipette extends ColorPipetteBase {
     }
 
     @Override
-    public void cancelPipette() {
-        timer.stop();
-        super.cancelPipette();
-    }
-
-    @Override
     public void dispose() {
         timer.stop();
         super.dispose();
@@ -157,9 +138,27 @@ public class DefaultColorPipette extends ColorPipetteBase {
         zoomImage = null;
     }
 
+    protected Point getHotSPot(@NotNull final Point location) {
+        location.x -= MOUSE_OFF_X - 2;
+        location.y -= MOUSE_OFF_Y + 2;
+        return location;
+    }
+
     @Override
-    protected JWindow createPickerWindow(final Window parent) {
-        return new DefaultPickerWindow(parent, this);
+    public boolean isAvailable() {
+        if (robot != null) {
+            robot.createScreenCapture(new Rectangle(0, 0, 1, 1));
+            return true;
+        }
+        return false;
+    }
+
+    protected Icon getPipetteIcon() {
+        return UIManager.getIcon("ColorChooser.pipette.icon");
+    }
+
+    protected Color getPipetteBorderColor() {
+        return UIManager.getColor("ColorChooser.pipetteBorderColor");
     }
 
     protected static class DefaultPickerWindow extends PickerWindow {

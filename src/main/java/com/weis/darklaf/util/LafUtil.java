@@ -88,9 +88,34 @@ public final class LafUtil {
     }
 
     @NotNull
-    private static DimensionUIResource parseSize(@NotNull final String value) {
-        int[] dim = Arrays.stream(value.split(",", 2)).mapToInt(Integer::parseInt).toArray();
-        return new DimensionUIResource(dim[0], dim[1]);
+    private static Object parseInsets(final String value) {
+        final List<String> numbers = StringUtil.split(value, ",");
+        return new InsetsUIResource(
+                Integer.parseInt(numbers.get(0)),
+                Integer.parseInt(numbers.get(1)),
+                Integer.parseInt(numbers.get(2)),
+                Integer.parseInt(numbers.get(3)));
+    }
+
+    @NotNull
+    private static Object parseObject(final String value) {
+        try {
+            return Class.forName(value).getDeclaredConstructor().newInstance();
+        } catch (@NotNull final Exception e) {
+            return new LoadError(e.getMessage());
+        }
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    private static Object parseFont(final String value) {
+        try {
+            final String[] decode = value.split("-");
+            //noinspection MagicConstant
+            return new Font(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
+        } catch (@NotNull final Exception e) {
+            return new Font("Monospaced", Font.PLAIN, 12);
+        }
     }
 
     private static Icon parseIcon(@NotNull final String value) {
@@ -125,35 +150,9 @@ public final class LafUtil {
     }
 
     @NotNull
-    @Contract("_ -> new")
-    private static Object parseFont(final String value) {
-        try {
-            final String[] decode = value.split("-");
-            //noinspection MagicConstant
-            return new Font(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
-        } catch (@NotNull final Exception e) {
-            return new Font("Monospaced", Font.PLAIN, 12);
-        }
-    }
-
-    @NotNull
-    private static Object parseObject(final String value) {
-        try {
-            return Class.forName(value).getDeclaredConstructor().newInstance();
-        } catch (@NotNull final Exception e) {
-            return new LoadError(e.getMessage());
-        }
-    }
-
-
-    @NotNull
-    private static Object parseInsets(final String value) {
-        final List<String> numbers = StringUtil.split(value, ",");
-        return new InsetsUIResource(
-                Integer.parseInt(numbers.get(0)),
-                Integer.parseInt(numbers.get(1)),
-                Integer.parseInt(numbers.get(2)),
-                Integer.parseInt(numbers.get(3)));
+    private static DimensionUIResource parseSize(@NotNull final String value) {
+        int[] dim = Arrays.stream(value.split(",", 2)).mapToInt(Integer::parseInt).toArray();
+        return new DimensionUIResource(dim[0], dim[1]);
     }
 
     @Nullable

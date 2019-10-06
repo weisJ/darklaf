@@ -11,9 +11,9 @@ import java.awt.*;
 
 public class ScrollPopupMenu extends JPopupMenu {
 
-    private int maxHeight;
     private final JPanel contentPane;
     private final JScrollPane scrollPane;
+    private int maxHeight;
     private JWindow popWin;
     private int posX;
     private int posY;
@@ -52,10 +52,6 @@ public class ScrollPopupMenu extends JPopupMenu {
         addMenuKeyListener(menuKeyListener);
     }
 
-    public void setMaxHeight(final int maxHeight) {
-        this.maxHeight = maxHeight;
-    }
-
     @NotNull
     private OverlayScrollPane createScrollPane() {
         var view = new JPanel(new BorderLayout());
@@ -71,6 +67,10 @@ public class ScrollPopupMenu extends JPopupMenu {
         return overlayScrollPane;
     }
 
+    public void setMaxHeight(final int maxHeight) {
+        this.maxHeight = maxHeight;
+    }
+
     @Override
     public JMenuItem add(@NotNull final JMenuItem menuItem) {
         menuItem.getModel().addChangeListener(e -> contentPane.repaint(menuItem.getBounds()));
@@ -78,6 +78,29 @@ public class ScrollPopupMenu extends JPopupMenu {
     }
 
     @Override
+    public void pack() {
+        if (popWin == null) {
+            return;
+        }
+        final Dimension prefSize = getPreferredSize();
+        if (maxHeight == 0 || prefSize.height <= maxHeight) {
+            setBounds(0, 0, prefSize.width, prefSize.height);
+            popWin.setContentPane(this);
+            setBorderPainted(true);
+            popWin.setSize(prefSize.width, prefSize.height);
+        } else {
+            int increment = getComponentCount() > 0
+                            ? Math.max(1, getComponent(0).getPreferredSize().height / 2)
+                            : 1;
+            var bar = scrollPane.getVerticalScrollBar();
+            bar.setValue(bar.getMinimum());
+            bar.setUnitIncrement(increment);
+            setBorderPainted(false);
+            popWin.setContentPane(contentPane);
+            popWin.pack();
+            popWin.setSize(popWin.getSize().width + bar.getPreferredSize().width, maxHeight);
+        }
+    }    @Override
     public void setLocation(final int x, final int y) {
         if (popWin != null && popWin.isShowing()) {
             popWin.setLocation(x, y);
@@ -87,7 +110,15 @@ public class ScrollPopupMenu extends JPopupMenu {
         }
     }
 
-    @Override
+    /**
+     * Get the scroll pane of the popup.
+     *
+     * @return scroll pane;
+     */
+    @Nullable
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }    @Override
     public boolean isVisible() {
         return popWin != null && popWin.isShowing();
     }
@@ -144,40 +175,9 @@ public class ScrollPopupMenu extends JPopupMenu {
         requestFocus();
     }
 
-    @Override
-    public void pack() {
-        if (popWin == null) {
-            return;
-        }
-        final Dimension prefSize = getPreferredSize();
-        if (maxHeight == 0 || prefSize.height <= maxHeight) {
-            setBounds(0, 0, prefSize.width, prefSize.height);
-            popWin.setContentPane(this);
-            setBorderPainted(true);
-            popWin.setSize(prefSize.width, prefSize.height);
-        } else {
-            int increment = getComponentCount() > 0
-                            ? Math.max(1, getComponent(0).getPreferredSize().height / 2)
-                            : 1;
-            var bar = scrollPane.getVerticalScrollBar();
-            bar.setValue(bar.getMinimum());
-            bar.setUnitIncrement(increment);
-            setBorderPainted(false);
-            popWin.setContentPane(contentPane);
-            popWin.pack();
-            popWin.setSize(popWin.getSize().width + bar.getPreferredSize().width, maxHeight);
-        }
-    }
 
-    /**
-     * Get the scroll pane of the popup.
-     *
-     * @return scroll pane;
-     */
-    @Nullable
-    public JScrollPane getScrollPane() {
-        return scrollPane;
-    }
+
+
 
     private boolean isPopupMenu() {
         var invoker = getInvoker();

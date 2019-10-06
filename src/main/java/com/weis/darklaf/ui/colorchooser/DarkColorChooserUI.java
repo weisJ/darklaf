@@ -37,21 +37,21 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     };
     private final AncestorListener ancestorListener = new AncestorListener() {
         @Override
-        public void ancestorAdded(AncestorEvent event) {
+        public void ancestorAdded(final AncestorEvent event) {
             var win = SwingUtilities.getWindowAncestor(chooser);
             if (win instanceof Dialog) {
-                ((Dialog)win).setResizable(false);
+                ((Dialog) win).setResizable(false);
                 chooser.removeAncestorListener(ancestorListener);
             }
         }
 
         @Override
-        public void ancestorRemoved(AncestorEvent event) {
+        public void ancestorRemoved(final AncestorEvent event) {
 
         }
 
         @Override
-        public void ancestorMoved(AncestorEvent event) {
+        public void ancestorMoved(final AncestorEvent event) {
 
         }
     };
@@ -74,6 +74,12 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     }
 
     @Override
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+        chooser.setPreviewPanel(new DarkPreviewPanel());
+    }
+
+    @Override
     protected void installListeners() {
         super.installListeners();
         chooser.addPropertyChangeListener(propertyChangeListener);
@@ -85,11 +91,5 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
         super.uninstallListeners();
         chooser.removePropertyChangeListener(propertyChangeListener);
         chooser.removeAncestorListener(ancestorListener);
-    }
-
-    @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        chooser.setPreviewPanel(new DarkPreviewPanel());
     }
 }

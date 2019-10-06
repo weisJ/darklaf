@@ -16,7 +16,8 @@ public class SelectWordAction extends TextAction {
     public SelectWordAction() {
         super(DefaultEditorKit.selectWordAction);
         start = new BeginWordAction("pigdog", false);
-        end = new EndWordAction("pigdog", true);    }
+        end = new EndWordAction("pigdog", true);
+    }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
@@ -40,8 +41,7 @@ public class SelectWordAction extends TextAction {
                 int begOffs = getWordStart(textArea, offs);
                 if (select) {
                     textArea.moveCaretPosition(begOffs);
-                }
-                else {
+                } else {
                     textArea.setCaretPosition(begOffs);
                 }
             } catch (BadLocationException ble) {
@@ -71,8 +71,7 @@ public class SelectWordAction extends TextAction {
                 int endOffs = getWordEnd(textArea, offs);
                 if (select) {
                     textArea.moveCaretPosition(endOffs);
-                }
-                else {
+                } else {
                     textArea.setCaretPosition(endOffs);
                 }
             } catch (BadLocationException ble) {

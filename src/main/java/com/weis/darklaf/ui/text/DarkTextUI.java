@@ -26,14 +26,6 @@ public abstract class DarkTextUI extends BasicTextUI {
     protected abstract DarkCaret.CaretStyle getDefaultCaretStyle();
 
     @Override
-    public void installUI(final JComponent c) {
-        if (c instanceof JTextComponent) {
-            editor = (JTextComponent) c;
-        }
-        super.installUI(c);
-    }
-
-    @Override
     protected void installDefaults() {
         super.installDefaults();
         editor.putClientProperty("JTextComponent.roundedSelection",
@@ -46,22 +38,13 @@ public abstract class DarkTextUI extends BasicTextUI {
         editor.putClientProperty("JTextComponent.roundedSelection", null);
     }
 
-    public class FocusAction extends AbstractAction {
-
-        public void actionPerformed(final ActionEvent e) {
-            editor.requestFocus();
+    @Override
+    public void installUI(final JComponent c) {
+        if (c instanceof JTextComponent) {
+            editor = (JTextComponent) c;
         }
-
-        public boolean isEnabled() {
-            return editor.isEditable();
-        }
+        super.installUI(c);
     }
-
-
-
-    /*
-     * Implementation of BasicTextUI.
-     */
 
     /**
      * Invoked when editable property is changed.
@@ -99,6 +82,12 @@ public abstract class DarkTextUI extends BasicTextUI {
         }
     }
 
+
+
+    /*
+     * Implementation of BasicTextUI.
+     */
+
     /**
      * Create a default action map.  This is basically the
      * set of actions found exported by the component.
@@ -116,5 +105,16 @@ public abstract class DarkTextUI extends BasicTextUI {
         map.put(TransferHandler.getPasteAction().getValue(Action.NAME),
                 TransferHandler.getPasteAction());
         return map;
+    }
+
+    public class FocusAction extends AbstractAction {
+
+        public void actionPerformed(final ActionEvent e) {
+            editor.requestFocus();
+        }
+
+        public boolean isEnabled() {
+            return editor.isEditable();
+        }
     }
 }

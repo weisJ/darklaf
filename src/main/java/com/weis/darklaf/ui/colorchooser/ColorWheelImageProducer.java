@@ -27,10 +27,6 @@ public class ColorWheelImageProducer extends MemoryImageSource {
         generateColorWheel();
     }
 
-    public int getRadius() {
-        return Math.min(myWidth, myHeight) / 2 - 2;
-    }
-
     private void generateLookupTables() {
         mySat = new float[myWidth * myHeight];
         myHues = new float[myWidth * myHeight];
@@ -53,8 +49,8 @@ public class ColorWheelImageProducer extends MemoryImageSource {
 
                 int index = x + y * myWidth;
                 mySat[index] = (float) Math.sqrt(squarekx + ky
-                                                            * ky)
-                               / radius;
+                        * ky)
+                        / radius;
                 if (mySat[index] <= 1f) {
                     myAlphas[index] = 0xff000000;
                 } else {
@@ -78,5 +74,9 @@ public class ColorWheelImageProducer extends MemoryImageSource {
             }
         }
         newPixels();
+    }
+
+    public int getRadius() {
+        return Math.min(myWidth, myHeight) / 2 - 2;
     }
 }

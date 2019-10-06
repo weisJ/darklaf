@@ -103,26 +103,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         doneInit = true;
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(520, 420);
-    }
-
-    private void updateFormatters() {
-        for (ColorValueFormatter formatter : formatters) {
-            formatter.setModel(getDarkColorModel());
-        }
-    }
-
-    private void updateValueFields() {
-        var model = getDarkColorModel();
-        int count = model.getValueCount();
-        for (int i = 0; i < valueFields.length; i++) {
-            valueFields[i].setEnabled(i < count);
-            valueFields[i].setVisible(i < count);
-        }
-    }
-
     private void updateDescriptors() {
         var desc = getDarkColorModel().getLabelDescriptorsBefore();
         var descAfter = getDarkColorModel().getLabelDescriptorsAfter();
@@ -138,6 +118,65 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
                 descriptorsAfter[i].setText("");
             }
         }
+    }
+
+    private void updateValueFields() {
+        var model = getDarkColorModel();
+        int count = model.getValueCount();
+        for (int i = 0; i < valueFields.length; i++) {
+            valueFields[i].setEnabled(i < count);
+            valueFields[i].setVisible(i < count);
+        }
+    }
+
+    private void updateFormatters() {
+        for (ColorValueFormatter formatter : formatters) {
+            formatter.setModel(getDarkColorModel());
+        }
+    }
+
+    private void applyColorToFields(final Color color) {
+        var model = getDarkColorModel();
+        isChanging = true;
+        int[] values = model.getValuesFromColor(color);
+        for (int i = 0; i < values.length; i++) {
+            valueFields[i].setValue(values[i]);
+        }
+        isChanging = false;
+    }
+
+    @NotNull
+    private JFormattedTextField createColorField(final boolean hex) {
+        JFormattedTextField field = new JFormattedTextField(0);
+        field.setColumns(hex ? 8 : 4);
+        if (!hex) {
+            field.addPropertyChangeListener(e -> {
+                if ("value".equals(e.getPropertyName())) {
+                    updatePreviewFromTextFields();
+                }
+            });
+        } else {
+            field.addPropertyChangeListener(e -> {
+                if ("value".equals(e.getPropertyName())) {
+                    if (isChanging) return;
+                    var hexStr = e.getNewValue().toString();
+                    var alpha = isColorTransparencySelectionEnabled()
+                                ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
+                    var c = new Color(
+                            Integer.valueOf(hexStr.substring(0, 2), 16),
+                            Integer.valueOf(hexStr.substring(2, 4), 16),
+                            Integer.valueOf(hexStr.substring(4, 6), 16),
+                            alpha);
+                    colorWheelPanel.setColor(c, textHex);
+                }
+            });
+        }
+        field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
+        return field;
+    }
+
+    protected DarkColorModel getDarkColorModel() {
+        return (DarkColorModel) formatBox.getSelectedItem();
     }
 
     @NotNull
@@ -195,6 +234,22 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return result;
     }
 
+    private void updatePreviewFromTextFields() {
+        if (!doneInit || isChanging) return;
+        isChanging = true;
+        int[] values = new int[valueFields.length];
+        for (int i = 0; i < valueFields.length; i++) {
+            values[i] = (((Integer) valueFields[i].getValue()));
+        }
+        var color = getDarkColorModel().getColorFromValues(values);
+
+        if (isColorTransparencySelectionEnabled()) {
+            color = ColorUtil.toAlpha(color, getColorFromModel().getAlpha());
+        }
+        colorWheelPanel.setColor(color, valueFields[0]);
+        isChanging = false;
+    }
+
     protected Icon getPipetteIcon() {
         return UIManager.getIcon("ColorChooser.pipette.icon");
     }
@@ -203,39 +258,9 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return UIManager.getIcon("ColorChooser.pipetteRollover.icon");
     }
 
-
-    @NotNull
-    private JFormattedTextField createColorField(final boolean hex) {
-        JFormattedTextField field = new JFormattedTextField(0);
-        field.setColumns(hex ? 8 : 4);
-        if (!hex) {
-            field.addPropertyChangeListener(e -> {
-                if ("value".equals(e.getPropertyName())) {
-                    updatePreviewFromTextFields();
-                }
-            });
-        } else {
-            field.addPropertyChangeListener(e -> {
-                if ("value".equals(e.getPropertyName())) {
-                    if (isChanging) return;
-                    var hexStr = e.getNewValue().toString();
-                    var alpha = isColorTransparencySelectionEnabled()
-                                ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
-                    var c = new Color(
-                            Integer.valueOf(hexStr.substring(0, 2), 16),
-                            Integer.valueOf(hexStr.substring(2, 4), 16),
-                            Integer.valueOf(hexStr.substring(4, 6), 16),
-                            alpha);
-                    colorWheelPanel.setColor(c, textHex);
-                }
-            });
-        }
-        field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
-        return field;
-    }
-
-    protected DarkColorModel getDarkColorModel() {
-        return (DarkColorModel) formatBox.getSelectedItem();
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(520, 420);
     }
 
     @Override
@@ -259,19 +284,15 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     @Override
     public int getMnemonic() {
         return KeyEvent.VK_W;
-    }
-
-    @Override
-    public int getDisplayedMnemonicIndex() {
-        return 6;
-    }
-
-    @Override
+    }    @Override
     public boolean isColorTransparencySelectionEnabled() {
         return colorWheelPanel.isColorTransparencySelectionEnabled();
     }
 
     @Override
+    public int getDisplayedMnemonicIndex() {
+        return 6;
+    }    @Override
     public void setColorTransparencySelectionEnabled(final boolean b) {
         boolean oldValue = isColorTransparencySelectionEnabled();
         if (b != oldValue) {
@@ -340,30 +361,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         isChanging = changingOld;
     }
 
-    private void applyColorToFields(final Color color) {
-        var model = getDarkColorModel();
-        isChanging = true;
-        int[] values = model.getValuesFromColor(color);
-        for (int i = 0; i < values.length; i++) {
-            valueFields[i].setValue(values[i]);
-        }
-        isChanging = false;
-    }
 
-    private void updatePreviewFromTextFields() {
-        if (!doneInit || isChanging) return;
-        isChanging = true;
-        int[] values = new int[valueFields.length];
-        for (int i = 0; i < valueFields.length; i++) {
-            values[i] = (((Integer) valueFields[i].getValue()));
-        }
-        var color = getDarkColorModel().getColorFromValues(values);
 
-        if (isColorTransparencySelectionEnabled()) {
-            color = ColorUtil.toAlpha(color, getColorFromModel().getAlpha());
-        }
-        colorWheelPanel.setColor(color, valueFields[0]);
-        isChanging = false;
-    }
+
 
 }

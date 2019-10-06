@@ -13,13 +13,6 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     private static final DarkTreeCellEditor checkBoxEditor = new DarkTreeCellEditor(new JCheckBox());
     private static final DarkTreeCellEditor radioButtonEditor = new DarkTreeCellEditor(new JRadioButton());
 
-    protected DarkTreeCellEditor getBooleanEditor(@NotNull final JTree table) {
-        if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
-            return radioButtonEditor;
-        }
-        return checkBoxEditor;
-    }
-
     public DarkDefaultTreeEditor(final JTree tree, final DarkTreeCellRenderer renderer) {
         this(tree, renderer, null);
     }
@@ -46,6 +39,22 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
         };
     }
 
+    protected boolean isBooleanRenderer(final JTree tree, final int row) {
+        var isBoolRenderer = realEditor instanceof DarkTreeCellEditor
+                && ((DarkTreeCellEditor) realEditor).isBooleanEditor(tree);
+        if (isBoolRenderer) return true;
+        var path = tree.getPathForRow(row);
+        return path != null
+                && DarkTreeCellRenderer.unwrapBooleanIfPossible(path.getLastPathComponent()) instanceof Boolean;
+    }
+
+    protected DarkTreeCellEditor getBooleanEditor(@NotNull final JTree table) {
+        if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
+            return radioButtonEditor;
+        }
+        return checkBoxEditor;
+    }
+
     @Override
     public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
                                                 final boolean expanded, final boolean leaf, final int row) {
@@ -59,6 +68,16 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
             ((Container) comp).add(editingComponent);
         }
         return comp;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return super.getCellEditorValue();
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+        return super.stopCellEditing();
     }
 
     @Override
@@ -84,24 +103,5 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
             }
         }
         return super.canEditImmediately(event);
-    }
-
-    @Override
-    public boolean stopCellEditing() {
-        return super.stopCellEditing();
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-        return super.getCellEditorValue();
-    }
-
-    protected boolean isBooleanRenderer(final JTree tree, final int row) {
-        var isBoolRenderer = realEditor instanceof DarkTreeCellEditor
-                && ((DarkTreeCellEditor) realEditor).isBooleanEditor(tree);
-        if (isBoolRenderer) return true;
-        var path = tree.getPathForRow(row);
-        return path != null
-                && DarkTreeCellRenderer.unwrapBooleanIfPossible(path.getLastPathComponent()) instanceof Boolean;
     }
 }

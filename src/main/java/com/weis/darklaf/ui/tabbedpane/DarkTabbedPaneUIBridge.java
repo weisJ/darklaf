@@ -52,11 +52,42 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
 // Instance variables initialized at installation
 
+    /* This method will create and return a polygon shape for the given tab rectangle
+     * which has been cropped at the specified cropline with a torn edge visual.
+     * e.g. A "File" tab which has cropped been cropped just after the "i":
+     *             -------------
+     *             |  .....     |
+     *             |  .          |
+     *             |  ...  .    |
+     *             |  .    .   |
+     *             |  .    .    |
+     *             |  .    .     |
+     *             --------------
+     *
+     * The x, y arrays below define the pattern used to create a "torn" edge
+     * segment which is repeated to fill the edge of the tab.
+     * For tabs placed on TOP and BOTTOM, this righthand torn edge is created by
+     * line segments which are defined by coordinates obtained by
+     * subtracting xCropLen[i] from (tab.x + tab.width) and adding yCroplen[i]
+     * to (tab.y).
+     * For tabs placed on LEFT or RIGHT, the bottom torn edge is created by
+     * subtracting xCropLen[i] from (tab.y + tab.height) and adding yCropLen[i]
+     * to (tab.x).
+     */
+    protected static final int[] xCropLen = {1, 1, 0, 0, 1, 1, 2, 2};
+    protected static final int[] yCropLen = {0, 3, 3, 6, 6, 9, 9, 12};
+    protected static final int CROP_SEGMENT = 12;
+    protected final Insets currentPadInsets = new Insets(0, 0, 0, 0);
+    protected final Insets currentTabAreaInsets = new Insets(0, 0, 0, 0);
+    /**
+     * A rectangle used for general layout calculations in order
+     * to avoid constructing many new Rectangles on the fly.
+     */
+    protected final transient Rectangle calcRect = new Rectangle(0, 0, 0, 0);
     /**
      * The tab pane
      */
     protected JTabbedPane tabPane;
-
     /**
      * Highlight color
      */
@@ -78,7 +109,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      */
     protected Color focus;
     protected Color selectedColor;
-
     /**
      * Text icon gap
      */
@@ -87,7 +117,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * Tab run overlay
      */
     protected int tabRunOverlay;
-
     /**
      * Tab insets
      */
@@ -105,9 +134,11 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      */
     protected Insets contentBorderInsets;
     protected boolean tabsOverlapBorder;
+
+
+// Transient variables (recalculated each time TabbedPane is layed out)
     protected boolean tabsOpaque = true;
     protected boolean contentOpaque = true;
-
     /**
      * As of Java 2 platform v1.3 this previously undocumented field is no
      * longer used.
@@ -149,8 +180,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     @Deprecated
     protected KeyStroke rightKey;
 
-
-// Transient variables (recalculated each time TabbedPane is layed out)
+// Listeners
     /**
      * Tab runs
      */
@@ -167,6 +197,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * Tab rects
      */
     protected Rectangle[] rects = new Rectangle[0];
+
+// Private instance data
     /**
      * Maximum tab height
      */
@@ -175,9 +207,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * Maximum tab width
      */
     protected int maxTabWidth;
-
-// Listeners
-
     /**
      * Tab change listener
      */
@@ -194,61 +223,42 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * Focus change listener
      */
     protected FocusListener focusListener;
-
-// Private instance data
-
-    protected final Insets currentPadInsets = new Insets(0, 0, 0, 0);
-    protected final Insets currentTabAreaInsets = new Insets(0, 0, 0, 0);
-
     protected Component visibleComponent;
     // PENDING(api): See comment for ContainerHandler
     protected Vector<View> htmlViews;
-
     protected Hashtable<Integer, Integer> mnemonicToIndexMap;
-
     /**
      * InputMap used for mnemonics. Only non-null if the JTabbedPane has
      * mnemonics associated with it. Lazily created in initMnemonics.
      */
     protected InputMap mnemonicInputMap;
-
     // For use when tabLayoutPolicy = SCROLL_TAB_LAYOUT
     protected ScrollableTabSupport tabScroller;
-
     protected TabContainer tabContainer;
-
-    /**
-     * A rectangle used for general layout calculations in order
-     * to avoid constructing many new Rectangles on the fly.
-     */
-    protected final transient Rectangle calcRect = new Rectangle(0, 0, 0, 0);
-
     /**
      * Tab that has focus.
      */
     protected int focusIndex;
-
     /**
      * Combined listeners.
      */
     protected Handler handler;
-
     /**
      * Index of the tab the mouse is over.
      */
     protected int rolloverTabIndex;
 
+// UI creation
     /**
      * This is set to true when a component is added/removed from the tab
      * pane and set to false when layout happens.  If true it indicates that
      * tabRuns is not valid and shouldn't be used.
      */
     protected boolean isRunsDirty;
-
     protected boolean calculatedBaseline;
-    protected int baseline;
 
-// UI creation
+// UI Installation/De-installation
+    protected int baseline;
 
     /**
      * Create a UI.
@@ -279,7 +289,60 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         map.put(new Actions(Actions.SCROLL_BACKWARD));
     }
 
-// UI Installation/De-installation
+    protected static Polygon createCroppedTabShape(final int tabPlacement, final Rectangle tabRect, final int cropline) {
+        int rlen;
+        int start;
+        int end;
+        int ostart;
+
+        switch (tabPlacement) {
+            case LEFT:
+            case RIGHT:
+                rlen = tabRect.width;
+                start = tabRect.x;
+                end = tabRect.x + tabRect.width;
+                ostart = tabRect.y + tabRect.height;
+                break;
+            case TOP:
+            case BOTTOM:
+            default:
+                rlen = tabRect.height;
+                start = tabRect.y;
+                end = tabRect.y + tabRect.height;
+                ostart = tabRect.x + tabRect.width;
+        }
+        int rcnt = rlen / CROP_SEGMENT;
+        if (rlen % CROP_SEGMENT > 0) {
+            rcnt++;
+        }
+        int npts = 2 + (rcnt * 8);
+        int[] xp = new int[npts];
+        int[] yp = new int[npts];
+        int pcnt = 0;
+
+        xp[pcnt] = ostart;
+        yp[pcnt++] = end;
+        xp[pcnt] = ostart;
+        yp[pcnt++] = start;
+        for (int i = 0; i < rcnt; i++) {
+            for (int j = 0; j < xCropLen.length; j++) {
+                xp[pcnt] = cropline - xCropLen[j];
+                yp[pcnt] = start + (i * CROP_SEGMENT) + yCropLen[j];
+                if (yp[pcnt] >= end) {
+                    yp[pcnt] = end;
+                    pcnt++;
+                    break;
+                }
+                pcnt++;
+            }
+        }
+        if (tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM) {
+            return new Polygon(xp, yp, pcnt);
+
+        } else { // LEFT or RIGHT
+            return new Polygon(yp, xp, pcnt);
+        }
+    }
 
     public void installUI(final JComponent c) {
         this.tabPane = (JTabbedPane) c;
@@ -305,88 +368,65 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Invoked by <code>installUI</code> to create
-     * a layout manager object to manage
-     * the <code>JTabbedPane</code>.
-     *
-     * @return a layout manager object
-     * @see TabbedPaneLayout
-     * @see javax.swing.JTabbedPane#getTabLayoutPolicy
+     * Uninstalls the keyboard actions.
      */
-    protected LayoutManager createLayoutManager() {
-        if (tabPane.getTabLayoutPolicy() == JTabbedPane.SCROLL_TAB_LAYOUT) {
-            return new TabbedPaneScrollLayout();
-        } else { /* WRAP_TAB_LAYOUT */
-            return new TabbedPaneLayout();
-        }
-    }
-
-    /* In an attempt to preserve backward compatibility for programs
-     * which have extended BasicTabbedPaneUI to do their own layout, the
-     * UI uses the installed layoutManager (and not tabLayoutPolicy) to
-     * determine if scrollTabLayout is enabled.
-     */
-    protected boolean scrollableTabLayoutEnabled() {
-        return (tabPane.getLayout() instanceof TabbedPaneScrollLayout);
+    protected void uninstallKeyboardActions() {
+        SwingUtilities.replaceUIActionMap(tabPane, null);
+        SwingUtilities.replaceUIInputMap(tabPane, JComponent.
+                                                 WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
+                                         null);
+        SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_FOCUSED,
+                                         null);
+        SwingUtilities.replaceUIInputMap(tabPane,
+                                         JComponent.WHEN_IN_FOCUSED_WINDOW,
+                                         null);
+        mnemonicToIndexMap = null;
+        mnemonicInputMap = null;
     }
 
     /**
-     * Creates and installs any required subcomponents for the JTabbedPane.
-     * Invoked by installUI.
-     *
-     * @since 1.4
+     * Uninstall the listeners.
      */
-    protected void installComponents() {
-        if (scrollableTabLayoutEnabled()) {
-            if (tabScroller == null) {
-                tabScroller = new ScrollableTabSupport(tabPane.getTabPlacement());
-                tabPane.add(tabScroller.viewport);
-            }
+    protected void uninstallListeners() {
+        if (mouseListener != null) {
+            tabPane.removeMouseListener(mouseListener);
+            mouseListener = null;
         }
-        installTabContainer();
-    }
+        tabPane.removeMouseMotionListener(getHandler());
+        if (focusListener != null) {
+            tabPane.removeFocusListener(focusListener);
+            focusListener = null;
+        }
 
-    protected void installTabContainer() {
-        for (int i = 0; i < tabPane.getTabCount(); i++) {
-            Component tabComponent = tabPane.getTabComponentAt(i);
-            if (tabComponent != null) {
-                if (tabContainer == null) {
-                    tabContainer = new TabContainer();
-                }
-                tabContainer.add(tabComponent);
-            }
+        tabPane.removeContainerListener(getHandler());
+        if (htmlViews != null) {
+            htmlViews.removeAllElements();
+            htmlViews = null;
         }
-        if (tabContainer == null) {
-            return;
+        if (tabChangeListener != null) {
+            tabPane.removeChangeListener(tabChangeListener);
+            tabChangeListener = null;
         }
-        if (scrollableTabLayoutEnabled()) {
-            tabScroller.tabPanel.add(tabContainer);
-        } else {
-            tabPane.add(tabContainer);
+        if (propertyChangeListener != null) {
+            tabPane.removePropertyChangeListener(propertyChangeListener);
+            propertyChangeListener = null;
         }
+        handler = null;
     }
 
     /**
-     * Creates and returns a JButton that will provide the user
-     * with a way to scroll the tabs in a particular direction. The
-     * returned JButton must be instance of UIResource.
-     *
-     * @param direction One of the SwingConstants constants:
-     *                  SOUTH, NORTH, EAST or WEST
-     * @return Widget for user to
-     * @throws IllegalArgumentException if direction is not one of
-     *                                  NORTH, SOUTH, EAST or WEST
-     * @see javax.swing.JTabbedPane#setTabPlacement
-     * @see javax.swing.SwingConstants
-     * @since 1.5
+     * Uninstall the defaults.
      */
-    protected JButton createScrollButton(final int direction) {
-        if (direction != SOUTH && direction != NORTH && direction != EAST &&
-            direction != WEST) {
-            throw new IllegalArgumentException("Direction must be one of: " +
-                                               "SOUTH, NORTH, EAST or WEST");
-        }
-        return new ScrollableTabButton(direction);
+    protected void uninstallDefaults() {
+        highlight = null;
+        lightHighlight = null;
+        shadow = null;
+        darkShadow = null;
+        focus = null;
+        tabInsets = null;
+        selectedTabPadInsets = null;
+        tabAreaInsets = null;
+        contentBorderInsets = null;
     }
 
     /**
@@ -420,6 +460,122 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             tabPane.remove(tabContainer);
         }
         tabContainer = null;
+    }
+
+    public void paint(final Graphics g, final JComponent c) {
+        int selectedIndex = tabPane.getSelectedIndex();
+        int tabPlacement = tabPane.getTabPlacement();
+
+        ensureCurrentLayout();
+
+        // Paint content border and tab area
+        if (tabsOverlapBorder) {
+            paintContentBorder(g, tabPlacement, selectedIndex);
+        }
+        // If scrollable tabs are enabled, the tab area will be
+        // painted by the scrollable tab panel instead.
+        //
+        if (!scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
+            paintTabArea(g, tabPlacement, selectedIndex);
+        }
+        if (!tabsOverlapBorder) {
+            paintContentBorder(g, tabPlacement, selectedIndex);
+        }
+    }
+
+    public Dimension getMinimumSize(final JComponent c) {
+        // Default to LayoutManager's minimumLayoutSize
+        return null;
+    }
+
+    public Dimension getMaximumSize(final JComponent c) {
+        // Default to LayoutManager's maximumLayoutSize
+        return null;
+    }
+
+    /**
+     * Returns the baseline.
+     *
+     * @throws NullPointerException     {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @see javax.swing.JComponent#getBaseline(int, int)
+     * @since 1.6
+     */
+    public int getBaseline(final JComponent c, final int width, final int height) {
+        super.getBaseline(c, width, height);
+        int baseline = calculateBaselineIfNecessary();
+        if (baseline != -1) {
+            int placement = tabPane.getTabPlacement();
+            Insets insets = tabPane.getInsets();
+            Insets tabAreaInsets = getTabAreaInsets(placement);
+            switch (placement) {
+                case JTabbedPane.TOP:
+                case JTabbedPane.LEFT:
+                case JTabbedPane.RIGHT:
+                    baseline += insets.top + tabAreaInsets.top;
+                    return baseline;
+                case JTabbedPane.BOTTOM:
+                    baseline = height - insets.bottom -
+                            tabAreaInsets.bottom - maxTabHeight + baseline;
+                    return baseline;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Returns an enum indicating how the baseline of the component
+     * changes as the size changes.
+     *
+     * @throws NullPointerException {@inheritDoc}
+     * @see javax.swing.JComponent#getBaseline(int, int)
+     * @since 1.6
+     */
+    public Component.BaselineResizeBehavior getBaselineResizeBehavior(
+            final JComponent c) {
+        super.getBaselineResizeBehavior(c);
+        switch (tabPane.getTabPlacement()) {
+            case JTabbedPane.LEFT:
+            case JTabbedPane.RIGHT:
+            case JTabbedPane.TOP:
+                return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
+            case JTabbedPane.BOTTOM:
+                return Component.BaselineResizeBehavior.CONSTANT_DESCENT;
+        }
+        return Component.BaselineResizeBehavior.OTHER;
+    }
+
+    /**
+     * Invoked by <code>installUI</code> to create
+     * a layout manager object to manage
+     * the <code>JTabbedPane</code>.
+     *
+     * @return a layout manager object
+     * @see TabbedPaneLayout
+     * @see javax.swing.JTabbedPane#getTabLayoutPolicy
+     */
+    protected LayoutManager createLayoutManager() {
+        if (tabPane.getTabLayoutPolicy() == JTabbedPane.SCROLL_TAB_LAYOUT) {
+            return new TabbedPaneScrollLayout();
+        } else { /* WRAP_TAB_LAYOUT */
+            return new TabbedPaneLayout();
+        }
+    }
+
+    /**
+     * Creates and installs any required subcomponents for the JTabbedPane.
+     * Invoked by installUI.
+     *
+     * @since 1.4
+     */
+    protected void installComponents() {
+        if (scrollableTabLayoutEnabled()) {
+            if (tabScroller == null) {
+                tabScroller = new ScrollableTabSupport(tabPane.getTabPlacement());
+                tabPane.add(tabScroller.viewport);
+            }
+        }
+        installTabContainer();
     }
 
     /**
@@ -460,21 +616,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Uninstall the defaults.
-     */
-    protected void uninstallDefaults() {
-        highlight = null;
-        lightHighlight = null;
-        shadow = null;
-        darkShadow = null;
-        focus = null;
-        tabInsets = null;
-        selectedTabPadInsets = null;
-        tabAreaInsets = null;
-        contentBorderInsets = null;
-    }
-
-    /**
      * Install the listeners.
      */
     protected void installListeners() {
@@ -498,50 +639,58 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Uninstall the listeners.
+     * Installs the keyboard actions.
      */
-    protected void uninstallListeners() {
-        if (mouseListener != null) {
-            tabPane.removeMouseListener(mouseListener);
-            mouseListener = null;
-        }
-        tabPane.removeMouseMotionListener(getHandler());
-        if (focusListener != null) {
-            tabPane.removeFocusListener(focusListener);
-            focusListener = null;
-        }
+    protected void installKeyboardActions() {
+        InputMap km = getInputMap(JComponent.
+                                          WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        tabPane.removeContainerListener(getHandler());
-        if (htmlViews != null) {
-            htmlViews.removeAllElements();
-            htmlViews = null;
+        SwingUtilities.replaceUIInputMap(tabPane, JComponent.
+                                                 WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
+                                         km);
+        km = getInputMap(JComponent.WHEN_FOCUSED);
+        SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_FOCUSED, km);
+
+        LazyActionMap.installLazyActionMap(tabPane, DarkTabbedPaneUIBridge.class,
+                                           "TabbedPane.actionMap");
+        updateMnemonics();
+    }
+
+    /* In an attempt to preserve backward compatibility for programs
+     * which have extended BasicTabbedPaneUI to do their own layout, the
+     * UI uses the installed layoutManager (and not tabLayoutPolicy) to
+     * determine if scrollTabLayout is enabled.
+     */
+    protected boolean scrollableTabLayoutEnabled() {
+        return (tabPane.getLayout() instanceof TabbedPaneScrollLayout);
+    }
+
+    protected void installTabContainer() {
+        for (int i = 0; i < tabPane.getTabCount(); i++) {
+            Component tabComponent = tabPane.getTabComponentAt(i);
+            if (tabComponent != null) {
+                if (tabContainer == null) {
+                    tabContainer = new TabContainer();
+                }
+                tabContainer.add(tabComponent);
+            }
         }
-        if (tabChangeListener != null) {
-            tabPane.removeChangeListener(tabChangeListener);
-            tabChangeListener = null;
+        if (tabContainer == null) {
+            return;
         }
-        if (propertyChangeListener != null) {
-            tabPane.removePropertyChangeListener(propertyChangeListener);
-            propertyChangeListener = null;
+        if (scrollableTabLayoutEnabled()) {
+            tabScroller.tabPanel.add(tabContainer);
+        } else {
+            tabPane.add(tabContainer);
         }
-        handler = null;
     }
 
     /**
-     * Creates a mouse listener.
+     * Creates a property change listener.
      *
-     * @return a mouse listener
+     * @return a property change listener
      */
-    protected MouseListener createMouseListener() {
-        return getHandler();
-    }
-
-    /**
-     * Creates a focus listener.
-     *
-     * @return a focus listener
-     */
-    protected FocusListener createFocusListener() {
+    protected PropertyChangeListener createPropertyChangeListener() {
         return getHandler();
     }
 
@@ -555,11 +704,11 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Creates a property change listener.
+     * Creates a mouse listener.
      *
-     * @return a property change listener
+     * @return a mouse listener
      */
-    protected PropertyChangeListener createPropertyChangeListener() {
+    protected MouseListener createMouseListener() {
         return getHandler();
     }
 
@@ -571,21 +720,28 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Installs the keyboard actions.
+     * Creates a focus listener.
+     *
+     * @return a focus listener
      */
-    protected void installKeyboardActions() {
-        InputMap km = getInputMap(JComponent.
-                                          WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    protected FocusListener createFocusListener() {
+        return getHandler();
+    }
 
-        SwingUtilities.replaceUIInputMap(tabPane, JComponent.
-                                                          WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
-                                         km);
-        km = getInputMap(JComponent.WHEN_FOCUSED);
-        SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_FOCUSED, km);
-
-        LazyActionMap.installLazyActionMap(tabPane, DarkTabbedPaneUIBridge.class,
-                                           "TabbedPane.actionMap");
-        updateMnemonics();
+    protected Vector<View> createHTMLVector() {
+        Vector<View> htmlViews = new Vector<>();
+        int count = tabPane.getTabCount();
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                String title = tabPane.getTitleAt(i);
+                if (BasicHTML.isHTMLString(title)) {
+                    htmlViews.addElement(BasicHTML.createHTMLView(tabPane, title));
+                } else {
+                    htmlViews.addElement(null);
+                }
+            }
+        }
+        return htmlViews;
     }
 
     InputMap getInputMap(final int condition) {
@@ -597,23 +753,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                                                 "TabbedPane.focusInputMap");
         }
         return null;
-    }
-
-    /**
-     * Uninstalls the keyboard actions.
-     */
-    protected void uninstallKeyboardActions() {
-        SwingUtilities.replaceUIActionMap(tabPane, null);
-        SwingUtilities.replaceUIInputMap(tabPane, JComponent.
-                                                          WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
-                                         null);
-        SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_FOCUSED,
-                                         null);
-        SwingUtilities.replaceUIInputMap(tabPane,
-                                         JComponent.WHEN_IN_FOCUSED_WINDOW,
-                                         null);
-        mnemonicToIndexMap = null;
-        mnemonicInputMap = null;
     }
 
     /**
@@ -653,7 +792,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, DarkUIUtil.getFocusAcceleratorKeyMask()),
                              "setSelectedIndex");
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_GRAPH_DOWN_MASK
-                                                              | DarkUIUtil.getFocusAcceleratorKeyMask()),
+                                     | DarkUIUtil.getFocusAcceleratorKeyMask()),
                              "setSelectedIndex");
         mnemonicToIndexMap.put(mnemonic, index);
     }
@@ -672,6 +811,29 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
+     * Creates and returns a JButton that will provide the user
+     * with a way to scroll the tabs in a particular direction. The
+     * returned JButton must be instance of UIResource.
+     *
+     * @param direction One of the SwingConstants constants:
+     *                  SOUTH, NORTH, EAST or WEST
+     * @return Widget for user to
+     * @throws IllegalArgumentException if direction is not one of
+     *                                  NORTH, SOUTH, EAST or WEST
+     * @see javax.swing.JTabbedPane#setTabPlacement
+     * @see javax.swing.SwingConstants
+     * @since 1.5
+     */
+    protected JButton createScrollButton(final int direction) {
+        if (direction != SOUTH && direction != NORTH && direction != EAST &&
+                direction != WEST) {
+            throw new IllegalArgumentException("Direction must be one of: " +
+                                                       "SOUTH, NORTH, EAST or WEST");
+        }
+        return new ScrollableTabButton(direction);
+    }
+
+    /**
      * Sets the tab the mouse is over by location. This is a cover method
      * for <code>setRolloverTab(tabForCoordinate(x, y, false))</code>.
      */
@@ -683,17 +845,61 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         setRolloverTab(tabForCoordinate(tabPane, x, y, false));
     }
 
+// UI Rendering
+
+    protected int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
+                                   final boolean validateIfNecessary) {
+        if (validateIfNecessary) {
+            ensureCurrentLayout();
+        }
+        if (isRunsDirty) {
+            // We didn't recalculate the layout, runs and tabCount may not
+            // line up, bail.
+            return -1;
+        }
+        Point p = new Point(x, y);
+
+        if (scrollableTabLayoutEnabled()) {
+            translatePointToTabPanel(x, y, p);
+            Rectangle viewRect = tabScroller.viewport.getViewRect();
+            if (!viewRect.contains(p)) {
+                return -1;
+            }
+        }
+        int tabCount = tabPane.getTabCount();
+        for (int i = 0; i < tabCount; i++) {
+            if (rects[i].contains(p.x, p.y)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    protected void ensureCurrentLayout() {
+        if (!tabPane.isValid()) {
+            tabPane.validate();
+        }
+        /* If tabPane doesn't have a peer yet, the validate() call will
+         * silently fail.  We handle that by forcing a layout if tabPane
+         * is still invalid.  See bug 4237677.
+         */
+        if (!tabPane.isValid()) {
+            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
+            layout.calculateLayoutInfo();
+        }
+    }
+
     /**
-     * Sets the tab the mouse is currently over to <code>index</code>.
-     * <code>index</code> will be -1 if the mouse is no longer over any
-     * tab. No checking is done to ensure the passed in index identifies a
-     * valid tab.
-     *
-     * @param index Index of the tab the mouse is over.
-     * @since 1.5
+     * Returns a point which is translated from the specified point in the
+     * JTabbedPane's coordinate space to the coordinate space of the
+     * ScrollableTabPanel.  This is used for SCROLL_TAB_LAYOUT ONLY.
      */
-    protected void setRolloverTab(final int index) {
-        rolloverTabIndex = index;
+    protected Point translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
+        Point vpp = tabScroller.viewport.getLocation();
+        Point viewp = tabScroller.viewport.getViewPosition();
+        dest.x = srcx - vpp.x + viewp.x;
+        dest.y = srcy - vpp.y + viewp.y;
+        return dest;
     }
 
     /**
@@ -708,66 +914,17 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         return rolloverTabIndex;
     }
 
-    public Dimension getMinimumSize(final JComponent c) {
-        // Default to LayoutManager's minimumLayoutSize
-        return null;
-    }
-
-    public Dimension getMaximumSize(final JComponent c) {
-        // Default to LayoutManager's maximumLayoutSize
-        return null;
-    }
-
     /**
-     * Returns the baseline.
+     * Sets the tab the mouse is currently over to <code>index</code>.
+     * <code>index</code> will be -1 if the mouse is no longer over any
+     * tab. No checking is done to ensure the passed in index identifies a
+     * valid tab.
      *
-     * @throws NullPointerException     {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @param index Index of the tab the mouse is over.
+     * @since 1.5
      */
-    public int getBaseline(final JComponent c, final int width, final int height) {
-        super.getBaseline(c, width, height);
-        int baseline = calculateBaselineIfNecessary();
-        if (baseline != -1) {
-            int placement = tabPane.getTabPlacement();
-            Insets insets = tabPane.getInsets();
-            Insets tabAreaInsets = getTabAreaInsets(placement);
-            switch (placement) {
-                case JTabbedPane.TOP:
-                case JTabbedPane.LEFT:
-                case JTabbedPane.RIGHT:
-                    baseline += insets.top + tabAreaInsets.top;
-                    return baseline;
-                case JTabbedPane.BOTTOM:
-                    baseline = height - insets.bottom -
-                               tabAreaInsets.bottom - maxTabHeight + baseline;
-                    return baseline;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Returns an enum indicating how the baseline of the component
-     * changes as the size changes.
-     *
-     * @throws NullPointerException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
-     */
-    public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-            final JComponent c) {
-        super.getBaselineResizeBehavior(c);
-        switch (tabPane.getTabPlacement()) {
-            case JTabbedPane.LEFT:
-            case JTabbedPane.RIGHT:
-            case JTabbedPane.TOP:
-                return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
-            case JTabbedPane.BOTTOM:
-                return Component.BaselineResizeBehavior.CONSTANT_DESCENT;
-        }
-        return Component.BaselineResizeBehavior.OTHER;
+    protected void setRolloverTab(final int index) {
+        rolloverTabIndex = index;
     }
 
     /**
@@ -794,7 +951,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             Insets tabInsets = getTabInsets(tabPane.getTabPlacement(), tab);
             int cellHeight = maxTabHeight - tabInsets.top - tabInsets.bottom;
             return c.getBaseline(pref.width, pref.height) +
-                   (cellHeight - pref.height) / 2 + tabInsets.top;
+                    (cellHeight - pref.height) / 2 + tabInsets.top;
         } else {
             View view = getTextViewForTab(tab);
             if (view != null) {
@@ -803,7 +960,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                         view, (int) view.getPreferredSpan(View.X_AXIS), viewHeight);
                 if (baseline >= 0) {
                     return maxTabHeight / 2 - viewHeight / 2 + baseline +
-                           getBaselineOffset();
+                            getBaselineOffset();
                 }
                 return -1;
             }
@@ -812,7 +969,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         int fontHeight = metrics.getHeight();
         int fontBaseline = metrics.getAscent();
         return maxTabHeight / 2 - fontHeight / 2 + fontBaseline +
-               getBaselineOffset();
+                getBaselineOffset();
     }
 
     /**
@@ -877,29 +1034,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                     break;
                 }
             }
-        }
-    }
-
-// UI Rendering
-
-    public void paint(final Graphics g, final JComponent c) {
-        int selectedIndex = tabPane.getSelectedIndex();
-        int tabPlacement = tabPane.getTabPlacement();
-
-        ensureCurrentLayout();
-
-        // Paint content border and tab area
-        if (tabsOverlapBorder) {
-            paintContentBorder(g, tabPlacement, selectedIndex);
-        }
-        // If scrollable tabs are enabled, the tab area will be
-        // painted by the scrollable tab panel instead.
-        //
-        if (!scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
-            paintTabArea(g, tabPlacement, selectedIndex);
-        }
-        if (!tabsOverlapBorder) {
-            paintContentBorder(g, tabPlacement, selectedIndex);
         }
     }
 
@@ -982,9 +1116,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             String clippedTitle = title;
 
             if (scrollableTabLayoutEnabled() && tabScroller.croppedEdge.isParamsSet() &&
-                tabScroller.croppedEdge.getTabIndex() == tabIndex && isHorizontalTabPlacement()) {
+                    tabScroller.croppedEdge.getTabIndex() == tabIndex && isHorizontalTabPlacement()) {
                 int availTextWidth = tabScroller.croppedEdge.getCropline() -
-                                     (textRect.x - tabRect.x) - tabScroller.croppedEdge.getCroppedSideWidth();
+                        (textRect.x - tabRect.x) - tabScroller.croppedEdge.getCroppedSideWidth();
                 clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, availTextWidth);
             } else if (!scrollableTabLayoutEnabled() && isHorizontalTabPlacement()) {
                 clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, textRect.width);
@@ -1001,87 +1135,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
     protected boolean isHorizontalTabPlacement() {
         return tabPane.getTabPlacement() == TOP || tabPane.getTabPlacement() == BOTTOM;
-    }
-
-    /* This method will create and return a polygon shape for the given tab rectangle
-     * which has been cropped at the specified cropline with a torn edge visual.
-     * e.g. A "File" tab which has cropped been cropped just after the "i":
-     *             -------------
-     *             |  .....     |
-     *             |  .          |
-     *             |  ...  .    |
-     *             |  .    .   |
-     *             |  .    .    |
-     *             |  .    .     |
-     *             --------------
-     *
-     * The x, y arrays below define the pattern used to create a "torn" edge
-     * segment which is repeated to fill the edge of the tab.
-     * For tabs placed on TOP and BOTTOM, this righthand torn edge is created by
-     * line segments which are defined by coordinates obtained by
-     * subtracting xCropLen[i] from (tab.x + tab.width) and adding yCroplen[i]
-     * to (tab.y).
-     * For tabs placed on LEFT or RIGHT, the bottom torn edge is created by
-     * subtracting xCropLen[i] from (tab.y + tab.height) and adding yCropLen[i]
-     * to (tab.x).
-     */
-    protected static final int[] xCropLen = {1, 1, 0, 0, 1, 1, 2, 2};
-    protected static final int[] yCropLen = {0, 3, 3, 6, 6, 9, 9, 12};
-    protected static final int CROP_SEGMENT = 12;
-
-    protected static Polygon createCroppedTabShape(final int tabPlacement, final Rectangle tabRect, final int cropline) {
-        int rlen;
-        int start;
-        int end;
-        int ostart;
-
-        switch (tabPlacement) {
-            case LEFT:
-            case RIGHT:
-                rlen = tabRect.width;
-                start = tabRect.x;
-                end = tabRect.x + tabRect.width;
-                ostart = tabRect.y + tabRect.height;
-                break;
-            case TOP:
-            case BOTTOM:
-            default:
-                rlen = tabRect.height;
-                start = tabRect.y;
-                end = tabRect.y + tabRect.height;
-                ostart = tabRect.x + tabRect.width;
-        }
-        int rcnt = rlen / CROP_SEGMENT;
-        if (rlen % CROP_SEGMENT > 0) {
-            rcnt++;
-        }
-        int npts = 2 + (rcnt * 8);
-        int[] xp = new int[npts];
-        int[] yp = new int[npts];
-        int pcnt = 0;
-
-        xp[pcnt] = ostart;
-        yp[pcnt++] = end;
-        xp[pcnt] = ostart;
-        yp[pcnt++] = start;
-        for (int i = 0; i < rcnt; i++) {
-            for (int j = 0; j < xCropLen.length; j++) {
-                xp[pcnt] = cropline - xCropLen[j];
-                yp[pcnt] = start + (i * CROP_SEGMENT) + yCropLen[j];
-                if (yp[pcnt] >= end) {
-                    yp[pcnt] = end;
-                    pcnt++;
-                    break;
-                }
-                pcnt++;
-            }
-        }
-        if (tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM) {
-            return new Polygon(xp, yp, pcnt);
-
-        } else { // LEFT or RIGHT
-            return new Polygon(yp, xp, pcnt);
-        }
     }
 
     /* If tabLayoutPolicy == SCROLL_TAB_LAYOUT, this method will paint an edge
@@ -1547,8 +1600,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         // selected tab is not visible (SCROLL_TAB_LAYOUT)
         //
         if (tabPlacement != TOP || selectedIndex < 0 ||
-            (selRect.y + selRect.height + 1 < y) ||
-            (selRect.x < x || selRect.x > x + w)) {
+                (selRect.y + selRect.height + 1 < y) ||
+                (selRect.x < x || selRect.x > x + w)) {
             g.drawLine(x, y, x + w - 2, y);
         } else {
             // Break line to show visual connection to selected tab
@@ -1562,6 +1615,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             }
         }
     }
+
+
+// TabbedPaneUI methods
 
     /**
      * Paints the content border left edge.
@@ -1587,8 +1643,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         // selected tab is not visible (SCROLL_TAB_LAYOUT)
         //
         if (tabPlacement != LEFT || selectedIndex < 0 ||
-            (selRect.x + selRect.width + 1 < x) ||
-            (selRect.y < y || selRect.y > y + h)) {
+                (selRect.x + selRect.width + 1 < x) ||
+                (selRect.y < y || selRect.y > y + h)) {
             g.drawLine(x, y, x, y + h - 2);
         } else {
             // Break line to show visual connection to selected tab
@@ -1624,8 +1680,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         // selected tab is not visible (SCROLL_TAB_LAYOUT)
         //
         if (tabPlacement != BOTTOM || selectedIndex < 0 ||
-            (selRect.y - 1 > h) ||
-            (selRect.x < x || selRect.x > x + w)) {
+                (selRect.y - 1 > h) ||
+                (selRect.x < x || selRect.x > x + w)) {
             g.drawLine(x + 1, y + h - 2, x + w - 2, y + h - 2);
             g.setColor(darkShadow);
             g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
@@ -1668,8 +1724,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         // selected tab is not visible (SCROLL_TAB_LAYOUT)
         //
         if (tabPlacement != RIGHT || selectedIndex < 0 ||
-            (selRect.x - 1 > w) ||
-            (selRect.y < y || selRect.y > y + h)) {
+                (selRect.x - 1 > w) ||
+                (selRect.y < y || selRect.y > y + h)) {
             g.drawLine(x + w - 2, y + 1, x + w - 2, y + h - 3);
             g.setColor(darkShadow);
             g.drawLine(x + w - 1, y, x + w - 1, y + h - 1);
@@ -1690,22 +1746,13 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
-    protected void ensureCurrentLayout() {
-        if (!tabPane.isValid()) {
-            tabPane.validate();
-        }
-        /* If tabPane doesn't have a peer yet, the validate() call will
-         * silently fail.  We handle that by forcing a layout if tabPane
-         * is still invalid.  See bug 4237677.
-         */
-        if (!tabPane.isValid()) {
-            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
-            layout.calculateLayoutInfo();
-        }
+    /**
+     * Returns the tab index which intersects the specified point
+     * in the JTabbedPane's coordinate space.
+     */
+    public int tabForCoordinate(final JTabbedPane pane, final int x, final int y) {
+        return tabForCoordinate(pane, x, y, true);
     }
-
-
-// TabbedPaneUI methods
 
     /**
      * Returns the bounds of the specified tab index.  The bounds are
@@ -1720,80 +1767,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     public int getTabRunCount(final JTabbedPane pane) {
         ensureCurrentLayout();
         return runCount;
-    }
-
-    /**
-     * Returns the tab index which intersects the specified point
-     * in the JTabbedPane's coordinate space.
-     */
-    public int tabForCoordinate(final JTabbedPane pane, final int x, final int y) {
-        return tabForCoordinate(pane, x, y, true);
-    }
-
-    protected int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
-                                   final boolean validateIfNecessary) {
-        if (validateIfNecessary) {
-            ensureCurrentLayout();
-        }
-        if (isRunsDirty) {
-            // We didn't recalculate the layout, runs and tabCount may not
-            // line up, bail.
-            return -1;
-        }
-        Point p = new Point(x, y);
-
-        if (scrollableTabLayoutEnabled()) {
-            translatePointToTabPanel(x, y, p);
-            Rectangle viewRect = tabScroller.viewport.getViewRect();
-            if (!viewRect.contains(p)) {
-                return -1;
-            }
-        }
-        int tabCount = tabPane.getTabCount();
-        for (int i = 0; i < tabCount; i++) {
-            if (rects[i].contains(p.x, p.y)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Returns the bounds of the specified tab in the coordinate space
-     * of the JTabbedPane component.  This is required because the tab rects
-     * are by default defined in the coordinate space of the component where
-     * they are rendered, which could be the JTabbedPane
-     * (for WRAP_TAB_LAYOUT) or a ScrollableTabPanel (SCROLL_TAB_LAYOUT).
-     * This method should be used whenever the tab rectangle must be relative
-     * to the JTabbedPane itself and the result should be placed in a
-     * designated Rectangle object (rather than instantiating and returning
-     * a new Rectangle each time). The tab index parameter must be a valid
-     * tabbed pane tab index (0 to tab count - 1, inclusive).  The destination
-     * rectangle parameter must be a valid <code>Rectangle</code> instance.
-     * The handling of invalid parameters is unspecified.
-     *
-     * @param tabIndex the index of the tab
-     * @param dest     the rectangle where the result should be placed
-     * @return the resulting rectangle
-     * @since 1.4
-     */
-    protected Rectangle getTabBounds(final int tabIndex, final Rectangle dest) {
-        dest.width = rects[tabIndex].width;
-        dest.height = rects[tabIndex].height;
-
-        if (scrollableTabLayoutEnabled()) { // SCROLL_TAB_LAYOUT
-            // Need to translate coordinates based on viewport location &
-            // view position
-            Point vpp = tabScroller.viewport.getLocation();
-            Point viewp = tabScroller.viewport.getViewPosition();
-            dest.x = rects[tabIndex].x + vpp.x - viewp.x;
-            dest.y = rects[tabIndex].y + vpp.y - viewp.y;
-
-        } else { // WRAP_TAB_LAYOUT
-            dest.x = rects[tabIndex].x;
-            dest.y = rects[tabIndex].y;
-        }
-        return dest;
     }
 
     /**
@@ -1837,48 +1810,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         return min;
     }
 
-    /**
-     * Returns a point which is translated from the specified point in the
-     * JTabbedPane's coordinate space to the coordinate space of the
-     * ScrollableTabPanel.  This is used for SCROLL_TAB_LAYOUT ONLY.
-     */
-    protected Point translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
-        Point vpp = tabScroller.viewport.getLocation();
-        Point viewp = tabScroller.viewport.getViewPosition();
-        dest.x = srcx - vpp.x + viewp.x;
-        dest.y = srcy - vpp.y + viewp.y;
-        return dest;
-    }
-
 // BasicTabbedPaneUI methods
-
-    /**
-     * Returns the visible component.
-     *
-     * @return the visible component
-     */
-    protected Component getVisibleComponent() {
-        return visibleComponent;
-    }
-
-    /**
-     * Sets the visible component.
-     *
-     * @param component the component
-     */
-    protected void setVisibleComponent(final Component component) {
-        if (visibleComponent != null
-            && visibleComponent != component
-            && visibleComponent.getParent() == tabPane
-            && visibleComponent.isVisible()) {
-
-            visibleComponent.setVisible(false);
-        }
-        if (component != null && !component.isVisible()) {
-            component.setVisible(true);
-        }
-        visibleComponent = component;
-    }
 
     /**
      * Assure the rectangles are created.
@@ -1988,34 +1920,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Returns the icon for a tab.
-     *
-     * @param tabIndex the index of the tab
-     * @return the icon for a tab
-     */
-    protected Icon getIconForTab(final int tabIndex) {
-        return (!tabPane.isEnabled() || !tabPane.isEnabledAt(tabIndex)) ?
-               tabPane.getDisabledIconAt(tabIndex) : tabPane.getIconAt(tabIndex);
-    }
-
-    /**
-     * Returns the text View object required to render stylized text (HTML) for
-     * the specified tab or null if no specialized text rendering is needed
-     * for this tab. This is provided to support html rendering inside tabs.
-     *
-     * @param tabIndex the index of the tab
-     * @return the text view to render the tab's text or null if no
-     * specialized rendering is required
-     * @since 1.4
-     */
-    protected View getTextViewForTab(final int tabIndex) {
-        if (htmlViews != null) {
-            return htmlViews.elementAt(tabIndex);
-        }
-        return null;
-    }
-
-    /**
      * Calculates the tab height.
      *
      * @param tabPlacement the placement (left, right, bottom, top) of the tab
@@ -2066,6 +1970,32 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
+     * Calculates the maximum tab width.
+     *
+     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @return the maximum tab width
+     */
+    protected int calculateMaxTabWidth(final int tabPlacement) {
+        FontMetrics metrics = getFontMetrics();
+        int tabCount = tabPane.getTabCount();
+        int result = 0;
+        for (int i = 0; i < tabCount; i++) {
+            result = Math.max(calculateTabWidth(tabPlacement, i, metrics), result);
+        }
+        return result;
+    }
+
+    /**
+     * Returns the font metrics.
+     *
+     * @return the font metrics
+     */
+    protected FontMetrics getFontMetrics() {
+        Font font = tabPane.getFont();
+        return tabPane.getFontMetrics(font);
+    }
+
+    /**
      * Calculates the tab width.
      *
      * @param tabPlacement the placement (left, right, bottom, top) of the tab
@@ -2098,19 +2028,42 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Calculates the maximum tab width.
+     * Returns the tab insets.
      *
      * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @return the maximum tab width
+     * @param tabIndex     the tab index
+     * @return the tab insets
      */
-    protected int calculateMaxTabWidth(final int tabPlacement) {
-        FontMetrics metrics = getFontMetrics();
-        int tabCount = tabPane.getTabCount();
-        int result = 0;
-        for (int i = 0; i < tabCount; i++) {
-            result = Math.max(calculateTabWidth(tabPlacement, i, metrics), result);
+    protected Insets getTabInsets(final int tabPlacement, final int tabIndex) {
+        return tabInsets;
+    }
+
+    /**
+     * Returns the icon for a tab.
+     *
+     * @param tabIndex the index of the tab
+     * @return the icon for a tab
+     */
+    protected Icon getIconForTab(final int tabIndex) {
+        return (!tabPane.isEnabled() || !tabPane.isEnabledAt(tabIndex)) ?
+               tabPane.getDisabledIconAt(tabIndex) : tabPane.getIconAt(tabIndex);
+    }
+
+    /**
+     * Returns the text View object required to render stylized text (HTML) for
+     * the specified tab or null if no specialized text rendering is needed
+     * for this tab. This is provided to support html rendering inside tabs.
+     *
+     * @param tabIndex the index of the tab
+     * @return the text view to render the tab's text or null if no
+     * specialized rendering is required
+     * @since 1.4
+     */
+    protected View getTextViewForTab(final int tabIndex) {
+        if (htmlViews != null) {
+            return htmlViews.elementAt(tabIndex);
         }
-        return result;
+        return null;
     }
 
     /**
@@ -2126,7 +2079,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
         return (horizRunCount > 0 ?
                 horizRunCount * (maxTabHeight - tabRunOverlay) + tabRunOverlay +
-                tabAreaInsets.top + tabAreaInsets.bottom :
+                        tabAreaInsets.top + tabAreaInsets.bottom :
                 0);
     }
 
@@ -2143,19 +2096,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
         return (vertRunCount > 0 ?
                 vertRunCount * (maxTabWidth - tabRunOverlay) + tabRunOverlay +
-                tabAreaInsets.left + tabAreaInsets.right :
+                        tabAreaInsets.left + tabAreaInsets.right :
                 0);
-    }
-
-    /**
-     * Returns the tab insets.
-     *
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the tab index
-     * @return the tab insets
-     */
-    protected Insets getTabInsets(final int tabPlacement, final int tabIndex) {
-        return tabInsets;
     }
 
     /**
@@ -2167,6 +2109,44 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     protected Insets getSelectedTabPadInsets(final int tabPlacement) {
         rotateInsets(selectedTabPadInsets, currentPadInsets, tabPlacement);
         return currentPadInsets;
+    }
+
+    /**
+     * Rotates the insets.
+     *
+     * @param topInsets       the top insets
+     * @param targetInsets    the target insets
+     * @param targetPlacement the target placement
+     */
+    @SuppressWarnings("SuspiciousNameCombination")
+    protected static void rotateInsets(final Insets topInsets, final Insets targetInsets, final int targetPlacement) {
+
+        switch (targetPlacement) {
+            case LEFT:
+                targetInsets.top = topInsets.left;
+                targetInsets.left = topInsets.top;
+                targetInsets.bottom = topInsets.right;
+                targetInsets.right = topInsets.bottom;
+                break;
+            case BOTTOM:
+                targetInsets.top = topInsets.bottom;
+                targetInsets.left = topInsets.left;
+                targetInsets.bottom = topInsets.top;
+                targetInsets.right = topInsets.right;
+                break;
+            case RIGHT:
+                targetInsets.top = topInsets.left;
+                targetInsets.left = topInsets.bottom;
+                targetInsets.bottom = topInsets.right;
+                targetInsets.right = topInsets.top;
+                break;
+            case TOP:
+            default:
+                targetInsets.top = topInsets.top;
+                targetInsets.left = topInsets.left;
+                targetInsets.bottom = topInsets.bottom;
+                targetInsets.right = topInsets.right;
+        }
     }
 
     /**
@@ -2189,19 +2169,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     protected Insets getContentBorderInsets(final int tabPlacement) {
         return contentBorderInsets;
     }
-
-    /**
-     * Returns the font metrics.
-     *
-     * @return the font metrics
-     */
-    protected FontMetrics getFontMetrics() {
-        Font font = tabPane.getFont();
-        return tabPane.getFontMetrics(font);
-    }
-
-
-// Tab Navigation methods
 
     /**
      * Navigate the selected tab.
@@ -2285,6 +2252,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                 }
         }
     }
+
+
+// Tab Navigation methods
 
     /**
      * Select the next tab in the run.
@@ -2388,6 +2358,15 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
+    /**
+     * Makes sure the focusIndex is valid.
+     */
+    protected void validateFocusIndex() {
+        if (focusIndex >= tabPane.getTabCount()) {
+            setFocusIndex(tabPane.getSelectedIndex(), false);
+        }
+    }
+
     void setFocusIndex(final int index, final boolean repaint) {
         if (repaint && !isRunsDirty) {
             repaintTab(focusIndex);
@@ -2410,12 +2389,41 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Makes sure the focusIndex is valid.
+     * Returns the bounds of the specified tab in the coordinate space
+     * of the JTabbedPane component.  This is required because the tab rects
+     * are by default defined in the coordinate space of the component where
+     * they are rendered, which could be the JTabbedPane
+     * (for WRAP_TAB_LAYOUT) or a ScrollableTabPanel (SCROLL_TAB_LAYOUT).
+     * This method should be used whenever the tab rectangle must be relative
+     * to the JTabbedPane itself and the result should be placed in a
+     * designated Rectangle object (rather than instantiating and returning
+     * a new Rectangle each time). The tab index parameter must be a valid
+     * tabbed pane tab index (0 to tab count - 1, inclusive).  The destination
+     * rectangle parameter must be a valid <code>Rectangle</code> instance.
+     * The handling of invalid parameters is unspecified.
+     *
+     * @param tabIndex the index of the tab
+     * @param dest     the rectangle where the result should be placed
+     * @return the resulting rectangle
+     * @since 1.4
      */
-    protected void validateFocusIndex() {
-        if (focusIndex >= tabPane.getTabCount()) {
-            setFocusIndex(tabPane.getSelectedIndex(), false);
+    protected Rectangle getTabBounds(final int tabIndex, final Rectangle dest) {
+        dest.width = rects[tabIndex].width;
+        dest.height = rects[tabIndex].height;
+
+        if (scrollableTabLayoutEnabled()) { // SCROLL_TAB_LAYOUT
+            // Need to translate coordinates based on viewport location &
+            // view position
+            Point vpp = tabScroller.viewport.getLocation();
+            Point viewp = tabScroller.viewport.getViewPosition();
+            dest.x = rects[tabIndex].x + vpp.x - viewp.x;
+            dest.y = rects[tabIndex].y + vpp.y - viewp.y;
+
+        } else { // WRAP_TAB_LAYOUT
+            dest.x = rects[tabIndex].x;
+            dest.y = rects[tabIndex].y;
         }
+        return dest;
     }
 
     /**
@@ -2583,49 +2591,39 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         return (baseRun + 1) % runCount;
     }
 
-    /**
-     * Rotates the insets.
-     *
-     * @param topInsets       the top insets
-     * @param targetInsets    the target insets
-     * @param targetPlacement the target placement
-     */
-    @SuppressWarnings("SuspiciousNameCombination")
-    protected static void rotateInsets(final Insets topInsets, final Insets targetInsets, final int targetPlacement) {
-
-        switch (targetPlacement) {
-            case LEFT:
-                targetInsets.top = topInsets.left;
-                targetInsets.left = topInsets.top;
-                targetInsets.bottom = topInsets.right;
-                targetInsets.right = topInsets.bottom;
-                break;
-            case BOTTOM:
-                targetInsets.top = topInsets.bottom;
-                targetInsets.left = topInsets.left;
-                targetInsets.bottom = topInsets.top;
-                targetInsets.right = topInsets.right;
-                break;
-            case RIGHT:
-                targetInsets.top = topInsets.left;
-                targetInsets.left = topInsets.bottom;
-                targetInsets.bottom = topInsets.right;
-                targetInsets.right = topInsets.top;
-                break;
-            case TOP:
-            default:
-                targetInsets.top = topInsets.top;
-                targetInsets.left = topInsets.left;
-                targetInsets.bottom = topInsets.bottom;
-                targetInsets.right = topInsets.right;
-        }
-    }
-
     // REMIND(aim,7/29/98): This method should be made
     // protected in the next release where
     // API changes are allowed
     boolean requestFocusForVisibleComponent() {
         return SwingUtilities2.tabbedPaneChangeFocusTo(getVisibleComponent());
+    }
+
+    /**
+     * Returns the visible component.
+     *
+     * @return the visible component
+     */
+    protected Component getVisibleComponent() {
+        return visibleComponent;
+    }
+
+    /**
+     * Sets the visible component.
+     *
+     * @param component the component
+     */
+    protected void setVisibleComponent(final Component component) {
+        if (visibleComponent != null
+                && visibleComponent != component
+                && visibleComponent.getParent() == tabPane
+                && visibleComponent.isVisible()) {
+
+            visibleComponent.setVisible(false);
+        }
+        if (component != null && !component.isVisible()) {
+            component.setVisible(true);
+        }
+        visibleComponent = component;
     }
 
     protected static class Actions extends UIAction {
@@ -2653,8 +2651,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             String key = getName();
             JTabbedPane pane = (JTabbedPane) e.getSource();
             DarkTabbedPaneUIBridge ui = (DarkTabbedPaneUIBridge) DarkUIUtil
-                                                                         .getUIOfType(pane.getUI(),
-                                                                                      DarkTabbedPaneUIBridge.class);
+                    .getUIOfType(pane.getUI(),
+                                 DarkTabbedPaneUIBridge.class);
 
             if (ui == null) {
                 return;
@@ -2719,6 +2717,18 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
+    @SuppressWarnings("serial") // Superclass is not serializable across versions
+    protected static class ScrollableTabButton extends BasicArrowButton implements UIResource,
+            SwingConstants {
+        public ScrollableTabButton(final int direction) {
+            super(direction,
+                  UIManager.getColor("TabbedPane.selected"),
+                  UIManager.getColor("TabbedPane.shadow"),
+                  UIManager.getColor("TabbedPane.darkShadow"),
+                  UIManager.getColor("TabbedPane.highlight"));
+        }
+    }
+
     /**
      * This class should be treated as a &quot;protected&quot; inner class.
      * Instantiate it only within subclasses of BasicTabbedPaneUI.
@@ -2737,129 +2747,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
         public Dimension minimumLayoutSize(final Container parent) {
             return calculateSize(true);
-        }
-
-        /**
-         * Returns the calculated size.
-         *
-         * @param minimum use the minimum size or preferred size
-         * @return the calculated size
-         */
-        protected Dimension calculateSize(final boolean minimum) {
-            int tabPlacement = tabPane.getTabPlacement();
-            Insets insets = tabPane.getInsets();
-            Insets contentInsets = getContentBorderInsets(tabPlacement);
-            Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
-
-            Dimension zeroSize = new Dimension(0, 0);
-            int height = 0;
-            int width = 0;
-            int cWidth = 0;
-            int cHeight = 0;
-
-            // Determine minimum size required to display largest
-            // child in each dimension
-            //
-            for (int i = 0; i < tabPane.getTabCount(); i++) {
-                Component component = tabPane.getComponentAt(i);
-                if (component != null) {
-                    Dimension size = minimum ? component.getMinimumSize() :
-                                     component.getPreferredSize();
-
-                    if (size != null) {
-                        cHeight = Math.max(size.height, cHeight);
-                        cWidth = Math.max(size.width, cWidth);
-                    }
-                }
-            }
-            // Add content border insets to minimum size
-            width += cWidth;
-            height += cHeight;
-            int tabExtent;
-
-            // Calculate how much space the tabs will need, based on the
-            // minimum size required to display largest child + content border
-            //
-            switch (tabPlacement) {
-                case LEFT:
-                case RIGHT:
-                    height = Math.max(height, calculateMaxTabHeight(tabPlacement));
-                    tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
-                    width += tabExtent;
-                    break;
-                case TOP:
-                case BOTTOM:
-                default:
-                    width = Math.max(width, calculateMaxTabWidth(tabPlacement));
-                    tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
-                    height += tabExtent;
-            }
-            return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
-                                 height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
-
-        }
-
-        /**
-         * Returns the preferred tab area height.
-         *
-         * @param tabPlacement the tab placement
-         * @param width        the width
-         * @return the preferred tab area height
-         */
-        protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
-            FontMetrics metrics = getFontMetrics();
-            int tabCount = tabPane.getTabCount();
-            int total = 0;
-            if (tabCount > 0) {
-                int rows = 1;
-                int x = 0;
-
-                int maxTabHeight = calculateMaxTabHeight(tabPlacement);
-
-                for (int i = 0; i < tabCount; i++) {
-                    int tabWidth = calculateTabWidth(tabPlacement, i, metrics);
-
-                    if (x != 0 && x + tabWidth > width) {
-                        rows++;
-                        x = 0;
-                    }
-                    x += tabWidth;
-                }
-                total = calculateTabAreaHeight(tabPlacement, rows, maxTabHeight);
-            }
-            return total;
-        }
-
-        /**
-         * Returns the preferred tab area width.
-         *
-         * @param tabPlacement the tab placement
-         * @param height       the height
-         * @return the preferred tab area widty
-         */
-        protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
-            FontMetrics metrics = getFontMetrics();
-            int tabCount = tabPane.getTabCount();
-            int total = 0;
-            if (tabCount > 0) {
-                int columns = 1;
-                int y = 0;
-                int fontHeight = metrics.getHeight();
-
-                maxTabWidth = calculateMaxTabWidth(tabPlacement);
-
-                for (int i = 0; i < tabCount; i++) {
-                    int tabHeight = calculateTabHeight(tabPlacement, i, fontHeight);
-
-                    if (y != 0 && y + tabHeight > height) {
-                        columns++;
-                        y = 0;
-                    }
-                    y += tabHeight;
-                }
-                total = calculateTabAreaWidth(tabPlacement, columns, maxTabWidth);
-            }
-            return total;
         }
 
         /**
@@ -2912,7 +2799,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             //
             if (selectedComponent != null) {
                 if (selectedComponent != visibleComponent &&
-                    visibleComponent != null) {
+                        visibleComponent != null) {
                     if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
                         shouldChangeFocus = true;
                     }
@@ -2949,11 +2836,11 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                 }
 
                 cw = bounds.width - totalTabWidth -
-                     insets.left - insets.right -
-                     contentInsets.left - contentInsets.right;
+                        insets.left - insets.right -
+                        contentInsets.left - contentInsets.right;
                 ch = bounds.height - totalTabHeight -
-                     insets.top - insets.bottom -
-                     contentInsets.top - contentInsets.bottom;
+                        insets.top - insets.bottom -
+                        contentInsets.top - contentInsets.bottom;
 
                 for (int i = 0; i < numChildren; i++) {
                     Component child = tabPane.getComponent(i);
@@ -2961,10 +2848,10 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
                         int tabContainerWidth = totalTabWidth == 0 ? bounds.width :
                                                 totalTabWidth + insets.left + insets.right +
-                                                contentInsets.left + contentInsets.right;
+                                                        contentInsets.left + contentInsets.right;
                         int tabContainerHeight = totalTabHeight == 0 ? bounds.height :
                                                  totalTabHeight + insets.top + insets.bottom +
-                                                 contentInsets.top + contentInsets.bottom;
+                                                         contentInsets.top + contentInsets.bottom;
 
                         int tabContainerX = 0;
                         int tabContainerY = 0;
@@ -3212,25 +3099,10 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             // the bottom, flip x positions and adjust by widths
             if (!leftToRight && !verticalTabRuns) {
                 int rightMargin = size.width
-                                  - (insets.right + tabAreaInsets.right);
+                        - (insets.right + tabAreaInsets.right);
                 for (i = 0; i < tabCount; i++) {
                     rects[i].x = rightMargin - rects[i].x - rects[i].width;
                 }
-            }
-        }
-
-
-        /**
-         * Rotates the run-index array so that the selected run is run[0].
-         *
-         * @param tabPlacement the tab placement
-         * @param selectedRun  the selected run
-         */
-        protected void rotateTabRuns(final int tabPlacement, final int selectedRun) {
-            for (int i = 0; i < selectedRun; i++) {
-                int save = tabRuns[0];
-                if (runCount - 1 >= 0) System.arraycopy(tabRuns, 1, tabRuns, 0, runCount - 1);
-                tabRuns[runCount - 1] = save;
             }
         }
 
@@ -3307,6 +3179,20 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                     run = runCount - 1;
                     weight += .25;
                 }
+            }
+        }
+
+        /**
+         * Rotates the run-index array so that the selected run is run[0].
+         *
+         * @param tabPlacement the tab placement
+         * @param selectedRun  the selected run
+         */
+        protected void rotateTabRuns(final int tabPlacement, final int selectedRun) {
+            for (int i = 0; i < selectedRun; i++) {
+                int save = tabRuns[0];
+                if (runCount - 1 >= 0) System.arraycopy(tabRuns, 1, tabRuns, 0, runCount - 1);
+                tabRuns[runCount - 1] = save;
             }
         }
 
@@ -3394,6 +3280,129 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                 }
             }
         }
+
+        /**
+         * Returns the calculated size.
+         *
+         * @param minimum use the minimum size or preferred size
+         * @return the calculated size
+         */
+        protected Dimension calculateSize(final boolean minimum) {
+            int tabPlacement = tabPane.getTabPlacement();
+            Insets insets = tabPane.getInsets();
+            Insets contentInsets = getContentBorderInsets(tabPlacement);
+            Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
+
+            Dimension zeroSize = new Dimension(0, 0);
+            int height = 0;
+            int width = 0;
+            int cWidth = 0;
+            int cHeight = 0;
+
+            // Determine minimum size required to display largest
+            // child in each dimension
+            //
+            for (int i = 0; i < tabPane.getTabCount(); i++) {
+                Component component = tabPane.getComponentAt(i);
+                if (component != null) {
+                    Dimension size = minimum ? component.getMinimumSize() :
+                                     component.getPreferredSize();
+
+                    if (size != null) {
+                        cHeight = Math.max(size.height, cHeight);
+                        cWidth = Math.max(size.width, cWidth);
+                    }
+                }
+            }
+            // Add content border insets to minimum size
+            width += cWidth;
+            height += cHeight;
+            int tabExtent;
+
+            // Calculate how much space the tabs will need, based on the
+            // minimum size required to display largest child + content border
+            //
+            switch (tabPlacement) {
+                case LEFT:
+                case RIGHT:
+                    height = Math.max(height, calculateMaxTabHeight(tabPlacement));
+                    tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
+                    width += tabExtent;
+                    break;
+                case TOP:
+                case BOTTOM:
+                default:
+                    width = Math.max(width, calculateMaxTabWidth(tabPlacement));
+                    tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
+                    height += tabExtent;
+            }
+            return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
+                                 height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
+
+        }
+
+        /**
+         * Returns the preferred tab area width.
+         *
+         * @param tabPlacement the tab placement
+         * @param height       the height
+         * @return the preferred tab area widty
+         */
+        protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
+            FontMetrics metrics = getFontMetrics();
+            int tabCount = tabPane.getTabCount();
+            int total = 0;
+            if (tabCount > 0) {
+                int columns = 1;
+                int y = 0;
+                int fontHeight = metrics.getHeight();
+
+                maxTabWidth = calculateMaxTabWidth(tabPlacement);
+
+                for (int i = 0; i < tabCount; i++) {
+                    int tabHeight = calculateTabHeight(tabPlacement, i, fontHeight);
+
+                    if (y != 0 && y + tabHeight > height) {
+                        columns++;
+                        y = 0;
+                    }
+                    y += tabHeight;
+                }
+                total = calculateTabAreaWidth(tabPlacement, columns, maxTabWidth);
+            }
+            return total;
+        }
+
+        /**
+         * Returns the preferred tab area height.
+         *
+         * @param tabPlacement the tab placement
+         * @param width        the width
+         * @return the preferred tab area height
+         */
+        protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
+            FontMetrics metrics = getFontMetrics();
+            int tabCount = tabPane.getTabCount();
+            int total = 0;
+            if (tabCount > 0) {
+                int rows = 1;
+                int x = 0;
+
+                int maxTabHeight = calculateMaxTabHeight(tabPlacement);
+
+                for (int i = 0; i < tabCount; i++) {
+                    int tabWidth = calculateTabWidth(tabPlacement, i, metrics);
+
+                    if (x != 0 && x + tabWidth > width) {
+                        rows++;
+                        x = 0;
+                    }
+                    x += tabWidth;
+                }
+                total = calculateTabAreaHeight(tabPlacement, rows, maxTabHeight);
+            }
+            return total;
+        }
     }
 
     protected class TabbedPaneScrollLayout extends TabbedPaneLayout {
@@ -3457,7 +3466,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             //
             if (selectedComponent != null) {
                 if (selectedComponent != visibleComponent &&
-                    visibleComponent != null) {
+                        visibleComponent != null) {
                     if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
                         shouldChangeFocus = true;
                     }
@@ -3483,9 +3492,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                         cx = tx + tw + contentInsets.left;
                         cy = ty + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - tw -
-                             contentInsets.left - contentInsets.right;
+                                contentInsets.left - contentInsets.right;
                         ch = bounds.height - insets.top - insets.bottom -
-                             contentInsets.top - contentInsets.bottom;
+                                contentInsets.top - contentInsets.bottom;
                         break;
                     case RIGHT:
                         // calculate tab area bounds
@@ -3498,9 +3507,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right - tw -
-                             contentInsets.left - contentInsets.right;
+                                contentInsets.left - contentInsets.right;
                         ch = bounds.height - insets.top - insets.bottom -
-                             contentInsets.top - contentInsets.bottom;
+                                contentInsets.top - contentInsets.bottom;
                         break;
                     case BOTTOM:
                         // calculate tab area bounds
@@ -3513,9 +3522,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                         cx = insets.left + contentInsets.left;
                         cy = insets.top + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right -
-                             contentInsets.left - contentInsets.right;
+                                contentInsets.left - contentInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - th -
-                             contentInsets.top - contentInsets.bottom;
+                                contentInsets.top - contentInsets.bottom;
                         break;
                     case TOP:
                     default:
@@ -3529,9 +3538,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                         cx = tx + contentInsets.left;
                         cy = ty + th + contentInsets.top;
                         cw = bounds.width - insets.left - insets.right -
-                             contentInsets.left - contentInsets.right;
+                                contentInsets.left - contentInsets.right;
                         ch = bounds.height - insets.top - insets.bottom - th -
-                             contentInsets.top - contentInsets.bottom;
+                                contentInsets.top - contentInsets.bottom;
                 }
 
                 for (int i = 0; i < numChildren; i++) {
@@ -3574,8 +3583,8 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                         child.setBounds(tx, ty, vw, vh);
 
                     } else if (tabScroller != null &&
-                               (child == tabScroller.scrollForwardButton ||
-                                child == tabScroller.scrollBackwardButton)) {
+                            (child == tabScroller.scrollForwardButton ||
+                                    child == tabScroller.scrollBackwardButton)) {
                         Dimension bsize = child.getPreferredSize();
                         int bx = 0;
                         int by = 0;
@@ -3746,7 +3755,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             // the bottom, flip x positions and adjust by widths
             if (!leftToRight && !verticalTabRuns) {
                 int rightMargin = size.width
-                                  - (insets.right + tabAreaInsets.right);
+                        - (insets.right + tabAreaInsets.right);
                 for (i = 0; i < tabCount; i++) {
                     rects[i].x = rightMargin - rects[i].x - rects[i].width;
                 }
@@ -3757,15 +3766,14 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     protected class ScrollableTabSupport implements ActionListener,
-                                                    ChangeListener {
+            ChangeListener {
+        public final CroppedEdge croppedEdge;
+        protected final Point tabViewPosition = new Point(0, 0);
         public ScrollableTabViewport viewport;
         public ScrollableTabPanel tabPanel;
         public JButton scrollForwardButton;
         public JButton scrollBackwardButton;
-        public final CroppedEdge croppedEdge;
         public int leadingTabIndex;
-
-        protected final Point tabViewPosition = new Point(0, 0);
 
         ScrollableTabSupport(final int tabPlacement) {
             viewport = new ScrollableTabViewport();
@@ -3817,13 +3825,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             setLeadingTabIndex(tabPlacement, leadingTabIndex + 1);
         }
 
-        public void scrollBackward(final int tabPlacement) {
-            if (leadingTabIndex == 0) {
-                return; // no room left to scroll
-            }
-            setLeadingTabIndex(tabPlacement, leadingTabIndex - 1);
-        }
-
         public void setLeadingTabIndex(final int tabPlacement, final int index) {
             leadingTabIndex = index;
             Dimension viewSize = viewport.getViewSize();
@@ -3855,6 +3856,13 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                     }
             }
             viewport.setViewPosition(tabViewPosition);
+        }
+
+        public void scrollBackward(final int tabPlacement) {
+            if (leadingTabIndex == 0) {
+                return; // no room left to scroll
+            }
+            setLeadingTabIndex(tabPlacement, leadingTabIndex - 1);
         }
 
         public void stateChanged(final ChangeEvent e) {
@@ -3897,7 +3905,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                             viewRect.y > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
                             leadingTabIndex < tabCount - 1 &&
-                            viewSize.height - viewRect.y > viewRect.height);
+                                    viewSize.height - viewRect.y > viewRect.height);
                     break;
                 case RIGHT:
                     tabPane.repaint(vpRect.x - contentInsets.right, vpRect.y,
@@ -3906,7 +3914,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                             viewRect.y > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
                             leadingTabIndex < tabCount - 1 &&
-                            viewSize.height - viewRect.y > viewRect.height);
+                                    viewSize.height - viewRect.y > viewRect.height);
                     break;
                 case BOTTOM:
                     tabPane.repaint(vpRect.x, vpRect.y - contentInsets.bottom,
@@ -3915,7 +3923,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                             viewRect.x > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
                             leadingTabIndex < tabCount - 1 &&
-                            viewSize.width - viewRect.x > viewRect.width);
+                                    viewSize.width - viewRect.x > viewRect.width);
                     break;
                 case TOP:
                 default:
@@ -3925,7 +3933,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                             viewRect.x > 0 && leadingTabIndex > 0);
                     scrollForwardButton.setEnabled(
                             leadingTabIndex < tabCount - 1 &&
-                            viewSize.width - viewRect.x > viewRect.width);
+                                    viewSize.width - viewRect.x > viewRect.width);
             }
         }
 
@@ -3955,9 +3963,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
         public String toString() {
             return "viewport.viewSize=" + viewport.getViewSize() + "\n" +
-                   "viewport.viewRectangle=" + viewport.getViewRect() + "\n" +
-                   "leadingTabIndex=" + leadingTabIndex + "\n" +
-                   "tabViewPosition=" + tabViewPosition;
+                    "viewport.viewRectangle=" + viewport.getViewRect() + "\n" +
+                    "leadingTabIndex=" + leadingTabIndex + "\n" +
+                    "tabViewPosition=" + tabViewPosition;
         }
 
     }
@@ -3976,6 +3984,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             setBackground(bgColor);
         }
     }
+
+
+// Controller: event listeners
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class ScrollableTabPanel extends JPanel implements UIResource {
@@ -4009,24 +4020,9 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
-    @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected static class ScrollableTabButton extends BasicArrowButton implements UIResource,
-                                                                            SwingConstants {
-        public ScrollableTabButton(final int direction) {
-            super(direction,
-                  UIManager.getColor("TabbedPane.selected"),
-                  UIManager.getColor("TabbedPane.shadow"),
-                  UIManager.getColor("TabbedPane.darkShadow"),
-                  UIManager.getColor("TabbedPane.highlight"));
-        }
-    }
-
-
-// Controller: event listeners
-
     protected class Handler implements ChangeListener, ContainerListener,
-                                       FocusListener, MouseListener, MouseMotionListener,
-                                       PropertyChangeListener {
+            FocusListener, MouseListener, MouseMotionListener,
+            PropertyChangeListener {
         //
         // PropertyChangeListener
         //
@@ -4139,17 +4135,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         public void mouseClicked(final MouseEvent e) {
         }
 
-        public void mouseReleased(final MouseEvent e) {
-        }
-
-        public void mouseEntered(final MouseEvent e) {
-            setRolloverTab(e.getX(), e.getY());
-        }
-
-        public void mouseExited(final MouseEvent e) {
-            setRolloverTab(-1);
-        }
-
         public void mousePressed(final MouseEvent e) {
             if (!tabPane.isEnabled()) {
                 return;
@@ -4168,6 +4153,17 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                     tabPane.requestFocus();
                 }
             }
+        }
+
+        public void mouseReleased(final MouseEvent e) {
+        }
+
+        public void mouseEntered(final MouseEvent e) {
+            setRolloverTab(e.getX(), e.getY());
+        }
+
+        public void mouseExited(final MouseEvent e) {
+            setRolloverTab(-1);
         }
 
         //
@@ -4323,22 +4319,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
-    protected Vector<View> createHTMLVector() {
-        Vector<View> htmlViews = new Vector<>();
-        int count = tabPane.getTabCount();
-        if (count > 0) {
-            for (int i = 0; i < count; i++) {
-                String title = tabPane.getTitleAt(i);
-                if (BasicHTML.isHTMLString(title)) {
-                    htmlViews.addElement(BasicHTML.createHTMLView(tabPane, title));
-                } else {
-                    htmlViews.addElement(null);
-                }
-            }
-        }
-        return htmlViews;
-    }
-
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class TabContainer extends JPanel implements UIResource {
         protected boolean notifyTabbedPane = true;
@@ -4356,6 +4336,18 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             }
         }
 
+        public void doLayout() {
+            // We layout tabComponents in JTabbedPane's layout manager
+            // and use this method as a hook for repainting tabs
+            // to update tabs area e.g. when the size of tabComponent was changed
+            if (scrollableTabLayoutEnabled()) {
+                tabScroller.tabPanel.repaint();
+                tabScroller.updateView();
+            } else {
+                tabPane.repaint(getBounds());
+            }
+        }
+
         protected void removeUnusedTabComponents() {
             for (Component c : getComponents()) {
                 if (!(c instanceof UIResource)) {
@@ -4369,18 +4361,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
         public boolean isOptimizedDrawingEnabled() {
             return tabScroller != null && !tabScroller.croppedEdge.isParamsSet();
-        }
-
-        public void doLayout() {
-            // We layout tabComponents in JTabbedPane's layout manager
-            // and use this method as a hook for repainting tabs
-            // to update tabs area e.g. when the size of tabComponent was changed
-            if (scrollableTabLayoutEnabled()) {
-                tabScroller.tabPanel.repaint();
-                tabScroller.updateView();
-            } else {
-                tabPane.repaint(getBounds());
-            }
         }
     }
 
@@ -4415,10 +4395,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             }
         }
 
-        public boolean isParamsSet() {
-            return shape != null;
-        }
-
         public int getTabIndex() {
             return tabIndex;
         }
@@ -4429,17 +4405,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
         public int getCroppedSideWidth() {
             return 3;
-        }
-
-        protected Color getBgColor() {
-            Component parent = tabPane.getParent();
-            if (parent != null) {
-                Color bg = parent.getBackground();
-                if (bg != null) {
-                    return bg;
-                }
-            }
-            return UIManager.getColor("control");
         }
 
         protected void paintComponent(final Graphics g) {
@@ -4453,6 +4418,21 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                 paintCroppedTabEdge(g);
                 g2.translate(-cropx, -cropy);
             }
+        }
+
+        public boolean isParamsSet() {
+            return shape != null;
+        }
+
+        protected Color getBgColor() {
+            Component parent = tabPane.getParent();
+            if (parent != null) {
+                Color bg = parent.getBackground();
+                if (bg != null) {
+                    return bg;
+                }
+            }
+            return UIManager.getColor("control");
         }
     }
 }

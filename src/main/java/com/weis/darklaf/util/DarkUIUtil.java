@@ -48,43 +48,6 @@ public final class DarkUIUtil {
         doPaint(g, width, height, arc, symmetric);
     }
 
-    public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
-                                        final boolean symmetric) {
-        Outline.focus.setGraphicsColor(g, true);
-        doPaint(g, width, height, arc, symmetric);
-    }
-
-    public static void paintFocusOval(final Graphics2D g, final int x, final int y, final int width, final int height) {
-        paintFocusOval(g, (float) x, (float) y, (float) width, (float) height);
-    }
-
-    public static void paintFocusOval(final Graphics2D g, final float x, final float y,
-                                      final float width, final float height) {
-        Outline.focus.setGraphicsColor(g, true);
-
-        float blw = 2f + 1f;
-        Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        shape.append(new Ellipse2D.Float(x - blw, y - blw, width + blw * 2, height + blw * 2), false);
-        shape.append(new Ellipse2D.Float(x, y, width, height), false);
-        g.fill(shape);
-    }
-
-    public static void paintLineBorder(final Graphics2D g, final float x, final float y,
-                                       final float width, final float height, final int arc, final boolean growByLW) {
-        float lw = 0.5f;
-        float adj = growByLW ? lw : 0;
-        var config = GraphicsUtil.setupStrokePainting(g);
-        Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        border.append(new RoundRectangle2D.Float(x - adj, y - adj, width + 2 * adj, height + 2 * adj,
-                                                 arc + lw, arc + lw), false);
-        border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
-                                                 width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
-                                                 arc, arc), false);
-        g.fill(border);
-        config.restore();
-    }
-
-
     @SuppressWarnings("SuspiciousNameCombination")
     private static void doPaint(@NotNull final Graphics2D g, final int width, final int height, final float arc,
                                 final boolean symmetric) {
@@ -122,6 +85,42 @@ public final class DarkUIUtil {
         path.append(innerRect, false);
         g.fill(path);
         context.restore();
+    }
+
+    public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
+                                        final boolean symmetric) {
+        Outline.focus.setGraphicsColor(g, true);
+        doPaint(g, width, height, arc, symmetric);
+    }
+
+    public static void paintFocusOval(final Graphics2D g, final int x, final int y, final int width, final int height) {
+        paintFocusOval(g, (float) x, (float) y, (float) width, (float) height);
+    }
+
+    public static void paintFocusOval(final Graphics2D g, final float x, final float y,
+                                      final float width, final float height) {
+        Outline.focus.setGraphicsColor(g, true);
+
+        float blw = 2f + 1f;
+        Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+        shape.append(new Ellipse2D.Float(x - blw, y - blw, width + blw * 2, height + blw * 2), false);
+        shape.append(new Ellipse2D.Float(x, y, width, height), false);
+        g.fill(shape);
+    }
+
+    public static void paintLineBorder(final Graphics2D g, final float x, final float y,
+                                       final float width, final float height, final int arc, final boolean growByLW) {
+        float lw = 0.5f;
+        float adj = growByLW ? lw : 0;
+        var config = GraphicsUtil.setupStrokePainting(g);
+        Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+        border.append(new RoundRectangle2D.Float(x - adj, y - adj, width + 2 * adj, height + 2 * adj,
+                                                 arc + lw, arc + lw), false);
+        border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
+                                                 width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
+                                                 arc, arc), false);
+        g.fill(border);
+        config.restore();
     }
 
     @NotNull
@@ -166,17 +165,6 @@ public final class DarkUIUtil {
         return SwingUtilities.getWindowAncestor(owner) == w;
     }
 
-    @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {
-        for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
-            if (cls.isAssignableFrom(eachParent.getClass())) {
-                return (T) eachParent;
-            }
-        }
-        return null;
-    }
-
     public static Color getTreeTextBackground() {
         return UIManager.getColor("Tree.textBackground");
     }
@@ -209,6 +197,17 @@ public final class DarkUIUtil {
                 || getParentOfType(TreeCellRenderer.class, c) != null
                 || getParentOfType(CellRenderer.class, c) != null
                 || getParentOfType(CellEditor.class, c) != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {
+        for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
+            if (cls.isAssignableFrom(eachParent.getClass())) {
+                return (T) eachParent;
+            }
+        }
+        return null;
     }
 
     @Contract("null -> null")

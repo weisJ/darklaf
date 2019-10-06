@@ -1,12 +1,11 @@
 package com.weis.darklaf.components.border;
 
 
-import javax.swing.border.Border;
-
 import com.weis.darklaf.util.ImageUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -39,49 +38,9 @@ public class DropShadowBorder implements Border, Serializable {
      *
      */
     private static final long serialVersionUID = 715287754750604058L;
-
-    private enum Position {
-        TOP, TOP_LEFT, LEFT, BOTTOM_LEFT,
-        BOTTOM, BOTTOM_RIGHT, RIGHT, TOP_RIGHT
-    }
-
     private static final Map<Double, Map<Position, BufferedImage>> CACHE
             = new HashMap<>();
-
     private Color shadowColor;
-
-    public void setShadowColor(Color shadowColor) {
-        this.shadowColor = shadowColor;
-    }
-
-    public void setShadowSize(int shadowSize) {
-        this.shadowSize = shadowSize;
-    }
-
-    public void setShadowOpacity(float shadowOpacity) {
-        this.shadowOpacity = shadowOpacity;
-    }
-
-    public void setCornerSize(int cornerSize) {
-        this.cornerSize = cornerSize;
-    }
-
-    public void setShowTopShadow(boolean showTopShadow) {
-        this.showTopShadow = showTopShadow;
-    }
-
-    public void setShowLeftShadow(boolean showLeftShadow) {
-        this.showLeftShadow = showLeftShadow;
-    }
-
-    public void setShowBottomShadow(boolean showBottomShadow) {
-        this.showBottomShadow = showBottomShadow;
-    }
-
-    public void setShowRightShadow(boolean showRightShadow) {
-        this.showRightShadow = showRightShadow;
-    }
-
     private int shadowSize;
     private float shadowOpacity;
     private int cornerSize;
@@ -96,19 +55,14 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     @Contract(pure = true)
-    public DropShadowBorder(Color shadowColor, int shadowSize) {
+    public DropShadowBorder(final Color shadowColor, final int shadowSize) {
         this(shadowColor, shadowSize, .5f, 12, false, false, true, true);
     }
 
     @Contract(pure = true)
-    public DropShadowBorder(boolean showLeftShadow) {
-        this(Color.BLACK, 5, .5f, 12, false, showLeftShadow, true, true);
-    }
-
-    @Contract(pure = true)
-    public DropShadowBorder(Color shadowColor, int shadowSize,
-                            float shadowOpacity, int cornerSize, boolean showTopShadow,
-                            boolean showLeftShadow, boolean showBottomShadow, boolean showRightShadow) {
+    public DropShadowBorder(final Color shadowColor, final int shadowSize,
+                            final float shadowOpacity, final int cornerSize, final boolean showTopShadow,
+                            final boolean showLeftShadow, final boolean showBottomShadow, final boolean showRightShadow) {
         this.shadowColor = shadowColor;
         this.shadowSize = shadowSize;
         this.shadowOpacity = shadowOpacity;
@@ -118,11 +72,15 @@ public class DropShadowBorder implements Border, Serializable {
         this.showBottomShadow = showBottomShadow;
         this.showRightShadow = showRightShadow;
     }
+    @Contract(pure = true)
+    public DropShadowBorder(final boolean showLeftShadow) {
+        this(Color.BLACK, 5, .5f, 12, false, showLeftShadow, true, true);
+    }
 
     /**
      * {@inheritDoc}
      */
-    public void paintBorder(Component c, @NotNull Graphics graphics, int x, int y, int width, int height) {
+    public void paintBorder(final Component c, @NotNull final Graphics graphics, final int x, final int y, final int width, final int height) {
         /*
          * 1) Get images for this border
          * 2) Paint the images for each side of the border that should be painted
@@ -258,7 +216,7 @@ public class DropShadowBorder implements Border, Serializable {
 
     @SuppressWarnings("SuspiciousNameCombination")
     @NotNull
-    private Map<Position, BufferedImage> getImages(Graphics2D g2) {
+    private Map<Position, BufferedImage> getImages(final Graphics2D g2) {
         //first, check to see if an image for this size has already been rendered
         //if so, use the cache. Else, draw and save
         Map<Position, BufferedImage> images = CACHE.get(shadowSize + (shadowColor.hashCode() * .3) + (shadowOpacity * .12));//(TUDU) do a real hash
@@ -357,7 +315,7 @@ public class DropShadowBorder implements Border, Serializable {
      * strategies on later JDKs.)
      */
     @NotNull
-    private BufferedImage getSubImage(BufferedImage img, int x, int y, int w, int h) {
+    private BufferedImage getSubImage(final BufferedImage img, final int x, final int y, final int w, final int h) {
         BufferedImage ret = ImageUtil.createCompatibleTranslucentImage(w, h);
         Graphics2D g2 = ret.createGraphics();
 
@@ -373,7 +331,7 @@ public class DropShadowBorder implements Border, Serializable {
     /**
      * @inheritDoc
      */
-    public Insets getBorderInsets(Component c) {
+    public Insets getBorderInsets(final Component c) {
         int top = showTopShadow ? shadowSize : 0;
         int left = showLeftShadow ? shadowSize : 0;
         int bottom = showBottomShadow ? shadowSize : 0;
@@ -392,31 +350,68 @@ public class DropShadowBorder implements Border, Serializable {
         return showTopShadow;
     }
 
+    public void setShowTopShadow(final boolean showTopShadow) {
+        this.showTopShadow = showTopShadow;
+    }
+
     public boolean isShowLeftShadow() {
         return showLeftShadow;
+    }
+
+    public void setShowLeftShadow(final boolean showLeftShadow) {
+        this.showLeftShadow = showLeftShadow;
     }
 
     public boolean isShowRightShadow() {
         return showRightShadow;
     }
 
+    public void setShowRightShadow(final boolean showRightShadow) {
+        this.showRightShadow = showRightShadow;
+    }
+
     public boolean isShowBottomShadow() {
         return showBottomShadow;
+    }
+
+    public void setShowBottomShadow(final boolean showBottomShadow) {
+        this.showBottomShadow = showBottomShadow;
     }
 
     public int getShadowSize() {
         return shadowSize;
     }
 
+    public void setShadowSize(final int shadowSize) {
+        this.shadowSize = shadowSize;
+    }
+
     public Color getShadowColor() {
         return shadowColor;
+    }
+
+    public void setShadowColor(final Color shadowColor) {
+        this.shadowColor = shadowColor;
     }
 
     public float getShadowOpacity() {
         return shadowOpacity;
     }
 
+    public void setShadowOpacity(final float shadowOpacity) {
+        this.shadowOpacity = shadowOpacity;
+    }
+
     public int getCornerSize() {
         return cornerSize;
+    }
+
+    public void setCornerSize(final int cornerSize) {
+        this.cornerSize = cornerSize;
+    }
+
+    private enum Position {
+        TOP, TOP_LEFT, LEFT, BOTTOM_LEFT,
+        BOTTOM, BOTTOM_RIGHT, RIGHT, TOP_RIGHT
     }
 }

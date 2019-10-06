@@ -14,6 +14,31 @@ public class DarkColorModelHSB extends DarkColorModel {
         super("hsv", "Hue", "Saturation", "Brightness");
     }
 
+    @Override
+    public int getMaximum(final int index) {
+        return (index == 0) ? 359 : 100;
+    }
+
+    @Override
+    public String toString() {
+        return "HSB";
+    }
+
+    @Override
+    public char[] getLabelDescriptorsBefore() {
+        return new char[]{'H', 'S', 'B'};
+    }
+
+    @Override
+    public char[] getLabelDescriptorsAfter() {
+        return new char[]{'\u00B0', '%', '%'};
+    }
+
+    @Override
+    public int[] getValuesFromColor(@NotNull final Color color) {
+        return RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
     @Contract("_, _, _ -> new")
     @NotNull
     public static int[] RGBtoHSB(final int r, final int g, final int b) {
@@ -51,6 +76,12 @@ public class DarkColorModelHSB extends DarkColorModel {
         hsb[1] = (int) Math.round(saturation * 100);
         hsb[1] = (int) Math.round(brightness * 100);
         return hsb;
+    }
+
+    @Override
+    public Color getColorFromValues(@NotNull final int[] values) {
+        var rgb = HSBtoRGB(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0);
+        return new Color(rgb[0], rgb[1], rgb[2]);
     }
 
     public static int[] HSBtoRGB(final double hue, final double saturation, final double brightness) {
@@ -100,36 +131,5 @@ public class DarkColorModelHSB extends DarkColorModel {
         rgb[1] = ((int) Math.round(g));
         rgb[2] = ((int) Math.round(b));
         return rgb;
-    }
-
-    @Override
-    public int getMaximum(final int index) {
-        return (index == 0) ? 359 : 100;
-    }
-
-    @Override
-    public String toString() {
-        return "HSB";
-    }
-
-    @Override
-    public char[] getLabelDescriptorsBefore() {
-        return new char[]{'H', 'S', 'B'};
-    }
-
-    @Override
-    public char[] getLabelDescriptorsAfter() {
-        return new char[]{'\u00B0', '%', '%'};
-    }
-
-    @Override
-    public int[] getValuesFromColor(@NotNull final Color color) {
-        return RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue());
-    }
-
-    @Override
-    public Color getColorFromValues(@NotNull final int[] values) {
-        var rgb = HSBtoRGB(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0);
-        return new Color(rgb[0], rgb[1], rgb[2]);
     }
 }

@@ -199,6 +199,14 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
         config.restore();
     }
 
+    protected Color getHeaderBackground() {
+        return UIManager.getColor("TableHeader.background");
+    }
+
+    protected Color getBorderColor() {
+        return UIManager.getColor("TableHeader.borderColor");
+    }
+
     protected boolean isScrollPaneRtl() {
         if (!isInScrollPane()) return false;
         Container comp = SwingUtilities.getUnwrappedParent(header).getParent();
@@ -219,13 +227,5 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
             comp = comp.getParent();
         }
         return comp instanceof JScrollPane;
-    }
-
-    protected Color getBorderColor() {
-        return UIManager.getColor("TableHeader.borderColor");
-    }
-
-    protected Color getHeaderBackground() {
-        return UIManager.getColor("TableHeader.background");
     }
 }

@@ -30,8 +30,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     public static final int ARC_SIZE = 3;
     public static final int SEARCH_ARC_SIZE = 5;
-    private long lastSearchEvent;
-
     private final FocusListener focusListener = new FocusAdapter() {
         public void focusGained(final FocusEvent e) {
             getComponent().repaint();
@@ -39,14 +37,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
         public void focusLost(final FocusEvent e) {
             getComponent().repaint();
-        }
-    };
-    private final MouseListener mouseListener = (MouseClickListener) e -> {
-        ClickAction actionUnder = getActionUnder(e.getPoint());
-        if (actionUnder == ClickAction.CLEAR) {
-            getComponent().setText("");
-        } else if (actionUnder == ClickAction.SEARCH_POPUP) {
-            showSearchPopup();
         }
     };
     private final MouseMotionListener mouseMotionListener = (MouseMovementListener) e -> updateCursor(e.getPoint());
@@ -60,6 +50,15 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             });
         }
     };
+    private long lastSearchEvent;
+    private final MouseListener mouseListener = (MouseClickListener) e -> {
+        ClickAction actionUnder = getActionUnder(e.getPoint());
+        if (actionUnder == ClickAction.CLEAR) {
+            getComponent().setText("");
+        } else if (actionUnder == ClickAction.SEARCH_POPUP) {
+            showSearchPopup();
+        }
+    };
     private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
         @Override
         public void popupMenuWillBecomeInvisible(@NotNull final PopupMenuEvent e) {
@@ -67,121 +66,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         }
     };
 
-
-    private void updateCursor(final Point p) {
-        var action = getActionUnder(p);
-        var drawRect = getDrawingRect(getComponent());
-        var textRect = getTextRect(getComponent());
-        int rightBoundary = getComponent().getText().isEmpty()
-                            ? drawRect.x + drawRect.width
-                            : getClearIconCoord().x;
-        boolean insideTextArea = drawRect.contains(p) && p.x >= textRect.x && p.x < rightBoundary;
-        if (insideTextArea) {
-            getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-        } else {
-            var cursor = action == ClickAction.NONE
-                         ? Cursor.getDefaultCursor()
-                         : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-            getComponent().setCursor(cursor);
-        }
-    }
-
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTextFieldUI();
-    }
-
-    @Override
-    protected void installListeners() {
-        JTextComponent c = getComponent();
-        c.addMouseListener(mouseListener);
-        c.addMouseMotionListener(mouseMotionListener);
-        c.addFocusListener(focusListener);
-        c.addKeyListener(keyListener);
-    }
-
-    @Override
-    protected void uninstallListeners() {
-        JTextComponent c = getComponent();
-        c.removeMouseListener(mouseListener);
-        c.removeMouseMotionListener(mouseMotionListener);
-        c.removeFocusListener(focusListener);
-        c.removeKeyListener(keyListener);
-    }
-
-    protected void showSearchPopup() {
-        if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
-            var menu = getSearchPopup(getComponent());
-            if (menu != null) {
-                menu.show(getComponent(), getSearchIconCoord().x, getComponent().getHeight());
-            }
-        }
-    }
-
-    protected void paintBackground(final Graphics graphics) {
-        Graphics2D g = (Graphics2D) graphics;
-        JTextComponent c = this.getComponent();
-
-        Container parent = c.getParent();
-        if (c.isOpaque() && parent != null) {
-            g.setColor(parent.getBackground());
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        }
-
-        GraphicsContext config = new GraphicsContext(g);
-        Border border = c.getBorder();
-        if (isSearchField(c)) {
-            paintSearchField(g, c);
-        } else if (border instanceof DarkTextBorder) {
-            paintBorderBackground(g, c);
-        } else {
-            super.paintBackground(g);
-        }
-        config.restore();
-    }
-
-    private void paintBorderBackground(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
-        g.setColor(getBackgroundColor(c));
-        Rectangle r = getDrawingRect(getComponent());
-        int arc = getArcSize(c);
-        g.fillRoundRect(r.x, r.y, r.width, r.height, arc, arc);
-        g.fillRect(r.x, r.y, r.width, r.height);
-    }
-
-    private void paintSearchField(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
-        g.setColor(getBackgroundColor(c));
-        Rectangle r = getDrawingRect(getComponent());
-        int arc = getArcSize(c);
-        g.fillRoundRect(r.x, r.y, r.width, r.height, arc, arc);
-        paintSearchIcon(g);
-        if (c.getText().length() > 0) {
-            paintClearIcon(g);
-        }
-    }
-
-
-    private void paintClearIcon(final Graphics2D g) {
-        Point p = getClearIconCoord();
-        getClearIcon().paintIcon(null, g, p.x, p.y);
-    }
-
-    private void paintSearchIcon(final Graphics2D g) {
-        Point p = getSearchIconCoord();
-        getSearchIcon(getComponent()).paintIcon(null, g, p.x, p.y);
-    }
-
-    protected Point getClearIconCoord() {
-        Rectangle r = getDrawingRect(getComponent());
-        int w = getClearIcon().getIconWidth();
-        return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
-    }
-
-    @NotNull
-    @Contract("_ -> new")
-    public static Rectangle getDrawingRect(@NotNull final JTextComponent c) {
-        int w = DarkTextBorder.BORDER_SIZE;
-        return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
     }
 
     @NotNull
@@ -189,18 +77,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         Insets i = c.getInsets();
         Dimension dim = c.getSize();
         return new Rectangle(i.left, i.top, dim.width - i.left - i.right, dim.height - i.top - i.bottom);
-    }
-
-    protected Point getSearchIconCoord() {
-        Rectangle r = getDrawingRect(getComponent());
-        int w = getSearchIcon(getComponent()).getIconWidth();
-        return new Point(r.x + DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
-    }
-
-    public static Icon getSearchIcon(final Component c) {
-        return isSearchFieldWithHistoryPopup(c)
-               ? UIManager.getIcon("TextField.search.searchWithHistory.icon")
-               : UIManager.getIcon("TextField.search.search.icon");
     }
 
     @Contract(pure = true)
@@ -227,7 +103,68 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     public static boolean chooseAlternativeArc(@NotNull final Component c) {
         return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.alternativeArc"));
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.alternativeArc"));
+    }
+
+    public static boolean isOver(@NotNull final Point p, @NotNull final Icon icon, final Point e) {
+        return new Rectangle(p.x, p.y,
+                             icon.getIconWidth(), icon.getIconHeight()).contains(e);
+    }
+
+    private void updateCursor(final Point p) {
+        var action = getActionUnder(p);
+        var drawRect = getDrawingRect(getComponent());
+        var textRect = getTextRect(getComponent());
+        int rightBoundary = getComponent().getText().isEmpty()
+                            ? drawRect.x + drawRect.width
+                            : getClearIconCoord().x;
+        boolean insideTextArea = drawRect.contains(p) && p.x >= textRect.x && p.x < rightBoundary;
+        if (insideTextArea) {
+            getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+        } else {
+            var cursor = action == ClickAction.NONE
+                         ? Cursor.getDefaultCursor()
+                         : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+            getComponent().setCursor(cursor);
+        }
+    }
+
+    protected void showSearchPopup() {
+        if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
+            var menu = getSearchPopup(getComponent());
+            if (menu != null) {
+                menu.show(getComponent(), getSearchIconCoord().x, getComponent().getHeight());
+            }
+        }
+    }
+
+    @Nullable
+    private static JPopupMenu getSearchPopup(@NotNull final JComponent c) {
+        Object value = c.getClientProperty("JTextField.Search.FindPopup");
+        return value instanceof JPopupMenu ? (JPopupMenu) value : null;
+    }
+
+    protected Point getSearchIconCoord() {
+        Rectangle r = getDrawingRect(getComponent());
+        int w = getSearchIcon(getComponent()).getIconWidth();
+        return new Point(r.x + DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    public static Rectangle getDrawingRect(@NotNull final JTextComponent c) {
+        int w = DarkTextBorder.BORDER_SIZE;
+        return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
+    }
+
+    public static Icon getSearchIcon(final Component c) {
+        return isSearchFieldWithHistoryPopup(c)
+               ? UIManager.getIcon("TextField.search.searchWithHistory.icon")
+               : UIManager.getIcon("TextField.search.search.icon");
+    }
+
+    public static boolean isSearchFieldWithHistoryPopup(final Component c) {
+        return isSearchField(c) && getSearchPopup((JComponent) c) != null;
     }
 
     @Contract("null -> false")
@@ -235,14 +172,39 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return c instanceof JTextField && "search".equals(((JTextField) c).getClientProperty("JTextField.variant"));
     }
 
-    public static boolean isSearchFieldWithHistoryPopup(final Component c) {
-        return isSearchField(c) && getSearchPopup((JComponent) c) != null;
+    private void paintBorderBackground(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
+        g.setColor(getBackgroundColor(c));
+        Rectangle r = getDrawingRect(getComponent());
+        int arc = getArcSize(c);
+        g.fillRoundRect(r.x, r.y, r.width, r.height, arc, arc);
+        g.fillRect(r.x, r.y, r.width, r.height);
     }
 
-    @Nullable
-    private static JPopupMenu getSearchPopup(@NotNull final JComponent c) {
-        Object value = c.getClientProperty("JTextField.Search.FindPopup");
-        return value instanceof JPopupMenu ? (JPopupMenu) value : null;
+    private void paintSearchField(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
+        g.setColor(getBackgroundColor(c));
+        Rectangle r = getDrawingRect(getComponent());
+        int arc = getArcSize(c);
+        g.fillRoundRect(r.x, r.y, r.width, r.height, arc, arc);
+        paintSearchIcon(g);
+        if (c.getText().length() > 0) {
+            paintClearIcon(g);
+        }
+    }
+
+    private void paintClearIcon(final Graphics2D g) {
+        Point p = getClearIconCoord();
+        getClearIcon().paintIcon(null, g, p.x, p.y);
+    }
+
+    private void paintSearchIcon(final Graphics2D g) {
+        Point p = getSearchIconCoord();
+        getSearchIcon(getComponent()).paintIcon(null, g, p.x, p.y);
+    }
+
+    protected Point getClearIconCoord() {
+        Rectangle r = getDrawingRect(getComponent());
+        int w = getClearIcon().getIconWidth();
+        return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
     }
 
     private ClickAction getActionUnder(final Point p) {
@@ -258,11 +220,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return ClickAction.NONE;
     }
 
-    public static boolean isOver(@NotNull final Point p, @NotNull final Icon icon, final Point e) {
-        return new Rectangle(p.x, p.y,
-                             icon.getIconWidth(), icon.getIconHeight()).contains(e);
-    }
-
     @Override
     protected DarkCaret.CaretStyle getDefaultCaretStyle() {
         return DarkCaret.CaretStyle.THICK_VERTICAL_LINE_STYLE;
@@ -275,12 +232,52 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             var oldVal = evt.getOldValue();
             var newVal = evt.getNewValue();
             if (oldVal instanceof JPopupMenu) {
-                ((JPopupMenu)oldVal).removePopupMenuListener(searchPopupListener);
+                ((JPopupMenu) oldVal).removePopupMenuListener(searchPopupListener);
             }
             if (newVal instanceof JPopupMenu) {
-                ((JPopupMenu)newVal).addPopupMenuListener(searchPopupListener);
+                ((JPopupMenu) newVal).addPopupMenuListener(searchPopupListener);
             }
         }
+    }
+
+    @Override
+    protected void installListeners() {
+        JTextComponent c = getComponent();
+        c.addMouseListener(mouseListener);
+        c.addMouseMotionListener(mouseMotionListener);
+        c.addFocusListener(focusListener);
+        c.addKeyListener(keyListener);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        JTextComponent c = getComponent();
+        c.removeMouseListener(mouseListener);
+        c.removeMouseMotionListener(mouseMotionListener);
+        c.removeFocusListener(focusListener);
+        c.removeKeyListener(keyListener);
+    }
+
+    protected void paintBackground(final Graphics graphics) {
+        Graphics2D g = (Graphics2D) graphics;
+        JTextComponent c = this.getComponent();
+
+        Container parent = c.getParent();
+        if (c.isOpaque() && parent != null) {
+            g.setColor(parent.getBackground());
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        }
+
+        GraphicsContext config = new GraphicsContext(g);
+        Border border = c.getBorder();
+        if (isSearchField(c)) {
+            paintSearchField(g, c);
+        } else if (border instanceof DarkTextBorder) {
+            paintBorderBackground(g, c);
+        } else {
+            super.paintBackground(g);
+        }
+        config.restore();
     }
 
     private enum ClickAction {

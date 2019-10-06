@@ -5,9 +5,10 @@ import java.awt.event.MouseMotionListener;
 
 public interface MouseMovementListener extends MouseMotionListener {
 
-   @Override
-   default void mouseDragged(final MouseEvent e) {}
+    @Override
+    default void mouseDragged(final MouseEvent e) {
+    }
 
-   @Override
-   void mouseMoved(MouseEvent e);
+    @Override
+    void mouseMoved(MouseEvent e);
 }

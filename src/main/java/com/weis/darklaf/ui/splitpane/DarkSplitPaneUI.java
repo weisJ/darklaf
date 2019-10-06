@@ -32,15 +32,6 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     @Override
-    public BasicSplitPaneDivider createDefaultDivider() {
-        if (style == Style.DEFAULT) {
-            return new DarkSplitPaneDivider(this);
-        } else {
-            return new ThinDivider(this);
-        }
-    }
-
-    @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
         defaultDividerSize = splitPane.getDividerSize();
@@ -53,6 +44,12 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     @Override
+    protected void installListeners() {
+        super.installListeners();
+        splitPane.addPropertyChangeListener(this);
+    }
+
+    @Override
     public void uninstallUI(final JComponent c) {
         if (splitPane.getLayout() instanceof LayoutManagerDelegate) {
             splitPane.setLayout(null);
@@ -61,15 +58,40 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     @Override
-    protected void installListeners() {
-        super.installListeners();
-        splitPane.addPropertyChangeListener(this);
-    }
-
-    @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
         splitPane.removePropertyChangeListener(this);
+    }
+
+    @Override
+    public BasicSplitPaneDivider createDefaultDivider() {
+        if (style == Style.DEFAULT) {
+            return new DarkSplitPaneDivider(this);
+        } else {
+            return new ThinDivider(this);
+        }
+    }
+
+    @Override
+    protected void resetLayoutManager() {
+        super.resetLayoutManager();
+        splitPane.setLayout(new LayoutManagerDelegate(splitPane.getLayout()) {
+            @Override
+            public void layoutContainer(final Container parent) {
+                super.layoutContainer(parent);
+                if (style != Style.DEFAULT) {
+                    var bounds = getDivider().getBounds();
+                    if (getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+                        bounds.x -= DIVIDER_DRAG_OFFSET;
+                        bounds.width = DIVIDER_DRAG_SIZE;
+                    } else {
+                        bounds.y -= DIVIDER_DRAG_OFFSET;
+                        bounds.height = DIVIDER_DRAG_SIZE;
+                    }
+                    getDivider().setBounds(bounds);
+                }
+            }
+        });
     }
 
     @Override
@@ -106,28 +128,6 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
         }
     }
 
-    @Override
-    protected void resetLayoutManager() {
-        super.resetLayoutManager();
-        splitPane.setLayout(new LayoutManagerDelegate(splitPane.getLayout()) {
-            @Override
-            public void layoutContainer(final Container parent) {
-                super.layoutContainer(parent);
-                if (style != Style.DEFAULT) {
-                    var bounds = getDivider().getBounds();
-                    if (getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-                        bounds.x -= DIVIDER_DRAG_OFFSET;
-                        bounds.width = DIVIDER_DRAG_SIZE;
-                    } else {
-                        bounds.y -= DIVIDER_DRAG_OFFSET;
-                        bounds.height = DIVIDER_DRAG_SIZE;
-                    }
-                    getDivider().setBounds(bounds);
-                }
-            }
-        });
-    }
-
     protected Color getDividerLineColor() {
         return UIManager.getColor("SplitPane.dividerLineColor");
     }
@@ -151,6 +151,12 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             super(ui);
         }
 
+        @Contract(pure = true)
+        @Override
+        public int getDividerSize() {
+            return style == Style.LINE ? 1 : 0;
+        }
+
         @Override
         public void paint(@NotNull final Graphics g) {
             if (style == Style.LINE) {
@@ -161,12 +167,6 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
                     g.drawLine(0, DIVIDER_DRAG_OFFSET, getWidth() - 1, DIVIDER_DRAG_OFFSET);
                 }
             }
-        }
-
-        @Contract(pure = true)
-        @Override
-        public int getDividerSize() {
-            return style == Style.LINE ? 1 : 0;
         }
 
         @Override

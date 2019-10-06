@@ -68,24 +68,6 @@ public class UIAwareIcon implements Icon, UIResource, Serializable {
         g2.dispose();
     }
 
-    @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        ensureLoaded();
-        icon.paintIcon(c, g, x, y);
-    }
-
-    @Override
-    public int getIconWidth() {
-        ensureLoaded();
-        return icon.getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-        ensureLoaded();
-        return icon.getIconHeight();
-    }
-
     private void ensureLoaded() {
         if (!isLoaded()) {
             loadIcon();
@@ -105,6 +87,24 @@ public class UIAwareIcon implements Icon, UIResource, Serializable {
             icon = IconLoader.get(parentClass).getIcon(lightKey, w, h);
         }
         loaded = true;
+    }
+
+    @Override
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        ensureLoaded();
+        icon.paintIcon(c, g, x, y);
+    }
+
+    @Override
+    public int getIconWidth() {
+        ensureLoaded();
+        return icon.getIconWidth();
+    }
+
+    @Override
+    public int getIconHeight() {
+        ensureLoaded();
+        return icon.getIconHeight();
     }
 
     public UIAwareIcon getDual() {

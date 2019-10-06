@@ -58,18 +58,15 @@ public class DarkTableUI extends DarkTableUIBridge {
         return new DarkTableUI();
     }
 
-    protected static int adjustDistance(final int distance, @NotNull final Rectangle rect,
-                                        @NotNull final JTable comp) {
-        int dist = distance;
-        int min = 0;
-        int max = comp.getX() + comp.getWidth();
-        if (rect.x + dist <= min) {
-            dist = min - rect.x;
-        }
-        if (rect.x + rect.width + dist >= max) {
-            dist = max - rect.x - rect.width;
-        }
-        return dist;
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        table.setRowHeight(ROW_HEIGHT);
+        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
+        table.putClientProperty("JTable.renderBooleanAsCheckBox",
+                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
+        table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
+        setupRendererComponents(table);
     }
 
     protected static void setupRendererComponents(@NotNull final JTable table) {
@@ -106,17 +103,6 @@ public class DarkTableUI extends DarkTableUIBridge {
         super.uninstallListeners();
         table.removeFocusListener(focusListener);
         table.addPropertyChangeListener(propertyChangeListener);
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        table.setRowHeight(ROW_HEIGHT);
-        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
-        table.putClientProperty("JTable.renderBooleanAsCheckBox",
-                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
-        table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
-        setupRendererComponents(table);
     }
 
     @Override
@@ -190,10 +176,6 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
-    protected Color getBorderColor() {
-        return UIManager.getColor("TableHeader.borderColor");
-    }
-
     protected boolean isScrollPaneRtl() {
         if (!isInScrollPane()) return false;
         Container comp = SwingUtilities.getUnwrappedParent(table).getParent();
@@ -206,14 +188,6 @@ public class DarkTableUI extends DarkTableUIBridge {
             comp = comp.getParent();
         }
         return comp instanceof JScrollPane && ((JScrollPane) comp).getVerticalScrollBar().isVisible();
-    }
-
-    protected boolean isInScrollPane() {
-        Container comp = SwingUtilities.getUnwrappedParent(table);
-        if (comp != null) {
-            comp = comp.getParent();
-        }
-        return comp instanceof JScrollPane;
     }
 
     protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
@@ -244,6 +218,32 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
         }
+    }
+
+    protected Color getBorderColor() {
+        return UIManager.getColor("TableHeader.borderColor");
+    }
+
+    protected boolean isInScrollPane() {
+        Container comp = SwingUtilities.getUnwrappedParent(table);
+        if (comp != null) {
+            comp = comp.getParent();
+        }
+        return comp instanceof JScrollPane;
+    }
+
+    protected static int adjustDistance(final int distance, @NotNull final Rectangle rect,
+                                        @NotNull final JTable comp) {
+        int dist = distance;
+        int min = 0;
+        int max = comp.getX() + comp.getWidth();
+        if (rect.x + dist <= min) {
+            dist = min - rect.x;
+        }
+        if (rect.x + rect.width + dist >= max) {
+            dist = max - rect.x - rect.width;
+        }
+        return dist;
     }
 
     @Override

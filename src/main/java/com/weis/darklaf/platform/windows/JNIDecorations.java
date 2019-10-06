@@ -14,6 +14,14 @@ import java.util.logging.Logger;
 
 public class JNIDecorations {
 
+    private static final Logger LOGGER = Logger.getLogger(JNIDecorations.class.getName());
+    private static boolean supported;
+    private static boolean loaded;
+
+    static {
+        updateLibrary();
+    }
+
     public static native void updateValues(final long hwnd, final int left, final int right, final int height);
 
     public static native void setResizable(final long hwnd, final boolean resizable);
@@ -32,14 +40,6 @@ public class JNIDecorations {
 
     public static long getHWND(final Component component) {
         return Pointer.nativeValue(Native.getComponentPointer(component));
-    }
-
-    private static final Logger LOGGER = Logger.getLogger(JNIDecorations.class.getName());
-    private static boolean supported;
-    private static boolean loaded;
-
-    static {
-        updateLibrary();
     }
 
     /**

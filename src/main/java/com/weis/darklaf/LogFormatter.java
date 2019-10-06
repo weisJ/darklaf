@@ -72,6 +72,12 @@ public class LogFormatter extends Formatter {
         return builder.toString();
     }
 
+    @NotNull
+    private String calculateDateString(final long milliseconds) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(milliseconds);
+        return dateFormat.format(date);
+    }
 
     private String getMessageColor(@NotNull final LogRecord record) {
         if (record.getLevel() == Level.SEVERE) {
@@ -81,12 +87,5 @@ public class LogFormatter extends Formatter {
         } else {
             return ANSI_WHITE;
         }
-    }
-
-    @NotNull
-    private String calculateDateString(final long milliseconds) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date(milliseconds);
-        return dateFormat.format(date);
     }
 }

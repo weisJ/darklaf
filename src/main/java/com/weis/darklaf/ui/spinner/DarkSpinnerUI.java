@@ -27,12 +27,6 @@ import java.beans.PropertyChangeListener;
 public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListener {
 
     private static final int BUTTON_PAD = 7;
-
-    private Component component;
-    private JComponent editor;
-    private Color compColor;
-    private JButton prevButton;
-
     private final FocusListener focusListener = new FocusAdapter() {
         @Override
         public void focusGained(final FocusEvent e) {
@@ -51,6 +45,10 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             spinner.getEditor().requestFocus();
         }
     };
+    private Component component;
+    private JComponent editor;
+    private Color compColor;
+    private JButton prevButton;
 
     @NotNull
     @Contract("_ -> new")
@@ -72,53 +70,29 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         spinner.removePropertyChangeListener(this);
     }
 
-    protected static boolean isTableCellEditor(@NotNull final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
-    }
+    protected LayoutManager createLayout() {
+        return new LayoutManagerDelegate(super.createLayout()) {
+            private Component editor = null;
 
-    protected static boolean isTreeCellEditor(@NotNull final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTreeCellEditor"));
-    }
+            @Override
+            public void addLayoutComponent(final String name, final Component comp) {
+                super.addLayoutComponent(name, comp);
+                if ("Editor".equals(name)) {
+                    editor = comp;
+                }
+            }
 
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    protected void replaceEditor(final JComponent oldEditor, final JComponent newEditor) {
-        super.replaceEditor(oldEditor, newEditor);
-        editor = newEditor;
-        if (oldEditor != null && oldEditor.getComponents().length > 0) {
-            oldEditor.getComponents()[0].removeFocusListener(focusListener);
-        }
-        if (newEditor != null && newEditor.getComponents().length > 0) {
-            var comp = newEditor.getComponents()[0];
-            comp.addFocusListener(focusListener);
-        }
-    }
-
-    @Override
-    protected JComponent createEditor() {
-        editor = super.createEditor();
-        component = ((JSpinner.DefaultEditor) editor).getTextField();
-        component.addFocusListener(focusListener);
-        return editor;
-    }
-
-    private void paintSpinBackground(@NotNull final Graphics2D g, final int width, final int height,
-                                     final int bSize, final int arc) {
-        var bounds = prevButton.getBounds();
-        boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
-        int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
-        Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize, height - 2 * bSize,
-                                                         arc, arc));
-        Area iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1, height - 2 * bSize));
-        if (leftToRight) {
-            rect.intersect(iconRect);
-        } else {
-            rect.subtract(iconRect);
-        }
-        g.setColor(getSpinBackground());
-        g.fill(rect);
+            @Override
+            public void layoutContainer(final Container parent) {
+                super.layoutContainer(parent);
+                if (editor != null && !spinner.getComponentOrientation().isLeftToRight()) {
+                    var bounds = editor.getBounds();
+                    bounds.x += DarkSpinnerBorder.BORDER_SIZE;
+                    bounds.width -= DarkSpinnerBorder.BORDER_SIZE;
+                    editor.setBounds(bounds);
+                }
+            }
+        };
     }
 
     @Override
@@ -137,6 +111,28 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         nextButton.setBorder(new EmptyBorder(1, 1, 1, 1));
         installNextButtonListeners(nextButton);
         return nextButton;
+    }
+
+    @Override
+    protected JComponent createEditor() {
+        editor = super.createEditor();
+        component = ((JSpinner.DefaultEditor) editor).getTextField();
+        component.addFocusListener(focusListener);
+        return editor;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    protected void replaceEditor(final JComponent oldEditor, final JComponent newEditor) {
+        super.replaceEditor(oldEditor, newEditor);
+        editor = newEditor;
+        if (oldEditor != null && oldEditor.getComponents().length > 0) {
+            oldEditor.getComponents()[0].removeFocusListener(focusListener);
+        }
+        if (newEditor != null && newEditor.getComponents().length > 0) {
+            var comp = newEditor.getComponents()[0];
+            comp.addFocusListener(focusListener);
+        }
     }
 
     @NotNull
@@ -194,38 +190,40 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
     }
 
-    protected LayoutManager createLayout() {
-        return new LayoutManagerDelegate(super.createLayout()) {
-            private Component editor = null;
+    public static Color getBackground(final JComponent c) {
+        return c == null || !c.isEnabled() ? UIManager.getColor("Spinner.inactiveBackground")
+                                           : UIManager.getColor("Spinner.activeBackground");
+    }
 
-            @Override
-            public void addLayoutComponent(final String name, final Component comp) {
-                super.addLayoutComponent(name, comp);
-                if ("Editor".equals(name)) {
-                    editor = comp;
-                }
-            }
+    protected static boolean isTableCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
+    }
 
-            @Override
-            public void layoutContainer(final Container parent) {
-                super.layoutContainer(parent);
-                if (editor != null && !spinner.getComponentOrientation().isLeftToRight()) {
-                    var bounds = editor.getBounds();
-                    bounds.x += DarkSpinnerBorder.BORDER_SIZE;
-                    bounds.width -= DarkSpinnerBorder.BORDER_SIZE;
-                    editor.setBounds(bounds);
-                }
-            }
-        };
+    protected static boolean isTreeCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTreeCellEditor"));
+    }
+
+    private void paintSpinBackground(@NotNull final Graphics2D g, final int width, final int height,
+                                     final int bSize, final int arc) {
+        var bounds = prevButton.getBounds();
+        boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
+        int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
+        Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize, height - 2 * bSize,
+                                                         arc, arc));
+        Area iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1, height - 2 * bSize));
+        if (leftToRight) {
+            rect.intersect(iconRect);
+        } else {
+            rect.subtract(iconRect);
+        }
+        g.setColor(getSpinBackground());
+        g.fill(rect);
     }
 
     public static Color getSpinBackground() {
         return getBackground(null);
-    }
-
-    public static Color getBackground(final JComponent c) {
-        return c == null || !c.isEnabled() ? UIManager.getColor("Spinner.inactiveBackground")
-                                           : UIManager.getColor("Spinner.activeBackground");
     }
 
     @Override

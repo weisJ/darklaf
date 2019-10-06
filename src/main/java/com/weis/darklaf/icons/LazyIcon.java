@@ -8,18 +8,23 @@ import java.awt.*;
 
 public abstract class LazyIcon implements Icon, UIResource {
 
-    private boolean loaded;
-    private Icon icon;
-
     protected final String path;
     protected final IconLoader.IconKey key;
     protected final Class<?> parentClass;
+    private boolean loaded;
+    private Icon icon;
 
     @Contract(pure = true)
     public LazyIcon(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
         this.path = path;
         this.key = key;
         this.parentClass = parentClass;
+    }
+
+    @Override
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        ensureLoaded();
+        icon.paintIcon(c, g, x, y);
     }
 
     private void ensureLoaded() {
@@ -35,12 +40,6 @@ public abstract class LazyIcon implements Icon, UIResource {
     }
 
     protected abstract Icon loadIcon();
-
-    @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        ensureLoaded();
-        icon.paintIcon(c, g, x, y);
-    }
 
     @Override
     public int getIconWidth() {

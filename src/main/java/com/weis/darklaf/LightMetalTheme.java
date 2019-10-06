@@ -27,20 +27,32 @@ public class LightMetalTheme extends DefaultMetalTheme {
 
     @NotNull
     @Override
+    protected ColorUIResource getPrimary1() {
+        return primary1;
+    }
+
+    @NotNull
+    @Override
+    protected ColorUIResource getPrimary2() {
+        return primary2;
+    }
+
+    @NotNull
+    @Override
+    protected ColorUIResource getPrimary3() {
+        return primary3;
+    }
+
+    @NotNull
+    @Override
+    public ColorUIResource getFocusColor() {
+        return new ColorUIResource(Color.black);
+    }
+
+    @NotNull
+    @Override
     public ColorUIResource getControl() {
         return lightGray;
-    }
-
-    @NotNull
-    @Override
-    public ColorUIResource getSeparatorBackground() {
-        return white;
-    }
-
-    @NotNull
-    @Override
-    public ColorUIResource getSeparatorForeground() {
-        return darkGray;
     }
 
     @NotNull
@@ -63,31 +75,19 @@ public class LightMetalTheme extends DefaultMetalTheme {
 
     @NotNull
     @Override
-    public ColorUIResource getAcceleratorSelectedForeground() {
+    public ColorUIResource getSeparatorBackground() {
         return white;
     }
 
     @NotNull
     @Override
-    public ColorUIResource getFocusColor() {
-        return new ColorUIResource(Color.black);
+    public ColorUIResource getSeparatorForeground() {
+        return darkGray;
     }
 
     @NotNull
     @Override
-    protected ColorUIResource getPrimary1() {
-        return primary1;
-    }
-
-    @NotNull
-    @Override
-    protected ColorUIResource getPrimary2() {
-        return primary2;
-    }
-
-    @NotNull
-    @Override
-    protected ColorUIResource getPrimary3() {
-        return primary3;
+    public ColorUIResource getAcceleratorSelectedForeground() {
+        return white;
     }
 }

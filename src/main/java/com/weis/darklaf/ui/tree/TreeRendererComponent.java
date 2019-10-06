@@ -26,24 +26,6 @@ public class TreeRendererComponent extends Container {
     }
 
     @Override
-    public void paint(final Graphics g) {
-        int width = getWidth();
-
-        var icon = defaultRenderer.getIcon();
-        // Then the icon.
-        if (icon != null) {
-            int yLoc = calculateIconY(icon);
-
-            if (getComponentOrientation().isLeftToRight()) {
-                icon.paintIcon(this, g, 0, yLoc);
-            } else {
-                icon.paintIcon(this, g, width - icon.getIconWidth(), yLoc);
-            }
-        }
-        super.paint(g);
-    }
-
-    @Override
     public boolean isShowing() {
         return true;
     }
@@ -60,19 +42,6 @@ public class TreeRendererComponent extends Container {
                 renderComponent.setBounds(getWidth() - width - offset, 0, width, height);
             }
         }
-    }
-
-    /**
-     * Calculate the y location for the icon.
-     */
-    private int calculateIconY(@NotNull final Icon icon) {
-        int iconHeight = icon.getIconHeight();
-        int textHeight = renderComponent.getFontMetrics(renderComponent.getFont()).getHeight();
-        int textY = iconHeight / 2 - textHeight / 2;
-        int totalY = Math.min(0, textY);
-        int totalHeight = Math.max(iconHeight, textY + textHeight) -
-                totalY;
-        return getHeight() / 2 - (totalY + (totalHeight / 2));
     }
 
     private int getOffset() {
@@ -99,5 +68,36 @@ public class TreeRendererComponent extends Container {
             return pSize;
         }
         return new Dimension(0, 0);
+    }
+
+    @Override
+    public void paint(final Graphics g) {
+        int width = getWidth();
+
+        var icon = defaultRenderer.getIcon();
+        // Then the icon.
+        if (icon != null) {
+            int yLoc = calculateIconY(icon);
+
+            if (getComponentOrientation().isLeftToRight()) {
+                icon.paintIcon(this, g, 0, yLoc);
+            } else {
+                icon.paintIcon(this, g, width - icon.getIconWidth(), yLoc);
+            }
+        }
+        super.paint(g);
+    }
+
+    /**
+     * Calculate the y location for the icon.
+     */
+    private int calculateIconY(@NotNull final Icon icon) {
+        int iconHeight = icon.getIconHeight();
+        int textHeight = renderComponent.getFontMetrics(renderComponent.getFont()).getHeight();
+        int textY = iconHeight / 2 - textHeight / 2;
+        int totalY = Math.min(0, textY);
+        int totalHeight = Math.max(iconHeight, textY + textHeight) -
+                totalY;
+        return getHeight() / 2 - (totalY + (totalHeight / 2));
     }
 }

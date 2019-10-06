@@ -19,17 +19,6 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
     private final DarkCellRendererToggleButton radioRenderer =
             new DarkCellRendererToggleButton(new DarkCellRendererToggleButton.CellEditorRadioButton());
 
-    protected static boolean isBooleanRenderingEnabled(@NotNull final JTable table) {
-        return Boolean.TRUE.equals(table.getClientProperty("JTable.renderBooleanAsCheckBox"));
-    }
-
-    protected TableCellRenderer getBooleanRenderer(@NotNull final JTable table) {
-        if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
-            return radioRenderer;
-        }
-        return checkBoxRenderer;
-    }
-
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value,
                                                    final boolean isSelected, final boolean hasFocus,
@@ -58,5 +47,16 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
             }
         }
         return component;
+    }
+
+    protected static boolean isBooleanRenderingEnabled(@NotNull final JTable table) {
+        return Boolean.TRUE.equals(table.getClientProperty("JTable.renderBooleanAsCheckBox"));
+    }
+
+    protected TableCellRenderer getBooleanRenderer(@NotNull final JTable table) {
+        if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
+            return radioRenderer;
+        }
+        return checkBoxRenderer;
     }
 }

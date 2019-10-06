@@ -71,14 +71,25 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     protected static boolean canResize(final TableColumn column,
                                        final JTableHeader header) {
         return (column != null) && header.getResizingAllowed()
-               && column.getResizable();
+                && column.getResizable();
     }
 
 //
 //  The installation/uninstall procedures and support
 //
 
-    /**
+    protected void updateRolloverColumn(final MouseEvent e) {
+        if (header.getDraggedColumn() == null &&
+                header.contains(e.getPoint())) {
+
+            int col = header.columnAtPoint(e.getPoint());
+            if (col != rolloverColumn) {
+                int oldRolloverColumn = rolloverColumn;
+                rolloverColumn = col;
+                rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
+            }
+        }
+    }    /**
      * Creates the mouse listener for the {@code JTableHeader}.
      *
      * @return the mouse listener for the {@code JTableHeader}
@@ -89,11 +100,29 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
 //  Installation
 
-    public void installUI(final JComponent c) {
+    //
+// Support for keyboard and mouse access
+//
+    protected int selectNextColumn(final boolean doIt) {
+        int newIndex = getSelectedColumnIndex();
+        if (newIndex < header.getColumnModel().getColumnCount() - 1) {
+            newIndex++;
+            if (doIt) {
+                selectColumn(newIndex);
+            }
+        }
+        return newIndex;
+    }    public void installUI(final JComponent c) {
         super.installUI(c);
     }
 
-    /**
+    protected int getSelectedColumnIndex() {
+        int numCols = header.getColumnModel().getColumnCount();
+        if (selectedColumnIndex >= numCols && numCols > 0) {
+            selectedColumnIndex = numCols - 1;
+        }
+        return selectedColumnIndex;
+    }    /**
      * Initializes JTableHeader properties such as font, foreground, and background.
      * The font, foreground, and background properties are only set if their
      * current value is either null or a UIResource, other properties are set
@@ -108,6 +137,12 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     }
 
     /**
+     * Selects the specified column in the table header. Repaints the
+     * affected header cells and makes sure the newly selected one is visible.
+     */
+    void selectColumn(final int newColIndex) {
+        selectColumn(newColIndex, true);
+    }    /**
      * Attaches listeners to the JTableHeader.
      */
     protected void installListeners() {
@@ -120,120 +155,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
 // Uninstall methods
 
-    public void uninstallUI(final JComponent c) {
-        uninstallDefaults();
-        uninstallListeners();
-        uninstallKeyboardActions();
-
-        header.remove(rendererPane);
-        rendererPane = null;
-        header = null;
-    }
-
-    /**
-     * Uninstalls default properties
-     */
-    protected void uninstallDefaults() {
-    }
-
-    /**
-     * Unregisters listeners.
-     */
-    protected void uninstallListeners() {
-        header.removeMouseListener(mouseInputListener);
-        header.removeMouseMotionListener(mouseInputListener);
-        header.removeFocusListener(focusListener);
-
-        mouseInputListener = null;
-    }
-
-    /**
-     * Unregisters default key actions.
-     */
-    protected void uninstallKeyboardActions() {
-        SwingUtilities.replaceUIInputMap(header, JComponent.WHEN_FOCUSED, null);
-        SwingUtilities.replaceUIActionMap(header, null);
-    }
-
-//
-// Support for mouse rollover
-//
-
-    /**
-     * Returns the index of the column header over which the mouse
-     * currently is. When the mouse is not over the table header,
-     * -1 is returned.
-     *
-     * @return the index of the current rollover column
-     * @see #rolloverColumnUpdated(int, int)
-     * @since 1.6
-     */
-    protected int getRolloverColumn() {
-        return rolloverColumn;
-    }
-
-    /**
-     * This method gets called every time when a rollover column in the table
-     * header is updated. Every look and feel that supports a rollover effect
-     * in a table header should override this method and repaint the header.
-     *
-     * @param oldColumn the index of the previous rollover column or -1 if the
-     *                  mouse was not over a column
-     * @param newColumn the index of the new rollover column or -1 if the mouse
-     *                  is not over a column
-     * @see #getRolloverColumn()
-     * @see JTableHeader#getHeaderRect(int)
-     * @since 1.6
-     */
-    protected void rolloverColumnUpdated(final int oldColumn, final int newColumn) {
-    }
-
-    protected void updateRolloverColumn(final MouseEvent e) {
-        if (header.getDraggedColumn() == null &&
-            header.contains(e.getPoint())) {
-
-            int col = header.columnAtPoint(e.getPoint());
-            if (col != rolloverColumn) {
-                int oldRolloverColumn = rolloverColumn;
-                rolloverColumn = col;
-                rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
-            }
-        }
-    }
-
-    //
-// Support for keyboard and mouse access
-//
-    protected int selectNextColumn(final boolean doIt) {
-        int newIndex = getSelectedColumnIndex();
-        if (newIndex < header.getColumnModel().getColumnCount() - 1) {
-            newIndex++;
-            if (doIt) {
-                selectColumn(newIndex);
-            }
-        }
-        return newIndex;
-    }
-
-    protected int selectPreviousColumn(final boolean doIt) {
-        int newIndex = getSelectedColumnIndex();
-        if (newIndex > 0) {
-            newIndex--;
-            if (doIt) {
-                selectColumn(newIndex);
-            }
-        }
-        return newIndex;
-    }
-
-    /**
-     * Selects the specified column in the table header. Repaints the
-     * affected header cells and makes sure the newly selected one is visible.
-     */
-    void selectColumn(final int newColIndex) {
-        selectColumn(newColIndex, true);
-    }
-
     void selectColumn(final int newColIndex, final boolean doScroll) {
         Rectangle repaintRect = header.getHeaderRect(selectedColumnIndex);
         header.repaint(repaintRect);
@@ -243,6 +164,14 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         if (doScroll) {
             scrollToColumn(newColIndex);
         }
+    }    public void uninstallUI(final JComponent c) {
+        uninstallDefaults();
+        uninstallListeners();
+        uninstallKeyboardActions();
+
+        header.remove(rendererPane);
+        rendererPane = null;
+        header = null;
     }
 
     /**
@@ -255,9 +184,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
         //Test whether the header is in a scroll pane and has a table.
         if ((header.getParent() == null) ||
-            ((container = header.getParent().getParent()) == null) ||
-            !(container instanceof JScrollPane) ||
-            ((table = header.getTable()) == null)) {
+                ((container = header.getParent().getParent()) == null) ||
+                !(container instanceof JScrollPane) ||
+                ((table = header.getTable()) == null)) {
             return;
         }
 
@@ -267,14 +196,30 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         vis.x = cellBounds.x;
         vis.width = cellBounds.width;
         table.scrollRectToVisible(vis);
+    }    /**
+     * Uninstalls default properties
+     */
+    protected void uninstallDefaults() {
     }
 
-    protected int getSelectedColumnIndex() {
-        int numCols = header.getColumnModel().getColumnCount();
-        if (selectedColumnIndex >= numCols && numCols > 0) {
-            selectedColumnIndex = numCols - 1;
+    protected int selectPreviousColumn(final boolean doIt) {
+        int newIndex = getSelectedColumnIndex();
+        if (newIndex > 0) {
+            newIndex--;
+            if (doIt) {
+                selectColumn(newIndex);
+            }
         }
-        return selectedColumnIndex;
+        return newIndex;
+    }    /**
+     * Unregisters listeners.
+     */
+    protected void uninstallListeners() {
+        header.removeMouseListener(mouseInputListener);
+        header.removeMouseMotionListener(mouseInputListener);
+        header.removeFocusListener(focusListener);
+
+        mouseInputListener = null;
     }
 
     protected int changeColumnWidth(final TableColumn resizingColumn,
@@ -286,14 +231,14 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         JTable table;
 
         if ((th.getParent() == null) ||
-            ((container = th.getParent().getParent()) == null) ||
-            !(container instanceof JScrollPane) ||
-            ((table = th.getTable()) == null)) {
+                ((container = th.getParent().getParent()) == null) ||
+                !(container instanceof JScrollPane) ||
+                ((table = th.getTable()) == null)) {
             return 0;
         }
 
         if (!container.getComponentOrientation().isLeftToRight() &&
-            !th.getComponentOrientation().isLeftToRight()) {
+                !th.getComponentOrientation().isLeftToRight()) {
             JViewport viewport = ((JScrollPane) container).getViewport();
             int viewportWidth = viewport.getWidth();
             int diff = newWidth - oldWidth;
@@ -309,7 +254,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
              * a view's position.
              */
             if ((newHeaderWidth >= viewportWidth) &&
-                (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
+                    (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
                 Point p = viewport.getViewPosition();
                 p.x = Math.max(0, Math.min(newHeaderWidth - viewportWidth,
                                            p.x + diff));
@@ -318,7 +263,407 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             }
         }
         return 0;
+    }    /**
+     * Unregisters default key actions.
+     */
+    protected void uninstallKeyboardActions() {
+        SwingUtilities.replaceUIInputMap(header, JComponent.WHEN_FOCUSED, null);
+        SwingUtilities.replaceUIActionMap(header, null);
     }
+
+//
+// Support for mouse rollover
+//
+
+    protected static class Actions extends UIAction {
+        public static final String TOGGLE_SORT_ORDER =
+                "toggleSortOrder";
+        public static final String SELECT_COLUMN_TO_LEFT =
+                "selectColumnToLeft";
+        public static final String SELECT_COLUMN_TO_RIGHT =
+                "selectColumnToRight";
+        public static final String MOVE_COLUMN_LEFT =
+                "moveColumnLeft";
+        public static final String MOVE_COLUMN_RIGHT =
+                "moveColumnRight";
+        public static final String RESIZE_LEFT =
+                "resizeLeft";
+        public static final String RESIZE_RIGHT =
+                "resizeRight";
+        public static final String FOCUS_TABLE =
+                "focusTable";
+
+        public Actions(final String name) {
+            super(name);
+        }
+
+        @Override
+        public boolean accept(final Object sender) {
+            if (sender instanceof JTableHeader) {
+                JTableHeader th = (JTableHeader) sender;
+                TableColumnModel cm = th.getColumnModel();
+                if (cm.getColumnCount() <= 0) {
+                    return false;
+                }
+
+                String key = getName();
+                DarkTableHeaderUIBridge ui =
+                        (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+                if (ui != null) {
+                    if (Objects.equals(key, MOVE_COLUMN_LEFT)) {
+                        return th.getReorderingAllowed()
+                                && maybeMoveColumn(true, th, ui, false);
+                    } else if (Objects.equals(key, MOVE_COLUMN_RIGHT)) {
+                        return th.getReorderingAllowed()
+                                && maybeMoveColumn(false, th, ui, false);
+                    } else if (Objects.equals(key, RESIZE_LEFT) ||
+                            Objects.equals(key, RESIZE_RIGHT)) {
+                        return canResize(cm.getColumn(ui.getSelectedColumnIndex()), th);
+                    } else if (Objects.equals(key, FOCUS_TABLE)) {
+                        return (th.getTable() != null);
+                    }
+                }
+            }
+            return true;
+        }
+
+        protected boolean maybeMoveColumn(final boolean leftArrow, final JTableHeader th,
+                                          final DarkTableHeaderUIBridge ui, final boolean doIt) {
+            int oldIndex = ui.getSelectedColumnIndex();
+            int newIndex;
+
+            if (th.getComponentOrientation().isLeftToRight()) {
+                newIndex = leftArrow ? ui.selectPreviousColumn(doIt)
+                                     : ui.selectNextColumn(doIt);
+            } else {
+                newIndex = leftArrow ? ui.selectNextColumn(doIt)
+                                     : ui.selectPreviousColumn(doIt);
+            }
+
+            if (newIndex != oldIndex) {
+                if (doIt) {
+                    th.getColumnModel().moveColumn(oldIndex, newIndex);
+                } else {
+                    return true; // we'd do the move if asked
+                }
+            }
+
+            return false;
+        }
+
+        public void actionPerformed(final ActionEvent e) {
+            JTableHeader th = (JTableHeader) e.getSource();
+            DarkTableHeaderUIBridge ui =
+                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+            if (ui == null) {
+                return;
+            }
+
+            String name = getName();
+            if (Objects.equals(TOGGLE_SORT_ORDER, name)) {
+                JTable table = th.getTable();
+                RowSorter<?> sorter = table == null ? null : table.getRowSorter();
+                if (sorter != null) {
+                    int columnIndex = ui.getSelectedColumnIndex();
+                    columnIndex = table.convertColumnIndexToModel(
+                            columnIndex);
+                    sorter.toggleSortOrder(columnIndex);
+                }
+            } else if (Objects.equals(SELECT_COLUMN_TO_LEFT, name)) {
+                if (th.getComponentOrientation().isLeftToRight()) {
+                    ui.selectPreviousColumn(true);
+                } else {
+                    ui.selectNextColumn(true);
+                }
+            } else if (Objects.equals(SELECT_COLUMN_TO_RIGHT, name)) {
+                if (th.getComponentOrientation().isLeftToRight()) {
+                    ui.selectNextColumn(true);
+                } else {
+                    ui.selectPreviousColumn(true);
+                }
+            } else if (Objects.equals(MOVE_COLUMN_LEFT, name)) {
+                moveColumn(true, th, ui);
+            } else if (Objects.equals(MOVE_COLUMN_RIGHT, name)) {
+                moveColumn(false, th, ui);
+            } else if (Objects.equals(RESIZE_LEFT, name)) {
+                resize(true, th, ui);
+            } else if (Objects.equals(RESIZE_RIGHT, name)) {
+                resize(false, th, ui);
+            } else if (Objects.equals(FOCUS_TABLE, name)) {
+                JTable table = th.getTable();
+                if (table != null) {
+                    table.requestFocusInWindow();
+                }
+            }
+        }
+
+        protected void moveColumn(final boolean leftArrow, final JTableHeader th,
+                                  final DarkTableHeaderUIBridge ui) {
+            maybeMoveColumn(leftArrow, th, ui, true);
+        }
+
+        protected void resize(final boolean leftArrow, final JTableHeader th,
+                              final DarkTableHeaderUIBridge ui) {
+            int columnIndex = ui.getSelectedColumnIndex();
+            TableColumn resizingColumn =
+                    th.getColumnModel().getColumn(columnIndex);
+
+            th.setResizingColumn(resizingColumn);
+            int oldWidth = resizingColumn.getWidth();
+            int newWidth = oldWidth;
+
+            if (th.getComponentOrientation().isLeftToRight()) {
+                newWidth = newWidth + (leftArrow ? -1 : 1);
+            } else {
+                newWidth = newWidth + (leftArrow ? 1 : -1);
+            }
+
+            ui.changeColumnWidth(resizingColumn, th, oldWidth, newWidth);
+        }
+    }    /**
+     * Returns the index of the column header over which the mouse
+     * currently is. When the mouse is not over the table header,
+     * -1 is returned.
+     *
+     * @return the index of the current rollover column
+     * @see #rolloverColumnUpdated(int, int)
+     * @since 1.6
+     */
+    protected int getRolloverColumn() {
+        return rolloverColumn;
+    }
+
+    /**
+     * This class should be treated as a &quot;protected&quot; inner class.
+     * Instantiate it only within subclasses of {@code DarkTableHeaderUIBridge}.
+     */
+    public class MouseInputHandler implements MouseInputListener {
+
+        protected int mouseXOffset;
+        protected Cursor otherCursor = resizeCursor;
+
+        public void mouseClicked(final MouseEvent e) {
+            if (!header.isEnabled()) {
+                return;
+            }
+            if (e.getClickCount() % 2 == 1 &&
+                    SwingUtilities.isLeftMouseButton(e)) {
+                JTable table = header.getTable();
+                RowSorter<?> sorter;
+                if (table != null && (sorter = table.getRowSorter()) != null) {
+                    int columnIndex = header.columnAtPoint(e.getPoint());
+                    if (columnIndex != -1) {
+                        columnIndex = table.convertColumnIndexToModel(
+                                columnIndex);
+                        sorter.toggleSortOrder(columnIndex);
+                    }
+                }
+            }
+        }
+
+        public void mousePressed(final MouseEvent e) {
+            if (!header.isEnabled()) {
+                return;
+            }
+            header.setDraggedColumn(null);
+            header.setResizingColumn(null);
+            header.setDraggedDistance(0);
+
+            Point p = e.getPoint();
+
+            // First find which header cell was hit
+            TableColumnModel columnModel = header.getColumnModel();
+            int index = header.columnAtPoint(p);
+
+            if (index != -1) {
+                // The last 3 pixels + 3 pixels of next column are for resizing
+                TableColumn resizingColumn = getResizingColumn(p, index);
+                if (canResize(resizingColumn, header)) {
+                    header.setResizingColumn(resizingColumn);
+                    if (header.getComponentOrientation().isLeftToRight()) {
+                        mouseXOffset = p.x - resizingColumn.getWidth();
+                    } else {
+                        mouseXOffset = p.x + resizingColumn.getWidth();
+                    }
+                } else if (header.getReorderingAllowed()) {
+                    TableColumn hitColumn = columnModel.getColumn(index);
+                    header.setDraggedColumn(hitColumn);
+                    mouseXOffset = p.x;
+                }
+            }
+
+            if (header.getReorderingAllowed()) {
+                int oldRolloverColumn = rolloverColumn;
+                rolloverColumn = -1;
+                rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
+            }
+        }
+
+        protected TableColumn getResizingColumn(final Point p, final int column) {
+            if (column == -1) {
+                return null;
+            }
+            Rectangle r = header.getHeaderRect(column);
+            r.grow(-3, 0);
+            if (r.contains(p)) {
+                return null;
+            }
+            int midPoint = r.x + r.width / 2;
+            int columnIndex;
+            if (header.getComponentOrientation().isLeftToRight()) {
+                columnIndex = (p.x < midPoint) ? column - 1 : column;
+            } else {
+                columnIndex = (p.x < midPoint) ? column : column - 1;
+            }
+            if (columnIndex == -1) {
+                return null;
+            }
+            return header.getColumnModel().getColumn(columnIndex);
+        }
+
+        public void mouseReleased(final MouseEvent e) {
+            if (!header.isEnabled()) {
+                return;
+            }
+            setDraggedDistance(0, viewIndexForColumn(header.getDraggedColumn()));
+
+            header.setResizingColumn(null);
+            header.setDraggedColumn(null);
+
+            updateRolloverColumn(e);
+        }
+
+        public void mouseEntered(final MouseEvent e) {
+            if (!header.isEnabled()) {
+                return;
+            }
+            updateRolloverColumn(e);
+        }
+
+        public void mouseExited(final MouseEvent e) {
+            if (!header.isEnabled()) {
+                return;
+            }
+            int oldRolloverColumn = rolloverColumn;
+            rolloverColumn = -1;
+            rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
+        }
+
+        public void mouseDragged(final MouseEvent e) {
+            if (!header.isEnabled()) {
+                return;
+            }
+            int mouseX = e.getX();
+
+            TableColumn resizingColumn = header.getResizingColumn();
+            TableColumn draggedColumn = header.getDraggedColumn();
+
+            boolean headerLeftToRight = header.getComponentOrientation().isLeftToRight();
+
+            if (resizingColumn != null) {
+                int oldWidth = resizingColumn.getWidth();
+                int newWidth;
+                if (headerLeftToRight) {
+                    newWidth = mouseX - mouseXOffset;
+                } else {
+                    newWidth = mouseXOffset - mouseX;
+                }
+                mouseXOffset += changeColumnWidth(resizingColumn, header,
+                                                  oldWidth, newWidth);
+            } else if (draggedColumn != null) {
+                TableColumnModel cm = header.getColumnModel();
+                int draggedDistance = mouseX - mouseXOffset;
+                int direction = (draggedDistance < 0) ? -1 : 1;
+                int columnIndex = viewIndexForColumn(draggedColumn);
+                int newColumnIndex = columnIndex + (headerLeftToRight ? direction : -direction);
+                if (0 <= newColumnIndex && newColumnIndex < cm.getColumnCount()) {
+                    int width = cm.getColumn(newColumnIndex).getWidth();
+                    if (Math.abs(draggedDistance) > (width / 2)) {
+
+                        mouseXOffset = mouseXOffset + direction * width;
+                        header.setDraggedDistance(draggedDistance - direction * width);
+
+                        //Cache the selected column.
+                        int selectedIndex = SwingUtilities2.convertColumnIndexToModel(header.getColumnModel(),
+                                                                                      getSelectedColumnIndex());
+
+                        //Now do the move.
+                        cm.moveColumn(columnIndex, newColumnIndex);
+
+                        //Update the selected index.
+                        selectColumn(SwingUtilities2.convertColumnIndexToView(header.getColumnModel(), selectedIndex),
+                                     false);
+
+                        return;
+                    }
+                }
+                setDraggedDistance(draggedDistance, columnIndex);
+            }
+
+            updateRolloverColumn(e);
+        }
+
+        public void mouseMoved(final MouseEvent e) {
+            if (!header.isEnabled()) {
+                return;
+            }
+            if (canResize(getResizingColumn(e.getPoint()), header) !=
+                    (header.getCursor() == resizeCursor)) {
+                swapCursor();
+            }
+            updateRolloverColumn(e);
+        }
+
+        protected TableColumn getResizingColumn(final Point p) {
+            return getResizingColumn(p, header.columnAtPoint(p));
+        }
+
+        protected void swapCursor() {
+            Cursor tmp = header.getCursor();
+            header.setCursor(otherCursor);
+            otherCursor = tmp;
+        }
+//
+// Protected & protected Methods
+//
+
+        protected void setDraggedDistance(final int draggedDistance, final int column) {
+            header.setDraggedDistance(draggedDistance);
+            if (column != -1) {
+                header.getColumnModel().moveColumn(column, column);
+            }
+        }
+    }    /**
+     * This method gets called every time when a rollover column in the table
+     * header is updated. Every look and feel that supports a rollover effect
+     * in a table header should override this method and repaint the header.
+     *
+     * @param oldColumn the index of the previous rollover column or -1 if the
+     *                  mouse was not over a column
+     * @param newColumn the index of the new rollover column or -1 if the mouse
+     *                  is not over a column
+     * @see #getRolloverColumn()
+     * @see JTableHeader#getHeaderRect(int)
+     * @since 1.6
+     */
+    protected void rolloverColumnUpdated(final int oldColumn, final int newColumn) {
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Returns the baseline.
@@ -438,8 +783,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         }
 
         boolean hasFocus = !header.isPaintingForPrint()
-                           && (columnIndex == getSelectedColumnIndex())
-                           && header.hasFocus();
+                && (columnIndex == getSelectedColumnIndex())
+                && header.hasFocus();
         return renderer.getTableCellRendererComponent(header.getTable(),
                                                       aColumn.getHeaderValue(),
                                                       false, hasFocus,
@@ -550,352 +895,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         return createHeaderSize(width);
     }
 
-    protected static class Actions extends UIAction {
-        public static final String TOGGLE_SORT_ORDER =
-                "toggleSortOrder";
-        public static final String SELECT_COLUMN_TO_LEFT =
-                "selectColumnToLeft";
-        public static final String SELECT_COLUMN_TO_RIGHT =
-                "selectColumnToRight";
-        public static final String MOVE_COLUMN_LEFT =
-                "moveColumnLeft";
-        public static final String MOVE_COLUMN_RIGHT =
-                "moveColumnRight";
-        public static final String RESIZE_LEFT =
-                "resizeLeft";
-        public static final String RESIZE_RIGHT =
-                "resizeRight";
-        public static final String FOCUS_TABLE =
-                "focusTable";
 
-        public Actions(final String name) {
-            super(name);
-        }
 
-        @Override
-        public boolean accept(final Object sender) {
-            if (sender instanceof JTableHeader) {
-                JTableHeader th = (JTableHeader) sender;
-                TableColumnModel cm = th.getColumnModel();
-                if (cm.getColumnCount() <= 0) {
-                    return false;
-                }
 
-                String key = getName();
-                DarkTableHeaderUIBridge ui =
-                        (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
-                if (ui != null) {
-                    if (Objects.equals(key, MOVE_COLUMN_LEFT)) {
-                        return th.getReorderingAllowed()
-                               && maybeMoveColumn(true, th, ui, false);
-                    } else if (Objects.equals(key, MOVE_COLUMN_RIGHT)) {
-                        return th.getReorderingAllowed()
-                               && maybeMoveColumn(false, th, ui, false);
-                    } else if (Objects.equals(key, RESIZE_LEFT) ||
-                            Objects.equals(key, RESIZE_RIGHT)) {
-                        return canResize(cm.getColumn(ui.getSelectedColumnIndex()), th);
-                    } else if (Objects.equals(key, FOCUS_TABLE)) {
-                        return (th.getTable() != null);
-                    }
-                }
-            }
-            return true;
-        }
-
-        public void actionPerformed(final ActionEvent e) {
-            JTableHeader th = (JTableHeader) e.getSource();
-            DarkTableHeaderUIBridge ui =
-                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
-            if (ui == null) {
-                return;
-            }
-
-            String name = getName();
-            if (Objects.equals(TOGGLE_SORT_ORDER, name)) {
-                JTable table = th.getTable();
-                RowSorter<?> sorter = table == null ? null : table.getRowSorter();
-                if (sorter != null) {
-                    int columnIndex = ui.getSelectedColumnIndex();
-                    columnIndex = table.convertColumnIndexToModel(
-                            columnIndex);
-                    sorter.toggleSortOrder(columnIndex);
-                }
-            } else if (Objects.equals(SELECT_COLUMN_TO_LEFT, name)) {
-                if (th.getComponentOrientation().isLeftToRight()) {
-                    ui.selectPreviousColumn(true);
-                } else {
-                    ui.selectNextColumn(true);
-                }
-            } else if (Objects.equals(SELECT_COLUMN_TO_RIGHT, name)) {
-                if (th.getComponentOrientation().isLeftToRight()) {
-                    ui.selectNextColumn(true);
-                } else {
-                    ui.selectPreviousColumn(true);
-                }
-            } else if (Objects.equals(MOVE_COLUMN_LEFT, name)) {
-                moveColumn(true, th, ui);
-            } else if (Objects.equals(MOVE_COLUMN_RIGHT, name)) {
-                moveColumn(false, th, ui);
-            } else if (Objects.equals(RESIZE_LEFT, name)) {
-                resize(true, th, ui);
-            } else if (Objects.equals(RESIZE_RIGHT, name)) {
-                resize(false, th, ui);
-            } else if (Objects.equals(FOCUS_TABLE, name)) {
-                JTable table = th.getTable();
-                if (table != null) {
-                    table.requestFocusInWindow();
-                }
-            }
-        }
-
-        protected void moveColumn(final boolean leftArrow, final JTableHeader th,
-                                  final DarkTableHeaderUIBridge ui) {
-            maybeMoveColumn(leftArrow, th, ui, true);
-        }
-
-        protected boolean maybeMoveColumn(final boolean leftArrow, final JTableHeader th,
-                                          final DarkTableHeaderUIBridge ui, final boolean doIt) {
-            int oldIndex = ui.getSelectedColumnIndex();
-            int newIndex;
-
-            if (th.getComponentOrientation().isLeftToRight()) {
-                newIndex = leftArrow ? ui.selectPreviousColumn(doIt)
-                                     : ui.selectNextColumn(doIt);
-            } else {
-                newIndex = leftArrow ? ui.selectNextColumn(doIt)
-                                     : ui.selectPreviousColumn(doIt);
-            }
-
-            if (newIndex != oldIndex) {
-                if (doIt) {
-                    th.getColumnModel().moveColumn(oldIndex, newIndex);
-                } else {
-                    return true; // we'd do the move if asked
-                }
-            }
-
-            return false;
-        }
-
-        protected void resize(final boolean leftArrow, final JTableHeader th,
-                              final DarkTableHeaderUIBridge ui) {
-            int columnIndex = ui.getSelectedColumnIndex();
-            TableColumn resizingColumn =
-                    th.getColumnModel().getColumn(columnIndex);
-
-            th.setResizingColumn(resizingColumn);
-            int oldWidth = resizingColumn.getWidth();
-            int newWidth = oldWidth;
-
-            if (th.getComponentOrientation().isLeftToRight()) {
-                newWidth = newWidth + (leftArrow ? -1 : 1);
-            } else {
-                newWidth = newWidth + (leftArrow ? 1 : -1);
-            }
-
-            ui.changeColumnWidth(resizingColumn, th, oldWidth, newWidth);
-        }
-    }
-
-    /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of {@code DarkTableHeaderUIBridge}.
-     */
-    public class MouseInputHandler implements MouseInputListener {
-
-        protected int mouseXOffset;
-        protected Cursor otherCursor = resizeCursor;
-
-        public void mouseClicked(final MouseEvent e) {
-            if (!header.isEnabled()) {
-                return;
-            }
-            if (e.getClickCount() % 2 == 1 &&
-                SwingUtilities.isLeftMouseButton(e)) {
-                JTable table = header.getTable();
-                RowSorter<?> sorter;
-                if (table != null && (sorter = table.getRowSorter()) != null) {
-                    int columnIndex = header.columnAtPoint(e.getPoint());
-                    if (columnIndex != -1) {
-                        columnIndex = table.convertColumnIndexToModel(
-                                columnIndex);
-                        sorter.toggleSortOrder(columnIndex);
-                    }
-                }
-            }
-        }
-
-        protected TableColumn getResizingColumn(final Point p) {
-            return getResizingColumn(p, header.columnAtPoint(p));
-        }
-
-        protected TableColumn getResizingColumn(final Point p, final int column) {
-            if (column == -1) {
-                return null;
-            }
-            Rectangle r = header.getHeaderRect(column);
-            r.grow(-3, 0);
-            if (r.contains(p)) {
-                return null;
-            }
-            int midPoint = r.x + r.width / 2;
-            int columnIndex;
-            if (header.getComponentOrientation().isLeftToRight()) {
-                columnIndex = (p.x < midPoint) ? column - 1 : column;
-            } else {
-                columnIndex = (p.x < midPoint) ? column : column - 1;
-            }
-            if (columnIndex == -1) {
-                return null;
-            }
-            return header.getColumnModel().getColumn(columnIndex);
-        }
-
-        public void mousePressed(final MouseEvent e) {
-            if (!header.isEnabled()) {
-                return;
-            }
-            header.setDraggedColumn(null);
-            header.setResizingColumn(null);
-            header.setDraggedDistance(0);
-
-            Point p = e.getPoint();
-
-            // First find which header cell was hit
-            TableColumnModel columnModel = header.getColumnModel();
-            int index = header.columnAtPoint(p);
-
-            if (index != -1) {
-                // The last 3 pixels + 3 pixels of next column are for resizing
-                TableColumn resizingColumn = getResizingColumn(p, index);
-                if (canResize(resizingColumn, header)) {
-                    header.setResizingColumn(resizingColumn);
-                    if (header.getComponentOrientation().isLeftToRight()) {
-                        mouseXOffset = p.x - resizingColumn.getWidth();
-                    } else {
-                        mouseXOffset = p.x + resizingColumn.getWidth();
-                    }
-                } else if (header.getReorderingAllowed()) {
-                    TableColumn hitColumn = columnModel.getColumn(index);
-                    header.setDraggedColumn(hitColumn);
-                    mouseXOffset = p.x;
-                }
-            }
-
-            if (header.getReorderingAllowed()) {
-                int oldRolloverColumn = rolloverColumn;
-                rolloverColumn = -1;
-                rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
-            }
-        }
-
-        protected void swapCursor() {
-            Cursor tmp = header.getCursor();
-            header.setCursor(otherCursor);
-            otherCursor = tmp;
-        }
-
-        public void mouseMoved(final MouseEvent e) {
-            if (!header.isEnabled()) {
-                return;
-            }
-            if (canResize(getResizingColumn(e.getPoint()), header) !=
-                (header.getCursor() == resizeCursor)) {
-                swapCursor();
-            }
-            updateRolloverColumn(e);
-        }
-
-        public void mouseDragged(final MouseEvent e) {
-            if (!header.isEnabled()) {
-                return;
-            }
-            int mouseX = e.getX();
-
-            TableColumn resizingColumn = header.getResizingColumn();
-            TableColumn draggedColumn = header.getDraggedColumn();
-
-            boolean headerLeftToRight = header.getComponentOrientation().isLeftToRight();
-
-            if (resizingColumn != null) {
-                int oldWidth = resizingColumn.getWidth();
-                int newWidth;
-                if (headerLeftToRight) {
-                    newWidth = mouseX - mouseXOffset;
-                } else {
-                    newWidth = mouseXOffset - mouseX;
-                }
-                mouseXOffset += changeColumnWidth(resizingColumn, header,
-                                                  oldWidth, newWidth);
-            } else if (draggedColumn != null) {
-                TableColumnModel cm = header.getColumnModel();
-                int draggedDistance = mouseX - mouseXOffset;
-                int direction = (draggedDistance < 0) ? -1 : 1;
-                int columnIndex = viewIndexForColumn(draggedColumn);
-                int newColumnIndex = columnIndex + (headerLeftToRight ? direction : -direction);
-                if (0 <= newColumnIndex && newColumnIndex < cm.getColumnCount()) {
-                    int width = cm.getColumn(newColumnIndex).getWidth();
-                    if (Math.abs(draggedDistance) > (width / 2)) {
-
-                        mouseXOffset = mouseXOffset + direction * width;
-                        header.setDraggedDistance(draggedDistance - direction * width);
-
-                        //Cache the selected column.
-                        int selectedIndex = SwingUtilities2.convertColumnIndexToModel(header.getColumnModel(),
-                                                                                      getSelectedColumnIndex());
-
-                        //Now do the move.
-                        cm.moveColumn(columnIndex, newColumnIndex);
-
-                        //Update the selected index.
-                        selectColumn(SwingUtilities2.convertColumnIndexToView(header.getColumnModel(), selectedIndex),
-                                     false);
-
-                        return;
-                    }
-                }
-                setDraggedDistance(draggedDistance, columnIndex);
-            }
-
-            updateRolloverColumn(e);
-        }
-
-        public void mouseReleased(final MouseEvent e) {
-            if (!header.isEnabled()) {
-                return;
-            }
-            setDraggedDistance(0, viewIndexForColumn(header.getDraggedColumn()));
-
-            header.setResizingColumn(null);
-            header.setDraggedColumn(null);
-
-            updateRolloverColumn(e);
-        }
-
-        public void mouseEntered(final MouseEvent e) {
-            if (!header.isEnabled()) {
-                return;
-            }
-            updateRolloverColumn(e);
-        }
-
-        public void mouseExited(final MouseEvent e) {
-            if (!header.isEnabled()) {
-                return;
-            }
-            int oldRolloverColumn = rolloverColumn;
-            rolloverColumn = -1;
-            rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
-        }
-//
-// Protected & protected Methods
-//
-
-        protected void setDraggedDistance(final int draggedDistance, final int column) {
-            header.setDraggedDistance(draggedDistance);
-            if (column != -1) {
-                header.getColumnModel().moveColumn(column, column);
-            }
-        }
-    }
 }
