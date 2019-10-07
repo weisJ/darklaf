@@ -13,11 +13,11 @@ import java.awt.*;
 import java.beans.PropertyChangeListener;
 
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
-    private static final int PAD = 5;
-    private static final int BAR_HEIGHT = (int) (56 / GraphicsUtil.SCALE_Y);
-    private static final int BUTTON_WIDTH = (int) (92.5 / GraphicsUtil.SCALE_X);
-    private static final int IMAGE_HEIGHT = 16;
-    private static final int IMAGE_WIDTH = 16;
+    protected static final int PAD = 5;
+    protected static final int BAR_HEIGHT = (int) (56 / GraphicsUtil.SCALE_Y);
+    protected static final int BUTTON_WIDTH = (int) (92.5 / GraphicsUtil.SCALE_X);
+    protected static final int IMAGE_HEIGHT = 16;
+    protected static final int IMAGE_WIDTH = 16;
 
     private JMenuBar menu;
     private JLabel label;
