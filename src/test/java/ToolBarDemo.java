@@ -37,6 +37,7 @@
  */
 
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -118,7 +119,7 @@ public class ToolBarDemo extends JPanel implements ActionListener {
         //Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(() -> {
-            LafManager.loadLaf(LafManager.Theme.Dark);
+            LafManager.install();
             //Turn off metal's use of bold fonts
             UIManager.put("swing.boldMetal", Boolean.FALSE);
             createAndShowGUI();

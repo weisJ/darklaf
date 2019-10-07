@@ -1,6 +1,5 @@
 package com.weis.darklaf.util;
 
-import com.weis.darklaf.DarkLaf;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.icons.IconLoader;
 import com.weis.darklaf.icons.UIAwareIcon;
@@ -29,9 +28,9 @@ public final class LafUtil {
     private static final String AWARE_KEY = "[aware]";
 
     @NotNull
-    public static Properties loadProperties(@NotNull final DarkLaf laf, final String name, final String path) {
+    public static Properties loadProperties(@NotNull final Class<?> clazz, final String name, final String path) {
         final Properties properties = new Properties();
-        try (InputStream stream = laf.getClass().getResourceAsStream(path + "/" + name + ".properties")) {
+        try (InputStream stream = clazz.getResourceAsStream(path + name + ".properties")) {
             properties.load(stream);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Could not load" + name + ".properties", e.getMessage());

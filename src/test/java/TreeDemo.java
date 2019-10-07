@@ -1,4 +1,5 @@
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.components.SelectableTreeNode;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class TreeDemo extends JFrame {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.loadLaf(LafManager.Theme.Dark);
+            LafManager.install();
             new TreeDemo();
         });
     }

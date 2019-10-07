@@ -1,4 +1,5 @@
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.components.TextFieldHistory;
 import com.weis.darklaf.icons.IconLoader;
 import org.jdesktop.swingx.JXStatusBar;
@@ -18,7 +19,7 @@ public final class UIDemo {
         System.setProperty("org.apache.batik.warn_destination", "false");
         SwingUtilities.invokeLater(
                 () -> {
-                    LafManager.loadLaf(LafManager.Theme.Dark);
+                    LafManager.install();
                     JFrame.setDefaultLookAndFeelDecorated(true);
 
                     JXTaskPaneContainer taskpanecontainer = new JXTaskPaneContainer();

@@ -10,7 +10,7 @@ public class TabbedPaneDemo extends JFrame {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.loadLaf(LafManager.Theme.Dark);
+            LafManager.install();
             final JFrame frame = new JFrame();
             int tabCount = 2;
             frame.setSize(500 * tabCount, 500);

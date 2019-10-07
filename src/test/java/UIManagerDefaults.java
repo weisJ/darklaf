@@ -60,7 +60,7 @@ public class UIManagerDefaults implements ItemListener {
      *  UIManagerDefaults Main. Called only if we're an application.
      */
     public static void main(final String[] args) {
-        LafManager.loadLaf(LafManager.Theme.Dark);
+        LafManager.install();
         SwingUtilities.invokeLater(UIManagerDefaults::createAndShowGUI);
     }
 

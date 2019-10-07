@@ -1,4 +1,5 @@
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -96,7 +97,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
      * event-dispatching thread.
      */
     private static void createAndShowGUI() {
-        LafManager.loadLaf(LafManager.Theme.Dark);
+        LafManager.install();
 
         //Create and set up the window.
         InternalFrameDemo frame = new InternalFrameDemo();

@@ -1,4 +1,5 @@
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +8,7 @@ public final class SplitPaneDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.loadLaf(LafManager.Theme.Dark);
+            LafManager.install();
             final var frame = new JFrame();
             frame.setSize(500, 500);
             var splitPane = new JSplitPane() {

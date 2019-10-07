@@ -1,4 +1,5 @@
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 
 import javax.swing.*;
 
@@ -6,7 +7,7 @@ public final class ListDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.loadLaf(LafManager.Theme.Dark);
+            LafManager.install();
             var f = new JFrame("frame");
             JPanel p = new JPanel();
 

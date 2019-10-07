@@ -1,6 +1,7 @@
 package com.weis.darklaf.icons;
 
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +25,7 @@ public class UIAwareIcon implements Icon, UIResource, Serializable {
     private final int w;
     private final int h;
     private final Class<?> parentClass;
-    private LafManager.Theme currentTheme;
+    private Theme currentTheme;
     private transient boolean loaded;
     private transient Icon icon;
 
@@ -76,12 +77,12 @@ public class UIAwareIcon implements Icon, UIResource, Serializable {
 
     @Contract(pure = true)
     private boolean isLoaded() {
-        return loaded && LafManager.getCurrentLafTheme().equals(currentTheme);
+        return loaded && LafManager.getTheme().equals(currentTheme);
     }
 
     private void loadIcon() {
-        currentTheme = LafManager.getCurrentLafTheme();
-        if (currentTheme.equals(LafManager.Theme.Dark)) {
+        currentTheme = LafManager.getTheme();
+        if (currentTheme.isDark()) {
             icon = IconLoader.get(parentClass).getIcon(darkKey, w, h);
         } else {
             icon = IconLoader.get(parentClass).getIcon(lightKey, w, h);

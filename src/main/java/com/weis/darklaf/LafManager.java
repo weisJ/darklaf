@@ -1,11 +1,10 @@
 package com.weis.darklaf;
 
-import org.jetbrains.annotations.Contract;
+import com.weis.darklaf.theme.DarculaTheme;
+import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,22 +20,13 @@ import java.util.logging.Logger;
  */
 public final class LafManager {
 
-    private static Theme currentLaf = Theme.Dark;
+    private static Theme theme;
 
     static {
-        setLogEnabled(true);
+        enableLogging(true);
     }
 
-    static void setCurrentLaf(final Theme currentLaf) {
-        LafManager.currentLaf = currentLaf;
-    }
-
-    @Contract(pure = true)
-    public static Theme getCurrentLafTheme() {
-        return currentLaf;
-    }
-
-    public static void setLogEnabled(final boolean logEnabled) {
+    public static void enableLogging(final boolean logEnabled) {
         if (!logEnabled) {
             LogManager.getLogManager().reset();
         } else {
@@ -51,24 +41,37 @@ public final class LafManager {
         }
     }
 
+    public static Theme getTheme() {
+        if (theme == null) {
+            theme = new DarculaTheme();
+        }
+        return theme;
+    }
+
+    public static void setTheme(final Theme theme) {
+        LafManager.theme = theme;
+    }
+
+
     /**
      * Set the LaF to one of the two defaults.
      *
-     * @param theme The thume. See {@link Theme}.
+     * @param theme The theme to install. See {@link Theme}.
      */
-    public static void loadLaf(final Theme theme) {
-        if (theme == Theme.Dark) {
-            currentLaf = Theme.Dark;
-            setTheme(DarkLaf.class.getCanonicalName());
-        } else {
-            throw new IllegalArgumentException(theme + " not supported!");
-        }
+    public static void installTheme(final Theme theme) {
+        setTheme(theme);
+        install();
     }
 
-    private static void setTheme(final String loaf) {
+    /**
+     * Install the current theme. If no theme is installed, the default is
+     * {@link DarculaTheme}.
+     */
+    public static void install() {
+        getTheme();
+        theme.beforeInstall();
         try {
-            MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-            UIManager.setLookAndFeel(loaf);
+            UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
         } catch (@NotNull final ClassNotFoundException
                 | InstantiationException
@@ -91,7 +94,4 @@ public final class LafManager {
         SwingUtilities.updateComponentTreeUI(window);
     }
 
-    public enum Theme {
-        Dark
-    }
 }

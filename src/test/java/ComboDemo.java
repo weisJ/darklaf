@@ -1,4 +1,5 @@
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.theme.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +9,7 @@ import java.awt.*;
  */
 public class ComboDemo {
     public static void main(final String[] args) {
-        LafManager.loadLaf(LafManager.Theme.Dark);
+        LafManager.install();
         JFrame f = new JFrame("Combo boxes");
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Container contentPane = f.getContentPane();

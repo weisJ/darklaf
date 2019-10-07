@@ -1,8 +1,8 @@
 package com.weis.darklaf;
 
 import com.weis.darklaf.platform.windows.JNIDecorations;
+import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
-import com.weis.darklaf.util.LafUtil;
 import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -16,11 +16,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -32,12 +28,6 @@ import java.util.logging.Logger;
 public class DarkLaf extends BasicLookAndFeel {
 
 
-    private static final String[] PROPERTIES = new String[]{
-            "theme", "base", "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser",
-            "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "optionPane", "panel", "popupMenu",
-            "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator", "slider", "spinner",
-            "splitPane", "statusBar", "tabbedPane", "table", "text", "toggleButton", "toolBar", "toolTip", "tree",
-    };
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
     private static boolean decorationsEnabled = true;
@@ -47,29 +37,49 @@ public class DarkLaf extends BasicLookAndFeel {
      * Create Custom Darcula LaF.
      */
     public DarkLaf() {
-        LafManager.setCurrentLaf(LafManager.Theme.Dark);
         try {
             if (SystemInfo.isWindows || SystemInfo.isLinux) {
                 base = new MetalLookAndFeel();
-                MetalLookAndFeel.setCurrentTheme(new DarkMetalTheme());
             } else {
                 final String name = UIManager.getSystemLookAndFeelClassName();
                 base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
             }
         } catch (@NotNull final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
     }
 
-    public static void loadCustomProperties(@NotNull final Properties properties) {
-        for (final String key : properties.stringPropertyNames()) {
-            UIManager.put(key, LafUtil.parseValue(key, properties.getProperty(key), UIManager.getDefaults()));
-        }
+    @NotNull
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @NotNull
+    @Override
+    public String getID() {
+        return getName();
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Dark Look and feel based on Darcula-LAF";
+    }
+
+    @Override
+    public boolean isNativeLookAndFeel() {
+        return true;
+    }
+
+    @Override
+    public boolean isSupportedLookAndFeel() {
+        return true;
     }
 
     @Contract(pure = true)
     public static boolean isDecorationsEnabled() {
-        return decorationsEnabled;
+        return LafManager.getTheme().useCustomDecorations() && decorationsEnabled;
     }
 
     public static void setDecorationsEnabled(final boolean decorationsEnabled) {
@@ -85,28 +95,36 @@ public class DarkLaf extends BasicLookAndFeel {
     }
 
     @Override
+    public boolean getSupportsWindowDecorations() {
+        return LafManager.getTheme().useCustomDecorations()
+                && JNIDecorations.isCustomDecorationSupported();
+    }
+
+    @Override
     public UIDefaults getDefaults() {
         try {
             final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("getDefaults");
             superMethod.setAccessible(true);
             final UIDefaults metalDefaults = (UIDefaults) superMethod.invoke(new MetalLookAndFeel());
             final UIDefaults defaults = (UIDefaults) superMethod.invoke(base);
+
             initInputMapDefaults(defaults);
+            loadThemeDefaults(defaults);
             initIdeaDefaults(defaults);
             patchComboBox(metalDefaults, defaults);
-            loadStyleSheet();
+
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
 
-            if (SystemInfo.isMac
-                    && !"true".equalsIgnoreCase(System.getProperty("apple.laf.useScreenMenuBar", "false"))) {
+            if (SystemInfo.isMac && !"true".equalsIgnoreCase(System.getProperty("apple.laf.useScreenMenuBar",
+                                                                                "false"))) {
                 //Todo.
                 defaults.put("MenuBarUI", "com.bulenkov.darcula.ui.DarculaMenuBarUI");
                 defaults.put("MenuUI", "javax.swing.plaf.basic.BasicMenuUI");
             }
             return defaults;
         } catch (@NotNull final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
         return super.getDefaults();
     }
@@ -149,9 +167,84 @@ public class DarkLaf extends BasicLookAndFeel {
         }
     }
 
+    private static void patchComboBox(@NotNull final UIDefaults metalDefaults, @NotNull final UIDefaults defaults) {
+        defaults.remove("ComboBox.ancestorInputMap");
+        defaults.remove("ComboBox.actionMap");
+        defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));
+        defaults.put("ComboBox.actionMap", metalDefaults.get("ComboBox.actionMap"));
+    }
+
+    private static void installCutCopyPasteShortcuts(@NotNull final InputMap inputMap,
+                                                     final boolean useSimpleActionKeys) {
+        final String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
+        final String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
+        final String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
+        // Ctrl+Ins, Shift+Ins, Shift+Del
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_DOWN_MASK), copyActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_DOWN_MASK), cutActionKey);
+        // Ctrl+C, Ctrl+V, Ctrl+X
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), copyActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), pasteActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
+    }
+
+
+    private void loadThemeDefaults(@NotNull final UIDefaults defaults) {
+        var uiProps = new Properties();
+        final Theme currentTheme = LafManager.getTheme();
+        currentTheme.loadDefaults(uiProps, defaults);
+        currentTheme.loadGlobals(uiProps, defaults);
+        installGlobals(uiProps, defaults);
+        currentTheme.loadUIProperties(uiProps, defaults);
+        currentTheme.loadPlatformProperties(uiProps, defaults);
+        defaults.putAll(uiProps);
+
+        StyleSheet styleSheet = currentTheme.loadStyleSheet();
+        new HTMLEditorKit().setStyleSheet(styleSheet);
+
+        setDecorationsEnabled(currentTheme.useCustomDecorations());
+    }
+
+    private void installGlobals(@NotNull final Properties uiProps, final UIDefaults defaults) {
+        final HashMap<String, Object> globalSettings = new HashMap<>();
+        final String prefix = "global.";
+        for (final Object key : uiProps.keySet()) {
+            if (key instanceof String && ((String) key).startsWith(prefix)) {
+                globalSettings.put(((String) key).substring(prefix.length()), uiProps.get(key));
+            }
+        }
+
+        for (final Object key : defaults.keySet()) {
+            if (key instanceof String && ((String) key).contains(".")) {
+                final String s = (String) key;
+                final String globalKey = s.substring(s.lastIndexOf('.') + 1);
+                if (globalSettings.containsKey(globalKey)) {
+                    defaults.put(key, globalSettings.get(globalKey));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void initialize() {
+        call("initialize");
+    }
+
+    @Override
+    public void uninitialize() {
+        call("uninitialize");
+        AppContext context = AppContext.getAppContext();
+        synchronized (DarkPopupMenuUI.MOUSE_GRABBER_KEY) {
+            Object grabber = context.get(DarkPopupMenuUI.MOUSE_GRABBER_KEY);
+            if (grabber != null) {
+                ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
+            }
+        }
+    }
+
     @SuppressWarnings({"HardCodedStringLiteral"})
     private void initIdeaDefaults(@NotNull final UIDefaults defaults) {
-        loadDefaults(defaults);
         defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
                 new Object[]{
                         "ctrl C", "copy",
@@ -206,133 +299,17 @@ public class DarkLaf extends BasicLookAndFeel {
                 }));
     }
 
-    private static void patchComboBox(@NotNull final UIDefaults metalDefaults, @NotNull final UIDefaults defaults) {
-        defaults.remove("ComboBox.ancestorInputMap");
-        defaults.remove("ComboBox.actionMap");
-        defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));
-        defaults.put("ComboBox.actionMap", metalDefaults.get("ComboBox.actionMap"));
-    }
-
-    private static void loadStyleSheet() {
-        StyleSheet defaultStyles = new StyleSheet();
-        try (Reader r = new BufferedReader(
-                new InputStreamReader(DarkLaf.class.getResourceAsStream("darcula.css"),
-                                      StandardCharsets.UTF_8))) {
-            defaultStyles.loadRules(r, null);
-            new HTMLEditorKit().setStyleSheet(defaultStyles);
-        } catch (Throwable e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-    }
-
-    private static void installCutCopyPasteShortcuts(@NotNull final InputMap inputMap,
-                                                     final boolean useSimpleActionKeys) {
-        final String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
-        final String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
-        final String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
-        // Ctrl+Ins, Shift+Ins, Shift+Del
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_DOWN_MASK), copyActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_DOWN_MASK), cutActionKey);
-        // Ctrl+C, Ctrl+V, Ctrl+X
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), copyActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), pasteActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
-    }
-
-    private void loadDefaults(@NotNull final UIDefaults defaults) {
-        var uiProps = new Properties();
-        for (var property : PROPERTIES) {
-            Properties properties = LafUtil.loadProperties(this, property, getResourcePath());
-            for (final String key : properties.stringPropertyNames()) {
-                final String value = properties.getProperty(key);
-                var parsed = LafUtil.parseValue(key, value, uiProps);
-                if (parsed != null) {
-                    uiProps.put(key, parsed);
-                } else {
-                    defaults.remove(key);
-                }
-            }
-        }
-
-        final String osPrefix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
-        Properties properties = LafUtil.loadProperties(this, osPrefix, getResourcePath() + "/platform");
-        for (final String key : properties.stringPropertyNames()) {
-            final String value = properties.getProperty(key);
-            var parsed = LafUtil.parseValue(key, value, uiProps);
-            if (parsed != null) {
-                uiProps.put(key, parsed);
-            } else {
-                defaults.remove(key);
-            }
-        }
-
-        final HashMap<String, Object> globalSettings = new HashMap<>();
-        final String prefix = "global.";
-        for (final Object key : uiProps.keySet()) {
-            if (key instanceof String && ((String) key).startsWith(prefix)) {
-                globalSettings.put(((String) key).substring(prefix.length()), uiProps.get(key));
-            }
-        }
-
-        for (final Object key : defaults.keySet()) {
-            if (key instanceof String && ((String) key).contains(".")) {
-                final String s = (String) key;
-                final String globalKey = s.substring(s.lastIndexOf('.') + 1);
-                if (globalSettings.containsKey(globalKey)) {
-                    defaults.put(key, globalSettings.get(globalKey));
-                }
-            }
-        }
-
-//        var colors = uiProps.values().stream().filter(c -> c instanceof Color).collect(Collectors.toSet());
-//        for (var c : colors) {
-//            System.out.println("Color: " + c + " " + String.format("%02x%02x%02x", ((Color) c).getRed(),
-//                                                                   ((Color) c).getGreen(), ((Color) c).getBlue()));
-//            var keys = uiProps.entrySet().stream()
-//                    .filter(e -> e.getValue().equals(c))
-//                    .map(Map.Entry::getKey)
-//                    .map(Object::toString)
-//                    .collect(Collectors.joining("\n"));
-//            System.out.println(keys);
-//            System.out.println("\n");
-//        }
-
-        defaults.putAll(uiProps);
-    }
-
-    @NotNull
-    public String getResourcePath() {
-        return "properties/dark";
-    }
-
     @Override
-    public void initialize() {
-        call("initialize");
-    }
-
-    @NotNull
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @Override
-    public void uninitialize() {
-        call("uninitialize");
-        AppContext context = AppContext.getAppContext();
-        synchronized (DarkPopupMenuUI.MOUSE_GRABBER_KEY) {
-            Object grabber = context.get(DarkPopupMenuUI.MOUSE_GRABBER_KEY);
-            if (grabber != null) {
-                ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
-            }
+    protected void loadSystemColors(final UIDefaults defaults, final String[] systemColors,
+                                    final boolean useNative) {
+        try {
+            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(
+                    "loadSystemColors", UIDefaults.class, String[].class, boolean.class);
+            superMethod.setAccessible(true);
+            superMethod.invoke(base, defaults, systemColors, useNative);
+        } catch (@NotNull final Exception e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
-    }
-
-    @NotNull
-    @Override
-    public String getID() {
-        return getName();
     }
 
     @Override
@@ -340,20 +317,9 @@ public class DarkLaf extends BasicLookAndFeel {
         callInit("initClassDefaults", defaults);
     }
 
-    @NotNull
-    @Override
-    public String getDescription() {
-        return "Dark Look and feel based on Darcula-LAF";
-    }
-
     @Override
     protected void initSystemColorDefaults(final UIDefaults defaults) {
         callInit("initSystemColorDefaults", defaults);
-    }
-
-    @Override
-    public boolean isNativeLookAndFeel() {
-        return true;
     }
 
     private void callInit(@NotNull final String method, final UIDefaults defaults) {
@@ -362,24 +328,7 @@ public class DarkLaf extends BasicLookAndFeel {
             superMethod.setAccessible(true);
             superMethod.invoke(base, defaults);
         } catch (@NotNull final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
-    }
-
-    @Override
-    public boolean isSupportedLookAndFeel() {
-        return true;
-    }
-
-    @Override
-    protected void loadSystemColors(final UIDefaults defaults, final String[] systemColors, final boolean useNative) {
-        try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(
-                    "loadSystemColors", UIDefaults.class, String[].class, boolean.class);
-            superMethod.setAccessible(true);
-            superMethod.invoke(base, defaults, systemColors, useNative);
-        } catch (@NotNull final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
     }
 
@@ -393,13 +342,7 @@ public class DarkLaf extends BasicLookAndFeel {
             superMethod.setAccessible(true);
             superMethod.invoke(base);
         } catch (@NotNull final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
-    }
-
-
-    @Override
-    public boolean getSupportsWindowDecorations() {
-        return JNIDecorations.isCustomDecorationSupported();
     }
 }

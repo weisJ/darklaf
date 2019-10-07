@@ -27,12 +27,6 @@ public class LightLaf extends DarkLaf {
 
     @NotNull
     @Override
-    public String getResourcePath() {
-        return "darcula_light";
-    }
-
-    @NotNull
-    @Override
     public String getName() {
         return NAME;
     }

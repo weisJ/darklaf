@@ -30,8 +30,6 @@ import java.util.function.Function;
 
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
-    private static final int FOCUS_SIZE = 4;
-
     private static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler();
     private final FocusListener focusListener = new FocusListener() {
         @Override
@@ -297,18 +295,19 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             if (!drawFocusBar()) return;
             g.setColor(getAccentColor(DarkUIUtil.hasFocus(tabPane)));
             var r = rects[tabIndex];
+            int focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
             switch (tabPlacement) {
                 case LEFT:
-                    g.fillRect(r.x + r.width - FOCUS_SIZE - 1, r.y, FOCUS_SIZE, r.height);
+                    g.fillRect(r.x + r.width - focusSize - 1, r.y, focusSize, r.height);
                     break;
                 case RIGHT:
-                    g.fillRect(r.x + 1, r.y, FOCUS_SIZE, r.height);
+                    g.fillRect(r.x + 1, r.y, focusSize, r.height);
                     break;
                 case BOTTOM:
-                    g.fillRect(r.x, r.y + 1, r.width, FOCUS_SIZE);
+                    g.fillRect(r.x, r.y + 1, r.width, focusSize);
                     break;
                 default:
-                    g.fillRect(r.x, r.y + r.height - FOCUS_SIZE, r.width, FOCUS_SIZE);
+                    g.fillRect(r.x, r.y + r.height - focusSize, r.width, focusSize);
                     break;
             }
         }
