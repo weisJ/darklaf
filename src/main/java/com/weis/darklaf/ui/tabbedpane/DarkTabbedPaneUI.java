@@ -250,7 +250,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         g.setColor(getDropColor());
         var context = new GraphicsContext(g);
         if (!scrollableTabLayoutEnabled()) {
-            ((Graphics2D) g).setComposite(DarkUIUtil.ALPHA_COMPOSITE_2);
+            ((Graphics2D) g).setComposite(DarkUIUtil.DROP_ALPHA);
         }
         switch (tabPane.getTabPlacement()) {
             case TOP:

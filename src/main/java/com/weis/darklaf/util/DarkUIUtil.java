@@ -21,8 +21,8 @@ import java.awt.geom.RoundRectangle2D;
 public final class DarkUIUtil {
 
     public static final Color TRANSPARENT_COLOR = new Color(0, 0, 0, 0);
-    public final static AlphaComposite ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f);
-    public final static AlphaComposite ALPHA_COMPOSITE_2 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
+    public final static AlphaComposite GLOW_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+    public final static AlphaComposite DROP_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     public final static AlphaComposite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
     public static final boolean USE_QUARTZ = "true".equals(System.getProperty("apple.awt.graphics.UseQuartz"));
 
@@ -90,8 +90,11 @@ public final class DarkUIUtil {
 
     public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
                                         final boolean symmetric) {
+        GraphicsContext config = new GraphicsContext(g);
+        g.setComposite(DarkUIUtil.GLOW_ALPHA);
         Outline.focus.setGraphicsColor(g, true);
         doPaint(g, width, height, arc, symmetric);
+        config.restore();
     }
 
     public static void paintFocusOval(final Graphics2D g, final int x, final int y, final int width, final int height) {
@@ -100,6 +103,8 @@ public final class DarkUIUtil {
 
     public static void paintFocusOval(final Graphics2D g, final float x, final float y,
                                       final float width, final float height) {
+        GraphicsContext config = new GraphicsContext(g);
+        g.setComposite(DarkUIUtil.GLOW_ALPHA);
         Outline.focus.setGraphicsColor(g, true);
 
         float blw = 2f + 1f;
@@ -107,6 +112,7 @@ public final class DarkUIUtil {
         shape.append(new Ellipse2D.Float(x - blw, y - blw, width + blw * 2, height + blw * 2), false);
         shape.append(new Ellipse2D.Float(x, y, width, height), false);
         g.fill(shape);
+        config.restore();
     }
 
     public static void paintLineBorder(final Graphics2D g, final float x, final float y,

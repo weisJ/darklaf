@@ -379,10 +379,7 @@ public class DarkSliderUI extends BasicSliderUI {
         Ellipse2D.Double thumb = new Ellipse2D.Double(0, 0, r, r);
         Ellipse2D.Double innerThumb = new Ellipse2D.Double(1, 1, r - 2, r - 2);
         if (paintFocus()) {
-            GraphicsContext config = new GraphicsContext(g);
-            g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
             DarkUIUtil.paintFocusOval(g, 1, 1, r - 2, r - 2);
-            config.restore();
         }
         if (isVolumeSlider(slider)) {
             g.setColor(getThumbColor());
@@ -399,12 +396,9 @@ public class DarkSliderUI extends BasicSliderUI {
     private void paintSliderThumb(final Graphics2D g) {
         Path2D thumb = getThumbShape();
         if (paintFocus()) {
-            GraphicsContext config = new GraphicsContext(g);
-            g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
             g.setStroke(new BasicStroke(4.25f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             DarkUIUtil.Outline.focus.setGraphicsColor(g, true);
             g.draw(thumb);
-            config.restore();
         }
         g.setColor(getThumbColor());
         g.fill(thumb);
