@@ -1,7 +1,6 @@
 package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.color.DarkColorModel;
-import com.weis.darklaf.util.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -164,6 +163,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 checkRange(g, 0, 255);
                 int b = Integer.valueOf(hexStr.substring(4, 6), 16);
                 checkRange(b, 0, 255);
+                int alpha = Integer.valueOf(hexStr.substring(6, 8), 16);
+                checkRange(alpha, 0, 255);
                 return Integer.valueOf(text, radix);
             } else {
                 var value = Integer.valueOf(text, this.radix);
@@ -193,7 +194,13 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 return object.toString();
             }
             if (hex) {
-                return StringUtil.toUpperCase(Integer.toHexString((Integer) object));
+                if (getHexLength() == 8) {
+                    var hexStr = String.format("%08X", object);
+                    hexStr = hexStr.substring(2) + hexStr.substring(0, 2);
+                    return hexStr;
+                } else {
+                    return String.format("%06X", (0xFFFFFF & (Integer) object));
+                }
             }
             int value = (Integer) object;
             int index = getLength();
