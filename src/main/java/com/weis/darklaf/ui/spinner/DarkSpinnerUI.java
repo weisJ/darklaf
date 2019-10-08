@@ -209,10 +209,10 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                                      final int bSize, final int arc) {
         var bounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
-        int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
+        int off = leftToRight ? bounds.x : bounds.x + bounds.width;
         Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize, height - 2 * bSize,
                                                          arc, arc));
-        Area iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1, height - 2 * bSize));
+        Area iconRect = new Area(new Rectangle(off, 0, width, height));
         if (leftToRight) {
             rect.intersect(iconRect);
         } else {

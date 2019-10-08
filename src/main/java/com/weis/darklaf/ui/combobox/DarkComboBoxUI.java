@@ -277,17 +277,16 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         if (comboBox.isEditable()) {
             var arrowBounds = arrowButton.getBounds();
             boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
-            int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width - 1;
+            int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
             Area rect;
             Area iconRect;
             if (!isTableCellEditor && !isTreeCellEditor) {
                 rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
                                                             height - 2 * bSize, arc, arc));
-                iconRect = new Area(new Rectangle(off, bSize, width - 2 * bSize - off + 1,
-                                                  height - 2 * bSize));
+                iconRect = new Area(new Rectangle(off, 0, width, height));
             } else {
                 rect = new Area(new Rectangle(0, 0, width, height));
-                iconRect = new Area(new Rectangle(off, 0, width - off + 1, height));
+                iconRect = new Area(new Rectangle(off, 0, width, height));
             }
             if (leftToRight) {
                 rect.intersect(iconRect);
