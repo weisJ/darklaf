@@ -16,18 +16,17 @@ import java.util.logging.Logger;
 public final class IconColorMapper {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
 
-    public static void patchColors(@NotNull final SVGIcon svgIcon, @NotNull final UIDefaults defaults) {
+    public static void patchColors(@NotNull final SVGIcon svgIcon) {
         var universe = svgIcon.getSvgUniverse();
         SVGDiagram diagram = universe.getDiagram(svgIcon.getSvgURI());
         try {
-            loadColors(diagram, defaults);
+            loadColors(diagram);
         } catch (SVGElementException e) {
             LOGGER.log(Level.SEVERE, "Failed patching colors. " + e.getMessage(), e.getStackTrace());
         }
     }
 
-    private static void loadColors(@NotNull final SVGDiagram diagram,
-                                   @NotNull final UIDefaults defaults) throws SVGElementException {
+    private static void loadColors(@NotNull final SVGDiagram diagram) throws SVGElementException {
         var root = diagram.getRoot();
         var defs = diagram.getElement("colors");
         if (defs == null) return;
@@ -41,7 +40,7 @@ public final class IconColorMapper {
         for (var child : children) {
             if (child instanceof LinearGradient) {
                 var id = ((LinearGradient) child).getId();
-                var c = defaults.getColor(id);
+                var c = UIManager.getColor(id);
                 if (c == null) {
                     c = Color.RED;
                     LOGGER.warning("Could not load color with id'" + id + "'. Using Color.RED instead.");

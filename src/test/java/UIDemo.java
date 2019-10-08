@@ -1,5 +1,6 @@
 import com.weis.darklaf.LafManager;
 import com.weis.darklaf.components.TextFieldHistory;
+import com.weis.darklaf.components.tristate.TristateCheckBox;
 import com.weis.darklaf.icons.IconLoader;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.JXTaskPane;
@@ -27,7 +28,7 @@ public final class UIDemo {
                     taskpanecontainer.add(taskpane);
 
                     JFrame frame = new JFrame("UIDemo");
-                    Icon folderIcon = IconLoader.get().getUIAwareIcon("control/checkBoxFocused.svg", 19, 19);
+                    Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg", 19, 19);
 
                     var panel = new JPanel(new GridLayout(2, 5));
                     var content = new JPanel(new BorderLayout());
@@ -57,6 +58,13 @@ public final class UIDemo {
                                 setEnabled(false);
                             }});
                             add(new JRadioButton("enabled"));
+                        }});
+                        add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
+                            add(new TristateCheckBox("disabled") {{
+                                setIndeterminate();
+                                setEnabled(false);
+                            }});
+                            add(new TristateCheckBox("enabled"));
                         }});
                         add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
                             add(new JButton("IconButton", folderIcon) {{

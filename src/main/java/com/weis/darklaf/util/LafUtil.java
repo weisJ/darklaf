@@ -1,9 +1,6 @@
 package com.weis.darklaf.util;
 
-import com.kitfox.svg.app.beans.SVGIcon;
-import com.weis.darklaf.icons.DarkSVGIcon;
 import com.weis.darklaf.icons.EmptyIcon;
-import com.weis.darklaf.icons.IconColorMapper;
 import com.weis.darklaf.icons.IconLoader;
 import com.weis.darklaf.icons.UIAwareIcon;
 import org.jetbrains.annotations.Contract;
@@ -18,11 +15,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,8 +27,6 @@ public final class LafUtil {
     private static final String DUAL_KEY = "[dual]";
     private static final String AWARE_KEY = "[aware]";
     private static final String PATCH_KEY = "[patch]";
-
-    private static final Set<SVGIcon> resolveSet = new HashSet<>();
 
     @NotNull
     public static Properties loadProperties(@NotNull final Class<?> clazz, final String name, final String path) {
@@ -45,18 +38,6 @@ public final class LafUtil {
         }
         return properties;
     }
-
-    public static void patchIcons(@NotNull final UIDefaults defaults) {
-        new SwingWorker<>() {
-            @Override
-            protected Object doInBackground() {
-                resolveSet.forEach(icon -> IconColorMapper.patchColors(icon, defaults));
-                resolveSet.clear();
-                return null;
-            }
-        }.doInBackground();
-    }
-
 
     @Nullable
     public static Object parseValue(@NotNull final String key, @NotNull final String value,
@@ -164,14 +145,7 @@ public final class LafUtil {
             }
             var iconPath = path.substring(0, path.length() - tag.length());
             if (tag.equals(PATCH_KEY)) {
-                Icon icon = ICON_LOADER.getIcon(iconPath, dim.width, dim.height);
-                if (icon instanceof DarkSVGIcon) {
-                    resolveSet.add(((DarkSVGIcon) icon).getSVGIcon());
-                    return icon;
-                } else {
-                    LOGGER.warning("Could not patch colours for icon '" + iconPath + "'. Not a SVG icon.");
-                    return icon;
-                }
+                return ICON_LOADER.getIcon(iconPath, dim.width, dim.height, true);
             } else {
                 UIAwareIcon icon = ICON_LOADER.getUIAwareIcon(iconPath, dim.width, dim.height);
                 if (tag.equals(DUAL_KEY)) {

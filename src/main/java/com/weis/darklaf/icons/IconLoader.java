@@ -19,6 +19,7 @@ public final class IconLoader {
     private final Class<?> parentClass;
     private final Map<IconKey, UIAwareIcon> awareIconMap = new HashMap<>();
     private final Map<IconKey, Icon> iconMap = new HashMap<>();
+
     @Contract(pure = true)
     private IconLoader(final Class<?> parentClass) {
         this.parentClass = parentClass;
@@ -67,6 +68,10 @@ public final class IconLoader {
     }
 
     public Icon getIcon(final String path, final int w, final int h) {
+        return getIcon(path, w, h, false);
+    }
+
+    public Icon getIcon(final String path, final int w, final int h, final boolean themed) {
         IconKey key = new IconKey(path, w, h);
         if (iconMap.containsKey(key)) {
             return iconMap.get(key);
@@ -87,7 +92,7 @@ public final class IconLoader {
             }
             key.w = w; //Restore key.
             if (path.endsWith(".svg")) {
-                Icon icon = loadIcon(path, w, h);
+                Icon icon = loadSVGIcon(path, w, h, themed);
                 iconMap.put(key, icon);
                 return icon;
             } else {
@@ -100,10 +105,14 @@ public final class IconLoader {
 
     @NotNull
     @Contract("_, _, _ -> new")
-    public Icon loadIcon(@NotNull final String name, final int w, final int h) {
+    public Icon loadSVGIcon(@NotNull final String name, final int w, final int h, final boolean themed) {
         try {
             LOGGER.info("Loading icon '" + name + "'. Resolving from " + parentClass);
-            return new DarkSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
+            if (themed) {
+                return new ThemedSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
+            } else {
+                return new DarkSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
+            }
         } catch (NullPointerException | URISyntaxException e) {
             LOGGER.log(Level.SEVERE, "Exception while loading '" + name + "'" + ". Resolving from " + parentClass,
                        e.getStackTrace());
@@ -112,8 +121,8 @@ public final class IconLoader {
     }
 
     @NotNull
-    public Icon loadIcon(@NotNull final String name) {
-        return loadIcon(name, 16, 16);
+    public Icon loadSVGIcon(@NotNull final String name, final boolean themed) {
+        return loadSVGIcon(name, 16, 16, themed);
     }
 
     @Nullable

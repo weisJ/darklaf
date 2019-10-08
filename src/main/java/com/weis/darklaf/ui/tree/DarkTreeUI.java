@@ -105,6 +105,7 @@ public class DarkTreeUI extends BasicTreeUI {
 
         myOldRepaintAllRowValue = UIManager.getBoolean("Tree.repaintWholeRow");
         UIManager.put("Tree.repaintWholeRow", true);
+        tree.putClientProperty("JTree.alternateRowColor", UIManager.getBoolean("Tree.alternateRowColor"));
 
         tree.setShowsRootHandles(true);
         tree.addMouseListener(mySelectionListener);

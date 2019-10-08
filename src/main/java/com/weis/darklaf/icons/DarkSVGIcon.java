@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Icon from SVG image.
@@ -20,6 +21,8 @@ public class DarkSVGIcon implements Icon, Serializable {
 
     private final Dimension size;
     private final SVGIcon icon;
+    private final URI uri;
+    private final AtomicBoolean loaded;
 
     /**
      * Method to fetch the SVG icon from a url.
@@ -29,18 +32,20 @@ public class DarkSVGIcon implements Icon, Serializable {
      * @param displayHeight display height of icon.
      */
     public DarkSVGIcon(@NotNull final URI uri, final int displayWidth, final int displayHeight) {
+        this.uri = uri;
         size = new Dimension(displayWidth, displayHeight);
-
         icon = new SVGIcon();
-        icon.setSvgURI(uri);
         icon.setScaleToFit(true);
         icon.setAntiAlias(true);
+        loaded = new AtomicBoolean(false);
     }
 
     @Contract(pure = true)
     private DarkSVGIcon(final int width, final int height, @NotNull final DarkSVGIcon icon) {
         this.size = new Dimension(width, height);
         this.icon = icon.icon;
+        this.uri = icon.uri;
+        this.loaded = icon.loaded;
     }
 
     public DarkSVGIcon derive(final int width, final int height) {
@@ -49,7 +54,15 @@ public class DarkSVGIcon implements Icon, Serializable {
 
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        ensureLoaded();
         paintIcon(c, g, x, y, 0);
+    }
+
+    private void ensureLoaded() {
+        if (!loaded.get()) {
+            icon.setSvgURI(uri);
+            loaded.set(true);
+        }
     }
 
     /**
@@ -63,6 +76,7 @@ public class DarkSVGIcon implements Icon, Serializable {
      */
     public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y,
                           final double rotation) {
+        ensureLoaded();
         var g2 = (Graphics2D) g.create();
         g2.translate(x, y);
         if (rotation != 0) {
@@ -85,6 +99,7 @@ public class DarkSVGIcon implements Icon, Serializable {
     }
 
     public SVGIcon getSVGIcon() {
+        ensureLoaded();
         return icon;
     }
 }

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public abstract class Theme {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
     private static final String[] UI_PROPERTIES = new String[]{
-            "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser",
+            "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
             "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "optionPane", "panel", "popupMenu",
             "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator", "slider", "spinner",
             "splitPane", "statusBar", "tabbedPane", "table", "text", "toggleButton", "toolBar", "toolTip", "tree",

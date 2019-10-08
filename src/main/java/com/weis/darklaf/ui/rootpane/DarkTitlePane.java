@@ -166,8 +166,10 @@ public class DarkTitlePane extends JComponent {
         windowHandle = 0;
         rootPane.removeContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().removeContainerListener(layeredPaneContainerListener);
-        menuBar.setPreferredSize(null);
-        rootPane.setJMenuBar(menuBar);
+        if (menuBar != null) {
+            menuBar.setPreferredSize(null);
+            rootPane.setJMenuBar(menuBar);
+        }
         removeAll();
     }
 
