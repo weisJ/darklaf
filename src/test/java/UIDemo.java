@@ -113,7 +113,9 @@ public final class UIDemo {
                             addItem("DisabledComboBox");
                             setEnabled(false);
                         }});
-                        add(new JSpinner());
+                        add(new JSpinner() {{
+                            putClientProperty("JSpinner.variant", "plusMinus");
+                        }});
                         add(new JSpinner() {{
                             setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                         }});

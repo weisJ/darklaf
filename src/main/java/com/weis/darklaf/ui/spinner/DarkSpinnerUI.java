@@ -2,6 +2,7 @@ package com.weis.darklaf.ui.spinner;
 
 import com.weis.darklaf.components.ArrowButton;
 import com.weis.darklaf.decorators.LayoutManagerDelegate;
+import com.weis.darklaf.icons.UIAwareIcon;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -138,7 +139,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     @NotNull
     private JButton createArrow(final int direction) {
         var insets = new Insets(0, BUTTON_PAD, 0, BUTTON_PAD);
-        JButton button = ArrowButton.createUpDownArrow(spinner, direction, false, true, insets);
+        JButton button = ArrowButton.createUpDownArrow(spinner, getArrowIcon(direction), direction,
+                                                       false, true, insets);
         Border buttonBorder = UIManager.getBorder("Spinner.arrowButtonBorder");
         if (buttonBorder instanceof UIResource) {
             // Wrap the border to avoid having the UIResource be replaced by
@@ -149,6 +151,16 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
         button.setInheritsPopupMenu(true);
         return button;
+    }
+
+    protected SpinnerIcon getArrowIcon(final int direction) {
+        if (direction == SwingConstants.SOUTH) {
+            return new SpinnerIcon(spinner, (UIAwareIcon) UIManager.getIcon("ArrowButton.down.icon"),
+                                   (UIAwareIcon) UIManager.getIcon("Spinner.minus.icon"));
+        } else {
+            return new SpinnerIcon(spinner, (UIAwareIcon) UIManager.getIcon("ArrowButton.up.icon"),
+                                   (UIAwareIcon) UIManager.getIcon("Spinner.plus.icon"));
+        }
     }
 
     @Override
@@ -248,6 +260,49 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             if (component instanceof JTextField && evt.getNewValue() instanceof Integer) {
                 ((JTextField) component).setHorizontalAlignment((Integer) evt.getNewValue());
             }
+        }
+    }
+
+    protected static boolean usePlusMinusIcons(@NotNull final JSpinner spinner) {
+        return "plusMinus".equals(spinner.getClientProperty("JSpinner.variant"));
+    }
+
+    protected static class SpinnerIcon implements UIAwareIcon {
+
+        private final JSpinner spinner;
+        private final UIAwareIcon icon;
+        private final UIAwareIcon mathIcon;
+
+
+        @Contract(pure = true)
+        public SpinnerIcon(final JSpinner spinner, final UIAwareIcon icon, final UIAwareIcon mathIcon) {
+            this.spinner = spinner;
+            this.icon = icon;
+            this.mathIcon = mathIcon;
+        }
+
+        protected UIAwareIcon getCurrent() {
+            return usePlusMinusIcons(spinner) ? mathIcon : icon;
+        }
+
+        @Override
+        public UIAwareIcon getDual() {
+            return getCurrent().getDual();
+        }
+
+        @Override
+        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+            getCurrent().paintIcon(c, g, x, y);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return getCurrent().getIconWidth();
+        }
+
+        @Override
+        public int getIconHeight() {
+            return getCurrent().getIconHeight();
         }
     }
 }

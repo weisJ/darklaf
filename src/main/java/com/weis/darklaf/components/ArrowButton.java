@@ -37,6 +37,14 @@ public final class ArrowButton implements SwingConstants {
             default:
                 throw new IllegalStateException("Invalid button orientation: " + orientation);
         }
+        return createUpDownArrow(parent, icon, orientation, center, applyInsetsOnSize, insets);
+    }
+
+    @Contract("_, _, _, _, _, _ -> new")
+    @NotNull
+    public static JButton createUpDownArrow(final JComponent parent, final UIAwareIcon icon, final int orientation,
+                                            final boolean center, final boolean applyInsetsOnSize,
+                                            final Insets insets) {
         return new BasicArrowButton(orientation, null, null, null, null) {
             @Override
             public void paint(final Graphics g) {

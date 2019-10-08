@@ -2,7 +2,7 @@ package com.weis.darklaf.util;
 
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.icons.IconLoader;
-import com.weis.darklaf.icons.UIAwareIcon;
+import com.weis.darklaf.icons.DarkUIAwareIcon;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -147,7 +147,7 @@ public final class LafUtil {
             if (tag.equals(PATCH_KEY)) {
                 return ICON_LOADER.getIcon(iconPath, dim.width, dim.height, true);
             } else {
-                UIAwareIcon icon = ICON_LOADER.getUIAwareIcon(iconPath, dim.width, dim.height);
+                DarkUIAwareIcon icon = ICON_LOADER.getUIAwareIcon(iconPath, dim.width, dim.height);
                 if (tag.equals(DUAL_KEY)) {
                     return icon.getDual();
                 } else {

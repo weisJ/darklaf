@@ -17,7 +17,7 @@ public final class IconLoader {
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
     private static final IconLoader instance = new IconLoader(IconLoader.class);
     private final Class<?> parentClass;
-    private final Map<IconKey, UIAwareIcon> awareIconMap = new HashMap<>();
+    private final Map<IconKey, DarkUIAwareIcon> awareIconMap = new HashMap<>();
     private final Map<IconKey, Icon> iconMap = new HashMap<>();
 
     @Contract(pure = true)
@@ -39,16 +39,16 @@ public final class IconLoader {
         }
     }
 
-    public UIAwareIcon getUIAwareIcon(final String path) {
+    public DarkUIAwareIcon getUIAwareIcon(final String path) {
         return getUIAwareIcon(path, 16, 16);
     }
 
-    public UIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
+    public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
         if (awareIconMap.containsKey(key)) {
             return awareIconMap.get(key);
         } else {
-            UIAwareIcon icon = create(path, w, h);
+            DarkUIAwareIcon icon = create(path, w, h);
             awareIconMap.put(key, icon);
             return icon;
         }
@@ -59,8 +59,8 @@ public final class IconLoader {
      */
     @Contract(value = "_, _, _ -> new", pure = true)
     @NotNull
-    public UIAwareIcon create(@NotNull final String name, final int w, final int h) {
-        return new UIAwareIcon("dark/" + name, "light/" + name, w, h, IconLoader.class);
+    public DarkUIAwareIcon create(@NotNull final String name, final int w, final int h) {
+        return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, IconLoader.class);
     }
 
     public Icon getIcon(final String path) {

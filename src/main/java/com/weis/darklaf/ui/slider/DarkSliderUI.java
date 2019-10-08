@@ -396,9 +396,12 @@ public class DarkSliderUI extends BasicSliderUI {
     private void paintSliderThumb(final Graphics2D g) {
         Path2D thumb = getThumbShape();
         if (paintFocus()) {
-            g.setStroke(new BasicStroke(4.25f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            var config = new GraphicsContext(g);
+            g.setComposite(DarkUIUtil.GLOW_ALPHA);
+            g.setStroke(new BasicStroke(4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 8));
             DarkUIUtil.Outline.focus.setGraphicsColor(g, true);
             g.draw(thumb);
+            config.restore();
         }
         g.setColor(getThumbColor());
         g.fill(thumb);
