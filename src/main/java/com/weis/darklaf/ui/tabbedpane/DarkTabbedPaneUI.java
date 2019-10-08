@@ -596,6 +596,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             super.paint(g);
             if (dragging) {
                 paintTab(g, tabPane.getTabPlacement(), dragRect, tabPane.getSelectedIndex(), iconRect, textRect);
+                var comp = tabPane.getTabComponentAt(dropSourceIndex);
+                g.translate(comp.getX(), comp.getY());
+                comp.print(g);
             }
         }
 
@@ -1202,13 +1205,18 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                         }
                     }
                 }
-                super.layoutTabComponents();
+                layoutTabComponents();
                 if (shouldChangeFocus) {
                     if (!requestFocusForVisibleComponent()) {
                         tabPane.requestFocus();
                     }
                 }
             }
+        }
+
+        @Override
+        protected void layoutTabComponents() {
+            DarkTabbedPaneUI.this.layoutTabComponents();
         }
 
         @SuppressWarnings("SuspiciousNameCombination")
@@ -1760,6 +1768,58 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                     tabPane.requestFocus();
                 }
             }
+        }
+
+        @Override
+        protected void layoutTabComponents() {
+            DarkTabbedPaneUI.this.layoutTabComponents();
+        }
+    }
+
+    protected void layoutTabComponents() {
+        if (tabContainer == null) {
+            return;
+        }
+        Rectangle rect = new Rectangle();
+        Point delta = new Point(-tabContainer.getX(), -tabContainer.getY());
+        if (scrollableTabLayoutEnabled()) {
+            translatePointToTabPanel(0, 0, delta);
+        }
+        for (int i = 0; i < tabPane.getTabCount(); i++) {
+            Component c = tabPane.getTabComponentAt(i);
+            if (c == null) {
+                continue;
+            }
+            getTabBounds(i, rect);
+
+            //Adjust dragged component position.
+            if (i == dropSourceIndex) {
+                if (dragging) {
+                    rect.setBounds(dragRect);
+                    var p = rect.getLocation();
+                    var vl = tabScroller.viewport.getLocation();
+                    p.x += vl.x;
+                    p.y += vl.y;
+                    rect.setLocation(p);
+                } else {
+                    rect.setBounds(0, 0, 0, 0);
+                }
+            }
+
+            Dimension preferredSize = c.getPreferredSize();
+            Insets insets = getTabInsets(tabPane.getTabPlacement(), i);
+            int outerX = rect.x + insets.left + delta.x;
+            int outerY = rect.y + insets.top + delta.y;
+            int outerWidth = rect.width - insets.left - insets.right;
+            int outerHeight = rect.height - insets.top - insets.bottom;
+            //centralize component
+            int x = outerX + (outerWidth - preferredSize.width) / 2;
+            int y = outerY + (outerHeight - preferredSize.height) / 2;
+            int tabPlacement = tabPane.getTabPlacement();
+            boolean isSeleceted = i == tabPane.getSelectedIndex();
+            c.setBounds(x + getTabLabelShiftX(tabPlacement, i, isSeleceted),
+                        y + getTabLabelShiftY(tabPlacement, i, isSeleceted),
+                        preferredSize.width, preferredSize.height);
         }
     }
 

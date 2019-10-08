@@ -16,7 +16,7 @@ public class ClosableTabbedPane extends JTabbedPane {
             return;
         }
         super.insertTab(title, icon, component, tip, index);
-        setTabComponentAt(index, new ClosableTabComponent(this));
+        setTabComponentAt(indexOfComponent(component), new ClosableTabComponent(this));
         notifyTabListeners(new TabEvent(this, TabEvent.TAB_OPENED, "tabOpened", index));
     }
 
