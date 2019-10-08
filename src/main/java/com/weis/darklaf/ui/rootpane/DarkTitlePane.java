@@ -94,6 +94,7 @@ public class DarkTitlePane extends JComponent {
         public void componentAdded(@NotNull final ContainerEvent e) {
             if (e.getChild() instanceof JMenuBar) {
                 menuBar = getRootPane().getJMenuBar();
+                //Otherwise a white bar will appear where the menuBar used to be.
                 menuBar.setPreferredSize(new Dimension(0, 0));
                 add(menuBar);
             }
@@ -129,7 +130,23 @@ public class DarkTitlePane extends JComponent {
 
     @NotNull
     private static JButton createButton(final String accessibleName, final Icon icon, final Action action) {
-        JButton button = new JButton();
+        return createButton(accessibleName, icon, action, false);
+    }
+
+    @NotNull
+    private static JButton createButton(final String accessibleName, final Icon icon, final Action action,
+                                        final boolean close) {
+        JButton button;
+        if (close) {
+            button = new JButton() {
+                @Override
+                public void updateUI() {
+                }
+            };
+            button.setUI(new CloseButtonUI());
+        } else {
+            button = new JButton();
+        }
         button.setFocusable(false);
         button.setOpaque(true);
         button.setRolloverEnabled(true);
@@ -148,6 +165,9 @@ public class DarkTitlePane extends JComponent {
         JNIDecorations.uninstallDecorations(windowHandle);
         windowHandle = 0;
         rootPane.removeContainerListener(rootPaneContainerListener);
+        rootPane.getLayeredPane().removeContainerListener(layeredPaneContainerListener);
+        menuBar.setPreferredSize(null);
+        rootPane.setJMenuBar(menuBar);
         removeAll();
     }
 
@@ -202,6 +222,11 @@ public class DarkTitlePane extends JComponent {
                 decorationStyle == JRootPane.QUESTION_DIALOG ||
                 decorationStyle == JRootPane.WARNING_DIALOG) {
             add(closeButton);
+        }
+        menuBar = getRootPane().getJMenuBar();
+        if (menuBar != null) {
+            menuBar.setPreferredSize(new Dimension(0, 0));
+            add(menuBar);
         }
     }
 
@@ -321,9 +346,8 @@ public class DarkTitlePane extends JComponent {
     }
 
     private void createButtons() {
-        closeButton = createButton("Close", closeIcon, closeAction);
+        closeButton = createButton("Close", closeIcon, closeAction, true);
         closeButton.setRolloverIcon(UIManager.getIcon("TitlePane.closeHover.icon"));
-        closeButton.setUI(new CloseButtonUI());
 
         if (getWindowDecorationStyle() == JRootPane.FRAME) {
             minimizeButton = createButton("Iconify", minimizeIcon, minimizeAction);

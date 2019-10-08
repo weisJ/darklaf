@@ -27,11 +27,29 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     private static Dimension size = new Dimension();
     private final Ellipse2D hitArea = new Ellipse2D.Float();
 
+    private Icon radioIcon;
+    private Icon radioDisabledIcon;
+    private Icon radioFocusedIcon;
+    private Icon radioSelectedIcon;
+    private Icon radioSelectedDisabledIcon;
+    private Icon radioSelectedFocusedIcon;
+
 
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonUI();
+    }
+
+    @Override
+    public void installDefaults(final AbstractButton b) {
+        super.installDefaults(b);
+        radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
+        radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
+        radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
+        radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
+        radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
+        radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
     }
 
     @Override
@@ -51,7 +69,12 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         if (icon != null) {
             icon.paintIcon(c, g, iconRect.x, iconRect.y);
         } else {
-            paintDarkBullet(c, g, b);
+            Icon radioIcon = getRadioIcon(b);
+            if (radioIcon != null) {
+                radioIcon.paintIcon(c, g, iconRect.x, iconRect.y + 1);
+            } else {
+                paintDarkBullet(c, g, b);
+            }
         }
         config.restore();
         if (text != null) {
@@ -59,7 +82,19 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         }
     }
 
-    protected String layoutRadioButton(final AbstractButton b, final FontMetrics fm) {
+    protected Icon getRadioIcon(@NotNull final AbstractButton b) {
+        boolean selected = b.isSelected();
+        boolean enabled = b.isEnabled();
+        boolean hasFocus = b.hasFocus();
+        return selected ? enabled ? hasFocus ? radioSelectedFocusedIcon
+                                             : radioSelectedIcon
+                                  : radioSelectedDisabledIcon
+                        : enabled ? hasFocus ? radioFocusedIcon
+                                             : radioIcon
+                                  : radioDisabledIcon;
+    }
+
+    protected String layoutRadioButton(@NotNull final AbstractButton b, final FontMetrics fm) {
         Insets i = b.getInsets();
         size = b.getSize(size);
         viewRect.x = i.left;
@@ -110,18 +145,20 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         var g2 = (Graphics2D) g.create();
         Color bgColor = enabled ? UIManager.getColor("RadioButton.activeFillColor")
                                 : UIManager.getColor("RadioButton.inactiveFillColor");
-        Color borderColor = enabled ? UIManager.getColor("RadioButton.activeBorderColor")
-                                    : UIManager.getColor("RadioButton.inactiveBorderColor");
+        Color borderColor = focus ? UIManager.getColor("RadioButton.focusBorderColor")
+                                  : enabled ? UIManager.getColor("RadioButton.activeBorderColor")
+                                            : UIManager.getColor("RadioButton.inactiveBorderColor");
         g.setColor(bgColor);
         g.fillOval(0, 0, SIZE, SIZE);
-        g.setColor(borderColor);
-        g.drawOval(0, 0, SIZE, SIZE);
 
         if (focus) {
             g2.translate(-0.2, -0.2);
-            g2.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
             DarkUIUtil.paintFocusOval(g2, 1, 1, SIZE - 1, SIZE - 1);
         }
+
+        g.setColor(borderColor);
+        g.drawOval(0, 0, SIZE, SIZE);
+
         g2.dispose();
     }
 

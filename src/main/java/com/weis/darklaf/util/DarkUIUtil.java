@@ -51,9 +51,10 @@ public final class DarkUIUtil {
     @SuppressWarnings("SuspiciousNameCombination")
     private static void doPaint(@NotNull final Graphics2D g, final int width, final int height, final float arc,
                                 final boolean symmetric) {
+        var context = GraphicsUtil.setupStrokePainting(g);
         float bw = 2f;
         float lw = 1f;
-        var context = GraphicsUtil.setupStrokePainting(g);
+
         float outerArc = arc > 0 ? arc + bw - 2f : bw;
         float rightOuterArc = symmetric ? outerArc : 6f;
         Path2D outerRect = new Path2D.Float(Path2D.WIND_EVEN_ODD);

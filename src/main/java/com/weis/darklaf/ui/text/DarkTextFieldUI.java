@@ -3,6 +3,7 @@ package com.weis.darklaf.ui.text;
 import com.weis.darklaf.decorators.MouseClickListener;
 import com.weis.darklaf.decorators.MouseMovementListener;
 import com.weis.darklaf.decorators.PopupMenuAdapter;
+import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -86,9 +87,25 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     public static Color getBorderColor(@NotNull final Component c) {
         boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();
+        boolean focus = DarkUIUtil.hasFocus(c);
+        boolean error = hasError(c);
+        if (focus) {
+            if (error) {
+                return UIManager.getColor("TextField.border.focusError");
+            } else {
+                return UIManager.getColor("TextField.border.focus");
+            }
+        } else if (error) {
+            return UIManager.getColor("TextField.border.error");
+        }
         return c.isEnabled() && editable
                ? UIManager.getColor("TextField.border.enabled")
                : UIManager.getColor("TextField.border.disabled");
+    }
+
+    @Contract("null -> false")
+    protected static boolean hasError(final Component c) {
+        return c instanceof JComponent && Boolean.TRUE.equals(((JComponent) c).getClientProperty("error"));
     }
 
     public static Color getBackgroundColor(@NotNull final JTextComponent c) {

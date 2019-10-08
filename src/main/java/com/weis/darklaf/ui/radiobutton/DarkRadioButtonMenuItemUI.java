@@ -2,8 +2,6 @@ package com.weis.darklaf.ui.radiobutton;
 
 import com.weis.darklaf.decorators.MouseClickListener;
 import com.weis.darklaf.ui.menu.DarkMenuItemUIBase;
-import com.weis.darklaf.util.GraphicsContext;
-import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.MenuItemLayoutHelper;
@@ -20,6 +18,14 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
 
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> menuItem.setArmed(true));
 
+
+    private Icon radioIcon;
+    private Icon radioDisabledIcon;
+    private Icon radioFocusedIcon;
+    private Icon radioSelectedIcon;
+    private Icon radioSelectedDisabledIcon;
+    private Icon radioSelectedFocusedIcon;
+
     @NotNull
     @Contract(value = "_ -> new", pure = true)
     public static ComponentUI createUI(final JComponent c) {
@@ -35,26 +41,34 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
         c.putClientProperty("RadioButtonMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 
-    @Override
-    protected void paintMenuItem(@NotNull final Graphics g, final JComponent c, final Icon checkIcon, final Icon arrowIcon, final Color background, final Color foreground, final int defaultTextIconGap) {
-        super.paintMenuItem(g, c, checkIcon, arrowIcon, background, foreground, defaultTextIconGap);
+    public void installDefaults() {
+        super.installDefaults();
+        radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
+        radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
+        radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
+        radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
+        radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
+        radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
     }
 
     @Override
     protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
                                   @NotNull final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
-        Graphics2D g = (Graphics2D) g2;
-        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-        g.translate(lr.getCheckRect().x, lr.getCheckRect().y + 2);
+        var rect = lr.getCheckRect();
+        getRadioIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y);
+    }
 
-        DarkRadioButtonUI.paintCheckBorder(g, lh.getMenuItem().isEnabled(), lh.getMenuItem().hasFocus());
-        if (lh.getMenuItem().isSelected()) {
-            DarkRadioButtonUI.paintCheckBullet(g, lh.getMenuItem().isEnabled());
-        }
-
-        g.translate(-lr.getCheckRect().x, -lr.getCheckRect().y - 2);
-        config.restore();
+    protected Icon getRadioIcon(@NotNull final AbstractButton b) {
+        boolean selected = b.isSelected();
+        boolean enabled = b.isEnabled();
+        boolean hasFocus = b.hasFocus();
+        return selected ? enabled ? hasFocus ? radioSelectedFocusedIcon
+                                             : radioSelectedIcon
+                                  : radioSelectedDisabledIcon
+                        : enabled ? hasFocus ? radioFocusedIcon
+                                             : radioIcon
+                                  : radioDisabledIcon;
     }
 
     protected String getPropertyPrefix() {

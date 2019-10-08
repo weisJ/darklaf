@@ -3,6 +3,7 @@ package com.weis.darklaf;
 import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
+import com.weis.darklaf.util.LafUtil;
 import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -203,6 +204,7 @@ public class DarkLaf extends BasicLookAndFeel {
         StyleSheet styleSheet = currentTheme.loadStyleSheet();
         new HTMLEditorKit().setStyleSheet(styleSheet);
 
+        LafUtil.patchIcons(defaults);
         setDecorationsEnabled(currentTheme.useCustomDecorations());
     }
 
@@ -290,11 +292,11 @@ public class DarkLaf extends BasicLookAndFeel {
                         "ctrl shift END", "selectLastRowExtendSelection",
                         "TAB", "selectNextColumnCell",
                         "shift TAB", "selectPreviousColumnCell",
-                        // "ENTER", "selectNextRowCell",
+                        "ENTER", "selectNextRowCell",
                         "shift ENTER", "selectPreviousRowCell",
                         "ctrl A", "selectAll",
                         "meta A", "selectAll",
-                        // "ESCAPE", "cancel",
+                        "ESCAPE", "cancel",
                         "F2", "startEditing"
                 }));
     }

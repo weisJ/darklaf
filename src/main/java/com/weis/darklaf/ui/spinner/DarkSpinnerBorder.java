@@ -29,22 +29,6 @@ public class DarkSpinnerBorder implements Border, UIResource {
 
         int size = tableCellEditor ? 0 : BORDER_SIZE;
         int arc = ARC_SIZE;
-        g.setColor(getBorderColor(c));
-        if (!tableCellEditor && !treeCellEditor) {
-            DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
-        } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
-            var table = (JTable) c.getParent();
-            if (!table.getShowHorizontalLines()) {
-                g.fillRect(0, 0, width, 1);
-                g.fillRect(0, height - 1, width, 1);
-            }
-            if (!table.getShowVerticalLines()) {
-                g.fillRect(0, 0, 1, height);
-                g.fillRect(width - 1, 0, 1, height);
-            }
-        } else {
-            DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
-        }
 
         if (c instanceof JSpinner) {
             JSpinner spinner = (JSpinner) c;
@@ -63,9 +47,29 @@ public class DarkSpinnerBorder implements Border, UIResource {
         }
 
         if (!tableCellEditor && !treeCellEditor && DarkUIUtil.hasFocus(c)) {
-            g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
             DarkUIUtil.paintFocusBorder(g, width, height, arc, true);
         }
+
+        g.setColor(getBorderColor(c));
+        if (!tableCellEditor && !treeCellEditor) {
+            if (DarkUIUtil.hasFocus(c)) {
+                g.setColor(UIManager.getColor("Spinner.focusBorderColor"));
+            }
+            DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
+        } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
+            var table = (JTable) c.getParent();
+            if (!table.getShowHorizontalLines()) {
+                g.fillRect(0, 0, width, 1);
+                g.fillRect(0, height - 1, width, 1);
+            }
+            if (!table.getShowVerticalLines()) {
+                g.fillRect(0, 0, 1, height);
+                g.fillRect(width - 1, 0, 1, height);
+            }
+        } else {
+            DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
+        }
+
         g.translate(-x, -y);
         config.restore();
     }

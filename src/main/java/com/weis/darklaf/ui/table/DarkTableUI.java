@@ -102,7 +102,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     protected void uninstallListeners() {
         super.uninstallListeners();
         table.removeFocusListener(focusListener);
-        table.addPropertyChangeListener(propertyChangeListener);
+        table.removePropertyChangeListener(propertyChangeListener);
     }
 
     @Override

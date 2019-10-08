@@ -20,6 +20,14 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
 
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> menuItem.setArmed(true));
 
+    private Icon checkBoxIcon;
+    private Icon checkBoxDisabledIcon;
+    private Icon checkBoxFocusedIcon;
+    private Icon checkBoxSelectedIcon;
+    private Icon checkBoxSelectedDisabledIcon;
+    private Icon checkBoxSelectedFocusedIcon;
+
+
     @NotNull
     @Contract(value = "_ -> new", pure = true)
     public static ComponentUI createUI(final JComponent c) {
@@ -32,22 +40,37 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
         c.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 
+    public void installDefaults() {
+        super.installDefaults();
+        checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
+        checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
+        checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");
+        checkBoxSelectedIcon = UIManager.getIcon("CheckBox.selected.icon");
+        checkBoxSelectedDisabledIcon = UIManager.getIcon("CheckBox.selectedDisabled.icon");
+        checkBoxSelectedFocusedIcon = UIManager.getIcon("CheckBox.selectedFocused.icon");
+    }
+
     protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
                                   @NotNull final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-
-        g.translate(lr.getCheckRect().x, lr.getCheckRect().y + 2);
-
-        DarkCheckBoxUI.paintCheckBorder(g, lh.getMenuItem().isEnabled(), lh.getMenuItem().hasFocus());
-        if (lh.getMenuItem().isSelected()) {
-            DarkCheckBoxUI.paintCheckArrow(g, lh.getMenuItem().isEnabled());
-        }
-
-        g.translate(-lr.getCheckRect().x, -lr.getCheckRect().y - 2);
+        var rect = lr.getCheckRect();
+        getCheckBoxIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y);
         config.restore();
         g.setColor(foreground);
+    }
+
+    protected Icon getCheckBoxIcon(@NotNull final AbstractButton b) {
+        boolean selected = b.isSelected();
+        boolean enabled = b.isEnabled();
+        boolean hasFocus = b.hasFocus();
+        return selected ? enabled ? hasFocus ? checkBoxSelectedFocusedIcon
+                                             : checkBoxSelectedIcon
+                                  : checkBoxSelectedDisabledIcon
+                        : enabled ? hasFocus ? checkBoxFocusedIcon
+                                             : checkBoxIcon
+                                  : checkBoxDisabledIcon;
     }
 
     protected String getPropertyPrefix() {

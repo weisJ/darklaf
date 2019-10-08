@@ -1,6 +1,7 @@
 package com.weis.darklaf.ui.checkbox;
 
 import com.weis.darklaf.icons.EmptyIcon;
+import com.weis.darklaf.ui.button.DarkButtonBorder;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -20,6 +21,7 @@ import java.awt.geom.RoundRectangle2D;
 
 public class DarkCheckBoxUI extends MetalCheckBoxUI {
 
+    private static final int BSIZE = DarkButtonBorder.BORDER_SIZE;
     private static final int ICON_OFF = 4;
     private static final int ARC_SIZE = 3;
     private static final int SIZE = 13;
@@ -28,11 +30,28 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     private static final Rectangle textRect = new Rectangle();
     private static Dimension size = new Dimension();
     private final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
+    private Icon checkBoxIcon;
+    private Icon checkBoxDisabledIcon;
+    private Icon checkBoxFocusedIcon;
+    private Icon checkBoxSelectedIcon;
+    private Icon checkBoxSelectedDisabledIcon;
+    private Icon checkBoxSelectedFocusedIcon;
 
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkCheckBoxUI();
+    }
+
+    @Override
+    public void installDefaults(final AbstractButton b) {
+        super.installDefaults(b);
+        checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
+        checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
+        checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");
+        checkBoxSelectedIcon = UIManager.getIcon("CheckBox.selected.icon");
+        checkBoxSelectedDisabledIcon = UIManager.getIcon("CheckBox.selectedDisabled.icon");
+        checkBoxSelectedFocusedIcon = UIManager.getIcon("CheckBox.selectedFocused.icon");
     }
 
     @Override
@@ -49,12 +68,29 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         if (icon != null) {
             icon.paintIcon(c, g, iconRect.x, iconRect.y);
         } else {
-            paintDarkCheck(c, g, b);
+            Icon checkIcon = getCheckIcon(b);
+            if (checkIcon != null) {
+                checkIcon.paintIcon(c, g, iconRect.x, iconRect.y + 1);
+            } else {
+                paintDarkCheck(c, g, b);
+            }
         }
 
         if (text != null) {
             paintText(g, b, textRect, text, fm, getDisabledTextColor());
         }
+    }
+
+    protected Icon getCheckIcon(@NotNull final AbstractButton b) {
+        boolean selected = b.isSelected();
+        boolean enabled = b.isEnabled();
+        boolean hasFocus = b.hasFocus();
+        return selected ? enabled ? hasFocus ? checkBoxSelectedFocusedIcon
+                                             : checkBoxSelectedIcon
+                                  : checkBoxSelectedDisabledIcon
+                        : enabled ? hasFocus ? checkBoxFocusedIcon
+                                             : checkBoxIcon
+                                  : checkBoxDisabledIcon;
     }
 
     protected String layoutCheckBox(@NotNull final JCheckBox b, final FontMetrics fm) {
@@ -158,19 +194,21 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         var g2 = (Graphics2D) g.create();
         Color bgColor = enabled ? UIManager.getColor("CheckBox.activeFillColor")
                                 : UIManager.getColor("CheckBox.inactiveFillColor");
-        Color borderColor = enabled ? UIManager.getColor("CheckBox.activeBorderColor")
-                                    : UIManager.getColor("CheckBox.inactiveBorderColor");
+        Color borderColor = focus ? UIManager.getColor("CheckBox.focusBorderColor")
+                                  : enabled ? UIManager.getColor("CheckBox.activeBorderColor")
+                                            : UIManager.getColor("CheckBox.inactiveBorderColor");
         g.setColor(bgColor);
         g.fillRoundRect(0, 0, SIZE, SIZE, ARC_SIZE, ARC_SIZE);
+
+        if (focus) {
+            g2.translate(-BSIZE, -BSIZE);
+            DarkUIUtil.paintFocusBorder(g2, SIZE + 2 * BSIZE, SIZE + 2 * BSIZE, ARC_SIZE, true);
+            g2.translate(BSIZE, BSIZE);
+        }
 
         g.setColor(borderColor);
         DarkUIUtil.paintLineBorder(g, 0, 0, SIZE, SIZE, ARC_SIZE, true);
 
-        if (focus) {
-            g2.translate(-2, -2);
-            g2.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
-            DarkUIUtil.paintFocusBorder(g2, SIZE + 4, SIZE + 4, ARC_SIZE, true);
-        }
         g2.dispose();
     }
 

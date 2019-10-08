@@ -1,5 +1,4 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.components.TextFieldHistory;
 import com.weis.darklaf.icons.IconLoader;
 import org.jdesktop.swingx.JXStatusBar;
@@ -28,7 +27,7 @@ public final class UIDemo {
                     taskpanecontainer.add(taskpane);
 
                     JFrame frame = new JFrame("UIDemo");
-                    Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg");
+                    Icon folderIcon = IconLoader.get().getUIAwareIcon("control/checkBoxFocused.svg", 19, 19);
 
                     var panel = new JPanel(new GridLayout(2, 5));
                     var content = new JPanel(new BorderLayout());

@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 
 public class DarkToggleButtonUI extends DarkButtonUI {
 
+    private static final int BSIZE = DarkButtonBorder.BORDER_SIZE;
     private static final int SLIDER_HEIGHT = 17;
     private static final int SLIDER_WIDTH = 35;
     private static final Rectangle rect = new Rectangle();
@@ -142,17 +143,16 @@ public class DarkToggleButtonUI extends DarkButtonUI {
                                                   bounds.height, bounds.height);
         g.setColor(getBackgroundColor(c));
         g.fill(slider);
+
+        if (c.hasFocus()) {
+            g.translate(-BSIZE, -BSIZE);
+            DarkUIUtil.paintFocusBorder(g, bounds.width + 2 * BSIZE, bounds.height + 2 * BSIZE,
+                                        (float) (bounds.height / 2.0) + 2, true);
+            g.translate(BSIZE, BSIZE);
+        }
+
         g.setColor(getToggleBorderColor(c));
         g.draw(slider);
-        if (c.hasFocus()) {
-            var config = new GraphicsContext(g);
-            g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
-            g.translate(-2, -2);
-            DarkUIUtil.paintFocusBorder(g, bounds.width + 4, bounds.height + 4,
-                                        (float) (bounds.height / 2.0) + 2, true);
-            g.translate(2, 2);
-            config.restore();
-        }
         g.setColor(getSliderColor(c));
         if (c.isSelected()) {
             g.fill(new Ellipse2D.Float(
@@ -164,6 +164,9 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     }
 
     private static Color getToggleBorderColor(@NotNull final AbstractButton b) {
+        if (b.hasFocus()) {
+            return UIManager.getColor("ToggleButton.focusedSliderBorderColor");
+        }
         return b.isEnabled() ? UIManager.getColor("ToggleButton.sliderBorderColor")
                              : UIManager.getColor("ToggleButton.disabledSliderBorderColor");
     }

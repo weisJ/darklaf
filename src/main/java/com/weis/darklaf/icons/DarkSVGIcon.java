@@ -83,4 +83,8 @@ public class DarkSVGIcon implements Icon, Serializable {
     public int getIconHeight() {
         return size.height;
     }
+
+    public SVGIcon getSVGIcon() {
+        return icon;
+    }
 }

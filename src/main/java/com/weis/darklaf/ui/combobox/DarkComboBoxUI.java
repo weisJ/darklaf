@@ -301,15 +301,17 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             g.fillRect(off, bSize, 1, height - 2 * bSize);
         }
 
-        g.setColor(getBorderColor());
         if (!isTableCellEditor && !isTreeCellEditor) {
+            if (hasFocus) {
+                DarkUIUtil.paintFocusBorder(g, width, height, ARC_SIZE, true);
+                g.setColor(UIManager.getColor("ComboBox.focusBorderColor"));
+            } else {
+                g.setColor(getBorderColor());
+            }
             DarkUIUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize,
                                        height - 2 * bSize, arc, true);
-            if (hasFocus) {
-                g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
-                DarkUIUtil.paintFocusBorder(g, width, height, ARC_SIZE, true);
-            }
         } else {
+            g.setColor(getBorderColor());
             var parent = c.getParent();
             if (isTableCellEditor(c) && parent instanceof JTable) {
                 var table = ((JTable) parent);

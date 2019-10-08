@@ -19,7 +19,7 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class DarkButtonBorder implements Border, UIResource {
 
-    public static final int BORDER_SIZE = 2;
+    public static final int BORDER_SIZE = 3;
     public static final int SHADOW_HEIGHT = 3;
 
     @Override
@@ -37,6 +37,10 @@ public class DarkButtonBorder implements Border, UIResource {
             paintShadow(g2, width, height, arc);
         }
 
+        if (c.hasFocus()) {
+            DarkUIUtil.paintFocusBorder(g2, width, height - SHADOW_HEIGHT, arc, true);
+        }
+
         g2.setColor(getBorderColor(c));
         if (DarkButtonUI.isSquare(c) && !DarkButtonUI.isForceRoundCorner(c)) {
             g2.drawRect(BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
@@ -45,11 +49,6 @@ public class DarkButtonBorder implements Border, UIResource {
             DarkUIUtil.paintLineBorder(g2, BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
                                        height - 2 * BORDER_SIZE - SHADOW_HEIGHT, arc, true);
 
-        }
-
-        if (c.hasFocus()) {
-            g2.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
-            DarkUIUtil.paintFocusBorder(g2, width, height - SHADOW_HEIGHT, arc, true);
         }
         config.restore();
     }
@@ -76,7 +75,9 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     private Color getBorderColor(final Component c) {
-        if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
+        if (c.hasFocus()) {
+            return UIManager.getColor("Button.focusBorderColor");
+        } else if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
             return UIManager.getColor("Button.defaultBorderColor");
         } else if (c.isEnabled()) {
             return UIManager.getColor("Button.activeBorderColor");
@@ -86,7 +87,7 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
-        if (DarkButtonUI.isFullShadow(c)) {
+        if (DarkButtonUI.isFullShadow(c) || DarkButtonUI.isLabelButton(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
         int shadow = DarkButtonUI.isShadowVariant(c) ? 0 : SHADOW_HEIGHT;

@@ -66,6 +66,10 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     private DarkScrollHandler scrollHandler;
     private Component leadingComp;
     private Component trailingComp;
+    private Component northComp;
+    private Component eastComp;
+    private Component southComp;
+    private Component westComp;
 
     @NotNull
     @Contract("_ -> new")
@@ -170,7 +174,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected void setRolloverTab(final int index) {
+    public void setRolloverTab(final int index) {
         int oldRollover = rolloverTabIndex;
         super.setRolloverTab(index);
         if (oldRollover != getRolloverTab()) {
@@ -421,6 +425,23 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             } else {
                 insets.bottom += b.height;
             }
+        }
+        return insets;
+    }
+
+    protected Insets getContentBorderInsets(final int tabPlacement) {
+        Insets insets = (Insets) super.getContentBorderInsets(tabPlacement).clone();
+        if (northComp != null) {
+            insets.top += northComp.getPreferredSize().height;
+        }
+        if (southComp != null) {
+            insets.bottom += southComp.getPreferredSize().height;
+        }
+        if (eastComp != null) {
+            insets.right += eastComp.getPreferredSize().width;
+        }
+        if (westComp != null) {
+            insets.left += westComp.getPreferredSize().width;
         }
         return insets;
     }
@@ -1138,10 +1159,30 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                     } else {
                         int tabHeight = maxTabHeight + tabAreaInsets.top + tabAreaInsets.bottom;
                         int tabWidth = maxTabWidth + tabAreaInsets.left + tabAreaInsets.right;
+                        int compHeight = ch;
+                        int compY = cy;
+                        if (northComp != null) {
+                            int nh = northComp.getPreferredSize().height;
+                            compY -= nh;
+                            compHeight += nh;
+                        }
+                        if (southComp != null) {
+                            compHeight += southComp.getPreferredSize().height;
+                        }
                         if (child == leadingComp && leadingComp != null) {
                             layoutLeadingComponent(child, tabWidth, tabHeight, insets, tx, ty, tabPlacement);
                         } else if (child == trailingComp && trailingComp != null) {
                             layoutTrailingComponent(child, tabWidth, tabHeight, insets, tx, ty, tw, th, tabPlacement);
+                        } else if (child == northComp && northComp != null) {
+                            northComp.setBounds(cx, cy - northComp.getPreferredSize().height,
+                                                cw, northComp.getPreferredSize().height);
+                        } else if (child == southComp && southComp != null) {
+                            southComp.setBounds(cx, cy + ch, cw, southComp.getPreferredSize().height);
+                        } else if (child == eastComp && eastComp != null) {
+                            eastComp.setBounds(cx + cw, compY, eastComp.getPreferredSize().width, compHeight);
+                        } else if (child == westComp && westComp != null) {
+                            westComp.setBounds(cx - westComp.getPreferredSize().width, compY,
+                                               westComp.getPreferredSize().width, compHeight);
                         } else if (child != moreTabs && child != newTab) {
                             child.setBounds(cx, cy, cw, ch);
                         }
@@ -1565,6 +1606,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     public class DarkTabbedPaneLayout extends TabbedPaneLayout {
 
+        /*
+         * Non scroll-layout
+         */
         @Override
         public void layoutContainer(final Container parent) {
             int tabPlacement = tabPane.getTabPlacement();
@@ -1666,10 +1710,30 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                     } else {
                         int tabHeight = maxTabHeight + tabAreaInsets.top + tabAreaInsets.bottom;
                         int tabWidth = maxTabWidth + tabAreaInsets.left + tabAreaInsets.right;
+                        int compHeight = ch;
+                        int compY = cy;
+                        if (northComp != null) {
+                            int nh = northComp.getPreferredSize().height;
+                            compY -= nh;
+                            compHeight += nh;
+                        }
+                        if (southComp != null) {
+                            compHeight += southComp.getPreferredSize().height;
+                        }
                         if (child == leadingComp && leadingComp != null) {
                             layoutLeadingComponent(child, tabWidth, tabHeight, insets, tx, ty, tabPlacement);
                         } else if (child == trailingComp && trailingComp != null) {
                             layoutTrailingComponent(child, tabWidth, tabHeight, insets, tx, ty, tw, th, tabPlacement);
+                        } else if (child == northComp && northComp != null) {
+                            northComp.setBounds(cx, cy - northComp.getPreferredSize().height,
+                                                cw, northComp.getPreferredSize().height);
+                        } else if (child == southComp && southComp != null) {
+                            southComp.setBounds(cx, cy + ch, cw, southComp.getPreferredSize().height);
+                        } else if (child == eastComp && eastComp != null) {
+                            eastComp.setBounds(cx + cw, compY, eastComp.getPreferredSize().width, compHeight);
+                        } else if (child == westComp && westComp != null) {
+                            westComp.setBounds(cx - westComp.getPreferredSize().width, compY,
+                                               westComp.getPreferredSize().width, compHeight);
                         } else {
                             child.setBounds(cx, cy, cw, ch);
                         }
@@ -1749,6 +1813,42 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             } else if ("componentOrientation".equals(key)) {
                 tabPane.doLayout();
                 tabPane.repaint();
+            } else if ("JTabbedPane.northComponent".equals(key)) {
+                tabPane.remove(northComp);
+                var val = e.getNewValue();
+                if (val instanceof Component) {
+                    northComp = (Component) val;
+                    tabPane.add(northComp);
+                } else {
+                    northComp = null;
+                }
+            } else if ("JTabbedPane.southComponent".equals(key)) {
+                tabPane.remove(southComp);
+                var val = e.getNewValue();
+                if (val instanceof Component) {
+                    southComp = (Component) val;
+                    tabPane.add(southComp);
+                } else {
+                    southComp = null;
+                }
+            } else if ("JTabbedPane.eastComponent".equals(key)) {
+                tabPane.remove(eastComp);
+                var val = e.getNewValue();
+                if (val instanceof Component) {
+                    eastComp = (Component) val;
+                    tabPane.add(eastComp);
+                } else {
+                    eastComp = null;
+                }
+            } else if ("JTabbedPane.westComponent".equals(key)) {
+                tabPane.remove(westComp);
+                var val = e.getNewValue();
+                if (val instanceof Component) {
+                    westComp = (Component) val;
+                    tabPane.add(westComp);
+                } else {
+                    westComp = null;
+                }
             }
         }
 

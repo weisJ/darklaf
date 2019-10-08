@@ -82,15 +82,6 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     {
         return HitTestNCA(hwnd, wParam, lParam, wrapper);
     }
-    // else if (uMsg == WM_PAINT)
-    // {
-    //     PAINTSTRUCT ps;
-    //     HDC hdc = BeginPaint(hwnd, &ps);
-
-    //     RECT rc = ps.rcPaint;
-    //     FillRect(hdc, &rc, CreateSolidBrush(wrapper->background));
-    //     EndPaint(hwnd, &ps);
-    // }
     return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
 }
 

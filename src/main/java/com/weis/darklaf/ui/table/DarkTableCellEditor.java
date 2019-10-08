@@ -37,7 +37,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
     public DarkTableCellEditor(final JTextField textField) {
         super(textField);
-        textField.setBorder(new DarkTableCellBorder());
+        textField.setBorder(new TextFieldTableCellEditorBorder());
         setClickCountToStart(2);
     }
 

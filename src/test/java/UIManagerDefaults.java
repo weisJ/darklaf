@@ -609,7 +609,7 @@ public class UIManagerDefaults implements ItemListener {
 
                 final JMenuItem mi = (JMenuItem) e.getSource();
                 final JPopupMenu popup = (JPopupMenu) mi.getParent();
-                final JRootPane rootPane = SwingUtilities.getRootPane(popup.getInvoker());
+                final JRootPane rootPane = SwingUtilities.getRootPane(mi);
                 SwingUtilities.updateComponentTreeUI(rootPane);
                 //  Use custom decorations when supported by the LAF
                 final JFrame frame = (JFrame) SwingUtilities.windowForComponent(rootPane);

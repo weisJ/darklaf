@@ -159,7 +159,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         }
     }
 
-    protected void paintText(final Graphics g, final MenuItemLayoutHelper lh,
+    protected void paintText(final Graphics g, @NotNull final MenuItemLayoutHelper lh,
                              final MenuItemLayoutHelper.LayoutResult lr) {
         if (!lh.getText().isBlank()) {
             if (lh.getHtmlView() != null) {
@@ -431,8 +431,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     protected void updateCheckIcon() {
         String prefix = getPropertyPrefix();
 
-        if (checkIcon == null ||
-                checkIcon instanceof UIResource) {
+        if (checkIcon == null || checkIcon instanceof UIResource) {
             checkIcon = UIManager.getIcon(prefix + ".checkIcon");
             //In case of column layout, .checkIconFactory is defined for this UI,
             //the icon is compatible with it and useCheckAndArrow() is true,
@@ -441,8 +440,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
                     menuItem.getComponentOrientation().isLeftToRight(), menuItem);
             if (isColumnLayout) {
                 MenuItemCheckIconFactory iconFactory =
-                        (MenuItemCheckIconFactory) UIManager.get(prefix
-                                                                         + ".checkIconFactory");
+                        (MenuItemCheckIconFactory) UIManager.get(prefix + ".checkIconFactory");
                 if (iconFactory != null
                         && MenuItemLayoutHelper.useCheckAndArrow(menuItem)
                         && iconFactory.isCompatible(checkIcon, prefix)) {

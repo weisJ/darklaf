@@ -106,16 +106,15 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     private void uninstallClientDecorations(final JRootPane root) {
         uninstallBorder(root);
-        setTitlePane(root, null);
+        if (titlePane != null) {
+            titlePane.uninstall();
+            setTitlePane(root, null);
+        }
         uninstallLayout(root);
         int style = root.getWindowDecorationStyle();
         if (style == JRootPane.NONE) {
             root.repaint();
             root.revalidate();
-        }
-        if (titlePane != null) {
-            titlePane.uninstall();
-            titlePane = null;
         }
         if (window != null) {
             window.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -141,9 +140,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         updateWindow(root.getParent());
         installLayout(root);
         if (window != null) {
-            if (window instanceof Frame) {
+            if (window instanceof Frame && !window.isDisplayable()) {
                 ((Frame) window).setUndecorated(root.getWindowDecorationStyle() == JRootPane.NONE);
-            } else if (window instanceof Dialog) {
+            } else if (window instanceof Dialog && !window.isDisplayable()) {
                 ((Dialog) window).setUndecorated(root.getWindowDecorationStyle() == JRootPane.NONE);
             }
             root.revalidate();
@@ -205,6 +204,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
+        if (rootPane == null) return;
         Component parent = rootPane.getParent();
         if (parent == null) {
             return;

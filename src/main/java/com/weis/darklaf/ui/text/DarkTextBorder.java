@@ -3,7 +3,6 @@ package com.weis.darklaf.ui.text;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -18,7 +17,7 @@ import java.awt.*;
  */
 public class DarkTextBorder implements Border, UIResource {
 
-    public final static int BORDER_SIZE = 2;
+    public final static int BORDER_SIZE = 3;
     public final static int PADDING = 4;
 
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y,
@@ -28,39 +27,33 @@ public class DarkTextBorder implements Border, UIResource {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         int arcSize = DarkTextFieldUI.getArcSize(c);
         if (!DarkTextFieldUI.isSearchField(c)) {
-            g.setColor(DarkTextFieldUI.getBorderColor(c));
-            if (DarkTextFieldUI.chooseAlternativeArc(c)) {
-                g.drawRoundRect(BORDER_SIZE, BORDER_SIZE,
-                                width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE, arcSize, arcSize);
-            } else {
-                g.drawRect(BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE);
-            }
-            g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
-            if (hasError(c)) {
+            if (DarkTextFieldUI.hasError(c)) {
                 DarkUIUtil.paintOutlineBorder(g, width, height, arcSize, true,
                                               c.hasFocus(), DarkUIUtil.Outline.error);
             } else if (c.hasFocus()) {
                 DarkUIUtil.paintFocusBorder(g, width, height, arcSize, true);
             }
+            g.setColor(DarkTextFieldUI.getBorderColor(c));
+            if (DarkTextFieldUI.chooseAlternativeArc(c)) {
+                DarkUIUtil.paintLineBorder(g, BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
+                                           height - 2 * BORDER_SIZE, arcSize, true);
+            } else {
+                g.drawRect(BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE);
+            }
         } else if (DarkTextFieldUI.isSearchField(c)) {
             g.setColor(DarkTextFieldUI.getBorderColor(c));
             if (((JComponent) c).getClientProperty("JTextField.Search.noBorderRing") != Boolean.TRUE) {
-                DarkUIUtil.paintLineBorder(g, BORDER_SIZE, BORDER_SIZE,
-                                           width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE, arcSize, true);
-                g.setComposite(DarkUIUtil.ALPHA_COMPOSITE);
                 if (c.hasFocus()) {
                     DarkUIUtil.paintOutlineBorder(g, width, height, arcSize, true,
                                                   true, DarkUIUtil.Outline.focus);
                 }
+                g.setColor(DarkTextFieldUI.getBorderColor(c));
+                DarkUIUtil.paintLineBorder(g, BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
+                                           height - 2 * BORDER_SIZE, arcSize, true);
             }
         }
         g.translate(-x, -y);
         config.restore();
-    }
-
-    @Contract("null -> false")
-    private boolean hasError(final Component c) {
-        return c instanceof JComponent && Boolean.TRUE.equals(((JComponent) c).getClientProperty("error"));
     }
 
     @Override

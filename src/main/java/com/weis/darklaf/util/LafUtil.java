@@ -1,6 +1,9 @@
 package com.weis.darklaf.util;
 
+import com.kitfox.svg.app.beans.SVGIcon;
+import com.weis.darklaf.icons.DarkSVGIcon;
 import com.weis.darklaf.icons.EmptyIcon;
+import com.weis.darklaf.icons.IconColorMapper;
 import com.weis.darklaf.icons.IconLoader;
 import com.weis.darklaf.icons.UIAwareIcon;
 import org.jetbrains.annotations.Contract;
@@ -15,9 +18,11 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +31,9 @@ public final class LafUtil {
     private static final IconLoader ICON_LOADER = IconLoader.get();
     private static final String DUAL_KEY = "[dual]";
     private static final String AWARE_KEY = "[aware]";
+    private static final String PATCH_KEY = "[patch]";
+
+    private static final Set<SVGIcon> resolveSet = new HashSet<>();
 
     @NotNull
     public static Properties loadProperties(@NotNull final Class<?> clazz, final String name, final String path) {
@@ -36,6 +44,17 @@ public final class LafUtil {
             LOGGER.log(Level.SEVERE, "Could not load" + name + ".properties", e.getMessage());
         }
         return properties;
+    }
+
+    public static void patchIcons(@NotNull final UIDefaults defaults) {
+        new SwingWorker<>() {
+            @Override
+            protected Object doInBackground() {
+                resolveSet.forEach(icon -> IconColorMapper.patchColors(icon, defaults));
+                resolveSet.clear();
+                return null;
+            }
+        }.doInBackground();
     }
 
 
@@ -132,17 +151,34 @@ public final class LafUtil {
             path = path.substring(0, i);
         }
         if (path.charAt(path.length() - 1) == ']') {
-            String tag = path.endsWith(DUAL_KEY) ? DUAL_KEY
-                                                 : path.endsWith(AWARE_KEY) ? AWARE_KEY : null;
+            String tag = null;
+            if (path.endsWith(DUAL_KEY)) {
+                tag = DUAL_KEY;
+            } else if (path.endsWith(AWARE_KEY)) {
+                tag = AWARE_KEY;
+            } else if (path.endsWith(PATCH_KEY)) {
+                tag = PATCH_KEY;
+            }
             if (tag == null) {
                 throw new IllegalArgumentException("Invalid tag on icon path: '" + value + "'");
             }
-            UIAwareIcon icon = ICON_LOADER.getUIAwareIcon(path.substring(0, path.length() - tag.length()),
-                                                          dim.width, dim.height);
-            if (tag.equals(DUAL_KEY)) {
-                return icon.getDual();
+            var iconPath = path.substring(0, path.length() - tag.length());
+            if (tag.equals(PATCH_KEY)) {
+                Icon icon = ICON_LOADER.getIcon(iconPath, dim.width, dim.height);
+                if (icon instanceof DarkSVGIcon) {
+                    resolveSet.add(((DarkSVGIcon) icon).getSVGIcon());
+                    return icon;
+                } else {
+                    LOGGER.warning("Could not patch colours for icon '" + iconPath + "'. Not a SVG icon.");
+                    return icon;
+                }
             } else {
-                return icon;
+                UIAwareIcon icon = ICON_LOADER.getUIAwareIcon(iconPath, dim.width, dim.height);
+                if (tag.equals(DUAL_KEY)) {
+                    return icon.getDual();
+                } else {
+                    return icon;
+                }
             }
         }
         if (path.equals("empty")) {
