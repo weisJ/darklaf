@@ -136,7 +136,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     protected boolean tabsOverlapBorder;
 
 
-// Transient variables (recalculated each time TabbedPane is layed out)
+    // Transient variables (recalculated each time TabbedPane is layed out)
     protected boolean tabsOpaque = true;
     protected boolean contentOpaque = true;
     /**
@@ -257,7 +257,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     protected boolean isRunsDirty;
     protected boolean calculatedBaseline;
 
-// UI Installation/De-installation
+    // UI Installation/De-installation
     protected int baseline;
 
     /**
@@ -1079,20 +1079,25 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
+    protected void paintTab(final Graphics g, final int tabPlacement,
+                            final Rectangle[] rects, final int tabIndex,
+                            final Rectangle iconRect, final Rectangle textRect) {
+        paintTab(g, tabPlacement, rects[tabIndex], tabIndex, iconRect, textRect);
+    }
+
     /**
      * Paints a tab.
      *
      * @param g            the graphics
      * @param tabPlacement the tab placement
-     * @param rects        rectangles
+     * @param tabRect      the tab rectangle
      * @param tabIndex     the tab index
      * @param iconRect     the icon rectangle
      * @param textRect     the text rectangle
      */
     protected void paintTab(final Graphics g, final int tabPlacement,
-                            final Rectangle[] rects, final int tabIndex,
+                            final Rectangle tabRect, final int tabIndex,
                             final Rectangle iconRect, final Rectangle textRect) {
-        Rectangle tabRect = rects[tabIndex];
         int selectedIndex = tabPane.getSelectedIndex();
         boolean isSelected = selectedIndex == tabIndex;
 
@@ -1129,7 +1134,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
 
             paintIcon(g, tabPlacement, tabIndex, icon, iconRect, isSelected);
         }
-        paintFocusIndicator(g, tabPlacement, rects, tabIndex,
+        paintFocusIndicator(g, tabPlacement, tabRect, tabIndex,
                             iconRect, textRect, isSelected);
     }
 
@@ -1350,22 +1355,28 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
+    protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
+                                       final Rectangle[] rects, final int tabIndex,
+                                       final Rectangle iconRect, final Rectangle textRect,
+                                       final boolean isSelected) {
+        paintFocusIndicator(g, tabPlacement, rects[tabIndex], tabIndex, iconRect, textRect, isSelected);
+    }
+
     /**
      * Paints the focus indicator.
      *
      * @param g            the graphics
      * @param tabPlacement the tab placement
-     * @param rects        rectangles
+     * @param tabRect      the tabRect
      * @param tabIndex     the tab index
      * @param iconRect     the icon rectangle
      * @param textRect     the text rectangle
      * @param isSelected   selection status
      */
     protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                       final Rectangle[] rects, final int tabIndex,
+                                       final Rectangle tabRect, final int tabIndex,
                                        final Rectangle iconRect, final Rectangle textRect,
                                        final boolean isSelected) {
-        Rectangle tabRect = rects[tabIndex];
         if (tabPane.hasFocus() && isSelected) {
             int x, y, w, h;
             g.setColor(focus);

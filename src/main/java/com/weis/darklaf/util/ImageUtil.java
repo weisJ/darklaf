@@ -30,11 +30,46 @@ public final class ImageUtil {
      * @return image containing the captured area.
      */
     @NotNull
+    public static Image scaledImageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds) {
+        return scaledImageFromComponent(c, bounds, SCALE_X, SCALE_Y);
+    }
+
+    /**
+     * Create image from component.
+     *
+     * @param c      the component.
+     * @param bounds the bounds inside the component to capture.
+     * @return image containing the captured area.
+     */
+    @NotNull
     public static Image imageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds) {
-        BufferedImage image = new BufferedImage((int) (SCALE_X * bounds.width), (int) (SCALE_Y * bounds.height),
-                                                BufferedImage.TYPE_INT_RGB);
+        return scaledImageFromComponent(c, bounds, 1.0, 1.0);
+    }
+
+    /**
+     * Create image from component.
+     *
+     * @param c      the component.
+     * @param bounds the bounds inside the component to capture.
+     * @param scalex the x scale
+     * @param scaley the y scale
+     * @return image containing the captured area.
+     */
+    @NotNull
+    public static Image scaledImageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds,
+                                                 final double scalex, final double scaley) {
+        BufferedImage image;
+        boolean scale = scalex != 1.0 || scaley != 1.0;
+        if (scale) {
+            image = new BufferedImage((int) (scalex * bounds.width), (int) (scaley * bounds.height),
+                                      BufferedImage.TYPE_INT_RGB);
+        } else {
+            image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
+        }
         final Graphics2D g2d = (Graphics2D) image.getGraphics();
-        g2d.scale(SCALE_Y, SCALE_Y);
+        if (scale) {
+            g2d.scale(scalex, scaley);
+        }
         g2d.translate(-bounds.x, -bounds.y);
         c.printAll(g2d);
 

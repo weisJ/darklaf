@@ -62,6 +62,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     private boolean sourceEqualsTarget;
     private boolean drawDropRect;
 
+    private boolean dragging;
+    private Rectangle dragRect = new Rectangle();
+
 
     private DarkScrollHandler scrollHandler;
     private Component leadingComp;
@@ -175,6 +178,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     @Override
     public void setRolloverTab(final int index) {
+        if (dragging) return;
         int oldRollover = rolloverTabIndex;
         super.setRolloverTab(index);
         if (oldRollover != getRolloverTab()) {
@@ -292,13 +296,12 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement, final Rectangle[] rects,
+    protected void paintFocusIndicator(final Graphics g, final int tabPlacement, final Rectangle r,
                                        final int tabIndex, final Rectangle iconRect,
                                        final Rectangle textRect, final boolean isSelected) {
         if (isSelected) {
             if (!drawFocusBar()) return;
             g.setColor(getAccentColor(DarkUIUtil.hasFocus(tabPane)));
-            var r = rects[tabIndex];
             int focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
             switch (tabPlacement) {
                 case LEFT:
@@ -344,8 +347,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                                       final int y, final int w, final int h,
                                       final boolean isSelected) {
         g.setColor(getTabBackgroundColor(tabIndex, isSelected, getRolloverTab() == tabIndex));
-        var r = rects[tabIndex];
-        g.fillRect(r.x, r.y, r.width, r.height);
+        g.fillRect(x, y, w, h);
     }
 
     @Override
@@ -577,11 +579,23 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected class DarkScrollableTabPanel extends ScrollableTabPanel {
+
+        private final Rectangle iconRect = new Rectangle();
+        private final Rectangle textRect = new Rectangle();
+
         @Override
         public void paintComponent(final Graphics g) {
             super.paintComponent(g);
             if (drawDropRect) {
                 paintDrop(g);
+            }
+        }
+
+        @Override
+        public void paint(final Graphics g) {
+            super.paint(g);
+            if (dragging) {
+                paintTab(g, tabPane.getTabPlacement(), dragRect, tabPane.getSelectedIndex(), iconRect, textRect);
             }
         }
 
@@ -1859,22 +1873,100 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             setFocusIndex(tabPane.getSelectedIndex(), false);
         }
 
+        private Point origin;
+        private Point tabOrigin;
+        private int pressedIndex;
+
         @Override
         public void mousePressed(final MouseEvent e) {
             super.mousePressed(e);
             tabPane.requestFocus();
+            origin = e.getPoint();
+            pressedIndex = tabForCoordinate(tabPane, e.getX(), e.getY());
         }
 
         @Override
         public void mouseDragged(final MouseEvent e) {
             super.mouseDragged(e);
             if (!dndEnabled) return;
-
-            int index = tabForCoordinate(tabPane, e.getX(), e.getY());
-            if (index >= 0 && index < tabPane.getTabCount()) {
-                TransferHandler handler = tabPane.getTransferHandler();
-                handler.exportAsDrag(tabPane, e, TransferHandler.MOVE);
+            if (origin == null) {
+                origin = e.getPoint();
+                pressedIndex = tabForCoordinate(tabPane, e.getX(), e.getY());
             }
+            boolean indexValid = pressedIndex >= 0 && pressedIndex < tabPane.getTabCount();
+            if (scrollableTabLayoutEnabled()) {
+                if (!dragging && indexValid) {
+                    dragRect.setBounds(rects[pressedIndex]);
+                    tabOrigin = rects[pressedIndex].getLocation();
+                    dragging = true;
+                    dropSourceIndex = pressedIndex;
+                    dropTargetIndex = pressedIndex;
+                    sourceEqualsTarget = true;
+                    drawDropRect = true;
+                    dropRect.setBounds(rects[pressedIndex]);
+                    dragRect.setBounds(rects[pressedIndex]);
+                } else if (dragging && indexValid) {
+                    var margins = scrollLayout.getMargins(tabPane.getTabPlacement());
+                    int min = margins.x;
+                    if (isHorizontalTabPlacement()) {
+                        int max = margins.y - dropRect.width;
+                        dragRect.x = tabOrigin.x + e.getX() - origin.x;
+                        dragRect.x = Math.max(Math.min(dragRect.x, max), min);
+                    } else {
+                        int max = margins.y - dropRect.height;
+                        dragRect.y = tabOrigin.x + e.getY() - origin.y;
+                        dragRect.x = Math.max(Math.min(dragRect.y, max), min);
+                    }
+                    var p = getDragMousePos();
+                    int tab = TabbedPaneUtil.getDroppedTabIndex(dropRect, tabPane, DarkTabbedPaneUI.this, p);
+                    var rect = TabbedPaneUtil.getDropRect(DarkTabbedPaneUI.this, tabPane, tabPane, p,
+                                                          dropRect, tab, dropSourceIndex, dropTargetIndex);
+                    setDnDIndicatorRect(rect.x, rect.y, rect.width, rect.height, tab, true);
+                }
+            }
+
+            if (indexValid) {
+                var p = e.getPoint();
+                int dist = Math.abs(isHorizontalTabPlacement() ? origin.y - p.y : origin.x - p.x);
+                if (dist > Math.max(50, maxTabHeight)) {
+                    stopDrag(e);
+                    TransferHandler handler = tabPane.getTransferHandler();
+                    handler.exportAsDrag(tabPane, e, TransferHandler.MOVE);
+                }
+            }
+        }
+
+        protected Point getDragMousePos() {
+            var p = new Point(dragRect.x + dragRect.width / 2, dragRect.y + dragRect.height / 2);
+            p.x += scrollableTabSupport.viewport.getX();
+            p.y += scrollableTabSupport.viewport.getY();
+            return p;
+        }
+
+        protected void stopDrag(final MouseEvent e) {
+            int tab = TabbedPaneUtil.getDroppedTabIndex(dropRect, tabPane,
+                                                        DarkTabbedPaneUI.this, getDragMousePos());
+            if (tab >= 0 && tab <= tabPane.getTabCount()) {
+                TabbedPaneUtil.moveTabs(tabPane, tabPane, dropSourceIndex, tab);
+            }
+            SwingUtilities.invokeLater(() -> setRolloverTab(e.getX(), e.getY()));
+
+            dragging = false;
+            dropRect.setBounds(0, 0, 0, 0);
+            pressedIndex = -1;
+            dropTargetIndex = -1;
+            dropSourceIndex = -1;
+            origin = null;
+            drawDropRect = false;
+            tabPane.doLayout();
+            tabPane.repaint();
+            scrollableTabSupport.viewport.repaint();
+        }
+
+        @Override
+        public void mouseReleased(final MouseEvent e) {
+            super.mouseReleased(e);
+            stopDrag(e);
         }
 
         @Override

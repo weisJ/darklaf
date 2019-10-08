@@ -512,7 +512,7 @@ public class DarkTreeUI extends BasicTreeUI {
         Stroke oldStroke = g2d.getStroke();
 
         BasicStroke dashedStroke = new BasicStroke(2, BasicStroke.CAP_BUTT,
-                                                   BasicStroke.JOIN_ROUND, 0, new float[]{1.0f}, 0);
+                                                   BasicStroke.JOIN_ROUND, 0, new float[]{2.0f}, 0);
         g2d.setStroke(dashedStroke);
         g2d.drawLine(x, y1, x, y2);
         g2d.setStroke(oldStroke);

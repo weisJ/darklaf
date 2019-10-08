@@ -29,7 +29,6 @@ import java.awt.event.MouseEvent;
 public class TabbedPaneTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
     private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class=javax.swing.JTabbedPane";
-    private static final Rectangle EMPTY_RECT = new Rectangle(0, 0, 0, 0);
     private static TabbedPaneDragGestureRecognizer recognizer = null;
     /**
      * The location of the mouse cursor throughout the drag-and-drop.
@@ -93,39 +92,12 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         if (hasTabFlavor(t.getTransferDataFlavors()) && mouseLocation != null) {
             try {
                 JTabbedPane tabbedPane = (JTabbedPane) c;
-                int tab = getDroppedTabIndex(currentTransferable, tabbedPane, mouseLocation);
+                int tab = TabbedPaneUtil.getDroppedTabIndex(currentTransferable.getTabBounds(), tabbedPane,
+                                                            supportsIndicator(tabbedPane), mouseLocation);
                 TabTransferable.TabTransferData td = (TabTransferable.TabTransferData) t.getTransferData(tabFlavor);
-                JTabbedPane sourcePane = td.sourceTabbedPane;
-                int sourceIndex = td.tabIndex;
-
-                if (tabbedPane == sourcePane && sourceIndex == tab) {
-                    //Nothing to do. Just select the tab to be sure.
-                    selectTab(sourcePane, sourceIndex);
+                if (!TabbedPaneUtil.moveTabs(td.sourceTabbedPane, tabbedPane, td.tabIndex, tab)) {
                     return true;
                 }
-                if (tab < 0 || tab > tabbedPane.getTabCount()) {
-                    return false;
-                }
-
-                String tabName = sourcePane.getTitleAt(sourceIndex);
-                Icon icon = sourcePane.getIconAt(sourceIndex);
-                Component comp = sourcePane.getComponentAt(sourceIndex);
-                String toolTip = sourcePane.getToolTipTextAt(sourceIndex);
-                Color foreground = sourcePane.getForegroundAt(sourceIndex);
-                Component tabComp = sourcePane.getTabComponentAt(sourceIndex);
-
-                tabbedPane.insertTab(tabName, icon, comp, toolTip, tab);
-
-                int index = tab;
-                if (tabbedPane == sourcePane) {
-                    if (sourceIndex < index) index--;
-                }
-
-                if (tabComp != null) {
-                    tabbedPane.setTabComponentAt(index, tabComp);
-                }
-                tabbedPane.setForegroundAt(index, foreground);
-                selectTab(tabbedPane, index);
 
                 successful = true;
                 var ui = supportsIndicator(c);
@@ -197,7 +169,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     protected void createDragImage(@NotNull final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
-        Image tabImage = ImageUtil.imageFromComponent(tabbedPane, currentTransferable.transferData.tabBounds);
+        Image tabImage = ImageUtil.scaledImageFromComponent(tabbedPane, currentTransferable.transferData.tabBounds);
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
         var g = tabImage.getGraphics();
@@ -231,21 +203,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         return false;
     }
 
-    /**
-     * Selects the specified tab in the specified tabbed pane.  This method
-     * can be overridden by subclasses to do more stuff than simply select
-     * the tab.
-     *
-     * @param tabbedPane The tabbed pane.
-     * @param index      The index of the tab to select.
-     */
-    protected void selectTab(final JTabbedPane tabbedPane, final int index) {
-        SwingUtilities.invokeLater(() -> {
-            tabbedPane.setSelectedIndex(index);
-            tabbedPane.requestFocus();
-        });
-    }
-
     @Override
     public void dragEnter(final DropTargetDragEvent e) {
     }
@@ -262,109 +219,18 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         if (ui != null) {
             TabTransferable t = currentTransferable;
             if (t != null) {
-                int tab = getDroppedTabIndex(t, destTabbedPane, mouseLocation);
-
+                int tab = TabbedPaneUtil.getDroppedTabIndex(t.getTabBounds(), destTabbedPane,
+                                                            supportsIndicator(destTabbedPane), mouseLocation);
                 if (tab == -1) {
                     lastTab = tab;
                     ui.clearDropIndicator();
                     return;
                 }
-                int tabPlacement = destTabbedPane.getTabPlacement();
-                Rectangle dropRect = t.getTabBounds();
-                Rectangle destRect = destTabbedPane.getBoundsAt(Math.min(tab, destTabbedPane.getTabCount() - 1));
-                JTabbedPane source = t.transferData.sourceTabbedPane;
-                int sourceIndex = t.transferData.tabIndex;
-
-
-                if (ui.scrollableTabLayoutEnabled()) {
-                    boolean lastInSource = false;
-                    if (destTabbedPane == source && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1
-                            && tab == source.getTabCount()))) {
-                        lastInSource = true;
-                        destRect.width = dropRect.width;
-                        destRect.height = dropRect.height;
-                    }
-
-                    switch (tabPlacement) {
-                        case TOP:
-                        case BOTTOM:
-                            if (destTabbedPane.getComponentOrientation().isLeftToRight()) {
-                                if (tab >= destTabbedPane.getTabCount() && !lastInSource) {
-                                    destRect.x += destRect.width;
-                                }
-                                dropRect.x = destRect.x;
-                                if (lastTab != -1 && lastTab < tab) {
-                                    dropRect.x -= dropRect.width;
-                                }
-                            } else {
-                                if (tab >= destTabbedPane.getTabCount()) {
-                                    destRect.x -= 2 * dropRect.width;
-                                    if (lastTab < tab) {
-                                        destRect.x += destRect.width;
-                                    }
-                                }
-                                dropRect.x = destRect.x + dropRect.width;
-                                if (lastTab != -1 && lastTab > tab) {
-                                    dropRect.x -= dropRect.width;
-                                }
-                            }
-                            dropRect.y = destRect.y + destRect.height - dropRect.height;
-                            break;
-                        case LEFT:
-                        case RIGHT:
-                            if (tab >= destTabbedPane.getTabCount()) {
-                                destRect.y += destRect.height;
-                            }
-                            dropRect.y = destRect.y;
-                            dropRect.x = destRect.x + destRect.width - dropRect.width;
-                            if (lastTab != -1 && lastTab < tab) {
-                                dropRect.y -= dropRect.height;
-                            }
-                            break;
-                    }
-                } else {
-                    if (source == destTabbedPane && (tab == sourceIndex || tab == sourceIndex + 1)) {
-                        dropRect.setRect(0, 0, 0, 0);
-                    } else {
-                        int placement = destTabbedPane.getTabPlacement();
-                        if (placement == TOP || placement == BOTTOM) {
-                            var b = ui.getTabAreaBounds();
-                            if (tab == destTabbedPane.getTabCount()) {
-                                dropRect.x = destRect.x + destRect.width / 2;
-                                dropRect.width = Math.min(b.x + b.width - dropRect.x, dropRect.width);
-                            } else if (tab == 0) {
-                                dropRect.x = destRect.x;
-                                dropRect.width = Math.min(dropRect.width / 2, destRect.width / 2);
-                            } else {
-                                var prev = destTabbedPane.getBoundsAt(tab - 1);
-                                if (destRect.y + destRect.height <= mouseLocation.y &&
-                                        prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
-                                    destRect.x = prev.x + prev.width;
-                                    destRect.y = prev.y;
-                                    destRect.height = prev.height;
-                                }
-
-                                dropRect.x = destRect.x;
-                                dropRect.setLocation(destRect.getLocation());
-                                dropRect.x -= dropRect.width / 2;
-                                if (dropRect.x < b.x) {
-                                    int diff = b.x - dropRect.x;
-                                    dropRect.width -= diff;
-                                    dropRect.x = b.x;
-                                }
-                                if (dropRect.x + dropRect.width > b.x + b.width) {
-                                    int diff = dropRect.width + dropRect.x - b.width - b.x;
-                                    dropRect.width -= diff;
-                                }
-                            }
-                            dropRect.y = destRect.y + destRect.height - dropRect.height;
-                        } else if (placement == LEFT || placement == RIGHT) {
-                            //Todo
-                        }
-                    }
-                }
+                var dropRect = TabbedPaneUtil.getDropRect(supportsIndicator(destTabbedPane), destTabbedPane,
+                                                          t.transferData.sourceTabbedPane, mouseLocation,
+                                                          t.getTabBounds(), tab, t.transferData.tabIndex, lastTab);
                 ui.setDnDIndicatorRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height,
-                                       tab, source == destTabbedPane);
+                                       tab, t.transferData.sourceTabbedPane == destTabbedPane);
                 lastTab = tab;
             }
         }
@@ -393,90 +259,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         }
     }
 
-    /**
-     * Returns the index at which to add a tab if it is dropped at the mouse
-     * location specified by <code>p</code>.
-     *
-     * @param tabbedPane The tabbed pane who would be receiving the tab.
-     * @param p          The mouse location.
-     * @return The index at which to add the tab.
-     */
-    protected int getDroppedTabIndex(final TabTransferable t, @NotNull final JTabbedPane tabbedPane,
-                                     @NotNull final Point p) {
-        var tab = tabbedPane.indexAtLocation(p.x, p.y);
-        var ui = supportsIndicator(tabbedPane);
-        if (ui != null) {
-            if (tab == -1) {
-                var bounds = ui.getTabAreaBounds();
-                if (bounds.contains(p)) {
-                    if (tabbedPane.getTabCount() > 0) {
-                        var minb = ui.getTabBounds(tabbedPane, 0);
-                        var maxb = ui.getTabBounds(tabbedPane, tabbedPane.getTabCount() - 1);
-                        if (tabbedPane.getComponentOrientation().isLeftToRight()) {
-                            int x = Math.max(bounds.x, minb.x);
-                            bounds.width = Math.min(bounds.x + bounds.width - x, maxb.x + maxb.width - x);
-                            bounds.x = x;
-                        } else {
-                            int x = Math.max(bounds.x, maxb.x);
-                            bounds.width = Math.min(bounds.x + bounds.width - x, minb.x + minb.width - x);
-                            bounds.x = x;
-                        }
-                        int y = Math.max(bounds.y, minb.y);
-                        bounds.height = Math.min(bounds.y + bounds.height - y, maxb.x + maxb.height - y);
-                    }
-
-                    int tabPlacement = tabbedPane.getTabPlacement();
-                    if (tabPlacement == TOP || tabPlacement == BOTTOM) {
-                        if (tabbedPane.getComponentOrientation().isLeftToRight()) {
-                            tab = p.x <= bounds.x + bounds.width / 2 ? 0 : tabbedPane.getTabCount();
-                        } else {
-                            tab = p.x >= bounds.x + bounds.width / 2 ? 1 : tabbedPane.getTabCount();
-                        }
-                    } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
-                        tab = p.y <= bounds.y + bounds.height / 2 ? 0 : tabbedPane.getTabCount();
-                    }
-                }
-            } else {
-                if (tab < tabbedPane.getTabCount()) {
-                    var b = tabbedPane.getBoundsAt(tab);
-
-                    if (tab >= 1 && !ui.scrollableTabLayoutEnabled()) {
-                        var prev = tabbedPane.getBoundsAt(tab - 1);
-                        if (b.y + b.height < mouseLocation.y &&
-                                prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
-                            b = prev;
-                        }
-                    }
-
-
-                    var sb = (ui.scrollableTabLayoutEnabled()) ? t.getTabBounds() : EMPTY_RECT;
-                    switch (tabbedPane.getTabPlacement()) {
-                        case TOP:
-                        case BOTTOM:
-                            if (tabbedPane.getComponentOrientation().isLeftToRight()) {
-                                if (p.x >= b.x + sb.width + (b.width - sb.width) / 2) {
-                                    tab += 1;
-                                }
-                            } else {
-                                if (p.x <= b.x + (b.width - sb.width) / 2) {
-                                    tab += 1;
-                                }
-                            }
-                            break;
-                        case LEFT:
-                        case RIGHT:
-                            if (p.y >= b.y + sb.height + (b.height - sb.height) / 2) {
-                                tab += 1;
-                            }
-                            break;
-                    }
-                }
-            }
-        } else if (tab == -1) {
-            tab = tabbedPane.getTabCount();
-        }
-        return tab;
-    }
 
     protected static class TabbedPaneDragGestureRecognizer extends DragGestureRecognizer {
 
@@ -635,8 +417,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                 ui.clearSourceIndicator();
             }
             if (!dsde.getDropSuccess()) {
-                selectTab(currentTransferable.transferData.sourceTabbedPane,
-                          currentTransferable.transferData.tabIndex);
+                TabbedPaneUtil.selectTab(currentTransferable.transferData.sourceTabbedPane,
+                                         currentTransferable.transferData.tabIndex);
             }
             currentTransferable = null;
         }
