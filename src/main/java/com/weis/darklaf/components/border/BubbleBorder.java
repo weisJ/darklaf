@@ -14,7 +14,7 @@ import java.awt.geom.RoundRectangle2D;
 /**
  * @author Jannis Weis
  */
-public class TextBubbleBorder extends AbstractBorder {
+public class BubbleBorder extends AbstractBorder {
 
     private final Insets insets;
     private Alignment pointerSide = Alignment.NORTH;
@@ -32,7 +32,7 @@ public class TextBubbleBorder extends AbstractBorder {
      *
      * @param color color of border
      */
-    public TextBubbleBorder(final Color color) {
+    public BubbleBorder(final Color color) {
         this(color, 2, 4, 5);
     }
 
@@ -44,10 +44,10 @@ public class TextBubbleBorder extends AbstractBorder {
      * @param radius      corner radius of border.
      * @param pointerSize size of pointer. You can set this size to 0 to achieve no pointer, but it
      *                    is not desirable. The appropriate method for this is to set using {@link
-     *                    TextBubbleBorder#setPointerSide(Alignment)} to {@link Alignment#CENTER}
+     *                    BubbleBorder#setPointerSide(Alignment)} to {@link Alignment#CENTER}
      */
-    public TextBubbleBorder(final Color color, final int thickness,
-                            final int radius, final int pointerSize) {
+    public BubbleBorder(final Color color, final int thickness,
+                        final int radius, final int pointerSize) {
         this.color = color;
         this.thickness = thickness;
         this.radius = radius;
@@ -73,7 +73,7 @@ public class TextBubbleBorder extends AbstractBorder {
      * @return this
      */
     @NotNull
-    public TextBubbleBorder setColor(final Color color) {
+    public BubbleBorder setColor(final Color color) {
         this.color = color;
         return this;
     }
@@ -93,7 +93,7 @@ public class TextBubbleBorder extends AbstractBorder {
      * @param pointerWidth the width of the pointer base.
      * @return this
      */
-    public TextBubbleBorder setPointerWidth(final int pointerWidth) {
+    public BubbleBorder setPointerWidth(final int pointerWidth) {
         this.pointerWidth = pointerWidth;
         return this;
     }
@@ -115,7 +115,7 @@ public class TextBubbleBorder extends AbstractBorder {
      * @return this
      */
     @NotNull
-    public TextBubbleBorder setPointerPadPercent(final double percent) {
+    public BubbleBorder setPointerPadPercent(final double percent) {
         this.pointerPadPercent = percent > 1 ? 1 : percent;
         pointerPadPercent = pointerPadPercent < 0 ? 0 : pointerPadPercent;
         return this;
@@ -138,7 +138,7 @@ public class TextBubbleBorder extends AbstractBorder {
      * @return this
      */
     @NotNull
-    public TextBubbleBorder setThickness(final int n) {
+    public BubbleBorder setThickness(final int n) {
         thickness = Math.max(n, 0);
         stroke = new BasicStroke(thickness);
         return setPointerSize(pointerSize);
@@ -160,7 +160,7 @@ public class TextBubbleBorder extends AbstractBorder {
      * @return this
      */
     @NotNull
-    public TextBubbleBorder setRadius(final int radius) {
+    public BubbleBorder setRadius(final int radius) {
         this.radius = radius;
         return setPointerSize(pointerSize);
     }
@@ -181,7 +181,7 @@ public class TextBubbleBorder extends AbstractBorder {
      * @return this
      */
     @NotNull
-    public TextBubbleBorder setPointerSize(final int size) {
+    public BubbleBorder setPointerSize(final int size) {
         pointerSize = Math.max(size, 0);
         int left = thickness;
         int right = thickness;
@@ -231,7 +231,7 @@ public class TextBubbleBorder extends AbstractBorder {
      * @return this.
      */
     @NotNull
-    public TextBubbleBorder setPointerSide(final Alignment side) {
+    public BubbleBorder setPointerSide(final Alignment side) {
         this.pointerSide = side;
         return setPointerSize(pointerSize);
     }

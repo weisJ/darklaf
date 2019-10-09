@@ -2,7 +2,7 @@ package com.weis.darklaf.ui.tooltip;
 
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.border.DropShadowBorder;
-import com.weis.darklaf.components.border.TextBubbleBorder;
+import com.weis.darklaf.components.border.BubbleBorder;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,10 +20,10 @@ public class DarkTooltipBorder implements Border, UIResource {
                                                                        10, 0.4f, 10,
                                                                        false, true,
                                                                        true, true);
-    private final TextBubbleBorder bubbleBorder;
+    private final BubbleBorder bubbleBorder;
 
     public DarkTooltipBorder() {
-        bubbleBorder = new TextBubbleBorder(UIManager.getColor("Tooltip.borderColor"));
+        bubbleBorder = new BubbleBorder(UIManager.getColor("Tooltip.borderColor"));
         bubbleBorder.setThickness(1);
         bubbleBorder.setPointerSize(8);
         bubbleBorder.setPointerWidth(12);
