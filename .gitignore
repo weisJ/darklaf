@@ -1,18 +1,3 @@
-#Latex
-*.log
-*.aux
-*.fdb_latexmk
-*.nav
-*.out
-*.snm
-cpt*.pdf
-*.gz
-*.toc
-*.fls
-
-#Images
-*.ai
-
 # SVN
 .svn
 repo/
@@ -33,13 +18,6 @@ repo/
 #
 # # Excel Backup File
 *.xlk
-
-# Eclipse
-.metadata/
-.classpath
-.project
-.settings
-bin/
 
 # intelliJ
 .idea/
