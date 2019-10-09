@@ -51,6 +51,11 @@ public final class LafManager {
         enableLogging(true);
     }
 
+    /**
+     * Enable logging for the Look and Feel.
+     *
+     * @param logEnabled true if messages should be logged.
+     */
     public static void enableLogging(final boolean logEnabled) {
         if (!logEnabled) {
             LogManager.getLogManager().reset();
@@ -66,6 +71,12 @@ public final class LafManager {
         }
     }
 
+    /**
+     * Get the current theme.
+     * This method will never return null even if the LaF isn#t currently installed.
+     *
+     * @return the current theme.
+     */
     public static Theme getTheme() {
         if (theme == null) {
             theme = new DarculaTheme();
@@ -73,15 +84,21 @@ public final class LafManager {
         return theme;
     }
 
+    /**
+     * Set the current theme.
+     *
+     * @param theme The theme to use.
+     */
     public static void setTheme(final Theme theme) {
         LafManager.theme = theme;
     }
 
 
     /**
-     * Set the LaF to one of the two defaults.
+     * Sets the current theme and installs the LaF. If the LaF is already installed the theme is switched.
+     * This behaves exactly like {@link #setTheme(Theme)} followed by {@link #install()}
      *
-     * @param theme The theme to install. See {@link Theme}.
+     * @param theme the theme to install.
      */
     public static void installTheme(final Theme theme) {
         setTheme(theme);
@@ -91,6 +108,7 @@ public final class LafManager {
     /**
      * Install the current theme. If no theme is installed, the default is
      * {@link DarculaTheme}.
+     * This sets the current LaF and applies the given theme.
      */
     public static void install() {
         try {
@@ -104,9 +122,12 @@ public final class LafManager {
         }
     }
 
+    /**
+     * Update the component ui classes for all current windows.
+     */
     public static void updateLaf() {
-        for (final Frame f : Frame.getFrames()) {
-            updateLafRecursively(f);
+        for (final Window w : Window.getWindows()) {
+            updateLafRecursively(w);
         }
     }
 
