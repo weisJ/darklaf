@@ -6,6 +6,9 @@ import com.weis.darklaf.util.DarkUIUtil;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkTableCellFocusBorder extends DarkCellBorder {
 
     @Override

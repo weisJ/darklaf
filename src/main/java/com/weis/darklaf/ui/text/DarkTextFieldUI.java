@@ -27,6 +27,10 @@ import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Konstantin Bulenkov
+ * @author Jannis Weis
+ */
 public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener {
 
     public static final int ARC_SIZE = 3;

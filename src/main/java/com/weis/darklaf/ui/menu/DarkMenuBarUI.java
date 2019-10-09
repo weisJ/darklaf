@@ -21,20 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include <stdio.h>
-#include <windows.h>
-#include <windowsx.h>
+package com.weis.darklaf.ui.menu;
 
-class WindowWrapper
-{
-public:
-    bool resizable = true;
-    WNDPROC prev_proc;
-    COLORREF background = RGB(255, 255, 255);
+import org.jetbrains.annotations.NotNull;
 
-    int left = 0;
-    int right = 0;
-    int height = 0;
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalMenuBarUI;
+import java.awt.*;
 
-    static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
-};
+/**
+ * @author Konstantin Bulenkov
+ * @author Jannis Weis
+ */
+public class DarkMenuBarUI extends MetalMenuBarUI {
+
+    @Override
+    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+        g.setColor(UIManager.getColor("MenuItem.background"));
+        g.fillRect(0, 0, c.getWidth(), c.getHeight());
+    }
+}

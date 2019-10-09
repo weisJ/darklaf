@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Jannis Weis
+ */
 class CloseButtonUI extends DarkButtonUI {
 
     @Override

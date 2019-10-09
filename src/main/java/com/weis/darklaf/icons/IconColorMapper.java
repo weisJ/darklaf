@@ -13,6 +13,9 @@ import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author Jannis Weis
+ */
 public final class IconColorMapper {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
 

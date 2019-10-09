@@ -28,6 +28,9 @@ import java.beans.PropertyChangeEvent;
 import java.util.TooManyListenersException;
 import java.util.function.Function;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     private static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler();

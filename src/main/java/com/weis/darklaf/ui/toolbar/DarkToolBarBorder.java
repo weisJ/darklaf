@@ -1,15 +1,20 @@
 package com.weis.darklaf.ui.toolbar;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
+/**
+ * @author Konstantin Bulenkov
+ * @author Jannis Weis
+ */
 public class DarkToolBarBorder extends AbstractBorder implements UIResource, SwingConstants {
 
-    public void paintBorder(final Component c, final Graphics g,
+    public void paintBorder(final Component c, @NotNull final Graphics g,
                             final int x, final int y, final int w, final int h) {
         g.translate(x, y);
 

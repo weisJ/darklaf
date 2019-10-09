@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.net.URI;
 
+/**
+ * @author Jannis Weis
+ */
 public class ThemedSVGIcon extends DarkSVGIcon {
 
     private Theme currentTheme;

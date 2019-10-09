@@ -7,6 +7,9 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicListUI;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkListUI extends BasicListUI {
 
     @NotNull

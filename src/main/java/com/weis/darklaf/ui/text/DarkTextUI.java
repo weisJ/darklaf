@@ -14,6 +14,9 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Jannis Weis
+ */
 public abstract class DarkTextUI extends BasicTextUI {
 
     protected JTextComponent editor;

@@ -13,6 +13,9 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener {
 
     @NotNull

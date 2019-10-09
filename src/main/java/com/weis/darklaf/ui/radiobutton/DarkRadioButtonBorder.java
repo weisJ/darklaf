@@ -10,6 +10,10 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
+/**
+ * @author Konstantin Bulenkov
+ * @author Jannis Weis
+ */
 public class DarkRadioButtonBorder implements Border, UIResource {
 
     @Override

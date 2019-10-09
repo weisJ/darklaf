@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkColorTableCellRendererEditor extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
     private final JLabel label;

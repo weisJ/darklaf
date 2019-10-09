@@ -1,9 +1,14 @@
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license
 package com.weis.darklaf.ui.colorchooser;
 
 import java.awt.*;
 import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
 
+/**
+ * @author pegov
+ * @author Konstantin Bulenkov
+ */
 public class ColorWheelImageProducer extends MemoryImageSource {
 
     private final int[] myPixels;

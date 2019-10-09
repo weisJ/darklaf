@@ -19,6 +19,9 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkSliderUI extends BasicSliderUI {
 
     private static final int TRACK_SIZE = 4;

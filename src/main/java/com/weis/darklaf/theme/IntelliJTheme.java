@@ -1,5 +1,8 @@
 package com.weis.darklaf.theme;
 
+/**
+ * @author Jannis Weis
+ */
 public class IntelliJTheme extends Theme {
 
     @Override

@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkScrollPaneUI extends BasicScrollPaneUI {
 
     private final MouseWheelListener verticalMouseWheelListener = e -> {

@@ -2,6 +2,9 @@ package com.weis.darklaf.components;
 
 import java.beans.PropertyChangeEvent;
 
+/**
+ * @author Jannis Weis
+ */
 public class TabPropertyChangeEvent extends PropertyChangeEvent {
 
     private final int index;

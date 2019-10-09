@@ -13,8 +13,8 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 
 /**
+ * @author Konstantin Bulenkov
  * @author Jannis Weis
- * @since 2019
  */
 public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
 

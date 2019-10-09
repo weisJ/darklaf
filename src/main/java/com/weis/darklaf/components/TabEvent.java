@@ -2,6 +2,9 @@ package com.weis.darklaf.components;
 
 import java.awt.event.ActionEvent;
 
+/**
+ * @author Jannis Weis
+ */
 public class TabEvent extends ActionEvent {
 
     public static final int TAB_OPENED = 0;

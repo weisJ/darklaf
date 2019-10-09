@@ -11,13 +11,14 @@ import java.awt.*;
 /**
  * @author vincencopalazzo
  * @author atarw
+ * @author Jannis Weis
  */
 public class DarkTableCellRenderer extends DefaultTableCellRenderer {
 
-    private final DarkCellRendererToggleButton checkBoxRenderer =
-            new DarkCellRendererToggleButton(new DarkCellRendererToggleButton.CellEditorCheckBox());
-    private final DarkCellRendererToggleButton radioRenderer =
-            new DarkCellRendererToggleButton(new DarkCellRendererToggleButton.CellEditorRadioButton());
+    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer =
+            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox());
+    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
+            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton());
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value,

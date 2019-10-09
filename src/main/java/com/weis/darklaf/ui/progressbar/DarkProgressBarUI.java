@@ -15,6 +15,7 @@ import java.awt.geom.RoundRectangle2D;
 
 /**
  * @author Konstantin Bulenkov
+ * @author Jannis Weis
  */
 public class DarkProgressBarUI extends BasicProgressBarUI {
 

@@ -16,6 +16,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * @author Jannis Weis
+ */
 abstract class SwatchPanel extends JPanel {
 
     protected Color[] colors;

@@ -10,6 +10,9 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkDesktopIconUI extends BasicDesktopIconUI {
 
     public static ComponentUI createUI(final JComponent c) {

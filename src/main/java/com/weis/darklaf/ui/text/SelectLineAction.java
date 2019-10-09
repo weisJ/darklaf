@@ -11,6 +11,9 @@ import javax.swing.text.Segment;
 import javax.swing.text.TextAction;
 import java.awt.event.ActionEvent;
 
+/**
+ * @author Jannis Weis
+ */
 public class SelectLineAction extends TextAction {
 
     private final Action start;
@@ -18,8 +21,8 @@ public class SelectLineAction extends TextAction {
 
     public SelectLineAction() {
         super(DefaultEditorKit.selectLineAction);
-        start = new BeginLineAction("pigdog", false);
-        end = new EndLineAction("pigdog", true);
+        start = new BeginLineAction("darklaf", false);
+        end = new EndLineAction("darklaf", true);
     }
 
     @Override

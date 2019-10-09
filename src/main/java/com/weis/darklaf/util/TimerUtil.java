@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
+/**
+ * @author Jannis Weis
+ */
 public final class TimerUtil {
     @Contract("_, _, _ -> new")
     @NotNull

@@ -16,6 +16,9 @@ import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
 
     private static final boolean DEBUG_COLOR = false;

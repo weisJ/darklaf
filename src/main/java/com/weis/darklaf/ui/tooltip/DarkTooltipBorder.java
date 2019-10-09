@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkTooltipBorder implements Border, UIResource {
 
     private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK,

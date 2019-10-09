@@ -12,10 +12,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 
 /**
- * Border that looks like a Text Bubble.
- *
  * @author Jannis Weis
- * @since 2018
  */
 public class TextBubbleBorder extends AbstractBorder {
 

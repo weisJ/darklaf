@@ -6,10 +6,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * Line Border that can change side thickness.
- *
  * @author Jannis Weis
- * @since 2019
  */
 public class MutableLineBorder extends EmptyBorder {
 

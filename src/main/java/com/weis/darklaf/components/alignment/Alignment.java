@@ -9,10 +9,7 @@ import java.util.function.BiFunction;
 import static com.weis.darklaf.components.alignment.AlignmentHelper.*;
 
 /**
- * Alignment for GUI elements.
- *
  * @author Jannis Weis
- * @since 2018
  */
 public enum Alignment {
     NORTH(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_TOP_INSIDE),

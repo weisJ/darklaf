@@ -18,6 +18,7 @@ import java.util.EventObject;
 /**
  * @author vincencopalazzo
  * @author atarw
+ * @author Jannis Weis
  */
 public class DarkTableCellEditor extends DefaultCellEditor {
 

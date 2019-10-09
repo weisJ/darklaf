@@ -22,6 +22,8 @@ import java.awt.*;
  * This class is an exact copy of the implementation of {@link BasicTextFieldUI}.
  * In this way it is possible to contain all Laf specific methods in {@link DarkTextFieldUI}, without having to
  * extends {@link BasicTextFieldUI} directly and instead extend the {@link DarkTextUI} base class.
+ *
+ * @author Jannis Weis
  */
 public abstract class DarkTextFieldUIBridge extends DarkTextUI {
 

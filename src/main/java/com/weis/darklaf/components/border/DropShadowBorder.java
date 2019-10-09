@@ -32,14 +32,11 @@ import java.util.Map;
  * rapidly.</p>
  *
  * @author rbair
+ * Adaptions made by
+ * @author Jannis Weis
  */
 public class DropShadowBorder implements Border, Serializable {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 715287754750604058L;
-    private static final Map<Double, Map<Position, BufferedImage>> CACHE
-            = new HashMap<>();
+    private static final Map<Integer, Map<Position, BufferedImage>> CACHE = new HashMap<>();
     private Color shadowColor;
     private int shadowSize;
     private float shadowOpacity;
@@ -73,6 +70,7 @@ public class DropShadowBorder implements Border, Serializable {
         this.showBottomShadow = showBottomShadow;
         this.showRightShadow = showRightShadow;
     }
+
     @Contract(pure = true)
     public DropShadowBorder(final boolean showLeftShadow) {
         this(Color.BLACK, 5, .5f, 12, false, showLeftShadow, true, true);
@@ -220,7 +218,7 @@ public class DropShadowBorder implements Border, Serializable {
     private Map<Position, BufferedImage> getImages(final Graphics2D g2) {
         //first, check to see if an image for this size has already been rendered
         //if so, use the cache. Else, draw and save
-        Map<Position, BufferedImage> images = CACHE.get(shadowSize + (shadowColor.hashCode() * .3) + (shadowOpacity * .12));//(TUDU) do a real hash
+        Map<Position, BufferedImage> images = CACHE.get(getBorderHash(shadowSize, shadowOpacity, shadowColor));
         if (images == null) {
             images = new HashMap<>();
 
@@ -247,7 +245,6 @@ public class DropShadowBorder implements Border, Serializable {
             try {
                 buffer.setPaint(new Color(shadowColor.getRed(), shadowColor.getGreen(),
                                           shadowColor.getBlue(), (int) (shadowOpacity * 255)));
-//                buffer.setColor(new Color(0.0f, 0.0f, 0.0f, shadowOpacity));
                 buffer.translate(shadowSize, shadowSize);
                 buffer.fill(rect);
             } finally {
@@ -303,10 +300,16 @@ public class DropShadowBorder implements Border, Serializable {
             images.put(Position.TOP, getSubImage(targetImage, x, y, w, h));
 
             image.flush();
-            CACHE.put(shadowSize + (shadowColor.hashCode() * .3) + (shadowOpacity * .12),
-                      images); //TUDU do a real hash
+            CACHE.put(getBorderHash(shadowSize, shadowOpacity, shadowColor), images);
         }
         return images;
+    }
+
+    private static int getBorderHash(final int shadowSize, final float opacity, final Color shadowColor) {
+        int result = shadowSize;
+        result = 31 * result + (opacity != +0.0f ? Float.floatToIntBits(opacity) : 0);
+        result = 31 * result + (shadowColor != null ? shadowColor.hashCode() : 0);
+        return result;
     }
 
     /**
@@ -415,4 +418,5 @@ public class DropShadowBorder implements Border, Serializable {
         TOP, TOP_LEFT, LEFT, BOTTOM_LEFT,
         BOTTOM, BOTTOM_RIGHT, RIGHT, TOP_RIGHT
     }
+
 }

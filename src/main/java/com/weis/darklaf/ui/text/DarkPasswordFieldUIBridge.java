@@ -11,6 +11,8 @@ import javax.swing.text.View;
  * This class is an exact copy of the implementation of {@link BasicPasswordFieldUI}.
  * In this way it is possible to contain all Laf specific methods in {@link DarkPasswordFieldUI}, without having to
  * extends {@link BasicPasswordFieldUI} directly and instead extend the {@link DarkTextFieldUI} base class.
+ *
+ * @author Jannis Weis
  */
 public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
 

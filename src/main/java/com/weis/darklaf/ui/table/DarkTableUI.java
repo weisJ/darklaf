@@ -15,6 +15,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkTableUI extends DarkTableUIBridge {
 
     private static final int ROW_HEIGHT = 22;

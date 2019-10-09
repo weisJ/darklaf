@@ -17,6 +17,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkCaret extends DefaultCaret implements UIResource {
 
     private static Action selectWord;
@@ -129,9 +132,6 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     protected Highlighter.HighlightPainter getSelectionPainter() {
         return selectionPainter;
     }
-
-
-
 
 
     /**
@@ -292,19 +292,15 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
 
-
-
     public void setPasteOnMiddleMouseClick(final boolean paste) {
         pasteOnMiddleMouseClick = paste;
     }
-
 
 
     @Override
     public void setSelectionVisible(final boolean visible) {
         super.setSelectionVisible(true);
     }
-
 
 
     private void validateWidth(final Rectangle rect) {

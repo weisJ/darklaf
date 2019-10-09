@@ -5,6 +5,9 @@ import org.jetbrains.annotations.Contract;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Jannis Weis
+ */
 public class ScrollLayoutManagerDelegate extends ScrollPaneLayout {
     private final ScrollPaneLayout delegate;
 

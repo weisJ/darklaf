@@ -10,6 +10,9 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkCheckBoxBorder implements Border, UIResource {
 
     @Override

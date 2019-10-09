@@ -12,6 +12,10 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
+/**
+ * @author Konstantin Bulenkov
+ * @author Jannis Weis
+ */
 public class DarkSpinnerBorder implements Border, UIResource {
 
     public static final int BORDER_SIZE = DarkTextBorder.BORDER_SIZE;

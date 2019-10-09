@@ -18,6 +18,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author Jannis Weis
+ */
 public abstract class Theme {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
     private static final String[] UI_PROPERTIES = new String[]{

@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
 
     @NotNull

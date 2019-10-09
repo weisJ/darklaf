@@ -7,6 +7,9 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkDesktopIconBorder extends MutableLineBorder implements UIResource {
 
     public DarkDesktopIconBorder() {

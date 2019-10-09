@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Jannis Weis
+ */
 public class TabbedPaneUtil implements SwingConstants {
 
     private static final Rectangle EMPTY_RECT = new Rectangle(0, 0, 0, 0);

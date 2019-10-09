@@ -6,6 +6,9 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicLabelUI;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkLabelUI extends BasicLabelUI {
 
     protected static final DarkLabelUI darkLabelUI = new DarkLabelUI();

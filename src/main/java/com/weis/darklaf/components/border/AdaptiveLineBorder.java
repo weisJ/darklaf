@@ -5,7 +5,6 @@ import java.awt.*;
 
 /**
  * @author Jannis Weis
- * @since 2019
  */
 public class AdaptiveLineBorder extends MutableLineBorder {
 

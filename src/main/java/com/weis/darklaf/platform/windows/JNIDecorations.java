@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author Jannis Weis
+ */
 public class JNIDecorations {
 
     private static final Logger LOGGER = Logger.getLogger(JNIDecorations.class.getName());

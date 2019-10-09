@@ -23,6 +23,9 @@ import javax.swing.text.WrappedPlainView;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkTextAreaUI extends DarkTextUI {
 
     @NotNull

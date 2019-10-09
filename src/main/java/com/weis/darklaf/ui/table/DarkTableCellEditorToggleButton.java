@@ -10,6 +10,7 @@ import java.util.EventObject;
 /**
  * @author vincencopalazzo
  * @author atarw
+ * @author Jannis Weis
  */
 public class DarkTableCellEditorToggleButton extends AbstractCellEditor implements TableCellEditor, SwingConstants {
 

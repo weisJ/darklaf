@@ -12,6 +12,9 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     protected static final int PAD = 5;
     protected static final int BAR_HEIGHT = (int) (56 / GraphicsUtil.SCALE_Y);

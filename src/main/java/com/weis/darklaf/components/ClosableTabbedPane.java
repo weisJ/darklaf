@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 
+/**
+ * @author Jannis Weis
+ */
 public class ClosableTabbedPane extends JTabbedPane {
 
     @Override

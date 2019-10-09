@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 
+/**
+ * @author Jannis Weis
+ */
 class RecentSwatchPanel extends SwatchPanel {
     private Color defaultRecentColor;
 

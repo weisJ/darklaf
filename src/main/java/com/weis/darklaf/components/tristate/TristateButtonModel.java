@@ -38,28 +38,15 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
         return state == TristateState.SELECTED;
     }
 
-    // Empty overrides of superclass methods
-    public void setArmed(final boolean b) {
-    }
-
-    public void setPressed(final boolean b) {
-    }
-
     protected void iterateState() {
         setState(state.next());
     }
 
     public void setState(final TristateState state) {
-        //Set internal state
         this.state = state;
         displayState();
         if (state == TristateState.INDETERMINATE && isEnabled()) {
-            // force the events to fire
-
-            // Send ChangeEvent
             fireStateChanged();
-
-            // Send ItemEvent
             int indeterminate = 3;
             //noinspection MagicConstant
             fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this, indeterminate));

@@ -12,6 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * @author Jannis Weis
+ */
 public class DarkToolBarUI extends DarkToolBarUIBridge {
 
     private static final Robot robot = createRobot();
