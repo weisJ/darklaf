@@ -69,13 +69,11 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.white);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP,
-                   INNER_GAP,
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
                    SQUARE_SIZE - (INNER_GAP * 2),
                    SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.white);
-        g.fillRect(offsetX + INNER_GAP * 2,
-                   INNER_GAP * 2,
+        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2,
                    SQUARE_SIZE - (INNER_GAP * 4),
                    SQUARE_SIZE - (INNER_GAP * 4));
 
@@ -86,13 +84,11 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.black);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP,
-                   INNER_GAP,
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
                    SQUARE_SIZE - (INNER_GAP * 2),
                    SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.white);
-        g.fillRect(offsetX + INNER_GAP * 2,
-                   INNER_GAP * 2,
+        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2,
                    SQUARE_SIZE - (INNER_GAP * 4),
                    SQUARE_SIZE - (INNER_GAP * 4));
         g.translate(-(SQUARE_SIZE + SQUARE_GAP), 0);
@@ -101,8 +97,7 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.white);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP,
-                   INNER_GAP,
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
                    SQUARE_SIZE - (INNER_GAP * 2),
                    SQUARE_SIZE - (INNER_GAP * 2));
         g.translate(-(SQUARE_SIZE + SQUARE_GAP), -(SQUARE_SIZE + SQUARE_GAP));
@@ -112,13 +107,11 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.white);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP,
-                   INNER_GAP,
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
                    SQUARE_SIZE - (INNER_GAP * 2),
                    SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.black);
-        g.fillRect(offsetX + INNER_GAP * 2,
-                   INNER_GAP * 2,
+        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2,
                    SQUARE_SIZE - (INNER_GAP * 4),
                    SQUARE_SIZE - (INNER_GAP * 4));
         g.translate(-((SQUARE_SIZE + SQUARE_GAP) * 2), 0);
@@ -127,8 +120,7 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.black);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP,
-                   INNER_GAP,
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
                    SQUARE_SIZE - (INNER_GAP * 2),
                    SQUARE_SIZE - (INNER_GAP * 2));
         g.translate(-((SQUARE_SIZE + SQUARE_GAP) * 2), -(SQUARE_SIZE + SQUARE_GAP));

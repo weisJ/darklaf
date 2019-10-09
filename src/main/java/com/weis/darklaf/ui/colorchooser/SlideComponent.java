@@ -1,6 +1,7 @@
 package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.util.ColorUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -166,7 +167,7 @@ class SlideComponent extends JComponent {
             arrowShadow.addPoint(x + 7, y + 7);
             arrowShadow.addPoint(x - 5, y + 13);
 
-            g2d.setColor(new Color(0, 0, 0, 70));
+            g2d.setColor(ColorUtil.toAlpha(UIManager.getColor("ColorChooser.sliderShadow"), 0.5));
             g2d.fill(arrowShadow);
 
             Polygon arrowHead = new Polygon();
@@ -184,7 +185,7 @@ class SlideComponent extends JComponent {
             arrowShadow.addPoint(x + 13, y - 5);
             arrowShadow.addPoint(x + 7, y + 7);
 
-            g2d.setColor(new Color(0, 0, 0, 70));
+            g2d.setColor(ColorUtil.toAlpha(UIManager.getColor("ColorChooser.sliderShadow"), 0.5));
             g2d.fill(arrowShadow);
 
             Polygon arrowHead = new Polygon();
