@@ -26,7 +26,7 @@ public class DarklafDemo {
 
     public static void main(String[] args) {
          SwingUtilities.invokeLater(() -> {
-            LafManager.loadLaf(LafManager.Theme.Dark);
+            LafManager.install();
 
             JFrame frame = new JFrame("Darklaf - A Darcula LaF for Swing");
             frame.setSize(600, 400);
