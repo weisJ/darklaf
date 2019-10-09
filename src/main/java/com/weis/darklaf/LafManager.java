@@ -45,6 +45,9 @@ public final class LafManager {
     private static Theme theme;
 
     static {
+        /*
+         * Disable for production.
+         */
         enableLogging(true);
     }
 
