@@ -17,13 +17,11 @@ repositories {
 }
 
 dependencies {
-    compile 'darcula:darcula.laf:1.0.0'
     compile 'com.metsci.ext.com.kitfox.svg:svg-salamander:[0.1.19,)'
     compile 'org.jetbrains:annotations:16.0.1'
     compile 'net.java.dev.jna:jna:4.1.0'
     compileOnly 'org.swinglabs:swingx:1.6.1'
     testCompile 'org.swinglabs:swingx:1.6.1'
-    testCompile 'junit:junit:4.12'
 }
 
 

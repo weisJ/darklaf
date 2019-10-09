@@ -113,12 +113,12 @@ public class SystemInfo {
     }
 
     public static boolean isJavaVersionAtLeast(final String v) {
-        return com.bulenkov.iconloader.util.StringUtil.compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
+        return StringUtil.compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
     }
 
     private static boolean isOracleJvm() {
         String vendor = getJavaVmVendor();
-        return vendor != null && com.bulenkov.iconloader.util.StringUtil.containsIgnoreCase(vendor, "Oracle");
+        return vendor != null && StringUtil.containsIgnoreCase(vendor, "Oracle");
     }
 
     public static String getJavaVmVendor() {
@@ -127,11 +127,11 @@ public class SystemInfo {
 
     private static boolean isSunJvm() {
         String vendor = getJavaVmVendor();
-        return vendor != null && com.bulenkov.iconloader.util.StringUtil.containsIgnoreCase(vendor, "Sun") && com.bulenkov.iconloader.util.StringUtil.containsIgnoreCase(vendor, "Microsystems");
+        return vendor != null && StringUtil.containsIgnoreCase(vendor, "Sun") && StringUtil.containsIgnoreCase(vendor, "Microsystems");
     }
 
     private static boolean isAppleJvm() {
         String vendor = getJavaVmVendor();
-        return vendor != null && com.bulenkov.iconloader.util.StringUtil.containsIgnoreCase(vendor, "Apple");
+        return vendor != null && StringUtil.containsIgnoreCase(vendor, "Apple");
     }
 }

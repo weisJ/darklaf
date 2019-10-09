@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public final class StringUtil {
@@ -90,7 +91,8 @@ public final class StringUtil {
         return split(s, separator, excludeSeparator, true);
     }
 
-    public static List<String> split(final String s, @NotNull final String separator, final boolean excludeSeparator, final boolean excludeEmptyStrings) {
+    public static List<String> split(final String s, @NotNull final String separator,
+                                     final boolean excludeSeparator, final boolean excludeEmptyStrings) {
         if (separator.isEmpty()) {
             return Collections.singletonList(s);
         } else {
@@ -114,6 +116,126 @@ public final class StringUtil {
                 }
 
                 pos = nextPos;
+            }
+        }
+    }
+
+    public static int indexOfIgnoreCase(@NotNull final String where, final char what, int fromIndex) {
+        int sourceCount = where.length();
+        if (fromIndex >= sourceCount) {
+            return -1;
+        } else {
+            if (fromIndex < 0) {
+                fromIndex = 0;
+            }
+
+            for (int i = fromIndex; i < sourceCount; ++i) {
+                if (charsEqualIgnoreCase(where.charAt(i), what)) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+    }
+
+    public static int indexOfIgnoreCase(final String where, final String what, int fromIndex) {
+        int targetCount = what.length();
+        int sourceCount = where.length();
+        if (fromIndex >= sourceCount) {
+            return targetCount == 0 ? sourceCount : -1;
+        } else {
+            if (fromIndex < 0) {
+                fromIndex = 0;
+            }
+
+            if (targetCount == 0) {
+                return fromIndex;
+            } else {
+                char first = what.charAt(0);
+                int max = sourceCount - targetCount;
+
+                for (int i = fromIndex; i <= max; ++i) {
+                    if (!charsEqualIgnoreCase(where.charAt(i), first)) {
+                        do {
+                            ++i;
+                        } while (i <= max && !charsEqualIgnoreCase(where.charAt(i), first));
+                    }
+
+                    if (i <= max) {
+                        int j = i + 1;
+                        int end = j + targetCount - 1;
+
+                        for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); ++k) {
+                            ++j;
+                        }
+
+                        if (j == end) {
+                            return i;
+                        }
+                    }
+                }
+
+                return -1;
+            }
+        }
+    }
+
+    public static boolean containsIgnoreCase(final String where, final String what) {
+        return indexOfIgnoreCase(where, what, 0) >= 0;
+    }
+
+    public static boolean charsEqualIgnoreCase(final char a, final char b) {
+        return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
+    }
+
+    public static int compareVersionNumbers(final String v1, final String v2) {
+        if (v1 == null && v2 == null) {
+            return 0;
+        } else if (v1 == null) {
+            return -1;
+        } else if (v2 == null) {
+            return 1;
+        } else {
+            String[] part1 = v1.split("[._\\-]");
+            String[] part2 = v2.split("[._\\-]");
+
+            int idx;
+            for (idx = 0; idx < part1.length && idx < part2.length; ++idx) {
+                String p1 = part1[idx];
+                String p2 = part2[idx];
+                int cmp;
+                if (p1.matches("\\d+") && p2.matches("\\d+")) {
+                    cmp = (Integer.valueOf(p1)).compareTo(Integer.valueOf(p2));
+                } else {
+                    cmp = part1[idx].compareTo(part2[idx]);
+                }
+
+                if (cmp != 0) {
+                    return cmp;
+                }
+            }
+
+            if (part1.length == part2.length) {
+                return 0;
+            } else {
+                boolean left = part1.length > idx;
+
+                for (String[] parts = left ? part1 : part2; idx < parts.length; ++idx) {
+                    String p = parts[idx];
+                    int cmp;
+                    if (p.matches("\\d+")) {
+                        cmp = (Integer.valueOf(p)).compareTo(0);
+                    } else {
+                        cmp = 1;
+                    }
+
+                    if (cmp != 0) {
+                        return left ? cmp : -cmp;
+                    }
+                }
+
+                return 0;
             }
         }
     }
