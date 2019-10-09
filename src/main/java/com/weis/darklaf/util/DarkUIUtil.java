@@ -156,6 +156,16 @@ public final class DarkUIUtil {
         }
     }
 
+    public static void removeInsets(final Rectangle rectangle, final Insets insets) {
+        if (insets != null) {
+            rectangle.x += insets.left;
+            rectangle.y += insets.top;
+            rectangle.width -= insets.left + insets.right;
+            rectangle.height -= insets.top + insets.bottom;
+        }
+
+    }
+
     public static boolean hasFocus(final Component c) {
         if (c instanceof Window) {
             return hasFocus(c);

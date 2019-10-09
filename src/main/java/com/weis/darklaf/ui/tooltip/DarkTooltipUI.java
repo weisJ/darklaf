@@ -92,7 +92,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
         var key = evt.getPropertyName();
         if (evt.getSource() instanceof JToolTip) {
             var tooltip = (JToolTip) evt.getSource();

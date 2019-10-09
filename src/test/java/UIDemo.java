@@ -30,7 +30,7 @@ public final class UIDemo {
                     JFrame frame = new JFrame("UIDemo");
                     Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg", 19, 19);
 
-                    var panel = new JPanel(new GridLayout(2, 5));
+                    var panel = new JPanel(new GridLayout(3, 4));
                     var content = new JPanel(new BorderLayout());
                     content.add(panel, BorderLayout.CENTER);
                     var statusBar = new JXStatusBar();
@@ -162,7 +162,30 @@ public final class UIDemo {
                         }});
                     }});
                     panel.add(taskpanecontainer);
-                    panel.add(new JPanel());
+                    panel.add(new JPanel() {{
+                        add(new JProgressBar() {{
+                            setValue(50);
+                        }});
+                        add(new JProgressBar() {{
+                            setValue(50);
+                            putClientProperty("JProgressBar.failed", true);
+                        }});
+                        add(new JProgressBar() {{
+                            setValue(50);
+                            putClientProperty("JProgressBar.passed", true);
+                        }});
+                        add(new JProgressBar() {{
+                            setIndeterminate(true);
+                        }});
+                        add(new JProgressBar() {{
+                            setIndeterminate(true);
+                            putClientProperty("JProgressBar.failed", true);
+                        }});
+                        add(new JProgressBar() {{
+                            setIndeterminate(true);
+                            putClientProperty("JProgressBar.passed", true);
+                        }});
+                    }});
                     panel.add(new JPanel() {{
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
                         add(new JSlider());
@@ -375,9 +398,8 @@ public final class UIDemo {
                     menuBar.add(menu);
                     frame.setJMenuBar(menuBar);
 
-                    frame.setMinimumSize(new Dimension(100, 100));
                     frame.getRootPane().setDefaultButton(defaultButton);
-                    frame.pack();
+                    frame.setSize(1200, 800);
                     frame.setLocationRelativeTo(null);
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     frame.setVisible(true);
