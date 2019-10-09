@@ -66,6 +66,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             lastSearchEvent = System.currentTimeMillis();
         }
     };
+    private boolean clearHovered;
 
     @NotNull
     @Contract("_ -> new")
@@ -81,8 +82,9 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     @Contract(pure = true)
-    public static Icon getClearIcon() {
-        return UIManager.getIcon("TextField.search.clear.icon");
+    public static Icon getClearIcon(final boolean clearHovered) {
+        return clearHovered ? UIManager.getIcon("TextField.search.clearHover.icon")
+                            : UIManager.getIcon("TextField.search.clear.icon");
     }
 
     public static Color getBorderColor(@NotNull final Component c) {
@@ -130,6 +132,11 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     private void updateCursor(final Point p) {
         var action = getActionUnder(p);
+        boolean oldClear = clearHovered;
+        clearHovered = action == ClickAction.CLEAR;
+        if (oldClear != clearHovered) {
+            editor.repaint();
+        }
         var drawRect = getDrawingRect(getComponent());
         var textRect = getTextRect(getComponent());
         int rightBoundary = getComponent().getText().isEmpty()
@@ -210,7 +217,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     private void paintClearIcon(final Graphics2D g) {
         Point p = getClearIconCoord();
-        getClearIcon().paintIcon(null, g, p.x, p.y);
+        getClearIcon(clearHovered).paintIcon(null, g, p.x, p.y);
     }
 
     private void paintSearchIcon(final Graphics2D g) {
@@ -220,14 +227,14 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected Point getClearIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
-        int w = getClearIcon().getIconWidth();
+        int w = getClearIcon(clearHovered).getIconWidth();
         return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
     }
 
     private ClickAction getActionUnder(final Point p) {
         var c = getComponent();
         if (isSearchField(c)) {
-            if (isOver(getClearIconCoord(), getClearIcon(), p)) {
+            if (isOver(getClearIconCoord(), getClearIcon(clearHovered), p)) {
                 return ClickAction.CLEAR;
             }
             if (isOver(getSearchIconCoord(), getSearchIcon(c), p)) {

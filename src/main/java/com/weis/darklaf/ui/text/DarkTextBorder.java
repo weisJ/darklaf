@@ -44,8 +44,7 @@ public class DarkTextBorder implements Border, UIResource {
             g.setColor(DarkTextFieldUI.getBorderColor(c));
             if (((JComponent) c).getClientProperty("JTextField.Search.noBorderRing") != Boolean.TRUE) {
                 if (c.hasFocus()) {
-                    DarkUIUtil.paintOutlineBorder(g, width, height, arcSize, true,
-                                                  true, DarkUIUtil.Outline.focus);
+                    DarkUIUtil.paintFocusBorder(g, width, height, arcSize, true);
                 }
                 g.setColor(DarkTextFieldUI.getBorderColor(c));
                 DarkUIUtil.paintLineBorder(g, BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
@@ -62,7 +61,7 @@ public class DarkTextBorder implements Border, UIResource {
                                    BORDER_SIZE + PADDING, BORDER_SIZE + PADDING);
         if (DarkTextFieldUI.isSearchField(c)) {
             int searchWidth = DarkTextFieldUI.getSearchIcon(c).getIconWidth();
-            int clearWidth = DarkTextFieldUI.getClearIcon().getIconWidth();
+            int clearWidth = DarkTextFieldUI.getClearIcon(false).getIconWidth();
             insets.left += PADDING + searchWidth;
             insets.right += PADDING + clearWidth;
         } else if (DarkPasswordFieldUI.hasShowIcon(c)) {
