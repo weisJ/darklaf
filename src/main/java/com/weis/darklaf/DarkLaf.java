@@ -31,13 +31,14 @@ public class DarkLaf extends BasicLookAndFeel {
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
     private static boolean decorationsEnabled = true;
-    private BasicLookAndFeel base;
+    private final BasicLookAndFeel base;
 
     /**
      * Create Custom Darcula LaF.
      */
     public DarkLaf() {
         try {
+            LafManager.getTheme().beforeInstall();
             if (SystemInfo.isWindows || SystemInfo.isLinux) {
                 base = new MetalLookAndFeel();
             } else {
@@ -45,7 +46,8 @@ public class DarkLaf extends BasicLookAndFeel {
                 base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
             }
         } catch (@NotNull final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
+            LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
+            throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
         }
     }
 

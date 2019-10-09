@@ -16,6 +16,7 @@ package com.weis.darklaf.ui.rootpane;
  * limitations under the License.
  */
 
+import com.weis.darklaf.decorators.AncestorAdapter;
 import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -25,6 +26,8 @@ import sun.awt.SunToolkit;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,6 +64,21 @@ public class DarkTitlePane extends JComponent {
         public void componentRemoved(@NotNull final ContainerEvent e) {
             if (e.getChild() instanceof JLayeredPane) {
                 ((JLayeredPane) e.getChild()).removeContainerListener(layeredPaneContainerListener);
+            }
+        }
+    };
+    private final AncestorListener ancestorListener = new AncestorAdapter() {
+        @Override
+        public void ancestorAdded(final AncestorEvent event) {
+            if (window != null) {
+                //Force window to recalculate bounds.
+                SwingUtilities.invokeLater(() -> {
+                    var size = window.getSize();
+                    size.height += 1;
+                    window.setSize(size);
+                    size.height -= 1;
+                    window.setSize(size);
+                });
             }
         }
     };
@@ -161,6 +179,11 @@ public class DarkTitlePane extends JComponent {
 
     public void uninstall() {
         uninstallListeners();
+        uninstallDecorations();
+        removeAll();
+    }
+
+    protected void uninstallDecorations() {
         window = null;
         JNIDecorations.uninstallDecorations(windowHandle);
         windowHandle = 0;
@@ -170,7 +193,32 @@ public class DarkTitlePane extends JComponent {
             menuBar.setPreferredSize(null);
             rootPane.setJMenuBar(menuBar);
         }
-        removeAll();
+    }
+
+    public void install() {
+        if (window != null) {
+            if (window instanceof Dialog || window instanceof Frame) {
+                windowHandle = JNIDecorations.getHWND(window);
+
+                JNIDecorations.installDecorations(windowHandle);
+                updateResizeBehaviour();
+                var color = window.getBackground();
+                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+            }
+
+            if (window instanceof Frame) {
+                titleLabel.setText(((Frame) window).getTitle());
+                setState(((Frame) window).getExtendedState());
+            } else {
+                setState(0);
+            }
+            if (window instanceof Dialog) {
+                titleLabel.setText(((Dialog) window).getTitle());
+            }
+            setActive(window.isActive());
+            installListeners();
+            updateSystemIcon();
+        }
     }
 
     private void uninstallListeners() {
@@ -178,6 +226,7 @@ public class DarkTitlePane extends JComponent {
             window.removeWindowListener(windowListener);
             window.removePropertyChangeListener(propertyChangeListener);
         }
+        removeAncestorListener(ancestorListener);
     }
 
     private void installListeners() {
@@ -187,6 +236,7 @@ public class DarkTitlePane extends JComponent {
             propertyChangeListener = createWindowPropertyChangeListener();
             window.addPropertyChangeListener(propertyChangeListener);
         }
+        addAncestorListener(ancestorListener);
     }
 
     @NotNull
@@ -396,30 +446,8 @@ public class DarkTitlePane extends JComponent {
     public void addNotify() {
         super.addNotify();
         uninstallListeners();
-
         window = SwingUtilities.getWindowAncestor(this);
-        if (window != null) {
-            if (window instanceof Dialog || window instanceof Frame) {
-                windowHandle = JNIDecorations.getHWND(window);
-                JNIDecorations.installDecorations(windowHandle);
-                updateResizeBehaviour();
-                var color = window.getBackground();
-                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
-            }
-
-            if (window instanceof Frame) {
-                titleLabel.setText(((Frame) window).getTitle());
-                setState(((Frame) window).getExtendedState());
-            } else {
-                setState(0);
-            }
-            if (window instanceof Dialog) {
-                titleLabel.setText(((Dialog) window).getTitle());
-            }
-            setActive(window.isActive());
-            installListeners();
-            updateSystemIcon();
-        }
+        install();
     }
 
     public void removeNotify() {
@@ -725,17 +753,6 @@ public class DarkTitlePane extends JComponent {
     }
 
     protected class WindowHandler extends WindowAdapter {
-        @Override
-        public void windowOpened(final WindowEvent e) {
-            if (window != null) {
-                //Force window to recalculate bounds.
-                var size = window.getSize();
-                size.width += 1;
-                window.setSize(size);
-                size.width -= 1;
-                window.setSize(size);
-            }
-        }
 
         public void windowActivated(final WindowEvent ev) {
             setActive(true);

@@ -68,8 +68,6 @@ public final class LafManager {
      * {@link DarculaTheme}.
      */
     public static void install() {
-        getTheme();
-        theme.beforeInstall();
         try {
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();

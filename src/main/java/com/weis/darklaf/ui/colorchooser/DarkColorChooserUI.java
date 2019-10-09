@@ -3,6 +3,7 @@ package com.weis.darklaf.ui.colorchooser;
 import com.weis.darklaf.color.DarkColorModel;
 import com.weis.darklaf.color.DarkColorModelCMYK;
 import com.weis.darklaf.color.DarkColorModelHSL;
+import com.weis.darklaf.decorators.AncestorAdapter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +36,7 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
             }
         }
     };
-    private final AncestorListener ancestorListener = new AncestorListener() {
+    private final AncestorListener ancestorListener = new AncestorAdapter() {
         @Override
         public void ancestorAdded(final AncestorEvent event) {
             var win = SwingUtilities.getWindowAncestor(chooser);
@@ -43,16 +44,6 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
                 ((Dialog) win).setResizable(false);
                 chooser.removeAncestorListener(ancestorListener);
             }
-        }
-
-        @Override
-        public void ancestorRemoved(final AncestorEvent event) {
-
-        }
-
-        @Override
-        public void ancestorMoved(final AncestorEvent event) {
-
         }
     };
 

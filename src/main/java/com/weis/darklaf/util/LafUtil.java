@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.io.IOException;
@@ -113,10 +114,9 @@ public final class LafUtil {
     private static Object parseFont(final String value) {
         try {
             final String[] decode = value.split("-");
-            //noinspection MagicConstant
-            return new Font(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
+            return new FontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
         } catch (@NotNull final Exception e) {
-            return new Font("Monospaced", Font.PLAIN, 12);
+            return new FontUIResource("Dialog", Font.PLAIN, 12);
         }
     }
 

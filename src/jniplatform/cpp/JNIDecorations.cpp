@@ -126,8 +126,19 @@ Java_com_weis_darklaf_platform_windows_JNIDecorations_installDecorations(JNIEnv 
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
 
+    auto it = wrapper_map.find(handle);
+    if (it != wrapper_map.end())
+    {
+        //Prevent multiple installations overwriding the real window procedure.
+        return;
+    }
+
     MARGINS margins = {0, 0, 0, 1};
     DwmExtendFrameIntoClientArea(handle, &margins);
+
+    auto style = GetWindowLongPtr(handle, GWL_STYLE);
+    SetWindowLongPtr(handle, GWL_STYLE, style | WS_THICKFRAME);
+
     SetWindowPos(handle, NULL, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
     WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWL_WNDPROC));
 

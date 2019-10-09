@@ -2,6 +2,7 @@ package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.color.DarkColorModel;
 import com.weis.darklaf.components.DefaultColorPipette;
+import com.weis.darklaf.decorators.AncestorAdapter;
 import com.weis.darklaf.util.ColorUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -64,19 +64,11 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         descriptorsAfter = new JLabel[record];
 
         textHex = createColorField(true);
-        textHex.addAncestorListener(new AncestorListener() {
+        textHex.addAncestorListener(new AncestorAdapter() {
             @Override
             public void ancestorAdded(final AncestorEvent event) {
                 textHex.requestFocus();
                 textHex.removeAncestorListener(this);
-            }
-
-            @Override
-            public void ancestorRemoved(final AncestorEvent event) {
-            }
-
-            @Override
-            public void ancestorMoved(final AncestorEvent event) {
             }
         });
 

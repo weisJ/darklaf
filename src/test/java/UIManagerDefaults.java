@@ -56,10 +56,8 @@ public class UIManagerDefaults implements ItemListener {
         resetComponents();
     }
 
-    /*
-     *  UIManagerDefaults Main. Called only if we're an application.
-     */
     public static void main(final String[] args) {
+        UIManager.installLookAndFeel(new DarkLafInfo());
         LafManager.install();
         SwingUtilities.invokeLater(UIManagerDefaults::createAndShowGUI);
     }
@@ -69,7 +67,6 @@ public class UIManagerDefaults implements ItemListener {
      */
     private static void createAndShowGUI() {
         final UIManagerDefaults application = new UIManagerDefaults();
-
         final JFrame frame = new JFrame("UIManager Defaults");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(application.getMenuBar());
@@ -144,12 +141,6 @@ public class UIManagerDefaults implements ItemListener {
                 mi.setSelected(true);
             }
         }
-        var info = new DarkLafInfo();
-        Action action = new ChangeLookAndFeelAction(this, info.getClassName(), info.getName());
-        var mi = new JRadioButtonMenuItem(action);
-        menu.add(mi);
-        bg.add(mi);
-        mi.setSelected(true);
         return menu;
     }
 
@@ -158,8 +149,12 @@ public class UIManagerDefaults implements ItemListener {
      */
     @NotNull
     private JComponent buildNorthComponent() {
-        comboBox = new JComboBox<>();
-        comboBox.setPreferredSize(new Dimension(200, comboBox.getPreferredSize().height));
+        comboBox = new JComboBox<>() {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(200, getUI().getPreferredSize(this).height);
+            }
+        };
 
         final JLabel label = new JLabel("Select Item:");
         label.setDisplayedMnemonic('S');
@@ -594,8 +589,7 @@ public class UIManagerDefaults implements ItemListener {
         private final UIManagerDefaults defaults;
         private final String laf;
 
-        private ChangeLookAndFeelAction(
-                final UIManagerDefaults defaults, final String laf, final String name) {
+        private ChangeLookAndFeelAction(final UIManagerDefaults defaults, final String laf, final String name) {
             this.defaults = defaults;
             this.laf = laf;
             putValue(Action.NAME, name);
@@ -607,9 +601,7 @@ public class UIManagerDefaults implements ItemListener {
                 UIManager.setLookAndFeel(laf);
                 defaults.resetComponents();
 
-                final JMenuItem mi = (JMenuItem) e.getSource();
-                final JPopupMenu popup = (JPopupMenu) mi.getParent();
-                final JRootPane rootPane = SwingUtilities.getRootPane(mi);
+                final JRootPane rootPane = SwingUtilities.getRootPane(defaults.getContentPane());
                 SwingUtilities.updateComponentTreeUI(rootPane);
                 //  Use custom decorations when supported by the LAF
                 final JFrame frame = (JFrame) SwingUtilities.windowForComponent(rootPane);

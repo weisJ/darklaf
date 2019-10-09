@@ -204,6 +204,11 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     }
 
     @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        return getMinimumSize(c);
+    }
+
+    @Override
     protected Rectangle rectangleForCurrentValue() {
         var rect = super.rectangleForCurrentValue();
         if (!comboBox.getComponentOrientation().isLeftToRight()) {
@@ -225,6 +230,14 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             return new InsetsUIResource(BORDER_SIZE + 4, BORDER_SIZE,
                                         BORDER_SIZE + 4, BORDER_SIZE + 6);
         }
+    }
+
+    @Override
+    public Insets getBorderInsets(final Component c) {
+        if (isTableCellEditor(c) || isTreeCellEditor(c)) {
+            return new InsetsUIResource(0, 0, 0, 0);
+        }
+        return new InsetsUIResource(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
     }
 
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
@@ -334,14 +347,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     private Color getBorderColor() {
         return comboBox.isEnabled() ? UIManager.getColor("ComboBox.activeBorderColor")
                                     : UIManager.getColor("ComboBox.inactiveBorderColor");
-    }
-
-    @Override
-    public Insets getBorderInsets(final Component c) {
-        if (isTableCellEditor(c) || isTreeCellEditor(c)) {
-            return new InsetsUIResource(0, 0, 0, 0);
-        }
-        return new InsetsUIResource(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
     }
 
     @Override
