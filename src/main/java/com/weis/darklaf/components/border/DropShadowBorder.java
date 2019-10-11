@@ -73,13 +73,15 @@ public class DropShadowBorder implements Border, Serializable {
 
     @Contract(pure = true)
     public DropShadowBorder(final boolean showLeftShadow) {
-        this(Color.BLACK, 5, .5f, 12, false, showLeftShadow, true, true);
+        this(Color.BLACK, 5, .5f, 12,
+             false, showLeftShadow, true, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void paintBorder(final Component c, @NotNull final Graphics graphics, final int x, final int y, final int width, final int height) {
+    public void paintBorder(final Component c, @NotNull final Graphics graphics,
+                            final int x, final int y, final int width, final int height) {
         /*
          * 1) Get images for this border
          * 2) Paint the images for each side of the border that should be painted

@@ -46,7 +46,7 @@ final class AlignmentHelper {
 
     static final Mapper HOR_CENTER_OUTSIDE = HOR_CENTER_INSIDE;
     static final Mapper HOR_LEFT_OUTSIDE = (d, r) -> r.x - d.width;
-    static final Mapper HOR_RIGHT_OUTSIDE = (d, r) -> r.x;
+    static final Mapper HOR_RIGHT_OUTSIDE = (d, r) -> r.x + r.width;
     static final Mapper VERT_CENTER_OUTSIDE = VERT_CENTER_INSIDE;
     static final Mapper VERT_TOP_OUTSIDE = (d, r) -> r.y - d.height;
     static final Mapper VERT_BOTTOM_OUTSIDE = (d, r) -> r.y + r.height;
@@ -60,8 +60,8 @@ final class AlignmentHelper {
      */
     @NotNull
     @Contract(pure = true)
-    static BiFunction<Dimension, Rectangle, Point> align(
-            @NotNull final Mapper mapperX, @NotNull final Mapper mapperY) {
+    static BiFunction<Dimension, Rectangle, Point> align(@NotNull final Mapper mapperX,
+                                                         @NotNull final Mapper mapperY) {
         return (d, p) -> new Point(mapperX.apply(d, p), mapperY.apply(d, p));
     }
 

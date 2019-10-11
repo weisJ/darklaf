@@ -36,7 +36,6 @@ public class TristateCheckBox extends JCheckBox {
         // override action behaviour
         super.addMouseListener(new MouseAdapter() {
             public void mousePressed(final MouseEvent e) {
-                System.out.println(getState());
                 TristateCheckBox.this.iterateState();
             }
         });

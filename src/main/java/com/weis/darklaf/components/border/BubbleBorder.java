@@ -16,6 +16,7 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class BubbleBorder extends AbstractBorder {
 
+    private final static double PAD_OFFSET = 0.2;
     private final Insets insets;
     private Alignment pointerSide = Alignment.NORTH;
     private Color color;
@@ -98,29 +99,6 @@ public class BubbleBorder extends AbstractBorder {
         return this;
     }
 
-    /**
-     * Get the percentage for pointer padding where 0 - means left/top 1 - means right/bottom.
-     *
-     * @return percentage of padding
-     */
-    public double getPointerPadPercent() {
-        return pointerPadPercent;
-    }
-
-    /**
-     * Set the percentage for pointer padding where 0 - means left/top 1 - means right/bottom Clips
-     * at 0 and 1.
-     *
-     * @param percent percentage between 0 and 1
-     * @return this
-     */
-    @NotNull
-    public BubbleBorder setPointerPadPercent(final double percent) {
-        this.pointerPadPercent = percent > 1 ? 1 : percent;
-        pointerPadPercent = pointerPadPercent < 0 ? 0 : pointerPadPercent;
-        return this;
-    }
-
 
     /**
      * Get the border thickness.
@@ -128,7 +106,7 @@ public class BubbleBorder extends AbstractBorder {
      * @return thickness of border.
      */
     public int getThickness() {
-        return pointerSide == Alignment.CENTER ? 0 : thickness;
+        return thickness;
     }
 
     /**
@@ -233,8 +211,31 @@ public class BubbleBorder extends AbstractBorder {
     @NotNull
     public BubbleBorder setPointerSide(final Alignment side) {
         this.pointerSide = side;
-        return setPointerSize(pointerSize);
+        setPointerSize(pointerSize);
+        switch (pointerSide) {
+            case NORTH:
+            case SOUTH:
+            case EAST:
+            case WEST:
+            case CENTER:
+                pointerPadPercent = 0.5;
+                break;
+            case NORTH_EAST:
+            case SOUTH_EAST:
+                pointerPadPercent = 1.0 - PAD_OFFSET;
+                break;
+            case NORTH_WEST:
+            case SOUTH_WEST:
+                pointerPadPercent = PAD_OFFSET;
+                break;
+        }
+        return this;
     }
+
+    public int getOffset(final int w, final int h) {
+        return (int) calculatePointerPad(w, h, PAD_OFFSET) + 2 * thickness;
+    }
+
 
     @Override
     public void paintBorder(@NotNull final Component c, final Graphics g,
@@ -246,7 +247,7 @@ public class BubbleBorder extends AbstractBorder {
     @NotNull
     @Override
     public Insets getBorderInsets(final Component c) {
-        return insets;
+        return new Insets(insets.top, insets.left, insets.bottom, insets.right);
     }
 
     @NotNull
@@ -259,7 +260,7 @@ public class BubbleBorder extends AbstractBorder {
         var bubble = calculateBubbleRect(x, y, width, height);
         final Area area = new Area(bubble);
         if (pointerSide != Alignment.CENTER) {
-            double pointerPad = calculatePointerPad(width, height);
+            double pointerPad = calculatePointerPad(width, height, pointerPadPercent);
             Path2D pointer = creatPointerShape(pointerPad, bubble);
             area.add(new Area(pointer));
         }
@@ -283,7 +284,7 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     @Contract(pure = true)
-    private double calculatePointerPad(final int width, final int height) {
+    private double calculatePointerPad(final int width, final int height, final double percent) {
         double pointerPad;
         switch (pointerSide) {
             case WEST:
@@ -296,7 +297,7 @@ public class BubbleBorder extends AbstractBorder {
             case SOUTH:
             case SOUTH_WEST:
             case SOUTH_EAST:
-                pointerPad = radius + (pointerPadPercent * (width - insets.left - insets.right - 2 * radius));
+                pointerPad = radius + (percent * (width - insets.left - insets.right - 2 * radius));
                 break;
             default:
                 pointerPad = 0;
