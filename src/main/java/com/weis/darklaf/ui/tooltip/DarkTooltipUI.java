@@ -37,6 +37,10 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     protected void installDefaults(final JComponent c) {
         super.installDefaults(c);
         c.setOpaque(false);
+        if (c.getBorder() instanceof DarkTooltipBorder) {
+            Alignment align = (Alignment) c.getClientProperty("JToolTip.pointerLocation");
+            ((DarkTooltipBorder) c.getBorder()).setPointerLocation(align == null ? Alignment.CENTER : align);
+        }
     }
 
     @Override
