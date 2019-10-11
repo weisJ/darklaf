@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.tabbedpane;
 
-import com.weis.darklaf.ui.tabbedpane.bridge.ScrollableTabViewport;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

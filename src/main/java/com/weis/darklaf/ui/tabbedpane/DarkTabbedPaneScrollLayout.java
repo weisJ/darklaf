@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.tabbedpane;
 
-import com.weis.darklaf.ui.tabbedpane.bridge.TabbedPaneScrollLayout;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

@@ -243,7 +243,9 @@ public class DarkHandler extends TabbedPaneHandler {
     @Override
     public void mouseReleased(final MouseEvent e) {
         super.mouseReleased(e);
-        stopDrag(e);
+        if (ui.dragging && ui.scrollableTabLayoutEnabled()) {
+            stopDrag(e);
+        }
     }
 
     @Override

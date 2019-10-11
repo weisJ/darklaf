@@ -88,4 +88,8 @@ public final class ColorUtil {
         }
     }
 
+    @NotNull
+    public static Color removeAlpha(final Color color) {
+        return toAlpha(color, 255);
+    }
 }

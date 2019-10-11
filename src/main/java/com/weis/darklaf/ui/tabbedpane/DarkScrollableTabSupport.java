@@ -25,7 +25,6 @@ package com.weis.darklaf.ui.tabbedpane;
 
 import com.weis.darklaf.components.ScrollPopupMenu;
 import com.weis.darklaf.decorators.PopupMenuAdapter;
-import com.weis.darklaf.ui.tabbedpane.bridge.ScrollableTabSupport;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
