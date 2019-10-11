@@ -163,6 +163,10 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         }
     }
 
+    public void setStyle(final ToolTipStyle style) {
+        putClientProperty("JToolTip.style", style);
+    }
+
 
     protected class FadeInAnimator extends Animator {
         private static final int DELAY_FRAMES = 6;

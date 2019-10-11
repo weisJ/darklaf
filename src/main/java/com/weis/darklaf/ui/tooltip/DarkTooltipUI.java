@@ -60,7 +60,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         if (((JToolTip) c).getTipText() == null) return;
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
-            var area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c.getWidth(), c.getHeight());
+            var area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
             ((Graphics2D) g).fill(area);
         }
         super.paint(g, c);

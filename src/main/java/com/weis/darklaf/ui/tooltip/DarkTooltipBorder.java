@@ -3,6 +3,8 @@ package com.weis.darklaf.ui.tooltip;
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.border.BubbleBorder;
 import com.weis.darklaf.components.border.DropShadowBorder;
+import com.weis.darklaf.components.tooltip.ToolTipStyle;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -32,7 +34,10 @@ public class DarkTooltipBorder implements Border, UIResource {
     }
 
 
-    public Area getBackgroundArea(final int width, final int height) {
+    public Area getBackgroundArea(final Component c, final int width, final int height) {
+        if (isPlain(c)) {
+            return new Area(new Rectangle(0, 0, width, height));
+        }
         var ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
         return bubbleBorder.getInnerArea(ins.left, ins.top,
@@ -43,10 +48,15 @@ public class DarkTooltipBorder implements Border, UIResource {
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
-        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         if (bubbleBorder.getColor() == null) {
             bubbleBorder.setColor(UIManager.getColor("ToolTip.borderColor"));
         }
+        if (isPlain(c)) {
+            g.setColor(bubbleBorder.getColor());
+            DarkUIUtil.drawRect(g, x, y, width, height, 1);
+            return;
+        }
+        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         var ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
         var bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,
@@ -77,6 +87,9 @@ public class DarkTooltipBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
+        if (isPlain(c)) {
+            return new Insets(1, 1, 1, 1);
+        }
         var ins = (Insets) bubbleBorder.getBorderInsets(c).clone();
         var si = shadowBorder.getBorderInsets(c);
         adjustInsets(si);
@@ -86,6 +99,12 @@ public class DarkTooltipBorder implements Border, UIResource {
         ins.right += 5 + si.right + uIns.right;
         ins.bottom += 2 + si.bottom + uIns.bottom;
         return ins;
+    }
+
+    protected boolean isPlain(@NotNull final Component c) {
+        if (!(c instanceof JComponent)) return false;
+        var prop = ((JComponent) c).getClientProperty("JToolTip.style");
+        return prop == ToolTipStyle.PLAIN || "plain".equals(prop);
     }
 
     protected Insets getUserInsets(final Component c) {
@@ -115,12 +134,14 @@ public class DarkTooltipBorder implements Border, UIResource {
         bubbleBorder.setPointerSize(height);
     }
 
-    public int getPointerOffset(@NotNull final Dimension dimension) {
+    public int getPointerOffset(final Component c, @NotNull final Dimension dimension) {
+        if (isPlain(c)) return 0;
         return bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
                 + shadowBorder.getShadowSize();
     }
 
-    public int getShadowSize() {
+    public int getShadowSize(final Component c) {
+        if (isPlain(c)) return 0;
         return shadowBorder.getShadowSize();
     }
 }

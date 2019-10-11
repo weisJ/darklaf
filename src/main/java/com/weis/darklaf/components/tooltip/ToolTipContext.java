@@ -45,6 +45,7 @@ public class ToolTipContext implements ToolTipListener {
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseMoved(final MouseEvent e) {
+            if (hotSpotArea == null) return;
             checkExit(e);
         }
 
@@ -80,6 +81,7 @@ public class ToolTipContext implements ToolTipListener {
     private Area hotSpotArea;
     private boolean hideOnExit;
     private Insets insets;
+    private ToolTipStyle style;
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
@@ -199,6 +201,7 @@ public class ToolTipContext implements ToolTipListener {
         }
         this.c = c;
         valid = false;
+        setToolTipStyle(ToolTipStyle.BALLOON);
         setUpdatePosition(false);
         setHideOnExit(false);
         setAlignInside(alignInside);
@@ -367,12 +370,27 @@ public class ToolTipContext implements ToolTipListener {
         return this;
     }
 
+    /**
+     * @param style
+     * @return
+     */
+    public ToolTipContext setToolTipStyle(final ToolTipStyle style) {
+        this.style = style;
+        if (style == null) {
+            this.style = ToolTipStyle.BALLOON;
+        }
+        updateToolTip();
+        return this;
+    }
+
+
     private void updateToolTip() {
         if (toolTip != null) {
             toolTip.setAlignment(alignment == Alignment.CENTER
                                  ? centerAlignment.opposite()
                                  : alignInside ? alignment : alignment.opposite());
             toolTip.setInsets(insets);
+            toolTip.setStyle(style);
         }
     }
 
@@ -416,7 +434,7 @@ public class ToolTipContext implements ToolTipListener {
         var dim = toolTip.getPreferredSize();
         var align = alignment == Alignment.CENTER ? centerAlignment : alignment;
         if (align == Alignment.EAST || align == Alignment.WEST) {
-            dim.height -= ((DarkTooltipBorder) toolTip.getBorder()).getShadowSize();
+            dim.height -= ((DarkTooltipBorder) toolTip.getBorder()).getShadowSize(toolTip);
         }
         return dim;
     }
@@ -456,9 +474,9 @@ public class ToolTipContext implements ToolTipListener {
     private Point adjustPoint(final Point p, final Alignment align, final Dimension dim, final boolean outside) {
         int factor = outside ? 1 : -1;
         if (align == Alignment.NORTH_EAST || align == Alignment.SOUTH_EAST) {
-            p.x -= factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(dim);
+            p.x -= factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim);
         } else if (align == Alignment.NORTH_WEST || align == Alignment.SOUTH_WEST) {
-            p.x += factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(dim);
+            p.x += factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim);
         }
         return p;
     }
