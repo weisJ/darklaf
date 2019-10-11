@@ -51,6 +51,7 @@ public class ColorWheelPanel extends JPanel {
         add(colorWheel, BorderLayout.CENTER);
 
         brightnessSlider = new SlideComponent("Brightness", true, false);
+        brightnessSlider.setToolTipText("Brightness");
         brightnessSlider.addListener(value -> {
             colorWheel.setBrightness(1 - (value / 255f));
             colorWheel.repaint();
@@ -63,6 +64,7 @@ public class ColorWheelPanel extends JPanel {
 
         if (enableOpacity) {
             opacitySlider = new SlideComponent("Opacity", false, true);
+            opacitySlider.setToolTipText("Opacity");
             opacitySlider.setUnits(opacityInPercent ? SlideComponent.Unit.PERCENT : SlideComponent.Unit.LEVEL);
             opacitySlider.addListener(integer -> {
                 colorWheel.setOpacity(integer);
