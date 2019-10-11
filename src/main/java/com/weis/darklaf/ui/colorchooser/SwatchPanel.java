@@ -1,6 +1,7 @@
 package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.components.tooltip.ToolTipContext;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -13,13 +14,17 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
  * @author Jannis Weis
  */
 abstract class SwatchPanel extends JPanel {
+
+    private final ToolTipContext toolTipContext = new ToolTipContext(this)
+            .setAlignment(Alignment.CENTER)
+            .setToolTipRectSupplier(this::getSwatchBounds)
+            .setHideOnExit(true);
 
     protected Color[] colors;
     protected Dimension swatchSize;
@@ -28,7 +33,6 @@ abstract class SwatchPanel extends JPanel {
 
     private int selRow;
     private int selCol;
-    private JToolTip tooltip;
 
     public SwatchPanel() {
         initValues();
@@ -38,16 +42,6 @@ abstract class SwatchPanel extends JPanel {
         setBackground(UIManager.getColor("ColorChooser.swatchGridColor"));
         setFocusable(true);
         setInheritsPopupMenu(true);
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseExited(final MouseEvent e) {
-                var p = e.getPoint();
-                p = SwingUtilities.convertPoint(e.getComponent(), p, SwatchPanel.this);
-                if (tooltip != null && !contains(p)) {
-                    tooltip.setVisible(false);
-                }
-            }
-        });
         addFocusListener(new FocusAdapter() {
             public void focusGained(final FocusEvent e) {
                 repaint();
@@ -179,26 +173,20 @@ abstract class SwatchPanel extends JPanel {
 
     @Override
     public Point getToolTipLocation(final MouseEvent e) {
-        if (tooltip == null) {
-            createToolTip();
-            tooltip.setTipText(getToolTipText(e));
-        }
+        return toolTipContext.getToolTipLocation(e);
+    }
+
+    @NotNull
+    protected Rectangle getSwatchBounds(@NotNull final MouseEvent e) {
         var p = getCoordinatesForLocation(e.getX(), e.getY());
         int x = getXForColumn(p.x);
         int y = getYForRow(p.y);
-        x += swatchSize.width / 2;
-        y += swatchSize.height / 2;
-        x -= tooltip.getPreferredSize().width / 2;
-        return new Point(x, y);
+        return new Rectangle(x, y, swatchSize.width, swatchSize.height);
     }
 
     @Override
     public JToolTip createToolTip() {
-        tooltip = super.createToolTip();
-//        tooltip.putClientProperty("JToolTip.pointerWidth", 10);
-//        tooltip.putClientProperty("JToolTip.pointerHeight", 7);
-        tooltip.putClientProperty("JToolTip.pointerLocation", Alignment.NORTH);
-        return tooltip;
+        return toolTipContext.getToolTip();
     }
 
     public Point getCoordinatesForLocation(final int x, final int y) {

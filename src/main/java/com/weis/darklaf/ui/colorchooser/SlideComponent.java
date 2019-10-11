@@ -25,7 +25,9 @@
 package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.components.tooltip.ToolTipContext;
 import com.weis.darklaf.util.ColorUtil;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,19 +46,29 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-class SlideComponent extends JComponent {
+class SlideComponent extends JComponent implements ColorListener {
     private static final int OFFSET = 11;
-    private final boolean myVertical;
-    private final String myTitle;
-    private final List<Consumer<Integer>> myListeners = new ArrayList<>();
-    private int myPointerValue = 0;
-    private int myValue = 0;
-    private Unit myUnit = Unit.LEVEL;
-    private JToolTip tooltip;
+    private final ToolTipContext toolTipContext = new ToolTipContext(this);
+    private final boolean vertical;
+    private boolean isOpacity;
+    private final String title;
+    private final List<Consumer<Integer>> listeners = new ArrayList<>();
+    private int pointerValue = 0;
+    private int value = 0;
+    private Unit unitType = Unit.LEVEL;
+    private Color color;
 
-    SlideComponent(final String title, final boolean vertical) {
-        myTitle = title;
-        myVertical = vertical;
+    SlideComponent(final String title, final boolean vertical, final boolean isOpacity) {
+        this.title = title;
+        this.vertical = vertical;
+        this.isOpacity = isOpacity;
+        this.color = Color.WHITE;
+
+        toolTipContext.setAlignInside(false)
+                .setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
+                .setHideOnExit(false)
+                .setToolTipRectSupplier(e -> getKnobRect())
+                .setInsets(new Insets(3, 0, 3, 0));
 
         addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -67,25 +79,22 @@ class SlideComponent extends JComponent {
 
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseExited(final MouseEvent e) {
-                var p = e.getPoint();
-                p = SwingUtilities.convertPoint(e.getComponent(), p, SlideComponent.this);
-                if (tooltip != null && !contains(p)) {
-                    tooltip.setVisible(false);
-                }
+            public void mousePressed(final MouseEvent e) {
+                processMouse(e);
             }
         });
+
 
         addMouseWheelListener(event -> {
             int units = event.getUnitsToScroll();
             if (units == 0) return;
-            int pointerValue = myPointerValue + units;
+            int pointerValue = this.pointerValue + units;
             pointerValue = Math.max(pointerValue, OFFSET);
-            int size = myVertical ? getHeight() : getWidth();
+            int size = this.vertical ? getHeight() : getWidth();
             pointerValue = Math.min(pointerValue, (size - 12));
 
-            myPointerValue = pointerValue;
-            myValue = pointerValueToValue(myPointerValue);
+            this.pointerValue = pointerValue;
+            value = pointerValueToValue(this.pointerValue);
 
             repaint();
             fireValueChanged();
@@ -104,14 +113,14 @@ class SlideComponent extends JComponent {
     }
 
     private void processMouse(final MouseEvent e) {
-        int pointerValue = myVertical ? e.getY() : e.getX();
+        int pointerValue = vertical ? e.getY() : e.getX();
         pointerValue = Math.max(pointerValue, OFFSET);
-        int size = myVertical ? getHeight() : getWidth();
+        int size = vertical ? getHeight() : getWidth();
         pointerValue = Math.min(pointerValue, (size - 12));
 
-        myPointerValue = pointerValue;
+        this.pointerValue = pointerValue;
 
-        myValue = pointerValueToValue(myPointerValue);
+        value = pointerValueToValue(this.pointerValue);
 
         repaint();
         fireValueChanged();
@@ -119,49 +128,54 @@ class SlideComponent extends JComponent {
 
     private int pointerValueToValue(int pointerValue) {
         pointerValue -= OFFSET;
-        final int size = myVertical ? getHeight() : getWidth();
+        final int size = vertical ? getHeight() : getWidth();
         double proportion = (size - 23) / 255f;
         return (int) Math.round((pointerValue / proportion));
     }
 
     private void fireValueChanged() {
-        for (Consumer<Integer> listener : myListeners) {
-            listener.accept(myValue);
+        var p = MouseInfo.getPointerInfo().getLocation();
+        SwingUtilities.convertPointFromScreen(p, this);
+        ToolTipManager.sharedInstance().mouseMoved(new MouseEvent(this, MouseEvent.MOUSE_MOVED, 0,
+                                                                  0, p.x, p.y, 0, false, 0));
+        for (Consumer<Integer> listener : listeners) {
+            listener.accept(value);
         }
     }
 
     public int getValue() {
-        return myValue;
+        return value;
     }
 
     public void setValue(final int value) {
         if (value < 0 || value > 255) {
             throw new IllegalArgumentException("Value " + value + " not in range [0,255]");
         }
-        myPointerValue = valueToPointerValue(value);
-        myValue = value;
+        pointerValue = valueToPointerValue(value);
+        this.value = value;
     }
 
     private int valueToPointerValue(final int value) {
-        final int size = myVertical ? getHeight() : getWidth();
+        final int size = vertical ? getHeight() : getWidth();
         float proportion = (size - 23) / 255f;
         return OFFSET + (int) (value * proportion);
     }
 
     void setUnits(final Unit unit) {
-        myUnit = unit;
+        unitType = unit;
     }
 
     public void addListener(final Consumer<Integer> listener) {
-        myListeners.add(listener);
+        listeners.add(listener);
     }
 
     @Override
     protected void paintComponent(final Graphics g) {
         final Graphics2D g2d = (Graphics2D) g;
-
-        if (myVertical) {
-            g2d.setPaint(new GradientPaint(0f, 0f, Color.WHITE, 0f, getHeight(), Color.BLACK));
+        Color endColor = isOpacity ? DarkUIUtil.TRANSPARENT_COLOR : Color.BLACK;
+        Color beginColor = color;
+        if (vertical) {
+            g2d.setPaint(new GradientPaint(0f, 0f, beginColor, 0f, getHeight(), endColor));
             g.fillRect(7, 10, 12, getHeight() - 20);
 
             g.setColor(UIManager.getColor("ColorChooser.sliderBorderColor"));
@@ -170,7 +184,7 @@ class SlideComponent extends JComponent {
             g.fillRect(7 + 12 - 1, 10, 1, getHeight() - 20);
             g.fillRect(7, 10 + getHeight() - 20 - 1, 12, 1);
         } else {
-            g2d.setPaint(new GradientPaint(0f, 0f, Color.WHITE, getWidth(), 0f, Color.BLACK));
+            g2d.setPaint(new GradientPaint(0f, 0f, endColor, getWidth(), 0f, beginColor));
             g.fillRect(10, 7, getWidth() - 20, 12);
 
             g.setColor(UIManager.getColor("ColorChooser.sliderBorderColor"));
@@ -180,7 +194,17 @@ class SlideComponent extends JComponent {
             g.fillRect(10 + getWidth() - 20 - 1, 7, 1, 12);
         }
 
-        drawKnob(g2d, myVertical ? 7 : myPointerValue, myVertical ? myPointerValue : 7, myVertical);
+        drawKnob(g2d, vertical ? 7 : pointerValue, vertical ? pointerValue : 7, vertical);
+    }
+
+    @NotNull
+    @Contract(" -> new")
+    private Rectangle getKnobRect() {
+        if (vertical) {
+            return new Rectangle(1, pointerValue - 6, 12, 12);
+        } else {
+            return new Rectangle(pointerValue - 6, 1, 12, 12);
+        }
     }
 
     private static void drawKnob(@NotNull final Graphics2D g2d, int x, int y, final boolean vertical) {
@@ -225,49 +249,35 @@ class SlideComponent extends JComponent {
 
     @Override
     public Dimension getPreferredSize() {
-        return myVertical ? new Dimension(22, 100)
-                          : new Dimension(100, 22);
+        return vertical ? new Dimension(22, 100)
+                        : new Dimension(100, 22);
     }
 
     @Override
     public Dimension getMinimumSize() {
-        return myVertical ? new Dimension(22, 50)
-                          : new Dimension(50, 22);
+        return vertical ? new Dimension(22, 50)
+                        : new Dimension(50, 22);
     }
 
     @Override
     public String getToolTipText(final MouseEvent event) {
-        return myTitle + ": " + Unit.formatValue(myValue, myUnit);
+        return title + ": " + Unit.formatValue(value, unitType);
     }
 
     @Override
     public Point getToolTipLocation(final MouseEvent e) {
-        if (tooltip == null) {
-            createToolTip();
-            tooltip.setTipText(getToolTipText(e));
-        }
-        final Point point = myVertical ? new Point(0, myPointerValue) : new Point(myPointerValue, 0);
-        if (myVertical) {
-            point.x -= tooltip.getPreferredSize().width - 7;
-            point.y -= (tooltip.getPreferredSize().height) / 2 - 4;
-        } else {
-            point.x -= tooltip.getPreferredSize().width / 2;
-            point.y -= tooltip.getPreferredSize().height - 7;
-        }
-        return point;
+        return toolTipContext.getToolTipLocation(e);
     }
 
     @Override
     public JToolTip createToolTip() {
-        tooltip = super.createToolTip();
-        if (myVertical) {
-            tooltip.setPreferredSize(new Dimension(130, 39));
-        } else {
-            tooltip.setPreferredSize(new Dimension(120, 46));
-        }
-        tooltip.putClientProperty("JToolTip.insets", new Insets(3, 0, 3, 0));
-        tooltip.putClientProperty("JToolTip.pointerLocation", myVertical ? Alignment.EAST : Alignment.SOUTH);
-        return tooltip;
+        return toolTipContext.getToolTip();
+    }
+
+    @Override
+    public void colorChanged(final Color color, final Object source) {
+        this.color = ColorUtil.removeAlpha(color);
+        repaint();
     }
 
     enum Unit {

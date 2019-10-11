@@ -35,9 +35,9 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class ColorWheelPanel extends JPanel {
-    private final ColorWheel myColorWheel;
-    private final SlideComponent myBrightnessComponent;
-    private SlideComponent myOpacityComponent = null;
+    private final ColorWheel colorWheel;
+    private final SlideComponent brightnessSlider;
+    private SlideComponent opacitySlider = null;
     private boolean enableOpacity;
 
     public ColorWheelPanel(final ColorListener colorListener, final boolean enableOpacity,
@@ -47,30 +47,31 @@ public class ColorWheelPanel extends JPanel {
 
         this.enableOpacity = enableOpacity;
 
-        myColorWheel = new ColorWheel();
-        add(myColorWheel, BorderLayout.CENTER);
+        colorWheel = new ColorWheel();
+        add(colorWheel, BorderLayout.CENTER);
 
-        myColorWheel.addListener(colorListener);
-
-        myBrightnessComponent = new SlideComponent("Brightness", true);
-        myBrightnessComponent.setToolTipText("Brightness");
-        myBrightnessComponent.addListener(value -> {
-            myColorWheel.setBrightness(1 - (value / 255f));
-            myColorWheel.repaint();
+        brightnessSlider = new SlideComponent("Brightness", true, false);
+        brightnessSlider.addListener(value -> {
+            colorWheel.setBrightness(1 - (value / 255f));
+            colorWheel.repaint();
         });
 
-        add(myBrightnessComponent, BorderLayout.EAST);
+        add(brightnessSlider, BorderLayout.EAST);
+        colorWheel.addListener(colorListener);
+        colorWheel.addListener(brightnessSlider);
+
 
         if (enableOpacity) {
-            myOpacityComponent = new SlideComponent("Opacity", false);
-            myOpacityComponent.setUnits(opacityInPercent ? SlideComponent.Unit.PERCENT : SlideComponent.Unit.LEVEL);
-            myOpacityComponent.setToolTipText("Opacity");
-            myOpacityComponent.addListener(integer -> {
-                myColorWheel.setOpacity(integer);
-                myColorWheel.repaint();
+            opacitySlider = new SlideComponent("Opacity", false, true);
+            opacitySlider.setUnits(opacityInPercent ? SlideComponent.Unit.PERCENT : SlideComponent.Unit.LEVEL);
+            opacitySlider.addListener(integer -> {
+                colorWheel.setOpacity(integer);
+                colorWheel.repaint();
             });
 
-            add(myOpacityComponent, BorderLayout.SOUTH);
+            add(opacitySlider, BorderLayout.SOUTH);
+            colorWheel.addListener(opacitySlider);
+
         }
     }
 
@@ -78,16 +79,16 @@ public class ColorWheelPanel extends JPanel {
         float[] hsb = new float[3];
         Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsb);
 
-        myBrightnessComponent.setValue(255 - (int) (hsb[2] * 255));
-        myBrightnessComponent.repaint();
+        brightnessSlider.setValue(255 - (int) (hsb[2] * 255));
+        brightnessSlider.repaint();
 
-        myColorWheel.dropImage();
-        if (myOpacityComponent != null && source instanceof AbstractColorChooserPanel) {
-            myOpacityComponent.setValue(color.getAlpha());
-            myOpacityComponent.repaint();
+        colorWheel.dropImage();
+        if (opacitySlider != null && source instanceof AbstractColorChooserPanel) {
+            opacitySlider.setValue(color.getAlpha());
+            opacitySlider.repaint();
         }
 
-        myColorWheel.setColor(color, source, hsb[0], hsb[1], hsb[2]);
+        colorWheel.setColor(color, source, hsb[0], hsb[1], hsb[2]);
     }
 
     public boolean isColorTransparencySelectionEnabled() {
@@ -97,8 +98,8 @@ public class ColorWheelPanel extends JPanel {
     public void setColorTransparencySelectionEnabled(final boolean b) {
         if (b != enableOpacity) {
             enableOpacity = b;
-            myOpacityComponent.setEnabled(b);
-            myOpacityComponent.setVisible(b);
+            opacitySlider.setEnabled(b);
+            opacitySlider.setVisible(b);
         }
     }
 }
