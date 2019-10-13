@@ -27,7 +27,7 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
-class DarkTabAreaButton extends JButton implements UIResource {
+public class DarkTabAreaButton extends JButton implements UIResource {
 
     private DarkTabbedPaneUI ui;
 

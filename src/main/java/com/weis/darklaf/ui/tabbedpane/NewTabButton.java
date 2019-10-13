@@ -29,29 +29,34 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
-class NewTabButton extends JPanel implements UIResource {
+public class NewTabButton extends JPanel implements UIResource {
 
-    private DarkTabbedPaneUI ui;
+    protected DarkTabbedPaneUI ui;
     protected final JButton button;
 
     protected NewTabButton(@NotNull final DarkTabbedPaneUI ui) {
         this.ui = ui;
-        button = new JButton();
-        button.setIcon(ui.getNewTabIcon());
-        button.putClientProperty("JButton.variant", "shadow");
-        button.putClientProperty("JButton.buttonType", "square");
-        button.putClientProperty("JButton.thin", Boolean.TRUE);
-        button.setRolloverEnabled(true);
+        button = createButton();
         button.addActionListener(e -> {
             var action = ui.getNewTabAction();
             if (action != null) {
                 action.actionPerformed(e);
             }
         });
-        button.setOpaque(false);
         add(button);
         setOpaque(false);
         setLayout(null);
+    }
+
+    protected JButton createButton() {
+        var button = new JButton();
+        button.setIcon(ui.getNewTabIcon());
+        button.putClientProperty("JButton.variant", "shadow");
+        button.putClientProperty("JButton.buttonType", "square");
+        button.putClientProperty("JButton.thin", Boolean.TRUE);
+        button.setRolloverEnabled(true);
+        button.setOpaque(false);
+        return button;
     }
 
     @Override

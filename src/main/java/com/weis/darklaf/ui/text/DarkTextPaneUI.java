@@ -24,11 +24,6 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
      */
 
     @Override
-    protected String getPropertyPrefix() {
-        return "TextPane";
-    }
-
-    @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
     }
@@ -36,5 +31,10 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     @Override
     protected void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
+    }
+
+    @Override
+    protected String getPropertyPrefix() {
+        return "TextPane";
     }
 }

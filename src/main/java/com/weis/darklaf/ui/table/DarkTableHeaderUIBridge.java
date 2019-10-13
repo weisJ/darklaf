@@ -115,16 +115,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
             }
         }
-    }    /**
-     * Creates the mouse listener for the {@code JTableHeader}.
-     *
-     * @return the mouse listener for the {@code JTableHeader}
-     */
-    protected MouseInputListener createMouseInputListener() {
-        return new DarkTableHeaderUIBridge.MouseInputHandler();
     }
-
-//  Installation
 
     //
 // Support for keyboard and mouse access
@@ -138,9 +129,18 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             }
         }
         return newIndex;
-    }    public void installUI(final JComponent c) {
-        super.installUI(c);
     }
+
+    /**
+     * Creates the mouse listener for the {@code JTableHeader}.
+     *
+     * @return the mouse listener for the {@code JTableHeader}
+     */
+    protected MouseInputListener createMouseInputListener() {
+        return new DarkTableHeaderUIBridge.MouseInputHandler();
+    }
+
+//  Installation
 
     protected int getSelectedColumnIndex() {
         int numCols = header.getColumnModel().getColumnCount();
@@ -148,18 +148,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             selectedColumnIndex = numCols - 1;
         }
         return selectedColumnIndex;
-    }    /**
-     * Initializes JTableHeader properties such as font, foreground, and background.
-     * The font, foreground, and background properties are only set if their
-     * current value is either null or a UIResource, other properties are set
-     * if the current value is null.
-     *
-     * @see #installUI
-     */
-    protected void installDefaults() {
-        LookAndFeel.installColorsAndFont(header, "TableHeader.background",
-                                         "TableHeader.foreground", "TableHeader.font");
-        LookAndFeel.installProperty(header, "opaque", Boolean.TRUE);
     }
 
     /**
@@ -168,18 +156,11 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
      */
     void selectColumn(final int newColIndex) {
         selectColumn(newColIndex, true);
-    }    /**
-     * Attaches listeners to the JTableHeader.
-     */
-    protected void installListeners() {
-        mouseInputListener = createMouseInputListener();
-
-        header.addMouseListener(mouseInputListener);
-        header.addMouseMotionListener(mouseInputListener);
-        header.addFocusListener(focusListener);
     }
 
-// Uninstall methods
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+    }
 
     void selectColumn(final int newColIndex, final boolean doScroll) {
         Rectangle repaintRect = header.getHeaderRect(selectedColumnIndex);
@@ -190,14 +171,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         if (doScroll) {
             scrollToColumn(newColIndex);
         }
-    }    public void uninstallUI(final JComponent c) {
-        uninstallDefaults();
-        uninstallListeners();
-        uninstallKeyboardActions();
-
-        header.remove(rendererPane);
-        rendererPane = null;
-        header = null;
     }
 
     /**
@@ -223,9 +196,17 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         vis.width = cellBounds.width;
         table.scrollRectToVisible(vis);
     }    /**
-     * Uninstalls default properties
+     * Initializes JTableHeader properties such as font, foreground, and background.
+     * The font, foreground, and background properties are only set if their
+     * current value is either null or a UIResource, other properties are set
+     * if the current value is null.
+     *
+     * @see #installUI
      */
-    protected void uninstallDefaults() {
+    protected void installDefaults() {
+        LookAndFeel.installColorsAndFont(header, "TableHeader.background",
+                                         "TableHeader.foreground", "TableHeader.font");
+        LookAndFeel.installProperty(header, "opaque", Boolean.TRUE);
     }
 
     protected int selectPreviousColumn(final boolean doIt) {
@@ -237,15 +218,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             }
         }
         return newIndex;
-    }    /**
-     * Unregisters listeners.
-     */
-    protected void uninstallListeners() {
-        header.removeMouseListener(mouseInputListener);
-        header.removeMouseMotionListener(mouseInputListener);
-        header.removeFocusListener(focusListener);
-
-        mouseInputListener = null;
     }
 
     protected int changeColumnWidth(final TableColumn resizingColumn,
@@ -290,16 +262,17 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         }
         return 0;
     }    /**
-     * Unregisters default key actions.
+     * Attaches listeners to the JTableHeader.
      */
-    protected void uninstallKeyboardActions() {
-        SwingUtilities.replaceUIInputMap(header, JComponent.WHEN_FOCUSED, null);
-        SwingUtilities.replaceUIActionMap(header, null);
+    protected void installListeners() {
+        mouseInputListener = createMouseInputListener();
+
+        header.addMouseListener(mouseInputListener);
+        header.addMouseMotionListener(mouseInputListener);
+        header.addFocusListener(focusListener);
     }
 
-//
-// Support for mouse rollover
-//
+// Uninstall methods
 
     protected static class Actions extends UIAction {
         public static final String TOGGLE_SORT_ORDER =
@@ -446,17 +419,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
             ui.changeColumnWidth(resizingColumn, th, oldWidth, newWidth);
         }
-    }    /**
-     * Returns the index of the column header over which the mouse
-     * currently is. When the mouse is not over the table header,
-     * -1 is returned.
-     *
-     * @return the index of the current rollover column
-     * @see #rolloverColumnUpdated(int, int)
-     * @since 1.6
-     */
-    protected int getRolloverColumn() {
-        return rolloverColumn;
     }
 
     /**
@@ -659,7 +621,66 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 header.getColumnModel().moveColumn(column, column);
             }
         }
-    }    /**
+    }
+
+    public void uninstallUI(final JComponent c) {
+        uninstallDefaults();
+        uninstallListeners();
+        uninstallKeyboardActions();
+
+        header.remove(rendererPane);
+        rendererPane = null;
+        header = null;
+    }
+
+
+    /**
+     * Uninstalls default properties
+     */
+    protected void uninstallDefaults() {
+    }
+
+
+    /**
+     * Unregisters listeners.
+     */
+    protected void uninstallListeners() {
+        header.removeMouseListener(mouseInputListener);
+        header.removeMouseMotionListener(mouseInputListener);
+        header.removeFocusListener(focusListener);
+
+        mouseInputListener = null;
+    }
+
+
+    /**
+     * Unregisters default key actions.
+     */
+    protected void uninstallKeyboardActions() {
+        SwingUtilities.replaceUIInputMap(header, JComponent.WHEN_FOCUSED, null);
+        SwingUtilities.replaceUIActionMap(header, null);
+    }
+
+//
+// Support for mouse rollover
+//
+
+
+    /**
+     * Returns the index of the column header over which the mouse
+     * currently is. When the mouse is not over the table header,
+     * -1 is returned.
+     *
+     * @return the index of the current rollover column
+     * @see #rolloverColumnUpdated(int, int)
+     * @since 1.6
+     */
+    protected int getRolloverColumn() {
+        return rolloverColumn;
+    }
+
+
+    /**
      * This method gets called every time when a rollover column in the table
      * header is updated. Every look and feel that supports a rollover effect
      * in a table header should override this method and repaint the header.

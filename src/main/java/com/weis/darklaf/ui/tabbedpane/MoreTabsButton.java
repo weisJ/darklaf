@@ -30,14 +30,14 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-class MoreTabsButton extends DarkTabAreaButton {
+public class MoreTabsButton extends DarkTabAreaButton {
 
     protected final static String INFINITY = "\u221e";
     protected final static int PAD = 2;
     private DarkTabbedPaneUI ui;
     protected final Icon icon;
 
-    protected MoreTabsButton(final DarkTabbedPaneUI ui) {
+    public MoreTabsButton(final DarkTabbedPaneUI ui) {
         super(ui);
         this.ui = ui;
         icon = ui.getMoreTabsIcon();

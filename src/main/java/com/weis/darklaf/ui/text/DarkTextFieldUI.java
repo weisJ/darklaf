@@ -44,6 +44,14 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             getComponent().repaint();
         }
     };
+    private long lastSearchEvent;
+    private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
+        @Override
+        public void popupMenuWillBecomeInvisible(@NotNull final PopupMenuEvent e) {
+            lastSearchEvent = System.currentTimeMillis();
+        }
+    };
+    private boolean clearHovered;
     private final MouseMotionListener mouseMotionListener = (MouseMovementListener) e -> updateCursor(e.getPoint());
     private final KeyListener keyListener = new KeyAdapter() {
         @Override
@@ -55,7 +63,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             });
         }
     };
-    private long lastSearchEvent;
     private final MouseListener mouseListener = (MouseClickListener) e -> {
         ClickAction actionUnder = getActionUnder(e.getPoint());
         if (actionUnder == ClickAction.CLEAR) {
@@ -64,13 +71,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             showSearchPopup();
         }
     };
-    private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
-        @Override
-        public void popupMenuWillBecomeInvisible(@NotNull final PopupMenuEvent e) {
-            lastSearchEvent = System.currentTimeMillis();
-        }
-    };
-    private boolean clearHovered;
 
     @NotNull
     @Contract("_ -> new")

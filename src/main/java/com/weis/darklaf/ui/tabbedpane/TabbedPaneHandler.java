@@ -77,7 +77,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
             ui.calculatedBaseline = false;
         } else if (Objects.equals(name, "tabPlacement")) {
             if (ui.scrollableTabLayoutEnabled()) {
-                ui.tabScroller.createButtons();
+                ui.tabScroller.createButtons(ui);
             }
             ui.calculatedBaseline = false;
         } else if (Objects.equals(name, "opaque") && isScrollLayout) {

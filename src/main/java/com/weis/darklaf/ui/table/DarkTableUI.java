@@ -250,6 +250,56 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     @Override
+    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
+        var bounds = table.getVisibleRect();
+        Point upperLeft = bounds.getLocation();
+        Point lowerRight = new Point(upperLeft.x + bounds.width - 1, upperLeft.y + bounds.height - 1);
+        int cMin = table.columnAtPoint(upperLeft);
+        int cMax = table.columnAtPoint(lowerRight);
+
+        boolean scrollLtR = !isScrollPaneRtl();
+        boolean ltr = table.getComponentOrientation().isLeftToRight();
+        int draggedIndex = viewIndexForColumn(table.getTableHeader().getDraggedColumn());
+        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
+                                  table.getCellRect(row, draggedIndex, true),
+                                  table);
+        boolean isDragged = column == draggedIndex && dist != 0;
+        var r = new Rectangle(cellRect);
+        if (!scrollBarVisible()) {
+            if (ltr) {
+                if (column == cMax && !isDragged) r.width += 1;
+            } else {
+                if (column == cMin && !isDragged) r.width += 1;
+            }
+        } else if (!scrollLtR) {
+            if (ltr) {
+                if (column == cMax && !isDragged) r.width += 1;
+                if (column == cMin && !isDragged) {
+                    r.width -= 1;
+                    r.x += 1;
+                }
+            } else {
+                if (column == cMin && !isDragged) r.width += 1;
+                if (column == cMax && !isDragged) {
+                    r.width -= 1;
+                    r.x += 1;
+                }
+            }
+        }
+        if (table.isEditing() && table.getEditingRow() == row &&
+                table.getEditingColumn() == column) {
+            Component component = table.getEditorComponent();
+            component.setBounds(cellRect);
+            component.validate();
+        } else {
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component component = table.prepareRenderer(renderer, row, column);
+            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
+                                        cellRect.width, cellRect.height, true);
+        }
+    }
+
+    @Override
     protected void paintDraggedArea(@NotNull final Graphics g, final int rMin, final int rMax,
                                     final int cMin, final int cMax,
                                     final TableColumn draggedColumn, final int distance) {
@@ -335,56 +385,6 @@ public class DarkTableUI extends DarkTableUIBridge {
             int y = rect.y + rect.height - 1;
             g.setColor(getBorderColor());
             g.fillRect(rect.x, y, rect.width, 1);
-        }
-    }
-
-    @Override
-    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
-        var bounds = table.getVisibleRect();
-        Point upperLeft = bounds.getLocation();
-        Point lowerRight = new Point(upperLeft.x + bounds.width - 1, upperLeft.y + bounds.height - 1);
-        int cMin = table.columnAtPoint(upperLeft);
-        int cMax = table.columnAtPoint(lowerRight);
-
-        boolean scrollLtR = !isScrollPaneRtl();
-        boolean ltr = table.getComponentOrientation().isLeftToRight();
-        int draggedIndex = viewIndexForColumn(table.getTableHeader().getDraggedColumn());
-        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
-                                  table.getCellRect(row, draggedIndex, true),
-                                  table);
-        boolean isDragged = column == draggedIndex && dist != 0;
-        var r = new Rectangle(cellRect);
-        if (!scrollBarVisible()) {
-            if (ltr) {
-                if (column == cMax && !isDragged) r.width += 1;
-            } else {
-                if (column == cMin && !isDragged) r.width += 1;
-            }
-        } else if (!scrollLtR) {
-            if (ltr) {
-                if (column == cMax && !isDragged) r.width += 1;
-                if (column == cMin && !isDragged) {
-                    r.width -= 1;
-                    r.x += 1;
-                }
-            } else {
-                if (column == cMin && !isDragged) r.width += 1;
-                if (column == cMax && !isDragged) {
-                    r.width -= 1;
-                    r.x += 1;
-                }
-            }
-        }
-        if (table.isEditing() && table.getEditingRow() == row &&
-                table.getEditingColumn() == column) {
-            Component component = table.getEditorComponent();
-            component.setBounds(cellRect);
-            component.validate();
-        } else {
-            TableCellRenderer renderer = table.getCellRenderer(row, column);
-            Component component = table.prepareRenderer(renderer, row, column);
-            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
-                                        cellRect.width, cellRect.height, true);
         }
     }
 }

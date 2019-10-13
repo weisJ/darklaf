@@ -72,15 +72,14 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         // Calculate how much space the tabs will need, based on the
         // minimum size required to display largest child + content border
         //
-        if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
+        if (!ui.isHorizontalTabPlacement()) {
             int tabHeight = ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(),
                                                   ui.getFontMetrics().getHeight());
             if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
                 tabHeight += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
             }
             height = Math.max(height, tabHeight);
-            tabExtent = preferredTabAreaWidth(tabPlacement,
-                                              height - tabAreaInsets.top - tabAreaInsets.bottom);
+            tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
             width += tabExtent;
         } else {
             int tabWidth = ui.calculateTabWidth(tabPlacement, ui.tabPane.getSelectedIndex(), ui.getFontMetrics());
@@ -300,7 +299,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         boolean verticalTabRuns = !ui.isHorizontalTabPlacement();
         boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
 
-        if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
+        if (!ui.isHorizontalTabPlacement()) {
             ui.maxTabWidth = ui.calculateMaxTabWidth(tabPlacement);
         } else {
             ui.maxTabHeight = ui.calculateMaxTabHeight(tabPlacement);

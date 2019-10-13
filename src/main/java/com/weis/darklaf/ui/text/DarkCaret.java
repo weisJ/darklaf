@@ -46,33 +46,17 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     public boolean getRoundedSelectionEdges() {
         return ((DarkHighlightPainter) getSelectionPainter()).getRoundedEdges();
+    }
+
+    public void setRoundedSelectionEdges(final boolean rounded) {
+        ((DarkHighlightPainter) getSelectionPainter()).setRoundedEdges(rounded);
     }    @Override
     protected void positionCaret(final MouseEvent e) {
         super.positionCaret(e);
     }
 
-    public void setRoundedSelectionEdges(final boolean rounded) {
-        ((DarkHighlightPainter) getSelectionPainter()).setRoundedEdges(rounded);
-    }    private void adjustCaretLocation(@NotNull final MouseEvent e) {
-        if (e.isShiftDown() && getDot() != -1) {
-            moveCaret(e);
-        } else {
-            positionCaret(e);
-        }
-    }
-
     public CaretStyle getStyle() {
         return style;
-    }    private void adjustFocus(final boolean inWindow) {
-        JTextComponent textArea = getComponent();
-        if ((textArea != null) && textArea.isEnabled() &&
-                textArea.isRequestFocusEnabled()) {
-            if (inWindow) {
-                textArea.requestFocusInWindow();
-            } else {
-                textArea.requestFocus();
-            }
-        }
     }
 
     public void setStyle(final CaretStyle style) {
@@ -84,22 +68,18 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             this.style = s;
             repaint();
         }
-    }    @Override
-    protected synchronized void damage(final Rectangle r) {
-        if (r != null) {
-            validateWidth(r); // Check for "0" or "1" caret width
-            x = r.x - 1;
-            y = r.y;
-            width = r.width + 4;
-            height = r.height;
-            repaint();
+    }
+
+    private void adjustCaretLocation(@NotNull final MouseEvent e) {
+        if (e.isShiftDown() && getDot() != -1) {
+            moveCaret(e);
+        } else {
+            positionCaret(e);
         }
     }
 
     public boolean isAlwaysVisible() {
         return alwaysVisible;
-    }    public boolean getPasteOnMiddleMouseClick() {
-        return pasteOnMiddleMouseClick;
     }
 
     /**
@@ -122,15 +102,46 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
+    private void adjustFocus(final boolean inWindow) {
+        JTextComponent textArea = getComponent();
+        if ((textArea != null) && textArea.isEnabled() &&
+                textArea.isRequestFocusEnabled()) {
+            if (inWindow) {
+                textArea.requestFocusInWindow();
+            } else {
+                textArea.requestFocus();
+            }
+        }
+    }
+
+    @Override
+    protected synchronized void damage(final Rectangle r) {
+        if (r != null) {
+            validateWidth(r); // Check for "0" or "1" caret width
+            x = r.x - 1;
+            y = r.y;
+            width = r.width + 4;
+            height = r.height;
+            repaint();
+        }
+    }
+
+    @Override
+    protected Highlighter.HighlightPainter getSelectionPainter() {
+        return selectionPainter;
+    }
+
+    public boolean getPasteOnMiddleMouseClick() {
+        return pasteOnMiddleMouseClick;
+    }
+
+
     public enum CaretStyle {
         VERTICAL_LINE_STYLE,
         UNDERLINE_STYLE,
         BLOCK_STYLE,
         BLOCK_BORDER_STYLE,
         THICK_VERTICAL_LINE_STYLE
-    }    @Override
-    protected Highlighter.HighlightPainter getSelectionPainter() {
-        return selectionPainter;
     }
 
 

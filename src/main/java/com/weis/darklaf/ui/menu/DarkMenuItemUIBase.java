@@ -63,6 +63,9 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         return new DarkMenuItemUIBase();
     }
 
+    protected static void loadActionMap(@NotNull final LazyActionMap map) {
+        map.put(new Actions(Actions.CLICK));
+    }
 
     @Override
     public void installUI(final JComponent c) {
@@ -71,13 +74,6 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
         acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
         arrowIcon = null;
-    }
-
-    protected DarkMenuItemUIBase.Handler getHandler() {
-        if (handler == null) {
-            handler = new DarkMenuItemUIBase.Handler();
-        }
-        return handler;
     }
 
     protected void paintMenuItem(@NotNull final Graphics g, final JComponent c,
@@ -264,129 +260,11 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
      * Code from BasicMenuItemUI.
      */
 
-    protected class Handler implements MenuDragMouseListener, MouseInputListener, PropertyChangeListener {
-        //
-        // MouseInputListener
-        //
-        public void mouseClicked(final MouseEvent e) {
+    protected DarkMenuItemUIBase.Handler getHandler() {
+        if (handler == null) {
+            handler = new DarkMenuItemUIBase.Handler();
         }
-
-        public void mousePressed(final MouseEvent e) {
-        }
-
-        public void mouseReleased(final MouseEvent e) {
-            if (!menuItem.isEnabled()) {
-                return;
-            }
-            MenuSelectionManager manager =
-                    MenuSelectionManager.defaultManager();
-            Point p = e.getPoint();
-            if (p.x >= 0 && p.x < menuItem.getWidth() &&
-                    p.y >= 0 && p.y < menuItem.getHeight()) {
-                doClick(manager);
-            } else {
-                manager.processMouseEvent(e);
-            }
-        }
-
-        @SuppressWarnings("deprecation")
-        public void mouseEntered(@NotNull final MouseEvent e) {
-            MenuSelectionManager manager = MenuSelectionManager.defaultManager();
-            int modifiers = e.getModifiers();
-            // 4188027: drag enter/exit added in JDK 1.1.7A, JDK1.2
-            if ((modifiers & (InputEvent.BUTTON1_MASK |
-                    InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK)) != 0) {
-                MenuSelectionManager.defaultManager().processMouseEvent(e);
-            } else {
-                manager.setSelectedPath(getPath());
-            }
-        }
-
-        @SuppressWarnings("deprecation")
-        public void mouseExited(@NotNull final MouseEvent e) {
-            MenuSelectionManager manager = MenuSelectionManager.defaultManager();
-
-            int modifiers = e.getModifiers();
-            // 4188027: drag enter/exit added in JDK 1.1.7A, JDK1.2
-            if ((modifiers & (InputEvent.BUTTON1_MASK |
-                    InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK)) != 0) {
-                MenuSelectionManager.defaultManager().processMouseEvent(e);
-            } else {
-
-                MenuElement[] path = manager.getSelectedPath();
-                if (path.length > 1 && path[path.length - 1] == menuItem) {
-                    MenuElement[] newPath = new MenuElement[path.length - 1];
-                    int i, c;
-                    for (i = 0, c = path.length - 1; i < c; i++) { newPath[i] = path[i]; }
-                    manager.setSelectedPath(newPath);
-                }
-            }
-        }
-
-        public void mouseDragged(final MouseEvent e) {
-            MenuSelectionManager.defaultManager().processMouseEvent(e);
-        }
-
-        public void mouseMoved(final MouseEvent e) {
-        }
-
-        //
-        // MenuDragListener
-        //
-        public void menuDragMouseEntered(@NotNull final MenuDragMouseEvent e) {
-            MenuSelectionManager manager = e.getMenuSelectionManager();
-            MenuElement[] path = e.getPath();
-            manager.setSelectedPath(path);
-        }
-
-        public void menuDragMouseDragged(@NotNull final MenuDragMouseEvent e) {
-            MenuSelectionManager manager = e.getMenuSelectionManager();
-            MenuElement[] path = e.getPath();
-            manager.setSelectedPath(path);
-        }
-
-        public void menuDragMouseExited(final MenuDragMouseEvent e) {
-        }
-
-        public void menuDragMouseReleased(final MenuDragMouseEvent e) {
-            if (!menuItem.isEnabled()) {
-                return;
-            }
-            MenuSelectionManager manager = e.getMenuSelectionManager();
-            e.getPath();
-            Point p = e.getPoint();
-            if (p.x >= 0 && p.x < menuItem.getWidth() &&
-                    p.y >= 0 && p.y < menuItem.getHeight()) {
-                doClick(manager);
-            } else {
-                manager.clearSelectedPath();
-            }
-        }
-
-
-        //
-        // PropertyChangeListener
-        //
-        public void propertyChange(final PropertyChangeEvent e) {
-            String name = e.getPropertyName();
-
-            if (Objects.equals(name, "labelFor") || Objects.equals(name, "displayedMnemonic") ||
-                    Objects.equals(name, "accelerator")) {
-                updateAcceleratorBinding();
-            } else if (Objects.equals(name, "text") || "font".equals(name) || "foreground".equals(name)
-                    || SwingUtilities2.isScaleChanged(e)) {
-                // remove the old html view client property if one
-                // existed, and install a new one if the text installed
-                // into the JLabel is html source.
-                JMenuItem lbl = ((JMenuItem) e.getSource());
-                String text = lbl.getText();
-                BasicHTML.updateRenderer(lbl, text);
-            } else if (Objects.equals(name, "iconTextGap")) {
-                defaultTextIconGap = ((Number) e.getNewValue()).intValue();
-            } else if (Objects.equals(name, "horizontalTextPosition")) {
-                updateCheckIcon();
-            }
-        }
+        return handler;
     }
 
     protected void updateAcceleratorBinding() {
@@ -473,10 +351,6 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         }
     }
 
-    protected static void loadActionMap(@NotNull final LazyActionMap map) {
-        map.put(new Actions(Actions.CLICK));
-    }
-
     private static class Actions extends UIAction {
         private static final String CLICK = "doClick";
 
@@ -488,6 +362,131 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
             JMenuItem mi = (JMenuItem) e.getSource();
             MenuSelectionManager.defaultManager().clearSelectedPath();
             mi.doClick();
+        }
+    }
+
+    protected class Handler implements MenuDragMouseListener, MouseInputListener, PropertyChangeListener {
+        //
+        // MouseInputListener
+        //
+        public void mouseClicked(final MouseEvent e) {
+        }
+
+        public void mousePressed(final MouseEvent e) {
+        }
+
+        public void mouseReleased(final MouseEvent e) {
+            if (!menuItem.isEnabled()) {
+                return;
+            }
+            MenuSelectionManager manager =
+                    MenuSelectionManager.defaultManager();
+            Point p = e.getPoint();
+            if (p.x >= 0 && p.x < menuItem.getWidth() &&
+                    p.y >= 0 && p.y < menuItem.getHeight()) {
+                doClick(manager);
+            } else {
+                manager.processMouseEvent(e);
+            }
+        }
+
+        @SuppressWarnings("deprecation")
+        public void mouseEntered(@NotNull final MouseEvent e) {
+            MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+            int modifiers = e.getModifiers();
+            // 4188027: drag enter/exit added in JDK 1.1.7A, JDK1.2
+            if ((modifiers & (InputEvent.BUTTON1_MASK |
+                    InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK)) != 0) {
+                MenuSelectionManager.defaultManager().processMouseEvent(e);
+            } else {
+                manager.setSelectedPath(getPath());
+            }
+        }
+
+        @SuppressWarnings("deprecation")
+        public void mouseExited(@NotNull final MouseEvent e) {
+            MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+
+            int modifiers = e.getModifiers();
+            // 4188027: drag enter/exit added in JDK 1.1.7A, JDK1.2
+            if ((modifiers & (InputEvent.BUTTON1_MASK |
+                    InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK)) != 0) {
+                MenuSelectionManager.defaultManager().processMouseEvent(e);
+            } else {
+
+                MenuElement[] path = manager.getSelectedPath();
+                if (path.length > 1 && path[path.length - 1] == menuItem) {
+                    MenuElement[] newPath = new MenuElement[path.length - 1];
+                    int i, c;
+                    for (i = 0, c = path.length - 1; i < c; i++) { newPath[i] = path[i]; }
+                    manager.setSelectedPath(newPath);
+                }
+            }
+        }
+
+        public void mouseDragged(final MouseEvent e) {
+            MenuSelectionManager.defaultManager().processMouseEvent(e);
+        }
+
+        public void mouseMoved(final MouseEvent e) {
+        }
+
+        //
+        // MenuDragListener
+        //
+        public void menuDragMouseEntered(@NotNull final MenuDragMouseEvent e) {
+            MenuSelectionManager manager = e.getMenuSelectionManager();
+            MenuElement[] path = e.getPath();
+            manager.setSelectedPath(path);
+        }
+
+        public void menuDragMouseExited(final MenuDragMouseEvent e) {
+        }
+
+        public void menuDragMouseDragged(@NotNull final MenuDragMouseEvent e) {
+            MenuSelectionManager manager = e.getMenuSelectionManager();
+            MenuElement[] path = e.getPath();
+            manager.setSelectedPath(path);
+        }
+
+        public void menuDragMouseReleased(final MenuDragMouseEvent e) {
+            if (!menuItem.isEnabled()) {
+                return;
+            }
+            MenuSelectionManager manager = e.getMenuSelectionManager();
+            e.getPath();
+            Point p = e.getPoint();
+            if (p.x >= 0 && p.x < menuItem.getWidth() &&
+                    p.y >= 0 && p.y < menuItem.getHeight()) {
+                doClick(manager);
+            } else {
+                manager.clearSelectedPath();
+            }
+        }
+
+
+        //
+        // PropertyChangeListener
+        //
+        public void propertyChange(final PropertyChangeEvent e) {
+            String name = e.getPropertyName();
+
+            if (Objects.equals(name, "labelFor") || Objects.equals(name, "displayedMnemonic") ||
+                    Objects.equals(name, "accelerator")) {
+                updateAcceleratorBinding();
+            } else if (Objects.equals(name, "text") || "font".equals(name) || "foreground".equals(name)
+                    || SwingUtilities2.isScaleChanged(e)) {
+                // remove the old html view client property if one
+                // existed, and install a new one if the text installed
+                // into the JLabel is html source.
+                JMenuItem lbl = ((JMenuItem) e.getSource());
+                String text = lbl.getText();
+                BasicHTML.updateRenderer(lbl, text);
+            } else if (Objects.equals(name, "iconTextGap")) {
+                defaultTextIconGap = ((Number) e.getNewValue()).intValue();
+            } else if (Objects.equals(name, "horizontalTextPosition")) {
+                updateCheckIcon();
+            }
         }
     }
 }

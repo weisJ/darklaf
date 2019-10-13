@@ -88,7 +88,7 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.remove(ui.leadingComp);
             var val = e.getNewValue();
             if (val instanceof Component) {
-                ui.leadingComp = (Component) val;
+                ui.leadingComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.leadingComp);
             } else {
                 ui.leadingComp = null;
@@ -97,7 +97,7 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.remove(ui.trailingComp);
             var val = e.getNewValue();
             if (val instanceof Component) {
-                ui.trailingComp = (Component) val;
+                ui.trailingComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.trailingComp);
             } else {
                 ui.trailingComp = null;
@@ -112,7 +112,7 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.remove(ui.northComp);
             var val = e.getNewValue();
             if (val instanceof Component) {
-                ui.northComp = (Component) val;
+                ui.northComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.northComp);
             } else {
                 ui.northComp = null;
@@ -121,7 +121,7 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.remove(ui.southComp);
             var val = e.getNewValue();
             if (val instanceof Component) {
-                ui.southComp = (Component) val;
+                ui.southComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.southComp);
             } else {
                 ui.southComp = null;
@@ -130,7 +130,7 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.remove(ui.eastComp);
             var val = e.getNewValue();
             if (val instanceof Component) {
-                ui.eastComp = (Component) val;
+                ui.eastComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.eastComp);
             } else {
                 ui.eastComp = null;
@@ -139,7 +139,7 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.remove(ui.westComp);
             var val = e.getNewValue();
             if (val instanceof Component) {
-                ui.westComp = (Component) val;
+                ui.westComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.westComp);
             } else {
                 ui.westComp = null;

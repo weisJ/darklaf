@@ -47,13 +47,13 @@ class ScrollableTabSupport implements ActionListener, ChangeListener {
         viewport.setView(tabPanel);
         viewport.addChangeListener(this);
         croppedEdge = new CroppedEdge(ui);
-        createButtons();
+        createButtons(ui);
     }
 
     /**
      * Recreates the scroll buttons and adds them to the TabbedPane.
      */
-    void createButtons() {
+    void createButtons(final DarkTabbedPaneUIBridge ui) {
         if (scrollForwardButton != null) {
             ui.tabPane.remove(scrollForwardButton);
             scrollForwardButton.removeActionListener(this);

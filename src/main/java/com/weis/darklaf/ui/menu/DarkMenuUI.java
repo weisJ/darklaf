@@ -34,29 +34,24 @@ import java.util.Objects;
  */
 public class DarkMenuUI extends DarkMenuItemUIBase {
 
-    /**
-     * The instance of {@code ChangeListener}.
-     */
-    protected ChangeListener changeListener;
-
-    /**
-     * The instance of {@code MenuListener}.
-     */
-    protected MenuListener menuListener;
-
-    private int lastMnemonic = 0;
-
-    /**
-     * Uses as the parent of the windowInputMap when selected.
-     */
-    private InputMap selectedWindowInputMap;
-
     /* diagnostic aids -- should be false for production builds. */
     private static final boolean TRACE = false; // trace creates and disposes
     private static final boolean VERBOSE = false; // show reuse hits/misses
     private static final boolean DEBUG = false;  // show bad params, misc.
-
     private static boolean crossMenuMnemonic = true;
+    /**
+     * The instance of {@code ChangeListener}.
+     */
+    protected ChangeListener changeListener;
+    /**
+     * The instance of {@code MenuListener}.
+     */
+    protected MenuListener menuListener;
+    private int lastMnemonic = 0;
+    /**
+     * Uses as the parent of the windowInputMap when selected.
+     */
+    private InputMap selectedWindowInputMap;
 
     /**
      * Constructs a new instance of {@code BasicMenuUI}.
@@ -75,6 +70,37 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
         map.put(new Actions(Actions.SELECT, null, true));
     }
 
+    private static void appendPath(@NotNull final MenuElement[] path, final MenuElement elem) {
+        MenuElement[] newPath = new MenuElement[path.length + 1];
+        System.arraycopy(path, 0, newPath, 0, path.length);
+        newPath[path.length] = elem;
+        MenuSelectionManager.defaultManager().setSelectedPath(newPath);
+    }
+
+    @NotNull
+    protected static java.util.List<JPopupMenu> getPopups() {
+        MenuSelectionManager msm = MenuSelectionManager.defaultManager();
+        MenuElement[] p = msm.getSelectedPath();
+
+        java.util.List<JPopupMenu> list = new ArrayList<JPopupMenu>(p.length);
+        for (MenuElement element : p) {
+            if (element instanceof JPopupMenu) {
+                list.add((JPopupMenu) element);
+            }
+        }
+        return list;
+    }
+
+    protected static JPopupMenu getLastPopup() {
+        MenuSelectionManager msm = MenuSelectionManager.defaultManager();
+        MenuElement[] p = msm.getSelectedPath();
+        JPopupMenu popup = null;
+
+        for (int i = p.length - 1; popup == null && i >= 0; i--) {
+            if (p[i] instanceof JPopupMenu) { popup = (JPopupMenu) p[i]; }
+        }
+        return popup;
+    }
 
     protected void installDefaults() {
         super.installDefaults();
@@ -102,11 +128,6 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
     protected void installKeyboardActions() {
         super.installKeyboardActions();
         updateMnemonicBinding();
-    }
-
-    void installLazyActionMap() {
-        LazyActionMap.installLazyActionMap(menuItem, BasicMenuUI.class,
-                                           getPropertyPrefix() + ".actionMap");
     }
 
     @SuppressWarnings("deprecation")
@@ -144,46 +165,6 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
         lastMnemonic = mnemonic;
     }
 
-    protected void uninstallKeyboardActions() {
-        super.uninstallKeyboardActions();
-        lastMnemonic = 0;
-    }
-
-    protected MouseInputListener createMouseInputListener(final JComponent c) {
-        return getHandler();
-    }
-
-    /**
-     * Returns an instance of {@code MenuListener}.
-     *
-     * @param c a component
-     * @return an instance of {@code MenuListener}
-     */
-    protected MenuListener createMenuListener(final JComponent c) {
-        return null;
-    }
-
-    /**
-     * Returns an instance of {@code ChangeListener}.
-     *
-     * @param c a component
-     * @return an instance of {@code ChangeListener}
-     */
-    protected ChangeListener createChangeListener(final JComponent c) {
-        return null;
-    }
-
-    protected PropertyChangeListener createPropertyChangeListener(final JComponent c) {
-        return getHandler();
-    }
-
-    protected DarkMenuItemUIBase.Handler getHandler() {
-        if (handler == null) {
-            handler = new DarkMenuUI.Handler();
-        }
-        return handler;
-    }
-
     protected void uninstallDefaults() {
         menuItem.setArmed(false);
         menuItem.setSelected(false);
@@ -203,12 +184,32 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
         handler = null;
     }
 
+    protected void uninstallKeyboardActions() {
+        super.uninstallKeyboardActions();
+        lastMnemonic = 0;
+    }
+
+    protected MouseInputListener createMouseInputListener(final JComponent c) {
+        return getHandler();
+    }
+
+    protected DarkMenuItemUIBase.Handler getHandler() {
+        if (handler == null) {
+            handler = new DarkMenuUI.Handler();
+        }
+        return handler;
+    }
+
     protected MenuDragMouseListener createMenuDragMouseListener(final JComponent c) {
         return getHandler();
     }
 
     protected MenuKeyListener createMenuKeyListener(final JComponent c) {
         return (MenuKeyListener) getHandler();
+    }
+
+    protected PropertyChangeListener createPropertyChangeListener(final JComponent c) {
+        return getHandler();
     }
 
     public Dimension getMinimumSize(final JComponent c) {
@@ -225,6 +226,49 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
     }
 
     /**
+     * Returns an instance of {@code ChangeListener}.
+     *
+     * @param c a component
+     * @return an instance of {@code ChangeListener}
+     */
+    protected ChangeListener createChangeListener(final JComponent c) {
+        return null;
+    }
+
+    /**
+     * Returns an instance of {@code MenuListener}.
+     *
+     * @param c a component
+     * @return an instance of {@code MenuListener}
+     */
+    protected MenuListener createMenuListener(final JComponent c) {
+        return null;
+    }
+
+    /*
+     * Set the background color depending on whether this is a toplevel menu
+     * in a menubar or a submenu of another menu.
+     */
+    private void updateDefaultBackgroundColor() {
+        if (!UIManager.getBoolean("Menu.useMenuBarBackgroundForTopLevel")) {
+            return;
+        }
+        JMenu menu = (JMenu) menuItem;
+        if (menu.getBackground() instanceof UIResource) {
+            if (menu.isTopLevelMenu()) {
+                menu.setBackground(UIManager.getColor("MenuBar.background"));
+            } else {
+                menu.setBackground(UIManager.getColor(getPropertyPrefix() + ".background"));
+            }
+        }
+    }
+
+    void installLazyActionMap() {
+        LazyActionMap.installLazyActionMap(menuItem, BasicMenuUI.class,
+                                           getPropertyPrefix() + ".actionMap");
+    }
+
+    /**
      * Sets timer to the {@code menu}.
      *
      * @param menu an instance of {@code JMenu}.
@@ -233,13 +277,6 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
         Timer timer = new Timer(menu.getDelay(), new Actions(Actions.SELECT, menu, false));
         timer.setRepeats(false);
         timer.start();
-    }
-
-    private static void appendPath(@NotNull final MenuElement[] path, final MenuElement elem) {
-        MenuElement[] newPath = new MenuElement[path.length + 1];
-        System.arraycopy(path, 0, newPath, 0, path.length);
-        newPath[path.length] = elem;
-        MenuSelectionManager.defaultManager().setSelectedPath(newPath);
     }
 
     private static class Actions extends UIAction {
@@ -254,13 +291,6 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
             super(key);
             this.menu = menu;
             this.force = shouldForce;
-        }
-
-        private JMenu getMenu(final ActionEvent e) {
-            if (e.getSource() instanceof JMenu) {
-                return (JMenu) e.getSource();
-            }
-            return menu;
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -302,30 +332,19 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
             }
         }
 
+        private JMenu getMenu(final ActionEvent e) {
+            if (e.getSource() instanceof JMenu) {
+                return (JMenu) e.getSource();
+            }
+            return menu;
+        }
+
         @Override
         public boolean accept(final Object c) {
             if (c instanceof JMenu) {
                 return ((JMenu) c).isEnabled();
             }
             return true;
-        }
-    }
-
-    /*
-     * Set the background color depending on whether this is a toplevel menu
-     * in a menubar or a submenu of another menu.
-     */
-    private void updateDefaultBackgroundColor() {
-        if (!UIManager.getBoolean("Menu.useMenuBarBackgroundForTopLevel")) {
-            return;
-        }
-        JMenu menu = (JMenu) menuItem;
-        if (menu.getBackground() instanceof UIResource) {
-            if (menu.isTopLevelMenu()) {
-                menu.setBackground(UIManager.getColor("MenuBar.background"));
-            } else {
-                menu.setBackground(UIManager.getColor(getPropertyPrefix() + ".background"));
-            }
         }
     }
 
@@ -447,21 +466,6 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
 
     private class Handler extends DarkMenuItemUIBase.Handler implements MenuKeyListener {
         //
-        // PropertyChangeListener
-        //
-        public void propertyChange(final PropertyChangeEvent e) {
-            if (Objects.equals(e.getPropertyName(), AbstractButton.
-                    MNEMONIC_CHANGED_PROPERTY)) {
-                updateMnemonicBinding();
-            } else {
-                if (e.getPropertyName().equals("ancestor")) {
-                    updateDefaultBackgroundColor();
-                }
-                super.propertyChange(e);
-            }
-        }
-
-        //
         // MouseInputListener
         //
         public void mouseClicked(final MouseEvent e) {
@@ -578,7 +582,6 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
         public void mouseMoved(final MouseEvent e) {
         }
 
-
         //
         // MenuDragHandler
         //
@@ -619,6 +622,21 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
         }
 
         public void menuDragMouseReleased(final MenuDragMouseEvent e) {
+        }
+
+        //
+        // PropertyChangeListener
+        //
+        public void propertyChange(final PropertyChangeEvent e) {
+            if (Objects.equals(e.getPropertyName(), AbstractButton.
+                    MNEMONIC_CHANGED_PROPERTY)) {
+                updateMnemonicBinding();
+            } else {
+                if (e.getPropertyName().equals("ancestor")) {
+                    updateDefaultBackgroundColor();
+                }
+                super.propertyChange(e);
+            }
         }
 
         //
@@ -666,30 +684,5 @@ public class DarkMenuUI extends DarkMenuItemUIBase {
 
         public void menuKeyReleased(final MenuKeyEvent e) {
         }
-    }
-
-    @NotNull
-    protected static java.util.List<JPopupMenu> getPopups() {
-        MenuSelectionManager msm = MenuSelectionManager.defaultManager();
-        MenuElement[] p = msm.getSelectedPath();
-
-        java.util.List<JPopupMenu> list = new ArrayList<JPopupMenu>(p.length);
-        for (MenuElement element : p) {
-            if (element instanceof JPopupMenu) {
-                list.add((JPopupMenu) element);
-            }
-        }
-        return list;
-    }
-
-    protected static JPopupMenu getLastPopup() {
-        MenuSelectionManager msm = MenuSelectionManager.defaultManager();
-        MenuElement[] p = msm.getSelectedPath();
-        JPopupMenu popup = null;
-
-        for (int i = p.length - 1; popup == null && i >= 0; i--) {
-            if (p[i] instanceof JPopupMenu) { popup = (JPopupMenu) p[i]; }
-        }
-        return popup;
     }
 }

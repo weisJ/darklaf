@@ -28,9 +28,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
@@ -44,7 +42,6 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
     private static final int DIVIDER_DRAG_SIZE = 10;
     private static final int DIVIDER_DRAG_OFFSET = 5;
-    private int defaultDividerSize;
     private Style style;
 
     protected DarkSplitPaneUI(final Style style) {
@@ -60,13 +57,8 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-        defaultDividerSize = splitPane.getDividerSize();
-        if (style == Style.LINE) {
-            splitPane.setDividerSize(1);
-        } else if (style == Style.INVISIBLE) {
-            splitPane.setDividerSize(0);
-        }
         splitPane.setContinuousLayout(true);
+        splitPane.setComponentZOrder(getDivider(), 0);
     }
 
     @Override
@@ -81,6 +73,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             splitPane.setLayout(null);
         }
         super.uninstallUI(c);
+        divider = null;
     }
 
     @Override
@@ -135,20 +128,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             }
             if (oldStyle != style) {
                 if (style == Style.DEFAULT || oldStyle == Style.DEFAULT) {
-                    splitPane.setDividerSize(defaultDividerSize);
-                    splitPane.remove(divider);
-                    divider = createDefaultDivider();
-                    Border b = divider.getBorder();
-                    if (!(b instanceof UIResource)) {
-                        divider.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
-                    }
-                    Integer temp = (Integer) UIManager.get("SplitPane.dividerSize");
-                    LookAndFeel.installProperty(splitPane, "dividerSize", temp == null ? 10 : temp);
-
-                    divider.setDividerSize(splitPane.getDividerSize());
-                    dividerSize = divider.getDividerSize();
-                    splitPane.add(divider, JSplitPane.DIVIDER);
-                    splitPane.invalidate();
+                    splitPane.setUI(new DarkSplitPaneUI(style));
                 }
             }
         }
@@ -188,9 +168,9 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             if (style == Style.LINE) {
                 g.setColor(getDividerLineColor());
                 if (orientation == JSplitPane.HORIZONTAL_SPLIT) {
-                    g.drawLine(DIVIDER_DRAG_OFFSET, 0, DIVIDER_DRAG_OFFSET, getHeight() - 1);
+                    g.drawLine(DIVIDER_DRAG_OFFSET, 0, DIVIDER_DRAG_OFFSET, getHeight());
                 } else {
-                    g.drawLine(0, DIVIDER_DRAG_OFFSET, getWidth() - 1, DIVIDER_DRAG_OFFSET);
+                    g.drawLine(0, DIVIDER_DRAG_OFFSET, getWidth(), DIVIDER_DRAG_OFFSET);
                 }
             }
         }

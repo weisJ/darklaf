@@ -209,10 +209,6 @@ public final class DarkUIUtil {
         return SwingUtilities.getWindowAncestor(owner) == w;
     }
 
-    public static Color getTreeTextBackground() {
-        return UIManager.getColor("Tree.textBackground");
-    }
-
     public static int getFocusAcceleratorKeyMask() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         if (tk instanceof SunToolkit) {

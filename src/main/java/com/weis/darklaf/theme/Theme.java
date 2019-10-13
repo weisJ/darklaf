@@ -27,7 +27,7 @@ public abstract class Theme {
             "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
             "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "optionPane", "panel", "popupMenu",
             "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator", "slider", "spinner",
-            "splitPane", "statusBar", "tabbedPane", "table", "text", "toggleButton", "toolBar", "toolTip", "tree",
+            "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "text", "toggleButton", "toolBar", "toolTip", "tree",
     };
 
     public void beforeInstall() {

@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.tabbedpane;
 
+import com.weis.darklaf.components.UIResourceWrapper;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
@@ -7,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -134,15 +136,42 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
         var lead = tabPane.getClientProperty("JTabbedPane.leadingComponent");
         if (lead instanceof Component) {
-            leadingComp = (Component) lead;
+            leadingComp = wrapClientComponent((Component) lead);
             tabPane.add(leadingComp);
         }
         var trail = tabPane.getClientProperty("JTabbedPane.trailingComponent");
         if (trail instanceof Component) {
-            trailingComp = (Component) trail;
+            trailingComp = wrapClientComponent((Component) trail);
             tabPane.add(trailingComp);
         }
+        var north = tabPane.getClientProperty("JTabbedPane.northComponent");
+        if (north instanceof Component) {
+            northComp = wrapClientComponent((Component) north);
+            tabPane.add(northComp);
+        }
+        var south = tabPane.getClientProperty("JTabbedPane.southComponent");
+        if (south instanceof Component) {
+            southComp = wrapClientComponent((Component) south);
+            tabPane.add(southComp);
+        }
+        var west = tabPane.getClientProperty("JTabbedPane.westComponent");
+        if (west instanceof Component) {
+            westComp = wrapClientComponent((Component) west);
+            tabPane.add(westComp);
+        }
+        var east = tabPane.getClientProperty("JTabbedPane.eastComponent");
+        if (east instanceof Component) {
+            eastComp = wrapClientComponent((Component) east);
+            tabPane.add(eastComp);
+        }
         dndEnabled = Boolean.TRUE.equals(tabPane.getClientProperty("JTabbedPane.dndEnabled"));
+    }
+
+    protected Component wrapClientComponent(final Component component) {
+        if (component instanceof UIResource) {
+            return component;
+        }
+        return new UIResourceWrapper(component);
     }
 
     @Override
@@ -269,27 +298,13 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
-    protected Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
-        if (isSelected) {
-            return hover ? UIManager.getColor("TabbedPane.selectHighlight")
-                         : UIManager.getColor("TabbedPane.selected");
-        } else {
-            return hover ? UIManager.getColor("TabbedPane.highlight")
-                         : tabPane.getBackgroundAt(tabIndex);
-        }
-    }
-
-    @Override
-    protected void paintCroppedTabEdge(final Graphics g) {
-    }
-
     @Override
     protected void paintFocusIndicator(final Graphics g, final int tabPlacement, final Rectangle r,
                                        final int tabIndex, final Rectangle iconRect,
                                        final Rectangle textRect, final boolean isSelected) {
         if (isSelected) {
             if (!drawFocusBar()) return;
-            g.setColor(getAccentColor(DarkUIUtil.hasFocus(tabPane)));
+            g.setColor(getAccentColor());
             int focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
             switch (tabPlacement) {
                 case LEFT:
@@ -306,6 +321,15 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                     break;
             }
         }
+    }
+
+    @Override
+    protected void paintCroppedTabEdge(final Graphics g) {
+    }
+
+    protected Color getAccentColor() {
+        boolean focus = DarkUIUtil.hasFocus(tabPane);
+        return getAccentColor(focus);
     }
 
     @Override
@@ -444,6 +468,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         return !Boolean.FALSE.equals(tabPane.getClientProperty("JTabbedPane.drawFocusBar"));
     }
 
+    @Override
+    protected int calculateTabHeight(final int tabPlacement, final int tabIndex, final int fontHeight) {
+        return super.calculateTabHeight(tabPlacement, tabIndex, fontHeight) - 1;
+    }
+
     protected Color getAccentColor(final boolean focus) {
         return focus ? UIManager.getColor("TabbedPane.accentFocus")
                      : UIManager.getColor("TabbedPane.accent");
@@ -498,8 +527,14 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
-    protected Icon getNewTabIcon() {
-        return UIManager.getIcon("TabbedPane.newTab.icon");
+    protected Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
+        if (isSelected) {
+            return hover ? UIManager.getColor("TabbedPane.selectedHoverBackground")
+                         : UIManager.getColor("TabbedPane.selectedBackground");
+        } else {
+            return hover ? UIManager.getColor("TabbedPane.hoverBackground")
+                         : tabPane.getBackgroundAt(tabIndex);
+        }
     }
 
     protected Icon getMoreTabsIcon() {
@@ -611,6 +646,18 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                         y + getTabLabelShiftY(tabPlacement, i, isSeleceted),
                         preferredSize.width, preferredSize.height);
         }
+    }
+
+    public Icon getNewTabIcon() {
+        return UIManager.getIcon("TabbedPane.newTab.icon");
+    }
+
+    public JComponent createNewTabButton() {
+        return new NewTabButton(this);
+    }
+
+    public JButton createMoreTabsButton() {
+        return new MoreTabsButton(this);
     }
 
 }

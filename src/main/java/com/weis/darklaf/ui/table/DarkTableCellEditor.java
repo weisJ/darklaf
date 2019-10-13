@@ -197,7 +197,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             ((JComboBox<?>) editorComponent).setSelectedItem(value);
         } else if (editorComponent instanceof JSpinner) {
             var rendererComp = table.getCellRenderer(row, column)
-                    .getTableCellRendererComponent(table, value, isSelected, false, row, column);
+                                    .getTableCellRendererComponent(table, value, isSelected, false, row, column);
             if (rendererComp instanceof JTextField) {
                 editorComponent.putClientProperty("JSpinner.cellEditorAlignment",
                                                   ((JTextField) rendererComp).getHorizontalAlignment());

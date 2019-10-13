@@ -1,5 +1,4 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.theme.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +18,7 @@ public final class SplitPaneDemo {
             splitPane.setRightComponent(new JPanel() {{
                 setBackground(Color.BLUE);
             }});
+            splitPane.putClientProperty("JSplitPane.style", "invisible");
             splitPane.putClientProperty("JSplitPane.style", "line");
             splitPane.setOneTouchExpandable(true);
             frame.setContentPane(new JPanel(new BorderLayout()) {{

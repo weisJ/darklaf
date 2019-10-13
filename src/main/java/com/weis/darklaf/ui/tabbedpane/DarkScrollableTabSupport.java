@@ -56,11 +56,11 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         viewport.setView(tabPanel);
         viewport.addMouseWheelListener(this);
 
-        moreTabsButton = new MoreTabsButton(ui);
+        moreTabsButton = ui.createMoreTabsButton();
         moreTabsButton.setVisible(false);
         moreTabsButton.addActionListener(this);
 
-        newTabButton = new NewTabButton(ui);
+        newTabButton = ui.createNewTabButton();
         newTabButton.setVisible(Boolean.TRUE.equals(ui.tabPane.getClientProperty("JTabbedPane.showNewTabButton")));
 
         scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt("TabbedPane.maxPopupHeight"));
@@ -94,8 +94,8 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
     }
 
     @Override
-    void createButtons() {
-        super.createButtons();
+    void createButtons(final DarkTabbedPaneUIBridge ui) {
+        super.createButtons(ui);
         ui.tabPane.remove(scrollForwardButton);
         ui.tabPane.remove(scrollBackwardButton);
     }
