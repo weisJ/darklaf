@@ -96,5 +96,6 @@ task copyLibraries(type: Copy) {
 shadowJar {
     exclude 'help/'
     exclude 'icons/'
+    exclude 'org/jdesktop/jxlayer/plaf/ext/images/'
     minimize()
 }
