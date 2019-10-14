@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.text;
 
+import com.weis.darklaf.ui.table.TextFieldTableCellEditorBorder;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -38,11 +39,18 @@ import java.awt.*;
  */
 public class DarkTextBorder implements Border, UIResource {
 
+    private static final Border editorBorder = new TextFieldTableCellEditorBorder();
+
     public final static int BORDER_SIZE = 3;
     public final static int PADDING = 4;
 
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y,
                             final int width, final int height) {
+        if (isCellEditor(c)) {
+            editorBorder.paintBorder(c, g2, x, y, width, height);
+            return;
+        }
+
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
@@ -76,8 +84,16 @@ public class DarkTextBorder implements Border, UIResource {
         config.restore();
     }
 
+    protected static boolean isCellEditor(final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.cellEditor"));
+    }
+
     @Override
     public Insets getBorderInsets(final Component c) {
+        if (isCellEditor(c)) {
+            return editorBorder.getBorderInsets(c);
+        }
         Insets insets = new Insets(BORDER_SIZE + PADDING, BORDER_SIZE + PADDING,
                                    BORDER_SIZE + PADDING, BORDER_SIZE + PADDING);
         if (DarkTextFieldUI.isSearchField(c)) {

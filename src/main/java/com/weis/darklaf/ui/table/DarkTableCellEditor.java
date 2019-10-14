@@ -23,6 +23,7 @@ import java.util.EventObject;
 public class DarkTableCellEditor extends DefaultCellEditor {
 
     private static final JCheckBox dummyCheckBox = new JCheckBox();
+    private static final IconWrapper iconWrapper = new IconWrapper();
 
     private final DarkTableCellEditorToggleButton checkBoxEditor =
             new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellCheckBox());
@@ -39,6 +40,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     public DarkTableCellEditor(final JTextField textField) {
         super(textField);
         textField.setBorder(new TextFieldTableCellEditorBorder());
+        textField.putClientProperty("JTextField.isCellEditor", Boolean.TRUE);
         setClickCountToStart(2);
     }
 
@@ -148,7 +150,8 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     }
 
     @Override
-    public boolean isCellEditable(@NotNull final EventObject anEvent) {
+    public boolean isCellEditable(final EventObject anEvent) {
+        if (anEvent == null) return super.isCellEditable(anEvent);
         var table = ((JTable) anEvent.getSource());
         if (DarkTableCellRenderer.isBooleanRenderingEnabled(table) && anEvent instanceof MouseEvent) {
             var p = ((MouseEvent) anEvent).getPoint();
@@ -191,6 +194,8 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
         delegate.setValue(value);
 
+        var comp = editorComponent;
+
         if (editorComponent instanceof JComboBox) {
             ((JComboBox<?>) editorComponent).removeAllItems();
             ((JComboBox<Object>) editorComponent).addItem(value);
@@ -207,19 +212,30 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             }
         }
 
+        var rendererComp = table.getCellRenderer(row, column)
+                                .getTableCellRendererComponent(table, value, isSelected, false, row, column);
+        if (rendererComp instanceof JLabel) {
+            var icon = ((JLabel) rendererComp).getIcon();
+            if (icon != null) {
+                comp = iconWrapper;
+                iconWrapper.init(editorComponent, icon, rendererComp.getComponentOrientation().isLeftToRight());
+                iconWrapper.setIconGap(((JLabel) rendererComp).getIconTextGap() - 1);
+            }
+        }
+
         boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
         if (alternativeRow) {
             if (!isSelected) {
                 if (row % 2 == 1) {
-                    editorComponent.setBackground(alternativeRowColor);
+                    comp.setBackground(alternativeRowColor);
                 } else {
-                    editorComponent.setBackground(normalColor);
+                    comp.setBackground(normalColor);
                 }
             }
         }
-        return editorComponent;
+        return comp;
     }
 
     @Contract("null, _ -> false")
@@ -233,5 +249,59 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             return radioButtonEditor;
         }
         return checkBoxEditor;
+    }
+
+    protected static class IconWrapper extends JPanel {
+
+        private final JLabel label;
+        private JComponent c;
+        private int iconGap;
+
+        protected IconWrapper() {
+            setLayout(null);
+            label = new JLabel();
+            label.setIconTextGap(0);
+            add(label);
+        }
+
+        protected void setIconGap(final int iconGap) {
+            this.iconGap = iconGap;
+        }
+
+        protected void init(@NotNull final JComponent component, final Icon icon, final boolean ltr) {
+            setComponentOrientation(ltr ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT);
+            if (c != null) {
+                remove(c);
+            }
+            add(component);
+            this.c = component;
+            label.setIcon(icon);
+        }
+
+        @Override
+        public void doLayout() {
+            if (c == null) return;
+            int w = getWidth();
+            int h = getHeight();
+            var b = c.getBorder();
+            var ins = new Insets(0, 0, 0, 0);
+            var labelSize = label.getPreferredSize();
+            int gap = getIconCompGap();
+            if (b != null) {
+                ins = b.getBorderInsets(c);
+            }
+            if (getComponentOrientation().isLeftToRight()) {
+                label.setBounds(ins.left + gap, 0, labelSize.width + 1, h);
+                c.setBounds(ins.left + labelSize.width + 2 * gap - 1, 0,
+                            w - ins.left - labelSize.width - 2 * gap + 1, h);
+            } else {
+                c.setBounds(0, 0, w - ins.right - labelSize.width - gap - 1, h);
+                label.setBounds(w - ins.right - labelSize.width - gap - 1, 0, labelSize.width + 1, h);
+            }
+        }
+
+        public int getIconCompGap() {
+            return iconGap;
+        }
     }
 }

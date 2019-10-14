@@ -1,5 +1,4 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.theme.Theme;
 
 import javax.swing.*;
 
@@ -9,11 +8,11 @@ public final class FileChooserDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             var chooser = new JFileChooser(System.getProperty("user.home"));
+            chooser.setMultiSelectionEnabled(true);
             var frame = new JFrame();
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.setSize(100, 100);
-            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
             chooser.showOpenDialog(frame);
         });
     }

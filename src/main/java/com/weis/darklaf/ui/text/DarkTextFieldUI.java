@@ -95,6 +95,11 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();
         boolean focus = DarkUIUtil.hasFocus(c);
         boolean error = hasError(c);
+        return getBorderColor(focus, error, editable, c.isEnabled());
+    }
+
+    public static Color getBorderColor(@NotNull final boolean focus, final boolean error,
+                                       final boolean editable, final boolean enabled) {
         if (focus) {
             if (error) {
                 return UIManager.getColor("TextField.border.focusError");
@@ -104,7 +109,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         } else if (error) {
             return UIManager.getColor("TextField.border.error");
         }
-        return c.isEnabled() && editable
+        return enabled && editable
                ? UIManager.getColor("TextField.border.enabled")
                : UIManager.getColor("TextField.border.disabled");
     }

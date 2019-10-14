@@ -391,7 +391,13 @@ public final class UIDemo {
 
                     var menuBar = new JMenuBar();
                     var menu = new JMenu("test");
-                    menu.add(new JMenuItem("item"));
+                    menu.add(new JMenu("submenu") {{
+                        add(new JMenuItem("item1"));
+                        add(new JMenuItem("item2"));
+                        add(new JMenuItem("item3"));
+                        add(new JMenuItem("item4"));
+                        add(new JMenuItem("item5"));
+                    }});
                     menu.addSeparator();
                     menu.add(new JRadioButtonMenuItem("radioButton"));
                     menu.add(new JCheckBoxMenuItem("checkBox"));

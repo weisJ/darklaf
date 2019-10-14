@@ -164,6 +164,9 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
                         if (draggedColumnIndex != cMax) {
                             g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
                                        1, draggedCellRect.height);
+                        } else {
+                            g.fillRect(draggedCellRect.x + draggedCellRect.width, draggedCellRect.y,
+                                       1, draggedCellRect.height);
                         }
                         if (draggedColumnIndex == cMin) {
                             g.fillRect(draggedCellRect.x, draggedCellRect.y, 1, draggedCellRect.height);
@@ -187,6 +190,9 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
                 if (ltr) {
                     if (draggedColumnIndex != cMax) {
                         g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
+                                   1, draggedCellRect.height);
+                    } else {
+                        g.fillRect(draggedCellRect.x + draggedCellRect.width, draggedCellRect.y,
                                    1, draggedCellRect.height);
                     }
                 } else {

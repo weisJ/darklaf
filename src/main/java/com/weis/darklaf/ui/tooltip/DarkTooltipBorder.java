@@ -82,6 +82,8 @@ public class DarkTooltipBorder implements Border, UIResource {
             si.right = 0;
         } else if (align == Alignment.WEST) {
             si.left = 0;
+        } else if (align == Alignment.NORTH_EAST || align == Alignment.NORTH || align == Alignment.NORTH_WEST) {
+            si.bottom = 0;
         }
     }
 

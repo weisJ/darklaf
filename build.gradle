@@ -82,7 +82,8 @@ tasks.withType(JavaCompile) {
         options.compilerArgs += [
                 '--add-exports=java.desktop/sun.awt=ALL-UNNAMED',
                 '--add-exports=java.desktop/com.sun.java.swing=ALL-UNNAMED',
-                '--add-exports=java.desktop/sun.swing=ALL-UNNAMED'
+                '--add-exports=java.desktop/sun.swing=ALL-UNNAMED',
+                '--add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED'
         ]
     }
 }

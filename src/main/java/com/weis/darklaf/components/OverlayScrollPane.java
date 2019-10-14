@@ -40,7 +40,6 @@ public class OverlayScrollPane extends JLayeredPane {
 
     protected final OScrollPane scrollPane;
     private final ControlPanel controlPanel;
-    private Insets barInsets;
 
     /**
      * Creates a <code>JScrollIndicator</code> that displays the contents of the specified component,
@@ -76,9 +75,7 @@ public class OverlayScrollPane extends JLayeredPane {
      * @param hsbPolicy an integer that specifies the horizontal scrollbar policy
      */
     public OverlayScrollPane(final JComponent view, final int vsbPolicy, final int hsbPolicy) {
-        setBorder(null);
         scrollPane = createScrollPane(view, vsbPolicy, hsbPolicy);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, JLayeredPane.DEFAULT_LAYER);
 
         controlPanel = new ControlPanel(scrollPane);
@@ -106,46 +103,31 @@ public class OverlayScrollPane extends JLayeredPane {
         scrollPane.setSize(getSize());
         controlPanel.setSize(getSize());
         scrollPane.doLayout();
-    }    @Override
-    public Dimension getPreferredSize() {
-        return scrollPane.getPreferredSize();
     }
 
     public void setVerticalScrollBarPolicy(final int policy) {
         scrollPane.setVerticalScrollBarPolicy(policy);
         controlPanel.showVerticalScrollBar(policy != JScrollPane.VERTICAL_SCROLLBAR_NEVER);
     }    @Override
-    public void setPreferredSize(final Dimension preferredSize) {
-        super.setPreferredSize(preferredSize);
-        scrollPane.setPreferredSize(preferredSize);
-    }
-
-    public void setHorizontalScrollBarPolicy(final int policy) {
-        scrollPane.setHorizontalScrollBarPolicy(policy);
-        controlPanel.showHorizontalScrollBar(policy != JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    }
-
-    @Contract(pure = true)
-    @NotNull
-    public JScrollBar getVerticalScrollBar() {
-        return scrollPane.verticalScrollBar;
-    }
-
-    @Contract(pure = true)
-    @NotNull
-    public JScrollBar getHorizontalScrollBar() {
-        return scrollPane.horizontalScrollBar;
-    }
-
-    public void setViewportView(final Component c) {
-        scrollPane.setViewportView(c);
+    public Dimension getPreferredSize() {
+        return scrollPane.getPreferredSize();
     }
 
     private static final class PopupScrollBar extends JScrollBar {
 
-        private PopupScrollBar(final int direction) {
+        private final JScrollPane pane;
+
+        private PopupScrollBar(final int direction, final JScrollPane pane) {
             super(direction);
+            this.pane = pane;
+            putClientProperty("JScrollBar.fastWheelScrolling", true);
             setOpaque(false);
+        }
+
+        @Contract(pure = true)
+        @Override
+        public boolean isOpaque() {
+            return false;
         }
     }
 
@@ -218,10 +200,12 @@ public class OverlayScrollPane extends JLayeredPane {
          */
         public void setUI(final ScrollPaneUI ui) {
             if (verticalScrollBar == null) {
-                verticalScrollBar = new PopupScrollBar(JScrollBar.VERTICAL);
+                verticalScrollBar = new PopupScrollBar(JScrollBar.VERTICAL, this);
+                verticalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
             }
             if (horizontalScrollBar == null) {
-                horizontalScrollBar = new PopupScrollBar(JScrollBar.HORIZONTAL);
+                horizontalScrollBar = new PopupScrollBar(JScrollBar.HORIZONTAL, this);
+                horizontalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
             }
             super.setUI(ui);
             SwingUtilities.invokeLater(() -> {
@@ -241,6 +225,33 @@ public class OverlayScrollPane extends JLayeredPane {
         public JScrollBar getVerticalScrollBar() {
             return verticalScrollBar;
         }
+    }
+
+    @Override
+    public void setPreferredSize(final Dimension preferredSize) {
+        super.setPreferredSize(preferredSize);
+        scrollPane.setPreferredSize(preferredSize);
+    }
+
+    public void setHorizontalScrollBarPolicy(final int policy) {
+        scrollPane.setHorizontalScrollBarPolicy(policy);
+        controlPanel.showHorizontalScrollBar(policy != JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    }
+
+    @Contract(pure = true)
+    @NotNull
+    public JScrollBar getVerticalScrollBar() {
+        return scrollPane.verticalScrollBar;
+    }
+
+    @Contract(pure = true)
+    @NotNull
+    public JScrollBar getHorizontalScrollBar() {
+        return scrollPane.horizontalScrollBar;
+    }
+
+    public void setViewportView(final Component c) {
+        scrollPane.setViewportView(c);
     }
 
     private final class ControlPanel extends JPanel {
@@ -281,20 +292,14 @@ public class OverlayScrollPane extends JLayeredPane {
             scrollPane.horizontalScrollBar.setVisible(show);
         }
 
-        @NotNull
-        private Rectangle getVerticalBounds() {
-            var bounds = OverlayScrollPane.this.getBounds();
-            var verticalSize = scrollPane.verticalScrollBar.getPreferredSize();
-            return new Rectangle(bounds.width - verticalSize.width, 0,
-                                 verticalSize.width, bounds.height);
-        }
-
-        @NotNull
-        private Rectangle getHorizontalBounds() {
-            var bounds = OverlayScrollPane.this.getBounds();
-            var horizontalSize = scrollPane.horizontalScrollBar.getPreferredSize();
-            return new Rectangle(0, bounds.height - horizontalSize.height,
-                                 bounds.width, horizontalSize.height);
+        @Override
+        public boolean contains(final int x, final int y) {
+            if (scrollPane.horizontalScrollBar.isVisible()
+                    && scrollPane.horizontalScrollBar.getBounds().contains(x, y)) {
+                return true;
+            }
+            return scrollPane.verticalScrollBar.isVisible()
+                    && scrollPane.verticalScrollBar.getBounds().contains(x, y);
         }
     }
 

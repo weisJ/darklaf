@@ -28,7 +28,6 @@ import com.weis.darklaf.util.Animator;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -71,8 +70,12 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         if (scrollbar.getOrientation() == VERTICAL && !e.isShiftDown()
                 || scrollbar.getOrientation() == HORIZONTAL && e.isShiftDown()) {
             scrollbar.setValueIsAdjusting(true);
+            var sp = scrollbar.getClientProperty("JScrollBar.scrollPaneParent");
             if (scrollbar.getParent() instanceof JScrollPane) {
                 doScroll(scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
+                         scrollbar.getParent().getComponentOrientation().isLeftToRight());
+            } else if (sp instanceof JScrollPane) {
+                doScroll(scrollbar, ((JScrollPane) sp).getViewport(), e,
                          scrollbar.getParent().getComponentOrientation().isLeftToRight());
             } else {
                 doScroll(scrollbar, null, e, scrollbar.getComponentOrientation().isLeftToRight());
@@ -88,18 +91,15 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     private Animator thumbFadeinAnimator;
     private boolean mouseOverTrack = false;
     private boolean mouseOverThumb = false;
-    private final MouseMotionListener mouseMotionListener = new MouseMovementListener() {
-        @Override
-        public void mouseMoved(@Nullable final MouseEvent e) {
-            if (e == null) {
-                return;
-            }
-            boolean overThumb = isOverThumb(e.getPoint());
-            if (overThumb != mouseOverThumb) {
-                mouseOverThumb = overThumb;
-                if (!scrollbar.getValueIsAdjusting()) {
-                    resetThumbAnimator();
-                }
+    private final MouseMotionListener mouseMotionListener = (MouseMovementListener) e -> {
+        if (e == null) {
+            return;
+        }
+        boolean overThumb = isOverThumb(e.getPoint());
+        if (overThumb != mouseOverThumb) {
+            mouseOverThumb = overThumb;
+            if (!scrollbar.getValueIsAdjusting()) {
+                resetThumbAnimator();
             }
         }
     };

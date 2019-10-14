@@ -82,7 +82,9 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     public Dimension getPreferredSize(final JComponent c) {
         Dimension d = super.getPreferredSize(c);
-        d.width += SLIDER_WIDTH + DarkButtonBorder.BORDER_SIZE;
+        if (isSlider(c)) {
+            d.width += SLIDER_WIDTH + DarkButtonBorder.BORDER_SIZE;
+        }
         return d;
     }
 
@@ -129,20 +131,43 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
     }
 
-    protected Color getBackgroundColor(@NotNull final JComponent c) {
-        if ((c instanceof JToggleButton && ((JToggleButton) c).isSelected())) {
-            return UIManager.getColor("Button.activeFillColor");
-        } else {
-            return UIManager.getColor("Button.inactiveFillColor");
+    private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {
+        var bounds = getSliderBounds(c);
+        g.translate(bounds.x, bounds.y);
+        Shape slider = new RoundRectangle2D.Float(0, 0, bounds.width, bounds.height,
+                                                  bounds.height, bounds.height);
+
+        if (c.hasFocus()) {
+            g.translate(-BSIZE, -BSIZE);
+            DarkUIUtil.paintFocusBorder(g, bounds.width + 2 * BSIZE, bounds.height + 2 * BSIZE,
+                                        (float) ((bounds.height + 2 * BSIZE) / 2.0 + 2), true);
+            g.translate(BSIZE, BSIZE);
         }
+
+        g.setColor(getBackgroundColor(c));
+        g.fill(slider);
+        g.setColor(getToggleBorderColor(c));
+        g.draw(slider);
+        g.setColor(getSliderColor(c));
+
+        if (c.isSelected()) {
+            g.fill(new Ellipse2D.Float(
+                    bounds.width - bounds.height + 1, 1, bounds.height - 1.5f, bounds.height - 1.5f));
+        } else {
+            g.fill(new Ellipse2D.Float(1, 1, bounds.height - 1.5f, bounds.height - 1.5f));
+        }
+        g.translate(-bounds.x, -bounds.y);
     }
 
-    @Override
-    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
-        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
-        var bounds = getSliderBounds(c);
-        return new RoundRectangle2D.Float(bounds.x, bounds.y, bounds.width, bounds.height,
-                                          bounds.height, bounds.height).contains(x, y);
+    protected Color getBackgroundColor(@NotNull final JComponent c) {
+        if (c instanceof JToggleButton && c.isEnabled()) {
+            if (((JToggleButton) c).isSelected()) {
+                return UIManager.getColor("ToggleButton.activeFillColor");
+            } else {
+                return UIManager.getColor("ToggleButton.inactiveFillColor");
+            }
+        }
+        return super.getBackgroundColor(c);
     }
 
     @NotNull
@@ -162,31 +187,13 @@ public class DarkToggleButtonUI extends DarkButtonUI {
                 && "slider".equals(c.getClientProperty("ToggleButton.variant"));
     }
 
-    private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {
+    @Override
+    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+        if (!isSlider(c)) return super.contains(c, x, y);
+        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
         var bounds = getSliderBounds(c);
-        g.translate(bounds.x, bounds.y);
-        Shape slider = new RoundRectangle2D.Float(0, 0, bounds.width, bounds.height,
-                                                  bounds.height, bounds.height);
-        g.setColor(getBackgroundColor(c));
-        g.fill(slider);
-
-        if (c.hasFocus()) {
-            g.translate(-BSIZE, -BSIZE);
-            DarkUIUtil.paintFocusBorder(g, bounds.width + 2 * BSIZE, bounds.height + 2 * BSIZE,
-                                        (float) (bounds.height / 2.0) + 2, true);
-            g.translate(BSIZE, BSIZE);
-        }
-
-        g.setColor(getToggleBorderColor(c));
-        g.draw(slider);
-        g.setColor(getSliderColor(c));
-        if (c.isSelected()) {
-            g.fill(new Ellipse2D.Float(
-                    bounds.width - bounds.height + 1, 1, bounds.height - 1.5f, bounds.height - 1.5f));
-        } else {
-            g.fill(new Ellipse2D.Float(1, 1, bounds.height - 1.5f, bounds.height - 1.5f));
-        }
-        g.translate(-bounds.x, -bounds.y);
+        return new RoundRectangle2D.Float(bounds.x, bounds.y, bounds.width, bounds.height,
+                                          bounds.height, bounds.height).contains(x, y);
     }
 
     private static Color getToggleBorderColor(@NotNull final AbstractButton b) {

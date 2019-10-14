@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTableUI;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -37,21 +36,7 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class DarkTableUIBridge extends BasicTableUI {
-
-    protected static int getAdjustedLead(final JTable table, final boolean row) {
-        return row ? getAdjustedLead(table, true, table.getSelectionModel())
-                   : getAdjustedLead(table, false, table.getColumnModel().getSelectionModel());
-    }
-
-    protected static int getAdjustedLead(final JTable table,
-                                         final boolean row,
-                                         final ListSelectionModel model) {
-
-        int index = model.getLeadSelectionIndex();
-        int compare = row ? table.getRowCount() : table.getColumnCount();
-        return index < compare ? index : -1;
-    }
+public class DarkTableUIBridge extends BasicTableUIBridge {
 
     /**
      * Paint a representation of the <code>table</code> instance
@@ -446,6 +431,10 @@ public class DarkTableUIBridge extends BasicTableUI {
     }
 
     protected int viewIndexForColumn(final TableColumn aColumn) {
+        return viewIndexForColumn(aColumn, table);
+    }
+
+    public static int viewIndexForColumn(final TableColumn aColumn, final JTable table) {
         TableColumnModel cm = table.getColumnModel();
         for (int column = 0; column < cm.getColumnCount(); column++) {
             if (cm.getColumn(column) == aColumn) {

@@ -37,6 +37,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
@@ -166,13 +168,7 @@ public final class DarkUIUtil {
         return new Color(redPart, greenPart, bluePart);
     }
 
-    public static void drawRect(final Graphics g, final int x, final int y, final int width, final int height,
-                                final int thickness) {
-        g.fillRect(x, y, width, thickness);
-        g.fillRect(x, y, thickness, height);
-        g.fillRect(x + width - thickness, y, thickness, height);
-        g.fillRect(x, y + height - thickness, width, thickness);
-    }
+    private static final Rectangle iconRect = new Rectangle();
 
     public static void applyInsets(final Rectangle rect, final Insets insets) {
         if (insets != null && rect != null) {
@@ -314,6 +310,59 @@ public final class DarkUIUtil {
             }
         }
         return null;
+    }
+
+    private static final Rectangle textRect = new Rectangle();
+
+    public static void drawRect(@NotNull final Graphics g, final int x, final int y,
+                                final int width, final int height, final int thickness) {
+        g.fillRect(x, y, width, thickness);
+        g.fillRect(x, y + thickness, thickness, height - 2 * thickness);
+        g.fillRect(x + width - thickness, y + thickness, thickness, height - 2 * thickness);
+        g.fillRect(x, y + height - thickness, width, thickness);
+    }
+
+    public static boolean isOverText(@NotNull final MouseEvent e, final int index, final JList list) {
+        var bounds = list.getCellBounds(index, index);
+        if (!bounds.contains(e.getPoint())) return false;
+        //noinspection unchecked
+        var cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer())
+                .getListCellRendererComponent(list, list.getModel().getElementAt(index),
+                                              index, false, false);
+        if (cellRenderer instanceof JLabel) {
+            return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean isOverText(final JLabel label, final Rectangle bounds, final Point p) {
+        textRect.setBounds(0, 0, 0, 0);
+        iconRect.setBounds(0, 0, 0, 0);
+        SwingUtilities.layoutCompoundLabel(label, label.getFontMetrics(label.getFont()), label.getText(),
+                                           label.getIcon(), label.getVerticalAlignment(),
+                                           label.getHorizontalAlignment(),
+                                           label.getVerticalTextPosition(), label.getHorizontalTextPosition(),
+                                           bounds, iconRect, textRect, label.getIconTextGap());
+        return textRect.contains(p);
+    }
+
+    public static boolean isOverText(@NotNull final MouseEvent e, final int row, final int column,
+                                     final JTable table) {
+        var bounds = table.getCellRect(row, column, false);
+        if (!bounds.contains(e.getPoint())) return false;
+        var cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(
+                table, table.getValueAt(row, column), false, false, row, column);
+        if (cellRenderer instanceof JLabel) {
+            return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean isMenuShortcutKeyDown(final InputEvent event) {
+        return (event.getModifiersEx() &
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()) != 0;
     }
 
     public enum Outline {

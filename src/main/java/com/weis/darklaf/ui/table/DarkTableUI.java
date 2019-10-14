@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
@@ -11,9 +12,12 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
+import java.util.function.Supplier;
 
 /**
  * @author Jannis Weis
@@ -52,6 +56,22 @@ public class DarkTableUI extends DarkTableUIBridge {
         } else if ("showVerticalLines".equals(key)) {
             var b = (boolean) e.getNewValue();
             table.getColumnModel().setColumnMargin(b ? 1 : 0);
+        } else if ("ancestor".equals(key)) {
+            var oldVal = e.getOldValue();
+            var newVal = e.getNewValue();
+            if (oldVal instanceof Component) {
+                var oldUnwrapped = SwingUtilities.getUnwrappedParent((Component) oldVal);
+                if ((oldUnwrapped instanceof JScrollPane)
+                        && ((JComponent) oldUnwrapped).getBorder() instanceof UIResource) {
+                    LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
+                }
+            }
+            if (newVal instanceof Component) {
+                var newUnwrapped = SwingUtilities.getUnwrappedParent((Component) newVal);
+                if ((newUnwrapped instanceof JScrollPane)) {
+                    LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
+                }
+            }
         }
     };
 
@@ -59,53 +79,6 @@ public class DarkTableUI extends DarkTableUIBridge {
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        table.setRowHeight(ROW_HEIGHT);
-        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
-        table.putClientProperty("JTable.renderBooleanAsCheckBox",
-                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
-        table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
-        setupRendererComponents(table);
-    }
-
-    protected static void setupRendererComponents(@NotNull final JTable table) {
-        var cellRenderer = new DarkTableCellRenderer();
-        var cellEditor = new DarkTableCellEditor();
-        var colorRendererEditor = new DarkColorTableCellRendererEditor();
-
-        table.setDefaultRenderer(Object.class, cellRenderer);
-        table.setDefaultRenderer(String.class, cellRenderer);
-        table.setDefaultRenderer(Integer.class, cellRenderer);
-        table.setDefaultRenderer(Double.class, cellRenderer);
-        table.setDefaultRenderer(Float.class, cellRenderer);
-        table.setDefaultRenderer(Boolean.class, cellRenderer);
-        table.setDefaultRenderer(Color.class, colorRendererEditor);
-
-        table.setDefaultEditor(Object.class, cellEditor);
-        table.setDefaultEditor(String.class, cellEditor);
-        table.setDefaultEditor(Integer.class, cellEditor);
-        table.setDefaultEditor(Double.class, cellEditor);
-        table.setDefaultEditor(Float.class, cellEditor);
-        table.setDefaultEditor(Boolean.class, cellEditor);
-        table.setDefaultEditor(Color.class, colorRendererEditor);
-    }
-
-    @Override
-    protected void installListeners() {
-        super.installListeners();
-        table.addFocusListener(focusListener);
-        table.addPropertyChangeListener(propertyChangeListener);
-    }
-
-    @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        table.removeFocusListener(focusListener);
-        table.removePropertyChangeListener(propertyChangeListener);
     }
 
     @Override
@@ -140,7 +113,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         boolean scrollVisible = scrollBarVisible();
         if (table.getShowVerticalLines()) {
             TableColumnModel cm = table.getColumnModel();
-            int tableHeight = damagedArea.y + damagedArea.height;
+            int tableHeight = getPreferredSize(table).height;
             int x;
             boolean ltr = table.getComponentOrientation().isLeftToRight();
             if (ltr) {
@@ -169,14 +142,127 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
         }
-        if (!table.getShowHorizontalLines() && table.getRowCount() != 0 && !scrollVisible) {
-            g.setColor(getBorderColor());
-            var clip = g.getClipBounds();
-            clip.height += 1;
-            g.setClip(clip);
-            int y = table.getHeight();
-            g.fillRect(0, y, table.getWidth(), 1);
+    }
+
+
+    protected static void setupRendererComponents(@NotNull final JTable table) {
+        var cellRenderer = new DarkTableCellRenderer();
+        var cellEditor = new DarkTableCellEditor();
+        var colorRendererEditor = new DarkColorTableCellRendererEditor();
+
+        table.setDefaultRenderer(Object.class, cellRenderer);
+        table.setDefaultRenderer(String.class, cellRenderer);
+        table.setDefaultRenderer(Integer.class, cellRenderer);
+        table.setDefaultRenderer(Double.class, cellRenderer);
+        table.setDefaultRenderer(Float.class, cellRenderer);
+        table.setDefaultRenderer(Boolean.class, cellRenderer);
+        table.setDefaultRenderer(Color.class, colorRendererEditor);
+
+        table.setDefaultEditor(Object.class, cellEditor);
+        table.setDefaultEditor(String.class, cellEditor);
+        table.setDefaultEditor(Integer.class, cellEditor);
+        table.setDefaultEditor(Double.class, cellEditor);
+        table.setDefaultEditor(Float.class, cellEditor);
+        table.setDefaultEditor(Boolean.class, cellEditor);
+        table.setDefaultEditor(Color.class, colorRendererEditor);
+    }
+
+    @Override
+    protected void paintDraggedArea(@NotNull final Graphics g, final int rMin, final int rMax,
+                                    final int cMin, final int cMax,
+                                    final TableColumn draggedColumn, final int distance) {
+        int draggedColumnIndex = viewIndexForColumn(draggedColumn);
+
+        Rectangle minCell = table.getCellRect(rMin, draggedColumnIndex, true);
+        Rectangle maxCell = table.getCellRect(rMax, draggedColumnIndex, true);
+
+        Rectangle vacatedColumnRect = minCell.union(maxCell);
+
+        int dist = adjustDistance(distance, vacatedColumnRect, table);
+
+        // Paint a gray well in place of the moving column.
+        g.setColor(table.getParent().getBackground());
+        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
+                   vacatedColumnRect.width - 1, vacatedColumnRect.height);
+
+
+        // Move to the where the cell has been dragged.
+        vacatedColumnRect.x += dist;
+
+        boolean scrollVisible = scrollBarVisible();
+        boolean drawBottomBorder = !table.getShowHorizontalLines() && !scrollVisible && table.getShowVerticalLines();
+        boolean ltr = table.getComponentOrientation().isLeftToRight();
+
+        // Fill the background.
+        g.setColor(table.getBackground());
+        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
+                   vacatedColumnRect.width, vacatedColumnRect.height);
+
+
+        // Paint the vertical grid lines if necessary.
+        if (table.getShowVerticalLines()) {
+            g.setColor(table.getGridColor());
+            int x1 = vacatedColumnRect.x;
+            int y1 = vacatedColumnRect.y;
+            int x2 = x1 + vacatedColumnRect.width - 1;
+            int y2 = y1 + vacatedColumnRect.height - 1;
+
+            boolean onLeftEdge = ltr ? draggedColumnIndex == cMin : draggedColumnIndex == cMax;
+            boolean onRightEdge = ltr ? draggedColumnIndex == cMax : draggedColumnIndex == cMin;
+            if (scrollBarVisible()) {
+                if (isScrollPaneRtl()) {
+                    onLeftEdge = false;
+                } else {
+                    onRightEdge = false;
+                }
+            }
+            // Left
+            if (dist != 0 || !onLeftEdge) {
+                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl()) x1++;
+                g.fillRect(x1 - 1, y1, 1, y2 - y1);
+            }
+            // Right
+            if (dist != 0 || !onRightEdge) {
+                g.fillRect(x2, y1, 1, y2 - y1);
+            }
         }
+
+        for (int row = rMin; row <= rMax; row++) {
+            // Render the cell value
+            Rectangle r = table.getCellRect(row, draggedColumnIndex, false);
+            r.x += dist;
+            paintCell(g, r, row, draggedColumnIndex);
+
+            // Paint the (lower) horizontal grid line if necessary.
+            if (table.getShowHorizontalLines() || (!scrollVisible && row == rMax)) {
+                g.setColor(table.getGridColor());
+                Rectangle rcr = table.getCellRect(row, draggedColumnIndex, true);
+                rcr.x += dist;
+                int x1 = rcr.x - 1;
+                int y1 = rcr.y;
+                int x2 = x1 + rcr.width + 1;
+                int y2 = y1 + rcr.height - 1;
+                g.fillRect(x1, y2, x2 - x1, 1);
+            }
+        }
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        table.addFocusListener(focusListener);
+        table.addPropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        table.removeFocusListener(focusListener);
+        table.removePropertyChangeListener(propertyChangeListener);
+    }
+
+    protected boolean pointOutsidePrefSize(final int row, final int column, final Point p) {
+        return false;
     }
 
     protected boolean isScrollPaneRtl() {
@@ -300,91 +386,94 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     @Override
-    protected void paintDraggedArea(@NotNull final Graphics g, final int rMin, final int rMax,
-                                    final int cMin, final int cMax,
-                                    final TableColumn draggedColumn, final int distance) {
-        int draggedColumnIndex = viewIndexForColumn(draggedColumn);
+    protected Handler getHandler() {
+        if (handler == null) {
+            handler = new DarkHandler();
+        }
+        return handler;
+    }
 
-        Rectangle minCell = table.getCellRect(rMin, draggedColumnIndex, true);
-        Rectangle maxCell = table.getCellRect(rMax, draggedColumnIndex, true);
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        int rowHeight = UIManager.getInt("Table.rowHeight");
+        if (rowHeight > 0) {
+            table.setRowHeight(ROW_HEIGHT);
+        }
+        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
+        table.putClientProperty("JTable.renderBooleanAsCheckBox",
+                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
+        table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
+        setupRendererComponents(table);
+    }
 
-        Rectangle vacatedColumnRect = minCell.union(maxCell);
+    @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        var prefSize = super.getPreferredSize(c);
+        if (!isInScrollPane()) {
+            return prefSize;
+        } else {
+            var dim = SwingUtilities.getUnwrappedParent(table).getSize();
+            if (dim.width < prefSize.width || dim.height < prefSize.height) {
+                return prefSize;
+            } else {
+                return dim;
+            }
+        }
+    }
 
-        int dist = adjustDistance(distance, vacatedColumnRect, table);
+    protected class DarkHandler extends Handler {
 
-        // Paint a gray well in place of the moving column.
-        g.setColor(table.getParent().getBackground());
-        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
-                   vacatedColumnRect.width - 1, vacatedColumnRect.height);
+        protected int lastIndex = -1;
 
-
-        // Move to the where the cell has been dragged.
-        vacatedColumnRect.x += dist;
-
-        boolean scrollVisible = scrollBarVisible();
-        boolean drawBottomBorder = !table.getShowHorizontalLines() && !scrollVisible;
-        boolean ltr = table.getComponentOrientation().isLeftToRight();
-
-        // Fill the background.
-        g.setColor(table.getBackground());
-        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
-                   vacatedColumnRect.width, vacatedColumnRect.height);
-
-
-        // Paint the vertical grid lines if necessary.
-        if (table.getShowVerticalLines()) {
-            g.setColor(table.getGridColor());
-            int x1 = vacatedColumnRect.x;
-            int y1 = vacatedColumnRect.y;
-            int x2 = x1 + vacatedColumnRect.width - 1;
-            int y2 = y1 + vacatedColumnRect.height - 1;
-
-            boolean onLeftEdge = ltr ? draggedColumnIndex == cMin : draggedColumnIndex == cMax;
-            boolean onRightEdge = ltr ? draggedColumnIndex == cMax : draggedColumnIndex == cMin;
-            if (scrollBarVisible()) {
-                if (isScrollPaneRtl()) {
-                    onLeftEdge = false;
+        @Override
+        public void mouseClicked(final MouseEvent e) {
+            super.mouseClicked(e);
+            if (isFileList) {
+                int row = table.rowAtPoint(e.getPoint());
+                JFileChooser fc = getFileChooser();
+                if (row < 0 || fc == null) return;
+                int column = getFileNameColumnIndex();
+                boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
+                        && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
+                if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
+                        && isSelected && lastIndex == row
+                        && DarkUIUtil.isOverText(e, row, column, table)) {
+                    startEditing(row, column);
                 } else {
-                    onRightEdge = false;
+                    lastIndex = row;
                 }
-            }
-            // Left
-            if (dist != 0 || !onLeftEdge) {
-                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl()) x1++;
-                g.fillRect(x1 - 1, y1, 1, y2 - y1);
-            }
-            // Right
-            if (dist != 0 || !onRightEdge) {
-                g.fillRect(x2, y1, 1, y2 - y1);
             }
         }
 
-        for (int row = rMin; row <= rMax; row++) {
-            // Render the cell value
-            Rectangle r = table.getCellRect(row, draggedColumnIndex, false);
-            r.x += dist;
-            paintCell(g, r, row, draggedColumnIndex);
+        protected JFileChooser getFileChooser() {
+            var obj = table.getClientProperty("JTable.fileChooserParent");
+            if (obj instanceof Supplier) {
+                var supplied = ((Supplier) obj).get();
+                return supplied instanceof JFileChooser ? (JFileChooser) supplied : null;
+            }
+            return null;
+        }
 
-            // Paint the (lower) horizontal grid line if necessary.
-            if (table.getShowHorizontalLines() || (!scrollVisible && row == rMax)) {
-                g.setColor(table.getGridColor());
-                if (drawBottomBorder) {
-                    g.setColor(getBorderColor());
-                }
-                Rectangle rcr = table.getCellRect(row, draggedColumnIndex, true);
-                rcr.x += dist;
-                int x1 = rcr.x - 1;
-                int y1 = rcr.y;
-                int x2 = x1 + rcr.width + 1;
-                int y2 = y1 + rcr.height - 1;
-                g.fillRect(x1, y2, x2 - x1, 1);
+        protected Integer getFileNameColumnIndex() {
+            var obj = table.getClientProperty("JTable.fileNameColumnIndex");
+            return obj instanceof Integer ? (Integer) obj : 0;
+        }
+
+        protected void startEditing(final int row, final int column) {
+            table.editCellAt(row, column, null);
+            Component editorComponent = table.getEditorComponent();
+            if (editorComponent != null && !editorComponent.hasFocus()) {
+                SwingUtilities2.compositeRequestFocus(editorComponent);
             }
         }
-        if (drawBottomBorder) {
-            var rect = table.getCellRect(rMax, draggedColumnIndex, true);
-            int y = rect.y + rect.height - 1;
-            g.setColor(getBorderColor());
-            g.fillRect(rect.x, y, rect.width, 1);
+
+        @Override
+        protected void maybeStartTimer() {
+        }
+
+        @Override
+        public void actionPerformed(final ActionEvent ae) {
         }
     }
 }

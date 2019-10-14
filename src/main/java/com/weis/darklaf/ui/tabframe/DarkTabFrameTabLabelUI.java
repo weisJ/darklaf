@@ -151,7 +151,6 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         if (tabFrame == null) return;
         int acc = tabComponent.getAccelerator();
         if (acc < 0) return;
-        System.out.println("install");
         tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
                      "accelerator_" + acc);
