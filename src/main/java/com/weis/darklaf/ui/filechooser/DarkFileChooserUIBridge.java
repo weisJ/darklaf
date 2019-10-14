@@ -52,6 +52,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Vector;
 
 
@@ -475,7 +476,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
                     if (o != e.getOldValue()) {
                         cc.applyComponentOrientation(o);
                     }
-                } else if (s == "FileChooser.useShellFolder") {
+                } else if (Objects.equals(s, "FileChooser.useShellFolder")) {
                     doDirectoryChanged(e);
                 } else if (s.equals("ancestor")) {
                     if (e.getOldValue() == null && e.getNewValue() != null) {
@@ -1269,10 +1270,10 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         public void propertyChange(final PropertyChangeEvent e) {
             String prop = e.getPropertyName();
-            if (prop == JFileChooser.CHOOSABLE_FILE_FILTER_CHANGED_PROPERTY) {
+            if (Objects.equals(prop, JFileChooser.CHOOSABLE_FILE_FILTER_CHANGED_PROPERTY)) {
                 filters = (FileFilter[]) e.getNewValue();
                 fireContentsChanged(this, -1, -1);
-            } else if (prop == JFileChooser.FILE_FILTER_CHANGED_PROPERTY) {
+            } else if (Objects.equals(prop, JFileChooser.FILE_FILTER_CHANGED_PROPERTY)) {
                 fireContentsChanged(this, -1, -1);
             }
         }
@@ -1298,7 +1299,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
                         found = true;
                     }
                 }
-                if (found == false) {
+                if (!found) {
                     getFileChooser().addChoosableFileFilter(currentFilter);
                 }
             }

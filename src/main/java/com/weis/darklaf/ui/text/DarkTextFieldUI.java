@@ -116,7 +116,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     @Contract("null -> false")
     protected static boolean hasError(final Component c) {
-        return c instanceof JComponent && Boolean.TRUE.equals(((JComponent) c).getClientProperty("error"));
+        return c instanceof JComponent && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.hasError"));
     }
 
     public static Color getBackgroundColor(@NotNull final JTextComponent c) {

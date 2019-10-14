@@ -375,9 +375,9 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         isChanging = true;
         boolean transparencyEnabled = isColorTransparencySelectionEnabled();
         if (transparencyEnabled) {
-            textHex.setValue(c.getRGB());
+            textHex.setValue(c);
         } else {
-            textHex.setValue(new Color(c.getRed(), c.getGreen(), c.getBlue()).getRGB());
+            textHex.setValue(ColorUtil.removeAlpha(c));
         }
         isChanging = changingOld;
     }

@@ -15,6 +15,10 @@ import java.awt.event.MouseEvent;
  */
 public class DarkListUI extends DarkListUIBridge {
 
+    static {
+        UIManager.put("List.cellRenderer", new DarkListCellRenderer());
+    }
+
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent list) {

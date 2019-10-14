@@ -32,6 +32,8 @@ import sun.swing.FilePane;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
@@ -225,13 +227,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         populateFileNameLabel();
         fileNamePanel.add(fileNameLabel);
 
-        @SuppressWarnings("serial") // anonymous class
-                JTextField tmp2 = new JTextField(35) {
-            public Dimension getMaximumSize() {
-                return new Dimension(Short.MAX_VALUE, super.getPreferredSize().height);
-            }
-        };
-        fileNameTextField = tmp2;
+        fileNameTextField = new FileTextField();
         fileNamePanel.add(fileNameTextField);
         fileNameLabel.setLabelFor(fileNameTextField);
         fileNameTextField.addFocusListener(
@@ -262,9 +258,22 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         filterComboBoxModel = createFilterComboBoxModel();
         fc.addPropertyChangeListener(filterComboBoxModel);
         filterComboBox = new JComboBox<>(filterComboBoxModel);
-        if (filterComboBox.getItemCount() == 0) {
-            filterComboBox.setEnabled(false);
-        }
+        filterComboBoxModel.addListDataListener(new ListDataListener() {
+            @Override
+            public void intervalAdded(final ListDataEvent e) {
+                filterComboBox.setEnabled(filterComboBox.getItemCount() > 1);
+            }
+
+            @Override
+            public void intervalRemoved(final ListDataEvent e) {
+                filterComboBox.setEnabled(filterComboBox.getItemCount() > 1);
+            }
+
+            @Override
+            public void contentsChanged(final ListDataEvent e) {
+                filterComboBox.setEnabled(filterComboBox.getItemCount() > 1);
+            }
+        });
         filterComboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY,
                                          filesOfTypeLabelText);
         filesOfTypeLabel.setLabelFor(filterComboBox);

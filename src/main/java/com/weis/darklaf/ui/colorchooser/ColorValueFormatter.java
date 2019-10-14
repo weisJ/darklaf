@@ -33,6 +33,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.ParseException;
@@ -42,7 +44,8 @@ import static java.util.Locale.ENGLISH;
 /**
  * @author Jannis Weis
  */
-public final class ColorValueFormatter extends JFormattedTextField.AbstractFormatter implements FocusListener {
+public final class ColorValueFormatter extends JFormattedTextField.AbstractFormatter implements FocusListener,
+        ActionListener {
 
     private final int fieldIndex;
     private final int radix;
@@ -50,6 +53,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     private DarkColorModel model;
     private boolean transparencyEnabled;
     private JFormattedTextField text;
+    private final Timer errorTimer;
     private final DocumentFilter filter = new DocumentFilter() {
         @Override
         public void remove(@NotNull final FilterBypass fb, final int offset,
@@ -58,7 +62,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 fb.remove(offset, length);
                 commit();
             } else {
-                Toolkit.getDefaultToolkit().beep();
+                error();
             }
         }
 
@@ -75,7 +79,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                     return;
                 }
             }
-            Toolkit.getDefaultToolkit().beep();
+            error();
         }
 
         @Override
@@ -90,7 +94,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                     return;
                 }
             }
-            Toolkit.getDefaultToolkit().beep();
+            error();
         }
     };
 
@@ -99,6 +103,20 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         this.fieldIndex = index;
         this.radix = hex ? 16 : 10;
         this.hex = hex;
+        this.errorTimer = new Timer(UIManager.getInt("ColorChooser.errorDelay"), this);
+        errorTimer.setRepeats(false);
+    }
+
+    protected void error() {
+        text.putClientProperty("JTextField.hasError", true);
+        text.repaint();
+        errorTimer.restart();
+    }
+
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+        text.putClientProperty("JTextField.hasError", false);
+        text.repaint();
     }
 
     @NotNull
@@ -112,6 +130,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     }
 
     private void commit() {
+        text.putClientProperty("JTextField.hasError", false);
+        text.repaint();
         SwingUtilities.invokeLater(() -> {
             try {
                 if (text != null) {
@@ -179,10 +199,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 return model.getDefault(fieldIndex);
             }
             if (hex) {
-                var hexStr = text;
-                if (hexStr.length() == 6) {
-                    hexStr += "FF";
-                }
+                var hexStr = String.format("%1$-" + getHexLength() + "s", text).replaceAll(" ", "F");
                 int r = Integer.valueOf(hexStr.substring(0, 2), 16);
                 checkRange(r, 0, 255);
                 int g = Integer.valueOf(hexStr.substring(2, 4), 16);
@@ -191,7 +208,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 checkRange(b, 0, 255);
                 int alpha = Integer.valueOf(hexStr.substring(6, 8), 16);
                 checkRange(alpha, 0, 255);
-                return Integer.valueOf(text, radix);
+                return new Color(r, g, b, alpha);
             } else {
                 var value = Integer.valueOf(text, this.radix);
                 var min = model.getMinimum(fieldIndex);
@@ -215,27 +232,19 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     @Contract("null -> fail")
     @Override
     public String valueToString(final Object object) throws ParseException {
-        if (object instanceof Integer) {
-            if (radix == 10) {
+        if (object instanceof Integer && !hex) {
                 return object.toString();
+        } else if (object instanceof Color && hex) {
+            var c = (Color) object;
+            int r = c.getRed();
+            int g = c.getGreen();
+            int b = c.getBlue();
+            int a = c.getAlpha();
+            if (getHexLength() == 8) {
+                return String.format("%02X%02X%02X%02X", r, g, b, a);
+            } else {
+                return String.format("%02X%02X%02X", r, g, b);
             }
-            if (hex) {
-                if (getHexLength() == 8) {
-                    var hexStr = String.format("%08X", object);
-                    hexStr = hexStr.substring(2) + hexStr.substring(0, 2);
-                    return hexStr;
-                } else {
-                    return String.format("%06X", (0xFFFFFF & (Integer) object));
-                }
-            }
-            int value = (Integer) object;
-            int index = getLength();
-            char[] array = new char[index];
-            while (0 < index--) {
-                array[index] = Character.forDigit(value & 0x0F, this.radix);
-                value >>= 4;
-            }
-            return new String(array).toUpperCase(ENGLISH);
         }
         throw new ParseException("illegal object", 0);
     }

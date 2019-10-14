@@ -27,16 +27,86 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.text.Document;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 
 /**
  * @author Jannis Weis
  */
-public class DarkFormattedTextFieldUI extends DarkTextFieldUI {
+public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements PropertyChangeListener, DocumentListener {
+
+    private JFormattedTextField textField;
 
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkFormattedTextFieldUI();
+    }
+
+    protected String getPropertyPrefix() {
+        return "FormattedTextField";
+    }
+
+    @Override
+    public void installUI(final JComponent c) {
+        textField = (JFormattedTextField) c;
+        super.installUI(c);
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+        if ("document".equals(evt.getPropertyName())) {
+            var oldDoc = evt.getOldValue();
+            var newDoc = evt.getNewValue();
+            if (oldDoc instanceof Document) {
+                ((Document) oldDoc).removeDocumentListener(this);
+            }
+            if (newDoc instanceof Document) {
+                ((Document) newDoc).addDocumentListener(this);
+            }
+        }
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        textField.getDocument().addDocumentListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        textField.getDocument().removeDocumentListener(this);
+    }
+
+    @Override
+    public void insertUpdate(final DocumentEvent e) {
+        update();
+    }
+
+    @Override
+    public void removeUpdate(final DocumentEvent e) {
+        update();
+    }
+
+    @Override
+    public void changedUpdate(final DocumentEvent e) {
+        update();
+    }
+
+    protected void update() {
+        if (textField == null) return;
+        try {
+            textField.getFormatter().stringToValue(textField.getText());
+            textField.putClientProperty("JTextField.hasError", false);
+        } catch (ParseException e) {
+            textField.putClientProperty("JTextField.hasError", true);
+        }
     }
 }

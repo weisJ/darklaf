@@ -1,6 +1,9 @@
 import com.weis.darklaf.LafManager;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 
 public final class FileChooserDemo {
 
@@ -8,6 +11,18 @@ public final class FileChooserDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             var chooser = new JFileChooser(System.getProperty("user.home"));
+            var filter = new FileNameExtensionFilter("JSON files", "json");
+            chooser.addChoosableFileFilter(new FileFilter() {
+                @Override
+                public boolean accept(final File f) {
+                    return f.isDirectory() || filter.accept(f);
+                }
+
+                @Override
+                public String getDescription() {
+                    return filter.getDescription();
+                }
+            });
             chooser.setMultiSelectionEnabled(true);
             var frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

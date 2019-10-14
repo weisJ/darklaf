@@ -486,7 +486,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         listViewWindowsStyle = UIManager.getBoolean("FileChooser.listViewWindowsStyle");
         readOnly = UIManager.getBoolean("FileChooser.readOnly");
 
-        // TODO: On windows, get the following localized strings from the OS
+        // TUDU: On windows, get the following localized strings from the OS
 
         viewMenuLabelText =
                 UIManager.getString("FileChooser.viewMenuLabelText", l);
@@ -1797,7 +1797,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
             setHorizontalAlignment(alignment);
 
             // formatting cell text
-            // TODO: it's rather a temporary trick, to be revised
+            // TUDU: it's rather a temporary trick, to be revised
             String text;
             if (value == null) {
                 text = "";
