@@ -97,7 +97,6 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
 
     @Override
     public void changedUpdate(final DocumentEvent e) {
-        update();
     }
 
     protected void update() {
