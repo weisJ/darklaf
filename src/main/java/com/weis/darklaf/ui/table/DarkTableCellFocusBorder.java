@@ -19,12 +19,12 @@ public class DarkTableCellFocusBorder extends DarkCellBorder {
         if (isRowFocusBorder(c)) {
             g.setColor(DarkColors.get().getTableRowBorderColor());
             g.fillRect(0, 0, width, 1);
-            g.drawRect(0, height - 1, width, 1);
+            g.fillRect(0, height - 1, width, 1);
             if (forcePaintLeft(c)) {
-                g.drawRect(0, 0, 1, height);
+                g.fillRect(0, 0, 1, height);
             }
             if (forcePaintRight(c)) {
-                g.drawRect(width - 1, 0, 1, height);
+                g.fillRect(width - 1, 0, 1, height);
             }
         } else {
             g.setColor(DarkColors.get().getTableFocusBorderColor());

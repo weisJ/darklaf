@@ -144,7 +144,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     @Deprecated
     protected KeyStroke rightKey;
 
-    static void loadActionMap(final LazyActionMap map) {
+    public static void loadActionMap(final LazyActionMap map) {
         map.put(new Actions(Actions.NAVIGATE_RIGHT));
         map.put(new Actions(Actions.NAVIGATE_LEFT));
         map.put(new Actions(Actions.NAVIGATE_UP));

@@ -87,6 +87,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         };
         list.setCellRenderer(new FileRenderer());
         list.setLayoutOrientation(JList.VERTICAL_WRAP);
+        LookAndFeel.installColors(list, "FileView.background", "FileView.foreground");
 
         // 4835633 : tell BasicListUI that this is a file list
         list.putClientProperty("List.isFileList", Boolean.TRUE);
@@ -226,7 +227,10 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         OverlayScrollPane overlayScrollPane = new OverlayScrollPane(detailsTable);
         JScrollPane scrollPane = overlayScrollPane.getScrollPane();
         scrollPane.setComponentOrientation(chooser.getComponentOrientation());
-        LookAndFeel.installColors(scrollPane.getViewport(), "Table.background", "Table.foreground");
+        LookAndFeel.installColors(scrollPane.getViewport(),
+                                  "FileView.background", "FileView.foreground");
+        LookAndFeel.installColors(detailsTable,
+                                  "FileView.background", "FileView.foreground");
 
         // Adjust width of first column so the table fills the viewport when
         // first displayed (temporary listener).

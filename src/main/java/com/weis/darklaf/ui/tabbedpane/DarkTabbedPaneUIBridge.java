@@ -64,7 +64,6 @@ import java.util.Vector;
  */
 public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstants {
 
-
 // Instance variables initialized at installation
 
     protected final Insets currentPadInsets = new Insets(0, 0, 0, 0);
@@ -224,7 +223,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     // UI Installation/De-installation
     protected int baseline;
 
-    static void loadActionMap(@NotNull final LazyActionMap map) {
+    public static void loadActionMap(@NotNull final LazyActionMap map) {
         map.put(new Actions(Actions.NEXT));
         map.put(new Actions(Actions.PREVIOUS));
         map.put(new Actions(Actions.RIGHT));

@@ -37,7 +37,7 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class DarkTableUIBridge extends BasicTableUIBridge {
+public class DarkTableUIBridge extends TableUIBridge {
 
     /**
      * Paint a representation of the <code>table</code> instance

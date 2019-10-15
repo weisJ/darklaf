@@ -21,7 +21,7 @@ public class LazyActionMap extends ActionMapUIResource {
      */
     private transient Object _loader;
 
-    private LazyActionMap(final Class<?> loader) {
+    public LazyActionMap(final Class<?> loader) {
         _loader = loader;
     }
 

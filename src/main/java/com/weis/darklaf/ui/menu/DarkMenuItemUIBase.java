@@ -50,7 +50,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         return new DarkMenuItemUIBase();
     }
 
-    protected static void loadActionMap(@NotNull final LazyActionMap map) {
+    public static void loadActionMap(@NotNull final LazyActionMap map) {
         map.put(new Actions(Actions.CLICK));
     }
 

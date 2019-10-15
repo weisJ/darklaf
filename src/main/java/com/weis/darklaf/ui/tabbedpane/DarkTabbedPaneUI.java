@@ -257,6 +257,13 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
+    @Override
+    protected void paintTabArea(@NotNull final Graphics g, final int tabPlacement, final int selectedIndex) {
+        g.setColor(DarkColors.get().getTabbedPaneTabAreaBackground());
+        g.fillRect(0, 0, tabPane.getWidth(), maxTabHeight - 1);
+        super.paintTabArea(g, tabPlacement, selectedIndex);
+    }
+
     protected void paintTabAreaBorder(@NotNull final Graphics g, final int tabPlacement,
                                       final int x, final int y, final int w, final int h) {
         g.setColor(getTabBorderColor());
