@@ -6,7 +6,8 @@ Gradually all the custom UI and more from the darcula project wil be ported over
 
 # Screenshot
 <p align="center">
-<img src="https://raw.githubusercontent.com/weisJ/darklaf/master/img/preview.png" width="400" align="center">
+<img src="https://raw.githubusercontent.com/weisJ/darklaf/master/img/file_chooser.png" width="200">
+<img src="https://raw.githubusercontent.com/weisJ/darklaf/master/img/color_chooser.png" width="200">
 </p>
 
 # Usage & Features
