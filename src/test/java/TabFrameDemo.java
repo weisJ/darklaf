@@ -1,11 +1,11 @@
 import com.weis.darklaf.LafManager;
+import com.weis.darklaf.components.OverlayScrollPane;
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.tabframe.TabFrame;
 import com.weis.darklaf.components.tabframe.TabbedPopup;
 import com.weis.darklaf.icons.IconLoader;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /*
@@ -48,7 +48,6 @@ public class TabFrameDemo {
                     for (int i = 0; i < 2; i++) {
                         var pcc = new JPanel();
                         pcc.setOpaque(true);
-                        pcc.setBackground(Color.YELLOW.darker().darker());
                         pcc.add(new JLabel(o.toString() + "_" + i + " Popup"));
                         tabFrame.addTab(pcc, o.toString() + "_" + i, folderIcon, o);
                     }
@@ -58,22 +57,27 @@ public class TabFrameDemo {
             tabFrame.setTabAt(tabbedPopup, "NORTH (Tabbed Pane Tab)", null, Alignment.NORTH, 0);
             for (int i = 0; i < 5; i++) {
                 var panel = new JPanel();
-                var label = new JLabel("inside tab " + i);
+                var label = new JLabel("Tab Number " + i);
                 panel.add(label);
-                panel.setBackground(Color.GREEN.darker().darker());
                 tabbedPopup.getTabbedPane().addTab("Tab " + i, panel);
             }
 
+            /* Activate for custom tab demo.
             tabFrame.setUserTabComponentAt(new JLabel("NORTH (custom tab)") {{
                 setBorder(new EmptyBorder(0, 5, 0, 5));
                 setOpaque(false);
                 setForeground(Color.RED);
                 setFont(new Font(Font.SERIF, Font.ITALIC, 12));
             }}, Alignment.NORTH, 1);
-
+             */
             tabFrame.setAcceleratorAt(1, Alignment.NORTH_WEST, 0);
 
             var contentPane = new JPanel(new BorderLayout());
+            var overlayScroll = new OverlayScrollPane(new JTextPane() {{
+                setText(TestResources.LOREM_IPSUM);
+                setFont(Font.getFont(Font.MONOSPACED));
+            }});
+            contentPane.add(overlayScroll, BorderLayout.CENTER);
             frame.setContentPane(tabFrame);
             tabFrame.setContent(contentPane);
 

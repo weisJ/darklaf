@@ -84,8 +84,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
      */
     public void installUI(final JComponent c) {
         super.installUI(c);
-        updateDisplayProperties(c.getFont(),
-                                c.getForeground());
+        updateDisplayProperties(c.getFont(), c.getForeground());
     }
 
     void updateDisplayProperties(final Font font, final Color fg) {
