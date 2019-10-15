@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -232,11 +233,11 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     }
 
     protected Color getHeaderBackground() {
-        return UIManager.getColor("TableHeader.background");
+        return DarkColors.get().getTableBackground();
     }
 
     protected Color getBorderColor() {
-        return UIManager.getColor("TableHeader.borderColor");
+        return DarkColors.get().getTableHeaderBorderColor();
     }
 
     protected boolean isScrollPaneRtl() {

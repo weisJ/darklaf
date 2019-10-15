@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.progressbar;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -48,15 +49,15 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         super.installDefaults();
         UIManager.put("ProgressBar.repaintInterval", isSimplified() ? REPAINT_INTERVAL_SIMPLIFIED : REPAINT_INTERVAL_DEFAULT);
         UIManager.put("ProgressBar.cycleTime", isSimplified() ? CYCLE_TIME_SIMPLIFIED : CYCLE_TIME_DEFAULT);
-        trackColor = UIManager.getColor("ProgressBar.trackColor");
-        progressColor = UIManager.getColor("ProgressBar.progressColor");
-        indeterminateStartColor = UIManager.getColor("ProgressBar.indeterminateStartColor");
-        indeterminateEndColor = UIManager.getColor("ProgressBar.indeterminateEndColor");
+        trackColor = DarkColors.get().getProgressBarTrackBackground();
+        progressColor = DarkColors.get().getProgressBarProgressColor();
+        indeterminateStartColor = DarkColors.get().getProgressBarIndeterminateStartColor();
+        indeterminateEndColor = DarkColors.get().getProgressBarIndeterminateEndColor();
 
-        failedColor = UIManager.getColor("ProgressBar.failedColor");
-        failedEndColor = UIManager.getColor("ProgressBar.failedEndColor");
-        passedColor = UIManager.getColor("ProgressBar.passedColor");
-        passedEndColor = UIManager.getColor("ProgressBar.passedEndColor");
+        failedColor = DarkColors.get().getProgressBarFailedColor();
+        failedEndColor = DarkColors.get().getProgressBarFailedEndColor();
+        passedColor = DarkColors.get().getProgressBarPassedColor();
+        passedEndColor = DarkColors.get().getProgressBarPassedEndColor();
     }
 
     @Override

@@ -21,21 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.ui.list;
+package com.weis.darklaf.ui.taskpane;
 
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.ui.cell.DarkCellBorder;
-import com.weis.darklaf.util.DarkUIUtil;
+import org.jdesktop.swingx.plaf.basic.BasicTaskPaneContainerUI;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 
-public class DarkListCellFocusBorder extends DarkCellBorder {
+public class DarkTaskPaneContainerUI extends BasicTaskPaneContainerUI {
+
+
+    @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkTaskPaneContainerUI();
+    }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g, final int x, final int y,
-                            final int width, final int height) {
-        super.paintBorder(c, g, x, y, width, height);
-        g.setColor(DarkColors.get().getListFocusBorderColor());
-        DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
+    protected void installDefaults() {
+        super.installDefaults();
+        taskPane.setOpaque(false);
+        taskPane.setBackgroundPainter(null);
     }
+
 }

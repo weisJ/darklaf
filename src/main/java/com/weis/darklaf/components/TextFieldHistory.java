@@ -26,6 +26,7 @@ package com.weis.darklaf.components;
 import com.weis.darklaf.decorators.PlainAction;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -76,7 +77,17 @@ public class TextFieldHistory extends ScrollPopupMenu implements ActionListener 
     }
 
     @Override
+    public void show(final Component invoker, final int x, final int y) {
+        if (history.size() == 0) return;
+        super.show(invoker, x, y);
+    }
+
+    @Override
     protected void showPopup() {
+        if (history.size() == 0) {
+            firePopupMenuCanceled();
+            return;
+        }
         this.removeAll();
         LinkedList<String> list = new LinkedList<>(history);
         Iterator<String> itr = list.descendingIterator();

@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.toolbar;
 
+import com.weis.darklaf.defaults.DarkIcons;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,11 +43,11 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
     }
 
     protected Icon getHorizontalGrip() {
-        return UIManager.getIcon("ToolBar.horizontalGrip.icon");
+        return DarkIcons.get().getToolBarHorizontalGrip();
     }
 
     protected Icon getVerticalGrip() {
-        return UIManager.getIcon("ToolBar.verticalGrip.icon");
+        return DarkIcons.get().getToolBarVerticalGrip();
     }
 
     public Insets getBorderInsets(final Component c, final Insets newInsets) {

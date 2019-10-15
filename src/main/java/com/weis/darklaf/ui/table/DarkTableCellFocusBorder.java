@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.cell.DarkCellBorder;
 import com.weis.darklaf.util.DarkUIUtil;
 
@@ -16,18 +17,17 @@ public class DarkTableCellFocusBorder extends DarkCellBorder {
                             final int width, final int height) {
         super.paintBorder(c, g, x, y, width, height);
         if (isRowFocusBorder(c)) {
-            g.setColor(UIManager.getColor("Table.focusRowBorderColor"));
-            ((Graphics2D) g).scale(0.5, 0.5);
-            g.drawRect(0, 0, 2 * width, 1);
-            g.drawRect(0, 2 * height - 2, 2 * width, 1);
+            g.setColor(DarkColors.get().getTableRowBorderColor());
+            g.fillRect(0, 0, width, 1);
+            g.drawRect(0, height - 1, width, 1);
             if (forcePaintLeft(c)) {
-                g.drawRect(0, 0, 1, 2 * height);
+                g.drawRect(0, 0, 1, height);
             }
             if (forcePaintRight(c)) {
-                g.drawRect(2 * width - 2, 0, 1, 2 * height);
+                g.drawRect(width - 1, 0, 1, height);
             }
         } else {
-            g.setColor(UIManager.getColor("Table.focusBorderColor"));
+            g.setColor(DarkColors.get().getTableFocusBorderColor());
             DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
         }
     }

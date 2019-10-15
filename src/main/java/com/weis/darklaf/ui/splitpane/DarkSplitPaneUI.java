@@ -24,6 +24,7 @@
 package com.weis.darklaf.ui.splitpane;
 
 import com.weis.darklaf.decorators.LayoutManagerDelegate;
+import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -135,7 +136,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     protected Color getDividerLineColor() {
-        return UIManager.getColor("SplitPane.dividerLineColor");
+        return DarkColors.get().getSplitPaneDividerLineColor();
     }
 
     private enum Style {

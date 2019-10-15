@@ -23,35 +23,26 @@
  */
 package com.weis.darklaf.ui.tabbedpane;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.LazyActionMap;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentInputMapUIResource;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
 import java.util.Objects;
@@ -71,68 +62,17 @@ import java.util.Vector;
  * besides the fact that all fields and methods are now protected instead of private.
  * @author Jannis Weis
  */
-public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstants {
+public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstants {
 
 
 // Instance variables initialized at installation
 
-    /* This method will create and return a polygon shape for the given tab rectangle
-     * which has been cropped at the specified cropline with a torn edge visual.
-     * e.g. A "File" tab which has cropped been cropped just after the "i":
-     *             -------------
-     *             |  .....     |
-     *             |  .          |
-     *             |  ...  .    |
-     *             |  .    .   |
-     *             |  .    .    |
-     *             |  .    .     |
-     *             --------------
-     *
-     * The x, y arrays below define the pattern used to create a "torn" edge
-     * segment which is repeated to fill the edge of the tab.
-     * For tabs placed on TOP and BOTTOM, this righthand torn edge is created by
-     * line segments which are defined by coordinates obtained by
-     * subtracting xCropLen[i] from (tab.x + tab.width) and adding yCroplen[i]
-     * to (tab.y).
-     * For tabs placed on LEFT or RIGHT, the bottom torn edge is created by
-     * subtracting xCropLen[i] from (tab.y + tab.height) and adding yCropLen[i]
-     * to (tab.x).
-     */
-    protected static final int[] xCropLen = {1, 1, 0, 0, 1, 1, 2, 2};
-    protected static final int[] yCropLen = {0, 3, 3, 6, 6, 9, 9, 12};
-    protected static final int CROP_SEGMENT = 12;
     protected final Insets currentPadInsets = new Insets(0, 0, 0, 0);
     protected final Insets currentTabAreaInsets = new Insets(0, 0, 0, 0);
-    /**
-     * A rectangle used for general layout calculations in order
-     * to avoid constructing many new Rectangles on the fly.
-     */
-    protected final transient Rectangle calcRect = new Rectangle(0, 0, 0, 0);
     /**
      * The tab pane
      */
     protected JTabbedPane tabPane;
-    /**
-     * Highlight color
-     */
-    protected Color highlight;
-    /**
-     * Light highlight color
-     */
-    protected Color lightHighlight;
-    /**
-     * Shadow color
-     */
-    protected Color shadow;
-    /**
-     * Dark shadow color
-     */
-    protected Color darkShadow;
-    /**
-     * Focus color
-     */
-    protected Color focus;
-    protected Color selectedColor;
     /**
      * Text icon gap
      */
@@ -284,18 +224,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     // UI Installation/De-installation
     protected int baseline;
 
-    /**
-     * Create a UI.
-     *
-     * @param c a component
-     * @return a UI
-     */
-    @NotNull
-    @Contract("_ -> new")
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkTabbedPaneUIBridge();
-    }
-
     static void loadActionMap(@NotNull final LazyActionMap map) {
         map.put(new Actions(Actions.NEXT));
         map.put(new Actions(Actions.PREVIOUS));
@@ -311,61 +239,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         map.put(new Actions(Actions.SELECT_FOCUSED));
         map.put(new Actions(Actions.SCROLL_FORWARD));
         map.put(new Actions(Actions.SCROLL_BACKWARD));
-    }
-
-    protected static Polygon createCroppedTabShape(final int tabPlacement, final Rectangle tabRect, final int cropline) {
-        int rlen;
-        int start;
-        int end;
-        int ostart;
-
-        switch (tabPlacement) {
-            case LEFT:
-            case RIGHT:
-                rlen = tabRect.width;
-                start = tabRect.x;
-                end = tabRect.x + tabRect.width;
-                ostart = tabRect.y + tabRect.height;
-                break;
-            case TOP:
-            case BOTTOM:
-            default:
-                rlen = tabRect.height;
-                start = tabRect.y;
-                end = tabRect.y + tabRect.height;
-                ostart = tabRect.x + tabRect.width;
-        }
-        int rcnt = rlen / CROP_SEGMENT;
-        if (rlen % CROP_SEGMENT > 0) {
-            rcnt++;
-        }
-        int npts = 2 + (rcnt * 8);
-        int[] xp = new int[npts];
-        int[] yp = new int[npts];
-        int pcnt = 0;
-
-        xp[pcnt] = ostart;
-        yp[pcnt++] = end;
-        xp[pcnt] = ostart;
-        yp[pcnt++] = start;
-        for (int i = 0; i < rcnt; i++) {
-            for (int j = 0; j < xCropLen.length; j++) {
-                xp[pcnt] = cropline - xCropLen[j];
-                yp[pcnt] = start + (i * CROP_SEGMENT) + yCropLen[j];
-                if (yp[pcnt] >= end) {
-                    yp[pcnt] = end;
-                    pcnt++;
-                    break;
-                }
-                pcnt++;
-            }
-        }
-        if (tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM) {
-            return new Polygon(xp, yp, pcnt);
-
-        } else { // LEFT or RIGHT
-            return new Polygon(yp, xp, pcnt);
-        }
     }
 
     public void installUI(final JComponent c) {
@@ -442,11 +315,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * Uninstall the defaults.
      */
     protected void uninstallDefaults() {
-        highlight = null;
-        lightHighlight = null;
-        shadow = null;
-        darkShadow = null;
-        focus = null;
         tabInsets = null;
         selectedTabPadInsets = null;
         tabAreaInsets = null;
@@ -463,8 +331,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         uninstallTabContainer();
         if (scrollableTabLayoutEnabled()) {
             tabPane.remove(tabScroller.viewport);
-            tabPane.remove(tabScroller.scrollForwardButton);
-            tabPane.remove(tabScroller.scrollBackwardButton);
             tabScroller = null;
         }
     }
@@ -478,7 +344,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         tabContainer.notifyTabbedPane = false;
         tabContainer.removeAll();
         if (scrollableTabLayoutEnabled()) {
-            tabContainer.remove(tabScroller.croppedEdge);
             tabScroller.tabPanel.remove(tabContainer);
         } else {
             tabPane.remove(tabContainer);
@@ -578,13 +443,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * @see TabbedPaneLayout
      * @see javax.swing.JTabbedPane#getTabLayoutPolicy
      */
-    protected LayoutManager createLayoutManager() {
-        if (tabPane.getTabLayoutPolicy() == JTabbedPane.SCROLL_TAB_LAYOUT) {
-            return new TabbedPaneScrollLayout(this);
-        } else { /* WRAP_TAB_LAYOUT */
-            return new TabbedPaneLayout(this);
-        }
-    }
+    protected abstract LayoutManager createLayoutManager();
 
     /**
      * Creates and installs any required subcomponents for the JTabbedPane.
@@ -595,7 +454,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     protected void installComponents() {
         if (scrollableTabLayoutEnabled()) {
             if (tabScroller == null) {
-                tabScroller = new ScrollableTabSupport(this, tabPane.getTabPlacement());
+                tabScroller = new ScrollableTabSupport(this);
                 tabPane.add(tabScroller.viewport);
             }
         }
@@ -608,13 +467,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     protected void installDefaults() {
         LookAndFeel.installColorsAndFont(tabPane, "TabbedPane.background",
                                          "TabbedPane.foreground", "TabbedPane.font");
-        highlight = UIManager.getColor("TabbedPane.light");
-        lightHighlight = UIManager.getColor("TabbedPane.highlight");
-        shadow = UIManager.getColor("TabbedPane.shadow");
-        darkShadow = UIManager.getColor("TabbedPane.darkShadow");
-        focus = UIManager.getColor("TabbedPane.focus");
-        selectedColor = UIManager.getColor("TabbedPane.selected");
-
         textIconGap = UIManager.getInt("TabbedPane.textIconGap");
         tabInsets = UIManager.getInsets("TabbedPane.tabInsets");
         selectedTabPadInsets = UIManager.getInsets("TabbedPane.selectedTabPadInsets");
@@ -832,29 +684,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         SwingUtilities.replaceUIInputMap(tabPane,
                                          JComponent.WHEN_IN_FOCUSED_WINDOW,
                                          mnemonicInputMap);
-    }
-
-    /**
-     * Creates and returns a JButton that will provide the user
-     * with a way to scroll the tabs in a particular direction. The
-     * returned JButton must be instance of UIResource.
-     *
-     * @param direction One of the SwingConstants constants:
-     *                  SOUTH, NORTH, EAST or WEST
-     * @return Widget for user to
-     * @throws IllegalArgumentException if direction is not one of
-     *                                  NORTH, SOUTH, EAST or WEST
-     * @see javax.swing.JTabbedPane#setTabPlacement
-     * @see javax.swing.SwingConstants
-     * @since 1.5
-     */
-    protected JButton createScrollButton(final int direction) {
-        if (direction != SOUTH && direction != NORTH && direction != EAST &&
-                direction != WEST) {
-            throw new IllegalArgumentException("Direction must be one of: " +
-                                                       "SOUTH, NORTH, EAST or WEST");
-        }
-        return new ScrollableTabButton(direction);
     }
 
     /**
@@ -1144,65 +973,19 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         if (tabPane.getTabComponentAt(tabIndex) == null) {
             String clippedTitle = title;
 
-            if (scrollableTabLayoutEnabled() && tabScroller.croppedEdge.isParamsSet() &&
-                    tabScroller.croppedEdge.getTabIndex() == tabIndex && isHorizontalTabPlacement()) {
-                int availTextWidth = tabScroller.croppedEdge.getCropline() -
-                        (textRect.x - tabRect.x) - tabScroller.croppedEdge.getCroppedSideWidth();
-                clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, availTextWidth);
-            } else if (!scrollableTabLayoutEnabled() && isHorizontalTabPlacement()) {
+            if (!scrollableTabLayoutEnabled() && isHorizontalTabPlacement()) {
                 clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, textRect.width);
             }
 
-            paintText(g, tabPlacement, font, metrics,
-                      tabIndex, clippedTitle, textRect, isSelected);
+            paintText(g, tabPlacement, font, metrics, tabIndex, clippedTitle, textRect, isSelected);
 
             paintIcon(g, tabPlacement, tabIndex, icon, iconRect, isSelected);
         }
-        paintFocusIndicator(g, tabPlacement, tabRect, tabIndex,
-                            iconRect, textRect, isSelected);
+        paintFocusIndicator(g, tabPlacement, tabRect, tabIndex, iconRect, textRect, isSelected);
     }
 
     protected boolean isHorizontalTabPlacement() {
         return tabPane.getTabPlacement() == TOP || tabPane.getTabPlacement() == BOTTOM;
-    }
-
-    /* If tabLayoutPolicy == SCROLL_TAB_LAYOUT, this method will paint an edge
-     * indicating the tab is cropped in the viewport display
-     */
-    protected void paintCroppedTabEdge(final Graphics g) {
-        int tabIndex = tabScroller.croppedEdge.getTabIndex();
-        int cropline = tabScroller.croppedEdge.getCropline();
-        int x, y;
-        switch (tabPane.getTabPlacement()) {
-            case LEFT:
-            case RIGHT:
-                x = rects[tabIndex].x;
-                y = cropline;
-                int xx = x;
-                g.setColor(shadow);
-                while (xx <= x + rects[tabIndex].width) {
-                    for (int i = 0; i < xCropLen.length; i += 2) {
-                        g.drawLine(xx + yCropLen[i], y - xCropLen[i],
-                                   xx + yCropLen[i + 1] - 1, y - xCropLen[i + 1]);
-                    }
-                    xx += CROP_SEGMENT;
-                }
-                break;
-            case TOP:
-            case BOTTOM:
-            default:
-                x = cropline;
-                y = rects[tabIndex].y;
-                int yy = y;
-                g.setColor(shadow);
-                while (yy <= y + rects[tabIndex].height) {
-                    for (int i = 0; i < xCropLen.length; i += 2) {
-                        g.drawLine(x - xCropLen[i], yy + yCropLen[i],
-                                   x - xCropLen[i + 1], yy + yCropLen[i + 1] - 1);
-                    }
-                    yy += CROP_SEGMENT;
-                }
-        }
     }
 
     /**
@@ -1274,59 +1057,22 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
     }
 
     /**
-     * Paints text.
+     * Paints the tab background.
      *
-     * @param g            the graphics
-     * @param tabPlacement the tab placement
-     * @param font         the font
-     * @param metrics      the font metrics
-     * @param tabIndex     the tab index
-     * @param title        the title
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
+     * @param g            the graphics context in which to paint
+     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabIndex     the index of the tab with respect to other tabs
+     * @param x            the x coordinate of tab
+     * @param y            the y coordinate of tab
+     * @param w            the width of the tab
+     * @param h            the height of the tab
+     * @param isSelected   a {@code boolean} which determines whether or not
+     *                     the tab is selected
      */
-    protected void paintText(final Graphics g, final int tabPlacement,
-                             final Font font, final FontMetrics metrics, final int tabIndex,
-                             final String title, final Rectangle textRect,
-                             final boolean isSelected) {
-
-        g.setFont(font);
-
-        View v = getTextViewForTab(tabIndex);
-        if (v != null) {
-            // html
-            v.paint(g, textRect);
-        } else {
-            // plain text
-            int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
-
-            if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
-                Color fg = tabPane.getForegroundAt(tabIndex);
-                if (isSelected && (fg instanceof UIResource)) {
-                    Color selectedFG = UIManager.getColor(
-                            "TabbedPane.selectedForeground");
-                    if (selectedFG != null) {
-                        fg = selectedFG;
-                    }
-                }
-                g.setColor(fg);
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
-
-            } else { // tab disabled
-                g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
-                g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x - 1, textRect.y + metrics.getAscent() - 1);
-
-            }
-        }
-    }
+    protected abstract void paintTabBackground(final Graphics g, final int tabPlacement,
+                                               final int tabIndex,
+                                               final int x, final int y, final int w, final int h,
+                                               final boolean isSelected);
 
     /**
      * Returns the tab label.properties shift x.
@@ -1379,61 +1125,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
     }
 
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                       final Rectangle[] rects, final int tabIndex,
-                                       final Rectangle iconRect, final Rectangle textRect,
-                                       final boolean isSelected) {
-        paintFocusIndicator(g, tabPlacement, rects[tabIndex], tabIndex, iconRect, textRect, isSelected);
-    }
-
-    /**
-     * Paints the focus indicator.
-     *
-     * @param g            the graphics
-     * @param tabPlacement the tab placement
-     * @param tabRect      the tabRect
-     * @param tabIndex     the tab index
-     * @param iconRect     the icon rectangle
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
-     */
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                       final Rectangle tabRect, final int tabIndex,
-                                       final Rectangle iconRect, final Rectangle textRect,
-                                       final boolean isSelected) {
-        if (tabPane.hasFocus() && isSelected) {
-            int x, y, w, h;
-            g.setColor(focus);
-            switch (tabPlacement) {
-                case LEFT:
-                    x = tabRect.x + 3;
-                    y = tabRect.y + 3;
-                    w = tabRect.width - 5;
-                    h = tabRect.height - 6;
-                    break;
-                case RIGHT:
-                    x = tabRect.x + 2;
-                    y = tabRect.y + 3;
-                    w = tabRect.width - 5;
-                    h = tabRect.height - 6;
-                    break;
-                case BOTTOM:
-                    x = tabRect.x + 3;
-                    y = tabRect.y + 2;
-                    w = tabRect.width - 6;
-                    h = tabRect.height - 5;
-                    break;
-                case TOP:
-                default:
-                    x = tabRect.x + 3;
-                    y = tabRect.y + 3;
-                    w = tabRect.width - 6;
-                    h = tabRect.height - 5;
-            }
-            BasicGraphicsUtils.drawDashedRect(g, x, y, w, h);
-        }
-    }
-
     /**
      * this function draws the border around each tab
      * note that this function does now draw the background of the tab.
@@ -1449,100 +1140,85 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * @param isSelected   a {@code boolean} which determines whether or not
      *                     the tab is selected
      */
-    protected void paintTabBorder(final Graphics g, final int tabPlacement,
-                                  final int tabIndex,
-                                  final int x, final int y, final int w, final int h,
-                                  final boolean isSelected) {
-        g.setColor(lightHighlight);
+    protected abstract void paintTabBorder(final Graphics g, final int tabPlacement,
+                                           final int tabIndex,
+                                           final int x, final int y, final int w, final int h,
+                                           final boolean isSelected);
 
-        switch (tabPlacement) {
-            case LEFT:
-                g.drawLine(x + 1, y + h - 2, x + 1, y + h - 2); // bottom-left highlight
-                g.drawLine(x, y + 2, x, y + h - 3); // left highlight
-                g.drawLine(x + 1, y + 1, x + 1, y + 1); // top-left highlight
-                g.drawLine(x + 2, y, x + w - 1, y); // top highlight
+    /**
+     * Paints text.
+     *
+     * @param g            the graphics
+     * @param tabPlacement the tab placement
+     * @param font         the font
+     * @param metrics      the font metrics
+     * @param tabIndex     the tab index
+     * @param title        the title
+     * @param textRect     the text rectangle
+     * @param isSelected   selection status
+     */
+    protected void paintText(final Graphics g, final int tabPlacement,
+                             final Font font, final FontMetrics metrics, final int tabIndex,
+                             final String title, final Rectangle textRect,
+                             final boolean isSelected) {
 
-                g.setColor(shadow);
-                g.drawLine(x + 2, y + h - 2, x + w - 1, y + h - 2); // bottom shadow
+        g.setFont(font);
 
-                g.setColor(darkShadow);
-                g.drawLine(x + 2, y + h - 1, x + w - 1, y + h - 1); // bottom dark shadow
-                break;
-            case RIGHT:
-                g.drawLine(x, y, x + w - 3, y); // top highlight
+        View v = getTextViewForTab(tabIndex);
+        if (v != null) {
+            // html
+            v.paint(g, textRect);
+        } else {
+            // plain text
+            int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
 
-                g.setColor(shadow);
-                g.drawLine(x, y + h - 2, x + w - 3, y + h - 2); // bottom shadow
-                g.drawLine(x + w - 2, y + 2, x + w - 2, y + h - 3); // right shadow
+            if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
+                Color fg = tabPane.getForegroundAt(tabIndex);
+                if (isSelected && (fg instanceof UIResource)) {
+                    Color selectedFG = DarkColors.get().getTabbedPaneSelectedForeground();
+                    if (selectedFG != null) {
+                        fg = selectedFG;
+                    }
+                }
+                g.setColor(fg);
+                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+                                                          title, mnemIndex,
+                                                          textRect.x, textRect.y + metrics.getAscent());
 
-                g.setColor(darkShadow);
-                g.drawLine(x + w - 2, y + 1, x + w - 2, y + 1); // top-right dark shadow
-                g.drawLine(x + w - 2, y + h - 2, x + w - 2, y + h - 2); // bottom-right dark shadow
-                g.drawLine(x + w - 1, y + 2, x + w - 1, y + h - 3); // right dark shadow
-                g.drawLine(x, y + h - 1, x + w - 3, y + h - 1); // bottom dark shadow
-                break;
-            case BOTTOM:
-                g.drawLine(x, y, x, y + h - 3); // left highlight
-                g.drawLine(x + 1, y + h - 2, x + 1, y + h - 2); // bottom-left highlight
+            } else { // tab disabled
+                g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
+                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+                                                          title, mnemIndex,
+                                                          textRect.x, textRect.y + metrics.getAscent());
+                g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
+                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+                                                          title, mnemIndex,
+                                                          textRect.x - 1, textRect.y + metrics.getAscent() - 1);
 
-                g.setColor(shadow);
-                g.drawLine(x + 2, y + h - 2, x + w - 3, y + h - 2); // bottom shadow
-                g.drawLine(x + w - 2, y, x + w - 2, y + h - 3); // right shadow
-
-                g.setColor(darkShadow);
-                g.drawLine(x + 2, y + h - 1, x + w - 3, y + h - 1); // bottom dark shadow
-                g.drawLine(x + w - 2, y + h - 2, x + w - 2, y + h - 2); // bottom-right dark shadow
-                g.drawLine(x + w - 1, y, x + w - 1, y + h - 3); // right dark shadow
-                break;
-            case TOP:
-            default:
-                g.drawLine(x, y + 2, x, y + h - 1); // left highlight
-                g.drawLine(x + 1, y + 1, x + 1, y + 1); // top-left highlight
-                g.drawLine(x + 2, y, x + w - 3, y); // top highlight
-
-                g.setColor(shadow);
-                g.drawLine(x + w - 2, y + 2, x + w - 2, y + h - 1); // right shadow
-
-                g.setColor(darkShadow);
-                g.drawLine(x + w - 1, y + 2, x + w - 1, y + h - 1); // right dark-shadow
-                g.drawLine(x + w - 2, y + 1, x + w - 2, y + 1); // top-right shadow
+            }
         }
     }
 
     /**
-     * Paints the tab background.
+     * Paints the focus indicator.
      *
-     * @param g            the graphics context in which to paint
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param x            the x coordinate of tab
-     * @param y            the y coordinate of tab
-     * @param w            the width of the tab
-     * @param h            the height of the tab
-     * @param isSelected   a {@code boolean} which determines whether or not
-     *                     the tab is selected
+     * @param g            the graphics
+     * @param tabPlacement the tab placement
+     * @param tabRect      the tabRect
+     * @param tabIndex     the tab index
+     * @param iconRect     the icon rectangle
+     * @param textRect     the text rectangle
+     * @param isSelected   selection status
      */
-    protected void paintTabBackground(final Graphics g, final int tabPlacement,
-                                      final int tabIndex,
-                                      final int x, final int y, final int w, final int h,
-                                      final boolean isSelected) {
-        g.setColor(!isSelected || selectedColor == null ?
-                   tabPane.getBackgroundAt(tabIndex) : selectedColor);
-        switch (tabPlacement) {
-            case LEFT:
-                g.fillRect(x + 1, y + 1, w - 1, h - 3);
-                break;
-            case RIGHT:
-                g.fillRect(x, y + 1, w - 2, h - 3);
-                break;
-            case BOTTOM:
-                g.fillRect(x + 1, y, w - 3, h - 1);
-                break;
-            case TOP:
-            default:
-                g.fillRect(x + 1, y + 1, w - 3, h - 1);
-        }
-    }
+    protected abstract void paintFocusIndicator(final Graphics g, final int tabPlacement,
+                                                final Rectangle tabRect, final int tabIndex,
+                                                final Rectangle iconRect, final Rectangle textRect,
+                                                final boolean isSelected);
+
+    protected abstract void paintFocusIndicator(final Graphics g, final int tabPlacement,
+                                                final Rectangle[] rects, final int tabIndex,
+                                                final Rectangle iconRect, final Rectangle textRect,
+                                                final boolean isSelected);
 
     /**
      * Paints the content border.
@@ -1551,235 +1227,10 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
      * @param tabPlacement  the placement (left, right, bottom, top) of the tab
      * @param selectedIndex the tab index of the selected component
      */
-    protected void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex) {
-        int width = tabPane.getWidth();
-        int height = tabPane.getHeight();
-        Insets insets = tabPane.getInsets();
-        Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
-
-        int x = insets.left;
-        int y = insets.top;
-        int w = width - insets.right - insets.left;
-        int h = height - insets.top - insets.bottom;
-
-        switch (tabPlacement) {
-            case LEFT:
-                x += calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
-                if (tabsOverlapBorder) {
-                    x -= tabAreaInsets.right;
-                }
-                w -= (x - insets.left);
-                break;
-            case RIGHT:
-                w -= calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
-                if (tabsOverlapBorder) {
-                    w += tabAreaInsets.left;
-                }
-                break;
-            case BOTTOM:
-                h -= calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
-                if (tabsOverlapBorder) {
-                    h += tabAreaInsets.top;
-                }
-                break;
-            case TOP:
-            default:
-                y += calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
-                if (tabsOverlapBorder) {
-                    y -= tabAreaInsets.bottom;
-                }
-                h -= (y - insets.top);
-        }
-
-        if (tabPane.getTabCount() > 0 && (contentOpaque || tabPane.isOpaque())) {
-            // Fill region behind content area
-            Color color = UIManager.getColor("TabbedPane.contentAreaColor");
-            if (color != null) {
-                g.setColor(color);
-            } else if (selectedColor == null || selectedIndex == -1) {
-                g.setColor(tabPane.getBackground());
-            } else {
-                g.setColor(selectedColor);
-            }
-            g.fillRect(x, y, w, h);
-        }
-
-        paintContentBorderTopEdge(g, tabPlacement, selectedIndex, x, y, w, h);
-        paintContentBorderLeftEdge(g, tabPlacement, selectedIndex, x, y, w, h);
-        paintContentBorderBottomEdge(g, tabPlacement, selectedIndex, x, y, w, h);
-        paintContentBorderRightEdge(g, tabPlacement, selectedIndex, x, y, w, h);
-
-    }
-
-    /**
-     * Paints the content border top edge.
-     *
-     * @param g             the graphics context in which to paint
-     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
-     * @param selectedIndex the tab index of the selected component
-     * @param x             the x coordinate of tab
-     * @param y             the y coordinate of tab
-     * @param w             the width of the tab
-     * @param h             the height of the tab
-     */
-    protected void paintContentBorderTopEdge(final Graphics g, final int tabPlacement,
-                                             final int selectedIndex,
-                                             final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
-                            getTabBounds(selectedIndex, calcRect);
-
-        g.setColor(lightHighlight);
-
-        // Draw unbroken line if tabs are not on TOP, OR
-        // selected tab is not in run adjacent to content, OR
-        // selected tab is not visible (SCROLL_TAB_LAYOUT)
-        //
-        if (tabPlacement != TOP || selectedIndex < 0 ||
-                (selRect.y + selRect.height + 1 < y) ||
-                (selRect.x < x || selRect.x > x + w)) {
-            g.drawLine(x, y, x + w - 2, y);
-        } else {
-            // Break line to show visual connection to selected tab
-            g.drawLine(x, y, selRect.x - 1, y);
-            if (selRect.x + selRect.width < x + w - 2) {
-                g.drawLine(selRect.x + selRect.width, y,
-                           x + w - 2, y);
-            } else {
-                g.setColor(shadow);
-                g.drawLine(x + w - 2, y, x + w - 2, y);
-            }
-        }
-    }
+    protected abstract void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex);
 
 
 // TabbedPaneUI methods
-
-    /**
-     * Paints the content border left edge.
-     *
-     * @param g             the graphics context in which to paint
-     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
-     * @param selectedIndex the tab index of the selected component
-     * @param x             the x coordinate of tab
-     * @param y             the y coordinate of tab
-     * @param w             the width of the tab
-     * @param h             the height of the tab
-     */
-    protected void paintContentBorderLeftEdge(final Graphics g, final int tabPlacement,
-                                              final int selectedIndex,
-                                              final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
-                            getTabBounds(selectedIndex, calcRect);
-
-        g.setColor(lightHighlight);
-
-        // Draw unbroken line if tabs are not on LEFT, OR
-        // selected tab is not in run adjacent to content, OR
-        // selected tab is not visible (SCROLL_TAB_LAYOUT)
-        //
-        if (tabPlacement != LEFT || selectedIndex < 0 ||
-                (selRect.x + selRect.width + 1 < x) ||
-                (selRect.y < y || selRect.y > y + h)) {
-            g.drawLine(x, y, x, y + h - 2);
-        } else {
-            // Break line to show visual connection to selected tab
-            g.drawLine(x, y, x, selRect.y - 1);
-            if (selRect.y + selRect.height < y + h - 2) {
-                g.drawLine(x, selRect.y + selRect.height,
-                           x, y + h - 2);
-            }
-        }
-    }
-
-    /**
-     * Paints the content border bottom edge.
-     *
-     * @param g             the graphics context in which to paint
-     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
-     * @param selectedIndex the tab index of the selected component
-     * @param x             the x coordinate of tab
-     * @param y             the y coordinate of tab
-     * @param w             the width of the tab
-     * @param h             the height of the tab
-     */
-    protected void paintContentBorderBottomEdge(final Graphics g, final int tabPlacement,
-                                                final int selectedIndex,
-                                                final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
-                            getTabBounds(selectedIndex, calcRect);
-
-        g.setColor(shadow);
-
-        // Draw unbroken line if tabs are not on BOTTOM, OR
-        // selected tab is not in run adjacent to content, OR
-        // selected tab is not visible (SCROLL_TAB_LAYOUT)
-        //
-        if (tabPlacement != BOTTOM || selectedIndex < 0 ||
-                (selRect.y - 1 > h) ||
-                (selRect.x < x || selRect.x > x + w)) {
-            g.drawLine(x + 1, y + h - 2, x + w - 2, y + h - 2);
-            g.setColor(darkShadow);
-            g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
-        } else {
-            // Break line to show visual connection to selected tab
-            g.drawLine(x + 1, y + h - 2, selRect.x - 1, y + h - 2);
-            g.setColor(darkShadow);
-            g.drawLine(x, y + h - 1, selRect.x - 1, y + h - 1);
-            if (selRect.x + selRect.width < x + w - 2) {
-                g.setColor(shadow);
-                g.drawLine(selRect.x + selRect.width, y + h - 2, x + w - 2, y + h - 2);
-                g.setColor(darkShadow);
-                g.drawLine(selRect.x + selRect.width, y + h - 1, x + w - 1, y + h - 1);
-            }
-        }
-
-    }
-
-    /**
-     * Paints the content border right edge.
-     *
-     * @param g             the graphics context in which to paint
-     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
-     * @param selectedIndex the tab index of the selected component
-     * @param x             the x coordinate of tab
-     * @param y             the y coordinate of tab
-     * @param w             the width of the tab
-     * @param h             the height of the tab
-     */
-    protected void paintContentBorderRightEdge(final Graphics g, final int tabPlacement,
-                                               final int selectedIndex,
-                                               final int x, final int y, final int w, final int h) {
-        Rectangle selRect = selectedIndex < 0 ? null :
-                            getTabBounds(selectedIndex, calcRect);
-
-        g.setColor(shadow);
-
-        // Draw unbroken line if tabs are not on RIGHT, OR
-        // selected tab is not in run adjacent to content, OR
-        // selected tab is not visible (SCROLL_TAB_LAYOUT)
-        //
-        if (tabPlacement != RIGHT || selectedIndex < 0 ||
-                (selRect.x - 1 > w) ||
-                (selRect.y < y || selRect.y > y + h)) {
-            g.drawLine(x + w - 2, y + 1, x + w - 2, y + h - 3);
-            g.setColor(darkShadow);
-            g.drawLine(x + w - 1, y, x + w - 1, y + h - 1);
-        } else {
-            // Break line to show visual connection to selected tab
-            g.drawLine(x + w - 2, y + 1, x + w - 2, selRect.y - 1);
-            g.setColor(darkShadow);
-            g.drawLine(x + w - 1, y, x + w - 1, selRect.y - 1);
-
-            if (selRect.y + selRect.height < y + h - 2) {
-                g.setColor(shadow);
-                g.drawLine(x + w - 2, selRect.y + selRect.height,
-                           x + w - 2, y + h - 2);
-                g.setColor(darkShadow);
-                g.drawLine(x + w - 1, selRect.y + selRect.height,
-                           x + w - 1, y + h - 2);
-            }
-        }
-    }
 
     /**
      * Returns the tab index which intersects the specified point
@@ -2740,92 +2191,12 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
                 if (focusIndex != -1) {
                     pane.setSelectedIndex(focusIndex);
                 }
-            } else if (Objects.equals(key, SCROLL_FORWARD)) {
-                if (ui.scrollableTabLayoutEnabled()) {
-                    ui.tabScroller.scrollForward(pane.getTabPlacement());
-                }
-            } else if (Objects.equals(key, SCROLL_BACKWARD)) {
-                if (ui.scrollableTabLayoutEnabled()) {
-                    ui.tabScroller.scrollBackward(pane.getTabPlacement());
-                }
             }
-        }
-    }
-
-    @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected static class ScrollableTabButton extends BasicArrowButton implements UIResource,
-            SwingConstants {
-        public ScrollableTabButton(final int direction) {
-            super(direction,
-                  UIManager.getColor("TabbedPane.selected"),
-                  UIManager.getColor("TabbedPane.shadow"),
-                  UIManager.getColor("TabbedPane.darkShadow"),
-                  UIManager.getColor("TabbedPane.highlight"));
         }
     }
 
 
 // Controller: event listeners
-
-    /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of BasicTabbedPaneUI.
-     */
-    public class PropertyChangeHandler implements PropertyChangeListener {
-        // NOTE: This class exists only for backward compatibility. All
-        // its functionality has been moved into Handler. If you need to add
-        // new functionality add it to the Handler, but make sure this
-        // class calls into the Handler.
-        public void propertyChange(final PropertyChangeEvent e) {
-            getHandler().propertyChange(e);
-        }
-    }
-
-    /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of BasicTabbedPaneUI.
-     */
-    public class TabSelectionHandler implements ChangeListener {
-        // NOTE: This class exists only for backward compatibility. All
-        // its functionality has been moved into Handler. If you need to add
-        // new functionality add it to the Handler, but make sure this
-        // class calls into the Handler.
-        public void stateChanged(final ChangeEvent e) {
-            getHandler().stateChanged(e);
-        }
-    }
-
-    /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of BasicTabbedPaneUI.
-     */
-    public class MouseHandler extends MouseAdapter {
-        // NOTE: This class exists only for backward compatibility. All
-        // its functionality has been moved into Handler. If you need to add
-        // new functionality add it to the Handler, but make sure this
-        // class calls into the Handler.
-        public void mousePressed(final MouseEvent e) {
-            getHandler().mousePressed(e);
-        }
-    }
-
-    /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of BasicTabbedPaneUI.
-     */
-    public class FocusHandler extends FocusAdapter {
-        // NOTE: This class exists only for backward compatibility. All
-        // its functionality has been moved into Handler. If you need to add
-        // new functionality add it to the Handler, but make sure this
-        // class calls into the Handler.
-        public void focusGained(final FocusEvent e) {
-            getHandler().focusGained(e);
-        }
-
-        public void focusLost(final FocusEvent e) {
-            getHandler().focusLost(e);
-        }
-    }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class TabContainer extends JPanel implements UIResource {
@@ -2850,7 +2221,6 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
             // to update tabs area e.g. when the size of tabComponent was changed
             if (scrollableTabLayoutEnabled()) {
                 tabScroller.tabPanel.repaint();
-                tabScroller.updateView();
             } else {
                 tabPane.repaint(getBounds());
             }
@@ -2868,7 +2238,7 @@ public class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstan
         }
 
         public boolean isOptimizedDrawingEnabled() {
-            return tabScroller != null && !tabScroller.croppedEdge.isParamsSet();
+            return true;
         }
     }
 

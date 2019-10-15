@@ -23,6 +23,8 @@
  */
 package com.weis.darklaf.ui.button;
 
+import com.weis.darklaf.defaults.DarkColors;
+import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
@@ -42,9 +44,6 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class DarkButtonBorder implements Border, UIResource {
 
-    public static final int BORDER_SIZE = 3;
-    public static final int SHADOW_HEIGHT = 3;
-
     @Override
     public void paintBorder(final Component c, @NotNull final Graphics g,
                             final int x, final int y, final int width, final int height) {
@@ -53,67 +52,93 @@ public class DarkButtonBorder implements Border, UIResource {
         }
         Graphics2D g2 = (Graphics2D) g;
         g2.translate(x, y);
+
         int arc = getArc(c);
+        int focusArc = getFocusArc(c);
         GraphicsContext config = new GraphicsContext(g);
 
         if (c.isEnabled()) {
             paintShadow(g2, width, height, arc);
         }
 
+        int shadowHeight = getShadowSize();
+        int borderSize = getBorderSize();
+
+
         if (c.hasFocus()) {
-            DarkUIUtil.paintFocusBorder(g2, width, height - SHADOW_HEIGHT, arc, true);
+            DarkUIUtil.paintFocusBorder(g2, width, height - shadowHeight, focusArc, borderSize);
         }
 
         g2.setColor(getBorderColor(c));
-        if (DarkButtonUI.isSquare(c) && !DarkButtonUI.isForceRoundCorner(c)) {
-            g2.drawRect(BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
-                        height - 2 * BORDER_SIZE - SHADOW_HEIGHT);
-        } else {
-            DarkUIUtil.paintLineBorder(g2, BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
-                                       height - 2 * BORDER_SIZE - SHADOW_HEIGHT, arc, true);
-
-        }
+        DarkUIUtil.paintLineBorder(g2, borderSize, borderSize, width - 2 * borderSize,
+                                   height - 2 * borderSize - shadowHeight, arc, true);
         config.restore();
     }
 
-    protected int getArc(final Component c) {
-        return DarkButtonUI.isSquare(c) && !DarkButtonUI.isForceRoundCorner(c) ? DarkButtonUI.SQUARE_ARC_SIZE
-                                                                               : DarkButtonUI.ARC_SIZE;
+    public static int getArc(final Component c) {
+        return DarkButtonUI.isSquare(c) && !DarkButtonUI.isForceRoundCorner(c) ? 0 : getArcSize();
+    }
+
+    public static int getFocusArc(final Component c) {
+        return DarkButtonUI.isSquare(c) && !DarkButtonUI.isForceRoundCorner(c) ? getSquareFocusArcSize()
+                                                                               : getFocusArcSize();
     }
 
     private void paintShadow(@NotNull final Graphics2D g2, final int width, final int height, final int arc) {
         GraphicsContext context = new GraphicsContext(g2);
-        Area shadowShape = new Area(new RoundRectangle2D.Double(BORDER_SIZE, BORDER_SIZE,
-                                                                width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE,
+        int borderSize = getBorderSize();
+        int shadowSize = getShadowSize();
+        Area shadowShape = new Area(new RoundRectangle2D.Double(borderSize, borderSize,
+                                                                width - 2 * borderSize, height - 2 * borderSize,
                                                                 arc, arc));
-        Area innerArea = new Area(new RoundRectangle2D.Double(BORDER_SIZE, BORDER_SIZE,
-                                                              width - 2 * BORDER_SIZE,
-                                                              height - 2 * BORDER_SIZE - SHADOW_HEIGHT,
+        Area innerArea = new Area(new RoundRectangle2D.Double(borderSize, borderSize,
+                                                              width - 2 * borderSize,
+                                                              height - 2 * borderSize - shadowSize,
                                                               arc, arc));
         shadowShape.subtract(innerArea);
         g2.setComposite(DarkUIUtil.SHADOW_COMPOSITE);
-        g2.setColor(UIManager.getColor("Button.shadow"));
+        g2.setColor(DarkColors.get().getButtonShadowColor());
         g2.fill(shadowShape);
         context.restore();
     }
 
-    private Color getBorderColor(final Component c) {
+    public static int getShadowSize() {
+        return DarkDefaults.get().getButtonShadowSize();
+    }
+
+    public static int getBorderSize() {
+        return DarkDefaults.get().getButtonBorderSize();
+    }
+
+    private Color getBorderColor(@NotNull final Component c) {
         if (c.hasFocus()) {
-            return UIManager.getColor("Button.focusBorderColor");
+            return DarkColors.get().getButtonFocusBorderColor();
         } else if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
-            return UIManager.getColor("Button.defaultBorderColor");
+            return DarkColors.get().getButtonDefaultBorderColor();
         } else if (c.isEnabled()) {
-            return UIManager.getColor("Button.activeBorderColor");
+            return DarkColors.get().getButtonBorderColor();
         } else {
-            return UIManager.getColor("Button.inactiveBorderColor");
+            return DarkColors.get().getButtonInactiveBorderColor();
         }
+    }
+
+    public static int getArcSize() {
+        return DarkDefaults.get().getButtonArc();
+    }
+
+    public static int getSquareFocusArcSize() {
+        return DarkDefaults.get().getButtonSquareFocusArc();
+    }
+
+    public static int getFocusArcSize() {
+        return DarkDefaults.get().getButtonFocusArc();
     }
 
     public Insets getBorderInsets(final Component c) {
         if (DarkButtonUI.isFullShadow(c) || DarkButtonUI.isLabelButton(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
-        int shadow = DarkButtonUI.isShadowVariant(c) ? 0 : SHADOW_HEIGHT;
+        int shadow = DarkButtonUI.isShadowVariant(c) ? 0 : getShadowSize();
         int pad = isThin(c) ? 4 : 8;
         if (DarkButtonUI.isSquare(c)) {
             return new InsetsUIResource(pad, pad, pad + shadow, pad);

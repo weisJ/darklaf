@@ -4,6 +4,7 @@ import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.border.BubbleBorder;
 import com.weis.darklaf.components.border.DropShadowBorder;
 import com.weis.darklaf.components.tooltip.ToolTipStyle;
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +27,7 @@ public class DarkTooltipBorder implements Border, UIResource {
     private final BubbleBorder bubbleBorder;
 
     public DarkTooltipBorder() {
-        bubbleBorder = new BubbleBorder(UIManager.getColor("ToolTip.borderColor"));
+        bubbleBorder = new BubbleBorder(DarkColors.get().getToolTipBorderColor());
         bubbleBorder.setThickness(1);
         bubbleBorder.setPointerSize(8);
         bubbleBorder.setPointerWidth(12);
@@ -49,7 +50,7 @@ public class DarkTooltipBorder implements Border, UIResource {
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
         if (bubbleBorder.getColor() == null) {
-            bubbleBorder.setColor(UIManager.getColor("ToolTip.borderColor"));
+            bubbleBorder.setColor(DarkColors.get().getToolTipBorderColor());
         }
         if (isPlain(c)) {
             g.setColor(bubbleBorder.getColor());
@@ -67,7 +68,7 @@ public class DarkTooltipBorder implements Border, UIResource {
         clip.subtract(bubbleArea);
         g.setClip(clip);
 
-        shadowBorder.setShadowColor(UIManager.getColor("ToolTip.borderShadowColor"));
+        shadowBorder.setShadowColor(DarkColors.get().getToolTipShadowColor());
         shadowBorder.paintBorder(c, g, x, y, width, height);
 
         g.setClip(oldClip);

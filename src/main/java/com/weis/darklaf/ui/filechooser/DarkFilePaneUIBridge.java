@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.filechooser;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.list.DarkListCellRenderer;
 import com.weis.darklaf.ui.table.DarkTableCellEditor;
 import com.weis.darklaf.ui.table.DarkTableCellRenderer;
@@ -482,7 +483,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         Locale l = getFileChooser().getLocale();
 
         listViewBorder = UIManager.getBorder("FileChooser.listViewBorder");
-        listViewBackground = UIManager.getColor("FileChooser.listViewBackground");
+        listViewBackground = DarkColors.get().getFilePaneListViewBackground();
         listViewWindowsStyle = UIManager.getBoolean("FileChooser.listViewWindowsStyle");
         readOnly = UIManager.getBoolean("FileChooser.readOnly");
 

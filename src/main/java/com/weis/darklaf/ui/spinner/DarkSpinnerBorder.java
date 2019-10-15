@@ -1,7 +1,7 @@
 package com.weis.darklaf.ui.spinner;
 
-import com.weis.darklaf.ui.text.DarkTextBorder;
-import com.weis.darklaf.ui.text.DarkTextFieldUI;
+import com.weis.darklaf.defaults.DarkColors;
+import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +18,6 @@ import java.awt.*;
  */
 public class DarkSpinnerBorder implements Border, UIResource {
 
-    public static final int BORDER_SIZE = DarkTextBorder.BORDER_SIZE;
-    public static final int ARC_SIZE = DarkTextFieldUI.SEARCH_ARC_SIZE;
 
     @Override
     public void paintBorder(@NotNull final Component c, final Graphics g2,
@@ -31,8 +29,10 @@ public class DarkSpinnerBorder implements Border, UIResource {
         GraphicsContext config = new GraphicsContext(g);
         g.translate(x, y);
 
-        int size = tableCellEditor ? 0 : BORDER_SIZE;
-        int arc = ARC_SIZE;
+        int borderSize = getBorderSize();
+
+        int size = tableCellEditor ? 0 : borderSize;
+        int arc = getArc();
 
         if (c instanceof JSpinner) {
             JSpinner spinner = (JSpinner) c;
@@ -40,7 +40,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
             if (editor != null) {
                 int off = spinner.getComponentOrientation().isLeftToRight()
                           ? editor.getBounds().x + editor.getWidth()
-                          : editor.getBounds().x - 1 - BORDER_SIZE;
+                          : editor.getBounds().x - 1 - borderSize;
                 g.setColor(getBorderColor(spinner));
                 if (!treeCellEditor) {
                     g.fillRect(off, size, 1, height - 2 * size);
@@ -51,13 +51,13 @@ public class DarkSpinnerBorder implements Border, UIResource {
         }
 
         if (!tableCellEditor && !treeCellEditor && DarkUIUtil.hasFocus(c)) {
-            DarkUIUtil.paintFocusBorder(g, width, height, arc, true);
+            DarkUIUtil.paintFocusBorder(g, width, height, arc, borderSize);
         }
 
         g.setColor(getBorderColor(c));
         if (!tableCellEditor && !treeCellEditor) {
             if (DarkUIUtil.hasFocus(c)) {
-                g.setColor(UIManager.getColor("Spinner.focusBorderColor"));
+                g.setColor(DarkColors.get().getSpinnerFocusBorderColor());
             }
             DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
         } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
@@ -78,9 +78,17 @@ public class DarkSpinnerBorder implements Border, UIResource {
         config.restore();
     }
 
-    private Color getBorderColor(@NotNull final Component c) {
-        return c.isEnabled() ? UIManager.getColor("Spinner.activeBorderColor")
-                             : UIManager.getColor("Spinner.inactiveBorderColor");
+    public static int getBorderSize() {
+        return DarkDefaults.get().getSpinnerBorderSize();
+    }
+
+    public static int getArc() {
+        return DarkDefaults.get().getSpinnerArc();
+    }
+
+    private static Color getBorderColor(@NotNull final Component c) {
+        return c.isEnabled() ? DarkColors.get().getSpinnerBorderColor()
+                             : DarkColors.get().getSpinnerInactiveBorderColor();
     }
 
     @Override

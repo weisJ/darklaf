@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
@@ -143,8 +144,8 @@ public class DarkTableUIBridge extends BasicTableUIBridge {
             return;
         }
 
-        Color color = UIManager.getColor("Table.dropLineColor");
-        Color shortColor = UIManager.getColor("Table.dropLineShortColor");
+        Color color = DarkColors.get().getTableDropLineColor();
+        Color shortColor = DarkColors.get().getTableDropLineShortColor();
         if (color == null && shortColor == null) {
             return;
         }

@@ -23,9 +23,9 @@
  */
 package com.weis.darklaf.ui.menu;
 
+import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
@@ -39,7 +39,7 @@ public class DarkMenuBarBorder implements Border, UIResource {
     @Override
     public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y,
                             final int w, final int h) {
-        g.setColor(UIManager.getColor("MenuBar.borderColor"));
+        g.setColor(DarkColors.get().getMenuBarBorderColor());
         g.fillRect(x, y + h - 1, w, 1);
     }
 

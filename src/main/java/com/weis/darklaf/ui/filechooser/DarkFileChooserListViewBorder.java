@@ -24,8 +24,8 @@
 package com.weis.darklaf.ui.filechooser;
 
 import com.weis.darklaf.components.border.MutableLineBorder;
+import com.weis.darklaf.defaults.DarkColors;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class DarkFileChooserListViewBorder extends MutableLineBorder.UIResource {
@@ -36,6 +36,6 @@ public class DarkFileChooserListViewBorder extends MutableLineBorder.UIResource 
 
     @Override
     protected Color getColor() {
-        return UIManager.getColor("FileChooser.borderColor");
+        return DarkColors.get().getFileChooserListViewBorderColor();
     }
 }

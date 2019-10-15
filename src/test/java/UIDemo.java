@@ -8,6 +8,7 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Jannis Weis
@@ -24,6 +25,14 @@ public final class UIDemo {
 
                     JXTaskPaneContainer taskpanecontainer = new JXTaskPaneContainer();
                     JXTaskPane taskpane = new JXTaskPane();
+                    for (int i = 0; i < 3; i++) {
+                        taskpane.add(new AbstractAction("Test Task " + i) {
+                            @Override
+                            public void actionPerformed(final ActionEvent e) {
+                                System.out.println("hello from test task");
+                            }
+                        });
+                    }
                     taskpane.setTitle("My Tasks");
                     taskpanecontainer.add(taskpane);
 

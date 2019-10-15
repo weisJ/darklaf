@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.menu;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.LazyActionMap;
 import org.jetbrains.annotations.Contract;
@@ -57,8 +58,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     public void installUI(final JComponent c) {
         super.installUI(c);
         acceleratorFont = UIManager.getFont("MenuItem.font");
-        acceleratorForeground = UIManager.getColor("MenuItem.foreground");
-        acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
+        acceleratorForeground = DarkColors.get().getMenuItemAcceleratorForeground();
+        acceleratorSelectionForeground = DarkColors.get().getMenuItemAcceleratorSelectionForeground();
         arrowIcon = null;
     }
 

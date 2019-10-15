@@ -23,6 +23,8 @@
  */
 package com.weis.darklaf.ui.tree;
 
+import com.weis.darklaf.defaults.DarkColors;
+import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -450,7 +452,7 @@ public class DarkTreeUI extends BasicTreeUI {
             return getTreeSelectionBackground(tree.hasFocus() || isTableTree || tree.isEditing());
         }
         if (Boolean.TRUE.equals(tree.getClientProperty(STRIPED_CLIENT_PROPERTY)) && row % 2 == 1) {
-            return UIManager.getColor("Tree.alternateRowBackground");
+            return DarkColors.get().getTreeAlternativeBackground();
         } else {
             return tree.getBackground();
         }
@@ -460,29 +462,34 @@ public class DarkTreeUI extends BasicTreeUI {
         return !"None".equals(getLineStyle());
     }
 
+    protected Color getTreeSelectionBackground(final boolean focused) {
+        return focused ? DarkColors.get().getTreeFocusSelectionBackground()
+                       : DarkColors.get().getTreeSelectionBackground();
+    }
+
     protected Color getLineColor(final TreePath path) {
         if (selectedChildOf(path)) {
             if (tree.hasFocus() || tree.isEditing()) {
-                return UIManager.getColor("Tree.lineFocusSelected");
+                return DarkColors.get().getTreeLineFocusColor();
             } else {
-                return UIManager.getColor("Tree.lineSelected");
+                return DarkColors.get().getTreeLineSelectedColor();
             }
         }
-        return UIManager.getColor("Tree.lineUnselected");
+        return DarkColors.get().getTreeLineColor();
     }
 
     protected Icon getExpandedIcon(final boolean selected, final boolean focused) {
         if (selected) {
             if (focused) {
-                return UIManager.getIcon("Tree.expanded.selected.focused.icon");
+                return DarkIcons.get().getTreeExpandedFocusedSelected();
             } else {
-                return UIManager.getIcon("Tree.expanded.selected.unfocused.icon");
+                return DarkIcons.get().getTreeExpandedSelected();
             }
         } else {
             if (focused) {
-                return UIManager.getIcon("Tree.expanded.unselected.focused.icon");
+                return DarkIcons.get().getTreeExpandedFocused();
             } else {
-                return UIManager.getIcon("Tree.expanded.unselected.unfocused.icon");
+                return DarkIcons.get().getTreeExpanded();
             }
         }
     }
@@ -490,22 +497,17 @@ public class DarkTreeUI extends BasicTreeUI {
     protected Icon getCollapsedIcon(final boolean selected, final boolean focused) {
         if (selected) {
             if (focused) {
-                return UIManager.getIcon("Tree.collapsed.selected.focused.icon");
+                return DarkIcons.get().getTreeCollapsedFocusedSelected();
             } else {
-                return UIManager.getIcon("Tree.collapsed.selected.unfocused.icon");
+                return DarkIcons.get().getTreeCollapsedSelected();
             }
         } else {
             if (focused) {
-                return UIManager.getIcon("Tree.collapsed.unselected.focused.icon");
+                return DarkIcons.get().getTreeCollapsedFocused();
             } else {
-                return UIManager.getIcon("Tree.collapsed.unselected.unfocused.icon");
+                return DarkIcons.get().getTreeCollapsed();
             }
         }
-    }
-
-    protected Color getTreeSelectionBackground(final boolean focused) {
-        return focused ? UIManager.getColor("Tree.selectionBackground")
-                       : UIManager.getColor("Tree.unfocusedSelectionBackground");
     }
 
     protected String getLineStyle() {

@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ActionMapUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -39,15 +38,13 @@ public class TristateCheckBox extends JCheckBox {
                 TristateCheckBox.this.iterateState();
             }
         });
-        ActionMap actions = new ActionMapUIResource();
-        actions.put("pressed", new AbstractAction() {
-            public void actionPerformed(final ActionEvent e) {
-                TristateCheckBox.this.iterateState();
-            }
-        });
-        actions.put("released", null);
-        SwingUtilities.replaceUIActionMap(this, actions);
     }
+
+    @Override
+    public void setSelected(final boolean b) {
+        setState(b ? TristateState.SELECTED : TristateState.DESELECTED);
+    }
+
 
     public void setIndeterminate() {
         getTristateModel().setIndeterminate();

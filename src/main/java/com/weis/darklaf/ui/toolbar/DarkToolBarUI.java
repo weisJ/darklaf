@@ -1,6 +1,7 @@
 package com.weis.darklaf.ui.toolbar;
 
 import com.weis.darklaf.decorators.MouseResponder;
+import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -270,7 +271,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
-        g.setColor(UIManager.getColor("ToolBar.background"));
+        g.setColor(DarkColors.get().getToolBarBackground());
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }
 

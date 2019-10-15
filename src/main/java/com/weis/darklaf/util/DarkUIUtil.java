@@ -24,6 +24,7 @@
 package com.weis.darklaf.util;
 
 import com.weis.darklaf.decorators.CellRenderer;
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -56,60 +57,35 @@ public final class DarkUIUtil {
     public static final boolean USE_QUARTZ = "true".equals(System.getProperty("apple.awt.graphics.UseQuartz"));
 
     private static Color getErrorGlow() {
-        return UIManager.getColor("glowError");
+        return DarkColors.get().getErrorGlow();
     }
 
     private static Color getErrorFocusGlow() {
-        return UIManager.getColor("glowFocusError");
+        return DarkColors.get().getErrorFocusGlow();
     }
 
     private static Color getFocusGlow() {
-        return UIManager.getColor("glowFocus");
+        return DarkColors.get().getFocusGlow();
     }
 
     private static Color getWarningGlow() {
-        return UIManager.getColor("glowWarning");
+        return DarkColors.get().getWarningGlow();
     }
 
     public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
-                                          final boolean symmetric, final boolean hasFocus, final Outline type) {
+                                          final float bw, final boolean hasFocus, final Outline type) {
         type.setGraphicsColor(g, hasFocus);
-        doPaint(g, width, height, arc, symmetric);
+        doPaint(g, width, height, arc, bw);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
     private static void doPaint(@NotNull final Graphics2D g, final int width, final int height, final float arc,
-                                final boolean symmetric) {
+                                final float bw) {
         var context = GraphicsUtil.setupStrokePainting(g);
-        float bw = 2f;
-        float lw = 1f;
 
-        float outerArc = arc > 0 ? arc + bw - 2f : bw;
-        float rightOuterArc = symmetric ? outerArc : 6f;
-        Path2D outerRect = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        outerRect.moveTo(width - rightOuterArc, 0);
-        outerRect.quadTo(width, 0, width, rightOuterArc);
-        outerRect.lineTo(width, height - rightOuterArc);
-        outerRect.quadTo(width, height, width - rightOuterArc, height);
-        outerRect.lineTo(outerArc, height);
-        outerRect.quadTo(0, height, 0, height - outerArc);
-        outerRect.lineTo(0, outerArc);
-        outerRect.quadTo(0, 0, outerArc, 0);
-        outerRect.closePath();
-
-        bw += lw;
-        float rightInnerArc = symmetric ? outerArc : 7f;
-        Path2D innerRect = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        innerRect.moveTo(width - rightInnerArc, bw);
-        innerRect.quadTo(width - bw, bw, width - bw, rightInnerArc);
-        innerRect.lineTo(width - bw, height - rightInnerArc);
-        innerRect.quadTo(width - bw, height - bw, width - rightInnerArc, height - bw);
-        innerRect.lineTo(outerArc, height - bw);
-        innerRect.quadTo(bw, height - bw, bw, height - outerArc);
-        innerRect.lineTo(bw, outerArc);
-        innerRect.quadTo(bw, bw, outerArc, bw);
-        innerRect.closePath();
-
+        Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, arc + bw, arc + bw);
+        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw,
+                                                     arc - bw, arc);
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         path.append(outerRect, false);
         path.append(innerRect, false);
@@ -118,11 +94,11 @@ public final class DarkUIUtil {
     }
 
     public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
-                                        final boolean symmetric) {
+                                        final float bw) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(DarkUIUtil.GLOW_ALPHA);
         Outline.focus.setGraphicsColor(g, true);
-        doPaint(g, width, height, arc, symmetric);
+        doPaint(g, width, height, arc, bw);
         config.restore();
     }
 
@@ -157,6 +133,17 @@ public final class DarkUIUtil {
                                                  arc, arc), false);
         g.fill(border);
         config.restore();
+    }
+
+    public static void paintRoundRect(final Graphics2D g, final float x, final float y,
+                                      final float width, final float height, final int arc) {
+        float lw = 0.5f;
+        float adj = 1.0f;
+        Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+        border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
+                                                 width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
+                                                 arc, arc), false);
+        g.fill(border);
     }
 
     @NotNull

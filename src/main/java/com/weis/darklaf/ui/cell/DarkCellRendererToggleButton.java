@@ -25,6 +25,7 @@ package com.weis.darklaf.ui.cell;
 
 import com.weis.darklaf.components.SelectableTreeNode;
 import com.weis.darklaf.decorators.CellRenderer;
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.tree.DarkTreeCellRenderer;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,8 +61,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHasFocus(focus);
 
         boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
-        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
-        Color normalColor = UIManager.getColor("Table.background");
+        Color alternativeRowColor = DarkColors.get().getTableAlternativeBackground();
+        Color normalColor = DarkColors.get().getTableBackground();
         if (alternativeRow) {
             if (!isSelected) {
                 if (row % 2 == 1) {

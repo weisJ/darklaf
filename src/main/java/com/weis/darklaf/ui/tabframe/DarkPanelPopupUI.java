@@ -29,6 +29,7 @@ import com.weis.darklaf.components.border.MutableLineBorder;
 import com.weis.darklaf.components.tabframe.PanelPopup;
 import com.weis.darklaf.components.tabframe.TabFrame;
 import com.weis.darklaf.components.tooltip.ToolTipContext;
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.panel.DarkPanelUI;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
@@ -87,12 +88,12 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     protected void installDefaults() {
-        headerBackground = UIManager.getColor("TabFramePopup.headerBackground");
-        headerButtonHoverBackground = UIManager.getColor("TabFramePopup.headerButtonHoverBackground");
-        headerButtonClickBackground = UIManager.getColor("TabFramePopup.headerButtonClickBackground");
-        headerFocusBackground = UIManager.getColor("TabFramePopup.headerFocusBackground");
-        headerButtonFocusHoverBackground = UIManager.getColor("TabFramePopup.headerButtonFocusHoverBackground");
-        headerButtonFocusClickBackground = UIManager.getColor("TabFramePopup.headerButtonFocusClickBackground");
+        headerBackground = DarkColors.get().getTabFramePopupHeaderBackground();
+        headerButtonHoverBackground = DarkColors.get().getTabFramePopupButtonHoverBackground();
+        headerButtonClickBackground = DarkColors.get().getTabFramePopupButtonClickBackground();
+        headerFocusBackground = DarkColors.get().getTabFramePopupFocusHeaderBackground();
+        headerButtonFocusHoverBackground = DarkColors.get().getTabFramePopupButtonFocusHoverBackground();
+        headerButtonFocusClickBackground = DarkColors.get().getTabFramePopupButtonFocusClickBackground();
         accelerator = UIManager.getString("TabFramePopup.closeAccelerator");
         popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                       .put(KeyStroke.getKeyStroke(accelerator), accelerator);
@@ -174,7 +175,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     protected MutableLineBorder createBorder() {
-        var color = UIManager.getColor("TabFramePopup.borderColor");
+        var color = DarkColors.get().getTabFramePopupBorderColor();
         return new MutableLineBorder.UIResource(0, 0, 0, 0, color);
     }
 

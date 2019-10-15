@@ -23,6 +23,9 @@
  */
 package com.weis.darklaf;
 
+import com.weis.darklaf.defaults.DarkColors;
+import com.weis.darklaf.defaults.DarkDefaults;
+import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
@@ -265,6 +268,9 @@ public class DarkLaf extends BasicLookAndFeel {
                 ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
             }
         }
+        DarkColors.uninstall();
+        DarkIcons.uninstall();
+        DarkDefaults.uninstall();
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})

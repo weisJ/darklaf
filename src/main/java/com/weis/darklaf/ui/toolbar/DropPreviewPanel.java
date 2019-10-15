@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.toolbar;
 
+import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -48,7 +49,7 @@ public class DropPreviewPanel extends JComponent {
     protected Color getBackgroundColor() {
         var useToolbar = Boolean.TRUE.equals(toolBar.getClientProperty("JToolBar.drag.useToolbarBackground"));
         if (!useToolbar) {
-            var c = UIManager.getColor("ToolBar.dropColor");
+            var c = DarkColors.get().getToolBarDropBackground();
             if (c == null) {
                 return toolBar.getBackground();
             }

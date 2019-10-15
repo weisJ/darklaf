@@ -1,6 +1,7 @@
 package com.weis.darklaf.ui.table;
 
 import com.weis.darklaf.decorators.CellRenderer;
+import com.weis.darklaf.defaults.DarkColors;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -31,8 +32,8 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
         boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
-        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
-        Color normalColor = UIManager.getColor("Table.background");
+        Color alternativeRowColor = DarkColors.get().getTableAlternativeBackground();
+        Color normalColor = DarkColors.get().getTableBackground();
         if (alternativeRow) {
             if (!isSelected) {
                 if (row % 2 == 1) {

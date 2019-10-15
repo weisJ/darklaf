@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.button;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -33,7 +34,6 @@ import sun.swing.SwingUtilities2;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeListener;
 
@@ -42,9 +42,6 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkToggleButtonUI extends DarkButtonUI {
 
-    private static final int BSIZE = DarkButtonBorder.BORDER_SIZE;
-    private static final int SLIDER_HEIGHT = 17;
-    private static final int SLIDER_WIDTH = 35;
     private static final Rectangle rect = new Rectangle();
 
     private final PropertyChangeListener propertyChangeListener = evt -> {
@@ -61,11 +58,18 @@ public class DarkToggleButtonUI extends DarkButtonUI {
             }
         }
     };
+    protected Dimension sliderSize;
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
     public static ComponentUI createUI(final JComponent c) {
         return new DarkToggleButtonUI();
+    }
+
+    @Override
+    protected void installDefaults(final AbstractButton b) {
+        super.installDefaults(b);
+        sliderSize = UIManager.getDimension("ToggleButton.sliderSize");
     }
 
     @Override
@@ -80,38 +84,13 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         button.removePropertyChangeListener(propertyChangeListener);
     }
 
-    public Dimension getPreferredSize(final JComponent c) {
-        Dimension d = super.getPreferredSize(c);
-        if (isSlider(c)) {
-            d.width += SLIDER_WIDTH + DarkButtonBorder.BORDER_SIZE;
-        }
-        return d;
-    }
-
-    @Override
-    public void paint(final Graphics g, @NotNull final JComponent c) {
-        if (isSlider(c)) {
-            GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-            AbstractButton b = (AbstractButton) c;
-            String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
-                                 b.getWidth(), b.getHeight());
-
-            paintSlider((Graphics2D) g, b);
-            paintIcon(g, b, c);
-            paintText(g, b, c, text);
-            config.restore();
-        } else {
-            super.paint(g, c);
-        }
-    }
-
     @Override
     protected String layout(@NotNull final AbstractButton b, final JComponent c,
                             final FontMetrics fm, final int width, final int height) {
         if (isSlider(c)) {
             Insets i = b.getInsets();
             var bounds = getSliderBounds(c);
-            viewRect.x = bounds.x + bounds.width + DarkButtonBorder.BORDER_SIZE;
+            viewRect.x = bounds.x + bounds.width + DarkButtonBorder.getBorderSize();
             viewRect.y = i.top;
             viewRect.width = width - (i.right + viewRect.x);
             viewRect.height = height - (i.bottom + viewRect.y);
@@ -131,40 +110,29 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
     }
 
-    private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {
-        var bounds = getSliderBounds(c);
-        g.translate(bounds.x, bounds.y);
-        Shape slider = new RoundRectangle2D.Float(0, 0, bounds.width, bounds.height,
-                                                  bounds.height, bounds.height);
+    @Override
+    public void paint(final Graphics g, @NotNull final JComponent c) {
+        if (isSlider(c)) {
+            GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
+            AbstractButton b = (AbstractButton) c;
+            String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
+                                 b.getWidth(), b.getHeight());
 
-        if (c.hasFocus()) {
-            g.translate(-BSIZE, -BSIZE);
-            DarkUIUtil.paintFocusBorder(g, bounds.width + 2 * BSIZE, bounds.height + 2 * BSIZE,
-                                        (float) ((bounds.height + 2 * BSIZE) / 2.0 + 2), true);
-            g.translate(BSIZE, BSIZE);
-        }
-
-        g.setColor(getBackgroundColor(c));
-        g.fill(slider);
-        g.setColor(getToggleBorderColor(c));
-        g.draw(slider);
-        g.setColor(getSliderColor(c));
-
-        if (c.isSelected()) {
-            g.fill(new Ellipse2D.Float(
-                    bounds.width - bounds.height + 1, 1, bounds.height - 1.5f, bounds.height - 1.5f));
+            paintSlider((Graphics2D) g, b);
+            paintIcon(g, b, c);
+            paintText(g, b, c, text);
+            config.restore();
         } else {
-            g.fill(new Ellipse2D.Float(1, 1, bounds.height - 1.5f, bounds.height - 1.5f));
+            super.paint(g, c);
         }
-        g.translate(-bounds.x, -bounds.y);
     }
 
     protected Color getBackgroundColor(@NotNull final JComponent c) {
         if (c instanceof JToggleButton && c.isEnabled()) {
             if (((JToggleButton) c).isSelected()) {
-                return UIManager.getColor("ToggleButton.activeFillColor");
+                return DarkColors.get().getToggleButtonBackground();
             } else {
-                return UIManager.getColor("ToggleButton.inactiveFillColor");
+                return DarkColors.get().getToggleButtonInactiveBackground();
             }
         }
         return super.getBackgroundColor(c);
@@ -172,13 +140,47 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     @NotNull
     private Rectangle getSliderBounds(@NotNull final JComponent c) {
-        int x = DarkButtonBorder.BORDER_SIZE;
-        int y = (c.getHeight() - SLIDER_HEIGHT) / 2;
+        int x = borderSize;
+        int y = (c.getHeight() - sliderSize.height) / 2;
         rect.x = x;
         rect.y = y;
-        rect.width = SLIDER_WIDTH;
-        rect.height = SLIDER_HEIGHT;
+        rect.width = sliderSize.width;
+        rect.height = sliderSize.height;
         return rect;
+    }
+
+    public Dimension getPreferredSize(final JComponent c) {
+        Dimension d = super.getPreferredSize(c);
+        if (isSlider(c)) {
+            d.width += sliderSize.width + DarkButtonBorder.getBorderSize();
+        }
+        return d;
+    }
+
+    private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {
+        var bounds = getSliderBounds(c);
+        g.translate(bounds.x, bounds.y);
+
+        if (c.hasFocus()) {
+            g.translate(-borderSize, -borderSize);
+            DarkUIUtil.paintFocusBorder(g, bounds.width + 2 * borderSize, bounds.height + 2 * borderSize,
+                                        bounds.height, borderSize);
+            g.translate(borderSize, borderSize);
+        }
+
+        g.setColor(getBackgroundColor(c));
+        DarkUIUtil.paintRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
+        g.setColor(getToggleBorderColor(c));
+        DarkUIUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height, true);
+        g.setColor(getSliderColor(c));
+
+        int size = bounds.height - 2;
+        if (c.isSelected()) {
+            DarkUIUtil.paintRoundRect(g, bounds.width - size - 1, 1, size, size, size);
+        } else {
+            DarkUIUtil.paintRoundRect(g, 1, 1, size, size, size);
+        }
+        g.translate(-bounds.x, -bounds.y);
     }
 
     @Contract("null -> false")
@@ -198,14 +200,14 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     private static Color getToggleBorderColor(@NotNull final AbstractButton b) {
         if (b.hasFocus()) {
-            return UIManager.getColor("ToggleButton.focusedSliderBorderColor");
+            return DarkColors.get().getToggleButtonFocusBorderColor();
         }
-        return b.isEnabled() ? UIManager.getColor("ToggleButton.sliderBorderColor")
-                             : UIManager.getColor("ToggleButton.disabledSliderBorderColor");
+        return b.isEnabled() ? DarkColors.get().getToggleButtonBorderColor()
+                             : DarkColors.get().getToggleButtonInactiveBorderColor();
     }
 
     private static Color getSliderColor(@NotNull final AbstractButton b) {
-        return b.isEnabled() ? UIManager.getColor("ToggleButton.sliderColor")
-                             : UIManager.getColor("ToggleButton.disabledSliderColor");
+        return b.isEnabled() ? DarkColors.get().getToggleButtonSliderColor()
+                             : DarkColors.get().getToggleButtonInactiveSliderColor();
     }
 }

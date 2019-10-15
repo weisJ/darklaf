@@ -25,7 +25,10 @@ package com.weis.darklaf.ui.spinner;
 
 import com.weis.darklaf.components.ArrowButton;
 import com.weis.darklaf.decorators.LayoutManagerDelegate;
+import com.weis.darklaf.defaults.DarkColors;
+import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.icons.UIAwareIcon;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -115,8 +118,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                 super.layoutContainer(parent);
                 if (editor != null && !spinner.getComponentOrientation().isLeftToRight()) {
                     var bounds = editor.getBounds();
-                    bounds.x += DarkSpinnerBorder.BORDER_SIZE;
-                    bounds.width -= DarkSpinnerBorder.BORDER_SIZE;
+                    int borderSize = DarkSpinnerBorder.getBorderSize();
+                    bounds.x += borderSize;
+                    bounds.width -= borderSize;
                     editor.setBounds(bounds);
                 }
             }
@@ -182,18 +186,18 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
     protected SpinnerIcon getArrowIcon(final int direction) {
         if (direction == SwingConstants.SOUTH) {
-            return new SpinnerIcon(spinner, (UIAwareIcon) UIManager.getIcon("ArrowButton.down.icon"),
-                                   (UIAwareIcon) UIManager.getIcon("Spinner.minus.icon"));
+            return new SpinnerIcon(spinner, DarkIcons.get().getSpinnerArrowDown(),
+                                   DarkIcons.get().getSpinnerMathDown());
         } else {
-            return new SpinnerIcon(spinner, (UIAwareIcon) UIManager.getIcon("ArrowButton.up.icon"),
-                                   (UIAwareIcon) UIManager.getIcon("Spinner.plus.icon"));
+            return new SpinnerIcon(spinner, DarkIcons.get().getSpinnerArrowUp(),
+                                   DarkIcons.get().getSpinnerMathUp());
         }
     }
 
     @Override
     public void paint(final Graphics g, @NotNull final JComponent c) {
-        int size = DarkSpinnerBorder.BORDER_SIZE;
-        int arc = DarkSpinnerBorder.ARC_SIZE;
+        int size = DarkSpinnerBorder.getBorderSize();
+        int arc = DarkSpinnerBorder.getArc();
         int width = c.getWidth();
         int height = c.getHeight();
         JComponent editor = spinner.getEditor();
@@ -212,7 +216,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                 g.setColor(getBackground(c));
             }
             if (!isTableCellEditor(c) && !isTreeCellEditor(c)) {
-                g.fillRoundRect(size, size, width - 2 * size, height - 2 * size, arc, arc);
+                DarkUIUtil.paintRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
             } else {
                 var bounds = prevButton.getBounds();
                 boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
@@ -230,8 +234,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     }
 
     public static Color getBackground(final JComponent c) {
-        return c == null || !c.isEnabled() ? UIManager.getColor("Spinner.inactiveBackground")
-                                           : UIManager.getColor("Spinner.activeBackground");
+        return c == null || !c.isEnabled() ? DarkColors.get().getSpinnerInactiveBackground()
+                                           : DarkColors.get().getSpinnerBackground();
     }
 
     protected static boolean isTableCellEditor(@NotNull final Component c) {

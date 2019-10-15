@@ -28,6 +28,8 @@ import com.weis.darklaf.components.tabframe.PopupContainer;
 import com.weis.darklaf.components.tabframe.TabFrame;
 import com.weis.darklaf.components.tabframe.TabFramePopup;
 import com.weis.darklaf.components.tabframe.TabFrameUI;
+import com.weis.darklaf.defaults.DarkColors;
+import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jetbrains.annotations.Contract;
@@ -78,7 +80,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     protected void installDefaults() {
         layout = createLayout();
         tabFrame.setLayout(layout);
-        lineColor = UIManager.getColor("TabFrame.line");
+        lineColor = DarkColors.get().getTabFrameBorderColor();
         topBorder = new MutableLineBorder.UIResource(0, 0, 1, 0, lineColor);
         bottomBorder = new MutableLineBorder.UIResource(1, 0, 0, 0, lineColor);
         rightBorder = new MutableLineBorder.UIResource(0, 0, 1, 0, lineColor);
@@ -145,7 +147,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     }
 
     public int getTabSize(final TabFrame tabFrame) {
-        return UIManager.getInt("TabFrame.tabHeight");
+        return DarkDefaults.get().getTabFrameTabHeight();
     }
 
     public JComponent getLeftContainer() {

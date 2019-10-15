@@ -1,6 +1,8 @@
 package com.weis.darklaf.ui.slider;
 
 import com.weis.darklaf.decorators.MouseClickListener;
+import com.weis.darklaf.defaults.DarkColors;
+import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -24,11 +26,6 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class DarkSliderUI extends BasicSliderUI {
 
-    private static final int TRACK_SIZE = 4;
-    private static final int ARC_SIZE = 4;
-    private static final int PLAIN_THUMB_SIZE = 12;
-    private static final int THUMB_SIZE_1 = 10;
-    private static final int THUMB_SIZE_2 = 18;
     private static final int ICON_BAR_EXT = 5;
     private static final int ICON_PAD = 10;
     private final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
@@ -50,6 +47,10 @@ public class DarkSliderUI extends BasicSliderUI {
             }
         }
     };
+    protected int plainThumbRadius;
+    protected int arcSize;
+    protected int trackSize;
+    protected Dimension thumbSize;
 
     public DarkSliderUI(final JSlider b) {
         super(b);
@@ -65,6 +66,15 @@ public class DarkSliderUI extends BasicSliderUI {
     public void installUI(final JComponent c) {
         super.installUI(c);
         slider.putClientProperty("Slider.paintFocusGlow", UIManager.getBoolean("Slider.paintFocusGlow"));
+    }
+
+    @Override
+    protected void installDefaults(final JSlider slider) {
+        super.installDefaults(slider);
+        arcSize = UIManager.getInt("Slider.arc");
+        trackSize = UIManager.getInt("Slider.trackThickness");
+        plainThumbRadius = UIManager.getInt("Slider.plainThumbRadius");
+        thumbSize = UIManager.getDimension("Slider.thumbSize");
     }
 
     @Override
@@ -111,11 +121,11 @@ public class DarkSliderUI extends BasicSliderUI {
     @Override
     protected Dimension getThumbSize() {
         if (isPlainThumb()) {
-            return new Dimension(PLAIN_THUMB_SIZE + 6, PLAIN_THUMB_SIZE + 6);
+            return new Dimension(plainThumbRadius + 6, plainThumbRadius + 6);
         }
         return isHorizontal()
-               ? new Dimension(THUMB_SIZE_1, THUMB_SIZE_2)
-               : new Dimension(THUMB_SIZE_2, THUMB_SIZE_1);
+               ? new Dimension(thumbSize.width, thumbSize.height)
+               : new Dimension(thumbSize.height, thumbSize.width);
     }
 
     @Override
@@ -241,7 +251,7 @@ public class DarkSliderUI extends BasicSliderUI {
 
     @NotNull
     protected Color getDisabledTickColor() {
-        return UIManager.getColor("Slider.disabledTickColor");
+        return DarkColors.get().getSliderInactiveTickColor();
     }
 
     private static boolean showVolumeIcon(final JComponent c) {
@@ -253,17 +263,23 @@ public class DarkSliderUI extends BasicSliderUI {
         int range = slider.getMaximum() - slider.getMinimum();
         int value = slider.getValue() - slider.getMinimum();
         double percentage = value / (double) range;
+        boolean enabled = slider.isEnabled();
         String prefix = slider.isEnabled() ? "enabled_" : "disabled_";
         if (Math.abs(percentage) < 1E-6) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_0.icon");
+            return enabled ? DarkIcons.get().getSliderVolumeLevel0()
+                           : DarkIcons.get().getSliderVolumeLevel0Inactive();
         } else if (percentage < 0.25) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_1.icon");
+            return enabled ? DarkIcons.get().getSliderVolumeLevel1()
+                           : DarkIcons.get().getSliderVolumeLevel1Inactive();
         } else if (percentage < 0.5) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_2.icon");
+            return enabled ? DarkIcons.get().getSliderVolumeLevel2()
+                           : DarkIcons.get().getSliderVolumeLevel2Inactive();
         } else if (percentage < 0.75) {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_3.icon");
+            return enabled ? DarkIcons.get().getSliderVolumeLevel3()
+                           : DarkIcons.get().getSliderVolumeLevel3Inactive();
         } else {
-            return UIManager.getIcon("Slider.volume." + prefix + "level_4.icon");
+            return enabled ? DarkIcons.get().getSliderVolumeLevel4()
+                           : DarkIcons.get().getSliderVolumeLevel4Inactive();
         }
     }
 
@@ -306,8 +322,7 @@ public class DarkSliderUI extends BasicSliderUI {
     @NotNull
     @Contract(" -> new")
     private Area getHorizontalTrackShape() {
-        int trackSize = TRACK_SIZE;
-        int arc = ARC_SIZE;
+        int arc = arcSize;
         int yOff = (trackRect.height / 2) - trackSize / 2;
         int w = showVolumeIcon(slider) ? trackRect.width + getIconBarExt() : trackRect.width;
         if (slider.getComponentOrientation().isLeftToRight()) {
@@ -344,8 +359,7 @@ public class DarkSliderUI extends BasicSliderUI {
     @NotNull
     @Contract(" -> new")
     private Area getVerticalTrackShape() {
-        int trackSize = TRACK_SIZE;
-        int arc = ARC_SIZE;
+        int arc = arcSize;
         int xOff = (trackRect.width / 2) - trackSize / 2;
         int h = showVolumeIcon(slider) ? trackRect.height + getIconBarExt() : trackRect.height;
         if (slider.getComponentOrientation().isLeftToRight()) {
@@ -375,7 +389,7 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     private void paintPlainSliderThumb(@NotNull final Graphics2D g) {
-        int r = PLAIN_THUMB_SIZE;
+        int r = plainThumbRadius;
         int x = isHorizontal() ? 4 : (thumbRect.width - r) / 2;
         int y = isHorizontal() ? (thumbRect.height - r) / 2 : 4;
         g.translate(x, y);
@@ -472,41 +486,41 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     @NotNull
-    protected Color getTrackBackground() {
-        return UIManager.getColor("Slider.trackBackground");
-    }
-
-    @NotNull
-    protected Color getSelectedTrackColor() {
-        if (isVolumeSlider(slider)) {
-            return slider.isEnabled()
-                   ? UIManager.getColor("Slider.volume.selectedTrackColor")
-                   : UIManager.getColor("Slider.volume.disabledTrackColor");
-        } else {
-            return slider.isEnabled()
-                   ? UIManager.getColor("Slider.selectedTrackColor")
-                   : UIManager.getColor("Slider.disabledTrackColor");
-        }
-    }
-
-    @NotNull
     protected Color getThumbColor() {
         if (isVolumeSlider(slider)) {
             return slider.isEnabled()
-                   ? UIManager.getColor("Slider.volume.activeThumbFill")
-                   : UIManager.getColor("Slider.volume.inactiveThumbFill");
+                   ? DarkColors.get().getSliderVolumeThumbBackground()
+                   : DarkColors.get().getSliderVolumeThumbInactiveBackground();
         } else {
             return slider.isEnabled()
-                   ? UIManager.getColor("Slider.activeThumbFill")
-                   : UIManager.getColor("Slider.inactiveThumbFill");
+                   ? DarkColors.get().getSliderThumbBackground()
+                   : DarkColors.get().getSliderThumbInactiveBackground();
         }
     }
 
     @NotNull
     protected Color getThumbBorderColor() {
         return slider.isEnabled()
-               ? UIManager.getColor("Slider.thumbBorderColor")
-               : UIManager.getColor("Slider.thumbBorderColorDisabled");
+               ? DarkColors.get().getSliderThumbBorderColor()
+               : DarkColors.get().getSliderThumbInactiveBorderColor();
+    }
+
+    @NotNull
+    protected Color getTrackBackground() {
+        return DarkColors.get().getSliderTrackBackground();
+    }
+
+    @NotNull
+    protected Color getSelectedTrackColor() {
+        if (isVolumeSlider(slider)) {
+            return slider.isEnabled()
+                   ? DarkColors.get().getSliderVolumeSelectedTrackBackground()
+                   : DarkColors.get().getSliderVolumeSelectedTrackInactiveBackground();
+        } else {
+            return slider.isEnabled()
+                   ? DarkColors.get().getSliderSelectedTrackBackground()
+                   : DarkColors.get().getSliderSelectedTrackInactiveBackground();
+        }
     }
 
     private boolean instantScrollEnabled(@NotNull final JComponent c) {

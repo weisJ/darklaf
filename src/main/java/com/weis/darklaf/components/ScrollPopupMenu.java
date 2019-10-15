@@ -43,6 +43,7 @@ public class ScrollPopupMenu extends JPopupMenu {
     private JWindow popWin;
     private int posX;
     private int posY;
+    private JPanel view;
 
     public ScrollPopupMenu(final int maxHeight) {
         this.maxHeight = maxHeight;
@@ -80,12 +81,11 @@ public class ScrollPopupMenu extends JPopupMenu {
 
     @NotNull
     private OverlayScrollPane createScrollPane() {
-        var view = new JPanel(new BorderLayout());
+        view = new JPanel(new BorderLayout());
         view.add(this, BorderLayout.CENTER);
-        OverlayScrollPane overlayScrollPane = new OverlayScrollPane(view,
-                                                                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                                                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
+        OverlayScrollPane overlayScrollPane =
+                new OverlayScrollPane(view, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                      JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         JScrollBar bar = overlayScrollPane.getVerticalScrollBar();
         bar.putClientProperty("ScrollBar.thin", Boolean.TRUE);
         DarkUIUtil.doNotCancelPopupSetup(bar);
@@ -122,9 +122,10 @@ public class ScrollPopupMenu extends JPopupMenu {
             bar.setValue(bar.getMinimum());
             bar.setUnitIncrement(increment);
             setBorderPainted(false);
+            view.add(this);
             popWin.setContentPane(contentPane);
             popWin.pack();
-            popWin.setSize(popWin.getSize().width + bar.getPreferredSize().width, maxHeight);
+            popWin.setSize(prefSize.width + bar.getPreferredSize().width, maxHeight);
         }
     }    @Override
     public void setLocation(final int x, final int y) {

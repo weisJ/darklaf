@@ -88,9 +88,6 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
             Color newVal = (Color) e.getNewValue();
             ui.tabScroller.tabPanel.setBackground(newVal);
             ui.tabScroller.viewport.setBackground(newVal);
-            Color newColor = ui.selectedColor == null ? newVal : ui.selectedColor;
-            ui.tabScroller.scrollForwardButton.setBackground(newColor);
-            ui.tabScroller.scrollBackwardButton.setBackground(newColor);
         } else if (Objects.equals(name, "indexForTabComponent")) {
             if (ui.tabContainer != null) {
                 ui.tabContainer.removeUnusedTabComponents();

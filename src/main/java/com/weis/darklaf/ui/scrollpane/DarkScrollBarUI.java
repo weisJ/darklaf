@@ -24,6 +24,7 @@
 package com.weis.darklaf.ui.scrollpane;
 
 import com.weis.darklaf.decorators.MouseMovementListener;
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.Animator;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
@@ -470,7 +471,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     protected void paintMaxiThumb(@NotNull final Graphics2D g, @NotNull final Rectangle rect) {
         final var c = g.getComposite();
         g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
-        g.setColor(UIManager.getColor("ScrollBar.thumbBorderColor"));
+        g.setColor(DarkColors.get().getScrollBarThumbBorderColor());
         DarkUIUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
         g.setColor(getThumbColor());
         g.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
@@ -479,8 +480,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
 
     @NotNull
     private Color getThumbColor() {
-        return DarkUIUtil.blendColors(UIManager.getColor("ScrollBar.fadeEndColor"),
-                                      UIManager.getColor("ScrollBar.fadeStartColor"), thumbAlpha);
+        return DarkUIUtil.blendColors(DarkColors.get().getScrollBarThumbEndColor(),
+                                      DarkColors.get().getScrollBarThumbStartColor(), thumbAlpha);
     }
 
     @Override
@@ -507,7 +508,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     @NotNull
     @Contract(value = " -> new", pure = true)
     protected Color getTrackColor() {
-        return UIManager.getColor("ScrollBar.trackColor");
+        return DarkColors.get().getScrollBarTrackBackground();
     }
 
     @NotNull

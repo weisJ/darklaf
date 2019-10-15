@@ -26,6 +26,7 @@ package com.weis.darklaf.ui.tabframe;
 import com.weis.darklaf.components.JPanelUIResource;
 import com.weis.darklaf.components.border.MutableLineBorder;
 import com.weis.darklaf.components.tabframe.TabbedPopup;
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.weis.darklaf.ui.tabbedpane.NewTabButton;
 import org.jetbrains.annotations.Contract;
@@ -65,12 +66,12 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        headerHoverBackground = UIManager.getColor("TabFramePopup.headerHoverBackground");
-        headerSelectedBackground = UIManager.getColor("TabFramePopup.headerSelectedBackground");
-        headerSelectedHoverBackground = UIManager.getColor("TabFramePopup.headerSelectedHoverBackground");
-        headerFocusHoverBackground = UIManager.getColor("TabFramePopup.headerFocusHoverBackground");
-        headerFocusSelectedBackground = UIManager.getColor("TabFramePopup.headerFocusSelectedBackground");
-        headerFocusSelectedHoverBackground = UIManager.getColor("TabFramePopup.headerFocusSelectedHoverBackground");
+        headerHoverBackground = DarkColors.get().getTabFramePopupHeaderHoverBackground();
+        headerSelectedBackground = DarkColors.get().getTabFramePopupHeaderSelectedBackground();
+        headerSelectedHoverBackground = DarkColors.get().getTabFramePopupHeaderSelectedHoverBackground();
+        headerFocusHoverBackground = DarkColors.get().getTabFramePopupHeaderFocusHoverBackground();
+        headerFocusSelectedBackground = DarkColors.get().getTabFramePopupHeaderFocusSelectedBackground();
+        headerFocusSelectedHoverBackground = DarkColors.get().getTabFramePopupHeaderFocusSelectedHoverBackground();
     }
 
     @Override
@@ -151,7 +152,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
         @Override
         protected Color getTabBorderColor() {
-            return UIManager.getColor("TabFramePopup.borderColor");
+            return DarkColors.get().getTabFramePopupBorderColor();
         }
 
         @Override

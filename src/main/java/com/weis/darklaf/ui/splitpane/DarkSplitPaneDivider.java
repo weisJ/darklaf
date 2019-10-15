@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.splitpane;
 
+import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.icons.EmptyIcon;
 import org.jetbrains.annotations.Contract;
 
@@ -41,6 +42,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         super(ui);
     }
 
+
     @Override
     public void paint(final Graphics g) {
         super.paint(g);
@@ -56,11 +58,11 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     }
 
     protected Icon getVerticalSplitIcon() {
-        return UIManager.getIcon("SplitPane.verticalGlue.icon");
+        return DarkIcons.get().getSplitPaneDividerVerticalSplit();
     }
 
     protected Icon getHorizontalSplitIcon() {
-        return UIManager.getIcon("SplitPane.horizontalGlue.icon");
+        return DarkIcons.get().getSplitPaneDividerHorizontalSplit();
     }
 
     @Override
@@ -74,19 +76,19 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     }
 
     protected Icon getLeftOneTouchIcon() {
-        return UIManager.getIcon("SplitPaneDivider.leftOneTouch.icon");
+        return DarkIcons.get().getSplitPaneDividerLeftOneTouch();
     }
 
     protected Icon getRightOneTouchIcon() {
-        return UIManager.getIcon("SplitPaneDivider.rightOneTouch.icon");
+        return DarkIcons.get().getSplitPaneDividerRightOneTouch();
     }
 
     protected Icon getTopOneTouchIcon() {
-        return UIManager.getIcon("SplitPaneDivider.topOneTouch.icon");
+        return DarkIcons.get().getSplitPaneDividerTopOneTouch();
     }
 
     protected Icon getBottomOneTouchIcon() {
-        return UIManager.getIcon("SplitPaneDivider.bottomOneTouch.icon");
+        return DarkIcons.get().getSplitPaneDividerBottomOneTouch();
     }
 
     protected static class OneTouchButton extends JButton implements UIResource {

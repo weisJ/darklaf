@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         public void focusGained(final FocusEvent e) {
             var bg = table.getSelectionBackground();
             if (bg instanceof UIResource) {
-                table.setSelectionBackground(UIManager.getColor("Table.focusSelectionBackground"));
+                table.setSelectionBackground(DarkColors.get().getTableFocusSelectionBackground());
             }
             table.repaint();
         }
@@ -42,7 +43,7 @@ public class DarkTableUI extends DarkTableUIBridge {
                 if (table.isEditing()) {
                     table.setSelectionBackground(table.getBackground());
                 } else {
-                    table.setSelectionBackground(UIManager.getColor("Table.selectionNoFocusBackground"));
+                    table.setSelectionBackground(DarkColors.get().getTableSelectionBackground());
                 }
             }
             table.repaint();
@@ -310,7 +311,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     protected Color getBorderColor() {
-        return UIManager.getColor("TableHeader.borderColor");
+        return DarkColors.get().getTableHeaderBorderColor();
     }
 
     protected boolean isInScrollPane() {

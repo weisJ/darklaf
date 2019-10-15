@@ -48,7 +48,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
     protected long lastClickEvent;
 
     public DarkScrollableTabSupport(final DarkTabbedPaneUI ui, final int tabPlacement) {
-        super(ui, tabPlacement);
+        super(ui);
         this.ui = ui;
         viewport = new DarkScrollableTabViewport(ui);
         tabPanel = new DarkScrollableTabPanel(ui);
@@ -91,13 +91,6 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         var pos = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(pos, ui.tabPane);
         ui.setRolloverTab(pos.x, pos.y);
-    }
-
-    @Override
-    void createButtons(final DarkTabbedPaneUIBridge ui) {
-        super.createButtons(ui);
-        ui.tabPane.remove(scrollForwardButton);
-        ui.tabPane.remove(scrollBackwardButton);
     }
 
     @Override

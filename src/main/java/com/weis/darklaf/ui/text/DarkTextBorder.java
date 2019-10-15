@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.text;
 
+import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.ui.table.TextFieldTableCellEditorBorder;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
@@ -41,7 +42,6 @@ public class DarkTextBorder implements Border, UIResource {
 
     private static final Border editorBorder = new TextFieldTableCellEditorBorder();
 
-    public final static int BORDER_SIZE = 3;
     public final static int PADDING = 4;
 
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y,
@@ -50,38 +50,65 @@ public class DarkTextBorder implements Border, UIResource {
             editorBorder.paintBorder(c, g2, x, y, width, height);
             return;
         }
+        int borderSize = getBorderSize();
 
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-        int arcSize = DarkTextFieldUI.getArcSize(c);
+        int arcSize = getArcSize(c);
+        int focusArcSize = getFocusArcSize(c);
         if (!DarkTextFieldUI.isSearchField(c)) {
             if (DarkTextFieldUI.hasError(c)) {
-                DarkUIUtil.paintOutlineBorder(g, width, height, arcSize, true,
+                DarkUIUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
                                               c.hasFocus(), DarkUIUtil.Outline.error);
             } else if (c.hasFocus()) {
-                DarkUIUtil.paintFocusBorder(g, width, height, arcSize, true);
+                DarkUIUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize);
             }
             g.setColor(DarkTextFieldUI.getBorderColor(c));
+
             if (DarkTextFieldUI.chooseAlternativeArc(c)) {
-                DarkUIUtil.paintLineBorder(g, BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
-                                           height - 2 * BORDER_SIZE, arcSize, true);
+                DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
+                                           height - 2 * borderSize, arcSize, true);
             } else {
-                g.drawRect(BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE, height - 2 * BORDER_SIZE);
+                DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
+                                           height - 2 * borderSize, 0, true);
             }
         } else if (DarkTextFieldUI.isSearchField(c)) {
             g.setColor(DarkTextFieldUI.getBorderColor(c));
             if (((JComponent) c).getClientProperty("JTextField.Search.noBorderRing") != Boolean.TRUE) {
                 if (c.hasFocus()) {
-                    DarkUIUtil.paintFocusBorder(g, width, height, arcSize, true);
+                    DarkUIUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
                 }
                 g.setColor(DarkTextFieldUI.getBorderColor(c));
-                DarkUIUtil.paintLineBorder(g, BORDER_SIZE, BORDER_SIZE, width - 2 * BORDER_SIZE,
-                                           height - 2 * BORDER_SIZE, arcSize, true);
+                DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
+                                           height - 2 * borderSize, arcSize, true);
             }
         }
         g.translate(-x, -y);
         config.restore();
+    }
+
+    public static int getBorderSize() {
+        return DarkDefaults.get().getTextFieldBorderSize();
+    }
+
+    public static int getArcSize(final Component c) {
+        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
+        if (!alt && !DarkTextFieldUI.isSearchField(c)) {
+            return 0;
+        }
+        int arcSize = UIManager.getInt("TextField.arc");
+        int searchArcSize = UIManager.getInt("TextField.searchArc");
+        return DarkTextFieldUI.isSearchField(c) ? (alt ? arcSize : searchArcSize)
+                                                : (alt ? searchArcSize : arcSize);
+    }
+
+    public static int getFocusArcSize(final Component c) {
+        int arcSize = UIManager.getInt("TextField.focusArc");
+        int searchArcSize = UIManager.getInt("TextField.searchFocusArc");
+        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
+        return DarkTextFieldUI.isSearchField(c) ? (alt ? arcSize : searchArcSize)
+                                                : (alt ? searchArcSize : arcSize);
     }
 
     protected static boolean isCellEditor(final Component c) {
@@ -94,8 +121,9 @@ public class DarkTextBorder implements Border, UIResource {
         if (isCellEditor(c)) {
             return editorBorder.getBorderInsets(c);
         }
-        Insets insets = new Insets(BORDER_SIZE + PADDING, BORDER_SIZE + PADDING,
-                                   BORDER_SIZE + PADDING, BORDER_SIZE + PADDING);
+        int borderSize = getBorderSize();
+        Insets insets = new Insets(borderSize + PADDING, borderSize + PADDING,
+                                   borderSize + PADDING, borderSize + PADDING);
         if (DarkTextFieldUI.isSearchField(c)) {
             int searchWidth = DarkTextFieldUI.getSearchIcon(c).getIconWidth();
             int clearWidth = DarkTextFieldUI.getClearIcon(false).getIconWidth();

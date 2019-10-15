@@ -24,7 +24,9 @@
 package com.weis.darklaf.ui.colorchooser;
 
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.ColorUtil;
+import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -169,7 +171,7 @@ public class ColorWheel extends JComponent {
                                     _size - BORDER_SIZE * 2);
         }
 
-        g2d.setColor(UIManager.getColor("Panel.background"));
+        g2d.setColor(DarkColors.get().getPanelBackground());
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
 
@@ -186,10 +188,10 @@ public class ColorWheel extends JComponent {
         final int x = (int) (mx + arcw * Math.cos(th));
         final int y = (int) (my - arch * Math.sin(th));
 
-        g2d.setColor(UIManager.getColor("ColorChooser.colorWheelDropBackgroundColor"));
+        g2d.setColor(DarkColors.get().getColorChooserColorWheelDropBackground());
         g2d.fillRect(x - 2, y - 2, 4, 4);
-        g2d.setColor(UIManager.getColor("ColorChooser.colorWheelDropBorderColor"));
-        g2d.drawRect(x - 2, y - 2, 4, 4);
+        g2d.setColor(DarkColors.get().getColorChooserColorWheelDropBorderColor());
+        DarkUIUtil.drawRect(g, x - 2, y - 2, 4, 4, 1);
     }
 
     @Override

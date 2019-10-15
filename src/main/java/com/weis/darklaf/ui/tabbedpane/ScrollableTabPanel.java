@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.tabbedpane;
 
+import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,7 +37,7 @@ public class ScrollableTabPanel extends JPanel implements UIResource {
         super(null);
         this.ui = ui;
         setOpaque(ui.tabPane.isOpaque());
-        Color bgColor = UIManager.getColor("TabbedPane.tabAreaBackground");
+        Color bgColor = DarkColors.get().getTabbedPaneTabAreaBackground();
         if (bgColor == null) {
             bgColor = ui.tabPane.getBackground();
         }
@@ -45,14 +46,7 @@ public class ScrollableTabPanel extends JPanel implements UIResource {
 
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        ui.paintTabArea(g, ui.tabPane.getTabPlacement(),
-                        ui.tabPane.getSelectedIndex());
-        if (ui.tabScroller.croppedEdge.isParamsSet() && ui.tabContainer == null) {
-            Rectangle croppedRect = ui.rects[ui.tabScroller.croppedEdge.getTabIndex()];
-            g.translate(croppedRect.x, croppedRect.y);
-            ui.tabScroller.croppedEdge.paintComponent(g);
-            g.translate(-croppedRect.x, -croppedRect.y);
-        }
+        ui.paintTabArea(g, ui.tabPane.getTabPlacement(), ui.tabPane.getSelectedIndex());
     }
 
     public void doLayout() {

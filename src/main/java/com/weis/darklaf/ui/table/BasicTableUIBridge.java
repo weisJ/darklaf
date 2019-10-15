@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.LazyActionMap;
 import org.jdesktop.swingx.plaf.basic.core.BasicTransferable;
@@ -1550,7 +1551,7 @@ public class BasicTableUIBridge extends BasicTableUI {
 
         Color gridColor = table.getGridColor();
         if (gridColor == null || gridColor instanceof UIResource) {
-            gridColor = UIManager.getColor("Table.gridColor");
+            gridColor = DarkColors.get().getTableGridColor();
             table.setGridColor(gridColor != null ? gridColor : Color.GRAY);
         }
 
@@ -1889,8 +1890,8 @@ public class BasicTableUIBridge extends BasicTableUI {
             return;
         }
 
-        Color color = UIManager.getColor("Table.dropLineColor");
-        Color shortColor = UIManager.getColor("Table.dropLineShortColor");
+        Color color = DarkColors.get().getTableDropLineColor();
+        Color shortColor = DarkColors.get().getTableDropLineShortColor();
         if (color == null && shortColor == null) {
             return;
         }

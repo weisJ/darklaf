@@ -24,9 +24,9 @@
 package com.weis.darklaf.ui.table;
 
 import com.weis.darklaf.components.border.MutableLineBorder;
+import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
@@ -47,7 +47,7 @@ public class DarkTableBorder extends MutableLineBorder implements UIResource {
     }
 
     protected Color getBorderColor() {
-        return UIManager.getColor("TableHeader.borderColor");
+        return DarkColors.get().getTableHeaderBorderColor();
     }
 
     @Override

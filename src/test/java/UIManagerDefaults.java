@@ -8,6 +8,8 @@ import com.weis.darklaf.LafManager;
 import com.weis.darklaf.components.OverlayScrollPane;
 import com.weis.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.weis.darklaf.ui.table.DarkColorTableCellRendererEditor;
+import org.jdesktop.swingx.JXTaskPane;
+import org.jdesktop.swingx.JXTaskPaneContainer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +49,8 @@ public class UIManagerDefaults implements ItemListener {
      * Constructor
      */
     private UIManagerDefaults() {
+        new JXTaskPaneContainer();
+        new JXTaskPane();
         items = new TreeMap<>();
         models = new HashMap<>();
 

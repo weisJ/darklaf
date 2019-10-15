@@ -1,5 +1,6 @@
 package com.weis.darklaf.ui.text;
 
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -260,7 +261,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                         g.fillRect(r.x, r.y, r.width, r.height);
                         break;
                     case BLOCK_BORDER_STYLE:
-                        g.drawRect(r.x, r.y, r.width - 1, r.height);
+                        DarkUIUtil.drawRect(g, r.x, r.y, r.width - 1, r.height, 1);
                         break;
                     case UNDERLINE_STYLE:
                         if (textAreaBg == null) {

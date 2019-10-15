@@ -23,6 +23,8 @@
  */
 package com.weis.darklaf.ui.table;
 
+import com.weis.darklaf.defaults.DarkColors;
+
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -43,10 +45,10 @@ public class DarkTableHeaderCorner extends JComponent implements UIResource {
     }
 
     protected Color getHeaderBackground() {
-        return UIManager.getColor("TableHeader.background");
+        return DarkColors.get().getTableHeaderBackground();
     }
 
     protected Color getBorderColor() {
-        return UIManager.getColor("TableHeader.borderColor");
+        return DarkColors.get().getTableHeaderBorderColor();
     }
 }

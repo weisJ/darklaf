@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.radiobutton;
 
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.ui.checkbox.DarkCheckBoxUI;
 import com.weis.darklaf.util.DarkUIUtil;
@@ -170,11 +171,11 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
 
     static void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
         var g2 = (Graphics2D) g.create();
-        Color bgColor = enabled ? UIManager.getColor("RadioButton.activeFillColor")
-                                : UIManager.getColor("RadioButton.inactiveFillColor");
-        Color borderColor = focus ? UIManager.getColor("RadioButton.focusBorderColor")
-                                  : enabled ? UIManager.getColor("RadioButton.activeBorderColor")
-                                            : UIManager.getColor("RadioButton.inactiveBorderColor");
+        Color bgColor = enabled ? DarkColors.get().getRadioButtonBackground()
+                                : DarkColors.get().getRadioButtonInactiveBackground();
+        Color borderColor = focus ? DarkColors.get().getRadioButtonFocusBorderColor()
+                                  : enabled ? DarkColors.get().getRadioButtonBorderColor()
+                                            : DarkColors.get().getRadioButtonInactiveBorderColor();
         g.setColor(bgColor);
         g.fillOval(0, 0, SIZE, SIZE);
 
@@ -190,8 +191,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     }
 
     static void paintCheckBullet(@NotNull final Graphics2D g, final boolean enabled) {
-        Color color = enabled ? UIManager.getColor("RadioButton.selectionEnabledColor")
-                              : UIManager.getColor("RadioButton.selectionDisabledColor");
+        Color color = enabled ? DarkColors.get().getRadioButtonCheckColor()
+                              : DarkColors.get().getRadioButtonCheckInactiveColor();
         g.setColor(color);
         g.translate(0.2, 0.2);
         g.fillOval((SIZE - BULLET_RAD) / 2, (SIZE - BULLET_RAD) / 2, BULLET_RAD, BULLET_RAD);

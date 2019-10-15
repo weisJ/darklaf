@@ -27,6 +27,7 @@ package com.weis.darklaf.ui.colorchooser;
 import com.weis.darklaf.color.DarkColorModel;
 import com.weis.darklaf.components.DefaultColorPipette;
 import com.weis.darklaf.decorators.AncestorAdapter;
+import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.util.ColorUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -272,11 +273,11 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     protected Icon getPipetteIcon() {
-        return UIManager.getIcon("ColorChooser.pipette.icon");
+        return DarkIcons.get().getColorChooserPipette();
     }
 
     protected Icon getPipetteRolloverIcon() {
-        return UIManager.getIcon("ColorChooser.pipetteRollover.icon");
+        return DarkIcons.get().getColorChooserPipetteHover();
     }
 
     @Override

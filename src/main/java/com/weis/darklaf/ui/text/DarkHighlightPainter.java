@@ -5,6 +5,7 @@ import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -22,8 +23,6 @@ import java.awt.geom.Rectangle2D;
 public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
 
     private static final boolean DEBUG_COLOR = false;
-    private static final int ARC_WIDTH = 5;
-    private static final int ARC_HEIGHT = 5;
     private Paint paint;
     private boolean roundedEdges;
     private AlphaComposite alphaComposite;
@@ -31,6 +30,7 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
     private int selectionStart = -1;
     private int selectionEnd = -1;
     private int repaintCount = 0;
+    private int arcSize;
 
 
     public DarkHighlightPainter() {
@@ -52,6 +52,7 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
         setPaint(paint);
         setRoundedEdges(rounded);
         setAlpha(alpha);
+        arcSize = UIManager.getInt("Highlight.arc");
     }
 
     public boolean getRoundedEdges() {
@@ -177,7 +178,7 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
                 Rectangle r = shape.getBounds();
                 if ((offs0 != view.getStartOffset() && offs1 != view.getEndOffset()) || posEnd.y == posStart.y) {
                     if (isRounded(c)) {
-                        g2d.fillRoundRect(r.x, r.y, r.width, r.height, ARC_WIDTH, ARC_HEIGHT);
+                        g2d.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
                     } else {
                         g2d.fillRect(r.x, r.y, r.width, r.height);
                     }
@@ -260,9 +261,9 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
                     isLastLine = false;
                 }
                 roundRightBottom = isLastLine || (isSecondLastLine
-                        && posEnd.x < (c.getWidth() - margin.right - ARC_WIDTH / 2));
+                        && posEnd.x < (c.getWidth() - margin.right - arcSize / 2));
                 roundLeftBottom = isLastLine;
-                roundLeftTop = isFirstLine || (isSecondLine && posStart.x > margin.left + ARC_WIDTH / 2);
+                roundLeftTop = isFirstLine || (isSecondLine && posStart.x > margin.left + arcSize / 2);
                 roundRightTop = isFirstLine || isSecondLine && c.getWidth() - margin.right - posStart.x == 1;
             }
 
@@ -271,19 +272,19 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
                 return alloc;
             }
             // At least one round corner now.
-            g2d.fillRoundRect(alloc.x, alloc.y, alloc.width, alloc.height, ARC_WIDTH, ARC_HEIGHT);
+            g2d.fillRoundRect(alloc.x, alloc.y, alloc.width, alloc.height, arcSize, arcSize);
             if (!roundRightBottom) {
-                g2d.fillRect(alloc.x + alloc.width - ARC_WIDTH, alloc.y + alloc.height - ARC_HEIGHT,
-                             ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(alloc.x + alloc.width - arcSize, alloc.y + alloc.height - arcSize,
+                             arcSize, arcSize);
             }
             if (!roundLeftBottom) {
-                g2d.fillRect(alloc.x, alloc.y + alloc.height - ARC_HEIGHT, ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(alloc.x, alloc.y + alloc.height - arcSize, arcSize, arcSize);
             }
             if (!roundRightTop) {
-                g2d.fillRect(alloc.x + alloc.width - ARC_WIDTH, alloc.y, ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(alloc.x + alloc.width - arcSize, alloc.y, arcSize, arcSize);
             }
             if (!roundLeftTop) {
-                g2d.fillRect(alloc.x, alloc.y, ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(alloc.x, alloc.y, arcSize, arcSize);
             }
 
             boolean drawArc = isFirstLine && !roundLeftBottom;
@@ -294,8 +295,8 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
             }
             if (drawArc) {
                 paintStartArc(g2d, alloc);
-                alloc.x -= ARC_WIDTH;
-                alloc.width += ARC_WIDTH;
+                alloc.x -= arcSize;
+                alloc.width += arcSize;
             }
         } else {
             g2d.fillRect(alloc.x, alloc.y, alloc.width, alloc.height);
@@ -322,19 +323,19 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
                 roundLeftBottom = roundLeftBottom || c.getWidth() - c.getMargin().right - posEnd.x == 1;
             }
 
-            g2d.fillRoundRect(r.x, r.y, r.width, r.height, ARC_WIDTH, ARC_HEIGHT);
+            g2d.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
             if (!roundLeftBottom && !roundRightBottom) {
                 //Optimize draw calls
-                g2d.fillRect(r.x, r.y + r.height - ARC_HEIGHT, r.width, ARC_HEIGHT);
+                g2d.fillRect(r.x, r.y + r.height - arcSize, r.width, arcSize);
             } else if (!roundLeftBottom) {
-                g2d.fillRect(r.x, r.y + r.height - ARC_HEIGHT, ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(r.x, r.y + r.height - arcSize, arcSize, arcSize);
             } else if (!roundRightBottom) {
-                g2d.fillRect(r.x + r.width - ARC_WIDTH, r.y + r.height - ARC_HEIGHT, ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(r.x + r.width - arcSize, r.y + r.height - arcSize, arcSize, arcSize);
             }
             if (!roundLeftBottom) {
                 paintStartArc(g2d, r);
-                r.x -= ARC_WIDTH;
-                r.width += ARC_WIDTH;
+                r.x -= arcSize;
+                r.width += arcSize;
             }
         } else {
             g2d.fillRect(r.x, r.y, r.width, r.height);
@@ -357,7 +358,7 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
             r.x = posStart.x;
         }
         if (!c.getComponentOrientation().isLeftToRight()) {
-            if (posEnd.x >= (c.getWidth() - margin.right - ARC_WIDTH / 2)) {
+            if (posEnd.x >= (c.getWidth() - margin.right - arcSize / 2)) {
                 //Fill to right edge even if corners are not rounded.
                 r.width = c.getWidth() - margin.right - margin.left;
             }
@@ -366,18 +367,18 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
             boolean roundRightTop = posEnd.x < (posStart.x + 2) && posEnd.y == posStart.y + posStart.height;
             boolean roundLeftTop = posEnd.y == posStart.y + posStart.height && posStart.x != margin.left;
 
-            g2d.fillRoundRect(r.x, r.y, r.width, r.height, ARC_WIDTH, ARC_HEIGHT);
+            g2d.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
             if (!roundLeftTop && !roundRightTop) {
                 //Optimize draw calls
-                g2d.fillRect(r.x, r.y, r.width, ARC_HEIGHT);
+                g2d.fillRect(r.x, r.y, r.width, arcSize);
             } else if (!roundLeftTop) {
-                g2d.fillRect(r.x, r.y, ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(r.x, r.y, arcSize, arcSize);
             } else if (!roundRightTop) {
-                g2d.fillRect(r.x + r.width - ARC_WIDTH, r.y, ARC_WIDTH, ARC_HEIGHT);
+                g2d.fillRect(r.x + r.width - arcSize, r.y, arcSize, arcSize);
             }
             if (!roundRightTop) {
                 paintEndArc(g2d, r);
-                r.width += ARC_WIDTH;
+                r.width += arcSize;
             }
         } else {
             g2d.fillRect(r.x, r.y, r.width, r.height);
@@ -389,24 +390,24 @@ public class DarkHighlightPainter extends LayeredHighlighter.LayerPainter {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
 
         Area arc = new Area(new Rectangle2D.Double(
-                r.x - ARC_WIDTH + 0.25, r.y + r.height - ARC_HEIGHT + 0.25, ARC_WIDTH, ARC_HEIGHT));
+                r.x - arcSize + 0.25, r.y + r.height - arcSize + 0.25, arcSize, arcSize));
         arc.subtract(new Area(new Arc2D.Double(
-                r.x - 2 * ARC_WIDTH + 0.25,
-                r.y + r.height - 2 * ARC_HEIGHT + 0.25, 2 * ARC_WIDTH, 2 * ARC_HEIGHT,
+                r.x - 2 * arcSize + 0.25,
+                r.y + r.height - 2 * arcSize + 0.25, 2 * arcSize, 2 * arcSize,
                 0, -90, Arc2D.Double.PIE)));
         g2d.fill(arc);
-        r.x -= ARC_WIDTH;
-        r.width += ARC_WIDTH;
+        r.x -= arcSize;
+        r.width += arcSize;
     }
 
     private void paintEndArc(@NotNull final Graphics2D g2d, @NotNull final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
 
         Area arc = new Area(new Rectangle2D.Double(
-                r.x + r.width - 0.25, r.y - 0.25, ARC_WIDTH, ARC_HEIGHT));
+                r.x + r.width - 0.25, r.y - 0.25, arcSize, arcSize));
         arc.subtract(new Area(new Arc2D.Double(
                 r.x + r.width - 0.25,
-                r.y - 0.25, 2 * ARC_WIDTH, 2 * ARC_HEIGHT, 90, 90, Arc2D.Double.PIE)));
+                r.y - 0.25, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.Double.PIE)));
         g2d.fill(arc);
     }
 }

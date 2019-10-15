@@ -22,15 +22,12 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
         return state == TristateState.INDETERMINATE;
     }
 
-    // Overrides of superclass methods
+
+    @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
         // Restore state display
         displayState();
-    }
-
-    public void setSelected(final boolean selected) {
-        setState(selected ? TristateState.SELECTED : TristateState.DESELECTED);
     }
 
     @Override

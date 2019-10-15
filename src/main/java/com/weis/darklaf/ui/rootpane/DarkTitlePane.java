@@ -25,6 +25,7 @@
 package com.weis.darklaf.ui.rootpane;
 
 import com.weis.darklaf.decorators.AncestorAdapter;
+import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -292,27 +293,27 @@ public class DarkTitlePane extends JComponent {
     private void determineColors() {
         switch (getWindowDecorationStyle()) {
             case JRootPane.ERROR_DIALOG:
-                activeBackground = UIManager.getColor("OptionPane.errorDialog.titlePane.background");
-                activeForeground = UIManager.getColor("OptionPane.errorDialog.titlePane.foreground");
+                activeBackground = DarkColors.get().getOptionPaneErrorDialogTitleBackground();
+                activeForeground = DarkColors.get().getOptionPaneErrorDialogTitleForeground();
                 break;
             case JRootPane.QUESTION_DIALOG:
             case JRootPane.COLOR_CHOOSER_DIALOG:
             case JRootPane.FILE_CHOOSER_DIALOG:
-                activeBackground = UIManager.getColor("OptionPane.questionDialog.titlePane.background");
-                activeForeground = UIManager.getColor("OptionPane.questionDialog.titlePane.foreground");
+                activeBackground = DarkColors.get().getOptionPaneQuestionDialogTitleBackground();
+                activeForeground = DarkColors.get().getOptionPaneQuestionDialogTitleForeground();
                 break;
             case JRootPane.WARNING_DIALOG:
-                activeBackground = UIManager.getColor("OptionPane.warningDialog.titlePane.background");
-                activeForeground = UIManager.getColor("OptionPane.warningDialog.titlePane.foreground");
+                activeBackground = DarkColors.get().getOptionPaneWarningDialogTitleBackground();
+                activeForeground = DarkColors.get().getOptionPaneWarningDialogTitleForeground();
                 break;
             default: //JRootPane.Frame
-                activeBackground = UIManager.getColor("TitlePane.background");
-                activeForeground = UIManager.getColor("TitlePane.foreground");
+                activeBackground = DarkColors.get().getTitleBackground();
+                activeForeground = DarkColors.get().getTitleForeground();
                 break;
         }
-        inactiveBackground = UIManager.getColor("TitlePane.inactiveBackground");
-        inactiveForeground = UIManager.getColor("TitlePane.inactiveForeground");
-        border = UIManager.getColor("TitlePane.borderColor");
+        inactiveBackground = DarkColors.get().getTitleInactiveBackground();
+        inactiveForeground = DarkColors.get().getTitleInactiveForeground();
+        border = DarkColors.get().getTitleBorderColor();
     }
 
     private void installDefaults() {
