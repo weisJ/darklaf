@@ -8,8 +8,8 @@ Gradually all the custom UI and more from the darcula project wil be ported over
 <p align="center">
 <p valign="center">
 <img src="https://raw.githubusercontent.com/weisJ/darklaf/master/img/file_chooser.png" width="400">
-</p>
 <img src="https://raw.githubusercontent.com/weisJ/darklaf/master/img/color_chooser.png" width="400">
+</p>
 </p>
 
 # Usage & Features
