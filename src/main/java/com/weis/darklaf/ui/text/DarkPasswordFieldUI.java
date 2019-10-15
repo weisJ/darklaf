@@ -99,7 +99,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         return new DarkPasswordFieldUI();
     }
 
-    private void updateCursor(final Point p) {
+    protected void updateCursor(final Point p) {
         boolean insideTextArea = DarkTextFieldUI.getDrawingRect(getComponent()).contains(p)
                 && p.x >= DarkTextFieldUI.getTextRect(getComponent()).x
                 && p.x < getShowIconCoord().x;

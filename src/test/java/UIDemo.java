@@ -89,7 +89,7 @@ public final class UIDemo {
                                 setRolloverEnabled(true);
                                 putClientProperty("JButton.buttonType", "square");
                                 putClientProperty("JButton.thin", Boolean.TRUE);
-                                putClientProperty("JButton.forceRoundCorner", Boolean.TRUE);
+                                putClientProperty("JButton.alternativeArc", Boolean.TRUE);
                                 putClientProperty("JButton.variant", "shadow");
                             }});
                             add(new JButton(folderIcon) {{

@@ -76,12 +76,25 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public static int getArc(final Component c) {
-        return DarkButtonUI.isSquare(c) && !DarkButtonUI.isForceRoundCorner(c) ? 0 : getArcSize();
+        if (DarkButtonUI.isNoArc(c)) return 0;
+        boolean square = DarkButtonUI.isSquare(c);
+        boolean alt = DarkButtonUI.chooseAlternativeArc(c);
+        return square ? alt ? getArcSize()
+                            : getSquareArcSize()
+                      : alt ? getSquareArcSize() : getArcSize();
+    }
+
+    public static int getSquareArcSize() {
+        return DarkDefaults.get().getButtonSquareArc();
     }
 
     public static int getFocusArc(final Component c) {
-        return DarkButtonUI.isSquare(c) && !DarkButtonUI.isForceRoundCorner(c) ? getSquareFocusArcSize()
-                                                                               : getFocusArcSize();
+        if (DarkButtonUI.isNoArc(c)) return getMinimumArc();
+        boolean square = DarkButtonUI.isSquare(c);
+        boolean alt = DarkButtonUI.chooseAlternativeArc(c);
+        return square ? alt ? getFocusArcSize()
+                            : getSquareFocusArcSize()
+                      : alt ? getSquareFocusArcSize() : getFocusArcSize();
     }
 
     private void paintShadow(@NotNull final Graphics2D g2, final int width, final int height, final int arc) {
@@ -124,6 +137,10 @@ public class DarkButtonBorder implements Border, UIResource {
 
     public static int getArcSize() {
         return DarkDefaults.get().getButtonArc();
+    }
+
+    public static int getMinimumArc() {
+        return DarkDefaults.get().getButtonMinimumArc();
     }
 
     public static int getSquareFocusArcSize() {

@@ -97,7 +97,11 @@ public class DarkSliderUI extends BasicSliderUI {
     @Override
     protected void calculateGeometry() {
         super.calculateGeometry();
-        calculateIconRect();
+        if (showVolumeIcon(slider)) {
+            calculateIconRect();
+        } else {
+            iconRect.setBounds(-1, -1, 0, 0);
+        }
     }
 
     @Override
@@ -264,7 +268,6 @@ public class DarkSliderUI extends BasicSliderUI {
         int value = slider.getValue() - slider.getMinimum();
         double percentage = value / (double) range;
         boolean enabled = slider.isEnabled();
-        String prefix = slider.isEnabled() ? "enabled_" : "disabled_";
         if (Math.abs(percentage) < 1E-6) {
             return enabled ? DarkIcons.get().getSliderVolumeLevel0()
                            : DarkIcons.get().getSliderVolumeLevel0Inactive();
@@ -534,6 +537,7 @@ public class DarkSliderUI extends BasicSliderUI {
             int pos = isHorizontal() ? evt.getX() : evt.getY();
             int loc = getLocationForValue(getSnappedValue(evt));
             offset = (loc < 0) ? 0 : pos - loc;
+            if (iconRect.contains(evt.getPoint())) return;
             super.mousePressed(evt);
         }
 

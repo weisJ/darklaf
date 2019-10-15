@@ -132,6 +132,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         prevButton = createArrow(SwingConstants.SOUTH);
         prevButton.setName("Spinner.previousButton");
         prevButton.setBorder(new EmptyBorder(1, 1, 1, 1));
+        prevButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         installPreviousButtonListeners(prevButton);
         return prevButton;
     }
@@ -141,6 +142,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         JButton nextButton = createArrow(SwingConstants.NORTH);
         nextButton.setName("Spinner.nextButton");
         nextButton.setBorder(new EmptyBorder(1, 1, 1, 1));
+        nextButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         installNextButtonListeners(nextButton);
         return nextButton;
     }

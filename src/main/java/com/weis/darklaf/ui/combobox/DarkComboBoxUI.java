@@ -146,6 +146,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         JButton button = ArrowButton.createUpDownArrow(comboBox, SwingConstants.SOUTH, true, false,
                                                        new Insets(0, BUTTON_PAD, 0, BUTTON_PAD));
         button.setBorder(BorderFactory.createEmptyBorder());
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return button;
     }
 
@@ -390,5 +391,4 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     public void resetPopup() {
         ((DarkComboPopup) popup).reset();
     }
-
 }

@@ -51,7 +51,6 @@ public class DarkButtonUI extends BasicButtonUI {
     protected static final Rectangle viewRect = new Rectangle();
     protected static final Rectangle textRect = new Rectangle();
     protected static final Rectangle iconRect = new Rectangle();
-    protected int arcSize;
     protected int borderSize;
     protected int shadowHeight;
     protected AbstractButton button;
@@ -71,7 +70,6 @@ public class DarkButtonUI extends BasicButtonUI {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        arcSize = DarkButtonBorder.getArcSize();
         borderSize = DarkButtonBorder.getBorderSize();
         shadowHeight = DarkButtonBorder.getShadowSize();
     }
@@ -121,32 +119,10 @@ public class DarkButtonUI extends BasicButtonUI {
         return fg;
     }
 
-    protected void paintButton(final Graphics g, @NotNull final JComponent c) {
-        Graphics2D g2 = (Graphics2D) g;
-        if (shouldDrawBackground(c)) {
-            int arc = getArcSize(c);
-            if (isShadowVariant(c)) {
-                var b = (AbstractButton) c;
-                if (b.isEnabled() && b.getModel().isRollover()) {
-                    GraphicsUtil.setupAAPainting(g2);
-                    g.setColor(getShadowColor(b));
-                    if (isFullShadow(c)) {
-                        g.fillRect(0, 0, c.getWidth(), c.getHeight());
-                    } else {
-                        DarkUIUtil.paintRoundRect((Graphics2D) g, 0, 0, c.getWidth(), c.getHeight(), arc);
-                    }
-                }
-            } else {
-                g2.setColor(getBackgroundColor(c));
-                if (isSquare(c) && !isForceRoundCorner(c)) {
-                    g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                c.getHeight() - 2 * borderSize - shadowHeight);
-                } else {
-                    DarkUIUtil.paintRoundRect((Graphics2D) g, borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                              c.getHeight() - 2 * borderSize - shadowHeight, arc);
-                }
-            }
-        }
+    @Contract("null -> false")
+    public static boolean isNoArc(final Component c) {
+        return c instanceof JButton
+                && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.noArc"));
     }
 
     protected String layout(@NotNull final AbstractButton b, final JComponent c, final FontMetrics fm,
@@ -195,8 +171,32 @@ public class DarkButtonUI extends BasicButtonUI {
         return c.isEnabled() && border != null && button.isContentAreaFilled();
     }
 
-    protected int getArcSize(final JComponent c) {
-        return isSquare(c) && !isForceRoundCorner(c) ? 0 : arcSize;
+    protected void paintButton(final Graphics g, @NotNull final JComponent c) {
+        Graphics2D g2 = (Graphics2D) g;
+        if (shouldDrawBackground(c)) {
+            int arc = getArcSize(c);
+            if (isShadowVariant(c)) {
+                var b = (AbstractButton) c;
+                if (b.isEnabled() && b.getModel().isRollover()) {
+                    GraphicsUtil.setupAAPainting(g2);
+                    g.setColor(getShadowColor(b));
+                    if (isFullShadow(c)) {
+                        g.fillRect(0, 0, c.getWidth(), c.getHeight());
+                    } else {
+                        DarkUIUtil.paintRoundRect((Graphics2D) g, 0, 0, c.getWidth(), c.getHeight(), arc);
+                    }
+                }
+            } else {
+                g2.setColor(getBackgroundColor(c));
+                if (isSquare(c) && !chooseAlternativeArc(c)) {
+                    g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                c.getHeight() - 2 * borderSize - shadowHeight);
+                } else {
+                    DarkUIUtil.paintRoundRect((Graphics2D) g, borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                              c.getHeight() - 2 * borderSize - shadowHeight, arc);
+                }
+            }
+        }
     }
 
     @Contract("null -> false")
@@ -219,6 +219,10 @@ public class DarkButtonUI extends BasicButtonUI {
     public static boolean isFullShadow(final Component c) {
         return c instanceof JButton
                 && "fullShadow".equals(((JButton) c).getClientProperty("JButton.variant"));
+    }
+
+    protected int getArcSize(final JComponent c) {
+        return DarkButtonBorder.getArc(c);
     }
 
     protected Color getBackgroundColor(@NotNull final JComponent c) {
@@ -255,9 +259,9 @@ public class DarkButtonUI extends BasicButtonUI {
     }
 
     @Contract("null -> false")
-    public static boolean isForceRoundCorner(final Component c) {
+    public static boolean chooseAlternativeArc(final Component c) {
         return c instanceof JButton
-                && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.forceRoundCorner"));
+                && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.alternativeArc"));
     }
 
     @Contract("null -> false")

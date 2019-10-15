@@ -145,7 +145,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
                              icon.getIconWidth(), icon.getIconHeight()).contains(e);
     }
 
-    private void updateCursor(final Point p) {
+    protected void updateCursor(final Point p) {
         var action = getActionUnder(p);
         boolean oldClear = clearHovered;
         clearHovered = action == ClickAction.CLEAR;

@@ -356,7 +356,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             super(icon);
             this.ui = ui;
             putClientProperty("JButton.buttonType", "square");
-            putClientProperty("JButton.forceRoundCorner", Boolean.TRUE);
+            putClientProperty("JButton.alternativeArc", Boolean.TRUE);
             putClientProperty("JButton.variant", "shadow");
             setRolloverEnabled(true);
             setFocus(false);

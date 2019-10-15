@@ -39,6 +39,8 @@ public class DarkDefaults {
     protected int SpinnerBorderSize = -1;
     protected int TabFrameTabHeight = -1;
     protected int TaskPaneArc = -1;
+    protected int ButtonSquareArc = -1;
+    protected int ButtonMinimumArc = -1;
 
     public static DarkDefaults get() {
         if (instance == null) {
@@ -64,6 +66,8 @@ public class DarkDefaults {
         SpinnerBorderSize = -1;
         TabFrameTabHeight = -1;
         TaskPaneArc = -1;
+        ButtonSquareArc = -1;
+        ButtonMinimumArc = -1;
     }
 
     public int getButtonArc() {
@@ -134,5 +138,19 @@ public class DarkDefaults {
             TaskPaneArc = UIManager.getInt("TaskPane.arc");
         }
         return TaskPaneArc;
+    }
+
+    public int getButtonSquareArc() {
+        if (ButtonSquareArc < 0) {
+            ButtonSquareArc = UIManager.getInt("Button.squareArc");
+        }
+        return ButtonSquareArc;
+    }
+
+    public int getButtonMinimumArc() {
+        if (ButtonMinimumArc < 0) {
+            ButtonMinimumArc = UIManager.getInt("Button.minimumArc");
+        }
+        return ButtonMinimumArc;
     }
 }
