@@ -23,7 +23,7 @@
  */
 package com.weis.darklaf.util;
 
-import com.weis.darklaf.LogFormatter;
+import com.weis.darklaf.log.LogFormatter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

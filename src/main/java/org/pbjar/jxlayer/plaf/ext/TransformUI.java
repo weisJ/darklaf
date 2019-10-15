@@ -31,7 +31,7 @@ package org.pbjar.jxlayer.plaf.ext;
  */
 
 import com.sun.java.swing.SwingUtilities3;
-import com.weis.darklaf.LogFormatter;
+import com.weis.darklaf.log.LogFormatter;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
 import org.jdesktop.jxlayer.plaf.LayerUI;

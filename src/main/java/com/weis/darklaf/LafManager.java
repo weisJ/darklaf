@@ -61,7 +61,7 @@ public final class LafManager {
             LogManager.getLogManager().reset();
         } else {
             try (InputStream inputStream = DarkLaf.class.getClassLoader()
-                    .getResourceAsStream("logging.properties")) {
+                                                        .getResourceAsStream("com/weis/darklaf/log/logging.properties")) {
                 if (inputStream != null) {
                     LogManager.getLogManager().readConfiguration(inputStream);
                 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf;
+package com.weis.darklaf.log;
 
 import org.jetbrains.annotations.NotNull;
 
