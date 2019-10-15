@@ -219,6 +219,7 @@ public class DarkColors {
     protected Color ProgressBarFailedEndColor;
     protected Color ProgressBarPassedColor;
     protected Color ProgressBarPassedEndColor;
+    protected Color TitledBorderBorderColor;
 
     public static DarkColors get() {
         if (instance == null) {
@@ -424,6 +425,7 @@ public class DarkColors {
         ProgressBarFailedEndColor = null;
         ProgressBarPassedColor = null;
         ProgressBarPassedEndColor = null;
+        TitledBorderBorderColor = null;
     }
 
     //TitlePane
@@ -1810,5 +1812,12 @@ public class DarkColors {
             WarningGlow = UIManager.getColor("glowWarning");
         }
         return WarningGlow;
+    }
+
+    public Color getTitledBorderBorderColor() {
+        if (TitledBorderBorderColor == null) {
+            TitledBorderBorderColor = UIManager.getColor("TitledBorder.borderColor");
+        }
+        return TitledBorderBorderColor;
     }
 }

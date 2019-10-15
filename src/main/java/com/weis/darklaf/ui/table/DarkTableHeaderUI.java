@@ -233,7 +233,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     }
 
     protected Color getHeaderBackground() {
-        return DarkColors.get().getTableBackground();
+        return DarkColors.get().getTableHeaderBackground();
     }
 
     protected Color getBorderColor() {
