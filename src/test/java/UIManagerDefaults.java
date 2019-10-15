@@ -5,7 +5,6 @@
 
 import com.weis.darklaf.DarkLafInfo;
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.OverlayScrollPane;
 import com.weis.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.weis.darklaf.ui.table.DarkColorTableCellRendererEditor;
 import org.jdesktop.swingx.JXTaskPane;
@@ -216,7 +215,7 @@ public class UIManagerDefaults implements ItemListener {
         d.height = 350;
         table.setPreferredScrollableViewportSize(d);
 
-        return new OverlayScrollPane(table);
+        return new JScrollPane(table);
     }
 
     /*

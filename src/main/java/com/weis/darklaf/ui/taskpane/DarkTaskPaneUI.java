@@ -26,6 +26,7 @@ package com.weis.darklaf.ui.taskpane;
 import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.util.DarkUIUtil;
+import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.plaf.metal.MetalTaskPaneUI;
@@ -47,9 +48,13 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         return new DarkTaskPaneUI();
     }
 
+    protected boolean isCollapsed;
     @Override
-    protected void installDefaults() {
-        super.installDefaults();
+    protected void installListeners() {
+        super.installListeners();
+        group.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY, e -> {
+            isCollapsed = "collapsed".equals(e.getNewValue());
+        });
     }
 
     @Override
@@ -116,6 +121,11 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         }
     }
 
+    protected boolean isCollapsed() {
+        if (!group.isAnimated()) return group.isCollapsed();
+        return isCollapsed;
+    }
+
     protected class DarkPaneBorder extends PaneBorder {
 
         public DarkPaneBorder() {
@@ -132,7 +142,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
             } else {
                 g.setColor(titleBackgroundGradientStart);
             }
-            if (group.isCollapsed()) {
+            if (isCollapsed()) {
                 DarkUIUtil.paintRoundRect(g, 0.5f, 0.5f, w - 1, h - 1, getRoundHeight());
                 g.setColor(borderColor);
                 DarkUIUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight(), false);
@@ -171,7 +181,5 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         protected boolean isMouseOverBorder() {
             return true;
         }
-
-
     }
 }

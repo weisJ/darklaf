@@ -6,6 +6,11 @@ package com.weis.darklaf.theme;
 public class IntelliJTheme extends Theme {
 
     @Override
+    public void beforeInstall() {
+        throw new UnsupportedOperationException("IntelliJ Theme currently not supported");
+    }
+
+    @Override
     public String getName() {
         return "IntelliJ";
     }
