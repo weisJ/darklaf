@@ -447,7 +447,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         }
     }
 
-    protected static class TabFrameSplitPane extends ToggleSplitPane implements TabFrameControl {
+    protected static class TabFrameSplitPane extends ToggleSplitPane {
         protected TabFrameSplitPane(final String name) {
             super(name);
         }
