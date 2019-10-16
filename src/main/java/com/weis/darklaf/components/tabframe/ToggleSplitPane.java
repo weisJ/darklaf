@@ -155,5 +155,4 @@ public class ToggleSplitPane extends JSplitPane {
                                   : comp.getMinimumSize().height;
     }
 
-
 }

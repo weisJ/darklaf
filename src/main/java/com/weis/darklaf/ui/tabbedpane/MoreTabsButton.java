@@ -34,7 +34,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
 
     protected final static String INFINITY = "\u221e";
     protected final static int PAD = 2;
-    private DarkTabbedPaneUI ui;
+    protected DarkTabbedPaneUI ui;
     protected final Icon icon;
 
     public MoreTabsButton(final DarkTabbedPaneUI ui) {
@@ -45,6 +45,12 @@ public class MoreTabsButton extends DarkTabAreaButton {
         putClientProperty("JButton.variant", "onlyLabel");
         putClientProperty("JButton.buttonType", "square");
         setFont(getFont().deriveFont(8f));
+    }
+
+    @Override
+    public Color getBackground() {
+        if (ui == null) return super.getBackground();
+        return ui.getTabAreaBackground();
     }
 
     protected void paintButton(@NotNull final Graphics g) {

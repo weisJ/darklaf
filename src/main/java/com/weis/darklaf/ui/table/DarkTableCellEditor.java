@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.table;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.combobox.DarkComboBoxUI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -225,8 +224,8 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         }
 
         boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
-        Color alternativeRowColor = DarkColors.get().getTableAlternativeBackground();
-        Color normalColor = DarkColors.get().getTableBackground();
+        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
+        Color normalColor = UIManager.getColor("Table.background");
         if (alternativeRow) {
             if (!isSelected) {
                 if (row % 2 == 1) {

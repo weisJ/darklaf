@@ -23,19 +23,25 @@
  */
 package com.weis.darklaf.ui.list;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.cell.DarkCellBorder;
 import com.weis.darklaf.util.DarkUIUtil;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class DarkListCellFocusBorder extends DarkCellBorder {
+
+    protected Color borderColor;
+
+    public DarkListCellFocusBorder() {
+        borderColor = UIManager.getColor("List.focusBorderColor");
+    }
 
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                             final int width, final int height) {
         super.paintBorder(c, g, x, y, width, height);
-        g.setColor(DarkColors.get().getListFocusBorderColor());
+        g.setColor(borderColor);
         DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
     }
 }

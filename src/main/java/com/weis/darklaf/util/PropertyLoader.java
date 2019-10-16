@@ -23,9 +23,9 @@
  */
 package com.weis.darklaf.util;
 
+import com.weis.darklaf.icons.DarkUIAwareIcon;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.icons.IconLoader;
-import com.weis.darklaf.icons.DarkUIAwareIcon;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +39,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -49,12 +51,30 @@ import java.util.logging.Logger;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public final class LafUtil {
-    private static final Logger LOGGER = Logger.getLogger(LafUtil.class.getName());
+public final class PropertyLoader {
+    private static final Logger LOGGER = Logger.getLogger(PropertyLoader.class.getName());
     private static final IconLoader ICON_LOADER = IconLoader.get();
     private static final String DUAL_KEY = "[dual]";
     private static final String AWARE_KEY = "[aware]";
     private static final String PATCH_KEY = "[patch]";
+    private static final String REFERENCE_PREFIX = "%";
+
+    private static final Collection<ObjectRequest> objectsToLoad = new HashSet<>();
+
+    public static void finish() {
+        for (var request : objectsToLoad) {
+            try {
+                request.resolve();
+            } catch (RuntimeException e) {
+                LOGGER.log(Level.SEVERE, "Could not load" + request, e.getMessage());
+            }
+        }
+        reset();
+    }
+
+    public static void reset() {
+        objectsToLoad.clear();
+    }
 
     @NotNull
     public static Properties loadProperties(@NotNull final Class<?> clazz, final String name, final String path) {
@@ -67,21 +87,53 @@ public final class LafUtil {
         return properties;
     }
 
+    public static void putProperties(@NotNull final Properties properties, final Properties accumulator,
+                                     final UIDefaults currentDefaults) {
+        for (final String key : properties.stringPropertyNames()) {
+            final String value = properties.getProperty(key);
+            var parsed = parseValue(key, value, accumulator);
+            if (parsed instanceof ObjectRequest) {
+                objectsToLoad.add((ObjectRequest) parsed);
+            } else if (parsed != null) {
+                accumulator.put(parseKey(key), parsed);
+            } else {
+                currentDefaults.remove(parseKey(key));
+            }
+        }
+    }
+
+    private static Object parseValue(@NotNull final String key, @NotNull final String value,
+                                     final Map<Object, Object> defaults) {
+        return parseValue(key, value, false, defaults);
+    }
+
+    private static String parseKey(@NotNull final String key) {
+        return key.startsWith(REFERENCE_PREFIX) ? key.substring(REFERENCE_PREFIX.length()) : key;
+    }
+
     @Nullable
-    public static Object parseValue(@NotNull final String key, @NotNull final String value,
-                                    final Map<Object, Object> defaults) {
+    private static Object parseValue(@NotNull final String propertyKey, @NotNull final String value,
+                                     final boolean ignoreRequest, final Map<Object, Object> defaults) {
         if ("null".equals(value)) {
             return null;
         }
-        Object returnVal = new LoadError("Could not parse value '" + value + "' for key '" + key + "'");
+        var key = propertyKey;
+        boolean skipObjects = ignoreRequest;
+        if (key.startsWith(REFERENCE_PREFIX)) {
+            key = parseKey(key);
+            skipObjects = true;
+        }
+
+        Object returnVal = new LoadError();
         if (key.endsWith("Insets")) {
             returnVal = parseInsets(value);
-        } else if (key.endsWith(".border") || key.endsWith("Border")) {
-            returnVal = parseObject(value);
-        } else if (key.endsWith(".component") || key.endsWith("Component")) {
-            returnVal = parseObject(value);
-        } else if (key.endsWith("Renderer")) {
-            returnVal = parseObject(value);
+        } else if (!skipObjects
+                && (key.endsWith("Border")
+                || key.endsWith(".border")
+                || key.endsWith(".component")
+                || key.endsWith("Component")
+                || key.endsWith("Renderer"))) {
+            return new ObjectRequest(key, value);
         } else if (key.endsWith(".font")) {
             returnVal = parseFont(value);
         } else if (key.endsWith(".icon") || key.endsWith("Icon")) {
@@ -93,8 +145,8 @@ public final class LafUtil {
         } else if (value.startsWith("%")) {
             var val = value.substring(1);
             if (!defaults.containsKey(val)) {
-                LOGGER.warning("Could not reference value '" + val + "'while loading '" + key + "' " +
-                                       ". May be a forward reference");
+                LOGGER.warning("Could not reference value '" + val + "'while loading '" + key + "'. " +
+                                       "May be a forward reference");
             }
             returnVal = defaults.get(val);
         }
@@ -127,13 +179,12 @@ public final class LafUtil {
                 Integer.parseInt(numbers.get(3)));
     }
 
-    @NotNull
+    @Nullable
     private static Object parseObject(final String value) {
         try {
             return Class.forName(value).getDeclaredConstructor().newInstance();
-        } catch (@NotNull final Exception e) {
-            return new LoadError(e.getMessage());
-        }
+        } catch (@NotNull final Exception ignored) { }
+        return null;
     }
 
     @NotNull
@@ -204,10 +255,41 @@ public final class LafUtil {
     }
 
     private static final class LoadError {
+    }
+
+    private static final class ObjectRequest {
+
+        final String value;
+        final String key;
 
         @Contract(pure = true)
-        private LoadError(final String message) {
+        private ObjectRequest(final String key, final String value) {
+            this.key = key;
+            this.value = value;
         }
 
+        private void resolve() {
+            Object obj = parseObject(value);
+            var defaults = UIManager.getLookAndFeelDefaults();
+            if (obj == null) {
+                obj = parseValue(key, value, true, defaults);
+                if (obj instanceof ObjectRequest) {
+                    LOGGER.severe("Failed to resolve object. " + this);
+                    return;
+                }
+            }
+            if (obj == null) {
+                defaults.remove(key);
+            } else {
+                defaults.put(key, obj);
+            }
+        }
+
+        @NotNull
+        @Contract(pure = true)
+        @Override
+        public String toString() {
+            return "[" + key + "," + value + "]";
+        }
     }
 }

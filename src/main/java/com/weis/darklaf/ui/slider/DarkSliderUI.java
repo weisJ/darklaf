@@ -1,8 +1,6 @@
 package com.weis.darklaf.ui.slider;
 
 import com.weis.darklaf.decorators.MouseClickListener;
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -51,6 +49,29 @@ public class DarkSliderUI extends BasicSliderUI {
     protected int arcSize;
     protected int trackSize;
     protected Dimension thumbSize;
+    protected Color inactiveTickForeground;
+    protected Color trackBackground;
+    protected Color selectedTrackBackground;
+    protected Color selectedTrackInactiveBackground;
+    protected Color selectedVolumeTrackBackground;
+    protected Color selectedVolumeTrackInactiveBackground;
+    protected Color thumbBackground;
+    protected Color thumbInactiveBackground;
+    protected Color volumeThumbBackground;
+    protected Color volumeThumbInactiveBackground;
+    protected Color thumbBorderColor;
+    protected Color thumbInactiveBorderColor;
+
+    protected Icon volume0;
+    protected Icon volume1;
+    protected Icon volume2;
+    protected Icon volume3;
+    protected Icon volume4;
+    protected Icon volume0Inactive;
+    protected Icon volume1Inactive;
+    protected Icon volume2Inactive;
+    protected Icon volume3Inactive;
+    protected Icon volume4Inactive;
 
     public DarkSliderUI(final JSlider b) {
         super(b);
@@ -75,6 +96,29 @@ public class DarkSliderUI extends BasicSliderUI {
         trackSize = UIManager.getInt("Slider.trackThickness");
         plainThumbRadius = UIManager.getInt("Slider.plainThumbRadius");
         thumbSize = UIManager.getDimension("Slider.thumbSize");
+        inactiveTickForeground = UIManager.getColor("Slider.disabledTickColor");
+        trackBackground = UIManager.getColor("Slider.trackBackground");
+        selectedTrackBackground = UIManager.getColor("Slider.selectedTrackColor");
+        selectedTrackInactiveBackground = UIManager.getColor("Slider.disabledTrackColor");
+        selectedVolumeTrackBackground = UIManager.getColor("Slider.volume.selectedTrackColor");
+        selectedVolumeTrackInactiveBackground = UIManager.getColor("Slider.volume.disabledTrackColor");
+        thumbBackground = UIManager.getColor("Slider.activeThumbFill");
+        thumbInactiveBackground = UIManager.getColor("Slider.inactiveThumbFill");
+        volumeThumbBackground = UIManager.getColor("Slider.volume.activeThumbFill");
+        volumeThumbInactiveBackground = UIManager.getColor("Slider.volume.inactiveThumbFill");
+        thumbBorderColor = UIManager.getColor("Slider.thumbBorderColor");
+        thumbInactiveBorderColor = UIManager.getColor("Slider.thumbBorderColorDisabled");
+
+        volume0 = UIManager.getIcon("Slider.volume.enabled_level_0.icon");
+        volume1 = UIManager.getIcon("Slider.volume.enabled_level_1.icon");
+        volume2 = UIManager.getIcon("Slider.volume.enabled_level_2.icon");
+        volume3 = UIManager.getIcon("Slider.volume.enabled_level_3.icon");
+        volume4 = UIManager.getIcon("Slider.volume.enabled_level_4.icon");
+        volume0Inactive = UIManager.getIcon("Slider.volume.disabled_level_0.icon");
+        volume1Inactive = UIManager.getIcon("Slider.volume.disabled_level_1.icon");
+        volume2Inactive = UIManager.getIcon("Slider.volume.disabled_level_2.icon");
+        volume3Inactive = UIManager.getIcon("Slider.volume.disabled_level_3.icon");
+        volume4Inactive = UIManager.getIcon("Slider.volume.disabled_level_4.icon");
     }
 
     @Override
@@ -255,7 +299,7 @@ public class DarkSliderUI extends BasicSliderUI {
 
     @NotNull
     protected Color getDisabledTickColor() {
-        return DarkColors.get().getSliderInactiveTickColor();
+        return inactiveTickForeground;
     }
 
     private static boolean showVolumeIcon(final JComponent c) {
@@ -269,20 +313,15 @@ public class DarkSliderUI extends BasicSliderUI {
         double percentage = value / (double) range;
         boolean enabled = slider.isEnabled();
         if (Math.abs(percentage) < 1E-6) {
-            return enabled ? DarkIcons.get().getSliderVolumeLevel0()
-                           : DarkIcons.get().getSliderVolumeLevel0Inactive();
+            return enabled ? volume0 : volume0Inactive;
         } else if (percentage < 0.25) {
-            return enabled ? DarkIcons.get().getSliderVolumeLevel1()
-                           : DarkIcons.get().getSliderVolumeLevel1Inactive();
+            return enabled ? volume1 : volume1Inactive;
         } else if (percentage < 0.5) {
-            return enabled ? DarkIcons.get().getSliderVolumeLevel2()
-                           : DarkIcons.get().getSliderVolumeLevel2Inactive();
+            return enabled ? volume2 : volume2Inactive;
         } else if (percentage < 0.75) {
-            return enabled ? DarkIcons.get().getSliderVolumeLevel3()
-                           : DarkIcons.get().getSliderVolumeLevel3Inactive();
+            return enabled ? volume3 : volume3Inactive;
         } else {
-            return enabled ? DarkIcons.get().getSliderVolumeLevel4()
-                           : DarkIcons.get().getSliderVolumeLevel4Inactive();
+            return enabled ? volume4 : volume4Inactive;
         }
     }
 
@@ -491,38 +530,28 @@ public class DarkSliderUI extends BasicSliderUI {
     @NotNull
     protected Color getThumbColor() {
         if (isVolumeSlider(slider)) {
-            return slider.isEnabled()
-                   ? DarkColors.get().getSliderVolumeThumbBackground()
-                   : DarkColors.get().getSliderVolumeThumbInactiveBackground();
+            return slider.isEnabled() ? volumeThumbBackground : volumeThumbInactiveBackground;
         } else {
-            return slider.isEnabled()
-                   ? DarkColors.get().getSliderThumbBackground()
-                   : DarkColors.get().getSliderThumbInactiveBackground();
+            return slider.isEnabled() ? thumbBackground : thumbInactiveBackground;
         }
     }
 
     @NotNull
     protected Color getThumbBorderColor() {
-        return slider.isEnabled()
-               ? DarkColors.get().getSliderThumbBorderColor()
-               : DarkColors.get().getSliderThumbInactiveBorderColor();
+        return slider.isEnabled() ? thumbBorderColor : thumbInactiveBorderColor;
     }
 
     @NotNull
     protected Color getTrackBackground() {
-        return DarkColors.get().getSliderTrackBackground();
+        return trackBackground;
     }
 
     @NotNull
     protected Color getSelectedTrackColor() {
         if (isVolumeSlider(slider)) {
-            return slider.isEnabled()
-                   ? DarkColors.get().getSliderVolumeSelectedTrackBackground()
-                   : DarkColors.get().getSliderVolumeSelectedTrackInactiveBackground();
+            return slider.isEnabled() ? selectedVolumeTrackBackground : selectedVolumeTrackInactiveBackground;
         } else {
-            return slider.isEnabled()
-                   ? DarkColors.get().getSliderSelectedTrackBackground()
-                   : DarkColors.get().getSliderSelectedTrackInactiveBackground();
+            return slider.isEnabled() ? selectedTrackBackground : selectedTrackInactiveBackground;
         }
     }
 

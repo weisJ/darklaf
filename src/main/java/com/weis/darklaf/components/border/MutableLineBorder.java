@@ -22,11 +22,10 @@ public class MutableLineBorder extends EmptyBorder {
     public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y,
                             final int width, final int height) {
         g.setColor(getColor());
-        var insets = getBorderInsets();
-        g.fillRect(x, y, width - insets.right, insets.top);
-        g.fillRect(x, y + insets.top, insets.left, height - insets.top);
-        g.fillRect(x + insets.left, y + height - insets.bottom, width - insets.left, insets.bottom);
-        g.fillRect(x + width - insets.right, y, insets.right, height - insets.bottom);
+        g.fillRect(x, y, width - right, top);
+        g.fillRect(x, y + top, left, height - top);
+        g.fillRect(x + left, y + height - bottom, width - left, bottom);
+        g.fillRect(x + width - right, y, right, height - bottom);
     }
 
     @Override

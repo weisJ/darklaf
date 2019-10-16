@@ -23,8 +23,6 @@
  */
 package com.weis.darklaf.ui.taskpane;
 
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXHyperlink;
@@ -49,6 +47,16 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     }
 
     protected boolean isCollapsed;
+    protected Color borderColor;
+    protected int arc;
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        borderColor = UIManager.getColor("TaskPane.borderColor");
+        arc = UIManager.getInt("TaskPane.arc");
+    }
+
     @Override
     protected void installListeners() {
         super.installListeners();
@@ -64,8 +72,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
     @Override
     protected Border createContentPaneBorder() {
-        Color borderColor = DarkColors.get().getTaskPaneBorderColor();
-        return new CompoundBorder(new DarkContentPaneBorder(borderColor),
+        return new CompoundBorder(new DarkContentPaneBorder(borderColor, arc),
                                   BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
@@ -77,38 +84,34 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
     @Override
     protected int getRoundHeight() {
-        return getArcSize();
-    }
-
-    @Contract(pure = true)
-    protected static int getArcSize() {
-        return DarkDefaults.get().getTaskPaneArc();
+        return arc;
     }
 
     protected static class DarkContentPaneBorder implements Border, UIResource {
         protected Color color;
+        protected int arc;
 
         @Contract(pure = true)
-        public DarkContentPaneBorder(final Color color) {
+        public DarkContentPaneBorder(final Color color, final int arc) {
+            this.arc = arc;
             this.color = color;
         }
 
         public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y,
                                 final int width, final int height) {
             var clip = g.getClip().getBounds();
-            int h = height + getArcSize();
+            int h = height + arc;
             g.setClip(clip.x, clip.y, width, h / 2 + 1);
             g.setColor(color);
             DarkUIUtil.drawRect(g, x, y - 1, width, h, 1);
             if (c.isOpaque()) {
                 g.setColor(c.getBackground());
-                g.setClip(clip.x, clip.x + h - getArcSize(), width, getArcSize());
-                DarkUIUtil.paintRoundRect((Graphics2D) g, x + 0.5f, y + 0.5f,
-                                          width - 1, h - 1, getArcSize());
+                g.setClip(clip.x, clip.x + h - arc, width, arc);
+                DarkUIUtil.paintRoundRect((Graphics2D) g, x + 0.5f, y + 0.5f, width - 1, h - 1, arc);
             }
             g.setClip(clip.x, clip.y + h / 2 - 1, width, h / 2 + 2);
             g.setColor(color);
-            DarkUIUtil.paintLineBorder((Graphics2D) g, x, y, width, h, getArcSize(), false);
+            DarkUIUtil.paintLineBorder((Graphics2D) g, x, y, width, h, arc, false);
             g.setClip(clip);
         }
 
@@ -127,10 +130,6 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     }
 
     protected class DarkPaneBorder extends PaneBorder {
-
-        public DarkPaneBorder() {
-            borderColor = DarkColors.get().getTaskPaneBorderColor();
-        }
 
         @Override
         protected void paintTitleBackground(@NotNull final JXTaskPane group, final Graphics g2) {

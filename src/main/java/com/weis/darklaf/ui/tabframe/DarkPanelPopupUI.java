@@ -29,12 +29,12 @@ import com.weis.darklaf.components.border.MutableLineBorder;
 import com.weis.darklaf.components.tabframe.PanelPopup;
 import com.weis.darklaf.components.tabframe.TabFrame;
 import com.weis.darklaf.components.tooltip.ToolTipContext;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.panel.DarkPanelUI;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
@@ -88,12 +88,12 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     protected void installDefaults() {
-        headerBackground = DarkColors.get().getTabFramePopupHeaderBackground();
-        headerButtonHoverBackground = DarkColors.get().getTabFramePopupButtonHoverBackground();
-        headerButtonClickBackground = DarkColors.get().getTabFramePopupButtonClickBackground();
-        headerFocusBackground = DarkColors.get().getTabFramePopupFocusHeaderBackground();
-        headerButtonFocusHoverBackground = DarkColors.get().getTabFramePopupButtonFocusHoverBackground();
-        headerButtonFocusClickBackground = DarkColors.get().getTabFramePopupButtonFocusClickBackground();
+        headerBackground = UIManager.getColor("TabFramePopup.headerBackground");
+        headerButtonHoverBackground = UIManager.getColor("TabFramePopup.headerButtonHoverBackground");
+        headerButtonClickBackground = UIManager.getColor("TabFramePopup.headerButtonClickBackground");
+        headerFocusBackground = UIManager.getColor("TabFramePopup.headerFocusBackground");
+        headerButtonFocusHoverBackground = UIManager.getColor("TabFramePopup.headerButtonFocusHoverBackground");
+        headerButtonFocusClickBackground = UIManager.getColor("TabFramePopup.headerButtonFocusClickBackground");
         accelerator = UIManager.getString("TabFramePopup.closeAccelerator");
         popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                       .put(KeyStroke.getKeyStroke(accelerator), accelerator);
@@ -175,7 +175,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     protected MutableLineBorder createBorder() {
-        var color = DarkColors.get().getTabFramePopupBorderColor();
+        var color = UIManager.getColor("TabFramePopup.borderColor");
         return new MutableLineBorder.UIResource(0, 0, 0, 0, color);
     }
 
@@ -342,6 +342,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     @Override
     public void eventDispatched(@NotNull final AWTEvent event) {
         if (event.getID() == FocusEvent.FOCUS_GAINED) {
+            var focusOwner = FocusManager.getCurrentManager().getFocusOwner();
+            if (focusOwner instanceof TabFrame) return;
+            if (focusOwner instanceof JRootPane) return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
             setHeaderBackground(focus);
         }

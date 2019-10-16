@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.menu;
 
-import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,9 +35,17 @@ import java.awt.*;
  */
 public class DarkMenuBarUI extends MetalMenuBarUI {
 
+    protected Color background;
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        background = UIManager.getColor("MenuBar.background");
+    }
+
     @Override
     public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
-        g.setColor(DarkColors.get().getMenuItemBackground());
+        g.setColor(background);
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }
 }

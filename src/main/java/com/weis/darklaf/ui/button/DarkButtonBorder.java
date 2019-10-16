@@ -23,8 +23,6 @@
  */
 package com.weis.darklaf.ui.button;
 
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
@@ -43,6 +41,35 @@ import java.awt.geom.RoundRectangle2D;
  * @author Jannis Weis
  */
 public class DarkButtonBorder implements Border, UIResource {
+
+    private Color shadowColor;
+    private Color focusBorderColor;
+    private Color defaultBorderColor;
+    private Color borderColor;
+    private Color inactiveBorderColor;
+
+    private int arc;
+    private int focusArc;
+    private int squareFocusArc;
+    private int squareArc;
+    private int minimumArc;
+    private int borderSize;
+    private int shadowSize;
+
+    public DarkButtonBorder() {
+        shadowColor = UIManager.getColor("Button.shadow");
+        focusBorderColor = UIManager.getColor("Button.focusBorderColor");
+        defaultBorderColor = UIManager.getColor("Button.defaultBorderColor");
+        borderColor = UIManager.getColor("Button.activeBorderColor");
+        inactiveBorderColor = UIManager.getColor("Button.inactiveBorderColor");
+        arc = UIManager.getInt("Button.arc");
+        focusArc = UIManager.getInt("Button.focusArc");
+        squareFocusArc = UIManager.getInt("Button.squareFocusArc");
+        squareArc = UIManager.getInt("Button.squareArc");
+        minimumArc = UIManager.getInt("Button.minimumArc");
+        borderSize = UIManager.getInt("Button.borderThickness");
+        shadowSize = UIManager.getInt("Button.shadowHeight");
+    }
 
     @Override
     public void paintBorder(final Component c, @NotNull final Graphics g,
@@ -75,26 +102,18 @@ public class DarkButtonBorder implements Border, UIResource {
         config.restore();
     }
 
-    public static int getArc(final Component c) {
+    protected int getArc(final Component c) {
         if (DarkButtonUI.isNoArc(c)) return 0;
         boolean square = DarkButtonUI.isSquare(c);
         boolean alt = DarkButtonUI.chooseAlternativeArc(c);
-        return square ? alt ? getArcSize()
-                            : getSquareArcSize()
-                      : alt ? getSquareArcSize() : getArcSize();
+        return square ? alt ? arc : squareArc : alt ? squareArc : arc;
     }
 
-    public static int getSquareArcSize() {
-        return DarkDefaults.get().getButtonSquareArc();
-    }
-
-    public static int getFocusArc(final Component c) {
-        if (DarkButtonUI.isNoArc(c)) return getMinimumArc();
+    protected int getFocusArc(final Component c) {
+        if (DarkButtonUI.isNoArc(c)) return minimumArc;
         boolean square = DarkButtonUI.isSquare(c);
         boolean alt = DarkButtonUI.chooseAlternativeArc(c);
-        return square ? alt ? getFocusArcSize()
-                            : getSquareFocusArcSize()
-                      : alt ? getSquareFocusArcSize() : getFocusArcSize();
+        return square ? alt ? focusArc : squareFocusArc : alt ? squareFocusArc : focusArc;
     }
 
     private void paintShadow(@NotNull final Graphics2D g2, final int width, final int height, final int arc) {
@@ -110,45 +129,29 @@ public class DarkButtonBorder implements Border, UIResource {
                                                               arc, arc));
         shadowShape.subtract(innerArea);
         g2.setComposite(DarkUIUtil.SHADOW_COMPOSITE);
-        g2.setColor(DarkColors.get().getButtonShadowColor());
+        g2.setColor(shadowColor);
         g2.fill(shadowShape);
         context.restore();
     }
 
-    public static int getShadowSize() {
-        return DarkDefaults.get().getButtonShadowSize();
+    protected int getBorderSize() {
+        return borderSize;
     }
 
-    public static int getBorderSize() {
-        return DarkDefaults.get().getButtonBorderSize();
+    protected int getShadowSize() {
+        return shadowSize;
     }
 
-    private Color getBorderColor(@NotNull final Component c) {
+    protected Color getBorderColor(@NotNull final Component c) {
         if (c.hasFocus()) {
-            return DarkColors.get().getButtonFocusBorderColor();
+            return focusBorderColor;
         } else if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
-            return DarkColors.get().getButtonDefaultBorderColor();
+            return defaultBorderColor;
         } else if (c.isEnabled()) {
-            return DarkColors.get().getButtonBorderColor();
+            return borderColor;
         } else {
-            return DarkColors.get().getButtonInactiveBorderColor();
+            return inactiveBorderColor;
         }
-    }
-
-    public static int getArcSize() {
-        return DarkDefaults.get().getButtonArc();
-    }
-
-    public static int getMinimumArc() {
-        return DarkDefaults.get().getButtonMinimumArc();
-    }
-
-    public static int getSquareFocusArcSize() {
-        return DarkDefaults.get().getButtonSquareFocusArc();
-    }
-
-    public static int getFocusArcSize() {
-        return DarkDefaults.get().getButtonFocusArc();
     }
 
     public Insets getBorderInsets(final Component c) {

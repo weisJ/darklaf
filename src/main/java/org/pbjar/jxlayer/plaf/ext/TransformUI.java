@@ -298,10 +298,9 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @return a {@link AffineTransform} instance or {@code null}
      */
     @NotNull
-    public AffineTransform getPreferredTransform(
-            final Dimension size, final JXLayer<? extends JComponent> layer) {
-
-        return this.transformModel.getPreferredTransform(size, layer);
+    public AffineTransform getPreferredTransform(final Dimension size, final JXLayer<? extends JComponent> layer) {
+        return this.transformModel != null ? this.transformModel.getPreferredTransform(size, layer)
+                                           : new AffineTransform();
     }
 
   /*
@@ -533,8 +532,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @see #paint(Graphics, JComponent)
      */
     @Override
-    protected final void paintLayer(
-            @NotNull final Graphics2D g2, @NotNull final JXLayer<? extends JComponent> layer) {
+    protected final void paintLayer(@NotNull final Graphics2D g2, @NotNull final JXLayer<? extends JComponent> layer) {
         JComponent view = layer.getView();
         if (view != null) {
             if (view.getX() < 0 || view.getY() < 0) {
@@ -560,7 +558,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
     @NotNull
     @Override
     protected final AffineTransform getTransform(final JXLayer<? extends JComponent> layer) {
-        return transformModel.getTransform(layer);
+        return transformModel != null ? transformModel.getTransform(layer)
+                                      : new AffineTransform();
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.table;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -26,12 +25,14 @@ import java.util.function.Supplier;
 public class DarkTableUI extends DarkTableUIBridge {
 
     private static final int ROW_HEIGHT = 22;
+    protected Color selectionBackground;
+    protected Color selectionFocusBackground;
     private final FocusListener focusListener = new FocusListener() {
         @Override
         public void focusGained(final FocusEvent e) {
             var bg = table.getSelectionBackground();
             if (bg instanceof UIResource) {
-                table.setSelectionBackground(DarkColors.get().getTableFocusSelectionBackground());
+                table.setSelectionBackground(selectionFocusBackground);
             }
             table.repaint();
         }
@@ -43,7 +44,7 @@ public class DarkTableUI extends DarkTableUIBridge {
                 if (table.isEditing()) {
                     table.setSelectionBackground(table.getBackground());
                 } else {
-                    table.setSelectionBackground(DarkColors.get().getTableSelectionBackground());
+                    table.setSelectionBackground(selectionBackground);
                 }
             }
             table.repaint();
@@ -75,12 +76,14 @@ public class DarkTableUI extends DarkTableUIBridge {
             }
         }
     };
+    protected Color borderColor;
 
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
     }
+
 
     @Override
     protected void paintGrid(@NotNull final Graphics g,
@@ -311,7 +314,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     protected Color getBorderColor() {
-        return DarkColors.get().getTableHeaderBorderColor();
+        return borderColor;
     }
 
     protected boolean isInScrollPane() {
@@ -406,6 +409,9 @@ public class DarkTableUI extends DarkTableUIBridge {
                                 UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
         table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
         setupRendererComponents(table);
+        borderColor = UIManager.getColor("TableHeader.borderColor");
+        selectionFocusBackground = UIManager.getColor("Table.focusSelectionBackground");
+        selectionBackground = UIManager.getColor("Table.selectionNoFocusBackground");
     }
 
     @Override

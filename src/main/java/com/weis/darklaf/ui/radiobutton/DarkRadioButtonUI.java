@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.radiobutton;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.ui.checkbox.DarkCheckBoxUI;
 import com.weis.darklaf.util.DarkUIUtil;
@@ -62,6 +61,14 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     private Icon radioSelectedDisabledIcon;
     private Icon radioSelectedFocusedIcon;
 
+    protected Color background;
+    protected Color inactiveBackground;
+    protected Color focusBorderColor;
+    protected Color borderColor;
+    protected Color inactiveBorderColor;
+    protected Color checkColor;
+    protected Color inactiveCheckColor;
+
 
     @NotNull
     @Contract("_ -> new")
@@ -78,6 +85,13 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
         radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
         radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
+        background = UIManager.getColor("RadioButton.activeFillColor");
+        inactiveBackground = UIManager.getColor("RadioButton.inactiveFillColor");
+        focusBorderColor = UIManager.getColor("RadioButton.focusBorderColor");
+        borderColor = UIManager.getColor("RadioButton.activeBorderColor");
+        inactiveBorderColor = UIManager.getColor("RadioButton.inactiveBorderColor");
+        checkColor = UIManager.getColor("RadioButton.selectionEnabledColor");
+        inactiveCheckColor = UIManager.getColor("RadioButton.selectionDisabledColor");
     }
 
     @Override
@@ -169,13 +183,11 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         return new IconUIResource(EmptyIcon.create(20));
     }
 
-    static void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
+    protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
         var g2 = (Graphics2D) g.create();
-        Color bgColor = enabled ? DarkColors.get().getRadioButtonBackground()
-                                : DarkColors.get().getRadioButtonInactiveBackground();
-        Color borderColor = focus ? DarkColors.get().getRadioButtonFocusBorderColor()
-                                  : enabled ? DarkColors.get().getRadioButtonBorderColor()
-                                            : DarkColors.get().getRadioButtonInactiveBorderColor();
+        Color bgColor = enabled ? background : inactiveBackground;
+        Color border = focus ? focusBorderColor
+                             : enabled ? borderColor : inactiveBorderColor;
         g.setColor(bgColor);
         g.fillOval(0, 0, SIZE, SIZE);
 
@@ -184,15 +196,14 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
             DarkUIUtil.paintFocusOval(g2, 1, 1, SIZE - 1, SIZE - 1);
         }
 
-        g.setColor(borderColor);
+        g.setColor(border);
         g.drawOval(0, 0, SIZE, SIZE);
 
         g2.dispose();
     }
 
-    static void paintCheckBullet(@NotNull final Graphics2D g, final boolean enabled) {
-        Color color = enabled ? DarkColors.get().getRadioButtonCheckColor()
-                              : DarkColors.get().getRadioButtonCheckInactiveColor();
+    protected void paintCheckBullet(@NotNull final Graphics2D g, final boolean enabled) {
+        Color color = enabled ? checkColor : inactiveCheckColor;
         g.setColor(color);
         g.translate(0.2, 0.2);
         g.fillOval((SIZE - BULLET_RAD) / 2, (SIZE - BULLET_RAD) / 2, BULLET_RAD, BULLET_RAD);

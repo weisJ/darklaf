@@ -24,14 +24,12 @@
 package com.weis.darklaf.util;
 
 import com.weis.darklaf.decorators.CellRenderer;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sun.awt.SunToolkit;
 
-import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.table.TableCellRenderer;
@@ -57,19 +55,19 @@ public final class DarkUIUtil {
     public static final boolean USE_QUARTZ = "true".equals(System.getProperty("apple.awt.graphics.UseQuartz"));
 
     private static Color getErrorGlow() {
-        return DarkColors.get().getErrorGlow();
+        return UIManager.getColor("glowError");
     }
 
     private static Color getErrorFocusGlow() {
-        return DarkColors.get().getErrorFocusGlow();
+        return UIManager.getColor("glowFocusError");
     }
 
     private static Color getFocusGlow() {
-        return DarkColors.get().getFocusGlow();
+        return UIManager.getColor("glowFocus");
     }
 
     private static Color getWarningGlow() {
-        return DarkColors.get().getWarningGlow();
+        return UIManager.getColor("glowWarning");
     }
 
     public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
@@ -78,7 +76,6 @@ public final class DarkUIUtil {
         doPaint(g, width, height, arc, bw);
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
     private static void doPaint(@NotNull final Graphics2D g, final int width, final int height, final float arc,
                                 final float bw) {
         var context = GraphicsUtil.setupStrokePainting(g);
@@ -148,6 +145,8 @@ public final class DarkUIUtil {
 
     @NotNull
     public static Color blendColors(@NotNull final Color color1, @NotNull final Color color2, final double percent) {
+        if (percent == 1) return color1;
+        if (percent == 0) return color2;
         double inverse_percent = 1.0 - percent;
         int redPart = (int) (color1.getRed() * percent + color2.getRed() * inverse_percent);
         int greenPart = (int) (color1.getGreen() * percent + color2.getGreen() * inverse_percent);
@@ -181,9 +180,7 @@ public final class DarkUIUtil {
             return hasFocus(c);
         }
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        final Component owner2 = FocusManager.getCurrentManager().getFocusOwner();
-        return (owner != null && SwingUtilities.isDescendingFrom(owner, c))
-                || (owner2 != null && SwingUtilities.isDescendingFrom(owner2, c));
+        return (owner != null && SwingUtilities.isDescendingFrom(owner, c));
     }
 
     public static boolean hasFocus(final Window w) {

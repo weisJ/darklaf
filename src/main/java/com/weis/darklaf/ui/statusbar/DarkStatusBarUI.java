@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.statusbar;
 
-import com.weis.darklaf.defaults.DarkColors;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI;
 import org.jetbrains.annotations.Contract;
@@ -38,19 +37,30 @@ import java.awt.*;
  */
 public class DarkStatusBarUI extends BasicStatusBarUI {
 
+
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkStatusBarUI();
     }
 
+    protected Color background;
+    protected Color borderColor;
+
+    @Override
+    protected void installDefaults(final JXStatusBar sb) {
+        super.installDefaults(sb);
+        background = UIManager.getColor("StatusBar.background");
+        borderColor = UIManager.getColor("StatusBar.topColor");
+    }
+
     @Override
     protected void paintBackground(final Graphics2D g, @NotNull final JXStatusBar bar) {
         if (bar.isOpaque()) {
-            g.setColor(DarkColors.get().getStatusBarBackground());
+            g.setColor(background);
             g.fillRect(0, 0, bar.getWidth(), bar.getHeight());
         }
-        g.setColor(DarkColors.get().getStatusBarBorderColor());
+        g.setColor(borderColor);
         g.fillRect(0, 0, bar.getWidth(), 1);
     }
 }

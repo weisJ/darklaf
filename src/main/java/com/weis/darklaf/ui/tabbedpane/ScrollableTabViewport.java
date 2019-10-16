@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.tabbedpane;
 
-import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -33,15 +32,13 @@ import java.awt.*;
 @SuppressWarnings("serial")
         // Superclass is not serializable across versions
 class ScrollableTabViewport extends JViewport implements UIResource {
-    private DarkTabbedPaneUIBridge ui;
 
     public ScrollableTabViewport(@NotNull final DarkTabbedPaneUIBridge ui) {
         super();
-        this.ui = ui;
         setName("TabbedPane.scrollableViewport");
         setScrollMode(SIMPLE_SCROLL_MODE);
         setOpaque(ui.tabPane.isOpaque());
-        Color bgColor = DarkColors.get().getTabbedPaneTabAreaBackground();
+        Color bgColor = UIManager.getColor("TabbedPane.tabAreaBackground");
         if (bgColor == null) {
             bgColor = ui.tabPane.getBackground();
         }

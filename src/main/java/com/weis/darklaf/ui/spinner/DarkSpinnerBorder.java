@@ -1,7 +1,5 @@
 package com.weis.darklaf.ui.spinner;
 
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.defaults.DarkDefaults;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +16,19 @@ import java.awt.*;
  */
 public class DarkSpinnerBorder implements Border, UIResource {
 
+    protected Color focusBorderColor;
+    protected Color borderColor;
+    protected Color inactiveBorderColor;
+    protected int arc;
+    protected int borderSize;
+
+    public DarkSpinnerBorder() {
+        focusBorderColor = UIManager.getColor("Spinner.focusBorderColor");
+        borderColor = UIManager.getColor("Spinner.activeBorderColor");
+        inactiveBorderColor = UIManager.getColor("Spinner.inactiveBorderColor");
+        arc = UIManager.getInt("Spinner.arc");
+        borderSize = UIManager.getInt("Spinner.borderThickness");
+    }
 
     @Override
     public void paintBorder(@NotNull final Component c, final Graphics g2,
@@ -29,10 +40,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
         GraphicsContext config = new GraphicsContext(g);
         g.translate(x, y);
 
-        int borderSize = getBorderSize();
-
         int size = tableCellEditor ? 0 : borderSize;
-        int arc = getArc();
 
         if (c instanceof JSpinner) {
             JSpinner spinner = (JSpinner) c;
@@ -57,7 +65,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
         g.setColor(getBorderColor(c));
         if (!tableCellEditor && !treeCellEditor) {
             if (DarkUIUtil.hasFocus(c)) {
-                g.setColor(DarkColors.get().getSpinnerFocusBorderColor());
+                g.setColor(focusBorderColor);
             }
             DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
         } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
@@ -78,17 +86,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
         config.restore();
     }
 
-    public static int getBorderSize() {
-        return DarkDefaults.get().getSpinnerBorderSize();
-    }
-
-    public static int getArc() {
-        return DarkDefaults.get().getSpinnerArc();
-    }
-
-    private static Color getBorderColor(@NotNull final Component c) {
-        return c.isEnabled() ? DarkColors.get().getSpinnerBorderColor()
-                             : DarkColors.get().getSpinnerInactiveBorderColor();
+    protected Color getBorderColor(@NotNull final Component c) {
+        return c.isEnabled() ? borderColor : inactiveBorderColor;
     }
 
     @Override

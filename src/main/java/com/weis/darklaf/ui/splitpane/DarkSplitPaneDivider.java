@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.splitpane;
 
-import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.icons.EmptyIcon;
 import org.jetbrains.annotations.Contract;
 
@@ -38,8 +37,21 @@ import java.awt.*;
  */
 public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
 
+    protected Icon leftOneTouch;
+    protected Icon rightOneTouch;
+    protected Icon topOneTouch;
+    protected Icon bottomOneTouch;
+    protected Icon verticalSplit;
+    protected Icon horizontalSplit;
+
     public DarkSplitPaneDivider(final BasicSplitPaneUI ui) {
         super(ui);
+        leftOneTouch = UIManager.getIcon("SplitPaneDivider.leftOneTouch.icon");
+        rightOneTouch = UIManager.getIcon("SplitPaneDivider.rightOneTouch.icon");
+        topOneTouch = UIManager.getIcon("SplitPaneDivider.topOneTouch.icon");
+        bottomOneTouch = UIManager.getIcon("SplitPaneDivider.bottomOneTouch.icon");
+        verticalSplit = UIManager.getIcon("SplitPane.verticalGlue.icon");
+        horizontalSplit = UIManager.getIcon("SplitPane.horizontalGlue.icon");
     }
 
 
@@ -58,11 +70,11 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     }
 
     protected Icon getVerticalSplitIcon() {
-        return DarkIcons.get().getSplitPaneDividerVerticalSplit();
+        return verticalSplit;
     }
 
     protected Icon getHorizontalSplitIcon() {
-        return DarkIcons.get().getSplitPaneDividerHorizontalSplit();
+        return horizontalSplit;
     }
 
     @Override
@@ -76,19 +88,19 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     }
 
     protected Icon getLeftOneTouchIcon() {
-        return DarkIcons.get().getSplitPaneDividerLeftOneTouch();
+        return leftOneTouch;
     }
 
     protected Icon getRightOneTouchIcon() {
-        return DarkIcons.get().getSplitPaneDividerRightOneTouch();
+        return rightOneTouch;
     }
 
     protected Icon getTopOneTouchIcon() {
-        return DarkIcons.get().getSplitPaneDividerTopOneTouch();
+        return topOneTouch;
     }
 
     protected Icon getBottomOneTouchIcon() {
-        return DarkIcons.get().getSplitPaneDividerBottomOneTouch();
+        return bottomOneTouch;
     }
 
     protected static class OneTouchButton extends JButton implements UIResource {

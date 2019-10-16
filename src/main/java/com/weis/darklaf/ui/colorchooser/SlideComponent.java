@@ -26,7 +26,6 @@ package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.tooltip.ToolTipContext;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.ColorUtil;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
@@ -58,12 +57,18 @@ class SlideComponent extends JComponent implements ColorListener {
     private int value = 0;
     private Unit unitType = Unit.LEVEL;
     private Color color;
+    protected Color borderColor;
+    protected Color shadowColor;
+    protected Color knobFill;
 
     SlideComponent(final String title, final boolean vertical, final boolean isOpacity) {
         this.title = title;
         this.vertical = vertical;
         this.isOpacity = isOpacity;
         this.color = Color.WHITE;
+        this.borderColor = UIManager.getColor("ColorChooser.sliderBorderColor");
+        this.shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
+        this.knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
 
         toolTipContext.setAlignInside(false)
                 .setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
@@ -171,6 +176,14 @@ class SlideComponent extends JComponent implements ColorListener {
     }
 
     @Override
+    public void updateUI() {
+        super.updateUI();
+        borderColor = UIManager.getColor("ColorChooser.sliderBorderColor");
+        shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
+        knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
+    }
+
+    @Override
     protected void paintComponent(final Graphics g) {
         final Graphics2D g2d = (Graphics2D) g;
         Color endColor = isOpacity ? DarkUIUtil.TRANSPARENT_COLOR : Color.BLACK;
@@ -179,7 +192,7 @@ class SlideComponent extends JComponent implements ColorListener {
             g2d.setPaint(new GradientPaint(0f, 0f, beginColor, 0f, getHeight(), endColor));
             g.fillRect(7, 10, 12, getHeight() - 20);
 
-            g.setColor(DarkColors.get().getColorChooserSliderBorderColor());
+            g.setColor(borderColor);
             g.fillRect(7, 10, 12, 1);
             g.fillRect(7, 10, 1, getHeight() - 20);
             g.fillRect(7 + 12 - 1, 10, 1, getHeight() - 20);
@@ -188,7 +201,7 @@ class SlideComponent extends JComponent implements ColorListener {
             g2d.setPaint(new GradientPaint(0f, 0f, endColor, getWidth(), 0f, beginColor));
             g.fillRect(10, 7, getWidth() - 20, 12);
 
-            g.setColor(DarkColors.get().getColorChooserSliderBorderColor());
+            g.setColor(borderColor);
             g.fillRect(10, 7, 1, 12);
             g.fillRect(10, 7, getWidth() - 20, 1);
             g.fillRect(10, 7 + 12 - 1, getWidth() - 20, 1);
@@ -208,7 +221,7 @@ class SlideComponent extends JComponent implements ColorListener {
         }
     }
 
-    private static void drawKnob(@NotNull final Graphics2D g2d, int x, int y, final boolean vertical) {
+    protected void drawKnob(@NotNull final Graphics2D g2d, int x, int y, final boolean vertical) {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (vertical) {
             y -= 6;
@@ -217,7 +230,7 @@ class SlideComponent extends JComponent implements ColorListener {
             arrowShadow.addPoint(x + 7, y + 7);
             arrowShadow.addPoint(x - 5, y + 13);
 
-            g2d.setColor(ColorUtil.toAlpha(DarkColors.get().getColorChooserSliderShadowColor(), 0.5));
+            g2d.setColor(ColorUtil.toAlpha(shadowColor, 0.5));
             g2d.fill(arrowShadow);
 
             Polygon arrowHead = new Polygon();
@@ -225,7 +238,7 @@ class SlideComponent extends JComponent implements ColorListener {
             arrowHead.addPoint(x + 6, y + 6);
             arrowHead.addPoint(x - 6, y + 12);
 
-            g2d.setColor(DarkColors.get().getColorChooserSliderKnobColor());
+            g2d.setColor(knobFill);
             g2d.fill(arrowHead);
         } else {
             x -= 6;
@@ -235,7 +248,7 @@ class SlideComponent extends JComponent implements ColorListener {
             arrowShadow.addPoint(x + 13, y - 5);
             arrowShadow.addPoint(x + 7, y + 7);
 
-            g2d.setColor(ColorUtil.toAlpha(DarkColors.get().getColorChooserSliderShadowColor(), 0.5));
+            g2d.setColor(ColorUtil.toAlpha(shadowColor, 0.5));
             g2d.fill(arrowShadow);
 
             Polygon arrowHead = new Polygon();
@@ -243,7 +256,7 @@ class SlideComponent extends JComponent implements ColorListener {
             arrowHead.addPoint(x + 12, y - 6);
             arrowHead.addPoint(x + 6, y + 6);
 
-            g2d.setColor(DarkColors.get().getColorChooserSliderKnobColor());
+            g2d.setColor(knobFill);
             g2d.fill(arrowHead);
         }
     }

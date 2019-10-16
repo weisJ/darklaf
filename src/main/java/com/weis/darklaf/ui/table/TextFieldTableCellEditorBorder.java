@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.table;
 
-import com.weis.darklaf.ui.text.DarkTextFieldUI;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -13,10 +12,16 @@ import java.awt.*;
  */
 public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
 
+    protected Color borderColor;
+
+    public TextFieldTableCellEditorBorder() {
+        borderColor = UIManager.getColor("TextField.border.enabled");
+    }
+
     @Override
     public void paintBorder(@NotNull final Component c, @NotNull final Graphics g, final int x, final int y,
                             final int width, final int height) {
-        g.setColor(DarkTextFieldUI.getBorderColor(false, false, true, true));
+        g.setColor(borderColor);
         var table = DarkUIUtil.getParentOfType(JTable.class, c);
         if (table != null) {
             if (!table.getShowHorizontalLines()) {

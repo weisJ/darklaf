@@ -23,8 +23,6 @@
  */
 package com.weis.darklaf.ui.colorchooser;
 
-import com.weis.darklaf.defaults.DarkColors;
-
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -91,7 +89,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         recentSwatchPanel.addKeyListener(recentSwatchKeyListener);
 
         JPanel mainHolder = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        Border border = new LineBorder(DarkColors.get().getColorChooserSwatchBorderColor());
+        Border border = new LineBorder(UIManager.getColor("ColorChooser.swatchBorderColor"));
         swatchPanel.setBorder(border);
         mainHolder.add(swatchPanel);
 

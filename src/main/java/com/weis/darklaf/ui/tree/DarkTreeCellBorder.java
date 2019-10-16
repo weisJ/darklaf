@@ -23,10 +23,10 @@
  */
 package com.weis.darklaf.ui.tree;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
@@ -37,10 +37,16 @@ import java.awt.*;
  */
 public class DarkTreeCellBorder implements Border, UIResource {
 
+    protected Color borderColor;
+
+    public DarkTreeCellBorder() {
+        borderColor = UIManager.getColor("Tree.editorBorderColor");
+    }
+
     @Override
     public void paintBorder(final Component c, @NotNull final Graphics g, final int x,
                             final int y, final int width, final int height) {
-        g.setColor(DarkColors.get().getTreeEditorBorderColor());
+        g.setColor(borderColor);
         DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
     }
 

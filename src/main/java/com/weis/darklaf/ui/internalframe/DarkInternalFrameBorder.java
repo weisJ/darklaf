@@ -24,7 +24,6 @@
 package com.weis.darklaf.ui.internalframe;
 
 import com.weis.darklaf.components.border.DropShadowBorder;
-import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -38,8 +37,9 @@ import java.awt.*;
 public class DarkInternalFrameBorder extends DropShadowBorder implements UIResource {
 
     public DarkInternalFrameBorder() {
-        super(Color.BLACK, 9, .1f, 9,
+        super(null, 9, .1f, 9,
               true, true, true, true);
+        setShadowColor(UIManager.getColor("InternalFrame.borderShadowColor"));
     }
 
     @Override
@@ -49,7 +49,6 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
             return;
         }
         updateSize(c);
-        setShadowColor(DarkColors.get().getInternalFrameBorderShadowColor());
         super.paintBorder(c, graphics, x, y, width, height);
     }
 

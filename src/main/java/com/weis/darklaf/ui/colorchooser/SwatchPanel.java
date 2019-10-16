@@ -2,7 +2,6 @@ package com.weis.darklaf.ui.colorchooser;
 
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.tooltip.ToolTipContext;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -40,7 +39,7 @@ abstract class SwatchPanel extends JPanel {
         initColors();
         setToolTipText(""); // register for events
         setOpaque(true);
-        setBackground(DarkColors.get().getColorChooserSwatchGridColor());
+        setBackground(UIManager.getColor("ColorChooser.swatchGridColor"));
         setFocusable(true);
         setInheritsPopupMenu(true);
         addFocusListener(new FocusAdapter() {

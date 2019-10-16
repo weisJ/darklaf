@@ -2,7 +2,7 @@ package com.weis.darklaf.theme;
 
 import com.weis.darklaf.DarkLaf;
 import com.weis.darklaf.DarkMetalTheme;
-import com.weis.darklaf.util.LafUtil;
+import com.weis.darklaf.util.PropertyLoader;
 import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,39 +39,27 @@ public abstract class Theme {
 
     public void loadDefaults(@NotNull final Properties properties, final UIDefaults currentDefaults) {
         var name = getResourcePath() + getName() + "_defaults.properties";
-        putProperties(load(name), properties, currentDefaults);
+        PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 
     public void loadGlobals(@NotNull final Properties properties, final UIDefaults currentDefaults) {
-        putProperties(LafUtil.loadProperties(DarkLaf.class, "globals", "properties/"), properties,
-                      currentDefaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"),
+                                     properties, currentDefaults);
     }
 
     public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
         final String osPrefix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
-        putProperties(LafUtil.loadProperties(DarkLaf.class, osPrefix, "properties/platform/"), properties,
-                      currentDefaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, osPrefix, "properties/platform/"),
+                                     properties, currentDefaults);
     }
 
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         for (var property : UI_PROPERTIES) {
-            putProperties(LafUtil.loadProperties(DarkLaf.class, property, "properties/ui/"), properties,
-                          currentDefaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
+                                         properties, currentDefaults);
         }
     }
 
-    protected void putProperties(@NotNull final Properties properties, final Properties accumulator,
-                                 final UIDefaults currentDefaults) {
-        for (final String key : properties.stringPropertyNames()) {
-            final String value = properties.getProperty(key);
-            var parsed = LafUtil.parseValue(key, value, accumulator);
-            if (parsed != null) {
-                accumulator.put(key, parsed);
-            } else {
-                currentDefaults.remove(key);
-            }
-        }
-    }
 
     protected Properties load(final String name) {
         final Properties properties = new Properties();

@@ -303,8 +303,23 @@ public class TabFrame extends JComponent {
         if (a == Alignment.CENTER) {
             return;
         }
-        var tabComponent = createDefaultTab(title, icon, a, index);
-        insertTabComp(tabComponent, a, index);
+        insertTab(c, createDefaultTab(title, icon, a, index), a, index);
+    }
+
+    /**
+     * Insert a tab.
+     * A default tab component will be created.
+     *
+     * @param c     the popup to add.
+     * @param tab   the corresponding tab.
+     * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
+     * @param index the index to insert at.{@link TabFramePosition#getIndex()}
+     */
+    public void insertTab(@NotNull final TabFramePopup c, final TabFrameTab tab, final Alignment a, final int index) {
+        if (a == Alignment.CENTER) {
+            return;
+        }
+        insertTabComp(tab, a, index);
         compsForAlignment(a).add(index, c);
         c.setEnabled(false);
         c.setTabFrame(this);
@@ -659,6 +674,35 @@ public class TabFrame extends JComponent {
     }
 
     /**
+     * Move a tab to a new position.
+     *
+     * @param tabComp the tab to move.
+     * @param a       the new alignment position.{@link TabFramePosition#getAlignment()}
+     */
+    public void moveTab(@NotNull final TabFrameTab tabComp, final Alignment a) {
+        if (a == tabComp.getOrientation()) {
+            return;
+        }
+        boolean oldSelected = tabComp.isSelected();
+
+        var oldAlign = tabComp.getOrientation();
+        var oldIndex = tabComp.getIndex();
+
+        closeTab(oldAlign, oldIndex);
+
+        var comp = compsForAlignment(oldAlign).get(oldIndex);
+        removeTab(oldAlign, oldIndex);
+        addTab(comp, tabComp, a);
+
+        if (oldSelected) {
+            openTab(a, tabComp.getIndex());
+        }
+
+        doLayout();
+        getTabContainer(a).repaint();
+    }
+
+    /**
      * Remove a popup.
      *
      * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
@@ -675,35 +719,14 @@ public class TabFrame extends JComponent {
     }
 
     /**
-     * Move a tab to a new position.
+     * Add a popup.
      *
-     * @param tabComp the tab to move.
-     * @param a       the new alignment position.{@link TabFramePosition#getAlignment()}
+     * @param c   the popup.
+     * @param tab the corresponding tab.
+     * @param a   the alignment position.{@link TabFramePosition#getAlignment()}
      */
-    public void moveTab(@NotNull final TabFrameTab tabComp, final Alignment a) {
-        if (a == tabComp.getOrientation()) {
-            return;
-        }
-        boolean oldSelected = tabComp.isSelected();
-        var oldAlign = tabComp.getOrientation();
-        int index = tabComp.getIndex();
-        compsForAlignment(oldAlign).get(index).close();
-        removeTabComp(oldAlign, index);
-
-        var comp = compsForAlignment(oldAlign).remove(index);
-        int newIndex = tabsForAlignment(a).size();
-
-        insertTabComp(tabComp, a, newIndex);
-        compsForAlignment(a).add(newIndex, comp);
-        tabComp.setSelected(oldSelected);
-        notifySelectionChange(tabComp);
-
-        comp.setIndex(newIndex);
-        comp.setAlignment(a);
-
-        doLayout();
-        getTabContainer(oldAlign).repaint();
-        getTabContainer(a).repaint();
+    public void addTab(final TabFramePopup c, final TabFrameTab tab, final Alignment a) {
+        insertTab(c, tab, a, tabsForAlignment(a).size());
     }
 
     /*

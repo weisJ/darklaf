@@ -24,7 +24,6 @@
 package com.weis.darklaf.ui.combobox;
 
 import com.weis.darklaf.components.ArrowButton;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
@@ -65,6 +64,12 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     private Insets boxPadding;
     protected int arcSize;
     protected int borderSize;
+    protected Color background;
+    protected Color inactiveBackground;
+    protected Color inactiveForeground;
+    protected Color focusBorderColor;
+    protected Color borderColor;
+    protected Color inactiveBorderColor;
 
     @NotNull
     @Contract("_ -> new")
@@ -78,6 +83,12 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         comboBox.setBorder(this);
         boxPadding = UIManager.getInsets("ComboBox.padding");
         borderSize = UIManager.getInt("ComboBox.borderThickness");
+        background = UIManager.getColor("ComboBox.activeBackground");
+        inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
+        inactiveForeground = UIManager.getColor("ComboBox.disabledForeground");
+        focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
+        borderColor = UIManager.getColor("ComboBox.activeBorderColor");
+        inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
     }
 
     @Override
@@ -256,14 +267,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         return getMinimumSize(c);
     }
 
-    private Color getBackground() {
-        return comboBox.isEnabled() ? DarkColors.get().getComboBoxBackground()
-                                    : DarkColors.get().getComboBoxInactiveBackground();
-    }
-
     private Color getForeground() {
-        return comboBox.isEnabled() ? comboBox.getForeground()
-                                    : DarkColors.get().getComboBoxInactiveForeground();
+        return comboBox.isEnabled() ? comboBox.getForeground() : inactiveForeground;
     }
 
     @Override
@@ -310,7 +315,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         if (!isTableCellEditor && !isTreeCellEditor) {
             if (hasFocus) {
                 DarkUIUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
-                g.setColor(DarkColors.get().getComboBoxFocusBorderColor());
+                g.setColor(focusBorderColor);
             } else {
                 g.setColor(getBorderColor());
             }
@@ -336,6 +341,10 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
 
         g.translate(-x, -y);
         config.restore();
+    }
+
+    private Color getBackground() {
+        return comboBox.isEnabled() ? background : inactiveBackground;
     }
 
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
@@ -379,8 +388,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     }
 
     private Color getBorderColor() {
-        return comboBox.isEnabled() ? DarkColors.get().getComboBoxBorderColor()
-                                    : DarkColors.get().getComboBoxInactiveBorderColor();
+        return comboBox.isEnabled() ? borderColor : inactiveBorderColor;
     }
 
     @Override

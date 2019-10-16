@@ -24,7 +24,6 @@
 package com.weis.darklaf.ui.radiobutton;
 
 import com.weis.darklaf.decorators.MouseClickListener;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.menu.DarkMenuItemUIBase;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -59,8 +58,8 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     public void installUI(final JComponent c) {
         super.installUI(c);
         acceleratorFont = UIManager.getFont("MenuItem.font");
-        acceleratorForeground = DarkColors.get().getMenuItemAcceleratorForeground();
-        acceleratorSelectionForeground = DarkColors.get().getMenuItemAcceleratorSelectionForeground();
+        acceleratorForeground = UIManager.getColor("MenuItem.foreground");
+        acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
         c.putClientProperty("RadioButtonMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 

@@ -1,7 +1,6 @@
 package com.weis.darklaf.ui.toolbar;
 
 import com.weis.darklaf.decorators.MouseResponder;
-import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +23,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     private Dimension verticalDim = new Dimension(0, 0);
     private Dimension horizontalDim = new Dimension(0, 0);
     private Timer timer = new Timer(5, e -> dragTo());
+    protected Color background;
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -46,6 +46,12 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         previewPanel.setToolBar(toolBar);
         dragWindow = createDragWindow(toolBar);
         floatingToolBar = createFloatingWindow(toolBar);
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        background = UIManager.getColor("ToolBar.background");
     }
 
     @Override
@@ -271,7 +277,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
-        g.setColor(DarkColors.get().getToolBarBackground());
+        g.setColor(background);
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }
 

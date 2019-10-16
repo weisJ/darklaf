@@ -24,18 +24,12 @@
 package com.weis.darklaf.ui.filechooser;
 
 import com.weis.darklaf.components.border.MutableLineBorder;
-import com.weis.darklaf.defaults.DarkColors;
 
-import java.awt.*;
+import javax.swing.*;
 
 public class DarkFileChooserListViewBorder extends MutableLineBorder.UIResource {
-
     public DarkFileChooserListViewBorder() {
-        super(1, 1, 1, 1, Color.BLACK);
-    }
-
-    @Override
-    protected Color getColor() {
-        return DarkColors.get().getFileChooserListViewBorderColor();
+        super(1, 1, 1, 1, null);
+        setColor(UIManager.getColor("FileChooser.borderColor"));
     }
 }

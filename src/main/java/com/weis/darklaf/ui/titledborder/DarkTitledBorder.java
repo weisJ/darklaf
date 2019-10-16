@@ -24,19 +24,14 @@
 package com.weis.darklaf.ui.titledborder;
 
 import com.weis.darklaf.components.border.MutableLineBorder;
-import com.weis.darklaf.defaults.DarkColors;
 
+import javax.swing.*;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
 public class DarkTitledBorder extends MutableLineBorder implements UIResource {
 
     public DarkTitledBorder() {
-        super(1, 0, 0, 0, DarkColors.get().getTitledBorderBorderColor());
-    }
-
-    @Override
-    protected Color getColor() {
-        return DarkColors.get().getTitledBorderBorderColor();
+        super(1, 0, 0, 0, null);
+        setColor(UIManager.getColor("TitledBorder.borderColor"));
     }
 }

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.weis.darklaf.components;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.colorchooser.ColorListener;
 import com.weis.darklaf.util.GraphicsUtil;
 import com.weis.darklaf.util.TimerUtil;
@@ -28,10 +27,12 @@ public class DefaultColorPipette extends ColorPipetteBase {
     private final Timer timer;
     private Graphics2D zoomGraphics;
     private BufferedImage zoomImage;
+    protected Color borderColor;
 
     public DefaultColorPipette(@NotNull final JComponent parent, @NotNull final ColorListener colorListener) {
         super(parent, colorListener);
         timer = TimerUtil.createNamedTimer("DefaultColorPipette", 5, e -> updatePipette());
+        borderColor = UIManager.getColor("ColorChooser.pipetteBorderColor");
     }
 
     protected void updatePipette() {
@@ -160,7 +161,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
     }
 
     protected Color getPipetteBorderColor() {
-        return DarkColors.get().getColorChooserPipetteBorderColor();
+        return borderColor;
     }
 
     protected static class DefaultPickerWindow extends PickerWindow {

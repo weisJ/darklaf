@@ -23,12 +23,10 @@
  */
 package com.weis.darklaf;
 
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.defaults.DarkDefaults;
-import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.platform.windows.JNIDecorations;
 import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.ui.menu.DarkPopupMenuUI;
+import com.weis.darklaf.util.PropertyLoader;
 import com.weis.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +40,8 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Properties;
@@ -51,7 +51,7 @@ import java.util.logging.Logger;
 /**
  * @author Jannis Weis
  */
-public class DarkLaf extends BasicLookAndFeel {
+public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener {
 
 
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
@@ -256,6 +256,18 @@ public class DarkLaf extends BasicLookAndFeel {
     @Override
     public void initialize() {
         call("initialize");
+        PropertyLoader.reset();
+        UIManager.addPropertyChangeListener(this);
+    }
+
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        if ("lookAndFeel".equals(evt.getPropertyName())) {
+            if (UIManager.getLookAndFeel() == this) {
+                PropertyLoader.finish();
+            }
+            UIManager.removePropertyChangeListener(this);
+        }
     }
 
     @Override
@@ -268,9 +280,6 @@ public class DarkLaf extends BasicLookAndFeel {
                 ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
             }
         }
-        DarkColors.uninstall();
-        DarkIcons.uninstall();
-        DarkDefaults.uninstall();
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})

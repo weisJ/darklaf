@@ -70,29 +70,29 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         PopupContainer bottomRightPanel = new PopupContainer();
         PopupContainer leftTopPanel = new PopupContainer();
 
-        rightSplitter = new ToggleSplitPane("rightSplitter");
+        rightSplitter = new TabFrameSplitPane("rightSplitter");
         rightSplitter.setOrientation(JSplitPane.VERTICAL_SPLIT);
         rightSplitter.setTopComponent(rightTopPanel);
         rightSplitter.setBottomComponent(rightBottomPanel);
 
-        leftSplitter = new ToggleSplitPane("leftSplitter");
+        leftSplitter = new TabFrameSplitPane("leftSplitter");
         leftSplitter.setOrientation(JSplitPane.VERTICAL_SPLIT);
         leftSplitter.setTopComponent(leftTopPanel);
         leftSplitter.setBottomComponent(leftBottomPanel);
 
-        topSplitter = new ToggleSplitPane("topSplitter");
+        topSplitter = new TabFrameSplitPane("topSplitter");
         topSplitter.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         topSplitter.setLeftComponent(topLeftPanel);
         topSplitter.setRightComponent(topRightPanel);
 
-        bottomSplitter = new ToggleSplitPane("bottomSplitter");
+        bottomSplitter = new TabFrameSplitPane("bottomSplitter");
         bottomSplitter.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         bottomSplitter.setLeftComponent(bottomLeftPanel);
         bottomSplitter.setRightComponent(bottomRightPanel);
 
 
-        topSplit = new ToggleSplitPane("topSplit");
-        bottomSplit = new ToggleSplitPane("bottomSplit");
+        topSplit = new TabFrameSplitPane("topSplit");
+        bottomSplit = new TabFrameSplitPane("bottomSplit");
         topSplit.setOrientation(JSplitPane.VERTICAL_SPLIT);
         bottomSplit.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
@@ -100,8 +100,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         topSplit.setBottomComponent(bottomSplit);
         bottomSplit.setBottomComponent(bottomSplitter);
 
-        leftSplit = new ToggleSplitPane("leftSplit");
-        rightSplit = new ToggleSplitPane("rightSplit");
+        leftSplit = new TabFrameSplitPane("leftSplit");
+        rightSplit = new TabFrameSplitPane("rightSplit");
         leftSplit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         rightSplit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -444,6 +444,12 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
             this.splitterDisable = splitterDisable;
             this.splitDisable = splitDisable;
             this.splitterPeerDisable = splitterPeerDisable;
+        }
+    }
+
+    protected static class TabFrameSplitPane extends ToggleSplitPane implements TabFrameControl {
+        protected TabFrameSplitPane(final String name) {
+            super(name);
         }
     }
 }

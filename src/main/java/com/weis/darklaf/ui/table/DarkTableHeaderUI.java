@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.table;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +41,8 @@ import java.awt.*;
 public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
 
     private static final int HEADER_HEIGHT = 26;
+    protected Color borderColor;
+    protected Color background;
 
     @NotNull
     @Contract("_ -> new")
@@ -53,7 +54,11 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     public void installUI(final JComponent c) {
         super.installUI(c);
         var dim = header.getPreferredSize();
-        header.setPreferredSize(new Dimension(dim.width, Math.max(dim.height, HEADER_HEIGHT)));
+        int headerHeight = UIManager.getInt("TableHeader.height");
+        if (headerHeight < 0) {
+            headerHeight = HEADER_HEIGHT;
+        }
+        header.setPreferredSize(new Dimension(dim.width, Math.max(dim.height, headerHeight)));
         if (header.getDefaultRenderer() instanceof DefaultTableCellRenderer) {
             DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) header.getDefaultRenderer();
             renderer.setHorizontalAlignment(SwingConstants.LEADING);
@@ -63,6 +68,8 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        background = UIManager.getColor("TableHeader.background");
+        borderColor = UIManager.getColor("TableHeader.borderColor");
         LookAndFeel.installBorder(header, "TableHeader.border");
     }
 
@@ -233,11 +240,11 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     }
 
     protected Color getHeaderBackground() {
-        return DarkColors.get().getTableHeaderBackground();
+        return background;
     }
 
     protected Color getBorderColor() {
-        return DarkColors.get().getTableHeaderBorderColor();
+        return borderColor;
     }
 
     protected boolean isScrollPaneRtl() {

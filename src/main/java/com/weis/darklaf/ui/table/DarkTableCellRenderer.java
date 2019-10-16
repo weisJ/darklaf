@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.table;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -60,8 +59,8 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         }
 
         boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
-        Color alternativeRowColor = DarkColors.get().getTableAlternativeBackground();
-        Color normalColor = DarkColors.get().getTableBackground();
+        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
+        Color normalColor = UIManager.getColor("Table.background");
         if (alternativeRow) {
             if (!isSelected) {
                 if (row % 2 == 1) {

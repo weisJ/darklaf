@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.tabbedpane;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.LazyActionMap;
 import org.jetbrains.annotations.NotNull;
@@ -219,6 +218,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected boolean isRunsDirty;
     protected boolean calculatedBaseline;
+
+    protected Color selectedForeground;
 
     // UI Installation/De-installation
     protected int baseline;
@@ -475,6 +476,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         tabRunOverlay = UIManager.getInt("TabbedPane.tabRunOverlay");
         tabsOpaque = UIManager.getBoolean("TabbedPane.tabsOpaque");
         contentOpaque = UIManager.getBoolean("TabbedPane.contentOpaque");
+        selectedForeground = UIManager.getColor("TabbedPane.selectedForeground");
         Object opaque = UIManager.get("TabbedPane.opaque");
         if (opaque == null) {
             opaque = Boolean.FALSE;
@@ -1174,7 +1176,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
                 Color fg = tabPane.getForegroundAt(tabIndex);
                 if (isSelected && (fg instanceof UIResource)) {
-                    Color selectedFG = DarkColors.get().getTabbedPaneSelectedForeground();
+                    Color selectedFG = selectedForeground;
                     if (selectedFG != null) {
                         fg = selectedFG;
                     }

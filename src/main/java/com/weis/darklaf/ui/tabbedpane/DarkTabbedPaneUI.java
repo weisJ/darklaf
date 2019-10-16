@@ -1,8 +1,6 @@
 package com.weis.darklaf.ui.tabbedpane;
 
 import com.weis.darklaf.components.UIResourceWrapper;
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
@@ -57,6 +55,19 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected boolean dragging;
     protected Rectangle dragRect = new Rectangle();
 
+    protected Color dragBorderColor;
+    protected Color dropBackground;
+    protected Color tabBorderColor;
+    protected Color accent;
+    protected Color focusAccent;
+    protected Color selectedHoverBackground;
+    protected Color selectedBackground;
+    protected Color hoverBackground;
+    protected Color tabAreaBackground;
+
+    protected Icon moreTabsIcon;
+    protected Icon newTabIcon;
+
 
     protected DarkScrollHandler scrollHandler;
     protected Component leadingComp;
@@ -73,7 +84,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Color getDragBorderColor() {
-        return DarkColors.get().getTabbedPaneDragBorderColor();
+        return dragBorderColor;
     }
 
     protected Action getNewTabAction() {
@@ -128,6 +139,19 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        dragBorderColor = UIManager.getColor("TabbedPane.dragBorderColor");
+        dropBackground = UIManager.getColor("TabbedPane.dropFill");
+        tabBorderColor = UIManager.getColor("TabbedPane.tabBorderColor");
+        accent = UIManager.getColor("TabbedPane.accent");
+        focusAccent = UIManager.getColor("TabbedPane.accentFocus");
+        selectedHoverBackground = UIManager.getColor("TabbedPane.selectedHoverBackground");
+        selectedBackground = UIManager.getColor("TabbedPane.selectedBackground");
+        hoverBackground = UIManager.getColor("TabbedPane.hoverBackground");
+        tabAreaBackground = UIManager.getColor("TabbedPane.tabAreaBackground");
+
+        moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
+        newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
+
         var ins = tabPane.getClientProperty("JTabbedPane.tabAreaInsets");
         if (ins instanceof Insets) {
             tabAreaInsets = (Insets) ins;
@@ -259,9 +283,13 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     @Override
     protected void paintTabArea(@NotNull final Graphics g, final int tabPlacement, final int selectedIndex) {
-        g.setColor(DarkColors.get().getTabbedPaneTabAreaBackground());
+        g.setColor(getTabAreaBackground());
         g.fillRect(0, 0, tabPane.getWidth(), maxTabHeight - 1);
         super.paintTabArea(g, tabPlacement, selectedIndex);
+    }
+
+    protected Color getTabAreaBackground() {
+        return tabAreaBackground;
     }
 
     protected void paintTabAreaBorder(@NotNull final Graphics g, final int tabPlacement,
@@ -373,7 +401,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     protected Color getDropColor() {
         if (scrollableTabLayoutEnabled()) {
-            return DarkColors.get().getTabbedPaneDropBackground();
+            return dropBackground;
         } else {
             return getTabBackgroundColor(0, false, true);
         }
@@ -457,13 +485,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         return insets;
     }
 
-    protected Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
+    public Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
         if (isSelected) {
-            return hover ? DarkColors.get().getTabbedPaneTabSelectedHoverBackground()
-                         : DarkColors.get().getTabbedPaneTabSelectedBackground();
+            return hover ? selectedHoverBackground : selectedBackground;
         } else {
-            return hover ? DarkColors.get().getTabbedPaneTabHoverBackground()
-                         : tabPane.getBackgroundAt(tabIndex);
+            return hover ? hoverBackground : tabPane.getBackgroundAt(tabIndex);
         }
     }
 
@@ -477,7 +503,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Color getTabBorderColor() {
-        return DarkColors.get().getTabbedPaneTabBorderColor();
+        return tabBorderColor;
     }
 
     protected DarkScrollHandler getScrollHandler() {
@@ -530,12 +556,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Color getAccentColor(final boolean focus) {
-        return focus ? DarkColors.get().getTabbedPaneFocusAccentColor()
-                     : DarkColors.get().getTabbedPaneAccentColor();
+        return focus ? focusAccent : accent;
     }
 
     protected Icon getMoreTabsIcon() {
-        return DarkIcons.get().getTabbedPaneMoreTabs();
+        return moreTabsIcon;
     }
 
     protected void layoutLeadingComponent(final Component comp, final int tabWidth, final int tabHeight,
@@ -646,7 +671,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     public Icon getNewTabIcon() {
-        return DarkIcons.get().getTabbedPaneNewTabs();
+        return newTabIcon;
     }
 
     public JComponent createNewTabButton() {

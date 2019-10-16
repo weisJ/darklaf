@@ -66,12 +66,11 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapp
     }
 
     // Hit test (HTTOPLEFT, ... HTBOTTOMRIGHT)
-    LRESULT hitTests[3][3] =
-        {
-            {HTTOPLEFT, HTTOP, HTTOPRIGHT},
-            {HTLEFT, HTNOWHERE, HTRIGHT},
-            {HTBOTTOMLEFT, HTBOTTOM, HTBOTTOMRIGHT},
-        };
+    LRESULT hitTests[3][3] = {
+        {HTTOPLEFT, HTTOP, HTTOPRIGHT},
+        {HTLEFT, HTNOWHERE, HTRIGHT},
+        {HTBOTTOMLEFT, HTBOTTOM, HTBOTTOMRIGHT},
+    };
     LRESULT hit = hitTests[uRow][uCol];
     if (hit == HTNOWHERE || !wrapper->resizable)
     {
@@ -105,6 +104,18 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     {
         return HitTestNCA(hwnd, wParam, lParam, wrapper);
     }
+    else if (uMsg == WM_GETMINMAXINFO)
+    {
+        MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
+        RECT max_rect;
+        SystemParametersInfo(SPI_GETWORKAREA, 0, &max_rect, 0);
+        min_max_info->ptMaxSize.x = max_rect.right - max_rect.left;
+        min_max_info->ptMaxSize.y = max_rect.bottom - max_rect.top;
+        min_max_info->ptMaxPosition.x = max_rect.left;
+        min_max_info->ptMaxPosition.y = max_rect.top;
+        return 0;
+    }
+
     return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
 }
 

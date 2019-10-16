@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.tabbedpane;
 
-import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -37,7 +36,7 @@ public class ScrollableTabPanel extends JPanel implements UIResource {
         super(null);
         this.ui = ui;
         setOpaque(ui.tabPane.isOpaque());
-        Color bgColor = DarkColors.get().getTabbedPaneTabAreaBackground();
+        Color bgColor = UIManager.getColor("TabbedPane.tabAreaBackground");
         if (bgColor == null) {
             bgColor = ui.tabPane.getBackground();
         }

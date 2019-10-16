@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.internalframe;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.ui.rootpane.TitlePaneIcon;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -87,20 +86,20 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         maxIcon = maximizeIcon;
         iconIcon = iconifyIcon;
 
-        selectedTitleColor = DarkColors.get().getInternalFrameTitleSelectedBackground();
-        selectedTextColor = DarkColors.get().getInternalFrameTitleSelectedForeground();
-        notSelectedTitleColor = DarkColors.get().getInternalFrameTitleBackground();
-        notSelectedTextColor = DarkColors.get().getInternalFrameTitleForeground();
+        selectedTitleColor = UIManager.getColor("InternalFrameTitlePane.selectedBackgroundColor");
+        selectedTextColor = UIManager.getColor("InternalFrameTitlePane.selectedTextForeground");
+        notSelectedTitleColor = UIManager.getColor("InternalFrameTitlePane.backgroundColor");
+        notSelectedTextColor = UIManager.getColor("InternalFrameTitlePane.textForeground");
 
-        selectedButtonColor = DarkColors.get().getInternalFrameSelectedButtonBackground();
-        selectedButtonColorHover = DarkColors.get().getInternalFrameSelectedButtonHoverBackground();
-        selectedButtonColorClick = DarkColors.get().getInternalFrameSelectedButtonClickBackground();
+        selectedButtonColor = UIManager.getColor("InternalFrameTitlePane.selectedButtonColor");
+        selectedButtonColorHover = UIManager.getColor("InternalFrameTitlePane.selectedButtonHoverColor");
+        selectedButtonColorClick = UIManager.getColor("InternalFrameTitlePane.selectedButtonClickColor");
 
-        buttonColor = DarkColors.get().getInternalFrameButtonBackground();
-        buttonColorHover = DarkColors.get().getInternalFrameButtonHoverBackground();
-        buttonColorClick = DarkColors.get().getInternalFrameButtonClickBackground();
+        buttonColor = UIManager.getColor("InternalFrameTitlePane.buttonColor");
+        buttonColorHover = UIManager.getColor("InternalFrameTitlePane.buttonHoverColor");
+        buttonColorClick = UIManager.getColor("InternalFrameTitlePane.buttonClickColor");
 
-        border = DarkColors.get().getInternalFrameBorderColor();
+        border = UIManager.getColor("InternalFrameTitlePane.borderColor");
     }
 
     @Override

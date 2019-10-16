@@ -24,7 +24,6 @@
 package com.weis.darklaf.ui.colorchooser;
 
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.ColorUtil;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
@@ -51,6 +50,9 @@ public class ColorWheel extends JComponent {
     private Color myColor;
     private int myOpacity;
     private boolean pressedInside;
+    protected Color dropFill;
+    protected Color dropBorder;
+    protected Color background;
 
     public ColorWheel() {
         setOpaque(true);
@@ -105,6 +107,18 @@ public class ColorWheel extends JComponent {
                 pressedInside = false;
             }
         });
+
+        background = UIManager.getColor("ColorChooser.colorWheelBackground");
+        dropFill = UIManager.getColor("ColorChooser.colorWheelDropBackgroundColor");
+        dropBorder = UIManager.getColor("ColorChooser.colorWheelDropBorderColor");
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        background = UIManager.getColor("ColorChooser.colorWheelBackground");
+        dropFill = UIManager.getColor("ColorChooser.colorWheelDropBackgroundColor");
+        dropBorder = UIManager.getColor("ColorChooser.colorWheelDropBorderColor");
     }
 
     private void setHSBValue(final float h, final float s, final float b, final int opacity) {
@@ -171,7 +185,7 @@ public class ColorWheel extends JComponent {
                                     _size - BORDER_SIZE * 2);
         }
 
-        g2d.setColor(DarkColors.get().getPanelBackground());
+        g2d.setColor(background);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
 
@@ -188,9 +202,9 @@ public class ColorWheel extends JComponent {
         final int x = (int) (mx + arcw * Math.cos(th));
         final int y = (int) (my - arch * Math.sin(th));
 
-        g2d.setColor(DarkColors.get().getColorChooserColorWheelDropBackground());
+        g2d.setColor(dropFill);
         g2d.fillRect(x - 2, y - 2, 4, 4);
-        g2d.setColor(DarkColors.get().getColorChooserColorWheelDropBorderColor());
+        g2d.setColor(dropBorder);
         DarkUIUtil.drawRect(g, x - 2, y - 2, 4, 4, 1);
     }
 

@@ -27,7 +27,6 @@ package com.weis.darklaf.ui.colorchooser;
 import com.weis.darklaf.color.DarkColorModel;
 import com.weis.darklaf.components.DefaultColorPipette;
 import com.weis.darklaf.decorators.AncestorAdapter;
-import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.util.ColorUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +59,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     private final boolean doneInit;
     private Color currentColor;
     private boolean isChanging;
+    private Icon pipetteIcon;
+    private Icon pipetteHoverIcon;
 
     @Contract("null -> fail")
     public DarkColorChooserPanel(final DarkColorModel... colorModels) {
@@ -70,6 +71,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         previewComponent = new ColorPreviewComponent();
         colorWheelPanel = new ColorWheelPanel(this, true, true);
         pipette = new DefaultColorPipette(this, colorWheelPanel::setColor);
+        pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
+        pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
 
         formatBox = new JComboBox<>(colorModels);
         formatBox.addActionListener(e -> {
@@ -273,11 +276,11 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     protected Icon getPipetteIcon() {
-        return DarkIcons.get().getColorChooserPipette();
+        return pipetteIcon;
     }
 
     protected Icon getPipetteRolloverIcon() {
-        return DarkIcons.get().getColorChooserPipetteHover();
+        return pipetteHoverIcon;
     }
 
     @Override

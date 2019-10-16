@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.colorchooser;
 
-import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,9 +11,11 @@ import java.awt.*;
  */
 final class ColorPreviewComponent extends JComponent {
     private Color myColor;
+    protected Color borderColor;
 
     ColorPreviewComponent() {
         setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
+        borderColor = UIManager.getColor("ColorChooser.previewBorderColor");
     }
 
     public void setColor(final Color c) {
@@ -36,7 +37,7 @@ final class ColorPreviewComponent extends JComponent {
         g.setColor(myColor);
         g.fillRect(i.left + 1, i.top + 1, width - 2, height - 2);
 
-        g.setColor(DarkColors.get().getColorChooserPreviewBorderColor());
+        g.setColor(borderColor);
         g.fillRect(i.left, i.top, width, 1);
         g.fillRect(i.left, i.top, 1, height);
         g.fillRect(i.left + width - 1, i.top, 1, height);

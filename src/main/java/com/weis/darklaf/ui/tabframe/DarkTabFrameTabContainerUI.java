@@ -26,7 +26,6 @@ package com.weis.darklaf.ui.tabframe;
 import com.weis.darklaf.components.tabframe.TabFrame;
 import com.weis.darklaf.components.tabframe.TabFrameTabContainer;
 import com.weis.darklaf.decorators.HoverListener;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.panel.DarkPanelUI;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
@@ -134,8 +133,8 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     protected void installDefaults(final JPanel p) {
         super.installDefaults(p);
         tabContainer.setOpaque(true);
-        selectedColor = DarkColors.get().getTabFrameTabSelectedBackground();
-        hoverColor = DarkColors.get().getTabFrameTabHoverBackground();
+        selectedColor = UIManager.getColor("TabFrameTab.selectedBackground");
+        hoverColor = UIManager.getColor("TabFrameTab.hoverBackground");
     }
 
     protected void uninstallAccelerator(final TabFrame tabFrame) {

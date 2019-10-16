@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.toolbar;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.LazyActionMap;
 import sun.swing.DefaultLookup;
@@ -323,18 +322,18 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                                          "ToolBar.font");
         // Toolbar specific defaults
         if (dockingColor == null || dockingColor instanceof UIResource) {
-            dockingColor = DarkColors.get().getToolBarDockingBackground();
+            dockingColor = UIManager.getColor("ToolBar.dockingBackground");
         }
         if (floatingColor == null || floatingColor instanceof UIResource) {
-            floatingColor = DarkColors.get().getToolBarFloatingBackground();
+            floatingColor = UIManager.getColor("ToolBar.floatingBackground");
         }
         if (dockingBorderColor == null ||
                 dockingBorderColor instanceof UIResource) {
-            dockingBorderColor = DarkColors.get().getToolBarDockingBorderColor();
+            dockingBorderColor = UIManager.getColor("ToolBar.dockingForeground");
         }
         if (floatingBorderColor == null ||
                 floatingBorderColor instanceof UIResource) {
-            floatingBorderColor = DarkColors.get().getToolBarFloatingBorderColor();
+            floatingBorderColor = UIManager.getColor("ToolBar.floatingForeground");
         }
 
         // ToolBar rollover button borders

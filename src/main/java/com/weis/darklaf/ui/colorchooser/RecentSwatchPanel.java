@@ -1,6 +1,5 @@
 package com.weis.darklaf.ui.colorchooser;
 
-import com.weis.darklaf.defaults.DarkColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ class RecentSwatchPanel extends SwatchPanel {
 
 
     protected void initColors() {
-        defaultRecentColor = DarkColors.get().getColorChooserDefaultRecentColor();
+        defaultRecentColor = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor");
         int numColors = numSwatches.width * numSwatches.height;
 
         colors = new Color[numColors];

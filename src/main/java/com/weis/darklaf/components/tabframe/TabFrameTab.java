@@ -105,4 +105,5 @@ public interface TabFrameTab {
      * @param tabFrame the TabFrame.
      */
     void setTabFrame(TabFrame tabFrame);
+
 }

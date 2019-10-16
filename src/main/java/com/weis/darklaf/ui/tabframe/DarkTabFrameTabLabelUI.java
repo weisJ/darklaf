@@ -27,7 +27,6 @@ import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.tabframe.TabFrame;
 import com.weis.darklaf.components.tabframe.TabFrameTabLabel;
 import com.weis.darklaf.decorators.HoverListener;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.icons.RotatableIcon;
 import com.weis.darklaf.ui.label.DarkLabelUI;
 import com.weis.darklaf.util.DarkUIUtil;
@@ -132,11 +131,12 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         super.installDefaults(c);
         tabComponent.setFont(UIManager.getFont("TabFrameTab.font"));
         tabComponent.setOpaque(true);
-        defaultFontColor = DarkColors.get().getTabFrameTabForeground();
-        selectedColor = DarkColors.get().getTabFrameTabSelectedBackground();
-        hoverColor = DarkColors.get().getTabFrameTabHoverBackground();
-        selectedFontColor = DarkColors.get().getTabFrameTabSelectedForeground();
+        defaultFontColor = UIManager.getColor("TabFrameTab.foreground");
+        selectedColor = UIManager.getColor("TabFrameTab.selectedBackground");
+        hoverColor = UIManager.getColor("TabFrameTab.hoverBackground");
+        selectedFontColor = UIManager.getColor("TabFrameTab.selectedForeground");
         LookAndFeel.installBorder(c, "TabFrameTab.border");
+        tabComponent.setComponentPopupMenu(new DarkTabFrameComponentPopupMenu(tabComponent));
     }
 
     @Override

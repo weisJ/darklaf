@@ -25,8 +25,6 @@ package com.weis.darklaf.ui.spinner;
 
 import com.weis.darklaf.components.ArrowButton;
 import com.weis.darklaf.decorators.LayoutManagerDelegate;
-import com.weis.darklaf.defaults.DarkColors;
-import com.weis.darklaf.defaults.DarkIcons;
 import com.weis.darklaf.icons.UIAwareIcon;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
@@ -80,11 +78,33 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     private JComponent editor;
     private Color compColor;
     private JButton prevButton;
+    protected Color background;
+    protected Color inactiveBackground;
+    protected int arc;
+    protected int borderSize;
+    protected UIAwareIcon arrowDownIcon;
+    protected UIAwareIcon arrowUpIcon;
+    protected UIAwareIcon plusIcon;
+    protected UIAwareIcon minusIcon;
 
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSpinnerUI();
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        arc = UIManager.getInt("Spinner.arc");
+        borderSize = UIManager.getInt("Spinner.borderThickness");
+        background = UIManager.getColor("Spinner.activeBackground");
+        inactiveBackground = UIManager.getColor("Spinner.inactiveBackground");
+
+        arrowDownIcon = (UIAwareIcon) UIManager.getIcon("ArrowButton.down.icon");
+        arrowUpIcon = (UIAwareIcon) UIManager.getIcon("ArrowButton.up.icon");
+        minusIcon = (UIAwareIcon) UIManager.getIcon("Spinner.minus.icon");
+        plusIcon = (UIAwareIcon) UIManager.getIcon("Spinner.plus.icon");
     }
 
     @Override
@@ -118,7 +138,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                 super.layoutContainer(parent);
                 if (editor != null && !spinner.getComponentOrientation().isLeftToRight()) {
                     var bounds = editor.getBounds();
-                    int borderSize = DarkSpinnerBorder.getBorderSize();
                     bounds.x += borderSize;
                     bounds.width -= borderSize;
                     editor.setBounds(bounds);
@@ -188,18 +207,15 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
     protected SpinnerIcon getArrowIcon(final int direction) {
         if (direction == SwingConstants.SOUTH) {
-            return new SpinnerIcon(spinner, DarkIcons.get().getSpinnerArrowDown(),
-                                   DarkIcons.get().getSpinnerMathDown());
+            return new SpinnerIcon(spinner, arrowDownIcon, minusIcon);
         } else {
-            return new SpinnerIcon(spinner, DarkIcons.get().getSpinnerArrowUp(),
-                                   DarkIcons.get().getSpinnerMathUp());
+            return new SpinnerIcon(spinner, arrowUpIcon, plusIcon);
         }
     }
 
     @Override
     public void paint(final Graphics g, @NotNull final JComponent c) {
-        int size = DarkSpinnerBorder.getBorderSize();
-        int arc = DarkSpinnerBorder.getArc();
+        int size = borderSize;
         int width = c.getWidth();
         int height = c.getHeight();
         JComponent editor = spinner.getEditor();
@@ -235,9 +251,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
     }
 
-    public static Color getBackground(final JComponent c) {
-        return c == null || !c.isEnabled() ? DarkColors.get().getSpinnerInactiveBackground()
-                                           : DarkColors.get().getSpinnerBackground();
+    protected Color getBackground(final JComponent c) {
+        return c == null || !c.isEnabled() ? inactiveBackground : background;
     }
 
     protected static boolean isTableCellEditor(@NotNull final Component c) {
@@ -263,12 +278,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         } else {
             rect.subtract(iconRect);
         }
-        g.setColor(getSpinBackground());
+        g.setColor(getBackground(spinner));
         g.fill(rect);
-    }
-
-    public static Color getSpinBackground() {
-        return getBackground(null);
     }
 
     @Override

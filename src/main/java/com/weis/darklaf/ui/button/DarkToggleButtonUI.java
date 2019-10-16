@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.button;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -59,6 +58,13 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
     };
     protected Dimension sliderSize;
+    protected Color background;
+    protected Color backgroundInactive;
+    protected Color focusBorderColor;
+    protected Color borderColor;
+    protected Color inactiveBorderColor;
+    protected Color sliderColor;
+    protected Color inactiveSliderColor;
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -70,6 +76,13 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
         sliderSize = UIManager.getDimension("ToggleButton.sliderSize");
+        background = UIManager.getColor("ToggleButton.activeFillColor");
+        backgroundInactive = UIManager.getColor("ToggleButton.inactiveFillColor");
+        focusBorderColor = UIManager.getColor("ToggleButton.focusedSliderBorderColor");
+        borderColor = UIManager.getColor("ToggleButton.sliderBorderColor");
+        inactiveBorderColor = UIManager.getColor("ToggleButton.disabledSliderBorderColor");
+        sliderColor = UIManager.getColor("ToggleButton.sliderColor");
+        inactiveSliderColor = UIManager.getColor("ToggleButton.disabledSliderColor");
     }
 
     @Override
@@ -90,7 +103,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         if (isSlider(c)) {
             Insets i = b.getInsets();
             var bounds = getSliderBounds(c);
-            viewRect.x = bounds.x + bounds.width + DarkButtonBorder.getBorderSize();
+            viewRect.x = bounds.x + bounds.width + borderSize;
             viewRect.y = i.top;
             viewRect.width = width - (i.right + viewRect.x);
             viewRect.height = height - (i.bottom + viewRect.y);
@@ -130,9 +143,9 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     protected Color getBackgroundColor(@NotNull final JComponent c) {
         if (c instanceof JToggleButton && c.isEnabled()) {
             if (((JToggleButton) c).isSelected()) {
-                return DarkColors.get().getToggleButtonBackground();
+                return background;
             } else {
-                return DarkColors.get().getToggleButtonInactiveBackground();
+                return backgroundInactive;
             }
         }
         return super.getBackgroundColor(c);
@@ -152,7 +165,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     public Dimension getPreferredSize(final JComponent c) {
         Dimension d = super.getPreferredSize(c);
         if (isSlider(c)) {
-            d.width += sliderSize.width + DarkButtonBorder.getBorderSize();
+            d.width += sliderSize.width + borderSize;
         }
         return d;
     }
@@ -198,16 +211,14 @@ public class DarkToggleButtonUI extends DarkButtonUI {
                                           bounds.height, bounds.height).contains(x, y);
     }
 
-    private static Color getToggleBorderColor(@NotNull final AbstractButton b) {
+    protected Color getToggleBorderColor(@NotNull final AbstractButton b) {
         if (b.hasFocus()) {
-            return DarkColors.get().getToggleButtonFocusBorderColor();
+            return focusBorderColor;
         }
-        return b.isEnabled() ? DarkColors.get().getToggleButtonBorderColor()
-                             : DarkColors.get().getToggleButtonInactiveBorderColor();
+        return b.isEnabled() ? borderColor : inactiveBorderColor;
     }
 
-    private static Color getSliderColor(@NotNull final AbstractButton b) {
-        return b.isEnabled() ? DarkColors.get().getToggleButtonSliderColor()
-                             : DarkColors.get().getToggleButtonInactiveSliderColor();
+    protected Color getSliderColor(@NotNull final AbstractButton b) {
+        return b.isEnabled() ? sliderColor : inactiveSliderColor;
     }
 }

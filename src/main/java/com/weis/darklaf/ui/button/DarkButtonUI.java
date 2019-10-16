@@ -23,7 +23,6 @@
  */
 package com.weis.darklaf.ui.button;
 
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import com.weis.darklaf.util.GraphicsUtil;
@@ -53,6 +52,19 @@ public class DarkButtonUI extends BasicButtonUI {
     protected static final Rectangle iconRect = new Rectangle();
     protected int borderSize;
     protected int shadowHeight;
+    protected Color inactiveForeground;
+    protected Color foreground;
+    protected Color defaultBackground;
+    protected Color defaultHoverBackground;
+    protected Color defaultClickBackground;
+    protected Color background;
+    protected Color hoverBackground;
+    protected Color clickBackground;
+    protected Color inactiveBackground;
+    protected Color shadowHover;
+    protected Color shadowClick;
+    private int arc;
+    private int squareArc;
     protected AbstractButton button;
 
     @NotNull
@@ -70,8 +82,41 @@ public class DarkButtonUI extends BasicButtonUI {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        borderSize = DarkButtonBorder.getBorderSize();
-        shadowHeight = DarkButtonBorder.getShadowSize();
+        borderSize = UIManager.getInt("Button.borderThickness");
+        shadowHeight = UIManager.getInt("Button.shadowHeight");
+        inactiveForeground = UIManager.getColor("Button.disabledText");
+        foreground = UIManager.getColor("Button.selectedButtonForeground");
+        defaultBackground = UIManager.getColor("Button.defaultFillColor");
+        defaultHoverBackground = UIManager.getColor("Button.defaultFillColorRollOver");
+        defaultClickBackground = UIManager.getColor("Button.defaultFillColorClick");
+        background = UIManager.getColor("Button.activeFillColor");
+        hoverBackground = UIManager.getColor("Button.activeFillColorRollOver");
+        clickBackground = UIManager.getColor("Button.activeFillColorClick");
+        inactiveBackground = UIManager.getColor("Button.inactiveFillColor");
+        shadowHover = UIManager.getColor("Button.shadow.hover");
+        shadowClick = UIManager.getColor("Button.shadow.click");
+        arc = UIManager.getInt("Button.arc");
+        squareArc = UIManager.getInt("Button.squareArc");
+    }
+
+    @Override
+    protected void paintText(@NotNull final Graphics g, final JComponent c,
+                             final Rectangle textRect, final String text) {
+        AbstractButton button = (AbstractButton) c;
+        ButtonModel model = button.getModel();
+        g.setColor(getForeground(button));
+        FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
+        int mnemonicIndex = button.getDisplayedMnemonicIndex();
+        if (model.isEnabled()) {
+            SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
+                                                      textRect.x + this.getTextShiftOffset(),
+                                                      textRect.y + metrics.getAscent() + getTextShiftOffset());
+        } else {
+            g.setColor(inactiveForeground);
+            SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1,
+                                                      textRect.x + getTextShiftOffset(),
+                                                      textRect.y + metrics.getAscent() + getTextShiftOffset());
+        }
     }
 
     @Override
@@ -88,35 +133,43 @@ public class DarkButtonUI extends BasicButtonUI {
         config.restore();
     }
 
-    @Override
-    protected void paintText(@NotNull final Graphics g, final JComponent c,
-                             final Rectangle textRect, final String text) {
-        AbstractButton button = (AbstractButton) c;
-        ButtonModel model = button.getModel();
-        g.setColor(getForeground(button));
-        FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
-        int mnemonicIndex = button.getDisplayedMnemonicIndex();
-        if (model.isEnabled()) {
-            SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
-                                                      textRect.x + this.getTextShiftOffset(),
-                                                      textRect.y + metrics.getAscent() + getTextShiftOffset());
-        } else {
-            g.setColor(DarkColors.get().getButtonInactiveForeground());
-            SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1,
-                                                      textRect.x + getTextShiftOffset(),
-                                                      textRect.y + metrics.getAscent() + getTextShiftOffset());
-        }
-    }
-
     protected Color getForeground(@NotNull final AbstractButton button) {
         Color fg = button.getForeground();
         if (fg instanceof UIResource && button instanceof JButton && ((JButton) button).isDefaultButton()) {
-            Color selectedFg = DarkColors.get().getButtonForeground();
+            Color selectedFg = foreground;
             if (selectedFg != null) {
                 fg = selectedFg;
             }
         }
         return fg;
+    }
+
+    protected void paintButton(final Graphics g, @NotNull final JComponent c) {
+        Graphics2D g2 = (Graphics2D) g;
+        if (shouldDrawBackground(c)) {
+            int arc = getArc(c);
+            if (isShadowVariant(c)) {
+                var b = (AbstractButton) c;
+                if (b.isEnabled() && b.getModel().isRollover()) {
+                    GraphicsUtil.setupAAPainting(g2);
+                    g.setColor(getShadowColor(b));
+                    if (isFullShadow(c)) {
+                        g.fillRect(0, 0, c.getWidth(), c.getHeight());
+                    } else {
+                        DarkUIUtil.paintRoundRect((Graphics2D) g, 0, 0, c.getWidth(), c.getHeight(), arc);
+                    }
+                }
+            } else {
+                g2.setColor(getBackgroundColor(c));
+                if (isSquare(c) && !chooseAlternativeArc(c)) {
+                    g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                c.getHeight() - 2 * borderSize - shadowHeight);
+                } else {
+                    DarkUIUtil.paintRoundRect((Graphics2D) g, borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                              c.getHeight() - 2 * borderSize - shadowHeight, arc);
+                }
+            }
+        }
     }
 
     @Contract("null -> false")
@@ -171,32 +224,11 @@ public class DarkButtonUI extends BasicButtonUI {
         return c.isEnabled() && border != null && button.isContentAreaFilled();
     }
 
-    protected void paintButton(final Graphics g, @NotNull final JComponent c) {
-        Graphics2D g2 = (Graphics2D) g;
-        if (shouldDrawBackground(c)) {
-            int arc = getArcSize(c);
-            if (isShadowVariant(c)) {
-                var b = (AbstractButton) c;
-                if (b.isEnabled() && b.getModel().isRollover()) {
-                    GraphicsUtil.setupAAPainting(g2);
-                    g.setColor(getShadowColor(b));
-                    if (isFullShadow(c)) {
-                        g.fillRect(0, 0, c.getWidth(), c.getHeight());
-                    } else {
-                        DarkUIUtil.paintRoundRect((Graphics2D) g, 0, 0, c.getWidth(), c.getHeight(), arc);
-                    }
-                }
-            } else {
-                g2.setColor(getBackgroundColor(c));
-                if (isSquare(c) && !chooseAlternativeArc(c)) {
-                    g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                c.getHeight() - 2 * borderSize - shadowHeight);
-                } else {
-                    DarkUIUtil.paintRoundRect((Graphics2D) g, borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                              c.getHeight() - 2 * borderSize - shadowHeight, arc);
-                }
-            }
-        }
+    protected int getArc(final Component c) {
+        if (DarkButtonUI.isNoArc(c)) return 0;
+        boolean square = DarkButtonUI.isSquare(c);
+        boolean alt = DarkButtonUI.chooseAlternativeArc(c);
+        return square ? alt ? arc : squareArc : alt ? squareArc : arc;
     }
 
     @Contract("null -> false")
@@ -209,20 +241,14 @@ public class DarkButtonUI extends BasicButtonUI {
     protected Color getShadowColor(@NotNull final AbstractButton c) {
         var colorHover = c.getClientProperty("JButton.shadow.hover");
         var colorClick = c.getClientProperty("JButton.shadow.click");
-        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick
-                                                                    : DarkColors.get().getButtonShadowClickColor()
-                                      : colorHover instanceof Color ? (Color) colorHover
-                                                                    : DarkColors.get().getButtonShadowHoverColor();
+        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick : shadowClick
+                                      : colorHover instanceof Color ? (Color) colorHover : shadowHover;
     }
 
     @Contract("null -> false")
     public static boolean isFullShadow(final Component c) {
         return c instanceof JButton
                 && "fullShadow".equals(((JButton) c).getClientProperty("JButton.variant"));
-    }
-
-    protected int getArcSize(final JComponent c) {
-        return DarkButtonBorder.getArc(c);
     }
 
     protected Color getBackgroundColor(@NotNull final JComponent c) {
@@ -233,23 +259,23 @@ public class DarkButtonUI extends BasicButtonUI {
         if (c.isEnabled()) {
             if (defaultButton) {
                 if (clicked) {
-                    return DarkColors.get().getButtonDefaultClickBackground();
+                    return defaultClickBackground;
                 } else if (rollOver) {
-                    return DarkColors.get().getButtonDefaultHoverBackground();
+                    return defaultHoverBackground;
                 } else {
-                    return DarkColors.get().getButtonDefaultBackground();
+                    return defaultBackground;
                 }
             } else {
                 if (clicked) {
-                    return DarkColors.get().getButtonClickBackground();
+                    return clickBackground;
                 } else if (rollOver) {
-                    return DarkColors.get().getButtonHoverBackground();
+                    return hoverBackground;
                 } else {
-                    return DarkColors.get().getButtonBackground();
+                    return background;
                 }
             }
         } else {
-            return DarkColors.get().getButtonInactiveBackground();
+            return inactiveBackground;
         }
     }
 
@@ -284,8 +310,9 @@ public class DarkButtonUI extends BasicButtonUI {
             return super.contains(c, x, y);
         }
         if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
-        int bs = DarkButtonBorder.getBorderSize();
-        return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getWidth() - 2 * bs, getArcSize(c),
-                                          getArcSize(c)).contains(x, y);
+        int bs = borderSize;
+        int arc = getArc(c);
+        return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getWidth() - 2 * bs,
+                                          arc, arc).contains(x, y);
     }
 }

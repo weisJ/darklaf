@@ -26,8 +26,8 @@ package com.weis.darklaf.ui.tabframe;
 import com.weis.darklaf.components.JPanelUIResource;
 import com.weis.darklaf.components.border.MutableLineBorder;
 import com.weis.darklaf.components.tabframe.TabbedPopup;
-import com.weis.darklaf.defaults.DarkColors;
 import com.weis.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
+import com.weis.darklaf.ui.tabbedpane.MoreTabsButton;
 import com.weis.darklaf.ui.tabbedpane.NewTabButton;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +46,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     protected Color headerFocusHoverBackground;
     protected Color headerFocusSelectedBackground;
     protected Color headerFocusSelectedHoverBackground;
+    protected Color tabBorderColor;
     private TabbedPopup popupComponent;
     private JTabbedPane tabbedPane;
     private MutableLineBorder border;
@@ -66,12 +67,13 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        headerHoverBackground = DarkColors.get().getTabFramePopupHeaderHoverBackground();
-        headerSelectedBackground = DarkColors.get().getTabFramePopupHeaderSelectedBackground();
-        headerSelectedHoverBackground = DarkColors.get().getTabFramePopupHeaderSelectedHoverBackground();
-        headerFocusHoverBackground = DarkColors.get().getTabFramePopupHeaderFocusHoverBackground();
-        headerFocusSelectedBackground = DarkColors.get().getTabFramePopupHeaderFocusSelectedBackground();
-        headerFocusSelectedHoverBackground = DarkColors.get().getTabFramePopupHeaderFocusSelectedHoverBackground();
+        headerHoverBackground = UIManager.getColor("TabFramePopup.headerHoverBackground");
+        headerSelectedBackground = UIManager.getColor("TabFramePopup.headerSelectedBackground");
+        headerSelectedHoverBackground = UIManager.getColor("TabFramePopup.headerSelectedHoverBackground");
+        headerFocusHoverBackground = UIManager.getColor("TabFramePopup.headerFocusHoverBackground");
+        headerFocusSelectedBackground = UIManager.getColor("TabFramePopup.headerFocusSelectedBackground");
+        headerFocusSelectedHoverBackground = UIManager.getColor("TabFramePopup.headerFocusSelectedHoverBackground");
+        tabBorderColor = UIManager.getColor("TabFramePopup.borderColor");
     }
 
     @Override
@@ -128,46 +130,9 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
         }
     }
 
-    protected class DarkTabFrameTabbedPaneUI extends DarkTabbedPaneUI {
-
-        protected Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
-            if (hasFocus()) {
-                if (isSelected) {
-                    return hover ? headerFocusSelectedHoverBackground
-                                 : headerFocusSelectedBackground;
-                } else {
-                    return hover ? headerFocusHoverBackground
-                                 : headerFocusBackground;
-                }
-            } else {
-                if (isSelected) {
-                    return hover ? headerSelectedHoverBackground
-                                 : headerSelectedBackground;
-                } else {
-                    return hover ? headerHoverBackground
-                                 : headerBackground;
-                }
-            }
-        }
-
-        @Override
-        protected Color getTabBorderColor() {
-            return DarkColors.get().getTabFramePopupBorderColor();
-        }
-
-        @Override
-        protected Color getAccentColor(final boolean focus) {
-            return super.getAccentColor(focus || hasFocus());
-        }
-
-        @Override
-        public JComponent createNewTabButton() {
-            return new TabFrameNewTabButton(this);
-        }
-
-        @Override
-        public JButton createMoreTabsButton() {
-            return super.createMoreTabsButton();
+    protected static class TabFrameMoreTabsButton extends MoreTabsButton {
+        public TabFrameMoreTabsButton(final DarkTabbedPaneUI ui) {
+            super(ui);
         }
     }
 
@@ -186,6 +151,50 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
             button.setRolloverEnabled(true);
             button.setOpaque(false);
             return button;
+        }
+    }
+
+    protected class DarkTabFrameTabbedPaneUI extends DarkTabbedPaneUI {
+
+        @Override
+        protected Color getTabAreaBackground() {
+            return hasFocus() ? headerFocusBackground : headerBackground;
+        }
+
+        public Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
+            if (hasFocus()) {
+                if (isSelected) {
+                    return hover ? headerFocusSelectedHoverBackground : headerFocusSelectedBackground;
+                } else {
+                    return hover ? headerFocusHoverBackground : headerFocusBackground;
+                }
+            } else {
+                if (isSelected) {
+                    return hover ? headerSelectedHoverBackground : headerSelectedBackground;
+                } else {
+                    return hover ? headerHoverBackground : headerBackground;
+                }
+            }
+        }
+
+        @Override
+        protected Color getTabBorderColor() {
+            return tabBorderColor;
+        }
+
+        @Override
+        protected Color getAccentColor(final boolean focus) {
+            return super.getAccentColor(focus || hasFocus());
+        }
+
+        @Override
+        public JComponent createNewTabButton() {
+            return new TabFrameNewTabButton(this);
+        }
+
+        @Override
+        public JButton createMoreTabsButton() {
+            return new TabFrameMoreTabsButton(this);
         }
     }
 }
