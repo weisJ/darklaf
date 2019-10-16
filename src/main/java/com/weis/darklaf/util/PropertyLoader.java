@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.util;
 
+import com.weis.darklaf.LafManager;
 import com.weis.darklaf.icons.DarkUIAwareIcon;
 import com.weis.darklaf.icons.EmptyIcon;
 import com.weis.darklaf.icons.IconLoader;
@@ -226,7 +227,7 @@ public final class PropertyLoader {
                 return ICON_LOADER.getIcon(iconPath, dim.width, dim.height, true);
             } else {
                 DarkUIAwareIcon icon = ICON_LOADER.getUIAwareIcon(iconPath, dim.width, dim.height);
-                if (tag.equals(DUAL_KEY)) {
+                if (tag.equals(DUAL_KEY) && LafManager.getTheme().isDark()) {
                     return icon.getDual();
                 } else {
                     return icon;

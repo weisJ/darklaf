@@ -25,34 +25,61 @@ public abstract class Theme {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
     private static final String[] UI_PROPERTIES = new String[]{
             "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
-            "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "misc", "optionPane", "panel",
+            "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "optionPane", "panel",
             "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator",
             "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "taskPane", "text",
             "toggleButton", "toolBar", "toolTip", "tree",
     };
 
+    /**
+     * Called in the constructor of the look and feel.
+     */
     public void beforeInstall() {
         if (SystemInfo.isWindows || SystemInfo.isLinux) {
             MetalLookAndFeel.setCurrentTheme(new DarkMetalTheme());
         }
     }
 
+    /**
+     * Load the theme defaults.
+     *
+     * @param properties      the properties to load the values into.
+     * @param currentDefaults the current ui defaults.
+     */
     public void loadDefaults(@NotNull final Properties properties, final UIDefaults currentDefaults) {
         var name = getResourcePath() + getName() + "_defaults.properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 
+    /**
+     * Load the global values.
+     *
+     * @param properties the properties to load the values into.
+     * @param currentDefaults the current ui defaults.
+     */
     public void loadGlobals(@NotNull final Properties properties, final UIDefaults currentDefaults) {
         PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"),
                                      properties, currentDefaults);
     }
 
+    /**
+     * Load the platform defaults.
+     *
+     * @param properties the properties to load the values into.
+     * @param currentDefaults the current ui defaults.
+     */
     public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
         final String osPrefix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
         PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, osPrefix, "properties/platform/"),
                                      properties, currentDefaults);
     }
 
+    /**
+     * Load the ui defaults.
+     *
+     * @param properties the properties to load the values into.
+     * @param currentDefaults the current ui defaults.
+     */
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         for (var property : UI_PROPERTIES) {
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
