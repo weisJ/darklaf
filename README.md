@@ -11,9 +11,11 @@ Gradually all the custom UI and more from the darcula project wil be ported over
 
 # Usage & Features
 The LookAndFeel can be easily installed using the 'LafManager'
+
 ````java
-LafManager.loadLaf(LafManager.Theme.Dark);
+LafManager.install();
 ````
+
 or by any other default method of setting the LaF of your swing application.
 
 ## Example
