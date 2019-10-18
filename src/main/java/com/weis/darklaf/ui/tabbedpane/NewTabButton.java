@@ -53,6 +53,7 @@ public class NewTabButton extends JPanel implements UIResource {
         button.setIcon(ui.getNewTabIcon());
         button.putClientProperty("JButton.variant", "shadow");
         button.putClientProperty("JButton.buttonType", "square");
+        button.putClientProperty("JButton.alternativeArc", Boolean.TRUE);
         button.putClientProperty("JButton.thin", Boolean.TRUE);
         button.setRolloverEnabled(true);
         button.setOpaque(false);

@@ -65,6 +65,8 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     protected Color inactiveBorderColor;
     protected Color sliderColor;
     protected Color inactiveSliderColor;
+    protected Color sliderBorderColor;
+    protected Color inactiveSliderBorderColor;
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -81,8 +83,10 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         focusBorderColor = UIManager.getColor("ToggleButton.focusedSliderBorderColor");
         borderColor = UIManager.getColor("ToggleButton.sliderBorderColor");
         inactiveBorderColor = UIManager.getColor("ToggleButton.disabledSliderBorderColor");
-        sliderColor = UIManager.getColor("ToggleButton.sliderColor");
-        inactiveSliderColor = UIManager.getColor("ToggleButton.disabledSliderColor");
+        sliderColor = UIManager.getColor("ToggleButton.sliderKnobFillColor");
+        inactiveSliderColor = UIManager.getColor("ToggleButton.disabledSliderKnobFillColor");
+        sliderBorderColor = UIManager.getColor("ToggleButton.sliderKnobBorderColor");
+        inactiveSliderBorderColor = UIManager.getColor("ToggleButton.disabledSliderKnobBorderColor");
     }
 
     @Override
@@ -182,18 +186,25 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
 
         g.setColor(getBackgroundColor(c));
-        DarkUIUtil.paintRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
+        DarkUIUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
         g.setColor(getToggleBorderColor(c));
         DarkUIUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height, true);
-        g.setColor(getSliderColor(c));
 
         int size = bounds.height - 2;
+        var config = GraphicsUtil.setupStrokePainting(g);
         if (c.isSelected()) {
-            DarkUIUtil.paintRoundRect(g, bounds.width - size - 1, 1, size, size, size);
+            g.setColor(getSliderColor(c));
+            DarkUIUtil.fillRoundRect(g, bounds.width - size - 1, 1, size, size, size);
+            g.setColor(getSliderBorderColor(c));
+            DarkUIUtil.paintLineBorder(g, bounds.width - size - 1, 1, size, size, size, true);
         } else {
-            DarkUIUtil.paintRoundRect(g, 1, 1, size, size, size);
+            g.setColor(getSliderColor(c));
+            DarkUIUtil.fillRoundRect(g, 1, 1, size, size, size);
+            g.setColor(getSliderBorderColor(c));
+            DarkUIUtil.paintLineBorder(g, 1, 1, size, size, size, true);
         }
         g.translate(-bounds.x, -bounds.y);
+        config.restore();
     }
 
     @Contract("null -> false")
@@ -220,5 +231,9 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     protected Color getSliderColor(@NotNull final AbstractButton b) {
         return b.isEnabled() ? sliderColor : inactiveSliderColor;
+    }
+
+    protected Color getSliderBorderColor(@NotNull final AbstractButton b) {
+        return b.isEnabled() ? sliderBorderColor : inactiveSliderBorderColor;
     }
 }

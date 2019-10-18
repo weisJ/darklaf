@@ -479,9 +479,10 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     protected void paintMaxiThumb(@NotNull final Graphics2D g, @NotNull final Rectangle rect) {
         final var c = g.getComposite();
         g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
-        g.setColor(thumbBorderColor);
+        var thumbColor = getThumbColor();
+        g.setColor(DarkUIUtil.blendColors(thumbBorderColor, thumbColor, 1 - ((thumbAlpha - THUMB_ALPHA))));
         DarkUIUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
-        g.setColor(getThumbColor());
+        g.setColor(thumbColor);
         g.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
         g.setComposite(c);
     }

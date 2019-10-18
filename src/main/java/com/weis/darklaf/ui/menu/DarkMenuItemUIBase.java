@@ -62,6 +62,17 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         arrowIcon = null;
     }
 
+    public void paint(final Graphics g, final JComponent c) {
+        paintMenuItem(g, c, checkIcon, arrowIcon,
+                      selectionBackground, isSelected(c) ? selectionForeground : c.getForeground(),
+                      defaultTextIconGap);
+    }
+
+    protected boolean isSelected(final JComponent menuItem) {
+        if (!(menuItem instanceof JMenuItem)) return false;
+        return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
+    }
+
     protected void paintMenuItem(@NotNull final Graphics g, final JComponent c,
                                  final Icon checkIcon, final Icon arrowIcon,
                                  final Color background, final Color foreground,
@@ -176,6 +187,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
             }
         }
     }
+
 
     protected void paintAccText(final Graphics g, final MenuItemLayoutHelper lh,
                                 final MenuItemLayoutHelper.LayoutResult lr) {

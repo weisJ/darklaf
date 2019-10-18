@@ -64,11 +64,15 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     protected int borderSize;
     protected Color background;
     protected Color inactiveBackground;
+    protected Color selectedBackground;
     protected Color borderColor;
     protected Color focusBorderColor;
     protected Color inactiveBorderColor;
+    protected Color selectedBorderColor;
     protected Color checkColor;
     protected Color inactiveCheckColor;
+    protected Color focusCheckColor;
+    protected Color focusSelectedBorderColor;
 
     @NotNull
     @Contract("_ -> new")
@@ -79,6 +83,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     @Override
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
+        b.setOpaque(false);
         checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
         checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
         checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");
@@ -92,8 +97,12 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         borderColor = UIManager.getColor("CheckBox.activeBorderColor");
         focusBorderColor = UIManager.getColor("CheckBox.focusBorderColor");
         inactiveBorderColor = UIManager.getColor("CheckBox.inactiveBorderColor");
-        checkColor = UIManager.getColor("CheckBox.selectionEnabledColor");
+        checkColor = UIManager.getColor("CheckBox.selectionSelectedColor");
         inactiveCheckColor = UIManager.getColor("CheckBox.selectionDisabledColor");
+        selectedBorderColor = UIManager.getColor("CheckBox.selectedBorderColor");
+        selectedBackground = UIManager.getColor("CheckBox.selectedFillColor");
+        focusCheckColor = UIManager.getColor("CheckBox.selectionFocusSelectedColor");
+        focusSelectedBorderColor = UIManager.getColor("CheckBox.focusSelectedBorderColor");
     }
 
     @Override
@@ -127,11 +136,9 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();
-        return selected ? enabled ? hasFocus ? checkBoxSelectedFocusedIcon
-                                             : checkBoxSelectedIcon
+        return selected ? enabled ? hasFocus ? checkBoxSelectedFocusedIcon : checkBoxSelectedIcon
                                   : checkBoxSelectedDisabledIcon
-                        : enabled ? hasFocus ? checkBoxFocusedIcon
-                                             : checkBoxIcon
+                        : enabled ? hasFocus ? checkBoxFocusedIcon : checkBoxIcon
                                   : checkBoxDisabledIcon;
     }
 
@@ -201,9 +208,9 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         boolean enabled = b.isEnabled();
         g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
 
-        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted(), arcSize, borderSize);
+        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted(), b.isSelected(), arcSize, borderSize);
         if (b.isSelected()) {
-            paintCheckArrow(g, enabled);
+            paintCheckArrow(g, enabled, b.hasFocus() && b.isFocusPainted());
         }
         g.translate(-iconRect.x - ICON_OFF, -iconRect.y - ICON_OFF);
         config.restore();
@@ -233,12 +240,12 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     }
 
     protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus,
-                                    final int arcSize, final int borderSize) {
+                                    final boolean selected, final int arcSize, final int borderSize) {
         var g2 = (Graphics2D) g.create();
-        Color bgColor = enabled ? background : inactiveBackground;
-        Color border = focus ? focusBorderColor : enabled ? borderColor : inactiveBorderColor;
+        Color bgColor = getFillColor(selected, enabled);
+        Color border = getBorderColor(selected, focus, enabled);
         g.setColor(bgColor);
-        DarkUIUtil.paintRoundRect(g, 0, 0, SIZE, SIZE, arcSize);
+        DarkUIUtil.fillRoundRect(g, 0, 0, SIZE, SIZE, arcSize);
 
         if (focus) {
             g2.translate(-borderSize, -borderSize);
@@ -253,10 +260,10 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         g2.dispose();
     }
 
-    protected void paintCheckArrow(@NotNull final Graphics2D g, final boolean enabled) {
+    protected void paintCheckArrow(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
         var config = GraphicsUtil.setupStrokePainting(g);
         g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        Color color = enabled ? checkColor : inactiveCheckColor;
+        Color color = getCheckColor(focus, enabled);
 
         g.setPaint(color);
         Path2D check = new Path2D.Float(Path2D.WIND_EVEN_ODD);
@@ -265,6 +272,22 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         check.lineTo(SIZE - 2.7, 3);
         g.draw(check);
         config.restore();
+    }
+
+    protected Color getFillColor(final boolean selected, final boolean enabled) {
+        return enabled ? selected ? selectedBackground : background
+                       : inactiveBorderColor;
+    }
+
+    protected Color getBorderColor(final boolean selected, final boolean focus, final boolean enabled) {
+        return enabled ? focus ? selected ? focusSelectedBorderColor : focusBorderColor
+                               : selected ? selectedBorderColor : borderColor
+                       : inactiveBorderColor;
+    }
+
+    protected Color getCheckColor(final boolean focus, final boolean enabled) {
+        return enabled ? focus ? focusCheckColor : checkColor
+                       : inactiveCheckColor;
     }
 
     @Override

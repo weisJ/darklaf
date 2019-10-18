@@ -248,6 +248,57 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             paintContentBorder(g, tabPlacement, selectedIndex);
         }
 
+
+        // If scrollable tabs are enabled, the tab area will be
+        // painted by the scrollable tab panel instead.
+        if (!scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
+            paintTabArea(g, tabPlacement, selectedIndex);
+        } else {
+            paintTabAreaBorder(g, tabPlacement);
+        }
+
+        if (!tabsOverlapBorder) {
+            paintContentBorder(g, tabPlacement, selectedIndex);
+        }
+
+        if (!scrollableTabLayoutEnabled() && drawDropRect) {
+            paintDrop(g);
+        }
+    }
+
+    @Override
+    protected void paintTabArea(@NotNull final Graphics g, final int tabPlacement, final int selectedIndex) {
+        paintTabAreaBackground(g, tabPlacement);
+        paintTabAreaBorder(g, tabPlacement);
+        super.paintTabArea(g, tabPlacement, selectedIndex);
+    }
+
+    @Override
+    protected void paintFocusIndicator(final Graphics g, final int tabPlacement, final Rectangle r,
+                                       final int tabIndex, final Rectangle iconRect,
+                                       final Rectangle textRect, final boolean isSelected) {
+        if (isSelected) {
+            if (!drawFocusBar()) return;
+            g.setColor(getAccentColor());
+            int focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
+            switch (tabPlacement) {
+                case LEFT:
+                    g.fillRect(r.x + r.width - focusSize, r.y, focusSize, r.height);
+                    break;
+                case RIGHT:
+                    g.fillRect(r.x, r.y, focusSize, r.height);
+                    break;
+                case BOTTOM:
+                    g.fillRect(r.x, r.y + 1, r.width, focusSize);
+                    break;
+                default:
+                    g.fillRect(r.x, r.y + r.height - focusSize, r.width, focusSize);
+                    break;
+            }
+        }
+    }
+
+    private void paintTabAreaBorder(@NotNull final Graphics g, final int tabPlacement) {
         int width = tabPane.getWidth();
         int height = tabPane.getHeight();
         int y = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
@@ -266,26 +317,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                 paintTabAreaBorder(g, tabPlacement, width - x, 0, x, height);
                 break;
         }
-
-        // If scrollable tabs are enabled, the tab area will be
-        // painted by the scrollable tab panel instead.
-        if (!scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
-            paintTabArea(g, tabPlacement, selectedIndex);
-        }
-        if (!tabsOverlapBorder) {
-            paintContentBorder(g, tabPlacement, selectedIndex);
-        }
-
-        if (!scrollableTabLayoutEnabled() && drawDropRect) {
-            paintDrop(g);
-        }
-    }
-
-    @Override
-    protected void paintTabArea(@NotNull final Graphics g, final int tabPlacement, final int selectedIndex) {
-        g.setColor(getTabAreaBackground());
-        g.fillRect(0, 0, tabPane.getWidth(), maxTabHeight - 1);
-        super.paintTabArea(g, tabPlacement, selectedIndex);
     }
 
     protected Color getTabAreaBackground() {
@@ -339,29 +370,26 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     }
 
-    @Override
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement, final Rectangle r,
-                                       final int tabIndex, final Rectangle iconRect,
-                                       final Rectangle textRect, final boolean isSelected) {
-        if (isSelected) {
-            if (!drawFocusBar()) return;
-            g.setColor(getAccentColor());
-            int focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
-            switch (tabPlacement) {
-                case LEFT:
-                    g.fillRect(r.x + r.width - focusSize - 1, r.y, focusSize, r.height);
-                    break;
-                case RIGHT:
-                    g.fillRect(r.x + 1, r.y, focusSize, r.height);
-                    break;
-                case BOTTOM:
-                    g.fillRect(r.x, r.y + 1, r.width, focusSize);
-                    break;
-                default:
-                    g.fillRect(r.x, r.y + r.height - focusSize, r.width, focusSize);
-                    break;
-            }
+    protected void paintTabAreaBackground(@NotNull final Graphics g, final int tabPlacement) {
+        g.setColor(getTabAreaBackground());
+        g.setColor(Color.RED);
+        var b = getTabAreaBounds();
+        if (scrollableTabLayoutEnabled()) {
+            b.setLocation(0, 0);
         }
+        switch (tabPlacement) {
+            case BOTTOM:
+                b.y++;
+            case TOP:
+                b.height--;
+                break;
+            case RIGHT:
+                b.x++;
+            case LEFT:
+                b.width--;
+                break;
+        }
+        g.fillRect(b.x, b.y, b.width, b.height);
     }
 
     protected Color getAccentColor() {
@@ -572,17 +600,17 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int centerX = (tabWidth - w) / 2;
         switch (tabPlacement) {
             case LEFT:
-                comp.setBounds(insets.left + centerX, ty - b.height, w, b.height);
+                comp.setBounds(insets.left + centerX, insets.top, w, b.height);
                 break;
             case RIGHT:
-                comp.setBounds(tx - tabAreaInsets.left + centerX, ty - b.height,
+                comp.setBounds(tx - tabAreaInsets.left + centerX, insets.top,
                                w, b.height);
                 break;
             case TOP:
-                comp.setBounds(tx - b.width, insets.top + centerY, b.width, h);
+                comp.setBounds(insets.left, insets.top + centerY, b.width, h);
                 break;
             case BOTTOM:
-                comp.setBounds(tx - b.width, ty - tabAreaInsets.bottom + centerY,
+                comp.setBounds(insets.left, ty - tabAreaInsets.bottom + centerY,
                                b.width, h);
                 break;
         }
@@ -594,21 +622,23 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         var b = trailingComp.getPreferredSize();
         int h = Math.min(tabHeight, b.height);
         int w = Math.min(tabWidth, b.width);
+        var size = tabPane.getSize();
         int centerY = (tabHeight - h) / 2;
         int centerX = (tabWidth - w) / 2;
         switch (tabPlacement) {
             case LEFT:
-                comp.setBounds(insets.left + centerX, ty + th, w, b.height);
+                comp.setBounds(insets.left + centerX, size.height - b.height - insets.bottom,
+                               w, b.height);
                 break;
             case RIGHT:
-                comp.setBounds(tx - tabAreaInsets.left + centerX, ty + th,
+                comp.setBounds(tx - tabAreaInsets.left + centerX, size.height - b.height - insets.bottom,
                                w, b.height);
                 break;
             case TOP:
-                comp.setBounds(tx + tw, insets.top + centerY, b.width, h);
+                comp.setBounds(size.width - b.width - insets.right, insets.top + centerY, b.width, h);
                 break;
             case BOTTOM:
-                comp.setBounds(tx + tw, ty - tabAreaInsets.bottom + centerY,
+                comp.setBounds(size.width - b.width - insets.right, ty - tabAreaInsets.bottom + centerY,
                                b.width, h);
                 break;
         }

@@ -57,6 +57,7 @@ public class DropPreviewPanel extends JComponent {
             if (c == null) {
                 return toolBar.getBackground();
             }
+            return c;
         }
         return toolBar.getBackground();
     }

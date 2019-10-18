@@ -265,7 +265,8 @@ public class DarkEditorPaneUI extends DarkTextUI {
      * Fetch an action map to use.  The map for a JEditorPane
      * is not shared because it changes with the EditorKit.
      */
-    ActionMap getActionMap() {
+
+    public ActionMap getActionMap() {
         ActionMap am = new ActionMapUIResource();
         am.put("requestFocus", new FocusAction());
         EditorKit editorKit = getEditorKit(getComponent());
@@ -385,12 +386,11 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     void removeActions(final ActionMap map, final Action[] actions) {
-        int n = actions.length;
         for (Action a : actions) {
             map.remove(a.getValue(Action.NAME));
         }
     }
 
-    static class StyleSheetUIResource extends StyleSheet implements UIResource {
+    protected static class StyleSheetUIResource extends StyleSheet implements UIResource {
     }
 }

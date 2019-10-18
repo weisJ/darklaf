@@ -2,7 +2,6 @@ import com.weis.darklaf.LafManager;
 import org.jdesktop.swingx.MultiSplitLayout;
 
 import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 
 /**
@@ -17,9 +16,10 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
             final var frame = new JFrame();
             frame.setSize(500, 500);
             var overlayScroll = new JScrollPane(new JEditorPane() {{
-                setEditorKit(new HTMLEditorKit());
+//                setEditorKit(new HTMLEditorKit());
                 setText(TestResources.LOREM_IPSUM);
                 setFont(Font.getFont(Font.MONOSPACED));
+//                setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             }});
             frame.setContentPane(new JPanel(new BorderLayout()) {{
                 add(overlayScroll, BorderLayout.CENTER);

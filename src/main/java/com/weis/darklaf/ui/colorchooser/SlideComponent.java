@@ -71,10 +71,10 @@ class SlideComponent extends JComponent implements ColorListener {
         this.knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
 
         toolTipContext.setAlignInside(false)
-                .setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
-                .setHideOnExit(false)
-                .setToolTipRectSupplier(e -> getKnobRect())
-                .setInsets(new Insets(3, 0, 3, 0));
+                      .setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
+                      .setHideOnExit(false)
+                      .setToolTipRectSupplier(e -> getKnobRect())
+                      .setToolTipInsets(new Insets(3, 0, 3, 0));
 
         addMouseMotionListener(new MouseAdapter() {
             @Override

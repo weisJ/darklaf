@@ -19,9 +19,9 @@ import java.awt.*;
 public class DarkTableCellRenderer extends DefaultTableCellRenderer {
 
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox());
+            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton());
+            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(true));
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value,
@@ -58,18 +58,16 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
             component.putClientProperty("JTable.rowFocusBorder", false);
         }
 
-        boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
-        if (alternativeRow) {
-            if (!isSelected) {
-                if (row % 2 == 1) {
-                    component.setBackground(alternativeRowColor);
-                } else {
-                    component.setBackground(normalColor);
-                }
-                component.setForeground(table.getSelectionForeground());
-            }
+        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
+        if (!(isSelected) || table.isEditing()) {
+            component.setBackground(background);
+            component.setForeground(table.getForeground());
+        } else {
+            component.setForeground(table.getSelectionForeground());
+            component.setBackground(table.getSelectionBackground());
         }
         return component;
     }

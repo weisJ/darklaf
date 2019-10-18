@@ -21,7 +21,7 @@ public class TabbedPaneDemo extends JFrame {
                 final var tabbedPane = new ClosableTabbedPane();
                 tabbedPane.setName("TabPane " + j);
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 10; i++) {
                     var editor = new JTextPane();
                     editor.setText("TabPaneDemo TabPane-" + j + "\n".repeat(i + 1));
                     tabbedPane.addTab("Tab (" + i + "," + j + ")", editor);

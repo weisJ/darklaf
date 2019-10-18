@@ -19,6 +19,7 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
     public DarkTableCellEditorToggleButton(final DarkTableCellEditor delegate,
                                            final JToggleButton toggleButton) {
         this.toggleButton = toggleButton;
+        toggleButton.setOpaque(true);
         toggleButton.addChangeListener(e -> delegate.setValue(toggleButton.isSelected()));
     }
 
@@ -30,21 +31,16 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         }
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
-        boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
-        if (alternativeRow) {
-            if (!isSelected) {
-                if (row % 2 == 1) {
-                    toggleButton.setBackground(alternativeRowColor);
-                } else {
-                    toggleButton.setBackground(normalColor);
-                }
-                toggleButton.setForeground(table.getForeground());
-            } else {
-                toggleButton.setForeground(table.getSelectionForeground());
-                toggleButton.setBackground(table.getSelectionBackground());
-            }
+        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
+        if (!(isSelected) || table.isEditing()) {
+            toggleButton.setBackground(background);
+            toggleButton.setForeground(table.getForeground());
+        } else {
+            toggleButton.setForeground(table.getSelectionForeground());
+            toggleButton.setBackground(table.getSelectionBackground());
         }
         return toggleButton;
     }

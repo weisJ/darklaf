@@ -1,5 +1,4 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +32,6 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         setJMenuBar(createMenuBar());
 
         //Make dragging a little faster but perhaps uglier.
-//        desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
         desktop.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
     }
 

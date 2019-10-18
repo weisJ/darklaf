@@ -26,6 +26,7 @@ package com.weis.darklaf.components.tooltip;
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.alignment.AlignmentStrategy;
 import com.weis.darklaf.ui.tooltip.DarkTooltipBorder;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,6 +68,7 @@ public class ToolTipContext implements ToolTipListener {
             }
         }
     };
+    private final Insets calcInsets = new Insets(0, 0, 0, 0);
     private final JComponent c;
     private DarkToolTip toolTip;
     private Alignment alignment;
@@ -75,6 +77,7 @@ public class ToolTipContext implements ToolTipListener {
     private boolean updatePosition;
     private AlignmentStrategy alignmentStrategy;
     private Function<MouseEvent, Rectangle> toolTipRectSupplier;
+    private boolean applyInsetsToRect;
     private Point lastPos;
     private Rectangle lastRect;
     private boolean valid;
@@ -364,15 +367,18 @@ public class ToolTipContext implements ToolTipListener {
      * @param insets the insets to set.
      * @return this.
      */
-    public ToolTipContext setInsets(final Insets insets) {
+    public ToolTipContext setToolTipInsets(final Insets insets) {
         this.insets = insets;
         updateToolTip();
         return this;
     }
 
     /**
-     * @param style
-     * @return
+     * Set the style of the tooltip.
+     *
+     * @param style the tooltip style.
+     * @return this
+     * @see ToolTipStyle ToolTipStyle
      */
     public ToolTipContext setToolTipStyle(final ToolTipStyle style) {
         this.style = style;
@@ -380,6 +386,20 @@ public class ToolTipContext implements ToolTipListener {
             this.style = ToolTipStyle.BALLOON;
         }
         updateToolTip();
+        return this;
+    }
+
+    /**
+     * Sets whether the insets of the component insets should be subtracted from the
+     * area returned by {@link #setToolTipRectSupplier(Function)}.
+     * <p>
+     * Default is false.
+     *
+     * @param applyInsetsToRect true if they should be applied.
+     * @return this.
+     */
+    public ToolTipContext setApplyComponentInsetsToRect(final boolean applyInsetsToRect) {
+        this.applyInsetsToRect = applyInsetsToRect;
         return this;
     }
 
@@ -403,6 +423,9 @@ public class ToolTipContext implements ToolTipListener {
      */
     public Point getToolTipLocation(@NotNull final MouseEvent event) {
         var rect = toolTipRectSupplier.apply(event);
+        if (applyInsetsToRect) {
+            DarkUIUtil.applyInsets(rect, c.getInsets(calcInsets));
+        }
         if (valid && !updatePosition
                 && lastPos != null
                 && !Objects.equals(rect, lastRect)) {

@@ -46,7 +46,6 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
     public DarkCellRendererToggleButton(@NotNull final T toggleButton) {
         this.toggleButton = toggleButton;
-        toggleButton.setOpaque(false);
     }
 
     @Override
@@ -59,21 +58,16 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(focus);
 
-        boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
-        if (alternativeRow) {
-            if (!isSelected) {
-                if (row % 2 == 1) {
-                    toggleButton.setBackground(alternativeRowColor);
-                } else {
-                    toggleButton.setBackground(normalColor);
-                }
-                toggleButton.setForeground(table.getForeground());
-            } else {
-                toggleButton.setForeground(table.getSelectionForeground());
-                toggleButton.setBackground(table.getSelectionBackground());
-            }
+        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
+        if (!(isSelected) || table.isEditing()) {
+            toggleButton.setBackground(background);
+            toggleButton.setForeground(table.getForeground());
+        } else {
+            toggleButton.setForeground(table.getSelectionForeground());
+            toggleButton.setBackground(table.getSelectionBackground());
         }
         return toggleButton;
     }
@@ -91,6 +85,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
                 toggleButton.setText(((SelectableTreeNode) value).getLabel());
             }
         }
+        if (selected) {
+            toggleButton.setForeground(UIManager.getColor("Tree.selectionForeground"));
+        } else {
+            toggleButton.setForeground(tree.getForeground());
+        }
         toggleButton.setHorizontalAlignment(tree.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(false);
 
@@ -104,6 +103,10 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
     public static class CellEditorCheckBox extends JCheckBox implements CellRenderer, CellEditorToggleButton {
 
         private boolean hasFocus;
+
+        public CellEditorCheckBox(final boolean opaque) {
+            setOpaque(opaque);
+        }
 
         public void setHasFocus(final boolean hasFocus) {
             this.hasFocus = hasFocus;
@@ -123,6 +126,10 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
     public static class CellEditorRadioButton extends JRadioButton implements CellRenderer, CellEditorToggleButton {
 
         private boolean hasFocus;
+
+        public CellEditorRadioButton(final boolean opaque) {
+            setOpaque(opaque);
+        }
 
         public void setHasFocus(final boolean hasFocus) {
             this.hasFocus = hasFocus;

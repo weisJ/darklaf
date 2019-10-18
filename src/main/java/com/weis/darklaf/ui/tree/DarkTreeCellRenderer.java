@@ -37,9 +37,9 @@ import java.awt.*;
 public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements TreeRendererSupport {
 
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox());
+            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(false));
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton());
+            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(false));
     private TreeRendererComponent rendererComponent = new TreeRendererComponent();
 
     @Override

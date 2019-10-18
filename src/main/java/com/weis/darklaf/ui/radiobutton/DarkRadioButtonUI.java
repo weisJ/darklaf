@@ -64,11 +64,14 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     protected Color background;
     protected Color inactiveBackground;
     protected Color focusBorderColor;
+    protected Color focusSelectedBorderColor;
     protected Color borderColor;
     protected Color inactiveBorderColor;
     protected Color checkColor;
     protected Color inactiveCheckColor;
-
+    protected Color focusCheckColor;
+    protected Color selectedBorderColor;
+    protected Color selectedBackground;
 
     @NotNull
     @Contract("_ -> new")
@@ -79,6 +82,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     @Override
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
+        b.setOpaque(false);
         radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
         radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
         radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
@@ -90,8 +94,12 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         focusBorderColor = UIManager.getColor("RadioButton.focusBorderColor");
         borderColor = UIManager.getColor("RadioButton.activeBorderColor");
         inactiveBorderColor = UIManager.getColor("RadioButton.inactiveBorderColor");
-        checkColor = UIManager.getColor("RadioButton.selectionEnabledColor");
+        checkColor = UIManager.getColor("RadioButton.selectionSelectedColor");
         inactiveCheckColor = UIManager.getColor("RadioButton.selectionDisabledColor");
+        focusCheckColor = UIManager.getColor("RadioButton.selectionFocusSelectedColor");
+        selectedBorderColor = UIManager.getColor("RadioButton.selectedBorderColor");
+        selectedBackground = UIManager.getColor("RadioButton.selectedFillColor");
+        focusSelectedBorderColor = UIManager.getColor("RadioButton.focusSelectedBorderColor");
     }
 
     @Override
@@ -128,11 +136,9 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();
-        return selected ? enabled ? hasFocus ? radioSelectedFocusedIcon
-                                             : radioSelectedIcon
+        return selected ? enabled ? hasFocus ? radioSelectedFocusedIcon : radioSelectedIcon
                                   : radioSelectedDisabledIcon
-                        : enabled ? hasFocus ? radioFocusedIcon
-                                             : radioIcon
+                        : enabled ? hasFocus ? radioFocusedIcon : radioIcon
                                   : radioDisabledIcon;
     }
 
@@ -169,9 +175,9 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         boolean enabled = b.isEnabled();
         g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
         g.translate(-0.25, 0);
-        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted());
+        paintCheckBorder(g, enabled, b.hasFocus() && b.isFocusPainted(), b.isSelected());
         if (b.isSelected()) {
-            paintCheckBullet(g, enabled);
+            paintCheckBullet(g, enabled, b.hasFocus() && b.isFocusPainted());
         }
         g.translate(0.25, 0);
         g.translate(-iconRect.x - ICON_OFF, -iconRect.y - ICON_OFF);
@@ -183,11 +189,11 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         return new IconUIResource(EmptyIcon.create(20));
     }
 
-    protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
+    protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus,
+                                    final boolean selected) {
         var g2 = (Graphics2D) g.create();
-        Color bgColor = enabled ? background : inactiveBackground;
-        Color border = focus ? focusBorderColor
-                             : enabled ? borderColor : inactiveBorderColor;
+        Color bgColor = getFillColor(selected, enabled);
+        Color border = getBorderColor(selected, focus, enabled);
         g.setColor(bgColor);
         g.fillOval(0, 0, SIZE, SIZE);
 
@@ -202,12 +208,28 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         g2.dispose();
     }
 
-    protected void paintCheckBullet(@NotNull final Graphics2D g, final boolean enabled) {
-        Color color = enabled ? checkColor : inactiveCheckColor;
+    protected void paintCheckBullet(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
+        Color color = getCheckColor(focus, enabled);
         g.setColor(color);
         g.translate(0.2, 0.2);
         g.fillOval((SIZE - BULLET_RAD) / 2, (SIZE - BULLET_RAD) / 2, BULLET_RAD, BULLET_RAD);
         g.translate(-0.2, -0.2);
+    }
+
+    protected Color getFillColor(final boolean selected, final boolean enabled) {
+        return enabled ? selected ? selectedBackground : background
+                       : inactiveBorderColor;
+    }
+
+    protected Color getBorderColor(final boolean selected, final boolean focus, final boolean enabled) {
+        return enabled ? focus ? selected ? focusSelectedBorderColor : focusBorderColor
+                               : selected ? selectedBorderColor : borderColor
+                       : inactiveBorderColor;
+    }
+
+    protected Color getCheckColor(final boolean focus, final boolean enabled) {
+        return enabled ? focus ? focusCheckColor : checkColor
+                       : inactiveCheckColor;
     }
 
     @Override

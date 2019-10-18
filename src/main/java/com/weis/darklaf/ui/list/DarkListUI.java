@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
@@ -55,11 +54,9 @@ public class DarkListUI extends DarkListUIBridge {
     }
 
     @Override
-    protected void installListeners() {
-        super.installListeners();
-        list.addMouseListener(new MouseAdapter() {
-
-        });
+    protected void installDefaults() {
+        super.installDefaults();
+        list.putClientProperty("JList.alternateRowColor", UIManager.getBoolean("List.alternateRowColor"));
     }
 
     @Override
@@ -118,6 +115,4 @@ public class DarkListUI extends DarkListUIBridge {
             }
         }
     }
-
-
 }

@@ -408,6 +408,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         table.putClientProperty("JTable.renderBooleanAsCheckBox",
                                 UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
         table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
+        table.putClientProperty("JTable.alternateRowColor", UIManager.getBoolean("Table.alternateRowColor"));
         setupRendererComponents(table);
         borderColor = UIManager.getColor("TableHeader.borderColor");
         selectionFocusBackground = UIManager.getColor("Table.focusSelectionBackground");

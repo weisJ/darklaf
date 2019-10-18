@@ -34,11 +34,35 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(@NotNull final JList<?> list, final Object value,
                                                   final int index, final boolean isSelected,
                                                   final boolean cellHasFocus) {
-        if (Boolean.TRUE.equals(list.getClientProperty("JList.isEditing"))) {
-            if (list.getSelectionModel().getLeadSelectionIndex() == index) {
-                return super.getListCellRendererComponent(list, value, index, false, false);
+        if (getHorizontalAlignment() != CENTER) {
+            if (list.getComponentOrientation().isLeftToRight()) {
+                setHorizontalAlignment(LEFT);
+            } else {
+                setHorizontalAlignment(RIGHT);
             }
         }
-        return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        Component comp = null;
+        boolean isEditing = Boolean.TRUE.equals(list.getClientProperty("JList.isEditing"));
+        if (isEditing) {
+            if (list.getSelectionModel().getLeadSelectionIndex() == index) {
+                comp = super.getListCellRendererComponent(list, value, index, false, false);
+            }
+        }
+        if (comp == null) {
+            comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        }
+        boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor"))
+                && list.getLayoutOrientation() == JList.VERTICAL;
+        Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
+        Color normalColor = UIManager.getColor("List.background");
+        var background = alternativeRow && index % 2 == 1 ? alternativeRowColor : normalColor;
+        if (!(isSelected)) {
+            comp.setBackground(background);
+            comp.setForeground(list.getForeground());
+        } else {
+            comp.setForeground(list.getSelectionForeground());
+            comp.setBackground(list.getSelectionBackground());
+        }
+        return comp;
     }
 }

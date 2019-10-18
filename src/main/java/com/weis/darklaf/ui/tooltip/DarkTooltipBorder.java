@@ -64,9 +64,13 @@ public class DarkTooltipBorder implements Border, UIResource {
         var clip = new Area(new Rectangle2D.Double(x, y, width, height));
         clip.subtract(bubbleArea);
         g.setClip(clip);
-
-        shadowBorder.paintBorder(c, g, x, y, width, height);
-
+        int bw = bubbleBorder.getThickness();
+        int off = 0;
+        var pointerSide = bubbleBorder.getPointerSide();
+        if (pointerSide != Alignment.WEST && pointerSide != Alignment.EAST) {
+            off = bubbleBorder.getPointerSize();
+        }
+        shadowBorder.paintBorder(c, g, x + bw, y + bw + off, width - 2 * bw, height - 2 * bw - off);
         g.setClip(oldClip);
         bubbleBorder.paintBorder(g, bubbleArea);
     }
@@ -80,7 +84,7 @@ public class DarkTooltipBorder implements Border, UIResource {
         } else if (align == Alignment.WEST) {
             si.left = 0;
         } else if (align == Alignment.NORTH_EAST || align == Alignment.NORTH || align == Alignment.NORTH_WEST) {
-            si.bottom = 0;
+            si.top = 0;
         }
     }
 
@@ -89,9 +93,13 @@ public class DarkTooltipBorder implements Border, UIResource {
         if (isPlain(c)) {
             return new Insets(1, 1, 1, 1);
         }
-        var ins = (Insets) bubbleBorder.getBorderInsets(c).clone();
+        var ins = new Insets(0, 0, 0, 0);
+        var bi = bubbleBorder.getBorderInsets(c);
         var si = shadowBorder.getBorderInsets(c);
-        adjustInsets(si);
+        ins.bottom = Math.max(bi.bottom, si.bottom);
+        ins.left = Math.max(bi.left, si.left);
+        ins.right = Math.max(bi.right, si.right);
+        ins.top = Math.max(bi.top, si.top);
         var uIns = getUserInsets(c);
         ins.left += 5 + si.left + uIns.left;
         ins.top += 2 + si.top + uIns.top;

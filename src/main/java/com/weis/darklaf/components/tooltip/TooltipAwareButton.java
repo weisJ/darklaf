@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.components;
+package com.weis.darklaf.components.tooltip;
 
 import com.weis.darklaf.components.alignment.Alignment;
-import com.weis.darklaf.components.tooltip.ToolTipContext;
 
 import javax.swing.*;
 import java.awt.*;

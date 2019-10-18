@@ -132,8 +132,8 @@ public final class DarkUIUtil {
         config.restore();
     }
 
-    public static void paintRoundRect(final Graphics2D g, final float x, final float y,
-                                      final float width, final float height, final int arc) {
+    public static void fillRoundRect(final Graphics2D g, final float x, final float y,
+                                     final float width, final float height, final int arc) {
         float lw = 0.5f;
         float adj = 1.0f;
         Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
@@ -141,6 +141,17 @@ public final class DarkUIUtil {
                                                  width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
                                                  arc, arc), false);
         g.fill(border);
+    }
+
+    public static void drawRoundRect(final Graphics2D g, final float x, final float y,
+                                     final float width, final float height, final int arc) {
+        float lw = 0.5f;
+        float adj = 1.0f;
+        Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+        border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
+                                                 width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
+                                                 arc, arc), false);
+        g.draw(border);
     }
 
     @NotNull

@@ -50,11 +50,15 @@ public class DarkMenuUI extends BasicMenuUI {
         arrowIconHover = UIManager.getIcon("MenuItem.arrowHover.icon");
     }
 
-    @Override
     public void paint(final Graphics g, final JComponent c) {
         paintMenuItem(g, c, checkIcon, getArrowIcon(),
-                      selectionBackground, selectionForeground,
+                      selectionBackground, isSelected(c) ? selectionForeground : c.getForeground(),
                       defaultTextIconGap);
+    }
+
+    protected boolean isSelected(final JComponent menuItem) {
+        if (!(menuItem instanceof JMenuItem)) return false;
+        return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
     }
 
     protected Icon getArrowIcon() {

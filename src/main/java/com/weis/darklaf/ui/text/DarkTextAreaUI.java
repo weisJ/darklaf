@@ -126,7 +126,7 @@ public class DarkTextAreaUI extends DarkTextUI {
         return null;
     }
 
-    View createI18N(final Element elem) {
+    protected View createI18N(final Element elem) {
         String kind = elem.getName();
         if (kind != null) {
             if (kind.equals(AbstractDocument.ContentElementName)) {
@@ -192,7 +192,7 @@ public class DarkTextAreaUI extends DarkTextUI {
      * Paragraph for representing plain-text lines that support
      * bidirectional text.
      */
-    static class PlainParagraph extends ParagraphView {
+    protected static class PlainParagraph extends ParagraphView {
 
         PlainParagraph(final Element elem) {
             super(elem);
@@ -276,7 +276,7 @@ public class DarkTextAreaUI extends DarkTextUI {
          * view hierarchy, and calculates a preferred span.  It doesn't
          * do any rendering, layout, or model/view translation.
          */
-        static class LogicalView extends CompositeView {
+        protected static class LogicalView extends CompositeView {
 
             LogicalView(final Element elem) {
                 super(elem);

@@ -1,5 +1,4 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.theme.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,24 +14,24 @@ public class ComboDemo {
         Container contentPane = f.getContentPane();
 
         JLabel label = new JLabel();
-        JComboBox comboBox = new JComboBox();
+        JComboBox<String> comboBox = new JComboBox<>();
         JTextField textField = new JTextField();
-        JComboBox comboBox2 = new JComboBox();
+        JComboBox<String> comboBox2 = new JComboBox<>();
         JButton button = new JButton();
-        JComboBox comboBox3 = new JComboBox();
+        JComboBox<String> comboBox3 = new JComboBox<>();
         JTextArea textArea = new JTextArea();
-        JComboBox comboBox4 = new JComboBox();
+        JComboBox<String> comboBox4 = new JComboBox<>();
 
         label.setText("label.properties");
-        comboBox.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        comboBox.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         textField.setText("textfield");
-        comboBox2.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        comboBox2.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         button.setText("button");
-        comboBox3.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        comboBox3.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         textArea.setRows(5);
         textArea.setColumns(10);
         textArea.setText("textArea\nother text\nanother text");
-        comboBox4.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        comboBox4.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         GroupLayout layout = new GroupLayout(contentPane);
         contentPane.setLayout(layout);
         layout.setHorizontalGroup(

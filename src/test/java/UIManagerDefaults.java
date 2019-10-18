@@ -534,7 +534,7 @@ public class UIManagerDefaults implements ItemListener {
     private static final class SampleRenderer extends JLabel implements TableCellRenderer {
 
         private final DarkCellRendererToggleButton booleanRenderer =
-                new DarkCellRendererToggleButton(new DarkCellRendererToggleButton.CellEditorCheckBox());
+                new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
 
         private SampleRenderer() {
             super();

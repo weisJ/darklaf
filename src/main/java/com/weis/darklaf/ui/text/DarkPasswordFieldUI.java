@@ -77,7 +77,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mousePressed(@NotNull final MouseEvent e) {
-            if (isOverEye(e.getPoint())) {
+            if (hasShowIcon(editor) && isOverEye(e.getPoint())) {
                 ((JPasswordField) getComponent()).setEchoChar((char) 0);
                 showTriggered = true;
                 getComponent().repaint();
@@ -86,9 +86,11 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
         @Override
         public void mouseReleased(final MouseEvent e) {
-            ((JPasswordField) getComponent()).setEchoChar(echo_dot);
-            showTriggered = false;
-            getComponent().repaint();
+            if (showTriggered) {
+                ((JPasswordField) getComponent()).setEchoChar(echo_dot);
+                showTriggered = false;
+                getComponent().repaint();
+            }
         }
     };
     protected static Icon show;
@@ -112,12 +114,14 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     }
 
     protected void updateCursor(final Point p) {
+        boolean useShow = hasShowIcon(editor);
+        var textRect = DarkTextFieldUI.getTextRect(getComponent());
+        int rightMargin = useShow ? getShowIconCoord().x : textRect.x + textRect.width + 1;
         boolean insideTextArea = getDrawingRect(getComponent()).contains(p)
-                && p.x >= DarkTextFieldUI.getTextRect(getComponent()).x
-                && p.x < getShowIconCoord().x;
+                && p.x >= textRect.x && p.x < rightMargin;
         if (insideTextArea) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-        } else if (isOverEye(p)) {
+        } else if (useShow && isOverEye(p)) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
             getComponent().setCursor(Cursor.getDefaultCursor());
@@ -192,7 +196,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
             int width = c.getWidth();
             int height = c.getHeight();
             int w = borderSize;
-            DarkUIUtil.paintRoundRect(g, w, w, width - 2 * w, height - 2 * w, arc);
+            DarkUIUtil.fillRoundRect(g, w, w, width - 2 * w, height - 2 * w, arc);
             if (hasShowIcon(c) && showShowIcon()) {
                 paintShowIcon(g);
             }

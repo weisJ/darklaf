@@ -63,43 +63,44 @@ public final class ArrowButton implements SwingConstants {
             default:
                 throw new IllegalStateException("Invalid button orientation: " + orientation);
         }
-        return createUpDownArrow(parent, icon, orientation, center, applyInsetsOnSize, insets);
+        return createUpDownArrow(parent, icon, icon.getDual(), orientation, center, applyInsetsOnSize, insets);
     }
 
-    @Contract("_, _, _, _, _, _ -> new")
+    @Contract("_, _, _, _, _, _, _ -> new")
     @NotNull
-    public static JButton createUpDownArrow(final JComponent parent, final UIAwareIcon icon, final int orientation,
-                                            final boolean center, final boolean applyInsetsOnSize,
-                                            final Insets insets) {
+    public static JButton createUpDownArrow(final JComponent parent,
+                                            final Icon activeIcon, final Icon inactiveIcon,
+                                            final int orientation, final boolean center,
+                                            final boolean applyInsetsOnSize, final Insets insets) {
         return new BasicArrowButton(orientation, null, null, null, null) {
             @Override
             public void paint(final Graphics g) {
-                int x = (getWidth() - icon.getIconWidth()) / 2;
-                int y = direction == NORTH ? getHeight() - icon.getIconHeight() + 4 : -4;
+                int x = (getWidth() - getIcon().getIconWidth()) / 2;
+                int y = direction == NORTH ? getHeight() - getIcon().getIconHeight() + 4 : -4;
                 if (center) {
-                    y = (getHeight() - icon.getIconHeight()) / 2;
+                    y = (getHeight() - getIcon().getIconHeight()) / 2;
                 }
                 paintTriangle(g, x, y, 0, direction, parent.isEnabled());
+            }
+
+            public Icon getIcon() {
+                return isEnabled() ? activeIcon : inactiveIcon;
             }
 
             @Override
             public Dimension getPreferredSize() {
                 if (!applyInsetsOnSize) {
-                    return new DimensionUIResource(icon.getIconWidth(), icon.getIconHeight());
+                    return new DimensionUIResource(getIcon().getIconWidth(), getIcon().getIconHeight());
                 } else {
-                    return new DimensionUIResource(icon.getIconWidth() + insets.left + insets.right,
-                                                   icon.getIconHeight() + insets.top + insets.bottom);
+                    return new DimensionUIResource(getIcon().getIconWidth() + insets.left + insets.right,
+                                                   getIcon().getIconHeight() + insets.top + insets.bottom);
                 }
             }
 
             @Override
             public void paintTriangle(final Graphics g, final int x, final int y,
                                       final int size, final int direction, final boolean isEnabled) {
-                if (isEnabled) {
-                    icon.paintIcon(parent, g, x, y);
-                } else {
-                    icon.getDual().paintIcon(parent, g, x, y);
-                }
+                getIcon().paintIcon(this, g, x, y);
             }
 
             @NotNull

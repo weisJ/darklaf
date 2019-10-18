@@ -52,9 +52,9 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
     @Override
     protected void installDefaults() {
-        super.installDefaults();
         borderColor = UIManager.getColor("TaskPane.borderColor");
         arc = UIManager.getInt("TaskPane.arc");
+        super.installDefaults();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
             if (c.isOpaque()) {
                 g.setColor(c.getBackground());
                 g.setClip(clip.x, clip.x + h - arc, width, arc);
-                DarkUIUtil.paintRoundRect((Graphics2D) g, x + 0.5f, y + 0.5f, width - 1, h - 1, arc);
+                DarkUIUtil.fillRoundRect((Graphics2D) g, x + 0.5f, y + 0.5f, width - 1, h - 1, arc);
             }
             g.setClip(clip.x, clip.y + h / 2 - 1, width, h / 2 + 2);
             g.setColor(color);
@@ -142,14 +142,14 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
                 g.setColor(titleBackgroundGradientStart);
             }
             if (isCollapsed()) {
-                DarkUIUtil.paintRoundRect(g, 0.5f, 0.5f, w - 1, h - 1, getRoundHeight());
+                DarkUIUtil.fillRoundRect(g, 0.5f, 0.5f, w - 1, h - 1, getRoundHeight());
                 g.setColor(borderColor);
                 DarkUIUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight(), false);
             } else {
                 var clip = g.getClip().getBounds();
                 g.setClip(0, 0, w, h / 2 + 1);
 
-                DarkUIUtil.paintRoundRect(g, 0.5f, 0.5f, w - 1, h - 1, getRoundHeight());
+                DarkUIUtil.fillRoundRect(g, 0.5f, 0.5f, w - 1, h - 1, getRoundHeight());
                 g.setClip(0, h / 2 - 1, w, h / 2 + 2);
                 g.fillRect(0, 0, w, h);
                 g.setColor(borderColor);

@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.text.Element;
+import javax.swing.text.View;
 import java.beans.PropertyChangeEvent;
 
 /**
@@ -26,6 +28,11 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
+    }
+
+    @Override
+    public View create(final Element elem) {
+        return super.create(elem);
     }
 
     @Override

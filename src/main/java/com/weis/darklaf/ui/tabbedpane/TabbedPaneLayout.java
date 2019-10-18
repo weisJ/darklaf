@@ -401,10 +401,10 @@ public class TabbedPaneLayout implements LayoutManager {
         // if right to left and tab placement on the top or
         // the bottom, flip x positions and adjust by widths
         if (!leftToRight && !verticalTabRuns) {
-            int rightMargin = size.width
-                    - (insets.right + tabAreaInsets.right);
+            int rightMargin = size.width - (insets.right + tabAreaInsets.right);
+            int leftMargin = insets.left + tabAreaInsets.left;
             for (i = 0; i < tabCount; i++) {
-                ui.rects[i].x = rightMargin - ui.rects[i].x - ui.rects[i].width;
+                ui.rects[i].x = rightMargin - ui.rects[i].x - ui.rects[i].width + leftMargin;
             }
         }
     }

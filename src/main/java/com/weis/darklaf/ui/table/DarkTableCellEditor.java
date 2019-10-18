@@ -223,17 +223,12 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             }
         }
 
-        boolean alternativeRow = UIManager.getBoolean("Table.alternateRowColor");
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
-        if (alternativeRow) {
-            if (!isSelected) {
-                if (row % 2 == 1) {
-                    comp.setBackground(alternativeRowColor);
-                } else {
-                    comp.setBackground(normalColor);
-                }
-            }
+        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
+        if (!(isSelected)) {
+            comp.setBackground(background);
         }
         return comp;
     }

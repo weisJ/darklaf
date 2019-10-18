@@ -378,7 +378,8 @@ public class DarkTreeUI extends BasicTreeUI {
                     }
                     bounds = getPathBounds(path, insets, boundsBuffer);
                     if (bounds == null) return;
-                    paintRowBackground(g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+                    paintRowBackground(g, paintBounds, insets, bounds, path,
+                                       tree.getRowForPath(path), isExpanded, hasBeenExpanded, isLeaf);
                 }
             }
 

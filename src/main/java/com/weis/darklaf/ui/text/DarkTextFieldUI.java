@@ -174,7 +174,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         g.setColor(getBackgroundColor(c));
         Rectangle r = getDrawingRect(getComponent());
         int arc = getArcSize(c);
-        DarkUIUtil.paintRoundRect(g, r.x, r.y, r.width, r.height, arc);
+        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
     }
 
     protected Color getBackgroundColor(@NotNull final JTextComponent c) {
@@ -210,7 +210,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         g.setColor(getBackgroundColor(c));
         Rectangle r = getDrawingRect(getComponent());
         int arc = getArcSize(c);
-        DarkUIUtil.paintRoundRect(g, r.x, r.y, r.width, r.height, arc);
+        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
         paintSearchIcon(g);
         if (c.getText().length() > 0) {
             paintClearIcon(g);

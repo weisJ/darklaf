@@ -37,7 +37,7 @@ import java.awt.*;
 public class DarkInternalFrameBorder extends DropShadowBorder implements UIResource {
 
     public DarkInternalFrameBorder() {
-        super(null, 9, .1f, 9,
+        super(null, 7, .1f, 9,
               true, true, true, true);
         setShadowColor(UIManager.getColor("InternalFrame.borderShadowColor"));
     }

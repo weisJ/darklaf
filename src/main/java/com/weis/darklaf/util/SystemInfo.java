@@ -19,7 +19,6 @@ public class SystemInfo {
     public static final boolean isLinux;
     public static final boolean isUnix;
     public static final boolean isFileSystemCaseSensitive;
-    public static final boolean isMacOSLion;
     public static final boolean isAppleJvm;
     public static final boolean isOracleJvm;
     public static final boolean isSunJvm;
@@ -37,7 +36,6 @@ public class SystemInfo {
         isLinux = _OS_NAME.startsWith("linux");
         isUnix = !isWindows && !isOS2;
         isFileSystemCaseSensitive = isUnix && !isMac;
-        isMacOSLion = isLion();
         isAppleJvm = isAppleJvm();
         isOracleJvm = isOracleJvm();
         isSunJvm = isSunJvm();
@@ -87,29 +85,6 @@ public class SystemInfo {
                 return part1.length > idx ? 1 : -1;
             }
         }
-    }
-
-    private static boolean isMountainLion() {
-        return isMac && isLion() && !OS_VERSION.startsWith("10.7");
-    }
-
-    private static boolean isLion() {
-        return isMac && isSnowLeopard() && !OS_VERSION.startsWith("10.6");
-    }
-
-    private static boolean isSnowLeopard() {
-        return isMac && isLeopard() && !OS_VERSION.startsWith("10.5");
-    }
-
-    private static boolean isLeopard() {
-        return isMac && isTiger() && !OS_VERSION.startsWith("10.4");
-    }
-
-    private static boolean isTiger() {
-        return isMac && !OS_VERSION.startsWith("10.0")
-                && !OS_VERSION.startsWith("10.1")
-                && !OS_VERSION.startsWith("10.2")
-                && !OS_VERSION.startsWith("10.3");
     }
 
     public static boolean isJavaVersionAtLeast(final String v) {

@@ -24,6 +24,7 @@
 package com.weis.darklaf;
 
 import com.weis.darklaf.theme.DarculaTheme;
+import com.weis.darklaf.theme.IntelliJTheme;
 import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.NotNull;
 
@@ -79,7 +80,7 @@ public final class LafManager {
      */
     public static Theme getTheme() {
         if (theme == null) {
-            theme = new DarculaTheme();
+            theme = new IntelliJTheme();
         }
         return theme;
     }
@@ -103,6 +104,16 @@ public final class LafManager {
     public static void installTheme(final Theme theme) {
         setTheme(theme);
         install();
+    }
+
+    /**
+     * Overload for {@link #installTheme(Theme)}.
+     *
+     * @param theme the theme to install.
+     * @see #installTheme(Theme) installTheme().
+     */
+    public static void install(final Theme theme) {
+        installTheme(theme);
     }
 
     /**

@@ -55,7 +55,7 @@ public final class UIDemo {
                     panel.add(new JPanel() {{
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
                         add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
-                            add(new JCheckBox("disabled") {{
+                            add(new JCheckBox("disabled selected") {{
                                 setSelected(true);
                                 setEnabled(false);
                             }});

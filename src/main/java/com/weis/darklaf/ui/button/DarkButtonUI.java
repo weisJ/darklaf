@@ -53,7 +53,7 @@ public class DarkButtonUI extends BasicButtonUI {
     protected int borderSize;
     protected int shadowHeight;
     protected Color inactiveForeground;
-    protected Color foreground;
+    protected Color defaultForeground;
     protected Color defaultBackground;
     protected Color defaultHoverBackground;
     protected Color defaultClickBackground;
@@ -82,10 +82,11 @@ public class DarkButtonUI extends BasicButtonUI {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
+        b.setOpaque(false);
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");
         inactiveForeground = UIManager.getColor("Button.disabledText");
-        foreground = UIManager.getColor("Button.selectedButtonForeground");
+        defaultForeground = UIManager.getColor("Button.selectedButtonForeground");
         defaultBackground = UIManager.getColor("Button.defaultFillColor");
         defaultHoverBackground = UIManager.getColor("Button.defaultFillColorRollOver");
         defaultClickBackground = UIManager.getColor("Button.defaultFillColorClick");
@@ -135,13 +136,14 @@ public class DarkButtonUI extends BasicButtonUI {
 
     protected Color getForeground(@NotNull final AbstractButton button) {
         Color fg = button.getForeground();
-        if (fg instanceof UIResource && button instanceof JButton && ((JButton) button).isDefaultButton()) {
-            Color selectedFg = foreground;
-            if (selectedFg != null) {
-                fg = selectedFg;
-            }
+        if (fg instanceof UIResource && isDefaultButton(button)) {
+            fg = defaultForeground;
         }
         return fg;
+    }
+
+    protected boolean isDefaultButton(final JComponent c) {
+        return c instanceof JButton && ((JButton) c).isDefaultButton();
     }
 
     protected void paintButton(final Graphics g, @NotNull final JComponent c) {
@@ -156,7 +158,7 @@ public class DarkButtonUI extends BasicButtonUI {
                     if (isFullShadow(c)) {
                         g.fillRect(0, 0, c.getWidth(), c.getHeight());
                     } else {
-                        DarkUIUtil.paintRoundRect((Graphics2D) g, 0, 0, c.getWidth(), c.getHeight(), arc);
+                        DarkUIUtil.fillRoundRect((Graphics2D) g, 0, 0, c.getWidth(), c.getHeight(), arc);
                     }
                 }
             } else {
@@ -165,8 +167,8 @@ public class DarkButtonUI extends BasicButtonUI {
                     g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
                                 c.getHeight() - 2 * borderSize - shadowHeight);
                 } else {
-                    DarkUIUtil.paintRoundRect((Graphics2D) g, borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                              c.getHeight() - 2 * borderSize - shadowHeight, arc);
+                    DarkUIUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize, c.getWidth() - 2 * borderSize,
+                                             c.getHeight() - 2 * borderSize - shadowHeight, arc);
                 }
             }
         }
@@ -204,17 +206,32 @@ public class DarkButtonUI extends BasicButtonUI {
         }
     }
 
-    protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
-        var context = GraphicsUtil.setupAntialiasing(g);
-        if (text != null && !text.equals("")) {
-            View v = (View) c.getClientProperty(BasicHTML.propertyKey);
-            if (v != null) {
-                v.paint(g, textRect);
+    protected Color getBackgroundColor(@NotNull final JComponent c) {
+        var defaultButton = isDefaultButton(c);
+        var rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
+                && (((JButton) c).getModel().isRollover())));
+        var clicked = rollOver && ((JButton) c).getModel().isArmed();
+        if (c.isEnabled()) {
+            if (defaultButton) {
+                if (clicked) {
+                    return defaultClickBackground;
+                } else if (rollOver) {
+                    return defaultHoverBackground;
+                } else {
+                    return defaultBackground;
+                }
             } else {
-                paintText(g, b, textRect, text);
+                if (clicked) {
+                    return clickBackground;
+                } else if (rollOver) {
+                    return hoverBackground;
+                } else {
+                    return background;
+                }
             }
+        } else {
+            return inactiveBackground;
         }
-        context.restore();
     }
 
     private boolean shouldDrawBackground(@NotNull final JComponent c) {
@@ -251,32 +268,20 @@ public class DarkButtonUI extends BasicButtonUI {
                 && "fullShadow".equals(((JButton) c).getClientProperty("JButton.variant"));
     }
 
-    protected Color getBackgroundColor(@NotNull final JComponent c) {
-        var defaultButton = (c instanceof JButton && (((JButton) c).isDefaultButton()));
-        var rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
-                && (((JButton) c).getModel().isRollover())));
-        var clicked = rollOver && ((JButton) c).getModel().isArmed();
-        if (c.isEnabled()) {
-            if (defaultButton) {
-                if (clicked) {
-                    return defaultClickBackground;
-                } else if (rollOver) {
-                    return defaultHoverBackground;
-                } else {
-                    return defaultBackground;
-                }
-            } else {
-                if (clicked) {
-                    return clickBackground;
-                } else if (rollOver) {
-                    return hoverBackground;
-                } else {
-                    return background;
-                }
-            }
-        } else {
-            return inactiveBackground;
+    protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
+        var context = GraphicsUtil.setupAntialiasing(g);
+        if (isDefaultButton(b)) {
+            g.setFont(g.getFont().deriveFont(Font.BOLD));
         }
+        if (text != null && !text.equals("")) {
+            View v = (View) c.getClientProperty(BasicHTML.propertyKey);
+            if (v != null) {
+                v.paint(g, textRect);
+            } else {
+                paintText(g, b, textRect, text);
+            }
+        }
+        context.restore();
     }
 
     @Contract("null -> false")

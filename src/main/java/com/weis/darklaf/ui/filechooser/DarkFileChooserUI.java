@@ -23,8 +23,8 @@
  */
 package com.weis.darklaf.ui.filechooser;
 
-import com.weis.darklaf.components.TooltipAwareButton;
-import com.weis.darklaf.components.TooltipAwareToggleButton;
+import com.weis.darklaf.components.tooltip.TooltipAwareButton;
+import com.weis.darklaf.components.tooltip.TooltipAwareToggleButton;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.FilePane;
