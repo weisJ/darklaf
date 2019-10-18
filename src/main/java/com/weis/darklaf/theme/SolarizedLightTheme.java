@@ -23,12 +23,12 @@
  */
 package com.weis.darklaf.theme;
 
-public class SolarizedLightTheme extends Theme {
+import com.weis.darklaf.util.PropertyLoader;
 
-    @Override
-    public void beforeInstall() {
-        throw new UnsupportedThemeException("Currently not finished");
-    }
+import javax.swing.*;
+import java.util.Properties;
+
+public class SolarizedLightTheme extends Theme {
 
     @Override
     protected String getResourcePath() {
@@ -41,7 +41,14 @@ public class SolarizedLightTheme extends Theme {
     }
 
     @Override
+    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.loadUIProperties(properties, currentDefaults);
+        var name = getResourcePath() + getName() + "_ui.properties";
+        PropertyLoader.putProperties(load(name), properties, currentDefaults);
+    }
+
+    @Override
     public boolean isDark() {
-        return true;
+        return false;
     }
 }

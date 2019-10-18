@@ -19,6 +19,7 @@ public class ToolTipDemo {
 
                 {
                     setToolTipText("ToolTip \n multiline \n third line's a charm");
+//                    setToolTipText("ToolTip");
                 }
 
                 @Override

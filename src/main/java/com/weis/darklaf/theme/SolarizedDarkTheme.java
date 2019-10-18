@@ -23,6 +23,11 @@
  */
 package com.weis.darklaf.theme;
 
+import com.weis.darklaf.util.PropertyLoader;
+
+import javax.swing.*;
+import java.util.Properties;
+
 public class SolarizedDarkTheme extends Theme {
 
     @Override
@@ -38,5 +43,12 @@ public class SolarizedDarkTheme extends Theme {
     @Override
     public boolean isDark() {
         return true;
+    }
+
+    @Override
+    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.loadUIProperties(properties, currentDefaults);
+        var name = getResourcePath() + getName() + "_ui.properties";
+        PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 }

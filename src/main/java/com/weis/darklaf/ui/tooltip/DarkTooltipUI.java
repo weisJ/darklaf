@@ -112,14 +112,17 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                     } else {
                         border.setPointerLocation(Alignment.CENTER);
                     }
+                    tooltip.setComponent(tooltip.getComponent());
                 } else if ("JToolTip.pointerHeight".equals(key)) {
                     if (newVal instanceof Integer) {
                         border.setPointerHeight((Integer) newVal);
                     }
+                    tooltip.setComponent(tooltip.getComponent());
                 } else if ("JToolTip.pointerWidth".equals(key)) {
                     if (newVal instanceof Integer) {
                         border.setPointerWidth((Integer) newVal);
                     }
+                    tooltip.setComponent(tooltip.getComponent());
                 }
             }
         }

@@ -34,6 +34,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.AncestorEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -181,18 +183,36 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
                 }
             });
         } else {
-            field.addPropertyChangeListener(e -> {
-                if ("value".equals(e.getPropertyName())) {
-                    if (isChanging) return;
-                    var hexStr = e.getNewValue().toString();
-                    var alpha = isColorTransparencySelectionEnabled()
-                                ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
-                    var c = new Color(
-                            Integer.valueOf(hexStr.substring(0, 2), 16),
-                            Integer.valueOf(hexStr.substring(2, 4), 16),
-                            Integer.valueOf(hexStr.substring(4, 6), 16),
-                            alpha);
-                    colorWheelPanel.setColor(c, textHex);
+            field.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(final DocumentEvent e) {
+                    update();
+                }
+
+                @Override
+                public void removeUpdate(final DocumentEvent e) {
+                    update();
+                }
+
+                @Override
+                public void changedUpdate(final DocumentEvent e) {
+                }
+
+                protected void update() {
+                    try {
+                        if (isChanging) return;
+                        System.out.println("here");
+                        var hexStr = String.format("%1$-" + 8 + "s", field.getText()).replaceAll(" ", "F");
+                        var alpha = isColorTransparencySelectionEnabled()
+                                    ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
+                        var c = new Color(
+                                Integer.valueOf(hexStr.substring(0, 2), 16),
+                                Integer.valueOf(hexStr.substring(2, 4), 16),
+                                Integer.valueOf(hexStr.substring(4, 6), 16),
+                                alpha);
+                        System.out.println(c);
+                        colorWheelPanel.setColor(c, textHex);
+                    } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
                 }
             });
         }

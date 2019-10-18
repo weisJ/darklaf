@@ -372,7 +372,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     protected void paintTabAreaBackground(@NotNull final Graphics g, final int tabPlacement) {
         g.setColor(getTabAreaBackground());
-        g.setColor(Color.RED);
         var b = getTabAreaBounds();
         if (scrollableTabLayoutEnabled()) {
             b.setLocation(0, 0);

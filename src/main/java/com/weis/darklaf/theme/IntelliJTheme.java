@@ -34,4 +34,11 @@ public class IntelliJTheme extends Theme {
     public String getName() {
         return "intellij";
     }
+
+    @Override
+    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.loadUIProperties(properties, currentDefaults);
+        var name = getResourcePath() + getName() + "_ui.properties";
+        PropertyLoader.putProperties(load(name), properties, currentDefaults);
+    }
 }

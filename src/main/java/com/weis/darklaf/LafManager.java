@@ -24,7 +24,7 @@
 package com.weis.darklaf;
 
 import com.weis.darklaf.theme.DarculaTheme;
-import com.weis.darklaf.theme.SolarizedDarkTheme;
+import com.weis.darklaf.theme.IntelliJTheme;
 import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.NotNull;
 
@@ -80,7 +80,7 @@ public final class LafManager {
      */
     public static Theme getTheme() {
         if (theme == null) {
-            theme = new SolarizedDarkTheme();
+            theme = new IntelliJTheme();
         }
         return theme;
     }

@@ -55,6 +55,8 @@ public class DarkTooltipBorder implements Border, UIResource {
             return;
         }
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
+        g.setColor(Color.RED);
+        g.drawRect(x, y, width, height);
         var ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
         var bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,
@@ -67,7 +69,9 @@ public class DarkTooltipBorder implements Border, UIResource {
         int bw = bubbleBorder.getThickness();
         int off = 0;
         var pointerSide = bubbleBorder.getPointerSide();
-        if (pointerSide != Alignment.WEST && pointerSide != Alignment.EAST) {
+        if (pointerSide == Alignment.NORTH
+                || pointerSide == Alignment.NORTH_EAST
+                || pointerSide == Alignment.NORTH_WEST) {
             off = bubbleBorder.getPointerSize();
         }
         shadowBorder.paintBorder(c, g, x + bw, y + bw + off, width - 2 * bw, height - 2 * bw - off);
@@ -101,10 +105,10 @@ public class DarkTooltipBorder implements Border, UIResource {
         ins.right = Math.max(bi.right, si.right);
         ins.top = Math.max(bi.top, si.top);
         var uIns = getUserInsets(c);
-        ins.left += 5 + si.left + uIns.left;
-        ins.top += 2 + si.top + uIns.top;
-        ins.right += 5 + si.right + uIns.right;
-        ins.bottom += 2 + si.bottom + uIns.bottom;
+        ins.left += 5 + uIns.left;
+        ins.top += 2 + uIns.top;
+        ins.right += 5 + uIns.right;
+        ins.bottom += 2 + uIns.bottom;
         return ins;
     }
 
