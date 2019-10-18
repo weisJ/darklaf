@@ -261,7 +261,6 @@ public class OverlayScrollPane extends JLayeredPane {
 
         private ControlPanel(@NotNull final OScrollPane scrollPane) {
             setLayout(null);
-            setOpaque(false);
 
             scrollPane.setVerticalScrollBar(scrollPane.verticalScrollBar);
             if (scrollPane.getVerticalScrollBarPolicy() != JScrollPane.VERTICAL_SCROLLBAR_NEVER) {
@@ -274,6 +273,11 @@ public class OverlayScrollPane extends JLayeredPane {
                 showHorizontal = true;
                 add(scrollPane.horizontalScrollBar);
             }
+        }
+
+        @Override
+        public boolean isOpaque() {
+            return false;
         }
 
         private void showVerticalScrollBar(final boolean show) {

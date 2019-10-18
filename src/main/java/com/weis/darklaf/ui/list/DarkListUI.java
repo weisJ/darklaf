@@ -72,7 +72,7 @@ public class DarkListUI extends DarkListUIBridge {
              colCounter++) {
             // And then how many rows in this columnn
             int row = convertLocationToRowInColumn(paintBounds.y, colCounter);
-            int rowCount = rowsPerColumn;
+            int rowCount = Math.max(rowsPerColumn, getRowCount(colCounter));
             int index = getModelIndex(colCounter, row);
             Rectangle rowBounds = getCellBounds(list, index, index);
 
