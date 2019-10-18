@@ -120,7 +120,7 @@ public class DarkListUI extends DarkListUIBridge {
         if (empty) {
             boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor"));
             Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
-            Color normalColor = UIManager.getColor("List.background");
+            Color normalColor = list.getBackground();
             var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
             var c = g.getColor();
             g.setColor(background);

@@ -185,7 +185,14 @@ public class DarkTableUI extends DarkTableUIBridge {
         int dist = adjustDistance(distance, vacatedColumnRect, table);
 
         // Paint a gray well in place of the moving column.
-        g.setColor(table.getParent().getBackground());
+        Container parent = table.getParent();
+        if (isInScrollPane()) {
+            var par = DarkUIUtil.getParentOfType(JScrollPane.class, table);
+            if (par != null && par.getParent() != null) {
+                parent = par.getParent();
+            }
+        }
+        g.setColor(parent.getBackground());
         g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
                    vacatedColumnRect.width - 1, vacatedColumnRect.height);
 

@@ -65,7 +65,7 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
             }
         }
         Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
-        Color normalColor = UIManager.getColor("List.background");
+        Color normalColor = list.getBackground();
         var background = alternativeRow ? alternativeRowColor : normalColor;
         if (!(isSelected)) {
             comp.setBackground(background);

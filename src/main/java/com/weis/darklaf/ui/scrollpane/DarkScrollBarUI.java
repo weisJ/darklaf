@@ -480,7 +480,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         final var c = g.getComposite();
         g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
         var thumbColor = getThumbColor();
-        g.setColor(DarkUIUtil.blendColors(thumbBorderColor, thumbColor, 1 - ((thumbAlpha - THUMB_ALPHA))));
+        double percent = Math.min(1.0, Math.max(0.0, 1 - (thumbAlpha - THUMB_ALPHA)));
+        g.setColor(DarkUIUtil.blendColors(thumbBorderColor, thumbColor, percent));
         DarkUIUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
         g.setColor(thumbColor);
         g.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
