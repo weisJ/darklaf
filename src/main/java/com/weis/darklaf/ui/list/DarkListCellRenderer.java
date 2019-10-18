@@ -51,11 +51,22 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
         if (comp == null) {
             comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }
-        boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor"))
-                && list.getLayoutOrientation() == JList.VERTICAL;
+        boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor"));
+        var layout = list.getLayoutOrientation();
+        if (layout == JList.VERTICAL) {
+            alternativeRow = alternativeRow && index % 2 == 1;
+        } else if (layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP) {
+            var ui = list.getUI();
+            if (ui instanceof DarkListUI) {
+                int row = ((DarkListUI) ui).convertModelToRow(index);
+                alternativeRow = alternativeRow && row % 2 == 1;
+            } else {
+                alternativeRow = false;
+            }
+        }
         Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
         Color normalColor = UIManager.getColor("List.background");
-        var background = alternativeRow && index % 2 == 1 ? alternativeRowColor : normalColor;
+        var background = alternativeRow ? alternativeRowColor : normalColor;
         if (!(isSelected)) {
             comp.setBackground(background);
             comp.setForeground(list.getForeground());

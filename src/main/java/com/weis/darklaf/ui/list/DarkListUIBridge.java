@@ -1045,7 +1045,7 @@ public class DarkListUIBridge extends BasicListUI {
      * @param closest If true and the location doesn't exactly match a
      *                particular location, this will return the closest row.
      */
-    protected int convertLocationToRow(final int x, final int y0, final boolean closest) {
+    public int convertLocationToRow(final int x, final int y0, final boolean closest) {
         int size = list.getModel().getSize();
 
         if (size <= 0) {
@@ -1542,7 +1542,7 @@ public class DarkListUIBridge extends BasicListUI {
      * Returns the row that the model index <code>index</code> will be
      * displayed in..
      */
-    protected int convertModelToRow(final int index) {
+    public int convertModelToRow(final int index) {
         int size = list.getModel().getSize();
 
         if ((index < 0) || (index >= size)) {

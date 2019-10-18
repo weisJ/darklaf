@@ -212,21 +212,23 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             }
         }
 
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
+        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
+        Color normalColor = UIManager.getColor("Table.background");
+        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
+
         var rendererComp = table.getCellRenderer(row, column)
                                 .getTableCellRendererComponent(table, value, isSelected, false, row, column);
         if (rendererComp instanceof JLabel) {
             var icon = ((JLabel) rendererComp).getIcon();
             if (icon != null) {
                 comp = iconWrapper;
+                iconWrapper.setBackground(background);
                 iconWrapper.init(editorComponent, icon, rendererComp.getComponentOrientation().isLeftToRight());
                 iconWrapper.setIconGap(((JLabel) rendererComp).getIconTextGap() - 1);
             }
         }
 
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
-        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
-        Color normalColor = UIManager.getColor("Table.background");
-        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
         if (!(isSelected)) {
             comp.setBackground(background);
         }
