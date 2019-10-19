@@ -497,9 +497,9 @@ public class ToolTipContext implements ToolTipListener {
     private Point adjustPoint(final Point p, final Alignment align, final Dimension dim, final boolean outside) {
         int factor = outside ? 1 : -1;
         if (align == Alignment.NORTH_EAST || align == Alignment.SOUTH_EAST) {
-            p.x -= factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim);
+            p.x -= factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim) + 2;
         } else if (align == Alignment.NORTH_WEST || align == Alignment.SOUTH_WEST) {
-            p.x += factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim);
+            p.x += factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim) - 1;
         }
         return p;
     }

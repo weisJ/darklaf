@@ -15,7 +15,7 @@ public class ToolTipDemo {
             var p = new JPanel(new GridBagLayout());
             p.add(new JButton("Button with very very long text") {
                 private final ToolTipContext context = new ToolTipContext(this).setAlignment(Alignment.CENTER)
-                                                                               .setCenterAlignment(Alignment.SOUTH);
+                                                                               .setCenterAlignment(Alignment.SOUTH_EAST);
 
                 {
                     setToolTipText("ToolTip \n multiline \n third line's a charm");

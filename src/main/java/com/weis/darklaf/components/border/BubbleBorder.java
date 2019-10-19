@@ -16,7 +16,6 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class BubbleBorder extends AbstractBorder {
 
-    private final static double PAD_OFFSET = 0.2;
     private final Insets insets;
     private Alignment pointerSide = Alignment.NORTH;
     private Color color;
@@ -25,7 +24,6 @@ public class BubbleBorder extends AbstractBorder {
     private int pointerSize;
     private int pointerWidth;
     private BasicStroke stroke;
-    private double pointerPadPercent = 0.5;
 
 
     /**
@@ -212,28 +210,11 @@ public class BubbleBorder extends AbstractBorder {
     public BubbleBorder setPointerSide(final Alignment side) {
         this.pointerSide = side;
         setPointerSize(pointerSize);
-        switch (pointerSide) {
-            case NORTH:
-            case SOUTH:
-            case EAST:
-            case WEST:
-            case CENTER:
-                pointerPadPercent = 0.5;
-                break;
-            case NORTH_EAST:
-            case SOUTH_EAST:
-                pointerPadPercent = 1.0 - PAD_OFFSET;
-                break;
-            case NORTH_WEST:
-            case SOUTH_WEST:
-                pointerPadPercent = PAD_OFFSET;
-                break;
-        }
         return this;
     }
 
     public int getOffset(final int w, final int h) {
-        return (int) calculatePointerPad(w, h, PAD_OFFSET) + 2 * thickness;
+        return (int) calculatePointerPad(w, h, Alignment.NORTH_WEST);
     }
 
 
@@ -256,15 +237,31 @@ public class BubbleBorder extends AbstractBorder {
         return getBorderInsets(c);
     }
 
-    public Area getInnerArea(final int x, final int y, final int width, final int height) {
-        var bubble = calculateBubbleRect(x, y, width, height);
-        final Area area = new Area(bubble);
-        if (pointerSide != Alignment.CENTER) {
-            double pointerPad = calculatePointerPad(width, height, pointerPadPercent);
-            Path2D pointer = creatPointerShape(pointerPad, bubble);
-            area.add(new Area(pointer));
+    @Contract(pure = true)
+    private double calculatePointerPad(final int width, final int height, final Alignment side) {
+        double pointerPad;
+        switch (side) {
+            case WEST:
+            case EAST:
+                pointerPad = radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
+                break;
+            case NORTH_WEST:
+            case SOUTH_WEST:
+                pointerPad = radius + insets.left + pointerWidth;
+                break;
+            case NORTH_EAST:
+            case SOUTH_EAST:
+                pointerPad = width - radius - insets.right - pointerWidth;
+                break;
+            case SOUTH:
+            case NORTH:
+                pointerPad = radius + (0.5 * (width - insets.left - insets.right - 2 * radius));
+                break;
+            default:
+                pointerPad = 0;
+                break;
         }
-        return area;
+        return pointerPad;
     }
 
     public void paintBorder(final Graphics g, final Area innerArea) {
@@ -283,27 +280,15 @@ public class BubbleBorder extends AbstractBorder {
                                            height - insets.top - insets.bottom, radius, radius);
     }
 
-    @Contract(pure = true)
-    private double calculatePointerPad(final int width, final int height, final double percent) {
-        double pointerPad;
-        switch (pointerSide) {
-            case WEST:
-            case EAST:
-                pointerPad = radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
-                break;
-            case NORTH:
-            case NORTH_WEST:
-            case NORTH_EAST:
-            case SOUTH:
-            case SOUTH_WEST:
-            case SOUTH_EAST:
-                pointerPad = radius + (percent * (width - insets.left - insets.right - 2 * radius));
-                break;
-            default:
-                pointerPad = 0;
-                break;
+    public Area getInnerArea(final int x, final int y, final int width, final int height) {
+        var bubble = calculateBubbleRect(x, y, width, height);
+        final Area area = new Area(bubble);
+        if (pointerSide != Alignment.CENTER) {
+            double pointerPad = calculatePointerPad(width, height, pointerSide);
+            Path2D pointer = creatPointerShape(pointerPad, bubble);
+            area.add(new Area(pointer));
         }
-        return pointerPad;
+        return area;
     }
 
     @NotNull
