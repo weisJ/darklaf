@@ -38,6 +38,7 @@ import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -265,7 +266,16 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             }
         } else if ("peerInsets".equals(key)) {
             updateBorder(false);
+            updateTooltip();
+        } else if ("alignment".equals(key)) {
+            updateTooltip();
         }
+    }
+
+    protected void updateTooltip() {
+        var tabFrame = popupComponent.getTabFrame();
+        closeButton.setAlignment(popupComponent.getAlignment(),
+                                 tabFrame.getContentPane().isEnabled(tabFrame.getPeer(popupComponent.getAlignment())));
     }
 
     protected void updateBorder(final boolean notifyPeer) {
@@ -352,8 +362,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected static final class HeaderButton extends JButton implements UIResource {
 
-        private final ToolTipContext context = new ToolTipContext(this);
-        private final DarkPanelPopupUI ui;
+        protected final ToolTipContext context = new ToolTipContext(this);
+        protected final DarkPanelPopupUI ui;
 
         public HeaderButton(@NotNull final Icon icon, final DarkPanelPopupUI ui) {
             super(icon);
@@ -362,8 +372,10 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             putClientProperty("JButton.alternativeArc", Boolean.TRUE);
             putClientProperty("JButton.variant", "shadow");
             setRolloverEnabled(true);
+            setMargin(new InsetsUIResource(2, 2, 2, 2));
             setFocus(false);
             setOpaque(false);
+            context.setToolTipInsets(new Insets(5, 5, 5, 5));
         }
 
         public void setFocus(final boolean focus) {
@@ -381,6 +393,37 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         @Override
         public JToolTip createToolTip() {
             return context.getToolTip();
+        }
+
+        protected void setAlignment(@NotNull final Alignment a, final boolean peerEnabled) {
+            switch (a) {
+                case NORTH:
+                    context.setCenterAlignment(peerEnabled ? Alignment.SOUTH : Alignment.SOUTH_WEST);
+                    break;
+                case NORTH_EAST:
+                    context.setCenterAlignment(Alignment.SOUTH_WEST);
+                    break;
+                case EAST:
+                    context.setCenterAlignment(Alignment.WEST);
+                    break;
+                case SOUTH_EAST:
+                    context.setCenterAlignment(Alignment.WEST);
+                    break;
+                case SOUTH:
+                    context.setCenterAlignment(Alignment.NORTH_WEST);
+                    break;
+                case SOUTH_WEST:
+                    context.setCenterAlignment(peerEnabled ? Alignment.NORTH : Alignment.NORTH_WEST);
+                    break;
+                case WEST:
+                    context.setCenterAlignment(peerEnabled ? Alignment.NORTH : Alignment.SOUTH);
+                    break;
+                case NORTH_WEST:
+                    context.setCenterAlignment(Alignment.SOUTH);
+                    break;
+                case CENTER:
+                    break;
+            }
         }
     }
 }

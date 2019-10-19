@@ -149,16 +149,19 @@ public class DarkButtonUI extends BasicButtonUI {
     protected void paintButton(final Graphics g, @NotNull final JComponent c) {
         Graphics2D g2 = (Graphics2D) g;
         if (shouldDrawBackground(c)) {
+            var b = (AbstractButton) c;
+            var margin = b.getMargin();
             int arc = getArc(c);
             if (isShadowVariant(c)) {
-                var b = (AbstractButton) c;
                 if (b.isEnabled() && b.getModel().isRollover()) {
                     GraphicsUtil.setupAAPainting(g2);
                     g.setColor(getShadowColor(b));
                     if (isFullShadow(c)) {
                         g.fillRect(0, 0, c.getWidth(), c.getHeight());
                     } else {
-                        DarkUIUtil.fillRoundRect((Graphics2D) g, 0, 0, c.getWidth(), c.getHeight(), arc);
+                        DarkUIUtil.fillRoundRect((Graphics2D) g, margin.left, margin.top,
+                                                 c.getWidth() - margin.left - margin.right,
+                                                 c.getHeight() - margin.top - margin.bottom, arc);
                     }
                 }
             } else {
