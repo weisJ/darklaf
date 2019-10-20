@@ -4,7 +4,7 @@ This project is based on the [darcula](https://github.com/bulenkov/Darcula) look
 Gradually all the custom UI and more from the darcula project wil be ported over and given a new look that follows the newer darcula look in IntelliJ.
 
 
-# Screenshot
+# Screenshots
 ![Darcula Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_darcula.png) | ![IntelliJ Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_intellij.png)
 :-------------------------:|:-------------------------:
 Darcula Theme | IntelliJ Theme
