@@ -48,56 +48,6 @@ public abstract class DarkTextUI extends BasicTextUI {
         editor.putClientProperty("JTextComponent.roundedSelection", null);
     }
 
-    @Override
-    public void installUI(final JComponent c) {
-        if (c instanceof JTextComponent) {
-            editor = (JTextComponent) c;
-        }
-        super.installUI(c);
-    }
-
-    /**
-     * Invoked when editable property is changed.
-     * <p>
-     * removing 'TAB' and 'SHIFT-TAB' from traversalKeysSet in case
-     * editor is editable
-     * adding 'TAB' and 'SHIFT-TAB' to traversalKeysSet in case
-     * editor is non editable
-     */
-    @SuppressWarnings("deprecation")
-    void updateFocusTraversalKeys() {
-        /*
-         * Fix for 4514331 Non-editable JTextArea and similar
-         * should allow Tab to keyboard - accessibility
-         */
-        EditorKit editorKit = getEditorKit(editor);
-        if (editorKit instanceof DefaultEditorKit) {
-            Set<AWTKeyStroke> storedForwardTraversalKeys =
-                    editor.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> storedBackwardTraversalKeys =
-                    editor.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> forwardTraversalKeys =
-                    new HashSet<>(storedForwardTraversalKeys);
-            Set<AWTKeyStroke> backwardTraversalKeys =
-                    new HashSet<>(storedBackwardTraversalKeys);
-            if (editor.isEditable()) {
-                forwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
-                backwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK));
-            } else {
-                forwardTraversalKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
-                backwardTraversalKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK));
-            }
-            LookAndFeel.installProperty(editor, "focusTraversalKeysForward", forwardTraversalKeys);
-            LookAndFeel.installProperty(editor, "focusTraversalKeysBackward", backwardTraversalKeys);
-        }
-    }
-
-
-
-    /*
-     * Implementation of BasicTextUI.
-     */
-
     protected void installKeyboardActions() {
         // backward compatibility support... keymaps for the UI
         // are now installed in the more friendly input map.
@@ -116,6 +66,20 @@ public abstract class DarkTextUI extends BasicTextUI {
 
         updateFocusAcceleratorBinding(false);
     }
+
+    @Override
+    public void installUI(final JComponent c) {
+        if (c instanceof JTextComponent) {
+            editor = (JTextComponent) c;
+        }
+        super.installUI(c);
+    }
+
+
+
+    /*
+     * Implementation of BasicTextUI.
+     */
 
     /**
      * Get the InputMap to use for the UI.
@@ -170,8 +134,7 @@ public abstract class DarkTextUI extends BasicTextUI {
     }
 
     /**
-     * Invoked when the focus accelerator changes, this will update the
-     * key bindings as necessary.
+     * Invoked when the focus accelerator changes, this will update the key bindings as necessary.
      */
     @SuppressWarnings("MagicConstant")
     protected void updateFocusAcceleratorBinding(final boolean changed) {
@@ -209,8 +172,7 @@ public abstract class DarkTextUI extends BasicTextUI {
     }
 
     /**
-     * Create a default action map.  This is basically the
-     * set of actions found exported by the component.
+     * Create a default action map.  This is basically the set of actions found exported by the component.
      */
     public ActionMap createActionMap() {
         ActionMap map = new ActionMapUIResource();
@@ -225,6 +187,40 @@ public abstract class DarkTextUI extends BasicTextUI {
         map.put(TransferHandler.getPasteAction().getValue(Action.NAME),
                 TransferHandler.getPasteAction());
         return map;
+    }
+
+    /**
+     * Invoked when editable property is changed.
+     * <p>
+     * removing 'TAB' and 'SHIFT-TAB' from traversalKeysSet in case editor is editable adding 'TAB' and 'SHIFT-TAB' to
+     * traversalKeysSet in case editor is non editable
+     */
+    @SuppressWarnings("deprecation")
+    void updateFocusTraversalKeys() {
+        /*
+         * Fix for 4514331 Non-editable JTextArea and similar
+         * should allow Tab to keyboard - accessibility
+         */
+        EditorKit editorKit = getEditorKit(editor);
+        if (editorKit instanceof DefaultEditorKit) {
+            Set<AWTKeyStroke> storedForwardTraversalKeys =
+                    editor.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> storedBackwardTraversalKeys =
+                    editor.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> forwardTraversalKeys =
+                    new HashSet<>(storedForwardTraversalKeys);
+            Set<AWTKeyStroke> backwardTraversalKeys =
+                    new HashSet<>(storedBackwardTraversalKeys);
+            if (editor.isEditable()) {
+                forwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
+                backwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK));
+            } else {
+                forwardTraversalKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
+                backwardTraversalKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK));
+            }
+            LookAndFeel.installProperty(editor, "focusTraversalKeysForward", forwardTraversalKeys);
+            LookAndFeel.installProperty(editor, "focusTraversalKeysBackward", backwardTraversalKeys);
+        }
     }
 
     public class FocusAction extends AbstractAction {

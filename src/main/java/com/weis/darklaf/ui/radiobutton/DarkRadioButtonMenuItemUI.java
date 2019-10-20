@@ -63,16 +63,6 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
         c.putClientProperty("RadioButtonMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 
-    public void installDefaults() {
-        super.installDefaults();
-        radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
-        radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
-        radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
-        radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
-        radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
-        radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
-    }
-
     @Override
     protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
                                   @NotNull final MenuItemLayoutHelper.LayoutResult lr,
@@ -91,6 +81,16 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
                         : enabled ? hasFocus ? radioFocusedIcon
                                              : radioIcon
                                   : radioDisabledIcon;
+    }
+
+    public void installDefaults() {
+        super.installDefaults();
+        radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
+        radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
+        radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
+        radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
+        radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
+        radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
     }
 
     protected String getPropertyPrefix() {

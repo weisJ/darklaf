@@ -62,7 +62,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             comboBox.getEditor().getEditorComponent().requestFocus();
         }
     };
-    private Insets boxPadding;
     protected int arcSize;
     protected int borderSize;
     protected Color background;
@@ -74,6 +73,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     protected Color inactiveBorderColor;
     protected Color arrowBackgroundStart;
     protected Color arrowBackgroundEnd;
+    private Insets boxPadding;
 
     @NotNull
     @Contract("_ -> new")
@@ -184,6 +184,16 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         paintCurrentValue(g, r, hasFocus);
     }
 
+    protected static boolean isTableCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
+    }
+
+    protected static boolean isTreeCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTreeCellEditor"));
+    }
+
     @Override
     protected Rectangle rectangleForCurrentValue() {
         var rect = super.rectangleForCurrentValue();
@@ -192,24 +202,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             rect.width -= borderSize;
         }
         return rect;
-    }
-
-    protected static boolean isTableCellEditor(@NotNull final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
-    }
-
-    private void checkFocus() {
-        hasFocus = DarkUIUtil.hasFocus(comboBox);
-        if (hasFocus) {
-            return;
-        }
-
-        final ComboBoxEditor ed = comboBox.getEditor();
-        editor = ed == null ? null : ed.getEditorComponent();
-        if (editor != null) {
-            hasFocus = DarkUIUtil.hasFocus(editor);
-        }
     }
 
     @Override
@@ -224,11 +216,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
             return new InsetsUIResource(borderSize + 4, borderSize,
                                         borderSize + 4, borderSize + 6);
         }
-    }
-
-    protected static boolean isTreeCellEditor(@NotNull final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTreeCellEditor"));
     }
 
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
@@ -263,38 +250,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         }
     }
 
-    @Override
-    public Dimension getMinimumSize(final JComponent c) {
-        if (!isMinimumSizeDirty) {
-            return new Dimension(cachedMinimumSize);
-        }
-        Dimension size = getDisplaySize();
-        Insets insets = getInsets();
-        //calculate the width and height of the button
-        int buttonHeight = size.height;
-        int buttonWidth = squareButton
-                          ? buttonHeight
-                          : arrowButton.getPreferredSize().width
-                                  + arrowButton.getInsets().left + arrowButton.getInsets().right;
-        //adjust the size based on the button width
-        size.height += insets.top + insets.bottom;
-        size.width += insets.left + insets.right + buttonWidth;
-
-        cachedMinimumSize.setSize(size.width, size.height);
-        isMinimumSizeDirty = false;
-
-        return new Dimension(size);
-    }
-
-    @Override
-    public Dimension getPreferredSize(final JComponent c) {
-        return getMinimumSize(c);
-    }
-
-    private Color getForeground() {
-        return comboBox.isEnabled() ? comboBox.getForeground() : inactiveForeground;
-    }
-
     private void paintBackground(final Graphics g, @NotNull final JComponent c, final int width, final int height) {
         final Container parent = c.getParent();
         if (parent != null && parent.isOpaque()) {
@@ -319,6 +274,38 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) return editBackground;
         return background;
+    }
+
+    @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        return getMinimumSize(c);
+    }
+
+    @Override
+    public Dimension getMinimumSize(final JComponent c) {
+        if (!isMinimumSizeDirty) {
+            return new Dimension(cachedMinimumSize);
+        }
+        Dimension size = getDisplaySize();
+        Insets insets = getInsets();
+        //calculate the width and height of the button
+        int buttonHeight = size.height;
+        int buttonWidth = squareButton
+                          ? buttonHeight
+                          : arrowButton.getPreferredSize().width
+                                  + arrowButton.getInsets().left + arrowButton.getInsets().right;
+        //adjust the size based on the button width
+        size.height += insets.top + insets.bottom;
+        size.width += insets.left + insets.right + buttonWidth;
+
+        cachedMinimumSize.setSize(size.width, size.height);
+        isMinimumSizeDirty = false;
+
+        return new Dimension(size);
+    }
+
+    private Color getForeground() {
+        return comboBox.isEnabled() ? comboBox.getForeground() : inactiveForeground;
     }
 
     @Override
@@ -393,6 +380,19 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         config.restore();
     }
 
+    private void checkFocus() {
+        hasFocus = DarkUIUtil.hasFocus(comboBox);
+        if (hasFocus) {
+            return;
+        }
+
+        final ComboBoxEditor ed = comboBox.getEditor();
+        editor = ed == null ? null : ed.getEditorComponent();
+        if (editor != null) {
+            hasFocus = DarkUIUtil.hasFocus(editor);
+        }
+    }
+
     protected Paint getArrowBackground(final JComboBox c) {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) {
@@ -402,16 +402,16 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         return background;
     }
 
+    private Color getBorderColor() {
+        return comboBox.isEnabled() ? borderColor : inactiveBorderColor;
+    }
+
     @Override
     public Insets getBorderInsets(final Component c) {
         if (isTableCellEditor(c) || isTreeCellEditor(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
         return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
-    }
-
-    private Color getBorderColor() {
-        return comboBox.isEnabled() ? borderColor : inactiveBorderColor;
     }
 
     @Override

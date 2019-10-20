@@ -52,6 +52,8 @@ import java.util.Arrays;
  */
 public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
+    protected static Icon show;
+    protected static Icon showPressed;
     private final FocusListener focusListener = new FocusAdapter() {
         public void focusGained(final FocusEvent e) {
             getComponent().repaint();
@@ -72,6 +74,8 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
             });
         }
     };
+    protected int borderSize;
+    protected int arc;
     private char echo_dot = '*';
     private boolean showTriggered = false;
     private final MouseListener mouseListener = new MouseAdapter() {
@@ -93,10 +97,6 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
             }
         }
     };
-    protected static Icon show;
-    protected static Icon showPressed;
-    protected int borderSize;
-    protected int arc;
 
     @NotNull
     @Contract("_ -> new")
@@ -125,37 +125,6 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
             getComponent().setCursor(Cursor.getDefaultCursor());
-        }
-    }
-
-    @NotNull
-    private Point getShowIconCoord() {
-        Rectangle r = getDrawingRect(getComponent());
-        int w = getShowIcon().getIconWidth();
-        return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
-    }
-
-    private boolean isOverEye(final Point p) {
-        return showShowIcon() && DarkTextFieldUI.isOver(getShowIconCoord(), getShowIcon(), p);
-    }
-
-    protected static Icon getShowIcon() {
-        return show;
-    }
-
-    private boolean showShowIcon() {
-        var c = (JPasswordField) getComponent();
-        char[] pw = c.getPassword();
-        boolean show = pw.length > 0;
-        Arrays.fill(pw, (char) 0);
-        return show;
-    }
-
-    @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        if (c instanceof JPasswordField) {
-            echo_dot = ((JPasswordField) c).getEchoChar();
         }
     }
 
@@ -206,12 +175,6 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         config.restore();
     }
 
-    @Contract("null -> false")
-    public static boolean hasShowIcon(final Component c) {
-        return c instanceof JPasswordField
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("PasswordField.view"));
-    }
-
     private void paintShowIcon(final Graphics2D g) {
         var p = getShowIconCoord();
         if (showTriggered) {
@@ -223,5 +186,42 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     protected Icon getShowTriggeredIcon() {
         return showPressed;
+    }
+
+    @Contract("null -> false")
+    public static boolean hasShowIcon(final Component c) {
+        return c instanceof JPasswordField
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("PasswordField.view"));
+    }
+
+    private boolean isOverEye(final Point p) {
+        return showShowIcon() && DarkTextFieldUI.isOver(getShowIconCoord(), getShowIcon(), p);
+    }
+
+    private boolean showShowIcon() {
+        var c = (JPasswordField) getComponent();
+        char[] pw = c.getPassword();
+        boolean show = pw.length > 0;
+        Arrays.fill(pw, (char) 0);
+        return show;
+    }
+
+    @NotNull
+    private Point getShowIconCoord() {
+        Rectangle r = getDrawingRect(getComponent());
+        int w = getShowIcon().getIconWidth();
+        return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
+    }
+
+    protected static Icon getShowIcon() {
+        return show;
+    }
+
+    @Override
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+        if (c instanceof JPasswordField) {
+            echo_dot = ((JPasswordField) c).getEchoChar();
+        }
     }
 }

@@ -52,15 +52,15 @@ public final class ColorUtil {
 
     @NotNull
     @Contract("_, _ -> new")
-    public static Color toAlpha(final Color color, final int a) {
-        Color c = color != null ? color : Color.black;
-        return new Color(c.getRed(), c.getGreen(), c.getBlue(), Math.min(Math.max(0, a), 255));
+    public static Color toAlpha(final Color color, final double alpha) {
+        return toAlpha(color, (int) (alpha * 255));
     }
 
     @NotNull
     @Contract("_, _ -> new")
-    public static Color toAlpha(final Color color, final double alpha) {
-        return toAlpha(color, (int) (alpha * 255));
+    public static Color toAlpha(final Color color, final int a) {
+        Color c = color != null ? color : Color.black;
+        return new Color(c.getRed(), c.getGreen(), c.getBlue(), Math.min(Math.max(0, a), 255));
     }
 
     public static Color fromHex(final String str, final Color defaultValue) {

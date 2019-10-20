@@ -73,8 +73,7 @@ public final class LafManager {
     }
 
     /**
-     * Get the current theme.
-     * This method will never return null even if the LaF isn#t currently installed.
+     * Get the current theme. This method will never return null even if the LaF isn#t currently installed.
      *
      * @return the current theme.
      */
@@ -96,8 +95,8 @@ public final class LafManager {
 
 
     /**
-     * Sets the current theme and installs the LaF. If the LaF is already installed the theme is switched.
-     * This behaves exactly like {@link #setTheme(Theme)} followed by {@link #install()}
+     * Sets the current theme and installs the LaF. If the LaF is already installed the theme is switched. This behaves
+     * exactly like {@link #setTheme(Theme)} followed by {@link #install()}
      *
      * @param theme the theme to install.
      */
@@ -117,9 +116,8 @@ public final class LafManager {
     }
 
     /**
-     * Install the current theme. If no theme is installed, the default is
-     * {@link DarculaTheme}.
-     * This sets the current LaF and applies the given theme.
+     * Install the current theme. If no theme is installed, the default is {@link DarculaTheme}. This sets the current
+     * LaF and applies the given theme.
      */
     public static void install() {
         try {

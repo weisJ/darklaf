@@ -15,20 +15,13 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkDesktopIconUI extends BasicDesktopIconUI {
 
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkDesktopIconUI();
-    }
-
     protected JButton button;
     protected JLabel label;
     protected TitleListener titleListener;
     protected int width;
 
-    protected void installDefaults() {
-        super.installDefaults();
-        LookAndFeel.installColorsAndFont(desktopIcon, "DesktopIcon.background",
-                                         "DesktopIcon.foreground", "DesktopIcon.font");
-        width = UIManager.getInt("DesktopIcon.width");
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkDesktopIconUI();
     }
 
     protected void installComponents() {
@@ -76,6 +69,12 @@ public class DarkDesktopIconUI extends BasicDesktopIconUI {
         super.uninstallListeners();
     }
 
+    protected void installDefaults() {
+        super.installDefaults();
+        LookAndFeel.installColorsAndFont(desktopIcon, "DesktopIcon.background",
+                                         "DesktopIcon.foreground", "DesktopIcon.font");
+        width = UIManager.getInt("DesktopIcon.width");
+    }
 
     public Dimension getPreferredSize(final JComponent c) {
         return getMinimumSize(c);

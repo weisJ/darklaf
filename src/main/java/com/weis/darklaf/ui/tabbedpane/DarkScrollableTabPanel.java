@@ -27,9 +27,9 @@ import java.awt.*;
 
 class DarkScrollableTabPanel extends ScrollableTabPanel {
 
-    private DarkTabbedPaneUI ui;
     protected final Rectangle iconRect = new Rectangle();
     protected final Rectangle textRect = new Rectangle();
+    private DarkTabbedPaneUI ui;
 
     public DarkScrollableTabPanel(final DarkTabbedPaneUI ui) {
         super(ui);
@@ -41,17 +41,6 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
         super.paintComponent(g);
         if (ui.drawDropRect) {
             ui.paintDrop(g);
-        }
-    }
-
-    @Override
-    public void paint(final Graphics g) {
-        super.paint(g);
-        if (ui.dragging) {
-            ui.paintTab(g, ui.tabPane.getTabPlacement(), ui.dragRect, ui.tabPane.getSelectedIndex(), iconRect, textRect);
-            var comp = ui.tabPane.getTabComponentAt(ui.dropSourceIndex);
-            g.translate(comp.getX(), comp.getY());
-            comp.print(g);
         }
     }
 
@@ -81,6 +70,17 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
                     child.setBounds(0, 0, getWidth(), getHeight());
                 }
             }
+        }
+    }
+
+    @Override
+    public void paint(final Graphics g) {
+        super.paint(g);
+        if (ui.dragging) {
+            ui.paintTab(g, ui.tabPane.getTabPlacement(), ui.dragRect, ui.tabPane.getSelectedIndex(), iconRect, textRect);
+            var comp = ui.tabPane.getTabComponentAt(ui.dropSourceIndex);
+            g.translate(comp.getX(), comp.getY());
+            comp.print(g);
         }
     }
 }

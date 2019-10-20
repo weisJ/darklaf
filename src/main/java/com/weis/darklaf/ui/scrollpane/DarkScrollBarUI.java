@@ -83,6 +83,10 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             scrollbar.setValueIsAdjusting(false);
         }
     };
+    protected Color thumbBorderColor;
+    protected Color thumbFadeStartColor;
+    protected Color thumbFadeEndColor;
+    protected Color trackBackground;
     private float trackAlpha;
     private float thumbAlpha;
     private Animator trackFadeoutAnimator;
@@ -161,11 +165,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             mouseMotionListener.mouseMoved(e);
         }
     };
-    protected Color thumbBorderColor;
-    protected Color thumbFadeStartColor;
-    protected Color thumbFadeEndColor;
-    protected Color trackBackground;
-
 
     @NotNull
     @Contract("_ -> new")
@@ -428,23 +427,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     }
 
     @Override
-    public Dimension getMinimumSize(final JComponent c) {
-        return getMinimumThumbSize();
-    }
-
-    protected boolean isVertical() {
-        return this.scrollbar.getOrientation() == JScrollBar.VERTICAL;
-    }
-
-    private int getThickness() {
-        return isThin() ? THICKNESS_THIN : THICKNESS;
-    }
-
-    protected boolean isThin() {
-        return scrollbar.getClientProperty("ScrollBar.thin") == Boolean.TRUE;
-    }
-
-    @Override
     protected JButton createDecreaseButton(final int orientation) {
         return new EmptyButton();
     }
@@ -520,24 +502,41 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         return trackBackground;
     }
 
+    @Override
+    public Dimension getMinimumSize(final JComponent c) {
+        return getMinimumThumbSize();
+    }
+
+    protected boolean isVertical() {
+        return this.scrollbar.getOrientation() == JScrollBar.VERTICAL;
+    }
+
+    private int getThickness() {
+        return isThin() ? THICKNESS_THIN : THICKNESS;
+    }
+
+    protected boolean isThin() {
+        return scrollbar.getClientProperty("ScrollBar.thin") == Boolean.TRUE;
+    }
+
     @NotNull
     @Contract(" -> new")
     private Animator createTrackFadeoutAnimator() {
         return new Animator("Track fadeout", FADEOUT_FRAMES_COUNT,
                             FADEOUT_FRAMES_COUNT * FADEOUT_FRAME_COUNT_FACTOR, false) {
-            @Override
-            protected void paintCycleEnd() {
-                trackAlpha = 0;
-                if (scrollbar != null) {
-                    scrollbar.repaint();
-                }
-            }
-
             public void paintNow(final int frame, final int totalFrames, final int cycle) {
                 trackAlpha = MAX_TRACK_ALPHA;
                 if (frame > DELAY_FRAMES) {
                     trackAlpha *= (float) (1 - (double) frame / totalFrames);
                 }
+                if (scrollbar != null) {
+                    scrollbar.repaint();
+                }
+            }
+
+            @Override
+            protected void paintCycleEnd() {
+                trackAlpha = 0;
                 if (scrollbar != null) {
                     scrollbar.repaint();
                 }
@@ -551,14 +550,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         return new Animator("Adjustment fadeout", FADEOUT_FRAMES_COUNT,
                             FADEOUT_FRAMES_COUNT * FADEOUT_FRAME_COUNT_FACTOR, false) {
             @Override
-            protected void paintCycleEnd() {
-                thumbAlpha = 0;
-                if (scrollbar != null) {
-                    scrollbar.repaint();
-                }
-            }
-
-            @Override
             public void paintNow(final int frame, final int totalFrames, final int cycle) {
                 thumbAlpha = MAX_THUMB_ALPHA;
                 if (frame > DELAY_FRAMES) {
@@ -566,6 +557,14 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
                 }
                 if (scrollbar != null) {
                     scrollbar.repaint(getThumbBounds());
+                }
+            }
+
+            @Override
+            protected void paintCycleEnd() {
+                thumbAlpha = 0;
+                if (scrollbar != null) {
+                    scrollbar.repaint();
                 }
             }
         };
@@ -576,16 +575,16 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     private Animator createTrackFadeinAnimator() {
         return new Animator("Track fadein", FADEIN_FRAMES_COUNT,
                             FADEIN_FRAMES_COUNT * FADEIN_FRAME_COUNT_FACTOR, false) {
-            @Override
-            protected void paintCycleEnd() {
-                trackAlpha = MAX_TRACK_ALPHA;
+            public void paintNow(final int frame, final int totalFrames, final int cycle) {
+                trackAlpha = ((float) frame * MAX_TRACK_ALPHA) / totalFrames;
                 if (scrollbar != null) {
                     scrollbar.repaint();
                 }
             }
 
-            public void paintNow(final int frame, final int totalFrames, final int cycle) {
-                trackAlpha = ((float) frame * MAX_TRACK_ALPHA) / totalFrames;
+            @Override
+            protected void paintCycleEnd() {
+                trackAlpha = MAX_TRACK_ALPHA;
                 if (scrollbar != null) {
                     scrollbar.repaint();
                 }
@@ -599,6 +598,14 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         return new Animator("Adjustment fadein", FADEIN_FRAMES_COUNT / 2,
                             FADEIN_FRAMES_COUNT * FADEIN_FRAME_COUNT_FACTOR, false) {
             @Override
+            public void paintNow(final int frame, final int totalFrames, final int cycle) {
+                thumbAlpha = ((float) frame * MAX_THUMB_ALPHA) / totalFrames;
+                if (scrollbar != null) {
+                    scrollbar.repaint(getThumbBounds());
+                }
+            }
+
+            @Override
             protected void paintCycleEnd() {
                 thumbAlpha = MAX_THUMB_ALPHA;
                 if (scrollbar != null) {
@@ -609,14 +616,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
                 if (!getThumbBounds().contains(p)) {
                     mouseOverThumb = false;
                     resetThumbAnimator();
-                }
-            }
-
-            @Override
-            public void paintNow(final int frame, final int totalFrames, final int cycle) {
-                thumbAlpha = ((float) frame * MAX_THUMB_ALPHA) / totalFrames;
-                if (scrollbar != null) {
-                    scrollbar.repaint(getThumbBounds());
                 }
             }
         };

@@ -23,16 +23,6 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener {
 
-    @NotNull
-    @Contract("_ -> new")
-    public static ComponentUI createUI(@NotNull final JComponent c) {
-        if (Boolean.TRUE.equals(c.getClientProperty("JComponent.plainTooltip"))) {
-            return BasicToolTipUI.createUI(c);
-        } else {
-            return new DarkTooltipUI();
-        }
-    }
-
     protected JToolTip toolTip;
     protected MouseListener mouseListener = new MouseAdapter() {
         @Override
@@ -76,6 +66,16 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     };
 
+    @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(@NotNull final JComponent c) {
+        if (Boolean.TRUE.equals(c.getClientProperty("JComponent.plainTooltip"))) {
+            return BasicToolTipUI.createUI(c);
+        } else {
+            return new DarkTooltipUI();
+        }
+    }
+
     protected boolean isInside(@NotNull final MouseEvent e) {
         var p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), toolTip);
         return contains(toolTip, p.x, p.y);
@@ -101,6 +101,12 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     @Override
+    public void uninstallUI(final JComponent c) {
+        super.uninstallUI(c);
+        toolTip = null;
+    }
+
+    @Override
     protected void installDefaults(final JComponent c) {
         super.installDefaults(c);
         c.setOpaque(false);
@@ -108,12 +114,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             Alignment align = (Alignment) c.getClientProperty("JToolTip.pointerLocation");
             ((DarkTooltipBorder) c.getBorder()).setPointerLocation(align == null ? Alignment.CENTER : align);
         }
-    }
-
-    @Override
-    public void uninstallUI(final JComponent c) {
-        super.uninstallUI(c);
-        toolTip = null;
     }
 
     @Override
@@ -172,6 +172,14 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         return prefSize;
     }
 
+    @Override
+    public void hierarchyChanged(final HierarchyEvent e) {
+        var w = SwingUtilities.getWindowAncestor(toolTip);
+        if (w != null && !toolTip.isLightweight() && !isDecorated(w)) {
+            w.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
+        }
+    }
+
     protected boolean isDecorated(final Window w) {
         if (w instanceof Dialog) {
             return !((Dialog) w).isUndecorated();
@@ -181,15 +189,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
         return false;
     }
-
-    @Override
-    public void hierarchyChanged(final HierarchyEvent e) {
-        var w = SwingUtilities.getWindowAncestor(toolTip);
-        if (w != null && !toolTip.isLightweight() && !isDecorated(w)) {
-            w.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
-        }
-    }
-
 
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {

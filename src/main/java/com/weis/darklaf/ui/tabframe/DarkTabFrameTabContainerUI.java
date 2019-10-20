@@ -89,6 +89,36 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         }
     }
 
+    protected void installAccelerator(final JTabFrame tabFrame) {
+        if (tabFrame == null) return;
+        int acc = tabContainer.getAccelerator();
+        if (acc < 0) return;
+        tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
+                     "accelerator_" + acc);
+        tabFrame.getActionMap().put("accelerator_" + acc, createAcceleratorAction(tabFrame));
+    }
+
+    protected Action createAcceleratorAction(final JTabFrame tabFrame) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                var a = tabContainer.getOrientation();
+                var index = tabContainer.getIndex();
+                if (!tabContainer.isSelected()) {
+                    tabFrame.toggleTab(a, index, true);
+                } else {
+                    var popup = tabFrame.getPopupComponentAt(a, index);
+                    if (!DarkUIUtil.hasFocus(popup)) {
+                        popup.requestFocus();
+                    } else {
+                        tabFrame.toggleTab(a, index, false);
+                    }
+                }
+            }
+        };
+    }
+
     @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
@@ -117,6 +147,13 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         int acc = tabContainer.getAccelerator();
         String accAction = "accelerator_" + acc;
         tabFrame.getActionMap().remove(accAction);
+    }
+
+    protected void installDefaults(final JPanel p) {
+        super.installDefaults(p);
+        tabContainer.setOpaque(true);
+        selectedColor = UIManager.getColor("TabFrameTab.selectedBackground");
+        hoverColor = UIManager.getColor("TabFrameTab.hoverBackground");
     }
 
     @Override
@@ -152,23 +189,6 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         }
     }
 
-    protected void installDefaults(final JPanel p) {
-        super.installDefaults(p);
-        tabContainer.setOpaque(true);
-        selectedColor = UIManager.getColor("TabFrameTab.selectedBackground");
-        hoverColor = UIManager.getColor("TabFrameTab.hoverBackground");
-    }
-
-    protected void installAccelerator(final JTabFrame tabFrame) {
-        if (tabFrame == null) return;
-        int acc = tabContainer.getAccelerator();
-        if (acc < 0) return;
-        tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
-                     "accelerator_" + acc);
-        tabFrame.getActionMap().put("accelerator_" + acc, createAcceleratorAction(tabFrame));
-    }
-
     @Override
     public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
         g.setColor(getBackground(tabContainer));
@@ -180,25 +200,5 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         return tab.isSelected()
                ? selectedColor
                : hoverListener.isHover() ? hoverColor : tab.getBackground();
-    }
-
-    protected Action createAcceleratorAction(final JTabFrame tabFrame) {
-        return new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                var a = tabContainer.getOrientation();
-                var index = tabContainer.getIndex();
-                if (!tabContainer.isSelected()) {
-                    tabFrame.toggleTab(a, index, true);
-                } else {
-                    var popup = tabFrame.getPopupComponentAt(a, index);
-                    if (!DarkUIUtil.hasFocus(popup)) {
-                        popup.requestFocus();
-                    } else {
-                        tabFrame.toggleTab(a, index, false);
-                    }
-                }
-            }
-        };
     }
 }

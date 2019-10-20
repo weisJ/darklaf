@@ -18,6 +18,26 @@ public class DarkListUI extends DarkListUIBridge {
         UIManager.put("List.cellRenderer", new DarkListCellRenderer());
     }
 
+    @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(final JComponent list) {
+        return new DarkListUI();
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        list.putClientProperty("JList.alternateRowColor", UIManager.getBoolean("List.alternateRowColor"));
+    }
+
+    @Override
+    protected Handler getHandler() {
+        if (handler == null) {
+            handler = new DarkHandler();
+        }
+        return handler;
+    }
+
     protected void paintImpl(final Graphics g, final JComponent c) {
         switch (layoutOrientation) {
             case JList.VERTICAL_WRAP:
@@ -97,12 +117,6 @@ public class DarkListUI extends DarkListUIBridge {
         rendererPane.removeAll();
     }
 
-    @NotNull
-    @Contract("_ -> new")
-    public static ComponentUI createUI(final JComponent list) {
-        return new DarkListUI();
-    }
-
     protected void paintCell(final Graphics g, final int index, @NotNull final Rectangle rowBounds,
                              @NotNull final ListCellRenderer<Object> cellRenderer,
                              @NotNull final ListModel<Object> dataModel,
@@ -144,21 +158,6 @@ public class DarkListUI extends DarkListUIBridge {
             rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
         }
     }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        list.putClientProperty("JList.alternateRowColor", UIManager.getBoolean("List.alternateRowColor"));
-    }
-
-    @Override
-    protected Handler getHandler() {
-        if (handler == null) {
-            handler = new DarkHandler();
-        }
-        return handler;
-    }
-
 
     protected class DarkHandler extends Handler {
 

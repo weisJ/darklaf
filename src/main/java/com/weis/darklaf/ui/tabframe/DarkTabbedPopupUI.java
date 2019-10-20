@@ -110,6 +110,16 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     }
 
     @Override
+    protected void setHeaderBackground(final boolean focus) {
+        var oldFocus = hasFocus();
+        super.setHeaderBackground(focus);
+        if (oldFocus != focus) {
+            holder.setBackground(focus ? headerFocusBackground : headerBackground);
+            holder.repaint();
+        }
+    }
+
+    @Override
     protected void uninstallComponents() {
         super.uninstallComponents();
         popupComponent.remove(tabbedPane);
@@ -118,16 +128,6 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     @Override
     protected void applyBorderInsets(@NotNull final Insets insets) {
         border.setInsets(insets.top, insets.left, insets.bottom, insets.right);
-    }
-
-    @Override
-    protected void setHeaderBackground(final boolean focus) {
-        var oldFocus = hasFocus();
-        super.setHeaderBackground(focus);
-        if (oldFocus != focus) {
-            holder.setBackground(focus ? headerFocusBackground : headerBackground);
-            holder.repaint();
-        }
     }
 
     protected static class TabFrameMoreTabsButton extends MoreTabsButton {

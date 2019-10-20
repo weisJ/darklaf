@@ -246,7 +246,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
             setBackground(DarkUIUtil.TRANSPARENT_COLOR);
             BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
             Cursor blankCursor = Toolkit.getDefaultToolkit()
-                    .createCustomCursor(cursorImg, new Point(), "BlankCursor");
+                                        .createCustomCursor(cursorImg, new Point(), "BlankCursor");
             setCursor(blankCursor);
         }
 

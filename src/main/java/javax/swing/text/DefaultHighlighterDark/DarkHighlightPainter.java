@@ -44,10 +44,9 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Note this class only sits inside this weird package because of a hack used in
- * {@link SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent)} that
- * makes it impossible for custom highlighters to use the correct text foreground specified
- * by {@link JTextComponent#getSelectedTextColor()}.
+ * Note this class only sits inside this weird package because of a hack used in {@link
+ * SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent)} that makes it impossible for custom
+ * highlighters to use the correct text foreground specified by {@link JTextComponent#getSelectedTextColor()}.
  *
  * @author Jannis Weis
  */

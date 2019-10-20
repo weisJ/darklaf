@@ -222,9 +222,8 @@ public class TabbedPaneUtil implements SwingConstants {
     }
 
     /**
-     * Selects the specified tab in the specified tabbed pane.  This method
-     * can be overridden by subclasses to do more stuff than simply select
-     * the tab.
+     * Selects the specified tab in the specified tabbed pane.  This method can be overridden by subclasses to do more
+     * stuff than simply select the tab.
      *
      * @param tabbedPane The tabbed pane.
      * @param index      The index of the tab to select.

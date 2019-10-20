@@ -194,6 +194,19 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         }
     }
 
+    protected void updateText() {
+        var title = tabComponent.getTitle();
+        title = title == null ? "" : title;
+        int accelerator = tabComponent.getAccelerator();
+        if (accelerator >= 0 && accelerator <= 9) {
+            tabComponent.setText(accelerator + ":" + title);
+            tabComponent.setDisplayedMnemonicIndex(0);
+        } else {
+            tabComponent.setText(title);
+            tabComponent.setDisplayedMnemonicIndex(1);
+        }
+    }
+
     protected void installAccelerator(final JTabFrame tabFrame) {
         if (tabFrame == null) return;
         int acc = tabComponent.getAccelerator();
@@ -222,19 +235,6 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
                 }
             }
         };
-    }
-
-    protected void updateText() {
-        var title = tabComponent.getTitle();
-        title = title == null ? "" : title;
-        int accelerator = tabComponent.getAccelerator();
-        if (accelerator >= 0 && accelerator <= 9) {
-            tabComponent.setText(accelerator + ":" + title);
-            tabComponent.setDisplayedMnemonicIndex(0);
-        } else {
-            tabComponent.setText(title);
-            tabComponent.setDisplayedMnemonicIndex(1);
-        }
     }
 
     protected void uninstallAccelerator(final JTabFrame tabFrame) {

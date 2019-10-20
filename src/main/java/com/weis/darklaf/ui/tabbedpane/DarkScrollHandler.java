@@ -41,6 +41,11 @@ public class DarkScrollHandler extends DarkHandler {
     }
 
     @Override
+    public void mouseReleased(final MouseEvent e) {
+        super.mouseReleased(ui.convertEvent(e));
+    }
+
+    @Override
     public void mouseDragged(final MouseEvent e) {
         super.mouseDragged(ui.convertEvent(e));
     }
@@ -48,11 +53,6 @@ public class DarkScrollHandler extends DarkHandler {
     @Override
     public void mouseClicked(final MouseEvent e) {
         super.mouseClicked(ui.convertEvent(e));
-    }
-
-    @Override
-    public void mouseReleased(final MouseEvent e) {
-        super.mouseReleased(ui.convertEvent(e));
     }
 
     @Override

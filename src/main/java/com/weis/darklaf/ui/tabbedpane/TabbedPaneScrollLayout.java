@@ -33,14 +33,6 @@ abstract class TabbedPaneScrollLayout extends TabbedPaneLayout {
         super(ui);
     }
 
-    protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
-        return ui.calculateMaxTabHeight(tabPlacement);
-    }
-
-    protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
-        return ui.calculateMaxTabWidth(tabPlacement);
-    }
-
     protected void calculateTabRects(final int tabPlacement, final int tabCount) {
         FontMetrics metrics = ui.getFontMetrics();
         Dimension size = ui.tabPane.getSize();
@@ -138,5 +130,13 @@ abstract class TabbedPaneScrollLayout extends TabbedPaneLayout {
         }
         ui.tabScroller.tabPanel.setPreferredSize(new Dimension(totalWidth, totalHeight));
         ui.tabScroller.tabPanel.invalidate();
+    }
+
+    protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
+        return ui.calculateMaxTabWidth(tabPlacement);
+    }
+
+    protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
+        return ui.calculateMaxTabHeight(tabPlacement);
     }
 }

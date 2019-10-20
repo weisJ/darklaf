@@ -40,15 +40,15 @@ import java.awt.*;
 
 public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
+    protected boolean isCollapsed;
+    protected Color borderColor;
+    protected int arc;
+
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTaskPaneUI();
     }
-
-    protected boolean isCollapsed;
-    protected Color borderColor;
-    protected int arc;
 
     @Override
     protected void installDefaults() {
@@ -58,16 +58,16 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     }
 
     @Override
+    protected Border createPaneBorder() {
+        return new DarkPaneBorder();
+    }
+
+    @Override
     protected void installListeners() {
         super.installListeners();
         group.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY, e -> {
             isCollapsed = "collapsed".equals(e.getNewValue());
         });
-    }
-
-    @Override
-    protected Border createPaneBorder() {
-        return new DarkPaneBorder();
     }
 
     @Override
@@ -85,6 +85,11 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     @Override
     protected int getRoundHeight() {
         return arc;
+    }
+
+    protected boolean isCollapsed() {
+        if (!group.isAnimated()) return group.isCollapsed();
+        return isCollapsed;
     }
 
     protected static class DarkContentPaneBorder implements Border, UIResource {
@@ -122,11 +127,6 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         public boolean isBorderOpaque() {
             return true;
         }
-    }
-
-    protected boolean isCollapsed() {
-        if (!group.isAnimated()) return group.isCollapsed();
-        return isCollapsed;
     }
 
     protected class DarkPaneBorder extends PaneBorder {

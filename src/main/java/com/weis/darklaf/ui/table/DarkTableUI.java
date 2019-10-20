@@ -25,31 +25,6 @@ import java.util.function.Supplier;
 public class DarkTableUI extends DarkTableUIBridge {
 
     private static final int ROW_HEIGHT = 22;
-    protected Color selectionBackground;
-    protected Color selectionFocusBackground;
-    private final FocusListener focusListener = new FocusListener() {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            var bg = table.getSelectionBackground();
-            if (bg instanceof UIResource) {
-                table.setSelectionBackground(selectionFocusBackground);
-            }
-            table.repaint();
-        }
-
-        @Override
-        public void focusLost(final FocusEvent e) {
-            var bg = table.getSelectionBackground();
-            if (bg instanceof UIResource) {
-                if (table.isEditing()) {
-                    table.setSelectionBackground(table.getBackground());
-                } else {
-                    table.setSelectionBackground(selectionBackground);
-                }
-            }
-            table.repaint();
-        }
-    };
     private final PropertyChangeListener propertyChangeListener = e -> {
         var key = e.getPropertyName();
         if ("showHorizontalLines".equals(key)) {
@@ -76,6 +51,31 @@ public class DarkTableUI extends DarkTableUIBridge {
             }
         }
     };
+    protected Color selectionBackground;
+    protected Color selectionFocusBackground;
+    private final FocusListener focusListener = new FocusListener() {
+        @Override
+        public void focusGained(final FocusEvent e) {
+            var bg = table.getSelectionBackground();
+            if (bg instanceof UIResource) {
+                table.setSelectionBackground(selectionFocusBackground);
+            }
+            table.repaint();
+        }
+
+        @Override
+        public void focusLost(final FocusEvent e) {
+            var bg = table.getSelectionBackground();
+            if (bg instanceof UIResource) {
+                if (table.isEditing()) {
+                    table.setSelectionBackground(table.getBackground());
+                } else {
+                    table.setSelectionBackground(selectionBackground);
+                }
+            }
+            table.repaint();
+        }
+    };
     protected Color borderColor;
 
     @NotNull
@@ -84,6 +84,68 @@ public class DarkTableUI extends DarkTableUIBridge {
         return new DarkTableUI();
     }
 
+    protected boolean pointOutsidePrefSize(final int row, final int column, final Point p) {
+        return false;
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        table.addFocusListener(focusListener);
+        table.addPropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    protected Handler getHandler() {
+        if (handler == null) {
+            handler = new DarkHandler();
+        }
+        return handler;
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        table.removeFocusListener(focusListener);
+        table.removePropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        var prefSize = super.getPreferredSize(c);
+        if (!isInScrollPane()) {
+            return prefSize;
+        } else {
+            var dim = SwingUtilities.getUnwrappedParent(table).getSize();
+            if (dim.width < prefSize.width || dim.height < prefSize.height) {
+                return prefSize;
+            } else {
+                return dim;
+            }
+        }
+    }
+
+    protected Color getBorderColor() {
+        return borderColor;
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        int rowHeight = UIManager.getInt("Table.rowHeight");
+        if (rowHeight > 0) {
+            table.setRowHeight(ROW_HEIGHT);
+        }
+        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
+        table.putClientProperty("JTable.renderBooleanAsCheckBox",
+                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
+        table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
+        table.putClientProperty("JTable.alternateRowColor", UIManager.getBoolean("Table.alternateRowColor"));
+        setupRendererComponents(table);
+        borderColor = UIManager.getColor("TableHeader.borderColor");
+        selectionFocusBackground = UIManager.getColor("Table.focusSelectionBackground");
+        selectionBackground = UIManager.getColor("Table.selectionNoFocusBackground");
+    }
 
     @Override
     protected void paintGrid(@NotNull final Graphics g,
@@ -148,27 +210,120 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
+    protected boolean isScrollPaneRtl() {
+        if (!isInScrollPane()) return false;
+        Container comp = SwingUtilities.getUnwrappedParent(table).getParent();
+        return !comp.getComponentOrientation().isLeftToRight();
+    }
 
-    protected static void setupRendererComponents(@NotNull final JTable table) {
-        var cellRenderer = new DarkTableCellRenderer();
-        var cellEditor = new DarkTableCellEditor();
-        var colorRendererEditor = new DarkColorTableCellRendererEditor();
+    protected boolean scrollBarVisible() {
+        Container comp = SwingUtilities.getUnwrappedParent(table);
+        if (comp != null) {
+            comp = comp.getParent();
+        }
+        return comp instanceof JScrollPane && ((JScrollPane) comp).getVerticalScrollBar().isVisible();
+    }
 
-        table.setDefaultRenderer(Object.class, cellRenderer);
-        table.setDefaultRenderer(String.class, cellRenderer);
-        table.setDefaultRenderer(Integer.class, cellRenderer);
-        table.setDefaultRenderer(Double.class, cellRenderer);
-        table.setDefaultRenderer(Float.class, cellRenderer);
-        table.setDefaultRenderer(Boolean.class, cellRenderer);
-        table.setDefaultRenderer(Color.class, colorRendererEditor);
+    protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
+                                       final boolean scrollLtR, final int column, final int draggedIndex,
+                                       final int cMin, final int cMax) {
+        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
+                                  table.getCellRect(0, draggedIndex, true),
+                                  table);
+        boolean isDragged = column == draggedIndex && dist != 0;
+        if (!scrollVisible) {
+            if (ltr) {
+                return column != cMax;
+            } else {
+                return column != cMin;
+            }
+        } else {
+            if (ltr) {
+                if (scrollLtR) {
+                    return column != cMax || !isDragged;
+                } else {
+                    return column != cMax;
+                }
+            } else {
+                if (scrollLtR) {
+                    return column != cMin || !isDragged;
+                } else {
+                    return column != cMin;
+                }
+            }
+        }
+    }
 
-        table.setDefaultEditor(Object.class, cellEditor);
-        table.setDefaultEditor(String.class, cellEditor);
-        table.setDefaultEditor(Integer.class, cellEditor);
-        table.setDefaultEditor(Double.class, cellEditor);
-        table.setDefaultEditor(Float.class, cellEditor);
-        table.setDefaultEditor(Boolean.class, cellEditor);
-        table.setDefaultEditor(Color.class, colorRendererEditor);
+    protected boolean isInScrollPane() {
+        Container comp = SwingUtilities.getUnwrappedParent(table);
+        if (comp != null) {
+            comp = comp.getParent();
+        }
+        return comp instanceof JScrollPane;
+    }
+
+    protected static int adjustDistance(final int distance, @NotNull final Rectangle rect,
+                                        @NotNull final JTable comp) {
+        int dist = distance;
+        int min = 0;
+        int max = comp.getX() + comp.getWidth();
+        if (rect.x + dist <= min) {
+            dist = min - rect.x;
+        }
+        if (rect.x + rect.width + dist >= max) {
+            dist = max - rect.x - rect.width;
+        }
+        return dist;
+    }
+
+    @Override
+    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
+        var bounds = table.getVisibleRect();
+        Point upperLeft = bounds.getLocation();
+        Point lowerRight = new Point(upperLeft.x + bounds.width - 1, upperLeft.y + bounds.height - 1);
+        int cMin = table.columnAtPoint(upperLeft);
+        int cMax = table.columnAtPoint(lowerRight);
+
+        boolean scrollLtR = !isScrollPaneRtl();
+        boolean ltr = table.getComponentOrientation().isLeftToRight();
+        int draggedIndex = viewIndexForColumn(table.getTableHeader().getDraggedColumn());
+        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
+                                  table.getCellRect(row, draggedIndex, true),
+                                  table);
+        boolean isDragged = column == draggedIndex && dist != 0;
+        var r = new Rectangle(cellRect);
+        if (!scrollBarVisible()) {
+            if (ltr) {
+                if (column == cMax && !isDragged) r.width += 1;
+            } else {
+                if (column == cMin && !isDragged) r.width += 1;
+            }
+        } else if (!scrollLtR) {
+            if (ltr) {
+                if (column == cMax && !isDragged) r.width += 1;
+                if (column == cMin && !isDragged) {
+                    r.width -= 1;
+                    r.x += 1;
+                }
+            } else {
+                if (column == cMin && !isDragged) r.width += 1;
+                if (column == cMax && !isDragged) {
+                    r.width -= 1;
+                    r.x += 1;
+                }
+            }
+        }
+        if (table.isEditing() && table.getEditingRow() == row &&
+                table.getEditingColumn() == column) {
+            Component component = table.getEditorComponent();
+            component.setBounds(cellRect);
+            component.validate();
+        } else {
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component component = table.prepareRenderer(renderer, row, column);
+            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
+                                        cellRect.width, cellRect.height, true);
+        }
     }
 
     @Override
@@ -258,183 +413,26 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
-    @Override
-    protected void installListeners() {
-        super.installListeners();
-        table.addFocusListener(focusListener);
-        table.addPropertyChangeListener(propertyChangeListener);
-    }
+    protected static void setupRendererComponents(@NotNull final JTable table) {
+        var cellRenderer = new DarkTableCellRenderer();
+        var cellEditor = new DarkTableCellEditor();
+        var colorRendererEditor = new DarkColorTableCellRendererEditor();
 
-    @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        table.removeFocusListener(focusListener);
-        table.removePropertyChangeListener(propertyChangeListener);
-    }
+        table.setDefaultRenderer(Object.class, cellRenderer);
+        table.setDefaultRenderer(String.class, cellRenderer);
+        table.setDefaultRenderer(Integer.class, cellRenderer);
+        table.setDefaultRenderer(Double.class, cellRenderer);
+        table.setDefaultRenderer(Float.class, cellRenderer);
+        table.setDefaultRenderer(Boolean.class, cellRenderer);
+        table.setDefaultRenderer(Color.class, colorRendererEditor);
 
-    protected boolean pointOutsidePrefSize(final int row, final int column, final Point p) {
-        return false;
-    }
-
-    protected boolean isScrollPaneRtl() {
-        if (!isInScrollPane()) return false;
-        Container comp = SwingUtilities.getUnwrappedParent(table).getParent();
-        return !comp.getComponentOrientation().isLeftToRight();
-    }
-
-    protected boolean scrollBarVisible() {
-        Container comp = SwingUtilities.getUnwrappedParent(table);
-        if (comp != null) {
-            comp = comp.getParent();
-        }
-        return comp instanceof JScrollPane && ((JScrollPane) comp).getVerticalScrollBar().isVisible();
-    }
-
-    protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
-                                       final boolean scrollLtR, final int column, final int draggedIndex,
-                                       final int cMin, final int cMax) {
-        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
-                                  table.getCellRect(0, draggedIndex, true),
-                                  table);
-        boolean isDragged = column == draggedIndex && dist != 0;
-        if (!scrollVisible) {
-            if (ltr) {
-                return column != cMax;
-            } else {
-                return column != cMin;
-            }
-        } else {
-            if (ltr) {
-                if (scrollLtR) {
-                    return column != cMax || !isDragged;
-                } else {
-                    return column != cMax;
-                }
-            } else {
-                if (scrollLtR) {
-                    return column != cMin || !isDragged;
-                } else {
-                    return column != cMin;
-                }
-            }
-        }
-    }
-
-    protected Color getBorderColor() {
-        return borderColor;
-    }
-
-    protected boolean isInScrollPane() {
-        Container comp = SwingUtilities.getUnwrappedParent(table);
-        if (comp != null) {
-            comp = comp.getParent();
-        }
-        return comp instanceof JScrollPane;
-    }
-
-    protected static int adjustDistance(final int distance, @NotNull final Rectangle rect,
-                                        @NotNull final JTable comp) {
-        int dist = distance;
-        int min = 0;
-        int max = comp.getX() + comp.getWidth();
-        if (rect.x + dist <= min) {
-            dist = min - rect.x;
-        }
-        if (rect.x + rect.width + dist >= max) {
-            dist = max - rect.x - rect.width;
-        }
-        return dist;
-    }
-
-    @Override
-    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
-        var bounds = table.getVisibleRect();
-        Point upperLeft = bounds.getLocation();
-        Point lowerRight = new Point(upperLeft.x + bounds.width - 1, upperLeft.y + bounds.height - 1);
-        int cMin = table.columnAtPoint(upperLeft);
-        int cMax = table.columnAtPoint(lowerRight);
-
-        boolean scrollLtR = !isScrollPaneRtl();
-        boolean ltr = table.getComponentOrientation().isLeftToRight();
-        int draggedIndex = viewIndexForColumn(table.getTableHeader().getDraggedColumn());
-        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
-                                  table.getCellRect(row, draggedIndex, true),
-                                  table);
-        boolean isDragged = column == draggedIndex && dist != 0;
-        var r = new Rectangle(cellRect);
-        if (!scrollBarVisible()) {
-            if (ltr) {
-                if (column == cMax && !isDragged) r.width += 1;
-            } else {
-                if (column == cMin && !isDragged) r.width += 1;
-            }
-        } else if (!scrollLtR) {
-            if (ltr) {
-                if (column == cMax && !isDragged) r.width += 1;
-                if (column == cMin && !isDragged) {
-                    r.width -= 1;
-                    r.x += 1;
-                }
-            } else {
-                if (column == cMin && !isDragged) r.width += 1;
-                if (column == cMax && !isDragged) {
-                    r.width -= 1;
-                    r.x += 1;
-                }
-            }
-        }
-        if (table.isEditing() && table.getEditingRow() == row &&
-                table.getEditingColumn() == column) {
-            Component component = table.getEditorComponent();
-            component.setBounds(cellRect);
-            component.validate();
-        } else {
-            TableCellRenderer renderer = table.getCellRenderer(row, column);
-            Component component = table.prepareRenderer(renderer, row, column);
-            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
-                                        cellRect.width, cellRect.height, true);
-        }
-    }
-
-    @Override
-    protected Handler getHandler() {
-        if (handler == null) {
-            handler = new DarkHandler();
-        }
-        return handler;
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        int rowHeight = UIManager.getInt("Table.rowHeight");
-        if (rowHeight > 0) {
-            table.setRowHeight(ROW_HEIGHT);
-        }
-        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
-        table.putClientProperty("JTable.renderBooleanAsCheckBox",
-                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
-        table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
-        table.putClientProperty("JTable.alternateRowColor", UIManager.getBoolean("Table.alternateRowColor"));
-        setupRendererComponents(table);
-        borderColor = UIManager.getColor("TableHeader.borderColor");
-        selectionFocusBackground = UIManager.getColor("Table.focusSelectionBackground");
-        selectionBackground = UIManager.getColor("Table.selectionNoFocusBackground");
-    }
-
-    @Override
-    public Dimension getPreferredSize(final JComponent c) {
-        var prefSize = super.getPreferredSize(c);
-        if (!isInScrollPane()) {
-            return prefSize;
-        } else {
-            var dim = SwingUtilities.getUnwrappedParent(table).getSize();
-            if (dim.width < prefSize.width || dim.height < prefSize.height) {
-                return prefSize;
-            } else {
-                return dim;
-            }
-        }
+        table.setDefaultEditor(Object.class, cellEditor);
+        table.setDefaultEditor(String.class, cellEditor);
+        table.setDefaultEditor(Integer.class, cellEditor);
+        table.setDefaultEditor(Double.class, cellEditor);
+        table.setDefaultEditor(Float.class, cellEditor);
+        table.setDefaultEditor(Boolean.class, cellEditor);
+        table.setDefaultEditor(Color.class, colorRendererEditor);
     }
 
     protected class DarkHandler extends Handler {

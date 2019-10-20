@@ -658,8 +658,8 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     /**
-     * Property to remember whether a directory is currently selected in the UI.
-     * This is normally called by the UI on a selection event.
+     * Property to remember whether a directory is currently selected in the UI. This is normally called by the UI on a
+     * selection event.
      *
      * @param directorySelected if a directory is currently selected.
      * @since 1.4
@@ -840,14 +840,11 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Returns the preferred size of the specified
      * <code>JFileChooser</code>.
-     * The preferred size is at least as large,
-     * in both height and width,
-     * as the preferred size recommended
-     * by the file chooser's layout manager.
+     * The preferred size is at least as large, in both height and width, as the preferred size recommended by the file
+     * chooser's layout manager.
      *
      * @param c a <code>JFileChooser</code>
-     * @return a <code>Dimension</code> specifying the preferred
-     * width and height of the file chooser
+     * @return a <code>Dimension</code> specifying the preferred width and height of the file chooser
      */
     @Override
     public Dimension getPreferredSize(final JComponent c) {
@@ -865,8 +862,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * Returns the minimum size of the <code>JFileChooser</code>.
      *
      * @param c a <code>JFileChooser</code>
-     * @return a <code>Dimension</code> specifying the minimum
-     * width and height of the file chooser
+     * @return a <code>Dimension</code> specifying the minimum width and height of the file chooser
      */
     @Override
     public Dimension getMinimumSize(final JComponent c) {
@@ -877,8 +873,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * Returns the maximum size of the <code>JFileChooser</code>.
      *
      * @param c a <code>JFileChooser</code>
-     * @return a <code>Dimension</code> specifying the maximum
-     * width and height of the file chooser
+     * @return a <code>Dimension</code> specifying the maximum width and height of the file chooser
      */
     @Override
     public Dimension getMaximumSize(final JComponent c) {
@@ -921,8 +916,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * <code>ButtonAreaLayout</code> behaves in a similar manner to
      * <code>FlowLayout</code>. It lays out all components from left to
-     * right, flushed right. The widths of all components will be set
-     * to the largest preferred size width.
+     * right, flushed right. The widths of all components will be set to the largest preferred size width.
      */
     protected static class ButtonAreaLayout implements LayoutManager {
         protected int hGap = 5;
@@ -1143,9 +1137,8 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
 
         /**
-         * Adds the directory to the model and sets it to be selected,
-         * additionally clears out the previous selected directory and
-         * the paths leading up to it, if any.
+         * Adds the directory to the model and sets it to be selected, additionally clears out the previous selected
+         * directory and the paths leading up to it, if any.
          */
         protected void addItem(final File directory) {
 
@@ -1241,6 +1234,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
         public Object getElementAt(final int index) {
             return directories.elementAt(index);
         }
+
 
         public Object getSelectedItem() {
             return selectedDirectory;

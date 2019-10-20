@@ -19,29 +19,25 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class DarkProgressBarUI extends BasicProgressBarUI {
 
-    @NotNull
-    @Contract("_ -> new")
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkProgressBarUI();
-    }
-
+    private static final int CYCLE_TIME_DEFAULT = 800;
+    private static final int REPAINT_INTERVAL_DEFAULT = 50;
+    private static final int CYCLE_TIME_SIMPLIFIED = 1000;
+    private static final int REPAINT_INTERVAL_SIMPLIFIED = 500;
+    private static final int DEFAULT_WIDTH = 4;
     private Color trackColor;
     private Color progressColor;
     private Color indeterminateStartColor;
     private Color indeterminateEndColor;
-
     private Color failedColor;
     private Color failedEndColor;
     private Color passedColor;
     private Color passedEndColor;
 
-    private static final int CYCLE_TIME_DEFAULT = 800;
-    private static final int REPAINT_INTERVAL_DEFAULT = 50;
-
-    private static final int CYCLE_TIME_SIMPLIFIED = 1000;
-    private static final int REPAINT_INTERVAL_SIMPLIFIED = 500;
-
-    private static final int DEFAULT_WIDTH = 4;
+    @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkProgressBarUI();
+    }
 
     @Override
     protected void installDefaults() {
@@ -57,6 +53,10 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         failedEndColor = UIManager.getColor("ProgressBar.failedEndColor");
         passedColor = UIManager.getColor("ProgressBar.passedColor");
         passedEndColor = UIManager.getColor("ProgressBar.passedEndColor");
+    }
+
+    protected static boolean hasFailed(@NotNull final JComponent c) {
+        return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.failed"));
     }
 
     @Override
@@ -144,44 +144,6 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         }
     }
 
-    protected Color getStartColor() {
-        return indeterminateStartColor;
-    }
-
-    protected Color getEndColor() {
-        return indeterminateEndColor;
-    }
-
-    private void paintString(@NotNull final Graphics2D g, final int x, final int y,
-                             final int w, final int h, final int fillStart, final int amountFull) {
-        String progressString = progressBar.getString();
-        g.setFont(progressBar.getFont());
-        Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
-
-        var config = GraphicsUtil.setupAAPainting(g);
-        if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
-            g.setColor(getSelectionBackground());
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-            g.setColor(getSelectionForeground());
-            g.clipRect(fillStart, y, amountFull, h);
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-        } else { // VERTICAL
-            g.setColor(getSelectionBackground());
-            AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
-            g.setFont(progressBar.getFont().deriveFont(rotate));
-            renderLocation = getStringPlacement(g, progressString, x, y, w, h);
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-            g.setColor(getSelectionForeground());
-            g.clipRect(x, fillStart, w, amountFull);
-
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-        }
-        config.restore();
-    }
-
     @Override
     protected void paintDeterminate(@NotNull final Graphics g, final JComponent c) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -236,14 +198,6 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         }
     }
 
-    protected static boolean hasFailed(@NotNull final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.failed"));
-    }
-
-    protected static boolean hasPassed(@NotNull final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.passed"));
-    }
-
     protected Color getRemainderColor() {
         return trackColor;
     }
@@ -281,15 +235,57 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         }
     }
 
+    protected static boolean hasPassed(@NotNull final JComponent c) {
+        return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.passed"));
+    }
+
     @Override
     protected int getBoxLength(final int availableLength, final int otherDimension) {
         return availableLength;
+    }
+
+    protected Color getStartColor() {
+        return indeterminateStartColor;
+    }
+
+    protected Color getEndColor() {
+        return indeterminateEndColor;
     }
 
     @NotNull
     @Contract("_, _, _, _, _ -> new")
     private Shape getShapedRect(final float x, final float y, final float w, final float h, final float ar) {
         return new RoundRectangle2D.Float(x, y, w, h, ar, ar);
+    }
+
+    private void paintString(@NotNull final Graphics2D g, final int x, final int y,
+                             final int w, final int h, final int fillStart, final int amountFull) {
+        String progressString = progressBar.getString();
+        g.setFont(progressBar.getFont());
+        Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
+
+        var config = GraphicsUtil.setupAAPainting(g);
+        if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
+            g.setColor(getSelectionBackground());
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+            g.setColor(getSelectionForeground());
+            g.clipRect(fillStart, y, amountFull, h);
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+        } else { // VERTICAL
+            g.setColor(getSelectionBackground());
+            AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
+            g.setFont(progressBar.getFont().deriveFont(rotate));
+            renderLocation = getStringPlacement(g, progressString, x, y, w, h);
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+            g.setColor(getSelectionForeground());
+            g.clipRect(x, fillStart, w, amountFull);
+
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+        }
+        config.restore();
     }
 
     @Contract(pure = true)

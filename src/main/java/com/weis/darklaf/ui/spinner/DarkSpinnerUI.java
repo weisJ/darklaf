@@ -74,9 +74,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
     };
     protected Color arrowBackgroundStart;
-    private JComponent editor;
-    private Color compColor;
-    private JButton prevButton;
     protected Color background;
     protected Color arrowBackgroundEnd;
     protected Icon arrowDownIcon;
@@ -90,12 +87,33 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     protected Icon arrowUpInactiveIcon;
     protected Icon plusInactiveIcon;
     protected Icon minusInactiveIcon;
+    private JComponent editor;
+    private Color compColor;
+    private JButton prevButton;
     private Component editorComponent;
 
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSpinnerUI();
+    }
+
+    protected static boolean usePlusMinusIcons(@NotNull final JSpinner spinner) {
+        return "plusMinus".equals(spinner.getClientProperty("JSpinner.variant"));
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        spinner.addMouseListener(mouseListener);
+        spinner.addPropertyChangeListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        spinner.removeMouseListener(mouseListener);
+        spinner.removePropertyChangeListener(this);
     }
 
     @Override
@@ -119,20 +137,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         plusInactiveIcon = UIManager.getIcon("Spinner.plusInactive.icon");
 
         spinner.setOpaque(false);
-    }
-
-    @Override
-    protected void installListeners() {
-        super.installListeners();
-        spinner.addMouseListener(mouseListener);
-        spinner.addPropertyChangeListener(this);
-    }
-
-    @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        spinner.removeMouseListener(mouseListener);
-        spinner.removePropertyChangeListener(this);
     }
 
     protected LayoutManager createLayout() {
@@ -245,29 +249,29 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         JComponent editor = spinner.getEditor();
         if (editorComponent != null) {
             if (!editorComponent.isEnabled()) {
-                    if (compColor == null) {
-                        compColor = editorComponent.getBackground();
-                        editorComponent.setBackground(getBackground(c));
-                    } else {
-                        compColor = null;
-                    }
-                }
-            g.setColor(editorComponent.getBackground());
-            } else {
-            ((Graphics2D) g).setPaint(getBackground(c));
-            }
-            if (!isTableCellEditor(c) && !isTreeCellEditor(c)) {
-                DarkUIUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
-            } else {
-                var bounds = prevButton.getBounds();
-                boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
-                int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
-                if (leftToRight) {
-                    g.fillRect(0, 0, off, height);
+                if (compColor == null) {
+                    compColor = editorComponent.getBackground();
+                    editorComponent.setBackground(getBackground(c));
                 } else {
-                    g.fillRect(off, 0, width - off, height);
+                    compColor = null;
                 }
             }
+            g.setColor(editorComponent.getBackground());
+        } else {
+            ((Graphics2D) g).setPaint(getBackground(c));
+        }
+        if (!isTableCellEditor(c) && !isTreeCellEditor(c)) {
+            DarkUIUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
+        } else {
+            var bounds = prevButton.getBounds();
+            boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
+            int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
+            if (leftToRight) {
+                g.fillRect(0, 0, off, height);
+            } else {
+                g.fillRect(off, 0, width - off, height);
+            }
+        }
         if (editor != null) {
             paintSpinBackground((Graphics2D) g, width, height, size, arc);
         }
@@ -275,6 +279,16 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
     protected Color getBackground(final JComponent c) {
         return c == null || !c.isEnabled() ? inactiveBackground : background;
+    }
+
+    protected static boolean isTableCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
+    }
+
+    protected static boolean isTreeCellEditor(@NotNull final Component c) {
+        return c instanceof JComponent
+                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTreeCellEditor"));
     }
 
     private void paintSpinBackground(@NotNull final Graphics2D g, final int width, final int height,
@@ -292,16 +306,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
         g.setPaint(getArrowBackground(spinner));
         g.fill(rect);
-    }
-
-    protected static boolean isTableCellEditor(@NotNull final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
-    }
-
-    protected static boolean isTreeCellEditor(@NotNull final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTreeCellEditor"));
     }
 
     protected Paint getArrowBackground(final JComponent c) {
@@ -335,10 +339,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
     }
 
-    protected static boolean usePlusMinusIcons(@NotNull final JSpinner spinner) {
-        return "plusMinus".equals(spinner.getClientProperty("JSpinner.variant"));
-    }
-
     protected static class SpinnerIcon implements Icon {
 
         private final JSpinner spinner;
@@ -353,14 +353,13 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             this.mathIcon = mathIcon;
         }
 
-        protected Icon getCurrent() {
-            return usePlusMinusIcons(spinner) ? mathIcon : icon;
-        }
-
-
         @Override
         public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
             getCurrent().paintIcon(c, g, x, y);
+        }
+
+        protected Icon getCurrent() {
+            return usePlusMinusIcons(spinner) ? mathIcon : icon;
         }
 
         @Override

@@ -14,9 +14,8 @@ import java.nio.file.ProviderNotFoundException;
 import java.nio.file.StandardCopyOption;
 
 /**
- * A simple library class which helps with loading dynamic libraries stored in the
- * JAR archive. These libraries usually contain implementation of some methods in
- * native code (using JNI - Java Native Interface).
+ * A simple library class which helps with loading dynamic libraries stored in the JAR archive. These libraries usually
+ * contain implementation of some methods in native code (using JNI - Java Native Interface).
  *
  * @see <a href="http://adamheinrich.com/blog/2012/how-to-load-native-jni-library-from-jar">http://adamheinrich.com/blog/2012/how-to-load-native-jni-library-from-jar</a>
  * @see <a href="https://github.com/adamheinrich/native-utils">https://github.com/adamheinrich/native-utils</a>
@@ -41,14 +40,14 @@ public class NativeUtil {
      * Loads library from current JAR archive
      * <p>
      * The file from JAR is copied into system temporary directory and then loaded. The temporary file is deleted after
-     * exiting.
-     * Method uses String as filename because the pathname is "abstract", not system-dependent.
+     * exiting. Method uses String as filename because the pathname is "abstract", not system-dependent.
      *
      * @param path The path of file inside JAR as absolute path (beginning with '/'), e.g. /package/File.ext
      * @throws IOException              If temporary file creation or read/write operation fails
      * @throws IllegalArgumentException If source file (param path) does not exist
      * @throws IllegalArgumentException If the path is not absolute or if the filename is shorter than three characters
-     *                                  (restriction of {@link File#createTempFile(java.lang.String, java.lang.String)}).
+     *                                  (restriction of {@link File#createTempFile(java.lang.String,
+     *                                  java.lang.String)}).
      * @throws FileNotFoundException    If the file could not be found inside the JAR.
      */
     @Contract("null -> fail")
@@ -113,8 +112,8 @@ public class NativeUtil {
     private static boolean isPosixCompliant() {
         try {
             return FileSystems.getDefault()
-                    .supportedFileAttributeViews()
-                    .contains("posix");
+                              .supportedFileAttributeViews()
+                              .contains("posix");
         } catch (FileSystemNotFoundException
                 | ProviderNotFoundException
                 | SecurityException e) {

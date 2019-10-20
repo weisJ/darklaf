@@ -71,8 +71,28 @@ import java.awt.geom.Rectangle2D;
 public class TransformLayout extends DefaultLayerLayout {
 
     /**
-     * Overridden to apply a different layout when the {@link LayerUI} is an instance of {@link
-     * TransformUI}. If this is not the case, the super implementation will be invoked.
+     * Overridden to apply a preferred transform on the {@link Dimension} object returned from the super
+     * implementation.
+     */
+    @NotNull
+    @Override
+    public Dimension preferredLayoutSize(final Container parent) {
+        return transform(parent, super.preferredLayoutSize(parent));
+    }
+
+    /**
+     * Overridden to apply a preferred transform on the {@link Dimension} object returned from the super
+     * implementation.
+     */
+    @NotNull
+    @Override
+    public Dimension minimumLayoutSize(final Container parent) {
+        return transform(parent, super.minimumLayoutSize(parent));
+    }
+
+    /**
+     * Overridden to apply a different layout when the {@link LayerUI} is an instance of {@link TransformUI}. If this is
+     * not the case, the super implementation will be invoked.
      */
     @Override
     public void layoutContainer(final Container parent) {
@@ -98,26 +118,6 @@ public class TransformLayout extends DefaultLayerLayout {
             return;
         }
         super.layoutContainer(parent);
-    }
-
-    /**
-     * Overridden to apply a preferred transform on the {@link Dimension} object returned from the
-     * super implementation.
-     */
-    @NotNull
-    @Override
-    public Dimension minimumLayoutSize(final Container parent) {
-        return transform(parent, super.minimumLayoutSize(parent));
-    }
-
-    /**
-     * Overridden to apply a preferred transform on the {@link Dimension} object returned from the
-     * super implementation.
-     */
-    @NotNull
-    @Override
-    public Dimension preferredLayoutSize(final Container parent) {
-        return transform(parent, super.preferredLayoutSize(parent));
     }
 
     @NotNull

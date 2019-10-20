@@ -96,15 +96,6 @@ public class ToggleSplitPane extends JSplitPane {
         super.setDividerLocation(location);
     }
 
-    @Override
-    public int getDividerLocation() {
-        if (resizable) {
-            return super.getDividerLocation();
-        } else {
-            return disabledMax == disabledPos ? getMaximumDividerLocation() : disabledPos;
-        }
-    }
-
     public void forceSetDividerLocation(final double proportionalLocation) {
         if (proportionalLocation < 0.0 ||
                 proportionalLocation > 1.0) {
@@ -119,6 +110,15 @@ public class ToggleSplitPane extends JSplitPane {
     }
 
     @Override
+    public int getDividerLocation() {
+        if (resizable) {
+            return super.getDividerLocation();
+        } else {
+            return disabledMax == disabledPos ? getMaximumDividerLocation() : disabledPos;
+        }
+    }
+
+    @Override
     public int getLastDividerLocation() {
         if (resizable) {
             return super.getLastDividerLocation();
@@ -126,6 +126,7 @@ public class ToggleSplitPane extends JSplitPane {
             return disabledMax == disabledPos ? getMaximumDividerLocation() : disabledPos;
         }
     }
+
 
     @Override
     public void setDividerLocation(final int location) {

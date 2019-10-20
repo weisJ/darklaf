@@ -86,13 +86,11 @@ import java.util.concurrent.Callable;
 
 /**
  * <b>WARNING:</b> This class is an implementation detail and is only
- * public so that it can be used by two packages. You should NOT consider
- * this public API.
+ * public so that it can be used by two packages. You should NOT consider this public API.
  * <p>
- * This component is intended to be used in a subclass of
- * javax.swing.plaf.basic.BasicFileChooserUI. It realies heavily on the
- * implementation of BasicFileChooserUI, and is intended to be API compatible
- * with earlier implementations of MetalFileChooserUI and WindowsFileChooserUI.
+ * This component is intended to be used in a subclass of javax.swing.plaf.basic.BasicFileChooserUI. It realies heavily
+ * on the implementation of BasicFileChooserUI, and is intended to be API compatible with earlier implementations of
+ * MetalFileChooserUI and WindowsFileChooserUI.
  *
  * @author Leif Samuelsson
  */
@@ -515,8 +513,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
     }
 
     /**
-     * Fetches the command list for the FilePane. These commands
-     * are useful for binding to events, such as in a keymap.
+     * Fetches the command list for the FilePane. These commands are useful for binding to events, such as in a keymap.
      *
      * @return the command list
      */
@@ -1698,8 +1695,8 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
     }
 
     /**
-     * This class sorts directories before files, comparing directory to
-     * directory and file to file using the wrapped comparator.
+     * This class sorts directories before files, comparing directory to directory and file to file using the wrapped
+     * comparator.
      */
     protected class DirectoriesFirstComparatorWrapper implements Comparator<File> {
         protected Comparator<Object> comparator;

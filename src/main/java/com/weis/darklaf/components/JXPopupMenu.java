@@ -42,8 +42,7 @@ public class JXPopupMenu extends JPopupMenu {
     /**
      * Constructs a <code>JPopupMenu</code> with the specified title.
      *
-     * @param label the string that a UI may use to display as a title
-     *              for the popup menu.
+     * @param label the string that a UI may use to display as a title for the popup menu.
      */
     public JXPopupMenu(final String label) {
         super(label);

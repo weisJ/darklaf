@@ -83,20 +83,12 @@ public class TabbedPopup extends PanelPopup {
     }
 
     /**
-     * Returns all currently installed content panes.
-     * i.e. this area all components currently added as tabs to
-     * the TabbedPane.
-     * {@see {@link #getTabbedPane()}}.
+     * Creates the tabbedPane. Overwrite this method to customize the tabbedPane used.
      *
-     * @return a collection of components.
+     * @return a tabbed pane.
      */
-    public Collection<Component> getContentPanes() {
-        int size = getTabbedPane().getTabCount();
-        List<Component> compList = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            compList.add(tabbedPane.getComponentAt(i));
-        }
-        return compList;
+    protected JTabbedPane createTabbedPane() {
+        return new JTabbedPane();
     }
 
     /**
@@ -112,13 +104,12 @@ public class TabbedPopup extends PanelPopup {
     }
 
     /**
-     * Creates the tabbedPane.
-     * Overwrite this method to customize the tabbedPane used.
+     * Gets the currently selected component from the TabbedPane. {@see {@link #getTabbedPane()}}.
      *
-     * @return a tabbed pane.
+     * @return the selected component.
      */
-    protected JTabbedPane createTabbedPane() {
-        return new JTabbedPane();
+    public Component getContentPane() {
+        return tabbedPane.getSelectedComponent();
     }
 
     @Override
@@ -127,20 +118,8 @@ public class TabbedPopup extends PanelPopup {
     }
 
     /**
-     * Gets the currently selected component from the TabbedPane.
-     * {@see {@link #getTabbedPane()}}.
-     *
-     * @return the selected component.
-     */
-    public Component getContentPane() {
-        return tabbedPane.getSelectedComponent();
-    }
-
-    /**
-     * Adds the component to the tabbed pane if it isn't already added.
-     * This method exists to conform the interface methods.
-     * It is preferred to directly add to the TabbedPane obtained by
-     * {@link #getTabbedPane()}.
+     * Adds the component to the tabbed pane if it isn't already added. This method exists to conform the interface
+     * methods. It is preferred to directly add to the TabbedPane obtained by {@link #getTabbedPane()}.
      *
      * @param component the component to add.
      */
@@ -150,5 +129,20 @@ public class TabbedPopup extends PanelPopup {
             return;
         }
         getTabbedPane().addTab(component.getName(), component);
+    }
+
+    /**
+     * Returns all currently installed content panes. i.e. this area all components currently added as tabs to the
+     * TabbedPane. {@see {@link #getTabbedPane()}}.
+     *
+     * @return a collection of components.
+     */
+    public Collection<Component> getContentPanes() {
+        int size = getTabbedPane().getTabCount();
+        List<Component> compList = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            compList.add(tabbedPane.getComponentAt(i));
+        }
+        return compList;
     }
 }

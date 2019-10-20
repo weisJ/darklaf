@@ -42,18 +42,18 @@ public class OverlayScrollPane extends JLayeredPane {
     private final ControlPanel controlPanel;
 
     /**
-     * Creates a <code>JScrollIndicator</code> that displays the contents of the specified component,
-     * where both horizontal and vertical scrollbars appear whenever the component's contents are
-     * larger than the view and scrolling in underway or the mouse is over the scrollbar position.
+     * Creates a <code>JScrollIndicator</code> that displays the contents of the specified component, where both
+     * horizontal and vertical scrollbars appear whenever the component's contents are larger than the view and
+     * scrolling in underway or the mouse is over the scrollbar position.
      */
     public OverlayScrollPane() {
         this(null);
     }
 
     /**
-     * Creates a <code>JScrollIndicator</code> that displays the contents of the specified component,
-     * where both horizontal and vertical scrollbars appear whenever the component's contents are
-     * larger than the view and scrolling in underway or the mouse is over the scrollbar position.
+     * Creates a <code>JScrollIndicator</code> that displays the contents of the specified component, where both
+     * horizontal and vertical scrollbars appear whenever the component's contents are larger than the view and
+     * scrolling in underway or the mouse is over the scrollbar position.
      *
      * @param view the component to display in the scrollable viewport
      * @see JScrollPane#setViewportView
@@ -63,12 +63,11 @@ public class OverlayScrollPane extends JLayeredPane {
     }
 
     /**
-     * Creates a JScrollIndicator that displays the view component in a viewport whose view position
-     * can be controlled with a pair of scrollbars. The scrollbar policies specify when the scrollbars
-     * are displayed, For example, if vsbPolicy is JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED then the
-     * vertical scrollbar only appears if the view doesn't fit vertically. The available policy
-     * settings are listed at {@link JScrollPane#setVerticalScrollBarPolicy(int)} and {@link
-     * JScrollPane#setHorizontalScrollBarPolicy}.
+     * Creates a JScrollIndicator that displays the view component in a viewport whose view position can be controlled
+     * with a pair of scrollbars. The scrollbar policies specify when the scrollbars are displayed, For example, if
+     * vsbPolicy is JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED then the vertical scrollbar only appears if the view
+     * doesn't fit vertically. The available policy settings are listed at {@link JScrollPane#setVerticalScrollBarPolicy(int)}
+     * and {@link JScrollPane#setHorizontalScrollBarPolicy}.
      *
      * @param view      the view of the component.
      * @param vsbPolicy an integer that specifies the vertical scrollbar policy
@@ -87,9 +86,8 @@ public class OverlayScrollPane extends JLayeredPane {
     }
 
     /**
-     * Returns the scroll pane used by this scroll indicator. Use carefully (e.g. to set unit
-     * increments) because not all changes have an effect. You have to write listeners in this cases
-     * (e.g. for changing the scrollbar policy)
+     * Returns the scroll pane used by this scroll indicator. Use carefully (e.g. to set unit increments) because not
+     * all changes have an effect. You have to write listeners in this cases (e.g. for changing the scrollbar policy)
      *
      * @return the scrollPane
      */
@@ -108,9 +106,36 @@ public class OverlayScrollPane extends JLayeredPane {
     public void setVerticalScrollBarPolicy(final int policy) {
         scrollPane.setVerticalScrollBarPolicy(policy);
         controlPanel.showVerticalScrollBar(policy != JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+    }
+
+    public void setHorizontalScrollBarPolicy(final int policy) {
+        scrollPane.setHorizontalScrollBarPolicy(policy);
+        controlPanel.showHorizontalScrollBar(policy != JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     }    @Override
     public Dimension getPreferredSize() {
         return scrollPane.getPreferredSize();
+    }
+
+    @Contract(pure = true)
+    @NotNull
+    public JScrollBar getVerticalScrollBar() {
+        return scrollPane.verticalScrollBar;
+    }
+
+    @Contract(pure = true)
+    @NotNull
+    public JScrollBar getHorizontalScrollBar() {
+        return scrollPane.horizontalScrollBar;
+    }
+
+    public void setViewportView(final Component c) {
+        scrollPane.setViewportView(c);
+    }
+
+    @Override
+    public void setPreferredSize(final Dimension preferredSize) {
+        super.setPreferredSize(preferredSize);
+        scrollPane.setPreferredSize(preferredSize);
     }
 
     private static final class PopupScrollBar extends JScrollBar {
@@ -227,33 +252,6 @@ public class OverlayScrollPane extends JLayeredPane {
         }
     }
 
-    @Override
-    public void setPreferredSize(final Dimension preferredSize) {
-        super.setPreferredSize(preferredSize);
-        scrollPane.setPreferredSize(preferredSize);
-    }
-
-    public void setHorizontalScrollBarPolicy(final int policy) {
-        scrollPane.setHorizontalScrollBarPolicy(policy);
-        controlPanel.showHorizontalScrollBar(policy != JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    }
-
-    @Contract(pure = true)
-    @NotNull
-    public JScrollBar getVerticalScrollBar() {
-        return scrollPane.verticalScrollBar;
-    }
-
-    @Contract(pure = true)
-    @NotNull
-    public JScrollBar getHorizontalScrollBar() {
-        return scrollPane.horizontalScrollBar;
-    }
-
-    public void setViewportView(final Component c) {
-        scrollPane.setViewportView(c);
-    }
-
     private final class ControlPanel extends JPanel {
 
         private boolean showVertical;
@@ -273,11 +271,6 @@ public class OverlayScrollPane extends JLayeredPane {
                 showHorizontal = true;
                 add(scrollPane.horizontalScrollBar);
             }
-        }
-
-        @Override
-        public boolean isOpaque() {
-            return false;
         }
 
         private void showVerticalScrollBar(final boolean show) {
@@ -305,7 +298,16 @@ public class OverlayScrollPane extends JLayeredPane {
             return scrollPane.verticalScrollBar.isVisible()
                     && scrollPane.verticalScrollBar.getBounds().contains(x, y);
         }
+
+        @Override
+        public boolean isOpaque() {
+            return false;
+        }
     }
+
+
+
+
 
 
 }

@@ -121,8 +121,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
     }
 
     /**
-     * Returns null if the typed string was invalid;
-     * otherwise, returns the string as the user entered it.
+     * Returns null if the typed string was invalid; otherwise, returns the string as the user entered it.
      */
     public String getValidatedText() {
         return typedText;

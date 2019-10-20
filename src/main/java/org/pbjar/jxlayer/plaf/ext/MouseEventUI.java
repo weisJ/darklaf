@@ -47,8 +47,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 
 /**
- * This class provides for {@link MouseEvent} re-dispatching. It may be used to set a tool tip on
- * {@link JXLayer}'s glass pane and still have the child components receive {@link MouseEvent}s.
+ * This class provides for {@link MouseEvent} re-dispatching. It may be used to set a tool tip on {@link JXLayer}'s
+ * glass pane and still have the child components receive {@link MouseEvent}s.
  * <p>
  * <b>Note:</b> A {@link MouseEventUI} instance cannot be shared and can be set
  * to a single {@link JXLayer} instance only.
@@ -79,8 +79,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     /**
      * Overridden to override the {@link LayerUI} implementation that only consults the view.
      * <p>
-     * This implementation is a copy of the {@link ComponentUI#contains(JComponent, int, int)}
-     * method.
+     * This implementation is a copy of the {@link ComponentUI#contains(JComponent, int, int)} method.
      */
     @SuppressWarnings("deprecation")
     @Override
@@ -89,8 +88,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     /**
-     * Overridden to check if this {@link LayerUI} has not been installed already, and to set the
-     * argument {@code component} as the installed {@link JXLayer}.
+     * Overridden to check if this {@link LayerUI} has not been installed already, and to set the argument {@code
+     * component} as the installed {@link JXLayer}.
      *
      * @throws IllegalStateException when this {@link LayerUI} has been installed already
      * @see #getInstalledLayer()
@@ -126,8 +125,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     /**
-     * Overridden to allow for re-dispatching of mouse events to their intended (visual) recipients,
-     * rather than to the components according to their bounds.
+     * Overridden to allow for re-dispatching of mouse events to their intended (visual) recipients, rather than to the
+     * components according to their bounds.
      */
     @Override
     public void eventDispatched(final AWTEvent event, @NotNull final JXLayer<? extends V> layer) {
@@ -159,8 +158,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     /**
-     * Re-dispatches the event to the first component in the hierarchy that has a {@link
-     * MouseWheelListener} registered.
+     * Re-dispatches the event to the first component in the hierarchy that has a {@link MouseWheelListener}
+     * registered.
      */
     @Override
     protected void processMouseWheelEvent(@NotNull final MouseWheelEvent event,

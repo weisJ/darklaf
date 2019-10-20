@@ -55,10 +55,10 @@ import java.util.Vector;
  * @author Steve Wilson
  * @author Tom Santos
  * @author Dave Moore
- *
- * This class stands in to allow to access the hell of ui code produced in
- * {@link javax.swing.plaf.basic.BasicTabbedPaneUI}. This code is almost identical to the original implementation
- * besides the fact that all fields and methods are now protected instead of private.
+ * <p>
+ * This class stands in to allow to access the hell of ui code produced in {@link javax.swing.plaf.basic.BasicTabbedPaneUI}.
+ * This code is almost identical to the original implementation besides the fact that all fields and methods are now
+ * protected instead of private.
  * @author Jannis Weis
  */
 public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstants {
@@ -102,40 +102,32 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected boolean tabsOpaque = true;
     protected boolean contentOpaque = true;
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
     @Deprecated
     protected KeyStroke upKey;
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
     @Deprecated
     protected KeyStroke downKey;
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
     @Deprecated
     protected KeyStroke leftKey;
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
@@ -190,8 +182,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected Vector<View> htmlViews;
     protected Hashtable<Integer, Integer> mnemonicToIndexMap;
     /**
-     * InputMap used for mnemonics. Only non-null if the JTabbedPane has
-     * mnemonics associated with it. Lazily created in initMnemonics.
+     * InputMap used for mnemonics. Only non-null if the JTabbedPane has mnemonics associated with it. Lazily created in
+     * initMnemonics.
      */
     protected InputMap mnemonicInputMap;
     // For use when tabLayoutPolicy = SCROLL_TAB_LAYOUT
@@ -212,9 +204,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
 // UI creation
     /**
-     * This is set to true when a component is added/removed from the tab
-     * pane and set to false when layout happens.  If true it indicates that
-     * tabRuns is not valid and shouldn't be used.
+     * This is set to true when a component is added/removed from the tab pane and set to false when layout happens.  If
+     * true it indicates that tabRuns is not valid and shouldn't be used.
      */
     protected boolean isRunsDirty;
     protected boolean calculatedBaseline;
@@ -322,8 +313,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Removes any installed subcomponents from the JTabbedPane.
-     * Invoked by uninstallUI.
+     * Removes any installed subcomponents from the JTabbedPane. Invoked by uninstallUI.
      *
      * @since 1.4
      */
@@ -413,8 +403,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Returns an enum indicating how the baseline of the component
-     * changes as the size changes.
+     * Returns an enum indicating how the baseline of the component changes as the size changes.
      *
      * @throws NullPointerException {@inheritDoc}
      * @see javax.swing.JComponent#getBaseline(int, int)
@@ -435,9 +424,361 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Invoked by <code>installUI</code> to create
-     * a layout manager object to manage
-     * the <code>JTabbedPane</code>.
+     * Paints the content border.
+     *
+     * @param g             the graphics context in which to paint
+     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
+     * @param selectedIndex the tab index of the selected component
+     */
+    protected abstract void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex);
+
+    /**
+     * Paints the tabs in the tab area. Invoked by paint(). The graphics parameter must be a valid <code>Graphics</code>
+     * object.  Tab placement may be either:
+     * <code>JTabbedPane.TOP</code>, <code>JTabbedPane.BOTTOM</code>,
+     * <code>JTabbedPane.LEFT</code>, or <code>JTabbedPane.RIGHT</code>.
+     * The selected index must be a valid tabbed pane tab index (0 to tab count - 1, inclusive) or -1 if no tab is
+     * currently selected. The handling of invalid parameters is unspecified.
+     *
+     * @param g             the graphics object to use for rendering
+     * @param tabPlacement  the placement for the tabs within the JTabbedPane
+     * @param selectedIndex the tab index of the selected component
+     * @since 1.4
+     */
+    protected void paintTabArea(final Graphics g, final int tabPlacement, final int selectedIndex) {
+        int tabCount = tabPane.getTabCount();
+
+        Rectangle iconRect = new Rectangle(),
+                textRect = new Rectangle();
+        Rectangle clipRect = g.getClipBounds();
+
+        // Paint tabRuns of tabs from back to front
+        for (int i = runCount - 1; i >= 0; i--) {
+            int start = tabRuns[i];
+            int next = tabRuns[(i == runCount - 1) ? 0 : i + 1];
+            int end = (next != 0 ? next - 1 : tabCount - 1);
+            for (int j = start; j <= end; j++) {
+                if (j != selectedIndex && rects[j].intersects(clipRect)) {
+                    paintTab(g, tabPlacement, rects, j, iconRect, textRect);
+                }
+            }
+        }
+
+        // Paint selected tab if its in the front run
+        // since it may overlap other tabs
+        if (selectedIndex >= 0 && rects[selectedIndex].intersects(clipRect)) {
+            paintTab(g, tabPlacement, rects, selectedIndex, iconRect, textRect);
+        }
+    }
+
+    protected void paintTab(final Graphics g, final int tabPlacement,
+                            final Rectangle[] rects, final int tabIndex,
+                            final Rectangle iconRect, final Rectangle textRect) {
+        paintTab(g, tabPlacement, rects[tabIndex], tabIndex, iconRect, textRect);
+    }
+
+    /**
+     * Paints a tab.
+     *
+     * @param g            the graphics
+     * @param tabPlacement the tab placement
+     * @param tabRect      the tab rectangle
+     * @param tabIndex     the tab index
+     * @param iconRect     the icon rectangle
+     * @param textRect     the text rectangle
+     */
+    protected void paintTab(final Graphics g, final int tabPlacement,
+                            final Rectangle tabRect, final int tabIndex,
+                            final Rectangle iconRect, final Rectangle textRect) {
+        int selectedIndex = tabPane.getSelectedIndex();
+        boolean isSelected = selectedIndex == tabIndex;
+
+        if (tabsOpaque || tabPane.isOpaque()) {
+            paintTabBackground(g, tabPlacement, tabIndex, tabRect.x, tabRect.y,
+                               tabRect.width, tabRect.height, isSelected);
+        }
+
+        paintTabBorder(g, tabPlacement, tabIndex, tabRect.x, tabRect.y,
+                       tabRect.width, tabRect.height, isSelected);
+
+        String title = tabPane.getTitleAt(tabIndex);
+        Font font = tabPane.getFont();
+        FontMetrics metrics = SwingUtilities2.getFontMetrics(tabPane, g, font);
+        Icon icon = getIconForTab(tabIndex);
+
+        layoutLabel(tabPlacement, metrics, tabIndex, title, icon,
+                    tabRect, iconRect, textRect, isSelected);
+
+        if (tabPane.getTabComponentAt(tabIndex) == null) {
+            String clippedTitle = title;
+
+            if (!scrollableTabLayoutEnabled() && isHorizontalTabPlacement()) {
+                clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, textRect.width);
+            }
+
+            paintText(g, tabPlacement, font, metrics, tabIndex, clippedTitle, textRect, isSelected);
+
+            paintIcon(g, tabPlacement, tabIndex, icon, iconRect, isSelected);
+        }
+        paintFocusIndicator(g, tabPlacement, tabRect, tabIndex, iconRect, textRect, isSelected);
+    }
+
+    /**
+     * Paints the tab background.
+     *
+     * @param g            the graphics context in which to paint
+     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabIndex     the index of the tab with respect to other tabs
+     * @param x            the x coordinate of tab
+     * @param y            the y coordinate of tab
+     * @param w            the width of the tab
+     * @param h            the height of the tab
+     * @param isSelected   a {@code boolean} which determines whether or not the tab is selected
+     */
+    protected abstract void paintTabBackground(final Graphics g, final int tabPlacement,
+                                               final int tabIndex,
+                                               final int x, final int y, final int w, final int h,
+                                               final boolean isSelected);
+
+    /**
+     * this function draws the border around each tab note that this function does now draw the background of the tab.
+     * that is done elsewhere
+     *
+     * @param g            the graphics context in which to paint
+     * @param tabPlacement the placement (left, right, bottom, top) of the tab
+     * @param tabIndex     the index of the tab with respect to other tabs
+     * @param x            the x coordinate of tab
+     * @param y            the y coordinate of tab
+     * @param w            the width of the tab
+     * @param h            the height of the tab
+     * @param isSelected   a {@code boolean} which determines whether or not the tab is selected
+     */
+    protected abstract void paintTabBorder(final Graphics g, final int tabPlacement,
+                                           final int tabIndex,
+                                           final int x, final int y, final int w, final int h,
+                                           final boolean isSelected);
+
+    /**
+     * Returns the icon for a tab.
+     *
+     * @param tabIndex the index of the tab
+     * @return the icon for a tab
+     */
+    protected Icon getIconForTab(final int tabIndex) {
+        return (!tabPane.isEnabled() || !tabPane.isEnabledAt(tabIndex)) ?
+               tabPane.getDisabledIconAt(tabIndex) : tabPane.getIconAt(tabIndex);
+    }
+
+    /**
+     * Laysout a label.properties.
+     *
+     * @param tabPlacement the tab placement
+     * @param metrics      the font metric
+     * @param tabIndex     the tab index
+     * @param title        the title
+     * @param icon         the icon
+     * @param tabRect      the tab rectangle
+     * @param iconRect     the icon rectangle
+     * @param textRect     the text rectangle
+     * @param isSelected   selection status
+     */
+    protected void layoutLabel(final int tabPlacement,
+                               final FontMetrics metrics, final int tabIndex,
+                               final String title, final Icon icon,
+                               final Rectangle tabRect, final Rectangle iconRect,
+                               final Rectangle textRect, final boolean isSelected) {
+        textRect.x = textRect.y = iconRect.x = iconRect.y = 0;
+
+        View v = getTextViewForTab(tabIndex);
+        if (v != null) {
+            tabPane.putClientProperty("html", v);
+        }
+
+        SwingUtilities.layoutCompoundLabel(tabPane,
+                                           metrics, title, icon,
+                                           SwingUtilities.CENTER,
+                                           SwingUtilities.CENTER,
+                                           SwingUtilities.CENTER,
+                                           SwingUtilities.TRAILING,
+                                           tabRect,
+                                           iconRect,
+                                           textRect,
+                                           textIconGap);
+
+        tabPane.putClientProperty("html", null);
+
+        int xNudge = getTabLabelShiftX(tabPlacement, tabIndex, isSelected);
+        int yNudge = getTabLabelShiftY(tabPlacement, tabIndex, isSelected);
+        iconRect.x += xNudge;
+        iconRect.y += yNudge;
+        textRect.x += xNudge;
+        textRect.y += yNudge;
+    }
+
+    protected boolean isHorizontalTabPlacement() {
+        return tabPane.getTabPlacement() == TOP || tabPane.getTabPlacement() == BOTTOM;
+    }
+
+    /**
+     * Paints text.
+     *
+     * @param g            the graphics
+     * @param tabPlacement the tab placement
+     * @param font         the font
+     * @param metrics      the font metrics
+     * @param tabIndex     the tab index
+     * @param title        the title
+     * @param textRect     the text rectangle
+     * @param isSelected   selection status
+     */
+    protected void paintText(final Graphics g, final int tabPlacement,
+                             final Font font, final FontMetrics metrics, final int tabIndex,
+                             final String title, final Rectangle textRect,
+                             final boolean isSelected) {
+
+        g.setFont(font);
+
+        View v = getTextViewForTab(tabIndex);
+        if (v != null) {
+            // html
+            v.paint(g, textRect);
+        } else {
+            // plain text
+            int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
+
+            if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
+                Color fg = tabPane.getForegroundAt(tabIndex);
+                if (isSelected && (fg instanceof UIResource)) {
+                    Color selectedFG = selectedForeground;
+                    if (selectedFG != null) {
+                        fg = selectedFG;
+                    }
+                }
+                g.setColor(fg);
+                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+                                                          title, mnemIndex,
+                                                          textRect.x, textRect.y + metrics.getAscent());
+
+            } else { // tab disabled
+                g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
+                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+                                                          title, mnemIndex,
+                                                          textRect.x, textRect.y + metrics.getAscent());
+                g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
+                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+                                                          title, mnemIndex,
+                                                          textRect.x - 1, textRect.y + metrics.getAscent() - 1);
+
+            }
+        }
+    }
+
+    /**
+     * Paints an icon.
+     *
+     * @param g            the graphics
+     * @param tabPlacement the tab placement
+     * @param tabIndex     the tab index
+     * @param icon         the icon
+     * @param iconRect     the icon rectangle
+     * @param isSelected   selection status
+     */
+    protected void paintIcon(final Graphics g, final int tabPlacement,
+                             final int tabIndex, final Icon icon, final Rectangle iconRect,
+                             final boolean isSelected) {
+        if (icon != null) {
+            // Clip the icon within iconRect bounds
+            Shape oldClip = g.getClip();
+            ((Graphics2D) g).clip(iconRect);
+            icon.paintIcon(tabPane, g, iconRect.x, iconRect.y);
+            g.setClip(oldClip);
+        }
+    }
+
+    /**
+     * Paints the focus indicator.
+     *
+     * @param g            the graphics
+     * @param tabPlacement the tab placement
+     * @param tabRect      the tabRect
+     * @param tabIndex     the tab index
+     * @param iconRect     the icon rectangle
+     * @param textRect     the text rectangle
+     * @param isSelected   selection status
+     */
+    protected abstract void paintFocusIndicator(final Graphics g, final int tabPlacement,
+                                                final Rectangle tabRect, final int tabIndex,
+                                                final Rectangle iconRect, final Rectangle textRect,
+                                                final boolean isSelected);
+
+    /**
+     * Returns the text View object required to render stylized text (HTML) for the specified tab or null if no
+     * specialized text rendering is needed for this tab. This is provided to support html rendering inside tabs.
+     *
+     * @param tabIndex the index of the tab
+     * @return the text view to render the tab's text or null if no specialized rendering is required
+     * @since 1.4
+     */
+    protected View getTextViewForTab(final int tabIndex) {
+        if (htmlViews != null) {
+            return htmlViews.elementAt(tabIndex);
+        }
+        return null;
+    }
+
+    /**
+     * Returns the tab label.properties shift x.
+     *
+     * @param tabPlacement the tab placement
+     * @param tabIndex     the tab index
+     * @param isSelected   selection status
+     * @return the tab label.properties shift x
+     */
+    protected int getTabLabelShiftX(final int tabPlacement, final int tabIndex, final boolean isSelected) {
+        Rectangle tabRect = rects[tabIndex];
+        String propKey = (isSelected ? "selectedLabelShift" : "labelShift");
+        int nudge = DefaultLookup.getInt(
+                tabPane, this, "TabbedPane." + propKey, 1);
+
+        switch (tabPlacement) {
+            case LEFT:
+                return nudge;
+            case RIGHT:
+                return -nudge;
+            case BOTTOM:
+            case TOP:
+            default:
+                return tabRect.width % 2;
+        }
+    }
+
+    /**
+     * Returns the tab label.properties shift y.
+     *
+     * @param tabPlacement the tab placement
+     * @param tabIndex     the tab index
+     * @param isSelected   selection status
+     * @return the tab label.properties shift y
+     */
+    protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
+        Rectangle tabRect = rects[tabIndex];
+        int nudge = (isSelected ? DefaultLookup.getInt(tabPane, this, "TabbedPane.selectedLabelShift", -1) :
+                     DefaultLookup.getInt(tabPane, this, "TabbedPane.labelShift", 1));
+
+        switch (tabPlacement) {
+            case BOTTOM:
+                return -nudge;
+            case LEFT:
+            case RIGHT:
+                return tabRect.height % 2;
+            case TOP:
+            default:
+                return nudge;
+        }
+    }
+
+    /**
+     * Invoked by <code>installUI</code> to create a layout manager object to manage the <code>JTabbedPane</code>.
      *
      * @return a layout manager object
      * @see TabbedPaneLayout
@@ -446,8 +787,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected abstract LayoutManager createLayoutManager();
 
     /**
-     * Creates and installs any required subcomponents for the JTabbedPane.
-     * Invoked by installUI.
+     * Creates and installs any required subcomponents for the JTabbedPane. Invoked by installUI.
      *
      * @since 1.4
      */
@@ -459,6 +799,22 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             }
         }
         installTabContainer();
+    }
+
+    /**
+     * Reloads the mnemonics. This should be invoked when a memonic changes, when the title of a mnemonic changes, or
+     * when tabs are added/removed.
+     */
+    protected void updateMnemonics() {
+        resetMnemonics();
+        for (int counter = tabPane.getTabCount() - 1; counter >= 0;
+             counter--) {
+            int mnemonic = tabPane.getMnemonicAt(counter);
+
+            if (mnemonic > 0) {
+                addMnemonic(counter, mnemonic);
+            }
+        }
     }
 
     /**
@@ -491,6 +847,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (tabAreaInsets == null) tabAreaInsets = new Insets(3, 2, 0, 2);
         if (contentBorderInsets == null) contentBorderInsets = new Insets(2, 2, 3, 3);
     }
+
+// UI Rendering
 
     /**
      * Install the listeners.
@@ -633,19 +991,15 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Reloads the mnemonics. This should be invoked when a memonic changes,
-     * when the title of a mnemonic changes, or when tabs are added/removed.
+     * Sets the tab the mouse is over by location. This is a cover method for <code>setRolloverTab(tabForCoordinate(x,
+     * y, false))</code>.
      */
-    protected void updateMnemonics() {
-        resetMnemonics();
-        for (int counter = tabPane.getTabCount() - 1; counter >= 0;
-             counter--) {
-            int mnemonic = tabPane.getMnemonicAt(counter);
-
-            if (mnemonic > 0) {
-                addMnemonic(counter, mnemonic);
-            }
-        }
+    protected void setRolloverTab(final int x, final int y) {
+        // NOTE:
+        // This calls in with false otherwise it could trigger a validate,
+        // which should NOT happen if the user is only dragging the
+        // mouse around.
+        setRolloverTab(tabForCoordinate(tabPane, x, y, false));
     }
 
     /**
@@ -688,18 +1042,16 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Sets the tab the mouse is over by location. This is a cover method
-     * for <code>setRolloverTab(tabForCoordinate(x, y, false))</code>.
+     * Returns a point which is translated from the specified point in the JTabbedPane's coordinate space to the
+     * coordinate space of the ScrollableTabPanel.  This is used for SCROLL_TAB_LAYOUT ONLY.
      */
-    protected void setRolloverTab(final int x, final int y) {
-        // NOTE:
-        // This calls in with false otherwise it could trigger a validate,
-        // which should NOT happen if the user is only dragging the
-        // mouse around.
-        setRolloverTab(tabForCoordinate(tabPane, x, y, false));
+    protected Point translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
+        Point vpp = tabScroller.viewport.getLocation();
+        Point viewp = tabScroller.viewport.getViewPosition();
+        dest.x = srcx - vpp.x + viewp.x;
+        dest.y = srcy - vpp.y + viewp.y;
+        return dest;
     }
-
-// UI Rendering
 
     protected int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
                                    final boolean validateIfNecessary) {
@@ -729,39 +1081,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return -1;
     }
 
-    protected void ensureCurrentLayout() {
-        if (!tabPane.isValid()) {
-            tabPane.validate();
-        }
-        /* If tabPane doesn't have a peer yet, the validate() call will
-         * silently fail.  We handle that by forcing a layout if tabPane
-         * is still invalid.  See bug 4237677.
-         */
-        if (!tabPane.isValid()) {
-            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
-            layout.calculateLayoutInfo();
-        }
-    }
-
     /**
-     * Returns a point which is translated from the specified point in the
-     * JTabbedPane's coordinate space to the coordinate space of the
-     * ScrollableTabPanel.  This is used for SCROLL_TAB_LAYOUT ONLY.
-     */
-    protected Point translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
-        Point vpp = tabScroller.viewport.getLocation();
-        Point viewp = tabScroller.viewport.getViewPosition();
-        dest.x = srcx - vpp.x + viewp.x;
-        dest.y = srcy - vpp.y + viewp.y;
-        return dest;
-    }
-
-    /**
-     * Returns the tab the mouse is currently over, or {@code -1} if the mouse is no
-     * longer over any tab.
+     * Returns the tab the mouse is currently over, or {@code -1} if the mouse is no longer over any tab.
      *
-     * @return the tab the mouse is currently over, or {@code -1} if the mouse is no
-     * longer over any tab
+     * @return the tab the mouse is currently over, or {@code -1} if the mouse is no longer over any tab
      * @since 1.5
      */
     protected int getRolloverTab() {
@@ -771,8 +1094,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Sets the tab the mouse is currently over to <code>index</code>.
      * <code>index</code> will be -1 if the mouse is no longer over any
-     * tab. No checking is done to ensure the passed in index identifies a
-     * valid tab.
+     * tab. No checking is done to ensure the passed in index identifies a valid tab.
      *
      * @param index Index of the tab the mouse is over.
      * @since 1.5
@@ -785,10 +1107,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Returns the baseline for the specified tab.
      *
      * @param tab index of tab to get baseline for
-     * @return baseline or a value &lt; 0 indicating there is no reasonable
-     * baseline
-     * @throws IndexOutOfBoundsException if index is out of range
-     *                                   (index &lt; 0 || index &gt;= tab count)
+     * @return baseline or a value &lt; 0 indicating there is no reasonable baseline
+     * @throws IndexOutOfBoundsException if index is out of range (index &lt; 0 || index &gt;= tab count)
      * @since 1.6
      */
     protected int getBaseline(final int tab) {
@@ -827,8 +1147,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Returns the amount the baseline is offset by.  This is typically
-     * the same as <code>getTabLabelShiftY</code>.
+     * Returns the amount the baseline is offset by.  This is typically the same as <code>getTabLabelShiftY</code>.
      *
      * @return amount to offset the baseline by
      * @since 1.6
@@ -852,6 +1171,13 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
+    /**
+     * Returns the tab index which intersects the specified point in the JTabbedPane's coordinate space.
+     */
+    public int tabForCoordinate(final JTabbedPane pane, final int x, final int y) {
+        return tabForCoordinate(pane, x, y, true);
+    }
+
     protected int calculateBaselineIfNecessary() {
         if (!calculatedBaseline) {
             calculatedBaseline = true;
@@ -862,6 +1188,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
         return baseline;
     }
+
+
+// TabbedPaneUI methods
 
     protected void calculateBaseline() {
         int tabCount = tabPane.getTabCount();
@@ -891,359 +1220,14 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
-    /**
-     * Paints the tabs in the tab area.
-     * Invoked by paint().
-     * The graphics parameter must be a valid <code>Graphics</code>
-     * object.  Tab placement may be either:
-     * <code>JTabbedPane.TOP</code>, <code>JTabbedPane.BOTTOM</code>,
-     * <code>JTabbedPane.LEFT</code>, or <code>JTabbedPane.RIGHT</code>.
-     * The selected index must be a valid tabbed pane tab index (0 to
-     * tab count - 1, inclusive) or -1 if no tab is currently selected.
-     * The handling of invalid parameters is unspecified.
-     *
-     * @param g             the graphics object to use for rendering
-     * @param tabPlacement  the placement for the tabs within the JTabbedPane
-     * @param selectedIndex the tab index of the selected component
-     * @since 1.4
-     */
-    protected void paintTabArea(final Graphics g, final int tabPlacement, final int selectedIndex) {
-        int tabCount = tabPane.getTabCount();
-
-        Rectangle iconRect = new Rectangle(),
-                textRect = new Rectangle();
-        Rectangle clipRect = g.getClipBounds();
-
-        // Paint tabRuns of tabs from back to front
-        for (int i = runCount - 1; i >= 0; i--) {
-            int start = tabRuns[i];
-            int next = tabRuns[(i == runCount - 1) ? 0 : i + 1];
-            int end = (next != 0 ? next - 1 : tabCount - 1);
-            for (int j = start; j <= end; j++) {
-                if (j != selectedIndex && rects[j].intersects(clipRect)) {
-                    paintTab(g, tabPlacement, rects, j, iconRect, textRect);
-                }
-            }
-        }
-
-        // Paint selected tab if its in the front run
-        // since it may overlap other tabs
-        if (selectedIndex >= 0 && rects[selectedIndex].intersects(clipRect)) {
-            paintTab(g, tabPlacement, rects, selectedIndex, iconRect, textRect);
-        }
-    }
-
-    protected void paintTab(final Graphics g, final int tabPlacement,
-                            final Rectangle[] rects, final int tabIndex,
-                            final Rectangle iconRect, final Rectangle textRect) {
-        paintTab(g, tabPlacement, rects[tabIndex], tabIndex, iconRect, textRect);
-    }
-
-    /**
-     * Paints a tab.
-     *
-     * @param g            the graphics
-     * @param tabPlacement the tab placement
-     * @param tabRect      the tab rectangle
-     * @param tabIndex     the tab index
-     * @param iconRect     the icon rectangle
-     * @param textRect     the text rectangle
-     */
-    protected void paintTab(final Graphics g, final int tabPlacement,
-                            final Rectangle tabRect, final int tabIndex,
-                            final Rectangle iconRect, final Rectangle textRect) {
-        int selectedIndex = tabPane.getSelectedIndex();
-        boolean isSelected = selectedIndex == tabIndex;
-
-        if (tabsOpaque || tabPane.isOpaque()) {
-            paintTabBackground(g, tabPlacement, tabIndex, tabRect.x, tabRect.y,
-                               tabRect.width, tabRect.height, isSelected);
-        }
-
-        paintTabBorder(g, tabPlacement, tabIndex, tabRect.x, tabRect.y,
-                       tabRect.width, tabRect.height, isSelected);
-
-        String title = tabPane.getTitleAt(tabIndex);
-        Font font = tabPane.getFont();
-        FontMetrics metrics = SwingUtilities2.getFontMetrics(tabPane, g, font);
-        Icon icon = getIconForTab(tabIndex);
-
-        layoutLabel(tabPlacement, metrics, tabIndex, title, icon,
-                    tabRect, iconRect, textRect, isSelected);
-
-        if (tabPane.getTabComponentAt(tabIndex) == null) {
-            String clippedTitle = title;
-
-            if (!scrollableTabLayoutEnabled() && isHorizontalTabPlacement()) {
-                clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, textRect.width);
-            }
-
-            paintText(g, tabPlacement, font, metrics, tabIndex, clippedTitle, textRect, isSelected);
-
-            paintIcon(g, tabPlacement, tabIndex, icon, iconRect, isSelected);
-        }
-        paintFocusIndicator(g, tabPlacement, tabRect, tabIndex, iconRect, textRect, isSelected);
-    }
-
-    protected boolean isHorizontalTabPlacement() {
-        return tabPane.getTabPlacement() == TOP || tabPane.getTabPlacement() == BOTTOM;
-    }
-
-    /**
-     * Laysout a label.properties.
-     *
-     * @param tabPlacement the tab placement
-     * @param metrics      the font metric
-     * @param tabIndex     the tab index
-     * @param title        the title
-     * @param icon         the icon
-     * @param tabRect      the tab rectangle
-     * @param iconRect     the icon rectangle
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
-     */
-    protected void layoutLabel(final int tabPlacement,
-                               final FontMetrics metrics, final int tabIndex,
-                               final String title, final Icon icon,
-                               final Rectangle tabRect, final Rectangle iconRect,
-                               final Rectangle textRect, final boolean isSelected) {
-        textRect.x = textRect.y = iconRect.x = iconRect.y = 0;
-
-        View v = getTextViewForTab(tabIndex);
-        if (v != null) {
-            tabPane.putClientProperty("html", v);
-        }
-
-        SwingUtilities.layoutCompoundLabel(tabPane,
-                                           metrics, title, icon,
-                                           SwingUtilities.CENTER,
-                                           SwingUtilities.CENTER,
-                                           SwingUtilities.CENTER,
-                                           SwingUtilities.TRAILING,
-                                           tabRect,
-                                           iconRect,
-                                           textRect,
-                                           textIconGap);
-
-        tabPane.putClientProperty("html", null);
-
-        int xNudge = getTabLabelShiftX(tabPlacement, tabIndex, isSelected);
-        int yNudge = getTabLabelShiftY(tabPlacement, tabIndex, isSelected);
-        iconRect.x += xNudge;
-        iconRect.y += yNudge;
-        textRect.x += xNudge;
-        textRect.y += yNudge;
-    }
-
-    /**
-     * Paints an icon.
-     *
-     * @param g            the graphics
-     * @param tabPlacement the tab placement
-     * @param tabIndex     the tab index
-     * @param icon         the icon
-     * @param iconRect     the icon rectangle
-     * @param isSelected   selection status
-     */
-    protected void paintIcon(final Graphics g, final int tabPlacement,
-                             final int tabIndex, final Icon icon, final Rectangle iconRect,
-                             final boolean isSelected) {
-        if (icon != null) {
-            // Clip the icon within iconRect bounds
-            Shape oldClip = g.getClip();
-            ((Graphics2D) g).clip(iconRect);
-            icon.paintIcon(tabPane, g, iconRect.x, iconRect.y);
-            g.setClip(oldClip);
-        }
-    }
-
-    /**
-     * Paints the tab background.
-     *
-     * @param g            the graphics context in which to paint
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param x            the x coordinate of tab
-     * @param y            the y coordinate of tab
-     * @param w            the width of the tab
-     * @param h            the height of the tab
-     * @param isSelected   a {@code boolean} which determines whether or not
-     *                     the tab is selected
-     */
-    protected abstract void paintTabBackground(final Graphics g, final int tabPlacement,
-                                               final int tabIndex,
-                                               final int x, final int y, final int w, final int h,
-                                               final boolean isSelected);
-
-    /**
-     * Returns the tab label.properties shift x.
-     *
-     * @param tabPlacement the tab placement
-     * @param tabIndex     the tab index
-     * @param isSelected   selection status
-     * @return the tab label.properties shift x
-     */
-    protected int getTabLabelShiftX(final int tabPlacement, final int tabIndex, final boolean isSelected) {
-        Rectangle tabRect = rects[tabIndex];
-        String propKey = (isSelected ? "selectedLabelShift" : "labelShift");
-        int nudge = DefaultLookup.getInt(
-                tabPane, this, "TabbedPane." + propKey, 1);
-
-        switch (tabPlacement) {
-            case LEFT:
-                return nudge;
-            case RIGHT:
-                return -nudge;
-            case BOTTOM:
-            case TOP:
-            default:
-                return tabRect.width % 2;
-        }
-    }
-
-    /**
-     * Returns the tab label.properties shift y.
-     *
-     * @param tabPlacement the tab placement
-     * @param tabIndex     the tab index
-     * @param isSelected   selection status
-     * @return the tab label.properties shift y
-     */
-    protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
-        Rectangle tabRect = rects[tabIndex];
-        int nudge = (isSelected ? DefaultLookup.getInt(tabPane, this, "TabbedPane.selectedLabelShift", -1) :
-                     DefaultLookup.getInt(tabPane, this, "TabbedPane.labelShift", 1));
-
-        switch (tabPlacement) {
-            case BOTTOM:
-                return -nudge;
-            case LEFT:
-            case RIGHT:
-                return tabRect.height % 2;
-            case TOP:
-            default:
-                return nudge;
-        }
-    }
-
-    /**
-     * this function draws the border around each tab
-     * note that this function does now draw the background of the tab.
-     * that is done elsewhere
-     *
-     * @param g            the graphics context in which to paint
-     * @param tabPlacement the placement (left, right, bottom, top) of the tab
-     * @param tabIndex     the index of the tab with respect to other tabs
-     * @param x            the x coordinate of tab
-     * @param y            the y coordinate of tab
-     * @param w            the width of the tab
-     * @param h            the height of the tab
-     * @param isSelected   a {@code boolean} which determines whether or not
-     *                     the tab is selected
-     */
-    protected abstract void paintTabBorder(final Graphics g, final int tabPlacement,
-                                           final int tabIndex,
-                                           final int x, final int y, final int w, final int h,
-                                           final boolean isSelected);
-
-    /**
-     * Paints text.
-     *
-     * @param g            the graphics
-     * @param tabPlacement the tab placement
-     * @param font         the font
-     * @param metrics      the font metrics
-     * @param tabIndex     the tab index
-     * @param title        the title
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
-     */
-    protected void paintText(final Graphics g, final int tabPlacement,
-                             final Font font, final FontMetrics metrics, final int tabIndex,
-                             final String title, final Rectangle textRect,
-                             final boolean isSelected) {
-
-        g.setFont(font);
-
-        View v = getTextViewForTab(tabIndex);
-        if (v != null) {
-            // html
-            v.paint(g, textRect);
-        } else {
-            // plain text
-            int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
-
-            if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
-                Color fg = tabPane.getForegroundAt(tabIndex);
-                if (isSelected && (fg instanceof UIResource)) {
-                    Color selectedFG = selectedForeground;
-                    if (selectedFG != null) {
-                        fg = selectedFG;
-                    }
-                }
-                g.setColor(fg);
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
-
-            } else { // tab disabled
-                g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
-                g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x - 1, textRect.y + metrics.getAscent() - 1);
-
-            }
-        }
-    }
-
-    /**
-     * Paints the focus indicator.
-     *
-     * @param g            the graphics
-     * @param tabPlacement the tab placement
-     * @param tabRect      the tabRect
-     * @param tabIndex     the tab index
-     * @param iconRect     the icon rectangle
-     * @param textRect     the text rectangle
-     * @param isSelected   selection status
-     */
-    protected abstract void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                                final Rectangle tabRect, final int tabIndex,
-                                                final Rectangle iconRect, final Rectangle textRect,
-                                                final boolean isSelected);
-
     protected abstract void paintFocusIndicator(final Graphics g, final int tabPlacement,
                                                 final Rectangle[] rects, final int tabIndex,
                                                 final Rectangle iconRect, final Rectangle textRect,
                                                 final boolean isSelected);
 
     /**
-     * Paints the content border.
-     *
-     * @param g             the graphics context in which to paint
-     * @param tabPlacement  the placement (left, right, bottom, top) of the tab
-     * @param selectedIndex the tab index of the selected component
-     */
-    protected abstract void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex);
-
-
-// TabbedPaneUI methods
-
-    /**
-     * Returns the tab index which intersects the specified point
-     * in the JTabbedPane's coordinate space.
-     */
-    public int tabForCoordinate(final JTabbedPane pane, final int x, final int y) {
-        return tabForCoordinate(pane, x, y, true);
-    }
-
-    /**
-     * Returns the bounds of the specified tab index.  The bounds are
-     * with respect to the JTabbedPane's coordinate space.
+     * Returns the bounds of the specified tab index.  The bounds are with respect to the JTabbedPane's coordinate
+     * space.
      */
     public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
         ensureCurrentLayout();
@@ -1251,53 +1235,60 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return getTabBounds(i, tabRect);
     }
 
+    protected void ensureCurrentLayout() {
+        if (!tabPane.isValid()) {
+            tabPane.validate();
+        }
+        /* If tabPane doesn't have a peer yet, the validate() call will
+         * silently fail.  We handle that by forcing a layout if tabPane
+         * is still invalid.  See bug 4237677.
+         */
+        if (!tabPane.isValid()) {
+            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
+            layout.calculateLayoutInfo();
+        }
+    }
+
+// BasicTabbedPaneUI methods
+
     public int getTabRunCount(final JTabbedPane pane) {
         ensureCurrentLayout();
         return runCount;
     }
 
     /**
-     * Returns the index of the tab closest to the passed in location, note
-     * that the returned tab may not contain the location x,y.
+     * Returns the bounds of the specified tab in the coordinate space of the JTabbedPane component.  This is required
+     * because the tab rects are by default defined in the coordinate space of the component where they are rendered,
+     * which could be the JTabbedPane (for WRAP_TAB_LAYOUT) or a ScrollableTabPanel (SCROLL_TAB_LAYOUT). This method
+     * should be used whenever the tab rectangle must be relative to the JTabbedPane itself and the result should be
+     * placed in a designated Rectangle object (rather than instantiating and returning a new Rectangle each time). The
+     * tab index parameter must be a valid tabbed pane tab index (0 to tab count - 1, inclusive).  The destination
+     * rectangle parameter must be a valid <code>Rectangle</code> instance. The handling of invalid parameters is
+     * unspecified.
+     *
+     * @param tabIndex the index of the tab
+     * @param dest     the rectangle where the result should be placed
+     * @return the resulting rectangle
+     * @since 1.4
      */
-    protected int getClosestTab(final int x, final int y) {
-        int min = 0;
-        int tabCount = Math.min(rects.length, tabPane.getTabCount());
-        int max = tabCount;
-        int tabPlacement = tabPane.getTabPlacement();
-        boolean useX = (tabPlacement == TOP || tabPlacement == BOTTOM);
-        int want = (useX) ? x : y;
+    protected Rectangle getTabBounds(final int tabIndex, final Rectangle dest) {
+        dest.width = rects[tabIndex].width;
+        dest.height = rects[tabIndex].height;
 
-        while (min != max) {
-            int current = (max + min) / 2;
-            int minLoc;
-            int maxLoc;
+        if (scrollableTabLayoutEnabled()) { // SCROLL_TAB_LAYOUT
+            // Need to translate coordinates based on viewport location &
+            // view position
+            Point vpp = tabScroller.viewport.getLocation();
+            Point viewp = tabScroller.viewport.getViewPosition();
+            dest.x = rects[tabIndex].x + vpp.x - viewp.x;
+            dest.y = rects[tabIndex].y + vpp.y - viewp.y;
 
-            if (useX) {
-                minLoc = rects[current].x;
-                maxLoc = minLoc + rects[current].width;
-            } else {
-                minLoc = rects[current].y;
-                maxLoc = minLoc + rects[current].height;
-            }
-            if (want < minLoc) {
-                max = current;
-                if (min == max) {
-                    return Math.max(0, current - 1);
-                }
-            } else if (want >= maxLoc) {
-                min = current;
-                if (max - min <= 1) {
-                    return Math.max(current + 1, tabCount - 1);
-                }
-            } else {
-                return current;
-            }
+        } else { // WRAP_TAB_LAYOUT
+            dest.x = rects[tabIndex].x;
+            dest.y = rects[tabIndex].y;
         }
-        return min;
+        return dest;
     }
-
-// BasicTabbedPaneUI methods
 
     /**
      * Assure the rectangles are created.
@@ -1523,34 +1514,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected Insets getTabInsets(final int tabPlacement, final int tabIndex) {
         return tabInsets;
-    }
-
-    /**
-     * Returns the icon for a tab.
-     *
-     * @param tabIndex the index of the tab
-     * @return the icon for a tab
-     */
-    protected Icon getIconForTab(final int tabIndex) {
-        return (!tabPane.isEnabled() || !tabPane.isEnabledAt(tabIndex)) ?
-               tabPane.getDisabledIconAt(tabIndex) : tabPane.getIconAt(tabIndex);
-    }
-
-    /**
-     * Returns the text View object required to render stylized text (HTML) for
-     * the specified tab or null if no specialized text rendering is needed
-     * for this tab. This is provided to support html rendering inside tabs.
-     *
-     * @param tabIndex the index of the tab
-     * @return the text view to render the tab's text or null if no
-     * specialized rendering is required
-     * @since 1.4
-     */
-    protected View getTextViewForTab(final int tabIndex) {
-        if (htmlViews != null) {
-            return htmlViews.elementAt(tabIndex);
-        }
-        return null;
     }
 
     /**
@@ -1876,41 +1839,44 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Returns the bounds of the specified tab in the coordinate space
-     * of the JTabbedPane component.  This is required because the tab rects
-     * are by default defined in the coordinate space of the component where
-     * they are rendered, which could be the JTabbedPane
-     * (for WRAP_TAB_LAYOUT) or a ScrollableTabPanel (SCROLL_TAB_LAYOUT).
-     * This method should be used whenever the tab rectangle must be relative
-     * to the JTabbedPane itself and the result should be placed in a
-     * designated Rectangle object (rather than instantiating and returning
-     * a new Rectangle each time). The tab index parameter must be a valid
-     * tabbed pane tab index (0 to tab count - 1, inclusive).  The destination
-     * rectangle parameter must be a valid <code>Rectangle</code> instance.
-     * The handling of invalid parameters is unspecified.
-     *
-     * @param tabIndex the index of the tab
-     * @param dest     the rectangle where the result should be placed
-     * @return the resulting rectangle
-     * @since 1.4
+     * Returns the index of the tab closest to the passed in location, note that the returned tab may not contain the
+     * location x,y.
      */
-    protected Rectangle getTabBounds(final int tabIndex, final Rectangle dest) {
-        dest.width = rects[tabIndex].width;
-        dest.height = rects[tabIndex].height;
+    protected int getClosestTab(final int x, final int y) {
+        int min = 0;
+        int tabCount = Math.min(rects.length, tabPane.getTabCount());
+        int max = tabCount;
+        int tabPlacement = tabPane.getTabPlacement();
+        boolean useX = (tabPlacement == TOP || tabPlacement == BOTTOM);
+        int want = (useX) ? x : y;
 
-        if (scrollableTabLayoutEnabled()) { // SCROLL_TAB_LAYOUT
-            // Need to translate coordinates based on viewport location &
-            // view position
-            Point vpp = tabScroller.viewport.getLocation();
-            Point viewp = tabScroller.viewport.getViewPosition();
-            dest.x = rects[tabIndex].x + vpp.x - viewp.x;
-            dest.y = rects[tabIndex].y + vpp.y - viewp.y;
+        while (min != max) {
+            int current = (max + min) / 2;
+            int minLoc;
+            int maxLoc;
 
-        } else { // WRAP_TAB_LAYOUT
-            dest.x = rects[tabIndex].x;
-            dest.y = rects[tabIndex].y;
+            if (useX) {
+                minLoc = rects[current].x;
+                maxLoc = minLoc + rects[current].width;
+            } else {
+                minLoc = rects[current].y;
+                maxLoc = minLoc + rects[current].height;
+            }
+            if (want < minLoc) {
+                max = current;
+                if (min == max) {
+                    return Math.max(0, current - 1);
+                }
+            } else if (want >= maxLoc) {
+                min = current;
+                if (max - min <= 1) {
+                    return Math.max(current + 1, tabCount - 1);
+                }
+            } else {
+                return current;
+            }
         }
-        return dest;
+        return min;
     }
 
     /**

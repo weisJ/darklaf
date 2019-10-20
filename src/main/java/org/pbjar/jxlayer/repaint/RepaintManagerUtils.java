@@ -70,8 +70,8 @@ public final class RepaintManagerUtils {
     }
 
     /**
-     * Create and return an {@link Action} that will display the delegate structure of the current
-     * {@link RepaintManager}.
+     * Create and return an {@link Action} that will display the delegate structure of the current {@link
+     * RepaintManager}.
      *
      * @return an {@link Action} object
      */
@@ -82,8 +82,8 @@ public final class RepaintManagerUtils {
     }
 
     /**
-     * Ensure that a specific {@link RepaintManager} is set according to the requirements of the
-     * {@link RepaintManagerProvider}.
+     * Ensure that a specific {@link RepaintManager} is set according to the requirements of the {@link
+     * RepaintManagerProvider}.
      *
      * @param c        a component from which the current repaint manager can be obtained.
      * @param provider the provider
@@ -97,8 +97,7 @@ public final class RepaintManagerUtils {
      * The actual implementation of ensure.
      *
      * @param delegate a delegate RepaintManager
-     * @param provider the provider that provides for the type and implementation of a delegated
-     *                 RepaintManager
+     * @param provider the provider that provides for the type and implementation of a delegated RepaintManager
      */
     private static void ensureImpl(
             @NotNull final RepaintManager delegate, @NotNull final RepaintManagerProvider provider) {
@@ -140,8 +139,8 @@ public final class RepaintManagerUtils {
     }
 
     /**
-     * Ensure that a specific {@link RepaintManager} is set according to the requirements of the
-     * {@link RepaintManagerProvider}.
+     * Ensure that a specific {@link RepaintManager} is set according to the requirements of the {@link
+     * RepaintManagerProvider}.
      *
      * @param c        a component from which the current repaint manager can be obtained.
      * @param provider the provider

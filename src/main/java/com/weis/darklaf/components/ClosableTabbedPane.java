@@ -41,12 +41,16 @@ public class ClosableTabbedPane extends JTabbedPane {
         }
     }
 
-    public void addTabListener(final TabListener listener) {
-        listenerList.add(TabListener.class, listener);
-    }
-
-    public void removeTabListener(final TabListener listener) {
-        listenerList.remove(TabListener.class, listener);
+    private boolean notifyVetoableChangeListeners(final TabPropertyChangeEvent e) {
+        try {
+            var listeners = getVetoableChangeListeners();
+            for (var l : listeners) {
+                l.vetoableChange(e);
+            }
+        } catch (PropertyVetoException ex) {
+            return true;
+        }
+        return false;
     }
 
     private void notifyTabListeners(@NotNull final TabEvent event) {
@@ -65,15 +69,11 @@ public class ClosableTabbedPane extends JTabbedPane {
         }
     }
 
-    private boolean notifyVetoableChangeListeners(final TabPropertyChangeEvent e) {
-        try {
-            var listeners = getVetoableChangeListeners();
-            for (var l : listeners) {
-                l.vetoableChange(e);
-            }
-        } catch (PropertyVetoException ex) {
-            return true;
-        }
-        return false;
+    public void addTabListener(final TabListener listener) {
+        listenerList.add(TabListener.class, listener);
+    }
+
+    public void removeTabListener(final TabListener listener) {
+        listenerList.remove(TabListener.class, listener);
     }
 }

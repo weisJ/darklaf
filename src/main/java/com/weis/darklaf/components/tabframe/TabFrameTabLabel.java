@@ -143,9 +143,8 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
     }
 
     /**
-     * Returns the current title.
-     * This needn't be the same as the displayed text.
-     * For this use {@link #getText()} instead.
+     * Returns the current title. This needn't be the same as the displayed text. For this use {@link #getText()}
+     * instead.
      *
      * @return the current title.
      */

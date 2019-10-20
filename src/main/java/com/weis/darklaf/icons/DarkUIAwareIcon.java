@@ -34,8 +34,8 @@ import java.awt.*;
 import java.io.Serializable;
 
 /**
- * Icon that is aware of the current ui theme and adjusts the icon accordingly. Icons are loaded
- * lazily at their point of usage.
+ * Icon that is aware of the current ui theme and adjusts the icon accordingly. Icons are loaded lazily at their point
+ * of usage.
  *
  * @author Jannis Weis
  * @since 2019

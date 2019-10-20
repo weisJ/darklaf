@@ -8,9 +8,9 @@ import javax.swing.text.PasswordView;
 import javax.swing.text.View;
 
 /**
- * This class is an exact copy of the implementation of {@link BasicPasswordFieldUI}.
- * In this way it is possible to contain all Laf specific methods in {@link DarkPasswordFieldUI}, without having to
- * extends {@link BasicPasswordFieldUI} directly and instead extend the {@link DarkTextFieldUI} base class.
+ * This class is an exact copy of the implementation of {@link BasicPasswordFieldUI}. In this way it is possible to
+ * contain all Laf specific methods in {@link DarkPasswordFieldUI}, without having to extends {@link
+ * BasicPasswordFieldUI} directly and instead extend the {@link DarkTextFieldUI} base class.
  *
  * @author Jannis Weis
  */
@@ -31,9 +31,8 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
     }
 
     /**
-     * Fetches the name used as a key to look up properties through the
-     * UIManager.  This is used as a prefix to all the standard
-     * text properties.
+     * Fetches the name used as a key to look up properties through the UIManager.  This is used as a prefix to all the
+     * standard text properties.
      *
      * @return the name ("PasswordField")
      */
@@ -52,9 +51,8 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
     }
 
     /**
-     * Create the action map for Password Field.  This map provides
-     * same actions for double mouse click and
-     * and for triple mouse click (see bug 4231444).
+     * Create the action map for Password Field.  This map provides same actions for double mouse click and and for
+     * triple mouse click (see bug 4231444).
      */
 
     public ActionMap createActionMap() {

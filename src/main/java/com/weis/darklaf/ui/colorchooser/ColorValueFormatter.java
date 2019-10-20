@@ -50,10 +50,10 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     private final int fieldIndex;
     private final int radix;
     private final boolean hex;
+    private final Timer errorTimer;
     private DarkColorModel model;
     private boolean transparencyEnabled;
     private JFormattedTextField text;
-    private final Timer errorTimer;
     private final DocumentFilter filter = new DocumentFilter() {
         @Override
         public void remove(@NotNull final FilterBypass fb, final int offset,
@@ -107,6 +107,16 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         errorTimer.setRepeats(false);
     }
 
+    @NotNull
+    static ColorValueFormatter init(final DarkColorModel model, final int index,
+                                    final boolean hex, @NotNull final JFormattedTextField text) {
+        ColorValueFormatter formatter = new ColorValueFormatter(model, index, hex);
+        text.setFormatterFactory(new DefaultFormatterFactory(formatter));
+        text.setMinimumSize(text.getPreferredSize());
+        text.addFocusListener(formatter);
+        return formatter;
+    }
+
     protected void error() {
         text.putClientProperty("JTextField.hasError", true);
         text.repaint();
@@ -117,16 +127,6 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     public void actionPerformed(final ActionEvent e) {
         text.putClientProperty("JTextField.hasError", false);
         text.repaint();
-    }
-
-    @NotNull
-    static ColorValueFormatter init(final DarkColorModel model, final int index,
-                                    final boolean hex, @NotNull final JFormattedTextField text) {
-        ColorValueFormatter formatter = new ColorValueFormatter(model, index, hex);
-        text.setFormatterFactory(new DefaultFormatterFactory(formatter));
-        text.setMinimumSize(text.getPreferredSize());
-        text.addFocusListener(formatter);
-        return formatter;
     }
 
     private void commit() {
@@ -170,6 +170,15 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     @Contract(pure = true)
     private boolean isValid(final int length) {
         return (0 <= length) && (length <= getLength());
+    }
+
+    private int getLength() {
+        return hex ? getHexLength() : String.valueOf(model.getMaximum(fieldIndex)).length();
+    }
+
+    @Contract(pure = true)
+    private int getHexLength() {
+        return transparencyEnabled ? 8 : 6;
     }
 
     private boolean isValid(@NotNull final String text) {
@@ -233,7 +242,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     @Override
     public String valueToString(final Object object) throws ParseException {
         if (object instanceof Integer && !hex) {
-                return object.toString();
+            return object.toString();
         } else if (object instanceof Color && hex) {
             var c = (Color) object;
             int r = c.getRed();
@@ -253,14 +262,5 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     @Override
     protected DocumentFilter getDocumentFilter() {
         return this.filter;
-    }
-
-    private int getLength() {
-        return hex ? getHexLength() : String.valueOf(model.getMaximum(fieldIndex)).length();
-    }
-
-    @Contract(pure = true)
-    private int getHexLength() {
-        return transparencyEnabled ? 8 : 6;
     }
 }

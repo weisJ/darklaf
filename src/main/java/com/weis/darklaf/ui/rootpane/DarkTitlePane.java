@@ -59,21 +59,24 @@ public class DarkTitlePane extends JComponent {
     private static final int ICON_WIDTH = (int) (65 / GraphicsUtil.SCALE_X);
     private static final int IMAGE_HEIGHT = 16;
     private static final int IMAGE_WIDTH = 16;
-    private final ContainerListener rootPaneContainerListener = new ContainerListener() {
-        @Override
-        public void componentAdded(@NotNull final ContainerEvent e) {
-            if (e.getChild() instanceof JLayeredPane) {
-                ((JLayeredPane) e.getChild()).addContainerListener(layeredPaneContainerListener);
-            }
-        }
-
-        @Override
-        public void componentRemoved(@NotNull final ContainerEvent e) {
-            if (e.getChild() instanceof JLayeredPane) {
-                ((JLayeredPane) e.getChild()).removeContainerListener(layeredPaneContainerListener);
-            }
-        }
-    };
+    private final JRootPane rootPane;
+    private boolean oldResizable;
+    private PropertyChangeListener propertyChangeListener;
+    private WindowListener windowListener;
+    private TitlePaneIcon closeIcon;
+    private TitlePaneIcon maximizeIcon;
+    private TitlePaneIcon restoreIcon;
+    private TitlePaneIcon minimizeIcon;
+    private JButton windowIconButton;
+    private JButton closeButton;
+    private JButton maximizeToggleButton;
+    private JButton minimizeButton;
+    private Action closeAction;
+    private Action restoreAction;
+    private Action maximizeAction;
+    private Action minimizeAction;
+    private JLabel titleLabel;
+    private Window window;
     private final AncestorListener ancestorListener = new AncestorAdapter() {
         @Override
         public void ancestorAdded(final AncestorEvent event) {
@@ -89,29 +92,6 @@ public class DarkTitlePane extends JComponent {
             }
         }
     };
-    private final JRootPane rootPane;
-    private boolean oldResizable;
-    private PropertyChangeListener propertyChangeListener;
-    private WindowListener windowListener;
-
-    private TitlePaneIcon closeIcon;
-    private TitlePaneIcon maximizeIcon;
-    private TitlePaneIcon restoreIcon;
-    private TitlePaneIcon minimizeIcon;
-
-    private JButton windowIconButton;
-    private JButton closeButton;
-    private JButton maximizeToggleButton;
-    private JButton minimizeButton;
-
-    private Action closeAction;
-    private Action restoreAction;
-    private Action maximizeAction;
-    private Action minimizeAction;
-
-    private JLabel titleLabel;
-
-    private Window window;
     private long windowHandle;
     private JMenuBar menuBar;
     private final ContainerListener layeredPaneContainerListener = new ContainerListener() {
@@ -131,6 +111,21 @@ public class DarkTitlePane extends JComponent {
 
         @Override
         public void componentRemoved(final ContainerEvent e) {
+        }
+    };
+    private final ContainerListener rootPaneContainerListener = new ContainerListener() {
+        @Override
+        public void componentAdded(@NotNull final ContainerEvent e) {
+            if (e.getChild() instanceof JLayeredPane) {
+                ((JLayeredPane) e.getChild()).addContainerListener(layeredPaneContainerListener);
+            }
+        }
+
+        @Override
+        public void componentRemoved(@NotNull final ContainerEvent e) {
+            if (e.getChild() instanceof JLayeredPane) {
+                ((JLayeredPane) e.getChild()).removeContainerListener(layeredPaneContainerListener);
+            }
         }
     };
     private int state;
@@ -190,6 +185,14 @@ public class DarkTitlePane extends JComponent {
         removeAll();
     }
 
+    private void uninstallListeners() {
+        if (window != null) {
+            window.removeWindowListener(windowListener);
+            window.removePropertyChangeListener(propertyChangeListener);
+        }
+        removeAncestorListener(ancestorListener);
+    }
+
     protected void uninstallDecorations() {
         window = null;
         JNIDecorations.uninstallDecorations(windowHandle);
@@ -226,14 +229,6 @@ public class DarkTitlePane extends JComponent {
             installListeners();
             updateSystemIcon();
         }
-    }
-
-    private void uninstallListeners() {
-        if (window != null) {
-            window.removeWindowListener(windowListener);
-            window.removePropertyChangeListener(propertyChangeListener);
-        }
-        removeAncestorListener(ancestorListener);
     }
 
     private void installListeners() {

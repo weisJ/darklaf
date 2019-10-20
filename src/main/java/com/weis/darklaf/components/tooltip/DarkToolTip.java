@@ -43,9 +43,9 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     private static final long REPAINT_THRESHOLD = 150;
     private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     private static final float MAX_ALPHA = 1.0f;
+    private final Animator fadeAnimator;
     private long lastHidden;
     private float alpha = 0;
-    private final Animator fadeAnimator;
 
     public DarkToolTip(final Alignment alignment) {
         setAlignment(alignment);
@@ -71,18 +71,6 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         putClientProperty("JToolTip.pointerLocation", alignment);
     }
 
-    public void setInsets(final Insets insets) {
-        putClientProperty("JToolTip.insets", insets);
-    }
-
-    public void addToolTipListener(final ToolTipListener listener) {
-        listenerList.add(ToolTipListener.class, listener);
-    }
-
-    public void removeToolTipListener(final ToolTipListener listener) {
-        listenerList.remove(ToolTipListener.class, listener);
-    }
-
     public void notifyToolTipListeners(final ToolTipEvent event) {
         for (var listener : listenerList.getListeners(ToolTipListener.class)) {
             if (listener != null) {
@@ -101,6 +89,33 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         }
     }
 
+    public void setInsets(final Insets insets) {
+        putClientProperty("JToolTip.insets", insets);
+    }
+
+    public void addToolTipListener(final ToolTipListener listener) {
+        listenerList.add(ToolTipListener.class, listener);
+    }
+
+    public void removeToolTipListener(final ToolTipListener listener) {
+        listenerList.remove(ToolTipListener.class, listener);
+    }
+
+    @Override
+    public void paint(final Graphics g) {
+        var config = new GraphicsContext(g);
+        if (alpha != MAX_ALPHA) {
+            ((Graphics2D) g).setComposite(COMPOSITE.derive(alpha));
+        }
+        super.paint(g);
+        config.restore();
+    }
+    @Override
+    public void setBorder(final Border border) {
+        if (!(border instanceof DarkTooltipBorder)) return;
+        super.setBorder(border);
+    }
+
     @Override
     public String getTipText() {
         var text = super.getTipText();
@@ -117,6 +132,36 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         lastHidden = System.currentTimeMillis();
     }
 
+    private enum ToolTipEvent {
+        TEXT,
+        SHOWN,
+        HIDDEN
+    }
+
+    protected class FadeInAnimator extends Animator {
+        private static final int DELAY_FRAMES = 6;
+        private static final int FADEOUT_FRAMES_COUNT = 10 + DELAY_FRAMES;
+        private static final int FADEIN_FRAMES_COUNT = FADEOUT_FRAMES_COUNT / 2;
+
+
+        public FadeInAnimator() {
+            super("Track fadeout", FADEIN_FRAMES_COUNT / 2,
+                  FADEIN_FRAMES_COUNT * 25, false);
+        }
+
+        @Override
+        public void paintNow(final int frame, final int totalFrames, final int cycle) {
+            alpha = ((float) frame * MAX_ALPHA) / totalFrames;
+            repaint();
+        }
+
+        @Override
+        protected void paintCycleEnd() {
+            alpha = MAX_ALPHA;
+            repaint();
+        }
+    }
+
     @Override
     public void setTipText(final String tipText) {
         if (tipText != null && !tipText.startsWith("<html>")) {
@@ -128,22 +173,6 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         } else {
             super.setTipText(tipText);
         }
-    }
-
-    @Override
-    public void setBorder(final Border border) {
-        if (!(border instanceof DarkTooltipBorder)) return;
-        super.setBorder(border);
-    }
-
-    @Override
-    public void paint(final Graphics g) {
-        var config = new GraphicsContext(g);
-        if (alpha != MAX_ALPHA) {
-            ((Graphics2D) g).setComposite(COMPOSITE.derive(alpha));
-        }
-        super.paint(g);
-        config.restore();
     }
 
     @Override
@@ -161,33 +190,4 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     }
 
 
-    protected class FadeInAnimator extends Animator {
-        private static final int DELAY_FRAMES = 6;
-        private static final int FADEOUT_FRAMES_COUNT = 10 + DELAY_FRAMES;
-        private static final int FADEIN_FRAMES_COUNT = FADEOUT_FRAMES_COUNT / 2;
-
-
-        public FadeInAnimator() {
-            super("Track fadeout", FADEIN_FRAMES_COUNT / 2,
-                  FADEIN_FRAMES_COUNT * 25, false);
-        }
-
-        @Override
-        protected void paintCycleEnd() {
-            alpha = MAX_ALPHA;
-            repaint();
-        }
-
-        @Override
-        public void paintNow(final int frame, final int totalFrames, final int cycle) {
-            alpha = ((float) frame * MAX_ALPHA) / totalFrames;
-            repaint();
-        }
-    }
-
-    private enum ToolTipEvent {
-        TEXT,
-        SHOWN,
-        HIDDEN
-    }
 }

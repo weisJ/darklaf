@@ -30,13 +30,13 @@ public class ToolTipDemo {
                 }
 
                 @Override
-                public JToolTip createToolTip() {
-                    return context.getToolTip();
+                public Point getToolTipLocation(final MouseEvent event) {
+                    return context.getToolTipLocation(event);
                 }
 
                 @Override
-                public Point getToolTipLocation(final MouseEvent event) {
-                    return context.getToolTipLocation(event);
+                public JToolTip createToolTip() {
+                    return context.getToolTip();
                 }
 
 

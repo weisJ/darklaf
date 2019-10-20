@@ -131,6 +131,21 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         return newIndex;
     }
 
+    protected int getSelectedColumnIndex() {
+        int numCols = header.getColumnModel().getColumnCount();
+        if (selectedColumnIndex >= numCols && numCols > 0) {
+            selectedColumnIndex = numCols - 1;
+        }
+        return selectedColumnIndex;
+    }
+    /**
+     * Selects the specified column in the table header. Repaints the affected header cells and makes sure the newly
+     * selected one is visible.
+     */
+    void selectColumn(final int newColIndex) {
+        selectColumn(newColIndex, true);
+    }
+
     /**
      * Creates the mouse listener for the {@code JTableHeader}.
      *
@@ -142,40 +157,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
 //  Installation
 
-    protected int getSelectedColumnIndex() {
-        int numCols = header.getColumnModel().getColumnCount();
-        if (selectedColumnIndex >= numCols && numCols > 0) {
-            selectedColumnIndex = numCols - 1;
-        }
-        return selectedColumnIndex;
-    }
-
     /**
-     * Selects the specified column in the table header. Repaints the
-     * affected header cells and makes sure the newly selected one is visible.
-     */
-    void selectColumn(final int newColIndex) {
-        selectColumn(newColIndex, true);
-    }
-
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-    }
-
-    void selectColumn(final int newColIndex, final boolean doScroll) {
-        Rectangle repaintRect = header.getHeaderRect(selectedColumnIndex);
-        header.repaint(repaintRect);
-        selectedColumnIndex = newColIndex;
-        repaintRect = header.getHeaderRect(newColIndex);
-        header.repaint(repaintRect);
-        if (doScroll) {
-            scrollToColumn(newColIndex);
-        }
-    }
-
-    /**
-     * Used by selectColumn to scroll horizontally, if necessary,
-     * to ensure that the newly selected column is visible.
+     * Used by selectColumn to scroll horizontally, if necessary, to ensure that the newly selected column is visible.
      */
     protected void scrollToColumn(final int col) {
         Container container;
@@ -195,84 +178,18 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         vis.x = cellBounds.x;
         vis.width = cellBounds.width;
         table.scrollRectToVisible(vis);
-    }    /**
-     * Initializes JTableHeader properties such as font, foreground, and background.
-     * The font, foreground, and background properties are only set if their
-     * current value is either null or a UIResource, other properties are set
-     * if the current value is null.
-     *
-     * @see #installUI
-     */
-    protected void installDefaults() {
-        LookAndFeel.installColorsAndFont(header, "TableHeader.background",
-                                         "TableHeader.foreground", "TableHeader.font");
-        LookAndFeel.installProperty(header, "opaque", Boolean.TRUE);
     }
 
-    protected int selectPreviousColumn(final boolean doIt) {
-        int newIndex = getSelectedColumnIndex();
-        if (newIndex > 0) {
-            newIndex--;
-            if (doIt) {
-                selectColumn(newIndex);
-            }
+    void selectColumn(final int newColIndex, final boolean doScroll) {
+        Rectangle repaintRect = header.getHeaderRect(selectedColumnIndex);
+        header.repaint(repaintRect);
+        selectedColumnIndex = newColIndex;
+        repaintRect = header.getHeaderRect(newColIndex);
+        header.repaint(repaintRect);
+        if (doScroll) {
+            scrollToColumn(newColIndex);
         }
-        return newIndex;
     }
-
-    protected int changeColumnWidth(final TableColumn resizingColumn,
-                                    final JTableHeader th,
-                                    final int oldWidth, final int newWidth) {
-        resizingColumn.setWidth(newWidth);
-
-        Container container;
-        JTable table;
-
-        if ((th.getParent() == null) ||
-                ((container = th.getParent().getParent()) == null) ||
-                !(container instanceof JScrollPane) ||
-                ((table = th.getTable()) == null)) {
-            return 0;
-        }
-
-        if (!container.getComponentOrientation().isLeftToRight() &&
-                !th.getComponentOrientation().isLeftToRight()) {
-            JViewport viewport = ((JScrollPane) container).getViewport();
-            int viewportWidth = viewport.getWidth();
-            int diff = newWidth - oldWidth;
-            int newHeaderWidth = table.getWidth() + diff;
-
-            /* Resize a table */
-            Dimension tableSize = table.getSize();
-            tableSize.width += diff;
-            table.setSize(tableSize);
-
-            /* If this table is in AUTO_RESIZE_OFF mode and
-             * has a horizontal scrollbar, we need to update
-             * a view's position.
-             */
-            if ((newHeaderWidth >= viewportWidth) &&
-                    (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
-                Point p = viewport.getViewPosition();
-                p.x = Math.max(0, Math.min(newHeaderWidth - viewportWidth,
-                                           p.x + diff));
-                viewport.setViewPosition(p);
-                return diff;
-            }
-        }
-        return 0;
-    }    /**
-     * Attaches listeners to the JTableHeader.
-     */
-    protected void installListeners() {
-        mouseInputListener = createMouseInputListener();
-
-        header.addMouseListener(mouseInputListener);
-        header.addMouseMotionListener(mouseInputListener);
-        header.addFocusListener(focusListener);
-    }
-
-// Uninstall methods
 
     protected static class Actions extends UIAction {
         public static final String TOGGLE_SORT_ORDER =
@@ -420,10 +337,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             ui.changeColumnWidth(resizingColumn, th, oldWidth, newWidth);
         }
     }
-
     /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of {@code DarkTableHeaderUIBridge}.
+     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
+     * {@code DarkTableHeaderUIBridge}.
      */
     public class MouseInputHandler implements MouseInputListener {
 
@@ -537,6 +453,13 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             rolloverColumnUpdated(oldRolloverColumn, rolloverColumn);
         }
 
+        protected void setDraggedDistance(final int draggedDistance, final int column) {
+            header.setDraggedDistance(draggedDistance);
+            if (column != -1) {
+                header.getColumnModel().moveColumn(column, column);
+            }
+        }
+
         public void mouseDragged(final MouseEvent e) {
             if (!header.isEnabled()) {
                 return;
@@ -605,23 +528,105 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         protected TableColumn getResizingColumn(final Point p) {
             return getResizingColumn(p, header.columnAtPoint(p));
         }
+//
+// Protected & protected Methods
+//
 
         protected void swapCursor() {
             Cursor tmp = header.getCursor();
             header.setCursor(otherCursor);
             otherCursor = tmp;
         }
-//
-// Protected & protected Methods
-//
+    }
 
-        protected void setDraggedDistance(final int draggedDistance, final int column) {
-            header.setDraggedDistance(draggedDistance);
-            if (column != -1) {
-                header.getColumnModel().moveColumn(column, column);
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+    }
+
+    protected int selectPreviousColumn(final boolean doIt) {
+        int newIndex = getSelectedColumnIndex();
+        if (newIndex > 0) {
+            newIndex--;
+            if (doIt) {
+                selectColumn(newIndex);
             }
         }
+        return newIndex;
     }
+
+    protected int changeColumnWidth(final TableColumn resizingColumn,
+                                    final JTableHeader th,
+                                    final int oldWidth, final int newWidth) {
+        resizingColumn.setWidth(newWidth);
+
+        Container container;
+        JTable table;
+
+        if ((th.getParent() == null) ||
+                ((container = th.getParent().getParent()) == null) ||
+                !(container instanceof JScrollPane) ||
+                ((table = th.getTable()) == null)) {
+            return 0;
+        }
+
+        if (!container.getComponentOrientation().isLeftToRight() &&
+                !th.getComponentOrientation().isLeftToRight()) {
+            JViewport viewport = ((JScrollPane) container).getViewport();
+            int viewportWidth = viewport.getWidth();
+            int diff = newWidth - oldWidth;
+            int newHeaderWidth = table.getWidth() + diff;
+
+            /* Resize a table */
+            Dimension tableSize = table.getSize();
+            tableSize.width += diff;
+            table.setSize(tableSize);
+
+            /* If this table is in AUTO_RESIZE_OFF mode and
+             * has a horizontal scrollbar, we need to update
+             * a view's position.
+             */
+            if ((newHeaderWidth >= viewportWidth) &&
+                    (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
+                Point p = viewport.getViewPosition();
+                p.x = Math.max(0, Math.min(newHeaderWidth - viewportWidth,
+                                           p.x + diff));
+                viewport.setViewPosition(p);
+                return diff;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Initializes JTableHeader properties such as font, foreground, and background. The font, foreground, and
+     * background properties are only set if their current value is either null or a UIResource, other properties are
+     * set if the current value is null.
+     *
+     * @see #installUI
+     */
+    protected void installDefaults() {
+        LookAndFeel.installColorsAndFont(header, "TableHeader.background",
+                                         "TableHeader.foreground", "TableHeader.font");
+        LookAndFeel.installProperty(header, "opaque", Boolean.TRUE);
+    }
+
+
+    /**
+     * Attaches listeners to the JTableHeader.
+     */
+    protected void installListeners() {
+        mouseInputListener = createMouseInputListener();
+
+        header.addMouseListener(mouseInputListener);
+        header.addMouseMotionListener(mouseInputListener);
+        header.addFocusListener(focusListener);
+    }
+
+// Uninstall methods
+
+
+
+
 
     public void uninstallUI(final JComponent c) {
         uninstallDefaults();
@@ -667,9 +672,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
 
     /**
-     * Returns the index of the column header over which the mouse
-     * currently is. When the mouse is not over the table header,
-     * -1 is returned.
+     * Returns the index of the column header over which the mouse currently is. When the mouse is not over the table
+     * header, -1 is returned.
      *
      * @return the index of the current rollover column
      * @see #rolloverColumnUpdated(int, int)
@@ -681,14 +685,11 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
 
     /**
-     * This method gets called every time when a rollover column in the table
-     * header is updated. Every look and feel that supports a rollover effect
-     * in a table header should override this method and repaint the header.
+     * This method gets called every time when a rollover column in the table header is updated. Every look and feel
+     * that supports a rollover effect in a table header should override this method and repaint the header.
      *
-     * @param oldColumn the index of the previous rollover column or -1 if the
-     *                  mouse was not over a column
-     * @param newColumn the index of the new rollover column or -1 if the mouse
-     *                  is not over a column
+     * @param oldColumn the index of the previous rollover column or -1 if the mouse was not over a column
+     * @param newColumn the index of the new rollover column or -1 if the mouse is not over a column
      * @see #getRolloverColumn()
      * @see JTableHeader#getHeaderRect(int)
      * @since 1.6
@@ -884,8 +885,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     }
 
     /**
-     * Return the minimum size of the header. The minimum width is the sum
-     * of the minimum widths of each column (plus inter-cell spacing).
+     * Return the minimum size of the header. The minimum width is the sum of the minimum widths of each column (plus
+     * inter-cell spacing).
      */
     public Dimension getMinimumSize(final JComponent c) {
         long width = 0;
@@ -898,10 +899,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     }
 
     /**
-     * Return the preferred size of the header. The preferred height is the
-     * maximum of the preferred heights of all of the components provided
-     * by the header renderers. The preferred width is the sum of the
-     * preferred widths of each column (plus inter-cell spacing).
+     * Return the preferred size of the header. The preferred height is the maximum of the preferred heights of all of
+     * the components provided by the header renderers. The preferred width is the sum of the preferred widths of each
+     * column (plus inter-cell spacing).
      */
     public Dimension getPreferredSize(final JComponent c) {
         long width = 0;
@@ -914,8 +914,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     }
 
     /**
-     * Return the maximum size of the header. The maximum width is the sum
-     * of the maximum widths of each column (plus inter-cell spacing).
+     * Return the maximum size of the header. The maximum width is the sum of the maximum widths of each column (plus
+     * inter-cell spacing).
      */
     public Dimension getMaximumSize(final JComponent c) {
         long width = 0;

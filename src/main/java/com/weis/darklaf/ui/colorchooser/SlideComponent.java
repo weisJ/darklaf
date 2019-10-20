@@ -50,16 +50,16 @@ class SlideComponent extends JComponent implements ColorListener {
     private static final int OFFSET = 11;
     private final ToolTipContext toolTipContext = new ToolTipContext(this);
     private final boolean vertical;
-    private boolean isOpacity;
     private final String title;
     private final List<Consumer<Integer>> listeners = new ArrayList<>();
+    protected Color borderColor;
+    protected Color shadowColor;
+    protected Color knobFill;
+    private boolean isOpacity;
     private int pointerValue = 0;
     private int value = 0;
     private Unit unitType = Unit.LEVEL;
     private Color color;
-    protected Color borderColor;
-    protected Color shadowColor;
-    protected Color knobFill;
 
     SlideComponent(final String title, final boolean vertical, final boolean isOpacity) {
         this.title = title;
@@ -116,6 +116,16 @@ class SlideComponent extends JComponent implements ColorListener {
         });
 
         setToolTipText(getToolTipText(null));
+    }
+
+    @NotNull
+    @Contract(" -> new")
+    private Rectangle getKnobRect() {
+        if (vertical) {
+            return new Rectangle(1, pointerValue - 6, 12, 12);
+        } else {
+            return new Rectangle(pointerValue - 6, 1, 12, 12);
+        }
     }
 
     private void processMouse(final MouseEvent e) {
@@ -209,16 +219,6 @@ class SlideComponent extends JComponent implements ColorListener {
         }
 
         drawKnob(g2d, vertical ? 7 : pointerValue, vertical ? pointerValue : 7, vertical);
-    }
-
-    @NotNull
-    @Contract(" -> new")
-    private Rectangle getKnobRect() {
-        if (vertical) {
-            return new Rectangle(1, pointerValue - 6, 12, 12);
-        } else {
-            return new Rectangle(pointerValue - 6, 1, 12, 12);
-        }
     }
 
     protected void drawKnob(@NotNull final Graphics2D g2d, int x, int y, final boolean vertical) {

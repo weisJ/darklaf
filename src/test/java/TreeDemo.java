@@ -1,5 +1,4 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.theme.Theme;
 import com.weis.darklaf.components.SelectableTreeNode;
 
 import javax.swing.*;

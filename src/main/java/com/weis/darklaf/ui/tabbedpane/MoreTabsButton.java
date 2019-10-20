@@ -34,8 +34,8 @@ public class MoreTabsButton extends DarkTabAreaButton {
 
     protected final static String INFINITY = "\u221e";
     protected final static int PAD = 2;
-    protected DarkTabbedPaneUI ui;
     protected final Icon icon;
+    protected DarkTabbedPaneUI ui;
 
     public MoreTabsButton(final DarkTabbedPaneUI ui) {
         super(ui);

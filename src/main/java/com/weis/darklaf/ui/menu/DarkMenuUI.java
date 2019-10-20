@@ -56,15 +56,15 @@ public class DarkMenuUI extends BasicMenuUI {
                       defaultTextIconGap);
     }
 
-    protected boolean isSelected(final JComponent menuItem) {
-        if (!(menuItem instanceof JMenuItem)) return false;
-        return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
-    }
-
     protected Icon getArrowIcon() {
         boolean hover = menuItem.getModel().isArmed()
                 || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
         return hover ? arrowIconHover : arrowIcon;
+    }
+
+    protected boolean isSelected(final JComponent menuItem) {
+        if (!(menuItem instanceof JMenuItem)) return false;
+        return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
     }
 
     protected void paintCheckIcon(final Graphics g, @NotNull final MenuItemLayoutHelper lh,

@@ -31,8 +31,7 @@ import java.util.Hashtable;
 import java.util.Objects;
 
 /**
- * A Basic L&amp;F implementation of ToolBarUI.  This implementation
- * is a "combined" view/controller.
+ * A Basic L&amp;F implementation of ToolBarUI.  This implementation is a "combined" view/controller.
  *
  * @author Georges Saab
  * @author Jeff Shapiro
@@ -103,40 +102,32 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     protected HashMap<AbstractButton, Border> borderTable = new HashMap<>();
     protected Hashtable<AbstractButton, Boolean> rolloverTable = new Hashtable<>();
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
     @Deprecated
     protected KeyStroke upKey;
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
     @Deprecated
     protected KeyStroke downKey;
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
     @Deprecated
     protected KeyStroke leftKey;
     /**
-     * As of Java 2 platform v1.3 this previously undocumented field is no
-     * longer used.
-     * Key bindings are now defined by the LookAndFeel, please refer to
-     * the key bindings specification for further details.
+     * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
+     * the LookAndFeel, please refer to the key bindings specification for further details.
      *
      * @deprecated As of Java 2 platform v1.3.
      */
@@ -268,12 +259,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     public abstract void setFloating(final boolean b, final Point p);
 
     /**
-     * Installs normal borders on all the child components of the JComponent.
-     * A normal border is the original border that was installed on the child
-     * component before it was added to the toolbar.
+     * Installs normal borders on all the child components of the JComponent. A normal border is the original border
+     * that was installed on the child component before it was added to the toolbar.
      * <p>
-     * This is a convenience method to call <code>setBorderNormal</code>
-     * for each child component.
+     * This is a convenience method to call <code>setBorderNormal</code> for each child component.
      *
      * @param c container which holds the child components (usually a JToolBar)
      * @see #setBorderToNonRollover
@@ -289,9 +278,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Sets the border of the component to have a normal border.
-     * A normal border is the original border that was installed on the child
-     * component before it was added to the toolbar.
+     * Sets the border of the component to have a normal border. A normal border is the original border that was
+     * installed on the child component before it was added to the toolbar.
      *
      * @param c component which will have a normal border re-installed
      * @see #createNonRolloverBorder
@@ -421,8 +409,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Creates a rollover border for toolbar components. The
-     * rollover border will be installed if rollover borders are
+     * Creates a rollover border for toolbar components. The rollover border will be installed if rollover borders are
      * enabled.
      * <p>
      * Override this method to provide an alternate rollover border.
@@ -445,9 +432,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Creates the non rollover border for toolbar components. This
-     * border will be installed as the border for components added
-     * to the toolbar if rollover borders are not enabled.
+     * Creates the non rollover border for toolbar components. This border will be installed as the border for
+     * components added to the toolbar if rollover borders are not enabled.
      * <p>
      * Override this method to provide an alternate rollover border.
      *
@@ -482,8 +468,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Returns a flag to determine whether rollover button borders
-     * are enabled.
+     * Returns a flag to determine whether rollover button borders are enabled.
      *
      * @return true if rollover borders are enabled; false otherwise
      * @see #setRolloverBorders
@@ -494,11 +479,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Sets the flag for enabling rollover borders on the toolbar and it will
-     * also install the appropriate border depending on the state of the flag.
+     * Sets the flag for enabling rollover borders on the toolbar and it will also install the appropriate border
+     * depending on the state of the flag.
      *
-     * @param rollover if true, rollover borders are installed.
-     *                 Otherwise non-rollover borders are installed
+     * @param rollover if true, rollover borders are installed. Otherwise non-rollover borders are installed
      * @see #isRolloverBorders
      * @since 1.4
      */
@@ -559,8 +543,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     /**
      * Installs rollover borders on all the child components of the JComponent.
      * <p>
-     * This is a convenience method to call <code>setBorderToRollover</code>
-     * for each child component.
+     * This is a convenience method to call <code>setBorderToRollover</code> for each child component.
      *
      * @param c container which holds the child components (usually a JToolBar)
      * @see #setBorderToRollover
@@ -579,12 +562,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Installs non-rollover borders on all the child components of the JComponent.
-     * A non-rollover border is the border that is installed on the child component
-     * while it is in the toolbar.
+     * Installs non-rollover borders on all the child components of the JComponent. A non-rollover border is the border
+     * that is installed on the child component while it is in the toolbar.
      * <p>
-     * This is a convenience method to call <code>setBorderToNonRollover</code>
-     * for each child component.
+     * This is a convenience method to call <code>setBorderToNonRollover</code> for each child component.
      *
      * @param c container which holds the child components (usually a JToolBar)
      * @see #setBorderToNonRollover
@@ -610,8 +591,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Sets the border of the component to have a rollover border which
-     * was created by the {@link #createRolloverBorder} method.
+     * Sets the border of the component to have a rollover border which was created by the {@link #createRolloverBorder}
+     * method.
      *
      * @param c component which will have a rollover border installed
      * @see #createRolloverBorder
@@ -638,8 +619,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Sets the border of the component to have a non-rollover border which
-     * was created by the {@link #createNonRolloverBorder} method.
+     * Sets the border of the component to have a non-rollover border which was created by the {@link
+     * #createNonRolloverBorder} method.
      *
      * @param c component which will have a non-rollover border installed
      * @see #createNonRolloverBorder
@@ -735,8 +716,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * Creates a window which contains the toolbar after it has been
-     * dragged out from its container
+     * Creates a window which contains the toolbar after it has been dragged out from its container
      *
      * @param toolbar an instance of {@code JToolBar}
      * @return a {@code RootPaneContainer} object, containing the toolbar
@@ -890,14 +870,13 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
     /**
-     * The method is used to drag {@code DragWindow} during the {@code JToolBar}
-     * is being dragged.
+     * The method is used to drag {@code DragWindow} during the {@code JToolBar} is being dragged.
      */
     protected abstract void dragTo();
 
     /**
-     * The method is called at end of dragging to place the frame in either
-     * its original place or in its floating frame.
+     * The method is called at end of dragging to place the frame in either its original place or in its floating
+     * frame.
      */
     protected abstract void floatAt();
 

@@ -51,7 +51,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * Create a search popup Menu.
      *
      * @param textField the text field.
-     * @param capacity    the length of the history.
+     * @param capacity  the length of the history.
      * @param maxH      maximum height.
      */
     public TextFieldHistoryPopup(@NotNull final SearchTextField textField, final int capacity, final int maxH) {
@@ -113,6 +113,19 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
         }
     }
 
+    /**
+     * Add entry to the history. If the size is greater than the capacity the oldest entry will be deleted.
+     *
+     * @param entry the entry to add.
+     * @see #getLength() getLength
+     * @see #setCapacity(int) setCapacity
+     * @see #getCapacity() getCapacity
+     */
+    public void addEntry(final String entry) {
+        history.remove(entry);
+        history.add(entry);
+    }
+
     @Override
     public void show(final Component invoker, final int x, final int y) {
         if (history.size() == 0) return;
@@ -133,19 +146,6 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
             add(new JMenuItem(new PlainAction(item, () -> textField.setText(item))));
         }
         super.showPopup();
-    }
-
-    /**
-     * Add entry to the history. If the size is greater than the capacity the oldest entry will be deleted.
-     *
-     * @param entry the entry to add.
-     * @see #getLength() getLength
-     * @see #setCapacity(int) setCapacity
-     * @see #getCapacity() getCapacity
-     */
-    public void addEntry(final String entry) {
-        history.remove(entry);
-        history.add(entry);
     }
 
     /**

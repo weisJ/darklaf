@@ -182,14 +182,6 @@ public final class PropertyLoader {
                 Integer.parseInt(numbers.get(3)));
     }
 
-    @Nullable
-    private static Object parseObject(final String value) {
-        try {
-            return Class.forName(value).getDeclaredConstructor().newInstance();
-        } catch (@NotNull final Exception ignored) { }
-        return null;
-    }
-
     @NotNull
     @Contract("_ -> new")
     private static Object parseFont(final String value) {
@@ -255,6 +247,14 @@ public final class PropertyLoader {
         } catch (@NotNull final NumberFormatException ignored) {
             return null;
         }
+    }
+
+    @Nullable
+    private static Object parseObject(final String value) {
+        try {
+            return Class.forName(value).getDeclaredConstructor().newInstance();
+        } catch (@NotNull final Exception ignored) { }
+        return null;
     }
 
     private static final class LoadError {

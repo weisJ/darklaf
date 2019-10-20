@@ -47,9 +47,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This implementation for PopupMenuUI is almost identical to the one of BasicPopupMenuUI.
- * The key difference is that it allows components to specify HIDE_POPUP_KEY and set a property to prevent
- * scroll events from closing a popup. This allows for more versatile PopupComponents.
+ * This implementation for PopupMenuUI is almost identical to the one of BasicPopupMenuUI. The key difference is that it
+ * allows components to specify HIDE_POPUP_KEY and set a property to prevent scroll events from closing a popup. This
+ * allows for more versatile PopupComponents.
  *
  * @author Jannis Weis
  */
@@ -96,8 +96,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     }
 
     /**
-     * This Method is responsible for removing the old MouseGrabber from the AppContext, to be able
-     * to add our own implementation for it that is a bit more generous with closing the popup.
+     * This Method is responsible for removing the old MouseGrabber from the AppContext, to be able to add our own
+     * implementation for it that is a bit more generous with closing the popup.
      */
     private void removeOldMouseGrabber() {
         AppContext context = AppContext.getAppContext();

@@ -41,12 +41,11 @@ public class MutableLineBorder extends EmptyBorder {
         this.color = color;
     }
 
-    public void setLeft(final int left) {
-        this.left = left;
-    }
-
-    public void setRight(final int right) {
-        this.right = right;
+    public void setInsets(final int top, final int left, final int bottom, final int right) {
+        setTop(top);
+        setBottom(bottom);
+        setLeft(left);
+        setRight(right);
     }
 
     public void setTop(final int top) {
@@ -57,11 +56,12 @@ public class MutableLineBorder extends EmptyBorder {
         this.bottom = bottom;
     }
 
-    public void setInsets(final int top, final int left, final int bottom, final int right) {
-        setTop(top);
-        setBottom(bottom);
-        setLeft(left);
-        setRight(right);
+    public void setLeft(final int left) {
+        this.left = left;
+    }
+
+    public void setRight(final int right) {
+        this.right = right;
     }
 
     public static class UIResource extends MutableLineBorder implements javax.swing.plaf.UIResource {

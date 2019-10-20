@@ -52,13 +52,13 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     public void setRoundedSelectionEdges(final boolean rounded) {
         ((DarkHighlightPainter) getSelectionPainter()).setRoundedEdges(rounded);
-    }    @Override
-    protected void positionCaret(final MouseEvent e) {
-        super.positionCaret(e);
     }
 
     public CaretStyle getStyle() {
         return style;
+    }    @Override
+    protected void positionCaret(final MouseEvent e) {
+        super.positionCaret(e);
     }
 
     public void setStyle(final CaretStyle style) {
@@ -72,23 +72,14 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-    private void adjustCaretLocation(@NotNull final MouseEvent e) {
-        if (e.isShiftDown() && getDot() != -1) {
-            moveCaret(e);
-        } else {
-            positionCaret(e);
-        }
-    }
-
     public boolean isAlwaysVisible() {
         return alwaysVisible;
     }
 
     /**
-     * Toggles whether this caret should always be visible (as opposed to
-     * blinking, or not visible when the editor's window is not focused).
-     * This can be used by popup windows that want the caret's location
-     * to still be visible for contextual purposes while they are displayed.
+     * Toggles whether this caret should always be visible (as opposed to blinking, or not visible when the editor's
+     * window is not focused). This can be used by popup windows that want the caret's location to still be visible for
+     * contextual purposes while they are displayed.
      *
      * @param alwaysVisible Whether this caret should always be visible.
      * @see #isAlwaysVisible()
@@ -103,54 +94,9 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             }
         }
     }
-
-    private void adjustFocus(final boolean inWindow) {
-        JTextComponent textArea = getComponent();
-        if ((textArea != null) && textArea.isEnabled() &&
-                textArea.isRequestFocusEnabled()) {
-            if (inWindow) {
-                textArea.requestFocusInWindow();
-            } else {
-                textArea.requestFocus();
-            }
-        }
-    }
-
-    @Override
-    protected synchronized void damage(final Rectangle r) {
-        if (r != null) {
-            validateWidth(r); // Check for "0" or "1" caret width
-            x = r.x - 1;
-            y = r.y;
-            width = r.width + 4;
-            height = r.height;
-            repaint();
-        }
-    }
-
-    @Override
-    protected Highlighter.HighlightPainter getSelectionPainter() {
-        return selectionPainter;
-    }
-
-    public boolean getPasteOnMiddleMouseClick() {
-        return pasteOnMiddleMouseClick;
-    }
-
-
-    public enum CaretStyle {
-        VERTICAL_LINE_STYLE,
-        UNDERLINE_STYLE,
-        BLOCK_STYLE,
-        BLOCK_BORDER_STYLE,
-        THICK_VERTICAL_LINE_STYLE
-    }
-
-
     /**
-     * Called when the mouse is clicked.  If the click was generated from
-     * button1, a double click selects a word, and a triple click the
-     * current line.
+     * Called when the mouse is clicked.  If the click was generated from button1, a double click selects a word, and a
+     * triple click the current line.
      *
      * @param e the mouse event
      */
@@ -211,6 +157,57 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 }
             }
         }
+    }
+
+    private void adjustCaretLocation(@NotNull final MouseEvent e) {
+        if (e.isShiftDown() && getDot() != -1) {
+            moveCaret(e);
+        } else {
+            positionCaret(e);
+        }
+    }
+
+
+    private void adjustFocus(final boolean inWindow) {
+        JTextComponent textArea = getComponent();
+        if ((textArea != null) && textArea.isEnabled() &&
+                textArea.isRequestFocusEnabled()) {
+            if (inWindow) {
+                textArea.requestFocusInWindow();
+            } else {
+                textArea.requestFocus();
+            }
+        }
+    }
+
+    @Override
+    protected synchronized void damage(final Rectangle r) {
+        if (r != null) {
+            validateWidth(r); // Check for "0" or "1" caret width
+            x = r.x - 1;
+            y = r.y;
+            width = r.width + 4;
+            height = r.height;
+            repaint();
+        }
+    }
+
+    @Override
+    protected Highlighter.HighlightPainter getSelectionPainter() {
+        return selectionPainter;
+    }
+
+    public boolean getPasteOnMiddleMouseClick() {
+        return pasteOnMiddleMouseClick;
+    }
+
+
+    public enum CaretStyle {
+        VERTICAL_LINE_STYLE,
+        UNDERLINE_STYLE,
+        BLOCK_STYLE,
+        BLOCK_BORDER_STYLE,
+        THICK_VERTICAL_LINE_STYLE
     }
 
 

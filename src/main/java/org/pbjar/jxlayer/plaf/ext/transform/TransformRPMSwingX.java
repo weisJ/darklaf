@@ -39,9 +39,8 @@ import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
 import javax.swing.*;
 
 /**
- * A specialized {@link RepaintManager} that checks for every JComponent that is being set dirty, if
- * it has a JXLayer ancestor, equipped with a TransformUI. In that case, the transformed region on
- * the JXLayer is also marked dirty.
+ * A specialized {@link RepaintManager} that checks for every JComponent that is being set dirty, if it has a JXLayer
+ * ancestor, equipped with a TransformUI. In that case, the transformed region on the JXLayer is also marked dirty.
  *
  * <p>If this class cannot be instantiated because the SwingX packages are not on the class path,
  * use {@link TransformRPMFallBack}

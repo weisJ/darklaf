@@ -40,9 +40,8 @@ import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
 import javax.swing.*;
 
 /**
- * A specialized {@link RepaintManager} that checks for every JComponent that is being set dirty, if
- * it has a JXLayer ancestor, equipped with a TransformUI. In that case, the transformed region on
- * the JXLayer is also marked dirty.
+ * A specialized {@link RepaintManager} that checks for every JComponent that is being set dirty, if it has a JXLayer
+ * ancestor, equipped with a TransformUI. In that case, the transformed region on the JXLayer is also marked dirty.
  *
  * <p>A fall back class if the {@link ForwardingRepaintManager} cannot be instantiated because the
  * SwingX packages are not on the class path.

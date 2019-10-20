@@ -6,12 +6,18 @@ import java.awt.event.ItemEvent;
 public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     private TristateState state = TristateState.DESELECTED;
 
+    public TristateButtonModel() {
+        this(TristateState.DESELECTED);
+    }
+
     public TristateButtonModel(final TristateState state) {
         setState(state);
     }
 
-    public TristateButtonModel() {
-        this(TristateState.DESELECTED);
+    protected void displayState() {
+        super.setSelected(state != TristateState.DESELECTED);
+        super.setArmed(state == TristateState.INDETERMINATE);
+        super.setPressed(state == TristateState.INDETERMINATE);
     }
 
     public void setIndeterminate() {
@@ -21,7 +27,6 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     public boolean isIndeterminate() {
         return state == TristateState.INDETERMINATE;
     }
-
 
     @Override
     public void setEnabled(final boolean enabled) {
@@ -39,6 +44,10 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
         setState(state.next());
     }
 
+    public TristateState getState() {
+        return state;
+    }
+
     public void setState(final TristateState state) {
         this.state = state;
         displayState();
@@ -48,15 +57,5 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
             //noinspection MagicConstant
             fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this, indeterminate));
         }
-    }
-
-    protected void displayState() {
-        super.setSelected(state != TristateState.DESELECTED);
-        super.setArmed(state == TristateState.INDETERMINATE);
-        super.setPressed(state == TristateState.INDETERMINATE);
-    }
-
-    public TristateState getState() {
-        return state;
     }
 }

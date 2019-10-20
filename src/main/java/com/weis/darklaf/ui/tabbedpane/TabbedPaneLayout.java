@@ -27,8 +27,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This class should be treated as a &quot;protected&quot; inner class.
- * Instantiate it only within subclasses of BasicTabbedPaneUI.
+ * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
+ * BasicTabbedPaneUI.
  */
 public class TabbedPaneLayout implements LayoutManager {
 

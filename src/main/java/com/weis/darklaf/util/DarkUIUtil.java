@@ -53,6 +53,8 @@ public final class DarkUIUtil {
     public final static AlphaComposite DROP_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     public final static AlphaComposite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
     public static final boolean USE_QUARTZ = "true".equals(System.getProperty("apple.awt.graphics.UseQuartz"));
+    private static final Rectangle iconRect = new Rectangle();
+    private static final Rectangle textRect = new Rectangle();
 
     private static Color getErrorGlow() {
         return UIManager.getColor("glowError");
@@ -165,8 +167,6 @@ public final class DarkUIUtil {
         return new Color(redPart, greenPart, bluePart);
     }
 
-    private static final Rectangle iconRect = new Rectangle();
-
     public static void applyInsets(final Rectangle rect, final Insets insets) {
         if (insets != null && rect != null) {
             rect.x += insets.left;
@@ -255,6 +255,16 @@ public final class DarkUIUtil {
         return hideTipAction.isEnabled();
     }
 
+    @Nullable
+    public static MenuElement findEnabledChild(final MenuElement[] e, final MenuElement elem, final boolean forward) {
+        for (int i = 0; i < e.length; i++) {
+            if (e[i] == elem) {
+                return findEnabledChild(e, i, forward);
+            }
+        }
+        return null;
+    }
+
     public static MenuElement findEnabledChild(final MenuElement[] e, final int fromIndex, final boolean forward) {
         MenuElement result;
         if (forward) {
@@ -265,16 +275,6 @@ public final class DarkUIUtil {
             if (result == null) result = previousEnabledChild(e, e.length - 1, fromIndex + 1);
         }
         return result;
-    }
-
-    @Nullable
-    public static MenuElement findEnabledChild(final MenuElement[] e, final MenuElement elem, final boolean forward) {
-        for (int i = 0; i < e.length; i++) {
-            if (e[i] == elem) {
-                return findEnabledChild(e, i, forward);
-            }
-        }
-        return null;
     }
 
     @Nullable
@@ -306,8 +306,6 @@ public final class DarkUIUtil {
         }
         return null;
     }
-
-    private static final Rectangle textRect = new Rectangle();
 
     public static void drawRect(@NotNull final Graphics g, final int x, final int y,
                                 final int width, final int height, final int thickness) {

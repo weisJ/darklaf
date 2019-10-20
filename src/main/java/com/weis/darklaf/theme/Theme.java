@@ -51,10 +51,34 @@ public abstract class Theme {
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 
+    protected String getResourcePath() {
+        return "";
+    }
+
+    public abstract String getName();
+
+    protected Properties load(final String name) {
+        final Properties properties = new Properties();
+        try (InputStream stream = getResourceAsStream(name)) {
+            properties.load(stream);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not load" + name + ".properties", e.getMessage());
+        }
+        return properties;
+    }
+
+    protected InputStream getResourceAsStream(final String name) {
+        return getResourceAsStream(this.getClass(), name);
+    }
+
+    protected InputStream getResourceAsStream(@NotNull final Class<?> clazz, final String name) {
+        return clazz.getResourceAsStream(name);
+    }
+
     /**
      * Load the global values.
      *
-     * @param properties the properties to load the values into.
+     * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     public void loadGlobals(@NotNull final Properties properties, final UIDefaults currentDefaults) {
@@ -65,7 +89,7 @@ public abstract class Theme {
     /**
      * Load the platform defaults.
      *
-     * @param properties the properties to load the values into.
+     * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
@@ -77,7 +101,7 @@ public abstract class Theme {
     /**
      * Load the ui defaults.
      *
-     * @param properties the properties to load the values into.
+     * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
@@ -85,17 +109,6 @@ public abstract class Theme {
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
                                          properties, currentDefaults);
         }
-    }
-
-
-    protected Properties load(final String name) {
-        final Properties properties = new Properties();
-        try (InputStream stream = getResourceAsStream(name)) {
-            properties.load(stream);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not load" + name + ".properties", e.getMessage());
-        }
-        return properties;
     }
 
     public StyleSheet loadStyleSheet() {
@@ -108,20 +121,6 @@ public abstract class Theme {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
         return styleSheet;
-    }
-
-    protected String getResourcePath() {
-        return "";
-    }
-
-    public abstract String getName();
-
-    protected InputStream getResourceAsStream(final String name) {
-        return getResourceAsStream(this.getClass(), name);
-    }
-
-    protected InputStream getResourceAsStream(@NotNull final Class<?> clazz, final String name) {
-        return clazz.getResourceAsStream(name);
     }
 
     public boolean useCustomDecorations() {

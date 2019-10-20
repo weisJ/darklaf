@@ -118,8 +118,8 @@ public enum Alignment {
     }
 
     /**
-     * Get the index of the alignment. This function is for utility purposes where one might save
-     * settings based on alignment in an array.
+     * Get the index of the alignment. This function is for utility purposes where one might save settings based on
+     * alignment in an array.
      *
      * @return the index.
      */

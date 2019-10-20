@@ -36,15 +36,14 @@ import java.awt.*;
  */
 public class DarkInternalFrameUI extends BasicInternalFrameUI {
 
+    public DarkInternalFrameUI(final JInternalFrame b) {
+        super(b);
+    }
+
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent b) {
         return new DarkInternalFrameUI((JInternalFrame) b);
-    }
-
-
-    public DarkInternalFrameUI(final JInternalFrame b) {
-        super(b);
     }
 
     @Override
@@ -54,14 +53,14 @@ public class DarkInternalFrameUI extends BasicInternalFrameUI {
     }
 
     @Override
-    public void paint(final Graphics g, final JComponent c) {
-        super.paint(g, c);
-    }
-
-    @Override
     protected JComponent createNorthPane(final JInternalFrame w) {
         this.titlePane = new DarkInternalFrameTitlePane(w);
         this.titlePane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 0));
         return this.titlePane;
+    }
+
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        super.paint(g, c);
     }
 }

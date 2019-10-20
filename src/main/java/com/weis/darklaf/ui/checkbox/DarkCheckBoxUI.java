@@ -54,12 +54,6 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     private static final Rectangle textRect = new Rectangle();
     private static Dimension size = new Dimension();
     private final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
-    private Icon checkBoxIcon;
-    private Icon checkBoxDisabledIcon;
-    private Icon checkBoxFocusedIcon;
-    private Icon checkBoxSelectedIcon;
-    private Icon checkBoxSelectedDisabledIcon;
-    private Icon checkBoxSelectedFocusedIcon;
     protected int arcSize;
     protected int borderSize;
     protected Color background;
@@ -73,6 +67,12 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     protected Color inactiveCheckColor;
     protected Color focusCheckColor;
     protected Color focusSelectedBorderColor;
+    private Icon checkBoxIcon;
+    private Icon checkBoxDisabledIcon;
+    private Icon checkBoxFocusedIcon;
+    private Icon checkBoxSelectedIcon;
+    private Icon checkBoxSelectedDisabledIcon;
+    private Icon checkBoxSelectedFocusedIcon;
 
     @NotNull
     @Contract("_ -> new")
@@ -130,16 +130,6 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         if (text != null) {
             paintText(g, b, textRect, text, fm, getDisabledTextColor());
         }
-    }
-
-    protected Icon getCheckIcon(@NotNull final AbstractButton b) {
-        boolean selected = b.isSelected();
-        boolean enabled = b.isEnabled();
-        boolean hasFocus = b.hasFocus();
-        return selected ? enabled ? hasFocus ? checkBoxSelectedFocusedIcon : checkBoxSelectedIcon
-                                  : checkBoxSelectedDisabledIcon
-                        : enabled ? hasFocus ? checkBoxFocusedIcon : checkBoxIcon
-                                  : checkBoxDisabledIcon;
     }
 
     protected String layoutCheckBox(@NotNull final JCheckBox b, final FontMetrics fm) {
@@ -201,6 +191,16 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
             icon = b.getIcon();
         }
         return icon;
+    }
+
+    protected Icon getCheckIcon(@NotNull final AbstractButton b) {
+        boolean selected = b.isSelected();
+        boolean enabled = b.isEnabled();
+        boolean hasFocus = b.hasFocus();
+        return selected ? enabled ? hasFocus ? checkBoxSelectedFocusedIcon : checkBoxSelectedIcon
+                                  : checkBoxSelectedDisabledIcon
+                        : enabled ? hasFocus ? checkBoxFocusedIcon : checkBoxIcon
+                                  : checkBoxDisabledIcon;
     }
 
     protected void paintDarkCheck(final JComponent c, final Graphics2D g, @NotNull final JCheckBox b) {

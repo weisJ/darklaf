@@ -33,6 +33,10 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener {
 
+    protected static Icon clear;
+    protected static Icon clearHover;
+    protected static Icon search;
+    protected static Icon searchWithHistory;
     private final FocusListener focusListener = new FocusAdapter() {
         public void focusGained(final FocusEvent e) {
             getComponent().repaint();
@@ -42,6 +46,11 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             getComponent().repaint();
         }
     };
+    protected int arcSize;
+    protected int searchArcSize;
+    protected int borderSize;
+    protected Color background;
+    protected Color inactiveBackground;
     private long lastSearchEvent;
     private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
         @Override
@@ -69,15 +78,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             showSearchPopup();
         }
     };
-    protected int arcSize;
-    protected int searchArcSize;
-    protected static Icon clear;
-    protected static Icon clearHover;
-    protected static Icon search;
-    protected static Icon searchWithHistory;
-    protected int borderSize;
-    protected Color background;
-    protected Color inactiveBackground;
 
     @NotNull
     @Contract("_ -> new")
@@ -95,25 +95,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         Insets i = c.getInsets();
         Dimension dim = c.getSize();
         return new Rectangle(i.left, i.top, dim.width - i.left - i.right, dim.height - i.top - i.bottom);
-    }
-
-    protected static Icon getSearchIcon(final Component c) {
-        return isSearchFieldWithHistoryPopup(c) ? searchWithHistory : search;
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        arcSize = UIManager.getInt("TextField.arc");
-        borderSize = UIManager.getInt("TextField.borderThickness");
-        searchArcSize = UIManager.getInt("TextField.searchArc");
-        background = UIManager.getColor("TextField.background");
-        inactiveBackground = UIManager.getColor("TextField.disabledBackground");
-        clearHover = UIManager.getIcon("TextField.search.clearHover.icon");
-        clear = UIManager.getIcon("TextField.search.clear.icon");
-        searchWithHistory = UIManager.getIcon("TextField.search.searchWithHistory.icon");
-        search = UIManager.getIcon("TextField.search.search.icon");
-
     }
 
     public static boolean chooseAlternativeArc(@NotNull final Component c) {
@@ -170,15 +151,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return new Point(r.x + DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
     }
 
-    protected void paintBorderBackground(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
-        g.setColor(getBackgroundColor(c));
-        Rectangle r = getDrawingRect(getComponent());
-        int arc = getArcSize(c);
-        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
-    }
-
-    protected Color getBackgroundColor(@NotNull final JTextComponent c) {
-        return c.isEnabled() && c.isEditable() ? background : inactiveBackground;
+    protected static Icon getSearchIcon(final Component c) {
+        return isSearchFieldWithHistoryPopup(c) ? searchWithHistory : search;
     }
 
     public static boolean isSearchFieldWithHistoryPopup(final Component c) {
@@ -195,6 +169,17 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     public Rectangle getDrawingRect(@NotNull final JTextComponent c) {
         int w = borderSize;
         return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
+    }
+
+    protected void paintBorderBackground(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
+        g.setColor(getBackgroundColor(c));
+        Rectangle r = getDrawingRect(getComponent());
+        int arc = getArcSize(c);
+        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
+    }
+
+    protected Color getBackgroundColor(@NotNull final JTextComponent c) {
+        return c.isEnabled() && c.isEditable() ? background : inactiveBackground;
     }
 
     protected int getArcSize(final Component c) {
@@ -249,6 +234,21 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     @Override
     protected DarkCaret.CaretStyle getDefaultCaretStyle() {
         return DarkCaret.CaretStyle.THICK_VERTICAL_LINE_STYLE;
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        arcSize = UIManager.getInt("TextField.arc");
+        borderSize = UIManager.getInt("TextField.borderThickness");
+        searchArcSize = UIManager.getInt("TextField.searchArc");
+        background = UIManager.getColor("TextField.background");
+        inactiveBackground = UIManager.getColor("TextField.disabledBackground");
+        clearHover = UIManager.getIcon("TextField.search.clearHover.icon");
+        clear = UIManager.getIcon("TextField.search.clear.icon");
+        searchWithHistory = UIManager.getIcon("TextField.search.searchWithHistory.icon");
+        search = UIManager.getIcon("TextField.search.search.icon");
+
     }
 
     @Override

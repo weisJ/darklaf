@@ -19,18 +19,17 @@ import javax.swing.text.ViewFactory;
 import java.awt.*;
 
 /**
- * This class is an exact copy of the implementation of {@link BasicTextFieldUI}.
- * In this way it is possible to contain all Laf specific methods in {@link DarkTextFieldUI}, without having to
- * extends {@link BasicTextFieldUI} directly and instead extend the {@link DarkTextUI} base class.
+ * This class is an exact copy of the implementation of {@link BasicTextFieldUI}. In this way it is possible to contain
+ * all Laf specific methods in {@link DarkTextFieldUI}, without having to extends {@link BasicTextFieldUI} directly and
+ * instead extend the {@link DarkTextUI} base class.
  *
  * @author Jannis Weis
  */
 public abstract class DarkTextFieldUIBridge extends DarkTextUI {
 
     /**
-     * Fetches the name used as a key to lookup properties through the
-     * UIManager.  This is used as a prefix to all the standard
-     * text properties.
+     * Fetches the name used as a key to lookup properties through the UIManager.  This is used as a prefix to all the
+     * standard text properties.
      *
      * @return the name ("TextField")
      */
@@ -110,8 +109,7 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
     }
 
     /**
-     * Returns an enum indicating how the baseline of the component
-     * changes as the size changes.
+     * Returns an enum indicating how the baseline of the component changes as the size changes.
      *
      * @throws NullPointerException {@inheritDoc}
      * @see javax.swing.JComponent#getBaseline(int, int)
@@ -125,8 +123,7 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
 
 
     /**
-     * A field view that support bidirectional text via the
-     * support provided by ParagraphView.
+     * A field view that support bidirectional text via the support provided by ParagraphView.
      */
     static class I18nFieldView extends ParagraphView {
 
@@ -140,19 +137,16 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Fetch the constraining span to flow against for
-         * the given child index.  There is no limit for
-         * a field since it scrolls, so this is implemented to
-         * return <code>Integer.MAX_VALUE</code>.
+         * Fetch the constraining span to flow against for the given child index.  There is no limit for a field since
+         * it scrolls, so this is implemented to return <code>Integer.MAX_VALUE</code>.
          */
         public int getFlowSpan(final int index) {
             return Integer.MAX_VALUE;
         }
 
         /**
-         * Renders using the given rendering surface and area on that surface.
-         * The view may need to do layout and create child views to enable
-         * itself to render into the given allocation.
+         * Renders using the given rendering surface and area on that surface. The view may need to do layout and create
+         * child views to enable itself to render into the given allocation.
          *
          * @param g the rendering surface to use
          * @param a the allocated region to render into
@@ -165,17 +159,12 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Adjusts the allocation given to the view
-         * to be a suitable allocation for a text field.
-         * If the view has been allocated more than the
-         * preferred span vertically, the allocation is
-         * changed to be centered vertically.  Horizontally
-         * the view is adjusted according to the horizontal
-         * alignment property set on the associated JTextField
-         * (if that is the type of the hosting component).
+         * Adjusts the allocation given to the view to be a suitable allocation for a text field. If the view has been
+         * allocated more than the preferred span vertically, the allocation is changed to be centered vertically.
+         * Horizontally the view is adjusted according to the horizontal alignment property set on the associated
+         * JTextField (if that is the type of the hosting component).
          *
-         * @param a the allocation given to the view, which may need
-         *          to be adjusted.
+         * @param a the allocation given to the view, which may need to be adjusted.
          * @return the allocation that the superclass should use.
          */
         Shape adjustAllocation(final Shape a) {
@@ -249,8 +238,7 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         // --- View methods -------------------------------------------
 
         /**
-         * Determines the resizability of the view along the
-         * given axis.  A value of 0 or less is not resizable.
+         * Determines the resizability of the view along the given axis.  A value of 0 or less is not resizable.
          *
          * @param axis View.X_AXIS or View.Y_AXIS
          * @return the weight -> 1 for View.X_AXIS, else 0
@@ -263,14 +251,14 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Provides a mapping from the document model coordinate space
-         * to the coordinate space of the view mapped to it.
+         * Provides a mapping from the document model coordinate space to the coordinate space of the view mapped to
+         * it.
          *
          * @param pos the position to convert >= 0
          * @param a   the allocated region to render into
          * @return the bounding box of the given position
-         * @throws BadLocationException if the given position does not
-         *                              represent a valid location in the associated document
+         * @throws BadLocationException if the given position does not represent a valid location in the associated
+         *                              document
          * @see View#modelToView
          */
         public Shape modelToView(final int pos, final Shape a, final Position.Bias b) throws BadLocationException {
@@ -278,14 +266,12 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Provides a mapping from the view coordinate space to the logical
-         * coordinate space of the model.
+         * Provides a mapping from the view coordinate space to the logical coordinate space of the model.
          *
          * @param fx the X coordinate >= 0.0f
          * @param fy the Y coordinate >= 0.0f
          * @param a  the allocated region to render into
-         * @return the location within the model that best represents the
-         * given point in the view
+         * @return the location within the model that best represents the given point in the view
          * @see View#viewToModel
          */
         public int viewToModel(final float fx, final float fy, final Shape a, final Position.Bias[] bias) {
@@ -293,21 +279,19 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Provides a mapping from the document model coordinate space
-         * to the coordinate space of the view mapped to it.
+         * Provides a mapping from the document model coordinate space to the coordinate space of the view mapped to
+         * it.
          *
          * @param p0 the position to convert >= 0
-         * @param b0 the bias toward the previous character or the
-         *           next character represented by p0, in case the
+         * @param b0 the bias toward the previous character or the next character represented by p0, in case the
          *           position is a boundary of two views.
          * @param p1 the position to convert >= 0
-         * @param b1 the bias toward the previous character or the
-         *           next character represented by p1, in case the
+         * @param b1 the bias toward the previous character or the next character represented by p1, in case the
          *           position is a boundary of two views.
          * @param a  the allocated region to render into
          * @return the bounding box of the given position is returned
-         * @throws BadLocationException     if the given position does
-         *                                  not represent a valid location in the associated document
+         * @throws BadLocationException     if the given position does not represent a valid location in the associated
+         *                                  document
          * @throws IllegalArgumentException for an invalid bias argument
          * @see View#viewToModel
          */
@@ -318,8 +302,8 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Gives notification that something was inserted into the document
-         * in a location that this view is responsible for.
+         * Gives notification that something was inserted into the document in a location that this view is responsible
+         * for.
          *
          * @param changes the change information from the associated document
          * @param a       the current allocation of the view
@@ -332,12 +316,9 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Update the visibility model with the associated JTextField
-         * (if there is one) to reflect the current visibility as a
-         * result of changes to the document model.  The bounded
-         * range properties are updated.  If the view hasn't yet been
-         * shown the extent will be zero and we just set it to be full
-         * until determined otherwise.
+         * Update the visibility model with the associated JTextField (if there is one) to reflect the current
+         * visibility as a result of changes to the document model.  The bounded range properties are updated.  If the
+         * view hasn't yet been shown the extent will be zero and we just set it to be full until determined otherwise.
          */
         void updateVisibilityModel() {
             Component c = getContainer();
@@ -359,8 +340,8 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         }
 
         /**
-         * Gives notification that something was removed from the document
-         * in a location that this view is responsible for.
+         * Gives notification that something was removed from the document in a location that this view is responsible
+         * for.
          *
          * @param changes the change information from the associated document
          * @param a       the current allocation of the view

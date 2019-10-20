@@ -20,10 +20,10 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     private static final Robot robot = createRobot();
 
     private final DropPreviewPanel previewPanel = new DropPreviewPanel();
+    protected Color background;
     private Dimension verticalDim = new Dimension(0, 0);
     private Dimension horizontalDim = new Dimension(0, 0);
     private Timer timer = new Timer(5, e -> dragTo());
-    protected Color background;
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -49,38 +49,8 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        background = UIManager.getColor("ToolBar.background");
-    }
-
-    @Override
-    protected void installListeners() {
-        super.installListeners();
-    }
-
-    @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-    }
-
-    @Override
-    protected DragWindow createDragWindow(final JToolBar toolbar) {
-        Window frame = null;
-        if (toolBar != null) {
-            Container p = toolbar.getParent();
-            while (p != null && !(p instanceof Window)) {
-                p = p.getParent();
-            }
-            if (p != null) {
-                frame = (Window) p;
-            }
-        }
-        if (floatingToolBar instanceof Window) { frame = (Window) floatingToolBar; }
-        return new DarkDragWindow(frame);
-    }
-
-    protected void setBorderToNonRollover(final Component c) {
     }
 
     @Override
@@ -136,6 +106,36 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
                 updateDockingSource();
             }
         }
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        background = UIManager.getColor("ToolBar.background");
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+    }
+
+    protected void setBorderToNonRollover(final Component c) {
+    }
+
+    @Override
+    protected DragWindow createDragWindow(final JToolBar toolbar) {
+        Window frame = null;
+        if (toolBar != null) {
+            Container p = toolbar.getParent();
+            while (p != null && !(p instanceof Window)) {
+                p = p.getParent();
+            }
+            if (p != null) {
+                frame = (Window) p;
+            }
+        }
+        if (floatingToolBar instanceof Window) { frame = (Window) floatingToolBar; }
+        return new DarkDragWindow(frame);
     }
 
     @Override

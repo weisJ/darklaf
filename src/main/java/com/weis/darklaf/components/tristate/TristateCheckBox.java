@@ -19,16 +19,6 @@ public class TristateCheckBox extends JCheckBox {
         this(text, null, TristateState.DESELECTED);
     }
 
-    @NotNull
-    @Contract(pure = true)
-    public String getUIClassID() {
-        if (UIManager.getLookAndFeel() instanceof DarkLaf) {
-            return "TristateCheckBoxUI";
-        } else {
-            return super.getUIClassID();
-        }
-    }
-
     public TristateCheckBox(final String text, final Icon icon, final TristateState initial) {
         super(text, icon);
         setModel(new TristateButtonModel(initial));
@@ -38,37 +28,6 @@ public class TristateCheckBox extends JCheckBox {
                 TristateCheckBox.this.iterateState();
             }
         });
-    }
-
-    @Override
-    public void setSelected(final boolean b) {
-        setState(b ? TristateState.SELECTED : TristateState.DESELECTED);
-    }
-
-
-    public void setIndeterminate() {
-        getTristateModel().setIndeterminate();
-    }
-
-    public void setState(final TristateState state) {
-        getTristateModel().setState(state);
-    }
-
-    public boolean isIndeterminate() {
-        return getTristateModel().isIndeterminate();
-    }
-
-    public TristateState getState() {
-        return getTristateModel().getState();
-    }
-
-    @Override
-    public void setModel(final ButtonModel newModel) {
-        super.setModel(newModel);
-
-        if (model instanceof TristateButtonModel) {
-            model.addChangeListener(enableListener);
-        }
     }
 
     private void iterateState() {
@@ -92,5 +51,45 @@ public class TristateCheckBox extends JCheckBox {
 
     public TristateButtonModel getTristateModel() {
         return (TristateButtonModel) super.getModel();
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    public String getUIClassID() {
+        if (UIManager.getLookAndFeel() instanceof DarkLaf) {
+            return "TristateCheckBoxUI";
+        } else {
+            return super.getUIClassID();
+        }
+    }
+
+    @Override
+    public void setSelected(final boolean b) {
+        setState(b ? TristateState.SELECTED : TristateState.DESELECTED);
+    }
+
+    @Override
+    public void setModel(final ButtonModel newModel) {
+        super.setModel(newModel);
+
+        if (model instanceof TristateButtonModel) {
+            model.addChangeListener(enableListener);
+        }
+    }
+
+    public void setIndeterminate() {
+        getTristateModel().setIndeterminate();
+    }
+
+    public boolean isIndeterminate() {
+        return getTristateModel().isIndeterminate();
+    }
+
+    public TristateState getState() {
+        return getTristateModel().getState();
+    }
+
+    public void setState(final TristateState state) {
+        getTristateModel().setState(state);
     }
 }

@@ -38,14 +38,14 @@ import java.awt.*;
 public class DarkStatusBarUI extends BasicStatusBarUI {
 
 
+    protected Color background;
+    protected Color borderColor;
+
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkStatusBarUI();
     }
-
-    protected Color background;
-    protected Color borderColor;
 
     @Override
     protected void installDefaults(final JXStatusBar sb) {

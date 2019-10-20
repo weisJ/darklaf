@@ -46,8 +46,7 @@ import java.util.WeakHashMap;
 import java.util.function.Function;
 
 /**
- * This is an implementation of {@link TransformModel} with methods to explicitly set transformation
- * values.
+ * This is an implementation of {@link TransformModel} with methods to explicitly set transformation values.
  *
  * @author Piet Blok
  */
@@ -124,14 +123,19 @@ public class DefaultTransformModel implements TransformModel {
     }
 
     /**
-     * Get the rotation value in radians as set by {@link #setRotation(double)}. The default value is
-     * {@code 0}.
+     * Get the rotation value in radians as set by {@link #setRotation(double)}. The default value is {@code 0}.
      *
      * @return the rotation value.
      * @see #setRotation(double)
      */
     public double getRotation() {
         return (Double) getValue(Type.Rotation);
+    }
+
+    @NotNull
+    @SuppressWarnings("unchecked")
+    protected <T> T getValue(@NotNull final Type type) {
+        return (T) values[type.ordinal()];
     }
 
     /**
@@ -152,6 +156,39 @@ public class DefaultTransformModel implements TransformModel {
      */
     public void setQuadrantRotation(final int newValue) {
         setValue(Type.QuadrantRotation, newValue);
+    }
+
+    /**
+     * Set a scale.
+     *
+     * <p>The scale is primarily used to calculate a preferred size. Unless {@code
+     * ScaleToPreferredSize} is set to {@code true} (see {@link #setScaleToPreferredSize(boolean)} and {@link
+     * #isScaleToPreferredSize()}), actual scaling itself is calculated such that the view occupies as much space as
+     * possible on the {@link JXLayer}.
+     *
+     * <p>The default value is 1.
+     *
+     * @param newValue the preferred scale
+     * @throws IllegalArgumentException when the argument value is 0
+     * @see #getScale()
+     */
+    public void setScale(final double newValue) throws IllegalArgumentException {
+        if (newValue == 0.0) {
+            throw new IllegalArgumentException("Preferred scale can not be set to 0");
+        }
+        setValue(Type.PreferredScale, newValue);
+    }
+
+    /**
+     * Set a value and fire a PropertyChange.
+     *
+     * @param type     the value type
+     * @param newValue the new value
+     */
+    private void setValue(@NotNull final Type type, final Object newValue) {
+        Object oldValue = values[type.ordinal()];
+        values[type.ordinal()] = newValue;
+        fireChangeEvent(oldValue, newValue);
     }
 
     /**
@@ -277,39 +314,6 @@ public class DefaultTransformModel implements TransformModel {
     }
 
     /**
-     * Set a scale.
-     *
-     * <p>The scale is primarily used to calculate a preferred size. Unless {@code
-     * ScaleToPreferredSize} is set to {@code true} (see {@link #setScaleToPreferredSize(boolean)} and
-     * {@link #isScaleToPreferredSize()}), actual scaling itself is calculated such that the view
-     * occupies as much space as possible on the {@link JXLayer}.
-     *
-     * <p>The default value is 1.
-     *
-     * @param newValue the preferred scale
-     * @throws IllegalArgumentException when the argument value is 0
-     * @see #getScale()
-     */
-    public void setScale(final double newValue) throws IllegalArgumentException {
-        if (newValue == 0.0) {
-            throw new IllegalArgumentException("Preferred scale can not be set to 0");
-        }
-        setValue(Type.PreferredScale, newValue);
-    }
-
-    /**
-     * Set a value and fire a PropertyChange.
-     *
-     * @param type     the value type
-     * @param newValue the new value
-     */
-    private void setValue(@NotNull final Type type, final Object newValue) {
-        Object oldValue = values[type.ordinal()];
-        values[type.ordinal()] = newValue;
-        fireChangeEvent(oldValue, newValue);
-    }
-
-    /**
      * If {!oldValue.equals(newValue)}, a {@link ChangeEvent} will be fired.
      *
      * @param oldValue an old value
@@ -322,12 +326,6 @@ public class DefaultTransformModel implements TransformModel {
                 listener.stateChanged(event);
             }
         }
-    }
-
-    @NotNull
-    @SuppressWarnings("unchecked")
-    protected <T> T getValue(@NotNull final Type type) {
-        return (T) values[type.ordinal()];
     }
 
     public void setRotationCenter(final Point2D rotationCenter) {

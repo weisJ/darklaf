@@ -41,16 +41,15 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 /**
- * The {@link TransformModel} interface specifies the methods the {@link TransformUI} will use to
- * interrogate a transformation model.
+ * The {@link TransformModel} interface specifies the methods the {@link TransformUI} will use to interrogate a
+ * transformation model.
  *
  * @author Piet Blok
  */
 public interface TransformModel {
 
     /**
-     * Add a {@link ChangeListener} that will be notified when the internal state of this model
-     * changes.
+     * Add a {@link ChangeListener} that will be notified when the internal state of this model changes.
      *
      * @param listener a {@link ChangeListener}
      * @see #removeChangeListener(ChangeListener)
@@ -58,12 +57,11 @@ public interface TransformModel {
     void addChangeListener(ChangeListener listener);
 
     /**
-     * Get a preferred {@link AffineTransform}. This method will typically be invoked by programs that
-     * calculate a preferred size.
+     * Get a preferred {@link AffineTransform}. This method will typically be invoked by programs that calculate a
+     * preferred size.
      *
      * <p>The {@code size} argument will be used to compute anchor values for some types of
-     * transformations. If the {@code size} argument is {@code null} a value of (0,0) is used for the
-     * anchor.
+     * transformations. If the {@code size} argument is {@code null} a value of (0,0) is used for the anchor.
      *
      * @param size  a {@link Dimension} instance to be used for an anchor or {@code null}
      * @param layer the {@link JXLayer}.
@@ -73,8 +71,8 @@ public interface TransformModel {
     AffineTransform getPreferredTransform(Dimension size, JXLayer<?> layer);
 
     /**
-     * Get a {@link AffineTransform}. This method will typically be invoked by programs that are about
-     * to prepare a {@link Graphics} object.
+     * Get a {@link AffineTransform}. This method will typically be invoked by programs that are about to prepare a
+     * {@link Graphics} object.
      *
      * @param layer the {@link JXLayer}
      * @return a {@link AffineTransform} or {@code null}

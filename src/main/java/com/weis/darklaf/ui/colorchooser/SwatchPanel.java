@@ -21,16 +21,14 @@ import java.awt.event.MouseEvent;
  */
 abstract class SwatchPanel extends JPanel {
 
-    private final ToolTipContext toolTipContext = new ToolTipContext(this)
-            .setAlignment(Alignment.CENTER)
-            .setToolTipRectSupplier(this::getSwatchBounds)
-            .setHideOnExit(true);
-
     protected Color[] colors;
     protected Dimension swatchSize;
     protected Dimension numSwatches;
     protected Dimension gap;
-
+    private final ToolTipContext toolTipContext = new ToolTipContext(this)
+            .setAlignment(Alignment.CENTER)
+            .setToolTipRectSupplier(this::getSwatchBounds)
+            .setHideOnExit(true);
     private int selRow;
     private int selCol;
 
@@ -176,17 +174,14 @@ abstract class SwatchPanel extends JPanel {
         return toolTipContext.getToolTipLocation(e);
     }
 
-    @NotNull
-    protected Rectangle getSwatchBounds(@NotNull final MouseEvent e) {
-        var p = getCoordinatesForLocation(e.getX(), e.getY());
-        int x = getXForColumn(p.x);
-        int y = getYForRow(p.y);
-        return new Rectangle(x, y, swatchSize.width, swatchSize.height);
-    }
-
     @Override
     public JToolTip createToolTip() {
         return toolTipContext.getToolTip();
+    }
+
+    public Color getColorForLocation(final int x, final int y) {
+        var p = getCoordinatesForLocation(x, y);
+        return getColorForCell(p.x, p.y);
     }
 
     public Point getCoordinatesForLocation(final int x, final int y) {
@@ -200,9 +195,12 @@ abstract class SwatchPanel extends JPanel {
         return new Point(column, row);
     }
 
-    public Color getColorForLocation(final int x, final int y) {
-        var p = getCoordinatesForLocation(x, y);
-        return getColorForCell(p.x, p.y);
+    @NotNull
+    protected Rectangle getSwatchBounds(@NotNull final MouseEvent e) {
+        var p = getCoordinatesForLocation(e.getX(), e.getY());
+        int x = getXForColumn(p.x);
+        int y = getYForRow(p.y);
+        return new Rectangle(x, y, swatchSize.width, swatchSize.height);
     }
 
     public void setSelectedColorFromLocation(final int x, final int y) {

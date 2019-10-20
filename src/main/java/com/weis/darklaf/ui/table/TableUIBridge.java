@@ -266,10 +266,9 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * Initialize JTable properties, e.g. font, foreground, and background.
-     * The font, foreground, and background properties are only set if their
-     * current value is either null or a UIResource, other properties are set
-     * if the current value is null.
+     * Initialize JTable properties, e.g. font, foreground, and background. The font, foreground, and background
+     * properties are only set if their current value is either null or a UIResource, other properties are set if the
+     * current value is null.
      *
      * @see #installUI
      */
@@ -467,8 +466,7 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * Paint a representation of the <code>table</code> instance
-     * that was set in installUI().
+     * Paint a representation of the <code>table</code> instance that was set in installUI().
      */
     public void paint(final Graphics g, final JComponent c) {
         Rectangle clip = g.getClipBounds();
@@ -566,9 +564,8 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * Return the preferred size of the table. The preferred height is the
-     * row height times the number of rows.
-     * The preferred width is the sum of the preferred widths of each column.
+     * Return the preferred size of the table. The preferred height is the row height times the number of rows. The
+     * preferred width is the sum of the preferred widths of each column.
      */
     public Dimension getPreferredSize(final JComponent c) {
         long width = 0;
@@ -581,9 +578,8 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * Return the minimum size of the table. The minimum height is the
-     * row height times the number of rows.
-     * The minimum width is the sum of the minimum widths of each column.
+     * Return the minimum size of the table. The minimum height is the row height times the number of rows. The minimum
+     * width is the sum of the minimum widths of each column.
      */
     public Dimension getMinimumSize(final JComponent c) {
         long width = 0;
@@ -595,30 +591,9 @@ public abstract class TableUIBridge extends TableUI {
         return createTableSize(width);
     }
 
-    protected Dimension createTableSize(final long width) {
-        int height = 0;
-        int rowCount = table.getRowCount();
-        if (rowCount > 0 && table.getColumnCount() > 0) {
-            Rectangle r = table.getCellRect(rowCount - 1, 0, true);
-            height = r.y + r.height;
-        }
-        // Width is always positive. The call to abs() is a workaround for
-        // a bug in the 1.1.6 JIT on Windows.
-        long tmp = Math.abs(width);
-        if (tmp > Integer.MAX_VALUE) {
-            tmp = Integer.MAX_VALUE;
-        }
-        return new Dimension((int) tmp, height);
-    }
-
-//
-// Size Methods
-//
-
     /**
-     * Return the maximum size of the table. The maximum height is the
-     * row heighttimes the number of rows.
-     * The maximum width is the sum of the maximum widths of each column.
+     * Return the maximum size of the table. The maximum height is the row heighttimes the number of rows. The maximum
+     * width is the sum of the maximum widths of each column.
      */
     public Dimension getMaximumSize(final JComponent c) {
         long width = 0;
@@ -629,6 +604,10 @@ public abstract class TableUIBridge extends TableUI {
         }
         return createTableSize(width);
     }
+
+//
+// Size Methods
+//
 
     /**
      * Returns the baseline.
@@ -656,8 +635,7 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * Returns an enum indicating how the baseline of the component
-     * changes as the size changes.
+     * Returns an enum indicating how the baseline of the component changes as the size changes.
      *
      * @throws NullPointerException {@inheritDoc}
      * @see javax.swing.JComponent#getBaseline(int, int)
@@ -667,6 +645,22 @@ public abstract class TableUIBridge extends TableUI {
             final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
+    }
+
+    protected Dimension createTableSize(final long width) {
+        int height = 0;
+        int rowCount = table.getRowCount();
+        if (rowCount > 0 && table.getColumnCount() > 0) {
+            Rectangle r = table.getCellRect(rowCount - 1, 0, true);
+            height = r.y + r.height;
+        }
+        // Width is always positive. The call to abs() is a workaround for
+        // a bug in the 1.1.6 JIT on Windows.
+        long tmp = Math.abs(width);
+        if (tmp > Integer.MAX_VALUE) {
+            tmp = Integer.MAX_VALUE;
+        }
+        return new Dimension((int) tmp, height);
     }
 
     protected void paintDropLines(final Graphics g) {
@@ -1395,16 +1389,12 @@ public abstract class TableUIBridge extends TableUI {
         }
 
         /**
-         * Called to move within the selected range of the given JTable.
-         * This method uses the table's notion of selection, which is
-         * important to allow the user to navigate between items visually
-         * selected on screen. This notion may or may not be the same as
-         * what could be determined by directly querying the selection models.
-         * It depends on certain table properties (such as whether or not
-         * row or column selection is allowed). When performing modifications,
-         * it is recommended that caution be taken in order to preserve
-         * the intent of this method, especially when deciding whether to
-         * query the selection models or interact with JTable directly.
+         * Called to move within the selected range of the given JTable. This method uses the table's notion of
+         * selection, which is important to allow the user to navigate between items visually selected on screen. This
+         * notion may or may not be the same as what could be determined by directly querying the selection models. It
+         * depends on certain table properties (such as whether or not row or column selection is allowed). When
+         * performing modifications, it is recommended that caution be taken in order to preserve the intent of this
+         * method, especially when deciding whether to query the selection models or interact with JTable directly.
          */
         protected boolean moveWithinSelectedRange(final JTable table, final int dx, final int dy,
                                                   final ListSelectionModel rsm, final ListSelectionModel csm) {
@@ -1507,8 +1497,7 @@ public abstract class TableUIBridge extends TableUI {
         }
 
         /**
-         * Find the next lead row and column based on the given
-         * dx/dy and max/min values.
+         * Find the next lead row and column based on the given dx/dy and max/min values.
          */
         protected void calcNextPos(final int dx, final int minX, final int maxX,
                                    final int dy, final int minY, final int maxY) {
@@ -1622,9 +1611,8 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * Create a Transferable to use as the source for a data transfer.
          *
-         * @param c The component holding the data to be transfered.  This
-         *          argument is provided to enable sharing of TransferHandlers by
-         *          multiple components.
+         * @param c The component holding the data to be transfered.  This argument is provided to enable sharing of
+         *          TransferHandlers by multiple components.
          * @return The representation of the data to be transfered.
          */
         protected Transferable createTransferable(final JComponent c) {
@@ -1694,12 +1682,11 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of {@code BasicTableUI}.
+     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
+     * {@code BasicTableUI}.
      * <p>As of Java 2 platform v1.3 this class is no longer used.
-     * Instead <code>JTable</code>
-     * overrides <code>processKeyBinding</code> to dispatch the event to
-     * the current <code>TableCellEditor</code>.
+     * Instead <code>JTable</code> overrides <code>processKeyBinding</code> to dispatch the event to the current
+     * <code>TableCellEditor</code>.
      */
     public class KeyHandler implements KeyListener {
         public void keyTyped(final KeyEvent e) {
@@ -1720,8 +1707,8 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of {@code BasicTableUI}.
+     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
+     * {@code BasicTableUI}.
      */
     public class FocusHandler implements FocusListener {
         // NOTE: This class exists only for backward compatibility. All
@@ -1738,8 +1725,8 @@ public abstract class TableUIBridge extends TableUI {
     }
 
     /**
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of BasicTableUI.
+     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
+     * BasicTableUI.
      */
     public class MouseInputHandler implements MouseInputListener {
         // NOTE: This class exists only for backward compatibility. All

@@ -40,12 +40,12 @@ import java.awt.event.MouseWheelListener;
 public class DarkScrollableTabSupport extends ScrollableTabSupport implements MouseWheelListener, ActionListener {
 
     protected static final int SCROLL_REWIND_DELAY = 1200;
-    private DarkTabbedPaneUI ui;
     protected final ScrollPopupMenu scrollPopupMenu;
     protected final JButton moreTabsButton;
     protected final JComponent newTabButton;
     protected final Timer timer;
     protected long lastClickEvent;
+    private DarkTabbedPaneUI ui;
 
     public DarkScrollableTabSupport(final DarkTabbedPaneUI ui, final int tabPlacement) {
         super(ui);

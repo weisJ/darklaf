@@ -61,9 +61,8 @@ public class JTabFrame extends JComponent {
     private boolean dndEnabled;
 
     /**
-     * Creates new {@link JTabFrame}.
-     * A TabFrame displays one center component and multiple popups around
-     * that can be toggles with a TabbedPane like tabArea along the border.
+     * Creates new {@link JTabFrame}. A TabFrame displays one center component and multiple popups around that can be
+     * toggles with a TabbedPane like tabArea along the border.
      */
     public JTabFrame() {
         super();
@@ -131,9 +130,8 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Get the maximum width a tab can inhibit.
-     * A negative value indicated the tabs should use as much space as
-     * their proffered size indicates.
+     * Get the maximum width a tab can inhibit. A negative value indicated the tabs should use as much space as their
+     * proffered size indicates.
      *
      * @return the maximum tab width.
      */
@@ -142,9 +140,8 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Sets the maximum width a tab can inhibit.
-     * A negative value indicated the tabs should use as much space as
-     * their proffered size indicates.
+     * Sets the maximum width a tab can inhibit. A negative value indicated the tabs should use as much space as their
+     * proffered size indicates.
      *
      * @param maxTabWidth the maximum tab width.
      */
@@ -227,15 +224,6 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Get the content pane.
-     *
-     * @return the content pane.
-     */
-    public TabFrameContent getContentPane() {
-        return content;
-    }
-
-    /**
      * Create a tab container.
      *
      * @return a tab container.
@@ -254,8 +242,7 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Insert a tab.
-     * A default tab component and popup component will be created.
+     * Insert a tab. A default tab component and popup component will be created.
      *
      * @param c     the component to add.
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
@@ -267,8 +254,7 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Insert a tab.
-     * A default tab component and popup component will be created.
+     * Insert a tab. A default tab component and popup component will be created.
      *
      * @param c     the component to add.
      * @param title the title of the component.
@@ -280,8 +266,7 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Insert a tab.
-     * A default tab component and popup component will be created.
+     * Insert a tab. A default tab component and popup component will be created.
      *
      * @param c     the component to add.
      * @param title the title of the component.
@@ -296,8 +281,7 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Insert a tab.
-     * A default tab component will be created.
+     * Insert a tab. A default tab component will be created.
      *
      * @param c     the popup to add.
      * @param title the title of the component.
@@ -313,8 +297,7 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Insert a tab.
-     * A default tab component will be created.
+     * Insert a tab. A default tab component will be created.
      *
      * @param c     the popup to add.
      * @param tab   the corresponding tab.
@@ -509,8 +492,7 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Gets the position of the given component or null if it isn't currently
-     * added.
+     * Gets the position of the given component or null if it isn't currently added.
      *
      * @param c the component to find.
      * @return the position in the tabFrame.{@link TabFramePosition}
@@ -825,9 +807,8 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Get the position of the alignment peer. That being the
-     * other position that occupies the same tab container given by
-     * {@link #getTabContainer(Alignment)}.
+     * Get the position of the alignment peer. That being the other position that occupies the same tab container given
+     * by {@link #getTabContainer(Alignment)}.
      * <p>
      * NORTH  <--> NORTH_EAST
      * <p>
@@ -865,6 +846,15 @@ public class JTabFrame extends JComponent {
         this.inTransfer = true;
         this.transferAlign = a;
         this.transferIndex = index;
+    }
+
+    /**
+     * Get the content pane.
+     *
+     * @return the content pane.
+     */
+    public TabFrameContent getContentPane() {
+        return content;
     }
 
     public void endTransfer() {
@@ -905,6 +895,15 @@ public class JTabFrame extends JComponent {
         }
 
         /**
+         * The alignment position. This specifies at what location the tab is placed.
+         *
+         * @return the alignment position.
+         */
+        public Alignment getAlignment() {
+            return a;
+        }
+
+        /**
          * Set the alignment.
          *
          * @param a the alignment.
@@ -914,31 +913,21 @@ public class JTabFrame extends JComponent {
         }
 
         /**
-         * Set the index.
-         *
-         * @param index the index.
-         */
-        public void setIndex(final int index) {
-            this.index = index;
-        }
-
-        /**
-         * The alignment position.
-         * This specifies at what location the tab is placed.
-         *
-         * @return the alignment position.
-         */
-        public Alignment getAlignment() {
-            return a;
-        }
-
-        /**
          * The index inside the alignment position.
          *
          * @return the index.
          */
         public int getIndex() {
             return index;
+        }
+
+        /**
+         * Set the index.
+         *
+         * @param index the index.
+         */
+        public void setIndex(final int index) {
+            this.index = index;
         }
 
         @Override

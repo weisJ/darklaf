@@ -78,17 +78,6 @@ public class DarkPreviewPanel extends JPanel {
         return new Dimension(x, y);
     }
 
-    private JColorChooser getColorChooser() {
-        return (JColorChooser) SwingUtilities.getAncestorOfClass(JColorChooser.class, this);
-    }
-
-    private String getSampleText() {
-        if (this.sampleText == null) {
-            this.sampleText = UIManager.getString("ColorChooser.sampleText", getLocale());
-        }
-        return this.sampleText;
-    }
-
     private int paintSquares(@NotNull final Graphics g, final int offsetX) {
         Color color = getForeground();
 
@@ -196,5 +185,16 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(getForeground());
         g.fillRect(offsetX, SQUARE_SIZE + SQUARE_GAP / 2, SWATCH_WIDTH, SQUARE_SIZE + SQUARE_GAP / 2);
         return (offsetX + SWATCH_WIDTH);
+    }
+
+    private JColorChooser getColorChooser() {
+        return (JColorChooser) SwingUtilities.getAncestorOfClass(JColorChooser.class, this);
+    }
+
+    private String getSampleText() {
+        if (this.sampleText == null) {
+            this.sampleText = UIManager.getString("ColorChooser.sampleText", getLocale());
+        }
+        return this.sampleText;
     }
 }

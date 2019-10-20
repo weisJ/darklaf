@@ -10,8 +10,8 @@ import java.awt.*;
  * @author Jannis Weis
  */
 final class ColorPreviewComponent extends JComponent {
-    private Color myColor;
     protected Color borderColor;
+    private Color myColor;
 
     ColorPreviewComponent() {
         setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));

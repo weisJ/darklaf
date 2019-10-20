@@ -14,15 +14,15 @@ import javax.swing.plaf.ComponentUI;
  */
 public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
 
+    private Icon checkBoxIndeterminateIcon;
+    private Icon checkBoxIndeterminateDisabledIcon;
+    private Icon checkBoxIndeterminateFocusedIcon;
+
     @NotNull
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTristateCheckBoxUI();
     }
-
-    private Icon checkBoxIndeterminateIcon;
-    private Icon checkBoxIndeterminateDisabledIcon;
-    private Icon checkBoxIndeterminateFocusedIcon;
 
     @Override
     public void installDefaults(final AbstractButton b) {

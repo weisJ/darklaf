@@ -165,6 +165,18 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     }
 
     @Override
+    public int getIndex() {
+        return index;
+    }
+
+    @Override
+    public void setIndex(final int index) {
+        int old = this.index;
+        this.index = index;
+        firePropertyChange("index", old, index);
+    }
+
+    @Override
     public void open() {
         if (parent != null && getAlignment() != null && getIndex() >= 0) {
             var oldOpen = isOpen();
@@ -197,17 +209,5 @@ public class PanelPopup extends JPanel implements TabFramePopup {
         var old = this.icon;
         this.icon = icon;
         firePropertyChange("icon", old, icon);
-    }
-
-    @Override
-    public int getIndex() {
-        return index;
-    }
-
-    @Override
-    public void setIndex(final int index) {
-        int old = this.index;
-        this.index = index;
-        firePropertyChange("index", old, index);
     }
 }

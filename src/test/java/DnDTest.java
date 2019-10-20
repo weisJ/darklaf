@@ -52,24 +52,24 @@ public class DnDTest extends JFrame {
         gl.setAutoCreateGaps(true);
 
         gl.setHorizontalGroup(gl.createParallelGroup(GroupLayout.Alignment.CENTER)
-                                      .addGroup(gl.createSequentialGroup()
-                                                        .addComponent(arg[0])
-                                                        .addGap(30)
-                                                        .addComponent(arg[1])
-                                                        .addGap(30)
-                                                        .addComponent(arg[2])
-                                      )
-                                      .addComponent(arg[3], GroupLayout.DEFAULT_SIZE,
-                                                    GroupLayout.DEFAULT_SIZE, Integer.MAX_VALUE)
+                                .addGroup(gl.createSequentialGroup()
+                                            .addComponent(arg[0])
+                                            .addGap(30)
+                                            .addComponent(arg[1])
+                                            .addGap(30)
+                                            .addComponent(arg[2])
+                                )
+                                .addComponent(arg[3], GroupLayout.DEFAULT_SIZE,
+                                              GroupLayout.DEFAULT_SIZE, Integer.MAX_VALUE)
         );
 
         gl.setVerticalGroup(gl.createSequentialGroup()
-                                    .addGroup(gl.createParallelGroup()
-                                                      .addComponent(arg[0])
-                                                      .addComponent(arg[1])
-                                                      .addComponent(arg[2]))
-                                    .addGap(30)
-                                    .addComponent(arg[3])
+                              .addGroup(gl.createParallelGroup()
+                                          .addComponent(arg[0])
+                                          .addComponent(arg[1])
+                                          .addComponent(arg[2]))
+                              .addGap(30)
+                              .addComponent(arg[3])
         );
 
         pack();

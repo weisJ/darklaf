@@ -39,72 +39,6 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         this.ui = ui;
     }
 
-    @Override
-    protected Dimension calculateSize(final boolean minimum) {
-        int tabPlacement = ui.tabPane.getTabPlacement();
-        Insets insets = ui.tabPane.getInsets();
-        Insets contentInsets = ui.getContentBorderInsets(tabPlacement);
-        Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
-
-        int height = 0;
-        int width = 0;
-        int cWidth = 0;
-        int cHeight = 0;
-
-        // Determine minimum size required to display largest
-        // child in each dimension
-        //
-        for (int i = 0; i < ui.tabPane.getTabCount(); i++) {
-            Component component = ui.tabPane.getComponentAt(i);
-            if (component != null) {
-                Dimension size = minimum ? component.getMinimumSize() : component.getPreferredSize();
-                if (size != null) {
-                    cHeight = Math.max(size.height, cHeight);
-                    cWidth = Math.max(size.width, cWidth);
-                }
-            }
-        }
-        // Add content border insets to minimum size
-        width += cWidth;
-        height += cHeight;
-        int tabExtent;
-
-        // Calculate how much space the tabs will need, based on the
-        // minimum size required to display largest child + content border
-        //
-        if (!ui.isHorizontalTabPlacement()) {
-            int tabHeight = ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(),
-                                                  ui.getFontMetrics().getHeight());
-            if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                tabHeight += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
-            }
-            height = Math.max(height, tabHeight);
-            tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
-            width += tabExtent;
-        } else {
-            int tabWidth = ui.calculateTabWidth(tabPlacement, ui.tabPane.getSelectedIndex(), ui.getFontMetrics());
-            if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                tabWidth += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().width;
-            }
-            width = Math.max(width, tabWidth);
-            tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
-            height += tabExtent;
-        }
-        return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
-                             height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
-
-    }
-
-    @Override
-    protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
-        return ui.calculateMaxTabHeight(tabPlacement);
-    }
-
-    @Override
-    protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
-        return ui.calculateMaxTabWidth(tabPlacement);
-    }
-
     public void layoutContainer(final Container parent) {
         int tabPlacement = ui.tabPane.getTabPlacement();
         Insets insets = ui.tabPane.getInsets();
@@ -289,6 +223,62 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         ui.layoutTabComponents();
     }
 
+    @Override
+    protected Dimension calculateSize(final boolean minimum) {
+        int tabPlacement = ui.tabPane.getTabPlacement();
+        Insets insets = ui.tabPane.getInsets();
+        Insets contentInsets = ui.getContentBorderInsets(tabPlacement);
+        Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
+
+        int height = 0;
+        int width = 0;
+        int cWidth = 0;
+        int cHeight = 0;
+
+        // Determine minimum size required to display largest
+        // child in each dimension
+        //
+        for (int i = 0; i < ui.tabPane.getTabCount(); i++) {
+            Component component = ui.tabPane.getComponentAt(i);
+            if (component != null) {
+                Dimension size = minimum ? component.getMinimumSize() : component.getPreferredSize();
+                if (size != null) {
+                    cHeight = Math.max(size.height, cHeight);
+                    cWidth = Math.max(size.width, cWidth);
+                }
+            }
+        }
+        // Add content border insets to minimum size
+        width += cWidth;
+        height += cHeight;
+        int tabExtent;
+
+        // Calculate how much space the tabs will need, based on the
+        // minimum size required to display largest child + content border
+        //
+        if (!ui.isHorizontalTabPlacement()) {
+            int tabHeight = ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(),
+                                                  ui.getFontMetrics().getHeight());
+            if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
+                tabHeight += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
+            }
+            height = Math.max(height, tabHeight);
+            tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
+            width += tabExtent;
+        } else {
+            int tabWidth = ui.calculateTabWidth(tabPlacement, ui.tabPane.getSelectedIndex(), ui.getFontMetrics());
+            if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
+                tabWidth += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().width;
+            }
+            width = Math.max(width, tabWidth);
+            tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
+            height += tabExtent;
+        }
+        return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
+                             height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
+
+    }
+
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
     protected void calculateTabRects(final int tabPlacement, final int tabCount) {
@@ -398,6 +388,16 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
         ui.tabScroller.tabPanel.setPreferredSize(tabBounds.getSize());
         ui.tabScroller.tabPanel.invalidate();
+    }
+
+    @Override
+    protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
+        return ui.calculateMaxTabWidth(tabPlacement);
+    }
+
+    @Override
+    protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
+        return ui.calculateMaxTabHeight(tabPlacement);
     }
 
     protected void layoutNewTabButton(final boolean horizontal, final boolean leftToRight,

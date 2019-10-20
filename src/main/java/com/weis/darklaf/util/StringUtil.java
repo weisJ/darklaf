@@ -74,15 +74,6 @@ public final class StringUtil {
         }
     }
 
-    @Contract(pure = true)
-    public static char toLowerCase(final char a) {
-        if (a >= 'A' && (a < 'a' || a > 'z')) {
-            return a <= 'Z' ? (char) (a + 32) : Character.toLowerCase(a);
-        } else {
-            return a;
-        }
-    }
-
     public static List<String> split(final String s, final String separator) {
         return split(s, separator, true);
     }
@@ -139,6 +130,23 @@ public final class StringUtil {
         }
     }
 
+    public static boolean charsEqualIgnoreCase(final char a, final char b) {
+        return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
+    }
+
+    @Contract(pure = true)
+    public static char toLowerCase(final char a) {
+        if (a >= 'A' && (a < 'a' || a > 'z')) {
+            return a <= 'Z' ? (char) (a + 32) : Character.toLowerCase(a);
+        } else {
+            return a;
+        }
+    }
+
+    public static boolean containsIgnoreCase(final String where, final String what) {
+        return indexOfIgnoreCase(where, what, 0) >= 0;
+    }
+
     public static int indexOfIgnoreCase(final String where, final String what, int fromIndex) {
         int targetCount = what.length();
         int sourceCount = where.length();
@@ -179,14 +187,6 @@ public final class StringUtil {
                 return -1;
             }
         }
-    }
-
-    public static boolean containsIgnoreCase(final String where, final String what) {
-        return indexOfIgnoreCase(where, what, 0) >= 0;
-    }
-
-    public static boolean charsEqualIgnoreCase(final char a, final char b) {
-        return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
     }
 
     public static int compareVersionNumbers(final String v1, final String v2) {

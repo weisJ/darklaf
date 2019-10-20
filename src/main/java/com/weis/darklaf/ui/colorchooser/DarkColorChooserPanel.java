@@ -327,14 +327,24 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     @Override
     public int getMnemonic() {
         return KeyEvent.VK_W;
+    }
+
+    @Override
+    public int getDisplayedMnemonicIndex() {
+        return 6;
     }    @Override
     public boolean isColorTransparencySelectionEnabled() {
         return colorWheelPanel.isColorTransparencySelectionEnabled();
     }
 
     @Override
-    public int getDisplayedMnemonicIndex() {
-        return 6;
+    public Icon getSmallDisplayIcon() {
+        return null;
+    }
+
+    @Override
+    public Icon getLargeDisplayIcon() {
+        return null;
     }    @Override
     public void setColorTransparencySelectionEnabled(final boolean b) {
         boolean oldValue = isColorTransparencySelectionEnabled();
@@ -352,16 +362,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
             firePropertyChange(TRANSPARENCY_ENABLED_PROPERTY,
                                oldValue, b);
         }
-    }
-
-    @Override
-    public Icon getSmallDisplayIcon() {
-        return null;
-    }
-
-    @Override
-    public Icon getLargeDisplayIcon() {
-        return null;
     }
 
     @Override
@@ -391,6 +391,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         }
         isChanging = false;
     }
+
 
     private void applyColorToHEX(@NotNull final Color c) {
         boolean changingOld = isChanging;

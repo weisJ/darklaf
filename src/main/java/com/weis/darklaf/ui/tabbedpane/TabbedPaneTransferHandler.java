@@ -58,11 +58,9 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class=javax.swing.JTabbedPane";
     private static TabbedPaneDragGestureRecognizer recognizer = null;
     /**
-     * The location of the mouse cursor throughout the drag-and-drop.
-     * This is here because of a deficiency in TransferHandler's design; you
-     * have no way of knowing the exact drop location in the component with a
-     * plain TransferHandler unless you implement DropTargetListener and get
-     * it that way.
+     * The location of the mouse cursor throughout the drag-and-drop. This is here because of a deficiency in
+     * TransferHandler's design; you have no way of knowing the exact drop location in the component with a plain
+     * TransferHandler unless you implement DropTargetListener and get it that way.
      */
     protected Point mouseLocation;
     private int lastTab = -1;
@@ -102,14 +100,12 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     /**
-     * Called when the drag-and-drop operation has just completed.  This
-     * creates a new tab identical to the one "dragged" and places it in the
-     * destination <code>JTabbedPane</code>.
+     * Called when the drag-and-drop operation has just completed.  This creates a new tab identical to the one
+     * "dragged" and places it in the destination <code>JTabbedPane</code>.
      *
      * @param c The component receiving the "drop" (the instance of
      *          <code>JTabbedPane</code>).
-     * @param t The data being transfered (information about the tab and the
-     *          component contained by the tab).
+     * @param t The data being transfered (information about the tab and the component contained by the tab).
      * @return Whether or not the import was successful.
      */
     @Override
@@ -187,14 +183,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         return currentTransferable;
     }
 
-    @Contract("null -> null")
-    private DarkTabbedPaneUI supportsIndicator(final Component c) {
-        if (c instanceof JComponent && ((JComponent) c).getUI() instanceof DarkTabbedPaneUI) {
-            return ((DarkTabbedPaneUI) ((JComponent) c).getUI());
-        }
-        return null;
-    }
-
     protected void createDragImage(@NotNull final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
         Image tabImage = ImageUtil.scaledImageFromComponent(tabbedPane, currentTransferable.transferData.tabBounds);
         int w = tabImage.getWidth(null);
@@ -228,6 +216,14 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             }
         }
         return false;
+    }
+
+    @Contract("null -> null")
+    private DarkTabbedPaneUI supportsIndicator(final Component c) {
+        if (c instanceof JComponent && ((JComponent) c).getUI() instanceof DarkTabbedPaneUI) {
+            return ((DarkTabbedPaneUI) ((JComponent) c).getUI());
+        }
+        return null;
     }
 
     @Override
@@ -313,6 +309,10 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
          */
         protected void unregisterListeners() {
         }
+    }
+
+    public static class UIResource extends TabbedPaneTransferHandler {
+
     }
 
     /**
@@ -450,9 +450,5 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             }
             currentTransferable = null;
         }
-    }
-
-    public static class UIResource extends TabbedPaneTransferHandler {
-
     }
 }

@@ -41,8 +41,7 @@ import java.applet.Applet;
 import java.awt.*;
 
 /**
- * A fall back class for when the SwingX class {@link ForwardingRepaintManager} is not available on
- * the class path.
+ * A fall back class for when the SwingX class {@link ForwardingRepaintManager} is not available on the class path.
  *
  * <p>A {@link RepaintManager} that preserves functionality of a wrapped {@code RepaintManager}. All
  * methods will delegate to the wrapped {@code RepaintManager}.
@@ -130,14 +129,6 @@ public class WrappedRepaintManager extends RepaintManager {
      * Just delegates. {@inheritDoc}
      */
     @Override
-    public Dimension getDoubleBufferMaximumSize() {
-        return delegate.getDoubleBufferMaximumSize();
-    }
-
-    /**
-     * Just delegates. {@inheritDoc}
-     */
-    @Override
     public void markCompletelyDirty(final JComponent c) {
         delegate.markCompletelyDirty(c);
     }
@@ -146,8 +137,16 @@ public class WrappedRepaintManager extends RepaintManager {
      * Just delegates. {@inheritDoc}
      */
     @Override
-    public void setDoubleBufferMaximumSize(final Dimension d) {
-        delegate.setDoubleBufferMaximumSize(d);
+    public boolean isCompletelyDirty(final JComponent c) {
+        return delegate.isCompletelyDirty(c);
+    }
+
+    /**
+     * Just delegates. {@inheritDoc}
+     */
+    @Override
+    public Dimension getDoubleBufferMaximumSize() {
+        return delegate.getDoubleBufferMaximumSize();
     }
 
     /**
@@ -159,11 +158,21 @@ public class WrappedRepaintManager extends RepaintManager {
     }
 
     /**
+     * Get the delegate.
+     *
+     * @return the delegate
+     */
+    @Nullable
+    public RepaintManager getDelegateManager() {
+        return delegate;
+    }
+
+    /**
      * Just delegates. {@inheritDoc}
      */
     @Override
-    public boolean isCompletelyDirty(final JComponent c) {
-        return delegate.isCompletelyDirty(c);
+    public void setDoubleBufferMaximumSize(final Dimension d) {
+        delegate.setDoubleBufferMaximumSize(d);
     }
 
     /**
@@ -186,24 +195,8 @@ public class WrappedRepaintManager extends RepaintManager {
      * Just delegates. {@inheritDoc}
      */
     @Override
-    public boolean isDoubleBufferingEnabled() {
-        return delegate.isDoubleBufferingEnabled();
-    }
-
-    /**
-     * Just delegates. {@inheritDoc}
-     */
-    @Override
     public Image getOffscreenBuffer(final Component c, final int proposedWidth, final int proposedHeight) {
         return delegate.getOffscreenBuffer(c, proposedWidth, proposedHeight);
-    }
-
-    /**
-     * Just delegates. {@inheritDoc}
-     */
-    @Override
-    public void setDoubleBufferingEnabled(final boolean flag) {
-        delegate.setDoubleBufferingEnabled(flag);
     }
 
     /**
@@ -215,13 +208,21 @@ public class WrappedRepaintManager extends RepaintManager {
     }
 
     /**
-     * Get the delegate.
-     *
-     * @return the delegate
+     * Just delegates. {@inheritDoc}
      */
-    @Nullable
-    public RepaintManager getDelegateManager() {
-        return delegate;
+    @Override
+    public boolean isDoubleBufferingEnabled() {
+        return delegate.isDoubleBufferingEnabled();
+    }
+
+
+
+    /**
+     * Just delegates. {@inheritDoc}
+     */
+    @Override
+    public void setDoubleBufferingEnabled(final boolean flag) {
+        delegate.setDoubleBufferingEnabled(flag);
     }
 
 

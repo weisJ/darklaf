@@ -63,9 +63,9 @@ public class DarkButtonUI extends BasicButtonUI {
     protected Color inactiveBackground;
     protected Color shadowHover;
     protected Color shadowClick;
+    protected AbstractButton button;
     private int arc;
     private int squareArc;
-    protected AbstractButton button;
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -100,6 +100,12 @@ public class DarkButtonUI extends BasicButtonUI {
         squareArc = UIManager.getInt("Button.squareArc");
     }
 
+    @Contract("null -> false")
+    public static boolean isNoArc(final Component c) {
+        return c instanceof JButton
+                && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.noArc"));
+    }
+
     @Override
     protected void paintText(@NotNull final Graphics g, final JComponent c,
                              final Rectangle textRect, final String text) {
@@ -118,20 +124,6 @@ public class DarkButtonUI extends BasicButtonUI {
                                                       textRect.x + getTextShiftOffset(),
                                                       textRect.y + metrics.getAscent() + getTextShiftOffset());
         }
-    }
-
-    @Override
-    public void paint(final Graphics g, final JComponent c) {
-        GraphicsContext config = new GraphicsContext(g);
-        AbstractButton b = (AbstractButton) c;
-        paintButton(g, c);
-
-        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
-                             b.getWidth(), b.getHeight());
-
-        paintIcon(g, b, c);
-        paintText(g, b, c, text);
-        config.restore();
     }
 
     protected Color getForeground(@NotNull final AbstractButton button) {
@@ -177,12 +169,6 @@ public class DarkButtonUI extends BasicButtonUI {
         }
     }
 
-    @Contract("null -> false")
-    public static boolean isNoArc(final Component c) {
-        return c instanceof JButton
-                && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.noArc"));
-    }
-
     protected String layout(@NotNull final AbstractButton b, final JComponent c, final FontMetrics fm,
                             final int width, final int height) {
         Insets i = b.getInsets();
@@ -209,32 +195,18 @@ public class DarkButtonUI extends BasicButtonUI {
         }
     }
 
-    protected Color getBackgroundColor(@NotNull final JComponent c) {
-        var defaultButton = isDefaultButton(c);
-        var rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
-                && (((JButton) c).getModel().isRollover())));
-        var clicked = rollOver && ((JButton) c).getModel().isArmed();
-        if (c.isEnabled()) {
-            if (defaultButton) {
-                if (clicked) {
-                    return defaultClickBackground;
-                } else if (rollOver) {
-                    return defaultHoverBackground;
-                } else {
-                    return defaultBackground;
-                }
-            } else {
-                if (clicked) {
-                    return clickBackground;
-                } else if (rollOver) {
-                    return hoverBackground;
-                } else {
-                    return background;
-                }
-            }
-        } else {
-            return inactiveBackground;
-        }
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        GraphicsContext config = new GraphicsContext(g);
+        AbstractButton b = (AbstractButton) c;
+        paintButton(g, c);
+
+        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
+                             b.getWidth(), b.getHeight());
+
+        paintIcon(g, b, c);
+        paintText(g, b, c, text);
+        config.restore();
     }
 
     private boolean shouldDrawBackground(@NotNull final JComponent c) {
@@ -302,6 +274,34 @@ public class DarkButtonUI extends BasicButtonUI {
     public static boolean isLabelButton(final Component c) {
         return c instanceof JButton
                 && "onlyLabel".equals(((JButton) c).getClientProperty("JButton.variant"));
+    }
+
+    protected Color getBackgroundColor(@NotNull final JComponent c) {
+        var defaultButton = isDefaultButton(c);
+        var rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
+                && (((JButton) c).getModel().isRollover())));
+        var clicked = rollOver && ((JButton) c).getModel().isArmed();
+        if (c.isEnabled()) {
+            if (defaultButton) {
+                if (clicked) {
+                    return defaultClickBackground;
+                } else if (rollOver) {
+                    return defaultHoverBackground;
+                } else {
+                    return defaultBackground;
+                }
+            } else {
+                if (clicked) {
+                    return clickBackground;
+                } else if (rollOver) {
+                    return hoverBackground;
+                } else {
+                    return background;
+                }
+            }
+        } else {
+            return inactiveBackground;
+        }
     }
 
     @Override

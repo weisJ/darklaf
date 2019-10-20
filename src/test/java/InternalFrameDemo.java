@@ -35,6 +35,10 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         desktop.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
     }
 
+    public static void main(final String[] args) {
+        SwingUtilities.invokeLater(InternalFrameDemo::createAndShowGUI);
+    }
+
     @NotNull
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -63,13 +67,18 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         return menuBar;
     }
 
-    //React to menu selections.
-    public void actionPerformed(@NotNull final ActionEvent e) {
-        if ("new".equals(e.getActionCommand())) {
-            createFrame();
-        } else {
-            quit();
-        }
+    /**
+     * Create the GUI and show it.  For thread safety, this method should be invoked from the event-dispatching thread.
+     */
+    private static void createAndShowGUI() {
+        LafManager.install();
+
+        //Create and set up the window.
+        InternalFrameDemo frame = new InternalFrameDemo();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Display the window.
+        frame.setVisible(true);
     }
 
     //Create a new internal frame.
@@ -83,29 +92,18 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         }
     }
 
+    //React to menu selections.
+    public void actionPerformed(@NotNull final ActionEvent e) {
+        if ("new".equals(e.getActionCommand())) {
+            createFrame();
+        } else {
+            quit();
+        }
+    }
+
     //Quit the application.
     @Contract(" -> fail")
     private void quit() {
         System.exit(0);
-    }
-
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
-    private static void createAndShowGUI() {
-        LafManager.install();
-
-        //Create and set up the window.
-        InternalFrameDemo frame = new InternalFrameDemo();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Display the window.
-        frame.setVisible(true);
-    }
-
-    public static void main(final String[] args) {
-        SwingUtilities.invokeLater(InternalFrameDemo::createAndShowGUI);
     }
 }

@@ -53,14 +53,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     private static final Rectangle textRect = new Rectangle();
     private static Dimension size = new Dimension();
     private final Ellipse2D hitArea = new Ellipse2D.Float();
-
-    private Icon radioIcon;
-    private Icon radioDisabledIcon;
-    private Icon radioFocusedIcon;
-    private Icon radioSelectedIcon;
-    private Icon radioSelectedDisabledIcon;
-    private Icon radioSelectedFocusedIcon;
-
     protected Color background;
     protected Color inactiveBackground;
     protected Color focusBorderColor;
@@ -72,6 +64,12 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     protected Color focusCheckColor;
     protected Color selectedBorderColor;
     protected Color selectedBackground;
+    private Icon radioIcon;
+    private Icon radioDisabledIcon;
+    private Icon radioFocusedIcon;
+    private Icon radioSelectedIcon;
+    private Icon radioSelectedDisabledIcon;
+    private Icon radioSelectedFocusedIcon;
 
     @NotNull
     @Contract("_ -> new")
@@ -132,16 +130,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         }
     }
 
-    protected Icon getRadioIcon(@NotNull final AbstractButton b) {
-        boolean selected = b.isSelected();
-        boolean enabled = b.isEnabled();
-        boolean hasFocus = b.hasFocus();
-        return selected ? enabled ? hasFocus ? radioSelectedFocusedIcon : radioSelectedIcon
-                                  : radioSelectedDisabledIcon
-                        : enabled ? hasFocus ? radioFocusedIcon : radioIcon
-                                  : radioDisabledIcon;
-    }
-
     protected String layoutRadioButton(@NotNull final AbstractButton b, final FontMetrics fm) {
         Insets i = b.getInsets();
         size = b.getSize(size);
@@ -168,6 +156,16 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
             g.setColor(c.getBackground());
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
+    }
+
+    protected Icon getRadioIcon(@NotNull final AbstractButton b) {
+        boolean selected = b.isSelected();
+        boolean enabled = b.isEnabled();
+        boolean hasFocus = b.hasFocus();
+        return selected ? enabled ? hasFocus ? radioSelectedFocusedIcon : radioSelectedIcon
+                                  : radioSelectedDisabledIcon
+                        : enabled ? hasFocus ? radioFocusedIcon : radioIcon
+                                  : radioDisabledIcon;
     }
 
     protected void paintDarkBullet(final JComponent c, final Graphics2D g, @NotNull final AbstractButton b) {

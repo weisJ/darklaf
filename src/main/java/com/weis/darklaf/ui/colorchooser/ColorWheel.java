@@ -41,6 +41,9 @@ import java.util.List;
 public class ColorWheel extends JComponent {
     private static final int BORDER_SIZE = 5;
     private final List<ColorListener> myListeners = new ArrayList<>();
+    protected Color dropFill;
+    protected Color dropBorder;
+    protected Color background;
     private float myBrightness = 1f;
     private float myHue = 1f;
     private float mySaturation = 0f;
@@ -50,9 +53,6 @@ public class ColorWheel extends JComponent {
     private Color myColor;
     private int myOpacity;
     private boolean pressedInside;
-    protected Color dropFill;
-    protected Color dropBorder;
-    protected Color background;
 
     public ColorWheel() {
         setOpaque(true);
@@ -113,14 +113,6 @@ public class ColorWheel extends JComponent {
         dropBorder = UIManager.getColor("ColorChooser.colorWheelDropBorderColor");
     }
 
-    @Override
-    public void updateUI() {
-        super.updateUI();
-        background = UIManager.getColor("ColorChooser.colorWheelBackground");
-        dropFill = UIManager.getColor("ColorChooser.colorWheelDropBackgroundColor");
-        dropBorder = UIManager.getColor("ColorChooser.colorWheelDropBorderColor");
-    }
-
     private void setHSBValue(final float h, final float s, final float b, final int opacity) {
         Color rgb = new Color(Color.HSBtoRGB(h, s, b));
         setColor(ColorUtil.toAlpha(rgb, opacity), this, h, s, b);
@@ -145,21 +137,12 @@ public class ColorWheel extends JComponent {
         }
     }
 
-    public void addListener(final ColorListener listener) {
-        myListeners.add(listener);
-    }
-
-    public void setBrightness(final float brightness) {
-        if (brightness != myBrightness) {
-            myImage = null;
-            setHSBValue(myHue, mySaturation, brightness, myOpacity);
-        }
-    }
-
-    public void setOpacity(final int opacity) {
-        if (opacity != myOpacity) {
-            setHSBValue(myHue, mySaturation, myBrightness, opacity);
-        }
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        background = UIManager.getColor("ColorChooser.colorWheelBackground");
+        dropFill = UIManager.getColor("ColorChooser.colorWheelDropBackgroundColor");
+        dropBorder = UIManager.getColor("ColorChooser.colorWheelDropBorderColor");
     }
 
     @Override
@@ -216,6 +199,23 @@ public class ColorWheel extends JComponent {
     @Override
     public Dimension getMinimumSize() {
         return new Dimension(300, 300);
+    }
+
+    public void addListener(final ColorListener listener) {
+        myListeners.add(listener);
+    }
+
+    public void setBrightness(final float brightness) {
+        if (brightness != myBrightness) {
+            myImage = null;
+            setHSBValue(myHue, mySaturation, brightness, myOpacity);
+        }
+    }
+
+    public void setOpacity(final int opacity) {
+        if (opacity != myOpacity) {
+            setHSBValue(myHue, mySaturation, myBrightness, opacity);
+        }
     }
 
     public void dropImage() {

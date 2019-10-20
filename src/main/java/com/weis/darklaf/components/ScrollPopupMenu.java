@@ -135,6 +135,11 @@ public class ScrollPopupMenu extends JPopupMenu {
             popWin.pack();
             popWin.setSize(prefSize.width + bar.getPreferredSize().width, maxHeight);
         }
+    }
+
+    @Override
+    public boolean isVisible() {
+        return popWin != null && popWin.isShowing();
     }    @Override
     public void setLocation(final int x, final int y) {
         if (popWin != null && popWin.isShowing()) {
@@ -153,9 +158,6 @@ public class ScrollPopupMenu extends JPopupMenu {
     @Nullable
     public JScrollPane getScrollPane() {
         return scrollPane;
-    }    @Override
-    public boolean isVisible() {
-        return popWin != null && popWin.isShowing();
     }
 
     @Override

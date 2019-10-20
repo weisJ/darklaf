@@ -41,9 +41,9 @@ public class BubbleBorder extends AbstractBorder {
      * @param color       Colour of bubble.
      * @param thickness   Line thickness of border.
      * @param radius      corner radius of border.
-     * @param pointerSize size of pointer. You can set this size to 0 to achieve no pointer, but it
-     *                    is not desirable. The appropriate method for this is to set using {@link
-     *                    BubbleBorder#setPointerSide(Alignment)} to {@link Alignment#CENTER}
+     * @param pointerSize size of pointer. You can set this size to 0 to achieve no pointer, but it is not desirable.
+     *                    The appropriate method for this is to set using {@link BubbleBorder#setPointerSide(Alignment)}
+     *                    to {@link Alignment#CENTER}
      */
     public BubbleBorder(final Color color, final int thickness,
                         final int radius, final int pointerSize) {
@@ -198,10 +198,9 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     /**
-     * Set the alignment for the pointer. Not there is no difference between {@link
-     * Alignment#NORTH}, {@link Alignment#NORTH_EAST} and {@link Alignment#NORTH_WEST} as well as
-     * {@link Alignment#SOUTH}, {@link Alignment#SOUTH_EAST} and {@link Alignment#SOUTH_WEST} {@link
-     * Alignment#CENTER} results in no pointer.
+     * Set the alignment for the pointer. Not there is no difference between {@link Alignment#NORTH}, {@link
+     * Alignment#NORTH_EAST} and {@link Alignment#NORTH_WEST} as well as {@link Alignment#SOUTH}, {@link
+     * Alignment#SOUTH_EAST} and {@link Alignment#SOUTH_WEST} {@link Alignment#CENTER} results in no pointer.
      *
      * @param side direction in which the pointer should point.
      * @return this.
@@ -215,26 +214,6 @@ public class BubbleBorder extends AbstractBorder {
 
     public int getOffset(final int w, final int h) {
         return (int) calculatePointerPad(w, h, Alignment.NORTH_WEST);
-    }
-
-
-    @Override
-    public void paintBorder(@NotNull final Component c, final Graphics g,
-                            final int x, final int y, final int width, final int height) {
-        var area = getInnerArea(x, y, width, height);
-        paintBorder(g, area);
-    }
-
-    @NotNull
-    @Override
-    public Insets getBorderInsets(final Component c) {
-        return new Insets(insets.top, insets.left, insets.bottom, insets.right);
-    }
-
-    @NotNull
-    @Override
-    public Insets getBorderInsets(final Component c, final Insets insets) {
-        return getBorderInsets(c);
     }
 
     @Contract(pure = true)
@@ -264,6 +243,36 @@ public class BubbleBorder extends AbstractBorder {
         return pointerPad;
     }
 
+    @Override
+    public void paintBorder(@NotNull final Component c, final Graphics g,
+                            final int x, final int y, final int width, final int height) {
+        var area = getInnerArea(x, y, width, height);
+        paintBorder(g, area);
+    }
+
+    @NotNull
+    @Override
+    public Insets getBorderInsets(final Component c) {
+        return new Insets(insets.top, insets.left, insets.bottom, insets.right);
+    }
+
+    @NotNull
+    @Override
+    public Insets getBorderInsets(final Component c, final Insets insets) {
+        return getBorderInsets(c);
+    }
+
+    public Area getInnerArea(final int x, final int y, final int width, final int height) {
+        var bubble = calculateBubbleRect(x, y, width, height);
+        final Area area = new Area(bubble);
+        if (pointerSide != Alignment.CENTER) {
+            double pointerPad = calculatePointerPad(width, height, pointerSide);
+            Path2D pointer = creatPointerShape(pointerPad, bubble);
+            area.add(new Area(pointer));
+        }
+        return area;
+    }
+
     public void paintBorder(final Graphics g, final Area innerArea) {
         final Graphics2D g2 = (Graphics2D) g;
         var config = GraphicsUtil.setupStrokePainting(g);
@@ -278,17 +287,6 @@ public class BubbleBorder extends AbstractBorder {
                                                        final int width, final int height) {
         return new RoundRectangle2D.Double(x + insets.left, y + insets.top, width - insets.left - insets.right,
                                            height - insets.top - insets.bottom, radius, radius);
-    }
-
-    public Area getInnerArea(final int x, final int y, final int width, final int height) {
-        var bubble = calculateBubbleRect(x, y, width, height);
-        final Area area = new Area(bubble);
-        if (pointerSide != Alignment.CENTER) {
-            double pointerPad = calculatePointerPad(width, height, pointerSide);
-            Path2D pointer = creatPointerShape(pointerPad, bubble);
-            area.add(new Area(pointer));
-        }
-        return area;
     }
 
     @NotNull

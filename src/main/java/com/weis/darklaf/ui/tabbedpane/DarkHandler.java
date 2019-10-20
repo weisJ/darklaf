@@ -163,6 +163,14 @@ public class DarkHandler extends TabbedPaneHandler {
     }
 
     @Override
+    public void mouseReleased(final MouseEvent e) {
+        super.mouseReleased(e);
+        if (ui.dragging && ui.scrollableTabLayoutEnabled()) {
+            stopDrag(e);
+        }
+    }
+
+    @Override
     public void mouseDragged(final MouseEvent e) {
         super.mouseDragged(e);
         if (!ui.dndEnabled) return;
@@ -238,14 +246,6 @@ public class DarkHandler extends TabbedPaneHandler {
         ui.tabPane.doLayout();
         ui.tabPane.repaint();
         ui.scrollableTabSupport.viewport.repaint();
-    }
-
-    @Override
-    public void mouseReleased(final MouseEvent e) {
-        super.mouseReleased(e);
-        if (ui.dragging && ui.scrollableTabLayoutEnabled()) {
-            stopDrag(e);
-        }
     }
 
     @Override

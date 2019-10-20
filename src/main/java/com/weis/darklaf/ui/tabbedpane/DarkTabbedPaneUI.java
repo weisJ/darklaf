@@ -121,6 +121,35 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         super.uninstallUI(c);
     }
 
+    public void paint(final Graphics g, final JComponent c) {
+        int selectedIndex = tabPane.getSelectedIndex();
+        int tabPlacement = tabPane.getTabPlacement();
+
+        ensureCurrentLayout();
+
+        // Paint content border and tab area
+        if (tabsOverlapBorder) {
+            paintContentBorder(g, tabPlacement, selectedIndex);
+        }
+
+
+        // If scrollable tabs are enabled, the tab area will be
+        // painted by the scrollable tab panel instead.
+        if (!scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
+            paintTabArea(g, tabPlacement, selectedIndex);
+        } else {
+            paintTabAreaBorder(g, tabPlacement);
+        }
+
+        if (!tabsOverlapBorder) {
+            paintContentBorder(g, tabPlacement, selectedIndex);
+        }
+
+        if (!scrollableTabLayoutEnabled() && drawDropRect) {
+            paintDrop(g);
+        }
+    }
+
     @Override
     protected LayoutManager createLayoutManager() {
         if (tabPane.getTabLayoutPolicy() == JTabbedPane.SCROLL_TAB_LAYOUT) {
@@ -227,6 +256,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
+    protected void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex) {
+
+    }
+
+    @Override
     public void setRolloverTab(final int index) {
         if (dragging) return;
         int oldRollover = rolloverTabIndex;
@@ -238,46 +272,40 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                       final Rectangle[] rects, final int tabIndex,
-                                       final Rectangle iconRect, final Rectangle textRect,
-                                       final boolean isSelected) {
-    }
-
-    public void paint(final Graphics g, final JComponent c) {
-        int selectedIndex = tabPane.getSelectedIndex();
-        int tabPlacement = tabPane.getTabPlacement();
-
-        ensureCurrentLayout();
-
-        // Paint content border and tab area
-        if (tabsOverlapBorder) {
-            paintContentBorder(g, tabPlacement, selectedIndex);
-        }
-
-
-        // If scrollable tabs are enabled, the tab area will be
-        // painted by the scrollable tab panel instead.
-        if (!scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
-            paintTabArea(g, tabPlacement, selectedIndex);
-        } else {
-            paintTabAreaBorder(g, tabPlacement);
-        }
-
-        if (!tabsOverlapBorder) {
-            paintContentBorder(g, tabPlacement, selectedIndex);
-        }
-
-        if (!scrollableTabLayoutEnabled() && drawDropRect) {
-            paintDrop(g);
-        }
-    }
-
-    @Override
     protected void paintTabArea(@NotNull final Graphics g, final int tabPlacement, final int selectedIndex) {
         paintTabAreaBackground(g, tabPlacement);
         paintTabAreaBorder(g, tabPlacement);
         super.paintTabArea(g, tabPlacement, selectedIndex);
+    }
+
+    @Override
+    protected void paintTabBackground(@NotNull final Graphics g, final int tabPlacement, final int tabIndex,
+                                      final int x,
+                                      final int y, final int w, final int h,
+                                      final boolean isSelected) {
+        g.setColor(getTabBackgroundColor(tabIndex, isSelected, getRolloverTab() == tabIndex));
+        g.fillRect(x, y, w, h);
+    }
+
+    @Override
+    protected void paintTabBorder(@NotNull final Graphics g, final int tabPlacement, final int tabIndex,
+                                  final int x, final int y, final int w, final int h,
+                                  final boolean isSelected) {
+        g.setColor(getTabBorderColor());
+        switch (tabPlacement) {
+            case TOP:
+                g.fillRect(x, y + h - 1, w, 1);
+                break;
+            case BOTTOM:
+                g.fillRect(x, y, w, 1);
+                break;
+            case LEFT:
+                g.fillRect(x + w - 1, y, 1, h);
+                break;
+            case RIGHT:
+                g.fillRect(x, y, 1, h);
+                break;
+        }
     }
 
     @Override
@@ -303,6 +331,128 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                     break;
             }
         }
+    }
+
+    @Override
+    protected int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
+                                   final boolean validateIfNecessary) {
+        int tab = super.tabForCoordinate(pane, x, y, validateIfNecessary);
+        Point p = new Point(x, y);
+        if (scrollableTabLayoutEnabled()) {
+            translatePointToTabPanel(x, y, p);
+            if (tab == -1 && dropTargetIndex >= 0 && dropRect.contains(p)) {
+                return dropTargetIndex;
+            }
+        }
+        return tab;
+    }
+
+    @Override
+    protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
+                                       final Rectangle[] rects, final int tabIndex,
+                                       final Rectangle iconRect, final Rectangle textRect,
+                                       final boolean isSelected) {
+    }
+
+    @Override
+    public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
+        var rect = super.getTabBounds(pane, i);
+        if (scrollableTabLayoutEnabled() && rect != null
+                && dropTargetIndex >= 0 && i == dropTargetIndex) {
+            int tabPlacement = pane.getTabPlacement();
+            if (tabPlacement == TOP || tabPlacement == BOTTOM) {
+                if (pane.getComponentOrientation().isLeftToRight()) {
+                    rect.x -= dropRect.width;
+                    rect.width += dropRect.width;
+                } else {
+                    rect.width += dropRect.width;
+                }
+            } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+                rect.y -= dropRect.height;
+                rect.height += dropRect.height;
+            }
+        }
+        return rect;
+    }
+
+    protected boolean shouldRotateTabRuns(final int tabPlacement) {
+        return Boolean.TRUE.equals(tabPane.getClientProperty("JTabbedPane.rotateTabRuns"));
+    }
+
+    @Override
+    protected int calculateTabHeight(final int tabPlacement, final int tabIndex, final int fontHeight) {
+        return super.calculateTabHeight(tabPlacement, tabIndex, fontHeight) - 1;
+    }
+
+    @Override
+    protected Insets getTabAreaInsets(final int tabPlacement) {
+        Insets insets = super.getTabAreaInsets(tabPlacement);
+        if (leadingComp != null) {
+            var b = leadingComp.getPreferredSize();
+            if (isHorizontalTabPlacement()) {
+                insets.left += b.width;
+            } else {
+                insets.top += b.height;
+            }
+        }
+        if (trailingComp != null) {
+            var b = trailingComp.getPreferredSize();
+            if (isHorizontalTabPlacement()) {
+                insets.right += b.width;
+            } else {
+                insets.bottom += b.height;
+            }
+        }
+        return insets;
+    }
+
+    protected Insets getContentBorderInsets(final int tabPlacement) {
+        Insets insets = (Insets) super.getContentBorderInsets(tabPlacement).clone();
+        if (northComp != null) {
+            insets.top += northComp.getPreferredSize().height;
+        }
+        if (southComp != null) {
+            insets.bottom += southComp.getPreferredSize().height;
+        }
+        if (eastComp != null) {
+            insets.right += eastComp.getPreferredSize().width;
+        }
+        if (westComp != null) {
+            insets.left += westComp.getPreferredSize().width;
+        }
+        return insets;
+    }
+
+    protected Color getTabBorderColor() {
+        return tabBorderColor;
+    }
+
+    public Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
+        if (isSelected) {
+            return hover ? selectedHoverBackground : selectedBackground;
+        } else {
+            return hover ? hoverBackground : tabPane.getBackgroundAt(tabIndex);
+        }
+    }
+
+    protected boolean drawFocusBar() {
+        return !Boolean.FALSE.equals(tabPane.getClientProperty("JTabbedPane.drawFocusBar"));
+    }
+
+    protected Color getAccentColor() {
+        boolean focus = DarkUIUtil.hasFocus(tabPane);
+        return getAccentColor(focus);
+    }
+
+    protected Color getAccentColor(final boolean focus) {
+        return focus ? focusAccent : accent;
+    }
+
+    protected DarkScrollHandler getScrollHandler() {
+        if (scrollHandler == null) {
+            scrollHandler = new DarkScrollHandler(this);
+        }
+        return scrollHandler;
     }
 
     private void paintTabAreaBorder(@NotNull final Graphics g, final int tabPlacement) {
@@ -372,11 +522,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         context.restore();
     }
 
-    @Override
-    protected void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex) {
-
-    }
-
     protected void paintTabAreaBackground(@NotNull final Graphics g, final int tabPlacement) {
         g.setColor(getTabAreaBackground());
         var b = getTabAreaBounds();
@@ -398,153 +543,12 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         g.fillRect(b.x, b.y, b.width, b.height);
     }
 
-    protected Color getAccentColor() {
-        boolean focus = DarkUIUtil.hasFocus(tabPane);
-        return getAccentColor(focus);
-    }
-
-    @Override
-    protected void paintTabBorder(@NotNull final Graphics g, final int tabPlacement, final int tabIndex,
-                                  final int x, final int y, final int w, final int h,
-                                  final boolean isSelected) {
-        g.setColor(getTabBorderColor());
-        switch (tabPlacement) {
-            case TOP:
-                g.fillRect(x, y + h - 1, w, 1);
-                break;
-            case BOTTOM:
-                g.fillRect(x, y, w, 1);
-                break;
-            case LEFT:
-                g.fillRect(x + w - 1, y, 1, h);
-                break;
-            case RIGHT:
-                g.fillRect(x, y, 1, h);
-                break;
-        }
-    }
-
-    @Override
-    protected void paintTabBackground(@NotNull final Graphics g, final int tabPlacement, final int tabIndex,
-                                      final int x,
-                                      final int y, final int w, final int h,
-                                      final boolean isSelected) {
-        g.setColor(getTabBackgroundColor(tabIndex, isSelected, getRolloverTab() == tabIndex));
-        g.fillRect(x, y, w, h);
-    }
-
     protected Color getDropColor() {
         if (scrollableTabLayoutEnabled()) {
             return dropBackground;
         } else {
             return getTabBackgroundColor(0, false, true);
         }
-    }
-
-    @Override
-    public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
-        var rect = super.getTabBounds(pane, i);
-        if (scrollableTabLayoutEnabled() && rect != null
-                && dropTargetIndex >= 0 && i == dropTargetIndex) {
-            int tabPlacement = pane.getTabPlacement();
-            if (tabPlacement == TOP || tabPlacement == BOTTOM) {
-                if (pane.getComponentOrientation().isLeftToRight()) {
-                    rect.x -= dropRect.width;
-                    rect.width += dropRect.width;
-                } else {
-                    rect.width += dropRect.width;
-                }
-            } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
-                rect.y -= dropRect.height;
-                rect.height += dropRect.height;
-            }
-        }
-        return rect;
-    }
-
-    @Override
-    protected int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
-                                   final boolean validateIfNecessary) {
-        int tab = super.tabForCoordinate(pane, x, y, validateIfNecessary);
-        Point p = new Point(x, y);
-        if (scrollableTabLayoutEnabled()) {
-            translatePointToTabPanel(x, y, p);
-            if (tab == -1 && dropTargetIndex >= 0 && dropRect.contains(p)) {
-                return dropTargetIndex;
-            }
-        }
-        return tab;
-    }
-
-    protected boolean shouldRotateTabRuns(final int tabPlacement) {
-        return Boolean.TRUE.equals(tabPane.getClientProperty("JTabbedPane.rotateTabRuns"));
-    }
-
-    @Override
-    protected Insets getTabAreaInsets(final int tabPlacement) {
-        Insets insets = super.getTabAreaInsets(tabPlacement);
-        if (leadingComp != null) {
-            var b = leadingComp.getPreferredSize();
-            if (isHorizontalTabPlacement()) {
-                insets.left += b.width;
-            } else {
-                insets.top += b.height;
-            }
-        }
-        if (trailingComp != null) {
-            var b = trailingComp.getPreferredSize();
-            if (isHorizontalTabPlacement()) {
-                insets.right += b.width;
-            } else {
-                insets.bottom += b.height;
-            }
-        }
-        return insets;
-    }
-
-    protected Insets getContentBorderInsets(final int tabPlacement) {
-        Insets insets = (Insets) super.getContentBorderInsets(tabPlacement).clone();
-        if (northComp != null) {
-            insets.top += northComp.getPreferredSize().height;
-        }
-        if (southComp != null) {
-            insets.bottom += southComp.getPreferredSize().height;
-        }
-        if (eastComp != null) {
-            insets.right += eastComp.getPreferredSize().width;
-        }
-        if (westComp != null) {
-            insets.left += westComp.getPreferredSize().width;
-        }
-        return insets;
-    }
-
-    public Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
-        if (isSelected) {
-            return hover ? selectedHoverBackground : selectedBackground;
-        } else {
-            return hover ? hoverBackground : tabPane.getBackgroundAt(tabIndex);
-        }
-    }
-
-    protected boolean drawFocusBar() {
-        return !Boolean.FALSE.equals(tabPane.getClientProperty("JTabbedPane.drawFocusBar"));
-    }
-
-    @Override
-    protected int calculateTabHeight(final int tabPlacement, final int tabIndex, final int fontHeight) {
-        return super.calculateTabHeight(tabPlacement, tabIndex, fontHeight) - 1;
-    }
-
-    protected Color getTabBorderColor() {
-        return tabBorderColor;
-    }
-
-    protected DarkScrollHandler getScrollHandler() {
-        if (scrollHandler == null) {
-            scrollHandler = new DarkScrollHandler(this);
-        }
-        return scrollHandler;
     }
 
     public void clearDropIndicator() {
@@ -587,10 +591,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         } else {
             return new Rectangle(tabAreaBounds);
         }
-    }
-
-    protected Color getAccentColor(final boolean focus) {
-        return focus ? focusAccent : accent;
     }
 
     protected Icon getMoreTabsIcon() {

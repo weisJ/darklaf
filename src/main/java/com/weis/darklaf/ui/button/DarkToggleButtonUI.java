@@ -90,15 +90,20 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     }
 
     @Override
-    protected void installListeners(final AbstractButton b) {
-        super.installListeners(b);
-        button.addPropertyChangeListener(propertyChangeListener);
-    }
+    public void paint(final Graphics g, @NotNull final JComponent c) {
+        if (isSlider(c)) {
+            GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
+            AbstractButton b = (AbstractButton) c;
+            String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
+                                 b.getWidth(), b.getHeight());
 
-    @Override
-    protected void uninstallListeners(final AbstractButton b) {
-        super.uninstallListeners(b);
-        button.removePropertyChangeListener(propertyChangeListener);
+            paintSlider((Graphics2D) g, b);
+            paintIcon(g, b, c);
+            paintText(g, b, c, text);
+            config.restore();
+        } else {
+            super.paint(g, c);
+        }
     }
 
     @Override
@@ -127,23 +132,6 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
     }
 
-    @Override
-    public void paint(final Graphics g, @NotNull final JComponent c) {
-        if (isSlider(c)) {
-            GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-            AbstractButton b = (AbstractButton) c;
-            String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
-                                 b.getWidth(), b.getHeight());
-
-            paintSlider((Graphics2D) g, b);
-            paintIcon(g, b, c);
-            paintText(g, b, c, text);
-            config.restore();
-        } else {
-            super.paint(g, c);
-        }
-    }
-
     protected Color getBackgroundColor(@NotNull final JComponent c) {
         if (c instanceof JToggleButton && c.isEnabled()) {
             if (((JToggleButton) c).isSelected()) {
@@ -155,6 +143,15 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         return super.getBackgroundColor(c);
     }
 
+    @Override
+    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+        if (!isSlider(c)) return super.contains(c, x, y);
+        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
+        var bounds = getSliderBounds(c);
+        return new RoundRectangle2D.Float(bounds.x, bounds.y, bounds.width, bounds.height,
+                                          bounds.height, bounds.height).contains(x, y);
+    }
+
     @NotNull
     private Rectangle getSliderBounds(@NotNull final JComponent c) {
         int x = borderSize;
@@ -164,14 +161,6 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         rect.width = sliderSize.width;
         rect.height = sliderSize.height;
         return rect;
-    }
-
-    public Dimension getPreferredSize(final JComponent c) {
-        Dimension d = super.getPreferredSize(c);
-        if (isSlider(c)) {
-            d.width += sliderSize.width + borderSize;
-        }
-        return d;
     }
 
     private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {
@@ -213,15 +202,6 @@ public class DarkToggleButtonUI extends DarkButtonUI {
                 && "slider".equals(c.getClientProperty("ToggleButton.variant"));
     }
 
-    @Override
-    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
-        if (!isSlider(c)) return super.contains(c, x, y);
-        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
-        var bounds = getSliderBounds(c);
-        return new RoundRectangle2D.Float(bounds.x, bounds.y, bounds.width, bounds.height,
-                                          bounds.height, bounds.height).contains(x, y);
-    }
-
     protected Color getToggleBorderColor(@NotNull final AbstractButton b) {
         if (b.hasFocus()) {
             return focusBorderColor;
@@ -235,5 +215,25 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     protected Color getSliderBorderColor(@NotNull final AbstractButton b) {
         return b.isEnabled() ? sliderBorderColor : inactiveSliderBorderColor;
+    }
+
+    @Override
+    protected void installListeners(final AbstractButton b) {
+        super.installListeners(b);
+        button.addPropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    protected void uninstallListeners(final AbstractButton b) {
+        super.uninstallListeners(b);
+        button.removePropertyChangeListener(propertyChangeListener);
+    }
+
+    public Dimension getPreferredSize(final JComponent c) {
+        Dimension d = super.getPreferredSize(c);
+        if (isSlider(c)) {
+            d.width += sliderSize.width + borderSize;
+        }
+        return d;
     }
 }

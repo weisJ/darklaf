@@ -25,9 +25,9 @@ public class DefaultColorPipette extends ColorPipetteBase {
     private final Rectangle captureRect = new Rectangle();
     private final Point previousLocation = new Point();
     private final Timer timer;
+    protected Color borderColor;
     private Graphics2D zoomGraphics;
     private BufferedImage zoomImage;
-    protected Color borderColor;
 
     public DefaultColorPipette(@NotNull final JComponent parent, @NotNull final ColorListener colorListener) {
         super(parent, colorListener);

@@ -45,6 +45,25 @@ public class DarkTooltipBorder implements Border {
                                          height - ins.top - ins.bottom);
     }
 
+    protected boolean isPlain(@NotNull final Component c) {
+        if (!(c instanceof JComponent)) return false;
+        var prop = ((JComponent) c).getClientProperty("JToolTip.style");
+        return prop == ToolTipStyle.PLAIN || "plain".equals(prop);
+    }
+
+    private void adjustInsets(final Insets si) {
+        var align = bubbleBorder.getPointerSide();
+        if (align == Alignment.SOUTH || align == Alignment.SOUTH_EAST || align == Alignment.SOUTH_WEST) {
+            si.bottom = 0;
+        } else if (align == Alignment.EAST) {
+            si.right = 0;
+        } else if (align == Alignment.WEST) {
+            si.left = 0;
+        } else if (align == Alignment.NORTH_EAST || align == Alignment.NORTH || align == Alignment.NORTH_WEST) {
+            si.top = 0;
+        }
+    }
+
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
@@ -76,19 +95,6 @@ public class DarkTooltipBorder implements Border {
         bubbleBorder.paintBorder(g, bubbleArea);
     }
 
-    private void adjustInsets(final Insets si) {
-        var align = bubbleBorder.getPointerSide();
-        if (align == Alignment.SOUTH || align == Alignment.SOUTH_EAST || align == Alignment.SOUTH_WEST) {
-            si.bottom = 0;
-        } else if (align == Alignment.EAST) {
-            si.right = 0;
-        } else if (align == Alignment.WEST) {
-            si.left = 0;
-        } else if (align == Alignment.NORTH_EAST || align == Alignment.NORTH || align == Alignment.NORTH_WEST) {
-            si.top = 0;
-        }
-    }
-
     @Override
     public Insets getBorderInsets(final Component c) {
         if (isPlain(c)) {
@@ -107,12 +113,6 @@ public class DarkTooltipBorder implements Border {
         ins.right += 5 + uIns.right;
         ins.bottom += 2 + uIns.bottom;
         return ins;
-    }
-
-    protected boolean isPlain(@NotNull final Component c) {
-        if (!(c instanceof JComponent)) return false;
-        var prop = ((JComponent) c).getClientProperty("JToolTip.style");
-        return prop == ToolTipStyle.PLAIN || "plain".equals(prop);
     }
 
     protected Insets getUserInsets(final Component c) {

@@ -49,8 +49,7 @@ public class DarkTableUIBridge extends TableUIBridge {
     }
 
     /**
-     * Paint a representation of the <code>table</code> instance
-     * that was set in installUI().
+     * Paint a representation of the <code>table</code> instance that was set in installUI().
      */
     public void paint(@NotNull final Graphics g, final JComponent c) {
         Rectangle clip = g.getClipBounds();
@@ -385,6 +384,10 @@ public class DarkTableUIBridge extends TableUIBridge {
         }
     }
 
+    protected int viewIndexForColumn(final TableColumn aColumn) {
+        return viewIndexForColumn(aColumn, table);
+    }
+
     protected void paintDraggedArea(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax,
                                     final TableColumn draggedColumn, final int distance) {
         int draggedColumnIndex = viewIndexForColumn(draggedColumn);
@@ -438,10 +441,6 @@ public class DarkTableUIBridge extends TableUIBridge {
                 g.fillRect(x1 - 1, y2 - 1, x2 - x1, 1);
             }
         }
-    }
-
-    protected int viewIndexForColumn(final TableColumn aColumn) {
-        return viewIndexForColumn(aColumn, table);
     }
 
     public static int viewIndexForColumn(final TableColumn aColumn, final JTable table) {

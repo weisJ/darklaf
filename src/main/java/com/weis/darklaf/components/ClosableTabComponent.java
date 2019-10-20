@@ -50,6 +50,7 @@ public class ClosableTabComponent extends JPanel {
 
     protected static class TabButton extends JButton implements ActionListener {
 
+        private final ClosableTabComponent tabComponent;
         private final MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseEntered(final MouseEvent e) {
@@ -63,7 +64,6 @@ public class ClosableTabComponent extends JPanel {
                 }
             }
         };
-        private final ClosableTabComponent tabComponent;
 
         protected TabButton(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;

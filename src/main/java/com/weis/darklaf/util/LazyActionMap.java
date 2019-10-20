@@ -8,16 +8,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * An ActionMap that populates its contents as necessary. The
- * contents are populated by invoking the <code>loadActionMap</code>
- * method on the passed in Object.
+ * An ActionMap that populates its contents as necessary. The contents are populated by invoking the
+ * <code>loadActionMap</code> method on the passed in Object.
  *
  * @author Scott Violet
  */
 public class LazyActionMap extends ActionMapUIResource {
     /**
-     * Object to invoke <code>loadActionMap</code> on. This may be
-     * a Class object.
+     * Object to invoke <code>loadActionMap</code> on. This may be a Class object.
      */
     private transient Object _loader;
 
@@ -33,10 +31,9 @@ public class LazyActionMap extends ActionMapUIResource {
      * This should be used if the ActionMap can be shared.
      *
      * @param c           JComponent to install the ActionMap on.
-     * @param loaderClass Class object that gets loadActionMap invoked
-     *                    on.
-     * @param defaultsKey Key to use to defaults table to check for
-     *                    existing map and what resulting Map will be registered on.
+     * @param loaderClass Class object that gets loadActionMap invoked on.
+     * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map will be
+     *                    registered on.
      */
     public static void installLazyActionMap(final JComponent c, final Class<?> loaderClass,
                                             final String defaultsKey) {
@@ -55,10 +52,9 @@ public class LazyActionMap extends ActionMapUIResource {
      * <p>
      * This should be used if the ActionMap can be shared.
      *
-     * @param loaderClass Class object that gets loadActionMap invoked
-     *                    on.
-     * @param defaultsKey Key to use to defaults table to check for
-     *                    existing map and what resulting Map will be registered on.
+     * @param loaderClass Class object that gets loadActionMap invoked on.
+     * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map will be
+     *                    registered on.
      */
     @NotNull
     public static ActionMap getActionMap(final Class<?> loaderClass,

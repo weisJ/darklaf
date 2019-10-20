@@ -68,8 +68,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 /**
- * This class provides for all necessary functionality when using transformations in a {@link
- * LayerUI}.
+ * This class provides for all necessary functionality when using transformations in a {@link LayerUI}.
  *
  * <p>Some implementation details:
  *
@@ -213,10 +212,9 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     /**
-     * {@link JTextComponent} and its descendants have some caret position problems when used inside a
-     * transformed {@link JXLayer}. When you plan to use {@link JTextComponent}(s) inside the
-     * hierarchy of a transformed {@link JXLayer}, call this method in an early stage, before
-     * instantiating any {@link JTextComponent}.
+     * {@link JTextComponent} and its descendants have some caret position problems when used inside a transformed
+     * {@link JXLayer}. When you plan to use {@link JTextComponent}(s) inside the hierarchy of a transformed {@link
+     * JXLayer}, call this method in an early stage, before instantiating any {@link JTextComponent}.
      *
      * <p>It executes the following method:
      *
@@ -283,12 +281,11 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     /**
-     * Get a preferred {@link AffineTransform}. This method will typically be invoked by programs that
-     * calculate a preferred size.
+     * Get a preferred {@link AffineTransform}. This method will typically be invoked by programs that calculate a
+     * preferred size.
      *
      * <p>The {@code size} argument will be used to compute anchor values for some types of
-     * transformations. If the {@code size} argument is {@code null} a value of (0,0) is used for the
-     * anchor.
+     * transformations. If the {@code size} argument is {@code null} a value of (0,0) is used for the anchor.
      *
      * <p>In {@code enabled} state this method is delegated to the {@link TransformModel} that has
      * been set. Otherwise {@code null} will be returned.
@@ -391,8 +388,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
   }*/
 
     /**
-     * Overridden to replace the {@link LayoutManager}, to add some listeners and to ensure that an
-     * appropriate {@link RepaintManager} is installed.
+     * Overridden to replace the {@link LayoutManager}, to add some listeners and to ensure that an appropriate {@link
+     * RepaintManager} is installed.
      *
      * @see #uninstallUI(JComponent)
      */
@@ -491,8 +488,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     /**
-     * Set a complete hierarchy to non double buffered and remember the components that were double
-     * buffered.
+     * Set a complete hierarchy to non double buffered and remember the components that were double buffered.
      *
      * @param component the component.
      */
@@ -513,10 +509,9 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     /**
-     * If the view of the {@link JXLayer} is (partly) obscured by its parent (this is the case when
-     * the size of the view (in component space) is larger than the size of the {@link JXLayer}), the
-     * obscured parts will not be painted by the super implementation. Therefore, only under this
-     * condition, a special painting technique is executed:
+     * If the view of the {@link JXLayer} is (partly) obscured by its parent (this is the case when the size of the view
+     * (in component space) is larger than the size of the {@link JXLayer}), the obscured parts will not be painted by
+     * the super implementation. Therefore, only under this condition, a special painting technique is executed:
      *
      * <ol>
      * <li>All descendants of the {@link JXLayer} are temporarily set to non double buffered.
@@ -577,8 +572,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     /**
-     * A delegate {@link RepaintManager} that can be set on the view of a {@link JXLayer} in Java
-     * versions starting with Java 6u10.
+     * A delegate {@link RepaintManager} that can be set on the view of a {@link JXLayer} in Java versions starting with
+     * Java 6u10.
      *
      * <p>For older Java versions, {@link RepaintManager#setCurrentManager(RepaintManager)} will be
      * used with either {@link TransformRPMFallBack} or {@link TransformRPMSwingX}.
@@ -589,8 +584,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
         }
 
         /**
-         * Finds the JXLayer ancestor and have ancestor marked invalid via the current {@link
-         * RepaintManager}.
+         * Finds the JXLayer ancestor and have ancestor marked invalid via the current {@link RepaintManager}.
          */
         @Override
         public void addInvalidComponent(final JComponent invalidComponent) {
@@ -599,8 +593,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
         }
 
         /**
-         * Finds the JXLayer ancestor and have the ancestor marked as dirty with the transformed
-         * rectangle via the current {@link RepaintManager}.
+         * Finds the JXLayer ancestor and have the ancestor marked as dirty with the transformed rectangle via the
+         * current {@link RepaintManager}.
          */
         @Override
         public void addDirtyRegion(@NotNull final JComponent c, final int x, final int y, final int w, final int h) {

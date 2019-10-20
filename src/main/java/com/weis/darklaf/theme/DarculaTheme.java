@@ -6,13 +6,13 @@ package com.weis.darklaf.theme;
 public class DarculaTheme extends Theme {
 
     @Override
-    public String getName() {
-        return "Darcula";
+    protected String getResourcePath() {
+        return "darcula/";
     }
 
     @Override
-    protected String getResourcePath() {
-        return "darcula/";
+    public String getName() {
+        return "Darcula";
     }
 
     @Override

@@ -42,10 +42,8 @@ import java.awt.*;
  */
 public class DarkTextBorder implements Border, UIResource {
 
-    private static final Border editorBorder = new TextFieldTableCellEditorBorder();
-
     public final static int PADDING = 4;
-
+    private static final Border editorBorder = new TextFieldTableCellEditorBorder();
     protected Color errorBorderColor;
     protected Color focusErrorBorderColor;
     protected Color focusBorderColor;

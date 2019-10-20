@@ -31,11 +31,6 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     }
 
     @Override
-    public View create(final Element elem) {
-        return super.create(elem);
-    }
-
-    @Override
     protected void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
     }
@@ -43,5 +38,10 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     @Override
     protected String getPropertyPrefix() {
         return "TextPane";
+    }
+
+    @Override
+    public View create(final Element elem) {
+        return super.create(elem);
     }
 }

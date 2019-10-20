@@ -45,11 +45,6 @@ public class PopupContainer extends JPanel {
         return popup;
     }
 
-    @Override
-    public void setBorder(final Border border) {
-        super.setBorder(null);
-    }
-
     public void setPopup(final Component component) {
         removeAll();
         add(component, BorderLayout.CENTER);
@@ -57,6 +52,11 @@ public class PopupContainer extends JPanel {
         revalidate();
         repaint();
         component.doLayout();
+    }
+
+    @Override
+    public void setBorder(final Border border) {
+        super.setBorder(null);
     }
 
 

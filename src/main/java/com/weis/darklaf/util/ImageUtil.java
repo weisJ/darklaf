@@ -59,18 +59,6 @@ public final class ImageUtil {
      *
      * @param c      the component.
      * @param bounds the bounds inside the component to capture.
-     * @return image containing the captured area.
-     */
-    @NotNull
-    public static Image imageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds) {
-        return scaledImageFromComponent(c, bounds, 1.0, 1.0);
-    }
-
-    /**
-     * Create image from component.
-     *
-     * @param c      the component.
-     * @param bounds the bounds inside the component to capture.
      * @param scalex the x scale
      * @param scaley the y scale
      * @return image containing the captured area.
@@ -95,6 +83,18 @@ public final class ImageUtil {
 
         g2d.dispose();
         return image;
+    }
+
+    /**
+     * Create image from component.
+     *
+     * @param c      the component.
+     * @param bounds the bounds inside the component to capture.
+     * @return image containing the captured area.
+     */
+    @NotNull
+    public static Image imageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds) {
+        return scaledImageFromComponent(c, bounds, 1.0, 1.0);
     }
 
     @NotNull

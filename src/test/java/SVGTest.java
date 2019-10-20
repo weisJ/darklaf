@@ -25,8 +25,8 @@ public class SVGTest {
         svgPanel.setAntiAlias(true);
         svgPanel.setScaleToFit(true);
         svgPanel.setSvgURI(SVGTest.class.getClassLoader()
-                                   .getResource("com/weis/darklaf/icons/control/checkBox.svg")
-                                   .toURI());
+                                        .getResource("com/weis/darklaf/icons/control/checkBox.svg")
+                                        .toURI());
         SVGUniverse svgUniverse = svgPanel.getSvgUniverse();
         SVGDiagram diagram = svgUniverse.getDiagram(svgPanel.getSvgURI());
         loadColors(diagram);

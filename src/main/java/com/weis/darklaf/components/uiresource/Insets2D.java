@@ -34,8 +34,7 @@ public final class Insets2D implements Cloneable {
     public double right;
 
     /**
-     * Creates and initializes a new <code>Insets</code> object with the
-     * specified top, left, bottom, and right insets.
+     * Creates and initializes a new <code>Insets</code> object with the specified top, left, bottom, and right insets.
      *
      * @param top    the inset from the top.
      * @param left   the inset from the left.

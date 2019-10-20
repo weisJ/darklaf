@@ -40,16 +40,6 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
         c.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 
-    public void installDefaults() {
-        super.installDefaults();
-        checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
-        checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
-        checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");
-        checkBoxSelectedIcon = UIManager.getIcon("CheckBox.selected.icon");
-        checkBoxSelectedDisabledIcon = UIManager.getIcon("CheckBox.selectedDisabled.icon");
-        checkBoxSelectedFocusedIcon = UIManager.getIcon("CheckBox.selectedFocused.icon");
-    }
-
     protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
                                   @NotNull final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
@@ -71,6 +61,16 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
                         : enabled ? hasFocus ? checkBoxFocusedIcon
                                              : checkBoxIcon
                                   : checkBoxDisabledIcon;
+    }
+
+    public void installDefaults() {
+        super.installDefaults();
+        checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
+        checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
+        checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");
+        checkBoxSelectedIcon = UIManager.getIcon("CheckBox.selected.icon");
+        checkBoxSelectedDisabledIcon = UIManager.getIcon("CheckBox.selectedDisabled.icon");
+        checkBoxSelectedFocusedIcon = UIManager.getIcon("CheckBox.selectedFocused.icon");
     }
 
     protected String getPropertyPrefix() {

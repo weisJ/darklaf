@@ -43,6 +43,19 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         super(f);
     }
 
+    private static int getButtonMnemonic(final String button) {
+        try {
+            return Integer.parseInt(UIManager.getString("InternalFrameTitlePane." + button + "Button.mnemonic"));
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    @Override
+    protected void installTitlePane() {
+        super.installTitlePane();
+    }
+
     @Override
     protected void installListeners() {
         super.installListeners();
@@ -61,14 +74,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     protected void uninstallListeners() {
         super.uninstallListeners();
         frame.removePropertyChangeListener(propertyChangeListener2);
-    }
-
-    @Override
-    protected void enableActions() {
-        super.enableActions();
-        iconifyIcon.setActive(iconifyAction.isEnabled());
-        maximizeIcon.setActive(maximizeAction.isEnabled());
-        minimizeIcon.setActive(restoreAction.isEnabled());
     }
 
     @Override
@@ -119,11 +124,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         setButtonIcons();
     }
 
-    @Override
-    protected void installTitlePane() {
-        super.installTitlePane();
-    }
-
     protected void addSystemMenuItems(@NotNull final JMenu systemMenu) {
         JMenuItem mi = systemMenu.add(restoreAction);
         mi.setMnemonic(getButtonMnemonic("restore"));
@@ -162,7 +162,28 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     }
 
     @Override
-    protected void paintBorder(final Graphics g) {
+    public void paintComponent(@NotNull final Graphics g) {
+        g.setColor(getTitleBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(border);
+        g.fillRect(0, getHeight() - 1, getWidth(), 1);
+    }
+
+    @Override
+    protected void enableActions() {
+        super.enableActions();
+        iconifyIcon.setActive(iconifyAction.isEnabled());
+        maximizeIcon.setActive(maximizeAction.isEnabled());
+        minimizeIcon.setActive(restoreAction.isEnabled());
+    }
+
+    @Override
+    protected LayoutManager createLayout() {
+        return new DarkTitlePaneLayout();
+    }
+
+    protected Color getTitleBackground() {
+        return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
     }
 
     @NotNull
@@ -201,20 +222,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     }
 
     @Override
-    public void paintComponent(@NotNull final Graphics g) {
-        g.setColor(getTitleBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(border);
-        g.fillRect(0, getHeight() - 1, getWidth(), 1);
-    }
-
-    protected Color getTitleBackground() {
-        return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
-    }
-
-    @Override
-    protected LayoutManager createLayout() {
-        return new DarkTitlePaneLayout();
+    protected void paintBorder(final Graphics g) {
     }
 
     protected class DarkTitlePaneLayout implements LayoutManager {
@@ -334,14 +342,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
             } else {
                 label.setBounds(x2, 0, x1 - x2, h);
             }
-        }
-    }
-
-    private static int getButtonMnemonic(final String button) {
-        try {
-            return Integer.parseInt(UIManager.getString("InternalFrameTitlePane." + button + "Button.mnemonic"));
-        } catch (NumberFormatException e) {
-            return -1;
         }
     }
 }

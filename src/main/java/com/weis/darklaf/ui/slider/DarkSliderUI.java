@@ -303,37 +303,15 @@ public class DarkSliderUI extends BasicSliderUI {
         return inactiveTickForeground;
     }
 
-    private static boolean showVolumeIcon(final JComponent c) {
-        return isVolumeSlider(c)
-                && Boolean.TRUE.equals(c.getClientProperty("Slider.volume.showIcon"));
-    }
-
-    protected Icon getVolumeIcon() {
-        int range = slider.getMaximum() - slider.getMinimum();
-        int value = slider.getValue() - slider.getMinimum();
-        double percentage = value / (double) range;
-        boolean enabled = slider.isEnabled();
-        if (Math.abs(percentage) < 1E-6) {
-            return enabled ? volume0 : volume0Inactive;
-        } else if (percentage < 0.25) {
-            return enabled ? volume1 : volume1Inactive;
-        } else if (percentage < 0.5) {
-            return enabled ? volume2 : volume2Inactive;
-        } else if (percentage < 0.75) {
-            return enabled ? volume3 : volume3Inactive;
-        } else {
-            return enabled ? volume4 : volume4Inactive;
-        }
-    }
-
-    private static boolean isVolumeSlider(@NotNull final JComponent c) {
-        return "volume".equals(c.getClientProperty("Slider.variant"));
-    }
-
     protected boolean isPlainThumb() {
         Boolean paintThumbArrowShape = (Boolean) slider.getClientProperty("Slider.paintThumbArrowShape");
         return (!slider.getPaintTicks() && paintThumbArrowShape == null) ||
                 paintThumbArrowShape == Boolean.FALSE;
+    }
+
+    private static boolean showVolumeIcon(final JComponent c) {
+        return isVolumeSlider(c)
+                && Boolean.TRUE.equals(c.getClientProperty("Slider.volume.showIcon"));
     }
 
     protected void calculateIconRect() {
@@ -355,6 +333,28 @@ public class DarkSliderUI extends BasicSliderUI {
                 iconRect.x = trackRect.x + (trackRect.width - iconRect.width) / 2;
                 iconRect.y = trackRect.y - iconRect.height - ICON_PAD;
             }
+        }
+    }
+
+    private static boolean isVolumeSlider(@NotNull final JComponent c) {
+        return "volume".equals(c.getClientProperty("Slider.variant"));
+    }
+
+    protected Icon getVolumeIcon() {
+        int range = slider.getMaximum() - slider.getMinimum();
+        int value = slider.getValue() - slider.getMinimum();
+        double percentage = value / (double) range;
+        boolean enabled = slider.isEnabled();
+        if (Math.abs(percentage) < 1E-6) {
+            return enabled ? volume0 : volume0Inactive;
+        } else if (percentage < 0.25) {
+            return enabled ? volume1 : volume1Inactive;
+        } else if (percentage < 0.5) {
+            return enabled ? volume2 : volume2Inactive;
+        } else if (percentage < 0.75) {
+            return enabled ? volume3 : volume3Inactive;
+        } else {
+            return enabled ? volume4 : volume4Inactive;
         }
     }
 

@@ -17,22 +17,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implements a DropShadow for components. In general, the DropShadowBorder will
- * work with any rectangular components that do not have a default border
- * installed as part of the look and feel, or otherwise. For example,
- * DropShadowBorder works wonderfully with JPanel, but horribly with JComboBox.
+ * Implements a DropShadow for components. In general, the DropShadowBorder will work with any rectangular components
+ * that do not have a default border installed as part of the look and feel, or otherwise. For example, DropShadowBorder
+ * works wonderfully with JPanel, but horribly with JComboBox.
  * <p>
- * Note: {@code DropShadowBorder} should usually be added to non-opaque
- * components, otherwise the background is likely to bleed through.</p>
+ * Note: {@code DropShadowBorder} should usually be added to non-opaque components, otherwise the background is likely
+ * to bleed through.</p>
  * <p>Note: Since generating drop shadows is relatively expensive operation,
- * {@code DropShadowBorder} keeps internal static cache that allows sharing
- * same border for multiple re-rendering and between different instances of the
- * class. Since this cache is shared at class level and never reset, it might
- * bleed your app memory in case you tend to create many different borders
- * rapidly.</p>
+ * {@code DropShadowBorder} keeps internal static cache that allows sharing same border for multiple re-rendering and
+ * between different instances of the class. Since this cache is shared at class level and never reset, it might bleed
+ * your app memory in case you tend to create many different borders rapidly.</p>
  *
- * @author rbair
- * Adaptions made by
+ * @author rbair Adaptions made by
  * @author Jannis Weis
  */
 public class DropShadowBorder implements Border, Serializable {
@@ -315,10 +311,8 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     /**
-     * Returns a new BufferedImage that represents a subregion of the given
-     * BufferedImage.  (Note that this method does not use
-     * BufferedImage.getSubimage(), which will defeat image acceleration
-     * strategies on later JDKs.)
+     * Returns a new BufferedImage that represents a subregion of the given BufferedImage.  (Note that this method does
+     * not use BufferedImage.getSubimage(), which will defeat image acceleration strategies on later JDKs.)
      */
     @NotNull
     private BufferedImage getSubImage(final BufferedImage img, final int x, final int y, final int w, final int h) {

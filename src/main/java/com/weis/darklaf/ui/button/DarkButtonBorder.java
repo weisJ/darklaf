@@ -134,12 +134,12 @@ public class DarkButtonBorder implements Border, UIResource {
         context.restore();
     }
 
-    protected int getBorderSize() {
-        return borderSize;
-    }
-
     protected int getShadowSize() {
         return shadowSize;
+    }
+
+    protected int getBorderSize() {
+        return borderSize;
     }
 
     protected Color getBorderColor(@NotNull final Component c) {

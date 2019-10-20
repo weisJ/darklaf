@@ -71,20 +71,19 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
     /**
      * <code>ButtonAreaLayout</code> behaves in a similar manner to
      * <code>FlowLayout</code>. It lays out all components from left to
-     * right. If <code>syncAllWidths</code> is true, the widths of each
-     * component will be set to the largest preferred size width.
+     * right. If <code>syncAllWidths</code> is true, the widths of each component will be set to the largest preferred
+     * size width.
      * <p>
-     * This class should be treated as a &quot;protected&quot; inner class.
-     * Instantiate it only within subclasses of {@code BasicOptionPaneUI}.
+     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
+     * {@code BasicOptionPaneUI}.
      */
     public static class DarkButtonAreaLayout extends ButtonAreaLayout {
         protected boolean syncAllWidthOverwrite = false;
         private int orientation;
         private boolean reverseButtons;
         /**
-         * Indicates whether or not centersChildren should be used vs
-         * the orientation. This is done for backward compatibility
-         * for subclassers.
+         * Indicates whether or not centersChildren should be used vs the orientation. This is done for backward
+         * compatibility for subclassers.
          */
         private boolean useOrientation;
 

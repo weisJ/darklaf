@@ -77,34 +77,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
-    @NotNull
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @NotNull
-    @Override
-    public String getID() {
-        return getName();
-    }
-
-    @NotNull
-    @Override
-    public String getDescription() {
-        return "Dark Look and feel based on Darcula-LAF";
-    }
-
-    @Override
-    public boolean isNativeLookAndFeel() {
-        return true;
-    }
-
-    @Override
-    public boolean isSupportedLookAndFeel() {
-        return true;
-    }
-
     @Contract(pure = true)
     public static boolean isDecorationsEnabled() {
         return LafManager.getTheme().useCustomDecorations() && decorationsEnabled;
@@ -122,10 +94,10 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
+    @NotNull
     @Override
-    public boolean getSupportsWindowDecorations() {
-        return LafManager.getTheme().useCustomDecorations()
-                && JNIDecorations.isCustomDecorationSupported();
+    public String getName() {
+        return NAME;
     }
 
     @Override
@@ -195,11 +167,38 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
+    @NotNull
+    @Override
+    public String getID() {
+        return getName();
+    }
+
+    private void loadThemeDefaults(@NotNull final UIDefaults defaults) {
+        var uiProps = new Properties();
+        final Theme currentTheme = LafManager.getTheme();
+        currentTheme.loadDefaults(uiProps, defaults);
+        currentTheme.loadGlobals(uiProps, defaults);
+        installGlobals(uiProps, defaults);
+        currentTheme.loadUIProperties(uiProps, defaults);
+        currentTheme.loadPlatformProperties(uiProps, defaults);
+        defaults.putAll(uiProps);
+
+        StyleSheet styleSheet = currentTheme.loadStyleSheet();
+        new HTMLEditorKit().setStyleSheet(styleSheet);
+        setDecorationsEnabled(currentTheme.useCustomDecorations());
+    }
+
     private static void patchComboBox(@NotNull final UIDefaults metalDefaults, @NotNull final UIDefaults defaults) {
         defaults.remove("ComboBox.ancestorInputMap");
         defaults.remove("ComboBox.actionMap");
         defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));
         defaults.put("ComboBox.actionMap", metalDefaults.get("ComboBox.actionMap"));
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Dark Look and feel based on Darcula-LAF";
     }
 
     private static void installCutCopyPasteShortcuts(@NotNull final InputMap inputMap,
@@ -215,22 +214,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), copyActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), pasteActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
-    }
-
-
-    private void loadThemeDefaults(@NotNull final UIDefaults defaults) {
-        var uiProps = new Properties();
-        final Theme currentTheme = LafManager.getTheme();
-        currentTheme.loadDefaults(uiProps, defaults);
-        currentTheme.loadGlobals(uiProps, defaults);
-        installGlobals(uiProps, defaults);
-        currentTheme.loadUIProperties(uiProps, defaults);
-        currentTheme.loadPlatformProperties(uiProps, defaults);
-        defaults.putAll(uiProps);
-
-        StyleSheet styleSheet = currentTheme.loadStyleSheet();
-        new HTMLEditorKit().setStyleSheet(styleSheet);
-        setDecorationsEnabled(currentTheme.useCustomDecorations());
     }
 
     private void installGlobals(@NotNull final Properties uiProps, final UIDefaults defaults) {
@@ -254,22 +237,16 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
     @Override
+    public boolean isNativeLookAndFeel() {
+        return true;
+    }
+
+    @Override
     public void initialize() {
         call("initialize");
         PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
     }
-
-    @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-        if ("lookAndFeel".equals(evt.getPropertyName())) {
-            if (UIManager.getLookAndFeel() == this) {
-                PropertyLoader.finish();
-            }
-            UIManager.removePropertyChangeListener(this);
-        }
-    }
-
     @Override
     public void uninitialize() {
         call("uninitialize");
@@ -280,6 +257,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                 ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
             }
         }
+    }
+
+    @Override
+    public boolean isSupportedLookAndFeel() {
+        return true;
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
@@ -339,6 +321,44 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
     @Override
+    protected void initClassDefaults(final UIDefaults defaults) {
+        callInit("initClassDefaults", defaults);
+    }
+
+    @Override
+    protected void initSystemColorDefaults(final UIDefaults defaults) {
+        callInit("initSystemColorDefaults", defaults);
+    }
+
+    public void initComponentDefaults(final UIDefaults defaults) {
+        callInit("initComponentDefaults", defaults);
+    }
+
+    @Override
+    public boolean getSupportsWindowDecorations() {
+        return LafManager.getTheme().useCustomDecorations()
+                       && JNIDecorations.isCustomDecorationSupported();
+    }
+
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        if ("lookAndFeel".equals(evt.getPropertyName())) {
+            if (UIManager.getLookAndFeel() == this) {
+                PropertyLoader.finish();
+            }
+            UIManager.removePropertyChangeListener(this);
+        }
+    }
+
+
+
+
+
+
+
+
+
+    @Override
     protected void loadSystemColors(final UIDefaults defaults, final String[] systemColors,
                                     final boolean useNative) {
         try {
@@ -351,15 +371,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
-    @Override
-    protected void initClassDefaults(final UIDefaults defaults) {
-        callInit("initClassDefaults", defaults);
-    }
 
-    @Override
-    protected void initSystemColorDefaults(final UIDefaults defaults) {
-        callInit("initSystemColorDefaults", defaults);
-    }
 
     private void callInit(@NotNull final String method, final UIDefaults defaults) {
         try {
@@ -371,10 +383,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
-    public void initComponentDefaults(final UIDefaults defaults) {
-        callInit("initComponentDefaults", defaults);
-    }
-
     private void call(@NotNull final String method) {
         try {
             final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method);
@@ -384,4 +392,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
     }
+
+
 }

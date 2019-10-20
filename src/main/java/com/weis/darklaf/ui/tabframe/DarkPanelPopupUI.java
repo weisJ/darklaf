@@ -272,12 +272,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
     }
 
-    protected void updateTooltip() {
-        var tabFrame = popupComponent.getTabFrame();
-        closeButton.setAlignment(popupComponent.getAlignment(),
-                                 tabFrame.getContentPane().isEnabled(tabFrame.getPeer(popupComponent.getAlignment())));
-    }
-
     protected void updateBorder(final boolean notifyPeer) {
         if (popupComponent.getTabFrame() != null) {
             var tabFrame = popupComponent.getTabFrame();
@@ -295,6 +289,12 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 } catch (IndexOutOfBoundsException ignored) {/*may happen during transfer*/}
             }
         }
+    }
+
+    protected void updateTooltip() {
+        var tabFrame = popupComponent.getTabFrame();
+        closeButton.setAlignment(popupComponent.getAlignment(),
+                                 tabFrame.getContentPane().isEnabled(tabFrame.getPeer(popupComponent.getAlignment())));
     }
 
     @NotNull

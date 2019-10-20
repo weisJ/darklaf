@@ -31,8 +31,7 @@ import java.awt.*;
 public interface TabFramePopup {
 
     /**
-     * Get the current content pane. A popup may hold more
-     * than one content pane. In this case this method should return
+     * Get the current content pane. A popup may hold more than one content pane. In this case this method should return
      * the component that is currently displayed.
      *
      * @return the current content pane.
@@ -40,8 +39,7 @@ public interface TabFramePopup {
     Component getContentPane();
 
     /**
-     * Sets the content pane. This needn't replace the old
-     * content pane if this popup supports multiple content panes.
+     * Sets the content pane. This needn't replace the old content pane if this popup supports multiple content panes.
      */
     void setContentPane(Component contentPane);
 
@@ -90,20 +88,19 @@ public interface TabFramePopup {
     int getIndex();
 
     /**
+     * Set the index of the popup. This method should only be called from {{@link JTabFrame}}.
+     *
+     * @param index the index.
+     */
+    void setIndex(int index);
+
+    /**
      * Sets the alignment position in the {{@link JTabFrame}}. This method should only be called from {{@link
      * JTabFrame}}.
      *
      * @param alignment the alignment position.
      */
     void setAlignment(Alignment alignment);
-
-    /**
-     * Set the index of the popup.
-     * This method should only be called from {{@link JTabFrame}}.
-     *
-     * @param index the index.
-     */
-    void setIndex(int index);
 
     /**
      * Open the popup.

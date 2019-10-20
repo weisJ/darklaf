@@ -35,8 +35,7 @@ import java.text.NumberFormat;
 /**
  * FormattedTextFieldDemo.java requires no other files.
  * <p>
- * It implements a mortgage calculator that uses four
- * JFormattedTextFields.
+ * It implements a mortgage calculator that uses four JFormattedTextFields.
  */
 public class FormattedTextFieldDemo extends JPanel
         implements PropertyChangeListener {
@@ -167,9 +166,7 @@ public class FormattedTextFieldDemo extends JPanel
     }
 
     /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event dispatch thread.
+     * Create the GUI and show it.  For thread safety, this method should be invoked from the event dispatch thread.
      */
     private static void createAndShowGUI() {
         //Create and set up the window.

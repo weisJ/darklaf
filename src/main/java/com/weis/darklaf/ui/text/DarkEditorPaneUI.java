@@ -48,9 +48,8 @@ import java.beans.PropertyChangeEvent;
 public class DarkEditorPaneUI extends DarkTextUI {
 
     /**
-     * Attribute key to reference the default font.
-     * used in javax.swing.text.StyleContext.getFont
-     * to resolve the default font.
+     * Attribute key to reference the default font. used in javax.swing.text.StyleContext.getFont to resolve the default
+     * font.
      */
     private static final String FONT_ATTRIBUTE_KEY = "FONT_ATTRIBUTE_KEY";
 
@@ -185,8 +184,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
     /**
      * Update the font in the default style of the document.
      *
-     * @param font the new font to use or null to remove the font attribute
-     *             from the document's style
+     * @param font the new font to use or null to remove the font attribute from the document's style
      */
     private void updateFont(final Font font) {
         StyledDocument doc = (StyledDocument) getComponent().getDocument();
@@ -239,8 +237,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
     /**
      * Update the color in the default style of the document.
      *
-     * @param color the new color to use or null to remove the color attribute
-     *              from the document's style
+     * @param color the new color to use or null to remove the color attribute from the document's style
      */
     private void updateForeground(final Color color) {
         StyledDocument doc = (StyledDocument) getComponent().getDocument();
@@ -262,8 +259,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     /**
-     * Fetch an action map to use.  The map for a JEditorPane
-     * is not shared because it changes with the EditorKit.
+     * Fetch an action map to use.  The map for a JEditorPane is not shared because it changes with the EditorKit.
      */
 
     public ActionMap getActionMap() {
@@ -293,12 +289,9 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     /**
-     * This method gets called when a bound property is changed
-     * on the associated JTextComponent.  This is a hook
-     * which UI implementations may change to reflect how the
-     * UI displays bound properties of JTextComponent subclasses.
-     * This is implemented to rebuild the ActionMap based upon an
-     * EditorKit change.
+     * This method gets called when a bound property is changed on the associated JTextComponent.  This is a hook which
+     * UI implementations may change to reflect how the UI displays bound properties of JTextComponent subclasses. This
+     * is implemented to rebuild the ActionMap based upon an EditorKit change.
      *
      * @param evt the property change event
      */
@@ -354,9 +347,8 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     /**
-     * Fetches the name used as a key to lookup properties through the
-     * UIManager.  This is used as a prefix to all the standard
-     * text properties.
+     * Fetches the name used as a key to lookup properties through the UIManager.  This is used as a prefix to all the
+     * standard text properties.
      *
      * @return the name ("EditorPane")
      */
@@ -375,8 +367,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     /**
-     * Fetches the EditorKit for the UI.  This is whatever is
-     * currently set in the associated JEditorPane.
+     * Fetches the EditorKit for the UI.  This is whatever is currently set in the associated JEditorPane.
      *
      * @return the editor capabilities
      */

@@ -96,8 +96,6 @@ public class DarkTreeUI extends BasicTreeUI {
             }
         }
     };
-
-    private boolean myOldRepaintAllRowValue;
     protected Color alternativeBackground;
     protected Color lineColor;
     protected Color focusSelectedLineColor;
@@ -112,7 +110,7 @@ public class DarkTreeUI extends BasicTreeUI {
     protected Icon collapsedSelected;
     protected Icon collapsedFocus;
     protected Icon collapsed;
-
+    private boolean myOldRepaintAllRowValue;
 
     @NotNull
     @Contract("_ -> new")
@@ -489,10 +487,6 @@ public class DarkTreeUI extends BasicTreeUI {
         return !"None".equals(getLineStyle());
     }
 
-    protected Color getTreeSelectionBackground(final boolean focused) {
-        return focused ? focusSelectionBackground : selectionBackground;
-    }
-
     protected Color getLineColor(final TreePath path) {
         if (selectedChildOf(path)) {
             if (tree.hasFocus() || tree.isEditing()) {
@@ -518,6 +512,10 @@ public class DarkTreeUI extends BasicTreeUI {
         } else {
             return focused ? collapsedFocus : collapsed;
         }
+    }
+
+    protected Color getTreeSelectionBackground(final boolean focused) {
+        return focused ? focusSelectionBackground : selectionBackground;
     }
 
     protected String getLineStyle() {

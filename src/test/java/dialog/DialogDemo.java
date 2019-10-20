@@ -490,9 +490,27 @@ public class DialogDemo extends JPanel {
     }
 
     /**
-     * Used by createSimpleDialogBox and createFeatureDialogBox
-     * to create a pane containing a description, a single column
-     * of radio buttons, and the Show it! button.
+     * Create the GUI and show it.  For thread safety, this method should be invoked from the event-dispatching thread.
+     */
+    private static void createAndShowGUI() {
+        //Create and set up the window.
+        JFrame frame = new JFrame("DialogDemo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Create and set up the content pane.
+        DialogDemo newContentPane = new DialogDemo(frame);
+        newContentPane.setOpaque(true); //content panes must be opaque
+        frame.setContentPane(newContentPane);
+
+        //Display the window.
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    /**
+     * Used by createSimpleDialogBox and createFeatureDialogBox to create a pane containing a description, a single
+     * column of radio buttons, and the Show it! button.
      */
     private JPanel createPane(final String description,
                               final JRadioButton[] radioButtons,
@@ -511,35 +529,6 @@ public class DialogDemo extends JPanel {
         JPanel pane = new JPanel(new BorderLayout());
         pane.add(box, BorderLayout.PAGE_START);
         pane.add(showButton, BorderLayout.PAGE_END);
-        return pane;
-    }
-
-    /**
-     * Like createPane, but creates a pane with 2 columns of radio
-     * buttons.  The number of buttons passed in *must* be even.
-     */
-    private JPanel create2ColPane(final String description,
-                                  final JRadioButton[] radioButtons,
-                                  final JButton showButton) {
-        JLabel label = new JLabel(description);
-        int numPerColumn = radioButtons.length / 2;
-
-        JPanel grid = new JPanel(new GridLayout(0, 2));
-        for (int i = 0; i < numPerColumn; i++) {
-            grid.add(radioButtons[i]);
-            grid.add(radioButtons[i + numPerColumn]);
-        }
-
-        JPanel box = new JPanel();
-        box.setLayout(new BoxLayout(box, BoxLayout.PAGE_AXIS));
-        box.add(label);
-        grid.setAlignmentX(0.0f);
-        box.add(grid);
-
-        JPanel pane = new JPanel(new BorderLayout());
-        pane.add(box, BorderLayout.PAGE_START);
-        pane.add(showButton, BorderLayout.PAGE_END);
-
         return pane;
     }
 
@@ -564,24 +553,32 @@ public class DialogDemo extends JPanel {
     }
 
     /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
+     * Like createPane, but creates a pane with 2 columns of radio buttons.  The number of buttons passed in *must* be
+     * even.
      */
-    private static void createAndShowGUI() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("DialogDemo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private JPanel create2ColPane(final String description,
+                                  final JRadioButton[] radioButtons,
+                                  final JButton showButton) {
+        JLabel label = new JLabel(description);
+        int numPerColumn = radioButtons.length / 2;
 
-        //Create and set up the content pane.
-        DialogDemo newContentPane = new DialogDemo(frame);
-        newContentPane.setOpaque(true); //content panes must be opaque
-        frame.setContentPane(newContentPane);
+        JPanel grid = new JPanel(new GridLayout(0, 2));
+        for (int i = 0; i < numPerColumn; i++) {
+            grid.add(radioButtons[i]);
+            grid.add(radioButtons[i + numPerColumn]);
+        }
 
-        //Display the window.
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        JPanel box = new JPanel();
+        box.setLayout(new BoxLayout(box, BoxLayout.PAGE_AXIS));
+        box.add(label);
+        grid.setAlignmentX(0.0f);
+        box.add(grid);
+
+        JPanel pane = new JPanel(new BorderLayout());
+        pane.add(box, BorderLayout.PAGE_START);
+        pane.add(showButton, BorderLayout.PAGE_END);
+
+        return pane;
     }
 
 }

@@ -46,8 +46,8 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 /**
- * To avoid duplicate code, this class implements the actual logic for {@link TransformRPMSwingX}
- * and {@link TransformRPMFallBack}.
+ * To avoid duplicate code, this class implements the actual logic for {@link TransformRPMSwingX} and {@link
+ * TransformRPMFallBack}.
  *
  * @author Piet Blok
  */
@@ -55,8 +55,8 @@ public final class TransformRPMImpl {
 
     private static final Logger LOGGER = Logger.getLogger(TransformRPMImpl.class.getName());
     /**
-     * A flag, indicating whether or not a very dirty initialization on created {@link
-     * RepaintManager}s must be performed.
+     * A flag, indicating whether or not a very dirty initialization on created {@link RepaintManager}s must be
+     * performed.
      *
      * @see #hackInitialization(RepaintManager, RepaintManager)
      */
@@ -73,12 +73,11 @@ public final class TransformRPMImpl {
     }
 
     /**
-     * Searches upwards in the component hierarchy for a {@link JXLayer} ancestor with an enabled
-     * {@link TransformUI}.
+     * Searches upwards in the component hierarchy for a {@link JXLayer} ancestor with an enabled {@link TransformUI}.
      * <p>
-     * If found, the dirty rectangle is transformed to a rectangle targeted at that {@link JXLayer}
-     * and the argument manager's {@link RepaintManager#addDirtyRegion(JComponent, int, int, int,
-     * int)} is invoked. {@code true} is returned.
+     * If found, the dirty rectangle is transformed to a rectangle targeted at that {@link JXLayer} and the argument
+     * manager's {@link RepaintManager#addDirtyRegion(JComponent, int, int, int, int)} is invoked. {@code true} is
+     * returned.
      * </p>
      * <p>
      * Else, (@code false} is returned.
@@ -90,8 +89,8 @@ public final class TransformRPMImpl {
      * @param w          the width of the dirty region
      * @param h          the height of the dirty region
      * @param manager    the current {@link RepaintManager}
-     * @return {@code true} if the call is delegated to the manager with a transformed rectangle,
-     * {@code false} otherwise
+     * @return {@code true} if the call is delegated to the manager with a transformed rectangle, {@code false}
+     * otherwise
      */
     @SuppressWarnings("unchecked")
     public static boolean addDirtyRegion(@NotNull final JComponent aComponent, final int x, final int y,
@@ -115,9 +114,8 @@ public final class TransformRPMImpl {
     }
 
     /**
-     * If {@link #hack} is {@code true}, the private fields {@code paintManager} and {@code
-     * bufferStrategyType} are copied via reflection from the source manager into the destination
-     * manager.
+     * If {@link #hack} is {@code true}, the private fields {@code paintManager} and {@code bufferStrategyType} are
+     * copied via reflection from the source manager into the destination manager.
      *
      * @param sourceManager      the source manager
      * @param destinationManager the destination manager

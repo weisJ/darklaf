@@ -66,8 +66,7 @@ public interface RepaintManagerProvider {
     Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass();
 
     /**
-     * Checks whether or not the argument class is a {@link RepaintManager} class that will do the
-     * required job.
+     * Checks whether or not the argument class is a {@link RepaintManager} class that will do the required job.
      *
      * @param rpm a {@link RepaintManager} class
      * @return {@code true} if the argument class will do the required job, {@code false} otherwise
