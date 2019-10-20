@@ -837,15 +837,39 @@ public class JTabFrame extends JComponent {
         return a;
     }
 
+    /**
+     * Returns whether there is transfer ongoing. How this is realized may depend on the specific UI implementation.
+     * This needn't necessarily represent a DnD operation.
+     *
+     * @return true if a transfer is ongoing.
+     */
     public boolean isInTransfer() {
         return inTransfer;
     }
 
+    /**
+     * Initialize a tranfer.
+     *
+     * @param a     the alignment position to be transferred.{@link TabFramePosition#getAlignment()}
+     * @param index the index to be transferred.{@link TabFramePosition#getIndex()}
+     */
     public void initTransfer(final Alignment a, final int index) {
         getContentPane().getComponent().setEnabled(false);
         this.inTransfer = true;
         this.transferAlign = a;
         this.transferIndex = index;
+    }
+
+    /**
+     * Returns whether the given tab is selected.
+     *
+     * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param index the index.{@link TabFramePosition#getIndex()}
+     * @return true if selected.
+     */
+    public boolean isSelected(final Alignment a, final int index) {
+        if (a == null) return false;
+        return selectedIndices[a.ordinal()] == index;
     }
 
     /**
@@ -857,6 +881,9 @@ public class JTabFrame extends JComponent {
         return content;
     }
 
+    /**
+     * Notify that a transfer has ended.
+     */
     public void endTransfer() {
         getContentPane().getComponent().setEnabled(true);
         inTransfer = false;
@@ -864,14 +891,30 @@ public class JTabFrame extends JComponent {
         transferIndex = -10;
     }
 
+    /**
+     * Get the current transfer info. This contains the position of the tab prepared the be transferred by {@link
+     * #initTransfer(Alignment, int)}.
+     *
+     * @return the transfer position.
+     */
     public TabFramePosition getTransferInfo() {
         return new TabFramePosition(transferAlign, transferIndex);
     }
 
+    /**
+     * Returns whether DnD operations are enabled.
+     *
+     * @return true if DnD is enabled.
+     */
     public boolean isDndEnabled() {
         return dndEnabled && getTransferHandler() instanceof TabFrameTransferHandler;
     }
 
+    /**
+     * Sets whether DnD operations are enabled.
+     *
+     * @param dndEnabled true if enabled.
+     */
     public void setDndEnabled(final boolean dndEnabled) {
         var old = this.dndEnabled;
         this.dndEnabled = dndEnabled;

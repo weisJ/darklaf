@@ -176,7 +176,9 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                 var popupComp = td.sourceTabFrame.getPopupComponentAt(td.tabAlignment, td.tabIndex);
                 td.sourceTabFrame.removeTab(td.tabAlignment, td.tabIndex);
                 tabFrame.insertTab((TabFramePopup) popupComp, tabComp, a, index);
-                tabFrame.toggleTab(a, index, td.wasSelected);
+                if (td.wasSelected) {
+                    tabFrame.toggleTab(a, index, true);
+                }
                 SwingUtilities.invokeLater(() -> td.tab.getComponent().repaint());
 
                 successful = true;

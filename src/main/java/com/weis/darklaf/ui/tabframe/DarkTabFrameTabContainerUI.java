@@ -58,6 +58,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     private HoverListener hoverListener;
     private Color selectedColor;
     private Color hoverColor;
+    private boolean printing;
 
     @NotNull
     @Contract("_ -> new")
@@ -186,6 +187,8 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
             if (evt.getNewValue() instanceof JTabFrame) {
                 installAccelerator((JTabFrame) evt.getNewValue());
             }
+        } else if ("paintingForPrint".equals(key)) {
+            printing = Boolean.TRUE.equals(evt.getNewValue());
         }
     }
 
@@ -197,8 +200,9 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     public Color getBackground(@NotNull final TabFrameTabContainer tab) {
+        if (printing) return tab.getBackground();
         return tab.isSelected()
-               ? selectedColor
-               : hoverListener.isHover() ? hoverColor : tab.getBackground();
+               ? selectedColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                                 ? hoverColor : tab.getBackground();
     }
 }

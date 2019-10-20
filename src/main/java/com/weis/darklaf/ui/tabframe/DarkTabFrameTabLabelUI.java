@@ -245,10 +245,10 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     public Color getBackground(@NotNull final TabFrameTabLabel tab) {
-        if (printing || tab.getTabFrame().isInTransfer()) return tab.getBackground();
+        if (printing) return tab.getBackground();
         return tab.isSelected()
-               ? selectedColor
-               : hoverListener.isHover() ? hoverColor : tab.getBackground();
+               ? selectedColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                                 ? hoverColor : tab.getBackground();
     }
 
     protected Icon getIcon() {
