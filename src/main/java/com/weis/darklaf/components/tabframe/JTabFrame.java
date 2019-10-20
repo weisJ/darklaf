@@ -897,7 +897,6 @@ public class JTabFrame extends JComponent {
     public static class TabFramePosition {
         private Alignment a;
         private int index;
-        private Point point;
 
         @Contract(pure = true)
         public TabFramePosition(final Alignment a, final int index) {
@@ -905,27 +904,22 @@ public class JTabFrame extends JComponent {
             this.index = index;
         }
 
-        @Contract(pure = true)
-        public TabFramePosition(final Alignment a, final int index, final Point p) {
-            this.a = a;
-            this.index = index;
-            this.point = p;
-        }
-
+        /**
+         * Set the alignment.
+         *
+         * @param a the alignment.
+         */
         public void setAlignment(final Alignment a) {
             this.a = a;
         }
 
+        /**
+         * Set the index.
+         *
+         * @param index the index.
+         */
         public void setIndex(final int index) {
             this.index = index;
-        }
-
-        public Point getPoint() {
-            return point;
-        }
-
-        public void setPoint(final Point point) {
-            this.point = point;
         }
 
         /**

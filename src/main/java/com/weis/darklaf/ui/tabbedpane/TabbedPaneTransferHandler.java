@@ -333,6 +333,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
 
         @Override
         public DataFlavor[] getTransferDataFlavors() {
+            if (tabFlavor == null) return new DataFlavor[0];
             return new DataFlavor[]{tabFlavor};
         }
 

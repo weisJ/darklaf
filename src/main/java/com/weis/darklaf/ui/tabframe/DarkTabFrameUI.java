@@ -32,6 +32,7 @@ import com.weis.darklaf.components.tabframe.TabFrameTab;
 import com.weis.darklaf.components.tabframe.TabFrameUI;
 import com.weis.darklaf.components.uiresource.JPanelUIResource;
 import com.weis.darklaf.util.DarkUIUtil;
+import com.weis.darklaf.util.Pair;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -230,6 +231,11 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     @Override
     public JTabFrame.TabFramePosition getTabIndexAt(final JTabFrame tabFrame, @NotNull final Point p) {
+        return getTabIndexAtImpl(tabFrame, p).getFirst();
+    }
+
+    protected Pair<JTabFrame.TabFramePosition, Point> getTabIndexAtImpl(final JTabFrame tabFrame,
+                                                                        @NotNull final Point p) {
         Component tabComp = null;
         Alignment a = null;
         Point pos = null;
@@ -287,33 +293,39 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         if (tabComp == null) {
             var tab = maybeRestoreTabContainer(tabFrame, p);
             if (tab.getAlignment() != null) {
-                return tab;
+                return new Pair<>(tab, pos);
             }
         } else {
             layout.setDraggedOver(false);
         }
         if (tabComp == null) {
-            return new JTabFrame.TabFramePosition(null, -1);
+            return new Pair<>(new JTabFrame.TabFramePosition(null, -1), pos);
         }
         var tabs = tabFrame.tabsForAlignment(a);
         for (var tab : tabs) {
             var rect = getTabRect(tab, a, tabComp, true);
             if (rect.contains(pos)) {
-                return new JTabFrame.TabFramePosition(a, tab.getIndex(), pos);
+                return new Pair<>(new JTabFrame.TabFramePosition(a, tab.getIndex()), pos);
             }
         }
-        return new JTabFrame.TabFramePosition(a, -1, pos);
+        return new Pair<>(new JTabFrame.TabFramePosition(a, -1), pos);
     }
 
     @Override
     public JTabFrame.TabFramePosition getNearestTabIndexAt(final JTabFrame tabFrame, final Point pos) {
-        var tab = getTabIndexAt(tabFrame, pos);
+        return getNearestTabIndexAtImpl(tabFrame, pos).getFirst();
+    }
+
+    protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(final JTabFrame tabFrame,
+                                                                               final Point pos) {
+        var res = getTabIndexAtImpl(tabFrame, pos);
+        var tab = res.getFirst();
         if (tab.getAlignment() != null && tab.getIndex() == -1) {
-            var p = tab.getPoint();
+            var p = res.getSecond();
             var a = tab.getAlignment();
             if (tabFrame.getTabCountAt(a) == 0) {
                 tab.setIndex(-1);
-                return tab;
+                return res;
             }
             int w = a == destAlign && destIndex == -1 ? dropSize.width : 0;
             var comp = getTabContainer(a);
@@ -344,7 +356,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
                     break;
             }
         }
-        return tab;
+        return res;
     }
 
     public void setDropSize(final int width, final int height) {
@@ -388,13 +400,15 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     }
 
     public JTabFrame.TabFramePosition getDropPosition(final JTabFrame tabFrame, final Point p) {
-        var tab = getNearestTabIndexAt(tabFrame, p);
+        var res = getNearestTabIndexAtImpl(tabFrame, p);
+        var tab = res.getFirst();
         if (tab.getAlignment() != null) {
             var a = tab.getAlignment();
             int index = tab.getIndex();
             if (index >= 0) {
-                var rect = getTabRect(tabFrame.getTabComponentAt(a, index), a, tabFrame.getTabContainer(a), false);
-                var pos = tab.getPoint();
+                var rect = getTabRect(tabFrame.getTabComponentAt(a, index), a,
+                                      tabFrame.getTabContainer(a), false);
+                var pos = res.getSecond();
                 if (isForward(a)) {
                     if (pos.x <= rect.x + rect.width / 2 && pos.x >= rect.x) {
                         tab.setIndex(tab.getIndex() - 1);

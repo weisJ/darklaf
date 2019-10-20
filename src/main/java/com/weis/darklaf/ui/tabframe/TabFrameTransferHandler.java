@@ -61,7 +61,7 @@ import java.awt.event.MouseEvent;
 public class TabFrameTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
     private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType
-            + ";class=com.weis.darklaf.components.tabframe.TabFrame";
+            + ";class=com.weis.darklaf.components.tabframe.JTabFrame";
     private static TabbedPaneDragGestureRecognizer recognizer = null;
     private final Timer timer;
     private final Timer startTimer;
@@ -381,6 +381,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         @Override
         public DataFlavor[] getTransferDataFlavors() {
+            if (tabFlavor == null) return new DataFlavor[0];
             return new DataFlavor[]{tabFlavor};
         }
 
