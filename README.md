@@ -5,7 +5,13 @@ Gradually all the custom UI and more from the darcula project wil be ported over
 
 
 # Screenshot
-<img src="https://user-images.githubusercontent.com/31143295/67161757-f6d25b80-f35d-11e9-9d95-c2cad1bb99ce.png" width="45%" alt="Darcula Theme"></img> <img src="https://user-images.githubusercontent.com/31143295/67161758-f6d25b80-f35d-11e9-906d-0a2710e046ca.png" width="45%" alt="IntellIJ Theme"></img> <img src="https://user-images.githubusercontent.com/31143295/67161759-f6d25b80-f35d-11e9-93c0-9dc5c365e8d5.png" width="45%" alt="Solarized Light Theme"></img> <img src="https://user-images.githubusercontent.com/31143295/67161760-f76af200-f35d-11e9-91f1-fcfc62eb9e23.png" width="45%" alt="Solarized Dark Theme"></img>
+![Darcula Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_darcula.png) | ![IntelliJ Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_intellij.png)
+:-------------------------:|:-------------------------:
+Darcula Theme | IntelliJ Theme
+
+![Solarized Dark Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_solarized_dark.png) | ![Solarized Light Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_solarized_light.png)
+:-------------------------:|:-------------------------:
+Solarized Light Theme | Solarized Dark Theme
 
 # Usage & Features
 The LookAndFeel can be easily installed using the 'LafManager'
