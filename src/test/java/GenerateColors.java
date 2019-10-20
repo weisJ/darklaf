@@ -1,4 +1,4 @@
-import com.weis.darklaf.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.color.DarkColorModelHSL;
 
 import java.awt.*;
 

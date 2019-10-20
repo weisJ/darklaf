@@ -1,10 +1,10 @@
-import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.OverlayScrollPane;
-import com.weis.darklaf.components.SelectableTreeNode;
-import com.weis.darklaf.components.alignment.Alignment;
-import com.weis.darklaf.components.tabframe.JTabFrame;
-import com.weis.darklaf.components.tabframe.TabbedPopup;
-import com.weis.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.components.alignment.Alignment;
+import com.github.weisj.darklaf.components.tabframe.JTabFrame;
+import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
+import com.github.weisj.darklaf.icons.IconLoader;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

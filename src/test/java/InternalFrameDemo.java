@@ -1,4 +1,4 @@
-import com.weis.darklaf.LafManager;
+import com.github.weisj.darklaf.LafManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

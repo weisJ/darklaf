@@ -1,5 +1,5 @@
-import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.ClosableTabbedPane;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.ClosableTabbedPane;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

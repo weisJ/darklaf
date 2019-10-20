@@ -31,7 +31,7 @@
 
 package org.pbjar.jxlayer.plaf.ext.transform;
 
-import com.weis.darklaf.log.LogFormatter;
+import com.github.weisj.darklaf.log.LogFormatter;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.jetbrains.annotations.NotNull;

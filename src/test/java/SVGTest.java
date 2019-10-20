@@ -1,3 +1,4 @@
+import com.github.weisj.darklaf.LafManager;
 import com.kitfox.svg.Defs;
 import com.kitfox.svg.LinearGradient;
 import com.kitfox.svg.SVGDiagram;
@@ -5,7 +6,6 @@ import com.kitfox.svg.SVGElementException;
 import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGPanel;
-import com.weis.darklaf.LafManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class SVGTest {
         svgPanel.setAntiAlias(true);
         svgPanel.setScaleToFit(true);
         svgPanel.setSvgURI(SVGTest.class.getClassLoader()
-                                        .getResource("com/weis/darklaf/icons/control/checkBox.svg")
+                                        .getResource("com/github/weisj/darklaf/icons/control/checkBox.svg")
                                         .toURI());
         SVGUniverse svgUniverse = svgPanel.getSvgUniverse();
         SVGDiagram diagram = svgUniverse.getDiagram(svgPanel.getSvgURI());

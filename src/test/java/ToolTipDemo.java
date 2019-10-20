@@ -1,6 +1,6 @@
-import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.alignment.Alignment;
-import com.weis.darklaf.components.tooltip.ToolTipContext;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.alignment.Alignment;
+import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 
 import javax.swing.*;
 import java.awt.*;

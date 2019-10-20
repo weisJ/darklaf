@@ -1,5 +1,5 @@
-import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.SelectableTreeNode;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

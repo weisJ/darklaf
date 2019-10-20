@@ -1,4 +1,4 @@
-import com.weis.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.icons.IconLoader;
 
 import javax.swing.*;
 import java.awt.*;

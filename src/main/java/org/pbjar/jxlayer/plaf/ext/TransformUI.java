@@ -30,8 +30,8 @@ package org.pbjar.jxlayer.plaf.ext;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.github.weisj.darklaf.log.LogFormatter;
 import com.sun.java.swing.SwingUtilities3;
-import com.weis.darklaf.log.LogFormatter;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
 import org.jdesktop.jxlayer.plaf.LayerUI;

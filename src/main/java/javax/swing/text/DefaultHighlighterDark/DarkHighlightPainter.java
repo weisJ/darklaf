@@ -23,8 +23,8 @@
  */
 package javax.swing.text.DefaultHighlighterDark;
 
-import com.weis.darklaf.util.GraphicsContext;
-import com.weis.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;

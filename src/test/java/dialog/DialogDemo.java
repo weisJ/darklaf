@@ -24,7 +24,7 @@
 
 package dialog;
 
-import com.weis.darklaf.LafManager;
+import com.github.weisj.darklaf.LafManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;

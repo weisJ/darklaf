@@ -1,8 +1,8 @@
-import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.text.SearchTextField;
-import com.weis.darklaf.components.text.SearchTextFieldWithHistory;
-import com.weis.darklaf.components.tristate.TristateCheckBox;
-import com.weis.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.text.SearchTextField;
+import com.github.weisj.darklaf.components.text.SearchTextFieldWithHistory;
+import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
+import com.github.weisj.darklaf.icons.IconLoader;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;

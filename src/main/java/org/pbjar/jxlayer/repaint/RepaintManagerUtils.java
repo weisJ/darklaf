@@ -31,7 +31,7 @@
 
 package org.pbjar.jxlayer.repaint;
 
-import com.weis.darklaf.log.LogFormatter;
+import com.github.weisj.darklaf.log.LogFormatter;
 import org.jdesktop.swingx.ForwardingRepaintManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

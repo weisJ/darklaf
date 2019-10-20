@@ -24,7 +24,7 @@
 
 package formattedTextField;
 
-import com.weis.darklaf.LafManager;
+import com.github.weisj.darklaf.LafManager;
 
 import javax.swing.*;
 import java.awt.*;

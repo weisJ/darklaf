@@ -43,3 +43,4 @@ venv/
 # Windows
 Thumbs.db
 /.recommenders/
+/key.gpg

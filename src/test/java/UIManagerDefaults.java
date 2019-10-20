@@ -3,10 +3,10 @@
  *  to create a table of key/value pairs for each Swing component.
  */
 
-import com.weis.darklaf.DarkLafInfo;
-import com.weis.darklaf.LafManager;
-import com.weis.darklaf.ui.cell.DarkCellRendererToggleButton;
-import com.weis.darklaf.ui.table.DarkColorTableCellRendererEditor;
+import com.github.weisj.darklaf.DarkLafInfo;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.ui.table.DarkColorTableCellRendererEditor;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 import org.jetbrains.annotations.Contract;
