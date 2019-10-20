@@ -44,7 +44,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -60,7 +59,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
             }
         }
     };
-    private MouseMotionListener dragListener;
+    private TabDragListener dragListener;
     private HoverListener hoverListener;
     private Color defaultFontColor;
     private Color selectedFontColor;
@@ -153,6 +152,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         tabComponent.addMouseListener(mouseListener);
         installAccelerator(tabComponent.getTabFrame());
         tabComponent.addMouseMotionListener(dragListener);
+        tabComponent.addMouseListener(dragListener);
     }
 
     @Override
@@ -162,6 +162,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         tabComponent.removeMouseListener(mouseListener);
         uninstallAccelerator(tabComponent.getTabFrame());
         tabComponent.removeMouseMotionListener(dragListener);
+        tabComponent.removeMouseListener(dragListener);
         dragListener = null;
     }
 

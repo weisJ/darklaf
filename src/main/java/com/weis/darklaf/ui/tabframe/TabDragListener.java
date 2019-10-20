@@ -30,6 +30,7 @@ import org.jdesktop.jxlayer.JXLayer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -41,8 +42,22 @@ public class TabDragListener extends MouseAdapter {
         this.tabComponent = tabComponent;
     }
 
+    protected Point origin;
+
+    @Override
+    public void mousePressed(@NotNull final MouseEvent e) {
+        origin = e.getPoint();
+    }
+
+    @Override
+    public void mouseReleased(final MouseEvent e) {
+        origin = null;
+    }
+
     @Override
     public void mouseDragged(@NotNull final MouseEvent e) {
+        if (origin == null) origin = e.getPoint();
+        if (distance(origin, e.getPoint()) < 100) return;
         var th = tabComponent.getTabFrame().getTransferHandler();
         if (th != null && tabComponent.getTabFrame().isDndEnabled()) {
             var p = e.getPoint();
@@ -56,5 +71,9 @@ public class TabDragListener extends MouseAdapter {
                                            p.x, p.y, e.getClickCount(), e.isPopupTrigger(), e.getButton()),
                             TransferHandler.MOVE);
         }
+    }
+
+    protected int distance(@NotNull final Point p1, @NotNull final Point p2) {
+        return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
     }
 }

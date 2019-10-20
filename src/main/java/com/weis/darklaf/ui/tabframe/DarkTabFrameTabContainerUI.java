@@ -38,7 +38,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -54,7 +53,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
             }
         }
     };
-    private MouseMotionListener dragListener;
+    private TabDragListener dragListener;
     private HoverListener hoverListener;
     private Color selectedColor;
     private Color hoverColor;
@@ -81,11 +80,13 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         tabContainer.addMouseListener(hoverListener);
         tabContainer.addPropertyChangeListener(this);
         tabContainer.addMouseListener(mouseListener);
+        tabContainer.addMouseListener(dragListener);
         tabContainer.addMouseMotionListener(dragListener);
         var cont = tabContainer.getContent();
         if (cont != null) {
             cont.addMouseListener(hoverListener);
             cont.addMouseListener(mouseListener);
+            cont.addMouseListener(dragListener);
             cont.addMouseMotionListener(dragListener);
         }
     }
@@ -131,12 +132,14 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     protected void uninstallListeners() {
         tabContainer.removeMouseListener(hoverListener);
         tabContainer.removeMouseListener(mouseListener);
+        tabContainer.removeMouseListener(dragListener);
         tabContainer.removePropertyChangeListener(this);
         tabContainer.removeMouseMotionListener(dragListener);
         var cont = tabContainer.getContent();
         if (cont != null) {
             cont.removeMouseListener(hoverListener);
             cont.removeMouseListener(mouseListener);
+            cont.removeMouseListener(dragListener);
             cont.removeMouseMotionListener(dragListener);
         }
         dragListener = null;
@@ -166,11 +169,13 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
             if (oldVal instanceof Component) {
                 ((Component) oldVal).removeMouseListener(mouseListener);
                 ((Component) oldVal).removeMouseListener(hoverListener);
+                ((Component) oldVal).removeMouseListener(dragListener);
                 ((Component) oldVal).removeMouseMotionListener(dragListener);
             }
             if (newVal instanceof Component) {
                 ((Component) newVal).addMouseListener(mouseListener);
                 ((Component) newVal).addMouseListener(hoverListener);
+                ((Component) newVal).addMouseListener(dragListener);
                 ((Component) newVal).addMouseMotionListener(dragListener);
             }
         } else if ("selected".equals(key)) {
