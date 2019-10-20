@@ -109,9 +109,9 @@ public class DarkTooltipBorder implements Border {
         ins.top = Math.max(bi.top, si.top);
         var uIns = getUserInsets(c);
         ins.left += 5 + uIns.left;
-        ins.top += 2 + uIns.top;
+        ins.top += 5 + uIns.top;
         ins.right += 5 + uIns.right;
-        ins.bottom += 2 + uIns.bottom;
+        ins.bottom += 5 + uIns.bottom;
         return ins;
     }
 

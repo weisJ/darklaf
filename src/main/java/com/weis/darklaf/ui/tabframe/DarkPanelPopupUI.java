@@ -377,7 +377,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             setMargin(new InsetsUIResource(2, 2, 2, 2));
             setFocus(false);
             setOpaque(false);
-            context.setToolTipInsets(new Insets(5, 5, 5, 5));
+            context.setToolTipInsets(new Insets(2, 5, 2, 5));
         }
 
         public void setFocus(final boolean focus) {
