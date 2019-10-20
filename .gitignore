@@ -21,6 +21,8 @@ repo/
 
 # intelliJ
 .idea/
+out/
+
 # VS Code
 .vscode/
 
