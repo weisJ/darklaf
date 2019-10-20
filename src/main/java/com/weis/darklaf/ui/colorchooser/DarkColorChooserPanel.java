@@ -201,7 +201,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
                 protected void update() {
                     try {
                         if (isChanging) return;
-                        System.out.println("here");
                         var hexStr = String.format("%1$-" + 8 + "s", field.getText()).replaceAll(" ", "F");
                         var alpha = isColorTransparencySelectionEnabled()
                                     ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
@@ -210,7 +209,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
                                 Integer.valueOf(hexStr.substring(2, 4), 16),
                                 Integer.valueOf(hexStr.substring(4, 6), 16),
                                 alpha);
-                        System.out.println(c);
                         colorWheelPanel.setColor(c, textHex);
                     } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
                 }

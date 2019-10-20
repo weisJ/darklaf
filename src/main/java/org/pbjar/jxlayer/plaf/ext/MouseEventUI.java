@@ -244,16 +244,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         if (mouseEvent != null) {
             Component target = mouseEvent.getComponent();
             target.dispatchEvent(mouseEvent);
-            /*
-             * Used to check the re dispatching behavior
-             */
-            // switch (mouseEvent.getID()) {
-            // case (MouseEvent.MOUSE_PRESSED):
-            // System.out.println();
-            // case (MouseEvent.MOUSE_RELEASED):
-            // case (MouseEvent.MOUSE_CLICKED):
-            // System.out.println("Dispatched mouse event " + mouseEvent);
-            // }
         }
     }
 

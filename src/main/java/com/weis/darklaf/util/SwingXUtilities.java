@@ -21,34 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.components;
+package com.weis.darklaf.util;
+
+import org.jdesktop.jxlayer.JXLayer;
+import org.jetbrains.annotations.NotNull;
+import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
+import java.awt.*;
 
-public class JLabelUIResource extends JLabel implements UIResource {
+public class SwingXUtilities {
 
-    public JLabelUIResource(final String text, final int horizontalAlignment) {
-        this(text, null, horizontalAlignment);
-    }
-
-    public JLabelUIResource(final String text, final Icon icon, final int horizontalAlignment) {
-        super(text, icon, horizontalAlignment);
-    }
-
-    public JLabelUIResource(final String text) {
-        this(text, null, LEADING);
-    }
-
-    public JLabelUIResource(final Icon image, final int horizontalAlignment) {
-        this(null, image, horizontalAlignment);
-    }
-
-    public JLabelUIResource(final Icon image) {
-        this(null, image, CENTER);
-    }
-
-    public JLabelUIResource() {
-        this("", null, LEADING);
+    @NotNull
+    public static Point convertPointToParent(final Component source, final Point p) {
+        JXLayer layer = DarkUIUtil.getParentOfType(JXLayer.class, source);
+        if (layer != null && layer.getUI() instanceof TransformUI) {
+            var ui = (TransformUI) layer.getUI();
+            var pos = SwingUtilities.convertPoint(source, p, layer);
+            //noinspection unchecked
+            var transform = ui.getPreferredTransform(layer.getSize(), layer);
+            transform.transform(pos, pos);
+            return pos;
+        }
+        return SwingUtilities.convertPoint(source, p, source.getParent());
     }
 }

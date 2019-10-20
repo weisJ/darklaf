@@ -55,8 +55,7 @@ public class DarkTooltipBorder implements Border, UIResource {
             return;
         }
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
-        g.setColor(Color.RED);
-        g.drawRect(x, y, width, height);
+        System.out.println(bubbleBorder.getPointerSide());
         var ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
         var bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,

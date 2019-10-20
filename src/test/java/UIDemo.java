@@ -1,5 +1,6 @@
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.components.TextFieldHistory;
+import com.weis.darklaf.components.text.SearchTextField;
+import com.weis.darklaf.components.text.SearchTextFieldWithHistory;
 import com.weis.darklaf.components.tristate.TristateCheckBox;
 import com.weis.darklaf.icons.IconLoader;
 import org.jdesktop.swingx.JXStatusBar;
@@ -141,14 +142,8 @@ public final class UIDemo {
                         add(new JTextField("TextField") {{
                             putClientProperty("JTextField.alternativeArc", Boolean.TRUE);
                         }});
-                        add(new JTextField("SearchField") {{
-                            putClientProperty("JTextField.variant", "search");
-                        }});
-                        add(new JTextField("SearchFieldWithHistory") {{
-                            putClientProperty("JTextField.variant", "search");
-                            putClientProperty("JTextField.Search.FindPopup",
-                                              new TextFieldHistory(this, 50, 100));
-                        }});
+                        add(new SearchTextField("SearchField"));
+                        add(new SearchTextFieldWithHistory("SearchFieldWithHistory"));
                         add(new JPasswordField("Password"));
                         add(new JPasswordField("VeryStrongPassword") {{
                             putClientProperty("JTextField.alternativeArc", Boolean.TRUE);

@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,13 +63,15 @@ public final class PropertyLoader {
     private static final Collection<ObjectRequest> objectsToLoad = new HashSet<>();
 
     public static void finish() {
+        var cache = new HashMap<String, Object>();
         for (var request : objectsToLoad) {
             try {
-                request.resolve();
+                request.resolve(cache);
             } catch (RuntimeException e) {
                 LOGGER.log(Level.SEVERE, "Could not load" + request, e.getMessage());
             }
         }
+        cache.clear();
         reset();
     }
 
@@ -268,20 +271,26 @@ public final class PropertyLoader {
             this.value = value;
         }
 
-        private void resolve() {
-            Object obj = parseObject(value);
+        private void resolve(@NotNull final Map<String, Object> cache) {
             var defaults = UIManager.getLookAndFeelDefaults();
-            if (obj == null) {
-                obj = parseValue(key, value, true, defaults);
-                if (obj instanceof ObjectRequest) {
-                    LOGGER.severe("Failed to resolve object. " + this);
-                    return;
-                }
-            }
-            if (obj == null) {
-                defaults.remove(key);
+            if (cache.containsKey(value)) {
+                defaults.put(key, cache.get(value));
             } else {
-                defaults.put(key, obj);
+                Object obj = parseObject(value);
+                if (obj == null) {
+                    obj = parseValue(key, value, true, defaults);
+                    if (obj instanceof ObjectRequest) {
+                        LOGGER.severe("Failed to resolve object. " + this);
+                        return;
+                    }
+                } else {
+                    cache.put(value, obj);
+                }
+                if (obj == null) {
+                    defaults.remove(key);
+                } else {
+                    defaults.put(key, obj);
+                }
             }
         }
 

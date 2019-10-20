@@ -31,14 +31,14 @@ import java.awt.*;
 public class TabFrameTabContainer extends JPanel implements TabFrameTab {
 
     protected final TabFrameTab oldTab;
-    private TabFrame parent;
+    private JTabFrame parent;
     private Component content;
     private Alignment orientation;
     private boolean selected;
     private int index;
     private int accelerator;
 
-    public TabFrameTabContainer(final TabFrame parent, final JComponent content, final TabFrameTab oldTab,
+    public TabFrameTabContainer(final JTabFrame parent, final JComponent content, final TabFrameTab oldTab,
                                 final Alignment alignment, final int index) {
         super(new BorderLayout());
         this.parent = parent;
@@ -140,12 +140,12 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
     }
 
     @Override
-    public TabFrame getTabFrame() {
+    public JTabFrame getTabFrame() {
         return parent;
     }
 
     @Override
-    public void setTabFrame(final TabFrame parent) {
+    public void setTabFrame(final JTabFrame parent) {
         var old = this.parent;
         this.parent = parent;
         firePropertyChange("tabFrame", old, parent);

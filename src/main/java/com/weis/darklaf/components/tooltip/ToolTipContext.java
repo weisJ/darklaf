@@ -429,6 +429,7 @@ public class ToolTipContext implements ToolTipListener {
         if (valid && !updatePosition
                 && lastPos != null
                 && !Objects.equals(rect, lastRect)) {
+            System.out.println("here");
             return lastPos;
         }
         getToolTip().setTipText(c.getToolTipText(event));

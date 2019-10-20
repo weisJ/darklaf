@@ -21,38 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.components.tabframe;
+package com.weis.darklaf.components.uiresource;
 
-import com.weis.darklaf.components.alignment.Alignment;
-
-import javax.swing.plaf.ComponentUI;
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 
-public abstract class TabFrameUI extends ComponentUI {
+public class JPanelUIResource extends JPanel implements UIResource {
 
-    public abstract int getTabSize(JTabFrame tabFrame);
+    public JPanelUIResource(final LayoutManager layout) {
+        this(layout, true);
+    }
 
-    public abstract void clearTargetIndicator();
+    public JPanelUIResource(final LayoutManager layout, final boolean isDoubleBuffered) {
+        super(layout, isDoubleBuffered);
+    }
 
-    public abstract void clearSourceIndicator();
+    public JPanelUIResource() {
+        this(true);
+    }
 
-    public abstract Color getDragBorderColor();
-
-    public abstract void setSourceIndicator(Alignment a, int tabIndex);
-
-    public abstract void setTargetIndicator(Alignment a, int tabIndex);
-
-    public abstract JTabFrame.TabFramePosition getTabIndexAt(JTabFrame tabFrame, Point p);
-
-    public abstract JTabFrame.TabFramePosition getNearestTabIndexAt(JTabFrame tabFrame, Point p);
-
-    public abstract void setDropSize(final int width, final int height);
-
-    public abstract int getTabWidth(JTabFrame tabFrame, Alignment a, int index);
-
-    public abstract int getTabHeight(JTabFrame tabFrame, Alignment a, int index);
-
-    public abstract Rectangle getTabContainerBounds(JTabFrame tabFrame, Alignment a);
-
-    public abstract JTabFrame.TabFramePosition getDropPosition(JTabFrame tabFrame, Point p);
+    public JPanelUIResource(final boolean isDoubleBuffered) {
+        this(new FlowLayout(), isDoubleBuffered);
+    }
 }

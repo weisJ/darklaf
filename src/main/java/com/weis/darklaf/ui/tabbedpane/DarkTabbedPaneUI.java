@@ -1,6 +1,6 @@
 package com.weis.darklaf.ui.tabbedpane;
 
-import com.weis.darklaf.components.UIResourceWrapper;
+import com.weis.darklaf.components.uiresource.UIResourceWrapper;
 import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.GraphicsContext;
 import org.jetbrains.annotations.Contract;
@@ -20,7 +20,7 @@ import java.util.TooManyListenersException;
  */
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
-    protected static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler();
+    protected static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler.UIResource();
     protected final FocusListener focusListener = new FocusListener() {
         @Override
         public void focusGained(final FocusEvent e) {
@@ -110,8 +110,15 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     @Override
     public void uninstallUI(final JComponent c) {
-        super.uninstallUI(c);
         scrollableTabSupport = null;
+        if (tabPane.getTransferHandler() instanceof TabbedPaneTransferHandler.UIResource) {
+            tabPane.setTransferHandler(null);
+            if (tabPane.getDropTarget() != null) {
+                tabPane.getDropTarget().removeDropTargetListener(TRANSFER_HANDLER);
+                tabPane.getDropTarget().setActive(false);
+            }
+        }
+        super.uninstallUI(c);
     }
 
     @Override

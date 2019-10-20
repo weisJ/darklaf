@@ -37,7 +37,6 @@
  */
 
 import com.weis.darklaf.LafManager;
-import com.weis.darklaf.theme.Theme;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -109,7 +108,6 @@ public class ToolBarDemo extends JPanel implements ActionListener {
             button.setIcon(new ImageIcon(imageURL, altText));
         } else {                                     //no image found
             button.setText(altText);
-            System.err.println("Resource not found: " + imgLocation);
         }
 
         return button;

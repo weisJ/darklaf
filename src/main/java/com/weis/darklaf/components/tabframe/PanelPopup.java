@@ -30,7 +30,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Popup Component for {@link TabFrame}.
+ * Popup Component for {@link JTabFrame}.
  *
  * @author Jannis Weis
  * @since 2019
@@ -39,7 +39,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
 
     private Component content;
     private boolean open;
-    private TabFrame parent;
+    private JTabFrame parent;
     private String title;
     private Icon icon;
     private Alignment alignment;
@@ -137,12 +137,12 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     }
 
     @Override
-    public TabFrame getTabFrame() {
+    public JTabFrame getTabFrame() {
         return parent;
     }
 
     @Override
-    public void setTabFrame(final TabFrame parent) {
+    public void setTabFrame(final JTabFrame parent) {
         var old = this.parent;
         this.parent = parent;
         firePropertyChange("tabFrame", old, parent);

@@ -24,7 +24,7 @@
 package com.weis.darklaf.ui.tabframe;
 
 import com.weis.darklaf.components.alignment.Alignment;
-import com.weis.darklaf.components.tabframe.TabFrame;
+import com.weis.darklaf.components.tabframe.JTabFrame;
 import com.weis.darklaf.components.tabframe.TabFrameTabLabel;
 import com.weis.darklaf.decorators.HoverListener;
 import com.weis.darklaf.icons.RotatableIcon;
@@ -36,6 +36,7 @@ import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
@@ -43,6 +44,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -51,13 +53,14 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private TabFrameTabLabel tabComponent;
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
-        public void mousePressed(final MouseEvent e) {
+        public void mouseClicked(final MouseEvent e) {
             if (SwingUtilities.isLeftMouseButton(e)) {
                 tabComponent.getTabFrame().toggleTab(tabComponent.getOrientation(), tabComponent.getIndex(),
                                                      !tabComponent.isSelected());
             }
         }
     };
+    private MouseMotionListener dragListener;
     private HoverListener hoverListener;
     private Color defaultFontColor;
     private Color selectedFontColor;
@@ -66,6 +69,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private RotatableIcon rotatableIcon = new RotatableIcon();
     private Rectangle paintIconR = new Rectangle();
     private Rectangle paintTextR = new Rectangle();
+    private boolean printing;
 
     @NotNull
     @Contract("_ -> new")
@@ -119,9 +123,10 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
-        uninstallAccelerator(tabComponent.getTabFrame());
-        tabComponent.removeMouseListener(hoverListener);
-        tabComponent.removeMouseListener(mouseListener);
+        uninstallListeners(tabComponent);
+        if (tabComponent.getComponentPopupMenu() instanceof UIResource) {
+            tabComponent.setComponentPopupMenu(null);
+        }
         hoverListener = null;
         tabComponent = null;
     }
@@ -142,40 +147,22 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     @Override
     protected void installListeners(final JLabel c) {
         super.installListeners(c);
+        dragListener = new TabDragListener(tabComponent);
         hoverListener = new HoverListener(tabComponent);
         tabComponent.addMouseListener(hoverListener);
         tabComponent.addMouseListener(mouseListener);
         installAccelerator(tabComponent.getTabFrame());
+        tabComponent.addMouseMotionListener(dragListener);
     }
 
-    protected void installAccelerator(final TabFrame tabFrame) {
-        if (tabFrame == null) return;
-        int acc = tabComponent.getAccelerator();
-        if (acc < 0) return;
-        tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
-                     "accelerator_" + acc);
-        tabFrame.getActionMap().put("accelerator_" + acc, createAcceleratorAction(tabFrame));
-    }
-
-    protected Action createAcceleratorAction(final TabFrame tabFrame) {
-        return new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                var a = tabComponent.getOrientation();
-                var index = tabComponent.getIndex();
-                if (!tabComponent.isSelected()) {
-                    tabFrame.toggleTab(a, index, true);
-                } else {
-                    var popup = tabFrame.getPopupComponentAt(a, index);
-                    if (!DarkUIUtil.hasFocus(popup)) {
-                        popup.requestFocus();
-                    } else {
-                        tabFrame.toggleTab(a, index, false);
-                    }
-                }
-            }
-        };
+    @Override
+    protected void uninstallListeners(final JLabel c) {
+        super.uninstallListeners(c);
+        tabComponent.removeMouseListener(hoverListener);
+        tabComponent.removeMouseListener(mouseListener);
+        uninstallAccelerator(tabComponent.getTabFrame());
+        tabComponent.removeMouseMotionListener(dragListener);
+        dragListener = null;
     }
 
     @Override
@@ -196,13 +183,45 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         } else if ("orientation".equals(key)) {
             rotatableIcon.setOrientation(mapOrientation(tabComponent.getOrientation()));
         } else if ("tabFrame".equals(key)) {
-            if (e.getOldValue() instanceof TabFrame) {
-                uninstallAccelerator((TabFrame) e.getOldValue());
+            if (e.getOldValue() instanceof JTabFrame) {
+                uninstallAccelerator((JTabFrame) e.getOldValue());
             }
-            if (e.getNewValue() instanceof TabFrame) {
-                installAccelerator((TabFrame) e.getNewValue());
+            if (e.getNewValue() instanceof JTabFrame) {
+                installAccelerator((JTabFrame) e.getNewValue());
             }
+        } else if ("paintingForPrint".equals(key)) {
+            printing = Boolean.TRUE.equals(e.getNewValue());
         }
+    }
+
+    protected void installAccelerator(final JTabFrame tabFrame) {
+        if (tabFrame == null) return;
+        int acc = tabComponent.getAccelerator();
+        if (acc < 0) return;
+        tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
+                     "accelerator_" + acc);
+        tabFrame.getActionMap().put("accelerator_" + acc, createAcceleratorAction(tabFrame));
+    }
+
+    protected Action createAcceleratorAction(final JTabFrame tabFrame) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                var a = tabComponent.getOrientation();
+                var index = tabComponent.getIndex();
+                if (!tabComponent.isSelected()) {
+                    tabFrame.toggleTab(a, index, true);
+                } else {
+                    var popup = tabFrame.getPopupComponentAt(a, index);
+                    if (!DarkUIUtil.hasFocus(popup)) {
+                        popup.requestFocus();
+                    } else {
+                        tabFrame.toggleTab(a, index, false);
+                    }
+                }
+            }
+        };
     }
 
     protected void updateText() {
@@ -218,7 +237,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         }
     }
 
-    protected void uninstallAccelerator(final TabFrame tabFrame) {
+    protected void uninstallAccelerator(final JTabFrame tabFrame) {
         if (tabFrame == null) return;
         int acc = tabComponent.getAccelerator();
         String accAction = "accelerator_" + acc;
@@ -226,6 +245,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     public Color getBackground(@NotNull final TabFrameTabLabel tab) {
+        if (printing || tab.getTabFrame().isInTransfer()) return tab.getBackground();
         return tab.isSelected()
                ? selectedColor
                : hoverListener.isHover() ? hoverColor : tab.getBackground();

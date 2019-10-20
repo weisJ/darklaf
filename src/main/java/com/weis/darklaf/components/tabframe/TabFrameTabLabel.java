@@ -34,13 +34,13 @@ import java.awt.*;
 import java.util.Objects;
 
 /**
- * Tab Component for {@link TabFrame}.
+ * Tab Component for {@link JTabFrame}.
  *
  * @author Jannis Weis
  */
 public class TabFrameTabLabel extends JLabel implements TabFrameTab {
 
-    private TabFrame parent;
+    private JTabFrame parent;
     private Alignment orientation;
     private String title;
     private boolean selected;
@@ -48,7 +48,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
     private int index;
 
     /**
-     * Create new TabComponent for the frame of {@link TabFrame}.
+     * Create new TabComponent for the frame of {@link JTabFrame}.
      *
      * @param title       the title.
      * @param icon        the icon.
@@ -57,7 +57,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
      * @param parent      the parent layout manager.
      */
     public TabFrameTabLabel(final String title, final Icon icon, final Alignment orientation,
-                            final int index, @NotNull final TabFrame parent) {
+                            final int index, @NotNull final JTabFrame parent) {
         this.index = index;
         this.accelerator = -1;
         this.parent = parent;
@@ -131,12 +131,12 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
     }
 
     @Override
-    public TabFrame getTabFrame() {
+    public JTabFrame getTabFrame() {
         return parent;
     }
 
     @Override
-    public void setTabFrame(final TabFrame parent) {
+    public void setTabFrame(final JTabFrame parent) {
         var old = this.parent;
         this.parent = parent;
         firePropertyChange("tabFrame", old, parent);

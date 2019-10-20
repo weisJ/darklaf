@@ -23,9 +23,9 @@
  */
 package com.weis.darklaf.ui.tabframe;
 
-import com.weis.darklaf.components.JPanelUIResource;
 import com.weis.darklaf.components.border.MutableLineBorder;
 import com.weis.darklaf.components.tabframe.TabbedPopup;
+import com.weis.darklaf.components.uiresource.JPanelUIResource;
 import com.weis.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.weis.darklaf.ui.tabbedpane.MoreTabsButton;
 import com.weis.darklaf.ui.tabbedpane.NewTabButton;

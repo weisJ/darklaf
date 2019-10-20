@@ -23,12 +23,12 @@
  */
 package com.weis.darklaf.ui.tabframe;
 
-import com.weis.darklaf.components.JLabelUIResource;
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.border.MutableLineBorder;
+import com.weis.darklaf.components.tabframe.JTabFrame;
 import com.weis.darklaf.components.tabframe.PanelPopup;
-import com.weis.darklaf.components.tabframe.TabFrame;
 import com.weis.darklaf.components.tooltip.ToolTipContext;
+import com.weis.darklaf.components.uiresource.JLabelUIResource;
 import com.weis.darklaf.ui.panel.DarkPanelUI;
 import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
@@ -250,19 +250,19 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             label.setIcon((Icon) evt.getNewValue());
             label.repaint();
         } else if ("visibleTab".equals(key)) {
-            if (evt.getNewValue() instanceof TabFrame.TabFramePosition) {
-                if (((TabFrame.TabFramePosition) evt.getNewValue()).getAlignment() == popupComponent.getAlignment()) {
+            if (evt.getNewValue() instanceof JTabFrame.TabFramePosition) {
+                if (((JTabFrame.TabFramePosition) evt.getNewValue()).getAlignment() == popupComponent.getAlignment()) {
                     updateBorder(true);
                 }
             }
         } else if ("tabFrame".equals(key)) {
             var oldVal = evt.getOldValue();
             var newVal = evt.getNewValue();
-            if (oldVal instanceof TabFrame) {
-                ((TabFrame) oldVal).removePropertyChangeListener(this);
+            if (oldVal instanceof JTabFrame) {
+                ((JTabFrame) oldVal).removePropertyChangeListener(this);
             }
-            if (newVal instanceof TabFrame) {
-                ((TabFrame) newVal).addPropertyChangeListener(this);
+            if (newVal instanceof JTabFrame) {
+                ((JTabFrame) newVal).addPropertyChangeListener(this);
             }
         } else if ("peerInsets".equals(key)) {
             updateBorder(false);
@@ -289,8 +289,10 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             popupComponent.doLayout();
             popupComponent.repaint();
             if (notifyPeer) {
-                var peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
-                peer.firePropertyChange("peerInsets", 0, 1);
+                try {
+                    var peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
+                    peer.firePropertyChange("peerInsets", 0, 1);
+                } catch (IndexOutOfBoundsException ignored) {/*may happen during transfer*/}
             }
         }
     }
@@ -353,7 +355,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     public void eventDispatched(@NotNull final AWTEvent event) {
         if (event.getID() == FocusEvent.FOCUS_GAINED) {
             var focusOwner = FocusManager.getCurrentManager().getFocusOwner();
-            if (focusOwner instanceof TabFrame) return;
+            if (focusOwner instanceof JTabFrame) return;
             if (focusOwner instanceof JRootPane) return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
             setHeaderBackground(focus);

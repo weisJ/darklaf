@@ -23,7 +23,7 @@
  */
 package com.weis.darklaf.ui.tabframe;
 
-import com.weis.darklaf.components.tabframe.TabFrame;
+import com.weis.darklaf.components.tabframe.JTabFrame;
 import com.weis.darklaf.components.tabframe.TabFrameTabContainer;
 import com.weis.darklaf.decorators.HoverListener;
 import com.weis.darklaf.ui.panel.DarkPanelUI;
@@ -38,6 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -53,6 +54,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
             }
         }
     };
+    private MouseMotionListener dragListener;
     private HoverListener hoverListener;
     private Color selectedColor;
     private Color hoverColor;
@@ -73,18 +75,91 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     protected void installListeners() {
+        dragListener = new TabDragListener(tabContainer);
         hoverListener = new HoverListener(tabContainer);
         tabContainer.addMouseListener(hoverListener);
         tabContainer.addPropertyChangeListener(this);
         tabContainer.addMouseListener(mouseListener);
+        tabContainer.addMouseMotionListener(dragListener);
         var cont = tabContainer.getContent();
         if (cont != null) {
             cont.addMouseListener(hoverListener);
             cont.addMouseListener(mouseListener);
+            cont.addMouseMotionListener(dragListener);
         }
     }
 
-    protected void installAccelerator(final TabFrame tabFrame) {
+    @Override
+    public void uninstallUI(final JComponent c) {
+        super.uninstallUI(c);
+        uninstallListeners();
+        uninstallAccelerator(tabContainer.getTabFrame());
+        tabContainer = null;
+    }
+
+    protected void uninstallListeners() {
+        tabContainer.removeMouseListener(hoverListener);
+        tabContainer.removeMouseListener(mouseListener);
+        tabContainer.removePropertyChangeListener(this);
+        tabContainer.removeMouseMotionListener(dragListener);
+        var cont = tabContainer.getContent();
+        if (cont != null) {
+            cont.removeMouseListener(hoverListener);
+            cont.removeMouseListener(mouseListener);
+            cont.removeMouseMotionListener(dragListener);
+        }
+        dragListener = null;
+        hoverListener = null;
+    }
+
+    protected void uninstallAccelerator(final JTabFrame tabFrame) {
+        if (tabFrame == null) return;
+        int acc = tabContainer.getAccelerator();
+        String accAction = "accelerator_" + acc;
+        tabFrame.getActionMap().remove(accAction);
+    }
+
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        var key = evt.getPropertyName();
+        if ("content".equals(key)) {
+            var oldVal = evt.getOldValue();
+            var newVal = evt.getNewValue();
+            if (oldVal instanceof Component) {
+                ((Component) oldVal).removeMouseListener(mouseListener);
+                ((Component) oldVal).removeMouseListener(hoverListener);
+                ((Component) oldVal).removeMouseMotionListener(dragListener);
+            }
+            if (newVal instanceof Component) {
+                ((Component) newVal).addMouseListener(mouseListener);
+                ((Component) newVal).addMouseListener(hoverListener);
+                ((Component) newVal).addMouseMotionListener(dragListener);
+            }
+        } else if ("selected".equals(key)) {
+            if (tabContainer == null) return;
+            tabContainer.repaint();
+        } else if ("accelerator".equals(key)) {
+            if (tabContainer == null) return;
+            uninstallAccelerator(tabContainer.getTabFrame());
+            installAccelerator(tabContainer.getTabFrame());
+        } else if ("tabFrame".equals(key)) {
+            if (evt.getOldValue() instanceof JTabFrame) {
+                uninstallAccelerator((JTabFrame) evt.getOldValue());
+            }
+            if (evt.getNewValue() instanceof JTabFrame) {
+                installAccelerator((JTabFrame) evt.getNewValue());
+            }
+        }
+    }
+
+    protected void installDefaults(final JPanel p) {
+        super.installDefaults(p);
+        tabContainer.setOpaque(true);
+        selectedColor = UIManager.getColor("TabFrameTab.selectedBackground");
+        hoverColor = UIManager.getColor("TabFrameTab.hoverBackground");
+    }
+
+    protected void installAccelerator(final JTabFrame tabFrame) {
         if (tabFrame == null) return;
         int acc = tabContainer.getAccelerator();
         if (acc < 0) return;
@@ -94,7 +169,20 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         tabFrame.getActionMap().put("accelerator_" + acc, createAcceleratorAction(tabFrame));
     }
 
-    protected Action createAcceleratorAction(final TabFrame tabFrame) {
+    @Override
+    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+        g.setColor(getBackground(tabContainer));
+        g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        super.paint(g, c);
+    }
+
+    public Color getBackground(@NotNull final TabFrameTabContainer tab) {
+        return tab.isSelected()
+               ? selectedColor
+               : hoverListener.isHover() ? hoverColor : tab.getBackground();
+    }
+
+    protected Action createAcceleratorAction(final JTabFrame tabFrame) {
         return new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -112,79 +200,5 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
                 }
             }
         };
-    }
-
-    @Override
-    public void uninstallUI(final JComponent c) {
-        super.uninstallUI(c);
-        tabContainer.removeMouseListener(hoverListener);
-        tabContainer.removeMouseListener(mouseListener);
-        tabContainer.removePropertyChangeListener(this);
-        var cont = tabContainer.getContent();
-        if (cont != null) {
-            cont.removeMouseListener(hoverListener);
-            cont.removeMouseListener(mouseListener);
-        }
-        hoverListener = null;
-        uninstallAccelerator(tabContainer.getTabFrame());
-        tabContainer = null;
-    }
-
-    protected void installDefaults(final JPanel p) {
-        super.installDefaults(p);
-        tabContainer.setOpaque(true);
-        selectedColor = UIManager.getColor("TabFrameTab.selectedBackground");
-        hoverColor = UIManager.getColor("TabFrameTab.hoverBackground");
-    }
-
-    protected void uninstallAccelerator(final TabFrame tabFrame) {
-        if (tabFrame == null) return;
-        int acc = tabContainer.getAccelerator();
-        String accAction = "accelerator_" + acc;
-        tabFrame.getActionMap().remove(accAction);
-    }
-
-    @Override
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
-        g.setColor(getBackground(tabContainer));
-        g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        super.paint(g, c);
-    }
-
-    public Color getBackground(@NotNull final TabFrameTabContainer tab) {
-        return tab.isSelected()
-               ? selectedColor
-               : hoverListener.isHover() ? hoverColor : tab.getBackground();
-    }
-
-    @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-        var key = evt.getPropertyName();
-        if ("content".equals(key)) {
-            var oldVal = evt.getOldValue();
-            var newVal = evt.getNewValue();
-            if (oldVal instanceof Component) {
-                ((Component) oldVal).removeMouseListener(mouseListener);
-                ((Component) oldVal).removeMouseListener(hoverListener);
-            }
-            if (newVal instanceof Component) {
-                ((Component) newVal).addMouseListener(mouseListener);
-                ((Component) newVal).addMouseListener(hoverListener);
-            }
-        } else if ("selected".equals(key)) {
-            if (tabContainer == null) return;
-            tabContainer.repaint();
-        } else if ("accelerator".equals(key)) {
-            if (tabContainer == null) return;
-            uninstallAccelerator(tabContainer.getTabFrame());
-            installAccelerator(tabContainer.getTabFrame());
-        } else if ("tabFrame".equals(key)) {
-            if (evt.getOldValue() instanceof TabFrame) {
-                uninstallAccelerator((TabFrame) evt.getOldValue());
-            }
-            if (evt.getNewValue() instanceof TabFrame) {
-                installAccelerator((TabFrame) evt.getNewValue());
-            }
-        }
     }
 }

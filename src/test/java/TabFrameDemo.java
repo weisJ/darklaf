@@ -1,7 +1,7 @@
 import com.weis.darklaf.LafManager;
 import com.weis.darklaf.components.OverlayScrollPane;
 import com.weis.darklaf.components.alignment.Alignment;
-import com.weis.darklaf.components.tabframe.TabFrame;
+import com.weis.darklaf.components.tabframe.JTabFrame;
 import com.weis.darklaf.components.tabframe.TabbedPopup;
 import com.weis.darklaf.icons.IconLoader;
 
@@ -42,7 +42,7 @@ public class TabFrameDemo {
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            var tabFrame = new TabFrame();
+            var tabFrame = new JTabFrame();
             for (var o : Alignment.values()) {
                 if (o != Alignment.CENTER) {
                     for (int i = 0; i < 2; i++) {
@@ -61,7 +61,6 @@ public class TabFrameDemo {
                 panel.add(label);
                 tabbedPopup.getTabbedPane().addTab("Tab " + i, panel);
             }
-
             /* Activate for custom tab demo.
             tabFrame.setUserTabComponentAt(new JLabel("NORTH (custom tab)") {{
                 setBorder(new EmptyBorder(0, 5, 0, 5));

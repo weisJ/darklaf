@@ -21,8 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.ui.tabbedpane;
+package com.weis.darklaf.ui.tabframe;
 
+import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.components.tabframe.JTabFrame;
+import com.weis.darklaf.components.tabframe.TabFramePopup;
+import com.weis.darklaf.components.tabframe.TabFrameTab;
+import com.weis.darklaf.components.tabframe.TabFrameUI;
 import com.weis.darklaf.util.ImageUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -53,28 +58,57 @@ import java.awt.event.MouseEvent;
  * @author Robert Futrell
  * @author Jannis Weis
  */
-public class TabbedPaneTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
+public class TabFrameTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
-    private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class=javax.swing.JTabbedPane";
+    private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType
+            + ";class=com.weis.darklaf.components.tabframe.TabFrame";
     private static TabbedPaneDragGestureRecognizer recognizer = null;
+    private final Timer timer;
+    private final Timer startTimer;
     /**
-     * The location of the mouse cursor throughout the drag-and-drop.
-     * This is here because of a deficiency in TransferHandler's design; you
-     * have no way of knowing the exact drop location in the component with a
-     * plain TransferHandler unless you implement DropTargetListener and get
-     * it that way.
+     * The location of the mouse cursor throughout the drag-and-drop. This is here because of a deficiency in
+     * TransferHandler's design; you have no way of knowing the exact drop location in the component with a plain
+     * TransferHandler unless you implement DropTargetListener and get it that way.
      */
     protected Point mouseLocation;
-    private int lastTab = -1;
     private DataFlavor tabFlavor;
     private TabTransferable currentTransferable;
+    private JTabFrame lastTabFrame;
 
 
-    public TabbedPaneTransferHandler() {
+    public TabFrameTransferHandler() {
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
         } catch (ClassNotFoundException ignored) {
         }
+        timer = new Timer(100, e -> {
+            if (lastTabFrame != null) {
+                var p = MouseInfo.getPointerInfo().getLocation();
+                SwingUtilities.convertPointFromScreen(p, lastTabFrame);
+                var evt = new DropTargetDragEvent(lastTabFrame.getDropTarget().getDropTargetContext(), p, MOVE, MOVE);
+                dragOver(evt);
+            }
+        });
+        timer.setRepeats(true);
+        startTimer = new Timer(200, e -> {
+            /*
+             * Drag Exit can be funky. Ensure that the timer is really running.
+             */
+            if (!timer.isRunning()) {
+                timer.start();
+            }
+        });
+        startTimer.setRepeats(false);
+    }
+
+    @Contract("null -> null")
+    private TabFrameUI getUI(final Component c) {
+        if (c instanceof JTabFrame) return ((JTabFrame) c).getUI();
+        return null;
+    }
+
+    protected JTabFrame.TabFramePosition getDropPosition(final Point p, final JTabFrame tabFrame) {
+        return getUI(tabFrame).getDropPosition(tabFrame, p);
     }
 
     public void exportAsDrag(final JComponent comp, final InputEvent e, final int a) {
@@ -102,34 +136,53 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     /**
-     * Called when the drag-and-drop operation has just completed.  This
-     * creates a new tab identical to the one "dragged" and places it in the
-     * destination <code>JTabbedPane</code>.
+     * Called when the drag-and-drop operation has just completed.  This creates a new tab identical to the one
+     * "dragged" and places it in the destination <code>JTabbedPane</code>.
      *
      * @param c The component receiving the "drop" (the instance of
      *          <code>JTabbedPane</code>).
-     * @param t The data being transfered (information about the tab and the
-     *          component contained by the tab).
+     * @param t The data being transfered (information about the tab and the component contained by the tab).
      * @return Whether or not the import was successful.
      */
     @Override
     public boolean importData(final JComponent c, @NotNull final Transferable t) {
-
         boolean successful = false;
         if (hasTabFlavor(t.getTransferDataFlavors()) && mouseLocation != null) {
             try {
-                JTabbedPane tabbedPane = (JTabbedPane) c;
-                int tab = TabbedPaneUtil.getDroppedTabIndex(currentTransferable.getTabBounds(), tabbedPane,
-                                                            supportsIndicator(tabbedPane), mouseLocation);
+                JTabFrame tabFrame = (JTabFrame) c;
+                var tab = getDropPosition(mouseLocation, tabFrame);
+                Alignment a = tab.getAlignment();
+                int index = tab.getIndex();
                 TabTransferable.TabTransferData td = (TabTransferable.TabTransferData) t.getTransferData(tabFlavor);
-                if (!TabbedPaneUtil.moveTabs(td.sourceTabbedPane, tabbedPane, td.tabIndex, tab)) {
-                    return true;
+
+                if (tabFrame == td.sourceTabFrame && td.tabAlignment == a) {
+                    if (index >= td.tabIndex) {
+                        index--;
+                    }
                 }
+                index++;
+
+                if (tabFrame == td.sourceTabFrame && a == td.tabAlignment && index == td.tabIndex) {
+                    //Nothing to do. Just select the tab to be sure.
+                    if (td.wasSelected) {
+                        selectTab(td.sourceTabFrame, a, index);
+                    }
+                    return false;
+                }
+                if (a == null || index < 0 || index > tabFrame.getTabCountAt(a)) {
+                    return false;
+                }
+                var tabComp = td.sourceTabFrame.getTabComponentAt(td.tabAlignment, td.tabIndex);
+                var popupComp = td.sourceTabFrame.getPopupComponentAt(td.tabAlignment, td.tabIndex);
+                td.sourceTabFrame.removeTab(td.tabAlignment, td.tabIndex);
+                tabFrame.insertTab((TabFramePopup) popupComp, tabComp, a, index);
+                tabFrame.toggleTab(a, index, td.wasSelected);
+                SwingUtilities.invokeLater(() -> td.tab.getComponent().repaint());
 
                 successful = true;
-                var ui = supportsIndicator(c);
+                var ui = getUI(c);
                 if (ui != null) {
-                    ui.clearDropIndicator();
+                    ui.clearTargetIndicator();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -157,67 +210,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         return MOVE;
     }
 
-    @Override
-    protected Transferable createTransferable(final JComponent c) {
-        JTabbedPane tabPane = (JTabbedPane) c;
-        currentTransferable = new TabTransferable(tabPane);
-        var ui = supportsIndicator(c);
-        int index = currentTransferable.transferData.tabIndex;
-        if (tabPane.getTabCount() > 1) {
-            if (index == 0) {
-                index++;
-            } else {
-                index--;
-            }
-        } else {
-            index = -1;
-        }
-        tabPane.setSelectedIndex(index);
-        if (ui != null) {
-            ui.setRolloverTab(-1);
-            createDragImage(tabPane, ui);
-            ui.setSourceIndicator(currentTransferable.transferData.tabIndex);
-        } else {
-            createDragImage(tabPane, null);
-        }
-        if ((ui != null && !ui.scrollableTabLayoutEnabled())
-                || tabPane.getTabLayoutPolicy() == JTabbedPane.WRAP_TAB_LAYOUT) {
-            tabPane.setSelectedIndex(currentTransferable.transferData.tabIndex);
-        }
-        return currentTransferable;
-    }
-
-    @Contract("null -> null")
-    private DarkTabbedPaneUI supportsIndicator(final Component c) {
-        if (c instanceof JComponent && ((JComponent) c).getUI() instanceof DarkTabbedPaneUI) {
-            return ((DarkTabbedPaneUI) ((JComponent) c).getUI());
-        }
-        return null;
-    }
-
-    protected void createDragImage(@NotNull final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
-        Image tabImage = ImageUtil.scaledImageFromComponent(tabbedPane, currentTransferable.transferData.tabBounds);
-        int w = tabImage.getWidth(null);
-        int h = tabImage.getHeight(null);
-        var g = tabImage.getGraphics();
-
-        if (ui != null) {
-            g.setColor(ui.getDragBorderColor());
-        } else {
-            g.setColor(tabbedPane.getBackgroundAt(currentTransferable.transferData.tabIndex).brighter());
-        }
-
-        int lw = 2;
-        g.fillRect(0, 0, w, lw);
-        g.fillRect(0, 0, lw, h);
-        g.fillRect(w - lw, 0, lw, h);
-        g.fillRect(0, h - lw, w, lw);
-        g.dispose();
-
-        setDragImageOffset(new Point(w / 2, h / 2));
-        setDragImage(tabImage);
-    }
-
     protected boolean hasTabFlavor(final DataFlavor[] flavors) {
         if (tabFlavor == null) {
             return false;
@@ -230,8 +222,54 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         return false;
     }
 
+    protected void selectTab(final JTabFrame tabbedPane, final Alignment a, final int index) {
+        SwingUtilities.invokeLater(() -> tabbedPane.toggleTab(a, index, true));
+    }
+
+    protected Transferable createTransferable(final JComponent c, @NotNull final DragGestureEvent dge) {
+        JTabFrame tabFrame = (JTabFrame) c;
+        if (tabFrame.isInTransfer()) {
+            currentTransferable = new TabTransferable(tabFrame, tabFrame.getTransferInfo());
+        } else {
+            var ind = getUI(tabFrame).getTabIndexAt(tabFrame, dge.getDragOrigin());
+            tabFrame.initTransfer(ind.getAlignment(), ind.getIndex());
+            currentTransferable = new TabTransferable(tabFrame, ind);
+        }
+        var ui = getUI(c);
+        createDragImage(ui);
+        var a = currentTransferable.transferData.tabAlignment;
+        int index = currentTransferable.transferData.tabIndex;
+        ui.setSourceIndicator(a, index);
+        startTimer.start();
+        lastTabFrame = currentTransferable.transferData.sourceTabFrame;
+        return currentTransferable;
+    }
+
+    protected void createDragImage(@NotNull final TabFrameUI ui) {
+        var comp = currentTransferable.transferData.tab.getComponent();
+        Image tabImage = ImageUtil.scaledImageFromComponent(comp, new Rectangle(0, 0, comp.getWidth(),
+                                                                                comp.getHeight()));
+        int w = tabImage.getWidth(null);
+        int h = tabImage.getHeight(null);
+        var g = tabImage.getGraphics();
+
+        g.setColor(ui.getDragBorderColor());
+
+        int lw = 2;
+        g.fillRect(0, 0, w, lw);
+        g.fillRect(0, 0, lw, h);
+        g.fillRect(w - lw, 0, lw, h);
+        g.fillRect(0, h - lw, w, lw);
+        g.dispose();
+
+        setDragImageOffset(new Point(w / 2, h / 2));
+        setDragImage(tabImage);
+    }
+
     @Override
     public void dragEnter(final DropTargetDragEvent e) {
+        timer.stop();
+        startTimer.stop();
     }
 
     @Override
@@ -240,27 +278,32 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         mouseLocation = e.getLocation();
 
         Component c = e.getDropTargetContext().getComponent();
-        JTabbedPane destTabbedPane = (JTabbedPane) c;
+        JTabFrame destTabFrame = (JTabFrame) c;
 
-        var ui = supportsIndicator(destTabbedPane);
+        var ui = getUI(destTabFrame);
         if (ui != null) {
             TabTransferable t = currentTransferable;
             if (t != null) {
-                int tab = TabbedPaneUtil.getDroppedTabIndex(t.getTabBounds(), destTabbedPane,
-                                                            supportsIndicator(destTabbedPane), mouseLocation);
-                if (tab == -1) {
-                    lastTab = tab;
-                    ui.clearDropIndicator();
-                    return;
+                var tab = getDropPosition(mouseLocation, destTabFrame);
+                if (tab.getAlignment() == null) {
+                    ui.clearTargetIndicator();
+                } else {
+                    try {
+                        var sourceTab = currentTransferable.transferData.sourceTabFrame;
+                        var sourceIndex = currentTransferable.transferData.tabIndex;
+                        var sourceAlign = currentTransferable.transferData.tabAlignment;
+                        int w = getUI(sourceTab).getTabWidth(sourceTab, sourceAlign, sourceIndex);
+                        int h = getUI(sourceTab).getTabHeight(sourceTab, sourceAlign, sourceIndex);
+                        ui.setDropSize(w, h);
+                        ui.setTargetIndicator(tab.getAlignment(), tab.getIndex());
+                    } catch (IndexOutOfBoundsException ex) {
+                        ui.clearTargetIndicator();
+                    }
                 }
-                var dropRect = TabbedPaneUtil.getDropRect(supportsIndicator(destTabbedPane), destTabbedPane,
-                                                          t.transferData.sourceTabbedPane, mouseLocation,
-                                                          t.getTabBounds(), tab, t.transferData.tabIndex, lastTab);
-                ui.setDnDIndicatorRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height,
-                                       tab, t.transferData.sourceTabbedPane == destTabbedPane);
-                lastTab = tab;
             }
         }
+        lastTabFrame = destTabFrame;
+        startTimer.restart();
     }
 
     @Override
@@ -270,22 +313,24 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     @Override
     public void dragExit(@NotNull final DropTargetEvent e) {
         Component c = e.getDropTargetContext().getComponent();
-        lastTab = -1;
-        var ui = supportsIndicator(c);
+        var ui = getUI(c);
         if (ui != null) {
-            ui.clearDropIndicator();
+            ui.clearTargetIndicator();
         }
+        lastTabFrame = (JTabFrame) c;
+        startTimer.start();
     }
 
     @Override
     public void drop(@NotNull final DropTargetDropEvent e) {
         Component c = e.getDropTargetContext().getComponent();
-        var ui = supportsIndicator(c);
+        var ui = getUI(c);
         if (ui != null) {
-            ui.clearDropIndicator();
+            ui.clearTargetIndicator();
         }
+        timer.stop();
+        startTimer.stop();
     }
-
 
     protected static class TabbedPaneDragGestureRecognizer extends DragGestureRecognizer {
 
@@ -315,6 +360,10 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         }
     }
 
+    public static class UIResource extends TabFrameTransferHandler {
+
+    }
+
     /**
      * Transferable representing a tab from a tabbed pane and its contents.
      */
@@ -322,13 +371,12 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
 
         private final TabTransferData transferData;
 
-        public TabTransferable(@NotNull final JTabbedPane tabbedPane) {
-            int index = tabbedPane.getSelectedIndex();
-            transferData = new TabTransferData(tabbedPane, index);
+        public TabTransferable(@NotNull final JTabFrame tabFrame, @NotNull final JTabFrame.TabFramePosition ind) {
+            transferData = new TabTransferData(tabFrame, ind.getAlignment(), ind.getIndex());
         }
 
-        public Rectangle getTabBounds() {
-            return new Rectangle(transferData.tabBounds);
+        public TabFrameTab getTab() {
+            return transferData.tab;
         }
 
         @Override
@@ -355,15 +403,20 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
          */
         public class TabTransferData {
 
-            private final JTabbedPane sourceTabbedPane;
+            private final JTabFrame sourceTabFrame;
             private final int tabIndex;
-            private final Rectangle tabBounds;
+            private final Alignment tabAlignment;
+            private final TabFrameTab tab;
+            private final boolean wasSelected;
 
             @Contract(pure = true)
-            public TabTransferData(@NotNull final JTabbedPane tabbedPane, final int tabIndex) {
-                this.sourceTabbedPane = tabbedPane;
+            public TabTransferData(@NotNull final JTabFrame tabbedPane, final Alignment tabAlignment,
+                                   final int tabIndex) {
+                this.sourceTabFrame = tabbedPane;
+                this.tabAlignment = tabAlignment;
                 this.tabIndex = tabIndex;
-                this.tabBounds = tabbedPane.getBoundsAt(tabIndex);
+                this.tab = tabbedPane.getTabComponentAt(tabAlignment, tabIndex);
+                this.wasSelected = tab.isSelected();
             }
 
         }
@@ -381,8 +434,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
          */
         public void dragGestureRecognized(@NotNull final DragGestureEvent dge) {
             JComponent c = (JComponent) dge.getComponent();
-            TabbedPaneTransferHandler th = (TabbedPaneTransferHandler) c.getTransferHandler();
-            Transferable t = th.createTransferable(c);
+            TabFrameTransferHandler th = (TabFrameTransferHandler) c.getTransferHandler();
+            Transferable t = th.createTransferable(c, dge);
             if (t != null) {
                 scrolls = c.getAutoscrolls();
                 c.setAutoscrolls(false);
@@ -432,26 +485,24 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             DragSourceContext dsc = dsde.getDragSourceContext();
             JComponent c = (JComponent) dsc.getComponent();
             if (dsde.getDropSuccess()) {
-                ((TabbedPaneTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(),
-                                                                                dsde.getDropAction());
+                ((TabFrameTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(),
+                                                                              dsde.getDropAction());
             } else {
-                ((TabbedPaneTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(), NONE);
+                ((TabFrameTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(), NONE);
             }
             c.setAutoscrolls(scrolls);
 
-            var ui = supportsIndicator(currentTransferable.transferData.sourceTabbedPane);
+            var ui = getUI(currentTransferable.transferData.sourceTabFrame);
             if (ui != null) {
                 ui.clearSourceIndicator();
             }
-            if (!dsde.getDropSuccess()) {
-                TabbedPaneUtil.selectTab(currentTransferable.transferData.sourceTabbedPane,
-                                         currentTransferable.transferData.tabIndex);
+            if (!dsde.getDropSuccess() && currentTransferable.transferData.wasSelected) {
+                selectTab(currentTransferable.transferData.sourceTabFrame,
+                          currentTransferable.transferData.tabAlignment,
+                          currentTransferable.transferData.tabIndex);
             }
+            currentTransferable.transferData.sourceTabFrame.endTransfer();
             currentTransferable = null;
         }
-    }
-
-    public static class UIResource extends TabbedPaneTransferHandler {
-
     }
 }

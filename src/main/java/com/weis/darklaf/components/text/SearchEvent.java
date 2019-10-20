@@ -21,36 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.components;
+package com.weis.darklaf.components.text;
 
-import javax.swing.border.Border;
-import java.awt.*;
+import java.awt.event.ActionEvent;
 
-public class UIResourceWrapper extends JPanelUIResource {
+public class SearchEvent extends ActionEvent {
 
-    public UIResourceWrapper(final Component component) {
-        super(new BorderLayout());
-        super.setOpaque(false);
-        super.setBorder(null);
-        add(component, BorderLayout.CENTER);
+    private final String text;
+
+    public SearchEvent(final Object source, final int id, final String command, final String text) {
+        super(source, id, command);
+        this.text = text;
     }
 
-    @Override
-    public void setBorder(final Border border) {
-        super.setBorder(null);
-    }
-
-    @Override
-    public void setOpaque(final boolean isOpaque) {
-    }
-
-    @Override
-    public boolean isOpaque() {
-        return false;
-    }
-
-    @Override
-    public Border getBorder() {
-        return null;
+    public String getText() {
+        return text;
     }
 }

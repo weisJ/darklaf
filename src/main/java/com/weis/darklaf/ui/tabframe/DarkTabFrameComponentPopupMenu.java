@@ -30,10 +30,11 @@ import com.weis.darklaf.icons.EmptyIcon;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.plaf.UIResource;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements PropertyChangeListener {
+public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements PropertyChangeListener, UIResource {
 
     private final TabFrameTab tab;
     private JMenuItem[] actions;

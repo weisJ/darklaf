@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.components;
+package com.weis.darklaf.components.uiresource;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

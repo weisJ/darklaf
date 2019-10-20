@@ -21,27 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.weis.darklaf.components;
+package com.weis.darklaf.components.text;
 
-import javax.swing.*;
-import javax.swing.plaf.UIResource;
-import java.awt.*;
+import java.util.EventListener;
 
-public class JPanelUIResource extends JPanel implements UIResource {
+public interface SearchListener extends EventListener {
 
-    public JPanelUIResource(final LayoutManager layout) {
-        this(layout, true);
-    }
-
-    public JPanelUIResource(final LayoutManager layout, final boolean isDoubleBuffered) {
-        super(layout, isDoubleBuffered);
-    }
-
-    public JPanelUIResource() {
-        this(true);
-    }
-
-    public JPanelUIResource(final boolean isDoubleBuffered) {
-        this(new FlowLayout(), isDoubleBuffered);
-    }
+    void searchPerformed(final SearchEvent e);
 }

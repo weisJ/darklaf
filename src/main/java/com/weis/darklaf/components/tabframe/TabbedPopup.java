@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Tabbed Popup Component for {@link TabFrame}.
+ * Tabbed Popup Component for {@link JTabFrame}.
  *
  * @author Jannis Weis
  */

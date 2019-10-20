@@ -93,6 +93,14 @@ public class ScrollPopupMenu extends JPopupMenu {
         return overlayScrollPane;
     }
 
+    /**
+     * Set the maximum height of the popup. If the size is larger than the specified maximum height the content will be
+     * wrapped inside a scroll pane.
+     * <p>
+     * Note: A value of <= 0 indicates that the height should not be limited.
+     *
+     * @param maxHeight the max height to use.
+     */
     public void setMaxHeight(final int maxHeight) {
         this.maxHeight = maxHeight;
     }
@@ -109,7 +117,7 @@ public class ScrollPopupMenu extends JPopupMenu {
             return;
         }
         final Dimension prefSize = getPreferredSize();
-        if (maxHeight == 0 || prefSize.height <= maxHeight) {
+        if (maxHeight <= 0 || prefSize.height <= maxHeight) {
             setBounds(0, 0, prefSize.width, prefSize.height);
             popWin.setContentPane(this);
             setBorderPainted(true);

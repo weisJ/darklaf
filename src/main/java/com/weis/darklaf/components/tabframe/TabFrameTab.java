@@ -97,13 +97,13 @@ public interface TabFrameTab {
      *
      * @return the TabFrame.
      */
-    TabFrame getTabFrame();
+    JTabFrame getTabFrame();
 
     /**
      * Set the tab frame this tab currently belongs to.
      *
      * @param tabFrame the TabFrame.
      */
-    void setTabFrame(TabFrame tabFrame);
+    void setTabFrame(JTabFrame tabFrame);
 
 }

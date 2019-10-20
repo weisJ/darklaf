@@ -133,7 +133,6 @@ public final class RepaintManagerUtils {
             @NotNull final Class<? extends RepaintManager> clazz, final RepaintManager delegate) {
         try {
             RepaintManager newManager = clazz.getConstructor(RepaintManager.class).newInstance(delegate);
-            System.out.println("Created " + newManager.getClass().getName());
             return newManager;
         } catch (Throwable t) {
             throw new RuntimeException("Cannot instantiate " + clazz.getName(), t);

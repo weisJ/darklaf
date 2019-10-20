@@ -62,21 +62,21 @@ public interface TabFramePopup {
     }
 
     /**
-     * Get the {{@link TabFrame}} this popup belongs to.
+     * Get the {{@link JTabFrame}} this popup belongs to.
      *
-     * @return the {{@link TabFrame}}.
+     * @return the {{@link JTabFrame}}.
      */
-    TabFrame getTabFrame();
+    JTabFrame getTabFrame();
 
     /**
-     * Sets the {{@link TabFrame}} this popup belongs to.
+     * Sets the {{@link JTabFrame}} this popup belongs to.
      *
-     * @param tabFrame the {{@link TabFrame}}.
+     * @param tabFrame the {{@link JTabFrame}}.
      */
-    void setTabFrame(TabFrame tabFrame);
+    void setTabFrame(JTabFrame tabFrame);
 
     /**
-     * Gets the alignment position in the {{@link TabFrame}}.
+     * Gets the alignment position in the {{@link JTabFrame}}.
      *
      * @return the alignment position.
      */
@@ -90,20 +90,20 @@ public interface TabFramePopup {
     int getIndex();
 
     /**
-     * Set the index of the popup.
-     * This method should only be called from {{@link TabFrame}}.
-     *
-     * @param index the index.
-     */
-    void setIndex(int index);
-
-    /**
-     * Sets the alignment position in the {{@link TabFrame}}.
-     * This method should only be called from {{@link TabFrame}}.
+     * Sets the alignment position in the {{@link JTabFrame}}. This method should only be called from {{@link
+     * JTabFrame}}.
      *
      * @param alignment the alignment position.
      */
     void setAlignment(Alignment alignment);
+
+    /**
+     * Set the index of the popup.
+     * This method should only be called from {{@link JTabFrame}}.
+     *
+     * @param index the index.
+     */
+    void setIndex(int index);
 
     /**
      * Open the popup.

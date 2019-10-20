@@ -24,6 +24,7 @@
 package com.weis.darklaf.components.tabframe;
 
 import com.weis.darklaf.components.alignment.Alignment;
+import com.weis.darklaf.ui.tabframe.TabFrameTransferHandler;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ import java.util.Objects;
  *
  * @author Jannis Weis
  */
-public class TabFrame extends JComponent {
+public class JTabFrame extends JComponent {
 
     private final JComponent bottomTabs = createTabContainer();
     private final JComponent topTabs = createTabContainer();
@@ -54,13 +55,17 @@ public class TabFrame extends JComponent {
 
     private int tabSize = -1;
     private int maxTabWidth = -1;
+    private boolean inTransfer;
+    private Alignment transferAlign;
+    private int transferIndex;
+    private boolean dndEnabled;
 
     /**
-     * Creates new {@link TabFrame}.
+     * Creates new {@link JTabFrame}.
      * A TabFrame displays one center component and multiple popups around
      * that can be toggles with a TabbedPane like tabArea along the border.
      */
-    public TabFrame() {
+    public JTabFrame() {
         super();
         updateUI();
         add(content.getComponent());
@@ -75,6 +80,7 @@ public class TabFrame extends JComponent {
             popupLists[i] = new ArrayList<>();
         }
         selectedIndices = new int[count];
+        setDndEnabled(true);
     }
 
     @Override
@@ -850,17 +856,76 @@ public class TabFrame extends JComponent {
         return a;
     }
 
+    public boolean isInTransfer() {
+        return inTransfer;
+    }
+
+    public void initTransfer(final Alignment a, final int index) {
+        getContentPane().getComponent().setEnabled(false);
+        this.inTransfer = true;
+        this.transferAlign = a;
+        this.transferIndex = index;
+    }
+
+    public void endTransfer() {
+        getContentPane().getComponent().setEnabled(true);
+        inTransfer = false;
+        transferAlign = null;
+        transferIndex = -10;
+    }
+
+    public TabFramePosition getTransferInfo() {
+        return new TabFramePosition(transferAlign, transferIndex);
+    }
+
+    public boolean isDndEnabled() {
+        return dndEnabled && getTransferHandler() instanceof TabFrameTransferHandler;
+    }
+
+    public void setDndEnabled(final boolean dndEnabled) {
+        var old = this.dndEnabled;
+        this.dndEnabled = dndEnabled;
+        if (getDropTarget() != null) {
+            getDropTarget().setActive(dndEnabled);
+        }
+        firePropertyChange("dndEnabled", old, dndEnabled);
+    }
+
     /**
      * This class represents a position inside the tabFrame.
      */
     public static class TabFramePosition {
-        private final Alignment a;
-        private final int index;
+        private Alignment a;
+        private int index;
+        private Point point;
 
         @Contract(pure = true)
         public TabFramePosition(final Alignment a, final int index) {
             this.a = a;
             this.index = index;
+        }
+
+        @Contract(pure = true)
+        public TabFramePosition(final Alignment a, final int index, final Point p) {
+            this.a = a;
+            this.index = index;
+            this.point = p;
+        }
+
+        public void setAlignment(final Alignment a) {
+            this.a = a;
+        }
+
+        public void setIndex(final int index) {
+            this.index = index;
+        }
+
+        public Point getPoint() {
+            return point;
+        }
+
+        public void setPoint(final Point point) {
+            this.point = point;
         }
 
         /**
@@ -880,6 +945,11 @@ public class TabFrame extends JComponent {
          */
         public int getIndex() {
             return index;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + a + "," + index + "]";
         }
     }
 }

@@ -34,7 +34,7 @@ import java.awt.*;
 import java.util.function.BiConsumer;
 
 /**
- * Content pane for {@link TabFrame}.
+ * Content pane for {@link JTabFrame}.
  *
  * @author Jannis Weis
  */
