@@ -30,6 +30,7 @@ target/
 # gradle
 /build
 /.gradle
+gradle.properties
 
 # Python
 venv/

@@ -24,6 +24,7 @@
 package com.weis.darklaf.ui.tree;
 
 import com.weis.darklaf.components.SelectableTreeNode;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -162,6 +163,14 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         }
         editorComponent.setOpaque(false);
         editorComponent.setComponentOrientation(tree.getComponentOrientation());
+
+        if (isSelected && editorComponent instanceof JToggleButton) {
+            if (DarkUIUtil.hasFocus(tree)) {
+                editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
+            } else {
+                editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
+            }
+        }
         return editorComponent;
     }
 }

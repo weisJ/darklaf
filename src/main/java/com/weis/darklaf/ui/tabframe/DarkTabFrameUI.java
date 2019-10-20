@@ -31,7 +31,6 @@ import com.weis.darklaf.components.tabframe.TabFramePopup;
 import com.weis.darklaf.components.tabframe.TabFrameTab;
 import com.weis.darklaf.components.tabframe.TabFrameUI;
 import com.weis.darklaf.components.uiresource.JPanelUIResource;
-import com.weis.darklaf.util.DarkUIUtil;
 import com.weis.darklaf.util.Pair;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jetbrains.annotations.Contract;
@@ -551,19 +550,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         if (event.getID() == MouseEvent.MOUSE_PRESSED) {
             var e = (MouseEvent) event;
             var comp = e.getComponent().getComponentAt(e.getPoint());
-            var parent = DarkUIUtil.getParentOfType(TabFramePopup.class, comp);
-            if (parent != null) {
-                parent.getComponent().requestFocus();
-                return;
-            }
-            var parent2 = DarkUIUtil.getParentOfType(PopupContainer.class, comp);
-            if (parent2 != null) {
-                parent2.getPopup().requestFocus();
-                return;
-            }
-            var parent3 = DarkUIUtil.getParentOfType(JTabFrame.class, comp);
-            if (parent3 != null && comp != null && !comp.hasFocus()) {
-                parent3.requestFocus();
+            if (comp instanceof TabFramePopup || comp instanceof PopupContainer || comp instanceof JTabFrame) {
+                comp.requestFocus();
             }
         }
     }

@@ -61,7 +61,9 @@ public final class IconLoader {
         if (iconLoaderMap.containsKey(parentClass)) {
             return iconLoaderMap.get(parentClass);
         } else {
-            return new IconLoader(parentClass);
+            var loader = new IconLoader(parentClass);
+            iconLoaderMap.put(parentClass, loader);
+            return loader;
         }
     }
 
@@ -86,7 +88,7 @@ public final class IconLoader {
     @Contract(value = "_, _, _ -> new", pure = true)
     @NotNull
     public DarkUIAwareIcon create(@NotNull final String name, final int w, final int h) {
-        return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, IconLoader.class);
+        return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, parentClass);
     }
 
     public Icon getIcon(final String path) {
@@ -130,7 +132,6 @@ public final class IconLoader {
     }
 
     @NotNull
-    @Contract("_, _, _ -> new")
     public Icon loadSVGIcon(@NotNull final String name, final int w, final int h, final boolean themed) {
         try {
             LOGGER.info("Loading icon '" + name + "'. Resolving from " + parentClass);

@@ -166,7 +166,7 @@ public class DarkHandler extends TabbedPaneHandler {
     public void mouseReleased(final MouseEvent e) {
         super.mouseReleased(e);
         if (ui.dragging && ui.scrollableTabLayoutEnabled()) {
-            stopDrag(e);
+            stopDrag(e, true);
         }
     }
 
@@ -214,7 +214,7 @@ public class DarkHandler extends TabbedPaneHandler {
             var p = e.getPoint();
             int dist = Math.abs(ui.isHorizontalTabPlacement() ? origin.y - p.y : origin.x - p.x);
             if (dist > Math.max(50, ui.maxTabHeight)) {
-                stopDrag(e);
+                stopDrag(e, false);
                 TransferHandler handler = ui.tabPane.getTransferHandler();
                 handler.exportAsDrag(ui.tabPane, e, TransferHandler.MOVE);
             }
@@ -228,10 +228,10 @@ public class DarkHandler extends TabbedPaneHandler {
         return p;
     }
 
-    protected void stopDrag(final MouseEvent e) {
+    protected void stopDrag(final MouseEvent e, final boolean changeTabs) {
         int tab = TabbedPaneUtil.getDroppedTabIndex(ui.dropRect, ui.tabPane,
                                                     ui, getDragMousePos());
-        if (tab >= 0 && tab <= ui.tabPane.getTabCount()) {
+        if (changeTabs && tab >= 0 && tab <= ui.tabPane.getTabCount()) {
             TabbedPaneUtil.moveTabs(ui.tabPane, ui.tabPane, ui.dropSourceIndex, tab);
         }
         SwingUtilities.invokeLater(() -> ui.setRolloverTab(e.getX(), e.getY()));

@@ -1,6 +1,7 @@
 package com.weis.darklaf.ui.table;
 
 import com.weis.darklaf.decorators.CellRenderer;
+import com.weis.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -39,7 +40,11 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
             toggleButton.setBackground(background);
             toggleButton.setForeground(table.getForeground());
         } else {
-            toggleButton.setForeground(table.getSelectionForeground());
+            if (DarkUIUtil.hasFocus(table)) {
+                toggleButton.setForeground(table.getSelectionForeground());
+            } else {
+                toggleButton.setForeground(UIManager.getColor("Table.selectionForegroundInactive"));
+            }
             toggleButton.setBackground(table.getSelectionBackground());
         }
         return toggleButton;

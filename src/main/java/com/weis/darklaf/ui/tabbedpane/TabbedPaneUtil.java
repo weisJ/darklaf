@@ -94,6 +94,7 @@ public class TabbedPaneUtil implements SwingConstants {
                                         @NotNull final JTabbedPane destTabbedPane, final JTabbedPane source,
                                         final Point mouseLocation, final Rectangle tabBounds,
                                         final int tab, final int sourceIndex, final int lastTab) {
+        if (destTabbedPane.getTabCount() == 0) return new Rectangle(0, 0, 0, 0);
         int tabPlacement = destTabbedPane.getTabPlacement();
         Rectangle destRect = destTabbedPane.getBoundsAt(Math.min(tab, destTabbedPane.getTabCount() - 1));
 
@@ -192,10 +193,14 @@ public class TabbedPaneUtil implements SwingConstants {
 
         if (tabbedPane == sourcePane && sourceIndex == tab) {
             //Nothing to do. Just select the tab to be sure.
+            var comp = sourcePane.getTabComponentAt(tab);
+            if (comp != null) comp.setVisible(true);
             selectTab(sourcePane, sourceIndex);
             return false;
         }
-        if (tab < 0 || tab > tabbedPane.getTabCount()) {
+        int destIndex = tab;
+        if (tabbedPane.getTabCount() == 0) destIndex = 0;
+        if (destIndex < 0 || destIndex > tabbedPane.getTabCount()) {
             return false;
         }
 
@@ -206,18 +211,21 @@ public class TabbedPaneUtil implements SwingConstants {
         Color foreground = sourcePane.getForegroundAt(sourceIndex);
         Component tabComp = sourcePane.getTabComponentAt(sourceIndex);
 
-        tabbedPane.insertTab(tabName, icon, comp, toolTip, tab);
+        tabbedPane.insertTab(tabName, icon, comp, toolTip, destIndex);
 
-        int index = tab;
+        int index = destIndex;
         if (tabbedPane == sourcePane) {
             if (sourceIndex < index) index--;
         }
 
         if (tabComp != null) {
+            tabComp.setVisible(true);
             tabbedPane.setTabComponentAt(index, tabComp);
         }
         tabbedPane.setForegroundAt(index, foreground);
         selectTab(tabbedPane, index);
+
+        sourcePane.revalidate();
         return true;
     }
 

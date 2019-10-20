@@ -382,37 +382,42 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @return the popup component at position.
      */
     @NotNull
-    public PanelPopup getPopupComponent(@NotNull final Alignment a) {
-        Component popupComponent;
-        switch (a) {
+    public Component getPopupComponent(@NotNull final Alignment a) {
+        return getContainer(a).getPopup();
+    }
+
+    @Override
+    public PopupContainer getContainer(@NotNull final Alignment alignment) {
+        PopupContainer popupComponent;
+        switch (alignment) {
             case NORTH:
-                popupComponent = ((PopupContainer) topSplitter.getLeftComponent()).getPopup();
+                popupComponent = ((PopupContainer) topSplitter.getLeftComponent());
                 break;
             case NORTH_EAST:
-                popupComponent = ((PopupContainer) topSplitter.getRightComponent()).getPopup();
+                popupComponent = ((PopupContainer) topSplitter.getRightComponent());
                 break;
             case EAST:
-                popupComponent = ((PopupContainer) rightSplitter.getTopComponent()).getPopup();
+                popupComponent = ((PopupContainer) rightSplitter.getTopComponent());
                 break;
             case SOUTH_EAST:
-                popupComponent = ((PopupContainer) rightSplitter.getBottomComponent()).getPopup();
+                popupComponent = ((PopupContainer) rightSplitter.getBottomComponent());
                 break;
             case SOUTH:
-                popupComponent = ((PopupContainer) bottomSplitter.getRightComponent()).getPopup();
+                popupComponent = ((PopupContainer) bottomSplitter.getRightComponent());
                 break;
             case SOUTH_WEST:
-                popupComponent = ((PopupContainer) bottomSplitter.getLeftComponent()).getPopup();
+                popupComponent = ((PopupContainer) bottomSplitter.getLeftComponent());
                 break;
             case WEST:
-                popupComponent = ((PopupContainer) leftSplitter.getBottomComponent()).getPopup();
+                popupComponent = ((PopupContainer) leftSplitter.getBottomComponent());
                 break;
             case NORTH_WEST:
-                popupComponent = ((PopupContainer) leftSplitter.getTopComponent()).getPopup();
+                popupComponent = ((PopupContainer) leftSplitter.getTopComponent());
                 break;
             default:
                 throw new IllegalArgumentException("CENTER is not supported");
         }
-        return (PanelPopup) popupComponent;
+        return popupComponent;
     }
 
     protected static class LayoutProportions {

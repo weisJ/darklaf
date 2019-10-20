@@ -15,7 +15,7 @@ import java.awt.event.MouseListener;
  */
 public class ClosableTabComponent extends JPanel {
 
-    private final JTabbedPane pane;
+    private JTabbedPane pane;
 
     public ClosableTabComponent(final JTabbedPane pane) {
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -26,6 +26,10 @@ public class ClosableTabComponent extends JPanel {
         setOpaque(false);
         add(new TabLabel(this));
         add(new TabButton(this));
+    }
+
+    public void setTabbedPane(final JTabbedPane pane) {
+        this.pane = pane;
     }
 
     protected static class TabLabel extends JLabel {

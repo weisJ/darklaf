@@ -23,6 +23,7 @@
  */
 package com.weis.darklaf.ui.list;
 
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -71,7 +72,11 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
             comp.setBackground(background);
             comp.setForeground(list.getForeground());
         } else {
-            comp.setForeground(list.getSelectionForeground());
+            if (DarkUIUtil.hasFocus(list)) {
+                comp.setForeground(list.getSelectionForeground());
+            } else {
+                comp.setForeground(UIManager.getColor("List.selectionForegroundInactive"));
+            }
             comp.setBackground(list.getSelectionBackground());
         }
         return comp;

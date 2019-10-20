@@ -24,14 +24,22 @@ public class ClosableTabbedPane extends JTabbedPane {
     }
 
     @Override
+    public void setTabComponentAt(final int index, final Component component) {
+        if (component instanceof ClosableTabComponent) {
+            ((ClosableTabComponent) component).setTabbedPane(this);
+        }
+        super.setTabComponentAt(index, component);
+    }
+
+    @Override
     public void removeTabAt(final int index) {
         checkIndex(index);
-        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, "tabOpened",
+        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, "tabClosed",
                                                                      getComponentAt(index), null, index))) {
             return;
         }
+        notifyTabListeners(new TabEvent(this, TabEvent.TAB_CLOSED, "tabClosed", index));
         super.removeTabAt(index);
-        notifyTabListeners(new TabEvent(this, TabEvent.TAB_CLOSED, "tabOpened", index));
     }
 
     private void checkIndex(final int index) {

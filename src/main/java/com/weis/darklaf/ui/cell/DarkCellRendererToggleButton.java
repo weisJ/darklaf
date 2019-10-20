@@ -26,6 +26,7 @@ package com.weis.darklaf.ui.cell;
 import com.weis.darklaf.components.SelectableTreeNode;
 import com.weis.darklaf.decorators.CellRenderer;
 import com.weis.darklaf.ui.tree.DarkTreeCellRenderer;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -66,7 +67,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
             toggleButton.setBackground(background);
             toggleButton.setForeground(table.getForeground());
         } else {
-            toggleButton.setForeground(table.getSelectionForeground());
+            if (DarkUIUtil.hasFocus(table)) {
+                toggleButton.setForeground(UIManager.getColor("Table.selectionForeground"));
+            } else {
+                toggleButton.setForeground(UIManager.getColor("Table.selectionForegroundInactive"));
+            }
             toggleButton.setBackground(table.getSelectionBackground());
         }
         return toggleButton;
@@ -86,7 +91,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
             }
         }
         if (selected) {
-            toggleButton.setForeground(UIManager.getColor("Tree.selectionForeground"));
+            if (DarkUIUtil.hasFocus(tree)) {
+                toggleButton.setForeground(UIManager.getColor("Tree.selectionForeground"));
+            } else {
+                toggleButton.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
+            }
         } else {
             toggleButton.setForeground(tree.getForeground());
         }

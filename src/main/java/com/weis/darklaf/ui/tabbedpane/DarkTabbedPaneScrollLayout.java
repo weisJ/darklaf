@@ -256,23 +256,25 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         // Calculate how much space the tabs will need, based on the
         // minimum size required to display largest child + content border
         //
-        if (!ui.isHorizontalTabPlacement()) {
-            int tabHeight = ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(),
-                                                  ui.getFontMetrics().getHeight());
-            if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                tabHeight += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
+        if (ui.tabPane.getTabCount() > 0) {
+            if (!ui.isHorizontalTabPlacement()) {
+                int tabHeight = ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(),
+                                                      ui.getFontMetrics().getHeight());
+                if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
+                    tabHeight += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
+                }
+                height = Math.max(height, tabHeight);
+                tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
+                width += tabExtent;
+            } else {
+                int tabWidth = ui.calculateTabWidth(tabPlacement, ui.tabPane.getSelectedIndex(), ui.getFontMetrics());
+                if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
+                    tabWidth += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().width;
+                }
+                width = Math.max(width, tabWidth);
+                tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
+                height += tabExtent;
             }
-            height = Math.max(height, tabHeight);
-            tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
-            width += tabExtent;
-        } else {
-            int tabWidth = ui.calculateTabWidth(tabPlacement, ui.tabPane.getSelectedIndex(), ui.getFontMetrics());
-            if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                tabWidth += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().width;
-            }
-            width = Math.max(width, tabWidth);
-            tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
-            height += tabExtent;
         }
         return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
                              height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
@@ -309,7 +311,9 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
 
         JButton tabsButton = ui.scrollableTabSupport.moreTabsButton;
-        Rectangle selectedBounds = new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()]);
+        Rectangle selectedBounds = ui.tabPane.getSelectedIndex() > 0
+                                   ? new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()])
+                                   : new Rectangle(0, 0, 0, 0);
         if (!verticalTabRuns) {
             int rightMargin = size.width - (insets.right + tabAreaInsets.right
                     + insets.left + tabAreaInsets.left);
@@ -389,6 +393,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         ui.tabScroller.tabPanel.setPreferredSize(tabBounds.getSize());
         ui.tabScroller.tabPanel.invalidate();
     }
+
 
     @Override
     protected int preferredTabAreaWidth(final int tabPlacement, final int height) {

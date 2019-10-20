@@ -61,18 +61,18 @@ public abstract class Theme {
         final Properties properties = new Properties();
         try (InputStream stream = getResourceAsStream(name)) {
             properties.load(stream);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not load" + name + ".properties", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Could not load " + name + ".properties. " + e.getMessage(), e.getStackTrace());
         }
         return properties;
     }
 
     protected InputStream getResourceAsStream(final String name) {
-        return getResourceAsStream(this.getClass(), name);
+        return getLoaderClass().getResourceAsStream(name);
     }
 
-    protected InputStream getResourceAsStream(@NotNull final Class<?> clazz, final String name) {
-        return clazz.getResourceAsStream(name);
+    protected Class<? extends Theme> getLoaderClass() {
+        return this.getClass();
     }
 
     /**

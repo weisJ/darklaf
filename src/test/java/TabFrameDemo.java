@@ -1,11 +1,13 @@
 import com.weis.darklaf.LafManager;
 import com.weis.darklaf.components.OverlayScrollPane;
+import com.weis.darklaf.components.SelectableTreeNode;
 import com.weis.darklaf.components.alignment.Alignment;
 import com.weis.darklaf.components.tabframe.JTabFrame;
 import com.weis.darklaf.components.tabframe.TabbedPopup;
 import com.weis.darklaf.icons.IconLoader;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 
 /*
@@ -61,6 +63,7 @@ public class TabFrameDemo {
                 panel.add(label);
                 tabbedPopup.getTabbedPane().addTab("Tab " + i, panel);
             }
+            tabFrame.setComponentAt(new JScrollPane(createTree()), Alignment.NORTH_WEST, 0);
             /* Activate for custom tab demo.
             tabFrame.setUserTabComponentAt(new JLabel("NORTH (custom tab)") {{
                 setBorder(new EmptyBorder(0, 5, 0, 5));
@@ -85,5 +88,29 @@ public class TabFrameDemo {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
+    }
+
+    protected static JTree createTree() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("States");
+        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Andhra Pradesh");
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Vijayawada");
+        DefaultMutableTreeNode child1 = new SelectableTreeNode("This node can be selected", true);
+        DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Telangana");
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Hyderabad");
+
+        // Adding child nodes to parent
+        parent1.add(child);
+        parent1.add(child1);
+        parent2.add(child2);
+
+        // Adding parent nodes to root
+        root.add(parent1);
+        root.add(parent2);
+
+        // Adding root to JTree
+        JTree tree = new JTree(root);
+        tree.setEditable(true);
+//        tree.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        return tree;
     }
 }

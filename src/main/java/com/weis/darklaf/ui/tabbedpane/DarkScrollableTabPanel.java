@@ -52,19 +52,21 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
                     boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
                     int tabCount = ui.tabPane.getTabCount();
                     var b = child.getPreferredSize();
-                    if (ui.isHorizontalTabPlacement()) {
-                        int off = ui.dropTargetIndex == tabCount ? ui.dropRect.width : 0;
-                        if (leftToRight) {
-                            int x = ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width + off;
-                            child.setBounds(x, 0, b.width, ui.maxTabHeight);
+                    if (tabCount > 0) {
+                        if (ui.isHorizontalTabPlacement()) {
+                            int off = ui.dropTargetIndex == tabCount ? ui.dropRect.width : 0;
+                            if (leftToRight) {
+                                int x = ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width + off;
+                                child.setBounds(x, 0, b.width, ui.maxTabHeight);
+                            } else {
+                                int x = ui.rects[tabCount - 1].x - off;
+                                child.setBounds(x - b.width, 0, b.width, ui.maxTabHeight);
+                            }
                         } else {
-                            int x = ui.rects[tabCount - 1].x - off;
-                            child.setBounds(x - b.width, 0, b.width, ui.maxTabHeight);
+                            int off = ui.dropTargetIndex == tabCount ? ui.dropRect.height : 0;
+                            int y = ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height + off;
+                            child.setBounds(0, y, ui.maxTabWidth, b.height);
                         }
-                    } else {
-                        int off = ui.dropTargetIndex == tabCount ? ui.dropRect.height : 0;
-                        int y = ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height + off;
-                        child.setBounds(0, y, ui.maxTabWidth, b.height);
                     }
                 } else {
                     child.setBounds(0, 0, getWidth(), getHeight());
@@ -76,11 +78,13 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
     @Override
     public void paint(final Graphics g) {
         super.paint(g);
-        if (ui.dragging) {
+        if (ui.dragging && ui.tabPane.getTabCount() > 0) {
             ui.paintTab(g, ui.tabPane.getTabPlacement(), ui.dragRect, ui.tabPane.getSelectedIndex(), iconRect, textRect);
             var comp = ui.tabPane.getTabComponentAt(ui.dropSourceIndex);
-            g.translate(comp.getX(), comp.getY());
-            comp.print(g);
+            if (comp != null) {
+                g.translate(comp.getX(), comp.getY());
+                comp.print(g);
+            }
         }
     }
 }

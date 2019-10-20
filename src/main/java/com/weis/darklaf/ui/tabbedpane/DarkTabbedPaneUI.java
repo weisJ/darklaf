@@ -148,6 +148,10 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         if (!scrollableTabLayoutEnabled() && drawDropRect) {
             paintDrop(g);
         }
+
+        if (tabPane.getTabCount() == 0) {
+            paintTabAreaBorder(g, tabPlacement);
+        }
     }
 
     @Override
@@ -657,6 +661,34 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         p.y += pos.y;
         return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
                               p.x, p.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
+    }
+
+    @Override
+    protected int calculateMaxTabHeight(final int tabPlacement) {
+        return Math.max(super.calculateMaxTabHeight(tabPlacement), getFallBackSize());
+    }
+
+    @Override
+    protected int calculateMaxTabWidth(final int tabPlacement) {
+        return Math.max(super.calculateMaxTabWidth(tabPlacement), getFallBackSize());
+    }
+
+    @Override
+    protected int calculateTabAreaHeight(final int tabPlacement, final int horizRunCount, final int maxTabHeight) {
+        return Math.max(super.calculateTabAreaHeight(tabPlacement, horizRunCount, maxTabHeight), getFallBackSize());
+    }
+
+    @Override
+    protected int calculateTabAreaWidth(final int tabPlacement, final int vertRunCount, final int maxTabWidth) {
+        return Math.max(super.calculateTabAreaWidth(tabPlacement, vertRunCount, maxTabWidth), getFallBackSize());
+    }
+
+    protected int getFallBackSize() {
+        int max = 0;
+        if (scrollableTabLayoutEnabled() && scrollableTabSupport.newTabButton.isVisible()) {
+            max = Math.max(scrollableTabSupport.newTabButton.getPreferredSize().height, 27);
+        }
+        return max;
     }
 
     protected void layoutTabComponents() {

@@ -80,4 +80,12 @@ public interface TabFrameContent {
      * @return the enabled status.
      */
     boolean[] getStatus();
+
+    /**
+     * Get the popup container at the given location.
+     *
+     * @param alignment the alignment position.
+     * @return the popup container.
+     */
+    PopupContainer getContainer(Alignment alignment);
 }

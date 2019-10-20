@@ -13,7 +13,7 @@ public class TabbedPaneDemo extends JFrame {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             final JFrame frame = new JFrame();
-            int tabCount = 1;
+            int tabCount = 2;
             frame.setSize(500 * tabCount, 500);
             var c = new JPanel(new GridLayout(1, 2));
             for (int j = 0; j < tabCount; j++) {
@@ -21,7 +21,7 @@ public class TabbedPaneDemo extends JFrame {
                 final var tabbedPane = new ClosableTabbedPane();
                 tabbedPane.setName("TabPane " + j);
 
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < j; i++) {
                     var editor = new JTextPane();
                     editor.setText("TabPaneDemo TabPane-" + j + "\n".repeat(i + 1));
                     tabbedPane.addTab("Tab (" + i + "," + j + ")", editor);
@@ -35,6 +35,8 @@ public class TabbedPaneDemo extends JFrame {
                 tabbedPane.putClientProperty("JTabbedPane.eastComponent", new Label("East"));
                 tabbedPane.putClientProperty("JTabbedPane.southComponent", new Label("South"));
                 tabbedPane.putClientProperty("JTabbedPane.westComponent", new Label("West"));
+
+                tabbedPane.setSelectedIndex(-1);
 
                 p.add(tabbedPane, BorderLayout.CENTER);
                 p.add(new JPanel() {{

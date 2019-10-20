@@ -24,6 +24,7 @@
 package com.weis.darklaf.ui.tree;
 
 import com.weis.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.weis.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -58,8 +59,11 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             rendererComponent.setRenderComponent(comp);
             return rendererComponent;
         }
-
-        return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        var comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        if (sel && !DarkUIUtil.hasFocus(tree)) {
+            comp.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
+        }
+        return comp;
     }
 
     public static Object unwrapBooleanIfPossible(final Object value) {

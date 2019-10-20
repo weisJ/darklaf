@@ -66,7 +66,11 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
             component.setBackground(background);
             component.setForeground(table.getForeground());
         } else {
-            component.setForeground(table.getSelectionForeground());
+            if (DarkUIUtil.hasFocus(table)) {
+                component.setForeground(table.getSelectionForeground());
+            } else {
+                component.setForeground(UIManager.getColor("Table.selectionForegroundInactive"));
+            }
             component.setBackground(table.getSelectionBackground());
         }
         return component;

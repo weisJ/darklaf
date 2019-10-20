@@ -925,6 +925,17 @@ public class JTabFrame extends JComponent {
     }
 
     /**
+     * Set the component at the given position.
+     *
+     * @param c     the component.
+     * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param index the index.{@link TabFramePosition#getIndex()}
+     */
+    public void setComponentAt(final Component c, final Alignment a, final int index) {
+        compsForAlignment(a).get(index).setContentPane(c);
+    }
+
+    /**
      * This class represents a position inside the tabFrame.
      */
     public static class TabFramePosition {
