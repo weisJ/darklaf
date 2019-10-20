@@ -10,19 +10,24 @@ public final class GenerateColors {
     public static void main(final String[] args) {
         int cols = 30;
         int rows = 15;
-        System.out.println("{");
+        StringBuilder builder = new StringBuilder("{");
         int r;
         int g;
         int b;
         for (int i = 1; i < rows + 1; i++) {
             r = g = b = (int) ((i - 1) * 255.0 / (rows - 1));
-            System.out.println(r + "," + g + "," + b + ",");
+            builder.append(r).append(",")
+                   .append(g).append(",")
+                   .append(b).append(",");
             for (int j = 0; j < cols - 1; j++) {
                 var c = colorFromPos(j, i, rows + 1, cols);
-                System.out.println(c.getRed() + "," + c.getGreen() + "," + c.getBlue() + ",");
+                builder.append(c.getRed()).append(",")
+                       .append(c.getGreen()).append(",")
+                       .append(c.getBlue()).append(",");
             }
         }
-        System.out.println("};");
+        builder.append("};");
+        System.out.println(builder);
     }
 
     private static Color colorFromPos(final int x, final int y, final int height, final int width) {

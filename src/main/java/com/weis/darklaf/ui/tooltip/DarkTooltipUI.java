@@ -97,6 +97,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public void installUI(final JComponent c) {
         toolTip = (JToolTip) c;
         super.installUI(c);
+        toolTip.setBorder(new DarkTooltipBorder());
     }
 
     @Override
@@ -189,6 +190,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     }
 
+
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {
         var key = evt.getPropertyName();
@@ -203,19 +205,19 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                     } else {
                         border.setPointerLocation(Alignment.CENTER);
                     }
-                    tooltip.setComponent(tooltip.getComponent());
+                    updateSize();
                 } else if ("JToolTip.pointerHeight".equals(key)) {
                     if (newVal instanceof Integer) {
                         border.setPointerHeight((Integer) newVal);
                     }
-                    tooltip.setComponent(tooltip.getComponent());
+                    updateSize();
                 } else if ("JToolTip.pointerWidth".equals(key)) {
                     if (newVal instanceof Integer) {
                         border.setPointerWidth((Integer) newVal);
                     }
-                    tooltip.setComponent(tooltip.getComponent());
+                    updateSize();
                 } else if ("JToolTip.insets".equals(key)) {
-                    tooltip.setComponent(tooltip.getComponent());
+                    updateSize();
                 } else if ("component".equals(key)) {
                     var oldComp = evt.getOldValue();
                     if (oldComp instanceof Component) {
@@ -230,4 +232,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     }
 
+    protected void updateSize() {
+        toolTip.setTipText(toolTip.getTipText());
+        toolTip.setPreferredSize(getPreferredSize(toolTip));
+    }
 }

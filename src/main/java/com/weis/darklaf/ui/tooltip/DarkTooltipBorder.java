@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
@@ -17,7 +16,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * @author Jannis Weis
  */
-public class DarkTooltipBorder implements Border, UIResource {
+public class DarkTooltipBorder implements Border {
 
     private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK,
                                                                        10, 0.2f, 10,
@@ -55,7 +54,6 @@ public class DarkTooltipBorder implements Border, UIResource {
             return;
         }
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
-        System.out.println(bubbleBorder.getPointerSide());
         var ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
         var bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,

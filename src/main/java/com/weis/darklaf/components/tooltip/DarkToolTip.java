@@ -67,13 +67,6 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         });
     }
 
-    @Override
-    public void setComponent(final JComponent c) {
-        super.setComponent(c);
-        setTipText(getTipText());
-        setPreferredSize(getUI().getPreferredSize(this));
-    }
-
     public void setAlignment(final Alignment alignment) {
         putClientProperty("JToolTip.pointerLocation", alignment);
     }
