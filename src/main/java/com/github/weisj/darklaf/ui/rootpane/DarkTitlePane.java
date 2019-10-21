@@ -57,8 +57,7 @@ public class DarkTitlePane extends JComponent {
     private static final int BAR_HEIGHT = (int) (56 / GraphicsUtil.SCALE_Y);
     private static final int BUTTON_WIDTH = (int) (92.5 / GraphicsUtil.SCALE_X);
     private static final int ICON_WIDTH = (int) (65 / GraphicsUtil.SCALE_X);
-    private static final int IMAGE_HEIGHT = 16;
-    private static final int IMAGE_WIDTH = 16;
+    private static final int ICON_SIZE = ICON_WIDTH - 3 * PAD;
     private final JRootPane rootPane;
     private final ContainerListener rootPaneContainerListener = new ContainerListener() {
         @Override
@@ -581,12 +580,17 @@ public class DarkTitlePane extends JComponent {
 
         List<Image> icons = window.getIconImages();
         assert icons != null;
-
         Icon systemIcon;
         if (icons.size() == 0) {
             systemIcon = UIManager.getIcon("TitlePane.icon");
+        } else if (icons.size() == 1) {
+            systemIcon = new ScaledIcon(icons.get(0).getScaledInstance((int) (ICON_SIZE * GraphicsUtil.SCALE_X),
+                                                                       (int) (ICON_SIZE * GraphicsUtil.SCALE_Y),
+                                                                       Image.SCALE_AREA_AVERAGING));
         } else {
-            systemIcon = new ImageIcon(SunToolkit.getScaledIconImage(icons, IMAGE_WIDTH, IMAGE_HEIGHT));
+            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, (int) (ICON_SIZE * GraphicsUtil.SCALE_X),
+                                                                      (int) (ICON_SIZE * GraphicsUtil.SCALE_Y))
+            );
         }
         if (windowIconButton != null) {
             windowIconButton.setIcon(systemIcon);
@@ -760,6 +764,34 @@ public class DarkTitlePane extends JComponent {
 
         public void windowDeactivated(final WindowEvent ev) {
             setActive(false);
+        }
+    }
+
+    protected static class ScaledIcon implements Icon {
+
+        private Image img;
+
+        @Contract(pure = true)
+        protected ScaledIcon(final Image img) {
+            this.img = img;
+        }
+
+        @Override
+        public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
+            var g = (Graphics2D) g2;
+            g.translate(x, y);
+            g.scale(1.0 / GraphicsUtil.SCALE_X, 1.0 / GraphicsUtil.SCALE_Y);
+            g.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return (int) (img.getWidth(null) / GraphicsUtil.SCALE_X);
+        }
+
+        @Override
+        public int getIconHeight() {
+            return (int) (img.getHeight(null) / GraphicsUtil.SCALE_Y);
         }
     }
 }

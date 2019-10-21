@@ -38,6 +38,10 @@ public final class UIDemo {
                     taskpanecontainer.add(taskpane);
 
                     JFrame frame = new JFrame("UIDemo");
+                    frame.setIconImage(Toolkit.getDefaultToolkit().createImage(
+                            UIDemo.class.getClassLoader().getResource("mima.png")
+                    ));
+
                     Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg", 19, 19);
 
                     var panel = new JPanel(new GridLayout(3, 4));
