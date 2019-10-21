@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf;
 
-import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.theme.Theme;
 import org.jetbrains.annotations.NotNull;

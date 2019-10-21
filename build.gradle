@@ -199,7 +199,7 @@ tasks.withType(JavaCompile) {
 task copyLibraries(type: Copy) {
     dependsOn('jniplatformX64SharedLibrary', 'jniplatformX86SharedLibrary')
     from "${buildDir}/libs/jniplatform/shared"
-    into "${projectDir}/src/main/resources/library"
+    into "${projectDir}/src/main/resources/com/github/weisj/darklaf/platform/windows"
 }
 
 shadowJar {

@@ -88,9 +88,9 @@ public class JNIDecorations {
         if (loaded) return true;
         try {
             if (SystemInfo.isX86) {
-                NativeUtil.loadLibraryFromJar("/library/x86/jniplatform.dll");
+                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/windows/x86/jniplatform.dll");
             } else if (SystemInfo.isX64) {
-                NativeUtil.loadLibraryFromJar("/library/x64/jniplatform.dll");
+                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/windows/x64/jniplatform.dll");
             } else {
                 LOGGER.warning("Could not determine jre model '"
                                        + SystemInfo.jreArchitecture

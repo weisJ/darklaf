@@ -585,8 +585,6 @@ public class DarkTitlePane extends JComponent {
         Icon systemIcon;
         if (icons.size() == 0) {
             systemIcon = UIManager.getIcon("TitlePane.icon");
-        } else if (icons.size() == 1) {
-            systemIcon = new ImageIcon(icons.get(0));
         } else {
             systemIcon = new ImageIcon(SunToolkit.getScaledIconImage(icons, IMAGE_WIDTH, IMAGE_HEIGHT));
         }

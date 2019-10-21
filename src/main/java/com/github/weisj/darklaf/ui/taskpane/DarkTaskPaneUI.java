@@ -42,6 +42,8 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
     protected boolean isCollapsed;
     protected Color borderColor;
+    protected Icon collapsedIcon;
+    protected Icon openIcon;
     protected int arc;
 
     @NotNull
@@ -54,6 +56,8 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     protected void installDefaults() {
         borderColor = UIManager.getColor("TaskPane.borderColor");
         arc = UIManager.getInt("TaskPane.arc");
+        collapsedIcon = UIManager.getIcon("TaskPane.collapsed.icon");
+        openIcon = UIManager.getIcon("TaskPane.open.icon");
         super.installDefaults();
     }
 
@@ -172,7 +176,11 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
                                              final int y, final int width, final int height) {
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(getPaintColor(group));
-            paintChevronControls(group, g, x, y, width, height);
+            if (group.isCollapsed()) {
+                collapsedIcon.paintIcon(group, g, x, y);
+            } else {
+                openIcon.paintIcon(group, g, x, y);
+            }
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         }
 
