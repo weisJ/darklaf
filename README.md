@@ -1,5 +1,7 @@
 # Darklaf - A Darcula Look and Feel
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.weisj/darklaf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.weisj%22%20AND%20a:%22darklaf%22)
+
 This project is based on the [darcula](https://github.com/bulenkov/Darcula) look and feel for Swing.
 Gradually all the custom UI and more from the darcula project wil be ported over and given a new look that follows the newer darcula look in IntelliJ.
 
