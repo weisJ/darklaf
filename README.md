@@ -13,7 +13,7 @@ Darcula Theme | IntelliJ Theme
 
 ![Solarized Dark Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_solarized_dark.png) | ![Solarized Light Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_solarized_light.png)
 :-------------------------:|:-------------------------:
-Solarized Light Theme | Solarized Dark Theme
+Solarized Dark Theme | Solarized Light Theme
 
 # Usage & Features
 The LookAndFeel can be easily installed using the 'LafManager'
