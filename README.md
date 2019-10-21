@@ -59,8 +59,3 @@ property of the component.
 //Todo: list of properties
 
 This LookAndFeel supports custom window decorations (only Windows at this point). In contrast to most other LaFs the native window behaviour is not compromised giving a seamless experience that still looks native.
-
-# Roadmap
-- Finish all ui classes for the dark variant.
-- Port/Create light variant.
-- Enable custom theming.
