@@ -19,7 +19,7 @@ Solarized Dark Theme | Solarized Light Theme
 You can either use the current build from [releases](https://github.com/weisJ/darklaf/releases) or the the [bin folder](https://github.com/weisJ/darklaf/tree/master/bin). These binaries already include a stripped down version of all dependecies.
 
 This project is available on Maven Central:
-## Maven
+### Maven
 ````xml
 <dependency>
   <groupId>com.github.weisj</groupId>
@@ -27,19 +27,21 @@ This project is available on Maven Central:
   <version>1.3</version>
 </dependency>
 ````
-## Gradle
+### Gradle
 ````
 implementation 'com.github.weisj:darklaf:1.3'
 ````
 
-
+## Installation
 The LookAndFeel can be easily installed using the 'LafManager'
-
 ````java
 LafManager.install();
 ````
-
-or by any other default method of setting the LaF of your swing application.
+or by using the UIManager
+````java
+LafManager.setTheme(new DarculaTheme());
+UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
+````
 
 ## Example
 ````java
