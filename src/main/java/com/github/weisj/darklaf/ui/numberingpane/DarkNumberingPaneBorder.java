@@ -21,34 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.ui.numberingpane;
 
-import org.jetbrains.annotations.Contract;
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
-public class Pair<T, H> {
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
-    private T first;
-    private H second;
+public class DarkNumberingPaneBorder extends MutableLineBorder implements UIResource {
 
-    @Contract(pure = true)
-    public Pair(final T first, final H second) {
-        this.first = first;
-        this.second = second;
-    }
-
-    public H getSecond() {
-        return second;
-    }
-
-    public T getFirst() {
-        return first;
-    }
-
-    public void setFirst(final T first) {
-        this.first = first;
-    }
-
-    public void setSecond(final H second) {
-        this.second = second;
+    public DarkNumberingPaneBorder() {
+        super(0, 0, 0, 1, null);
+        setColor(UIManager.getColor("NumberingPane.borderColor"));
     }
 }

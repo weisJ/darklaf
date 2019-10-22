@@ -1,10 +1,12 @@
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
+import com.github.weisj.darklaf.components.text.NonWrappingEditorPane;
+import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.icons.IconLoader;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -74,14 +76,8 @@ public class TabFrameDemo {
              */
             tabFrame.setAcceleratorAt(1, Alignment.NORTH_WEST, 0);
 
-            var contentPane = new JPanel(new BorderLayout());
-            var overlayScroll = new OverlayScrollPane(new JTextPane() {{
-                setText(TestResources.LOREM_IPSUM);
-                setFont(Font.getFont(Font.MONOSPACED));
-            }});
-            contentPane.add(overlayScroll, BorderLayout.CENTER);
             frame.setContentPane(tabFrame);
-            tabFrame.setContent(contentPane);
+            tabFrame.setContent(createTextArea());
 
             frame.pack();
             frame.setSize(1000, 500);
@@ -90,6 +86,7 @@ public class TabFrameDemo {
         });
     }
 
+    @NotNull
     protected static JTree createTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("States");
         DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Andhra Pradesh");
@@ -112,5 +109,23 @@ public class TabFrameDemo {
         tree.setEditable(true);
 //        tree.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         return tree;
+    }
+
+    @NotNull
+    private static Component createTextArea() {
+        var numberPane = new NumberedTextComponent(new NonWrappingEditorPane() {{
+            setText((TestResources.LOREM_IPSUM).repeat(10));
+            setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
+        }});
+        var numbering = numberPane.getNumberingPane();
+        Icon icon = IconLoader.get().getIcon("navigation/arrowRight.svg");
+//        try {
+//            numbering.addIconAtLine(5, icon);
+//            numbering.addIconAtLine(10, icon);
+//            numbering.addIconAtLine(15, icon);
+//        } catch (BadLocationException e) {
+//            e.printStackTrace();
+//        }
+        return numberPane;
     }
 }

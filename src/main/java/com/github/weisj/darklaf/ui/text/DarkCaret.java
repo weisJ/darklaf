@@ -250,61 +250,61 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     @Override
     public void paint(final Graphics g) {
         if (isVisible() || alwaysVisible) {
+            JTextComponent textArea = getComponent();
+            g.setColor(textArea.getCaretColor());
+            TextUI mapper = textArea.getUI();
+            Rectangle r;
             try {
-                JTextComponent textArea = getComponent();
-                g.setColor(textArea.getCaretColor());
-                TextUI mapper = textArea.getUI();
-                Rectangle r = mapper.modelToView2D(textArea, getDot(), Position.Bias.Forward).getBounds();
+                r = mapper.modelToView2D(textArea, getDot(), Position.Bias.Forward).getBounds();
+            } catch (BadLocationException ex) {
+                r = new Rectangle(0, 0, 0, 0);
+            }
+            validateWidth(r);
 
-                validateWidth(r);
+            if (width > 0 && height > 0 &&
+                    !contains(r.x, r.y, r.width, r.height)) {
+                Rectangle clip = g.getClipBounds();
+                if (clip != null && !clip.contains(this)) {
+                    // Clip doesn't contain the old location, force it
+                    // to be repainted lest we leave a caret around.
+                    repaint();
+                }
+                damage(r);
+            }
 
-                if (width > 0 && height > 0 &&
-                        !contains(r.x, r.y, r.width, r.height)) {
-                    Rectangle clip = g.getClipBounds();
-                    if (clip != null && !clip.contains(this)) {
-                        // Clip doesn't contain the old location, force it
-                        // to be repainted lest we leave a caret around.
-                        repaint();
+            // Need to subtract 2 from height, otherwise
+            // the caret will expand too far vertically.
+            r.height -= 2;
+            r.y += 1;
+
+            Color textAreaBg = textArea.getBackground();
+            switch (style) {
+                case BLOCK_STYLE:
+                    if (textAreaBg == null) {
+                        textAreaBg = Color.white;
                     }
-                    damage(r);
-                }
-
-                // Need to subtract 2 from height, otherwise
-                // the caret will expand too far vertically.
-                r.height -= 2;
-                r.y += 1;
-
-                Color textAreaBg = textArea.getBackground();
-                switch (style) {
-                    case BLOCK_STYLE:
-                        if (textAreaBg == null) {
-                            textAreaBg = Color.white;
-                        }
-                        g.setXORMode(textAreaBg);
-                        g.fillRect(r.x, r.y, r.width, r.height);
-                        break;
-                    case BLOCK_BORDER_STYLE:
-                        DarkUIUtil.drawRect(g, r.x, r.y, r.width - 1, r.height, 1);
-                        break;
-                    case UNDERLINE_STYLE:
-                        if (textAreaBg == null) {
-                            textAreaBg = Color.white;
-                        }
-                        g.setXORMode(textAreaBg);
-                        int y = r.y + r.height;
-                        g.drawLine(r.x, y, r.x + r.width - 1, y);
-                        break;
-                    case THICK_VERTICAL_LINE_STYLE:
-                        g.drawLine(r.x, r.y, r.x, r.y + r.height);
-                        r.x++;
-                        g.drawLine(r.x, r.y, r.x, r.y + r.height);
-                        break;
-                    case VERTICAL_LINE_STYLE:
-                        g.drawLine(r.x, r.y, r.x, r.y + r.height);
-                        break;
-                }
-            } catch (BadLocationException ble) {
-                ble.printStackTrace();
+                    g.setXORMode(textAreaBg);
+                    g.fillRect(r.x, r.y, r.width, r.height);
+                    break;
+                case BLOCK_BORDER_STYLE:
+                    DarkUIUtil.drawRect(g, r.x, r.y, r.width - 1, r.height, 1);
+                    break;
+                case UNDERLINE_STYLE:
+                    if (textAreaBg == null) {
+                        textAreaBg = Color.white;
+                    }
+                    g.setXORMode(textAreaBg);
+                    int y = r.y + r.height;
+                    g.drawLine(r.x, y, r.x + r.width - 1, y);
+                    break;
+                case THICK_VERTICAL_LINE_STYLE:
+                    g.drawLine(r.x, r.y, r.x, r.y + r.height);
+                    r.x++;
+                    g.drawLine(r.x, r.y, r.x, r.y + r.height);
+                    break;
+                case VERTICAL_LINE_STYLE:
+                    g.drawLine(r.x, r.y, r.x, r.y + r.height);
+                    break;
             }
         }
     }
@@ -340,24 +340,21 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     private void validateWidth(final Rectangle rect) {
         if (rect != null && rect.width <= 1) {
+            JTextComponent textArea = getComponent();
             try {
-                JTextComponent textArea = getComponent();
                 textArea.getDocument().getText(getDot(), 1, seg);
-                Font font = textArea.getFont();
-                FontMetrics fm = textArea.getFontMetrics(font);
-                rect.width = fm.charWidth(seg.array[seg.offset]);
-
-                if (rect.width == 0) {
-                    rect.width = fm.charWidth(' ');
-                }
-
             } catch (BadLocationException ble) {
                 // This shouldn't ever happen.
                 ble.printStackTrace();
                 rect.width = 8;
             }
+            Font font = textArea.getFont();
+            FontMetrics fm = textArea.getFontMetrics(font);
+            rect.width = fm.charWidth(seg.array[seg.offset]);
+
+            if (rect.width == 0) {
+                rect.width = fm.charWidth(' ');
+            }
         }
     }
-
-
 }

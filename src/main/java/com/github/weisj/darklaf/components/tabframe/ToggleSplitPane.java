@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.components.tabframe;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 public class ToggleSplitPane extends JSplitPane {
@@ -61,9 +62,17 @@ public class ToggleSplitPane extends JSplitPane {
             setEnabled(false);
             disabledPos = super.getDividerLocation();
             disabledMax = getMaximumDividerLocation();
+            getDivider().setEnabled(false);
+            setComponentZOrder(getDivider(), getComponentCount() - 1);
         } else {
             setEnabled(lastEnabled);
+            getDivider().setEnabled(lastEnabled);
+            setComponentZOrder(getDivider(), 0);
         }
+    }
+
+    protected BasicSplitPaneDivider getDivider() {
+        return ((BasicSplitPaneUI) getUI()).getDivider();
     }
 
     @Override

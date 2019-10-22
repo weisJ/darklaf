@@ -183,6 +183,12 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
         }
 
         @Override
+        public boolean contains(final Point p) {
+            if (!isEnabled()) return false;
+            return super.contains(p);
+        }
+
+        @Override
         protected void dragDividerTo(final int location) {
             super.dragDividerTo(location + DIVIDER_DRAG_OFFSET);
         }

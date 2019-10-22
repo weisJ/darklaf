@@ -21,34 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.components.text;
 
-import org.jetbrains.annotations.Contract;
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 
-public class Pair<T, H> {
+/**
+ * JTextPane that keeps the original width of text.
+ *
+ * @author Jannis Weis
+ * @since 2018
+ */
+public class NonWrappingEditorPane extends JEditorPane {
 
-    private T first;
-    private H second;
-
-    @Contract(pure = true)
-    public Pair(final T first, final H second) {
-        this.first = first;
-        this.second = second;
+    @Override
+    public Dimension getPreferredSize() {
+        // Avoid substituting the minimum width for the preferred width
+        // when the viewport is too narrow.
+        return getUI().getPreferredSize(this);
     }
 
-    public H getSecond() {
-        return second;
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+        final Component parent = getParent();
+        final ComponentUI ui = getUI();
+        return parent == null || (ui.getPreferredSize(this).width <= parent.getSize().width);
     }
 
-    public T getFirst() {
-        return first;
-    }
-
-    public void setFirst(final T first) {
-        this.first = first;
-    }
-
-    public void setSecond(final H second) {
-        this.second = second;
+    @Override
+    public int getScrollableUnitIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
+        return getFont().getSize();
     }
 }

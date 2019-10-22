@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.ui.rootpane;
 
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.platform.windows.JNIDecorations;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -767,31 +768,4 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-    protected static class ScaledIcon implements Icon {
-
-        private Image img;
-
-        @Contract(pure = true)
-        protected ScaledIcon(final Image img) {
-            this.img = img;
-        }
-
-        @Override
-        public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
-            var g = (Graphics2D) g2;
-            g.translate(x, y);
-            g.scale(1.0 / GraphicsUtil.SCALE_X, 1.0 / GraphicsUtil.SCALE_Y);
-            g.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
-        }
-
-        @Override
-        public int getIconWidth() {
-            return (int) (img.getWidth(null) / GraphicsUtil.SCALE_X);
-        }
-
-        @Override
-        public int getIconHeight() {
-            return (int) (img.getHeight(null) / GraphicsUtil.SCALE_Y);
-        }
-    }
 }

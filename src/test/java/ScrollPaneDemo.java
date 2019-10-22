@@ -17,7 +17,7 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
             frame.setSize(500, 500);
             var overlayScroll = new JScrollPane(new JEditorPane() {{
 //                setEditorKit(new HTMLEditorKit());
-                setText(TestResources.LOREM_IPSUM);
+                setText(TestResources.LOREM_IPSUM.repeat(10));
                 setFont(Font.getFont(Font.MONOSPACED));
 //                setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             }});

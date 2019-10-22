@@ -301,6 +301,7 @@ public class OverlayScrollPane extends JLayeredPane {
                     && scrollPane.verticalScrollBar.getBounds().contains(x, y);
         }
 
+        @Contract(pure = true)
         @Override
         public boolean isOpaque() {
             return false;

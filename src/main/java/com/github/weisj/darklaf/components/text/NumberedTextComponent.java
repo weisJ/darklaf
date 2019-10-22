@@ -21,34 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.components.text;
 
-import org.jetbrains.annotations.Contract;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 
-public class Pair<T, H> {
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
 
-    private T first;
-    private H second;
+public class NumberedTextComponent extends JPanel {
 
-    @Contract(pure = true)
-    public Pair(final T first, final H second) {
-        this.first = first;
-        this.second = second;
+    private NumberingPane numberingPane;
+
+    public NumberedTextComponent(final JTextComponent textComponent) {
+        super(new BorderLayout());
+        OverlayScrollPane overlayScrollPane = new OverlayScrollPane(textComponent);
+        numberingPane = new NumberingPane();
+        numberingPane.setTextComponent(textComponent);
+        overlayScrollPane.getVerticalScrollBar().setBlockIncrement(textComponent.getFont().getSize());
+        overlayScrollPane.getScrollPane().setRowHeaderView(numberingPane);
+        add(overlayScrollPane, BorderLayout.CENTER);
     }
 
-    public H getSecond() {
-        return second;
-    }
-
-    public T getFirst() {
-        return first;
-    }
-
-    public void setFirst(final T first) {
-        this.first = first;
-    }
-
-    public void setSecond(final H second) {
-        this.second = second;
+    public NumberingPane getNumberingPane() {
+        return numberingPane;
     }
 }
