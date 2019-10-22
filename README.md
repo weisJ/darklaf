@@ -35,7 +35,8 @@ implementation 'com.github.weisj:darklaf:1.3'
 ## Installation
 The LookAndFeel can be easily installed using the 'LafManager'
 ````java
-LafManager.install();
+LafManager.install(); //For default theme (IntelliJ)
+LafManager.install(new DarculaTheme()); //Specify the used theme.
 ````
 or by using the UIManager
 ````java
