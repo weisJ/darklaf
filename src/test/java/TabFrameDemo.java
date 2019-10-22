@@ -9,6 +9,7 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 
@@ -119,13 +120,13 @@ public class TabFrameDemo {
         }});
         var numbering = numberPane.getNumberingPane();
         Icon icon = IconLoader.get().getIcon("navigation/arrowRight.svg");
-//        try {
-//            numbering.addIconAtLine(5, icon);
-//            numbering.addIconAtLine(10, icon);
-//            numbering.addIconAtLine(15, icon);
-//        } catch (BadLocationException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            numbering.addIconAtLine(5, icon);
+            numbering.addIconAtLine(10, icon);
+            numbering.addIconAtLine(15, icon);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
         return numberPane;
     }
 }
