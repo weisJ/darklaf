@@ -28,6 +28,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +39,11 @@ public class NumberingPane extends JComponent {
 
     private JTextComponent textComponent;
     private Map<Position, Icon> iconMap;
+    private Map<Position, List<IconListener>> listenerMap;
 
     public NumberingPane() {
         iconMap = new HashMap<>();
+        listenerMap = new HashMap<>();
         updateUI();
     }
 
@@ -95,6 +98,54 @@ public class NumberingPane extends JComponent {
         }
         return addIconAtOffset(offset, icon);
     }
+
+    public void addIconListener(final int offset, final IconListener listener) throws BadLocationException {
+        if (textComponent == null) return;
+        addIconListener(textComponent.getDocument().createPosition(offset), listener);
+    }
+
+    public void addIconListener(final Position position, final IconListener listener) {
+        if (!listenerMap.containsKey(position)) {
+            listenerMap.put(position, new ArrayList<>());
+        }
+        var list = listenerMap.get(position);
+        list.add(listener);
+    }
+
+    public void removeIconListener(final int offset, final IconListener listener) throws BadLocationException {
+        if (textComponent == null) return;
+        removeIconListener(textComponent.getDocument().createPosition(offset), listener);
+    }
+
+    public void removeIconListener(final Position position, final IconListener listener) {
+        var list = listenerMap.get(position);
+        if (list != null) {
+            list.remove(listener);
+        }
+    }
+
+    public List<IconListener> getIconListeners(final int offset) throws BadLocationException {
+        if (textComponent == null) return List.of();
+        return getIconListeners(textComponent.getDocument().createPosition(offset));
+    }
+
+    public List<IconListener> getIconListeners(final Position position) {
+        var list = listenerMap.get(position);
+        return list != null ? list : List.of();
+    }
+
+    public List<IconListener> getIconListeners(final int startOffset, final int endOffset) {
+        return listenerMap.entrySet().stream()
+                          .filter(entry -> {
+                              var p = entry.getKey();
+                              return p.getOffset() >= startOffset && p.getOffset() <= endOffset;
+                          })
+                          .map(Map.Entry::getValue)
+                          .flatMap(List::stream)
+                          .collect(Collectors.toList());
+    }
+
+
 
     public Position addIconAtOffset(final int offset, final Icon icon) throws BadLocationException {
         var doc = textComponent.getDocument();

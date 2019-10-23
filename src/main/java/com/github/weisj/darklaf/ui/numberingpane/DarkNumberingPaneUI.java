@@ -251,12 +251,13 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         int x = OUTER_PAD + PAD + textWidth;
                         int y = lineRect.y + lineRect.height / 2 - h / 2;
                         if (p.x >= x && p.y >= y && p.y <= y + h) {
-                            System.out.println("clicked icon" + start);
-                            return;
+                            var list = numberingPane.getIconListeners(startOffset, endOffset);
+                            for (var listener : list) {
+                                listener.iconClicked(e);
+                            }
                         }
                     } catch (BadLocationException ignored) { }
                 }
-                System.out.println("clicked line: " + start);
             }
         }
 
