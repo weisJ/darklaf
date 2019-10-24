@@ -113,6 +113,11 @@ public class DarkComboPopup extends BasicComboPopup {
     }
 
     @Override
+    protected void configureList() {
+        super.configureList();
+    }
+
+    @Override
     protected void togglePopup() {
         if (comboBox.getItemCount() == 0) return;
         if (visible) {

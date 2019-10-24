@@ -204,7 +204,7 @@ public class UIManagerDefaults implements ItemListener {
         final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0);
         table = new JTable(model);
         table.setAutoCreateColumnsFromModel(false);
-//        table.setShowHorizontalLines(false);
+        table.setShowHorizontalLines(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(250);
         table.getColumnModel().getColumn(1).setPreferredWidth(500);
 
