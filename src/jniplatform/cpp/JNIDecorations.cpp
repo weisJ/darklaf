@@ -120,7 +120,7 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
 }
 
 JNIEXPORT void JNICALL
-JJava_com_github_weisj_darklaf_platform_windows_JNIDecorations_setResizable(JNIEnv *env, jclass obj, jlong hwnd, jboolean res)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_setResizable(JNIEnv *env, jclass obj, jlong hwnd, jboolean res)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];

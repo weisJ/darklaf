@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -170,6 +171,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         selectionBackground = UIManager.getColor("Table.selectionNoFocusBackground");
     }
 
+
     @Override
     protected void paintGrid(@NotNull final Graphics g,
                              final int rMin, final int rMax, final int cMin, final int cMax) {
@@ -240,11 +242,9 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     protected boolean scrollBarVisible() {
-        Container comp = SwingUtilities.getUnwrappedParent(table);
-        if (comp != null) {
-            comp = comp.getParent();
-        }
-        return comp instanceof JScrollPane && ((JScrollPane) comp).getVerticalScrollBar().isVisible();
+        JScrollPane comp = DarkUIUtil.getParentOfType(JScrollPane.class, table);
+        return comp != null && comp.getVerticalScrollBar().isVisible()
+                && DarkUIUtil.getParentOfType(OverlayScrollPane.class, table) == null;
     }
 
     protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
@@ -336,16 +336,14 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
         }
-        if (table.isEditing() && table.getEditingRow() == row &&
-                table.getEditingColumn() == column) {
+        if (table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column) {
             Component component = table.getEditorComponent();
-            component.setBounds(cellRect);
+            component.setBounds(r);
             component.validate();
         } else {
             TableCellRenderer renderer = table.getCellRenderer(row, column);
             Component component = table.prepareRenderer(renderer, row, column);
-            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
-                                        cellRect.width, cellRect.height, true);
+            rendererPane.paintComponent(g, component, table, r.x, r.y, r.width, r.height, true);
         }
     }
 
@@ -370,31 +368,28 @@ public class DarkTableUI extends DarkTableUIBridge {
                 parent = par.getParent();
             }
         }
+        int tableHeight = getPreferredSize(table).height;
         g.setColor(parent.getBackground());
-        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
-                   vacatedColumnRect.width - 1, vacatedColumnRect.height);
+        g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width - 1, tableHeight);
 
 
         // Move to the where the cell has been dragged.
         vacatedColumnRect.x += dist;
 
-        boolean scrollVisible = scrollBarVisible();
-        boolean drawBottomBorder = !table.getShowHorizontalLines() && !scrollVisible && table.getShowVerticalLines();
         boolean ltr = table.getComponentOrientation().isLeftToRight();
 
         // Fill the background.
         g.setColor(table.getBackground());
-        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
-                   vacatedColumnRect.width, vacatedColumnRect.height);
+        g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width, tableHeight);
 
 
         // Paint the vertical grid lines if necessary.
         if (table.getShowVerticalLines()) {
             g.setColor(table.getGridColor());
             int x1 = vacatedColumnRect.x;
-            int y1 = vacatedColumnRect.y;
+            int y1 = 0;
             int x2 = x1 + vacatedColumnRect.width - 1;
-            int y2 = y1 + vacatedColumnRect.height - 1;
+            int y2 = y1 + tableHeight;
 
             boolean onLeftEdge = ltr ? draggedColumnIndex == cMin : draggedColumnIndex == cMax;
             boolean onRightEdge = ltr ? draggedColumnIndex == cMax : draggedColumnIndex == cMin;
@@ -423,13 +418,13 @@ public class DarkTableUI extends DarkTableUIBridge {
             paintCell(g, r, row, draggedColumnIndex);
 
             // Paint the (lower) horizontal grid line if necessary.
-            if (table.getShowHorizontalLines() || (!scrollVisible && row == rMax)) {
+            if (table.getShowHorizontalLines()) {
                 g.setColor(table.getGridColor());
                 Rectangle rcr = table.getCellRect(row, draggedColumnIndex, true);
-                rcr.x += dist;
-                int x1 = rcr.x - 1;
+                rcr.x += distance;
+                int x1 = rcr.x;
                 int y1 = rcr.y;
-                int x2 = x1 + rcr.width + 1;
+                int x2 = x1 + rcr.width;
                 int y2 = y1 + rcr.height - 1;
                 g.fillRect(x1, y2, x2 - x1, 1);
             }
@@ -479,6 +474,14 @@ public class DarkTableUI extends DarkTableUIBridge {
                 } else {
                     lastIndex = row;
                 }
+            }
+        }
+
+        @Override
+        public void mousePressed(final MouseEvent e) {
+            super.mousePressed(e);
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                table.repaint();
             }
         }
 

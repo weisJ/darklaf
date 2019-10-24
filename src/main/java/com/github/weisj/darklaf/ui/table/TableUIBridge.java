@@ -1879,9 +1879,8 @@ public abstract class TableUIBridge extends TableUI {
                     if (binding != null) {
                         ActionMap am = component.getActionMap();
                         Action action = (am != null) ? am.get(binding) : null;
-                        if (action != null && SwingUtilities.
-                                                                    notifyAction(action, keyStroke, e, component,
-                                                                                 e.getModifiers())) {
+                        if (action != null && SwingUtilities.notifyAction(action, keyStroke, e, component,
+                                                                          e.getModifiers())) {
                             e.consume();
                         }
                     }
@@ -2057,11 +2056,8 @@ public abstract class TableUIBridge extends TableUI {
             Component editorComponent = table.getEditorComponent();
             Point p = e.getPoint();
             Point p2 = SwingUtilities.convertPoint(table, p, editorComponent);
-            dispatchComponent =
-                    SwingUtilities.getDeepestComponentAt(editorComponent,
-                                                         p2.x, p2.y);
-            SwingUtilities2.setSkipClickCount(dispatchComponent,
-                                              e.getClickCount() - 1);
+            dispatchComponent = SwingUtilities.getDeepestComponentAt(editorComponent, p2.x, p2.y);
+            SwingUtilities2.setSkipClickCount(dispatchComponent, e.getClickCount() - 1);
         }
 
         public void mouseEntered(final MouseEvent e) {
@@ -2107,11 +2103,8 @@ public abstract class TableUIBridge extends TableUI {
                 } else if (!e.isShiftDown() && table.isCellSelected(pressedRow, pressedCol)) {
                     // clicking on something that's already selected
                     // and need to make it the lead now
-                    table.getSelectionModel().addSelectionInterval(pressedRow,
-                                                                   pressedRow);
-                    table.getColumnModel().getSelectionModel().
-                            addSelectionInterval(pressedCol, pressedCol);
-
+                    table.getSelectionModel().addSelectionInterval(pressedRow, pressedRow);
+                    table.getColumnModel().getSelectionModel().addSelectionInterval(pressedCol, pressedCol);
                     return;
                 }
 
@@ -2145,7 +2138,6 @@ public abstract class TableUIBridge extends TableUI {
             if (editorComponent != null && !editorComponent.hasFocus()) {
                 SwingUtilities2.compositeRequestFocus(editorComponent);
             }
-            return;
         }
 
         public void dragStarting(final MouseEvent me) {
@@ -2166,9 +2158,7 @@ public abstract class TableUIBridge extends TableUI {
                 return;
             }
 
-            if (table.getDragEnabled() &&
-                    (DragRecognitionSupport.mouseDragged(e, this) || dragStarted)) {
-
+            if (table.getDragEnabled() && (DragRecognitionSupport.mouseDragged(e, this) || dragStarted)) {
                 return;
             }
 
@@ -2190,8 +2180,7 @@ public abstract class TableUIBridge extends TableUI {
                 return;
             }
 
-            table.changeSelection(row, column,
-                                  DarkUIUtil.isMenuShortcutKeyDown(e), true);
+            table.changeSelection(row, column, DarkUIUtil.isMenuShortcutKeyDown(e), true);
         }
 
         public void mouseMoved(final MouseEvent e) {

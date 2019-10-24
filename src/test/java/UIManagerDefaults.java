@@ -5,6 +5,7 @@
 
 import com.github.weisj.darklaf.DarkLafInfo;
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.ui.table.DarkColorTableCellRendererEditor;
 import org.jdesktop.swingx.JXTaskPane;
@@ -203,7 +204,7 @@ public class UIManagerDefaults implements ItemListener {
         final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0);
         table = new JTable(model);
         table.setAutoCreateColumnsFromModel(false);
-        table.setShowHorizontalLines(false);
+//        table.setShowHorizontalLines(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(250);
         table.getColumnModel().getColumn(1).setPreferredWidth(500);
 
@@ -215,7 +216,7 @@ public class UIManagerDefaults implements ItemListener {
         d.height = 350;
         table.setPreferredScrollableViewportSize(d);
 
-        return new JScrollPane(table);
+        return new OverlayScrollPane(table);
     }
 
     /*
