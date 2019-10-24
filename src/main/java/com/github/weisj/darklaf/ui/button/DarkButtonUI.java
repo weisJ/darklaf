@@ -117,6 +117,7 @@ public class DarkButtonUI extends BasicButtonUI {
     @Override
     protected void paintText(@NotNull final Graphics g, final JComponent c,
                              final Rectangle textRect, final String text) {
+        var config = GraphicsUtil.setupAntialiasing(g);
         AbstractButton button = (AbstractButton) c;
         ButtonModel model = button.getModel();
         g.setColor(getForeground(button));
@@ -132,6 +133,7 @@ public class DarkButtonUI extends BasicButtonUI {
                                                       textRect.x + getTextShiftOffset(),
                                                       textRect.y + metrics.getAscent() + getTextShiftOffset());
         }
+        config.restore();
     }
 
     protected Color getForeground(@NotNull final AbstractButton button) {

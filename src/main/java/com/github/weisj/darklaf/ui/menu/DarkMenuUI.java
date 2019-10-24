@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.menu;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.MenuItemLayoutHelper;
 import sun.swing.SwingUtilities2;
@@ -112,6 +113,7 @@ public class DarkMenuUI extends BasicMenuUI {
 
     protected void paintText(final Graphics g, @NotNull final MenuItemLayoutHelper lh,
                              final MenuItemLayoutHelper.LayoutResult lr) {
+        var config = GraphicsUtil.setupAntialiasing(g);
         if (!lh.getText().isBlank()) {
             if (lh.getHtmlView() != null) {
                 // Text is HTML
@@ -121,10 +123,12 @@ public class DarkMenuUI extends BasicMenuUI {
                 paintText(g, lh.getMenuItem(), lr.getTextRect(), lh.getText());
             }
         }
+        config.restore();
     }
 
     protected void paintAccText(final Graphics g, final MenuItemLayoutHelper lh,
                                 final MenuItemLayoutHelper.LayoutResult lr) {
+        var config = GraphicsUtil.setupAntialiasing(g);
         rightAlignAccText(lh, lr);
         if (!lh.getAccText().isBlank()) {
             ButtonModel model = lh.getMenuItem().getModel();
@@ -160,6 +164,7 @@ public class DarkMenuUI extends BasicMenuUI {
                                                    lh.getAccFontMetrics().getAscent());
             }
         }
+        config.restore();
     }
 
     protected void paintArrowIcon(final Graphics g, @NotNull final MenuItemLayoutHelper lh,

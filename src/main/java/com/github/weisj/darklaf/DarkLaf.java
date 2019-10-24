@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf;
 
+import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.platform.windows.JNIDecorations;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.menu.DarkPopupMenuUI;
@@ -303,6 +304,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     public void uninitialize() {
         call("uninitialize");
         AppContext context = AppContext.getAppContext();
+        UIManager.removePropertyChangeListener(this);
         synchronized (DarkPopupMenuUI.MOUSE_GRABBER_KEY) {
             Object grabber = context.get(DarkPopupMenuUI.MOUSE_GRABBER_KEY);
             if (grabber != null) {
@@ -376,6 +378,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             }
             UIManager.removePropertyChangeListener(this);
         }
+        DarkBorders.update();
     }
 
 

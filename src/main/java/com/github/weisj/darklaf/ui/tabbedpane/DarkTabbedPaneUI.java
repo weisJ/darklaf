@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -759,6 +760,15 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                         y + getTabLabelShiftY(tabPlacement, i, isSeleceted),
                         preferredSize.width, preferredSize.height);
         }
+    }
+
+    @Override
+    protected void paintText(final Graphics g, final int tabPlacement, final Font font,
+                             final FontMetrics metrics, final int tabIndex, final String title,
+                             final Rectangle textRect, final boolean isSelected) {
+        var config = GraphicsUtil.setupAntialiasing(g);
+        super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected);
+        config.restore();
     }
 
     public Icon getNewTabIcon() {

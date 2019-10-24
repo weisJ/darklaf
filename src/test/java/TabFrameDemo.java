@@ -1,6 +1,7 @@
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.components.alignment.Alignment;
+import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.text.NonWrappingEditorPane;
@@ -77,7 +78,15 @@ public class TabFrameDemo {
              */
             tabFrame.setAcceleratorAt(1, Alignment.NORTH_WEST, 0);
 
-            frame.setContentPane(tabFrame);
+            var contentPane = new JPanel(new BorderLayout());
+            var topPanel = new JPanel(new GridBagLayout());
+            topPanel.add(new JButton("I do nothing!"), null);
+            topPanel.setBorder(DarkBorders.createLineBorder(0, 0, 1, 0));
+
+            contentPane.add(topPanel, BorderLayout.NORTH);
+            contentPane.add(tabFrame, BorderLayout.CENTER);
+
+            frame.setContentPane(contentPane);
             tabFrame.setContent(createTextArea());
 
             frame.pack();

@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
+import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
@@ -145,6 +146,7 @@ public class DarkPreviewPanel extends JPanel {
     }
 
     private int paintText(@NotNull final Graphics g, final int offsetX) {
+        var config = GraphicsUtil.setupAntialiasing(g);
         g.setFont(getFont());
         JComponent host = getColorChooser();
         if (host == null) {
@@ -176,6 +178,7 @@ public class DarkPreviewPanel extends JPanel {
         SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
                                    ((height + TEXT_GAP) * 2) + ascent + 2);
 
+        config.restore();
         return width + TEXT_GAP * 3;
     }
 

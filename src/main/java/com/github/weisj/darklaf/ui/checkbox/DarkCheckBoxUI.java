@@ -219,7 +219,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     public static void paintText(@NotNull final Graphics2D g, @NotNull final AbstractButton b,
                                  final Rectangle textRect, final String text, final FontMetrics fm,
                                  final Color disabledTextColor) {
-        GraphicsContext context = GraphicsUtil.setupAntialiasing(g, true, false);
+        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.setFont(b.getFont());
         View view = (View) b.getClientProperty(BasicHTML.propertyKey);
         if (view != null) {

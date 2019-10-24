@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.numberingpane;
 import com.github.weisj.darklaf.components.text.LineHighlighter;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -185,6 +186,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
     protected void drawNumbering(@NotNull final Graphics g, final int startLine, final int endLine, final int yCur,
                                  @NotNull final Element root, final int descent) {
+        var config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
         int digits = String.valueOf(root.getElementCount()).length();
         for (int i = startLine; i <= endLine; i++) {
@@ -196,6 +198,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                              lineRect.y + lineRect.height - descent);
             } catch (BadLocationException ignored) { }
         }
+        config.restore();
     }
 
     protected void paintIcons(final Graphics g, final int startLine, final int endLine, @NotNull final Element root) {
