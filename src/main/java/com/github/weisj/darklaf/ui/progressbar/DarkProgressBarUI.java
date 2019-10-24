@@ -196,7 +196,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         g.setFont(progressBar.getFont());
         Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
 
-        var config = GraphicsUtil.setupAAPainting(g);
+        var config = GraphicsUtil.setupAntialiasing(g);
         if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
             g.setColor(getSelectionBackground());
             g.drawString(progressString, renderLocation.x, renderLocation.y);

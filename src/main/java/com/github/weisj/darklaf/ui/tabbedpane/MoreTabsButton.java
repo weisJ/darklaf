@@ -61,7 +61,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         int y = (getHeight() - icon.getIconHeight()) / 2;
 
 
-        var config = GraphicsUtil.setupAAPainting(g);
+        var config = GraphicsUtil.setupAntialiasing(g);
         /*
          * These offsets are due to the nature of the used icon. They are applied to match the baseline of
          * the label.properties text.

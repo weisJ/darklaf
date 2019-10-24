@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.util.GraphicsUtil;
 import sun.awt.SunToolkit;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
@@ -69,6 +70,13 @@ public abstract class DarkTextUI extends BasicTextUI {
     protected void uninstallDefaults() {
         super.uninstallDefaults();
         editor.putClientProperty("JTextComponent.roundedSelection", null);
+    }
+
+    @Override
+    protected void paintSafely(final Graphics g) {
+        var config = GraphicsUtil.setupAntialiasing(g);
+        super.paintSafely(g);
+        config.restore();
     }
 
     protected void installKeyboardActions() {

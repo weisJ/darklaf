@@ -23,11 +23,13 @@
  */
 package com.github.weisj.darklaf.ui.label;
 
+import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicLabelUI;
+import java.awt.*;
 
 /**
  * @author Jannis Weis
@@ -39,5 +41,12 @@ public class DarkLabelUI extends BasicLabelUI {
     @Contract(pure = true)
     public static ComponentUI createUI(final JComponent c) {
         return darkLabelUI;
+    }
+
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        var config = GraphicsUtil.setupAntialiasing(g);
+        super.paint(g, c);
+        config.restore();
     }
 }
