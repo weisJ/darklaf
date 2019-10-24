@@ -218,6 +218,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     public void setSourceIndicator(final Alignment a, final int tabIndex) {
         sourceAlign = a;
         sourceIndex = tabIndex;
+        destIndex = tabIndex;
+        destAlign = a;
         tabFrame.doLayout();
     }
 
