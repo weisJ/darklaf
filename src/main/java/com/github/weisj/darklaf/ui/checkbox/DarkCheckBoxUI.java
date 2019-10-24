@@ -83,7 +83,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     @Override
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        b.setOpaque(false);
+        LookAndFeel.installProperty(b, "opaque", false);
         checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
         checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
         checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");

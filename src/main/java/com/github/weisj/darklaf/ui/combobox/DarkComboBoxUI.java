@@ -101,7 +101,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        comboBox.setOpaque(false);
+        LookAndFeel.installProperty(comboBox, "opaque", false);
         arcSize = UIManager.getInt("ComboBox.arc");
     }
 

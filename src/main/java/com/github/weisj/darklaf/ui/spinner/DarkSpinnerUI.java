@@ -135,8 +135,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         arrowUpInactiveIcon = UIManager.getIcon("Spinner.arrowUpInactive.icon");
         minusInactiveIcon = UIManager.getIcon("Spinner.minusInactive.icon");
         plusInactiveIcon = UIManager.getIcon("Spinner.plusInactive.icon");
-
-        spinner.setOpaque(false);
+        LookAndFeel.installProperty(spinner, "opaque", false);
     }
 
     protected LayoutManager createLayout() {

@@ -82,7 +82,7 @@ public class DarkButtonUI extends BasicButtonUI {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        b.setOpaque(false);
+        LookAndFeel.installProperty(b, "opaque", false);
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");
         inactiveForeground = UIManager.getColor("Button.disabledText");

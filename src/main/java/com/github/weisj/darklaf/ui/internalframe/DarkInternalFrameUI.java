@@ -49,7 +49,7 @@ public class DarkInternalFrameUI extends BasicInternalFrameUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        frame.setOpaque(false);
+        LookAndFeel.installProperty(frame, "opaque", false);
     }
 
     @Override

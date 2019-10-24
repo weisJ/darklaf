@@ -115,7 +115,7 @@ public class DarkSliderUI extends BasicSliderUI {
     @Override
     protected void installDefaults(final JSlider slider) {
         super.installDefaults(slider);
-        slider.setOpaque(false);
+        LookAndFeel.installProperty(slider, "opaque", false);
         arcSize = UIManager.getInt("Slider.arc");
         trackSize = UIManager.getInt("Slider.trackThickness");
         plainThumbRadius = UIManager.getInt("Slider.plainThumbRadius");

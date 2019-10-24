@@ -59,6 +59,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
     protected JTextComponent textComponent;
     protected JViewport viewport;
     protected int maxIconWidth = 0;
+    protected Color oldBackground;
 
     @NotNull
     @Contract("_ -> new")
@@ -80,6 +81,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                                          "NumberingPane.font");
         foregroundHighlight = UIManager.getColor("NumberingPane.currentLineForeground");
         backgroundHighlight = UIManager.getColor("NumberingPane.currentLineBackground");
+        LookAndFeel.installProperty(c, "opaque", true);
         LookAndFeel.installBorder(c, "NumberingPane.border");
     }
 
@@ -139,8 +141,11 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     @Override
-    public void paint(final Graphics g, final JComponent c) {
-        super.paint(g, c);
+    public void paint(final Graphics g, @NotNull final JComponent c) {
+        if (c.isOpaque()) {
+            g.setColor(c.getBackground());
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        }
         if (textComponent == null || viewport == null) return;
         var metrics = textComponent.getFontMetrics(textComponent.getFont());
         int descent = metrics.getDescent();
@@ -305,6 +310,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 var newPane = evt.getNewValue();
                 if (textComponent != null) {
                     currentLinePainter.setComponent(null);
+                    textComponent.setBackground(oldBackground);
                     textComponent.getHighlighter().removeHighlight(currentHighlight);
                     textComponent.getCaret().removeChangeListener(getChangeListener());
                     textComponent.getCaret().removeChangeListener(currentLinePainter);
@@ -321,6 +327,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                     textComponent.getCaret().addChangeListener(getChangeListener());
                     var font = textComponent.getFont();
                     numberingPane.setFont(font.deriveFont(Math.max(font.getSize() - 1, 1.0f)));
+                    oldBackground = textComponent.getBackground();
+                    textComponent.setBackground(UIManager.getColor("NumberingPane.textBackground"));
                 }
             } else if ("icons".equals(key)) {
                 var oldVal = evt.getOldValue();

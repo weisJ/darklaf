@@ -80,7 +80,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     @Override
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        b.setOpaque(false);
+        LookAndFeel.installProperty(b, "opaque", false);
         radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
         radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
         radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
