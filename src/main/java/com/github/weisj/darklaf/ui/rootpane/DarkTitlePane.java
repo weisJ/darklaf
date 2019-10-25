@@ -595,6 +595,7 @@ public class DarkTitlePane extends JComponent {
         }
         if (windowIconButton != null) {
             windowIconButton.setIcon(systemIcon);
+            SwingUtilities.invokeLater(this::repaint);
         }
     }
 

@@ -39,23 +39,23 @@ import java.util.function.BiConsumer;
  * @author Jannis Weis
  */
 public class TabFrameContentPane extends JPanel implements TabFrameContent {
-    private static final double HORIZONTAL_PROP_LEFT = 0.2;
-    private static final double VERTICAL_PROP_TOP = 0.2;
-    private static final double VERTICAL_PROP_BOTTOM = 0.75;
-    private static final double HORIZONTAL_PROP_RIGHT = 0.75;
+    protected static final double HORIZONTAL_PROP_LEFT = 0.2;
+    protected static final double VERTICAL_PROP_TOP = 0.2;
+    protected static final double VERTICAL_PROP_BOTTOM = 0.75;
+    protected static final double HORIZONTAL_PROP_RIGHT = 0.75;
 
-    private final ToggleSplitPane topSplit;
-    private final ToggleSplitPane bottomSplit;
-    private final ToggleSplitPane leftSplit;
-    private final ToggleSplitPane rightSplit;
-    private final ToggleSplitPane leftSplitter;
-    private final ToggleSplitPane rightSplitter;
-    private final ToggleSplitPane topSplitter;
-    private final ToggleSplitPane bottomSplitter;
+    protected final ToggleSplitPane topSplit;
+    protected final ToggleSplitPane bottomSplit;
+    protected final ToggleSplitPane leftSplit;
+    protected final ToggleSplitPane rightSplit;
+    protected final ToggleSplitPane leftSplitter;
+    protected final ToggleSplitPane rightSplitter;
+    protected final ToggleSplitPane topSplitter;
+    protected final ToggleSplitPane bottomSplitter;
 
-    private final boolean[] enabled = new boolean[8];
+    protected final boolean[] enabled = new boolean[8];
 
-    private Component cont = new JPanel();
+    protected Component cont = new JPanel();
 
     public TabFrameContentPane() {
         super(new BorderLayout());
@@ -70,29 +70,29 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         PopupContainer bottomRightPanel = new PopupContainer();
         PopupContainer leftTopPanel = new PopupContainer();
 
-        rightSplitter = new TabFrameSplitPane("rightSplitter");
+        rightSplitter = createSplitPane("rightSplitter");
         rightSplitter.setOrientation(JSplitPane.VERTICAL_SPLIT);
         rightSplitter.setTopComponent(rightTopPanel);
         rightSplitter.setBottomComponent(rightBottomPanel);
 
-        leftSplitter = new TabFrameSplitPane("leftSplitter");
+        leftSplitter = createSplitPane("leftSplitter");
         leftSplitter.setOrientation(JSplitPane.VERTICAL_SPLIT);
         leftSplitter.setTopComponent(leftTopPanel);
         leftSplitter.setBottomComponent(leftBottomPanel);
 
-        topSplitter = new TabFrameSplitPane("topSplitter");
+        topSplitter = createSplitPane("topSplitter");
         topSplitter.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         topSplitter.setLeftComponent(topLeftPanel);
         topSplitter.setRightComponent(topRightPanel);
 
-        bottomSplitter = new TabFrameSplitPane("bottomSplitter");
+        bottomSplitter = createSplitPane("bottomSplitter");
         bottomSplitter.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         bottomSplitter.setLeftComponent(bottomLeftPanel);
         bottomSplitter.setRightComponent(bottomRightPanel);
 
 
-        topSplit = new TabFrameSplitPane("topSplit");
-        bottomSplit = new TabFrameSplitPane("bottomSplit");
+        topSplit = createSplitPane("topSplit");
+        bottomSplit = createSplitPane("bottomSplit");
         topSplit.setOrientation(JSplitPane.VERTICAL_SPLIT);
         bottomSplit.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
@@ -100,8 +100,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         topSplit.setBottomComponent(bottomSplit);
         bottomSplit.setBottomComponent(bottomSplitter);
 
-        leftSplit = new TabFrameSplitPane("leftSplit");
-        rightSplit = new TabFrameSplitPane("rightSplit");
+        leftSplit = createSplitPane("leftSplit");
+        rightSplit = createSplitPane("rightSplit");
         leftSplit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         rightSplit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -133,7 +133,11 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         });
     }
 
-    private <T> void setupSplitterPanes(@NotNull final BiConsumer<? super ToggleSplitPane, T> consumer,
+    protected ToggleSplitPane createSplitPane(final String name) {
+        return new TabFrameSplitPane(name);
+    }
+
+    protected <T> void setupSplitterPanes(@NotNull final BiConsumer<? super ToggleSplitPane, T> consumer,
                                         final T flag) {
         consumer.accept(bottomSplitter, flag);
         consumer.accept(leftSplitter, flag);
@@ -141,8 +145,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         consumer.accept(topSplitter, flag);
     }
 
-    private <T> void setupSplitPanes(@NotNull final BiConsumer<? super ToggleSplitPane, T> consumer,
-                                     final T flag) {
+    protected <T> void setupSplitPanes(@NotNull final BiConsumer<? super ToggleSplitPane, T> consumer,
+                                       final T flag) {
         consumer.accept(topSplit, flag);
         consumer.accept(leftSplit, flag);
         consumer.accept(bottomSplit, flag);

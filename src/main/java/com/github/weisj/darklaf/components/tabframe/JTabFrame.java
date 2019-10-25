@@ -550,7 +550,7 @@ public class JTabFrame extends JComponent {
             return;
         }
         var a = tabComponent.getOrientation();
-        selectedIndices[a.ordinal()] = tabComponent.getIndex();
+        selectedIndices[a.ordinal()] = tabComponent.isSelected() ? tabComponent.getIndex() : -1;
         if (tabComponent.isSelected()) {
             for (var tc : tabsForAlignment(a)) {
                 if (tc != null && tc != tabComponent) {
@@ -879,6 +879,16 @@ public class JTabFrame extends JComponent {
     public boolean isSelected(final Alignment a, final int index) {
         if (a == null) return false;
         return selectedIndices[a.ordinal()] == index;
+    }
+
+    /**
+     * Get the index that is currently selected at the given location or -1 if none is selected.
+     *
+     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
+     * @return the current selected index at the alignment position.
+     */
+    public int getSelectedIndex(@NotNull final Alignment a) {
+        return selectedIndices[a.ordinal()];
     }
 
     /**
