@@ -358,8 +358,10 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             if (focusOwner instanceof JTabFrame) return;
             if (focusOwner instanceof JRootPane) return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
-            var container = popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
-            focus = focus || DarkUIUtil.hasFocus(container);
+            if (popupComponent.getTabFrame() != null) {
+                var container = popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
+                focus = focus || DarkUIUtil.hasFocus(container);
+            }
             setHeaderBackground(focus);
         }
     }
