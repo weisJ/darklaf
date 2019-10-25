@@ -51,6 +51,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     private JTabbedPane tabbedPane;
     private MutableLineBorder border;
     private JPanel holder;
+    private JButton newTabButton;
 
     @NotNull
     @Contract("_ -> new")
@@ -114,6 +115,13 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
         var oldFocus = hasFocus();
         super.setHeaderBackground(focus);
         if (oldFocus != focus) {
+            if (newTabButton != null) {
+                newTabButton.putClientProperty("JButton.shadow.hover", focus ? headerButtonFocusHoverBackground
+                                                                             : headerButtonHoverBackground);
+                newTabButton.putClientProperty("JButton.shadow.click", focus ? headerButtonFocusClickBackground
+                                                                             : headerButtonClickBackground);
+                newTabButton.repaint();
+            }
             holder.setBackground(focus ? headerFocusBackground : headerBackground);
             holder.repaint();
         }
@@ -140,6 +148,10 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
         protected TabFrameNewTabButton(@NotNull final DarkTabbedPaneUI ui) {
             super(ui);
+        }
+
+        public JButton getButton() {
+            return button;
         }
 
         @Override
@@ -189,7 +201,9 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
         @Override
         public JComponent createNewTabButton() {
-            return new TabFrameNewTabButton(this);
+            var b = new TabFrameNewTabButton(this);
+            newTabButton = b.getButton();
+            return b;
         }
 
         @Override

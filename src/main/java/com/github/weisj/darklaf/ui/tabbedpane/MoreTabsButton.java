@@ -57,7 +57,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         FontMetrics metrics = g.getFontMetrics();
         String label = getLabelString();
         int labelWidth = metrics.stringWidth(label);
-        int x = (getWidth() - (icon.getIconWidth() + labelWidth + PAD)) / 2;
+        int x = (getWidth() - (icon.getIconWidth() + labelWidth + PAD)) / 2 + PAD;
         int y = (getHeight() - icon.getIconHeight()) / 2;
 
 
@@ -92,7 +92,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
     public Dimension getPreferredSize() {
         var size = super.getPreferredSize();
         var metrics = getFontMetrics(getFont());
-        size.width += metrics.stringWidth(getLabelString()) + PAD;
+        size.width += metrics.stringWidth(getLabelString()) + 3 * PAD;
         return size;
     }
 }
