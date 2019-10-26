@@ -241,9 +241,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
         public void mouseClicked(final MouseEvent e) {
             if (textComponent == null) return;
             var p = e.getPoint();
-            int iconCount = numberingPane.getIconCount();
             int width = numberingPane.getWidth();
-            if (iconCount > 0 && p.x > PAD + OUTER_PAD + textWidth && p.x <= width - PAD) {
+            if (p.x > PAD + OUTER_PAD + textWidth && p.x <= width - PAD) {
                 int offset = textComponent.viewToModel2D(new Point(0, p.y));
                 var doc = textComponent.getDocument();
                 int start = doc.getDefaultRootElement().getElementIndex(offset);
@@ -277,12 +276,36 @@ public class DarkNumberingPaneUI extends ComponentUI {
         public void mousePressed(final MouseEvent e) {
             if (textComponent == null) return;
             var p = e.getPoint();
-            if (p.x <= OUTER_PAD + textWidth) {
                 selectionLineStart = textComponent.viewToModel2D(new Point(0, p.y));
                 selectionLineEnd = textComponent.viewToModel2D(new Point(textComponent.getWidth(), p.y));
+            if (p.x <= OUTER_PAD + textWidth) {
                 textComponent.getCaret().setDot(selectionLineEnd + 1);
                 textComponent.getCaret().moveDot(Math.min(selectionLineStart,
                                                           textComponent.getDocument().getLength()));
+            }
+        }
+
+        @Override
+        public void mouseReleased(final MouseEvent e) {
+            selectionLineStart = -1;
+            selectionLineEnd = -1;
+        }
+
+        @Override
+        public void mouseDragged(final MouseEvent e) {
+            if (numberingPane.getTextComponent() == null) return;
+            var textPane = numberingPane.getTextComponent();
+            var p = e.getPoint();
+            if (selectionLineEnd >= 0 && selectionLineStart >= 0) {
+                int end = textPane.viewToModel2D(new Point(textPane.getWidth(), p.y));
+                int start = textPane.viewToModel2D(new Point(0, p.y));
+                if (selectionLineStart > end) {
+                    textPane.getCaret().setDot(selectionLineEnd + 1);
+                    textPane.getCaret().moveDot(Math.min(start, textPane.getDocument().getLength() - 1));
+                } else {
+                    textPane.getCaret().setDot(selectionLineStart);
+                    textPane.getCaret().moveDot(Math.min(end + 1, textPane.getDocument().getLength()));
+                }
             }
         }
 

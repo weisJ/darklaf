@@ -34,6 +34,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -54,6 +55,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         @Override
         public void focusLost(final FocusEvent e) {
             repaintTab(tabPane.getSelectedIndex());
+        }
+    };
+    protected final AWTEventListener awtEventListener = e -> {
+        if (e.getID() == FocusEvent.FOCUS_GAINED) {
+            tabPane.repaint();
         }
     };
     protected final Rectangle tabAreaBounds = new Rectangle(0, 0, 0, 0);
@@ -332,6 +338,12 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        Toolkit.getDefaultToolkit().removeAWTEventListener(awtEventListener);
+    }
+
+    @Override
     protected void installListeners() {
         super.installListeners();
         if (scrollableTabLayoutEnabled()) {
@@ -340,6 +352,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             tabScroller.viewport.addMouseMotionListener(getScrollHandler());
             tabScroller.viewport.addMouseListener(getScrollHandler());
         }
+        Toolkit.getDefaultToolkit().addAWTEventListener(awtEventListener, AWTEvent.FOCUS_EVENT_MASK);
     }
 
     @Override

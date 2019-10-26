@@ -234,12 +234,14 @@ public class TabbedPaneUtil implements SwingConstants {
         Color foreground = sourcePane.getForegroundAt(sourceIndex);
         Component tabComp = sourcePane.getTabComponentAt(sourceIndex);
 
-        tabbedPane.insertTab(tabName, icon, comp, toolTip, destIndex);
+        sourcePane.removeTabAt(sourceIndex);
 
         int index = destIndex;
         if (tabbedPane == sourcePane) {
             if (sourceIndex < index) index--;
         }
+
+        tabbedPane.insertTab(tabName, icon, comp, toolTip, index);
 
         if (tabComp != null) {
             tabComp.setVisible(true);
