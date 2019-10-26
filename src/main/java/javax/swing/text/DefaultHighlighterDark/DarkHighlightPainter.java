@@ -23,6 +23,7 @@
  */
 package javax.swing.text.DefaultHighlighterDark;
 
+import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
@@ -51,8 +52,9 @@ import java.awt.geom.Rectangle2D;
  */
 public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
 
-    private static final boolean DEBUG_COLOR = true;
+    private static final boolean DEBUG_COLOR = false;
     private Paint paint;
+    private Color color;
     private boolean roundedEdges;
     private AlphaComposite alphaComposite;
     private float alpha;
@@ -94,6 +96,11 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     }
 
 
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
     /**
      * Paints a highlight.
      *
@@ -109,6 +116,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Rectangle alloc = bounds.getBounds();
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2d);
+        color = c.getSelectedTextColor();
 
         if (getAlpha() < 1.0f) {
             g2d.setComposite(getAlphaComposite());
@@ -175,7 +183,11 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     @Override
     public Shape paintLayer(final Graphics g, final int offs0, final int offs1,
-                            final Shape bounds, final JTextComponent c, final View view) {
+                            final Shape bounds, final JTextComponent c, @NotNull final View view) {
+        color = (Color) view.getAttributes().getAttribute(StyleConstantsEx.SelectedForeground);
+        if (color == null) {
+            color = c.getSelectedTextColor();
+        }
         Shape dirtyShape = null;
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = GraphicsUtil.setupAAPainting(g2d);
@@ -440,7 +452,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private void paintRoundedLeftRight(final Graphics g, final boolean left, final boolean right, final Rectangle r) {
         if (right || left) {
             g.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
-            g.setColor(Color.PINK);
+            if (DEBUG_COLOR) g.setColor(Color.PINK);
             if (!left) {
                 g.fillRect(r.x, r.y, arcSize, r.height);
             }
@@ -454,7 +466,6 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private void paintStartArc(@NotNull final Graphics2D g2d, @NotNull final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
-
         Area arc = new Area(new Rectangle2D.Double(
                 r.x - arcSize + 0.25, r.y + r.height - arcSize + 0.25, arcSize, arcSize));
         arc.subtract(new Area(new Arc2D.Double(
@@ -468,7 +479,6 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private void paintEndArc(@NotNull final Graphics2D g2d, @NotNull final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
-
         Area arc = new Area(new Rectangle2D.Double(
                 r.x + r.width - 0.25, r.y - 0.25, arcSize, arcSize));
         arc.subtract(new Area(new Arc2D.Double(

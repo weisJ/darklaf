@@ -27,8 +27,10 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import org.jdesktop.swingx.plaf.basic.core.BasicTransferable;
 import org.jdesktop.swingx.plaf.basic.core.DragRecognitionSupport;
+import org.jetbrains.annotations.NotNull;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
+import sun.swing.UIAction;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -42,6 +44,7 @@ import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -457,6 +460,46 @@ public class DarkListUIBridge extends BasicListUI {
         }
     }
 
+    public static void loadActionMap(@NotNull final LazyActionMap map) {
+        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_EXTEND));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_NEXT_COLUMN));
+        map.put(new Actions(Actions.SELECT_NEXT_COLUMN_EXTEND));
+        map.put(new Actions(Actions.SELECT_NEXT_COLUMN_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_NEXT_ROW));
+        map.put(new Actions(Actions.SELECT_NEXT_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_NEXT_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_FIRST_ROW));
+        map.put(new Actions(Actions.SELECT_FIRST_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_FIRST_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_LAST_ROW));
+        map.put(new Actions(Actions.SELECT_LAST_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_LAST_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SCROLL_UP));
+        map.put(new Actions(Actions.SCROLL_UP_EXTEND));
+        map.put(new Actions(Actions.SCROLL_UP_CHANGE_LEAD));
+        map.put(new Actions(Actions.SCROLL_DOWN));
+        map.put(new Actions(Actions.SCROLL_DOWN_EXTEND));
+        map.put(new Actions(Actions.SCROLL_DOWN_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_ALL));
+        map.put(new Actions(Actions.CLEAR_SELECTION));
+        map.put(new Actions(Actions.ADD_TO_SELECTION));
+        map.put(new Actions(Actions.TOGGLE_AND_ANCHOR));
+        map.put(new Actions(Actions.EXTEND_TO));
+        map.put(new Actions(Actions.MOVE_SELECTION_TO));
+
+        map.put(TransferHandler.getCutAction().getValue(Action.NAME),
+                TransferHandler.getCutAction());
+        map.put(TransferHandler.getCopyAction().getValue(Action.NAME),
+                TransferHandler.getCopyAction());
+        map.put(TransferHandler.getPasteAction().getValue(Action.NAME),
+                TransferHandler.getPasteAction());
+    }
+
     /**
      * Registers the keyboard bindings on the <code>JList</code> that the
      * <code>BasicListUI</code> is associated with. This method is called at
@@ -467,7 +510,7 @@ public class DarkListUIBridge extends BasicListUI {
     protected void installKeyboardActions() {
         InputMap inputMap = getInputMap(JComponent.WHEN_FOCUSED);
         SwingUtilities.replaceUIInputMap(list, JComponent.WHEN_FOCUSED, inputMap);
-        LazyActionMap.installLazyActionMap(list, BasicListUI.class, "List.actionMap");
+        LazyActionMap.installLazyActionMap(list, DarkListUIBridge.class, "List.actionMap");
     }
 
     /**
@@ -2227,4 +2270,599 @@ public class DarkListUIBridge extends BasicListUI {
             repaintCellFocus();
         }
     }
+
+    private static class Actions extends UIAction {
+        private static final String SELECT_PREVIOUS_COLUMN =
+                "selectPreviousColumn";
+        private static final String SELECT_PREVIOUS_COLUMN_EXTEND =
+                "selectPreviousColumnExtendSelection";
+        private static final String SELECT_PREVIOUS_COLUMN_CHANGE_LEAD =
+                "selectPreviousColumnChangeLead";
+        private static final String SELECT_NEXT_COLUMN = "selectNextColumn";
+        private static final String SELECT_NEXT_COLUMN_EXTEND =
+                "selectNextColumnExtendSelection";
+        private static final String SELECT_NEXT_COLUMN_CHANGE_LEAD =
+                "selectNextColumnChangeLead";
+        private static final String SELECT_PREVIOUS_ROW = "selectPreviousRow";
+        private static final String SELECT_PREVIOUS_ROW_EXTEND =
+                "selectPreviousRowExtendSelection";
+        private static final String SELECT_PREVIOUS_ROW_CHANGE_LEAD =
+                "selectPreviousRowChangeLead";
+        private static final String SELECT_NEXT_ROW = "selectNextRow";
+        private static final String SELECT_NEXT_ROW_EXTEND =
+                "selectNextRowExtendSelection";
+        private static final String SELECT_NEXT_ROW_CHANGE_LEAD =
+                "selectNextRowChangeLead";
+        private static final String SELECT_FIRST_ROW = "selectFirstRow";
+        private static final String SELECT_FIRST_ROW_EXTEND =
+                "selectFirstRowExtendSelection";
+        private static final String SELECT_FIRST_ROW_CHANGE_LEAD =
+                "selectFirstRowChangeLead";
+        private static final String SELECT_LAST_ROW = "selectLastRow";
+        private static final String SELECT_LAST_ROW_EXTEND =
+                "selectLastRowExtendSelection";
+        private static final String SELECT_LAST_ROW_CHANGE_LEAD =
+                "selectLastRowChangeLead";
+        private static final String SCROLL_UP = "scrollUp";
+        private static final String SCROLL_UP_EXTEND =
+                "scrollUpExtendSelection";
+        private static final String SCROLL_UP_CHANGE_LEAD =
+                "scrollUpChangeLead";
+        private static final String SCROLL_DOWN = "scrollDown";
+        private static final String SCROLL_DOWN_EXTEND =
+                "scrollDownExtendSelection";
+        private static final String SCROLL_DOWN_CHANGE_LEAD =
+                "scrollDownChangeLead";
+        private static final String SELECT_ALL = "selectAll";
+        private static final String CLEAR_SELECTION = "clearSelection";
+
+        // add the lead item to the selection without changing lead or anchor
+        private static final String ADD_TO_SELECTION = "addToSelection";
+
+        // toggle the selected state of the lead item and move the anchor to it
+        private static final String TOGGLE_AND_ANCHOR = "toggleAndAnchor";
+
+        // extend the selection to the lead item
+        private static final String EXTEND_TO = "extendTo";
+
+        // move the anchor to the lead and ensure only that item is selected
+        private static final String MOVE_SELECTION_TO = "moveSelectionTo";
+
+        Actions(final String name) {
+            super(name);
+        }
+
+        public void actionPerformed(final ActionEvent e) {
+            String name = getName();
+            @SuppressWarnings("unchecked")
+            JList<Object> list = (JList) e.getSource();
+            DarkListUIBridge ui = (DarkListUIBridge) DarkUIUtil.getUIOfType(list.getUI(), DarkListUIBridge.class);
+
+            if (Objects.equals(name, SELECT_PREVIOUS_COLUMN)) {
+                changeSelection(list, CHANGE_SELECTION,
+                                getNextColumnIndex(list, ui, -1), -1);
+            } else if (Objects.equals(name, SELECT_PREVIOUS_COLUMN_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION,
+                                getNextColumnIndex(list, ui, -1), -1);
+            } else if (Objects.equals(name, SELECT_PREVIOUS_COLUMN_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD,
+                                getNextColumnIndex(list, ui, -1), -1);
+            } else if (Objects.equals(name, SELECT_NEXT_COLUMN)) {
+                changeSelection(list, CHANGE_SELECTION,
+                                getNextColumnIndex(list, ui, 1), 1);
+            } else if (Objects.equals(name, SELECT_NEXT_COLUMN_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION,
+                                getNextColumnIndex(list, ui, 1), 1);
+            } else if (Objects.equals(name, SELECT_NEXT_COLUMN_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD,
+                                getNextColumnIndex(list, ui, 1), 1);
+            } else if (Objects.equals(name, SELECT_PREVIOUS_ROW)) {
+                changeSelection(list, CHANGE_SELECTION,
+                                getNextIndex(list, ui, -1), -1);
+            } else if (Objects.equals(name, SELECT_PREVIOUS_ROW_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION,
+                                getNextIndex(list, ui, -1), -1);
+            } else if (Objects.equals(name, SELECT_PREVIOUS_ROW_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD,
+                                getNextIndex(list, ui, -1), -1);
+            } else if (Objects.equals(name, SELECT_NEXT_ROW)) {
+                changeSelection(list, CHANGE_SELECTION,
+                                getNextIndex(list, ui, 1), 1);
+            } else if (Objects.equals(name, SELECT_NEXT_ROW_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION,
+                                getNextIndex(list, ui, 1), 1);
+            } else if (Objects.equals(name, SELECT_NEXT_ROW_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD,
+                                getNextIndex(list, ui, 1), 1);
+            } else if (Objects.equals(name, SELECT_FIRST_ROW)) {
+                changeSelection(list, CHANGE_SELECTION, 0, -1);
+            } else if (Objects.equals(name, SELECT_FIRST_ROW_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION, 0, -1);
+            } else if (Objects.equals(name, SELECT_FIRST_ROW_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD, 0, -1);
+            } else if (Objects.equals(name, SELECT_LAST_ROW)) {
+                changeSelection(list, CHANGE_SELECTION,
+                                list.getModel().getSize() - 1, 1);
+            } else if (Objects.equals(name, SELECT_LAST_ROW_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION,
+                                list.getModel().getSize() - 1, 1);
+            } else if (Objects.equals(name, SELECT_LAST_ROW_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD,
+                                list.getModel().getSize() - 1, 1);
+            } else if (Objects.equals(name, SCROLL_UP)) {
+                changeSelection(list, CHANGE_SELECTION,
+                                getNextPageIndex(list, -1), -1);
+            } else if (Objects.equals(name, SCROLL_UP_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION,
+                                getNextPageIndex(list, -1), -1);
+            } else if (Objects.equals(name, SCROLL_UP_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD,
+                                getNextPageIndex(list, -1), -1);
+            } else if (Objects.equals(name, SCROLL_DOWN)) {
+                changeSelection(list, CHANGE_SELECTION,
+                                getNextPageIndex(list, 1), 1);
+            } else if (Objects.equals(name, SCROLL_DOWN_EXTEND)) {
+                changeSelection(list, EXTEND_SELECTION,
+                                getNextPageIndex(list, 1), 1);
+            } else if (Objects.equals(name, SCROLL_DOWN_CHANGE_LEAD)) {
+                changeSelection(list, CHANGE_LEAD,
+                                getNextPageIndex(list, 1), 1);
+            } else if (Objects.equals(name, SELECT_ALL)) {
+                selectAll(list);
+            } else if (Objects.equals(name, CLEAR_SELECTION)) {
+                clearSelection(list);
+            } else if (Objects.equals(name, ADD_TO_SELECTION)) {
+                int index = adjustIndex(
+                        list.getSelectionModel().getLeadSelectionIndex(), list);
+
+                if (!list.isSelectedIndex(index)) {
+                    int oldAnchor = list.getSelectionModel().getAnchorSelectionIndex();
+                    list.setValueIsAdjusting(true);
+                    list.addSelectionInterval(index, index);
+                    list.getSelectionModel().setAnchorSelectionIndex(oldAnchor);
+                    list.setValueIsAdjusting(false);
+                }
+            } else if (Objects.equals(name, TOGGLE_AND_ANCHOR)) {
+                int index = adjustIndex(
+                        list.getSelectionModel().getLeadSelectionIndex(), list);
+
+                if (list.isSelectedIndex(index)) {
+                    list.removeSelectionInterval(index, index);
+                } else {
+                    list.addSelectionInterval(index, index);
+                }
+            } else if (Objects.equals(name, EXTEND_TO)) {
+                changeSelection(
+                        list, EXTEND_SELECTION,
+                        adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list),
+                        0);
+            } else if (Objects.equals(name, MOVE_SELECTION_TO)) {
+                changeSelection(
+                        list, CHANGE_SELECTION,
+                        adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list),
+                        0);
+            }
+        }
+
+        private void changeSelection(final JList<?> list, int type,
+                                     final int index, final int direction) {
+            if (index >= 0 && index < list.getModel().getSize()) {
+                ListSelectionModel lsm = list.getSelectionModel();
+
+                // CHANGE_LEAD is only valid with multiple interval selection
+                if (type == CHANGE_LEAD &&
+                        list.getSelectionMode()
+                                != ListSelectionModel.MULTIPLE_INTERVAL_SELECTION) {
+
+                    type = CHANGE_SELECTION;
+                }
+
+                // IMPORTANT - This needs to happen before the index is changed.
+                // This is because JFileChooser, which uses JList, also scrolls
+                // the selected item into view. If that happens first, then
+                // this method becomes a no-op.
+                adjustScrollPositionIfNecessary(list, index, direction);
+
+                if (type == EXTEND_SELECTION) {
+                    int anchor = adjustIndex(lsm.getAnchorSelectionIndex(), list);
+                    if (anchor == -1) {
+                        anchor = 0;
+                    }
+
+                    list.setSelectionInterval(anchor, index);
+                } else if (type == CHANGE_SELECTION) {
+                    list.setSelectedIndex(index);
+                } else {
+                    // casting should be safe since the action is only enabled
+                    // for DefaultListSelectionModel
+                    ((DefaultListSelectionModel) lsm).moveLeadSelectionIndex(index);
+                }
+            }
+        }
+
+        private int getNextColumnIndex(final JList<?> list, final DarkListUIBridge ui,
+                                       final int amount) {
+            if (list.getLayoutOrientation() != JList.VERTICAL) {
+                int index = adjustIndex(list.getLeadSelectionIndex(), list);
+                int size = list.getModel().getSize();
+
+                if (index == -1) {
+                    return 0;
+                } else if (size == 1) {
+                    // there's only one item so we should select it
+                    return 0;
+                } else if (ui == null || ui.columnCount <= 1) {
+                    return -1;
+                }
+
+                int column = ui.convertModelToColumn(index);
+                int row = ui.convertModelToRow(index);
+
+                column += amount;
+                if (column >= ui.columnCount || column < 0) {
+                    // No wrapping.
+                    return -1;
+                }
+                int maxRowCount = ui.getRowCount(column);
+                if (row >= maxRowCount) {
+                    return -1;
+                }
+                return ui.getModelIndex(column, row);
+            }
+            // Won't change the selection.
+            return -1;
+        }
+
+        private int getNextIndex(final JList<?> list, final DarkListUIBridge ui, final int amount) {
+            int index = adjustIndex(list.getLeadSelectionIndex(), list);
+            int size = list.getModel().getSize();
+
+            if (index == -1) {
+                if (size > 0) {
+                    if (amount > 0) {
+                        index = 0;
+                    } else {
+                        index = size - 1;
+                    }
+                }
+            } else if (size == 1) {
+                // there's only one item so we should select it
+                index = 0;
+            } else if (list.getLayoutOrientation() == JList.HORIZONTAL_WRAP) {
+                if (ui != null) {
+                    index += ui.columnCount * amount;
+                }
+            } else {
+                index += amount;
+            }
+
+            return index;
+        }
+
+        private int getNextPageIndex(final JList<?> list, int direction) {
+            if (list.getModel().getSize() == 0) {
+                return -1;
+            }
+
+            int index = -1;
+            Rectangle visRect = list.getVisibleRect();
+            ListSelectionModel lsm = list.getSelectionModel();
+            int lead = adjustIndex(lsm.getLeadSelectionIndex(), list);
+            Rectangle leadRect =
+                    (lead == -1) ? new Rectangle() : list.getCellBounds(lead, lead);
+
+            if (leadRect == null) {
+                return index;
+            }
+            if (list.getLayoutOrientation() == JList.VERTICAL_WRAP &&
+                    list.getVisibleRowCount() <= 0) {
+                if (!list.getComponentOrientation().isLeftToRight()) {
+                    direction = -direction;
+                }
+                // apply for horizontal scrolling: the step for next
+                // page index is number of visible columns
+                if (direction < 0) {
+                    // left
+                    visRect.x = leadRect.x + leadRect.width - visRect.width;
+                    Point p = new Point(visRect.x - 1, leadRect.y);
+                    index = list.locationToIndex(p);
+                    if (index == -1) {
+                        return index;
+                    }
+                    Rectangle cellBounds = list.getCellBounds(index, index);
+                    if (cellBounds != null && visRect.intersects(cellBounds)) {
+                        p.x = cellBounds.x - 1;
+                        index = list.locationToIndex(p);
+                        if (index == -1) {
+                            return index;
+                        }
+                        cellBounds = list.getCellBounds(index, index);
+                    }
+                    // this is necessary for right-to-left orientation only
+                    if (cellBounds != null && cellBounds.y != leadRect.y) {
+                        p.x = cellBounds.x + cellBounds.width;
+                        index = list.locationToIndex(p);
+                    }
+                } else {
+                    // right
+                    visRect.x = leadRect.x;
+                    Point p = new Point(visRect.x + visRect.width, leadRect.y);
+                    index = list.locationToIndex(p);
+                    if (index == -1) {
+                        return index;
+                    }
+                    Rectangle cellBounds = list.getCellBounds(index, index);
+                    if (cellBounds != null && visRect.intersects(cellBounds)) {
+                        p.x = cellBounds.x + cellBounds.width;
+                        index = list.locationToIndex(p);
+                        if (index == -1) {
+                            return index;
+                        }
+                        cellBounds = list.getCellBounds(index, index);
+                    }
+                    if (cellBounds != null && cellBounds.y != leadRect.y) {
+                        p.x = cellBounds.x - 1;
+                        index = list.locationToIndex(p);
+                    }
+                }
+            } else {
+                if (direction < 0) {
+                    // up
+                    // go to the first visible cell
+                    Point p = new Point(leadRect.x, visRect.y);
+                    index = list.locationToIndex(p);
+                    if (lead <= index) {
+                        // if lead is the first visible cell (or above it)
+                        // adjust the visible rect up
+                        visRect.y = leadRect.y + leadRect.height - visRect.height;
+                        p.y = visRect.y;
+                        index = list.locationToIndex(p);
+                        if (index == -1) {
+                            return index;
+                        }
+                        Rectangle cellBounds = list.getCellBounds(index, index);
+                        // go one cell down if first visible cell doesn't fit
+                        // into adjasted visible rectangle
+                        if (cellBounds != null && cellBounds.y < visRect.y) {
+                            p.y = cellBounds.y + cellBounds.height;
+                            index = list.locationToIndex(p);
+                            if (index == -1) {
+                                return index;
+                            }
+                            cellBounds = list.getCellBounds(index, index);
+                        }
+                        // if index isn't less then lead
+                        // try to go to cell previous to lead
+                        if (cellBounds != null && cellBounds.y >= leadRect.y) {
+                            p.y = leadRect.y - 1;
+                            index = list.locationToIndex(p);
+                        }
+                    }
+                } else {
+                    // down
+                    // go to the last completely visible cell
+                    Point p = new Point(leadRect.x,
+                                        visRect.y + visRect.height - 1);
+                    index = list.locationToIndex(p);
+                    if (index == -1) {
+                        return index;
+                    }
+                    Rectangle cellBounds = list.getCellBounds(index, index);
+                    // go up one cell if last visible cell doesn't fit
+                    // into visible rectangle
+                    if (cellBounds != null &&
+                            cellBounds.y + cellBounds.height >
+                                    visRect.y + visRect.height) {
+                        p.y = cellBounds.y - 1;
+                        index = list.locationToIndex(p);
+                        if (index == -1) {
+                            return index;
+                        }
+                        cellBounds = list.getCellBounds(index, index);
+                        index = Math.max(index, lead);
+                    }
+
+                    if (lead >= index) {
+                        // if lead is the last completely visible index
+                        // (or below it) adjust the visible rect down
+                        visRect.y = leadRect.y;
+                        p.y = visRect.y + visRect.height - 1;
+                        index = list.locationToIndex(p);
+                        if (index == -1) {
+                            return index;
+                        }
+                        cellBounds = list.getCellBounds(index, index);
+                        // go one cell up if last visible cell doesn't fit
+                        // into adjasted visible rectangle
+                        if (cellBounds != null &&
+                                cellBounds.y + cellBounds.height >
+                                        visRect.y + visRect.height) {
+                            p.y = cellBounds.y - 1;
+                            index = list.locationToIndex(p);
+                            if (index == -1) {
+                                return index;
+                            }
+                            cellBounds = list.getCellBounds(index, index);
+                        }
+                        // if index isn't greater then lead
+                        // try to go to cell next after lead
+                        if (cellBounds != null && cellBounds.y <= leadRect.y) {
+                            p.y = leadRect.y + leadRect.height;
+                            index = list.locationToIndex(p);
+                        }
+                    }
+                }
+            }
+
+            return index;
+        }
+
+        private void selectAll(final JList<?> list) {
+            int size = list.getModel().getSize();
+            if (size > 0) {
+                ListSelectionModel lsm = list.getSelectionModel();
+                int lead = adjustIndex(lsm.getLeadSelectionIndex(), list);
+
+                if (lsm.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) {
+                    if (lead == -1) {
+                        int min = adjustIndex(list.getMinSelectionIndex(), list);
+                        lead = (min == -1 ? 0 : min);
+                    }
+
+                    list.setSelectionInterval(lead, lead);
+                    list.ensureIndexIsVisible(lead);
+                } else {
+                    list.setValueIsAdjusting(true);
+
+                    int anchor = adjustIndex(lsm.getAnchorSelectionIndex(), list);
+
+                    list.setSelectionInterval(0, size - 1);
+
+                    // this is done to restore the anchor and lead
+                    SwingUtilities2.setLeadAnchorWithoutSelection(lsm, anchor, lead);
+
+                    list.setValueIsAdjusting(false);
+                }
+            }
+        }
+
+        private void clearSelection(final JList<?> list) {
+            list.clearSelection();
+        }
+
+        /**
+         * When scroll down makes selected index the last completely visible index. When scroll up makes selected index
+         * the first visible index. Adjust visible rectangle respect to list's component orientation.
+         */
+        private void adjustScrollPositionIfNecessary(final JList<?> list, final int index,
+                                                     final int direction) {
+            if (direction == 0) {
+                return;
+            }
+            Rectangle cellBounds = list.getCellBounds(index, index);
+            Rectangle visRect = list.getVisibleRect();
+            if (cellBounds != null && !visRect.contains(cellBounds)) {
+                if (list.getLayoutOrientation() == JList.VERTICAL_WRAP &&
+                        list.getVisibleRowCount() <= 0) {
+                    // horizontal
+                    if (list.getComponentOrientation().isLeftToRight()) {
+                        if (direction > 0) {
+                            // right for left-to-right
+                            int x = Math.max(0,
+                                             cellBounds.x + cellBounds.width - visRect.width);
+                            int startIndex =
+                                    list.locationToIndex(new Point(x, cellBounds.y));
+                            if (startIndex == -1) {
+                                return;
+                            }
+                            Rectangle startRect = list.getCellBounds(startIndex,
+                                                                     startIndex);
+                            if (startRect != null &&
+                                    startRect.x < x && startRect.x < cellBounds.x) {
+                                startRect.x += startRect.width;
+                                startIndex =
+                                        list.locationToIndex(startRect.getLocation());
+                                if (startIndex == -1) {
+                                    return;
+                                }
+                                startRect = list.getCellBounds(startIndex,
+                                                               startIndex);
+                            }
+                            cellBounds = startRect;
+                        }
+                        if (cellBounds != null) {
+                            cellBounds.width = visRect.width;
+                        }
+                    } else {
+                        if (direction > 0) {
+                            // left for right-to-left
+                            int x = cellBounds.x + visRect.width;
+                            int rightIndex =
+                                    list.locationToIndex(new Point(x, cellBounds.y));
+                            if (rightIndex == -1) {
+                                return;
+                            }
+                            Rectangle rightRect = list.getCellBounds(rightIndex,
+                                                                     rightIndex);
+                            if (rightRect != null) {
+                                if (rightRect.x + rightRect.width > x &&
+                                        rightRect.x > cellBounds.x) {
+                                    rightRect.width = 0;
+                                }
+                                cellBounds.x = Math.max(0,
+                                                        rightRect.x + rightRect.width - visRect.width);
+                                cellBounds.width = visRect.width;
+                            }
+                        } else {
+                            cellBounds.x += Math.max(0,
+                                                     cellBounds.width - visRect.width);
+                            // adjust width to fit into visible rectangle
+                            cellBounds.width = Math.min(cellBounds.width,
+                                                        visRect.width);
+                        }
+                    }
+                } else {
+                    // vertical
+                    if (direction > 0 &&
+                            (cellBounds.y < visRect.y ||
+                                    cellBounds.y + cellBounds.height
+                                            > visRect.y + visRect.height)) {
+                        //down
+                        int y = Math.max(0,
+                                         cellBounds.y + cellBounds.height - visRect.height);
+                        int startIndex =
+                                list.locationToIndex(new Point(cellBounds.x, y));
+                        if (startIndex == -1) {
+                            return;
+                        }
+                        Rectangle startRect = list.getCellBounds(startIndex,
+                                                                 startIndex);
+                        if (startRect != null &&
+                                startRect.y < y && startRect.y < cellBounds.y) {
+                            startRect.y += startRect.height;
+                            startIndex =
+                                    list.locationToIndex(startRect.getLocation());
+                            if (startIndex == -1) {
+                                return;
+                            }
+                            startRect =
+                                    list.getCellBounds(startIndex, startIndex);
+                        }
+                        cellBounds = startRect;
+                        if (cellBounds != null) {
+                            cellBounds.height = visRect.height;
+                        }
+                    } else {
+                        // adjust height to fit into visible rectangle
+                        cellBounds.height = Math.min(cellBounds.height, visRect.height);
+                    }
+                }
+                if (cellBounds != null) {
+                    list.scrollRectToVisible(cellBounds);
+                }
+            }
+        }
+
+        @Override
+        public boolean accept(final Object c) {
+            Object name = getName();
+            if (name == SELECT_PREVIOUS_COLUMN_CHANGE_LEAD ||
+                    name == SELECT_NEXT_COLUMN_CHANGE_LEAD ||
+                    name == SELECT_PREVIOUS_ROW_CHANGE_LEAD ||
+                    name == SELECT_NEXT_ROW_CHANGE_LEAD ||
+                    name == SELECT_FIRST_ROW_CHANGE_LEAD ||
+                    name == SELECT_LAST_ROW_CHANGE_LEAD ||
+                    name == SCROLL_UP_CHANGE_LEAD ||
+                    name == SCROLL_DOWN_CHANGE_LEAD) {
+
+                // discontinuous selection actions are only enabled for
+                // DefaultListSelectionModel
+                return c != null && ((JList) c).getSelectionModel()
+                        instanceof DefaultListSelectionModel;
+            }
+
+            return true;
+        }
+    }
+
 }

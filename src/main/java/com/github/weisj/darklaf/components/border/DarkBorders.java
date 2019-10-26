@@ -34,24 +34,39 @@ public final class DarkBorders {
 
     private static final WeakLineBorder KEY = new WeakLineBorder(0, 0, 0, 0);
     private static Map<WeakLineBorder, WeakLineBorder> lineBorderMap = new WeakHashMap<>();
+    private static Map<WeakLineBorder, WeakLineBorder> lineWidgetBorderMap = new WeakHashMap<>();
 
     @NotNull
     public static Border createLineBorder(final int top, final int left, final int bottom, final int right) {
+        return createBorder(top, left, bottom, right, lineBorderMap, "border");
+    }
+
+    @NotNull
+    private static Border createBorder(final int top, final int left, final int bottom, final int right,
+                                       @NotNull final Map<WeakLineBorder, WeakLineBorder> map, final String key) {
         WeakLineBorder border = null;
         KEY.setInsets(top, left, bottom, right);
-        if (lineBorderMap.containsKey(KEY)) {
-            border = lineBorderMap.get(KEY);
+        if (map.containsKey(KEY)) {
+            border = map.get(KEY);
         }
         if (border == null) {
             border = new WeakLineBorder(top, left, bottom, right);
-            lineBorderMap.put(KEY, border);
+            map.put(KEY, border);
         }
-        border.setColor(UIManager.getColor("border"));
+        border.setColor(UIManager.getColor(key));
         return border;
+    }
+
+    @NotNull
+    public static Border createWidgetLineBorder(final int top, final int left, final int bottom, final int right) {
+        return createBorder(top, left, bottom, right, lineWidgetBorderMap, "borderSecondary");
     }
 
     public static void update() {
         for (var border : lineBorderMap.values()) {
+            border.setColor(UIManager.getColor("border"));
+        }
+        for (var border : lineWidgetBorderMap.values()) {
             border.setColor(UIManager.getColor("border"));
         }
     }
