@@ -21,36 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.components.text;
+package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
+import javax.swing.plaf.basic.BasicTextUI;
 
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import java.awt.*;
-
-public class NumberedTextComponent extends JPanel {
-
-    protected final OverlayScrollPane overlayScrollPane;
-    protected final NumberingPane numberingPane;
-    protected final JTextComponent textComponent;
-
-    public NumberedTextComponent(final JTextComponent textComponent) {
-        super(new BorderLayout());
-        this.textComponent = textComponent;
-        overlayScrollPane = new OverlayScrollPane(textComponent);
-        numberingPane = new NumberingPane();
-        numberingPane.setTextComponent(textComponent);
-        overlayScrollPane.getVerticalScrollBar().setBlockIncrement(textComponent.getFont().getSize());
-        overlayScrollPane.getScrollPane().setRowHeaderView(numberingPane);
-        add(overlayScrollPane, BorderLayout.CENTER);
-    }
-
-    public NumberingPane getNumberingPane() {
-        return numberingPane;
-    }
-
-    public JTextComponent getTextComponent() {
-        return textComponent;
-    }
+public class DarkHighlighter extends BasicTextUI.BasicHighlighter {
 }

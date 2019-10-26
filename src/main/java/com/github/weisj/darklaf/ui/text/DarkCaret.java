@@ -261,8 +261,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             }
             validateWidth(r);
 
-            if (width > 0 && height > 0 &&
-                    !contains(r.x, r.y, r.width, r.height)) {
+            if (width > 0 && height > 0 && !contains(r.x, r.y, r.width, r.height)) {
                 Rectangle clip = g.getClipBounds();
                 if (clip != null && !clip.contains(this)) {
                     // Clip doesn't contain the old location, force it
@@ -295,15 +294,13 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                     }
                     g.setXORMode(textAreaBg);
                     int y = r.y + r.height;
-                    g.drawLine(r.x, y, r.x + r.width - 1, y);
+                    g.fillRect(r.x, y - 1, r.width, 1);
                     break;
                 case THICK_VERTICAL_LINE_STYLE:
-                    g.drawLine(r.x, r.y, r.x, r.y + r.height);
-                    r.x++;
-                    g.drawLine(r.x, r.y, r.x, r.y + r.height);
+                    g.fillRect(r.x, r.y, 2, r.height);
                     break;
                 case VERTICAL_LINE_STYLE:
-                    g.drawLine(r.x, r.y, r.x, r.y + r.height);
+                    g.fillRect(r.x, r.y, 1, r.height);
                     break;
             }
         }

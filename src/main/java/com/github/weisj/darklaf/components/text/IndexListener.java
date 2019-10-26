@@ -23,34 +23,10 @@
  */
 package com.github.weisj.darklaf.components.text;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
+import java.awt.event.MouseEvent;
+import java.util.EventListener;
 
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import java.awt.*;
+public interface IndexListener extends EventListener {
 
-public class NumberedTextComponent extends JPanel {
-
-    protected final OverlayScrollPane overlayScrollPane;
-    protected final NumberingPane numberingPane;
-    protected final JTextComponent textComponent;
-
-    public NumberedTextComponent(final JTextComponent textComponent) {
-        super(new BorderLayout());
-        this.textComponent = textComponent;
-        overlayScrollPane = new OverlayScrollPane(textComponent);
-        numberingPane = new NumberingPane();
-        numberingPane.setTextComponent(textComponent);
-        overlayScrollPane.getVerticalScrollBar().setBlockIncrement(textComponent.getFont().getSize());
-        overlayScrollPane.getScrollPane().setRowHeaderView(numberingPane);
-        add(overlayScrollPane, BorderLayout.CENTER);
-    }
-
-    public NumberingPane getNumberingPane() {
-        return numberingPane;
-    }
-
-    public JTextComponent getTextComponent() {
-        return textComponent;
-    }
+    void indexClicked(final int index, final int offset, final MouseEvent e);
 }

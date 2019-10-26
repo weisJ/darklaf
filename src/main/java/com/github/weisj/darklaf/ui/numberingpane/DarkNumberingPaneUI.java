@@ -266,6 +266,10 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         }
                     } catch (BadLocationException ignored) { }
                 }
+                var list = numberingPane.getIndexListeners();
+                for (var listener : list) {
+                    listener.indexClicked(start, offset, e);
+                }
             }
         }
 

@@ -37,7 +37,6 @@ import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.View;
-import javax.swing.text.html.InlineView;
 import java.awt.*;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
@@ -52,7 +51,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
 
-    private static final boolean DEBUG_COLOR = false;
+    private static final boolean DEBUG_COLOR = true;
     private Paint paint;
     private boolean roundedEdges;
     private AlphaComposite alphaComposite;
@@ -184,11 +183,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             g2d.setComposite(getAlphaComposite());
         }
         try {
-            if (view instanceof InlineView) {
-                dirtyShape = paintLayerImplInline(g2d, offs0, offs1, bounds, c, view);
-            } else {
-                dirtyShape = paintLayerImpl(g2d, offs0, offs1, bounds, c, view);
-            }
+            dirtyShape = paintLayerImpl(g2d, offs0, offs1, c);
         } catch (BadLocationException ignored) {
         } finally {
             context.restore();
@@ -217,13 +212,44 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     }
 
     protected Shape paintLayerImpl(final Graphics2D g2d, final int offs0, final int offs1,
-                                   final Shape bounds, @NotNull final JTextComponent c,
-                                   final View view) throws BadLocationException {
+                                   @NotNull final JTextComponent c) throws BadLocationException {
         Shape dirtyShape;
         Rectangle posStart = c.modelToView2D(c.getSelectionStart()).getBounds();
         Rectangle posEnd = c.modelToView2D(c.getSelectionEnd()).getBounds();
+        Rectangle posEndPrev = c.modelToView2D(Math.max(0, c.getSelectionEnd() - 1)).getBounds();
         Rectangle posOffs0 = c.modelToView2D(offs0).getBounds();
+        Rectangle posOffs0Prev = c.modelToView2D(Math.max(0, offs0 - 1)).getBounds();
         Rectangle posOffs1 = c.getUI().modelToView2D(c, offs1, Position.Bias.Backward).getBounds();
+        Rectangle posOffs1Forward = c.modelToView2D(offs1).getBounds();
+        Rectangle posOffs1Next = c.modelToView2D(Math.min(c.getDocument().getLength(), offs1 - 1)).getBounds();
+        boolean selectionStart = c.getSelectionStart() >= offs0;
+        boolean selectionEnd = c.getSelectionEnd() <= offs1;
+
+        var margin = c.getMargin();
+
+        boolean isToEndOfLine = posOffs1.y < posEnd.y && (posOffs1Forward.y != posOffs1Next.y);
+        boolean isToStartOfLine = !selectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
+
+        Rectangle alloc;
+        if (offs0 == offs1 && posEnd.y != posStart.y) {
+            alloc = new Rectangle(margin.left, posOffs0.y,
+                                  c.getWidth() - margin.left - margin.right, posOffs0.height);
+        } else {
+            alloc = new Rectangle(posOffs0.x, posOffs0.y, posOffs1.x + posOffs1.width - posOffs0.x,
+                                  posOffs1.y + posOffs1.height - posOffs0.y);
+        }
+
+        boolean isFirstLine = alloc.y == posStart.y;
+        boolean isSecondLine = posStart.y + posStart.height == alloc.y;
+        boolean isSecondLastLine = alloc.y + alloc.height == posEnd.y;
+        boolean isLastLine = alloc.y == posEnd.y || isSecondLastLine && posEnd.y != posEndPrev.y;
+        boolean endBeforeStart = posEnd.x < (posStart.x + arcSize / 2.0)
+                && (posEnd.y == posStart.y + posStart.height
+                || (posEnd.y <= posStart.y + 2 * posStart.height && posEnd.x == margin.left));
+
+        alloc.width = Math.max(2 * arcSize, alloc.width);
+        alloc.x = Math.max(margin.left, Math.min(c.getWidth() - margin.right - alloc.width, alloc.x));
+
         Paint paint = getPaint();
         if (paint == null) {
             g2d.setColor(c.getSelectionColor());
@@ -231,207 +257,81 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             g2d.setPaint(paint);
         }
 
-        if (offs0 == offs1) {
-            /*
-             * No selection. We should still paint something.
-             */
-            if (DEBUG_COLOR) g2d.setColor(Color.YELLOW);
-            Shape s = view.modelToView(offs0, bounds, Position.Bias.Forward);
-            Rectangle r = s.getBounds();
-            dirtyShape = paintSelectionLine(g2d, r, c, posStart, posEnd);
-        } else if (posOffs0.y != posStart.y && posOffs1.y != posEnd.y
-                && posOffs1.y >= posOffs0.y && posOffs1.y <= posOffs0.y + posOffs0.height) {
+        if (offs0 == offs1 && posEnd.y != posStart.y) {
+            if (DEBUG_COLOR) g2d.setColor(Color.YELLOW.darker());
+            isToEndOfLine = false;
+            isToStartOfLine = false;
+            dirtyShape = paintMiddleSelection(g2d, alloc, c,
+                                              false, false);
+        } else if (!selectionStart && !selectionEnd) {
             if (DEBUG_COLOR) g2d.setColor(Color.ORANGE);
-            // Contained in view, can just use bounds.
-            //Full lines of selection
-            var alloc = new Rectangle(posOffs0.x, posOffs0.y, posOffs1.x + posOffs1.width - posOffs0.x,
-                                      posOffs1.y + posOffs1.height - posOffs0.y);
-            dirtyShape = paintSelectionLine(g2d, alloc, c, posStart, posEnd);
+            dirtyShape = paintMiddleSelection(g2d, alloc, c,
+                                              isToEndOfLine, isToStartOfLine);
         } else {
             // Should only render part of View.
             //Start/End parts of selection
-            Shape shape = view.modelToView(offs0, Position.Bias.Forward, offs1, Position.Bias.Backward, bounds);
-            Rectangle r = shape.getBounds();
             if (posEnd.y == posStart.y) {
-                dirtyShape = paintSelection(g2d, c, r);
-            } else if (posOffs0.y == posStart.y) {
-                dirtyShape = paintSelectionStart(g2d, r, c, posStart, posEnd);
+                dirtyShape = paintSelection(g2d, c, alloc, selectionStart, selectionEnd);
+            } else if (selectionStart) {
+                dirtyShape = paintSelectionStart(g2d, alloc, c, posStart, posOffs0,
+                                                 endBeforeStart);
             } else {
-                dirtyShape = paintSelectionEnd(g2d, r, c, posStart, posEnd);
+                dirtyShape = paintSelectionEnd(g2d, alloc, c, posStart,
+                                               isFirstLine, isSecondLine, isToStartOfLine, isToEndOfLine,
+                                               endBeforeStart);
             }
         }
-        return dirtyShape;
-    }
-
-    protected Shape paintLayerImplInline(final Graphics2D g2d, final int offs0, final int offs1,
-                                         final Shape bounds, @NotNull final JTextComponent c,
-                                         final View view) throws BadLocationException {
-        Shape dirtyShape;
-        Rectangle posStart = c.modelToView2D(c.getSelectionStart()).getBounds();
-        Rectangle posEnd = c.modelToView2D(c.getSelectionEnd()).getBounds();
-
-        Paint paint = getPaint();
-        if (paint == null) {
-            g2d.setColor(c.getSelectionColor());
-        } else {
-            g2d.setPaint(paint);
-        }
-
-        if (offs0 == offs1) {
-            if (DEBUG_COLOR) g2d.setColor(Color.YELLOW);
-            Shape s = view.modelToView(offs0, bounds, Position.Bias.Forward);
-            Rectangle r = s.getBounds();
-            g2d.drawLine(r.x, r.y, r.x, r.y + r.height);
-            dirtyShape = r;
-        } else if (offs0 == view.getStartOffset() && offs1 == view.getEndOffset() && posEnd.y != posStart.y) {
-            // Contained in view, can just use bounds.
-            //Full lines of selection
-            if (DEBUG_COLOR) g2d.setColor(Color.ORANGE);
-            dirtyShape = paintSelectionLine(g2d, bounds.getBounds(), c, posStart, posEnd);
-        } else {
-            // Should only render part of View.
-            //Start/End parts of selection
-            Shape shape = view.modelToView(offs0, Position.Bias.Forward, offs1, Position.Bias.Backward, bounds);
-            Rectangle r = shape.getBounds();
-            if ((offs0 != view.getStartOffset() && offs1 != view.getEndOffset()) || posEnd.y == posStart.y) {
-                dirtyShape = paintSelection(g2d, c, r);
-            } else if (offs1 == view.getEndOffset()) {
-                dirtyShape = paintSelectionStart(g2d, r, c, posStart, posEnd);
-            } else {
-                dirtyShape = paintSelectionEnd(g2d, r, c, posStart, posEnd);
-            }
-        }
+        dirtyShape = paintExtension(g2d, c,
+                                    isToEndOfLine, isToStartOfLine,
+                                    isFirstLine, isLastLine,
+                                    isSecondLine, isSecondLastLine,
+                                    selectionStart, selectionEnd,
+                                    posStart, posEnd, dirtyShape.getBounds());
         return dirtyShape;
     }
 
     @NotNull
-    @Contract("_, _, _ -> param3")
-    private Shape paintSelection(final Graphics2D g2d, final JTextComponent c, final Rectangle r) {
-        /*
-         * Selection is contained to one line.
-         */
+    private Shape paintMiddleSelection(final Graphics2D g, final Rectangle r, final JTextComponent c,
+                                       final boolean toEndOfLine, final boolean toStartOfLine) {
+        if (toStartOfLine) {
+            r.width -= arcSize;
+            r.x += arcSize;
+        }
+        if (toEndOfLine) {
+            r.width -= arcSize;
+        }
+        g.fillRect(r.x, r.y, r.width, r.height);
+        return r;
+    }
+
+    /*
+     * Selection is contained to one line.
+     */
+    @Contract("_, _, _, _, _ -> param3")
+    @NotNull
+    private Shape paintSelection(final Graphics2D g2d, final JTextComponent c, final Rectangle r,
+                                 final boolean selectionStart, final boolean selectionEnd) {
         if (DEBUG_COLOR) g2d.setColor(Color.BLUE);
         if (isRounded(c)) {
-            g2d.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
+            paintRoundedLeftRight(g2d, selectionStart, selectionEnd, r);
         } else {
             g2d.fillRect(r.x, r.y, r.width, r.height);
         }
         return r;
     }
 
-    @Contract("_, _, _, _, _ -> param2")
+    @Contract("_, _, _, _, _, _ -> param2")
     @NotNull
-    private Shape paintSelectionLine(@NotNull final Graphics2D g2d,
-                                     @NotNull final Rectangle alloc,
-                                     @NotNull final JTextComponent c,
-                                     @NotNull final Rectangle posStart,
-                                     @NotNull final Rectangle posEnd) throws BadLocationException {
-        var margin = c.getMargin();
-        boolean leftToRight = c.getComponentOrientation().isLeftToRight();
-        boolean isFirstLine = alloc.y == posStart.y;
-        boolean isSecondLine = posStart.y + posStart.height == alloc.y;
-        boolean isSecondLastLine = alloc.y + alloc.height == posEnd.y;
-
-        if (alloc.width == 0 && isFirstLine && !leftToRight) {
-            return alloc;
-        }
-        if (alloc.y == posStart.y && ((leftToRight || posStart.x - c.getWidth() - margin.right - posStart.x == 1))) {
-            alloc.width = c.getWidth() - margin.right - alloc.x;
-        } else {
-            alloc.width = c.getWidth() - margin.left - margin.right;
-            alloc.x = margin.left;
-        }
-        if (!leftToRight && alloc.y == posStart.y) {
-            alloc.width -= posStart.x - margin.left;
-            alloc.x = posStart.x;
-        }
-        if (isRounded(c)) {
-            boolean roundRightBottom;
-            boolean roundLeftTop;
-            boolean roundLeftBottom;
-            boolean roundRightTop;
-            if (leftToRight) {
-                boolean isLastLine = isSecondLastLine && posEnd.x == margin.left;
-                roundRightBottom = isSecondLastLine;
-                roundLeftTop = isFirstLine || isSecondLine && posStart.x != margin.left;
-                roundLeftBottom = isLastLine;
-                roundRightTop = isFirstLine;
-            } else {
-                boolean isLastLine = isSecondLastLine
-                        && (posEnd.x == c.getWidth() - margin.right - 1 || posEnd.x == margin.left);
-                if (c.modelToView2D(c.getSelectionEnd() - 1).getBounds().y == posEnd.y) {
-                    isLastLine = false;
-                }
-                roundRightBottom = isLastLine || (isSecondLastLine
-                        && posEnd.x < (c.getWidth() - margin.right - arcSize / 2));
-                roundLeftBottom = isLastLine;
-                roundLeftTop = isFirstLine || (isSecondLine && posStart.x > margin.left + arcSize / 2);
-                roundRightTop = isFirstLine || isSecondLine && c.getWidth() - margin.right - posStart.x == 1;
-            }
-
-            if (!(roundLeftBottom || roundRightBottom || roundRightTop || roundLeftTop)) {
-                g2d.fillRect(alloc.x, alloc.y, alloc.width, alloc.height);
-                return alloc;
-            }
-            // At least one round corner now.
-            g2d.fillRoundRect(alloc.x, alloc.y, alloc.width, alloc.height, arcSize, arcSize);
-            if (!roundRightBottom) {
-                g2d.fillRect(alloc.x + alloc.width - arcSize, alloc.y + alloc.height - arcSize,
-                             arcSize, arcSize);
-            }
-            if (!roundLeftBottom) {
-                g2d.fillRect(alloc.x, alloc.y + alloc.height - arcSize, arcSize, arcSize);
-            }
-            if (!roundRightTop) {
-                g2d.fillRect(alloc.x + alloc.width - arcSize, alloc.y, arcSize, arcSize);
-            }
-            if (!roundLeftTop) {
-                g2d.fillRect(alloc.x, alloc.y, arcSize, arcSize);
-            }
-
-            boolean drawArc = isFirstLine && !roundLeftBottom;
-            drawArc = drawArc && alloc.x >= margin.left + arcSize;
-            if (drawArc) {
-                paintStartArc(g2d, alloc);
-                alloc.x -= arcSize;
-                alloc.width += arcSize;
-            }
-        } else {
-            g2d.fillRect(alloc.x, alloc.y, alloc.width, alloc.height);
-        }
-        return alloc;
-    }
-
-    private boolean isRounded(final JTextComponent c) {
-        return roundedEdges || Boolean.TRUE.equals(c.getClientProperty("JTextComponent.roundedSelection"));
-    }
-
-    @NotNull
-    @Contract("_, _, _, _, _ -> param2")
     private Shape paintSelectionStart(@NotNull final Graphics2D g2d, @NotNull final Rectangle r,
                                       @NotNull final JTextComponent c,
-                                      @NotNull final Rectangle posStart, final Rectangle posEnd) {
+                                      @NotNull final Rectangle posStart,
+                                      final Rectangle posOffs0,
+                                      final boolean endBeforeStart) {
         if (DEBUG_COLOR) g2d.setColor(Color.RED);
-
-        r.width = c.getWidth() - posStart.x - c.getMargin().right;
         var margin = c.getMargin();
         if (isRounded(c)) {
-            boolean roundLeftBottom = posEnd.x < (posStart.x + 2) && posEnd.y == posStart.y + posStart.height;
-            boolean roundRightBottom = posEnd.y == posStart.y + posStart.height;
-            if (!c.getComponentOrientation().isLeftToRight()) {
-                roundLeftBottom = roundLeftBottom || c.getWidth() - c.getMargin().right - posEnd.x == 1;
-            }
-
-            g2d.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
-            if (!roundLeftBottom && !roundRightBottom) {
-                //Optimize draw calls
-                g2d.fillRect(r.x, r.y + r.height - arcSize, r.width, arcSize);
-            } else if (!roundLeftBottom) {
-                g2d.fillRect(r.x, r.y + r.height - arcSize, arcSize, arcSize);
-            } else if (!roundRightBottom) {
-                g2d.fillRect(r.x + r.width - arcSize, r.y + r.height - arcSize, arcSize, arcSize);
-            }
-            boolean drawCorner = !roundLeftBottom && r.x >= margin.left + arcSize;
+            paintRoundRect(g2d, r, arcSize, true, false, endBeforeStart, false);
+            boolean drawCorner = posOffs0.equals(posStart) && !endBeforeStart && r.x >= margin.left + arcSize;
             if (drawCorner) {
                 paintStartArc(g2d, r);
                 r.x -= arcSize;
@@ -443,40 +343,29 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return r;
     }
 
-    @Contract("_, _, _, _, _ -> param2")
+    private boolean isRounded(final JTextComponent c) {
+        return roundedEdges || Boolean.TRUE.equals(c.getClientProperty("JTextComponent.roundedSelection"));
+    }
+
+    @Contract("_, _, _, _, _, _, _, _, _ -> param2")
     @NotNull
     private Shape paintSelectionEnd(@NotNull final Graphics2D g2d, @NotNull final Rectangle r,
                                     @NotNull final JTextComponent c, final Rectangle posStart,
-                                    final Rectangle posEnd) {
+                                    final boolean isFirstLine, final boolean isSecondLine,
+                                    final boolean extendToStart, final boolean extendToEnd,
+                                    final boolean endBeforeStart) {
         if (DEBUG_COLOR) g2d.setColor(Color.GREEN);
-
         var margin = c.getMargin();
-        r.width += r.x - margin.left;
-        r.x = margin.left;
-        if (!c.getComponentOrientation().isLeftToRight() && r.y == posStart.y) {
-            r.width -= posStart.x - margin.left;
-            r.x = posStart.x;
-        }
-        if (!c.getComponentOrientation().isLeftToRight()) {
-            if (posEnd.x >= (c.getWidth() - margin.right - arcSize / 2)) {
-                //Fill to right edge even if corners are not rounded.
-                r.width = c.getWidth() - margin.right - margin.left;
-            }
+        if (r.x + r.width >= c.getWidth() - margin.right - arcSize / 2.0) {
+            int end = c.getWidth() - margin.right;
+            r.width = end - r.x;
         }
         if (isRounded(c)) {
-            boolean roundRightTop = posEnd.x < (posStart.x + 2) && posEnd.y == posStart.y + posStart.height;
-            boolean roundLeftTop = posEnd.y == posStart.y + posStart.height && posStart.x != margin.left;
-
-            g2d.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
-            if (!roundLeftTop && !roundRightTop) {
-                //Optimize draw calls
-                g2d.fillRect(r.x, r.y, r.width, arcSize);
-            } else if (!roundLeftTop) {
-                g2d.fillRect(r.x, r.y, arcSize, arcSize);
-            } else if (!roundRightTop) {
-                g2d.fillRect(r.x + r.width - arcSize, r.y, arcSize, arcSize);
-            }
-            boolean drawCorner = !roundRightTop && r.x + r.width <= c.getWidth() - margin.right - arcSize;
+            boolean roundRightTop = endBeforeStart && !extendToEnd;
+            boolean roundLeftBottom = !isFirstLine && !extendToStart;
+            boolean roundLeftTop = isSecondLine && !extendToStart && posStart.x >= r.x + arcSize;
+            paintRoundRect(g2d, r, arcSize, roundLeftTop, roundRightTop, roundLeftBottom, !extendToEnd);
+            boolean drawCorner = !extendToEnd && !roundRightTop && r.x + r.width <= c.getWidth() - margin.right - arcSize;
             if (drawCorner) {
                 paintEndArc(g2d, r);
                 r.width += arcSize;
@@ -485,6 +374,82 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             g2d.fillRect(r.x, r.y, r.width, r.height);
         }
         return r;
+    }
+
+    private Shape paintExtension(final Graphics2D g2d, @NotNull final JTextComponent c,
+                                 final boolean isToEndOfLine, final boolean isToStartOfLine,
+                                 final boolean isFirstLine, final boolean isLastLine,
+                                 final boolean isSecondLine, final boolean isSecondLastLine,
+                                 final boolean selectionStart, final boolean selectionEnd,
+                                 final Rectangle posStart, final Rectangle posEnd,
+                                 final Rectangle r) {
+        var margin = c.getMargin();
+        boolean rounded = isRounded(c);
+        if (isToEndOfLine) {
+            if (DEBUG_COLOR) g2d.setColor(Color.CYAN);
+            int start = r.x + r.width;
+            int w = c.getWidth() - start - margin.right;
+            w = Math.max(2 * arcSize, w);
+            start = Math.min(start, c.getWidth() - margin.right - w);
+            if (rounded) {
+                boolean roundTop = isFirstLine || selectionStart;
+                boolean roundBottom = isLastLine || (isSecondLastLine && posEnd.x + posEnd.width <= start + w - arcSize);
+                boolean roundLeftTop = isFirstLine && start == margin.left;
+                paintRoundRect(g2d, new Rectangle(start, r.y, w, r.height), arcSize,
+                               roundLeftTop, roundTop, false, roundBottom);
+            } else {
+                g2d.fillRect(start, r.y, w, r.height);
+            }
+            r.x = Math.min(r.x, start);
+            r.width += w;
+        }
+        if (isToStartOfLine) {
+            if (DEBUG_COLOR) g2d.setColor(Color.CYAN.darker());
+            int start = margin.left;
+            int end = r.x;
+            int w = end - start;
+            w = Math.max(2 * arcSize, w);
+            end = Math.max(end, start + w);
+            if (rounded) {
+                boolean roundTop = isFirstLine || (isSecondLine && posStart.x >= start + arcSize);
+                boolean roundBottom = isLastLine || selectionEnd;
+                boolean roundRightBottom = isLastLine && end == c.getWidth() - margin.right;
+                paintRoundRect(g2d, new Rectangle(start, r.y, w, r.height), arcSize,
+                               roundTop, false, roundBottom, roundRightBottom);
+            } else {
+                g2d.fillRect(r.x, r.y, end - r.x, r.height);
+            }
+            r.width += w;
+            r.x = start;
+        }
+        return r;
+    }
+
+    private void paintRoundRect(@NotNull final Graphics g, @NotNull final Rectangle r, final int arcSize,
+                                final boolean leftTop, final boolean rightTop,
+                                final boolean leftBottom, final boolean rightBottom) {
+        int aw = Math.min(arcSize, r.width);
+        int ah = Math.min(arcSize, r.height);
+        g.fillRoundRect(r.x, r.y, r.width, r.height, aw, ah);
+        if (!leftTop) g.fillRect(r.x, r.y, aw, ah);
+        if (!leftBottom) g.fillRect(r.x, r.y + r.height - ah, aw, ah);
+        if (!rightTop) g.fillRect(r.x + r.width - aw, r.y, aw, ah);
+        if (!rightBottom) g.fillRect(r.x + r.width - aw, r.y + r.height - ah, aw, ah);
+    }
+
+    private void paintRoundedLeftRight(final Graphics g, final boolean left, final boolean right, final Rectangle r) {
+        if (right || left) {
+            g.fillRoundRect(r.x, r.y, r.width, r.height, arcSize, arcSize);
+            g.setColor(Color.PINK);
+            if (!left) {
+                g.fillRect(r.x, r.y, arcSize, r.height);
+            }
+            if (!right) {
+                g.fillRect(r.x + r.width - arcSize, r.y, arcSize, r.height);
+            }
+        } else {
+            g.fillRect(r.x, r.y, r.width, r.height);
+        }
     }
 
     private void paintStartArc(@NotNull final Graphics2D g2d, @NotNull final Rectangle r) {

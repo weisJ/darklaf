@@ -36,6 +36,7 @@ import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.EditorKit;
+import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.TextAction;
 import java.awt.*;
@@ -106,7 +107,10 @@ public abstract class DarkTextUI extends BasicTextUI {
         super.installUI(c);
     }
 
-
+    @Override
+    protected Highlighter createHighlighter() {
+        return new DarkHighlighter();
+    }
 
     /*
      * Implementation of BasicTextUI.

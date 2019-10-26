@@ -256,7 +256,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     @Override
     protected DarkCaret.CaretStyle getDefaultCaretStyle() {
-        return DarkCaret.CaretStyle.THICK_VERTICAL_LINE_STYLE;
+        return DarkCaret.CaretStyle.VERTICAL_LINE_STYLE;
     }
 
     @Override

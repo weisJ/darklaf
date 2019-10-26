@@ -15,12 +15,14 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
             LafManager.install();
             final var frame = new JFrame();
             frame.setSize(500, 500);
-            var overlayScroll = new JScrollPane(new JEditorPane() {{
-//                setEditorKit(new HTMLEditorKit());
+            var overlayScroll = new JTextPane() {{
                 setText(TestResources.LOREM_IPSUM.repeat(10));
                 setFont(Font.getFont(Font.MONOSPACED));
 //                setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-            }});
+//                SimpleAttributeSet attribs = new SimpleAttributeSet();
+//                StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
+//                setParagraphAttributes(attribs, true);
+            }};
             frame.setContentPane(new JPanel(new BorderLayout()) {{
                 add(overlayScroll, BorderLayout.CENTER);
             }});

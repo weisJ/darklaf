@@ -157,12 +157,32 @@ public class NumberingPane extends JComponent {
         return pos;
     }
 
+    public void addIndexListener(final IndexListener listener) {
+        listenerList.add(IndexListener.class, listener);
+    }
+
+    public void removeIndexListener(final IndexListener listener) {
+        listenerList.remove(IndexListener.class, listener);
+    }
+
     public Collection<Icon> getIcons() {
         return iconMap.values();
+    }
+
+    public Icon getIcon(final Position position) {
+        return iconMap.get(position);
     }
 
     public void removeIconAt(final Position position) {
         var icon = iconMap.remove(position);
         firePropertyChange("icons", icon, icon);
+    }
+
+    public List<IconListener> getIconListeners() {
+        return listenerMap.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public IndexListener[] getIndexListeners() {
+        return listenerList.getListeners(IndexListener.class);
     }
 }
