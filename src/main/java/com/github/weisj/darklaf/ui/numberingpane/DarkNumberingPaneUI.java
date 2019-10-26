@@ -224,7 +224,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
     protected int calculateMaxIconWidth() {
         var icons = numberingPane.getIcons();
-        int max = 0;
+        int max = numberingPane.getMinimumIconWidth();
         for (var icon : icons) {
             max = Math.max(icon.getIconWidth(), max);
         }
@@ -352,6 +352,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         viewport = null;
                     }
                 }
+            } else if ("minimumIconWidth".equals(key)) {
+                maxIconWidth = calculateMaxIconWidth();
             }
         }
     }

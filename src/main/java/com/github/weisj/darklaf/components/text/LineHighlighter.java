@@ -90,8 +90,11 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
         if (component == null) return;
         SwingUtilities.invokeLater(() -> {
             try {
+                if (component == null) return;
                 int offset = component.getCaretPosition();
-                Rectangle currentView = component.modelToView2D(offset).getBounds();
+                var view = component.modelToView2D(offset);
+                if (view == null) return;
+                var currentView = view.getBounds();
 
                 //  Remove the highlighting from the previously highlighted line
                 if (lastView != null && lastView.y != currentView.y) {

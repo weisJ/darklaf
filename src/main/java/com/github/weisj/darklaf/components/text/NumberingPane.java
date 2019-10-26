@@ -40,6 +40,7 @@ public class NumberingPane extends JComponent {
     private JTextComponent textComponent;
     private Map<Position, Icon> iconMap;
     private Map<Position, List<IconListener>> listenerMap;
+    private int width;
 
     public NumberingPane() {
         iconMap = new HashMap<>();
@@ -163,6 +164,16 @@ public class NumberingPane extends JComponent {
 
     public void removeIndexListener(final IndexListener listener) {
         listenerList.remove(IndexListener.class, listener);
+    }
+
+    public int getMinimumIconWidth() {
+        return width;
+    }
+
+    public void setMinimumIconWidth(final int width) {
+        int old = this.width;
+        this.width = Math.max(width, 0);
+        firePropertyChange("minimumIconWidth", old, width);
     }
 
     public Collection<Icon> getIcons() {
