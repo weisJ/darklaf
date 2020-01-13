@@ -63,10 +63,10 @@ public final class DarkBorders {
     }
 
     public static void update() {
-        for (var border : lineBorderMap.values()) {
+        for (WeakLineBorder border : lineBorderMap.values()) {
             border.setColor(UIManager.getColor("border"));
         }
-        for (var border : lineWidgetBorderMap.values()) {
+        for (WeakLineBorder border : lineWidgetBorderMap.values()) {
             border.setColor(UIManager.getColor("border"));
         }
     }

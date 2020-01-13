@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -47,6 +48,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
 
 
 /**
@@ -123,7 +125,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                 }
 
                 successful = true;
-                var ui = supportsIndicator(c);
+                DarkTabbedPaneUI ui = supportsIndicator(c);
                 if (ui != null) {
                     ui.clearDropIndicator();
                 }
@@ -157,7 +159,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     protected Transferable createTransferable(final JComponent c) {
         JTabbedPane tabPane = (JTabbedPane) c;
         currentTransferable = new TabTransferable(tabPane);
-        var ui = supportsIndicator(c);
+        DarkTabbedPaneUI ui = supportsIndicator(c);
         int index = currentTransferable.transferData.tabIndex;
         if (tabPane.getTabCount() > 1) {
             if (index == 0) {
@@ -168,7 +170,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         } else {
             index = -1;
         }
-        var tabComp = tabPane.getTabComponentAt(index);
+        Component tabComp = tabPane.getTabComponentAt(index);
         if (tabComp != null) tabComp.setVisible(false);
         tabPane.setSelectedIndex(index);
         if (ui != null) {
@@ -189,7 +191,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         Image tabImage = ImageUtil.scaledImageFromComponent(tabbedPane, currentTransferable.transferData.tabBounds);
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
-        var g = tabImage.getGraphics();
+        Graphics g = tabImage.getGraphics();
 
         if (ui != null) {
             g.setColor(ui.getDragBorderColor());
@@ -222,8 +224,17 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
 
     @Contract("null -> null")
     private DarkTabbedPaneUI supportsIndicator(final Component c) {
-        if (c instanceof JComponent && ((JComponent) c).getUI() instanceof DarkTabbedPaneUI) {
-            return ((DarkTabbedPaneUI) ((JComponent) c).getUI());
+        JComponent jc = (JComponent) c;
+        ComponentUI ui;
+        try {
+            Field field = JComponent.class.getDeclaredField("ui");
+            field.setAccessible(true);
+            ui = (ComponentUI) field.get(jc);
+            if (ui instanceof DarkTabbedPaneUI) {
+                return ((DarkTabbedPaneUI) ui);
+            }
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -240,7 +251,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         Component c = e.getDropTargetContext().getComponent();
         JTabbedPane destTabbedPane = (JTabbedPane) c;
 
-        var ui = supportsIndicator(destTabbedPane);
+        DarkTabbedPaneUI ui = supportsIndicator(destTabbedPane);
         if (ui != null) {
             TabTransferable t = currentTransferable;
             if (t != null) {
@@ -251,9 +262,9 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                     ui.clearDropIndicator();
                     return;
                 }
-                var dropRect = TabbedPaneUtil.getDropRect(supportsIndicator(destTabbedPane), destTabbedPane,
-                                                          t.transferData.sourceTabbedPane, mouseLocation,
-                                                          t.getTabBounds(), tab, t.transferData.tabIndex, lastTab);
+                Rectangle dropRect = TabbedPaneUtil.getDropRect(supportsIndicator(destTabbedPane), destTabbedPane,
+                                                                t.transferData.sourceTabbedPane, mouseLocation,
+                                                                t.getTabBounds(), tab, t.transferData.tabIndex, lastTab);
                 ui.setDnDIndicatorRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height,
                                        tab, t.transferData.sourceTabbedPane == destTabbedPane);
                 lastTab = tab;
@@ -269,7 +280,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     public void dragExit(@NotNull final DropTargetEvent e) {
         Component c = e.getDropTargetContext().getComponent();
         lastTab = -1;
-        var ui = supportsIndicator(c);
+        DarkTabbedPaneUI ui = supportsIndicator(c);
         if (ui != null) {
             ui.clearDropIndicator();
         }
@@ -278,7 +289,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     @Override
     public void drop(@NotNull final DropTargetDropEvent e) {
         Component c = e.getDropTargetContext().getComponent();
-        var ui = supportsIndicator(c);
+        DarkTabbedPaneUI ui = supportsIndicator(c);
         if (ui != null) {
             ui.clearDropIndicator();
         }
@@ -442,7 +453,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             }
             c.setAutoscrolls(scrolls);
 
-            var ui = supportsIndicator(currentTransferable.transferData.sourceTabbedPane);
+            DarkTabbedPaneUI ui = supportsIndicator(currentTransferable.transferData.sourceTabbedPane);
             if (ui != null) {
                 ui.clearSourceIndicator();
             }

@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
@@ -146,7 +147,7 @@ public class DarkPreviewPanel extends JPanel {
     }
 
     private int paintText(@NotNull final Graphics g, final int offsetX) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setFont(getFont());
         JComponent host = getColorChooser();
         if (host == null) {

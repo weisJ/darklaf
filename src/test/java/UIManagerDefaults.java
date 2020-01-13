@@ -119,7 +119,7 @@ public class UIManagerDefaults implements ItemListener {
     private JMenu createFileMenu() {
         final JMenu menu = new JMenu("Application");
         menu.setMnemonic('A');
-        var item = new ExitAction();
+        ExitAction item = new ExitAction();
         menu.add(item);
         return menu;
     }

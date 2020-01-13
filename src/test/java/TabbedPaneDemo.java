@@ -13,16 +13,16 @@ public class TabbedPaneDemo extends JFrame {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             final JFrame frame = new JFrame();
-            int tabCount = 2;
+            int tabCount = 1;
             frame.setSize(500 * tabCount, 500);
-            var c = new JPanel(new GridLayout(1, 2));
+            JPanel c = new JPanel(new GridLayout(1, 2));
             for (int j = 0; j < tabCount; j++) {
-                var p = new JPanel(new BorderLayout());
-                final var tabbedPane = new ClosableTabbedPane();
+                JPanel p = new JPanel(new BorderLayout());
+                final ClosableTabbedPane tabbedPane = new ClosableTabbedPane();
                 tabbedPane.setName("TabPane " + j);
 
-                for (int i = 0; i < j; i++) {
-                    var editor = new JTextPane();
+                for (int i = 0; i < 4; i++) {
+                    JTextPane editor = new JTextPane();
                     editor.setText("TabPaneDemo TabPane-" + j + "\n".repeat(i + 1));
                     tabbedPane.addTab("Tab (" + i + "," + j + ")", editor);
                 }

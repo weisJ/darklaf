@@ -117,7 +117,7 @@ public class DarkButtonUI extends BasicButtonUI {
     @Override
     protected void paintText(@NotNull final Graphics g, final JComponent c,
                              final Rectangle textRect, final String text) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         AbstractButton button = (AbstractButton) c;
         ButtonModel model = button.getModel();
         g.setColor(getForeground(button));
@@ -151,8 +151,8 @@ public class DarkButtonUI extends BasicButtonUI {
     protected void paintButton(final Graphics g, @NotNull final JComponent c) {
         Graphics2D g2 = (Graphics2D) g;
         if (shouldDrawBackground(c)) {
-            var b = (AbstractButton) c;
-            var margin = b.getMargin();
+            AbstractButton b = (AbstractButton) c;
+            Insets margin = b.getMargin();
             int arc = getArc(c);
             if (isShadowVariant(c)) {
                 if (b.isEnabled() && b.getModel().isRollover()) {
@@ -205,20 +205,11 @@ public class DarkButtonUI extends BasicButtonUI {
         }
     }
 
-    protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
-        var context = GraphicsUtil.setupAntialiasing(g);
-        if (isDefaultButton(b)) {
-            g.setFont(g.getFont().deriveFont(Font.BOLD));
-        }
-        if (text != null && !text.equals("")) {
-            View v = (View) c.getClientProperty(BasicHTML.propertyKey);
-            if (v != null) {
-                v.paint(g, textRect);
-            } else {
-                paintText(g, b, textRect, text);
-            }
-        }
-        context.restore();
+    protected Color getShadowColor(@NotNull final AbstractButton c) {
+        Object colorHover = c.getClientProperty("JButton.shadow.hover");
+        Object colorClick = c.getClientProperty("JButton.shadow.click");
+        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick : shadowClick
+                                      : colorHover instanceof Color ? (Color) colorHover : shadowHover;
     }
 
     private boolean shouldDrawBackground(@NotNull final JComponent c) {
@@ -242,24 +233,11 @@ public class DarkButtonUI extends BasicButtonUI {
                 && "shadow".equals(((JButton) c).getClientProperty("JButton.variant"));
     }
 
-    protected Color getShadowColor(@NotNull final AbstractButton c) {
-        var colorHover = c.getClientProperty("JButton.shadow.hover");
-        var colorClick = c.getClientProperty("JButton.shadow.click");
-        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick : shadowClick
-                                      : colorHover instanceof Color ? (Color) colorHover : shadowHover;
-    }
-
-    @Contract("null -> false")
-    public static boolean isFullShadow(final Component c) {
-        return c instanceof JButton
-                && "fullShadow".equals(((JButton) c).getClientProperty("JButton.variant"));
-    }
-
     protected Color getBackgroundColor(@NotNull final JComponent c) {
-        var defaultButton = isDefaultButton(c);
-        var rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
+        boolean defaultButton = isDefaultButton(c);
+        boolean rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
                 && (((JButton) c).getModel().isRollover())));
-        var clicked = rollOver && ((JButton) c).getModel().isArmed();
+        boolean clicked = rollOver && ((JButton) c).getModel().isArmed();
         if (c.isEnabled()) {
             if (defaultButton) {
                 if (clicked) {
@@ -281,6 +259,28 @@ public class DarkButtonUI extends BasicButtonUI {
         } else {
             return inactiveBackground;
         }
+    }
+
+    @Contract("null -> false")
+    public static boolean isFullShadow(final Component c) {
+        return c instanceof JButton
+                && "fullShadow".equals(((JButton) c).getClientProperty("JButton.variant"));
+    }
+
+    protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
+        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
+        if (isDefaultButton(b)) {
+            g.setFont(g.getFont().deriveFont(Font.BOLD));
+        }
+        if (text != null && !text.equals("")) {
+            View v = (View) c.getClientProperty(BasicHTML.propertyKey);
+            if (v != null) {
+                v.paint(g, textRect);
+            } else {
+                paintText(g, b, textRect, text);
+            }
+        }
+        context.restore();
     }
 
     @Contract("null -> false")

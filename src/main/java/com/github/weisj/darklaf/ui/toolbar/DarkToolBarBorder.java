@@ -52,7 +52,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
 
         if (isFloatable(c)) {
             if (((JToolBar) c).getOrientation() == HORIZONTAL) {
-                var icon = getHorizontalGrip();
+                Icon icon = getHorizontalGrip();
                 int yIcon = h / 2 - icon.getIconHeight() / 2;
                 if (c.getComponentOrientation().isLeftToRight()) {
                     icon.paintIcon(c, g, 0, yIcon);
@@ -60,7 +60,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
                     icon.paintIcon(c, g, w - icon.getIconWidth(), yIcon);
                 }
             } else {
-                var icon = getVerticalGrip();
+                Icon icon = getVerticalGrip();
                 int xIcon = w / 2 - icon.getIconWidth() / 2;
                 icon.paintIcon(c, g, xIcon, 0);
             }
@@ -84,7 +84,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
     public Insets getBorderInsets(final Component c, final Insets newInsets) {
         if (isFloatable(c)) {
             if (((JToolBar) c).getOrientation() == HORIZONTAL) {
-                var icon = getHorizontalGrip();
+                Icon icon = getHorizontalGrip();
                 if (c.getComponentOrientation().isLeftToRight()) {
                     newInsets.left = icon.getIconWidth();
                 } else {

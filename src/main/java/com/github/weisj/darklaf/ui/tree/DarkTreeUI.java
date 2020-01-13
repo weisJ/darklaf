@@ -610,7 +610,7 @@ public class DarkTreeUI extends BasicTreeUI {
         int childCount = treeModel.getChildCount(path.getLastPathComponent());
         g.setColor(getLineColor(path));
         for (int i = 0; i < childCount - 1; i++) {
-            var childPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), i));
+            TreePath childPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), i));
             Rectangle childBounds = getPathBounds(tree, childPath);
             if (childBounds != null) {
                 bottom = Math.min(childBounds.y + childBounds.height, clipBottom);
@@ -621,7 +621,7 @@ public class DarkTreeUI extends BasicTreeUI {
         }
 
         //Descend to deepest last child.
-        var lastChildPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), childCount - 1));
+        TreePath lastChildPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), childCount - 1));
         while (tree.isExpanded(lastChildPath)) {
             int count = treeModel.getChildCount(lastChildPath.getLastPathComponent());
             lastChildPath = lastChildPath.pathByAddingChild(treeModel.getChild(lastChildPath.getLastPathComponent(),

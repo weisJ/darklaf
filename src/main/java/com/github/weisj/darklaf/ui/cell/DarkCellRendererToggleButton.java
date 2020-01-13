@@ -62,7 +62,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
-        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
+        Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
         if (!(isSelected) || table.isEditing()) {
             toggleButton.setBackground(background);
             toggleButton.setForeground(table.getForeground());

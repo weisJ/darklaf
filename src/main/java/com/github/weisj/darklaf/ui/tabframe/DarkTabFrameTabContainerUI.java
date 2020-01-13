@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.tabframe;
 
+import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabContainer;
 import com.github.weisj.darklaf.decorators.HoverListener;
@@ -82,7 +83,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         tabContainer.addMouseListener(mouseListener);
         tabContainer.addMouseListener(dragListener);
         tabContainer.addMouseMotionListener(dragListener);
-        var cont = tabContainer.getContent();
+        Component cont = tabContainer.getContent();
         if (cont != null) {
             cont.addMouseListener(hoverListener);
             cont.addMouseListener(mouseListener);
@@ -105,12 +106,12 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         return new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                var a = tabContainer.getOrientation();
-                var index = tabContainer.getIndex();
+                Alignment a = tabContainer.getOrientation();
+                int index = tabContainer.getIndex();
                 if (!tabContainer.isSelected()) {
                     tabFrame.toggleTab(a, index, true);
                 } else {
-                    var popup = tabFrame.getPopupComponentAt(a, index);
+                    Component popup = tabFrame.getPopupComponentAt(a, index);
                     if (!DarkUIUtil.hasFocus(popup)) {
                         popup.requestFocus();
                     } else {
@@ -135,7 +136,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         tabContainer.removeMouseListener(dragListener);
         tabContainer.removePropertyChangeListener(this);
         tabContainer.removeMouseMotionListener(dragListener);
-        var cont = tabContainer.getContent();
+        Component cont = tabContainer.getContent();
         if (cont != null) {
             cont.removeMouseListener(hoverListener);
             cont.removeMouseListener(mouseListener);
@@ -162,10 +163,10 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
 
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-        var key = evt.getPropertyName();
+        String key = evt.getPropertyName();
         if ("content".equals(key)) {
-            var oldVal = evt.getOldValue();
-            var newVal = evt.getNewValue();
+            Object oldVal = evt.getOldValue();
+            Object newVal = evt.getNewValue();
             if (oldVal instanceof Component) {
                 ((Component) oldVal).removeMouseListener(mouseListener);
                 ((Component) oldVal).removeMouseListener(hoverListener);

@@ -172,7 +172,7 @@ public class ColorWheel extends JComponent {
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
 
-        var config = new GraphicsContext(g);
+        GraphicsContext config = new GraphicsContext(g);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ((float) myOpacity) / 255f));
         g2d.drawImage(myImage, myWheel.x, myWheel.y, null);
         config.restore();

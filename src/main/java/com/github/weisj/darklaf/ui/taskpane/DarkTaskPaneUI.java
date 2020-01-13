@@ -69,9 +69,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     @Override
     protected void installListeners() {
         super.installListeners();
-        group.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY, e -> {
-            isCollapsed = "collapsed".equals(e.getNewValue());
-        });
+        group.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY, e -> isCollapsed = "collapsed".equals(e.getNewValue()));
     }
 
     @Override
@@ -108,7 +106,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
         public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y,
                                 final int width, final int height) {
-            var clip = g.getClip().getBounds();
+            Rectangle clip = g.getClip().getBounds();
             int h = height + arc;
             g.setClip(clip.x, clip.y, width, h / 2 + 1);
             g.setColor(color);
@@ -137,7 +135,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
         @Override
         protected void paintTitleBackground(@NotNull final JXTaskPane group, final Graphics g2) {
-            var g = (Graphics2D) g2;
+            Graphics2D g = (Graphics2D) g2;
             int w = group.getWidth();
             int h = getTitleHeight(group);
             if (group.isSpecial()) {
@@ -150,7 +148,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
                 g.setColor(borderColor);
                 DarkUIUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight(), false);
             } else {
-                var clip = g.getClip().getBounds();
+                Rectangle clip = g.getClip().getBounds();
                 g.setClip(0, 0, w, h / 2 + 1);
 
                 DarkUIUtil.fillRoundRect(g, 0.5f, 0.5f, w - 1, h - 1, getRoundHeight());

@@ -62,7 +62,7 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
     public void paint(@NotNull final Graphics g, final int p0, final int p1, final Shape bounds,
                       @NotNull final JTextComponent c) {
         try {
-            Rectangle r = c.modelToView2D(c.getCaretPosition()).getBounds();
+            Rectangle r = c.modelToView(c.getCaretPosition());
             g.setColor(color);
             g.fillRect(0, r.y, c.getWidth(), r.height);
 
@@ -92,9 +92,9 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
             try {
                 if (component == null) return;
                 int offset = component.getCaretPosition();
-                var view = component.modelToView2D(offset);
+                Rectangle view = component.modelToView(offset);
                 if (view == null) return;
-                var currentView = view.getBounds();
+                Rectangle currentView = view.getBounds();
 
                 //  Remove the highlighting from the previously highlighted line
                 if (lastView != null && lastView.y != currentView.y) {

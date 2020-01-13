@@ -171,22 +171,22 @@ public class OverlayScrollPane extends JLayeredPane {
                 public void layoutContainer(final Container parent) {
                     super.layoutContainer(parent);
                     if (viewport != null) {
-                        var bounds = viewport.getBounds();
-                        var vertBounds = verticalScrollBar.getBounds();
-                        var horBounds = horizontalScrollBar.getBounds();
-                        var columnHeader = getColumnHeader();
-                        var rowHeader = getRowHeader();
+                        Rectangle bounds = viewport.getBounds();
+                        Rectangle vertBounds = verticalScrollBar.getBounds();
+                        Rectangle horBounds = horizontalScrollBar.getBounds();
+                        JViewport columnHeader = getColumnHeader();
+                        JViewport rowHeader = getRowHeader();
                         if (getComponentOrientation().isLeftToRight()) {
                             if (verticalScrollBar.isVisible()) {
                                 bounds.width += vertBounds.width;
                             }
                             if (columnHeader != null && verticalScrollBar.isVisible()) {
-                                var chb = columnHeader.getBounds();
+                                Rectangle chb = columnHeader.getBounds();
                                 chb.width += vertBounds.width;
                                 columnHeader.setBounds(chb);
                             }
                             if (rowHeader != null && horizontalScrollBar.isVisible()) {
-                                var rhb = rowHeader.getBounds();
+                                Rectangle rhb = rowHeader.getBounds();
                                 rhb.height += horBounds.height;
                                 rowHeader.setBounds(rhb);
                             }
@@ -196,13 +196,13 @@ public class OverlayScrollPane extends JLayeredPane {
                                 bounds.width += vertBounds.width;
                             }
                             if (columnHeader != null && verticalScrollBar.isVisible()) {
-                                var chb = columnHeader.getBounds();
+                                Rectangle chb = columnHeader.getBounds();
                                 chb.x -= vertBounds.width;
                                 chb.width += vertBounds.width;
                                 columnHeader.setBounds(chb);
                             }
                             if (rowHeader != null && horizontalScrollBar.isVisible()) {
-                                var rhb = rowHeader.getBounds();
+                                Rectangle rhb = rowHeader.getBounds();
                                 rhb.height += horBounds.height;
                                 rowHeader.setBounds(rhb);
                             }

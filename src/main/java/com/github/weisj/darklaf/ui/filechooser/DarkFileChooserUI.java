@@ -82,7 +82,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         topPanel.add(lookInLabel, BorderLayout.BEFORE_LINE_BEGINS);
 
         // CurrentDir ComboBox
-        directoryComboBox = new JComboBox<>() {
+        directoryComboBox = new JComboBox<Object>() {
             public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 // Must be small enough to not affect total width.

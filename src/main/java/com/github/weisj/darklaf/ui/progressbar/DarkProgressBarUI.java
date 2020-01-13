@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.progressbar;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -192,7 +193,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
 
     private void paintString(@NotNull final Graphics2D g, final int x, final int y,
                              final int w, final int h, final int fillStart, final int amountFull) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         String progressString = progressBar.getString();
         g.setFont(progressBar.getFont());
         Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
@@ -265,7 +266,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
             g2.fill(coloredShape);
 
             if (progressBar.isStringPainted()) {
-                var config = GraphicsUtil.setupAAPainting(g);
+                GraphicsContext config = GraphicsUtil.setupAAPainting(g);
                 paintString(g, i.left, i.top, r.width, r.height, amountFull, i);
                 config.restore();
             }

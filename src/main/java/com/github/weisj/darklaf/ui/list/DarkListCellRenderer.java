@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.plaf.ListUI;
 import java.awt.*;
 
 public class DarkListCellRenderer extends DefaultListCellRenderer {
@@ -53,11 +54,11 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
             comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }
         boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor"));
-        var layout = list.getLayoutOrientation();
+        int layout = list.getLayoutOrientation();
         if (layout == JList.VERTICAL) {
             alternativeRow = alternativeRow && index % 2 == 1;
         } else if (layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP) {
-            var ui = list.getUI();
+            ListUI ui = list.getUI();
             if (ui instanceof DarkListUI) {
                 int row = ((DarkListUI) ui).convertModelToRow(index);
                 alternativeRow = alternativeRow && row % 2 == 1;
@@ -67,7 +68,7 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
         }
         Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
         Color normalColor = list.getBackground();
-        var background = alternativeRow ? alternativeRowColor : normalColor;
+        Color background = alternativeRow ? alternativeRowColor : normalColor;
         if (!(isSelected)) {
             comp.setBackground(background);
             comp.setForeground(list.getForeground());

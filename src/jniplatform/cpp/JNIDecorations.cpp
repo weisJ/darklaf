@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "JNIDecorations.h";
+#include "JNIDecorations.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorations.h"
 #include <dwmapi.h>
 #include <iostream>

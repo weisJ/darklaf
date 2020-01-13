@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.label;
 
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 
@@ -45,7 +46,7 @@ public class DarkLabelUI extends BasicLabelUI {
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         super.paint(g, c);
         config.restore();
     }

@@ -124,8 +124,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
         try {
             TextUI mapper = c.getUI();
-            Rectangle p0 = mapper.modelToView2D(c, offs0, Position.Bias.Forward).getBounds();
-            Rectangle p1 = mapper.modelToView2D(c, offs1, Position.Bias.Forward).getBounds();
+            Rectangle p0 = mapper.modelToView(c, offs0, Position.Bias.Forward);
+            Rectangle p1 = mapper.modelToView(c, offs1, Position.Bias.Forward);
             Paint paint = getPaint();
             if (paint == null) {
                 g2d.setColor(c.getSelectionColor());
@@ -226,18 +226,18 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     protected Shape paintLayerImpl(final Graphics2D g2d, final int offs0, final int offs1,
                                    @NotNull final JTextComponent c) throws BadLocationException {
         Shape dirtyShape;
-        Rectangle posStart = c.modelToView2D(c.getSelectionStart()).getBounds();
-        Rectangle posEnd = c.modelToView2D(c.getSelectionEnd()).getBounds();
-        Rectangle posEndPrev = c.modelToView2D(Math.max(0, c.getSelectionEnd() - 1)).getBounds();
-        Rectangle posOffs0 = c.modelToView2D(offs0).getBounds();
-        Rectangle posOffs0Prev = c.modelToView2D(Math.max(0, offs0 - 1)).getBounds();
-        Rectangle posOffs1 = c.getUI().modelToView2D(c, offs1, Position.Bias.Backward).getBounds();
-        Rectangle posOffs1Forward = c.modelToView2D(offs1).getBounds();
-        Rectangle posOffs1Next = c.modelToView2D(Math.min(c.getDocument().getLength(), offs1 - 1)).getBounds();
+        Rectangle posStart = c.modelToView(c.getSelectionStart());
+        Rectangle posEnd = c.modelToView(c.getSelectionEnd());
+        Rectangle posEndPrev = c.modelToView(Math.max(0, c.getSelectionEnd() - 1));
+        Rectangle posOffs0 = c.modelToView(offs0);
+        Rectangle posOffs0Prev = c.modelToView(Math.max(0, offs0 - 1)).getBounds();
+        Rectangle posOffs1 = c.getUI().modelToView(c, offs1, Position.Bias.Backward);
+        Rectangle posOffs1Forward = c.modelToView(offs1);
+        Rectangle posOffs1Next = c.modelToView(Math.min(c.getDocument().getLength(), offs1 - 1));
         boolean selectionStart = c.getSelectionStart() >= offs0;
         boolean selectionEnd = c.getSelectionEnd() <= offs1;
 
-        var margin = c.getMargin();
+        Insets margin = c.getMargin();
 
         boolean isToEndOfLine = posOffs1.y < posEnd.y && (posOffs1Forward.y != posOffs1Next.y);
         boolean isToStartOfLine = !selectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
@@ -340,7 +340,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                       final Rectangle posOffs0,
                                       final boolean endBeforeStart) {
         if (DEBUG_COLOR) g2d.setColor(Color.RED);
-        var margin = c.getMargin();
+        Insets margin = c.getMargin();
         if (isRounded(c)) {
             paintRoundRect(g2d, r, arcSize, true, false, endBeforeStart, false);
             boolean drawCorner = posOffs0.equals(posStart) && !endBeforeStart && r.x >= margin.left + arcSize;
@@ -367,7 +367,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                     final boolean extendToStart, final boolean extendToEnd,
                                     final boolean endBeforeStart) {
         if (DEBUG_COLOR) g2d.setColor(Color.GREEN);
-        var margin = c.getMargin();
+        Insets margin = c.getMargin();
         if (r.x + r.width >= c.getWidth() - margin.right - arcSize / 2.0) {
             int end = c.getWidth() - margin.right;
             r.width = end - r.x;
@@ -395,7 +395,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                  final boolean selectionStart, final boolean selectionEnd,
                                  final Rectangle posStart, final Rectangle posEnd,
                                  final Rectangle r) {
-        var margin = c.getMargin();
+        Insets margin = c.getMargin();
         boolean rounded = isRounded(c);
         if (isToEndOfLine) {
             if (DEBUG_COLOR) g2d.setColor(Color.CYAN);

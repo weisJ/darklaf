@@ -414,7 +414,7 @@ public class ToolTipContext implements ToolTipListener {
      * @return the tooltip location. {@see {@link JComponent#getToolTipLocation(MouseEvent)}}
      */
     public Point getToolTipLocation(@NotNull final MouseEvent event) {
-        var rect = toolTipRectSupplier.apply(event);
+        Rectangle rect = toolTipRectSupplier.apply(event);
         if (applyInsetsToRect) {
             DarkUIUtil.applyInsets(rect, c.getInsets(calcInsets));
         }
@@ -424,9 +424,9 @@ public class ToolTipContext implements ToolTipListener {
             return lastPos;
         }
         getToolTip().setTipText(c.getToolTipText(event));
-        var dim = getContentSize();
-        var mp = SwingUtilities.convertPoint((Component) event.getSource(), event.getPoint(), c);
-        var mRect = new Rectangle(mp.x, mp.y, 1, 1);
+        Dimension dim = getContentSize();
+        Point mp = SwingUtilities.convertPoint((Component) event.getSource(), event.getPoint(), c);
+        Rectangle mRect = new Rectangle(mp.x, mp.y, 1, 1);
         Point compPoint;
         Point mousePoint;
         if (alignment == Alignment.CENTER) {
@@ -461,8 +461,8 @@ public class ToolTipContext implements ToolTipListener {
     }
 
     private Dimension getContentSize() {
-        var dim = toolTip.getPreferredSize();
-        var align = alignment == Alignment.CENTER ? centerAlignment : alignment;
+        Dimension dim = toolTip.getPreferredSize();
+        Alignment align = alignment == Alignment.CENTER ? centerAlignment : alignment;
         if (align == Alignment.EAST || align == Alignment.WEST) {
             dim.height -= ((DarkTooltipBorder) toolTip.getBorder()).getShadowSize(toolTip);
         }

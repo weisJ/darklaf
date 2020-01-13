@@ -23,8 +23,11 @@
  */
 package com.github.weisj.darklaf.components.text;
 
+import com.github.weisj.darklaf.util.StringUtil;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
@@ -63,7 +66,7 @@ public class NumberingPane extends JComponent {
     }
 
     public void setTextComponent(final JTextComponent textComponent) {
-        var old = this.textComponent;
+        JTextComponent old = this.textComponent;
         this.textComponent = textComponent;
         firePropertyChange("editorPane", old, textComponent);
     }
@@ -75,7 +78,7 @@ public class NumberingPane extends JComponent {
     public List<Map.Entry<Position, Icon>> getIconsInRange(final int startOff, final int endOff) {
         return iconMap.entrySet().stream()
                       .filter(e -> {
-                          var pos = e.getKey();
+                          Position pos = e.getKey();
                           return pos.getOffset() >= startOff && pos.getOffset() <= endOff;
                       })
                       .collect(Collectors.toList());
@@ -88,11 +91,11 @@ public class NumberingPane extends JComponent {
     public Position addIconAtLine(final int lineIndex, final Icon icon, final boolean atTextStart) throws BadLocationException {
         int offset = textComponent.getDocument().getDefaultRootElement().getElement(lineIndex).getStartOffset();
         if (atTextStart) {
-            var doc = textComponent.getDocument();
-            var txt = new Segment();
+            Document doc = textComponent.getDocument();
+            Segment txt = new Segment();
             txt.setPartialReturn(true);
             String str = doc.getText(offset, 1);
-            while (str.isBlank()) {
+            while (StringUtil.isBlank(str)) {
                 offset++;
                 str = doc.getText(offset, 1);
             }
@@ -105,12 +108,14 @@ public class NumberingPane extends JComponent {
         addIconListener(textComponent.getDocument().createPosition(offset), listener);
     }
 
-    public void addIconListener(final Position position, final IconListener listener) {
-        if (!listenerMap.containsKey(position)) {
-            listenerMap.put(position, new ArrayList<>());
+    public Position addIconAtOffset(final int offset, final Icon icon) throws BadLocationException {
+        Document doc = textComponent.getDocument();
+        Position pos = doc.createPosition(offset);
+        if (icon != null) {
+            iconMap.put(pos, icon);
         }
-        var list = listenerMap.get(position);
-        list.add(listener);
+        firePropertyChange("icons", null, icon);
+        return pos;
     }
 
     public void removeIconListener(final int offset, final IconListener listener) throws BadLocationException {
@@ -118,44 +123,40 @@ public class NumberingPane extends JComponent {
         removeIconListener(textComponent.getDocument().createPosition(offset), listener);
     }
 
+    public void addIconListener(final Position position, final IconListener listener) {
+        if (!listenerMap.containsKey(position)) {
+            listenerMap.put(position, new ArrayList<>());
+        }
+        List<IconListener> list = listenerMap.get(position);
+        list.add(listener);
+    }
+
     public void removeIconListener(final Position position, final IconListener listener) {
-        var list = listenerMap.get(position);
+        List<IconListener> list = listenerMap.get(position);
         if (list != null) {
             list.remove(listener);
         }
     }
 
     public List<IconListener> getIconListeners(final int offset) throws BadLocationException {
-        if (textComponent == null) return List.of();
+        if (textComponent == null) return new ArrayList<>();
         return getIconListeners(textComponent.getDocument().createPosition(offset));
     }
 
     public List<IconListener> getIconListeners(final Position position) {
-        var list = listenerMap.get(position);
-        return list != null ? list : List.of();
+        List<IconListener> list = listenerMap.get(position);
+        return list != null ? list : new ArrayList<>();
     }
 
     public List<IconListener> getIconListeners(final int startOffset, final int endOffset) {
         return listenerMap.entrySet().stream()
                           .filter(entry -> {
-                              var p = entry.getKey();
+                              Position p = entry.getKey();
                               return p.getOffset() >= startOffset && p.getOffset() <= endOffset;
                           })
                           .map(Map.Entry::getValue)
                           .flatMap(List::stream)
                           .collect(Collectors.toList());
-    }
-
-
-
-    public Position addIconAtOffset(final int offset, final Icon icon) throws BadLocationException {
-        var doc = textComponent.getDocument();
-        var pos = doc.createPosition(offset);
-        if (icon != null) {
-            iconMap.put(pos, icon);
-        }
-        firePropertyChange("icons", null, icon);
-        return pos;
     }
 
     public void addIndexListener(final IndexListener listener) {
@@ -185,7 +186,7 @@ public class NumberingPane extends JComponent {
     }
 
     public void removeIconAt(final Position position) {
-        var icon = iconMap.remove(position);
+        Icon icon = iconMap.remove(position);
         firePropertyChange("icons", icon, icon);
     }
 

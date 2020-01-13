@@ -24,7 +24,9 @@
 package com.github.weisj.darklaf.ui.menu;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.MenuItemLayoutHelper;
 import sun.swing.SwingUtilities2;
@@ -113,8 +115,8 @@ public class DarkMenuUI extends BasicMenuUI {
 
     protected void paintText(final Graphics g, @NotNull final MenuItemLayoutHelper lh,
                              final MenuItemLayoutHelper.LayoutResult lr) {
-        var config = GraphicsUtil.setupAntialiasing(g);
-        if (!lh.getText().isBlank()) {
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
+        if (!StringUtil.isBlank(lh.getText())) {
             if (lh.getHtmlView() != null) {
                 // Text is HTML
                 lh.getHtmlView().paint(g, lr.getTextRect());
@@ -128,9 +130,9 @@ public class DarkMenuUI extends BasicMenuUI {
 
     protected void paintAccText(final Graphics g, final MenuItemLayoutHelper lh,
                                 final MenuItemLayoutHelper.LayoutResult lr) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         rightAlignAccText(lh, lr);
-        if (!lh.getAccText().isBlank()) {
+        if (!StringUtil.isBlank(lh.getAccText())) {
             ButtonModel model = lh.getMenuItem().getModel();
             g.setFont(lh.getAccFontMetrics().getFont());
             if (!model.isEnabled()) {
@@ -185,7 +187,7 @@ public class DarkMenuUI extends BasicMenuUI {
 
     private static void rightAlignAccText(@NotNull final MenuItemLayoutHelper lh,
                                           @NotNull final MenuItemLayoutHelper.LayoutResult lr) {
-        var accRect = lr.getAccRect();
+        Rectangle accRect = lr.getAccRect();
         ButtonModel model = lh.getMenuItem().getModel();
         if (model.isEnabled()) {
             accRect.x = lh.getViewRect().x + lh.getViewRect().width

@@ -73,7 +73,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
         if (selectedComponent != null) {
             if (selectedComponent != visibleComponent &&
                     visibleComponent != null) {
-                var owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
                     shouldChangeFocus = true;
                 }

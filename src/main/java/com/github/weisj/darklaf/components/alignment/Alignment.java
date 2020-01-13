@@ -91,7 +91,7 @@ public enum Alignment {
         if (hint.canBeAligned(point, size, outerBounds)) {
             return hint;
         }
-        for (var alignment : Alignment.values()) {
+        for (Alignment alignment : Alignment.values()) {
             if (alignment != CENTER && alignment != hint
                     && alignment.canBeAligned(point, size, outerBounds)) {
                 return alignment;
@@ -111,7 +111,7 @@ public enum Alignment {
     public boolean canBeAligned(@NotNull final Point point,
                                 @NotNull final Dimension size,
                                 @NotNull final Rectangle outerBounds) {
-        var p = relativePos(size, point);
+        Point p = relativePos(size, point);
         return p.x >= outerBounds.x && p.y >= outerBounds.y
                 && p.x + size.width < outerBounds.x + outerBounds.width
                 && p.y + size.height < outerBounds.x + outerBounds.height;

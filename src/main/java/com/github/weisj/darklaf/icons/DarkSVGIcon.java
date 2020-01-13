@@ -100,7 +100,7 @@ public class DarkSVGIcon implements Icon, Serializable {
     public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y,
                           final double rotation) {
         ensureLoaded();
-        var g2 = (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g.create();
         g2.translate(x, y);
         if (rotation != 0) {
             g2.setTransform(AffineTransform.getRotateInstance(rotation, size.width / 2.0,

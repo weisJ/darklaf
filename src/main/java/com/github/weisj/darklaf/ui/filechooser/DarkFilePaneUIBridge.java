@@ -616,7 +616,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         final JFileChooser fileChooser = getFileChooser();
 
         @SuppressWarnings("serial") // anonymous class
-        final JList<Object> list = new JList<>() {
+        final JList<Object> list = new JList<Object>() {
             public int getNextMatch(final String prefix, final int startIndex, final Position.Bias bias) {
                 ListModel<?> model = getModel();
                 int max = model.getSize();

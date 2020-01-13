@@ -108,7 +108,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
 
     @Override
     public void setContentPane(final Component component) {
-        var old = this.content;
+        Component old = this.content;
         this.content = component;
         if (content == null) {
             content = new JPanel();
@@ -125,7 +125,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void close() {
         if (parent != null && getAlignment() != null && getIndex() >= 0
                 && parent.isSelected(getAlignment(), getIndex())) {
-            var oldOpen = isOpen();
+            boolean oldOpen = isOpen();
             parent.closeTab(getAlignment(), getIndex());
             open = false;
             firePropertyChange("open", oldOpen, false);
@@ -144,7 +144,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
 
     @Override
     public void setTabFrame(final JTabFrame parent) {
-        var old = this.parent;
+        JTabFrame old = this.parent;
         this.parent = parent;
         firePropertyChange("tabFrame", old, parent);
     }
@@ -160,7 +160,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
             throw new IllegalArgumentException("Illegal alignment: " + (alignment != null
                                                                         ? alignment.toString() : "null"));
         }
-        var old = this.alignment;
+        Alignment old = this.alignment;
         this.alignment = alignment;
         firePropertyChange("alignment", old, alignment);
     }
@@ -169,7 +169,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void open() {
         if (parent != null && getAlignment() != null && getIndex() >= 0
                 && !parent.isSelected(getAlignment(), getIndex())) {
-            var oldOpen = isOpen();
+            boolean oldOpen = isOpen();
             parent.openTab(getAlignment(), getIndex());
             open = true;
             firePropertyChange("open", oldOpen, true);
@@ -184,7 +184,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
 
     @Override
     public void setTitle(final String title) {
-        var old = this.title;
+        String old = this.title;
         this.title = title == null ? "" : title;
         firePropertyChange("title", old, this.title);
     }
@@ -196,7 +196,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
 
     @Override
     public void setIcon(final Icon icon) {
-        var old = this.icon;
+        Icon old = this.icon;
         this.icon = icon;
         firePropertyChange("icon", old, icon);
     }

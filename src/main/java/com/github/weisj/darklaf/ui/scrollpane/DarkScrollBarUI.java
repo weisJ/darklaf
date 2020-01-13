@@ -70,7 +70,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         if (scrollbar.getOrientation() == VERTICAL && !e.isShiftDown()
                 || scrollbar.getOrientation() == HORIZONTAL && e.isShiftDown()) {
             scrollbar.setValueIsAdjusting(true);
-            var sp = scrollbar.getClientProperty("JScrollBar.scrollPaneParent");
+            Object sp = scrollbar.getClientProperty("JScrollBar.scrollPaneParent");
             if (scrollbar.getParent() instanceof JScrollPane) {
                 doScroll(scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
                          scrollbar.getParent().getComponentOrientation().isLeftToRight());
@@ -117,7 +117,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             int value = scrollBar.getValue() + extent;
             if (value == extent || value == scrollBar.getMaximum()) return;
 
-            var p = MouseInfo.getPointerInfo().getLocation();
+            Point p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, scrollbar);
             if (!getThumbBounds().contains(p)) {
                 if (!thumbFadeinAnimator.isRunning() && e.getValueIsAdjusting()) {
@@ -187,7 +187,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             boolean limitScroll = Math.abs(e.getWheelRotation()) == 1;
 
             Object fastWheelScroll = toScroll.getClientProperty("JScrollBar.fastWheelScrolling");
-            var comp = vp == null ? null : vp.getView();
+            Component comp = vp == null ? null : vp.getView();
             if (Boolean.TRUE.equals(fastWheelScroll) && comp instanceof Scrollable) {
                 Scrollable scrollComp = (Scrollable) comp;
                 Rectangle viewRect = vp.getViewRect();
@@ -455,9 +455,9 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     }
 
     protected void paintMaxiThumb(@NotNull final Graphics2D g, @NotNull final Rectangle rect) {
-        final var c = g.getComposite();
+        final Composite c = g.getComposite();
         g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
-        var thumbColor = getThumbColor();
+        Color thumbColor = getThumbColor();
         double percent = Math.min(1.0, Math.max(0.0, 1 - (thumbAlpha - THUMB_ALPHA)));
         g.setColor(DarkUIUtil.blendColors(thumbBorderColor, thumbColor, percent));
         DarkUIUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
@@ -607,7 +607,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
                 if (scrollbar != null) {
                     scrollbar.getParent().repaint();
                 }
-                var p = MouseInfo.getPointerInfo().getLocation();
+                Point p = MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(p, scrollbar);
                 if (!getThumbBounds().contains(p)) {
                     mouseOverThumb = false;

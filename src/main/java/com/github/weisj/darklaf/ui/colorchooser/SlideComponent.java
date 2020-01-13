@@ -150,7 +150,7 @@ class SlideComponent extends JComponent implements ColorListener {
     }
 
     private void fireValueChanged() {
-        var p = MouseInfo.getPointerInfo().getLocation();
+        Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, this);
         ToolTipManager.sharedInstance().mouseMoved(new MouseEvent(this, MouseEvent.MOUSE_MOVED, 0,
                                                                   0, p.x, p.y, 0, false, 0));

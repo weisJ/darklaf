@@ -53,7 +53,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-        var dim = header.getPreferredSize();
+        Dimension dim = header.getPreferredSize();
         int headerHeight = UIManager.getInt("TableHeader.height");
         if (headerHeight < 0) {
             headerHeight = HEADER_HEIGHT;

@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.log;
 
+import com.github.weisj.darklaf.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
@@ -77,10 +78,10 @@ public class LogFormatter extends Formatter {
         Object[] params = record.getParameters();
 
         int spaceLength = time.length() + 3 + record.getLevel().getName().length() + 3;
-        String space = " ".repeat(spaceLength);
+        String space = StringUtil.repeat(" ", spaceLength);
         if (params != null) {
             builder.append("\n");
-            builder.append(" ".repeat(spaceLength - 10));
+            builder.append(StringUtil.repeat(" ", spaceLength - 10));
             builder.append(ANSI_YELLOW);
             builder.append("[Details] ");
             builder.append(getMessageColor(record));

@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import sun.awt.SunToolkit;
 import sun.swing.DefaultLookup;
@@ -75,7 +76,7 @@ public abstract class DarkTextUI extends BasicTextUI {
 
     @Override
     protected void paintSafely(final Graphics g) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         super.paintSafely(g);
         config.restore();
     }

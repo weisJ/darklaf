@@ -222,17 +222,17 @@ public class DarkSliderUI extends BasicSliderUI {
         Color selectionColor = getSelectedTrackColor();
 
         if (isHorizontal()) {
-            var track = getHorizontalTrackShape();
+            Area track = getHorizontalTrackShape();
             g.setColor(bgColor);
             g.fill(track);
-            var selection = getHorizontalSliderShape(track);
+            Shape selection = getHorizontalSliderShape(track);
             g.setColor(selectionColor);
             g.fill(selection);
         } else {
-            var track = getVerticalTrackShape();
+            Area track = getVerticalTrackShape();
             g.setColor(bgColor);
             g.fill(track);
-            var selection = getVerticalSliderShape(track);
+            Shape selection = getVerticalSliderShape(track);
             g.setColor(selectionColor);
             g.fill(selection);
         }
@@ -266,7 +266,7 @@ public class DarkSliderUI extends BasicSliderUI {
     @Override
     public void paintLabels(final Graphics g) {
         checkDisabled(g);
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         super.paintLabels(g);
         config.restore();
     }
@@ -303,7 +303,7 @@ public class DarkSliderUI extends BasicSliderUI {
     protected void scrollDueToClickInTrack(final int dir) {
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, slider);
-        var area = isHorizontal() ? getHorizontalTrackShape() : getVerticalTrackShape();
+        Area area = isHorizontal() ? getHorizontalTrackShape() : getVerticalTrackShape();
         if (!area.getBounds().contains(p)) {
             return;
         }
@@ -404,8 +404,8 @@ public class DarkSliderUI extends BasicSliderUI {
     @NotNull
     private Area getHorizontalSliderShape(@NotNull final Area track) {
         double x = thumbRect.x + thumbRect.width / 2.0;
-        var leftArea = new Area(new Rectangle2D.Double(0, 0, x, slider.getHeight()));
-        var rightArea = new Area(new Rectangle2D.Double(x, 0, slider.getWidth() - x, slider.getHeight()));
+        Area leftArea = new Area(new Rectangle2D.Double(0, 0, x, slider.getHeight()));
+        Area rightArea = new Area(new Rectangle2D.Double(x, 0, slider.getWidth() - x, slider.getHeight()));
         if (slider.getComponentOrientation().isLeftToRight()) {
             if (slider.getInverted()) {
                 track.intersect(rightArea);
@@ -479,7 +479,7 @@ public class DarkSliderUI extends BasicSliderUI {
     private void paintSliderThumb(final Graphics2D g) {
         Path2D thumb = getThumbShape();
         if (paintFocus()) {
-            var config = new GraphicsContext(g);
+            GraphicsContext config = new GraphicsContext(g);
             g.setComposite(DarkUIUtil.GLOW_ALPHA);
             g.setStroke(new BasicStroke(4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 8));
             DarkUIUtil.Outline.focus.setGraphicsColor(g, true);

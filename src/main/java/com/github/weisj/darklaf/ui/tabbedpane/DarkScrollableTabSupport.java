@@ -88,7 +88,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
     }
 
     protected void updateRollover() {
-        var pos = MouseInfo.getPointerInfo().getLocation();
+        Point pos = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(pos, ui.tabPane);
         ui.setRolloverTab(pos.x, pos.y);
     }
@@ -100,7 +100,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         } else {
             if (!ui.tabPane.isEnabled()) return;
             if (lastClickEvent == 0 || (System.currentTimeMillis() - lastClickEvent) > 250) {
-                var pref = scrollPopupMenu.getPreferredSize();
+                Dimension pref = scrollPopupMenu.getPreferredSize();
                 boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
                 switch (ui.tabPane.getTabPlacement()) {
                     case SwingConstants.LEFT:

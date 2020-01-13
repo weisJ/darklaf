@@ -245,7 +245,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
             //Is needed to intercept ongoing drag.
             SwingUtilities.invokeLater(() -> robot.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK));
 
-            var oldOrientation = toolBar.getOrientation();
+            int oldOrientation = toolBar.getOrientation();
             toolBar.setOrientation(SwingConstants.VERTICAL);
             verticalDim = toolBar.getPreferredSize();
             toolBar.setOrientation(SwingConstants.HORIZONTAL);
@@ -310,7 +310,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
             super(w);
             setLayout(new BorderLayout());
             setBackground(toolBar.getBackground());
-            var glassPane = new JPanel();
+            JPanel glassPane = new JPanel();
             glassPane.setOpaque(false);
             glassPane.addMouseListener(new MouseResponder(e -> {
                 e.consume();
@@ -325,7 +325,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         @Override
         public void setOrientation(final int o) {
             super.setOrientation(o);
-            var size = toolBar.getPreferredSize();
+            Dimension size = toolBar.getPreferredSize();
             size.width += 2;
             size.height += 2;
             setSize(size);

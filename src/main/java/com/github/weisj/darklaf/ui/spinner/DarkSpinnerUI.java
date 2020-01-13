@@ -154,7 +154,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             public void layoutContainer(final Container parent) {
                 super.layoutContainer(parent);
                 if (editor != null && !spinner.getComponentOrientation().isLeftToRight()) {
-                    var bounds = editor.getBounds();
+                    Rectangle bounds = editor.getBounds();
                     bounds.x += borderSize;
                     bounds.width -= borderSize;
                     editor.setBounds(bounds);
@@ -200,14 +200,14 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             oldEditor.getComponents()[0].removeFocusListener(focusListener);
         }
         if (newEditor != null && newEditor.getComponents().length > 0) {
-            var comp = newEditor.getComponents()[0];
+            Component comp = newEditor.getComponents()[0];
             comp.addFocusListener(focusListener);
         }
     }
 
     @NotNull
     private JButton createArrow(final int direction) {
-        var insets = new Insets(0, BUTTON_PAD, 0, BUTTON_PAD);
+        Insets insets = new Insets(0, BUTTON_PAD, 0, BUTTON_PAD);
         JButton button = ArrowButton.createUpDownArrow(spinner,
                                                        getArrowIcon(direction),
                                                        getArrowInactiveIcon(direction), direction,
@@ -262,7 +262,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         if (!isTableCellEditor(c) && !isTreeCellEditor(c)) {
             DarkUIUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
         } else {
-            var bounds = prevButton.getBounds();
+            Rectangle bounds = prevButton.getBounds();
             boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
             int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
             if (leftToRight) {
@@ -292,7 +292,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
     private void paintSpinBackground(@NotNull final Graphics2D g, final int width, final int height,
                                      final int bSize, final int arc) {
-        var bounds = prevButton.getBounds();
+        Rectangle bounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
         int off = leftToRight ? bounds.x : bounds.x + bounds.width;
         Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize, height - 2 * bSize,
@@ -315,9 +315,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-        var key = evt.getPropertyName();
+        String key = evt.getPropertyName();
         if ("opaque".equals(key)) {
-            var val = Boolean.TRUE.equals(evt.getNewValue());
+            boolean val = Boolean.TRUE.equals(evt.getNewValue());
             spinner.getEditor().setOpaque(val);
             if (editorComponent instanceof JComponent) {
                 ((JComponent) editorComponent).setOpaque(val);

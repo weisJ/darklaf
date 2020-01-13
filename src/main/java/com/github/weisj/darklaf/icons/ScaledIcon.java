@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.Scale;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -40,19 +40,19 @@ public class ScaledIcon implements Icon {
 
     @Override
     public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
-        var g = (Graphics2D) g2;
+        Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
-        g.scale(1.0 / GraphicsUtil.SCALE_X, 1.0 / GraphicsUtil.SCALE_Y);
+        g.scale(1.0 / Scale.SCALE_X, 1.0 / Scale.SCALE_Y);
         g.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
     }
 
     @Override
     public int getIconWidth() {
-        return (int) (img.getWidth(null) / GraphicsUtil.SCALE_X);
+        return (int) (img.getWidth(null) / Scale.SCALE_X);
     }
 
     @Override
     public int getIconHeight() {
-        return (int) (img.getHeight(null) / GraphicsUtil.SCALE_Y);
+        return (int) (img.getHeight(null) / Scale.SCALE_Y);
     }
 }

@@ -91,7 +91,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     }
 
     protected JTabbedPane createTabbedPane() {
-        var tabbedPane = popupComponent.getTabbedPane();
+        JTabbedPane tabbedPane = popupComponent.getTabbedPane();
         tabbedPane.setUI(new DarkTabFrameTabbedPaneUI());
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         return tabbedPane;
@@ -99,7 +99,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
     protected void setupTabbedPane() {
         label.setBorder(new EmptyBorder(0, 5, 0, 5));
-        var buttonHolder = new JPanelUIResource();
+        JPanelUIResource buttonHolder = new JPanelUIResource();
         buttonHolder.setLayout(new BoxLayout(buttonHolder, BoxLayout.X_AXIS));
         buttonHolder.add(Box.createHorizontalStrut(1));
         buttonHolder.add(closeButton);
@@ -112,7 +112,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
     @Override
     protected void setHeaderBackground(final boolean focus) {
-        var oldFocus = hasFocus();
+        boolean oldFocus = hasFocus();
         super.setHeaderBackground(focus);
         if (oldFocus != focus) {
             if (newTabButton != null) {
@@ -156,7 +156,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
         @Override
         protected JButton createButton() {
-            var button = new HeaderButton(ui.getNewTabIcon(), DarkTabbedPopupUI.this);
+            HeaderButton button = new HeaderButton(ui.getNewTabIcon(), DarkTabbedPopupUI.this);
             button.putClientProperty("JButton.variant", "shadow");
             button.putClientProperty("JButton.buttonType", "square");
             button.putClientProperty("JButton.thin", Boolean.TRUE);
@@ -201,7 +201,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
         @Override
         public JComponent createNewTabButton() {
-            var b = new TabFrameNewTabButton(this);
+            TabFrameNewTabButton b = new TabFrameNewTabButton(this);
             newTabButton = b.getButton();
             return b;
         }

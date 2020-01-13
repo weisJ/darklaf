@@ -164,7 +164,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     }
 
     public void disableAll(final boolean force) {
-        for (var a : Alignment.values()) {
+        for (Alignment a : Alignment.values()) {
             setEnabled(a, false, force);
         }
     }

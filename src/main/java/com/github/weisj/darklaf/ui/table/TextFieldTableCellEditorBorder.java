@@ -45,7 +45,7 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
     public void paintBorder(@NotNull final Component c, @NotNull final Graphics g, final int x, final int y,
                             final int width, final int height) {
         g.setColor(borderColor);
-        var table = DarkUIUtil.getParentOfType(JTable.class, c);
+        JTable table = DarkUIUtil.getParentOfType(JTable.class, c);
         if (table != null) {
             if (!table.getShowHorizontalLines()) {
                 g.fillRect(0, 0, width, 1);
@@ -72,7 +72,7 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        var ins = super.getBorderInsets();
+        Insets ins = super.getBorderInsets();
         if (isInWrapper(c)) {
             if (parentLTR(c)) {
                 ins.left -= ((DarkTableCellEditor.IconWrapper) c.getParent()).getIconCompGap();
@@ -80,7 +80,7 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
                 ins.right -= ((DarkTableCellEditor.IconWrapper) c.getParent()).getIconCompGap();
             }
         } else if (isListEditor(c)) {
-            var renderer = ((JList) c.getParent()).getCellRenderer();
+            ListCellRenderer renderer = ((JList) c.getParent()).getCellRenderer();
             if (renderer instanceof JLabel) {
                 if (parentLTR(c)) {
                     ins.left -= ((JLabel) renderer).getIconTextGap() - 1;

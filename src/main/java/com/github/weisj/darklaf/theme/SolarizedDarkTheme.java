@@ -48,7 +48,7 @@ public class SolarizedDarkTheme extends Theme {
     @Override
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadUIProperties(properties, currentDefaults);
-        var name = getResourcePath() + getName() + "_ui.properties";
+        String name = getResourcePath() + getName() + "_ui.properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 }

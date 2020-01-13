@@ -169,7 +169,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     @Override
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
-        var key = e.getPropertyName();
+        String key = e.getPropertyName();
         if ("selected".equals(key)) {
             tabComponent.setForeground(Boolean.TRUE.equals(e.getNewValue())
                                        ? selectedFontColor : defaultFontColor);
@@ -196,7 +196,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     protected void updateText() {
-        var title = tabComponent.getTitle();
+        String title = tabComponent.getTitle();
         title = title == null ? "" : title;
         int accelerator = tabComponent.getAccelerator();
         if (accelerator >= 0 && accelerator <= 9) {
@@ -222,12 +222,12 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         return new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                var a = tabComponent.getOrientation();
-                var index = tabComponent.getIndex();
+                Alignment a = tabComponent.getOrientation();
+                int index = tabComponent.getIndex();
                 if (!tabComponent.isSelected()) {
                     tabFrame.toggleTab(a, index, true);
                 } else {
-                    var popup = tabFrame.getPopupComponentAt(a, index);
+                    Component popup = tabFrame.getPopupComponentAt(a, index);
                     if (!DarkUIUtil.hasFocus(popup)) {
                         popup.requestFocus();
                     } else {

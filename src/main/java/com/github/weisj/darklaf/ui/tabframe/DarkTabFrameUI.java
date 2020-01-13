@@ -43,6 +43,7 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.TooManyListenersException;
 
 /**
@@ -235,81 +236,30 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         return getTabIndexAtImpl(tabFrame, p).getFirst();
     }
 
-    protected Pair<JTabFrame.TabFramePosition, Point> getTabIndexAtImpl(final JTabFrame tabFrame,
-                                                                        @NotNull final Point p) {
-        Component tabComp = null;
-        Alignment a = null;
-        Point pos = null;
-        if (!layout.isDraggedOver(Alignment.NORTH)) {
-            getTopContainer().getBounds(calcRect);
-            if (p.y >= calcRect.y && p.y <= calcRect.y + calcRect.height) {
-                tabComp = getTopContainer();
-                a = Alignment.NORTH;
-                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
-                if (pos.x > tabComp.getWidth() / 2) {
-                    a = Alignment.NORTH_EAST;
-                }
-            }
+    public Rectangle getTabContainerBounds(final JTabFrame tabFrame, @NotNull final Alignment a) {
+        switch (a) {
+            case NORTH:
+            case NORTH_EAST:
+                Rectangle rect = getTopContainer().getBounds();
+                rect.x = 0;
+                rect.width = tabFrame.getWidth();
+                return rect;
+            case EAST:
+            case SOUTH_EAST:
+                return getRightContainer().getBounds();
+            case SOUTH:
+            case SOUTH_WEST:
+                Rectangle rect2 = getTopContainer().getBounds();
+                rect2.x = 0;
+                rect2.width = tabFrame.getWidth();
+                return rect2;
+            case WEST:
+            case NORTH_WEST:
+                return getLeftContainer().getBounds();
+            default:
+            case CENTER:
+                return tabFrame.getContentPane().getComponent().getBounds();
         }
-        if (tabComp == null && !layout.isDraggedOver(Alignment.SOUTH)) {
-            getBottomContainer().getBounds(calcRect);
-            if (p.y >= calcRect.y && p.y <= calcRect.y + calcRect.height) {
-                tabComp = getBottomContainer();
-                a = Alignment.SOUTH;
-                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
-                if (pos.x <= tabComp.getWidth() / 2) {
-                    a = Alignment.SOUTH_WEST;
-                }
-            }
-        }
-        if (tabComp == null && !layout.isDraggedOver(Alignment.WEST)) {
-            getLeftContainer().getBounds(calcRect);
-            if (p.x >= calcRect.x && p.x <= calcRect.x + calcRect.width) {
-                tabComp = getLeftContainer();
-                a = Alignment.WEST;
-                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
-                if (pos.y < tabComp.getHeight() / 2) {
-                    a = Alignment.NORTH_WEST;
-                }
-                int tmp = pos.x;
-                pos.x = tabComp.getHeight() - pos.y;
-                pos.y = tmp;
-            }
-        }
-        if (tabComp == null && !layout.isDraggedOver(Alignment.EAST)) {
-            getRightContainer().getBounds(calcRect);
-            if (p.x >= calcRect.x && p.x <= calcRect.x + calcRect.width) {
-                tabComp = getRightContainer();
-                a = Alignment.EAST;
-                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
-                if (pos.y > tabComp.getHeight() / 2) {
-                    a = Alignment.SOUTH_EAST;
-                }
-                int tmp = pos.x;
-                //noinspection SuspiciousNameCombination
-                pos.x = pos.y;
-                pos.y = tmp;
-            }
-        }
-        if (tabComp == null) {
-            var tab = maybeRestoreTabContainer(tabFrame, p);
-            if (tab.getAlignment() != null) {
-                return new Pair<>(tab, pos);
-            }
-        } else {
-            layout.setDraggedOver(false);
-        }
-        if (tabComp == null) {
-            return new Pair<>(new JTabFrame.TabFramePosition(null, -1), pos);
-        }
-        var tabs = tabFrame.tabsForAlignment(a);
-        for (var tab : tabs) {
-            var rect = getTabRect(tab, a, tabComp, true);
-            if (rect.contains(pos)) {
-                return new Pair<>(new JTabFrame.TabFramePosition(a, tab.getIndex()), pos);
-            }
-        }
-        return new Pair<>(new JTabFrame.TabFramePosition(a, -1), pos);
     }
 
     public JComponent getTopContainer() {
@@ -406,47 +356,28 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         return getNearestTabIndexAtImpl(tabFrame, pos).getFirst();
     }
 
-    protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(final JTabFrame tabFrame,
-                                                                               final Point pos) {
-        var res = getTabIndexAtImpl(tabFrame, pos);
-        var tab = res.getFirst();
-        if (tab.getAlignment() != null && tab.getIndex() == -1) {
-            var p = res.getSecond();
-            var a = tab.getAlignment();
-            if (tabFrame.getTabCountAt(a) == 0) {
-                tab.setIndex(-1);
-                return res;
-            }
-            int w = a == destAlign && destIndex == -1 ? dropSize.width : 0;
-            var comp = getTabContainer(a);
-            switch (a) {
-                case NORTH:
-                case SOUTH_WEST:
-                    if (p.x > getLeftContainer().getWidth() + w) {
-                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
+    public JTabFrame.TabFramePosition getDropPosition(final JTabFrame tabFrame, final Point p) {
+        Pair<JTabFrame.TabFramePosition, Point> res = getNearestTabIndexAtImpl(tabFrame, p);
+        JTabFrame.TabFramePosition tab = res.getFirst();
+        if (tab.getAlignment() != null) {
+            Alignment a = tab.getAlignment();
+            int index = tab.getIndex();
+            if (index >= 0) {
+                Rectangle rect = getTabRect(tabFrame.getTabComponentAt(a, index), a,
+                                            tabFrame.getTabContainer(a), false);
+                Point pos = res.getSecond();
+                if (isForward(a)) {
+                    if (pos.x <= rect.x + rect.width / 2 && pos.x >= rect.x) {
+                        tab.setIndex(tab.getIndex() - 1);
                     }
-                    break;
-                case NORTH_EAST:
-                case SOUTH:
-                    if (p.x < comp.getWidth() - getRightContainer().getWidth() - w) {
-                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
+                } else {
+                    if (pos.x >= rect.x + rect.width / 2) {
+                        tab.setIndex(tab.getIndex() - 1);
                     }
-                    break;
-                case EAST:
-                case WEST:
-                    if (p.x > w) {
-                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
-                    }
-                    break;
-                case SOUTH_EAST:
-                case NORTH_WEST:
-                    if (p.x < comp.getHeight() - w) {
-                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
-                    }
-                    break;
+                }
             }
         }
-        return res;
+        return tab;
     }
 
     protected Component getTabContainer(@NotNull final Alignment a) {
@@ -481,54 +412,124 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         return tabFrame.getTabSize();
     }
 
-    public Rectangle getTabContainerBounds(final JTabFrame tabFrame, @NotNull final Alignment a) {
-        switch (a) {
-            case NORTH:
-            case NORTH_EAST:
-                var rect = getTopContainer().getBounds();
-                rect.x = 0;
-                rect.width = tabFrame.getWidth();
-                return rect;
-            case EAST:
-            case SOUTH_EAST:
-                return getRightContainer().getBounds();
-            case SOUTH:
-            case SOUTH_WEST:
-                var rect2 = getTopContainer().getBounds();
-                rect2.x = 0;
-                rect2.width = tabFrame.getWidth();
-                return rect2;
-            case WEST:
-            case NORTH_WEST:
-                return getLeftContainer().getBounds();
-            default:
-            case CENTER:
-                return tabFrame.getContentPane().getComponent().getBounds();
+    protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(final JTabFrame tabFrame,
+                                                                               final Point pos) {
+        Pair<JTabFrame.TabFramePosition, Point> res = getTabIndexAtImpl(tabFrame, pos);
+        JTabFrame.TabFramePosition tab = res.getFirst();
+        if (tab.getAlignment() != null && tab.getIndex() == -1) {
+            Point p = res.getSecond();
+            Alignment a = tab.getAlignment();
+            if (tabFrame.getTabCountAt(a) == 0) {
+                tab.setIndex(-1);
+                return res;
+            }
+            int w = a == destAlign && destIndex == -1 ? dropSize.width : 0;
+            Component comp = getTabContainer(a);
+            switch (a) {
+                case NORTH:
+                case SOUTH_WEST:
+                    if (p.x > getLeftContainer().getWidth() + w) {
+                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
+                    }
+                    break;
+                case NORTH_EAST:
+                case SOUTH:
+                    if (p.x < comp.getWidth() - getRightContainer().getWidth() - w) {
+                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
+                    }
+                    break;
+                case EAST:
+                case WEST:
+                    if (p.x > w) {
+                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
+                    }
+                    break;
+                case SOUTH_EAST:
+                case NORTH_WEST:
+                    if (p.x < comp.getHeight() - w) {
+                        tab.setIndex(tabFrame.getTabCountAt(a) - 1);
+                    }
+                    break;
+            }
         }
+        return res;
     }
 
-    public JTabFrame.TabFramePosition getDropPosition(final JTabFrame tabFrame, final Point p) {
-        var res = getNearestTabIndexAtImpl(tabFrame, p);
-        var tab = res.getFirst();
-        if (tab.getAlignment() != null) {
-            var a = tab.getAlignment();
-            int index = tab.getIndex();
-            if (index >= 0) {
-                var rect = getTabRect(tabFrame.getTabComponentAt(a, index), a,
-                                      tabFrame.getTabContainer(a), false);
-                var pos = res.getSecond();
-                if (isForward(a)) {
-                    if (pos.x <= rect.x + rect.width / 2 && pos.x >= rect.x) {
-                        tab.setIndex(tab.getIndex() - 1);
-                    }
-                } else {
-                    if (pos.x >= rect.x + rect.width / 2) {
-                        tab.setIndex(tab.getIndex() - 1);
-                    }
+    protected Pair<JTabFrame.TabFramePosition, Point> getTabIndexAtImpl(final JTabFrame tabFrame,
+                                                                        @NotNull final Point p) {
+        Component tabComp = null;
+        Alignment a = null;
+        Point pos = null;
+        if (!layout.isDraggedOver(Alignment.NORTH)) {
+            getTopContainer().getBounds(calcRect);
+            if (p.y >= calcRect.y && p.y <= calcRect.y + calcRect.height) {
+                tabComp = getTopContainer();
+                a = Alignment.NORTH;
+                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
+                if (pos.x > tabComp.getWidth() / 2) {
+                    a = Alignment.NORTH_EAST;
                 }
             }
         }
-        return tab;
+        if (tabComp == null && !layout.isDraggedOver(Alignment.SOUTH)) {
+            getBottomContainer().getBounds(calcRect);
+            if (p.y >= calcRect.y && p.y <= calcRect.y + calcRect.height) {
+                tabComp = getBottomContainer();
+                a = Alignment.SOUTH;
+                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
+                if (pos.x <= tabComp.getWidth() / 2) {
+                    a = Alignment.SOUTH_WEST;
+                }
+            }
+        }
+        if (tabComp == null && !layout.isDraggedOver(Alignment.WEST)) {
+            getLeftContainer().getBounds(calcRect);
+            if (p.x >= calcRect.x && p.x <= calcRect.x + calcRect.width) {
+                tabComp = getLeftContainer();
+                a = Alignment.WEST;
+                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
+                if (pos.y < tabComp.getHeight() / 2) {
+                    a = Alignment.NORTH_WEST;
+                }
+                int tmp = pos.x;
+                pos.x = tabComp.getHeight() - pos.y;
+                pos.y = tmp;
+            }
+        }
+        if (tabComp == null && !layout.isDraggedOver(Alignment.EAST)) {
+            getRightContainer().getBounds(calcRect);
+            if (p.x >= calcRect.x && p.x <= calcRect.x + calcRect.width) {
+                tabComp = getRightContainer();
+                a = Alignment.EAST;
+                pos = SwingUtilities.convertPoint(tabFrame, p, tabComp);
+                if (pos.y > tabComp.getHeight() / 2) {
+                    a = Alignment.SOUTH_EAST;
+                }
+                int tmp = pos.x;
+                //noinspection SuspiciousNameCombination
+                pos.x = pos.y;
+                pos.y = tmp;
+            }
+        }
+        if (tabComp == null) {
+            JTabFrame.TabFramePosition tab = maybeRestoreTabContainer(tabFrame, p);
+            if (tab.getAlignment() != null) {
+                return new Pair<>(tab, pos);
+            }
+        } else {
+            layout.setDraggedOver(false);
+        }
+        if (tabComp == null) {
+            return new Pair<>(new JTabFrame.TabFramePosition(null, -1), pos);
+        }
+        List<TabFrameTab> tabs = tabFrame.tabsForAlignment(a);
+        for (TabFrameTab tab : tabs) {
+            Rectangle rect = getTabRect(tab, a, tabComp, true);
+            if (rect.contains(pos)) {
+                return new Pair<>(new JTabFrame.TabFramePosition(a, tab.getIndex()), pos);
+            }
+        }
+        return new Pair<>(new JTabFrame.TabFramePosition(a, -1), pos);
     }
 
     public Alignment getSourceAlign() {
@@ -550,8 +551,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     @Override
     public void eventDispatched(@NotNull final AWTEvent event) {
         if (event.getID() == MouseEvent.MOUSE_PRESSED) {
-            var e = (MouseEvent) event;
-            var comp = e.getComponent().getComponentAt(e.getPoint());
+            MouseEvent e = (MouseEvent) event;
+            Component comp = e.getComponent().getComponentAt(e.getPoint());
             if (comp instanceof TabFramePopup || comp instanceof PopupContainer || comp instanceof JTabFrame) {
                 comp.requestFocus();
             }

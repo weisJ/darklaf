@@ -76,7 +76,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             if (selectedComponent != visibleComponent &&
                     visibleComponent != null) {
 
-                var owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
                     shouldChangeFocus = true;
                 }
@@ -317,7 +317,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         if (!verticalTabRuns) {
             int rightMargin = size.width - (insets.right + tabAreaInsets.right
                     + insets.left + tabAreaInsets.left);
-            var p = getMargins(tabPlacement);
+            Point p = getMargins(tabPlacement);
             int leftMargin = p.x;
             int returnAt = p.y;
 
@@ -349,7 +349,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                 if (tabsButton.isVisible()) {
                     rightMargin -= tabsButton.getWidth();
                 }
-                var newTabButton = ui.scrollableTabSupport.newTabButton;
+                JComponent newTabButton = ui.scrollableTabSupport.newTabButton;
                 if (newTabButton.isVisible() && newTabButton.getParent() == ui.tabPane) {
                     rightMargin -= newTabButton.getWidth();
                 }
@@ -364,7 +364,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         } else {
             int bottomMargin = size.height - (insets.bottom + tabAreaInsets.bottom
                     + insets.top + tabAreaInsets.top);
-            var p = getMargins(tabPlacement);
+            Point p = getMargins(tabPlacement);
             int topMargin = p.x;
             int returnAt = p.y;
             ui.currentShiftYTmp = ui.currentShiftY;
@@ -405,34 +405,6 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         return ui.calculateMaxTabHeight(tabPlacement);
     }
 
-    protected void layoutNewTabButton(final boolean horizontal, final boolean leftToRight,
-                                      final int minVal, final int maxVal, final int tabCount) {
-        JComponent button = ui.scrollableTabSupport.newTabButton;
-        var buttonBounds = button.getPreferredSize();
-        if (horizontal) {
-            if (leftToRight) {
-                if (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width + buttonBounds.width > maxVal) {
-                    ui.tabPane.add(button);
-                } else {
-                    ui.scrollableTabSupport.tabPanel.add(button);
-                }
-            } else {
-                int x = ui.rects[tabCount - 1].x;
-                if (x - buttonBounds.width < minVal) {
-                    ui.tabPane.add(button);
-                } else {
-                    ui.scrollableTabSupport.tabPanel.add(button);
-                }
-            }
-        } else {
-            if (ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height + buttonBounds.height > maxVal) {
-                ui.tabPane.add(button);
-            } else {
-                ui.scrollableTabSupport.tabPanel.add(button);
-            }
-        }
-    }
-
     @SuppressWarnings("SuspiciousNameCombination")
     @NotNull
     @Contract("_ -> new")
@@ -440,8 +412,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         Dimension size = ui.tabPane.getSize();
         Insets insets = ui.tabPane.getInsets();
         Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
-        var tabsButton = ui.scrollableTabSupport.moreTabsButton;
-        var newTabsButton = ui.scrollableTabSupport.newTabButton;
+        JButton tabsButton = ui.scrollableTabSupport.moreTabsButton;
+        JComponent newTabsButton = ui.scrollableTabSupport.newTabButton;
         if (ui.isHorizontalTabPlacement()) {
             int leftMargin = 0;
             int returnAt = size.width - (insets.right + tabAreaInsets.right
@@ -467,13 +439,44 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
-    public void updateVisibleRange(final int tapPlacement) {
-        var p = getMargins(tapPlacement);
-        if (ui.isHorizontalTabPlacement()) {
-            shiftTabsX(0, p.x, p.y, ui.tabPane.getTabCount(), false);
+    protected void adjustForDropX(final int minX, final int maxX, final int tabCount) {
+        if (ui.dropSourceIndex >= 0 && ui.dropSourceIndex < ui.tabPane.getTabCount()) {
+            //Hide the source tab.
+            int shift = ui.rects[ui.dropSourceIndex].width;
+            ui.rects[ui.dropSourceIndex].setSize(0, 0);
+            commitShiftX(ui.dropSourceIndex + 1, tabCount - 1, -1 * shift, tabCount);
+        }
+        if (ui.sourceEqualsTarget && ui.dropTargetIndex >= 0 && ui.dropTargetIndex < ui.tabPane.getTabCount()) {
+            commitShiftX(ui.dropTargetIndex, tabCount - 1, ui.dropRect.width, tabCount);
+        }
+        shiftTabsX(0, minX, maxX, tabCount, false);
+    }
+
+    protected void layoutNewTabButton(final boolean horizontal, final boolean leftToRight,
+                                      final int minVal, final int maxVal, final int tabCount) {
+        JComponent button = ui.scrollableTabSupport.newTabButton;
+        Dimension buttonBounds = button.getPreferredSize();
+        if (horizontal) {
+            if (leftToRight) {
+                if (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width + buttonBounds.width > maxVal) {
+                    ui.tabPane.add(button);
+                } else {
+                    ui.scrollableTabSupport.tabPanel.add(button);
+                }
+            } else {
+                int x = ui.rects[tabCount - 1].x;
+                if (x - buttonBounds.width < minVal) {
+                    ui.tabPane.add(button);
+                } else {
+                    ui.scrollableTabSupport.tabPanel.add(button);
+                }
+            }
         } else {
-            shiftTabsY(0, p.x, p.y, ui.tabPane.getTabCount(), false);
+            if (ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height + buttonBounds.height > maxVal) {
+                ui.tabPane.add(button);
+            } else {
+                ui.scrollableTabSupport.tabPanel.add(button);
+            }
         }
     }
 
@@ -570,30 +573,27 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         shiftTabsY(shift, minY, maxY, tabCount, true);
     }
 
-    protected void adjustForDropX(final int minX, final int maxX, final int tabCount) {
-        if (ui.dropSourceIndex >= 0) {
-            //Hide the source tab.
-            int shift = ui.rects[ui.dropSourceIndex].width;
-            ui.rects[ui.dropSourceIndex].setSize(0, 0);
-            commitShiftX(ui.dropSourceIndex + 1, tabCount - 1, -1 * shift, tabCount);
-        }
-        if (ui.dropTargetIndex >= 0) {
-            commitShiftX(ui.dropTargetIndex, tabCount - 1, ui.dropRect.width, tabCount);
-        }
-        shiftTabsX(0, minX, maxX, tabCount, false);
-    }
-
     protected void adjustForDropY(final int minY, final int maxY, final int tabCount) {
-        if (ui.dropSourceIndex >= 0) {
+        if (ui.dropSourceIndex >= 0 && ui.dropSourceIndex < ui.tabPane.getTabCount()) {
             //Hide the source tab.
             int shift = ui.rects[ui.dropSourceIndex].height;
             ui.rects[ui.dropSourceIndex].setSize(0, 0);
             commitShiftY(ui.dropSourceIndex + 1, tabCount - 1, -1 * shift, tabCount);
         }
-        if (ui.sourceEqualsTarget && ui.dropTargetIndex >= 0) {
+        if (ui.sourceEqualsTarget && ui.dropTargetIndex >= 0 && ui.dropTargetIndex < ui.tabPane.getTabCount()) {
             commitShiftY(ui.dropTargetIndex, tabCount - 1, ui.dropRect.height, tabCount);
         }
         shiftTabsY(0, minY, maxY, tabCount, false);
+    }
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    public void updateVisibleRange(final int tapPlacement) {
+        Point p = getMargins(tapPlacement);
+        if (ui.isHorizontalTabPlacement()) {
+            shiftTabsX(0, p.x, p.y, ui.tabPane.getTabCount(), false);
+        } else {
+            shiftTabsY(0, p.x, p.y, ui.tabPane.getTabCount(), false);
+        }
     }
 
     protected void layoutMoreTabsButton(final int tabCount) {

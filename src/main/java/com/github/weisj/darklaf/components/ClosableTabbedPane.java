@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 
 /**
  * @author Jannis Weis
@@ -74,8 +75,8 @@ public class ClosableTabbedPane extends JTabbedPane {
 
     private boolean notifyVetoableChangeListeners(final TabPropertyChangeEvent e) {
         try {
-            var listeners = getVetoableChangeListeners();
-            for (var l : listeners) {
+            VetoableChangeListener[] listeners = getVetoableChangeListeners();
+            for (VetoableChangeListener l : listeners) {
                 l.vetoableChange(e);
             }
         } catch (PropertyVetoException ex) {
@@ -85,15 +86,15 @@ public class ClosableTabbedPane extends JTabbedPane {
     }
 
     private void notifyTabListeners(@NotNull final TabEvent event) {
-        var listeners = listenerList.getListeners(TabListener.class);
+        TabListener[] listeners = listenerList.getListeners(TabListener.class);
         switch (event.getID()) {
             case TabEvent.TAB_CLOSED:
-                for (var l : listeners) {
+                for (TabListener l : listeners) {
                     l.tabClosed(event);
                 }
                 break;
             case TabEvent.TAB_OPENED:
-                for (var l : listeners) {
+                for (TabListener l : listeners) {
                     l.tabOpened(event);
                 }
                 break;

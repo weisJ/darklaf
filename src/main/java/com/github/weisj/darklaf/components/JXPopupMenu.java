@@ -29,6 +29,7 @@ import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * Popup menu that is aware of {@link org.pbjar.jxlayer.plaf.ext.TransformUI}.
@@ -54,10 +55,10 @@ public class JXPopupMenu extends JPopupMenu {
         if (invoker != null) {
             JXLayer layer = DarkUIUtil.getParentOfType(JXLayer.class, invoker);
             if (layer != null && layer.getUI() instanceof TransformUI) {
-                var ui = (TransformUI) layer.getUI();
+                TransformUI ui = (TransformUI) layer.getUI();
                 p = SwingUtilities.convertPoint(invoker, p, layer);
                 //noinspection unchecked
-                var transform = ui.getPreferredTransform(layer.getSize(), layer);
+                AffineTransform transform = ui.getPreferredTransform(layer.getSize(), layer);
                 transform.transform(p, p);
                 super.show(layer, p.x, p.y);
                 return;

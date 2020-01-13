@@ -42,6 +42,8 @@ public final class IconLoader {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
     private static final IconLoader instance = new IconLoader(IconLoader.class);
+    private static final int DEFAULT_W = 16;
+    private static final int DEFAULT_H = 16;
     private final Class<?> parentClass;
     private final Map<IconKey, DarkUIAwareIcon> awareIconMap = new HashMap<>();
     private final Map<IconKey, Icon> iconMap = new HashMap<>();
@@ -61,14 +63,14 @@ public final class IconLoader {
         if (iconLoaderMap.containsKey(parentClass)) {
             return iconLoaderMap.get(parentClass);
         } else {
-            var loader = new IconLoader(parentClass);
+            IconLoader loader = new IconLoader(parentClass);
             iconLoaderMap.put(parentClass, loader);
             return loader;
         }
     }
 
     public DarkUIAwareIcon getUIAwareIcon(final String path) {
-        return getUIAwareIcon(path, 16, 16);
+        return getUIAwareIcon(path, DEFAULT_W, DEFAULT_H);
     }
 
     public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
@@ -92,7 +94,7 @@ public final class IconLoader {
     }
 
     public Icon getIcon(final String path) {
-        return getIcon(path, 16, 16);
+        return getIcon(path, DEFAULT_W, DEFAULT_H);
     }
 
     public Icon getIcon(final String path, final int w, final int h) {
@@ -108,7 +110,7 @@ public final class IconLoader {
         } else {
             key.w = -1; //Enable wild card search. Find any icon that matches path.
             if (iconMap.containsKey(key)) {
-                var icon = iconMap.get(key);
+                Icon icon = iconMap.get(key);
                 if (icon instanceof DarkSVGIcon) {
                     //If the desired icon is an DarkSVGIcon we can create a view that shares the underlying svg with
                     //the existing icon.
@@ -149,7 +151,7 @@ public final class IconLoader {
 
     @NotNull
     public Icon loadSVGIcon(@NotNull final String name, final boolean themed) {
-        return loadSVGIcon(name, 16, 16, themed);
+        return loadSVGIcon(name, DEFAULT_W, DEFAULT_H, themed);
     }
 
     @Nullable

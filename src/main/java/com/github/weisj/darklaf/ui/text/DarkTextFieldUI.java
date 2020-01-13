@@ -131,14 +131,14 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     protected void updateCursor(final Point p) {
-        var action = getActionUnder(p);
+        ClickAction action = getActionUnder(p);
         boolean oldClear = clearHovered;
         clearHovered = action == ClickAction.CLEAR;
         if (oldClear != clearHovered) {
             editor.repaint();
         }
-        var drawRect = getDrawingRect(getComponent());
-        var textRect = getTextRect(getComponent());
+        Rectangle drawRect = getDrawingRect(getComponent());
+        Rectangle textRect = getTextRect(getComponent());
         int rightBoundary = getComponent().getText().isEmpty()
                             ? drawRect.x + drawRect.width
                             : getClearIconCoord().x;
@@ -146,20 +146,24 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         if (insideTextArea) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
-            var cursor = action == ClickAction.NONE
+            Cursor cursor = action == ClickAction.NONE
                          ? Cursor.getDefaultCursor()
                          : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
             getComponent().setCursor(cursor);
         }
     }
 
-    protected void showSearchPopup() {
-        if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
-            var menu = getSearchPopup(getComponent());
-            if (menu != null) {
-                menu.show(getComponent(), getSearchIconCoord().x, getComponent().getHeight());
+    private ClickAction getActionUnder(final Point p) {
+        Component c = getComponent();
+        if (isSearchField(c)) {
+            if (isOver(getClearIconCoord(), getClearIcon(clearHovered), p)) {
+                return ClickAction.CLEAR;
+            }
+            if (isOver(getSearchIconCoord(), getSearchIcon(c), p)) {
+                return ClickAction.SEARCH_POPUP;
             }
         }
+        return ClickAction.NONE;
     }
 
     @Nullable
@@ -241,17 +245,13 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
     }
 
-    private ClickAction getActionUnder(final Point p) {
-        var c = getComponent();
-        if (isSearchField(c)) {
-            if (isOver(getClearIconCoord(), getClearIcon(clearHovered), p)) {
-                return ClickAction.CLEAR;
-            }
-            if (isOver(getSearchIconCoord(), getSearchIcon(c), p)) {
-                return ClickAction.SEARCH_POPUP;
+    protected void showSearchPopup() {
+        if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
+            JPopupMenu menu = getSearchPopup(getComponent());
+            if (menu != null) {
+                menu.show(getComponent(), getSearchIconCoord().x, getComponent().getHeight());
             }
         }
-        return ClickAction.NONE;
     }
 
     @Override
@@ -278,8 +278,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("JTextField.Search.FindPopup".equals(key)) {
-            var oldVal = evt.getOldValue();
-            var newVal = evt.getNewValue();
+            Object oldVal = evt.getOldValue();
+            Object newVal = evt.getNewValue();
             if (oldVal instanceof JPopupMenu) {
                 ((JPopupMenu) oldVal).removePopupMenuListener(searchPopupListener);
             }

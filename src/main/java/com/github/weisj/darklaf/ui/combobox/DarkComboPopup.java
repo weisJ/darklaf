@@ -30,6 +30,7 @@ import javax.swing.plaf.basic.BasicComboPopup;
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 /**
  * @author Jannis Weis
@@ -37,12 +38,12 @@ import java.awt.event.MouseEvent;
 public class DarkComboPopup extends BasicComboPopup {
 
     private final AdjustmentListener adjustmentListener = e -> {
-        var p = MouseInfo.getPointerInfo().getLocation();
+        Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, list);
         MouseEvent ev = new MouseEvent(list,
                                        MouseEvent.MOUSE_MOVED, 0, 0, p.x, p.y, 1,
                                        false, 0);
-        for (var ml : list.getMouseMotionListeners()) {
+        for (MouseMotionListener ml : list.getMouseMotionListeners()) {
             if (ml != null) {
                 ml.mouseMoved(ev);
             }

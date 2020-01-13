@@ -61,7 +61,7 @@ public class DarkTooltipBorder implements Border {
         if (isPlain(c)) {
             return new Area(new Rectangle(0, 0, width, height));
         }
-        var ins = shadowBorder.getBorderInsets(null);
+        Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
         return bubbleBorder.getInnerArea(ins.left, ins.top,
                                          width - ins.left - ins.right,
@@ -70,12 +70,12 @@ public class DarkTooltipBorder implements Border {
 
     protected boolean isPlain(@NotNull final Component c) {
         if (!(c instanceof JComponent)) return false;
-        var prop = ((JComponent) c).getClientProperty("JToolTip.style");
+        Object prop = ((JComponent) c).getClientProperty("JToolTip.style");
         return prop == ToolTipStyle.PLAIN || "plain".equals(prop);
     }
 
     private void adjustInsets(final Insets si) {
-        var align = bubbleBorder.getPointerSide();
+        Alignment align = bubbleBorder.getPointerSide();
         if (align == Alignment.SOUTH || align == Alignment.SOUTH_EAST || align == Alignment.SOUTH_WEST) {
             si.bottom = 0;
         } else if (align == Alignment.EAST) {
@@ -96,18 +96,18 @@ public class DarkTooltipBorder implements Border {
             return;
         }
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
-        var ins = shadowBorder.getBorderInsets(c);
+        Insets ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
-        var bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,
-                                                   width - ins.left - ins.right,
-                                                   height - ins.top - ins.bottom);
-        var oldClip = g.getClip();
-        var clip = new Area(new Rectangle2D.Double(x, y, width, height));
+        Area bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,
+                                                    width - ins.left - ins.right,
+                                                    height - ins.top - ins.bottom);
+        Shape oldClip = g.getClip();
+        Area clip = new Area(new Rectangle2D.Double(x, y, width, height));
         clip.subtract(bubbleArea);
         g.setClip(clip);
         int bw = bubbleBorder.getThickness();
         int off = 0;
-        var pointerSide = bubbleBorder.getPointerSide();
+        Alignment pointerSide = bubbleBorder.getPointerSide();
         if (pointerSide == Alignment.NORTH
                 || pointerSide == Alignment.NORTH_EAST
                 || pointerSide == Alignment.NORTH_WEST) {
@@ -123,14 +123,14 @@ public class DarkTooltipBorder implements Border {
         if (isPlain(c)) {
             return new Insets(1, 1, 1, 1);
         }
-        var ins = new Insets(0, 0, 0, 0);
-        var bi = bubbleBorder.getBorderInsets(c);
-        var si = shadowBorder.getBorderInsets(c);
+        Insets ins = new Insets(0, 0, 0, 0);
+        Insets bi = bubbleBorder.getBorderInsets(c);
+        Insets si = shadowBorder.getBorderInsets(c);
         ins.bottom = Math.max(bi.bottom, si.bottom);
         ins.left = Math.max(bi.left, si.left);
         ins.right = Math.max(bi.right, si.right);
         ins.top = Math.max(bi.top, si.top);
-        var uIns = getUserInsets(c);
+        Insets uIns = getUserInsets(c);
         ins.left += 5 + uIns.left;
         ins.top += 5 + uIns.top;
         ins.right += 5 + uIns.right;
@@ -140,7 +140,7 @@ public class DarkTooltipBorder implements Border {
 
     protected Insets getUserInsets(final Component c) {
         if (c instanceof JComponent) {
-            var obj = ((JComponent) c).getClientProperty("JToolTip.insets");
+            Object obj = ((JComponent) c).getClientProperty("JToolTip.insets");
             if (obj instanceof Insets) {
                 return (Insets) obj;
             }

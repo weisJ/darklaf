@@ -186,7 +186,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         // CurrentDir ComboBox
         @SuppressWarnings("serial") // anonymous class
-                JComboBox<Object> tmp1 = new JComboBox<>() {
+                JComboBox<Object> tmp1 = new JComboBox<Object>() {
             public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 // Must be small enough to not affect total width.
@@ -1040,7 +1040,6 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      *
      * @deprecated As of JDK version 9. Obsolete class.
      */
-    @Deprecated(since = "9")
     protected class SingleClickListener extends MouseAdapter {
         /**
          * Constructs an instance of {@code SingleClickListener}.
@@ -1056,7 +1055,6 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      *
      * @deprecated As of JDK version 9. Obsolete class.
      */
-    @Deprecated(since = "9")
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class FileRenderer extends DefaultListCellRenderer {
     }

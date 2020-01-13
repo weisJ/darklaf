@@ -29,6 +29,7 @@ import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public class SwingXUtilities {
 
@@ -36,10 +37,10 @@ public class SwingXUtilities {
     public static Point convertPointToParent(final Component source, final Point p) {
         JXLayer layer = DarkUIUtil.getParentOfType(JXLayer.class, source);
         if (layer != null && layer.getUI() instanceof TransformUI) {
-            var ui = (TransformUI) layer.getUI();
-            var pos = SwingUtilities.convertPoint(source, p, layer);
+            TransformUI ui = (TransformUI) layer.getUI();
+            Point pos = SwingUtilities.convertPoint(source, p, layer);
             //noinspection unchecked
-            var transform = ui.getPreferredTransform(layer.getSize(), layer);
+            AffineTransform transform = ui.getPreferredTransform(layer.getSize(), layer);
             transform.transform(pos, pos);
             return pos;
         }

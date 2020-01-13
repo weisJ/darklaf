@@ -48,7 +48,7 @@ public final class ImageUtil {
      */
     @NotNull
     public static Image scaledImageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds) {
-        return scaledImageFromComponent(c, bounds, GraphicsUtil.SCALE_X, GraphicsUtil.SCALE_Y);
+        return scaledImageFromComponent(c, bounds, Scale.SCALE_X, Scale.SCALE_Y);
     }
 
     /**
@@ -160,11 +160,11 @@ public final class ImageUtil {
     @NotNull
     @Contract("_, _, _ -> new")
     public static BufferedImage createImage(final int width, final int height, final int type) {
-        return new BufferedImage((int) (width * GraphicsUtil.SCALE_X), (int) (height * GraphicsUtil.SCALE_Y), type) {
+        return new BufferedImage(Scale.scaleWidth(width), Scale.scaleHeight(height), type) {
             @Override
             public Graphics2D createGraphics() {
-                var g = super.createGraphics();
-                g.scale(GraphicsUtil.SCALE_X, GraphicsUtil.SCALE_Y);
+                Graphics2D g = super.createGraphics();
+                g.scale(Scale.SCALE_X, Scale.SCALE_Y);
                 return g;
             }
         };

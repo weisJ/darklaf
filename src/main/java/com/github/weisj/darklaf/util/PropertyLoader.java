@@ -63,8 +63,8 @@ public final class PropertyLoader {
     private static final Collection<ObjectRequest> objectsToLoad = new HashSet<>();
 
     public static void finish() {
-        var cache = new HashMap<String, Object>();
-        for (var request : objectsToLoad) {
+        Map<String, Object> cache = new HashMap<>();
+        for (ObjectRequest request : objectsToLoad) {
             try {
                 request.resolve(cache);
             } catch (RuntimeException e) {
@@ -94,7 +94,7 @@ public final class PropertyLoader {
                                      final UIDefaults currentDefaults) {
         for (final String key : properties.stringPropertyNames()) {
             final String value = properties.getProperty(key);
-            var parsed = parseValue(key, value, accumulator);
+            Object parsed = parseValue(key, value, accumulator);
             if (parsed instanceof ObjectRequest) {
                 objectsToLoad.add((ObjectRequest) parsed);
             } else if (parsed != null) {
@@ -120,7 +120,7 @@ public final class PropertyLoader {
         if ("null".equals(value)) {
             return null;
         }
-        var key = propertyKey;
+        String key = propertyKey;
         boolean skipObjects = ignoreRequest;
         if (key.startsWith(REFERENCE_PREFIX)) {
             key = parseKey(key);
@@ -146,7 +146,7 @@ public final class PropertyLoader {
         } else if ("null".equalsIgnoreCase(value)) {
             returnVal = null;
         } else if (value.startsWith("%")) {
-            var val = value.substring(1);
+            String val = value.substring(1);
             if (!defaults.containsKey(val)) {
                 LOGGER.warning("Could not reference value '" + val + "'while loading '" + key + "'. " +
                                        "May be a forward reference");
@@ -216,7 +216,7 @@ public final class PropertyLoader {
             if (tag == null) {
                 throw new IllegalArgumentException("Invalid tag on icon path: '" + value + "'");
             }
-            var iconPath = path.substring(0, path.length() - tag.length());
+            String iconPath = path.substring(0, path.length() - tag.length());
             if (tag.equals(PATCH_KEY)) {
                 return ICON_LOADER.getIcon(iconPath, dim.width, dim.height, true);
             } else {
@@ -272,7 +272,7 @@ public final class PropertyLoader {
         }
 
         private void resolve(@NotNull final Map<String, Object> cache) {
-            var defaults = UIManager.getLookAndFeelDefaults();
+            UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             if (cache.containsKey(value)) {
                 defaults.put(key, cache.get(value));
             } else {

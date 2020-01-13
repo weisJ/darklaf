@@ -118,7 +118,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Action getNewTabAction() {
-        var action = tabPane.getClientProperty("JTabbedPane.newTabAction");
+        Object action = tabPane.getClientProperty("JTabbedPane.newTabAction");
         return action instanceof Action ? (Action) action : null;
     }
 
@@ -273,61 +273,27 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         installTabContainer();
     }
 
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        dragBorderColor = UIManager.getColor("TabbedPane.dragBorderColor");
-        dropBackground = UIManager.getColor("TabbedPane.dropFill");
-        tabBorderColor = UIManager.getColor("TabbedPane.tabBorderColor");
-        accent = UIManager.getColor("TabbedPane.accent");
-        focusAccent = UIManager.getColor("TabbedPane.accentFocus");
-        selectedHoverBackground = UIManager.getColor("TabbedPane.selectedHoverBackground");
-        selectedBackground = UIManager.getColor("TabbedPane.selectedBackground");
-        hoverBackground = UIManager.getColor("TabbedPane.hoverBackground");
-        tabAreaBackground = UIManager.getColor("TabbedPane.tabAreaBackground");
-
-        moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
-        newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
-
-        var ins = tabPane.getClientProperty("JTabbedPane.tabAreaInsets");
-        if (ins instanceof Insets) {
-            tabAreaInsets = (Insets) ins;
+    protected void paintDrop(@NotNull final Graphics g) {
+        g.setColor(getDropColor());
+        GraphicsContext context = new GraphicsContext(g);
+        if (!scrollableTabLayoutEnabled()) {
+            ((Graphics2D) g).setComposite(DarkUIUtil.DROP_ALPHA);
         }
-        ins = tabPane.getClientProperty("JTabbedPane.contentBorderInsets");
-        if (ins instanceof Insets) {
-            contentBorderInsets = (Insets) ins;
+        switch (tabPane.getTabPlacement()) {
+            case TOP:
+                g.fillRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height - 1);
+                break;
+            case BOTTOM:
+                g.fillRect(dropRect.x, dropRect.y + 1, dropRect.width, dropRect.height - 1);
+                break;
+            case LEFT:
+                g.fillRect(dropRect.x, dropRect.y, dropRect.width - 1, dropRect.height);
+                break;
+            case RIGHT:
+                g.fillRect(dropRect.x + 1, dropRect.y, dropRect.width - 1, dropRect.height);
+                break;
         }
-        var lead = tabPane.getClientProperty("JTabbedPane.leadingComponent");
-        if (lead instanceof Component) {
-            leadingComp = wrapClientComponent((Component) lead);
-            tabPane.add(leadingComp);
-        }
-        var trail = tabPane.getClientProperty("JTabbedPane.trailingComponent");
-        if (trail instanceof Component) {
-            trailingComp = wrapClientComponent((Component) trail);
-            tabPane.add(trailingComp);
-        }
-        var north = tabPane.getClientProperty("JTabbedPane.northComponent");
-        if (north instanceof Component) {
-            northComp = wrapClientComponent((Component) north);
-            tabPane.add(northComp);
-        }
-        var south = tabPane.getClientProperty("JTabbedPane.southComponent");
-        if (south instanceof Component) {
-            southComp = wrapClientComponent((Component) south);
-            tabPane.add(southComp);
-        }
-        var west = tabPane.getClientProperty("JTabbedPane.westComponent");
-        if (west instanceof Component) {
-            westComp = wrapClientComponent((Component) west);
-            tabPane.add(westComp);
-        }
-        var east = tabPane.getClientProperty("JTabbedPane.eastComponent");
-        if (east instanceof Component) {
-            eastComp = wrapClientComponent((Component) east);
-            tabPane.add(eastComp);
-        }
-        dndEnabled = Boolean.TRUE.equals(tabPane.getClientProperty("JTabbedPane.dndEnabled"));
+        context.restore();
     }
 
     protected Component wrapClientComponent(final Component component) {
@@ -395,25 +361,25 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                                        final boolean isSelected) {
     }
 
-    @Override
-    public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
-        var rect = super.getTabBounds(pane, i);
-        if (scrollableTabLayoutEnabled() && rect != null
-                && dropTargetIndex >= 0 && i == dropTargetIndex) {
-            int tabPlacement = pane.getTabPlacement();
-            if (tabPlacement == TOP || tabPlacement == BOTTOM) {
-                if (pane.getComponentOrientation().isLeftToRight()) {
-                    rect.x -= dropRect.width;
-                    rect.width += dropRect.width;
-                } else {
-                    rect.width += dropRect.width;
-                }
-            } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
-                rect.y -= dropRect.height;
-                rect.height += dropRect.height;
-            }
+    protected void paintTabAreaBackground(@NotNull final Graphics g, final int tabPlacement) {
+        g.setColor(getTabAreaBackground());
+        Rectangle b = getTabAreaBounds();
+        if (scrollableTabLayoutEnabled()) {
+            b.setLocation(0, 0);
         }
-        return rect;
+        switch (tabPlacement) {
+            case BOTTOM:
+                b.y++;
+            case TOP:
+                b.height--;
+                break;
+            case RIGHT:
+                b.x++;
+            case LEFT:
+                b.width--;
+                break;
+        }
+        g.fillRect(b.x, b.y, b.width, b.height);
     }
 
     protected boolean shouldRotateTabRuns(final int tabPlacement) {
@@ -445,26 +411,19 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         return Math.max(super.calculateTabAreaWidth(tabPlacement, vertRunCount, maxTabWidth), getFallBackSize());
     }
 
-    @Override
-    protected Insets getTabAreaInsets(final int tabPlacement) {
-        Insets insets = super.getTabAreaInsets(tabPlacement);
-        if (leadingComp != null) {
-            var b = leadingComp.getPreferredSize();
-            if (isHorizontalTabPlacement()) {
-                insets.left += b.width;
-            } else {
-                insets.top += b.height;
-            }
+    public void setDnDIndicatorRect(final int x, final int y, final int width, final int height, final int targetIndex,
+                                    final boolean sourceEqualsTarget) {
+        dropRect.setBounds(x, y, width, height);
+        if (scrollableTabLayoutEnabled()) {
+            Point p = scrollableTabSupport.viewport.getLocation();
+            dropRect.x -= p.x;
+            dropRect.y -= p.y;
         }
-        if (trailingComp != null) {
-            var b = trailingComp.getPreferredSize();
-            if (isHorizontalTabPlacement()) {
-                insets.right += b.width;
-            } else {
-                insets.bottom += b.height;
-            }
-        }
-        return insets;
+        drawDropRect = true;
+        this.sourceEqualsTarget = sourceEqualsTarget;
+        dropTargetIndex = targetIndex;
+        tabPane.doLayout();
+        tabPane.repaint();
     }
 
     protected Insets getContentBorderInsets(final int tabPlacement) {
@@ -568,48 +527,57 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
-    protected void paintDrop(@NotNull final Graphics g) {
-        g.setColor(getDropColor());
-        var context = new GraphicsContext(g);
-        if (!scrollableTabLayoutEnabled()) {
-            ((Graphics2D) g).setComposite(DarkUIUtil.DROP_ALPHA);
-        }
-        switch (tabPane.getTabPlacement()) {
-            case TOP:
-                g.fillRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height - 1);
-                break;
-            case BOTTOM:
-                g.fillRect(dropRect.x, dropRect.y + 1, dropRect.width, dropRect.height - 1);
-                break;
+    protected void layoutLeadingComponent(final Component comp, final int tabWidth, final int tabHeight,
+                                          final Insets insets, final int tx, final int ty, final int tabPlacement) {
+        Dimension b = leadingComp.getPreferredSize();
+        int h = Math.min(tabHeight, b.height);
+        int w = Math.min(tabWidth, b.width);
+        int centerY = (tabHeight - h) / 2;
+        int centerX = (tabWidth - w) / 2;
+        switch (tabPlacement) {
             case LEFT:
-                g.fillRect(dropRect.x, dropRect.y, dropRect.width - 1, dropRect.height);
+                comp.setBounds(insets.left + centerX, insets.top, w, b.height);
                 break;
             case RIGHT:
-                g.fillRect(dropRect.x + 1, dropRect.y, dropRect.width - 1, dropRect.height);
+                comp.setBounds(tx - tabAreaInsets.left + centerX, insets.top,
+                               w, b.height);
+                break;
+            case TOP:
+                comp.setBounds(insets.left, insets.top + centerY, b.width, h);
+                break;
+            case BOTTOM:
+                comp.setBounds(insets.left, ty - tabAreaInsets.bottom + centerY,
+                               b.width, h);
                 break;
         }
-        context.restore();
     }
 
-    protected void paintTabAreaBackground(@NotNull final Graphics g, final int tabPlacement) {
-        g.setColor(getTabAreaBackground());
-        var b = getTabAreaBounds();
-        if (scrollableTabLayoutEnabled()) {
-            b.setLocation(0, 0);
-        }
+    protected void layoutTrailingComponent(final Component comp, final int tabWidth, final int tabHeight,
+                                           final Insets insets, final int tx, final int ty,
+                                           final int tw, final int th, final int tabPlacement) {
+        Dimension b = trailingComp.getPreferredSize();
+        int h = Math.min(tabHeight, b.height);
+        int w = Math.min(tabWidth, b.width);
+        Dimension size = tabPane.getSize();
+        int centerY = (tabHeight - h) / 2;
+        int centerX = (tabWidth - w) / 2;
         switch (tabPlacement) {
-            case BOTTOM:
-                b.y++;
-            case TOP:
-                b.height--;
+            case LEFT:
+                comp.setBounds(insets.left + centerX, size.height - b.height - insets.bottom,
+                               w, b.height);
                 break;
             case RIGHT:
-                b.x++;
-            case LEFT:
-                b.width--;
+                comp.setBounds(tx - tabAreaInsets.left + centerX, size.height - b.height - insets.bottom,
+                               w, b.height);
+                break;
+            case TOP:
+                comp.setBounds(size.width - b.width - insets.right, insets.top + centerY, b.width, h);
+                break;
+            case BOTTOM:
+                comp.setBounds(size.width - b.width - insets.right, ty - tabAreaInsets.bottom + centerY,
+                               b.width, h);
                 break;
         }
-        g.fillRect(b.x, b.y, b.width, b.height);
     }
 
     protected Color getDropColor() {
@@ -639,19 +607,13 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         tabPane.repaint();
     }
 
-    public void setDnDIndicatorRect(final int x, final int y, final int width, final int height, final int targetIndex,
-                                    final boolean sourceEqualsTarget) {
-        dropRect.setBounds(x, y, width, height);
-        if (scrollableTabLayoutEnabled()) {
-            var p = scrollableTabSupport.viewport.getLocation();
-            dropRect.x -= p.x;
-            dropRect.y -= p.y;
-        }
-        drawDropRect = true;
-        this.sourceEqualsTarget = sourceEqualsTarget;
-        dropTargetIndex = targetIndex;
-        tabPane.doLayout();
-        tabPane.repaint();
+    protected MouseEvent convertEvent(@NotNull final MouseEvent e) {
+        Point p = e.getPoint();
+        Point pos = scrollableTabSupport.viewport.getLocation();
+        p.x += pos.x;
+        p.y += pos.y;
+        return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
+                              p.x, p.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
     }
 
     public Rectangle getTabAreaBounds() {
@@ -664,68 +626,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     protected Icon getMoreTabsIcon() {
         return moreTabsIcon;
-    }
-
-    protected void layoutLeadingComponent(final Component comp, final int tabWidth, final int tabHeight,
-                                          final Insets insets, final int tx, final int ty, final int tabPlacement) {
-        var b = leadingComp.getPreferredSize();
-        int h = Math.min(tabHeight, b.height);
-        int w = Math.min(tabWidth, b.width);
-        int centerY = (tabHeight - h) / 2;
-        int centerX = (tabWidth - w) / 2;
-        switch (tabPlacement) {
-            case LEFT:
-                comp.setBounds(insets.left + centerX, insets.top, w, b.height);
-                break;
-            case RIGHT:
-                comp.setBounds(tx - tabAreaInsets.left + centerX, insets.top,
-                               w, b.height);
-                break;
-            case TOP:
-                comp.setBounds(insets.left, insets.top + centerY, b.width, h);
-                break;
-            case BOTTOM:
-                comp.setBounds(insets.left, ty - tabAreaInsets.bottom + centerY,
-                               b.width, h);
-                break;
-        }
-    }
-
-    protected void layoutTrailingComponent(final Component comp, final int tabWidth, final int tabHeight,
-                                           final Insets insets, final int tx, final int ty,
-                                           final int tw, final int th, final int tabPlacement) {
-        var b = trailingComp.getPreferredSize();
-        int h = Math.min(tabHeight, b.height);
-        int w = Math.min(tabWidth, b.width);
-        var size = tabPane.getSize();
-        int centerY = (tabHeight - h) / 2;
-        int centerX = (tabWidth - w) / 2;
-        switch (tabPlacement) {
-            case LEFT:
-                comp.setBounds(insets.left + centerX, size.height - b.height - insets.bottom,
-                               w, b.height);
-                break;
-            case RIGHT:
-                comp.setBounds(tx - tabAreaInsets.left + centerX, size.height - b.height - insets.bottom,
-                               w, b.height);
-                break;
-            case TOP:
-                comp.setBounds(size.width - b.width - insets.right, insets.top + centerY, b.width, h);
-                break;
-            case BOTTOM:
-                comp.setBounds(size.width - b.width - insets.right, ty - tabAreaInsets.bottom + centerY,
-                               b.width, h);
-                break;
-        }
-    }
-
-    protected MouseEvent convertEvent(@NotNull final MouseEvent e) {
-        var p = e.getPoint();
-        var pos = scrollableTabSupport.viewport.getLocation();
-        p.x += pos.x;
-        p.y += pos.y;
-        return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
-                              p.x, p.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
     }
 
     protected void layoutTabComponents() {
@@ -748,8 +648,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             if (i == dropSourceIndex) {
                 if (dragging) {
                     rect.setBounds(dragRect);
-                    var p = rect.getLocation();
-                    var vl = tabScroller.viewport.getLocation();
+                    Point p = rect.getLocation();
+                    Point vl = tabScroller.viewport.getLocation();
                     p.x += vl.x;
                     p.y += vl.y;
                     rect.setLocation(p);
@@ -779,9 +679,109 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected void paintText(final Graphics g, final int tabPlacement, final Font font,
                              final FontMetrics metrics, final int tabIndex, final String title,
                              final Rectangle textRect, final boolean isSelected) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected);
         config.restore();
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        dragBorderColor = UIManager.getColor("TabbedPane.dragBorderColor");
+        dropBackground = UIManager.getColor("TabbedPane.dropFill");
+        tabBorderColor = UIManager.getColor("TabbedPane.tabBorderColor");
+        accent = UIManager.getColor("TabbedPane.accent");
+        focusAccent = UIManager.getColor("TabbedPane.accentFocus");
+        selectedHoverBackground = UIManager.getColor("TabbedPane.selectedHoverBackground");
+        selectedBackground = UIManager.getColor("TabbedPane.selectedBackground");
+        hoverBackground = UIManager.getColor("TabbedPane.hoverBackground");
+        tabAreaBackground = UIManager.getColor("TabbedPane.tabAreaBackground");
+
+        moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
+        newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
+
+        Object ins = tabPane.getClientProperty("JTabbedPane.tabAreaInsets");
+        if (ins instanceof Insets) {
+            tabAreaInsets = (Insets) ins;
+        }
+        ins = tabPane.getClientProperty("JTabbedPane.contentBorderInsets");
+        if (ins instanceof Insets) {
+            contentBorderInsets = (Insets) ins;
+        }
+        Object lead = tabPane.getClientProperty("JTabbedPane.leadingComponent");
+        if (lead instanceof Component) {
+            leadingComp = wrapClientComponent((Component) lead);
+            tabPane.add(leadingComp);
+        }
+        Object trail = tabPane.getClientProperty("JTabbedPane.trailingComponent");
+        if (trail instanceof Component) {
+            trailingComp = wrapClientComponent((Component) trail);
+            tabPane.add(trailingComp);
+        }
+        Object north = tabPane.getClientProperty("JTabbedPane.northComponent");
+        if (north instanceof Component) {
+            northComp = wrapClientComponent((Component) north);
+            tabPane.add(northComp);
+        }
+        Object south = tabPane.getClientProperty("JTabbedPane.southComponent");
+        if (south instanceof Component) {
+            southComp = wrapClientComponent((Component) south);
+            tabPane.add(southComp);
+        }
+        Object west = tabPane.getClientProperty("JTabbedPane.westComponent");
+        if (west instanceof Component) {
+            westComp = wrapClientComponent((Component) west);
+            tabPane.add(westComp);
+        }
+        Object east = tabPane.getClientProperty("JTabbedPane.eastComponent");
+        if (east instanceof Component) {
+            eastComp = wrapClientComponent((Component) east);
+            tabPane.add(eastComp);
+        }
+        dndEnabled = Boolean.TRUE.equals(tabPane.getClientProperty("JTabbedPane.dndEnabled"));
+    }
+
+    @Override
+    public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
+        Rectangle rect = super.getTabBounds(pane, i);
+        if (scrollableTabLayoutEnabled() && rect != null
+                && dropTargetIndex >= 0 && i == dropTargetIndex) {
+            int tabPlacement = pane.getTabPlacement();
+            if (tabPlacement == TOP || tabPlacement == BOTTOM) {
+                if (pane.getComponentOrientation().isLeftToRight()) {
+                    rect.x -= dropRect.width;
+                    rect.width += dropRect.width;
+                } else {
+                    rect.width += dropRect.width;
+                }
+            } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+                rect.y -= dropRect.height;
+                rect.height += dropRect.height;
+            }
+        }
+        return rect;
+    }
+
+    @Override
+    protected Insets getTabAreaInsets(final int tabPlacement) {
+        Insets insets = super.getTabAreaInsets(tabPlacement);
+        if (leadingComp != null) {
+            Dimension b = leadingComp.getPreferredSize();
+            if (isHorizontalTabPlacement()) {
+                insets.left += b.width;
+            } else {
+                insets.top += b.height;
+            }
+        }
+        if (trailingComp != null) {
+            Dimension b = trailingComp.getPreferredSize();
+            if (isHorizontalTabPlacement()) {
+                insets.right += b.width;
+            } else {
+                insets.bottom += b.height;
+            }
+        }
+        return insets;
     }
 
     public Icon getNewTabIcon() {

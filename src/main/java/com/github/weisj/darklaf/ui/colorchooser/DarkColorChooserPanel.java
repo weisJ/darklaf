@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -86,9 +87,9 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         });
         int record = 0;
         DarkColorModel prototype = null;
-        for (var model : colorModels) {
+        for (DarkColorModel model : colorModels) {
             record = Math.max(model.getValueCount(), record);
-            var name = model.toString();
+            String name = model.toString();
             if (prototype == null || prototype.toString().length() < name.length()) {
                 prototype = model;
             }
@@ -131,8 +132,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     private void updateDescriptors() {
-        var desc = getDarkColorModel().getLabelDescriptorsBefore();
-        var descAfter = getDarkColorModel().getLabelDescriptorsAfter();
+        char[] desc = getDarkColorModel().getLabelDescriptorsBefore();
+        char[] descAfter = getDarkColorModel().getLabelDescriptorsAfter();
         for (int i = 0; i < descriptors.length; i++) {
             if (i < desc.length) {
                 descriptors[i].setText(desc[i] + ":");
@@ -148,7 +149,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     private void updateValueFields() {
-        var model = getDarkColorModel();
+        DarkColorModel model = getDarkColorModel();
         int count = model.getValueCount();
         for (int i = 0; i < valueFields.length; i++) {
             valueFields[i].setEnabled(i < count);
@@ -163,7 +164,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     private void applyColorToFields(final Color color) {
-        var model = getDarkColorModel();
+        DarkColorModel model = getDarkColorModel();
         isChanging = true;
         int[] values = model.getValuesFromColor(color);
         for (int i = 0; i < values.length; i++) {
@@ -172,50 +173,10 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         isChanging = false;
     }
 
-    @NotNull
-    private JFormattedTextField createColorField(final boolean hex) {
-        JFormattedTextField field = new JFormattedTextField(0);
-        field.setColumns(hex ? 8 : 4);
-        if (!hex) {
-            field.addPropertyChangeListener(e -> {
-                if ("value".equals(e.getPropertyName())) {
-                    updatePreviewFromTextFields();
-                }
-            });
-        } else {
-            field.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(final DocumentEvent e) {
-                    update();
-                }
-
-                @Override
-                public void removeUpdate(final DocumentEvent e) {
-                    update();
-                }
-
-                @Override
-                public void changedUpdate(final DocumentEvent e) {
-                }
-
-                protected void update() {
-                    try {
-                        if (isChanging) return;
-                        var hexStr = String.format("%1$-" + 8 + "s", field.getText()).replaceAll(" ", "F");
-                        var alpha = isColorTransparencySelectionEnabled()
-                                    ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
-                        var c = new Color(
-                                Integer.valueOf(hexStr.substring(0, 2), 16),
-                                Integer.valueOf(hexStr.substring(2, 4), 16),
-                                Integer.valueOf(hexStr.substring(4, 6), 16),
-                                alpha);
-                        colorWheelPanel.setColor(c, textHex);
-                    } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
-                }
-            });
-        }
-        field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
-        return field;
+    @Override
+    protected Color getColorFromModel() {
+        Color c = super.getColorFromModel();
+        return c == null ? currentColor : c;
     }
 
     protected DarkColorModel getDarkColorModel() {
@@ -277,20 +238,50 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return result;
     }
 
-    private void updatePreviewFromTextFields() {
-        if (!doneInit || isChanging) return;
-        isChanging = true;
-        int[] values = new int[valueFields.length];
-        for (int i = 0; i < valueFields.length; i++) {
-            values[i] = (((Integer) valueFields[i].getValue()));
-        }
-        var color = getDarkColorModel().getColorFromValues(values);
+    @NotNull
+    private JFormattedTextField createColorField(final boolean hex) {
+        JFormattedTextField field = new JFormattedTextField(0);
+        field.setColumns(hex ? 8 : 4);
+        if (!hex) {
+            field.addPropertyChangeListener(e -> {
+                if ("value".equals(e.getPropertyName())) {
+                    updatePreviewFromTextFields();
+                }
+            });
+        } else {
+            field.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(final DocumentEvent e) {
+                    update();
+                }
 
-        if (isColorTransparencySelectionEnabled()) {
-            color = ColorUtil.toAlpha(color, getColorFromModel().getAlpha());
+                @Override
+                public void removeUpdate(final DocumentEvent e) {
+                    update();
+                }
+
+                @Override
+                public void changedUpdate(final DocumentEvent e) {
+                }
+
+                protected void update() {
+                    try {
+                        if (isChanging) return;
+                        String hexStr = String.format("%1$-" + 8 + "s", field.getText()).replaceAll(" ", "F");
+                        int alpha = isColorTransparencySelectionEnabled()
+                                    ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
+                        Color c = new Color(
+                                Integer.valueOf(hexStr.substring(0, 2), 16),
+                                Integer.valueOf(hexStr.substring(2, 4), 16),
+                                Integer.valueOf(hexStr.substring(4, 6), 16),
+                                alpha);
+                        colorWheelPanel.setColor(c, textHex);
+                    } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
+                }
+            });
         }
-        colorWheelPanel.setColor(color, valueFields[0]);
-        isChanging = false;
+        field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
+        return field;
     }
 
     protected Icon getPipetteIcon() {
@@ -349,19 +340,48 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return null;
     }
 
+    private void updatePreviewFromTextFields() {
+        if (!doneInit || isChanging) return;
+        isChanging = true;
+        int[] values = new int[valueFields.length];
+        for (int i = 0; i < valueFields.length; i++) {
+            values[i] = (((Integer) valueFields[i].getValue()));
+        }
+        Color color = getDarkColorModel().getColorFromValues(values);
+
+        if (isColorTransparencySelectionEnabled()) {
+            color = ColorUtil.toAlpha(color, getColorFromModel().getAlpha());
+        }
+        colorWheelPanel.setColor(color, valueFields[0]);
+        isChanging = false;
+    }
+
     @Override
-    protected Color getColorFromModel() {
-        var c = super.getColorFromModel();
-        return c == null ? currentColor : c;
+    public void setColorTransparencySelectionEnabled(final boolean b) {
+        boolean oldValue = isColorTransparencySelectionEnabled();
+        if (b != oldValue) {
+            Color color = getColorFromModel();
+            color = new Color(color.getRed(), color.getBlue(), color.getGreen());
+            ColorSelectionModel model = getColorSelectionModel();
+            if (model != null) {
+                model.setSelectedColor(color);
+            }
+            currentColor = color;
+            hexFormatter.setTransparencyEnabled(b);
+            colorWheelPanel.setColorTransparencySelectionEnabled(b);
+            applyColorToHEX(getColorFromModel());
+            firePropertyChange(TRANSPARENCY_ENABLED_PROPERTY,
+                               oldValue, b);
+        }
     }
 
     @Override
     public void colorChanged(final Color color, final Object source) {
         isChanging = true;
         if (color != null && !color.equals(currentColor)) {
-            var newColor = !isColorTransparencySelectionEnabled()
-                           ? new Color(color.getRed(), color.getGreen(), color.getBlue()) : color;
-            var model = getColorSelectionModel();
+            Color newColor = !isColorTransparencySelectionEnabled()
+                             ? new Color(color.getRed(), color.getGreen(), color.getBlue()) : color;
+            ColorSelectionModel model = getColorSelectionModel();
             if (model != null) {
                 model.setSelectedColor(newColor);
             }
@@ -375,25 +395,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
             }
         }
         isChanging = false;
-    }
-
-    @Override
-    public void setColorTransparencySelectionEnabled(final boolean b) {
-        boolean oldValue = isColorTransparencySelectionEnabled();
-        if (b != oldValue) {
-            var color = getColorFromModel();
-            color = new Color(color.getRed(), color.getBlue(), color.getGreen());
-            var model = getColorSelectionModel();
-            if (model != null) {
-                model.setSelectedColor(color);
-            }
-            currentColor = color;
-            hexFormatter.setTransparencyEnabled(b);
-            colorWheelPanel.setColorTransparencySelectionEnabled(b);
-            applyColorToHEX(getColorFromModel());
-            firePropertyChange(TRANSPARENCY_ENABLED_PROPERTY,
-                               oldValue, b);
-        }
     }
 
 

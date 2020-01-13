@@ -447,7 +447,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     private MouseWheelEvent transformMouseWheelEvent(
             @NotNull final MouseWheelEvent mouseWheelEvent, final Component t,
             final JXLayer<? extends V> layer) {
-        var target = t;
+        Component target = t;
         if (target == null) {
             target = layer;
         }

@@ -62,7 +62,7 @@ public class SelectWordAction extends TextAction {
         @Override
         public void actionPerformed(final ActionEvent e) {
             try {
-                var textArea = getTextComponent(e);
+                JTextComponent textArea = getTextComponent(e);
                 int offs = textArea.getCaretPosition();
                 int begOffs = getWordStart(textArea, offs);
                 if (select) {
@@ -92,7 +92,7 @@ public class SelectWordAction extends TextAction {
         @Override
         public void actionPerformed(final ActionEvent e) {
             try {
-                var textArea = getTextComponent(e);
+                JTextComponent textArea = getTextComponent(e);
                 int offs = textArea.getCaretPosition();
                 int endOffs = getWordEnd(textArea, offs);
                 if (select) {

@@ -130,7 +130,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     @Override
     protected ComboBoxEditor createEditor() {
         final ComboBoxEditor comboBoxEditor = super.createEditor();
-        var comp = comboBoxEditor.getEditorComponent();
+        Component comp = comboBoxEditor.getEditorComponent();
         comp.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(final KeyEvent e) {
@@ -254,7 +254,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
 
     @Override
     protected Rectangle rectangleForCurrentValue() {
-        var rect = super.rectangleForCurrentValue();
+        Rectangle rect = super.rectangleForCurrentValue();
         if (!comboBox.getComponentOrientation().isLeftToRight()) {
             rect.x += borderSize;
             rect.width -= borderSize;
@@ -324,7 +324,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         g.translate(x, y);
 
         if (comboBox.isEditable()) {
-            var arrowBounds = arrowButton.getBounds();
+            Rectangle arrowBounds = arrowButton.getBounds();
             boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
             int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
             Area rect;
@@ -360,9 +360,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
                                        height - 2 * bSize, arc, true);
         } else {
             g.setColor(getBorderColor());
-            var parent = c.getParent();
+            Component parent = c.getParent();
             if (isTableCellEditor(c) && parent instanceof JTable) {
-                var table = ((JTable) parent);
+                JTable table = ((JTable) parent);
                 if (!table.getShowHorizontalLines()) {
                     g.fillRect(0, 0, width, 1);
                     g.fillRect(0, height - 1, width, 1);

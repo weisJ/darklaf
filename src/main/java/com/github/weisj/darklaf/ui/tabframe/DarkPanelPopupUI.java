@@ -128,29 +128,29 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     protected void installListeners() {
         popupComponent.addPropertyChangeListener(this);
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.FOCUS_EVENT_MASK);
-        var frame = popupComponent.getTabFrame();
+        JTabFrame frame = popupComponent.getTabFrame();
         if (frame != null) {
             frame.addPropertyChangeListener(this);
         }
     }
 
     protected HeaderButton createCloseButton() {
-        var closeButton = new HeaderButton(UIManager.getIcon("TabFramePopup.close.icon"), this);
+        HeaderButton closeButton = new HeaderButton(UIManager.getIcon("TabFramePopup.close.icon"), this);
         closeButton.setBorder(new EmptyBorder(4, 4, 4, 4));
         closeButton.addActionListener(e -> popupComponent.close());
-        var tooltip = UIManager.getString("TabFramePopup.closeTooltipText");
+        String tooltip = UIManager.getString("TabFramePopup.closeTooltipText");
         closeButton.setToolTipText(tooltip);
         return closeButton;
     }
 
     protected JLabel createLabel() {
-        var label = new JLabelUIResource(popupComponent.getTitle(), popupComponent.getIcon(), JLabel.LEFT);
+        JLabelUIResource label = new JLabelUIResource(popupComponent.getTitle(), popupComponent.getIcon(), JLabel.LEFT);
         label.setOpaque(false);
         return label;
     }
 
     protected JPanel createHeader() {
-        var header = new JPanel();
+        JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
         header.add(Box.createHorizontalStrut(5));
         header.add(label);
@@ -176,7 +176,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     protected MutableLineBorder createBorder() {
-        var color = UIManager.getColor("TabFramePopup.borderColor");
+        Color color = UIManager.getColor("TabFramePopup.borderColor");
         return new MutableLineBorder.UIResource(0, 0, 0, 0, color);
     }
 
@@ -198,7 +198,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     protected void uninstallListeners() {
         popupComponent.removePropertyChangeListener(this);
         Toolkit.getDefaultToolkit().removeAWTEventListener(this);
-        var frame = popupComponent.getTabFrame();
+        JTabFrame frame = popupComponent.getTabFrame();
         if (frame != null) {
             frame.removePropertyChangeListener(this);
         }
@@ -232,7 +232,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-        var key = evt.getPropertyName();
+        String key = evt.getPropertyName();
         if ("open".equals(key)) {
             if (Boolean.TRUE.equals(evt.getNewValue())) {
                 setHeaderBackground(true);
@@ -256,8 +256,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 }
             }
         } else if ("tabFrame".equals(key)) {
-            var oldVal = evt.getOldValue();
-            var newVal = evt.getNewValue();
+            Object oldVal = evt.getOldValue();
+            Object newVal = evt.getNewValue();
             if (oldVal instanceof JTabFrame) {
                 ((JTabFrame) oldVal).removePropertyChangeListener(this);
             }
@@ -274,17 +274,17 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected void updateBorder(final boolean notifyPeer) {
         if (popupComponent.getTabFrame() != null) {
-            var tabFrame = popupComponent.getTabFrame();
-            var status = tabFrame.getContentPane().getStatus();
-            var alignment = popupComponent.getAlignment();
-            var insets = getBorderSize(alignment, status);
+            JTabFrame tabFrame = popupComponent.getTabFrame();
+            boolean[] status = tabFrame.getContentPane().getStatus();
+            Alignment alignment = popupComponent.getAlignment();
+            Insets insets = getBorderSize(alignment, status);
 
             applyBorderInsets(insets);
             popupComponent.doLayout();
             popupComponent.repaint();
             if (notifyPeer) {
                 try {
-                    var peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
+                    Component peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
                     peer.firePropertyChange("peerInsets", 0, 1);
                 } catch (IndexOutOfBoundsException ignored) {/*may happen during transfer*/}
             }
@@ -292,14 +292,14 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     protected void updateTooltip() {
-        var tabFrame = popupComponent.getTabFrame();
+        JTabFrame tabFrame = popupComponent.getTabFrame();
         closeButton.setAlignment(popupComponent.getAlignment(),
                                  tabFrame.getContentPane().isEnabled(tabFrame.getPeer(popupComponent.getAlignment())));
     }
 
     @NotNull
     protected Insets getBorderSize(@NotNull final Alignment a, final boolean[] info) {
-        var insets = new Insets(0, 0, 0, 0);
+        Insets insets = new Insets(0, 0, 0, 0);
         switch (a) {
             case NORTH:
             case NORTH_EAST:
@@ -354,12 +354,12 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     @Override
     public void eventDispatched(@NotNull final AWTEvent event) {
         if (event.getID() == FocusEvent.FOCUS_GAINED) {
-            var focusOwner = FocusManager.getCurrentManager().getFocusOwner();
+            Component focusOwner = FocusManager.getCurrentManager().getFocusOwner();
             if (focusOwner instanceof JTabFrame) return;
             if (focusOwner instanceof JRootPane) return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
             if (popupComponent.getTabFrame() != null) {
-                var container = popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
+                Container container = popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
                 focus = focus || DarkUIUtil.hasFocus(container);
             }
             setHeaderBackground(focus);

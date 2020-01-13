@@ -12,7 +12,7 @@ public class ToolTipDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             JFrame f = new JFrame();
-            var p = new JPanel(new GridBagLayout());
+            JPanel p = new JPanel(new GridBagLayout());
             p.add(new JButton("Button with very very long text") {
                 private final ToolTipContext context = new ToolTipContext(this).setAlignment(Alignment.CENTER)
                                                                                .setCenterAlignment(Alignment.SOUTH_EAST);

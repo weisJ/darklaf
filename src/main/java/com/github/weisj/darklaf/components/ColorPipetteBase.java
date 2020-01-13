@@ -209,7 +209,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
                 break;
             case KeyEvent.KEY_RELEASED:
                 keyDown = false;
-                var picker = getPickerWindow();
+                Window picker = getPickerWindow();
                 if (picker != null) {
                     picker.repaint();
                 }

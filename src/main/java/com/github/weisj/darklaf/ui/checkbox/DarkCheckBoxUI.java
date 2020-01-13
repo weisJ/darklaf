@@ -160,8 +160,8 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     }
 
     public static Icon getIconBullet(final JComponent c, final Graphics2D g, @NotNull final AbstractButton b) {
-        var model = b.getModel();
-        var icon = b.getIcon();
+        ButtonModel model = b.getModel();
+        Icon icon = b.getIcon();
         if (!model.isEnabled()) {
             if (model.isSelected()) {
                 icon = b.getDisabledSelectedIcon();
@@ -241,7 +241,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
 
     protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus,
                                     final boolean selected, final int arcSize, final int borderSize) {
-        var g2 = (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g.create();
         Color bgColor = getFillColor(selected, enabled);
         Color border = getBorderColor(selected, focus, enabled);
         g.setColor(bgColor);
@@ -261,7 +261,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     }
 
     protected void paintCheckArrow(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
-        var config = GraphicsUtil.setupStrokePainting(g);
+        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         Color color = getCheckColor(focus, enabled);
 

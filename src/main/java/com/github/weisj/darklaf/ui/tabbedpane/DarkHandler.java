@@ -49,21 +49,21 @@ public class DarkHandler extends TabbedPaneHandler {
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent e) {
         super.propertyChange(e);
-        var key = e.getPropertyName();
+        String key = e.getPropertyName();
         if ("TabbedPane.maxPopupHeight".equals(key)) {
             Integer newVal = (Integer) e.getNewValue();
             if (newVal != null && newVal >= 0) {
                 ui.scrollableTabSupport.scrollPopupMenu.setMaxHeight(newVal);
             }
         } else if ("JTabbedPane.tabAreaInsets".equals(key)) {
-            var ins = e.getNewValue();
+            Object ins = e.getNewValue();
             if (ins instanceof Insets) {
                 ui.tabAreaInsets = (Insets) ins;
             } else if (ins == null) {
                 ui.tabAreaInsets = new Insets(0, 0, 0, 0);
             }
         } else if ("JTabbedPane.contentBorderInsets".equals(key)) {
-            var ins = e.getNewValue();
+            Object ins = e.getNewValue();
             if (ins instanceof Insets) {
                 ui.contentBorderInsets = (Insets) ins;
             } else if (ins == null) {
@@ -76,7 +76,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.scrollLayout.calculateTabRects(ui.tabPane.getTabPlacement(), ui.tabPane.getTabCount());
             }
         } else if ("JTabbedPane.showNewTabButton".equals(key)) {
-            var val = e.getNewValue();
+            Object val = e.getNewValue();
             if (val instanceof Boolean && ui.scrollableTabLayoutEnabled()) {
                 boolean show = (Boolean) val;
                 if (show == ui.scrollableTabSupport.newTabButton.isVisible()) {
@@ -86,7 +86,7 @@ public class DarkHandler extends TabbedPaneHandler {
             }
         } else if ("JTabbedPane.leadingComponent".equals(key)) {
             ui.tabPane.remove(ui.leadingComp);
-            var val = e.getNewValue();
+            Object val = e.getNewValue();
             if (val instanceof Component) {
                 ui.leadingComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.leadingComp);
@@ -95,7 +95,7 @@ public class DarkHandler extends TabbedPaneHandler {
             }
         } else if ("JTabbedPane.trailingComponent".equals(key)) {
             ui.tabPane.remove(ui.trailingComp);
-            var val = e.getNewValue();
+            Object val = e.getNewValue();
             if (val instanceof Component) {
                 ui.trailingComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.trailingComp);
@@ -110,7 +110,7 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.repaint();
         } else if ("JTabbedPane.northComponent".equals(key)) {
             ui.tabPane.remove(ui.northComp);
-            var val = e.getNewValue();
+            Object val = e.getNewValue();
             if (val instanceof Component) {
                 ui.northComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.northComp);
@@ -119,7 +119,7 @@ public class DarkHandler extends TabbedPaneHandler {
             }
         } else if ("JTabbedPane.southComponent".equals(key)) {
             ui.tabPane.remove(ui.southComp);
-            var val = e.getNewValue();
+            Object val = e.getNewValue();
             if (val instanceof Component) {
                 ui.southComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.southComp);
@@ -128,7 +128,7 @@ public class DarkHandler extends TabbedPaneHandler {
             }
         } else if ("JTabbedPane.eastComponent".equals(key)) {
             ui.tabPane.remove(ui.eastComp);
-            var val = e.getNewValue();
+            Object val = e.getNewValue();
             if (val instanceof Component) {
                 ui.eastComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.eastComp);
@@ -137,7 +137,7 @@ public class DarkHandler extends TabbedPaneHandler {
             }
         } else if ("JTabbedPane.westComponent".equals(key)) {
             ui.tabPane.remove(ui.westComp);
-            var val = e.getNewValue();
+            Object val = e.getNewValue();
             if (val instanceof Component) {
                 ui.westComp = ui.wrapClientComponent((Component) val);
                 ui.tabPane.add(ui.westComp);
@@ -149,9 +149,7 @@ public class DarkHandler extends TabbedPaneHandler {
 
     public void stateChanged(@NotNull final ChangeEvent e) {
         JTabbedPane tabPane = (JTabbedPane) e.getSource();
-        tabPane.revalidate();
-        tabPane.repaint();
-        ui.setFocusIndex(tabPane.getSelectedIndex(), false);
+        ui.setFocusIndex(tabPane.getSelectedIndex(), true);
     }
 
     @Override
@@ -191,7 +189,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.dropRect.setBounds(ui.rects[pressedIndex]);
                 ui.dragRect.setBounds(ui.rects[pressedIndex]);
             } else if (ui.dragging && indexValid) {
-                var margins = ui.scrollLayout.getMargins(ui.tabPane.getTabPlacement());
+                Point margins = ui.scrollLayout.getMargins(ui.tabPane.getTabPlacement());
                 int min = margins.x;
                 if (ui.isHorizontalTabPlacement()) {
                     int max = margins.y - ui.dropRect.width;
@@ -202,16 +200,16 @@ public class DarkHandler extends TabbedPaneHandler {
                     ui.dragRect.y = tabOrigin.x + e.getY() - origin.y;
                     ui.dragRect.x = Math.max(Math.min(ui.dragRect.y, max), min);
                 }
-                var p = getDragMousePos();
+                Point p = getDragMousePos();
                 int tab = TabbedPaneUtil.getDroppedTabIndex(ui.dropRect, ui.tabPane, ui, p);
-                var rect = TabbedPaneUtil.getDropRect(ui, ui.tabPane, ui.tabPane, p,
-                                                      ui.dropRect, tab, ui.dropSourceIndex, ui.dropTargetIndex);
+                Rectangle rect = TabbedPaneUtil.getDropRect(ui, ui.tabPane, ui.tabPane, p,
+                                                            ui.dropRect, tab, ui.dropSourceIndex, ui.dropTargetIndex);
                 ui.setDnDIndicatorRect(rect.x, rect.y, rect.width, rect.height, tab, true);
             }
         }
 
         if (indexValid) {
-            var p = e.getPoint();
+            Point p = e.getPoint();
             int dist = Math.abs(ui.isHorizontalTabPlacement() ? origin.y - p.y : origin.x - p.x);
             if (dist > Math.max(50, ui.maxTabHeight)) {
                 stopDrag(e, false);
@@ -258,7 +256,7 @@ public class DarkHandler extends TabbedPaneHandler {
     }
 
     protected Point getDragMousePos() {
-        var p = new Point(ui.dragRect.x + ui.dragRect.width / 2, ui.dragRect.y + ui.dragRect.height / 2);
+        Point p = new Point(ui.dragRect.x + ui.dragRect.width / 2, ui.dragRect.y + ui.dragRect.height / 2);
         p.x += ui.scrollableTabSupport.viewport.getX();
         p.y += ui.scrollableTabSupport.viewport.getY();
         return p;

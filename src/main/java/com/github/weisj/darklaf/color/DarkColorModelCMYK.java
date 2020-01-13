@@ -87,7 +87,7 @@ public class DarkColorModelCMYK extends DarkColorModel {
 
     @Override
     public Color getColorFromValues(@NotNull final int[] values) {
-        var rgb = CMYKtoRGB(values[0] / 100.0, values[1] / 100.0, values[2] / 100.0, values[3] / 100.0);
+        int[] rgb = CMYKtoRGB(values[0] / 100.0, values[1] / 100.0, values[2] / 100.0, values[3] / 100.0);
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
 

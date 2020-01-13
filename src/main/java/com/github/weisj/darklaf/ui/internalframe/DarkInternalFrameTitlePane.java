@@ -25,7 +25,7 @@ package com.github.weisj.darklaf.ui.internalframe;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.rootpane.TitlePaneIcon;
-import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.Scale;
 import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
@@ -40,8 +40,8 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     protected static final int PAD = 5;
-    protected static final int BAR_HEIGHT = (int) (56 / GraphicsUtil.SCALE_Y);
-    protected static final int BUTTON_WIDTH = (int) (92.5 / GraphicsUtil.SCALE_X);
+    protected static final int BAR_HEIGHT = Scale.scaleHeight(28);
+    protected static final int BUTTON_WIDTH = (int) Scale.scaleWidth(46.25);
     protected static final int IMAGE_HEIGHT = 16;
     protected static final int IMAGE_WIDTH = 16;
 
@@ -90,7 +90,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     protected void installListeners() {
         super.installListeners();
         propertyChangeListener2 = e -> {
-            var menuBar = e.getNewValue();
+            Object menuBar = e.getNewValue();
             if (menuBar instanceof JMenuBar) {
                 frame.getRootPane().setJMenuBar(null);
                 menu = (JMenuBar) menuBar;
@@ -225,9 +225,9 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     @Override
     protected void paintChildren(final Graphics g) {
         label.setText(frame.getTitle());
-        var colorClick = frame.isSelected() ? selectedButtonColorClick : buttonColorClick;
-        var colorHover = frame.isSelected() ? selectedButtonColorHover : buttonColorHover;
-        var bg = frame.isSelected() ? selectedButtonColor : buttonColor;
+        Color colorClick = frame.isSelected() ? selectedButtonColorClick : buttonColorClick;
+        Color colorHover = frame.isSelected() ? selectedButtonColorHover : buttonColorHover;
+        Color bg = frame.isSelected() ? selectedButtonColor : buttonColor;
         iconButton.setBackground(bg);
         closeButton.setBackground(bg);
         maxButton.setBackground(bg);

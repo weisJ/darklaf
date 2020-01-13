@@ -23,43 +23,17 @@
  */
 package com.github.weisj.darklaf.util;
 
-import com.github.weisj.darklaf.log.LogFormatter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public final class GraphicsUtil {
-
-    /**
-     * The scaling factor.
-     */
-    public static final double SCALE;
-    public static final double SCALE_X;
-    public static final double SCALE_Y;
-    private static final Logger LOGGER = Logger.getLogger(ImageUtil.class.getName());
-
-    static {
-        LOGGER.setUseParentHandlers(false);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new LogFormatter());
-        LOGGER.addHandler(handler);
-
-        var mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
-        var screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        SCALE_X = mode.getWidth() / (double) screenSize.width;
-        SCALE_Y = mode.getHeight() / (double) screenSize.height;
-        SCALE = SCALE_X;
-        LOGGER.info("Using screen scaling SCALE_X=" + SCALE_X + ", SCALE_Y=" + SCALE_Y);
-
-    }
 
     @Contract(pure = true)
     private GraphicsUtil() {
@@ -73,7 +47,7 @@ public final class GraphicsUtil {
     @NotNull
     public static GraphicsContext setupAntialiasing(final Graphics g2, final boolean enableAA,
                                                     final boolean ignoreSystemSettings) {
-        var config = new GraphicsContext(g2);
+        GraphicsContext config = new GraphicsContext(g2);
         if (g2 instanceof Graphics2D) {
             Graphics2D g = (Graphics2D) g2;
             Toolkit tk = Toolkit.getDefaultToolkit();
@@ -109,6 +83,7 @@ public final class GraphicsUtil {
         return config;
     }
 
+    @NotNull
     public static GraphicsContext setupStrokePainting(final Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2);

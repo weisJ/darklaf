@@ -51,9 +51,9 @@ public class DropPreviewPanel extends JComponent {
     }
 
     protected Color getBackgroundColor() {
-        var useToolbar = Boolean.TRUE.equals(toolBar.getClientProperty("JToolBar.drag.useToolbarBackground"));
+        boolean useToolbar = Boolean.TRUE.equals(toolBar.getClientProperty("JToolBar.drag.useToolbarBackground"));
         if (!useToolbar) {
-            var c = dropBackground;
+            Color c = dropBackground;
             if (c == null) {
                 return toolBar.getBackground();
             }

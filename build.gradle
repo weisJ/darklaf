@@ -152,8 +152,8 @@ println "Using JDK: " + System.properties['java.home']
 
 
 compileJava {
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    sourceCompatibility = 8
+    targetCompatibility = 8
 }
 
 model {
@@ -173,8 +173,9 @@ model {
                 cppCompiler.args "-I${Jvm.current().javaHome}/include"
                 cppCompiler.args "-I${Jvm.current().javaHome}/include/win32"
                 cppCompiler.args "-std=c++11"
-                linker.args "-ldwmapi"
-                linker.args "-lGdi32"
+                linker.args "dwmapi.lib"
+                linker.args "user32.lib"
+                linker.args "Gdi32.lib"
             }
         }
     }
@@ -187,12 +188,12 @@ tasks.withType(JavaCompile) {
         options.compilerArgs += [
                 '-h', file("${projectDir}/src/jniplatform/cpp"),
         ]
-        options.compilerArgs += [
-                '--add-exports=java.desktop/sun.awt=ALL-UNNAMED',
-                '--add-exports=java.desktop/com.sun.java.swing=ALL-UNNAMED',
-                '--add-exports=java.desktop/sun.swing=ALL-UNNAMED',
-                '--add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED'
-        ]
+//        options.compilerArgs += [
+//                '--add-exports=java.desktop/sun.awt=ALL-UNNAMED',
+//                '--add-exports=java.desktop/com.sun.java.swing=ALL-UNNAMED',
+//                '--add-exports=java.desktop/sun.swing=ALL-UNNAMED',
+//                '--add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED'
+//        ]
     }
 }
 

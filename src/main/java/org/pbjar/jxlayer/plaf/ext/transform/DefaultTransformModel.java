@@ -78,7 +78,7 @@ public class DefaultTransformModel implements TransformModel {
     @NotNull
     @Override
     public AffineTransform getPreferredTransform(@Nullable final Dimension size, final JXLayer<?> layer) {
-        var p = getRotationCenter(size);
+        Point2D p = getRotationCenter(size);
         double centerX = p.getX();
         double centerY = p.getY();
         AffineTransform transform = transformNoScale(centerX, centerY);
@@ -264,7 +264,7 @@ public class DefaultTransformModel implements TransformModel {
             System.arraycopy(values, 0, prevValues, 0, values.length);
             transform.setToIdentity();
             if (view != null) {
-                var p = getRotationCenter(layer == null ? null : layer.getSize());
+                Point2D p = getRotationCenter(layer == null ? null : layer.getSize());
                 double centerX = p.getX();
                 double centerY = p.getY();
 

@@ -43,7 +43,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
             return;
         }
-        var scrollbar = scrollpane.getHorizontalScrollBar();
+        JScrollBar scrollbar = scrollpane.getHorizontalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         DarkScrollBarUI.doScroll(scrollbar, scrollpane.getViewport(), e,
                                  scrollpane.getComponentOrientation().isLeftToRight());
@@ -53,7 +53,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         if (!scrollpane.isWheelScrollingEnabled() || e.isShiftDown() || !verticalScrollBarEnabled()) {
             return;
         }
-        var scrollbar = scrollpane.getVerticalScrollBar();
+        JScrollBar scrollbar = scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         DarkScrollBarUI.doScroll(scrollbar, scrollpane.getViewport(), e,
                                  scrollpane.getComponentOrientation().isLeftToRight());
@@ -63,8 +63,8 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         if (!scrollpane.isWheelScrollingEnabled()) {
             return;
         }
-        var scrollbar = e.isShiftDown() ? scrollpane.getHorizontalScrollBar()
-                                        : scrollpane.getVerticalScrollBar();
+        JScrollBar scrollbar = e.isShiftDown() ? scrollpane.getHorizontalScrollBar()
+                                               : scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         DarkScrollBarUI.doScroll(scrollbar, scrollpane.getViewport(), e,
                                  scrollpane.getComponentOrientation().isLeftToRight());
@@ -72,10 +72,10 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     };
     private final PropertyChangeListener propertyChangeListener = e -> {
         if (e.getSource() == scrollpane) {
-            var propertyName = e.getPropertyName();
+            String propertyName = e.getPropertyName();
             if ("verticalScrollBar".equals(propertyName)) {
-                var old = e.getOldValue();
-                var newVal = e.getNewValue();
+                Object old = e.getOldValue();
+                Object newVal = e.getNewValue();
                 if (old instanceof JScrollBar) {
                     ((JScrollBar) old).removeMouseWheelListener(verticalMouseWheelListener);
                 }
@@ -83,8 +83,8 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                     ((JScrollBar) newVal).addMouseWheelListener(verticalMouseWheelListener);
                 }
             } else if ("horizontalScrollBar".equals(propertyName)) {
-                var old = e.getOldValue();
-                var newVal = e.getNewValue();
+                Object old = e.getOldValue();
+                Object newVal = e.getNewValue();
                 if (old instanceof JScrollBar) {
                     ((JScrollBar) old).removeMouseWheelListener(horizontalMouseWheelListener);
                 }
@@ -103,7 +103,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     }
 
     private boolean horizontalScrollBarEnabled() {
-        var sb = scrollpane.getHorizontalScrollBar();
+        JScrollBar sb = scrollpane.getHorizontalScrollBar();
         if (sb == null) {
             return false;
         }
@@ -111,7 +111,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     }
 
     private boolean verticalScrollBarEnabled() {
-        var sb = scrollpane.getVerticalScrollBar();
+        JScrollBar sb = scrollpane.getVerticalScrollBar();
         if (sb == null) {
             return false;
         }
@@ -135,12 +135,12 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 @Override
                 public void layoutContainer(final Container parent) {
                     super.layoutContainer(parent);
-                    var vsb = scrollpane.getVerticalScrollBar();
-                    var hsb = scrollpane.getHorizontalScrollBar();
-                    var lowerRight = scrollpane.getCorner(ScrollPaneConstants.LOWER_RIGHT_CORNER);
-                    var lowerLeft = scrollpane.getCorner(ScrollPaneConstants.LOWER_LEFT_CORNER);
-                    var vertBounds = vsb.getBounds();
-                    var horBounds = hsb.getBounds();
+                    JScrollBar vsb = scrollpane.getVerticalScrollBar();
+                    JScrollBar hsb = scrollpane.getHorizontalScrollBar();
+                    Component lowerRight = scrollpane.getCorner(ScrollPaneConstants.LOWER_RIGHT_CORNER);
+                    Component lowerLeft = scrollpane.getCorner(ScrollPaneConstants.LOWER_LEFT_CORNER);
+                    Rectangle vertBounds = vsb.getBounds();
+                    Rectangle horBounds = hsb.getBounds();
                     if (parent.getComponentOrientation().isLeftToRight()) {
                         if (lowerRight == null && hsb.isVisible()) {
                             vertBounds.height += horBounds.height;

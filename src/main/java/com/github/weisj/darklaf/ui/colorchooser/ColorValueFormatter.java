@@ -71,7 +71,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                                  @NotNull final String text, final AttributeSet set) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length())
                     && isValid(text)) {
-                var newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.insert(offset, text);
                 if (hex || isValidValue(newText.toString())) {
                     fb.insertString(offset, text.toUpperCase(ENGLISH), set);
@@ -86,7 +86,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         public void replace(@NotNull final FilterBypass fb, final int offset, final int length,
                             @NotNull final String text, final AttributeSet set) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length() - length) && isValid(text)) {
-                var newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.replace(offset, offset + length, text);
                 if (hex || isValidValue(newText.toString())) {
                     fb.replace(offset, length, text.toUpperCase(ENGLISH), set);
@@ -208,7 +208,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 return model.getDefault(fieldIndex);
             }
             if (hex) {
-                var hexStr = String.format("%1$-" + getHexLength() + "s", text).replaceAll(" ", "F");
+                String hexStr = String.format("%1$-" + getHexLength() + "s", text).replaceAll(" ", "F");
                 int r = Integer.valueOf(hexStr.substring(0, 2), 16);
                 checkRange(r, 0, 255);
                 int g = Integer.valueOf(hexStr.substring(2, 4), 16);
@@ -219,9 +219,9 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 checkRange(alpha, 0, 255);
                 return new Color(r, g, b, alpha);
             } else {
-                var value = Integer.valueOf(text, this.radix);
-                var min = model.getMinimum(fieldIndex);
-                var max = model.getMaximum(fieldIndex);
+                int value = Integer.valueOf(text, this.radix);
+                int min = model.getMinimum(fieldIndex);
+                int max = model.getMaximum(fieldIndex);
                 checkRange(value, min, max);
                 return value;
             }
@@ -244,7 +244,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         if (object instanceof Integer && !hex) {
             return object.toString();
         } else if (object instanceof Color && hex) {
-            var c = (Color) object;
+            Color c = (Color) object;
             int r = c.getRed();
             int g = c.getGreen();
             int b = c.getBlue();

@@ -112,7 +112,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         String text = layoutRadioButton(b, fm);
 
         paintBackground(c, g);
-        var config = GraphicsUtil.setupStrokePainting(g);
+        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         Icon icon = DarkCheckBoxUI.getIconBullet(c, g, b);
         if (icon != null) {
             icon.paintIcon(c, g, iconRect.x, iconRect.y);
@@ -189,7 +189,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
 
     protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus,
                                     final boolean selected) {
-        var g2 = (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g.create();
         Color bgColor = getFillColor(selected, enabled);
         Color border = getBorderColor(selected, focus, enabled);
         g.setColor(bgColor);

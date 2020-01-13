@@ -101,7 +101,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
         JLabel l = new JLabel(recentStr);
         l.setLabelFor(recentSwatchPanel);
-        var labelHolder = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel labelHolder = new JPanel(new FlowLayout(FlowLayout.LEFT));
         labelHolder.add(l);
 
         JPanel previewHolder = new JPanel(new BorderLayout());

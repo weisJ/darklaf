@@ -67,7 +67,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
                                   @NotNull final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
-        var rect = lr.getCheckRect();
+        Rectangle rect = lr.getCheckRect();
         getRadioIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y);
     }
 

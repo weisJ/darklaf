@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.tabframe;
 
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
+import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +66,7 @@ public class TabFrameLayout implements LayoutManager {
     @NotNull
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
-        var b = tabFrame.getContentPane().getComponent().getPreferredSize();
+        Dimension b = tabFrame.getContentPane().getComponent().getPreferredSize();
         return new Dimension(tabFrame.getLeftTabContainer().getWidth()
                                      + tabFrame.getRightTabContainer().getWidth() + b.width,
                              tabFrame.getTopTabContainer().getHeight()
@@ -75,7 +76,7 @@ public class TabFrameLayout implements LayoutManager {
     @NotNull
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
-        var b = tabFrame.getContentPane().getComponent().getMinimumSize();
+        Dimension b = tabFrame.getContentPane().getComponent().getMinimumSize();
         return new Dimension(tabFrame.getLeftTabContainer().getWidth()
                                      + tabFrame.getRightTabContainer().getWidth() + b.width,
                              tabFrame.getTopTabContainer().getHeight()
@@ -84,7 +85,7 @@ public class TabFrameLayout implements LayoutManager {
 
     @Override
     public void layoutContainer(@NotNull final Container parent) {
-        var dim = parent.getSize();
+        Dimension dim = parent.getSize();
         int topSize = tabFrame.getTopTabCount();
         int bottomSize = tabFrame.getBottomTabCount();
         int leftSize = tabFrame.getLeftTabCount();
@@ -110,17 +111,17 @@ public class TabFrameLayout implements LayoutManager {
         layoutLeftTab(dim, leftSize);
         layoutRightTab(dim, rightSize);
 
-        var leftPane = ui.getLeftContainer();
-        var rightPane = ui.getRightContainer();
-        var topPane = ui.getTopContainer();
-        var bottomPane = ui.getBottomContainer();
+        Component leftPane = ui.getLeftContainer();
+        Component rightPane = ui.getRightContainer();
+        Component topPane = ui.getTopContainer();
+        Component bottomPane = ui.getBottomContainer();
         tabFrame.getContentPane().getComponent().setBounds(leftPane.getWidth(), topPane.getHeight(),
                                                            dim.width - leftPane.getWidth() - rightPane.getWidth(),
                                                            dim.height - topPane.getHeight() - bottomPane.getHeight());
     }
 
     protected void layoutTopTab(final Dimension dim, final int topSize, final int leftSize, final int rightSize) {
-        var topComp = tabFrame.getTopTabContainer();
+        Component topComp = tabFrame.getTopTabContainer();
         if (topSize > 0) {
             topComp.setBounds(0, 0, dim.width, tabFrame.getTabSize());
             layoutHorizontal(dim, Alignment.NORTH, Alignment.NORTH_EAST, 0, leftSize, rightSize, topHeight);
@@ -136,7 +137,7 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     protected void layoutBottomTab(final Dimension dim, final int bottomSize, final int leftSize, final int rightSize) {
-        var bottomComp = tabFrame.getBottomTabContainer();
+        Component bottomComp = tabFrame.getBottomTabContainer();
         if (bottomSize > 0) {
             bottomComp.setBounds(0, dim.height - bottomHeight, dim.width, bottomHeight);
             layoutHorizontal(dim, Alignment.SOUTH_WEST, Alignment.SOUTH, 1, leftSize, rightSize, bottomHeight);
@@ -153,10 +154,10 @@ public class TabFrameLayout implements LayoutManager {
 
     protected void layoutHorizontalDrop(final Alignment left, final int leftSize, final int rightSize,
                                         final int size, final int yOff) {
-        var a = ui.getDestAlign();
-        var dropSize = ui.getDropSize();
-        var dropComp = ui.getDropComponent(left);
-        var tabComp = ui.getTabContainer(left);
+        Alignment a = ui.getDestAlign();
+        Dimension dropSize = ui.getDropSize();
+        Component dropComp = ui.getDropComponent(left);
+        Component tabComp = ui.getTabContainer(left);
         if (a == left) {
             int x = leftSize > 0 ? leftHeight : 0;
             dropComp.setBounds(x, yOff, dropSize.width, size);
@@ -168,7 +169,7 @@ public class TabFrameLayout implements LayoutManager {
 
     protected void layoutHorizontal(final Dimension dim, final Alignment left, final Alignment right,
                                     final int yOff, final int leftSize, final int rightSize, final int tabHeight) {
-        var start = new Point(leftSize > 0 ? leftHeight : 0, yOff);
+        Point start = new Point(leftSize > 0 ? leftHeight : 0, yOff);
         int leftEnd = layoutTabArea(start, left, true, tabHeight - 1);
         start.x = rightSize > 0 ? dim.width - rightHeight : dim.width;
         int rightStart = layoutTabArea(start, right, false, tabHeight - 1);
@@ -181,9 +182,9 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     protected void layoutLeftTab(final Dimension dim, final int leftSize) {
-        var leftPane = ui.getLeftContainer();
-        var topPane = tabFrame.getTopTabContainer();
-        var bottomPane = tabFrame.getBottomTabContainer();
+        Component leftPane = ui.getLeftContainer();
+        Component topPane = tabFrame.getTopTabContainer();
+        Component bottomPane = tabFrame.getBottomTabContainer();
         if (leftSize > 0 || draggedOver[getIndex(Alignment.WEST)]) {
             int size = leftSize > 0 ? leftHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
@@ -192,7 +193,7 @@ public class TabFrameLayout implements LayoutManager {
                                                                           leftPane.getWidth()));
             tabFrame.getLeftTabContainer().setSize(tabFrame.getLeftTabContainer().getPreferredSize());
             if (leftSize > 0) {
-                var start = new Point(leftPane.getHeight(), 0);
+                Point start = new Point(leftPane.getHeight(), 0);
                 int topStart = layoutTabArea(start, Alignment.NORTH_WEST, false, size - 1);
                 start.x = 0;
                 int bottomEnd = layoutTabArea(start, Alignment.WEST, true, size - 1);
@@ -212,10 +213,10 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     protected void layoutVerticalDrop(final Alignment left, final int size) {
-        var comp = ui.getDropComponent(left);
-        var a = ui.getDestAlign();
-        var dropSize = ui.getDropSize();
-        var tabComp = tabFrame.getTabContainer(left);
+        Component comp = ui.getDropComponent(left);
+        Alignment a = ui.getDestAlign();
+        Dimension dropSize = ui.getDropSize();
+        Component tabComp = tabFrame.getTabContainer(left);
         if (a == left) {
             comp.setBounds(0, 0, dropSize.width, size);
         } else {
@@ -224,9 +225,9 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     protected void layoutRightTab(final Dimension dim, final int rightSize) {
-        var rightPane = ui.getRightContainer();
-        var topPane = tabFrame.getTopTabContainer();
-        var bottomPane = tabFrame.getBottomTabContainer();
+        Component rightPane = ui.getRightContainer();
+        Component topPane = tabFrame.getTopTabContainer();
+        Component bottomPane = tabFrame.getBottomTabContainer();
         if (rightSize > 0 || draggedOver[getIndex(Alignment.EAST)]) {
             int size = rightSize > 0 ? rightHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
@@ -234,10 +235,10 @@ public class TabFrameLayout implements LayoutManager {
             tabFrame.getRightTabContainer().setPreferredSize(new Dimension(rightPane.getHeight(), rightPane.getWidth()));
             tabFrame.getRightTabContainer().setSize(tabFrame.getRightTabContainer().getPreferredSize());
             if (rightSize > 0) {
-                var start = new Point(0, 0);
+                Point start = new Point(0, 0);
                 int topEnd = layoutTabArea(start, Alignment.EAST, true, size - 1);
                 start.x = tabFrame.getRightTabContainer().getWidth();
-                var bottomStart = layoutTabArea(start, Alignment.SOUTH_EAST, false, size - 1);
+                int bottomStart = layoutTabArea(start, Alignment.SOUTH_EAST, false, size - 1);
                 if (bottomStart < topEnd) {
                     shift[getIndex(Alignment.EAST)] = topEnd - bottomStart;
                     shift(topEnd - bottomStart, Alignment.SOUTH_EAST);
@@ -254,14 +255,14 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     protected void shift(final int shift, final Alignment a) {
-        for (var c : tabFrame.tabsForAlignment(a)) {
-            var pos = c.getComponent().getLocation();
+        for (TabFrameTab c : tabFrame.tabsForAlignment(a)) {
+            Point pos = c.getComponent().getLocation();
             pos.x += shift;
             c.getComponent().setLocation(pos);
         }
         if (a == ui.getDestAlign()) {
-            var dropComp = ui.getDropComponent(a);
-            var pos = dropComp.getLocation();
+            Component dropComp = ui.getDropComponent(a);
+            Point pos = dropComp.getLocation();
             pos.x += shift;
             dropComp.setLocation(pos);
         }
@@ -307,9 +308,9 @@ public class TabFrameLayout implements LayoutManager {
         int sourceIndex = a == ui.getSourceAlign() ? ui.getSourceIndex() : -10;
         int destIndex = a == ui.getDestAlign() ? ui.getDestIndex() : -10;
 
-        var bounds = new Rectangle(0, 0, 0, 0);
+        Rectangle bounds = new Rectangle(0, 0, 0, 0);
         int index = 0;
-        var dropComp = ui.getDropComponent(a);
+        Component dropComp = ui.getDropComponent(a);
         if (destIndex == -1) {
             if (forward) {
                 dropComp.setBounds(x, y, ui.getDropSize().width, size);
@@ -319,7 +320,7 @@ public class TabFrameLayout implements LayoutManager {
                 dropComp.setBounds(x, y, ui.getDropSize().width, size);
             }
         }
-        for (var c : tabFrame.tabsForAlignment(a)) {
+        for (TabFrameTab c : tabFrame.tabsForAlignment(a)) {
             index = c.getIndex();
             bounds.width = index == sourceIndex ? 0 : getTabWidth(c.getComponent());
             bounds.height = size;
@@ -366,10 +367,10 @@ public class TabFrameLayout implements LayoutManager {
 
     protected int calculateMaxTabSize(final Alignment a) {
         int max = tabFrame.getTabSize();
-        for (var c : tabFrame.tabsForAlignment(a)) {
+        for (TabFrameTab c : tabFrame.tabsForAlignment(a)) {
             max = Math.max(max, c.getComponent().getMaximumSize().height + 1);
         }
-        for (var c : tabFrame.tabsForAlignment(tabFrame.getPeer(a))) {
+        for (TabFrameTab c : tabFrame.tabsForAlignment(tabFrame.getPeer(a))) {
             max = Math.max(max, c.getComponent().getMaximumSize().height + 1);
         }
         return max;

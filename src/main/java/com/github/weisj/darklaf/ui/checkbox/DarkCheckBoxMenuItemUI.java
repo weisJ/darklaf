@@ -68,7 +68,7 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
                                   final Color holdc, final Color foreground) {
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-        var rect = lr.getCheckRect();
+        Rectangle rect = lr.getCheckRect();
         getCheckBoxIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x - 1, rect.y);
         config.restore();
         g.setColor(foreground);

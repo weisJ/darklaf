@@ -70,7 +70,7 @@ public abstract class Theme {
      * @param currentDefaults the current ui defaults.
      */
     public void loadDefaults(@NotNull final Properties properties, final UIDefaults currentDefaults) {
-        var name = getResourcePath() + getName() + "_defaults.properties";
+        String name = getResourcePath() + getName() + "_defaults.properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 
@@ -128,7 +128,7 @@ public abstract class Theme {
      * @param currentDefaults the current ui defaults.
      */
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        for (var property : UI_PROPERTIES) {
+        for (String property : UI_PROPERTIES) {
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
                                          properties, currentDefaults);
         }
@@ -136,9 +136,9 @@ public abstract class Theme {
 
     public StyleSheet loadStyleSheet() {
         StyleSheet styleSheet = new StyleSheet();
-        try (var in = getResourceAsStream(getResourcePath() + getName() + "_styleSheet.css");
-             var inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-             var r = new BufferedReader(inReader)) {
+        try (InputStream in = getResourceAsStream(getResourcePath() + getName() + "_styleSheet.css");
+             InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
+             BufferedReader r = new BufferedReader(inReader)) {
             styleSheet.loadRules(r, null);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());

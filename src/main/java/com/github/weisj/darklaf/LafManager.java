@@ -44,12 +44,13 @@ import java.util.logging.Logger;
 public final class LafManager {
 
     private static Theme theme;
+    private static boolean logEnabled = false;
 
     static {
         /*
          * Disable for production.
          */
-        enableLogging(false);
+        enableLogging(!logEnabled);
     }
 
     /**
@@ -58,18 +59,22 @@ public final class LafManager {
      * @param logEnabled true if messages should be logged.
      */
     public static void enableLogging(final boolean logEnabled) {
+        if (logEnabled == LafManager.logEnabled) return;
         if (!logEnabled) {
             LogManager.getLogManager().reset();
         } else {
             try (InputStream inputStream = DarkLaf.class.getClassLoader()
                                                         .getResourceAsStream("com/github/weisj/darklaf/log/logging.properties")) {
                 if (inputStream != null) {
+                    Logger.getGlobal().info("Loading logging configuration.");
                     LogManager.getLogManager().readConfiguration(inputStream);
                 }
+                Logger.getGlobal().info("Loaded logging config" + LogManager.getLogManager().toString());
             } catch (IOException e) {
                 Logger.getGlobal().log(Level.SEVERE, "init logging system", e);
             }
         }
+        LafManager.logEnabled = logEnabled;
     }
 
     /**

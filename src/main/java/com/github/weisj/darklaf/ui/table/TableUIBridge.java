@@ -23,10 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.ui.BasicTransferable;
+import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
-import org.jdesktop.swingx.plaf.basic.core.BasicTransferable;
-import org.jdesktop.swingx.plaf.basic.core.DragRecognitionSupport;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;

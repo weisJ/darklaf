@@ -20,7 +20,7 @@ public final class GenerateColors {
                    .append(g).append(",")
                    .append(b).append(",");
             for (int j = 0; j < cols - 1; j++) {
-                var c = colorFromPos(j, i, rows + 1, cols);
+                Color c = colorFromPos(j, i, rows + 1, cols);
                 builder.append(c.getRed()).append(",")
                        .append(c.getGreen()).append(",")
                        .append(c.getBlue()).append(",");

@@ -13,7 +13,7 @@ public final class ScrollPaneDemo extends MultiSplitLayout {
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
-            final var frame = new JFrame();
+            final JFrame frame = new JFrame();
             frame.setSize(500, 500);
             var overlayScroll = new JTextPane() {{
                 setText(TestResources.LOREM_IPSUM.repeat(10));

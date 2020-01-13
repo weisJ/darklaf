@@ -50,25 +50,25 @@ public class DarkTableUI extends DarkTableUIBridge {
 
     private static final int ROW_HEIGHT = 22;
     private final PropertyChangeListener propertyChangeListener = e -> {
-        var key = e.getPropertyName();
+        String key = e.getPropertyName();
         if ("showHorizontalLines".equals(key)) {
-            var b = (boolean) e.getNewValue();
+            boolean b = (boolean) e.getNewValue();
             table.setRowMargin(b ? 1 : 0);
         } else if ("showVerticalLines".equals(key)) {
-            var b = (boolean) e.getNewValue();
+            boolean b = (boolean) e.getNewValue();
             table.getColumnModel().setColumnMargin(b ? 1 : 0);
         } else if ("ancestor".equals(key)) {
-            var oldVal = e.getOldValue();
-            var newVal = e.getNewValue();
+            Object oldVal = e.getOldValue();
+            Object newVal = e.getNewValue();
             if (oldVal instanceof Component) {
-                var oldUnwrapped = SwingUtilities.getUnwrappedParent((Component) oldVal);
+                Container oldUnwrapped = SwingUtilities.getUnwrappedParent((Component) oldVal);
                 if ((oldUnwrapped instanceof JScrollPane)
                         && ((JComponent) oldUnwrapped).getBorder() instanceof UIResource) {
                     LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
                 }
             }
             if (newVal instanceof Component) {
-                var newUnwrapped = SwingUtilities.getUnwrappedParent((Component) newVal);
+                Container newUnwrapped = SwingUtilities.getUnwrappedParent((Component) newVal);
                 if ((newUnwrapped instanceof JScrollPane)) {
                     LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                 }
@@ -80,7 +80,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     private final FocusListener focusListener = new FocusListener() {
         @Override
         public void focusGained(final FocusEvent e) {
-            var bg = table.getSelectionBackground();
+            Color bg = table.getSelectionBackground();
             if (bg instanceof UIResource) {
                 table.setSelectionBackground(selectionFocusBackground);
             }
@@ -89,7 +89,7 @@ public class DarkTableUI extends DarkTableUIBridge {
 
         @Override
         public void focusLost(final FocusEvent e) {
-            var bg = table.getSelectionBackground();
+            Color bg = table.getSelectionBackground();
             if (bg instanceof UIResource) {
                 if (table.isEditing()) {
                     table.setSelectionBackground(table.getBackground());
@@ -134,13 +134,35 @@ public class DarkTableUI extends DarkTableUIBridge {
         table.removePropertyChangeListener(propertyChangeListener);
     }
 
+    protected static void setupRendererComponents(@NotNull final JTable table) {
+        DarkTableCellRenderer cellRenderer = new DarkTableCellRenderer();
+        DarkTableCellEditor cellEditor = new DarkTableCellEditor();
+        DarkColorTableCellRendererEditor colorRendererEditor = new DarkColorTableCellRendererEditor();
+
+        table.setDefaultRenderer(Object.class, cellRenderer);
+        table.setDefaultRenderer(String.class, cellRenderer);
+        table.setDefaultRenderer(Integer.class, cellRenderer);
+        table.setDefaultRenderer(Double.class, cellRenderer);
+        table.setDefaultRenderer(Float.class, cellRenderer);
+        table.setDefaultRenderer(Boolean.class, cellRenderer);
+        table.setDefaultRenderer(Color.class, colorRendererEditor);
+
+        table.setDefaultEditor(Object.class, cellEditor);
+        table.setDefaultEditor(String.class, cellEditor);
+        table.setDefaultEditor(Integer.class, cellEditor);
+        table.setDefaultEditor(Double.class, cellEditor);
+        table.setDefaultEditor(Float.class, cellEditor);
+        table.setDefaultEditor(Boolean.class, cellEditor);
+        table.setDefaultEditor(Color.class, colorRendererEditor);
+    }
+
     @Override
     public Dimension getPreferredSize(final JComponent c) {
-        var prefSize = super.getPreferredSize(c);
+        Dimension prefSize = super.getPreferredSize(c);
         if (!isInScrollPane()) {
             return prefSize;
         } else {
-            var dim = SwingUtilities.getUnwrappedParent(table).getSize();
+            Dimension dim = SwingUtilities.getUnwrappedParent(table).getSize();
             if (dim.width < prefSize.width || dim.height < prefSize.height) {
                 return prefSize;
             } else {
@@ -299,9 +321,72 @@ public class DarkTableUI extends DarkTableUIBridge {
         return dist;
     }
 
+    protected class DarkHandler extends Handler {
+
+        protected int lastIndex = -1;
+
+        @Override
+        public void mouseClicked(final MouseEvent e) {
+            super.mouseClicked(e);
+            if (isFileList) {
+                int row = table.rowAtPoint(e.getPoint());
+                JFileChooser fc = getFileChooser();
+                if (row < 0 || fc == null) return;
+                int column = getFileNameColumnIndex();
+                boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
+                        && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
+                if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
+                        && isSelected && lastIndex == row
+                        && DarkUIUtil.isOverText(e, row, column, table)) {
+                    startEditing(row, column);
+                } else {
+                    lastIndex = row;
+                }
+            }
+        }
+
+        @Override
+        public void mousePressed(final MouseEvent e) {
+            super.mousePressed(e);
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                table.repaint();
+            }
+        }
+
+        protected JFileChooser getFileChooser() {
+            Object obj = table.getClientProperty("JTable.fileChooserParent");
+            if (obj instanceof Supplier) {
+                Object supplied = ((Supplier) obj).get();
+                return supplied instanceof JFileChooser ? (JFileChooser) supplied : null;
+            }
+            return null;
+        }
+
+        protected Integer getFileNameColumnIndex() {
+            Object obj = table.getClientProperty("JTable.fileNameColumnIndex");
+            return obj instanceof Integer ? (Integer) obj : 0;
+        }
+
+        protected void startEditing(final int row, final int column) {
+            table.editCellAt(row, column, null);
+            Component editorComponent = table.getEditorComponent();
+            if (editorComponent != null && !editorComponent.hasFocus()) {
+                SwingUtilities2.compositeRequestFocus(editorComponent);
+            }
+        }
+
+        @Override
+        protected void maybeStartTimer() {
+        }
+
+        @Override
+        public void actionPerformed(final ActionEvent ae) {
+        }
+    }
+
     @Override
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
-        var bounds = table.getVisibleRect();
+        Rectangle bounds = table.getVisibleRect();
         Point upperLeft = bounds.getLocation();
         Point lowerRight = new Point(upperLeft.x + bounds.width - 1, upperLeft.y + bounds.height - 1);
         int cMin = table.columnAtPoint(upperLeft);
@@ -314,7 +399,7 @@ public class DarkTableUI extends DarkTableUIBridge {
                                   table.getCellRect(row, draggedIndex, true),
                                   table);
         boolean isDragged = column == draggedIndex && dist != 0;
-        var r = new Rectangle(cellRect);
+        Rectangle r = new Rectangle(cellRect);
         if (!scrollBarVisible()) {
             if (ltr) {
                 if (column == cMax && !isDragged) r.width += 1;
@@ -363,7 +448,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         // Paint a gray well in place of the moving column.
         Container parent = table.getParent();
         if (isInScrollPane()) {
-            var par = DarkUIUtil.getParentOfType(JScrollPane.class, table);
+            JScrollPane par = DarkUIUtil.getParentOfType(JScrollPane.class, table);
             if (par != null && par.getParent() != null) {
                 parent = par.getParent();
             }
@@ -431,88 +516,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
-    protected static void setupRendererComponents(@NotNull final JTable table) {
-        var cellRenderer = new DarkTableCellRenderer();
-        var cellEditor = new DarkTableCellEditor();
-        var colorRendererEditor = new DarkColorTableCellRendererEditor();
 
-        table.setDefaultRenderer(Object.class, cellRenderer);
-        table.setDefaultRenderer(String.class, cellRenderer);
-        table.setDefaultRenderer(Integer.class, cellRenderer);
-        table.setDefaultRenderer(Double.class, cellRenderer);
-        table.setDefaultRenderer(Float.class, cellRenderer);
-        table.setDefaultRenderer(Boolean.class, cellRenderer);
-        table.setDefaultRenderer(Color.class, colorRendererEditor);
 
-        table.setDefaultEditor(Object.class, cellEditor);
-        table.setDefaultEditor(String.class, cellEditor);
-        table.setDefaultEditor(Integer.class, cellEditor);
-        table.setDefaultEditor(Double.class, cellEditor);
-        table.setDefaultEditor(Float.class, cellEditor);
-        table.setDefaultEditor(Boolean.class, cellEditor);
-        table.setDefaultEditor(Color.class, colorRendererEditor);
-    }
 
-    protected class DarkHandler extends Handler {
-
-        protected int lastIndex = -1;
-
-        @Override
-        public void mouseClicked(final MouseEvent e) {
-            super.mouseClicked(e);
-            if (isFileList) {
-                int row = table.rowAtPoint(e.getPoint());
-                JFileChooser fc = getFileChooser();
-                if (row < 0 || fc == null) return;
-                int column = getFileNameColumnIndex();
-                boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
-                        && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
-                if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
-                        && isSelected && lastIndex == row
-                        && DarkUIUtil.isOverText(e, row, column, table)) {
-                    startEditing(row, column);
-                } else {
-                    lastIndex = row;
-                }
-            }
-        }
-
-        @Override
-        public void mousePressed(final MouseEvent e) {
-            super.mousePressed(e);
-            if (SwingUtilities.isLeftMouseButton(e)) {
-                table.repaint();
-            }
-        }
-
-        protected JFileChooser getFileChooser() {
-            var obj = table.getClientProperty("JTable.fileChooserParent");
-            if (obj instanceof Supplier) {
-                var supplied = ((Supplier) obj).get();
-                return supplied instanceof JFileChooser ? (JFileChooser) supplied : null;
-            }
-            return null;
-        }
-
-        protected Integer getFileNameColumnIndex() {
-            var obj = table.getClientProperty("JTable.fileNameColumnIndex");
-            return obj instanceof Integer ? (Integer) obj : 0;
-        }
-
-        protected void startEditing(final int row, final int column) {
-            table.editCellAt(row, column, null);
-            Component editorComponent = table.getEditorComponent();
-            if (editorComponent != null && !editorComponent.hasFocus()) {
-                SwingUtilities2.compositeRequestFocus(editorComponent);
-            }
-        }
-
-        @Override
-        protected void maybeStartTimer() {
-        }
-
-        @Override
-        public void actionPerformed(final ActionEvent ae) {
-        }
-    }
 }

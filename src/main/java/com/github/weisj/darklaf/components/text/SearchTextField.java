@@ -55,9 +55,9 @@ public class SearchTextField extends JTextField {
         super(doc, text, columns);
         putClientProperty("JTextField.variant", "search");
         addActionListener(e -> {
-            var list = listenerList.getListeners(SearchListener.class);
-            var evt = new SearchEvent(SearchTextField.this, SEARCH, "search", getText());
-            for (var listener : list) {
+            SearchListener[] list = listenerList.getListeners(SearchListener.class);
+            SearchEvent evt = new SearchEvent(SearchTextField.this, SEARCH, "search", getText());
+            for (SearchListener listener : list) {
                 if (listener != null) {
                     listener.searchPerformed(evt);
                 }

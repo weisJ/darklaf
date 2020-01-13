@@ -99,7 +99,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
     @Override
     public void setOrientation(final Alignment a) {
         if (this.orientation == a) return;
-        var oldOrientation = this.orientation;
+        Alignment oldOrientation = this.orientation;
         this.orientation = a;
         firePropertyChange("orientation", oldOrientation, orientation);
     }
@@ -137,7 +137,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
 
     @Override
     public void setTabFrame(final JTabFrame parent) {
-        var old = this.parent;
+        JTabFrame old = this.parent;
         this.parent = parent;
         firePropertyChange("tabFrame", old, parent);
     }

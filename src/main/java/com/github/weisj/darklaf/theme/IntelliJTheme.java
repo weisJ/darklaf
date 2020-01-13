@@ -38,7 +38,7 @@ public class IntelliJTheme extends Theme {
     public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadPlatformProperties(properties, currentDefaults);
         if (SystemInfo.isMac) {
-            var name = getResourcePath() + getName() + "_mac.properties";
+            String name = getResourcePath() + getName() + "_mac.properties";
             PropertyLoader.putProperties(load(name), properties, currentDefaults);
         }
     }
@@ -61,7 +61,7 @@ public class IntelliJTheme extends Theme {
     @Override
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadUIProperties(properties, currentDefaults);
-        var name = getResourcePath() + getName() + "_ui.properties";
+        String name = getResourcePath() + getName() + "_ui.properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 }

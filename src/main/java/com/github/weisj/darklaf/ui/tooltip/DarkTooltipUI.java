@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.View;
@@ -38,6 +39,7 @@ import java.awt.event.HierarchyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Area;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -57,8 +59,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
              * the nature of mouseEntered events most of the times having width/height as their coordinated ToolTips would
              * not show up when the component is entered through the bottom/right side of the component.
              */
-            var p = e.getPoint();
-            var c = toolTip.getComponent();
+            Point p = e.getPoint();
+            Component c = toolTip.getComponent();
             if (p.x == c.getWidth()) p.x--;
             if (p.y == c.getHeight()) p.y--;
             p.x = Math.max(p.x, 0);
@@ -100,16 +102,16 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     protected boolean isInside(@NotNull final MouseEvent e) {
-        var p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), toolTip);
+        Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), toolTip);
         return contains(toolTip, p.x, p.y);
     }
 
     @Override
     public boolean contains(@NotNull final JComponent c, final int x, final int y) {
-        var b = c.getBorder();
+        Border b = c.getBorder();
         if (b instanceof DarkTooltipBorder) {
-            var insideArea = ((DarkTooltipBorder) b).getBackgroundArea(toolTip,
-                                                                       toolTip.getWidth(), toolTip.getHeight());
+            Area insideArea = ((DarkTooltipBorder) b).getBackgroundArea(toolTip,
+                                                                        toolTip.getWidth(), toolTip.getHeight());
             return insideArea.contains(x, y);
         } else {
             return super.contains(c, x, y);
@@ -145,7 +147,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         c.addHierarchyListener(this);
         c.addPropertyChangeListener(this);
         toolTip.addMouseListener(exitListener);
-        var comp = toolTip.getComponent();
+        Component comp = toolTip.getComponent();
         if (comp != null) {
             comp.addMouseListener(mouseListener);
         }
@@ -156,7 +158,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         super.uninstallListeners(c);
         c.removePropertyChangeListener(this);
         toolTip.removeMouseListener(exitListener);
-        var comp = toolTip.getComponent();
+        Component comp = toolTip.getComponent();
         if (comp != null) {
             comp.removeMouseListener(mouseListener);
         }
@@ -167,7 +169,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         if (((JToolTip) c).getTipText() == null) return;
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
-            var area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
+            Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
             ((Graphics2D) g).fill(area);
         }
         super.paint(g, c);
@@ -197,7 +199,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
 
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
-        var w = SwingUtilities.getWindowAncestor(toolTip);
+        Window w = SwingUtilities.getWindowAncestor(toolTip);
         if (w != null && !toolTip.isLightweight() && !isDecorated(w)) {
             w.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
         }
@@ -215,12 +217,12 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
 
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-        var key = evt.getPropertyName();
+        String key = evt.getPropertyName();
         if (evt.getSource() instanceof JToolTip) {
-            var tooltip = (JToolTip) evt.getSource();
+            JToolTip tooltip = (JToolTip) evt.getSource();
             if (tooltip.getBorder() instanceof DarkTooltipBorder) {
-                var border = (DarkTooltipBorder) tooltip.getBorder();
-                var newVal = evt.getNewValue();
+                DarkTooltipBorder border = (DarkTooltipBorder) tooltip.getBorder();
+                Object newVal = evt.getNewValue();
                 if ("JToolTip.pointerLocation".equals(key)) {
                     if (newVal instanceof Alignment) {
                         border.setPointerLocation((Alignment) newVal);
@@ -241,11 +243,11 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                 } else if ("JToolTip.insets".equals(key)) {
                     updateSize();
                 } else if ("component".equals(key)) {
-                    var oldComp = evt.getOldValue();
+                    Object oldComp = evt.getOldValue();
                     if (oldComp instanceof Component) {
                         ((Component) oldComp).removeMouseListener(mouseListener);
                     }
-                    var newComp = evt.getNewValue();
+                    Object newComp = evt.getNewValue();
                     if (newComp instanceof Component) {
                         ((Component) newComp).addMouseListener(mouseListener);
                     }

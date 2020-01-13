@@ -45,8 +45,8 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     private final PropertyChangeListener propertyChangeListener = evt -> {
         if ("ToggleButton.variant".equals(evt.getPropertyName())) {
-            var oldVal = evt.getOldValue();
-            var newVal = evt.getNewValue();
+            Object oldVal = evt.getOldValue();
+            Object newVal = evt.getNewValue();
             if (oldVal != null && oldVal.equals(newVal)) {
                 return;
             }
@@ -111,7 +111,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
                             final FontMetrics fm, final int width, final int height) {
         if (isSlider(c)) {
             Insets i = b.getInsets();
-            var bounds = getSliderBounds(c);
+            Rectangle bounds = getSliderBounds(c);
             viewRect.x = bounds.x + bounds.width + borderSize;
             viewRect.y = i.top;
             viewRect.width = width - (i.right + viewRect.x);
@@ -147,7 +147,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     public boolean contains(@NotNull final JComponent c, final int x, final int y) {
         if (!isSlider(c)) return super.contains(c, x, y);
         if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
-        var bounds = getSliderBounds(c);
+        Rectangle bounds = getSliderBounds(c);
         return new RoundRectangle2D.Float(bounds.x, bounds.y, bounds.width, bounds.height,
                                           bounds.height, bounds.height).contains(x, y);
     }
@@ -159,7 +159,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     }
 
     private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {
-        var bounds = getSliderBounds(c);
+        Rectangle bounds = getSliderBounds(c);
         g.translate(bounds.x, bounds.y);
 
         if (c.hasFocus()) {
@@ -175,7 +175,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         DarkUIUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height, true);
 
         int size = bounds.height - 2;
-        var config = GraphicsUtil.setupStrokePainting(g);
+        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         if (c.isSelected()) {
             g.setColor(getSliderColor(c));
             DarkUIUtil.fillRoundRect(g, bounds.width - size - 1, 1, size, size, size);

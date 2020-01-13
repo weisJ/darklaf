@@ -72,7 +72,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     }
 
     public void notifyToolTipListeners(final ToolTipEvent event) {
-        for (var listener : listenerList.getListeners(ToolTipListener.class)) {
+        for (ToolTipListener listener : listenerList.getListeners(ToolTipListener.class)) {
             if (listener != null) {
                 switch (event) {
                     case TEXT:
@@ -103,7 +103,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     @Override
     public void paint(final Graphics g) {
-        var config = new GraphicsContext(g);
+        GraphicsContext config = new GraphicsContext(g);
         if (alpha != MAX_ALPHA) {
             ((Graphics2D) g).setComposite(COMPOSITE.derive(alpha));
         }
@@ -126,7 +126,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     @Override
     public String getTipText() {
-        var text = super.getTipText();
+        String text = super.getTipText();
         if (text == null && getComponent() != null) {
             return getComponent().getToolTipText();
         }

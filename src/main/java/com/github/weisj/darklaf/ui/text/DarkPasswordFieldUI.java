@@ -115,7 +115,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     protected void updateCursor(final Point p) {
         boolean useShow = hasShowIcon(editor);
-        var textRect = DarkTextFieldUI.getTextRect(getComponent());
+        Rectangle textRect = DarkTextFieldUI.getTextRect(getComponent());
         int rightMargin = useShow ? getShowIconCoord().x : textRect.x + textRect.width + 1;
         boolean insideTextArea = getDrawingRect(getComponent()).contains(p)
                 && p.x >= textRect.x && p.x < rightMargin;
@@ -130,7 +130,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     protected void installListeners() {
         super.installListeners();
-        var c = getComponent();
+        Component c = getComponent();
         c.addFocusListener(focusListener);
         c.addMouseListener(mouseListener);
         c.addMouseMotionListener(mouseMotionListener);
@@ -139,7 +139,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     protected void uninstallListeners() {
         super.uninstallListeners();
-        var c = getComponent();
+        Component c = getComponent();
         c.removeFocusListener(focusListener);
         c.removeMouseListener(mouseListener);
         c.removeMouseMotionListener(mouseMotionListener);
@@ -176,7 +176,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     }
 
     private void paintShowIcon(final Graphics2D g) {
-        var p = getShowIconCoord();
+        Point p = getShowIconCoord();
         if (showTriggered) {
             getShowTriggeredIcon().paintIcon(getComponent(), g, p.x, p.y);
         } else {
@@ -210,7 +210,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     }
 
     private boolean showShowIcon() {
-        var c = (JPasswordField) getComponent();
+        JPasswordField c = (JPasswordField) getComponent();
         char[] pw = c.getPassword();
         boolean show = pw.length > 0;
         Arrays.fill(pw, (char) 0);

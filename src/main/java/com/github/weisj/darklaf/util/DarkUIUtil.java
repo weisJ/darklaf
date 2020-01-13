@@ -80,11 +80,10 @@ public final class DarkUIUtil {
 
     private static void doPaint(@NotNull final Graphics2D g, final int width, final int height, final float arc,
                                 final float bw) {
-        var context = GraphicsUtil.setupStrokePainting(g);
+        GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
 
         Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, arc + bw, arc + bw);
-        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw,
-                                                     arc - bw, arc);
+        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, arc - bw, arc);
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         path.append(outerRect, false);
         path.append(innerRect, false);
@@ -111,7 +110,7 @@ public final class DarkUIUtil {
         g.setComposite(DarkUIUtil.GLOW_ALPHA);
         Outline.focus.setGraphicsColor(g, true);
 
-        float blw = 2f + 1f;
+        float blw = (float) (6.0f / Scale.SCALE);
         Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         shape.append(new Ellipse2D.Float(x - blw, y - blw, width + blw * 2, height + blw * 2), false);
         shape.append(new Ellipse2D.Float(x, y, width, height), false);
@@ -121,9 +120,9 @@ public final class DarkUIUtil {
 
     public static void paintLineBorder(final Graphics2D g, final float x, final float y,
                                        final float width, final float height, final int arc, final boolean growByLW) {
-        float lw = 0.5f;
+        float lw = (float) (1.0f / Scale.SCALE);
         float adj = growByLW ? lw : 0;
-        var config = GraphicsUtil.setupStrokePainting(g);
+        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         border.append(new RoundRectangle2D.Float(x - adj, y - adj, width + 2 * adj, height + 2 * adj,
                                                  arc + lw, arc + lw), false);
@@ -134,26 +133,15 @@ public final class DarkUIUtil {
         config.restore();
     }
 
-    public static void fillRoundRect(final Graphics2D g, final float x, final float y,
+    public static void fillRoundRect(@NotNull final Graphics2D g, final float x, final float y,
                                      final float width, final float height, final int arc) {
-        float lw = 0.5f;
-        float adj = 1.0f;
+        float lw = (float) (1.0f / Scale.SCALE);
+        float adj = (float) (2.0f / Scale.SCALE);
         Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
                                                  width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
                                                  arc, arc), false);
         g.fill(border);
-    }
-
-    public static void drawRoundRect(final Graphics2D g, final float x, final float y,
-                                     final float width, final float height, final int arc) {
-        float lw = 0.5f;
-        float adj = 1.0f;
-        Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
-                                                 width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
-                                                 arc, arc), false);
-        g.draw(border);
     }
 
     @NotNull
@@ -195,7 +183,7 @@ public final class DarkUIUtil {
     }
 
     public static boolean hasFocus(final Window w) {
-        var owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         if (owner == null) return false;
         return SwingUtilities.getWindowAncestor(owner) == w;
     }
@@ -316,10 +304,10 @@ public final class DarkUIUtil {
     }
 
     public static boolean isOverText(@NotNull final MouseEvent e, final int index, final JList list) {
-        var bounds = list.getCellBounds(index, index);
+        Rectangle bounds = list.getCellBounds(index, index);
         if (!bounds.contains(e.getPoint())) return false;
         //noinspection unchecked
-        var cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer())
+        Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer())
                 .getListCellRendererComponent(list, list.getModel().getElementAt(index),
                                               index, false, false);
         if (cellRenderer instanceof JLabel) {
@@ -342,9 +330,9 @@ public final class DarkUIUtil {
 
     public static boolean isOverText(@NotNull final MouseEvent e, final int row, final int column,
                                      final JTable table) {
-        var bounds = table.getCellRect(row, column, false);
+        Rectangle bounds = table.getCellRect(row, column, false);
         if (!bounds.contains(e.getPoint())) return false;
-        var cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(
+        Component cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(
                 table, table.getValueAt(row, column), false, false, row, column);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
@@ -354,8 +342,7 @@ public final class DarkUIUtil {
     }
 
     public static boolean isMenuShortcutKeyDown(final InputEvent event) {
-        return (event.getModifiersEx() &
-                Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()) != 0;
+        return (event.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0;
     }
 
     public enum Outline {

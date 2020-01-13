@@ -106,7 +106,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             public void layoutContainer(final Container parent) {
                 super.layoutContainer(parent);
                 if (style != Style.DEFAULT) {
-                    var bounds = getDivider().getBounds();
+                    Rectangle bounds = getDivider().getBounds();
                     if (getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
                         bounds.x -= DIVIDER_DRAG_OFFSET;
                         bounds.width = DIVIDER_DRAG_SIZE;
@@ -122,9 +122,9 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-        var key = evt.getPropertyName();
+        String key = evt.getPropertyName();
         if ("JSplitPane.style".equals(key)) {
-            var val = evt.getNewValue();
+            Object val = evt.getNewValue();
             Style oldStyle = style;
             if (Style.INVISIBLE.name.equals(val)) {
                 style = Style.INVISIBLE;

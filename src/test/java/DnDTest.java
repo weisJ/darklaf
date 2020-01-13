@@ -1,3 +1,4 @@
+import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
 
 import javax.swing.*;
@@ -12,22 +13,31 @@ public class DnDTest extends JFrame {
         initUI();
     }
 
+    public static void main(final String[] args) {
+
+        EventQueue.invokeLater(() -> {
+
+            DnDTest ex = new DnDTest();
+            ex.setVisible(true);
+        });
+    }
+
     private void initUI() {
 
-        var icon1 = IconLoader.get().getUIAwareIcon("files/folder.svg");
-        var icon2 = IconLoader.get().getUIAwareIcon("files/text.svg");
-        var icon3 = IconLoader.get().getUIAwareIcon("files/unknown.svg");
+        DarkUIAwareIcon icon1 = IconLoader.get().getUIAwareIcon("files/folder.svg");
+        DarkUIAwareIcon icon2 = IconLoader.get().getUIAwareIcon("files/text.svg");
+        DarkUIAwareIcon icon3 = IconLoader.get().getUIAwareIcon("files/unknown.svg");
 
-        var label1 = new JLabel(icon1, JLabel.CENTER);
-        var label2 = new JLabel(icon2, JLabel.CENTER);
-        var label3 = new JLabel(icon3, JLabel.CENTER);
+        JLabel label1 = new JLabel(icon1, JLabel.CENTER);
+        JLabel label2 = new JLabel(icon2, JLabel.CENTER);
+        JLabel label3 = new JLabel(icon3, JLabel.CENTER);
 
-        var listener = new DragMouseAdapter();
+        DragMouseAdapter listener = new DragMouseAdapter();
         label1.addMouseListener(listener);
         label2.addMouseListener(listener);
         label3.addMouseListener(listener);
 
-        var button = new JButton(icon2);
+        JButton button = new JButton(icon2);
         button.setFocusable(false);
 
         label1.setTransferHandler(new TransferHandler("icon"));
@@ -44,8 +54,8 @@ public class DnDTest extends JFrame {
 
     private void createLayout(final JComponent... arg) {
 
-        var pane = getContentPane();
-        var gl = new GroupLayout(pane);
+        Container pane = getContentPane();
+        GroupLayout gl = new GroupLayout(pane);
         pane.setLayout(gl);
 
         gl.setAutoCreateContainerGaps(true);
@@ -75,21 +85,12 @@ public class DnDTest extends JFrame {
         pack();
     }
 
-    public static void main(final String[] args) {
-
-        EventQueue.invokeLater(() -> {
-
-            var ex = new DnDTest();
-            ex.setVisible(true);
-        });
-    }
-
     private class DragMouseAdapter extends MouseAdapter {
 
         public void mousePressed(final MouseEvent e) {
 
-            var c = (JComponent) e.getSource();
-            var handler = c.getTransferHandler();
+            JComponent c = (JComponent) e.getSource();
+            TransferHandler handler = c.getTransferHandler();
             handler.exportAsDrag(c, e, TransferHandler.COPY);
         }
     }

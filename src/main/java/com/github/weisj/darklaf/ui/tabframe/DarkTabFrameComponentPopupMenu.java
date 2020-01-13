@@ -43,7 +43,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
     public DarkTabFrameComponentPopupMenu(final TabFrameTab tab) {
         this.tab = tab;
         JMenu moveToMenu = new JMenu("Move to");
-        var aligns = Alignment.values();
+        Alignment[] aligns = Alignment.values();
         actions = new JMenuItem[aligns.length];
 
         Alignment a = Alignment.NORTH_WEST;
@@ -62,13 +62,13 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
     }
 
     protected void createAndAdd(final Alignment a, @NotNull final JMenu menu) {
-        var menuItem = createMenuItem(a);
+        JMenuItem menuItem = createMenuItem(a);
         actions[a.ordinal()] = menuItem;
         menu.add(menuItem);
     }
 
     protected JMenuItem createMenuItem(final Alignment a) {
-        var menuItem = new JMenuItem();
+        JMenuItem menuItem = new JMenuItem();
         menuItem.addActionListener(e -> moveTo(a));
         menuItem.setText(getDescription(a));
         menuItem.setIcon(createIcon(a, true));
@@ -110,7 +110,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
     }
 
     protected Icon createIcon(@NotNull final Alignment a, final boolean enabled) {
-        var suffix = enabled ? "" : "Disabled";
+        String suffix = enabled ? "" : "Disabled";
         switch (a) {
             case NORTH:
                 return UIManager.getIcon("TabFrame.moveToTopLeft" + suffix + ".icon");
@@ -137,7 +137,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
     @Override
     public void propertyChange(@NotNull final PropertyChangeEvent evt) {
         if ("orientation".equals(evt.getPropertyName())) {
-            var a = evt.getNewValue();
+            Object a = evt.getNewValue();
             if (a instanceof Alignment) {
                 if (disabled >= 0) {
                     actions[disabled].setEnabled(true);

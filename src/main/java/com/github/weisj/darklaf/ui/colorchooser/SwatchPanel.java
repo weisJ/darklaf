@@ -203,7 +203,7 @@ abstract class SwatchPanel extends JPanel {
     }
 
     public Color getColorForLocation(final int x, final int y) {
-        var p = getCoordinatesForLocation(x, y);
+        Point p = getCoordinatesForLocation(x, y);
         return getColorForCell(p.x, p.y);
     }
 
@@ -220,7 +220,7 @@ abstract class SwatchPanel extends JPanel {
 
     @NotNull
     protected Rectangle getSwatchBounds(@NotNull final MouseEvent e) {
-        var p = getCoordinatesForLocation(e.getX(), e.getY());
+        Point p = getCoordinatesForLocation(e.getX(), e.getY());
         int x = getXForColumn(p.x);
         int y = getYForRow(p.y);
         return new Rectangle(x, y, swatchSize.width, swatchSize.height);

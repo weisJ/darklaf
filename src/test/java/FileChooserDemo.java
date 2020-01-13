@@ -10,8 +10,8 @@ public final class FileChooserDemo {
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
-            var chooser = new JFileChooser(System.getProperty("user.home"));
-            var filter = new FileNameExtensionFilter("JSON files", "json");
+            JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON files", "json");
             chooser.addChoosableFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(final File f) {
@@ -24,7 +24,7 @@ public final class FileChooserDemo {
                 }
             });
             chooser.setMultiSelectionEnabled(true);
-            var frame = new JFrame();
+            JFrame frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);

@@ -67,7 +67,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         final JFileChooser fileChooser = getFileChooser();
 
         @SuppressWarnings("serial") // anonymous class
-        final JList<Object> list = new JList<>() {
+        final JList<Object> list = new JList<Object>() {
             public int getNextMatch(final String prefix, final int startIndex, final Position.Bias bias) {
                 ListModel<?> model = getModel();
                 int max = model.getSize();
@@ -299,7 +299,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 int editX = icon == null ? 20 : icon.getIconWidth() + 4;
 
                 int gap = 0;
-                var renderer = list.getCellRenderer();
+                ListCellRenderer renderer = list.getCellRenderer();
                 if (renderer instanceof JLabel) {
                     gap = ((JLabel) renderer).getIconTextGap() - 1;
                 }
@@ -342,7 +342,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 contextMenu.add(refreshAction);
             }
             if (renameAction != null) {
-                var menuItem = new JMenuItem(renameAction);
+                JMenuItem menuItem = new JMenuItem(renameAction);
                 menuItem.setText("Rename");
                 contextMenu.add(menuItem);
             }

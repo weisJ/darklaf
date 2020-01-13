@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.components.border;
 
 import com.github.weisj.darklaf.components.alignment.Alignment;
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -269,7 +270,7 @@ public class BubbleBorder extends AbstractBorder {
     @Override
     public void paintBorder(@NotNull final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
-        var area = getInnerArea(x, y, width, height);
+        Area area = getInnerArea(x, y, width, height);
         paintBorder(g, area);
     }
 
@@ -286,7 +287,7 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     public Area getInnerArea(final int x, final int y, final int width, final int height) {
-        var bubble = calculateBubbleRect(x, y, width, height);
+        RoundRectangle2D.Double bubble = calculateBubbleRect(x, y, width, height);
         final Area area = new Area(bubble);
         if (pointerSide != Alignment.CENTER) {
             double pointerPad = calculatePointerPad(width, height, pointerSide);
@@ -298,7 +299,7 @@ public class BubbleBorder extends AbstractBorder {
 
     public void paintBorder(final Graphics g, final Area innerArea) {
         final Graphics2D g2 = (Graphics2D) g;
-        var config = GraphicsUtil.setupStrokePainting(g);
+        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         g2.setColor(color);
         g2.setStroke(stroke);
         g2.draw(innerArea);

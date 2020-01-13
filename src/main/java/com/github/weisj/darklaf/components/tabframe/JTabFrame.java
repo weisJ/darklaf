@@ -32,6 +32,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,7 +94,7 @@ public class JTabFrame extends JComponent {
      * @return the ui.
      */
     public TabFrameUI getUI() {
-        return (TabFrameUI) super.getUI();
+        return (TabFrameUI) ui;
     }
 
     @Override
@@ -249,7 +250,7 @@ public class JTabFrame extends JComponent {
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
     public void insertTab(@NotNull final Component c, final Alignment a, final int index) {
-        var title = c.getName();
+        String title = c.getName();
         insertTab(c, title == null ? "" : title, a, index);
     }
 
@@ -326,11 +327,11 @@ public class JTabFrame extends JComponent {
     private void insertTabComp(@NotNull final TabFrameTab tabComp, final Alignment a, final int index) {
         tabComp.setOrientation(a);
         getTabContainer(a).add(tabComp.getComponent());
-        var tabs = tabsForAlignment(a);
+        List<TabFrameTab> tabs = tabsForAlignment(a);
         //Adjust indices for tabs.
-        var iterator = tabs.listIterator(index);
+        Iterator<TabFrameTab> iterator = tabs.listIterator(index);
         while (iterator.hasNext()) {
-            var tab = iterator.next();
+            TabFrameTab tab = iterator.next();
             tab.setIndex(tab.getIndex() + 1);
         }
         tabComp.setIndex(index);
@@ -426,9 +427,9 @@ public class JTabFrame extends JComponent {
         if (a == Alignment.CENTER) {
             return;
         }
-        var text = title == null ? c.getComponent().getName() : title;
+        String text = title == null ? c.getComponent().getName() : title;
         text = text == null ? c.getTitle() : text;
-        var tabComponent = createDefaultTab(text, icon, a, index);
+        TabFrameTab tabComponent = createDefaultTab(text, icon, a, index);
         c.setTitle(text);
         c.setIcon(icon);
         c.setTabFrame(this);
@@ -452,7 +453,7 @@ public class JTabFrame extends JComponent {
      * @return the tab component.
      */
     public TabFrameTab getTabComponentAt(final Alignment a, final int index) {
-        var tabs = tabsForAlignment(a);
+        List<TabFrameTab> tabs = tabsForAlignment(a);
         return tabs.get(index);
     }
 
@@ -460,8 +461,8 @@ public class JTabFrame extends JComponent {
      * Set the tab component at the given position.
      */
     private void setTabComponent(@NotNull final TabFrameTab tab, final Alignment a, final int index) {
-        var tabs = tabsForAlignment(a);
-        var oldComp = tabs.get(index);
+        List<TabFrameTab> tabs = tabsForAlignment(a);
+        TabFrameTab oldComp = tabs.get(index);
         getTabContainer(a).remove(oldComp.getComponent());
         getTabContainer(a).add(tab.getComponent());
         tabs.set(index, tab);
@@ -475,7 +476,7 @@ public class JTabFrame extends JComponent {
      * @return the popup component specified by {@link TabFramePopup#getContentPane()}.
      */
     public Component getComponentAt(final Alignment a, final int index) {
-        var tabs = compsForAlignment(a);
+        List<TabFramePopup> tabs = compsForAlignment(a);
         return tabs.get(index).getContentPane();
     }
 
@@ -485,7 +486,7 @@ public class JTabFrame extends JComponent {
      * @param c the component to close.
      */
     public void closeTab(final Component c) {
-        var res = findComponent(c);
+        TabFramePosition res = findComponent(c);
         if (res != null) {
             closeTab(res.getAlignment(), res.getIndex());
         }
@@ -498,8 +499,8 @@ public class JTabFrame extends JComponent {
      * @return the position in the tabFrame.{@link TabFramePosition}
      */
     public TabFramePosition findComponent(final Component c) {
-        for (var a : Alignment.values()) {
-            var list = popupLists[a.ordinal()];
+        for (Alignment a : Alignment.values()) {
+            List<TabFramePopup> list = popupLists[a.ordinal()];
             for (int i = 0; i < list.size(); i++) {
                 if (Objects.equals(list.get(i).getContentPane(), c)) {
                     return new TabFramePosition(a, i);
@@ -527,9 +528,9 @@ public class JTabFrame extends JComponent {
      * @param enabled true if visible.
      */
     public void toggleTab(@NotNull final Alignment a, final int index, final boolean enabled) {
-        var oldIndex = selectedIndices[a.getIndex()];
+        int oldIndex = selectedIndices[a.getIndex()];
         if (content.isEnabled(a) == enabled && oldIndex == index) return;
-        var compAtIndex = getTabComponentAt(a, index);
+        TabFrameTab compAtIndex = getTabComponentAt(a, index);
         compAtIndex.setSelected(enabled);
         notifySelectionChange(compAtIndex);
         setPopupVisibility(compAtIndex, enabled);
@@ -549,10 +550,10 @@ public class JTabFrame extends JComponent {
         if (tabComponent == null) {
             return;
         }
-        var a = tabComponent.getOrientation();
+        Alignment a = tabComponent.getOrientation();
         selectedIndices[a.ordinal()] = tabComponent.isSelected() ? tabComponent.getIndex() : -1;
         if (tabComponent.isSelected()) {
-            for (var tc : tabsForAlignment(a)) {
+            for (TabFrameTab tc : tabsForAlignment(a)) {
                 if (tc != null && tc != tabComponent) {
                     tc.setSelected(false);
                 }
@@ -565,8 +566,8 @@ public class JTabFrame extends JComponent {
      */
     private void setPopupVisibility(@NotNull final TabFrameTab tabComponent,
                                     final boolean selected) {
-        var a = tabComponent.getOrientation();
-        var c = compsForAlignment(a).get(tabComponent.getIndex());
+        Alignment a = tabComponent.getOrientation();
+        TabFramePopup c = compsForAlignment(a).get(tabComponent.getIndex());
         c.setEnabled(selected);
         content.setComponentAt(a, c.getComponent());
         content.setEnabled(a, selected);
@@ -580,7 +581,7 @@ public class JTabFrame extends JComponent {
      * @return the popup component specified by {@link TabFramePopup#getComponent()}.
      */
     public Component getPopupComponentAt(final Alignment a) {
-        var tabs = compsForAlignment(a);
+        List<TabFramePopup> tabs = compsForAlignment(a);
         return tabs.get(Math.max(Math.min(tabs.size() - 1, selectedIndices[a.ordinal()]), 0)).getComponent();
     }
 
@@ -600,7 +601,7 @@ public class JTabFrame extends JComponent {
      * @param c the component to open.
      */
     public void openTab(final Component c) {
-        var res = findComponent(c);
+        TabFramePosition res = findComponent(c);
         if (res != null) {
             openTab(res.getAlignment(), res.getIndex());
         }
@@ -673,12 +674,12 @@ public class JTabFrame extends JComponent {
         }
         boolean oldSelected = tabComp.isSelected();
 
-        var oldAlign = tabComp.getOrientation();
-        var oldIndex = tabComp.getIndex();
+        Alignment oldAlign = tabComp.getOrientation();
+        int oldIndex = tabComp.getIndex();
 
         closeTab(oldAlign, oldIndex);
 
-        var comp = compsForAlignment(oldAlign).get(oldIndex);
+        TabFramePopup comp = compsForAlignment(oldAlign).get(oldIndex);
         removeTab(oldAlign, oldIndex);
         addTab(comp, tabComp, a);
 
@@ -697,7 +698,7 @@ public class JTabFrame extends JComponent {
      * @param index the index of the tab.{@link TabFramePosition#getIndex()}
      */
     public void removeTab(final Alignment a, final int index) {
-        var comp = compsForAlignment(a).get(index);
+        TabFramePopup comp = compsForAlignment(a).get(index);
         comp.close();
         comp.setTabFrame(null);
         comp.setIndex(-1);
@@ -721,14 +722,14 @@ public class JTabFrame extends JComponent {
      * Remove a tab component from the given position.
      */
     private void removeTabComp(final Alignment a, final int index) {
-        var tabs = tabsForAlignment(a);
+        List<TabFrameTab> tabs = tabsForAlignment(a);
         //Adjust indices for tabs.
-        var iterator = tabs.listIterator(index);
+        Iterator<TabFrameTab> iterator = tabs.listIterator(index);
         while (iterator.hasNext()) {
-            var tab = iterator.next();
+            TabFrameTab tab = iterator.next();
             tab.setIndex(tab.getIndex() - 1);
         }
-        var tab = tabs.remove(index);
+        TabFrameTab tab = tabs.remove(index);
         getTabContainer(a).remove(tab.getComponent());
     }
 
@@ -740,7 +741,7 @@ public class JTabFrame extends JComponent {
      * @return the popup component specified by {@link TabFramePopup#getComponent()}.
      */
     public Component getPopupComponentAt(final Alignment a, final int index) {
-        var tabs = compsForAlignment(a);
+        List<TabFramePopup> tabs = compsForAlignment(a);
         return tabs.get(index).getComponent();
     }
 
@@ -751,7 +752,7 @@ public class JTabFrame extends JComponent {
      * @return the component specified by {@link TabFramePopup#getContentPane()}.
      */
     public Component getComponentAt(final Alignment a) {
-        var tabs = compsForAlignment(a);
+        List<TabFramePopup> tabs = compsForAlignment(a);
         return tabs.get(Math.max(Math.min(tabs.size() - 1, selectedIndices[a.ordinal()]), 0)).getContentPane();
     }
 
@@ -763,7 +764,7 @@ public class JTabFrame extends JComponent {
      * @return the user tab component or null if none is installed.
      */
     public Component getUserTabComponentAt(final Alignment a, final int index) {
-        var tab = getTabComponentAt(a, index);
+        TabFrameTab tab = getTabComponentAt(a, index);
         if (tab instanceof TabFrameTabContainer) {
             return ((TabFrameTabContainer) tab).getContent();
         } else {
@@ -779,8 +780,8 @@ public class JTabFrame extends JComponent {
      * @param index     the index.{@link TabFramePosition#getIndex()}
      */
     public void setUserTabComponentAt(final JComponent component, final Alignment a, final int index) {
-        var tabs = tabsForAlignment(a);
-        var tabContainer = tabs.get(index);
+        List<TabFrameTab> tabs = tabsForAlignment(a);
+        TabFrameTab tabContainer = tabs.get(index);
         if (component == null) {
             if (tabContainer instanceof TabFrameTabContainer) {
                 setTabComponent(((TabFrameTabContainer) tabContainer).oldTab, a, index);
@@ -789,7 +790,7 @@ public class JTabFrame extends JComponent {
             if (tabContainer instanceof TabFrameTabContainer) {
                 ((TabFrameTabContainer) tabContainer).setContent(component);
             } else {
-                var cont = new TabFrameTabContainer(this, component, tabContainer, a, index);
+                TabFrameTabContainer cont = new TabFrameTabContainer(this, component, tabContainer, a, index);
                 setTabComponent(cont, a, index);
             }
         }
@@ -926,7 +927,7 @@ public class JTabFrame extends JComponent {
      * @param dndEnabled true if enabled.
      */
     public void setDndEnabled(final boolean dndEnabled) {
-        var old = this.dndEnabled;
+        boolean old = this.dndEnabled;
         this.dndEnabled = dndEnabled;
         if (getDropTarget() != null) {
             getDropTarget().setActive(dndEnabled);

@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.components.text;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.decorators.PlainAction;
+import com.github.weisj.darklaf.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -59,7 +60,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
         this.textField = textField;
         textField.addSearchListener(this);
         setCapacity(capacity);
-        this.history = Collections.newSetFromMap(new LinkedHashMap<>() {
+        this.history = Collections.newSetFromMap(new LinkedHashMap<String, Boolean>() {
             protected boolean removeEldestEntry(final Map.Entry<String, Boolean> eldest) {
                 return size() > capacity;
             }
@@ -107,8 +108,8 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
 
     @Override
     public void searchPerformed(@NotNull final SearchEvent e) {
-        var text = e.getText();
-        if (!text.isBlank()) {
+        String text = e.getText();
+        if (!StringUtil.isBlank(text)) {
             addEntry(text);
         }
     }

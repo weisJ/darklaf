@@ -44,10 +44,10 @@ public final class UIDemo {
 
                     Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg", 19, 19);
 
-                    var panel = new JPanel(new GridLayout(3, 4));
-                    var content = new JPanel(new BorderLayout());
+                    JPanel panel = new JPanel(new GridLayout(3, 4));
+                    JPanel content = new JPanel(new BorderLayout());
                     content.add(panel, BorderLayout.CENTER);
-                    var statusBar = new JXStatusBar();
+                    JXStatusBar statusBar = new JXStatusBar();
                     statusBar.add(new JLabel("test1"));
                     statusBar.add(new JLabel("test2"));
                     statusBar.add(new JLabel("test3"));
@@ -397,8 +397,8 @@ public final class UIDemo {
 
                     frame.setContentPane(content);
 
-                    var menuBar = new JMenuBar();
-                    var menu = new JMenu("test");
+                    JMenuBar menuBar = new JMenuBar();
+                    JMenu menu = new JMenu("test");
                     menu.add(new JMenu("submenu") {{
                         add(new JMenuItem("item1"));
                         add(new JMenuItem("item2"));

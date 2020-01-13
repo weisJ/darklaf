@@ -61,12 +61,12 @@ public class ScrollPopupMenu extends JPopupMenu {
             @Override
             public void menuKeyPressed(final MenuKeyEvent e) {
                 SwingUtilities.invokeLater(() -> {
-                    var path = e.getMenuSelectionManager().getSelectedPath();
+                    MenuElement[] path = e.getMenuSelectionManager().getSelectedPath();
                     if (path.length == 0) {
                         return;
                     }
-                    var bounds = path[path.length - 1].getComponent().getBounds();
-                    var r = SwingUtilities.convertRectangle(ScrollPopupMenu.this, bounds, scrollPane);
+                    Rectangle bounds = path[path.length - 1].getComponent().getBounds();
+                    Rectangle r = SwingUtilities.convertRectangle(ScrollPopupMenu.this, bounds, scrollPane);
                     scrollPane.getViewport().scrollRectToVisible(r);
                 });
             }
@@ -111,30 +111,21 @@ public class ScrollPopupMenu extends JPopupMenu {
         return super.add(menuItem);
     }
 
-    @Override
-    public void pack() {
-        if (popWin == null) {
-            return;
+    protected void showPopup() {
+        Component comp = getInvoker();
+        if (comp == null) return;
+
+        while (comp.getParent() != null) {
+            comp = comp.getParent();
         }
-        final Dimension prefSize = getPreferredSize();
-        if (maxHeight <= 0 || prefSize.height <= maxHeight) {
-            setBounds(0, 0, prefSize.width, prefSize.height);
-            popWin.setContentPane(this);
-            setBorderPainted(true);
-            popWin.setSize(prefSize.width, prefSize.height);
-        } else {
-            int increment = getComponentCount() > 0
-                            ? Math.max(1, getComponent(0).getPreferredSize().height / 2)
-                            : 1;
-            var bar = scrollPane.getVerticalScrollBar();
-            bar.setValue(bar.getMinimum());
-            bar.setUnitIncrement(increment);
-            setBorderPainted(false);
-            view.add(this);
-            popWin.setContentPane(contentPane);
-            popWin.pack();
-            popWin.setSize(prefSize.width + bar.getPreferredSize().width, maxHeight);
+
+        if (popWin == null || popWin.getOwner() != comp) {
+            popWin = comp instanceof Window ? new JWindow((Window) comp) : new JWindow(new JFrame());
         }
+        pack();
+        popWin.setLocation(posX, posY);
+        popWin.setVisible(true);
+        requestFocus();
     }
 
     /**
@@ -198,26 +189,34 @@ public class ScrollPopupMenu extends JPopupMenu {
         }
     }
 
-    protected void showPopup() {
-        var comp = getInvoker();
-        if (comp == null) return;
-
-        while (comp.getParent() != null) {
-            comp = comp.getParent();
+    @Override
+    public void pack() {
+        if (popWin == null) {
+            return;
         }
-
-        if (popWin == null || popWin.getOwner() != comp) {
-            popWin = comp instanceof Window ? new JWindow((Window) comp) : new JWindow(new JFrame());
+        final Dimension prefSize = getPreferredSize();
+        if (maxHeight <= 0 || prefSize.height <= maxHeight) {
+            setBounds(0, 0, prefSize.width, prefSize.height);
+            popWin.setContentPane(this);
+            setBorderPainted(true);
+            popWin.setSize(prefSize.width, prefSize.height);
+        } else {
+            int increment = getComponentCount() > 0
+                            ? Math.max(1, getComponent(0).getPreferredSize().height / 2)
+                            : 1;
+            JScrollBar bar = scrollPane.getVerticalScrollBar();
+            bar.setValue(bar.getMinimum());
+            bar.setUnitIncrement(increment);
+            setBorderPainted(false);
+            view.add(this);
+            popWin.setContentPane(contentPane);
+            popWin.pack();
+            popWin.setSize(prefSize.width + bar.getPreferredSize().width, maxHeight);
         }
-        pack();
-        popWin.setLocation(posX, posY);
-        popWin.setVisible(true);
-        requestFocus();
     }
 
-
     private boolean isPopupMenu() {
-        var invoker = getInvoker();
+        Component invoker = getInvoker();
         return ((invoker != null) && !(invoker instanceof JMenu));
     }
 }

@@ -40,14 +40,14 @@ public class TabbedPaneUtil implements SwingConstants {
                                          @NotNull final JTabbedPane tabbedPane,
                                          final DarkTabbedPaneUI ui,
                                          @NotNull final Point p) {
-        var tab = tabbedPane.indexAtLocation(p.x, p.y);
+        int tab = tabbedPane.indexAtLocation(p.x, p.y);
         if (ui != null) {
             if (tab == -1) {
-                var bounds = ui.getTabAreaBounds();
+                Rectangle bounds = ui.getTabAreaBounds();
                 if (bounds.contains(p)) {
                     if (tabbedPane.getTabCount() > 0) {
-                        var minb = ui.getTabBounds(tabbedPane, 0);
-                        var maxb = ui.getTabBounds(tabbedPane, tabbedPane.getTabCount() - 1);
+                        Rectangle minb = ui.getTabBounds(tabbedPane, 0);
+                        Rectangle maxb = ui.getTabBounds(tabbedPane, tabbedPane.getTabCount() - 1);
                         if (tabbedPane.getComponentOrientation().isLeftToRight()) {
                             int x = Math.max(bounds.x, minb.x);
                             bounds.width = Math.min(bounds.x + bounds.width - x, maxb.x + maxb.width - x);
@@ -74,16 +74,16 @@ public class TabbedPaneUtil implements SwingConstants {
                 }
             } else {
                 if (tab < tabbedPane.getTabCount()) {
-                    var b = tabbedPane.getBoundsAt(tab);
+                    Rectangle b = tabbedPane.getBoundsAt(tab);
 
                     if (tab >= 1 && !ui.scrollableTabLayoutEnabled()) {
-                        var prev = tabbedPane.getBoundsAt(tab - 1);
+                        Rectangle prev = tabbedPane.getBoundsAt(tab - 1);
                         if (b.y + b.height < p.y && prev.y <= p.y && p.y <= prev.y + prev.height) {
                             b = prev;
                         }
                     }
 
-                    var sb = (ui.scrollableTabLayoutEnabled()) ? tabBounds : EMPTY_RECT;
+                    Rectangle sb = (ui.scrollableTabLayoutEnabled()) ? tabBounds : EMPTY_RECT;
                     switch (tabbedPane.getTabPlacement()) {
                         case TOP:
                         case BOTTOM:
@@ -173,7 +173,7 @@ public class TabbedPaneUtil implements SwingConstants {
             } else {
                 int placement = destTabbedPane.getTabPlacement();
                 if (placement == TOP || placement == BOTTOM) {
-                    var b = ui.getTabAreaBounds();
+                    Rectangle b = ui.getTabAreaBounds();
                     if (tab == destTabbedPane.getTabCount()) {
                         tabBounds.x = destRect.x + destRect.width / 2;
                         tabBounds.width = Math.min(b.x + b.width - tabBounds.x, tabBounds.width);
@@ -181,7 +181,7 @@ public class TabbedPaneUtil implements SwingConstants {
                         tabBounds.x = destRect.x;
                         tabBounds.width = Math.min(tabBounds.width / 2, destRect.width / 2);
                     } else {
-                        var prev = destTabbedPane.getBoundsAt(tab - 1);
+                        Rectangle prev = destTabbedPane.getBoundsAt(tab - 1);
                         if (destRect.y + destRect.height <= mouseLocation.y &&
                                 prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
                             destRect.x = prev.x + prev.width;
@@ -216,7 +216,7 @@ public class TabbedPaneUtil implements SwingConstants {
 
         if (tabbedPane == sourcePane && sourceIndex == tab) {
             //Nothing to do. Just select the tab to be sure.
-            var comp = sourcePane.getTabComponentAt(tab);
+            Component comp = sourcePane.getTabComponentAt(tab);
             if (comp != null) comp.setVisible(true);
             selectTab(sourcePane, sourceIndex);
             return false;

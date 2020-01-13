@@ -92,7 +92,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
             }
             DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
         } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
-            var table = (JTable) c.getParent();
+            JTable table = (JTable) c.getParent();
             if (!table.getShowHorizontalLines()) {
                 g.fillRect(0, 0, width, 1);
                 g.fillRect(0, height - 1, width, 1);

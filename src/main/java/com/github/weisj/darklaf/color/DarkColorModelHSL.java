@@ -116,7 +116,7 @@ public class DarkColorModelHSL extends DarkColorModel {
 
     @Override
     public Color getColorFromValues(@NotNull final int[] values) {
-        var rgb = HSLtoRGB(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0);
+        int[] rgb = HSLtoRGB(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0);
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
 

@@ -51,4 +51,9 @@ public class Pair<T, H> {
     public void setSecond(final H second) {
         this.second = second;
     }
+
+    @Override
+    public String toString() {
+        return "[" + first.toString() + "," + second.toString() + "]";
+    }
 }

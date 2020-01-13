@@ -82,7 +82,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public void setStyle(final CaretStyle style) {
-        var s = style;
+        CaretStyle s = style;
         if (s == null) {
             s = CaretStyle.THICK_VERTICAL_LINE_STYLE;
         }
@@ -255,7 +255,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             TextUI mapper = textArea.getUI();
             Rectangle r;
             try {
-                r = mapper.modelToView2D(textArea, getDot(), Position.Bias.Forward).getBounds();
+                r = mapper.modelToView(textArea, getDot(), Position.Bias.Forward);
             } catch (BadLocationException ex) {
                 r = new Rectangle(0, 0, 0, 0);
             }

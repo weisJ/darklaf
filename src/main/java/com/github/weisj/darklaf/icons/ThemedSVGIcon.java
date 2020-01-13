@@ -48,7 +48,7 @@ public class ThemedSVGIcon extends DarkSVGIcon {
     }
 
     private void ensureTheme() {
-        var theme = LafManager.getTheme();
+        Theme theme = LafManager.getTheme();
         if (currentTheme != theme) {
             IconColorMapper.patchColors(getSVGIcon());
             currentTheme = theme;

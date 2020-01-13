@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.components.tabframe;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import java.awt.*;
 
 public class ToggleSplitPane extends JSplitPane {
 
@@ -159,7 +160,7 @@ public class ToggleSplitPane extends JSplitPane {
 
     @Override
     public int getMinimumDividerLocation() {
-        var comp = getRightComponent();
+        Component comp = getRightComponent();
         return comp == null ? 0 : getOrientation() == HORIZONTAL_SPLIT
                                   ? comp.getMinimumSize().width
                                   : comp.getMinimumSize().height;

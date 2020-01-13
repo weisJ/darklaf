@@ -113,7 +113,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
             public void setValue(final Object value) {
                 try {
-                    var model = spinner.getModel();
+                    SpinnerModel model = spinner.getModel();
                     if (model instanceof SpinnerNumberModel) {
                         spinner.setValue(NumberFormat.getInstance().parse(value.toString()));
                     } else if (model instanceof SpinnerDateModel) {

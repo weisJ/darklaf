@@ -27,7 +27,7 @@ package com.github.weisj.darklaf.ui.rootpane;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.platform.windows.JNIDecorations;
-import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.Scale;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,9 +55,9 @@ import java.util.List;
  */
 public class DarkTitlePane extends JComponent {
     private static final int PAD = 5;
-    private static final int BAR_HEIGHT = (int) (56 / GraphicsUtil.SCALE_Y);
-    private static final int BUTTON_WIDTH = (int) (92.5 / GraphicsUtil.SCALE_X);
-    private static final int ICON_WIDTH = (int) (65 / GraphicsUtil.SCALE_X);
+    private static final int BAR_HEIGHT = 28;
+    private static final int BUTTON_WIDTH = 46;
+    private static final int ICON_WIDTH = 32;
     private static final int ICON_SIZE = ICON_WIDTH - 3 * PAD;
     private final JRootPane rootPane;
     private final ContainerListener rootPaneContainerListener = new ContainerListener() {
@@ -98,7 +98,7 @@ public class DarkTitlePane extends JComponent {
             if (window != null) {
                 //Force window to recalculate bounds.
                 SwingUtilities.invokeLater(() -> {
-                    var size = window.getSize();
+                    Dimension size = window.getSize();
                     size.height += 1;
                     window.setSize(size);
                     size.height -= 1;
@@ -212,7 +212,7 @@ public class DarkTitlePane extends JComponent {
 
                 JNIDecorations.installDecorations(windowHandle);
                 updateResizeBehaviour();
-                var color = window.getBackground();
+                Color color = window.getBackground();
                 JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
 
@@ -585,12 +585,12 @@ public class DarkTitlePane extends JComponent {
         if (icons.size() == 0) {
             systemIcon = UIManager.getIcon("TitlePane.icon");
         } else if (icons.size() == 1) {
-            systemIcon = new ScaledIcon(icons.get(0).getScaledInstance((int) (ICON_SIZE * GraphicsUtil.SCALE_X),
-                                                                       (int) (ICON_SIZE * GraphicsUtil.SCALE_Y),
+            systemIcon = new ScaledIcon(icons.get(0).getScaledInstance(Scale.scaleWidth(ICON_SIZE),
+                                                                       Scale.scaleHeight(ICON_SIZE),
                                                                        Image.SCALE_AREA_AVERAGING));
         } else {
-            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, (int) (ICON_SIZE * GraphicsUtil.SCALE_X),
-                                                                      (int) (ICON_SIZE * GraphicsUtil.SCALE_Y))
+            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, Scale.scaleWidth(ICON_SIZE),
+                                                                      Scale.scaleHeight(ICON_SIZE))
             );
         }
         if (windowIconButton != null) {
@@ -711,16 +711,16 @@ public class DarkTitlePane extends JComponent {
                 }
                 start = Math.max(start, PAD);
                 titleLabel.setBounds(start, 0, x - start - PAD, height);
-                JNIDecorations.updateValues(windowHandle, (int) (left * GraphicsUtil.SCALE_X),
-                                            (int) (right * GraphicsUtil.SCALE_X),
-                                            (int) (height * GraphicsUtil.SCALE_Y));
+                JNIDecorations.updateValues(windowHandle, Scale.scaleWidth(left),
+                                            Scale.scaleWidth(right),
+                                            Scale.scaleHeight(height));
             } else {
                 //Todo.
             }
         }
 
         private Dimension getPreferredMenuSize() {
-            var menuBarLayout = menuBar.getLayout();
+            LayoutManager menuBarLayout = menuBar.getLayout();
             Dimension size = null;
             if (menuBarLayout != null) {
                 size = menuBarLayout.preferredLayoutSize(menuBar);
@@ -752,7 +752,7 @@ public class DarkTitlePane extends JComponent {
                 revalidate();
                 repaint();
             } else if ("background".equals(name) && pce.getNewValue() instanceof Color) {
-                var color = (Color) pce.getNewValue();
+                Color color = (Color) pce.getNewValue();
                 JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
         }

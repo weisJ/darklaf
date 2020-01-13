@@ -30,9 +30,9 @@ public class TextDemo {
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
-            var f = new JFrame();
+            JFrame f = new JFrame();
             f.setTitle("Text Test");
-            var p = new JPanel();
+            JPanel p = new JPanel();
             p.add(new JTextField("Test"));
             p.add(new JPasswordField("Test"));
             p.add(new JFormattedTextField("Test"));

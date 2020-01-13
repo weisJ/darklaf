@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.components;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -81,7 +82,7 @@ public class ClosableTabComponent extends JPanel {
         private final MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseEntered(final MouseEvent e) {
-                var ui = tabComponent.pane.getUI();
+                ComponentUI ui = tabComponent.pane.getUI();
                 if (ui instanceof DarkTabbedPaneUI) {
                     int i = tabComponent.pane.indexOfTabComponent(tabComponent);
                     if (i != -1) {

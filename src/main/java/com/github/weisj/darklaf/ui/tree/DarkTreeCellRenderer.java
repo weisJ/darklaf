@@ -47,11 +47,11 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
                                                   final boolean expanded, final boolean leaf, final int row,
                                                   final boolean hasFocus) {
-        var val = unwrapBooleanIfPossible(value);
+        Object val = unwrapBooleanIfPossible(value);
         if (val instanceof Boolean && isBooleanRenderingEnabled(tree)) {
             super.getTreeCellRendererComponent(tree, val, sel, expanded, leaf, row, hasFocus);
-            var comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
-                                                                             row, hasFocus);
+            Component comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
+                                                                                   row, hasFocus);
             rendererComponent.setComponentOrientation(tree.getComponentOrientation());
             comp.setComponentOrientation(tree.getComponentOrientation());
             comp.setFont(tree.getFont());
@@ -59,7 +59,7 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             rendererComponent.setRenderComponent(comp);
             return rendererComponent;
         }
-        var comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        Component comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
         if (sel && !DarkUIUtil.hasFocus(tree)) {
             comp.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
         }
@@ -67,12 +67,12 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
     }
 
     public static Object unwrapBooleanIfPossible(final Object value) {
-        var val = value;
+        Object val = value;
         if (val instanceof DefaultMutableTreeNode) {
             val = ((DefaultMutableTreeNode) val).getUserObject();
         }
         if (!(val instanceof Boolean)) {
-            var str = val.toString();
+            String str = val.toString();
             if ("true".equals(str)) val = true;
             if ("false".equals(str)) val = false;
         }

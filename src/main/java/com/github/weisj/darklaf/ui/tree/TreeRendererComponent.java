@@ -71,7 +71,7 @@ public class TreeRendererComponent extends Container {
     }
 
     private int getOffset() {
-        var icon = defaultRenderer.getIcon();
+        Icon icon = defaultRenderer.getIcon();
         if (icon == null) return 0;
         return icon.getIconWidth() + defaultRenderer.getIconTextGap();
     }
@@ -100,7 +100,7 @@ public class TreeRendererComponent extends Container {
     public void paint(final Graphics g) {
         int width = getWidth();
 
-        var icon = defaultRenderer.getIcon();
+        Icon icon = defaultRenderer.getIcon();
         // Then the icon.
         if (icon != null) {
             int yLoc = calculateIconY(icon);

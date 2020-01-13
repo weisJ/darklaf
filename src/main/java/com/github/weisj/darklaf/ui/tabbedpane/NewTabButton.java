@@ -38,7 +38,7 @@ public class NewTabButton extends JPanel implements UIResource {
         this.ui = ui;
         button = createButton();
         button.addActionListener(e -> {
-            var action = ui.getNewTabAction();
+            Action action = ui.getNewTabAction();
             if (action != null) {
                 action.actionPerformed(e);
             }
@@ -49,7 +49,7 @@ public class NewTabButton extends JPanel implements UIResource {
     }
 
     protected JButton createButton() {
-        var button = new JButton();
+        JButton button = new JButton();
         button.setIcon(ui.getNewTabIcon());
         button.putClientProperty("JButton.variant", "shadow");
         button.putClientProperty("JButton.buttonType", "square");
@@ -63,7 +63,7 @@ public class NewTabButton extends JPanel implements UIResource {
 
     @Override
     public void doLayout() {
-        var b = button.getPreferredSize();
+        Dimension b = button.getPreferredSize();
         int x = (getWidth() - b.width) / 2;
         int y = (getHeight() - b.height) / 2;
         button.setBounds(x, y, b.width, b.height);

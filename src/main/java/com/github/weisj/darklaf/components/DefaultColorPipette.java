@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.components;
 
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.TimerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -122,7 +123,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
 
     @Override
     protected Point adjustPickerLocation(@NotNull final Point mouseLocation, @NotNull final Window pickerWindow) {
-        var p = super.adjustPickerLocation(mouseLocation, pickerWindow);
+        Point p = super.adjustPickerLocation(mouseLocation, pickerWindow);
         p.x += DIALOG_SIZE / 2 - MOUSE_OFF_X;
         p.y -= DIALOG_SIZE / 2 + MOUSE_OFF_Y;
         return p;
@@ -139,7 +140,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
                 previousLocation.setLocation(mouseLoc);
 
                 if (isKeyDown() && getPressedKeyCode() == KeyEvent.VK_SHIFT) {
-                    var p = pickerWindow.getLocationOnScreen();
+                    Point p = pickerWindow.getLocationOnScreen();
                     p.y += pickerWindow.getHeight() - 2;
                     p.x += 2;
                     captureRect.setBounds(p.x - 9, p.y - 9, 18, 18);
@@ -203,16 +204,16 @@ public class DefaultColorPipette extends ColorPipetteBase {
 
             //Draw region to be recognised as inside the window.
             g.setColor(Color.WHITE);
-            var config = GraphicsUtil.paintWithAlpha(g, 0.005f);
-            var p = MouseInfo.getPointerInfo().getLocation();
+            GraphicsContext config = GraphicsUtil.paintWithAlpha(g, 0.005f);
+            Point p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, this);
             g.fillRect(p.x - 5, p.y - 5, 10, 10);
             config.restore();
 
-            var icon = pipette.getPipetteIcon();
+            Icon icon = pipette.getPipetteIcon();
             if (pipette.isKeyDown() && pipette.getPressedKeyCode() == KeyEvent.VK_SHIFT) {
-                var oldCLip = g.getClip();
-                var circ = new Ellipse2D.Float(icon.getIconWidth() - 4, 2,
+                Shape oldCLip = g.getClip();
+                Ellipse2D.Float circ = new Ellipse2D.Float(icon.getIconWidth() - 4, 2,
                                                getWidth() - icon.getIconWidth() - 2 + 4,
                                                getHeight() - 2 - icon.getIconHeight() + 4);
                 g.setClip(circ);

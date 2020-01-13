@@ -23,9 +23,12 @@
  */
 package com.github.weisj.darklaf.ui.numberingpane;
 
+import com.github.weisj.darklaf.components.text.IconListener;
+import com.github.weisj.darklaf.components.text.IndexListener;
 import com.github.weisj.darklaf.components.text.LineHighlighter;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -36,8 +39,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
+import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -45,6 +50,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class DarkNumberingPaneUI extends ComponentUI {
 
@@ -147,15 +155,15 @@ public class DarkNumberingPaneUI extends ComponentUI {
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
         if (textComponent == null || viewport == null) return;
-        var metrics = textComponent.getFontMetrics(textComponent.getFont());
+        FontMetrics metrics = textComponent.getFontMetrics(textComponent.getFont());
         int descent = metrics.getDescent();
 
-        var doc = textComponent.getDocument();
-        var viewRect = viewport.getViewRect();
-        var p = viewRect.getLocation();
-        int startIndex = textComponent.viewToModel2D(p);
+        Document doc = textComponent.getDocument();
+        Rectangle viewRect = viewport.getViewRect();
+        Point p = viewRect.getLocation();
+        int startIndex = textComponent.viewToModel(p);
         p.y += viewRect.height;
-        int endIndex = textComponent.viewToModel2D(p);
+        int endIndex = textComponent.viewToModel(p);
 
         int currOffset = textComponent.getCaretPosition();
         Element root = doc.getDefaultRootElement();
@@ -181,7 +189,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         g.setColor(backgroundHighlight);
         Rectangle rect;
         try {
-            rect = textComponent.modelToView2D(currOffset).getBounds();
+            rect = textComponent.modelToView(currOffset).getBounds();
         } catch (BadLocationException e) {
             rect = new Rectangle(0, 0, 0, 0);
         }
@@ -191,13 +199,13 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
     protected void drawNumbering(@NotNull final Graphics g, final int startLine, final int endLine, final int yCur,
                                  @NotNull final Element root, final int descent) {
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
         int digits = String.valueOf(root.getElementCount()).length();
         for (int i = startLine; i <= endLine; i++) {
             int off = root.getElement(i).getStartOffset();
             try {
-                Rectangle lineRect = textComponent.modelToView2D(off).getBounds();
+                Rectangle lineRect = textComponent.modelToView(off);
                 g.setColor(lineRect.y == yCur ? foregroundHighlight : numberingPane.getForeground());
                 g.drawString(String.format("%1$" + digits + "d", i), OUTER_PAD,
                              lineRect.y + lineRect.height - descent);
@@ -207,12 +215,12 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     protected void paintIcons(final Graphics g, final int startLine, final int endLine, @NotNull final Element root) {
-        var icons = numberingPane.getIconsInRange(root.getElement(startLine).getStartOffset(),
-                                                  root.getElement(endLine).getEndOffset());
-        for (var icon : icons) {
+        List<Map.Entry<Position, Icon>> icons = numberingPane.getIconsInRange(root.getElement(startLine).getStartOffset(),
+                                                                              root.getElement(endLine).getEndOffset());
+        for (Map.Entry<Position, Icon> icon : icons) {
             Rectangle lineRect;
             try {
-                lineRect = textComponent.modelToView2D(icon.getKey().getOffset()).getBounds();
+                lineRect = textComponent.modelToView(icon.getKey().getOffset());
                 int h = icon.getValue().getIconHeight();
                 int x = OUTER_PAD + PAD + textWidth;
                 int y = lineRect.y + lineRect.height / 2 - h / 2;
@@ -223,9 +231,9 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     protected int calculateMaxIconWidth() {
-        var icons = numberingPane.getIcons();
+        Collection<Icon> icons = numberingPane.getIcons();
         int max = numberingPane.getMinimumIconWidth();
-        for (var icon : icons) {
+        for (Icon icon : icons) {
             max = Math.max(icon.getIconWidth(), max);
         }
         return max;
@@ -240,33 +248,33 @@ public class DarkNumberingPaneUI extends ComponentUI {
         @Override
         public void mouseClicked(final MouseEvent e) {
             if (textComponent == null) return;
-            var p = e.getPoint();
+            Point p = e.getPoint();
             int width = numberingPane.getWidth();
             if (p.x > PAD + OUTER_PAD + textWidth && p.x <= width - PAD) {
-                int offset = textComponent.viewToModel2D(new Point(0, p.y));
-                var doc = textComponent.getDocument();
+                int offset = textComponent.viewToModel(new Point(0, p.y));
+                Document doc = textComponent.getDocument();
                 int start = doc.getDefaultRootElement().getElementIndex(offset);
                 int startOffset = doc.getDefaultRootElement().getElement(start).getStartOffset();
                 int endOffset = doc.getDefaultRootElement().getElement(start).getEndOffset();
-                var icons = numberingPane.getIconsInRange(startOffset, endOffset);
+                List<Map.Entry<Position, Icon>> icons = numberingPane.getIconsInRange(startOffset, endOffset);
                 if (!icons.isEmpty()) {
-                    var icon = icons.get(0).getValue();
+                    Icon icon = icons.get(0).getValue();
                     Rectangle lineRect;
                     try {
-                        lineRect = textComponent.modelToView2D(start).getBounds();
+                        lineRect = textComponent.modelToView(start).getBounds();
                         int h = icon.getIconHeight();
                         int x = OUTER_PAD + PAD + textWidth;
                         int y = lineRect.y + lineRect.height / 2 - h / 2;
                         if (p.x >= x && p.y >= y && p.y <= y + h) {
-                            var list = numberingPane.getIconListeners(startOffset, endOffset);
-                            for (var listener : list) {
+                            List<IconListener> list = numberingPane.getIconListeners(startOffset, endOffset);
+                            for (IconListener listener : list) {
                                 listener.iconClicked(e);
                             }
                         }
                     } catch (BadLocationException ignored) { }
                 }
-                var list = numberingPane.getIndexListeners();
-                for (var listener : list) {
+                IndexListener[] list = numberingPane.getIndexListeners();
+                for (IndexListener listener : list) {
                     listener.indexClicked(start, offset, e);
                 }
             }
@@ -275,9 +283,9 @@ public class DarkNumberingPaneUI extends ComponentUI {
         @Override
         public void mousePressed(final MouseEvent e) {
             if (textComponent == null) return;
-            var p = e.getPoint();
-                selectionLineStart = textComponent.viewToModel2D(new Point(0, p.y));
-                selectionLineEnd = textComponent.viewToModel2D(new Point(textComponent.getWidth(), p.y));
+            Point p = e.getPoint();
+            selectionLineStart = textComponent.viewToModel(new Point(0, p.y));
+            selectionLineEnd = textComponent.viewToModel(new Point(textComponent.getWidth(), p.y));
             if (p.x <= OUTER_PAD + textWidth) {
                 textComponent.getCaret().setDot(selectionLineEnd + 1);
                 textComponent.getCaret().moveDot(Math.min(selectionLineStart,
@@ -294,11 +302,11 @@ public class DarkNumberingPaneUI extends ComponentUI {
         @Override
         public void mouseDragged(final MouseEvent e) {
             if (numberingPane.getTextComponent() == null) return;
-            var textPane = numberingPane.getTextComponent();
-            var p = e.getPoint();
+            JTextComponent textPane = numberingPane.getTextComponent();
+            Point p = e.getPoint();
             if (selectionLineEnd >= 0 && selectionLineStart >= 0) {
-                int end = textPane.viewToModel2D(new Point(textPane.getWidth(), p.y));
-                int start = textPane.viewToModel2D(new Point(0, p.y));
+                int end = textPane.viewToModel(new Point(textPane.getWidth(), p.y));
+                int start = textPane.viewToModel(new Point(0, p.y));
                 if (selectionLineStart > end) {
                     textPane.getCaret().setDot(selectionLineEnd + 1);
                     textPane.getCaret().moveDot(Math.min(start, textPane.getDocument().getLength() - 1));
@@ -316,25 +324,25 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
         @Override
         public void propertyChange(@NotNull final PropertyChangeEvent evt) {
-            var key = evt.getPropertyName();
+            String key = evt.getPropertyName();
             if ("caret".equals(key)) {
                 if (evt.getNewValue() instanceof Caret) {
-                    var oldCaret = evt.getOldValue();
+                    Object oldCaret = evt.getOldValue();
                     if (oldCaret instanceof Caret) {
                         ((Caret) oldCaret).removeChangeListener(getChangeListener());
                         ((Caret) oldCaret).removeChangeListener(currentLinePainter);
                     }
-                    var newCaret = evt.getNewValue();
+                    Object newCaret = evt.getNewValue();
                     if (newCaret instanceof Caret) {
                         ((Caret) newCaret).addChangeListener(getChangeListener());
                         ((Caret) newCaret).addChangeListener(currentLinePainter);
                     }
                 }
             } else if ("font".equals(key)) {
-                var font = textComponent.getFont();
+                Font font = textComponent.getFont();
                 numberingPane.setFont(font.deriveFont(Math.max(font.getSize() - 1, 1.0f)));
             } else if ("editorPane".equals(key)) {
-                var newPane = evt.getNewValue();
+                Object newPane = evt.getNewValue();
                 if (textComponent != null) {
                     currentLinePainter.setComponent(null);
                     textComponent.setBackground(oldBackground);
@@ -352,14 +360,14 @@ public class DarkNumberingPaneUI extends ComponentUI {
                     } catch (BadLocationException ignored) {}
                     textComponent.addPropertyChangeListener(getPropertyChangeListener());
                     textComponent.getCaret().addChangeListener(getChangeListener());
-                    var font = textComponent.getFont();
+                    Font font = textComponent.getFont();
                     numberingPane.setFont(font.deriveFont(Math.max(font.getSize() - 1, 1.0f)));
                     oldBackground = textComponent.getBackground();
                     textComponent.setBackground(UIManager.getColor("NumberingPane.textBackground"));
                 }
             } else if ("icons".equals(key)) {
-                var oldVal = evt.getOldValue();
-                var newVal = evt.getNewValue();
+                Object oldVal = evt.getOldValue();
+                Object newVal = evt.getNewValue();
                 if (oldVal instanceof Icon) {
                     maxIconWidth = calculateMaxIconWidth();
                 }
@@ -368,7 +376,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 }
             } else if ("ancestor".equals(key)) {
                 if (evt.getSource() == numberingPane) {
-                    var parent = DarkUIUtil.getParentOfType(JScrollPane.class, (Component) evt.getNewValue());
+                    JScrollPane parent = DarkUIUtil.getParentOfType(JScrollPane.class, (Component) evt.getNewValue());
                     if (parent != null) {
                         viewport = parent.getViewport();
                     } else {

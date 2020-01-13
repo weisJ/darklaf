@@ -7,12 +7,12 @@ public final class ListDemo {
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
-            var f = new JFrame("frame");
+            JFrame f = new JFrame("frame");
             JPanel p = new JPanel();
 
             String[] week = {"Monday", "Tuesday", "Wednesday",
                     "Thursday", "Friday", "Saturday", "Sunday"};
-            var list = new JList<>(week);
+            JList<String> list = new JList<>(week);
 
             list.setSelectedIndex(2);
             p.add(list);

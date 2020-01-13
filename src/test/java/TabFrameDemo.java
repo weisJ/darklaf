@@ -6,6 +6,7 @@ import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.text.NonWrappingEditorPane;
 import com.github.weisj.darklaf.components.text.NumberedTextComponent;
+import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.icons.IconLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,22 +49,22 @@ public class TabFrameDemo {
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            var tabFrame = new JTabFrame();
-            for (var o : Alignment.values()) {
+            JTabFrame tabFrame = new JTabFrame();
+            for (Alignment o : Alignment.values()) {
                 if (o != Alignment.CENTER) {
                     for (int i = 0; i < 2; i++) {
-                        var pcc = new JPanel();
+                        JPanel pcc = new JPanel();
                         pcc.setOpaque(true);
                         pcc.add(new JLabel(o.toString() + "_" + i + " Popup"));
                         tabFrame.addTab(pcc, o.toString() + "_" + i, folderIcon, o);
                     }
                 }
             }
-            var tabbedPopup = new TabbedPopup("Tabbed Popup:");
+            TabbedPopup tabbedPopup = new TabbedPopup("Tabbed Popup:");
             tabFrame.setTabAt(tabbedPopup, "NORTH (Tabbed Pane Tab)", null, Alignment.NORTH, 0);
             for (int i = 0; i < 5; i++) {
-                var panel = new JPanel();
-                var label = new JLabel("Tab Number " + i);
+                JPanel panel = new JPanel();
+                JLabel label = new JLabel("Tab Number " + i);
                 panel.add(label);
                 tabbedPopup.getTabbedPane().addTab("Tab " + i, panel);
             }
@@ -78,8 +79,8 @@ public class TabFrameDemo {
              */
             tabFrame.setAcceleratorAt(1, Alignment.NORTH_WEST, 0);
 
-            var contentPane = new JPanel(new BorderLayout());
-            var topPanel = new JPanel(new GridBagLayout());
+            JPanel contentPane = new JPanel(new BorderLayout());
+            JPanel topPanel = new JPanel(new GridBagLayout());
             topPanel.add(new JButton("I do nothing!"), null);
             topPanel.setBorder(DarkBorders.createLineBorder(0, 0, 1, 0));
 
@@ -123,11 +124,11 @@ public class TabFrameDemo {
 
     @NotNull
     private static Component createTextArea() {
-        var numberPane = new NumberedTextComponent(new NonWrappingEditorPane() {{
+        NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingEditorPane() {{
             setText((TestResources.LOREM_IPSUM).repeat(10));
             setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         }});
-        var numbering = numberPane.getNumberingPane();
+        NumberingPane numbering = numberPane.getNumberingPane();
         Icon icon = IconLoader.get().getIcon("navigation/arrowRight.svg");
         try {
             numbering.addIconAtLine(5, icon);

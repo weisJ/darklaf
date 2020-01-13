@@ -51,7 +51,7 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
                 if (child == ui.scrollableTabSupport.newTabButton) {
                     boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
                     int tabCount = ui.tabPane.getTabCount();
-                    var b = child.getPreferredSize();
+                    Dimension b = child.getPreferredSize();
                     if (tabCount > 0) {
                         if (ui.isHorizontalTabPlacement()) {
                             int off = ui.dropTargetIndex == tabCount ? ui.dropRect.width : 0;
@@ -80,7 +80,7 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
         super.paint(g);
         if (ui.dragging && ui.tabPane.getTabCount() > 0) {
             ui.paintTab(g, ui.tabPane.getTabPlacement(), ui.dragRect, ui.tabPane.getSelectedIndex(), iconRect, textRect);
-            var comp = ui.tabPane.getTabComponentAt(ui.dropSourceIndex);
+            Component comp = ui.tabPane.getTabComponentAt(ui.dropSourceIndex);
             if (comp != null) {
                 g.translate(comp.getX(), comp.getY());
                 comp.print(g);

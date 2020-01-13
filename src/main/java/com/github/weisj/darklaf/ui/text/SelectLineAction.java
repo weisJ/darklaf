@@ -30,6 +30,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.Segment;
 import javax.swing.text.TextAction;
 import java.awt.event.ActionEvent;
@@ -67,7 +68,7 @@ public class SelectLineAction extends TextAction {
         public void actionPerformed(final ActionEvent e) {
             int newPos;
             try {
-                var textArea = getTextComponent(e);
+                JTextComponent textArea = getTextComponent(e);
                 int caretPosition = textArea.getCaretPosition();
                 Document document = textArea.getDocument();
                 Element map = document.getDefaultRootElement();
@@ -128,7 +129,7 @@ public class SelectLineAction extends TextAction {
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            var textArea = getTextComponent(e);
+            JTextComponent textArea = getTextComponent(e);
             int offs = textArea.getCaretPosition();
             try {
                 Element root = textArea.getDocument().getDefaultRootElement();

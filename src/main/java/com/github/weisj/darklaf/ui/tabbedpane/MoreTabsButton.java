@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +62,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         int y = (getHeight() - icon.getIconHeight()) / 2;
 
 
-        var config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         /*
          * These offsets are due to the nature of the used icon. They are applied to match the baseline of
          * the label.properties text.
@@ -90,8 +91,8 @@ public class MoreTabsButton extends DarkTabAreaButton {
 
     @Override
     public Dimension getPreferredSize() {
-        var size = super.getPreferredSize();
-        var metrics = getFontMetrics(getFont());
+        Dimension size = super.getPreferredSize();
+        FontMetrics metrics = getFontMetrics(getFont());
         size.width += metrics.stringWidth(getLabelString()) + 3 * PAD;
         return size;
     }

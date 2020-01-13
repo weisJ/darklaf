@@ -62,8 +62,8 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
     public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         if ("document".equals(evt.getPropertyName())) {
-            var oldDoc = evt.getOldValue();
-            var newDoc = evt.getNewValue();
+            Object oldDoc = evt.getOldValue();
+            Object newDoc = evt.getNewValue();
             if (oldDoc instanceof Document) {
                 ((Document) oldDoc).removeDocumentListener(this);
             }

@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
@@ -100,7 +101,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
             public void setValue(final Object value) {
                 try {
-                    var model = spinner.getModel();
+                    SpinnerModel model = spinner.getModel();
                     if (model instanceof SpinnerNumberModel) {
                         spinner.setValue(NumberFormat.getInstance().parse(value.toString()));
                     } else if (model instanceof SpinnerDateModel) {
@@ -175,19 +176,19 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
         if (anEvent == null) return super.isCellEditable(anEvent);
-        var table = ((JTable) anEvent.getSource());
+        JTable table = ((JTable) anEvent.getSource());
         if (DarkTableCellRenderer.isBooleanRenderingEnabled(table) && anEvent instanceof MouseEvent) {
-            var p = ((MouseEvent) anEvent).getPoint();
+            Point p = ((MouseEvent) anEvent).getPoint();
             int row = table.rowAtPoint(p);
             int col = table.columnAtPoint(p);
             if (row >= 0 && row < table.getRowCount() && col >= 0 && col < table.getColumnCount()) {
-                var value = table.getValueAt(row, col);
+                Object value = table.getValueAt(row, col);
                 if (useBooleanEditor(value, table)) {
-                    var rect = table.getCellRect(row, col, false);
+                    Rectangle rect = table.getCellRect(row, col, false);
                     p.x -= rect.x;
                     p.y -= rect.y;
-                    var editor = getBooleanEditor(table).getTableCellEditorComponent(table, true,
-                                                                                     false, row, col);
+                    Component editor = getBooleanEditor(table).getTableCellEditorComponent(table, true,
+                                                                                           false, row, col);
                     return editor.contains(p);
                 }
             }
@@ -217,15 +218,15 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
         delegate.setValue(value);
 
-        var comp = editorComponent;
+        JComponent comp = editorComponent;
 
         if (editorComponent instanceof JComboBox) {
             ((JComboBox<?>) editorComponent).removeAllItems();
             ((JComboBox<Object>) editorComponent).addItem(value);
             ((JComboBox<?>) editorComponent).setSelectedItem(value);
         } else if (editorComponent instanceof JSpinner) {
-            var rendererComp = table.getCellRenderer(row, column)
-                                    .getTableCellRendererComponent(table, value, isSelected, false, row, column);
+            Component rendererComp = table.getCellRenderer(row, column)
+                                          .getTableCellRendererComponent(table, value, isSelected, false, row, column);
             if (rendererComp instanceof JTextField) {
                 editorComponent.putClientProperty("JSpinner.cellEditorAlignment",
                                                   ((JTextField) rendererComp).getHorizontalAlignment());
@@ -238,12 +239,12 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = table.getBackground();
-        var background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
+        Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
 
-        var rendererComp = table.getCellRenderer(row, column)
+        Component rendererComp = table.getCellRenderer(row, column)
                                 .getTableCellRendererComponent(table, value, isSelected, false, row, column);
         if (rendererComp instanceof JLabel) {
-            var icon = ((JLabel) rendererComp).getIcon();
+            Icon icon = ((JLabel) rendererComp).getIcon();
             if (icon != null) {
                 comp = iconWrapper;
                 iconWrapper.setBackground(background);
@@ -303,9 +304,9 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             if (c == null) return;
             int w = getWidth();
             int h = getHeight();
-            var b = c.getBorder();
-            var ins = new Insets(0, 0, 0, 0);
-            var labelSize = label.getPreferredSize();
+            Border b = c.getBorder();
+            Insets ins = new Insets(0, 0, 0, 0);
+            Dimension labelSize = label.getPreferredSize();
             int gap = getIconCompGap();
             if (b != null) {
                 ins = b.getBorderInsets(c);

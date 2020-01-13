@@ -41,7 +41,9 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,12 +104,12 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     private void removeOldMouseGrabber() {
         AppContext context = AppContext.getAppContext();
         try {
-            var field = BasicPopupMenuUI.class.getDeclaredField("MOUSE_GRABBER_KEY");
+            Field field = BasicPopupMenuUI.class.getDeclaredField("MOUSE_GRABBER_KEY");
             field.setAccessible(true);
-            var value = field.get(null);
-            var mouseGrabber = context.get(value);
+            Object value = field.get(null);
+            MouseGrabber mouseGrabber = (MouseGrabber) context.get(value);
             if (mouseGrabber != null) {
-                var method = mouseGrabber.getClass().getDeclaredMethod("uninstall");
+                Method method = mouseGrabber.getClass().getDeclaredMethod("uninstall");
                 method.setAccessible(true);
                 method.invoke(mouseGrabber);
             }

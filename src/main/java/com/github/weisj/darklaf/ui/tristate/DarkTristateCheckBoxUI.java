@@ -58,7 +58,7 @@ public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
     @Override
     protected Icon getCheckIcon(@NotNull final AbstractButton b) {
         if (b instanceof TristateCheckBox) {
-            var state = ((TristateCheckBox) b).getState();
+            TristateState state = ((TristateCheckBox) b).getState();
             if (state == TristateState.INDETERMINATE) {
                 if (b.isEnabled()) {
                     return b.hasFocus() ? checkBoxIndeterminateFocusedIcon : checkBoxIndeterminateIcon;

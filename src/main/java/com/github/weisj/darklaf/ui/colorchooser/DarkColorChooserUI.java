@@ -46,15 +46,15 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
 
     private final PropertyChangeListener propertyChangeListener = e -> {
         if ("ancestor".equals(e.getPropertyName())) {
-            var pane = (JComponent) e.getNewValue();
+            JComponent pane = (JComponent) e.getNewValue();
             if (pane != null) {
                 pane = (JComponent) pane.getRootPane().getContentPane();
             } else {
                 return;
             }
-            var children = pane.getComponents();
+            Component[] children = pane.getComponents();
             if (children.length >= 2 && children[1] instanceof JComponent) {
-                var layout = ((JComponent) children[1]).getLayout();
+                LayoutManager layout = ((JComponent) children[1]).getLayout();
                 if (layout instanceof FlowLayout) {
                     ((FlowLayout) layout).setAlignment(FlowLayout.TRAILING);
                 }
@@ -65,7 +65,7 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     private final AncestorListener ancestorListener = new AncestorAdapter() {
         @Override
         public void ancestorAdded(final AncestorEvent event) {
-            var win = SwingUtilities.getWindowAncestor(chooser);
+            Window win = SwingUtilities.getWindowAncestor(chooser);
             if (win instanceof Dialog) {
                 ((Dialog) win).setResizable(false);
                 chooser.removeAncestorListener(ancestorListener);

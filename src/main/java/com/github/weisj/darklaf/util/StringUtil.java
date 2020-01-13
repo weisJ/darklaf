@@ -239,4 +239,19 @@ public final class StringUtil {
             }
         }
     }
+
+    public static boolean isBlank(final String s) {
+        return s.trim().length() == 0;
+    }
+
+    @NotNull
+    public static String repeat(@NotNull final String s, final int count) {
+        if (count <= 0) return s;
+        if (count == 1) return s;
+        StringBuilder builder = new StringBuilder(s.length() * count);
+        for (int i = 0; i < count; i++) {
+            builder.append(s);
+        }
+        return builder.toString();
+    }
 }

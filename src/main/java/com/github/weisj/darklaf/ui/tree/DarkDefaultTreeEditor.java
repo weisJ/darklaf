@@ -23,10 +23,13 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
@@ -65,26 +68,10 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
         };
     }
 
-    protected boolean isBooleanRenderer(final JTree tree, final int row) {
-        var isBoolRenderer = realEditor instanceof DarkTreeCellEditor
-                && ((DarkTreeCellEditor) realEditor).isBooleanEditor(tree);
-        if (isBoolRenderer) return true;
-        var path = tree.getPathForRow(row);
-        return path != null
-                && DarkTreeCellRenderer.unwrapBooleanIfPossible(path.getLastPathComponent()) instanceof Boolean;
-    }
-
-    protected DarkTreeCellEditor getBooleanEditor(@NotNull final JTree table) {
-        if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
-            return radioButtonEditor;
-        }
-        return checkBoxEditor;
-    }
-
     @Override
     public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
                                                 final boolean expanded, final boolean leaf, final int row) {
-        var comp = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+        Component comp = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
         comp.setComponentOrientation(tree.getComponentOrientation());
         if (isBooleanRenderer(tree, row)) {
             ((Container) comp).remove(editingComponent);
@@ -94,6 +81,22 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
             ((Container) comp).add(editingComponent);
         }
         return comp;
+    }
+
+    protected DarkTreeCellEditor getBooleanEditor(@NotNull final JTree table) {
+        if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
+            return radioButtonEditor;
+        }
+        return checkBoxEditor;
+    }
+
+    protected boolean isBooleanRenderer(final JTree tree, final int row) {
+        boolean isBoolRenderer = realEditor instanceof DarkTreeCellEditor
+                && ((DarkTreeCellEditor) realEditor).isBooleanEditor(tree);
+        if (isBoolRenderer) return true;
+        TreePath path = tree.getPathForRow(row);
+        return path != null
+                && DarkTreeCellRenderer.unwrapBooleanIfPossible(path.getLastPathComponent()) instanceof Boolean;
     }
 
     @Override
@@ -109,17 +112,17 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     @Override
     protected boolean canEditImmediately(final EventObject event) {
         if (event != null && event.getSource() instanceof JTree) {
-            var tree = ((JTree) event.getSource());
-            var renderer = tree.getCellRenderer();
+            JTree tree = ((JTree) event.getSource());
+            TreeCellRenderer renderer = tree.getCellRenderer();
             if (event instanceof MouseEvent) {
-                var p = ((MouseEvent) event).getPoint();
+                Point p = ((MouseEvent) event).getPoint();
                 int row = tree.getRowForLocation(p.x, p.y);
                 if (isBooleanRenderer(tree, row) && renderer instanceof DarkTreeCellRenderer) {
-                    var bounds = tree.getRowBounds(row);
+                    Rectangle bounds = tree.getRowBounds(row);
                     if (bounds != null) {
-                        var rend = (DarkTreeCellRenderer) renderer;
-                        var booleanRend = rend.getBooleanRenderer(tree);
-                        var button = booleanRend.getButton();
+                        DarkTreeCellRenderer rend = (DarkTreeCellRenderer) renderer;
+                        DarkCellRendererToggleButton booleanRend = rend.getBooleanRenderer(tree);
+                        JToggleButton button = booleanRend.getButton();
 
                         p.x -= bounds.x + button.getX();
                         p.y -= bounds.y + button.getY();
