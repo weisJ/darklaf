@@ -39,6 +39,10 @@ artifacts {
 }
 
 signing {
+    def signingKeyId = findProperty("signingKeyId")
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign configurations.archives
 }
 
@@ -81,21 +85,12 @@ publishing {
             }
         }
     }
-//    repositories {
-//        maven {
-//            url deployRepoUrl
-//            credentials {
-//                username = deployRepoUsername
-//                password = deployRepoPassword
-//            }
-//        }
-//    }
     repositories {
         maven {
-            url System.getProperty("deployRepoUrl")
+            url System.getProperty("deployRepoUrl", deployRepoUrl)
             credentials {
-                username = System.getProperty("deployRepoUsername")
-                password = System.getProperty("deployRepoPassword")
+                username = System.getProperty("deployRepoUsername",deployRepoUsername)
+                password = System.getProperty("deployRepoPassword",deployRepoPassword)
             }
         }
     }
