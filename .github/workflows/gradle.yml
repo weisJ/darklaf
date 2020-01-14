@@ -20,4 +20,4 @@ jobs:
         repoPassword : '${{secrets.deployRepoPassword}}'
         signPassword : '${{secrets.SIGNING_PASSWORD}}'
         signKey : '${{secrets.SIGNING_KEY}}'
-      run: ./gradlew build -PdeployRepoUrl=${repoUrl} -PdeployRepoUsername=${repoUsername} -PdeployRepoPassword=${repoPassword} -PsigningPassword=${signPassword} -PsigningKey=${signKey}
+      run: ./gradlew build -PdeployRepoUrl='${{secrets.deployRepoUrl}}' -PdeployRepoUsername='${{secrets.deployRepoUsername}}' -PdeployRepoPassword='${{secrets.deployRepoPassword}}' -PsigningPassword='${{secrets.SIGNING_PASSWORD}}' -PsigningKey='${{secrets.SIGNING_KEY}}'
