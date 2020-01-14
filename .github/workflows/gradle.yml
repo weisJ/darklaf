@@ -14,4 +14,4 @@ jobs:
       with:
         java-version: 1.11
     - name: Build with Gradle
-      run: ./gradlew build -PdeployRepoUrl=${{secrets.deployRepoUrl}} -PdeployRepoUsername=${{secrets.deployRepoUsername}} -PdeployRepoPassword=${{secrets.deployRepoPassword}} -PsigningPassword=${{secrets.SIGNING_PASSWORD}} -PsigningKey=${{secrets.SIGNING_KEY}}
+      run: ./gradlew build --debug -PdeployRepoUrl=${{secrets.deployRepoUrl}} -PdeployRepoUsername=${{secrets.deployRepoUsername}} -PdeployRepoPassword=${{secrets.deployRepoPassword}} -PsigningPassword=${{secrets.SIGNING_PASSWORD}} -PsigningKey=${{secrets.SIGNING_KEY}}
