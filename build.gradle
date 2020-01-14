@@ -155,7 +155,7 @@ model {
 
 println "Building on OS: " + System.properties['os.name']
 println "Using JDK: " + System.properties['java.home']
-
+println signingKey
 
 compileJava {
     sourceCompatibility = 8
