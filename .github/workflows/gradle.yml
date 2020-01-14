@@ -22,4 +22,3 @@ jobs:
          signingKeyIdVar : ${{ secrets.SIGNING_KEY_ID }}
          signingPasswordVar :  ${{ secrets.SIGNING_PASSWORD }}
       run: ./gradlew build -PdeployRepoUrl=${{deployRepoUrlVar}} -PdeployRepoUsername=${{deployRepoUsernameVar}} -PdeployRepoPassword=${{deployRepoPasswordVar}} -PsigningKey=${{signingKeyVar}} -PsigningKeyId=${{signingKeyIdVar}} -PsigningPassword=${{signingPasswordVar}} 
-
