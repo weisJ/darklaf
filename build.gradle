@@ -39,10 +39,8 @@ artifacts {
 }
 
 signing {
-//    def signingKeyId = findProperty("signingKeyId")
-//    def signingKey = findProperty("signingKey")
-//    def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
+    def key = signingKey.replaceAll("#", "\n")
+    useInMemoryPgpKeys(key, signingPassword)
     sign configurations.archives
 }
 
@@ -155,7 +153,7 @@ model {
 
 println "Building on OS: " + System.properties['os.name']
 println "Using JDK: " + System.properties['java.home']
-println signingKey
+println signingKey.replaceAll("#", "\n")
 
 compileJava {
     sourceCompatibility = 8
