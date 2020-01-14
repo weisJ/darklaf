@@ -1,5 +1,7 @@
 import org.gradle.internal.jvm.Jvm
 
+
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.1.0'
     id 'java'
@@ -79,12 +81,21 @@ publishing {
             }
         }
     }
+//    repositories {
+//        maven {
+//            url deployRepoUrl
+//            credentials {
+//                username = deployRepoUsername
+//                password = deployRepoPassword
+//            }
+//        }
+//    }
     repositories {
         maven {
-            url deployRepoUrl
+            url System.getProperty("deployRepoUrl")
             credentials {
-                username = deployRepoUsername
-                password = deployRepoPassword
+                username = System.getProperty("deployRepoUsername")
+                password = System.getProperty("deployRepoPassword")
             }
         }
     }
