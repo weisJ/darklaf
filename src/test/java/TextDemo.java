@@ -38,7 +38,7 @@ public class TextDemo {
             p.add(new JFormattedTextField("Test"));
             p.add(new JTextArea("Test\n" + "Test\n" + "Test\n" + "Test..............\n"));
             p.add(new JTextPane() {{setText("Test\n" + "Test\n" + "Test\n" + "Test..............\n");}});
-            p.add(new JEditorPane() {{setText("Test");}});
+            p.add(new JEditorPane() {{setText("Test\n" + "Test\n" + "Test\n" + "Test..............\n");}});
             f.setContentPane(p);
             f.setSize(400, 400);
             f.pack();

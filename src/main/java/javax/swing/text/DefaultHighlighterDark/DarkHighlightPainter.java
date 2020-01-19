@@ -23,6 +23,7 @@
  */
 package javax.swing.text.DefaultHighlighterDark;
 
+import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
@@ -55,6 +56,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private static final boolean DEBUG_COLOR = false;
     private Paint paint;
     private Color color;
+    private ColorWrapper wrapper;
     private boolean roundedEdges;
     private AlphaComposite alphaComposite;
     private float alpha;
@@ -85,6 +87,12 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         setRoundedEdges(rounded);
         setAlpha(alpha);
         arcSize = UIManager.getInt("Highlight.arc");
+        wrapper = new ColorWrapper(color) {
+            @Override
+            public boolean equals(final Object obj) {
+                return obj != null;
+            }
+        };
     }
 
     public boolean getRoundedEdges() {
@@ -98,7 +106,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     @Override
     public Color getColor() {
-        return color;
+        return wrapper;
     }
 
     /**
@@ -117,6 +125,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2d);
         color = c.getSelectedTextColor();
+        wrapper.setColor(color);
 
         if (getAlpha() < 1.0f) {
             g2d.setComposite(getAlphaComposite());
@@ -188,6 +197,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         if (color == null) {
             color = c.getSelectedTextColor();
         }
+        wrapper.setColor(color);
         Shape dirtyShape = null;
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = GraphicsUtil.setupAAPainting(g2d);

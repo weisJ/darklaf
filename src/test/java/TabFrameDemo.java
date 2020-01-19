@@ -4,7 +4,7 @@ import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
-import com.github.weisj.darklaf.components.text.NonWrappingEditorPane;
+import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
 import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.icons.IconLoader;
@@ -124,7 +124,7 @@ public class TabFrameDemo {
 
     @NotNull
     private static Component createTextArea() {
-        NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingEditorPane() {{
+        NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {{
             setText((TestResources.LOREM_IPSUM).repeat(10));
             setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         }});
