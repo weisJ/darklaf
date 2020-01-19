@@ -107,8 +107,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             Field field = BasicPopupMenuUI.class.getDeclaredField("MOUSE_GRABBER_KEY");
             field.setAccessible(true);
             Object value = field.get(null);
-            MouseGrabber mouseGrabber = (MouseGrabber) context.get(value);
-            if (mouseGrabber != null) {
+            Object mouseGrabber = context.get(value);
+            if (mouseGrabber instanceof MouseGrabber) {
                 Method method = mouseGrabber.getClass().getDeclaredMethod("uninstall");
                 method.setAccessible(true);
                 method.invoke(mouseGrabber);

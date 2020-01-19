@@ -161,6 +161,7 @@ public class DarkButtonUI extends BasicButtonUI {
                     if (isFullShadow(c)) {
                         g.fillRect(0, 0, c.getWidth(), c.getHeight());
                     } else {
+                        margin.set(0, 0, 0, 0);
                         DarkUIUtil.fillRoundRect((Graphics2D) g, margin.left, margin.top,
                                                  c.getWidth() - margin.left - margin.right,
                                                  c.getHeight() - margin.top - margin.bottom, arc);

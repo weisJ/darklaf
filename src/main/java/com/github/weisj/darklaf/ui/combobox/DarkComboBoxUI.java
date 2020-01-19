@@ -58,7 +58,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mousePressed(final MouseEvent e) {
-            super.mousePressed(e);
             comboBox.getEditor().getEditorComponent().requestFocus();
         }
     };
