@@ -96,3 +96,4 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - Right to left layout support in [DarkTitlePane](https://github.com/weisJ/darklaf/blob/master/src/main/java/com/github/weisj/darklaf/ui/rootpane/DarkTitlePane.java).
 - Examine if Todo branch in [TabbedPaneUtil](https://github.com/weisJ/darklaf/blob/master/src/main/java/com/github/weisj/darklaf/ui/tabbedpane/TabbedPaneUtil.java) needs something to be done about.
 - [Arrow button cycle support for JComboBox.](https://github.com/weisJ/darklaf/issues/10)
+- [More customizability for icons](https://github.com/weisJ/darklaf/issues/11)
