@@ -88,4 +88,4 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [ComboBox Popups don't open.](https://github.com/weisJ/darklaf/issues/6)
 - [Custom TabComponents may be visible during DnD with JTabbedPane.](https://github.com/weisJ/darklaf/issues/7)
 - [Selection highlight wrong widht.](https://github.com/weisJ/darklaf/issues/8)
-- [Wrong selection text color with JTextPane](https://github.com/weisJ/darklaf/issues/9)
+- ([Wrong selection text color with JTextPane](https://github.com/weisJ/darklaf/issues/9))
