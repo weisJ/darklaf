@@ -84,8 +84,11 @@ This LookAndFeel supports custom window decorations (only Windows at this point)
 Here is a list of things that currently are not finished or need refinement. This list is a work in progress and being updated regulary. If you find any problems with the LaF feel free to submit an issue:
 
 - [Native window decorations on Linux and MacOS.](https://github.com/weisJ/darklaf/issues/2)
+  * See [jniplatform/cpp](https://github.com/weisJ/darklaf/tree/master/src/jniplatform/cpp) for the windows implementation.
+- [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
+  * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the plaform folder.
 - [Maximum window size for window decorations on windows.](https://github.com/weisJ/darklaf/issues/3)
 - [ComboBox Popups don't open.](https://github.com/weisJ/darklaf/issues/6)
 - [Custom TabComponents may be visible during DnD with JTabbedPane.](https://github.com/weisJ/darklaf/issues/7)
-- [Selection highlight wrong widht.](https://github.com/weisJ/darklaf/issues/8)
+- [Selection highlight wrong width.](https://github.com/weisJ/darklaf/issues/8)
 - ([Wrong selection text color with JTextPane](https://github.com/weisJ/darklaf/issues/9))
