@@ -36,8 +36,8 @@ public class TextDemo {
             p.add(new JTextField("Test"));
             p.add(new JPasswordField("Test"));
             p.add(new JFormattedTextField("Test"));
-            p.add(new JTextArea("Test"));
-            p.add(new JTextPane() {{setText("Test");}});
+            p.add(new JTextArea("Test\n" + "Test\n" + "Test\n" + "Test..............\n"));
+            p.add(new JTextPane() {{setText("Test\n" + "Test\n" + "Test\n" + "Test..............\n");}});
             p.add(new JEditorPane() {{setText("Test");}});
             f.setContentPane(p);
             f.setSize(400, 400);
