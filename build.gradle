@@ -173,7 +173,7 @@ model {
             architecture 'x86'
         }
         x64 {
-            architecture 'x86_64'
+            architecture 'x64'
         }
     }
     components {
