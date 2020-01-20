@@ -9,6 +9,16 @@ plugins {
     id 'cpp'
 }
 
+def signingKey = project.findProperty('signingKeyProp') ?: ""
+def signingPassword = project.findProperty('signingPasswordProp') ?: ""
+def deployRepoUrl = project.findProperty('deployRepoUrlProp') ?: ""
+def deployRepoUsername = project.findProperty('deployRepoUsernameProp') ?: ""
+def deployRepoPassword = project.findProperty('deployRepoPasswordProp') ?: ""
+if (signingKey.isEmpty()) {
+    project.gradle.startParameter.excludedTaskNames.add('signArchives')
+}
+
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -177,6 +187,9 @@ model {
                 linker.args "dwmapi.lib"
                 linker.args "user32.lib"
                 linker.args "Gdi32.lib"
+                linker.args "-ldwmapi"
+                linker.args "-lGdi32"
+                linker.args "-luser32"
             }
         }
     }
