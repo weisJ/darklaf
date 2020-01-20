@@ -10,7 +10,7 @@ public final class SplitPaneDemo {
             LafManager.install();
             final JFrame frame = new JFrame();
             frame.setSize(500, 500);
-            var splitPane = new JSplitPane() {
+            JSplitPane splitPane = new JSplitPane() {
             };
             splitPane.setLeftComponent(new JPanel() {{
                 setBackground(Color.RED);

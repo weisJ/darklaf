@@ -23,9 +23,9 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -107,7 +107,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         } else if (Objects.equals(name, "indexForNullComponent")) {
             ui.isRunsDirty = true;
             updateHtmlViews((Integer) e.getNewValue(), true);
-        } else if (Objects.equals(name, "font") || SwingUtilities2.isScaleChanged(e)) {
+        } else if (Objects.equals(name, "font") || DarkSwingUtil.isScaleChanged(e)) {
             ui.calculatedBaseline = false;
         }
     }

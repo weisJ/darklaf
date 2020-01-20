@@ -154,7 +154,7 @@ public class UIManagerDefaults implements ItemListener {
      */
     @NotNull
     private JComponent buildNorthComponent() {
-        comboBox = new JComboBox<>() {
+        comboBox = new JComboBox<String>() {
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(200, getUI().getPreferredSize(this).height);

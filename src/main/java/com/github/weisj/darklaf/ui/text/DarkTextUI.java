@@ -23,11 +23,11 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import sun.awt.SunToolkit;
 import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ActionMapUIResource;
@@ -192,7 +192,7 @@ public abstract class DarkTextUI extends BasicTextUI {
                 if (accelerator != '\0') {
                     km.put(KeyStroke.getKeyStroke(accelerator, getFocusAcceleratorKeyMask()), "requestFocus");
                     km.put(KeyStroke.getKeyStroke(accelerator,
-                                                  SwingUtilities2.setAltGraphMask(getFocusAcceleratorKeyMask())),
+                                                  DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
                            "requestFocus");
                 }
             }

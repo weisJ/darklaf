@@ -53,7 +53,7 @@ public final class UIDemo {
                     statusBar.add(new JLabel("test3"));
                     content.add(statusBar, BorderLayout.SOUTH);
 
-                    var defaultButton = new JButton("default") {{
+                    JButton defaultButton = new JButton("default") {{
                         setDefaultCapable(true);
                     }};
 

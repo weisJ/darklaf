@@ -1535,7 +1535,6 @@ public abstract class TableUIBridge extends TableUI {
             }
         }
 
-        @Override
         public boolean accept(final Object sender) {
             String key = getName();
 

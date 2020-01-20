@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.list;
 
 import com.github.weisj.darklaf.ui.BasicTransferable;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import org.jetbrains.annotations.NotNull;
@@ -243,8 +244,8 @@ public class DarkListUIBridge extends BasicListUI {
             final Graphics g,
             final int row,
             final Rectangle rowBounds,
-            final ListCellRenderer<Object> cellRenderer,
-            final ListModel<Object> dataModel,
+            final ListCellRenderer cellRenderer,
+            final ListModel dataModel,
             final ListSelectionModel selModel,
             final int leadIndex) {
         Object value = dataModel.getElementAt(row);
@@ -769,7 +770,7 @@ public class DarkListUIBridge extends BasicListUI {
      *
      * @throws NullPointerException {@inheritDoc}
      */
-    public int locationToIndex(final JList<?> list, final Point location) {
+    public int locationToIndex(final JList list, final Point location) {
         maybeUpdateLayoutState();
         return convertLocationToModel(location.x, location.y);
     }
@@ -777,7 +778,7 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * {@inheritDoc}
      */
-    public Point indexToLocation(final JList<?> list, final int index) {
+    public Point indexToLocation(final JList list, final int index) {
         maybeUpdateLayoutState();
         Rectangle rect = getCellBounds(list, index, index);
 
@@ -790,7 +791,7 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * {@inheritDoc}
      */
-    public Rectangle getCellBounds(final JList<?> list, final int index1, final int index2) {
+    public Rectangle getCellBounds(final JList list, final int index1, final int index2) {
         maybeUpdateLayoutState();
 
         int minIndex = Math.min(index1, index2);
@@ -1962,7 +1963,7 @@ public class DarkListUIBridge extends BasicListUI {
                 updateLayoutStateNeeded |= cellRendererChanged;
                 redrawList();
             } else if (Objects.equals(propertyName, "font")
-                    || SwingUtilities2.isScaleChanged(e)) {
+                    || DarkSwingUtil.isScaleChanged(e)) {
                 updateLayoutStateNeeded |= fontChanged;
                 redrawList();
             } else if (Objects.equals(propertyName, "prototypeCellValue")) {
@@ -2843,7 +2844,6 @@ public class DarkListUIBridge extends BasicListUI {
             }
         }
 
-        @Override
         public boolean accept(final Object c) {
             Object name = getName();
             if (name == SELECT_PREVIOUS_COLUMN_CHANGE_LEAD ||

@@ -126,8 +126,20 @@ public class DarkComboPopup extends BasicComboPopup {
             hide();
         } else if (lastEvent == 0 || (System.currentTimeMillis() - lastEvent) > 250) {
             visible = true;
+            System.out.println("here");
             SwingUtilities.invokeLater(this::show);
         }
+    }
+
+    @Override
+    public void show() {
+        super.show();
+    }
+
+
+    @Override
+    public void hide() {
+        super.hide();
     }
 
     protected void reset() {

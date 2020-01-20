@@ -22,7 +22,7 @@ public class SVGTest {
         JFrame frame = new JFrame();
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        var svgPanel = new SVGPanel() {
+        SVGPanel svgPanel = new SVGPanel() {
         };
         frame.setContentPane(svgPanel);
         svgPanel.setAntiAlias(true);

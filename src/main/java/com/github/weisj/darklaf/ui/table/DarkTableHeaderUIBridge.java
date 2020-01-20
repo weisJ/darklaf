@@ -268,7 +268,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             super(name);
         }
 
-        @Override
         public boolean accept(final Object sender) {
             if (sender instanceof JTableHeader) {
                 JTableHeader th = (JTableHeader) sender;

@@ -1,5 +1,6 @@
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.ClosableTabbedPane;
+import com.github.weisj.darklaf.util.StringUtil;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -23,7 +24,7 @@ public class TabbedPaneDemo extends JFrame {
 
                 for (int i = 0; i < 4; i++) {
                     JTextPane editor = new JTextPane();
-                    editor.setText("TabPaneDemo TabPane-" + j + "\n".repeat(i + 1));
+                    editor.setText(StringUtil.repeat("TabPaneDemo TabPane-" + j + "\n", i + 1));
                     tabbedPane.addTab("Tab (" + i + "," + j + ")", editor);
                 }
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);

@@ -47,6 +47,9 @@ import java.awt.event.KeyEvent;
  */
 public class DarkColorChooserPanel extends AbstractColorChooserPanel implements ColorListener {
 
+    public static final String TRANSPARENCY_ENABLED_PROPERTY
+            = "TransparencyEnabled";
+
     private final ColorPipette pipette;
     private final ColorWheelPanel colorWheelPanel;
     private final JFormattedTextField textHex;
@@ -330,7 +333,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return null;
     }
 
-    @Override
     public boolean isColorTransparencySelectionEnabled() {
         return colorWheelPanel.isColorTransparencySelectionEnabled();
     }
@@ -356,7 +358,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         isChanging = false;
     }
 
-    @Override
     public void setColorTransparencySelectionEnabled(final boolean b) {
         boolean oldValue = isColorTransparencySelectionEnabled();
         if (b != oldValue) {
