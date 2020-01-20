@@ -9,11 +9,11 @@ plugins {
     id 'cpp'
 }
 
-def signingKey = project.findProperty('signingKeyProp') ?: ""
-def signingPassword = project.findProperty('signingPasswordProp') ?: ""
-def deployRepoUrl = project.findProperty('deployRepoUrlProp') ?: ""
-def deployRepoUsername = project.findProperty('deployRepoUsernameProp') ?: ""
-def deployRepoPassword = project.findProperty('deployRepoPasswordProp') ?: ""
+def signingKey = project.findProperty('signingKeyProp') ?: System.getenv('signingKeyProp') ?: ""
+def signingPassword = project.findProperty('signingPasswordProp') ?: System.getenv('signingPasswordProp') ?: ""
+def deployRepoUrl = project.findProperty('deployRepoUrlProp') ?: System.getenv('deployRepoUrlProp') ?: ""
+def deployRepoUsername = project.findProperty('deployRepoUsernameProp') ?: System.getenv('deployRepoUsernameProp') ?: ""
+def deployRepoPassword = project.findProperty('deployRepoPasswordProp') ?: System.getenv('deployRepoPasswordProp') ?: ""
 if (signingKey.isEmpty()) {
     project.gradle.startParameter.excludedTaskNames.add('signArchives')
 }
