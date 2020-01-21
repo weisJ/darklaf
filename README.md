@@ -24,7 +24,7 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf</artifactId>
-  <version>1.3.1.2</version>
+  <version>1.3.1.3</version>
 </dependency>
 ````
 ### Gradle
