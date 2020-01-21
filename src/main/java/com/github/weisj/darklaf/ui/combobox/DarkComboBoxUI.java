@@ -203,7 +203,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         }
     }
 
-    protected Color getBackground(final JComboBox c) {
+    protected Color getBackground(@NotNull final JComboBox c) {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) return editBackground;
         return background;

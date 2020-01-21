@@ -136,7 +136,15 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 public void layoutContainer(final Container parent) {
                     super.layoutContainer(parent);
                     JScrollBar vsb = scrollpane.getVerticalScrollBar();
+                    if (vsb == null) {
+                        vsb = scrollpane.createHorizontalScrollBar();
+                        scrollpane.setHorizontalScrollBar(vsb);
+                    }
                     JScrollBar hsb = scrollpane.getHorizontalScrollBar();
+                    if (hsb == null) {
+                        hsb = scrollpane.createHorizontalScrollBar();
+                        scrollpane.setHorizontalScrollBar(hsb);
+                    }
                     Component lowerRight = scrollpane.getCorner(ScrollPaneConstants.LOWER_RIGHT_CORNER);
                     Component lowerLeft = scrollpane.getCorner(ScrollPaneConstants.LOWER_LEFT_CORNER);
                     Rectangle vertBounds = vsb.getBounds();

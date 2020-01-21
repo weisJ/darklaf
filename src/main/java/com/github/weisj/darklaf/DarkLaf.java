@@ -26,7 +26,7 @@ package com.github.weisj.darklaf;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.platform.windows.JNIDecorations;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.ui.menu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.PropertyLoader;
 import com.github.weisj.darklaf.util.SystemInfo;
 import org.jetbrains.annotations.Contract;

@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.util;
 
 import com.github.weisj.darklaf.decorators.CellRenderer;
-import com.github.weisj.darklaf.ui.menu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

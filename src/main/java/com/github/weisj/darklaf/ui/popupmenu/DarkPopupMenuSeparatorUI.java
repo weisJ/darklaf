@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 Jannis Weis
+ * Copyright (c) 2020 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,34 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.menu;
+package com.github.weisj.darklaf.ui.popupmenu;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.ui.separator.DarkSeparatorUI;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.plaf.InsetsUIResource;
-import javax.swing.plaf.UIResource;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 
 /**
  * @author Jannis Weis
  */
-public class DarkPopupMenuBorder extends MutableLineBorder implements UIResource {
-
-    public DarkPopupMenuBorder() {
-        super(1, 1, 1, 1, UIManager.getDefaults().getColor("PopupMenu.borderColor"));
-    }
-
-    @Override
-    public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y, final int width, final int height) {
-        setColor(UIManager.getDefaults().getColor("PopupMenu.borderColor"));
-        super.paintBorder(c, g, x, y, width, height);
-    }
+public class DarkPopupMenuSeparatorUI extends DarkSeparatorUI {
 
     @NotNull
+    @Contract("_ -> new")
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkPopupMenuSeparatorUI();
+    }
+
+
     @Override
-    public Insets getBorderInsets(final Component c) {
-        return new InsetsUIResource(1, 1, 1, 1);
+    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+        Dimension s = c.getSize();
+        g.setColor(UIManager.getDefaults().getColor("PopupMenu.borderColor"));
+        g.fillRect(0, 0, s.width, 1);
+    }
+
+    @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        return new Dimension(0, 1);
     }
 }

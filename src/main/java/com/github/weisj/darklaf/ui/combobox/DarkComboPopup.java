@@ -58,9 +58,10 @@ public class DarkComboPopup extends BasicComboPopup {
      *
      * @param combo an instance of {@code JComboBox}
      */
-    public DarkComboPopup(final JComboBox<Object> combo) {
+    public DarkComboPopup(final JComboBox combo) {
         super(combo);
     }
+
 
     @Override
     protected void firePopupMenuWillBecomeVisible() {
@@ -126,7 +127,6 @@ public class DarkComboPopup extends BasicComboPopup {
             hide();
         } else if (lastEvent == 0 || (System.currentTimeMillis() - lastEvent) > 250) {
             visible = true;
-            System.out.println("here");
             SwingUtilities.invokeLater(this::show);
         }
     }
@@ -141,6 +141,7 @@ public class DarkComboPopup extends BasicComboPopup {
     public void hide() {
         super.hide();
     }
+
 
     protected void reset() {
         lastEvent = 0;

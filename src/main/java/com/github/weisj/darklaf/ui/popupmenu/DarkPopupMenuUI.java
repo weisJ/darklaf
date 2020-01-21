@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 Jannis Weis
+ * Copyright (c) 2020 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.menu;
+package com.github.weisj.darklaf.ui.popupmenu;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -108,7 +108,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             field.setAccessible(true);
             Object value = field.get(null);
             Object mouseGrabber = context.get(value);
-            if (mouseGrabber instanceof MouseGrabber) {
+            if (mouseGrabber != null) {
                 Method method = mouseGrabber.getClass().getDeclaredMethod("uninstall");
                 method.setAccessible(true);
                 method.invoke(mouseGrabber);
