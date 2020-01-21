@@ -234,5 +234,4 @@ shadowJar {
     exclude 'com/sun/jna/sunos-sparcv9/'
     exclude 'com/sun/jna/sunos-x86/'
     exclude 'com/sun/jna/sunos-x86-64/'
-    minimize()
 }
