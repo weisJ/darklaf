@@ -29,7 +29,7 @@ This project is available on Maven Central:
 ````
 ### Gradle
 ````
-implementation 'com.github.weisj:darklaf:1.3.1.1'
+implementation 'com.github.weisj:darklaf:1.3.1.5'
 ````
 
 ## Installation
