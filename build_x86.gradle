@@ -18,8 +18,7 @@ if (signingKey.isEmpty()) {
     project.gradle.startParameter.excludedTaskNames.add('signArchives')
 }
 
-project.gradle.startParameter.excludedTaskNames.add('jniplatformX86StaticLibrary')
-project.gradle.startParameter.excludedTaskNames.add('jniplatformX64StaticLibrary')
+project.gradle.startParameter.excludedTaskNames.add('jniplatformStaticLibrary')
 
 repositories {
     mavenLocal()
@@ -163,14 +162,10 @@ model {
         x86 {
             architecture 'x86'
         }
-        x64 {
-            architecture 'x64'
-        }
     }
     components {
         jniplatform(NativeLibrarySpec) {
             targetPlatform "x86"
-            targetPlatform "x64"
             binaries.all {
                 cppCompiler.args "-I${Jvm.current().javaHome}/include"
                 cppCompiler.args "-I${Jvm.current().javaHome}/include/win32"
@@ -206,12 +201,12 @@ tasks.withType(JavaCompile) {
 
 task copyLibraries(type: Copy) {
     from "${buildDir}/libs/jniplatform/shared"
-    into "${projectDir}/src/main/resources/com/github/weisj/darklaf/platform/windows"
+    into "${projectDir}/src/main/resources/com/github/weisj/darklaf/platform/windows/x86"
     include "*.dll"
 }
 
 task buildLibraries {
-    dependsOn('jniplatformX64SharedLibrary', 'jniplatformX86SharedLibrary')
+    dependsOn('jniplatformSharedLibrary')
     finalizedBy(copyLibraries)
 }
 

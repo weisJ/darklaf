@@ -52,7 +52,7 @@ import java.awt.*;
 
 public class DarklafDemo {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
          SwingUtilities.invokeLater(() -> {
             LafManager.install();
 
@@ -79,6 +79,13 @@ property of the component.
 //Todo: list of properties
 
 This LookAndFeel supports custom window decorations (only Windows at this point). In contrast to most other LaFs the native window behaviour is not compromised giving a seamless experience that still looks native.
+
+# Build
+To build the project replace the ````build.gradle```` script with the one
+fitting your platform i.e.
+- You only have a x86 cpp installation -> ````build_x86.gradle````
+- You only have a x64 cpp installation -> ````build_x64.gradle````
+- You have a 86x_64x_multilib installation -> ````build.gradle````
 
 # Contribute
 Here is a list of things that currently are not finished or need refinement. This list is a work in progress and being updated regulary. If you find any problems with the LaF feel free to submit an issue:
