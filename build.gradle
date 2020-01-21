@@ -207,7 +207,7 @@ tasks.withType(JavaCompile) {
 task copyLibraries(type: Copy) {
     from "${buildDir}/libs/jniplatform/shared"
     into "${projectDir}/src/main/resources/com/github/weisj/darklaf/platform/windows"
-    include "*.dll"
+    include "*/*.dll"
 }
 
 task buildLibraries {
