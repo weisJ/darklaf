@@ -106,13 +106,23 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     }
     else if (uMsg == WM_GETMINMAXINFO)
     {
+        HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
+        HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+
+        MONITORINFO primaryMonitorInfo{sizeof(MONITORINFO)};
+        MONITORINFO targetMonitorInfo{sizeof(MONITORINFO)};
+
+        GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
+        GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
+
         MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
-        RECT max_rect;
-        SystemParametersInfo(SPI_GETWORKAREA, 0, &max_rect, 0);
-        min_max_info->ptMaxSize.x = max_rect.right - max_rect.left;
-        min_max_info->ptMaxSize.y = max_rect.bottom - max_rect.top;
-        min_max_info->ptMaxPosition.x = max_rect.left;
-        min_max_info->ptMaxPosition.y = max_rect.top;
+        RECT max_rect = primaryMonitorInfo.rcWork;
+        RECT target_rect = targetMonitorInfo.rcWork;
+        int indent = 2;
+        min_max_info->ptMaxSize.x = target_rect.right - target_rect.left - 2 * indent;
+        min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top - 2 + indent;
+        min_max_info->ptMaxPosition.x = max_rect.left + indent;
+        min_max_info->ptMaxPosition.y = max_rect.top + indent;
         return 0;
     }
 
@@ -132,7 +142,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_setResizable(JNIEn
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_updateValues(JNIEnv *env, jclass obj, jlong hwnd,
-                                                                   jint l, jint r, jint h)
+                                                                           jint l, jint r, jint h)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
