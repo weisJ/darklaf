@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="5" height="20" viewBox="0 0 5 20">
+    <defs id="colors">
+        <linearGradient id="horizontalGripIcon.color">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <rect height="6" width="1.5" y="0" x="0.5" fill="url(#horizontalGripIcon.color)"/>
+        <rect height="6" width="1.5" y="7" x="0.5" fill="url(#horizontalGripIcon.color)"/>
+        <rect height="6" width="1.5" y="14" x="0.5" fill="url(#horizontalGripIcon.color)"/>
+
+        <rect height="6" width="1.5" y="0" x="3" fill="url(#horizontalGripIcon.color)"/>
+        <rect height="6" width="1.5" y="7" x="3" fill="url(#horizontalGripIcon.color)"/>
+        <rect height="6" width="1.5" y="14" x="3" fill="url(#horizontalGripIcon.color)"/>
+    </g>
+</svg>

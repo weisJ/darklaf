@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="moreTabsIcon.color">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+        <linearGradient id="moreTabsIcon.arrowColor">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-opacity=".8">
+        <rect width="8" height="1" x="8" y="4" fill="url(#moreTabsIcon.color)"/>
+        <rect width="8" height="1" x="8" y="6" fill="url(#moreTabsIcon.color)"/>
+        <rect width="8" height="1" x="8" y="8" fill="url(#moreTabsIcon.color)"/>
+        <rect width="8" height="1" x="8" y="10" fill="url(#moreTabsIcon.color)"/>
+        <polygon fill="url(#moreTabsIcon.arrowColor)" points="3.5 7 6 10 1 10" transform="matrix(1 0 0 -1 0 17)"/>
+    </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="listFilesIcon.color">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <rect width="12" height="2" x="2" y="3" fill="url(#listFilesIcon.color)"/>
+        <rect width="12" height="2" x="2" y="7" fill="url(#listFilesIcon.color)"/>
+        <rect width="12" height="2" x="2" y="11" fill="url(#listFilesIcon.color)"/>
+    </g>
+</svg>
