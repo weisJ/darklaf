@@ -248,8 +248,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean selectionEnd = c.getSelectionEnd() <= offs1;
 
         Insets margin = c.getMargin();
-
-        boolean isToEndOfLine = posOffs1.y < posEnd.y && (true || posOffs1Forward.y != posOffs1Next.y);
+        boolean lastLineNotPainted = posOffs1Next.y == posEnd.y && posOffs1.y == posOffs1Forward.y;
+        boolean isToEndOfLine = posOffs1.y < posEnd.y && !lastLineNotPainted;
         boolean isToStartOfLine = !selectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
 
         Rectangle alloc;
