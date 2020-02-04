@@ -64,6 +64,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private int selectionEnd = -1;
     private int repaintCount = 0;
     private int arcSize;
+    private boolean suppressRounded = false;
 
 
     public DarkHighlightPainter() {
@@ -269,7 +270,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 && (posEnd.y == posStart.y + posStart.height
                 || (posEnd.y <= posStart.y + 2 * posStart.height && posEnd.x == margin.left));
 
-        alloc.width = Math.max(2 * arcSize, alloc.width);
+        if (alloc.width < 2 * arcSize && isRounded(c)) suppressRounded = true;
         alloc.x = Math.max(margin.left, Math.min(c.getWidth() - margin.right - alloc.width, alloc.x));
 
         Paint paint = getPaint();
@@ -309,6 +310,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                     isSecondLine, isSecondLastLine,
                                     selectionStart, selectionEnd,
                                     posStart, posEnd, dirtyShape.getBounds());
+        suppressRounded = false;
         return dirtyShape;
     }
 
@@ -369,7 +371,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     }
 
     private boolean isRounded(final JTextComponent c) {
-        return roundedEdges || Boolean.TRUE.equals(c.getClientProperty("JTextComponent.roundedSelection"));
+        return !suppressRounded
+                && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty("JTextComponent.roundedSelection")));
     }
 
     @Contract("_, _, _, _, _, _, _, _, _ -> param2")
@@ -418,7 +421,6 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             int w = c.getWidth() - start - margin.right;
             w = Math.max(2 * arcSize, w);
             start = Math.min(start, c.getWidth() - margin.right - w);
-            System.out.println(start + " " + w + " " + (start + w));
             if (rounded) {
                 boolean roundTop = isFirstLine || selectionStart;
                 boolean roundBottom = isLastLine || (isSecondLastLine && posEnd.x + posEnd.width <= start + w - arcSize);
