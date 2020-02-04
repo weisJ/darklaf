@@ -136,12 +136,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             TextUI mapper = c.getUI();
             Rectangle p0 = mapper.modelToView(c, offs0, Position.Bias.Forward);
             Rectangle p1 = mapper.modelToView(c, offs1, Position.Bias.Forward);
-            Paint paint = getPaint();
-            if (paint == null) {
-                g2d.setColor(c.getSelectionColor());
-            } else {
-                g2d.setPaint(paint);
-            }
+            setupColor(g2d, c);
 
             if (p0.y == p1.y) {
                 // Entire highlight is on one line.
@@ -234,6 +229,15 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return dirtyShape;
     }
 
+    private void setupColor(final Graphics2D g2d, @NotNull final JTextComponent c) {
+        Paint paint = getPaint();
+        if (paint == null) {
+            g2d.setColor(c.getSelectionColor());
+        } else {
+            g2d.setPaint(paint);
+        }
+    }
+
     protected Shape paintLayerImpl(final Graphics2D g2d, final int offs0, final int offs1,
                                    @NotNull final JTextComponent c) throws BadLocationException {
         Shape dirtyShape;
@@ -270,15 +274,12 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 && (posEnd.y == posStart.y + posStart.height
                 || (posEnd.y <= posStart.y + 2 * posStart.height && posEnd.x == margin.left));
 
-        if (alloc.width < 2 * arcSize && isRounded(c)) suppressRounded = true;
+        int originalWidth = alloc.width;
+        int originalX = alloc.x;
+        alloc.width = Math.max(2 * arcSize, alloc.width);
         alloc.x = Math.max(margin.left, Math.min(c.getWidth() - margin.right - alloc.width, alloc.x));
 
-        Paint paint = getPaint();
-        if (paint == null) {
-            g2d.setColor(c.getSelectionColor());
-        } else {
-            g2d.setPaint(paint);
-        }
+        setupColor(g2d, c);
 
         if (offs0 == offs1 && posEnd.y != posStart.y) {
             if (DEBUG_COLOR) g2d.setColor(Color.YELLOW.darker());
@@ -294,10 +295,17 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             // Should only render part of View.
             //Start/End parts of selection
             if (posEnd.y == posStart.y) {
-                dirtyShape = paintSelection(g2d, c, alloc, selectionStart, selectionEnd);
+                Rectangle rect = alloc;
+                if (originalWidth < 2 * arcSize && isRounded(c)) {
+                    suppressRounded = true;
+                    rect = new Rectangle(originalX, alloc.y, originalWidth, alloc.height);
+                }
+                paintSelection(g2d, c, rect, selectionStart, selectionEnd);
+                dirtyShape = alloc;
+                suppressRounded = false;
             } else if (selectionStart) {
-                dirtyShape = paintSelectionStart(g2d, alloc, c, posStart, posOffs0, isToEndOfLine,
-                                                 endBeforeStart);
+                dirtyShape = paintSelectionStart(g2d, alloc, c, posStart, posOffs0, endBeforeStart, isSecondLastLine,
+                                                 isToEndOfLine);
             } else {
                 dirtyShape = paintSelectionEnd(g2d, alloc, c, posStart,
                                                isFirstLine, isSecondLine, isToStartOfLine, isToEndOfLine,
@@ -310,7 +318,6 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                     isSecondLine, isSecondLastLine,
                                     selectionStart, selectionEnd,
                                     posStart, posEnd, dirtyShape.getBounds());
-        suppressRounded = false;
         return dirtyShape;
     }
 
@@ -344,21 +351,23 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return r;
     }
 
-    @Contract("_, _, _, _, _, _, _ -> param2")
+    @Contract("_, _, _, _, _, _, _, _ -> param2")
     @NotNull
     private Shape paintSelectionStart(@NotNull final Graphics2D g2d, @NotNull final Rectangle r,
                                       @NotNull final JTextComponent c,
                                       @NotNull final Rectangle posStart,
                                       final Rectangle posOffs0,
-                                      final boolean extendToEnd,
-                                      final boolean endBeforeStart) {
+                                      final boolean endBeforeStart, final boolean isSecondLastLine,
+                                      final boolean extendToEnd) {
         if (DEBUG_COLOR) g2d.setColor(Color.RED);
         Insets margin = c.getMargin();
         boolean rounded = isRounded(c);
         if (rounded && extendToEnd) r.width -= arcSize;
         if (rounded) {
-            paintRoundRect(g2d, r, arcSize, true, false, endBeforeStart, false);
-            boolean drawCorner = posOffs0.equals(posStart) && !endBeforeStart && r.x >= margin.left + arcSize;
+            boolean roundLeftBottom = endBeforeStart && isSecondLastLine;
+            if (r.width < 2 * arcSize) r.width = 2 * arcSize;
+            paintRoundRect(g2d, r, arcSize, true, false, roundLeftBottom, false);
+            boolean drawCorner = posOffs0.equals(posStart) && !roundLeftBottom && r.x >= margin.left + arcSize;
             if (drawCorner) {
                 paintStartArc(g2d, r);
                 r.x -= arcSize;
