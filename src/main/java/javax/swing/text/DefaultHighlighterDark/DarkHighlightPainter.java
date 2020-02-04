@@ -53,7 +53,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
 
-    private static final boolean DEBUG_COLOR = false;
+    private static final boolean DEBUG_COLOR = true;
     private Paint paint;
     private Color color;
     private ColorWrapper wrapper;
@@ -249,7 +249,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
         Insets margin = c.getMargin();
 
-        boolean isToEndOfLine = posOffs1.y < posEnd.y && (posOffs1Forward.y != posOffs1Next.y);
+        boolean isToEndOfLine = posOffs1.y < posEnd.y && (true || posOffs1Forward.y != posOffs1Next.y);
         boolean isToStartOfLine = !selectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
 
         Rectangle alloc;
@@ -295,7 +295,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             if (posEnd.y == posStart.y) {
                 dirtyShape = paintSelection(g2d, c, alloc, selectionStart, selectionEnd);
             } else if (selectionStart) {
-                dirtyShape = paintSelectionStart(g2d, alloc, c, posStart, posOffs0,
+                dirtyShape = paintSelectionStart(g2d, alloc, c, posStart, posOffs0, isToEndOfLine,
                                                  endBeforeStart);
             } else {
                 dirtyShape = paintSelectionEnd(g2d, alloc, c, posStart,
@@ -342,16 +342,19 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return r;
     }
 
-    @Contract("_, _, _, _, _, _ -> param2")
+    @Contract("_, _, _, _, _, _, _ -> param2")
     @NotNull
     private Shape paintSelectionStart(@NotNull final Graphics2D g2d, @NotNull final Rectangle r,
                                       @NotNull final JTextComponent c,
                                       @NotNull final Rectangle posStart,
                                       final Rectangle posOffs0,
+                                      final boolean extendToEnd,
                                       final boolean endBeforeStart) {
         if (DEBUG_COLOR) g2d.setColor(Color.RED);
         Insets margin = c.getMargin();
-        if (isRounded(c)) {
+        boolean rounded = isRounded(c);
+        if (rounded && extendToEnd) r.width -= arcSize;
+        if (rounded) {
             paintRoundRect(g2d, r, arcSize, true, false, endBeforeStart, false);
             boolean drawCorner = posOffs0.equals(posStart) && !endBeforeStart && r.x >= margin.left + arcSize;
             if (drawCorner) {
@@ -415,11 +418,11 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             int w = c.getWidth() - start - margin.right;
             w = Math.max(2 * arcSize, w);
             start = Math.min(start, c.getWidth() - margin.right - w);
+            System.out.println(start + " " + w + " " + (start + w));
             if (rounded) {
                 boolean roundTop = isFirstLine || selectionStart;
                 boolean roundBottom = isLastLine || (isSecondLastLine && posEnd.x + posEnd.width <= start + w - arcSize);
                 boolean roundLeftTop = isFirstLine && start == margin.left;
-                System.out.println(roundBottom);
                 paintRoundRect(g2d, new Rectangle(start, r.y, w, r.height), arcSize,
                                roundLeftTop, roundTop, false, roundBottom);
             } else {
