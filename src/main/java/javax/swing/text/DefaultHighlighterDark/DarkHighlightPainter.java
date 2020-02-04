@@ -377,12 +377,14 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                     final boolean extendToStart, final boolean extendToEnd,
                                     final boolean endBeforeStart) {
         if (DEBUG_COLOR) g2d.setColor(Color.GREEN);
+        boolean rounded = isRounded(c);
         Insets margin = c.getMargin();
         if (r.x + r.width >= c.getWidth() - margin.right - arcSize / 2.0) {
             int end = c.getWidth() - margin.right;
             r.width = end - r.x;
+            if (rounded && extendToEnd) r.width -= arcSize;
         }
-        if (isRounded(c)) {
+        if (rounded) {
             boolean roundRightTop = endBeforeStart && !extendToEnd;
             boolean roundLeftBottom = !isFirstLine && !extendToStart;
             boolean roundLeftTop = isSecondLine && !extendToStart && posStart.x >= r.x + arcSize;
@@ -417,6 +419,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 boolean roundTop = isFirstLine || selectionStart;
                 boolean roundBottom = isLastLine || (isSecondLastLine && posEnd.x + posEnd.width <= start + w - arcSize);
                 boolean roundLeftTop = isFirstLine && start == margin.left;
+                System.out.println(roundBottom);
                 paintRoundRect(g2d, new Rectangle(start, r.y, w, r.height), arcSize,
                                roundLeftTop, roundTop, false, roundBottom);
             } else {
