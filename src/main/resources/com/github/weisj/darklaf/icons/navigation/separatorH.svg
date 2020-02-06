@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="4" viewBox="0 6 16 4">
     <defs id="colors">
-        <linearGradient id="separatorHIcon.color">
+        <linearGradient id="Icons.separatorH.color">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">
-        <rect width="4" height="2" x="1" y="7" fill="url(#separatorHIcon.color)"/>
-        <rect width="4" height="2" x="6" y="7" fill="url(#separatorHIcon.color)"/>
-        <rect width="4" height="2" x="11" y="7" fill="url(#separatorHIcon.color)"/>
+        <rect width="4" height="2" x="1" y="7" fill="url(#Icons.separatorH.color)"/>
+        <rect width="4" height="2" x="6" y="7" fill="url(#Icons.separatorH.color)"/>
+        <rect width="4" height="2" x="11" y="7" fill="url(#Icons.separatorH.color)"/>
     </g>
 </svg>

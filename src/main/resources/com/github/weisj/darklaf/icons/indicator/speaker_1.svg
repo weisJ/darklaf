@@ -1,14 +1,15 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 500 500">
     <defs id="colors">
-        <linearGradient id="speaker1Icon.color">
+        <linearGradient id="Icons.speaker1.color">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
-        <linearGradient id="speaker1Icon.volumeColor">
+        <linearGradient id="Icons.speaker1.volumeColor">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <path fill="url(#speaker1Icon.color)" stroke="url(#speaker1Icon.color)" stroke-width="15" stroke-linejoin="round"
+    <path fill="url(#Icons.speaker1.color)" stroke="url(#Icons.speaker1.color)" stroke-width="15"
+          stroke-linejoin="round"
           d="M262.6,91.8l-114.4,98.9H40V318h106.6l116,100.3V91.8z"/>
 </svg>

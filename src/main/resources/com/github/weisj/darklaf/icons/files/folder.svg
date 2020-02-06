@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="folderIcon.color">
+        <linearGradient id="Icons.folder.color">
             <stop offset="0" stop-color="#9AA7B0"/>
             <stop offset="1" stop-color="#9AA7B0"/>
         </linearGradient>
     </defs>
-    <path fill="url(#folderIcon.color)" fill-opacity=".8"
+    <path fill="url(#Icons.folder.color)" fill-opacity=".8"
           d="M1,13 L15,13 L15,4 L7.98457,4 L6.69633,2.71149 C6.22161957,2.28559443 5.61570121,2.03457993 4.97888,2 L1.05128,2 C1.02295884,2 1,2.02295884 1,2.05128 L1,13 Z"/>
 </svg>

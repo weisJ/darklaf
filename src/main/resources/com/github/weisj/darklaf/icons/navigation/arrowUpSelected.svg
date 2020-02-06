@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="arrowUpSelectedIcon.color">
+        <linearGradient id="Icons.arrowUpSelected.color">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <polygon fill="url(#arrowUpSelectedIcon.color)" fill-rule="evenodd" points="8 5 12.5 10 3.5 10"/>
+    <polygon fill="url(#Icons.arrowUpSelected.color)" fill-rule="evenodd" points="8 5 12.5 10 3.5 10"/>
 </svg>

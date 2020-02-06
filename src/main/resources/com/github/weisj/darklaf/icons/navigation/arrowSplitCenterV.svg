@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="arrowSplitCenterVIcon.color">
+        <linearGradient id="Icons.arrowSplitCenterV.color">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <polygon fill="url(#arrowSplitCenterVIcon.color)" fill-rule="evenodd" points="8 4 10.5 7 5.5 7"/>
-    <polygon fill="url(#arrowSplitCenterVIcon.color)" fill-rule="evenodd" points="8 9 10.5 12 5.5 12"
+    <polygon fill="url(#Icons.arrowSplitCenterV.color)" fill-rule="evenodd" points="8 4 10.5 7 5.5 7"/>
+    <polygon fill="url(#Icons.arrowSplitCenterV.color)" fill-rule="evenodd" points="8 9 10.5 12 5.5 12"
              transform="matrix(1 0 0 -1 0 21)"/>
 </svg>
