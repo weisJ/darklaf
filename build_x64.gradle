@@ -66,7 +66,9 @@ publishing {
             // create the sign pom artifact
             pom.withXml {
                 def pomFile = file("${project.buildDir}/generated-pom.xml")
+                def projectPom = file("pom.xml")
                 writeTo(pomFile)
+                writeTo(projectPom)
                 def pomAscFile = signing.sign(pomFile).signatureFiles[0]
                 artifact(pomAscFile) {
                     classifier = null
