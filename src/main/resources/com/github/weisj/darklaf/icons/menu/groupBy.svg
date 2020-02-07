@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="Icons.groupBy.color">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <rect width="4" height="4" x="3" y="3" fill="url(#Icons.groupBy.color)"/>
+        <rect width="4" height="4" x="3" y="9" fill="url(#Icons.groupBy.color)"/>
+        <rect width="4" height="4" x="9" y="3" fill="url(#Icons.groupBy.color)"/>
+        <rect width="4" height="4" x="9" y="9" fill="url(#Icons.groupBy.color)"/>
+    </g>
+</svg>

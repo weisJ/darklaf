@@ -39,9 +39,12 @@ public class DarculaTheme extends Theme {
     }
 
     @Override
-    public boolean isDark() {
+    public boolean useDarkIcons() {
         return true;
     }
 
-
+    @Override
+    protected IconTheme getPresetIconTheme() {
+        return IconTheme.DARK;
+    }
 }

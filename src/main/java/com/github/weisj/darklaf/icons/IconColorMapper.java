@@ -60,7 +60,7 @@ public final class IconColorMapper {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
         if (defs == null) return;
-        List children = defs.getChildren(null);
+        List<?> children = defs.getChildren(null);
         root.removeChild(defs);
 
         Defs themedDefs = new Defs();

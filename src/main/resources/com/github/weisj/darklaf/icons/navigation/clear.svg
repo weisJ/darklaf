@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 32 32" width="16" height="16">
+    <defs id="colors">
+        <linearGradient id="Icons.clear.color">
+            <stop offset="0" stop-color="#7F8B91"/>
+            <stop offset="1" stop-color="#7F8B91"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#Icons.clear.color)" fill-opacity="0.8"
+          d="M14,0A14,14,0,1,0,28,14,14,14,0,0,0,14,0Zm7.5,19.1L19,21.6l-5-5-5,5L6.5,19.1l5-5-5-5L9,6.6l5,5,5-5,2.5,2.5-5,5Z"/>
+</svg>

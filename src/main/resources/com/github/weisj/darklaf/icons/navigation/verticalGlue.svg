@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="13" height="4" viewBox="0 0 13 4">
+    <defs id="colors">
+        <linearGradient id="Icons.verticalGlue.color">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+    </defs>
+    <circle cx="2" cy="2" r="1.5" fill="url(#Icons.verticalGlue.color)"/>
+    <circle cx="6.5" cy="2" r="1.5" fill="url(#Icons.verticalGlue.color)"/>
+    <circle cx="11" cy="2" r="1.5" fill="url(#Icons.verticalGlue.color)"/>
+</svg>

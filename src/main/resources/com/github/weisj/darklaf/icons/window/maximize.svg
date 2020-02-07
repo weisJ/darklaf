@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="Icons.windowMaximize.color">
+            <stop offset="0" stop-color="#A9A9A9"/>
+            <stop offset="1" stop-color="#A9A9A9"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#Icons.windowMaximize.color)" fill-rule="evenodd"
+          d="M3,3 L13,3 L13,13 L3,13 L3,3 Z M4,4 L4,12 L12,12 L12,4 L4,4 Z"/>
+</svg>

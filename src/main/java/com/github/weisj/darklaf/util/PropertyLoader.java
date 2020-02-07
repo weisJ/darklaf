@@ -57,7 +57,7 @@ public final class PropertyLoader {
     private static final IconLoader ICON_LOADER = IconLoader.get();
     private static final String DUAL_KEY = "[dual]";
     private static final String AWARE_KEY = "[aware]";
-    private static final String PATCH_KEY = "[patch]";
+    private static final String THEMED_KEY = "[themed]";
     private static final String REFERENCE_PREFIX = "%";
 
     private static final Collection<ObjectRequest> objectsToLoad = new HashSet<>();
@@ -210,14 +210,14 @@ public final class PropertyLoader {
                 tag = DUAL_KEY;
             } else if (path.endsWith(AWARE_KEY)) {
                 tag = AWARE_KEY;
-            } else if (path.endsWith(PATCH_KEY)) {
-                tag = PATCH_KEY;
+            } else if (path.endsWith(THEMED_KEY)) {
+                tag = THEMED_KEY;
             }
             if (tag == null) {
                 throw new IllegalArgumentException("Invalid tag on icon path: '" + value + "'");
             }
             String iconPath = path.substring(0, path.length() - tag.length());
-            if (tag.equals(PATCH_KEY)) {
+            if (tag.equals(THEMED_KEY)) {
                 return ICON_LOADER.getIcon(iconPath, dim.width, dim.height, true);
             } else {
                 DarkUIAwareIcon icon = ICON_LOADER.getUIAwareIcon(iconPath, dim.width, dim.height);

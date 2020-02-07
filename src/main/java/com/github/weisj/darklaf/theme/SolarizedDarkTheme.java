@@ -41,7 +41,7 @@ public class SolarizedDarkTheme extends Theme {
     }
 
     @Override
-    public boolean isDark() {
+    public boolean useDarkIcons() {
         return true;
     }
 
@@ -50,5 +50,10 @@ public class SolarizedDarkTheme extends Theme {
         super.loadUIProperties(properties, currentDefaults);
         String name = getResourcePath() + getName() + "_ui.properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
+    }
+
+    @Override
+    protected IconTheme getPresetIconTheme() {
+        return IconTheme.NONE;
     }
 }

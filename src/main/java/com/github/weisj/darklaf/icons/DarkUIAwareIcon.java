@@ -105,7 +105,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
     private void loadIcon() {
         currentTheme = LafManager.getTheme();
-        if (currentTheme.isDark()) {
+        if (currentTheme.useDarkIcons()) {
             icon = IconLoader.get(parentClass).getIcon(darkKey, w, h);
         } else {
             icon = IconLoader.get(parentClass).getIcon(lightKey, w, h);

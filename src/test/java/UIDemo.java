@@ -42,7 +42,7 @@ public final class UIDemo {
                             UIDemo.class.getClassLoader().getResource("mima.png")
                     ));
 
-                    Icon folderIcon = IconLoader.get().getUIAwareIcon("files/folder.svg", 19, 19);
+                    Icon folderIcon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
 
                     JPanel panel = new JPanel(new GridLayout(3, 4));
                     JPanel content = new JPanel(new BorderLayout());

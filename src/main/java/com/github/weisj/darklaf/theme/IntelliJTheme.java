@@ -49,8 +49,13 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
-    public boolean isDark() {
+    public boolean useDarkIcons() {
         return false;
+    }
+
+    @Override
+    protected IconTheme getPresetIconTheme() {
+        return IconTheme.LIGHT;
     }
 
     @Override
