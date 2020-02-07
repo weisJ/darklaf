@@ -54,6 +54,6 @@ public class SolarizedDarkTheme extends Theme {
 
     @Override
     protected IconTheme getPresetIconTheme() {
-        return IconTheme.DARK;
+        return IconTheme.NONE;
     }
 }
