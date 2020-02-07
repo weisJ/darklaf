@@ -75,6 +75,10 @@ public class DarkSVGIcon implements Icon, Serializable {
         return new DarkSVGIcon(width, height, this);
     }
 
+    public void setDisplaySize(final int width, final int height) {
+        size.setSize(width, height);
+    }
+
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         ensureLoaded();
