@@ -110,7 +110,7 @@ public final class DarkUIUtil {
         g.setComposite(DarkUIUtil.GLOW_ALPHA);
         Outline.focus.setGraphicsColor(g, true);
 
-        float blw = (float) (6.0f / Scale.SCALE);
+        float blw = 3.0f;
         Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         shape.append(new Ellipse2D.Float(x - blw, y - blw, width + blw * 2, height + blw * 2), false);
         shape.append(new Ellipse2D.Float(x, y, width, height), false);
@@ -120,7 +120,7 @@ public final class DarkUIUtil {
 
     public static void paintLineBorder(final Graphics2D g, final float x, final float y,
                                        final float width, final float height, final int arc, final boolean growByLW) {
-        float lw = (float) (1.0f / Scale.SCALE);
+        float lw = 0.5f;
         float adj = growByLW ? lw : 0;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);

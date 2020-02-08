@@ -287,6 +287,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         super.paintVerticalLabel(g, value, label);
     }
 
+
     @Override
     public void paintThumb(final Graphics g2) {
         Graphics2D g = (Graphics2D) g2;
