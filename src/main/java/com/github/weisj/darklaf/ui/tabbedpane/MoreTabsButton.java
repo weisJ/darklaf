@@ -44,7 +44,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         icon = ui.getMoreTabsIcon();
         setIcon(EmptyIcon.create(icon.getIconWidth(), icon.getIconHeight()));
         putClientProperty("JButton.variant", "onlyLabel");
-        putClientProperty("JButton.buttonType", "square");
+        putClientProperty("JButton.square", true);
         setFont(getFont().deriveFont(8f));
     }
 

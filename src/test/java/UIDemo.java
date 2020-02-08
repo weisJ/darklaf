@@ -87,12 +87,12 @@ public final class UIDemo {
                             }});
                             add(new JButton(folderIcon) {{
                                 setRolloverEnabled(true);
-                                putClientProperty("JButton.buttonType", "square");
+                                putClientProperty("JButton.square", true);
                                 putClientProperty("JButton.variant", "shadow");
                             }});
                             add(new JButton(folderIcon) {{
                                 setRolloverEnabled(true);
-                                putClientProperty("JButton.buttonType", "square");
+                                putClientProperty("JButton.square", true);
                                 putClientProperty("JButton.thin", Boolean.TRUE);
                                 putClientProperty("JButton.alternativeArc", Boolean.TRUE);
                                 putClientProperty("JButton.variant", "shadow");
@@ -166,7 +166,7 @@ public final class UIDemo {
                             putClientProperty("ToggleButton.variant", "slider");
                         }});
                         add(new JButton("square") {{
-                            putClientProperty("JButton.buttonType", "square");
+                            putClientProperty("JButton.square", true);
                         }});
                     }});
                     panel.add(taskpanecontainer);

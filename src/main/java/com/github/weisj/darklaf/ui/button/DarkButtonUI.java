@@ -40,12 +40,14 @@ import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkButtonUI extends BasicButtonUI {
+public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListener {
 
     protected static final Rectangle viewRect = new Rectangle();
     protected static final Rectangle textRect = new Rectangle();
@@ -100,18 +102,21 @@ public class DarkButtonUI extends BasicButtonUI {
         squareArc = UIManager.getInt("Button.squareArc");
     }
 
+    @Contract("null -> false")
+    public static boolean isSquare(final Component c) {
+        return c instanceof JButton && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.square"));
+    }
+
     @Override
-    public void paint(final Graphics g, final JComponent c) {
-        GraphicsContext config = new GraphicsContext(g);
-        AbstractButton b = (AbstractButton) c;
-        paintButton(g, c);
+    protected void installListeners(final AbstractButton b) {
+        super.installListeners(b);
+        b.addPropertyChangeListener(this);
+    }
 
-        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
-                             b.getWidth(), b.getHeight());
-
-        paintIcon(g, b, c);
-        paintText(g, b, c, text);
-        config.restore();
+    @Override
+    protected void uninstallListeners(final AbstractButton b) {
+        super.uninstallListeners(b);
+        b.removePropertyChangeListener(this);
     }
 
     @Override
@@ -136,12 +141,18 @@ public class DarkButtonUI extends BasicButtonUI {
         config.restore();
     }
 
-    protected Color getForeground(@NotNull final AbstractButton button) {
-        Color fg = button.getForeground();
-        if (fg instanceof UIResource && isDefaultButton(button)) {
-            fg = defaultForeground;
-        }
-        return fg;
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        GraphicsContext config = new GraphicsContext(g);
+        AbstractButton b = (AbstractButton) c;
+        paintButton(g, c);
+
+        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
+                             b.getWidth(), b.getHeight());
+
+        paintIcon(g, b, c);
+        paintText(g, b, c, text);
+        config.restore();
     }
 
     protected boolean isDefaultButton(final JComponent c) {
@@ -284,9 +295,12 @@ public class DarkButtonUI extends BasicButtonUI {
         context.restore();
     }
 
-    @Contract("null -> false")
-    public static boolean isSquare(final Component c) {
-        return c instanceof JButton && "square".equals(((JButton) c).getClientProperty("JButton.buttonType"));
+    protected Color getForeground(@NotNull final AbstractButton button) {
+        Color fg = button.getForeground();
+        if (fg instanceof UIResource && isDefaultButton(button) && !isShadowVariant(button)) {
+            fg = defaultForeground;
+        }
+        return fg;
     }
 
     @Contract("null -> false")
@@ -310,8 +324,11 @@ public class DarkButtonUI extends BasicButtonUI {
     @Override
     public void update(final Graphics g, final JComponent c) {
         super.update(g, c);
-        if (c instanceof JButton && ((JButton) c).isDefaultButton() && !SystemInfo.isMac && !c.getFont().isBold()) {
+        boolean isDefaultButton = isDefaultButton(c) && !SystemInfo.isMac;
+        if (isDefaultButton && !c.getFont().isBold()) {
             c.setFont(c.getFont().deriveFont(Font.BOLD));
+        } else if (!isDefaultButton && c.getFont().isBold()) {
+            c.setFont(c.getFont().deriveFont(Font.PLAIN));
         }
     }
 
@@ -325,5 +342,14 @@ public class DarkButtonUI extends BasicButtonUI {
         int arc = getArc(c);
         return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getWidth() - 2 * bs,
                                           arc, arc).contains(x, y);
+    }
+
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if (key.startsWith("JButton.")) {
+            button.repaint();
+            button.revalidate();
+        }
     }
 }

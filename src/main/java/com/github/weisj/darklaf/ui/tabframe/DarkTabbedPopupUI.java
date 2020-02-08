@@ -158,7 +158,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
         protected JButton createButton() {
             HeaderButton button = new HeaderButton(ui.getNewTabIcon(), DarkTabbedPopupUI.this);
             button.putClientProperty("JButton.variant", "shadow");
-            button.putClientProperty("JButton.buttonType", "square");
+            button.putClientProperty("JButton.square", true);
             button.putClientProperty("JButton.thin", Boolean.TRUE);
             button.setRolloverEnabled(true);
             button.setOpaque(false);
