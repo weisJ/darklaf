@@ -14,6 +14,7 @@ Darcula Theme | IntelliJ Theme
 Solarized Dark Theme | Solarized Light Theme
 
 # Usage & [Features](https://github.com/weisJ/darklaf/wiki/Features)
+The LaF is compatible with Java >=1.8 (you need >=1.9 to get proper scaling).
 You can either use the current build from [releases](https://github.com/weisJ/darklaf/releases) or the the [bin folder](https://github.com/weisJ/darklaf/tree/master/bin). These binaries already include a stripped down version of all dependecies.
 
 A list of all features can be found [here](https://github.com/weisJ/darklaf/wiki/Features).
