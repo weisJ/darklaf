@@ -44,7 +44,7 @@ import java.util.logging.Logger;
 /**
  * @author Jannis Weis
  */
-public abstract class Theme {
+public abstract class Theme extends UIManager.LookAndFeelInfo {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
     private static final String[] UI_PROPERTIES = new String[]{
             "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
@@ -56,6 +56,16 @@ public abstract class Theme {
     private static final String[] ICON_PROPERTIES = new String[]{
             "control", "dialog", "files", "indicator", "menu", "misc", "navigation", "window"
     };
+
+
+    public Theme() {
+        super("overridden by getName()", DarkLaf.class.getCanonicalName());
+    }
+
+    @Override
+    public final String getClassName() {
+        return DarkLaf.class.getCanonicalName();
+    }
 
     /**
      * Called in the constructor of the look and feel.

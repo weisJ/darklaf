@@ -1,26 +1,7 @@
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.components.SelectableTreeNode;
-import com.github.weisj.darklaf.components.alignment.Alignment;
-import com.github.weisj.darklaf.components.border.DarkBorders;
-import com.github.weisj.darklaf.components.tabframe.JTabFrame;
-import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
-import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
-import com.github.weisj.darklaf.components.text.NumberedTextComponent;
-import com.github.weisj.darklaf.components.text.NumberingPane;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.util.StringUtil;
-import demo.DemoResources;
-import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
-
 /*
  * MIT License
  *
- * Copyright (c) 2019 Jannis Weis
+ * Copyright (c) 2020 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +21,27 @@ import java.awt.*;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package demo.tabFrame;
+
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.components.alignment.Alignment;
+import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.components.tabframe.JTabFrame;
+import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
+import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
+import com.github.weisj.darklaf.components.text.NumberedTextComponent;
+import com.github.weisj.darklaf.components.text.NumberingPane;
+import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.util.StringUtil;
+import demo.DemoResources;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
+
 public class TabFrameDemo {
 
     public static void main(final String[] args) {

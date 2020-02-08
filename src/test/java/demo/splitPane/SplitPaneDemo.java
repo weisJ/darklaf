@@ -1,11 +1,7 @@
-import com.github.weisj.darklaf.LafManager;
-
-import javax.swing.*;
-
 /*
  * MIT License
  *
- * Copyright (c) 2019 Jannis Weis
+ * Copyright (c) 2020 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,26 +21,36 @@ import javax.swing.*;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class TextDemo {
+package demo.splitPane;
+
+import com.github.weisj.darklaf.LafManager;
+
+import javax.swing.*;
+import java.awt.*;
+
+public final class SplitPaneDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
-            JFrame f = new JFrame();
-            f.setTitle("Text Test");
-            JPanel p = new JPanel();
-            p.add(new JTextField("Test"));
-            p.add(new JPasswordField("Test"));
-            p.add(new JFormattedTextField("Test"));
-            p.add(new JTextArea("Test\n" + "Test\n" + "Test\n" + "Test..............\n"));
-            p.add(new JTextPane() {{setText("Test\n" + "Test\n" + "Test\n" + "Test..............\n");}});
-            p.add(new JEditorPane() {{setText("Test\n" + "Test\n" + "Test\n" + "Test..............\n");}});
-            f.setContentPane(p);
-            f.setSize(400, 400);
-            f.pack();
-            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            f.setLocationRelativeTo(null);
-            f.setVisible(true);
+            final JFrame frame = new JFrame();
+            frame.setSize(500, 500);
+            JSplitPane splitPane = new JSplitPane() {
+            };
+            splitPane.setLeftComponent(new JPanel() {{
+                setBackground(Color.RED);
+            }});
+            splitPane.setRightComponent(new JPanel() {{
+                setBackground(Color.BLUE);
+            }});
+            splitPane.putClientProperty("JSplitPane.style", "invisible");
+            splitPane.putClientProperty("JSplitPane.style", "line");
+            splitPane.setOneTouchExpandable(true);
+            frame.setContentPane(new JPanel(new BorderLayout()) {{
+                add(splitPane, BorderLayout.CENTER);
+            }});
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
         });
     }
 }
