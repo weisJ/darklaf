@@ -50,7 +50,7 @@ public final class LafManager {
         /*
          * Disable for production.
          */
-        enableLogging(!logEnabled);
+        enableLogging(false);
     }
 
     /**
