@@ -331,10 +331,16 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                     text.setHorizontalAlignment(alignment);
                 }
             }
+            spinner.repaint();
         } else if ("JSpinner.cellEditorAlignment".equals(key) && isTableCellEditor(spinner)) {
             if (editorComponent instanceof JTextField && evt.getNewValue() instanceof Integer) {
                 ((JTextField) editorComponent).setHorizontalAlignment((Integer) evt.getNewValue());
             }
+            spinner.repaint();
+        } else if ("JSpinner.variant".equals(key)) {
+            spinner.repaint();
+        } else if ("JSpinner.isTreeCellEditor".equals(key)) {
+            spinner.repaint();
         }
     }
 
