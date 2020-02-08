@@ -46,12 +46,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
+public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyChangeListener {
 
     private static final int BUTTON_PAD = 7;
 
@@ -108,12 +110,14 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     protected void installListeners() {
         super.installListeners();
         comboBox.addMouseListener(mouseListener);
+        comboBox.addPropertyChangeListener(this);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
         comboBox.removeMouseListener(mouseListener);
+        comboBox.removePropertyChangeListener(this);
     }
 
     @Override
@@ -254,7 +258,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
     @Override
     protected Rectangle rectangleForCurrentValue() {
         Rectangle rect = super.rectangleForCurrentValue();
-        if (!comboBox.getComponentOrientation().isLeftToRight()) {
+        if (comboBox.isEditable() && !comboBox.getComponentOrientation().isLeftToRight()) {
             rect.x += borderSize;
             rect.width -= borderSize;
         }
@@ -392,7 +396,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
         }
     }
 
-    protected Paint getArrowBackground(final JComboBox c) {
+    protected Paint getArrowBackground(@NotNull final JComboBox<?> c) {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) {
             return new GradientPaint(0, borderSize, arrowBackgroundStart,
@@ -420,5 +424,19 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border {
 
     public void resetPopup() {
         ((DarkComboPopup) popup).reset();
+    }
+
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if ("componentOrientation".equals(key)) {
+            comboBox.doLayout();
+            comboBox.repaint();
+//            editor.setComponentOrientation(comboBox.getComponentOrientation());
+        } else if ("editable".equals(key)) {
+            comboBox.repaint();
+        } else if ("JComboBox.isTableCellEditor".equals(key) || "JComboBox.isTreeCellEditor".equals(key)) {
+            comboBox.repaint();
+        }
     }
 }

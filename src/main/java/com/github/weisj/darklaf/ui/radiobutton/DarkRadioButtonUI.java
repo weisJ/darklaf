@@ -270,7 +270,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         String key = evt.getPropertyName();
         if ("componentOrientation".equals(key)) {
             radioButton.repaint();
-        } else if ("JToggleButton.isTreeCellEditor".equals(key)) {
+        } else if ("JToggleButton.isTreeCellEditor".equals(key) || "JToggleButton.isTableCellEditor".equals(key)) {
             radioButton.repaint();
         }
     }

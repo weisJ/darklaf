@@ -41,7 +41,7 @@ public class TriCheckBoxDemo implements ComponentDemo {
         TristateCheckBox button = new TristateCheckBox("Test TriCheckBox");
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(2, 2));
+        controlPanel.setLayout(new GridLayout(3, 2));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
@@ -58,6 +58,10 @@ public class TriCheckBoxDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("JToggleButton.isTreeCellEditor") {{
             setSelected(false);
             addActionListener(e -> button.putClientProperty("JToggleButton.isTreeCellEditor", isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("JToggleButton.isTableCellEditor") {{
+            setSelected(false);
+            addActionListener(e -> button.putClientProperty("JToggleButton.isTableCellEditor", isSelected()));
         }});
         return panel;
     }

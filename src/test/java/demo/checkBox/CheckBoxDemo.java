@@ -58,6 +58,10 @@ public class CheckBoxDemo implements ComponentDemo {
             setSelected(false);
             addActionListener(e -> button.putClientProperty("JToggleButton.isTreeCellEditor", isSelected()));
         }});
+        controlPanel.add(new JCheckBox("JToggleButton.isTableCellEditor") {{
+            setSelected(false);
+            addActionListener(e -> button.putClientProperty("JToggleButton.isTableCellEditor", isSelected()));
+        }});
         return panel;
     }
 

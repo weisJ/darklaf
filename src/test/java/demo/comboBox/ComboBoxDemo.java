@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package demo.radioButton;
+package demo.comboBox;
 
 import demo.ComponentDemo;
 import demo.DemoPanel;
@@ -29,45 +29,47 @@ import demo.DemoPanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class RadioButtonDemo implements ComponentDemo {
+public class ComboBoxDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new RadioButtonDemo());
+        ComponentDemo.showDemo(new ComboBoxDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        JRadioButton button = new JRadioButton("Test RadioButton");
-        DemoPanel panel = new DemoPanel(button);
+        JComboBox<String> comboBox = new JComboBox<>();
+        for (int i = 1; i <= 5; i++) {
+            comboBox.addItem("Item " + i);
+        }
+        DemoPanel panel = new DemoPanel(comboBox);
         JPanel controlPanel = panel.getControls();
         controlPanel.setLayout(new GridLayout(3, 2));
         controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(button.isEnabled());
-            addActionListener(e -> button.setEnabled(isSelected()));
+            setSelected(comboBox.isEnabled());
+            addActionListener(e -> comboBox.setEnabled(isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("editable") {{
+            setSelected(comboBox.isEditable());
+            addActionListener(e -> comboBox.setEditable(isSelected()));
         }});
         controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(button.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                               : ComponentOrientation.RIGHT_TO_LEFT));
+            setSelected(comboBox.getComponentOrientation().isLeftToRight());
+            addActionListener(e -> comboBox.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                 : ComponentOrientation.RIGHT_TO_LEFT));
         }});
-        controlPanel.add(new JCheckBox("Rollover") {{
-            setSelected(button.isRolloverEnabled());
-            addActionListener(e -> button.setRolloverEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("JToggleButton.isTreeCellEditor") {{
+        controlPanel.add(new JCheckBox("JComboBox.isTreeCellEditor") {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JToggleButton.isTreeCellEditor", isSelected()));
+            addActionListener(e -> comboBox.putClientProperty("JComboBox.isTreeCellEditor", isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JToggleButton.isTableCellEditor") {{
+        controlPanel.add(new JCheckBox("JComboBox.isTableCellEditor") {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JToggleButton.isTableCellEditor", isSelected()));
+            addActionListener(e -> comboBox.putClientProperty("JComboBox.isTableCellEditor", isSelected()));
         }});
         return panel;
     }
 
     @Override
     public String getTitle() {
-        return "RadioButton Demo";
+        return "ComboBox Demo";
     }
-
 }
