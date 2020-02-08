@@ -38,12 +38,14 @@ import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkRadioButtonUI extends MetalRadioButtonUI {
+public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyChangeListener {
 
     private static final int ICON_OFF = 4;
     private static final int SIZE = 13;
@@ -53,6 +55,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     private static final Rectangle textRect = new Rectangle();
     private static Dimension size = new Dimension();
     private final Ellipse2D hitArea = new Ellipse2D.Float();
+    protected JRadioButton radioButton;
     protected Color background;
     protected Color inactiveBackground;
     protected Color focusBorderColor;
@@ -75,6 +78,18 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
     @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonUI();
+    }
+
+    @Override
+    public void installUI(final JComponent c) {
+        radioButton = (JRadioButton) c;
+        super.installUI(c);
+    }
+
+    @Override
+    public void uninstallUI(final JComponent c) {
+        super.uninstallUI(c);
+        radioButton = null;
     }
 
     @Override
@@ -128,6 +143,18 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
         if (text != null) {
             DarkCheckBoxUI.paintText(g, b, textRect, text, fm, getDisabledTextColor());
         }
+    }
+
+    @Override
+    protected void installListeners(final AbstractButton button) {
+        super.installListeners(button);
+        button.addPropertyChangeListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners(final AbstractButton button) {
+        super.uninstallListeners(button);
+        button.removePropertyChangeListener(this);
     }
 
     protected String layoutRadioButton(@NotNull final AbstractButton b, final FontMetrics fm) {
@@ -236,5 +263,15 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI {
             layoutRadioButton((JRadioButton) c, c.getFontMetrics(c.getFont()));
         }
         return hitArea.contains(x, y);
+    }
+
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if ("componentOrientation".equals(key)) {
+            radioButton.repaint();
+        } else if ("JToggleButton.isTreeCellEditor".equals(key)) {
+            radioButton.repaint();
+        }
     }
 }

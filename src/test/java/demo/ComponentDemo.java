@@ -35,9 +35,12 @@ public interface ComponentDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             JFrame frame = DemoPanel.createFrame();
+            frame.setTitle(demo.getTitle());
             frame.setContentPane(demo.createComponent());
             frame.pack();
             frame.setVisible(true);
         });
     }
+
+    String getTitle();
 }

@@ -23,21 +23,22 @@
  */
 package demo.checkBox;
 
+import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import demo.ComponentDemo;
 import demo.DemoPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CheckBoxDemo implements ComponentDemo {
+public class TriCheckBoxDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new CheckBoxDemo());
+        ComponentDemo.showDemo(new TriCheckBoxDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        JCheckBox button = new JCheckBox("Test CheckBox");
+        TristateCheckBox button = new TristateCheckBox("Test TriCheckBox");
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
         controlPanel.setLayout(new GridLayout(2, 2));
@@ -63,7 +64,6 @@ public class CheckBoxDemo implements ComponentDemo {
 
     @Override
     public String getTitle() {
-        return "CheckBox Demo";
+        return "TriCheckBox Demo";
     }
-
 }

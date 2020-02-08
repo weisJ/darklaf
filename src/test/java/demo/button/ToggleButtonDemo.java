@@ -74,4 +74,9 @@ public class ToggleButtonDemo implements ComponentDemo {
         }});
         return panel;
     }
+
+    @Override
+    public String getTitle() {
+        return "ToggleButton Demo";
+    }
 }

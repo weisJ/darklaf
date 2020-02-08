@@ -99,4 +99,9 @@ public class ButtonDemo implements ComponentDemo {
         return panel;
     }
 
+    @Override
+    public String getTitle() {
+        return "Button Demo";
+    }
+
 }

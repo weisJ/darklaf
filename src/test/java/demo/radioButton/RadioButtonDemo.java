@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package demo.checkBox;
+package demo.radioButton;
 
 import demo.ComponentDemo;
 import demo.DemoPanel;
@@ -29,15 +29,15 @@ import demo.DemoPanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class CheckBoxDemo implements ComponentDemo {
+public class RadioButtonDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new CheckBoxDemo());
+        ComponentDemo.showDemo(new RadioButtonDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        JCheckBox button = new JCheckBox("Test CheckBox");
+        JRadioButton button = new JRadioButton("Test RadioButton");
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
         controlPanel.setLayout(new GridLayout(2, 2));
@@ -63,7 +63,7 @@ public class CheckBoxDemo implements ComponentDemo {
 
     @Override
     public String getTitle() {
-        return "CheckBox Demo";
+        return "RadioButton Demo";
     }
 
 }

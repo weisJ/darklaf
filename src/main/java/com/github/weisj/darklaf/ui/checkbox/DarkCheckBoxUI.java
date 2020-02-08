@@ -84,9 +84,20 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     }
 
     @Override
+    public void installUI(final JComponent c) {
+        checkBox = (JCheckBox) c;
+        super.installUI(c);
+    }
+
+    @Override
+    public void uninstallUI(final JComponent c) {
+        super.uninstallUI(c);
+        checkBox = null;
+    }
+
+    @Override
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        checkBox = (JCheckBox) b;
         LookAndFeel.installProperty(b, "opaque", false);
         checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
         checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
@@ -315,8 +326,11 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     }
 
     @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
-        if ("componentOrientation".equals(evt.getPropertyName())) {
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if ("componentOrientation".equals(key)) {
+            checkBox.repaint();
+        } else if ("JToggleButton.isTreeCellEditor".equals(key)) {
             checkBox.repaint();
         }
     }
