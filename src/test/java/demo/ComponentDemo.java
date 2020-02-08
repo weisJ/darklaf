@@ -34,7 +34,9 @@ public interface ComponentDemo {
     static void showDemo(final ComponentDemo demo) {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
-            JFrame frame = DemoPanel.createFrame();
+            JFrame frame = new JFrame();
+            frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setTitle(demo.getTitle());
             frame.setContentPane(demo.createComponent());
             frame.pack();

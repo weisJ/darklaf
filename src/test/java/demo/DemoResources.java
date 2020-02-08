@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 Jannis Weis
+ * Copyright (c) 2020 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class TestResources {
+package demo;
+
+public class DemoResources {
     public static final String LOREM_IPSUM =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam\n"
                     + " auctor, erat non viverra commodo, libero orci aliquam quam, ac interdum nunc est sed\n "

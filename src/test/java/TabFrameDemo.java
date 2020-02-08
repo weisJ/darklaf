@@ -9,6 +9,7 @@ import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.util.StringUtil;
+import demo.DemoResources;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -126,7 +127,7 @@ public class TabFrameDemo {
     @NotNull
     private static Component createTextArea() {
         NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {{
-            setText(StringUtil.repeat(TestResources.LOREM_IPSUM, 10));
+            setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));
             setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         }});
         NumberingPane numbering = numberPane.getNumberingPane();

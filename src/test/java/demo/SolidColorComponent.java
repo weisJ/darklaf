@@ -23,27 +23,16 @@
  */
 package demo;
 
-import com.github.weisj.darklaf.components.border.DarkBorders;
-
 import javax.swing.*;
 import java.awt.*;
 
-public class DemoPanel extends JPanel {
+public class SolidColorComponent extends JPanel {
 
-    private final JPanel controls;
-
-    public DemoPanel(final JComponent component) {
-        super(new BorderLayout());
-        JPanel content = new JPanel(new GridBagLayout());
-        content.add(component, null);
-        add(content, BorderLayout.CENTER);
-        controls = new JPanel();
-        controls.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
-        controls.setLayout(new BoxLayout(controls, BoxLayout.X_AXIS));
-        add(controls, BorderLayout.SOUTH);
-    }
-
-    public JPanel getControls() {
-        return controls;
+    public SolidColorComponent(final Color color, final int width, final int height) {
+        setBackground(color);
+        Dimension size = new Dimension(width, height);
+        setPreferredSize(size);
+        setMinimumSize(size);
+        setMaximumSize(size);
     }
 }
