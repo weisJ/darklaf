@@ -21,33 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package demo;
+package demo.scrollPane;
 
-import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.util.StringUtil;
+import demo.ComponentDemo;
+import demo.DemoPanel;
+import demo.DemoResources;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DemoPanel extends JPanel {
+public class OverlayScrollPaneDemo implements ComponentDemo {
 
-    private final JPanel controls;
-
-    public DemoPanel(final JComponent component) {
-        this(component, new GridBagLayout());
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new OverlayScrollPaneDemo(), new Dimension(500, 1000));
     }
 
-    public DemoPanel(final JComponent component, final LayoutManager layoutManager) {
-        super(new BorderLayout());
-        JPanel content = new JPanel(layoutManager);
-        content.add(component);
-        add(content, BorderLayout.CENTER);
-        controls = new JPanel();
-        controls.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
-        controls.setLayout(new BoxLayout(controls, BoxLayout.X_AXIS));
-        add(controls, BorderLayout.SOUTH);
+    @Override
+    public JComponent createComponent() {
+        OverlayScrollPane scrollPane = new OverlayScrollPane(
+                new JTextArea(StringUtil.repeat(DemoResources.LOREM_IPSUM, 5)));
+        return new DemoPanel(scrollPane, new BorderLayout());
     }
 
-    public JPanel getControls() {
-        return controls;
+    @Override
+    public String getTitle() {
+        return "OverlayScrollPane Demo";
     }
 }
