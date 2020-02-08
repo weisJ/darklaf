@@ -44,7 +44,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     private static final Rectangle rect = new Rectangle();
 
     private final PropertyChangeListener propertyChangeListener = evt -> {
-        if ("ToggleButton.variant".equals(evt.getPropertyName())) {
+        if ("JToggleButton.variant".equals(evt.getPropertyName())) {
             Object oldVal = evt.getOldValue();
             Object newVal = evt.getNewValue();
             if (oldVal != null && oldVal.equals(newVal)) {
@@ -155,7 +155,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     @Contract("null -> false")
     private static boolean isSlider(final JComponent c) {
         return c instanceof JToggleButton
-                && "slider".equals(c.getClientProperty("ToggleButton.variant"));
+                && "slider".equals(c.getClientProperty("JToggleButton.variant"));
     }
 
     private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {

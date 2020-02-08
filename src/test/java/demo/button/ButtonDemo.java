@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package demo;
+package demo.button;
 
-import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.icons.IconLoader;
+import demo.ComponentDemo;
+import demo.DemoPanel;
+import demo.QuickColorChooser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,13 +34,7 @@ import java.awt.*;
 public class ButtonDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            JFrame frame = DemoPanel.createFrame();
-            frame.setContentPane(new ButtonDemo().createComponent());
-            frame.pack();
-            frame.setVisible(true);
-        });
+        ComponentDemo.showDemo(new ButtonDemo());
     }
 
     @Override

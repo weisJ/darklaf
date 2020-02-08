@@ -102,7 +102,7 @@ public final class UIDemo {
                             }});
                         }});
                         add(new JToggleButton("toggle") {{
-                            putClientProperty("ToggleButton.variant", "slider");
+                            putClientProperty("JToggleButton.variant", "slider");
                             setEnabled(false);
                             setSelected(true);
                         }});
@@ -163,7 +163,7 @@ public final class UIDemo {
                         }});
                         add(defaultButton);
                         add(new JToggleButton("toggle") {{
-                            putClientProperty("ToggleButton.variant", "slider");
+                            putClientProperty("JToggleButton.variant", "slider");
                         }});
                         add(new JButton("square") {{
                             putClientProperty("JButton.square", true);

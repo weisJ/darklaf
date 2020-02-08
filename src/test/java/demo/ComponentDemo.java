@@ -23,9 +23,21 @@
  */
 package demo;
 
+import com.github.weisj.darklaf.LafManager;
+
 import javax.swing.*;
 
 public interface ComponentDemo {
 
     JComponent createComponent();
+
+    static void showDemo(final ComponentDemo demo) {
+        SwingUtilities.invokeLater(() -> {
+            LafManager.install();
+            JFrame frame = DemoPanel.createFrame();
+            frame.setContentPane(demo.createComponent());
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
 }
