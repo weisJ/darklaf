@@ -522,4 +522,20 @@ public class ToolTipContext implements ToolTipListener {
             valid = false;
         }
     }
+
+    public Alignment getAlignment() {
+        return alignment;
+    }
+
+    public Alignment getCenterAlignment() {
+        return centerAlignment;
+    }
+
+    public AlignmentStrategy getAlignmentStrategy() {
+        return alignmentStrategy;
+    }
+
+    public boolean isAlignInside() {
+        return alignInside;
+    }
 }

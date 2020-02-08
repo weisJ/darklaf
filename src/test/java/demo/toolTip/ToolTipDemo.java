@@ -23,54 +23,57 @@
  */
 package demo.toolTip;
 
-import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.alignment.Alignment;
+import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
+import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
+import demo.ComponentDemo;
+import demo.DemoPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
-public class ToolTipDemo {
+public class ToolTipDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        //Todo Rework Demo
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            JFrame f = new JFrame();
-            JPanel p = new JPanel(new GridBagLayout());
-            p.add(new JButton("Button with very very long text") {
-                private final ToolTipContext context = new ToolTipContext(this).setAlignment(Alignment.CENTER)
-                                                                               .setCenterAlignment(Alignment.SOUTH_EAST);
+        ComponentDemo.showDemo(new ToolTipDemo());
+    }
 
-                {
-                    setToolTipText("ToolTip \n multiline \n third line's a charm");
-//                    setToolTipText("ToolTip");
-                }
+    @Override
+    public JComponent createComponent() {
+        TooltipAwareButton button = new TooltipAwareButton("Demo Button");
+        DemoPanel panel = new DemoPanel(button);
+        ToolTipContext context = button.getToolTipContext();
+        button.setToolTipText("ToolTip demo text!");
 
-                @Override
-                protected void paintComponent(final Graphics g) {
-                    super.paintComponent(g);
-                    g.setColor(Color.RED);
-                    g.fillRect(getWidth() / 2, getHeight() / 2, 1, 1);
-                }
+        JPanel controlPanel = panel.getControls();
+        controlPanel.setLayout(new GridLayout(4, 2));
 
-                @Override
-                public Point getToolTipLocation(final MouseEvent event) {
-                    return context.getToolTipLocation(event);
-                }
+        controlPanel.add(new JLabel());
+        controlPanel.add(new JCheckBox("Align inside") {{
+            setSelected(context.isAlignInside());
+            addActionListener(e -> context.setAlignInside(isSelected()));
+        }});
+        controlPanel.add(new JLabel("Alignment:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {{
+            setSelectedItem(context.getAlignment());
+            addItemListener(e -> context.setAlignment((Alignment) e.getItem()));
+        }});
+        controlPanel.add(new JLabel("Center Alignment:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {{
+            setSelectedItem(context.getCenterAlignment());
+            addItemListener(e -> context.setCenterAlignment((Alignment) e.getItem()));
+        }});
+        controlPanel.add(new JLabel("Alignment Strategy:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<AlignmentStrategy>(AlignmentStrategy.values()) {{
+            setSelectedItem(context.getAlignmentStrategy());
+            addItemListener(e -> context.setAlignmentStrategy((AlignmentStrategy) e.getItem()));
+        }});
+        return panel;
+    }
 
-                @Override
-                public JToolTip createToolTip() {
-                    return context.getToolTip();
-                }
-
-
-            });
-            f.setContentPane(p);
-            f.setLocationRelativeTo(null);
-            f.setSize(100, 100);
-            f.setVisible(true);
-        });
+    @Override
+    public String getTitle() {
+        return "ToolTip Demo";
     }
 }

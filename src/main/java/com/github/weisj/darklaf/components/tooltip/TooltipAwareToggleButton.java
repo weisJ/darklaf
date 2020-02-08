@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class TooltipAwareToggleButton extends JToggleButton {
+public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAware {
 
     private final ToolTipContext context = new ToolTipContext(this)
             .setAlignment(Alignment.CENTER)
@@ -63,5 +63,10 @@ public class TooltipAwareToggleButton extends JToggleButton {
     @Override
     public JToolTip createToolTip() {
         return context.getToolTip();
+    }
+
+    @Override
+    public ToolTipContext getToolTipContext() {
+        return context;
     }
 }
