@@ -40,12 +40,14 @@ import javax.swing.text.View;
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkCheckBoxUI extends MetalCheckBoxUI {
+public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeListener {
 
     private static final int ICON_OFF = 4;
     private static final int SIZE = 13;
@@ -54,6 +56,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     private static final Rectangle textRect = new Rectangle();
     private static Dimension size = new Dimension();
     private final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
+    protected JCheckBox checkBox;
     protected int arcSize;
     protected int borderSize;
     protected Color background;
@@ -83,6 +86,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
     @Override
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
+        checkBox = (JCheckBox) b;
         LookAndFeel.installProperty(b, "opaque", false);
         checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
         checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
@@ -103,6 +107,18 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
         selectedBackground = UIManager.getColor("CheckBox.selectedFillColor");
         focusCheckColor = UIManager.getColor("CheckBox.selectionFocusSelectedColor");
         focusSelectedBorderColor = UIManager.getColor("CheckBox.focusSelectedBorderColor");
+    }
+
+    @Override
+    protected void installListeners(final AbstractButton button) {
+        super.installListeners(button);
+        button.addPropertyChangeListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners(final AbstractButton button) {
+        super.uninstallListeners(button);
+        button.removePropertyChangeListener(this);
     }
 
     @Override
@@ -296,5 +312,12 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI {
             layoutCheckBox((JCheckBox) c, c.getFontMetrics(c.getFont()));
         }
         return hitArea.contains(x, y);
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if ("componentOrientation".equals(evt.getPropertyName())) {
+            checkBox.repaint();
+        }
     }
 }

@@ -21,28 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package demo.button;
+package demo.checkBox;
 
-import com.github.weisj.darklaf.icons.IconLoader;
 import demo.ComponentDemo;
 import demo.DemoPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ToggleButtonDemo implements ComponentDemo {
+public class CheckBoxDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ToggleButtonDemo());
+        ComponentDemo.showDemo(new CheckBoxDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        Icon icon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
-        JToggleButton button = new JToggleButton("Test ToggleButton", icon);
+        JCheckBox button = new JCheckBox("Test CheckBox");
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new GridLayout(2, 2));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
@@ -56,22 +54,11 @@ public class ToggleButtonDemo implements ComponentDemo {
             setSelected(button.isRolloverEnabled());
             addActionListener(e -> button.setRolloverEnabled(isSelected()));
         }});
-        controlPanel.add(new JComboBox<String>() {{
-            addItem("JToggleButton.variant = slider");
-            addItem("no JToggleButton.variant");
-            setSelectedItem("no JToggleButton.variant");
-            addItemListener(e -> {
-                if (e.getItem().equals("JToggleButton.variant = slider")) {
-                    button.putClientProperty("JToggleButton.variant", "slider");
-                } else {
-                    button.putClientProperty("JToggleButton.variant", null);
-                }
-            });
-        }});
         controlPanel.add(new JCheckBox("JToggleButton.isTreeCellEditor") {{
             setSelected(false);
             addActionListener(e -> button.putClientProperty("JToggleButton.isTreeCellEditor", isSelected()));
         }});
         return panel;
     }
+
 }

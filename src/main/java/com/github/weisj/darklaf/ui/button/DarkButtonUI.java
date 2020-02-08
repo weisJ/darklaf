@@ -213,6 +213,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
 
     protected void paintIcon(final Graphics g, @NotNull final AbstractButton b, final JComponent c) {
         if (b.getIcon() != null) {
+            g.setClip(iconRect);
             paintIcon(g, c, iconRect);
         }
     }
@@ -283,7 +284,10 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         if (isDefaultButton(b)) {
             g.setFont(g.getFont().deriveFont(Font.BOLD));
+        } else if (g.getFont().isBold()) {
+            g.setFont(g.getFont().deriveFont(Font.PLAIN));
         }
+        g.setClip(textRect);
         if (text != null && !text.equals("")) {
             View v = (View) c.getClientProperty(BasicHTML.propertyKey);
             if (v != null) {

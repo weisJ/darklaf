@@ -44,7 +44,8 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     private static final Rectangle rect = new Rectangle();
 
     private final PropertyChangeListener propertyChangeListener = evt -> {
-        if ("JToggleButton.variant".equals(evt.getPropertyName())) {
+        String key = evt.getPropertyName();
+        if ("JToggleButton.variant".equals(key)) {
             Object oldVal = evt.getOldValue();
             Object newVal = evt.getNewValue();
             if (oldVal != null && oldVal.equals(newVal)) {
@@ -55,6 +56,8 @@ public class DarkToggleButtonUI extends DarkButtonUI {
             } else {
                 button.setBorderPainted(true);
             }
+        } else if ("componentOrientation".equals(key)) {
+            button.repaint();
         }
     };
     protected Dimension sliderSize;
@@ -112,10 +115,14 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         if (isSlider(c)) {
             Insets i = b.getInsets();
             Rectangle bounds = getSliderBounds(c);
-            viewRect.x = bounds.x + bounds.width + borderSize;
-            viewRect.y = i.top;
+            viewRect.x = bounds.width + 2 * borderSize;
             viewRect.width = width - (i.right + viewRect.x);
+            viewRect.y = i.top;
             viewRect.height = height - (i.bottom + viewRect.y);
+
+            if (!b.getComponentOrientation().isLeftToRight()) {
+                viewRect.x = bounds.x - viewRect.width - borderSize;
+            }
 
             textRect.x = textRect.y = textRect.width = textRect.height = 0;
             iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
@@ -199,6 +206,9 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         rect.y = y;
         rect.width = sliderSize.width;
         rect.height = sliderSize.height;
+        if (!c.getComponentOrientation().isLeftToRight()) {
+            rect.x = c.getWidth() - rect.x - rect.width;
+        }
         return rect;
     }
 
