@@ -3,7 +3,7 @@ import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import java.awt.*;
 
 /**
- * Usd to generate the color swatches for ColorChooser.
+ * Used to generate the color swatches for ColorChooser.
  */
 public final class GenerateColors {
 

@@ -1192,7 +1192,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
 
     /*
      * Listen for filechooser property changes, such as
-     * the selected file changing, or the type of the dialog changing.
+     * the selected file changing, or the type of the demo.dialog changing.
      */
     public void propertyChange(final PropertyChangeEvent e) {
         if (viewType == -1) {

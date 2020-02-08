@@ -42,7 +42,7 @@ import java.util.List;
 public class IconDemo {
 
     private static String[] FOLDERS = new String[]{
-            "control", "dialog", "files", "indicator", "menu", "misc", "navigation", "window",
+            "control", "demo/dialog", "files", "indicator", "menu", "misc", "navigation", "window",
     };
 
     public static void main(final String[] args) {
