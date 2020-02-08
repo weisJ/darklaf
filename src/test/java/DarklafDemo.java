@@ -8,7 +8,7 @@ public class DarklafDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
 
-            JFrame frame = new JFrame("Darklaf - A Darcula LaF for Swing");
+            JFrame frame = new JFrame("Darklaf - A themeable LaF for Swing");
             frame.setSize(600, 400);
 
             JButton button = new JButton("Click here!");
