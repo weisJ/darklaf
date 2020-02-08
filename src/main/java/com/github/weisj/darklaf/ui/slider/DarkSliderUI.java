@@ -41,11 +41,13 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Jannis Weis
  */
-public class DarkSliderUI extends BasicSliderUI {
+public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListener {
 
     private static final int ICON_BAR_EXT = 5;
     private static final int ICON_PAD = 10;
@@ -154,12 +156,14 @@ public class DarkSliderUI extends BasicSliderUI {
     protected void installListeners(final JSlider slider) {
         super.installListeners(slider);
         slider.addMouseListener(mouseListener);
+        slider.addPropertyChangeListener(this);
     }
 
     @Override
     protected void uninstallListeners(final JSlider slider) {
         super.uninstallListeners(slider);
         slider.removeMouseListener(mouseListener);
+        slider.removePropertyChangeListener(this);
     }
 
     @Override
@@ -581,6 +585,17 @@ public class DarkSliderUI extends BasicSliderUI {
 
     private boolean instantScrollEnabled(@NotNull final JComponent c) {
         return Boolean.TRUE.equals(c.getClientProperty("Slider.instantScrollEnabled"));
+    }
+
+    @Override
+    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if ("Slider.variant".equals(key)) {
+            slider.repaint();
+        } else if ("Slider.volume.showIcon".equals(key)) {
+            calculateGeometry();
+            slider.repaint();
+        }
     }
 
     public class SnapTrackListener extends TrackListener {
