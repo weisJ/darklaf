@@ -15,8 +15,10 @@ Darcula Theme | IntelliJ Theme
 :-------------------------:|:-------------------------:
 Solarized Dark Theme | Solarized Light Theme
 
-# Usage & Features
+# Usage & [Features](https://github.com/weisJ/darklaf/wiki/Features)
 You can either use the current build from [releases](https://github.com/weisJ/darklaf/releases) or the the [bin folder](https://github.com/weisJ/darklaf/tree/master/bin). These binaries already include a stripped down version of all dependecies.
+
+A list of all features can be found [here](https://github.com/weisJ/darklaf/wiki/Features).
 
 This project is available on Maven Central:
 ### Maven
