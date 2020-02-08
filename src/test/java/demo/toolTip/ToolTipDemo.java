@@ -26,6 +26,7 @@ package demo.toolTip;
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
+import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import demo.ComponentDemo;
 import demo.DemoPanel;
@@ -53,6 +54,11 @@ public class ToolTipDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("Align inside") {{
             setSelected(context.isAlignInside());
             addActionListener(e -> context.setAlignInside(isSelected()));
+        }});
+        controlPanel.add(new JLabel("Tooltip Style:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {{
+            setSelectedItem(ToolTipStyle.BALLOON);
+            addItemListener(e -> context.setToolTipStyle((ToolTipStyle) e.getItem()));
         }});
         controlPanel.add(new JLabel("Alignment:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {{
