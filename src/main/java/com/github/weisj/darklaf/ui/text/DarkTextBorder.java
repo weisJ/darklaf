@@ -89,10 +89,10 @@ public class DarkTextBorder implements Border, UIResource {
 
             if (DarkTextFieldUI.chooseAlternativeArc(c)) {
                 DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
-                                           height - 2 * borderSize, arcSize, true);
+                                           height - 2 * borderSize, arcSize);
             } else {
                 DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
-                                           height - 2 * borderSize, 0, true);
+                                           height - 2 * borderSize, 0);
             }
         } else if (DarkTextFieldUI.isSearchField(c)) {
             g.setColor(getBorderColor(c));
@@ -102,7 +102,7 @@ public class DarkTextBorder implements Border, UIResource {
                 }
                 g.setColor(getBorderColor(c));
                 DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
-                                           height - 2 * borderSize, arcSize, true);
+                                           height - 2 * borderSize, arcSize);
             }
         }
         g.translate(-x, -y);

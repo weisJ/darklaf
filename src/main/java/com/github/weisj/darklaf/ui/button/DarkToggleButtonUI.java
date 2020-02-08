@@ -179,7 +179,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         g.setColor(getBackgroundColor(c));
         DarkUIUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
         g.setColor(getToggleBorderColor(c));
-        DarkUIUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height, true);
+        DarkUIUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height);
 
         int size = bounds.height - 2;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
@@ -187,12 +187,12 @@ public class DarkToggleButtonUI extends DarkButtonUI {
             g.setColor(getSliderColor(c));
             DarkUIUtil.fillRoundRect(g, bounds.width - size - 1, 1, size, size, size);
             g.setColor(getSliderBorderColor(c));
-            DarkUIUtil.paintLineBorder(g, bounds.width - size - 1, 1, size, size, size, true);
+            DarkUIUtil.paintLineBorder(g, bounds.width - size - 1, 1, size, size, size);
         } else {
             g.setColor(getSliderColor(c));
             DarkUIUtil.fillRoundRect(g, 1, 1, size, size, size);
             g.setColor(getSliderBorderColor(c));
-            DarkUIUtil.paintLineBorder(g, 1, 1, size, size, size, true);
+            DarkUIUtil.paintLineBorder(g, 1, 1, size, size, size);
         }
         g.translate(-bounds.x, -bounds.y);
         config.restore();

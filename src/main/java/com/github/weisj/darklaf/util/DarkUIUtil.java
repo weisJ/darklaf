@@ -83,7 +83,7 @@ public final class DarkUIUtil {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
 
         Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, arc + bw, arc + bw);
-        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, arc - bw, arc);
+        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, arc, arc);
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         path.append(outerRect, false);
         path.append(innerRect, false);
@@ -119,29 +119,15 @@ public final class DarkUIUtil {
     }
 
     public static void paintLineBorder(final Graphics2D g, final float x, final float y,
-                                       final float width, final float height, final int arc, final boolean growByLW) {
-        float lw = 0.5f;
-        float adj = growByLW ? lw : 0;
+                                       final float width, final float height, final int arc) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-        Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        border.append(new RoundRectangle2D.Float(x - adj, y - adj, width + 2 * adj, height + 2 * adj,
-                                                 arc + lw, arc + lw), false);
-        border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
-                                                 width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
-                                                 arc, arc), false);
-        g.fill(border);
+        g.draw(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
         config.restore();
     }
 
     public static void fillRoundRect(@NotNull final Graphics2D g, final float x, final float y,
                                      final float width, final float height, final int arc) {
-        float lw = (float) (1.0f / Scale.SCALE);
-        float adj = (float) (2.0f / Scale.SCALE);
-        Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        border.append(new RoundRectangle2D.Float(x + 2 * lw - adj, y + 2 * lw - adj,
-                                                 width - 4 * lw + 2 * adj, height - 4 * lw + 2 * adj,
-                                                 arc, arc), false);
-        g.fill(border);
+        g.fill(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
     }
 
     @NotNull

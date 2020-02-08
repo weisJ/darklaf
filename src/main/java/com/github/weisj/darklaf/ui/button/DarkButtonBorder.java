@@ -98,7 +98,7 @@ public class DarkButtonBorder implements Border, UIResource {
 
         g2.setColor(getBorderColor(c));
         DarkUIUtil.paintLineBorder(g2, borderSize, borderSize, width - 2 * borderSize,
-                                   height - 2 * borderSize - shadowHeight, arc, true);
+                                   height - 2 * borderSize - shadowHeight, arc);
         config.restore();
     }
 

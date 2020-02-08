@@ -90,7 +90,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
             if (DarkUIUtil.hasFocus(c)) {
                 g.setColor(focusBorderColor);
             }
-            DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc, true);
+            DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc);
         } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
             JTable table = (JTable) c.getParent();
             if (!table.getShowHorizontalLines()) {

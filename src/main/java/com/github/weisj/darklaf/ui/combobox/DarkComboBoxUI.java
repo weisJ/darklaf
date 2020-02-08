@@ -360,7 +360,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
                 g.setColor(getBorderColor());
             }
             DarkUIUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize,
-                                       height - 2 * bSize, arc, true);
+                                       height - 2 * bSize, arc);
         } else {
             g.setColor(getBorderColor());
             Component parent = c.getParent();

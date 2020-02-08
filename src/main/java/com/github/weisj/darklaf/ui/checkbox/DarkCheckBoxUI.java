@@ -282,7 +282,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         }
 
         g.setColor(border);
-        DarkUIUtil.paintLineBorder(g, 0, 0, SIZE, SIZE, arcSize, true);
+        DarkUIUtil.paintLineBorder(g, 0, 0, SIZE, SIZE, arcSize);
 
         g2.dispose();
     }
