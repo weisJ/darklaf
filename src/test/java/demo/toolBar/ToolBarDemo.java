@@ -176,8 +176,7 @@ public class ToolBarDemo extends JPanel implements ActionListener {
             description = "taken you to the next <something>.";
         }
 
-        displayResult("If this were a real app, it would have "
-                              + description);
+        displayResult("If this were a real app, it would have " + description);
     }
 
     private void displayResult(final String actionDescription) {

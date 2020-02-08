@@ -30,6 +30,7 @@ import javax.swing.*;
 public final class ListDemo {
 
     public static void main(final String[] args) {
+        //Todo Rework Demo
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             JFrame f = new JFrame("frame");

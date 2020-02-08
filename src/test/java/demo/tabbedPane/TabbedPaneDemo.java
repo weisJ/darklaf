@@ -36,6 +36,7 @@ import java.awt.event.ItemEvent;
 public class TabbedPaneDemo extends JFrame {
 
     public static void main(final String[] args) {
+        //Todo Rework Demo
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             final JFrame frame = new JFrame();

@@ -31,6 +31,7 @@ import java.awt.*;
 public final class SplitPaneDemo {
 
     public static void main(final String[] args) {
+        //Todo Rework Demo
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             final JFrame frame = new JFrame();

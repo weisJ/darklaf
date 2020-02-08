@@ -30,6 +30,7 @@ import javax.swing.*;
 public class TextDemo {
 
     public static void main(final String[] args) {
+        //Todo Rework Demo
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             JFrame f = new JFrame();

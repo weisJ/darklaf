@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent;
 public class ToolTipDemo {
 
     public static void main(final String[] args) {
+        //Todo Rework Demo
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             JFrame f = new JFrame();
