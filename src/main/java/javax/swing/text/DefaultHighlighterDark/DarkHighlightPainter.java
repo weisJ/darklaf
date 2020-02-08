@@ -53,7 +53,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
 
-    private static final boolean DEBUG_COLOR = true;
+    private static final boolean DEBUG_COLOR = false;
     private Paint paint;
     private Color color;
     private ColorWrapper wrapper;
@@ -253,6 +253,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean selectionEnd = c.getSelectionEnd() <= offs1;
 
         Insets margin = c.getMargin();
+        boolean firstLineNotPainted = posOffs0Prev.y + posOffs0Prev.height == posOffs0.y;
         boolean lastLineNotPainted = posOffs1Next.y == posEnd.y && posOffs1.y == posOffs1Forward.y;
         boolean isToEndOfLine = posOffs1.y < posEnd.y && !lastLineNotPainted;
         boolean isToStartOfLine = !selectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
@@ -286,11 +287,14 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             isToEndOfLine = false;
             isToStartOfLine = false;
             dirtyShape = paintMiddleSelection(g2d, alloc, c,
-                                              false, false);
+                                              false, false,
+                                              isFirstLine, isLastLine, isSecondLastLine, isSecondLine,
+                                              firstLineNotPainted);
         } else if (!selectionStart && !selectionEnd) {
             if (DEBUG_COLOR) g2d.setColor(Color.ORANGE);
             dirtyShape = paintMiddleSelection(g2d, alloc, c,
-                                              isToEndOfLine, isToStartOfLine);
+                                              isToEndOfLine, isToStartOfLine, isFirstLine, isLastLine,
+                                              isSecondLastLine, isSecondLine, firstLineNotPainted);
         } else {
             // Should only render part of View.
             //Start/End parts of selection
@@ -323,7 +327,10 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     @NotNull
     private Shape paintMiddleSelection(final Graphics2D g, final Rectangle r, final JTextComponent c,
-                                       final boolean toEndOfLine, final boolean toStartOfLine) {
+                                       final boolean toEndOfLine, final boolean toStartOfLine,
+                                       final boolean isFirstLine, final boolean isLastLine,
+                                       final boolean isSecondLastLine, final boolean isSecondLine,
+                                       final boolean firstLineNotPainted) {
         if (toStartOfLine) {
             r.width -= arcSize;
             r.x += arcSize;
@@ -331,7 +338,12 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         if (toEndOfLine) {
             r.width -= arcSize;
         }
-        g.fillRect(r.x, r.y, r.width, r.height);
+        if (!isRounded(c)) {
+            g.fillRect(r.x, r.y, r.width, r.height);
+        } else {
+            boolean firstVisual = isFirstLine || (isSecondLine && firstLineNotPainted);
+            paintRoundRect(g, r, arcSize, firstVisual, firstVisual, isLastLine, isLastLine || isSecondLastLine);
+        }
         return r;
     }
 
