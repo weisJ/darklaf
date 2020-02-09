@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -122,95 +123,117 @@ public class TabbedPaneUtil implements SwingConstants {
         Rectangle destRect = destTabbedPane.getBoundsAt(Math.min(tab, destTabbedPane.getTabCount() - 1));
 
         if (ui.scrollableTabLayoutEnabled()) {
-            boolean lastInSource = false;
-            if (destTabbedPane == source && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1
-                    && tab == source.getTabCount()))) {
-                lastInSource = true;
-                destRect.width = tabBounds.width;
-                destRect.height = tabBounds.height;
-            }
-
-            switch (tabPlacement) {
-                case TOP:
-                case BOTTOM:
-                    if (destTabbedPane.getComponentOrientation().isLeftToRight()) {
-                        if (tab >= destTabbedPane.getTabCount() && !lastInSource) {
-                            destRect.x += destRect.width;
-                        }
-                        tabBounds.x = destRect.x;
-                        if (lastTab != -1 && lastTab < tab) {
-                            tabBounds.x -= tabBounds.width;
-                        }
-                    } else {
-                        if (tab >= destTabbedPane.getTabCount()) {
-                            destRect.x -= 2 * tabBounds.width;
-                            if (lastTab < tab) {
-                                destRect.x += destRect.width;
-                            }
-                        }
-                        tabBounds.x = destRect.x + tabBounds.width;
-                        if (lastTab != -1 && lastTab > tab) {
-                            tabBounds.x -= tabBounds.width;
-                        }
-                    }
-                    tabBounds.y = destRect.y + destRect.height - tabBounds.height;
-                    break;
-                case LEFT:
-                case RIGHT:
-                    if (tab >= destTabbedPane.getTabCount()) {
-                        destRect.y += destRect.height;
-                    }
-                    tabBounds.y = destRect.y;
-                    tabBounds.x = destRect.x + destRect.width - tabBounds.width;
-                    if (lastTab != -1 && lastTab < tab) {
-                        tabBounds.y -= tabBounds.height;
-                    }
-                    break;
-            }
+            calculateDropRectScrollLayout(destTabbedPane, source, tabBounds, tab, sourceIndex,
+                                          lastTab, tabPlacement, destRect);
         } else {
-            if (source == destTabbedPane && (tab == sourceIndex || tab == sourceIndex + 1)) {
-                tabBounds.setRect(0, 0, 0, 0);
-            } else {
-                int placement = destTabbedPane.getTabPlacement();
-                if (placement == TOP || placement == BOTTOM) {
-                    Rectangle b = ui.getTabAreaBounds();
-                    if (tab == destTabbedPane.getTabCount()) {
-                        tabBounds.x = destRect.x + destRect.width / 2;
-                        tabBounds.width = Math.min(b.x + b.width - tabBounds.x, tabBounds.width);
-                    } else if (tab == 0) {
-                        tabBounds.x = destRect.x;
-                        tabBounds.width = Math.min(tabBounds.width / 2, destRect.width / 2);
-                    } else {
-                        Rectangle prev = destTabbedPane.getBoundsAt(tab - 1);
-                        if (destRect.y + destRect.height <= mouseLocation.y &&
-                                prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
-                            destRect.x = prev.x + prev.width;
-                            destRect.y = prev.y;
-                            destRect.height = prev.height;
-                        }
-
-                        tabBounds.x = destRect.x;
-                        tabBounds.setLocation(destRect.getLocation());
-                        tabBounds.x -= tabBounds.width / 2;
-                        if (tabBounds.x < b.x) {
-                            int diff = b.x - tabBounds.x;
-                            tabBounds.width -= diff;
-                            tabBounds.x = b.x;
-                        }
-                        if (tabBounds.x + tabBounds.width > b.x + b.width) {
-                            int diff = tabBounds.width + tabBounds.x - b.width - b.x;
-                            tabBounds.width -= diff;
-                        }
-                    }
-                    tabBounds.y = destRect.y + destRect.height - tabBounds.height;
-                } else if (placement == LEFT || placement == RIGHT) {
-                    /*
-                     * Todo
-                     */
-                }
-            }
+            calculateDropRectWrapLayout(ui, destTabbedPane, source, mouseLocation, tabBounds, tab, sourceIndex, destRect);
         }
         return tabBounds;
+    }
+
+    private static void calculateDropRectScrollLayout(@NotNull final JTabbedPane destTabbedPane, final JTabbedPane source,
+                                                      final Rectangle tabBounds, final int tab, final int sourceIndex,
+                                                      final int lastTab, final int tabPlacement, final Rectangle destRect) {
+        boolean lastInSource = false;
+        if (destTabbedPane == source && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1
+                && tab == source.getTabCount()))) {
+            lastInSource = true;
+            destRect.width = tabBounds.width;
+            destRect.height = tabBounds.height;
+        }
+
+        switch (tabPlacement) {
+            case TOP:
+            case BOTTOM:
+                if (destTabbedPane.getComponentOrientation().isLeftToRight()) {
+                    if (tab >= destTabbedPane.getTabCount() && !lastInSource) {
+                        destRect.x += destRect.width;
+                    }
+                    tabBounds.x = destRect.x;
+                    if (lastTab != -1 && lastTab < tab) {
+                        tabBounds.x -= tabBounds.width;
+                    }
+                } else {
+                    if (tab >= destTabbedPane.getTabCount()) {
+                        destRect.x -= 2 * tabBounds.width;
+                        if (lastTab < tab) {
+                            destRect.x += destRect.width;
+                        }
+                    }
+                    tabBounds.x = destRect.x + tabBounds.width;
+                    if (lastTab != -1 && lastTab > tab) {
+                        tabBounds.x -= tabBounds.width;
+                    }
+                }
+                tabBounds.y = destRect.y + destRect.height - tabBounds.height;
+                break;
+            case LEFT:
+            case RIGHT:
+                if (tab >= destTabbedPane.getTabCount()) {
+                    destRect.y += destRect.height;
+                }
+                tabBounds.y = destRect.y;
+                tabBounds.x = destRect.x + destRect.width - tabBounds.width;
+                if (lastTab != -1 && lastTab < tab) {
+                    tabBounds.y -= tabBounds.height;
+                }
+                break;
+        }
+    }
+
+    private static void calculateDropRectWrapLayout(@NotNull final DarkTabbedPaneUI ui,
+                                                    @NotNull final JTabbedPane destTabbedPane,
+                                                    final JTabbedPane source, final Point mouseLocation,
+                                                    final Rectangle tabBounds, final int tab, final int sourceIndex,
+                                                    final Rectangle destRect) {
+        if (source == destTabbedPane && (tab == sourceIndex || tab == sourceIndex + 1)) {
+            tabBounds.setRect(0, 0, 0, 0);
+        } else {
+            int placement = destTabbedPane.getTabPlacement();
+            Rectangle b = ui.getTabAreaBounds();
+            Rectangle prev = destTabbedPane.getBoundsAt(tab - 1);
+
+            if (placement == LEFT || placement == RIGHT) {
+                DarkUIUtil.rotateRectangle(tabBounds);
+                DarkUIUtil.rotateRectangle(destRect);
+                DarkUIUtil.rotateRectangle(prev);
+                DarkUIUtil.rotateRectangle(b);
+                DarkUIUtil.rotatePoint(mouseLocation);
+            }
+
+            if (tab == destTabbedPane.getTabCount()) {
+                tabBounds.x = destRect.x + destRect.width / 2;
+                tabBounds.width = Math.min(b.x + b.width - tabBounds.x, tabBounds.width);
+            } else if (tab == 0) {
+                tabBounds.x = destRect.x;
+                tabBounds.width = Math.min(tabBounds.width / 2, destRect.width / 2);
+            } else {
+                if (destRect.y + destRect.height <= mouseLocation.y
+                        && prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
+                    destRect.x = prev.x + prev.width;
+                    destRect.y = prev.y;
+                    destRect.height = prev.height;
+                }
+
+                tabBounds.x = destRect.x;
+                tabBounds.setLocation(destRect.getLocation());
+                tabBounds.x -= tabBounds.width / 2;
+                if (tabBounds.x < b.x) {
+                    int diff = b.x - tabBounds.x;
+                    tabBounds.width -= diff;
+                    tabBounds.x = b.x;
+                }
+                if (tabBounds.x + tabBounds.width > b.x + b.width) {
+                    int diff = tabBounds.width + tabBounds.x - b.width - b.x;
+                    tabBounds.width -= diff;
+                }
+            }
+            tabBounds.y = destRect.y + destRect.height - tabBounds.height;
+
+            if (placement == LEFT || placement == RIGHT) {
+                DarkUIUtil.rotateRectangle(tabBounds);
+            }
+        }
     }
 
     public static boolean moveTabs(final JTabbedPane sourcePane, final JTabbedPane tabbedPane,

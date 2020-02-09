@@ -327,8 +327,25 @@ public final class DarkUIUtil {
         }
     }
 
-    public static boolean isMenuShortcutKeyDown(final InputEvent event) {
+    public static boolean isMenuShortcutKeyDown(@NotNull final InputEvent event) {
         return (event.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0;
+    }
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    public static void rotateRectangle(@NotNull final Rectangle rect) {
+        int tmp = rect.x;
+        rect.x = rect.y;
+        rect.y = tmp;
+        tmp = rect.width;
+        rect.width = rect.height;
+        rect.height = tmp;
+    }
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    public static void rotatePoint(@NotNull final Point p) {
+        int tmp = p.x;
+        p.x = p.y;
+        p.y = tmp;
     }
 
     public enum Outline {
