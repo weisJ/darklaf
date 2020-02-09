@@ -74,11 +74,11 @@ public class DarklafDemo {
 }
 ````
 
-All custom component-variants and settings are customizable by setting the appropriate client
+All custom component-variants and settings can be enabled by setting the appropriate client
 property of the component.
 They can be found [here](https://github.com/weisJ/darklaf/wiki/Features#alternative-visualsbehaviour-for-components).
 
-This LookAndFeel supports custom window decorations (only Windows at this point). In contrast to most other LaFs the native window behaviour is not compromised giving a seamless experience that still looks native.
+This LookAndFeel supports custom window decorations (only on Windows at this point). In contrast to most other LaFs the native window behaviour is not compromised giving a seamless experience that still looks native.
 
 # Build
 To build the project replace the ````build.gradle```` script with the one
