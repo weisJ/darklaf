@@ -84,6 +84,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 }
                 ui.scrollableTabSupport.newTabButton.setVisible(show);
             }
+            ui.tabPane.doLayout();
         } else if ("JTabbedPane.leadingComponent".equals(key)) {
             ui.tabPane.remove(ui.leadingComp);
             Object val = e.getNewValue();
@@ -93,6 +94,7 @@ public class DarkHandler extends TabbedPaneHandler {
             } else {
                 ui.leadingComp = null;
             }
+            ui.tabPane.doLayout();
         } else if ("JTabbedPane.trailingComponent".equals(key)) {
             ui.tabPane.remove(ui.trailingComp);
             Object val = e.getNewValue();
@@ -102,6 +104,7 @@ public class DarkHandler extends TabbedPaneHandler {
             } else {
                 ui.trailingComp = null;
             }
+            ui.tabPane.doLayout();
         } else if ("JTabbedPane.dndEnabled".equals(key)) {
             ui.dndEnabled = Boolean.TRUE.equals(ui.tabPane.getClientProperty("JTabbedPane.dndEnabled"));
             ui.tabPane.getDropTarget().setActive(ui.dndEnabled);
@@ -117,6 +120,7 @@ public class DarkHandler extends TabbedPaneHandler {
             } else {
                 ui.northComp = null;
             }
+            ui.tabPane.doLayout();
         } else if ("JTabbedPane.southComponent".equals(key)) {
             ui.tabPane.remove(ui.southComp);
             Object val = e.getNewValue();
@@ -126,6 +130,7 @@ public class DarkHandler extends TabbedPaneHandler {
             } else {
                 ui.southComp = null;
             }
+            ui.tabPane.doLayout();
         } else if ("JTabbedPane.eastComponent".equals(key)) {
             ui.tabPane.remove(ui.eastComp);
             Object val = e.getNewValue();
@@ -135,6 +140,7 @@ public class DarkHandler extends TabbedPaneHandler {
             } else {
                 ui.eastComp = null;
             }
+            ui.tabPane.doLayout();
         } else if ("JTabbedPane.westComponent".equals(key)) {
             ui.tabPane.remove(ui.westComp);
             Object val = e.getNewValue();
@@ -144,6 +150,7 @@ public class DarkHandler extends TabbedPaneHandler {
             } else {
                 ui.westComp = null;
             }
+            ui.tabPane.doLayout();
         }
     }
 
