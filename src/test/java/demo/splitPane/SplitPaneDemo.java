@@ -23,35 +23,68 @@
  */
 package demo.splitPane;
 
-import com.github.weisj.darklaf.LafManager;
+import demo.ComponentDemo;
+import demo.DemoPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class SplitPaneDemo {
+public final class SplitPaneDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        //Todo Rework Demo
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            final JFrame frame = new JFrame();
-            frame.setSize(500, 500);
-            JSplitPane splitPane = new JSplitPane() {
-            };
-            splitPane.setLeftComponent(new JPanel() {{
-                setBackground(Color.RED);
-            }});
-            splitPane.setRightComponent(new JPanel() {{
-                setBackground(Color.BLUE);
-            }});
-            splitPane.putClientProperty("JSplitPane.style", "invisible");
-            splitPane.putClientProperty("JSplitPane.style", "line");
-            splitPane.setOneTouchExpandable(true);
-            frame.setContentPane(new JPanel(new BorderLayout()) {{
-                add(splitPane, BorderLayout.CENTER);
-            }});
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
-        });
+        ComponentDemo.showDemo(new SplitPaneDemo());
+    }
+
+    @Override
+    public JComponent createComponent() {
+        JSplitPane splitPane = new JSplitPane();
+        JPanel leftPanel = new JPanel() {{
+            setBackground(UIManager.getColor("glowError"));
+        }};
+        JPanel rightPanel = new JPanel() {{
+            setBackground(UIManager.getColor("glowFocus"));
+        }};
+        splitPane.setLeftComponent(leftPanel);
+        splitPane.setRightComponent(rightPanel);
+
+        DemoPanel panel = new DemoPanel(splitPane, new BorderLayout());
+        JPanel controlPanel = panel.getControls();
+        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.add(new JCheckBox("ContinuousLayout") {{
+            setSelected(splitPane.isContinuousLayout());
+            addActionListener(e -> splitPane.setContinuousLayout(isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("OneTouchExpandable") {{
+            setSelected(splitPane.isOneTouchExpandable());
+            addActionListener(e -> splitPane.setOneTouchExpandable(isSelected()));
+        }});
+        controlPanel.add(new JLabel("Orientation:"));
+        controlPanel.add(new JComboBox<String>() {{
+            Map<String, Integer> mapping = new HashMap<String, Integer>() {{
+                put("VERTICAL_SPLIT", JSplitPane.VERTICAL_SPLIT);
+                put("HORIZONTAL_SPLIT", JSplitPane.HORIZONTAL_SPLIT);
+            }};
+            addItem("VERTICAL_SPLIT");
+            addItem("HORIZONTAL_SPLIT");
+            setSelectedItem("HORIZONTAL_SPLIT");
+            //noinspection MagicConstant
+            addItemListener(e -> splitPane.setOrientation(mapping.get(e.getItem().toString())));
+        }});
+        controlPanel.add(new JLabel("JSplitPane.style:"));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem("default");
+            addItem("line");
+            addItem("invisible");
+            setSelectedItem("default");
+            addItemListener(e -> splitPane.putClientProperty("JSplitPane.style", e.getItem()));
+        }});
+        return panel;
+    }
+
+    @Override
+    public String getTitle() {
+        return "SplitPane Demo";
     }
 }

@@ -136,8 +136,12 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             if (oldStyle != style) {
                 if (style == Style.DEFAULT || oldStyle == Style.DEFAULT) {
                     splitPane.setUI(new DarkSplitPaneUI(style));
+                } else {
+                    splitPane.doLayout();
                 }
             }
+        } else if ("orientation".equals(key)) {
+            splitPane.doLayout();
         }
     }
 
