@@ -46,7 +46,7 @@ public class TabbedPaneDemo implements ComponentDemo {
     public JComponent createComponent() {
         JTabbedPane tabbedPane = createTabbedPane();
         tabbedPane.setName("DemoTabbedPane");
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 10; i++) {
             JTextPane editor = new JTextPane();
             editor.setText(StringUtil.repeat("Demo Content" + "\n", i + 1));
             tabbedPane.addTab("Tab (" + i + ")", editor);

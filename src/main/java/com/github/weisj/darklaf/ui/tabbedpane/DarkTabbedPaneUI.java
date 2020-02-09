@@ -140,6 +140,10 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     @Override
     public void uninstallUI(final JComponent c) {
+        if (scrollableTabSupport != null) {
+            tabPane.remove(scrollableTabSupport.moreTabsButton);
+            tabPane.remove(scrollableTabSupport.newTabButton);
+        }
         scrollableTabSupport = null;
         if (tabPane.getTransferHandler() instanceof TabbedPaneTransferHandler.UIResource) {
             tabPane.setTransferHandler(null);

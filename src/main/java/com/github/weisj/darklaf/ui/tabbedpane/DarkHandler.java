@@ -218,7 +218,7 @@ public class DarkHandler extends TabbedPaneHandler {
         if (indexValid) {
             Point p = e.getPoint();
             int dist = Math.abs(ui.isHorizontalTabPlacement() ? origin.y - p.y : origin.x - p.x);
-            if (dist > Math.max(50, ui.maxTabHeight)) {
+            if (dist > Math.max(50, ui.maxTabHeight) || !ui.scrollableTabLayoutEnabled()) {
                 stopDrag(e, false);
                 TransferHandler handler = ui.tabPane.getTransferHandler();
                 handler.exportAsDrag(ui.tabPane, e, TransferHandler.MOVE);
@@ -242,6 +242,15 @@ public class DarkHandler extends TabbedPaneHandler {
         super.componentRemoved(e);
     }
 
+    protected Point getDragMousePos() {
+        Point p = new Point(ui.dragRect.x + ui.dragRect.width / 2, ui.dragRect.y + ui.dragRect.height / 2);
+        if (ui.scrollableTabLayoutEnabled()) {
+            p.x += ui.scrollableTabSupport.viewport.getX();
+            p.y += ui.scrollableTabSupport.viewport.getY();
+        }
+        return p;
+    }
+
     protected void stopDrag(final MouseEvent e, final boolean changeTabs) {
         int tab = TabbedPaneUtil.getDroppedTabIndex(ui.dropRect, ui.tabPane,
                                                     ui, getDragMousePos());
@@ -259,13 +268,10 @@ public class DarkHandler extends TabbedPaneHandler {
         ui.drawDropRect = false;
         ui.tabPane.doLayout();
         ui.tabPane.repaint();
-        ui.scrollableTabSupport.viewport.repaint();
-    }
-
-    protected Point getDragMousePos() {
-        Point p = new Point(ui.dragRect.x + ui.dragRect.width / 2, ui.dragRect.y + ui.dragRect.height / 2);
-        p.x += ui.scrollableTabSupport.viewport.getX();
-        p.y += ui.scrollableTabSupport.viewport.getY();
-        return p;
+        if (ui.scrollableTabLayoutEnabled()) {
+            ui.scrollableTabSupport.viewport.repaint();
+        } else {
+            ui.tabPane.repaint();
+        }
     }
 }

@@ -204,7 +204,9 @@ public class TabbedPaneUtil implements SwingConstants {
                     }
                     tabBounds.y = destRect.y + destRect.height - tabBounds.height;
                 } else if (placement == LEFT || placement == RIGHT) {
-                    //Todo
+                    /*
+                     * Todo
+                     */
                 }
             }
         }
