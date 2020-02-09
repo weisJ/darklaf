@@ -95,7 +95,4 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
   * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the plaform folder.
   * See todo in [DarkLaf](https://github.com/weisJ/darklaf/blob/master/src/main/java/com/github/weisj/darklaf/DarkLaf.java)
-- [Custom TabComponents may be visible during DnD with JTabbedPane.](https://github.com/weisJ/darklaf/issues/7)
-- Right to left layout support in [DarkTitlePane](https://github.com/weisJ/darklaf/blob/master/src/main/java/com/github/weisj/darklaf/ui/rootpane/DarkTitlePane.java).
-- Examine if Todo branch in [TabbedPaneUtil](https://github.com/weisJ/darklaf/blob/master/src/main/java/com/github/weisj/darklaf/ui/tabbedpane/TabbedPaneUtil.java) needs something to be done about.
 - [Arrow button cycle support for JComboBox.](https://github.com/weisJ/darklaf/issues/10)
