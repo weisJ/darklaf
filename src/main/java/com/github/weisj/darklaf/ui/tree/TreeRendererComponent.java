@@ -46,7 +46,7 @@ public class TreeRendererComponent extends Container {
     }
 
     public void setRenderComponent(final Component renderComponent) {
-        remove(renderComponent);
+        removeAll();
         this.renderComponent = renderComponent;
         add(renderComponent);
     }

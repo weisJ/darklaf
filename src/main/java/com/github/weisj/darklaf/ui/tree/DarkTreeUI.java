@@ -42,13 +42,15 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkTreeUI extends BasicTreeUI {
+public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
     public static final String TREE_TABLE_TREE_KEY = "JTree.treeTableTree";
     public static final String STRIPED_CLIENT_PROPERTY = "JTree.alternateRowColor";
@@ -135,13 +137,9 @@ public class DarkTreeUI extends BasicTreeUI {
     @Override
     protected void completeUIInstall() {
         super.completeUIInstall();
-
         myOldRepaintAllRowValue = UIManager.getBoolean("Tree.repaintWholeRow");
         UIManager.put("Tree.repaintWholeRow", true);
         tree.putClientProperty("JTree.alternateRowColor", UIManager.getBoolean("Tree.alternateRowColor"));
-
-        tree.setShowsRootHandles(true);
-        tree.addMouseListener(mySelectionListener);
     }
 
     @Override
@@ -164,6 +162,15 @@ public class DarkTreeUI extends BasicTreeUI {
         tree.putClientProperty("JTree.renderBooleanAsCheckBox",
                                UIManager.getBoolean("Tree.renderBooleanAsCheckBox"));
         tree.putClientProperty("JTree.booleanRenderType", UIManager.getString("Tree.booleanRenderType"));
+        tree.setShowsRootHandles(true);
+        tree.putClientProperty("JTree.lineStyle", "Line");
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        tree.addPropertyChangeListener(this);
+        tree.addMouseListener(mySelectionListener);
     }
 
     @Override
@@ -320,11 +327,16 @@ public class DarkTreeUI extends BasicTreeUI {
     }
 
     @Override
-    public void uninstallUI(final JComponent c) {
-        super.uninstallUI(c);
-
+    protected void uninstallDefaults() {
+        super.uninstallDefaults();
         UIManager.put("Tree.repaintWholeRow", myOldRepaintAllRowValue);
-        c.removeMouseListener(mySelectionListener);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        tree.removeMouseListener(mySelectionListener);
+        tree.removePropertyChangeListener(this);
     }
 
     @Override
@@ -672,6 +684,20 @@ public class DarkTreeUI extends BasicTreeUI {
     protected boolean isToggleSelectionEvent(final MouseEvent e) {
         return SwingUtilities.isLeftMouseButton(e)
                 && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if (STRIPED_CLIENT_PROPERTY.equals(key)) {
+            tree.repaint();
+        } else if ("JTree.renderBooleanAsCheckBox".equals(key)) {
+            tree.repaint();
+        } else if ("JTree.booleanRenderType".equals(key)) {
+            tree.repaint();
+        } else if ("JTree.lineStyle".equals(key)) {
+            tree.repaint();
+        }
     }
 
     private abstract static class TreeUIAction extends AbstractAction implements UIResource {

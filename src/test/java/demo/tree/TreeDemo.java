@@ -23,49 +23,83 @@
  */
 package demo.tree;
 
-import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
+import demo.ComponentDemo;
+import demo.DemoPanel;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 
-public class TreeDemo extends JFrame {
+public class TreeDemo implements ComponentDemo {
 
-    public TreeDemo() {
-        //Todo Rework Demo
-        super("JTree Demo");
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new TreeDemo());
+    }
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("States");
-        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Andhra Pradesh");
-        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Vijayawada");
-        DefaultMutableTreeNode child1 = new SelectableTreeNode("This node can be selected", true);
-        DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Telangana");
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Hyderabad");
+    @Override
+    public JComponent createComponent() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Node A");
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Leaf A");
+        DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
+        DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf C");
 
-        // Adding child nodes to parent
         parent1.add(child);
         parent1.add(child1);
         parent2.add(child2);
-
-        // Adding parent nodes to root
         root.add(parent1);
         root.add(parent2);
 
-        // Adding root to JTree
         JTree tree = new JTree(root);
-        tree.setEditable(true);
-//        tree.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-
-        getContentPane().add(new JScrollPane(tree));
-        setSize(300, 300);
-        setLocationRelativeTo(null);
-        setVisible(true);
+        DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout());
+        JPanel controlPanel = panel.getControls();
+        controlPanel.setLayout(new GridLayout(5, 2));
+        controlPanel.add(new JCheckBox("editable") {{
+            setSelected(tree.isEditable());
+            addActionListener(e -> tree.setEditable(isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("LeftToRight") {{
+            setSelected(tree.getComponentOrientation().isLeftToRight());
+            addActionListener(e -> tree.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                             : ComponentOrientation.RIGHT_TO_LEFT));
+        }});
+        controlPanel.add(new JCheckBox("show root handles") {{
+            setSelected(tree.getShowsRootHandles());
+            addActionListener(e -> tree.setShowsRootHandles(isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("JTree.alternateRowColor") {{
+            setSelected(Boolean.TRUE.equals(tree.getClientProperty("JTree.alternateRowColor")));
+            addActionListener(e -> tree.putClientProperty("JTree.alternateRowColor", isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("JTree.renderBooleanAsCheckBox") {{
+            setSelected(Boolean.TRUE.equals(tree.getClientProperty("JTree.renderBooleanAsCheckBox")));
+            addActionListener(e -> tree.putClientProperty("JTree.renderBooleanAsCheckBox", isSelected()));
+        }});
+        controlPanel.add(new JLabel());
+        controlPanel.add(new JLabel("JTree.booleanRenderType:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem("checkBox");
+            addItem("radioButton");
+            setSelectedItem(tree.getClientProperty("JTree.booleanRenderType"));
+            addItemListener(e -> tree.putClientProperty("JTree.booleanRenderType", e.getItem()));
+        }});
+        controlPanel.add(new JLabel("JTree.lineStyle:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem("Dashed");
+            addItem("None");
+            addItem("Line");
+            setSelectedItem("Line");
+            addItemListener(e -> tree.putClientProperty("JTree.lineStyle", e.getItem()));
+        }});
+        tree.setLargeModel(true);
+        return panel;
     }
 
-    public static void main(final String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            new TreeDemo();
-        });
+    @Override
+    public String getTitle() {
+        return "Tree Demo";
     }
 }
