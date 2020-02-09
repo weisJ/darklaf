@@ -25,12 +25,12 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf</artifactId>
-  <version>1.3.1.6</version>
+  <version>1.3.2.0</version>
 </dependency>
 ````
 ### Gradle
 ````
-implementation 'com.github.weisj:darklaf:1.3.1.6'
+implementation 'com.github.weisj:darklaf:1.3.2.0'
 ````
 
 ## Installation
