@@ -170,8 +170,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         } else {
             index = -1;
         }
-        Component tabComp = tabPane.getTabComponentAt(index);
-        if (tabComp != null) tabComp.setVisible(false);
         tabPane.setSelectedIndex(index);
         if (ui != null) {
             ui.setRolloverTab(-1);
