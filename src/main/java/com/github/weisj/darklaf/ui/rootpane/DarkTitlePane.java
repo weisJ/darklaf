@@ -676,46 +676,63 @@ public class DarkTitlePane extends JComponent {
             int left = 0;
             int right = 0;
 
-            if (leftToRight) {
-                if (windowIconButton != null) {
-                    windowIconButton.setBounds(start, y, ICON_WIDTH, height);
-                    start += ICON_WIDTH + PAD;
-                    left = start;
-                }
-                if (menuBar != null) {
-                    int menuWidth = getPreferredMenuSize().width;
-                    Insets menuInsets = menuBar.getInsets();
-                    menuBar.setBounds(start, y, menuWidth, height + menuInsets.bottom);
-                    start += menuWidth + PAD;
-                    left += menuWidth;
-                }
-                x = w;
-                if (closeButton != null) {
-                    x -= BUTTON_WIDTH;
-                    right += BUTTON_WIDTH;
-                    closeButton.setBounds(x, y, BUTTON_WIDTH, height);
-                }
-                if (getWindowDecorationStyle() == JRootPane.FRAME) {
-                    if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
-                        if (minimizeButton != null && maximizeToggleButton.getParent() != null) {
-                            x -= BUTTON_WIDTH;
-                            right += BUTTON_WIDTH;
-                            maximizeToggleButton.setBounds(x, y, BUTTON_WIDTH, height);
-                        }
-                        if (minimizeButton != null && minimizeButton.getParent() != null) {
-                            x -= BUTTON_WIDTH;
-                            right += BUTTON_WIDTH;
-                            minimizeButton.setBounds(x, y, BUTTON_WIDTH, height);
-                        }
+            if (windowIconButton != null) {
+                windowIconButton.setBounds(start, y, ICON_WIDTH, height);
+                start += ICON_WIDTH + PAD;
+                left = start;
+            }
+            if (menuBar != null) {
+                int menuWidth = getPreferredMenuSize().width;
+                Insets menuInsets = menuBar.getInsets();
+                menuBar.setBounds(start, y, menuWidth, height + menuInsets.bottom);
+                start += menuWidth + PAD;
+                left += menuWidth;
+            }
+            x = w;
+            if (closeButton != null) {
+                x -= BUTTON_WIDTH;
+                right += BUTTON_WIDTH;
+                closeButton.setBounds(x, y, BUTTON_WIDTH, height);
+            }
+            if (getWindowDecorationStyle() == JRootPane.FRAME) {
+                if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
+                    if (maximizeToggleButton != null && maximizeToggleButton.getParent() != null) {
+                        x -= BUTTON_WIDTH;
+                        right += BUTTON_WIDTH;
+                        maximizeToggleButton.setBounds(x, y, BUTTON_WIDTH, height);
+                    }
+                    if (minimizeButton != null && minimizeButton.getParent() != null) {
+                        x -= BUTTON_WIDTH;
+                        right += BUTTON_WIDTH;
+                        minimizeButton.setBounds(x, y, BUTTON_WIDTH, height);
                     }
                 }
-                start = Math.max(start, PAD);
-                titleLabel.setBounds(start, 0, x - start - PAD, height);
-                JNIDecorations.updateValues(windowHandle, Scale.scaleWidth(left),
-                                            Scale.scaleWidth(right),
-                                            Scale.scaleHeight(height));
-            } else {
-                //Todo.
+            }
+            start = Math.max(start, PAD);
+            titleLabel.setBounds(start, 0, x - start - PAD, height);
+
+            if (!leftToRight) {
+                mirror(windowIconButton, w);
+                mirror(menuBar, w);
+                mirror(closeButton, w);
+                mirror(minimizeButton, w);
+                mirror(maximizeToggleButton, w);
+                mirror(titleLabel, w);
+                int tmp = left;
+                left = right;
+                right = tmp;
+
+            }
+            JNIDecorations.updateValues(windowHandle, Scale.scaleWidth(left),
+                                        Scale.scaleWidth(right),
+                                        Scale.scaleHeight(height));
+
+        }
+
+        private void mirror(final JComponent component, final int w) {
+            if (component != null) {
+                component.setLocation(w - component.getX() - component.getWidth(),
+                                      component.getY());
             }
         }
 
