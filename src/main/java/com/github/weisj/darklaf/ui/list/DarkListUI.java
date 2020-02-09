@@ -31,6 +31,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 
 /**
  * @author Jannis Weis
@@ -183,6 +184,15 @@ public class DarkListUI extends DarkListUIBridge {
     }
 
     protected class DarkHandler extends Handler {
+
+        @Override
+        public void propertyChange(final PropertyChangeEvent e) {
+            super.propertyChange(e);
+            String key = e.getPropertyName();
+            if ("JList.alternateRowColor".equals(key)) {
+                list.repaint();
+            }
+        }
 
         @Override
         protected void adjustSelection(final MouseEvent e) {

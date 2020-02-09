@@ -60,7 +60,7 @@ public final class SplitPaneDemo implements ComponentDemo {
             setSelected(splitPane.isOneTouchExpandable());
             addActionListener(e -> splitPane.setOneTouchExpandable(isSelected()));
         }});
-        controlPanel.add(new JLabel("Orientation:"));
+        controlPanel.add(new JLabel("Orientation:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
                 put("VERTICAL_SPLIT", JSplitPane.VERTICAL_SPLIT);
@@ -72,7 +72,7 @@ public final class SplitPaneDemo implements ComponentDemo {
             //noinspection MagicConstant
             addItemListener(e -> splitPane.setOrientation(mapping.get(e.getItem().toString())));
         }});
-        controlPanel.add(new JLabel("JSplitPane.style:"));
+        controlPanel.add(new JLabel("JSplitPane.style:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             addItem("default");
             addItem("line");

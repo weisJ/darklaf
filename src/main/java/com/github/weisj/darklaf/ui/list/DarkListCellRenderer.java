@@ -75,10 +75,11 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
         } else {
             if (DarkUIUtil.hasFocus(list) || DarkUIUtil.getParentOfType(JPopupMenu.class, list) != null) {
                 comp.setForeground(list.getSelectionForeground());
+                comp.setBackground(list.getSelectionBackground());
             } else {
+                comp.setBackground(UIManager.getColor("List.selectionNoFocusBackground"));
                 comp.setForeground(UIManager.getColor("List.selectionForegroundInactive"));
             }
-            comp.setBackground(list.getSelectionBackground());
         }
         return comp;
     }

@@ -42,7 +42,6 @@ import java.awt.*;
 public class TabFrameDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        //Todo Rework Demo
         ComponentDemo.showDemo(new TabFrameDemo(), new Dimension(1000, 500));
     }
 

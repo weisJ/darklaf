@@ -23,28 +23,68 @@
  */
 package demo.list;
 
-import com.github.weisj.darklaf.LafManager;
+import demo.ComponentDemo;
+import demo.DemoPanel;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class ListDemo {
+public final class ListDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        //Todo Rework Demo
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            JFrame f = new JFrame("frame");
-            JPanel p = new JPanel();
+        ComponentDemo.showDemo(new ListDemo());
+    }
 
-            String[] week = {"Monday", "Tuesday", "Wednesday",
-                    "Thursday", "Friday", "Saturday", "Sunday"};
-            JList<String> list = new JList<>(week);
+    @Override
+    public JComponent createComponent() {
+        String[] week = {"Monday", "Tuesday", "Wednesday",
+                "Thursday", "Friday", "Saturday", "Sunday"};
+        JList<String> list = new JList<>(week);
+        list.setSelectedIndex(2);
+        DemoPanel panel = new DemoPanel(list, new BorderLayout());
+        JPanel controlPanel = panel.getControls();
+        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.add(new JLabel());
+        controlPanel.add(new JCheckBox("JList.alternateRowColor") {{
+            setSelected(Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor")));
+            addActionListener(e -> list.putClientProperty("JList.alternateRowColor", isSelected()));
+        }});
+        controlPanel.add(new JLabel("Layout orientation:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<String>() {{
+            Map<String, Integer> mapping = new HashMap<String, Integer>() {{
+                put("VERTICAL", JList.VERTICAL);
+                put("VERTICAL_WRAP", JList.VERTICAL_WRAP);
+                put("HORIZONTAL_WRAP", JList.HORIZONTAL_WRAP);
+            }};
+            addItem("VERTICAL");
+            addItem("VERTICAL_WRAP");
+            addItem("HORIZONTAL_WRAP");
+            setSelectedItem("VERTICAL");
+            //noinspection MagicConstant
+            addItemListener(e -> list.setLayoutOrientation(mapping.get(e.getItem().toString())));
+        }});
+        controlPanel.add(new JLabel("Selection mode:", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<String>() {{
+            Map<String, Integer> mapping = new HashMap<String, Integer>() {{
+                put("SINGLE_SELECTION", ListSelectionModel.SINGLE_SELECTION);
+                put("MULTIPLE_INTERVAL_SELECTION", ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                put("SINGLE_INTERVAL_SELECTION", ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            }};
+            addItem("SINGLE_SELECTION");
+            addItem("MULTIPLE_INTERVAL_SELECTION");
+            addItem("SINGLE_INTERVAL_SELECTION");
+            setSelectedItem("SINGLE_SELECTION");
+            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            //noinspection MagicConstant
+            addItemListener(e -> list.setSelectionMode(mapping.get(e.getItem().toString())));
+        }});
+        return panel;
+    }
 
-            list.setSelectedIndex(2);
-            p.add(list);
-            f.add(p);
-            f.setSize(400, 400);
-            f.setVisible(true);
-        });
+    @Override
+    public String getTitle() {
+        return "List Demo";
     }
 }
