@@ -30,7 +30,9 @@ import javax.swing.*;
 public class TextDemo {
 
     public static void main(final String[] args) {
-        //Todo Rework Demo
+        /*Todo Rework Demo:
+         * Split up into: JTextField, JFormattedTextField, JTextArea, JEditorPane, JTextPane, JPasswordField.
+         */
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             JFrame f = new JFrame();
