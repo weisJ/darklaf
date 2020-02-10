@@ -47,6 +47,15 @@ task packageJavadoc(type: Jar) {
     from javadoc
 }
 
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addStringOption('-add-exports java.desktop/sun.swing=ALL-UNNAMED ' +
+                '--add-exports java.desktop/sun.awt=ALL-UNNAMED ' +
+                '--add-exports java.desktop/com.sun.java.swing=ALL-UNNAMED ' +
+                '--add-exports java.desktop/sun.awt.shell=ALL-UNNAMED', '-quiet')
+    }
+}
+
 artifacts {
     archives jar
     archives sourceJar
