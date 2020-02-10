@@ -54,18 +54,22 @@ import java.util.Vector;
  * @author Philip Milne
  * @author Steve Wilson
  * @author Tom Santos
- * @author Dave Moore
- * <p>
- * This class stands in to allow to access the hell of ui code produced in {@link javax.swing.plaf.basic.BasicTabbedPaneUI}.
- * This code is almost identical to the original implementation besides the fact that all fields and methods are now
- * protected instead of private.
+ * @author Dave Moore <p> This class stands in to allow to access the hell of ui code produced in {@link
+ * javax.swing.plaf.basic.BasicTabbedPaneUI}. This code is almost identical to the original implementation besides the
+ * fact that all fields and methods are now protected instead of private.
  * @author Jannis Weis
  */
 public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements SwingConstants {
 
 // Instance variables initialized at installation
 
+    /**
+     * The Current pad insets.
+     */
     protected final Insets currentPadInsets = new Insets(0, 0, 0, 0);
+    /**
+     * The Current tab area insets.
+     */
     protected final Insets currentTabAreaInsets = new Insets(0, 0, 0, 0);
     /**
      * The tab pane
@@ -95,11 +99,20 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Content border insets
      */
     protected Insets contentBorderInsets;
+    /**
+     * The Tabs overlap border.
+     */
     protected boolean tabsOverlapBorder;
 
 
-    // Transient variables (recalculated each time TabbedPane is layed out)
+    /**
+     * The Tabs opaque.
+     */
+// Transient variables (recalculated each time TabbedPane is layed out)
     protected boolean tabsOpaque = true;
+    /**
+     * The Content opaque.
+     */
     protected boolean contentOpaque = true;
     /**
      * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
@@ -177,17 +190,32 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Focus change listener
      */
     protected FocusListener focusListener;
+    /**
+     * The Visible component.
+     */
     protected Component visibleComponent;
-    // PENDING(api): See comment for ContainerHandler
+    /**
+     * The Html views.
+     */
+// PENDING(api): See comment for ContainerHandler
     protected Vector<View> htmlViews;
+    /**
+     * The Mnemonic to index map.
+     */
     protected Hashtable<Integer, Integer> mnemonicToIndexMap;
     /**
      * InputMap used for mnemonics. Only non-null if the JTabbedPane has mnemonics associated with it. Lazily created in
      * initMnemonics.
      */
     protected InputMap mnemonicInputMap;
-    // For use when tabLayoutPolicy = SCROLL_TAB_LAYOUT
+    /**
+     * The Tab scroller.
+     */
+// For use when tabLayoutPolicy = SCROLL_TAB_LAYOUT
     protected ScrollableTabSupport tabScroller;
+    /**
+     * The Tab container.
+     */
     protected TabContainer tabContainer;
     /**
      * Tab that has focus.
@@ -208,13 +236,27 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * true it indicates that tabRuns is not valid and shouldn't be used.
      */
     protected boolean isRunsDirty;
+    /**
+     * The Calculated baseline.
+     */
     protected boolean calculatedBaseline;
 
+    /**
+     * The Selected foreground.
+     */
     protected Color selectedForeground;
 
-    // UI Installation/De-installation
+    /**
+     * The Baseline.
+     */
+// UI Installation/De-installation
     protected int baseline;
 
+    /**
+     * Load action map.
+     *
+     * @param map the map
+     */
     public static void loadActionMap(@NotNull final LazyActionMap map) {
         map.put(new Actions(Actions.NEXT));
         map.put(new Actions(Actions.PREVIOUS));
@@ -325,6 +367,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
+    /**
+     * Uninstall tab container.
+     */
     protected void uninstallTabContainer() {
         if (tabContainer == null) {
             return;
@@ -423,18 +468,18 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return Component.BaselineResizeBehavior.OTHER;
     }
 
-    protected void ensureCurrentLayout() {
-        if (!tabPane.isValid()) {
-            tabPane.validate();
-        }
-        /* If tabPane doesn't have a peer yet, the validate() call will
-         * silently fail.  We handle that by forcing a layout if tabPane
-         * is still invalid.  See bug 4237677.
-         */
-        if (!tabPane.isValid()) {
-            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
-            layout.calculateLayoutInfo();
-        }
+    /**
+     * Scrollable tab layout enabled boolean.
+     *
+     * @return the boolean
+     */
+    /* In an attempt to preserve backward compatibility for programs
+     * which have extended BasicTabbedPaneUI to do their own layout, the
+     * UI uses the installed layoutManager (and not tabLayoutPolicy) to
+     * determine if scrollTabLayout is enabled.
+     */
+    protected boolean scrollableTabLayoutEnabled() {
+        return (tabPane.getLayout() instanceof TabbedPaneScrollLayout);
     }
 
     /**
@@ -485,6 +530,16 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
+    /**
+     * Paint tab.
+     *
+     * @param g            the g
+     * @param tabPlacement the tab placement
+     * @param rects        the rects
+     * @param tabIndex     the tab index
+     * @param iconRect     the icon rect
+     * @param textRect     the text rect
+     */
     protected void paintTab(final Graphics g, final int tabPlacement,
                             final Rectangle[] rects, final int tabIndex,
                             final Rectangle iconRect, final Rectangle textRect) {
@@ -629,9 +684,14 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         textRect.y += yNudge;
     }
 
-    protected boolean isHorizontalTabPlacement() {
-        return tabPane.getTabPlacement() == TOP || tabPane.getTabPlacement() == BOTTOM;
-    }
+    /**
+     * Invoked by <code>installUI</code> to create a layout manager object to manage the <code>JTabbedPane</code>.
+     *
+     * @return a layout manager object
+     * @see TabbedPaneLayout
+     * @see javax.swing.JTabbedPane#getTabLayoutPolicy javax.swing.JTabbedPane#getTabLayoutPolicy
+     */
+    protected abstract LayoutManager createLayoutManager();
 
     /**
      * Paints text.
@@ -792,13 +852,27 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Invoked by <code>installUI</code> to create a layout manager object to manage the <code>JTabbedPane</code>.
-     *
-     * @return a layout manager object
-     * @see TabbedPaneLayout
-     * @see javax.swing.JTabbedPane#getTabLayoutPolicy
+     * Install tab container.
      */
-    protected abstract LayoutManager createLayoutManager();
+    protected void installTabContainer() {
+        for (int i = 0; i < tabPane.getTabCount(); i++) {
+            Component tabComponent = tabPane.getTabComponentAt(i);
+            if (tabComponent != null) {
+                if (tabContainer == null) {
+                    tabContainer = new TabContainer();
+                }
+                tabContainer.add(tabComponent);
+            }
+        }
+        if (tabContainer == null) {
+            return;
+        }
+        if (scrollableTabLayoutEnabled()) {
+            tabScroller.tabPanel.add(tabContainer);
+        } else {
+            tabPane.add(tabContainer);
+        }
+    }
 
     /**
      * Creates and installs any required subcomponents for the JTabbedPane. Invoked by installUI.
@@ -889,33 +963,37 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         updateMnemonics();
     }
 
-    /* In an attempt to preserve backward compatibility for programs
-     * which have extended BasicTabbedPaneUI to do their own layout, the
-     * UI uses the installed layoutManager (and not tabLayoutPolicy) to
-     * determine if scrollTabLayout is enabled.
+    /**
+     * Gets handler.
+     *
+     * @return the handler
      */
-    protected boolean scrollableTabLayoutEnabled() {
-        return (tabPane.getLayout() instanceof TabbedPaneScrollLayout);
+    protected TabbedPaneHandler getHandler() {
+        if (handler == null) {
+            handler = new TabbedPaneHandler(this);
+        }
+        return handler;
     }
 
-    protected void installTabContainer() {
-        for (int i = 0; i < tabPane.getTabCount(); i++) {
-            Component tabComponent = tabPane.getTabComponentAt(i);
-            if (tabComponent != null) {
-                if (tabContainer == null) {
-                    tabContainer = new TabContainer();
+    /**
+     * Create html vector vector.
+     *
+     * @return the vector
+     */
+    protected Vector<View> createHTMLVector() {
+        Vector<View> htmlViews = new Vector<>();
+        int count = tabPane.getTabCount();
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                String title = tabPane.getTitleAt(i);
+                if (BasicHTML.isHTMLString(title)) {
+                    htmlViews.addElement(BasicHTML.createHTMLView(tabPane, title));
+                } else {
+                    htmlViews.addElement(null);
                 }
-                tabContainer.add(tabComponent);
             }
         }
-        if (tabContainer == null) {
-            return;
-        }
-        if (scrollableTabLayoutEnabled()) {
-            tabScroller.tabPanel.add(tabContainer);
-        } else {
-            tabPane.add(tabContainer);
-        }
+        return htmlViews;
     }
 
     /**
@@ -945,11 +1023,21 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return getHandler();
     }
 
-    protected TabbedPaneHandler getHandler() {
-        if (handler == null) {
-            handler = new TabbedPaneHandler(this);
+    /**
+     * Gets input map.
+     *
+     * @param condition the condition
+     * @return the input map
+     */
+    InputMap getInputMap(final int condition) {
+        if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
+            return (InputMap) DefaultLookup.get(tabPane, this,
+                                                "TabbedPane.ancestorInputMap");
+        } else if (condition == JComponent.WHEN_FOCUSED) {
+            return (InputMap) DefaultLookup.get(tabPane, this,
+                                                "TabbedPane.focusInputMap");
         }
-        return handler;
+        return null;
     }
 
     /**
@@ -961,31 +1049,38 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return getHandler();
     }
 
-    protected Vector<View> createHTMLVector() {
-        Vector<View> htmlViews = new Vector<>();
-        int count = tabPane.getTabCount();
-        if (count > 0) {
-            for (int i = 0; i < count; i++) {
-                String title = tabPane.getTitleAt(i);
-                if (BasicHTML.isHTMLString(title)) {
-                    htmlViews.addElement(BasicHTML.createHTMLView(tabPane, title));
-                } else {
-                    htmlViews.addElement(null);
-                }
-            }
+    /**
+     * Adds the specified mnemonic at the specified index.
+     *
+     * @param index    the index
+     * @param mnemonic the mnemonic
+     */
+    @SuppressWarnings("MagicConstant")
+    protected void addMnemonic(final int index, final int mnemonic) {
+        if (mnemonicToIndexMap == null) {
+            initMnemonics();
         }
-        return htmlViews;
+        mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, DarkUIUtil.getFocusAcceleratorKeyMask()),
+                             "setSelectedIndex");
+        mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_GRAPH_DOWN_MASK
+                                     | DarkUIUtil.getFocusAcceleratorKeyMask()),
+                             "setSelectedIndex");
+        mnemonicToIndexMap.put(mnemonic, index);
     }
 
-    InputMap getInputMap(final int condition) {
-        if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            return (InputMap) DefaultLookup.get(tabPane, this,
-                                                "TabbedPane.ancestorInputMap");
-        } else if (condition == JComponent.WHEN_FOCUSED) {
-            return (InputMap) DefaultLookup.get(tabPane, this,
-                                                "TabbedPane.focusInputMap");
-        }
-        return null;
+    /**
+     * Sets the tab the mouse is over by location. This is a cover method for <code>setRolloverTab(tabForCoordinate(x,
+     * y, false))</code>.
+     *
+     * @param x the x
+     * @param y the y
+     */
+    protected void setRolloverTab(final int x, final int y) {
+        // NOTE:
+        // This calls in with false otherwise it could trigger a validate,
+        // which should NOT happen if the user is only dragging the
+        // mouse around.
+        setRolloverTab(tabForCoordinate(tabPane, x, y, false));
     }
 
     /**
@@ -1015,46 +1110,14 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
-     * Adds the specified mnemonic at the specified index.
+     * Tab for coordinate int.
+     *
+     * @param pane                the pane
+     * @param x                   the x
+     * @param y                   the y
+     * @param validateIfNecessary the validate if necessary
+     * @return the int
      */
-    @SuppressWarnings("MagicConstant")
-    protected void addMnemonic(final int index, final int mnemonic) {
-        if (mnemonicToIndexMap == null) {
-            initMnemonics();
-        }
-        mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, DarkUIUtil.getFocusAcceleratorKeyMask()),
-                             "setSelectedIndex");
-        mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_GRAPH_DOWN_MASK
-                                     | DarkUIUtil.getFocusAcceleratorKeyMask()),
-                             "setSelectedIndex");
-        mnemonicToIndexMap.put(mnemonic, index);
-    }
-
-    /**
-     * Installs the state needed for mnemonics.
-     */
-    protected void initMnemonics() {
-        mnemonicToIndexMap = new Hashtable<>();
-        mnemonicInputMap = new ComponentInputMapUIResource(tabPane);
-        mnemonicInputMap.setParent(SwingUtilities.getUIInputMap(tabPane,
-                                                                JComponent.WHEN_IN_FOCUSED_WINDOW));
-        SwingUtilities.replaceUIInputMap(tabPane,
-                                         JComponent.WHEN_IN_FOCUSED_WINDOW,
-                                         mnemonicInputMap);
-    }
-
-    /**
-     * Sets the tab the mouse is over by location. This is a cover method for <code>setRolloverTab(tabForCoordinate(x,
-     * y, false))</code>.
-     */
-    protected void setRolloverTab(final int x, final int y) {
-        // NOTE:
-        // This calls in with false otherwise it could trigger a validate,
-        // which should NOT happen if the user is only dragging the
-        // mouse around.
-        setRolloverTab(tabForCoordinate(tabPane, x, y, false));
-    }
-
     protected int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
                                    final boolean validateIfNecessary) {
         if (validateIfNecessary) {
@@ -1084,8 +1147,43 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     /**
+     * Installs the state needed for mnemonics.
+     */
+    protected void initMnemonics() {
+        mnemonicToIndexMap = new Hashtable<>();
+        mnemonicInputMap = new ComponentInputMapUIResource(tabPane);
+        mnemonicInputMap.setParent(SwingUtilities.getUIInputMap(tabPane,
+                                                                JComponent.WHEN_IN_FOCUSED_WINDOW));
+        SwingUtilities.replaceUIInputMap(tabPane,
+                                         JComponent.WHEN_IN_FOCUSED_WINDOW,
+                                         mnemonicInputMap);
+    }
+
+    /**
+     * Ensure current layout.
+     */
+    protected void ensureCurrentLayout() {
+        if (!tabPane.isValid()) {
+            tabPane.validate();
+        }
+        /* If tabPane doesn't have a peer yet, the validate() call will
+         * silently fail.  We handle that by forcing a layout if tabPane
+         * is still invalid.  See bug 4237677.
+         */
+        if (!tabPane.isValid()) {
+            TabbedPaneLayout layout = (TabbedPaneLayout) tabPane.getLayout();
+            layout.calculateLayoutInfo();
+        }
+    }
+
+    /**
      * Returns a point which is translated from the specified point in the JTabbedPane's coordinate space to the
      * coordinate space of the ScrollableTabPanel.  This is used for SCROLL_TAB_LAYOUT ONLY.
+     *
+     * @param srcx the srcx
+     * @param srcy the srcy
+     * @param dest the dest
+     * @return the point
      */
     protected Point translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
         Point vpp = tabScroller.viewport.getLocation();
@@ -1093,6 +1191,22 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         dest.x = srcx - vpp.x + viewp.x;
         dest.y = srcy - vpp.y + viewp.y;
         return dest;
+    }
+
+    /**
+     * Calculate baseline if necessary int.
+     *
+     * @return the int
+     */
+    protected int calculateBaselineIfNecessary() {
+        if (!calculatedBaseline) {
+            calculatedBaseline = true;
+            baseline = -1;
+            if (tabPane.getTabCount() > 0) {
+                calculateBaseline();
+            }
+        }
+        return baseline;
     }
 
     /**
@@ -1210,17 +1324,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return runCount;
     }
 
-    protected int calculateBaselineIfNecessary() {
-        if (!calculatedBaseline) {
-            calculatedBaseline = true;
-            baseline = -1;
-            if (tabPane.getTabCount() > 0) {
-                calculateBaseline();
-            }
-        }
-        return baseline;
-    }
-
+    /**
+     * Calculate baseline.
+     */
     protected void calculateBaseline() {
         int tabCount = tabPane.getTabCount();
         int tabPlacement = tabPane.getTabPlacement();
@@ -1249,8 +1355,28 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
+    /**
+     * Is horizontal tab placement boolean.
+     *
+     * @return the boolean
+     */
+    protected boolean isHorizontalTabPlacement() {
+        return tabPane.getTabPlacement() == TOP || tabPane.getTabPlacement() == BOTTOM;
+    }
+
 // BasicTabbedPaneUI methods
 
+    /**
+     * Paint focus indicator.
+     *
+     * @param g            the g
+     * @param tabPlacement the tab placement
+     * @param rects        the rects
+     * @param tabIndex     the tab index
+     * @param iconRect     the icon rect
+     * @param textRect     the text rect
+     * @param isSelected   the is selected
+     */
     protected abstract void paintFocusIndicator(final Graphics g, final int tabPlacement,
                                                 final Rectangle[] rects, final int tabIndex,
                                                 final Rectangle iconRect, final Rectangle textRect,
@@ -1764,6 +1890,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
+    /**
+     * Navigate to.
+     *
+     * @param index the index
+     */
     protected void navigateTo(final int index) {
         if (DefaultLookup.getBoolean(tabPane, this,
                                      "TabbedPane.selectionFollowsFocus", true)) {
@@ -1783,6 +1914,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
     }
 
+    /**
+     * Sets focus index.
+     *
+     * @param index   the index
+     * @param repaint the repaint
+     */
     void setFocusIndex(final int index, final boolean repaint) {
         if (repaint && !isRunsDirty) {
             repaintTab(focusIndex);
@@ -1795,6 +1932,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /**
      * Repaints the specified tab.
+     *
+     * @param index the index
      */
     protected void repaintTab(final int index) {
         // If we're not valid that means we will shortly be validated and
@@ -1841,6 +1980,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Returns the index of the tab closest to the passed in location, note that the returned tab may not contain the
      * location x,y.
+     *
+     * @param x the x
+     * @param y the y
+     * @return the closest tab
      */
     protected int getClosestTab(final int x, final int y) {
         int min = 0;
@@ -2044,7 +2187,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         return (baseRun + 1) % runCount;
     }
 
-    // REMIND(aim,7/29/98): This method should be made
+    /**
+     * Request focus for visible component boolean.
+     *
+     * @return the boolean
+     */
+// REMIND(aim,7/29/98): This method should be made
     // protected in the next release where
     // API changes are allowed
     boolean requestFocusForVisibleComponent() {
@@ -2079,23 +2227,73 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         visibleComponent = component;
     }
 
+    /**
+     * The type Actions.
+     */
     protected static class Actions extends UIAction {
+        /**
+         * The Next.
+         */
         static final String NEXT = "navigateNext";
+        /**
+         * The Previous.
+         */
         static final String PREVIOUS = "navigatePrevious";
+        /**
+         * The Right.
+         */
         static final String RIGHT = "navigateRight";
+        /**
+         * The Left.
+         */
         static final String LEFT = "navigateLeft";
+        /**
+         * The Up.
+         */
         static final String UP = "navigateUp";
+        /**
+         * The Down.
+         */
         static final String DOWN = "navigateDown";
+        /**
+         * The Page up.
+         */
         static final String PAGE_UP = "navigatePageUp";
+        /**
+         * The Page down.
+         */
         static final String PAGE_DOWN = "navigatePageDown";
+        /**
+         * The Request focus.
+         */
         static final String REQUEST_FOCUS = "requestFocus";
+        /**
+         * The Request focus for visible.
+         */
         static final String REQUEST_FOCUS_FOR_VISIBLE =
                 "requestFocusForVisibleComponent";
+        /**
+         * The Set selected.
+         */
         static final String SET_SELECTED = "setSelectedIndex";
+        /**
+         * The Select focused.
+         */
         static final String SELECT_FOCUSED = "selectTabWithFocus";
+        /**
+         * The Scroll forward.
+         */
         static final String SCROLL_FORWARD = "scrollTabsForwardAction";
+        /**
+         * The Scroll backward.
+         */
         static final String SCROLL_BACKWARD = "scrollTabsBackwardAction";
 
+        /**
+         * Instantiates a new Actions.
+         *
+         * @param key the key
+         */
         Actions(final String key) {
             super(key);
         }
@@ -2165,10 +2363,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
 // Controller: event listeners
 
+    /**
+     * The type Tab container.
+     */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class TabContainer extends JPanel implements UIResource {
+        /**
+         * The Notify tabbed pane.
+         */
         protected boolean notifyTabbedPane = true;
 
+        /**
+         * Instantiates a new Tab container.
+         */
         public TabContainer() {
             super(null);
             setOpaque(false);
@@ -2193,6 +2400,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             }
         }
 
+        /**
+         * Remove unused tab components.
+         */
         protected void removeUnusedTabComponents() {
             for (Component c : getComponents()) {
                 if (!(c instanceof UIResource)) {

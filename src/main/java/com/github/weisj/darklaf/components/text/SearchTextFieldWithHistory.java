@@ -99,8 +99,8 @@ public class SearchTextFieldWithHistory extends SearchTextField {
     /**
      * Set the maximum height of the popup. If the size is larger than the specified maximum height the content will be
      * wrapped inside a scroll pane.
-     * <p>
-     * Note: A value of <= 0 indicates that the height should not be limited.
+     *
+     * <p>Note: A value of less than or equal to 0 indicates that the height should not be limited.
      *
      * @param maximumHeight the max height to use.
      */
@@ -150,7 +150,7 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      * Set the capacity of the history. If the size grows larger than the capacity the oldest entry will be deleted.
      *
      * @param capacity the capacity.
-     * @throws IllegalArgumentException if capacity < 0
+     * @throws IllegalArgumentException if capacity is negative
      */
     public void setCapacity(final int capacity) throws IllegalArgumentException {
         history.setCapacity(capacity);

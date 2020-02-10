@@ -78,6 +78,7 @@ public class LazyActionMap extends ActionMapUIResource {
      * @param loaderClass Class object that gets loadActionMap invoked on.
      * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map will be
      *                    registered on.
+     * @return the action map
      */
     @NotNull
     public static ActionMap getActionMap(final Class<?> loaderClass,

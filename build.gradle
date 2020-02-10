@@ -43,9 +43,15 @@ task sourceJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+task packageJavadoc(type: Jar) {
+    classifier 'javadoc'
+    from javadoc
+}
+
 artifacts {
     archives jar
     archives sourceJar
+    archives packageJavadoc
 }
 
 signing {

@@ -479,6 +479,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
 
     /**
      * Creates a non rollover border for Toggle buttons in the toolbar.
+     *
+     * @return the border
      */
     protected Border createNonRolloverToggleBorder() {
         UIDefaults table = UIManager.getLookAndFeelDefaults();

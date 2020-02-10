@@ -52,7 +52,6 @@ import java.awt.geom.NoninvertibleTransformException;
  * <p>
  * <b>Note:</b> A {@link MouseEventUI} instance cannot be shared and can be set
  * to a single {@link JXLayer} instance only.
- * <p/>
  */
 public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
 

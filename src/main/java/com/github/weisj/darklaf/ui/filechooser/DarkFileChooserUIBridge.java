@@ -1137,6 +1137,8 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
         /**
          * Adds the directory to the model and sets it to be selected, additionally clears out the previous selected
          * directory and the paths leading up to it, if any.
+         *
+         * @param directory the directory
          */
         protected void addItem(final File directory) {
 

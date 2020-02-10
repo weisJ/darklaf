@@ -40,6 +40,8 @@ public interface TabFramePopup {
 
     /**
      * Sets the content pane. This needn't replace the old content pane if this popup supports multiple content panes.
+     *
+     * @param contentPane the content pane to use.
      */
     void setContentPane(Component contentPane);
 

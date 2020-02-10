@@ -90,7 +90,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * Set the capacity of the history. If the size grows larger than the capacity the oldest entry will be deleted.
      *
      * @param capacity the capacity.
-     * @throws IllegalArgumentException if capacity < 0
+     * @throws IllegalArgumentException if capacity is negative
      */
     public void setCapacity(final int capacity) throws IllegalArgumentException {
         if (capacity < 0) throw new IllegalArgumentException("Negative history size is not supported");

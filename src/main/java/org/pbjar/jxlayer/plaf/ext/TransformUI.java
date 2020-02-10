@@ -72,8 +72,6 @@ import java.util.logging.Logger;
  *
  * <p>Some implementation details:
  *
- * <p>
- *
  * <ul>
  * <li>It extends {@link MouseEventUI} because, when applying transformations, the whereabouts of
  * child components on screen (device space) do not necessarily match the location according
@@ -104,8 +102,6 @@ import java.util.logging.Logger;
  * </ul>
  *
  * <p>Known limitations:
- *
- * <p>
  *
  * <ol>
  * <li>In Java versions <b>before Java 6u10</b>, this implementation employs a custom {@link

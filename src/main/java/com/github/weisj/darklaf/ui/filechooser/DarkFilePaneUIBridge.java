@@ -372,6 +372,9 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
 
     /**
      * Returns true if specified FileChooser should use ShellFolder
+     *
+     * @param chooser the chooser
+     * @return the boolean
      */
     public static boolean usesShellFolder(final JFileChooser chooser) {
         Boolean prop = (Boolean) chooser.getClientProperty("FileChooser.useShellFolder");

@@ -65,9 +65,11 @@ import java.util.Objects;
  * @author Philip Milne
  * @author Shannon Hickey (drag and drop)
  */
-
 public class DarkListUIBridge extends BasicListUI {
 
+    /**
+     * The constant BASELINE_COMPONENT_KEY.
+     */
     protected static final StringBuilder BASELINE_COMPONENT_KEY =
             new StringBuilder("List.baselineComponent");
     /**
@@ -100,10 +102,25 @@ public class DarkListUIBridge extends BasicListUI {
      * The bit relates to cell renderer changed property.
      */
     protected static final int cellRendererChanged = 1 << 6;
+    /**
+     * The constant layoutOrientationChanged.
+     */
     protected static final int layoutOrientationChanged = 1 << 7;
+    /**
+     * The constant heightChanged.
+     */
     protected static final int heightChanged = 1 << 8;
+    /**
+     * The constant widthChanged.
+     */
     protected static final int widthChanged = 1 << 9;
+    /**
+     * The constant componentOrientationChanged.
+     */
     protected static final int componentOrientationChanged = 1 << 10;
+    /**
+     * The constant DROP_LINE_THICKNESS.
+     */
     protected static final int DROP_LINE_THICKNESS = 2;
     /**
      * Used by IncrementLeadSelectionAction. Indicates the action should change the lead, and not select it.
@@ -119,7 +136,10 @@ public class DarkListUIBridge extends BasicListUI {
      */
     protected static final int EXTEND_SELECTION = 2;
 
-    // Following ivars are used if the list is laying out horizontally
+    /**
+     * The constant defaultTransferHandler.
+     */
+// Following ivars are used if the list is laying out horizontally
     protected static final TransferHandler defaultTransferHandler = new ListTransferHandler();
     /**
      * The instance of {@code JList}.
@@ -156,6 +176,9 @@ public class DarkListUIBridge extends BasicListUI {
      * {@code PropertyChangeListener} that attached to {@code JList}.
      */
     protected PropertyChangeListener propertyChangeListener;
+    /**
+     * The Handler.
+     */
     protected Handler handler;
     /**
      * The array of cells' height
@@ -214,7 +237,7 @@ public class DarkListUIBridge extends BasicListUI {
 
     /**
      * Returns a new instance of {@code BasicListUI}. {@code BasicListUI} delegates are allocated one per {@code
-     * JList}.
+     * JList}*.
      *
      * @param list a component
      * @return a new {@code ListUI} implementation for the Windows look and feel.
@@ -223,8 +246,49 @@ public class DarkListUIBridge extends BasicListUI {
         return new BasicListUI();
     }
 
-    protected static int adjustIndex(final int index, final JList<?> list) {
-        return index < list.getModel().getSize() ? index : -1;
+    /**
+     * Load action map.
+     *
+     * @param map the map
+     */
+    public static void loadActionMap(@NotNull final LazyActionMap map) {
+        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_EXTEND));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_NEXT_COLUMN));
+        map.put(new Actions(Actions.SELECT_NEXT_COLUMN_EXTEND));
+        map.put(new Actions(Actions.SELECT_NEXT_COLUMN_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_NEXT_ROW));
+        map.put(new Actions(Actions.SELECT_NEXT_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_NEXT_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_FIRST_ROW));
+        map.put(new Actions(Actions.SELECT_FIRST_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_FIRST_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_LAST_ROW));
+        map.put(new Actions(Actions.SELECT_LAST_ROW_EXTEND));
+        map.put(new Actions(Actions.SELECT_LAST_ROW_CHANGE_LEAD));
+        map.put(new Actions(Actions.SCROLL_UP));
+        map.put(new Actions(Actions.SCROLL_UP_EXTEND));
+        map.put(new Actions(Actions.SCROLL_UP_CHANGE_LEAD));
+        map.put(new Actions(Actions.SCROLL_DOWN));
+        map.put(new Actions(Actions.SCROLL_DOWN_EXTEND));
+        map.put(new Actions(Actions.SCROLL_DOWN_CHANGE_LEAD));
+        map.put(new Actions(Actions.SELECT_ALL));
+        map.put(new Actions(Actions.CLEAR_SELECTION));
+        map.put(new Actions(Actions.ADD_TO_SELECTION));
+        map.put(new Actions(Actions.TOGGLE_AND_ANCHOR));
+        map.put(new Actions(Actions.EXTEND_TO));
+        map.put(new Actions(Actions.MOVE_SELECTION_TO));
+
+        map.put(TransferHandler.getCutAction().getValue(Action.NAME),
+                TransferHandler.getCutAction());
+        map.put(TransferHandler.getCopyAction().getValue(Action.NAME),
+                TransferHandler.getCopyAction());
+        map.put(TransferHandler.getPasteAction().getValue(Action.NAME),
+                TransferHandler.getPasteAction());
     }
 
     /**
@@ -461,44 +525,21 @@ public class DarkListUIBridge extends BasicListUI {
         }
     }
 
-    public static void loadActionMap(@NotNull final LazyActionMap map) {
-        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN));
-        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_EXTEND));
-        map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_CHANGE_LEAD));
-        map.put(new Actions(Actions.SELECT_NEXT_COLUMN));
-        map.put(new Actions(Actions.SELECT_NEXT_COLUMN_EXTEND));
-        map.put(new Actions(Actions.SELECT_NEXT_COLUMN_CHANGE_LEAD));
-        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW));
-        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW_EXTEND));
-        map.put(new Actions(Actions.SELECT_PREVIOUS_ROW_CHANGE_LEAD));
-        map.put(new Actions(Actions.SELECT_NEXT_ROW));
-        map.put(new Actions(Actions.SELECT_NEXT_ROW_EXTEND));
-        map.put(new Actions(Actions.SELECT_NEXT_ROW_CHANGE_LEAD));
-        map.put(new Actions(Actions.SELECT_FIRST_ROW));
-        map.put(new Actions(Actions.SELECT_FIRST_ROW_EXTEND));
-        map.put(new Actions(Actions.SELECT_FIRST_ROW_CHANGE_LEAD));
-        map.put(new Actions(Actions.SELECT_LAST_ROW));
-        map.put(new Actions(Actions.SELECT_LAST_ROW_EXTEND));
-        map.put(new Actions(Actions.SELECT_LAST_ROW_CHANGE_LEAD));
-        map.put(new Actions(Actions.SCROLL_UP));
-        map.put(new Actions(Actions.SCROLL_UP_EXTEND));
-        map.put(new Actions(Actions.SCROLL_UP_CHANGE_LEAD));
-        map.put(new Actions(Actions.SCROLL_DOWN));
-        map.put(new Actions(Actions.SCROLL_DOWN_EXTEND));
-        map.put(new Actions(Actions.SCROLL_DOWN_CHANGE_LEAD));
-        map.put(new Actions(Actions.SELECT_ALL));
-        map.put(new Actions(Actions.CLEAR_SELECTION));
-        map.put(new Actions(Actions.ADD_TO_SELECTION));
-        map.put(new Actions(Actions.TOGGLE_AND_ANCHOR));
-        map.put(new Actions(Actions.EXTEND_TO));
-        map.put(new Actions(Actions.MOVE_SELECTION_TO));
-
-        map.put(TransferHandler.getCutAction().getValue(Action.NAME),
-                TransferHandler.getCutAction());
-        map.put(TransferHandler.getCopyAction().getValue(Action.NAME),
-                TransferHandler.getCopyAction());
-        map.put(TransferHandler.getPasteAction().getValue(Action.NAME),
-                TransferHandler.getPasteAction());
+    /**
+     * Update is file list.
+     */
+    protected void updateIsFileList() {
+        boolean b = Boolean.TRUE.equals(list.getClientProperty("List.isFileList"));
+        if (b != isFileList) {
+            isFileList = b;
+            Font oldFont = list.getFont();
+            if (oldFont == null || oldFont instanceof UIResource) {
+                Font newFont = UIManager.getFont(b ? "FileChooser.listFont" : "List.font");
+                if (newFont != null && newFont != oldFont) {
+                    list.setFont(newFont);
+                }
+            }
+        }
     }
 
     /**
@@ -702,20 +743,11 @@ public class DarkListUIBridge extends BasicListUI {
         installKeyboardActions();
     }
 
-    protected void updateIsFileList() {
-        boolean b = Boolean.TRUE.equals(list.getClientProperty("List.isFileList"));
-        if (b != isFileList) {
-            isFileList = b;
-            Font oldFont = list.getFont();
-            if (oldFont == null || oldFont instanceof UIResource) {
-                Font newFont = UIManager.getFont(b ? "FileChooser.listFont" : "List.font");
-                if (newFont != null && newFont != oldFont) {
-                    list.setFont(newFont);
-                }
-            }
-        }
-    }
-
+    /**
+     * Gets handler.
+     *
+     * @return the handler
+     */
     protected Handler getHandler() {
         if (handler == null) {
             handler = new Handler();
@@ -723,6 +755,12 @@ public class DarkListUIBridge extends BasicListUI {
         return handler;
     }
 
+    /**
+     * Gets input map.
+     *
+     * @param condition the condition
+     * @return the input map
+     */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_FOCUSED) {
             InputMap keyMap = (InputMap) DefaultLookup.get(
@@ -739,6 +777,23 @@ public class DarkListUIBridge extends BasicListUI {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the closest location to the model index of the passed in location.
+     *
+     * @param x the x
+     * @param y the y
+     * @return the int
+     */
+    protected int convertLocationToModel(final int x, final int y) {
+        int row = convertLocationToRow(x, y, true);
+        int column = convertLocationToColumn(x, y);
+
+        if (row >= 0 && column >= 0) {
+            return getModelIndex(column, row);
+        }
+        return -1;
     }
 
     /**
@@ -1070,23 +1125,13 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Returns the closest location to the model index of the passed in location.
-     */
-    protected int convertLocationToModel(final int x, final int y) {
-        int row = convertLocationToRow(x, y, true);
-        int column = convertLocationToColumn(x, y);
-
-        if (row >= 0 && column >= 0) {
-            return getModelIndex(column, row);
-        }
-        return -1;
-    }
-
-    /**
      * Returns the row at location x/y.
      *
+     * @param x       the x
+     * @param y0      the y 0
      * @param closest If true and the location doesn't exactly match a particular location, this will return the closest
      *                row.
+     * @return the int
      */
     public int convertLocationToRow(final int x, final int y0, final boolean closest) {
         int size = list.getModel().getSize();
@@ -1129,6 +1174,10 @@ public class DarkListUIBridge extends BasicListUI {
 
     /**
      * Returns the closest column to the passed in location.
+     *
+     * @param x the x
+     * @param y the y
+     * @return the int
      */
     protected int convertLocationToColumn(final int x, final int y) {
         if (cellWidth > 0) {
@@ -1155,6 +1204,10 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the model index for the specified display location. If <code>column</code>x<code>row</code> is beyond the
      * length of the model, this will return the model size - 1.
+     *
+     * @param column the column
+     * @param row    the row
+     * @return the model index
      */
     protected int getModelIndex(final int column, final int row) {
         switch (layoutOrientation) {
@@ -1175,6 +1228,9 @@ public class DarkListUIBridge extends BasicListUI {
      * This updates the <code>rowsPerColumn, </code><code>columnCount</code>,
      * <code>preferredHeight</code> and potentially <code>cellHeight</code>
      * instance variables.
+     *
+     * @param fixedCellWidth  the fixed cell width
+     * @param fixedCellHeight the fixed cell height
      */
     protected void updateHorizontalLayoutState(final int fixedCellWidth,
                                                final int fixedCellHeight) {
@@ -1248,53 +1304,11 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Gets the bounds of the specified model index, returning the resulting bounds, or null if <code>index</code> is
-     * not valid.
+     * Paint.
+     *
+     * @param g the g
+     * @param c the c
      */
-    protected Rectangle getCellBounds(final JList<?> list, final int index) {
-        maybeUpdateLayoutState();
-
-        int row = convertModelToRow(index);
-        int column = convertModelToColumn(index);
-
-        if (row == -1 || column == -1) {
-            return null;
-        }
-
-        Insets insets = list.getInsets();
-        int x;
-        int w = cellWidth;
-        int y = insets.top;
-        int h;
-        switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP:
-            case JList.HORIZONTAL_WRAP:
-                if (isLeftToRight) {
-                    x = insets.left + column * cellWidth;
-                } else {
-                    x = list.getWidth() - insets.right - (column + 1) * cellWidth;
-                }
-                y += cellHeight * row;
-                h = cellHeight;
-                break;
-            default:
-                x = insets.left;
-                if (cellHeights == null) {
-                    y += (cellHeight * row);
-                } else if (row >= cellHeights.length) {
-                    y = 0;
-                } else {
-                    for (int i = 0; i < row; i++) {
-                        y += cellHeights[i];
-                    }
-                }
-                w = list.getWidth() - (insets.left + insets.right);
-                h = getRowHeight(index);
-                break;
-        }
-        return new Rectangle(x, y, w, h);
-    }
-
     protected void paintImpl(final Graphics g, final JComponent c) {
         switch (layoutOrientation) {
             case JList.VERTICAL_WRAP:
@@ -1376,6 +1390,105 @@ public class DarkListUIBridge extends BasicListUI {
         rendererPane.removeAll();
     }
 
+    /**
+     * Redraw list.
+     */
+    protected void redrawList() {
+        list.revalidate();
+        list.repaint();
+    }
+
+    /**
+     * Adjust index int.
+     *
+     * @param index the index
+     * @param list  the list
+     * @return the int
+     */
+    protected static int adjustIndex(final int index, final JList<?> list) {
+        return index < list.getModel().getSize() ? index : -1;
+    }
+
+    /**
+     * Returns the closest row that starts at the specified y-location in the passed in column.
+     *
+     * @param y      the y
+     * @param column the column
+     * @return the int
+     */
+    protected int convertLocationToRowInColumn(final int y, final int column) {
+        int x = 0;
+
+        if (layoutOrientation != JList.VERTICAL) {
+            if (isLeftToRight) {
+                x = column * cellWidth;
+            } else {
+                x = list.getWidth() - (column + 1) * cellWidth - list.getInsets().right;
+            }
+        }
+        return convertLocationToRow(x, y, true);
+    }
+
+    /**
+     * Returns the number of rows in the given column.
+     *
+     * @param column the column
+     * @return the row count
+     */
+    protected int getRowCount(final int column) {
+        if (column < 0 || column >= columnCount) {
+            return -1;
+        }
+        if (layoutOrientation == JList.VERTICAL ||
+                (column == 0 && columnCount == 1)) {
+            return list.getModel().getSize();
+        }
+        if (column >= columnCount) {
+            return -1;
+        }
+        if (layoutOrientation == JList.VERTICAL_WRAP) {
+            if (column < (columnCount - 1)) {
+                return rowsPerColumn;
+            }
+            return list.getModel().getSize() - (columnCount - 1) *
+                    rowsPerColumn;
+        }
+        // JList.HORIZONTAL_WRAP
+        int diff = columnCount - (columnCount * rowsPerColumn -
+                list.getModel().getSize());
+
+        if (column >= diff) {
+            return Math.max(0, rowsPerColumn - 1);
+        }
+        return rowsPerColumn;
+    }
+
+    /**
+     * Returns the height of the cell at the passed in location.
+     *
+     * @param column the column
+     * @param row    the row
+     * @return the height
+     */
+    protected int getHeight(final int column, final int row) {
+        if (column < 0 || column > columnCount || row < 0) {
+            return -1;
+        }
+        if (layoutOrientation != JList.VERTICAL) {
+            return cellHeight;
+        }
+        if (row >= list.getModel().getSize()) {
+            return -1;
+        }
+        return (cellHeights == null) ? cellHeight :
+               ((row < cellHeights.length) ? cellHeights[row] : -1);
+    }
+
+    /**
+     * Paint drop line.
+     *
+     * @param g the g
+     */
     protected void paintDropLine(final Graphics g) {
         JList.DropLocation loc = list.getDropLocation();
         if (loc == null || !loc.isInsert()) {
@@ -1390,6 +1503,12 @@ public class DarkListUIBridge extends BasicListUI {
         }
     }
 
+    /**
+     * Gets drop line rect.
+     *
+     * @param loc the loc
+     * @return the drop line rect
+     */
     protected Rectangle getDropLineRect(final JList.DropLocation loc) {
         int size = list.getModel().getSize();
 
@@ -1516,6 +1635,9 @@ public class DarkListUIBridge extends BasicListUI {
 
     /**
      * Returns the row that the model index <code>index</code> will be displayed in..
+     *
+     * @param index the index
+     * @return the int
      */
     public int convertModelToRow(final int index) {
         int size = list.getModel().getSize();
@@ -1535,24 +1657,62 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Returns the height of the cell at the passed in location.
+     * Gets the bounds of the specified model index, returning the resulting bounds, or null if <code>index</code> is
+     * not valid.
+     *
+     * @param list  the list
+     * @param index the index
+     * @return the cell bounds
      */
-    protected int getHeight(final int column, final int row) {
-        if (column < 0 || column > columnCount || row < 0) {
-            return -1;
+    protected Rectangle getCellBounds(final JList<?> list, final int index) {
+        maybeUpdateLayoutState();
+
+        int row = convertModelToRow(index);
+        int column = convertModelToColumn(index);
+
+        if (row == -1 || column == -1) {
+            return null;
         }
-        if (layoutOrientation != JList.VERTICAL) {
-            return cellHeight;
+
+        Insets insets = list.getInsets();
+        int x;
+        int w = cellWidth;
+        int y = insets.top;
+        int h;
+        switch (layoutOrientation) {
+            case JList.VERTICAL_WRAP:
+            case JList.HORIZONTAL_WRAP:
+                if (isLeftToRight) {
+                    x = insets.left + column * cellWidth;
+                } else {
+                    x = list.getWidth() - insets.right - (column + 1) * cellWidth;
+                }
+                y += cellHeight * row;
+                h = cellHeight;
+                break;
+            default:
+                x = insets.left;
+                if (cellHeights == null) {
+                    y += (cellHeight * row);
+                } else if (row >= cellHeights.length) {
+                    y = 0;
+                } else {
+                    for (int i = 0; i < row; i++) {
+                        y += cellHeights[i];
+                    }
+                }
+                w = list.getWidth() - (insets.left + insets.right);
+                h = getRowHeight(index);
+                break;
         }
-        if (row >= list.getModel().getSize()) {
-            return -1;
-        }
-        return (cellHeights == null) ? cellHeight :
-               ((row < cellHeights.length) ? cellHeights[row] : -1);
+        return new Rectangle(x, y, w, h);
     }
 
     /**
      * Returns the column that the model index <code>index</code> will be displayed in.
+     *
+     * @param index the index
+     * @return the int
      */
     protected int convertModelToColumn(final int index) {
         int size = list.getModel().getSize();
@@ -1572,57 +1732,8 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Returns the number of rows in the given column.
+     * The type List transfer handler.
      */
-    protected int getRowCount(final int column) {
-        if (column < 0 || column >= columnCount) {
-            return -1;
-        }
-        if (layoutOrientation == JList.VERTICAL ||
-                (column == 0 && columnCount == 1)) {
-            return list.getModel().getSize();
-        }
-        if (column >= columnCount) {
-            return -1;
-        }
-        if (layoutOrientation == JList.VERTICAL_WRAP) {
-            if (column < (columnCount - 1)) {
-                return rowsPerColumn;
-            }
-            return list.getModel().getSize() - (columnCount - 1) *
-                    rowsPerColumn;
-        }
-        // JList.HORIZONTAL_WRAP
-        int diff = columnCount - (columnCount * rowsPerColumn -
-                list.getModel().getSize());
-
-        if (column >= diff) {
-            return Math.max(0, rowsPerColumn - 1);
-        }
-        return rowsPerColumn;
-    }
-
-    /**
-     * Returns the closest row that starts at the specified y-location in the passed in column.
-     */
-    protected int convertLocationToRowInColumn(final int y, final int column) {
-        int x = 0;
-
-        if (layoutOrientation != JList.VERTICAL) {
-            if (isLeftToRight) {
-                x = column * cellWidth;
-            } else {
-                x = list.getWidth() - (column + 1) * cellWidth - list.getInsets().right;
-            }
-        }
-        return convertLocationToRow(x, y, true);
-    }
-
-    protected void redrawList() {
-        list.revalidate();
-        list.repaint();
-    }
-
     @SuppressWarnings("serial") // Superclass is a JDK-implementation class
     static class ListTransferHandler extends TransferHandler implements UIResource {
 
@@ -1669,607 +1780,6 @@ public class DarkListUIBridge extends BasicListUI {
             return null;
         }
 
-    }
-
-    /**
-     * Mouse input, and focus handling for JList.  An instance of this class is added to the appropriate
-     * java.awt.Component lists at installUI() time.  Note keyboard input is handled with JComponent KeyboardActions,
-     * see installKeyboardActions().
-     * <p>
-     * <strong>Warning:</strong>
-     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
-     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
-     * package. Please see {@link java.beans.XMLEncoder}.
-     *
-     * @see #createMouseInputListener
-     * @see #installKeyboardActions
-     * @see #installUI
-     */
-    @SuppressWarnings("serial") // Same-version serialization only
-    public class MouseInputHandler implements MouseInputListener {
-        public void mouseClicked(final MouseEvent e) {
-            getHandler().mouseClicked(e);
-        }
-
-        public void mousePressed(final MouseEvent e) {
-            getHandler().mousePressed(e);
-        }
-
-        public void mouseReleased(final MouseEvent e) {
-            getHandler().mouseReleased(e);
-        }
-
-        public void mouseEntered(final MouseEvent e) {
-            getHandler().mouseEntered(e);
-        }
-
-        public void mouseExited(final MouseEvent e) {
-            getHandler().mouseExited(e);
-        }
-
-        public void mouseDragged(final MouseEvent e) {
-            getHandler().mouseDragged(e);
-        }
-
-        public void mouseMoved(final MouseEvent e) {
-            getHandler().mouseMoved(e);
-        }
-    }
-
-    /**
-     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
-     * {@code BasicListUI}.
-     */
-    public class FocusHandler implements FocusListener {
-        /**
-         * Repaints focused cells.
-         */
-        protected void repaintCellFocus() {
-            getHandler().repaintCellFocus();
-        }
-
-        /* The focusGained() focusLost() methods run when the JList
-         * focus changes.
-         */
-
-        public void focusGained(final FocusEvent e) {
-            getHandler().focusGained(e);
-        }
-
-        public void focusLost(final FocusEvent e) {
-            getHandler().focusLost(e);
-        }
-    }
-
-    /**
-     * The ListSelectionListener that's added to the JLists selection model at installUI time, and whenever the
-     * JList.selectionModel property changes.  When the selection changes we repaint the affected rows.
-     * <p>
-     * <strong>Warning:</strong>
-     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
-     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
-     * package. Please see {@link java.beans.XMLEncoder}.
-     *
-     * @see #createListSelectionListener
-     * @see #installUI
-     */
-    @SuppressWarnings("serial") // Same-version serialization only
-    public class ListSelectionHandler implements ListSelectionListener {
-        public void valueChanged(final ListSelectionEvent e) {
-            getHandler().valueChanged(e);
-        }
-    }
-
-    /**
-     * The {@code ListDataListener} that's added to the {@code JLists} model at {@code installUI time}, and whenever the
-     * JList.model property changes.
-     * <p>
-     * <strong>Warning:</strong>
-     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
-     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
-     * package. Please see {@link java.beans.XMLEncoder}.
-     *
-     * @see JList#getModel
-     * @see #maybeUpdateLayoutState
-     * @see #createListDataListener
-     * @see #installUI
-     */
-    @SuppressWarnings("serial") // Same-version serialization only
-    public class ListDataHandler implements ListDataListener {
-        public void intervalAdded(final ListDataEvent e) {
-            getHandler().intervalAdded(e);
-        }
-
-
-        public void intervalRemoved(final ListDataEvent e) {
-            getHandler().intervalRemoved(e);
-        }
-
-
-        public void contentsChanged(final ListDataEvent e) {
-            getHandler().contentsChanged(e);
-        }
-    }
-
-    /**
-     * The PropertyChangeListener that's added to the JList at installUI time.  When the value of a JList property that
-     * affects layout changes, we set a bit in updateLayoutStateNeeded. If the JLists model changes we additionally
-     * remove our listeners from the old model.  Likewise for the JList selectionModel.
-     * <p>
-     * <strong>Warning:</strong>
-     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
-     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
-     * package. Please see {@link java.beans.XMLEncoder}.
-     *
-     * @see #maybeUpdateLayoutState
-     * @see #createPropertyChangeListener
-     * @see #installUI
-     */
-    @SuppressWarnings("serial") // Same-version serialization only
-    public class PropertyChangeHandler implements PropertyChangeListener {
-        public void propertyChange(final PropertyChangeEvent e) {
-            getHandler().propertyChange(e);
-        }
-    }
-
-    protected class Handler implements FocusListener, KeyListener,
-            ListDataListener, ListSelectionListener,
-            MouseInputListener, PropertyChangeListener,
-            DragRecognitionSupport.BeforeDrag {
-        //
-        // KeyListener
-        //
-        protected String prefix = "";
-        protected String typedString = "";
-        protected long lastTime = 0L;
-        // Whether or not the mouse press (which is being considered as part
-        // of a drag sequence) also caused the selection change to be fully
-        // processed.
-        protected boolean dragPressDidSelection;
-
-        /**
-         * Invoked when a key has been typed.
-         * <p>
-         * Moves the keyboard focus to the first element whose prefix matches the sequence of alphanumeric keys pressed
-         * by the user with delay less than value of <code>timeFactor</code> property (or 1000 milliseconds if it is not
-         * defined). Subsequent same key presses move the keyboard focus to the next object that starts with the same
-         * letter until another key is pressed, then it is treated as the prefix with appropriate number of the same
-         * letters followed by first typed another letter.
-         */
-        public void keyTyped(final KeyEvent e) {
-            JList<?> src = (JList) e.getSource();
-            ListModel<?> model = src.getModel();
-
-            if (model.getSize() == 0 || e.isAltDown() ||
-                    DarkUIUtil.isMenuShortcutKeyDown(e) ||
-                    isNavigationKey(e)) {
-                // Nothing to select
-                return;
-            }
-            boolean startingFromSelection = true;
-
-            char c = e.getKeyChar();
-
-            long time = e.getWhen();
-            int startIndex = adjustIndex(src.getLeadSelectionIndex(), list);
-            if (time - lastTime < timeFactor) {
-                typedString += c;
-                if ((prefix.length() == 1) && (c == prefix.charAt(0))) {
-                    // Subsequent same key presses move the keyboard focus to the next
-                    // object that starts with the same letter.
-                    startIndex++;
-                } else {
-                    prefix = typedString;
-                }
-            } else {
-                startIndex++;
-                typedString = "" + c;
-                prefix = typedString;
-            }
-            lastTime = time;
-
-            if (startIndex < 0 || startIndex >= model.getSize()) {
-                startingFromSelection = false;
-                startIndex = 0;
-            }
-            int index = src.getNextMatch(prefix, startIndex,
-                                         Position.Bias.Forward);
-            if (index >= 0) {
-                src.setSelectedIndex(index);
-                src.ensureIndexIsVisible(index);
-            } else if (startingFromSelection) { // wrap
-                index = src.getNextMatch(prefix, 0,
-                                         Position.Bias.Forward);
-                if (index >= 0) {
-                    src.setSelectedIndex(index);
-                    src.ensureIndexIsVisible(index);
-                }
-            }
-        }
-
-        /**
-         * Invoked when a key has been pressed.
-         * <p>
-         * Checks to see if the key event is a navigation key to prevent dispatching these keys for the first letter
-         * navigation.
-         */
-        public void keyPressed(final KeyEvent e) {
-            if (isNavigationKey(e)) {
-                prefix = "";
-                typedString = "";
-                lastTime = 0L;
-            }
-        }
-
-        /**
-         * Invoked when a key has been released. See the class description for {@link KeyEvent} for a definition of a
-         * key released event.
-         */
-        public void keyReleased(final KeyEvent e) {
-        }
-
-        /**
-         * Returns whether or not the supplied key event maps to a key that is used for navigation.  This is used for
-         * optimizing key input by only passing non- navigation keys to the first letter navigation mechanism.
-         */
-        protected boolean isNavigationKey(final KeyEvent event) {
-            InputMap inputMap = list.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-            KeyStroke key = KeyStroke.getKeyStrokeForEvent(event);
-
-            return inputMap != null && inputMap.get(key) != null;
-        }
-
-        //
-        // PropertyChangeListener
-        //
-        public void propertyChange(final PropertyChangeEvent e) {
-            String propertyName = e.getPropertyName();
-
-            /* If the JList.model property changes, remove our listener,
-             * listDataListener from the old model and add it to the new one.
-             */
-            if (Objects.equals(propertyName, "model")) {
-                ListModel<?> oldModel = (ListModel) e.getOldValue();
-                ListModel<?> newModel = (ListModel) e.getNewValue();
-                if (oldModel != null) {
-                    oldModel.removeListDataListener(listDataListener);
-                }
-                if (newModel != null) {
-                    newModel.addListDataListener(listDataListener);
-                }
-                updateLayoutStateNeeded |= modelChanged;
-                redrawList();
-            }
-
-            /* If the JList.selectionModel property changes, remove our listener,
-             * listSelectionListener from the old selectionModel and add it to the new one.
-             */
-            else if (Objects.equals(propertyName, "selectionModel")) {
-                ListSelectionModel oldModel = (ListSelectionModel) e.getOldValue();
-                ListSelectionModel newModel = (ListSelectionModel) e.getNewValue();
-                if (oldModel != null) {
-                    oldModel.removeListSelectionListener(listSelectionListener);
-                }
-                if (newModel != null) {
-                    newModel.addListSelectionListener(listSelectionListener);
-                }
-                updateLayoutStateNeeded |= modelChanged;
-                redrawList();
-            } else if (Objects.equals(propertyName, "cellRenderer")) {
-                updateLayoutStateNeeded |= cellRendererChanged;
-                redrawList();
-            } else if (Objects.equals(propertyName, "font")
-                    || DarkSwingUtil.isScaleChanged(e)) {
-                updateLayoutStateNeeded |= fontChanged;
-                redrawList();
-            } else if (Objects.equals(propertyName, "prototypeCellValue")) {
-                updateLayoutStateNeeded |= prototypeCellValueChanged;
-                redrawList();
-            } else if (Objects.equals(propertyName, "fixedCellHeight")) {
-                updateLayoutStateNeeded |= fixedCellHeightChanged;
-                redrawList();
-            } else if (Objects.equals(propertyName, "fixedCellWidth")) {
-                updateLayoutStateNeeded |= fixedCellWidthChanged;
-                redrawList();
-            } else if (Objects.equals(propertyName, "selectionForeground")) {
-                list.repaint();
-            } else if (Objects.equals(propertyName, "selectionBackground")) {
-                list.repaint();
-            } else if ("layoutOrientation".equals(propertyName)) {
-                updateLayoutStateNeeded |= layoutOrientationChanged;
-                layoutOrientation = list.getLayoutOrientation();
-                redrawList();
-            } else if ("visibleRowCount".equals(propertyName)) {
-                if (layoutOrientation != JList.VERTICAL) {
-                    updateLayoutStateNeeded |= layoutOrientationChanged;
-                    redrawList();
-                }
-            } else if ("componentOrientation".equals(propertyName)) {
-                isLeftToRight = list.getComponentOrientation().isLeftToRight();
-                updateLayoutStateNeeded |= componentOrientationChanged;
-                redrawList();
-
-                InputMap inputMap = getInputMap(JComponent.WHEN_FOCUSED);
-                SwingUtilities.replaceUIInputMap(list, JComponent.WHEN_FOCUSED,
-                                                 inputMap);
-            } else if ("List.isFileList".equals(propertyName)) {
-                updateIsFileList();
-                redrawList();
-            } else if ("dropLocation".equals(propertyName)) {
-                JList.DropLocation oldValue = (JList.DropLocation) e.getOldValue();
-                repaintDropLocation(oldValue);
-                repaintDropLocation(list.getDropLocation());
-            }
-        }
-
-        protected void repaintDropLocation(final JList.DropLocation loc) {
-            if (loc == null) {
-                return;
-            }
-
-            Rectangle r;
-
-            if (loc.isInsert()) {
-                r = getDropLineRect(loc);
-            } else {
-                r = getCellBounds(list, loc.getIndex());
-            }
-
-            if (r != null) {
-                list.repaint(r);
-            }
-        }
-
-        //
-        // ListDataListener
-        //
-        public void intervalAdded(final ListDataEvent e) {
-            updateLayoutStateNeeded = modelChanged;
-
-            int minIndex = Math.min(e.getIndex0(), e.getIndex1());
-            int maxIndex = Math.max(e.getIndex0(), e.getIndex1());
-
-            /* Sync the SelectionModel with the DataModel.
-             */
-
-            ListSelectionModel sm = list.getSelectionModel();
-            if (sm != null) {
-                sm.insertIndexInterval(minIndex, maxIndex - minIndex + 1, true);
-            }
-
-            /* Repaint the entire list, from the origin of
-             * the first added cell, to the bottom of the
-             * component.
-             */
-            redrawList();
-        }
-
-        public void intervalRemoved(final ListDataEvent e) {
-            updateLayoutStateNeeded = modelChanged;
-
-            /* Sync the SelectionModel with the DataModel.
-             */
-
-            ListSelectionModel sm = list.getSelectionModel();
-            if (sm != null) {
-                sm.removeIndexInterval(e.getIndex0(), e.getIndex1());
-            }
-
-            /* Repaint the entire list, from the origin of
-             * the first removed cell, to the bottom of the
-             * component.
-             */
-
-            redrawList();
-        }
-
-        public void contentsChanged(final ListDataEvent e) {
-            updateLayoutStateNeeded = modelChanged;
-            redrawList();
-        }
-
-        //
-        // ListSelectionListener
-        //
-        public void valueChanged(final ListSelectionEvent e) {
-            maybeUpdateLayoutState();
-
-            int size = list.getModel().getSize();
-            int firstIndex = Math.min(size - 1, Math.max(e.getFirstIndex(), 0));
-            int lastIndex = Math.min(size - 1, Math.max(e.getLastIndex(), 0));
-
-            Rectangle bounds = getCellBounds(list, firstIndex, lastIndex);
-
-            if (bounds != null) {
-                list.repaint(bounds.x, bounds.y, bounds.width, bounds.height);
-            }
-        }
-
-        //
-        // MouseListener
-        //
-        public void mouseClicked(final MouseEvent e) {
-        }
-
-        public void mousePressed(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
-                return;
-            }
-
-            boolean dragEnabled = list.getDragEnabled();
-            boolean grabFocus = true;
-
-            // different behavior if drag is enabled
-            if (dragEnabled) {
-                int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
-                // if we have a valid row and this is a drag initiating event
-                if (row != -1 && DragRecognitionSupport.mousePressed(e)) {
-                    dragPressDidSelection = false;
-
-                    if (DarkUIUtil.isMenuShortcutKeyDown(e)) {
-                        // do nothing for control - will be handled on release
-                        // or when drag starts
-                        return;
-                    } else if (!e.isShiftDown() && list.isSelectedIndex(row)) {
-                        // clicking on something that's already selected
-                        // and need to make it the lead now
-                        list.addSelectionInterval(row, row);
-                        return;
-                    }
-
-                    // could be a drag initiating event - don't grab focus
-                    grabFocus = false;
-
-                    dragPressDidSelection = true;
-                }
-            } else {
-                // When drag is enabled mouse drags won't change the selection
-                // in the list, so we only set the isAdjusting flag when it's
-                // not enabled
-                list.setValueIsAdjusting(true);
-            }
-
-            if (grabFocus) {
-                SwingUtilities2.adjustFocus(list);
-            }
-
-            adjustSelection(e);
-        }
-
-        protected void adjustSelection(final MouseEvent e) {
-            int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
-            if (row < 0) {
-                // If shift is down in multi-select, we should do nothing.
-                // For single select or non-shift-click, clear the selection
-                if (isFileList && e.getID() == MouseEvent.MOUSE_PRESSED &&
-                        (!e.isShiftDown() ||
-                                list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
-                    list.clearSelection();
-                }
-            } else {
-                int anchorIndex = adjustIndex(list.getAnchorSelectionIndex(), list);
-                boolean anchorSelected;
-                if (anchorIndex == -1) {
-                    anchorIndex = 0;
-                    anchorSelected = false;
-                } else {
-                    anchorSelected = list.isSelectedIndex(anchorIndex);
-                }
-
-                if (DarkUIUtil.isMenuShortcutKeyDown(e)) {
-                    if (e.isShiftDown()) {
-                        if (anchorSelected) {
-                            list.addSelectionInterval(anchorIndex, row);
-                        } else {
-                            list.removeSelectionInterval(anchorIndex, row);
-                            if (isFileList) {
-                                list.addSelectionInterval(row, row);
-                                list.getSelectionModel().setAnchorSelectionIndex(anchorIndex);
-                            }
-                        }
-                    } else if (list.isSelectedIndex(row)) {
-                        list.removeSelectionInterval(row, row);
-                    } else {
-                        list.addSelectionInterval(row, row);
-                    }
-                } else if (e.isShiftDown()) {
-                    list.setSelectionInterval(anchorIndex, row);
-                } else {
-                    list.setSelectionInterval(row, row);
-                }
-            }
-        }
-
-        public void mouseReleased(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
-                return;
-            }
-
-            if (list.getDragEnabled()) {
-                MouseEvent me = DragRecognitionSupport.mouseReleased(e);
-                if (me != null) {
-                    SwingUtilities2.adjustFocus(list);
-                    if (!dragPressDidSelection) {
-                        adjustSelection(me);
-                    }
-                }
-            } else {
-                list.setValueIsAdjusting(false);
-            }
-        }
-
-        public void mouseEntered(final MouseEvent e) {
-        }
-
-        public void mouseExited(final MouseEvent e) {
-        }
-
-        public void dragStarting(final MouseEvent me) {
-            if (DarkUIUtil.isMenuShortcutKeyDown(me)) {
-                int row = SwingUtilities2.loc2IndexFileList(list, me.getPoint());
-                list.addSelectionInterval(row, row);
-            }
-        }
-
-        public void mouseDragged(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
-                return;
-            }
-
-            if (list.getDragEnabled()) {
-                DragRecognitionSupport.mouseDragged(e, this);
-                return;
-            }
-
-            if (e.isShiftDown() || DarkUIUtil.isMenuShortcutKeyDown(e)) {
-                return;
-            }
-
-            int row = locationToIndex(list, e.getPoint());
-            if (row != -1) {
-                // 4835633.  Dragging onto a File should not select it.
-                if (isFileList) {
-                    return;
-                }
-                Rectangle cellBounds = getCellBounds(list, row, row);
-                if (cellBounds != null) {
-                    list.scrollRectToVisible(cellBounds);
-                    list.setSelectionInterval(row, row);
-                }
-            }
-        }
-
-        public void mouseMoved(final MouseEvent e) {
-        }
-
-        public void focusGained(final FocusEvent e) {
-            repaintCellFocus();
-        }
-
-        /* The focusGained() focusLost() methods run when the JList
-         * focus changes.
-         */
-
-        //
-        // FocusListener
-        //
-        protected void repaintCellFocus() {
-            int leadIndex = adjustIndex(list.getLeadSelectionIndex(), list);
-            if (leadIndex != -1) {
-                Rectangle r = getCellBounds(list, leadIndex, leadIndex);
-                if (r != null) {
-                    list.repaint(r.x, r.y, r.width, r.height);
-                }
-            }
-        }
-
-        public void focusLost(final FocusEvent e) {
-            repaintCellFocus();
-        }
     }
 
     private static class Actions extends UIAction {
@@ -2329,6 +1839,11 @@ public class DarkListUIBridge extends BasicListUI {
         // move the anchor to the lead and ensure only that item is selected
         private static final String MOVE_SELECTION_TO = "moveSelectionTo";
 
+        /**
+         * Instantiates a new Actions.
+         *
+         * @param name the name
+         */
         Actions(final String name) {
             super(name);
         }
@@ -2844,6 +2359,12 @@ public class DarkListUIBridge extends BasicListUI {
             }
         }
 
+        /**
+         * Accept boolean.
+         *
+         * @param c the c
+         * @return the boolean
+         */
         public boolean accept(final Object c) {
             Object name = getName();
             if (name == SELECT_PREVIOUS_COLUMN_CHANGE_LEAD ||
@@ -2862,6 +2383,638 @@ public class DarkListUIBridge extends BasicListUI {
             }
 
             return true;
+        }
+    }
+
+    /**
+     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
+     * {@code BasicListUI}.
+     */
+    public class FocusHandler implements FocusListener {
+        /**
+         * Repaints focused cells.
+         */
+        protected void repaintCellFocus() {
+            getHandler().repaintCellFocus();
+        }
+
+        /* The focusGained() focusLost() methods run when the JList
+         * focus changes.
+         */
+
+        public void focusGained(final FocusEvent e) {
+            getHandler().focusGained(e);
+        }
+
+        public void focusLost(final FocusEvent e) {
+            getHandler().focusLost(e);
+        }
+    }
+
+    /**
+     * Mouse input, and focus handling for JList.  An instance of this class is added to the appropriate
+     * java.awt.Component lists at installUI() time.  Note keyboard input is handled with JComponent KeyboardActions,
+     * see installKeyboardActions().
+     * <p>
+     * <strong>Warning:</strong>
+     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
+     * package. Please see {@link java.beans.XMLEncoder}.
+     *
+     * @see #createMouseInputListener #createMouseInputListener
+     * @see #installKeyboardActions #installKeyboardActions
+     * @see #installUI #installUI
+     */
+    @SuppressWarnings("serial") // Same-version serialization only
+    public class MouseInputHandler implements MouseInputListener {
+        public void mouseClicked(final MouseEvent e) {
+            getHandler().mouseClicked(e);
+        }
+
+        public void mousePressed(final MouseEvent e) {
+            getHandler().mousePressed(e);
+        }
+
+        public void mouseReleased(final MouseEvent e) {
+            getHandler().mouseReleased(e);
+        }
+
+        public void mouseEntered(final MouseEvent e) {
+            getHandler().mouseEntered(e);
+        }
+
+        public void mouseExited(final MouseEvent e) {
+            getHandler().mouseExited(e);
+        }
+
+        public void mouseDragged(final MouseEvent e) {
+            getHandler().mouseDragged(e);
+        }
+
+        public void mouseMoved(final MouseEvent e) {
+            getHandler().mouseMoved(e);
+        }
+    }
+
+    /**
+     * The ListSelectionListener that's added to the JLists selection model at installUI time, and whenever the
+     * JList.selectionModel property changes.  When the selection changes we repaint the affected rows.
+     * <p>
+     * <strong>Warning:</strong>
+     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
+     * package. Please see {@link java.beans.XMLEncoder}.
+     *
+     * @see #createListSelectionListener #createListSelectionListener
+     * @see #installUI #installUI
+     */
+    @SuppressWarnings("serial") // Same-version serialization only
+    public class ListSelectionHandler implements ListSelectionListener {
+        public void valueChanged(final ListSelectionEvent e) {
+            getHandler().valueChanged(e);
+        }
+    }
+
+    /**
+     * The {@code ListDataListener} that's added to the {@code JLists} model at {@code installUI time}, and whenever the
+     * JList.model property changes.
+     * <p>
+     * <strong>Warning:</strong>
+     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
+     * package. Please see {@link java.beans.XMLEncoder}.
+     *
+     * @see JList#getModel JList#getModel
+     * @see #maybeUpdateLayoutState #maybeUpdateLayoutState
+     * @see #createListDataListener #createListDataListener
+     * @see #installUI #installUI
+     */
+    @SuppressWarnings("serial") // Same-version serialization only
+    public class ListDataHandler implements ListDataListener {
+        public void intervalAdded(final ListDataEvent e) {
+            getHandler().intervalAdded(e);
+        }
+
+
+        public void intervalRemoved(final ListDataEvent e) {
+            getHandler().intervalRemoved(e);
+        }
+
+
+        public void contentsChanged(final ListDataEvent e) {
+            getHandler().contentsChanged(e);
+        }
+    }
+
+    /**
+     * The PropertyChangeListener that's added to the JList at installUI time.  When the value of a JList property that
+     * affects layout changes, we set a bit in updateLayoutStateNeeded. If the JLists model changes we additionally
+     * remove our listeners from the old model.  Likewise for the JList selectionModel.
+     * <p>
+     * <strong>Warning:</strong>
+     * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
+     * package. Please see {@link java.beans.XMLEncoder}.
+     *
+     * @see #maybeUpdateLayoutState #maybeUpdateLayoutState
+     * @see #createPropertyChangeListener #createPropertyChangeListener
+     * @see #installUI #installUI
+     */
+    @SuppressWarnings("serial") // Same-version serialization only
+    public class PropertyChangeHandler implements PropertyChangeListener {
+        public void propertyChange(final PropertyChangeEvent e) {
+            getHandler().propertyChange(e);
+        }
+    }
+
+    /**
+     * The type Handler.
+     */
+    protected class Handler implements FocusListener, KeyListener,
+            ListDataListener, ListSelectionListener,
+            MouseInputListener, PropertyChangeListener,
+            DragRecognitionSupport.BeforeDrag {
+        /**
+         * The Prefix.
+         */
+//
+        // KeyListener
+        //
+        protected String prefix = "";
+        /**
+         * The Typed string.
+         */
+        protected String typedString = "";
+        /**
+         * The Last time.
+         */
+        protected long lastTime = 0L;
+        /**
+         * The Drag press did selection.
+         */
+// Whether or not the mouse press (which is being considered as part
+        // of a drag sequence) also caused the selection change to be fully
+        // processed.
+        protected boolean dragPressDidSelection;
+
+        /**
+         * Invoked when a key has been typed.
+         * <p>
+         * Moves the keyboard focus to the first element whose prefix matches the sequence of alphanumeric keys pressed
+         * by the user with delay less than value of <code>timeFactor</code> property (or 1000 milliseconds if it is not
+         * defined). Subsequent same key presses move the keyboard focus to the next object that starts with the same
+         * letter until another key is pressed, then it is treated as the prefix with appropriate number of the same
+         * letters followed by first typed another letter.
+         */
+        public void keyTyped(final KeyEvent e) {
+            JList<?> src = (JList) e.getSource();
+            ListModel<?> model = src.getModel();
+
+            if (model.getSize() == 0 || e.isAltDown() ||
+                    DarkUIUtil.isMenuShortcutKeyDown(e) ||
+                    isNavigationKey(e)) {
+                // Nothing to select
+                return;
+            }
+            boolean startingFromSelection = true;
+
+            char c = e.getKeyChar();
+
+            long time = e.getWhen();
+            int startIndex = adjustIndex(src.getLeadSelectionIndex(), list);
+            if (time - lastTime < timeFactor) {
+                typedString += c;
+                if ((prefix.length() == 1) && (c == prefix.charAt(0))) {
+                    // Subsequent same key presses move the keyboard focus to the next
+                    // object that starts with the same letter.
+                    startIndex++;
+                } else {
+                    prefix = typedString;
+                }
+            } else {
+                startIndex++;
+                typedString = "" + c;
+                prefix = typedString;
+            }
+            lastTime = time;
+
+            if (startIndex < 0 || startIndex >= model.getSize()) {
+                startingFromSelection = false;
+                startIndex = 0;
+            }
+            int index = src.getNextMatch(prefix, startIndex,
+                                         Position.Bias.Forward);
+            if (index >= 0) {
+                src.setSelectedIndex(index);
+                src.ensureIndexIsVisible(index);
+            } else if (startingFromSelection) { // wrap
+                index = src.getNextMatch(prefix, 0,
+                                         Position.Bias.Forward);
+                if (index >= 0) {
+                    src.setSelectedIndex(index);
+                    src.ensureIndexIsVisible(index);
+                }
+            }
+        }
+
+        /**
+         * Invoked when a key has been pressed.
+         * <p>
+         * Checks to see if the key event is a navigation key to prevent dispatching these keys for the first letter
+         * navigation.
+         */
+        public void keyPressed(final KeyEvent e) {
+            if (isNavigationKey(e)) {
+                prefix = "";
+                typedString = "";
+                lastTime = 0L;
+            }
+        }
+
+        /**
+         * Invoked when a key has been released. See the class description for {@link KeyEvent} for a definition of a
+         * key released event.
+         */
+        public void keyReleased(final KeyEvent e) {
+        }
+
+        /**
+         * Returns whether or not the supplied key event maps to a key that is used for navigation.  This is used for
+         * optimizing key input by only passing non- navigation keys to the first letter navigation mechanism.
+         *
+         * @param event the event
+         * @return the boolean
+         */
+        protected boolean isNavigationKey(final KeyEvent event) {
+            InputMap inputMap = list.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+            KeyStroke key = KeyStroke.getKeyStrokeForEvent(event);
+
+            return inputMap != null && inputMap.get(key) != null;
+        }
+
+        //
+        // PropertyChangeListener
+        //
+        public void propertyChange(final PropertyChangeEvent e) {
+            String propertyName = e.getPropertyName();
+
+            /* If the JList.model property changes, remove our listener,
+             * listDataListener from the old model and add it to the new one.
+             */
+            if (Objects.equals(propertyName, "model")) {
+                ListModel<?> oldModel = (ListModel) e.getOldValue();
+                ListModel<?> newModel = (ListModel) e.getNewValue();
+                if (oldModel != null) {
+                    oldModel.removeListDataListener(listDataListener);
+                }
+                if (newModel != null) {
+                    newModel.addListDataListener(listDataListener);
+                }
+                updateLayoutStateNeeded |= modelChanged;
+                redrawList();
+            }
+
+            /* If the JList.selectionModel property changes, remove our listener,
+             * listSelectionListener from the old selectionModel and add it to the new one.
+             */
+            else if (Objects.equals(propertyName, "selectionModel")) {
+                ListSelectionModel oldModel = (ListSelectionModel) e.getOldValue();
+                ListSelectionModel newModel = (ListSelectionModel) e.getNewValue();
+                if (oldModel != null) {
+                    oldModel.removeListSelectionListener(listSelectionListener);
+                }
+                if (newModel != null) {
+                    newModel.addListSelectionListener(listSelectionListener);
+                }
+                updateLayoutStateNeeded |= modelChanged;
+                redrawList();
+            } else if (Objects.equals(propertyName, "cellRenderer")) {
+                updateLayoutStateNeeded |= cellRendererChanged;
+                redrawList();
+            } else if (Objects.equals(propertyName, "font")
+                    || DarkSwingUtil.isScaleChanged(e)) {
+                updateLayoutStateNeeded |= fontChanged;
+                redrawList();
+            } else if (Objects.equals(propertyName, "prototypeCellValue")) {
+                updateLayoutStateNeeded |= prototypeCellValueChanged;
+                redrawList();
+            } else if (Objects.equals(propertyName, "fixedCellHeight")) {
+                updateLayoutStateNeeded |= fixedCellHeightChanged;
+                redrawList();
+            } else if (Objects.equals(propertyName, "fixedCellWidth")) {
+                updateLayoutStateNeeded |= fixedCellWidthChanged;
+                redrawList();
+            } else if (Objects.equals(propertyName, "selectionForeground")) {
+                list.repaint();
+            } else if (Objects.equals(propertyName, "selectionBackground")) {
+                list.repaint();
+            } else if ("layoutOrientation".equals(propertyName)) {
+                updateLayoutStateNeeded |= layoutOrientationChanged;
+                layoutOrientation = list.getLayoutOrientation();
+                redrawList();
+            } else if ("visibleRowCount".equals(propertyName)) {
+                if (layoutOrientation != JList.VERTICAL) {
+                    updateLayoutStateNeeded |= layoutOrientationChanged;
+                    redrawList();
+                }
+            } else if ("componentOrientation".equals(propertyName)) {
+                isLeftToRight = list.getComponentOrientation().isLeftToRight();
+                updateLayoutStateNeeded |= componentOrientationChanged;
+                redrawList();
+
+                InputMap inputMap = getInputMap(JComponent.WHEN_FOCUSED);
+                SwingUtilities.replaceUIInputMap(list, JComponent.WHEN_FOCUSED,
+                                                 inputMap);
+            } else if ("List.isFileList".equals(propertyName)) {
+                updateIsFileList();
+                redrawList();
+            } else if ("dropLocation".equals(propertyName)) {
+                JList.DropLocation oldValue = (JList.DropLocation) e.getOldValue();
+                repaintDropLocation(oldValue);
+                repaintDropLocation(list.getDropLocation());
+            }
+        }
+
+        /**
+         * Repaint drop location.
+         *
+         * @param loc the loc
+         */
+        protected void repaintDropLocation(final JList.DropLocation loc) {
+            if (loc == null) {
+                return;
+            }
+
+            Rectangle r;
+
+            if (loc.isInsert()) {
+                r = getDropLineRect(loc);
+            } else {
+                r = getCellBounds(list, loc.getIndex());
+            }
+
+            if (r != null) {
+                list.repaint(r);
+            }
+        }
+
+        //
+        // ListDataListener
+        //
+        public void intervalAdded(final ListDataEvent e) {
+            updateLayoutStateNeeded = modelChanged;
+
+            int minIndex = Math.min(e.getIndex0(), e.getIndex1());
+            int maxIndex = Math.max(e.getIndex0(), e.getIndex1());
+
+            /* Sync the SelectionModel with the DataModel.
+             */
+
+            ListSelectionModel sm = list.getSelectionModel();
+            if (sm != null) {
+                sm.insertIndexInterval(minIndex, maxIndex - minIndex + 1, true);
+            }
+
+            /* Repaint the entire list, from the origin of
+             * the first added cell, to the bottom of the
+             * component.
+             */
+            redrawList();
+        }
+
+        public void intervalRemoved(final ListDataEvent e) {
+            updateLayoutStateNeeded = modelChanged;
+
+            /* Sync the SelectionModel with the DataModel.
+             */
+
+            ListSelectionModel sm = list.getSelectionModel();
+            if (sm != null) {
+                sm.removeIndexInterval(e.getIndex0(), e.getIndex1());
+            }
+
+            /* Repaint the entire list, from the origin of
+             * the first removed cell, to the bottom of the
+             * component.
+             */
+
+            redrawList();
+        }
+
+        public void contentsChanged(final ListDataEvent e) {
+            updateLayoutStateNeeded = modelChanged;
+            redrawList();
+        }
+
+        //
+        // ListSelectionListener
+        //
+        public void valueChanged(final ListSelectionEvent e) {
+            maybeUpdateLayoutState();
+
+            int size = list.getModel().getSize();
+            int firstIndex = Math.min(size - 1, Math.max(e.getFirstIndex(), 0));
+            int lastIndex = Math.min(size - 1, Math.max(e.getLastIndex(), 0));
+
+            Rectangle bounds = getCellBounds(list, firstIndex, lastIndex);
+
+            if (bounds != null) {
+                list.repaint(bounds.x, bounds.y, bounds.width, bounds.height);
+            }
+        }
+
+        //
+        // MouseListener
+        //
+        public void mouseClicked(final MouseEvent e) {
+        }
+
+        public void mousePressed(final MouseEvent e) {
+            if (SwingUtilities2.shouldIgnore(e, list)) {
+                return;
+            }
+
+            boolean dragEnabled = list.getDragEnabled();
+            boolean grabFocus = true;
+
+            // different behavior if drag is enabled
+            if (dragEnabled) {
+                int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
+                // if we have a valid row and this is a drag initiating event
+                if (row != -1 && DragRecognitionSupport.mousePressed(e)) {
+                    dragPressDidSelection = false;
+
+                    if (DarkUIUtil.isMenuShortcutKeyDown(e)) {
+                        // do nothing for control - will be handled on release
+                        // or when drag starts
+                        return;
+                    } else if (!e.isShiftDown() && list.isSelectedIndex(row)) {
+                        // clicking on something that's already selected
+                        // and need to make it the lead now
+                        list.addSelectionInterval(row, row);
+                        return;
+                    }
+
+                    // could be a drag initiating event - don't grab focus
+                    grabFocus = false;
+
+                    dragPressDidSelection = true;
+                }
+            } else {
+                // When drag is enabled mouse drags won't change the selection
+                // in the list, so we only set the isAdjusting flag when it's
+                // not enabled
+                list.setValueIsAdjusting(true);
+            }
+
+            if (grabFocus) {
+                SwingUtilities2.adjustFocus(list);
+            }
+
+            adjustSelection(e);
+        }
+
+        /**
+         * Adjust selection.
+         *
+         * @param e the e
+         */
+        protected void adjustSelection(final MouseEvent e) {
+            int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
+            if (row < 0) {
+                // If shift is down in multi-select, we should do nothing.
+                // For single select or non-shift-click, clear the selection
+                if (isFileList && e.getID() == MouseEvent.MOUSE_PRESSED &&
+                        (!e.isShiftDown() ||
+                                list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
+                    list.clearSelection();
+                }
+            } else {
+                int anchorIndex = adjustIndex(list.getAnchorSelectionIndex(), list);
+                boolean anchorSelected;
+                if (anchorIndex == -1) {
+                    anchorIndex = 0;
+                    anchorSelected = false;
+                } else {
+                    anchorSelected = list.isSelectedIndex(anchorIndex);
+                }
+
+                if (DarkUIUtil.isMenuShortcutKeyDown(e)) {
+                    if (e.isShiftDown()) {
+                        if (anchorSelected) {
+                            list.addSelectionInterval(anchorIndex, row);
+                        } else {
+                            list.removeSelectionInterval(anchorIndex, row);
+                            if (isFileList) {
+                                list.addSelectionInterval(row, row);
+                                list.getSelectionModel().setAnchorSelectionIndex(anchorIndex);
+                            }
+                        }
+                    } else if (list.isSelectedIndex(row)) {
+                        list.removeSelectionInterval(row, row);
+                    } else {
+                        list.addSelectionInterval(row, row);
+                    }
+                } else if (e.isShiftDown()) {
+                    list.setSelectionInterval(anchorIndex, row);
+                } else {
+                    list.setSelectionInterval(row, row);
+                }
+            }
+        }
+
+        public void mouseReleased(final MouseEvent e) {
+            if (SwingUtilities2.shouldIgnore(e, list)) {
+                return;
+            }
+
+            if (list.getDragEnabled()) {
+                MouseEvent me = DragRecognitionSupport.mouseReleased(e);
+                if (me != null) {
+                    SwingUtilities2.adjustFocus(list);
+                    if (!dragPressDidSelection) {
+                        adjustSelection(me);
+                    }
+                }
+            } else {
+                list.setValueIsAdjusting(false);
+            }
+        }
+
+        public void mouseEntered(final MouseEvent e) {
+        }
+
+        public void mouseExited(final MouseEvent e) {
+        }
+
+        public void dragStarting(final MouseEvent me) {
+            if (DarkUIUtil.isMenuShortcutKeyDown(me)) {
+                int row = SwingUtilities2.loc2IndexFileList(list, me.getPoint());
+                list.addSelectionInterval(row, row);
+            }
+        }
+
+        public void mouseDragged(final MouseEvent e) {
+            if (SwingUtilities2.shouldIgnore(e, list)) {
+                return;
+            }
+
+            if (list.getDragEnabled()) {
+                DragRecognitionSupport.mouseDragged(e, this);
+                return;
+            }
+
+            if (e.isShiftDown() || DarkUIUtil.isMenuShortcutKeyDown(e)) {
+                return;
+            }
+
+            int row = locationToIndex(list, e.getPoint());
+            if (row != -1) {
+                // 4835633.  Dragging onto a File should not select it.
+                if (isFileList) {
+                    return;
+                }
+                Rectangle cellBounds = getCellBounds(list, row, row);
+                if (cellBounds != null) {
+                    list.scrollRectToVisible(cellBounds);
+                    list.setSelectionInterval(row, row);
+                }
+            }
+        }
+
+        public void mouseMoved(final MouseEvent e) {
+        }
+
+        public void focusGained(final FocusEvent e) {
+            repaintCellFocus();
+        }
+
+        /* The focusGained() focusLost() methods run when the JList
+         * focus changes.
+         */
+
+        /**
+         * Repaint cell focus.
+         */
+//
+        // FocusListener
+        //
+        protected void repaintCellFocus() {
+            int leadIndex = adjustIndex(list.getLeadSelectionIndex(), list);
+            if (leadIndex != -1) {
+                Rectangle r = getCellBounds(list, leadIndex, leadIndex);
+                if (r != null) {
+                    list.repaint(r.x, r.y, r.width, r.height);
+                }
+            }
+        }
+
+        public void focusLost(final FocusEvent e) {
+            repaintCellFocus();
         }
     }
 

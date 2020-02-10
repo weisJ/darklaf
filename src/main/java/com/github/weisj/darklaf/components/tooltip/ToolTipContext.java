@@ -39,7 +39,6 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ToolTipContext implements ToolTipListener {
 
@@ -156,7 +155,7 @@ public class ToolTipContext implements ToolTipListener {
     }
 
     /**
-     * Sets whether the tooltip should be closed if the mouse has left the area set by {@link #setInsideArea(Area).}
+     * Sets whether the tooltip should be closed if the mouse has left the area set by {@link #setInsideArea(Area)}.
      * <p>
      * Default is false.
      *
@@ -174,13 +173,14 @@ public class ToolTipContext implements ToolTipListener {
     }
 
     /**
-     * Sets whether the component should be aligned inside or outside the supplied rectangle if the curent alignment is
-     * not {@link Alignment#CENTER}.
+     * Sets whether the component should be aligned inside or outside the supplied rectangle if the current alignment is
+     * not {@link Alignment#CENTER}. Default is true
      * <p>
-     * {@see {@link #setAlignment(Alignment)}, {@link #setToolTipRectSupplier(Supplier)}} Default is true.
      *
      * @param alignInside true if the tooltip should be aligned inside.
      * @return this.
+     * @see #setAlignment(Alignment)
+     * @see #setToolTipRectSupplier(Function)
      */
     public ToolTipContext setAlignInside(final boolean alignInside) {
         this.alignInside = alignInside;
@@ -188,13 +188,13 @@ public class ToolTipContext implements ToolTipListener {
     }
 
     /**
-     * Sets the alignment with respect to the supplied alignment rectangle. {@see {@link
-     * #setToolTipRectSupplier(Function)}}. When using {@link Alignment#CENTER} one can additionally supply an alignment
-     * using {@link #setCenterAlignment(Alignment)}. The tooltip will either be aligned outside of the rectangle or
-     * inside depending on {@link #setAlignInside(boolean)}.
+     * Sets the alignment with respect to the supplied alignment rectangle. When using {@link Alignment#CENTER} one can
+     * additionally supply an alignment using {@link #setCenterAlignment(Alignment)}. The tooltip will either be aligned
+     * outside of the rectangle or inside depending on {@link #setAlignInside(boolean)}.
      *
      * @param alignment the alignment.
      * @return this.
+     * @see #setToolTipRectSupplier(Function)
      */
     public ToolTipContext setAlignment(final Alignment alignment) {
         this.alignment = alignment;
@@ -225,10 +225,11 @@ public class ToolTipContext implements ToolTipListener {
 
     /**
      * Set the alignment strategy which determines how the current mouse position is considered when calculating the
-     * tooltip location. {@see {@link AlignmentStrategy}}
-     * <p>
-     * Default will be {@link AlignmentStrategy#COMPONENT_BOTH}.
+     * tooltip location.
      *
+     * <p>Default will be {@link AlignmentStrategy#COMPONENT_BOTH}.
+     *
+     * @see AlignmentStrategy
      * @param alignmentStrategy the alignment strategy.
      * @return this
      */
@@ -385,8 +386,7 @@ public class ToolTipContext implements ToolTipListener {
     }
 
     /**
-     * {@see {@link #setInsideArea(Area)}}.
-     *
+     * @see #setInsideArea(Area)
      * @param insideRect the rectangle to check.
      * @return this
      */
@@ -410,8 +410,9 @@ public class ToolTipContext implements ToolTipListener {
     /**
      * Calculates the tooltip location.
      *
+     * @see JComponent#getToolTipLocation(MouseEvent)
      * @param event the mouse event.
-     * @return the tooltip location. {@see {@link JComponent#getToolTipLocation(MouseEvent)}}
+     * @return the tooltip location.
      */
     public Point getToolTipLocation(@NotNull final MouseEvent event) {
         Rectangle rect = toolTipRectSupplier.apply(event);
@@ -448,7 +449,8 @@ public class ToolTipContext implements ToolTipListener {
     /**
      * Get the tooltip.
      *
-     * @return the tooltip. {@see {@link JComponent#createToolTip()}}
+     * @see JComponent#createToolTip()
+     * @return the tooltip.
      */
     public JToolTip getToolTip() {
         if (toolTip == null) {

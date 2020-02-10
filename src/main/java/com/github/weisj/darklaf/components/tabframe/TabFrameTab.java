@@ -88,7 +88,7 @@ public interface TabFrameTab {
     /**
      * Set the accelerator.
      *
-     * @param accelerator accelerator (>0).
+     * @param accelerator accelerator (positive).
      */
     void setAccelerator(int accelerator);
 

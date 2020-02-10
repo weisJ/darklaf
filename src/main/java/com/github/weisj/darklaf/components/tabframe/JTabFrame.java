@@ -286,6 +286,7 @@ public class JTabFrame extends JComponent {
      *
      * @param c     the popup to add.
      * @param title the title of the component.
+     * @param icon  the icon
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
@@ -811,13 +812,13 @@ public class JTabFrame extends JComponent {
      * Get the position of the alignment peer. That being the other position that occupies the same tab container given
      * by {@link #getTabContainer(Alignment)}.
      * <p>
-     * NORTH  <--> NORTH_EAST
-     * <p>
-     * EAST   <--> SOUTH_EAST
-     * <p>
-     * SOUTH  <--> SOUTH_WEST
-     * <p>
-     * WEST   <--> NORTH_WEST
+     * NORTH  = NORTH_EAST
+     * </p><p>
+     * EAST   = SOUTH_EAST
+     * </p><p>
+     * SOUTH  = SOUTH_WEST
+     * </p><p>
+     * WEST   = NORTH_WEST
      *
      * @param a the alignment position.{@link TabFramePosition#getAlignment()}
      * @return the peer position.{@link TabFramePosition#getAlignment()}

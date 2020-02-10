@@ -352,7 +352,7 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public Insets getBorderInsets(final Component c) {
         int top = showTopShadow ? shadowSize : 0;

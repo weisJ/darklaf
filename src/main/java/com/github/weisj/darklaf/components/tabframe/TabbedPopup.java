@@ -109,9 +109,10 @@ public class TabbedPopup extends PanelPopup {
     }
 
     /**
-     * Gets the currently selected component from the TabbedPane. {@see {@link #getTabbedPane()}}.
+     * Gets the currently selected component from the TabbedPane.
      *
      * @return the selected component.
+     * @see #getTabbedPane()
      */
     public Component getContentPane() {
         return tabbedPane.getSelectedComponent();
@@ -133,9 +134,10 @@ public class TabbedPopup extends PanelPopup {
 
     /**
      * Returns all currently installed content panes. i.e. this area all components currently added as tabs to the
-     * TabbedPane. {@see {@link #getTabbedPane()}}.
+     * TabbedPane.
      *
      * @return a collection of components.
+     * @see #getTabbedPane()
      */
     public Collection<Component> getContentPanes() {
         int size = getTabbedPane().getTabCount();

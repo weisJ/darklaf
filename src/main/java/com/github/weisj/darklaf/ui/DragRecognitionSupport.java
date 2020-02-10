@@ -35,9 +35,9 @@ import java.awt.event.MouseEvent;
  * Drag gesture recognition support for classes that have a
  * <code>TransferHandler</code>. The gesture for a drag in this class is a mouse
  * press followed by movement by <code>DragSource.getDragThreshold()</code> pixels. An instance of this class is
- * maintained per AppContext, and the public static methods call into the appropriate instance. <p>
- * <p>
- * This is a c&p of core (package private) needed for BasicXListUI. It differs from core in that references to sun
+ * maintained per AppContext, and the public static methods call into the appropriate instance.
+ *
+ * <p>This is a c and p of core (package private) needed for BasicXListUI. It differs from core in that references to sun
  * packages have been replaced.
  * <ul>
  * <li> a static method of SunDragSourceContextPeer has been copied into SwingXUtilities
@@ -56,10 +56,12 @@ public class DragRecognitionSupport {
 
     /**
      * Returns whether or not the event is potentially part of a drag sequence.
+     *
+     * @param me the MouseEvent.
+     * @return true if mouse is pressed.
      */
     public static boolean mousePressed(final MouseEvent me) {
-        return getDragRecognitionSupport().
-                                                  mousePressedImpl(me);
+        return getDragRecognitionSupport().mousePressedImpl(me);
     }
 
     /**
@@ -122,6 +124,9 @@ public class DragRecognitionSupport {
     /**
      * If a dnd recognition has been going on, return the MouseEvent that started the recognition. Otherwise, return
      * null.
+     *
+     * @param  me the MouseEvent.
+     * @return true if mouse has been released.
      */
     public static MouseEvent mouseReleased(final MouseEvent me) {
         return getDragRecognitionSupport().
@@ -150,10 +155,13 @@ public class DragRecognitionSupport {
 
     /**
      * Returns whether or not a drag gesture recognition is ongoing.
+     *
+     * @param me the me
+     * @param bd the bd
+     * @return the boolean
      */
     public static boolean mouseDragged(final MouseEvent me, final BeforeDrag bd) {
-        return getDragRecognitionSupport().
-                                                  mouseDraggedImpl(me, bd);
+        return getDragRecognitionSupport().mouseDraggedImpl(me, bd);
     }
 
     /**

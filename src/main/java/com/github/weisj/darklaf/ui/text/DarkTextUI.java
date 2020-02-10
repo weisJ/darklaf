@@ -119,6 +119,8 @@ public abstract class DarkTextUI extends BasicTextUI {
 
     /**
      * Get the InputMap to use for the UI.
+     *
+     * @return the input map
      */
     protected InputMap getInputMap() {
         InputMap map = new InputMapUIResource();
@@ -171,6 +173,8 @@ public abstract class DarkTextUI extends BasicTextUI {
 
     /**
      * Invoked when the focus accelerator changes, this will update the key bindings as necessary.
+     *
+     * @param changed the changed
      */
     @SuppressWarnings("MagicConstant")
     protected void updateFocusAcceleratorBinding(final boolean changed) {
@@ -201,6 +205,8 @@ public abstract class DarkTextUI extends BasicTextUI {
 
     /**
      * Create a default action map.  This is basically the set of actions found exported by the component.
+     *
+     * @return the action map
      */
     public ActionMap createActionMap() {
         ActionMap map = new ActionMapUIResource();

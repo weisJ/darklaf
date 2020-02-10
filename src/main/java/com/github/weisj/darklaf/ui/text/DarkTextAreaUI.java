@@ -274,8 +274,8 @@ public class DarkTextAreaUI extends DarkTextUI {
          * Sets the size of the view.  If the size has changed, layout is redone.  The size is the full size of the view
          * including the inset areas.
          *
-         * @param width  the width >= 0
-         * @param height the height >= 0
+         * @param width  the width (non negative)
+         * @param height the height (non negative)
          */
         public void setSize(final float width, final float height) {
             if ((int) width != getWidth()) {
