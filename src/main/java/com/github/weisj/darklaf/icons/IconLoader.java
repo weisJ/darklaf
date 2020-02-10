@@ -136,7 +136,6 @@ public final class IconLoader {
     @NotNull
     public Icon loadSVGIcon(@NotNull final String name, final int w, final int h, final boolean themed) {
         try {
-            LOGGER.info("Loading icon '" + name + "'. Resolving from " + parentClass);
             if (themed) {
                 return new ThemedSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
             } else {

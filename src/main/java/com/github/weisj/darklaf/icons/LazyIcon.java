@@ -28,12 +28,14 @@ import org.jetbrains.annotations.Contract;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
+import java.util.logging.Logger;
 
 /**
  * @author Jannis Weis
  */
 public abstract class LazyIcon implements Icon, UIResource {
 
+    private static final Logger LOGGER = Logger.getLogger(LazyIcon.class.getName());
     protected final String path;
     protected final IconLoader.IconKey key;
     protected final Class<?> parentClass;
@@ -55,6 +57,7 @@ public abstract class LazyIcon implements Icon, UIResource {
 
     private void ensureLoaded() {
         if (!loaded) {
+            LOGGER.info("Loading icon '" + path + "'. Resolving from " + parentClass);
             icon = loadIcon();
             loaded = true;
             if (icon == null) {
