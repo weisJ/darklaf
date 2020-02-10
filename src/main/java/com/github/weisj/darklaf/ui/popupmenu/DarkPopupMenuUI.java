@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
+import com.github.weisj.darklaf.util.ReflectionUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
@@ -102,6 +103,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
      * implementation for it that is a bit more generous with closing the popup.
      */
     private void removeOldMouseGrabber() {
+        Object oldLogger = ReflectionUtil.changeIllegalAccessLogger(null);
         AppContext context = AppContext.getAppContext();
         try {
             Field field = BasicPopupMenuUI.class.getDeclaredField("MOUSE_GRABBER_KEY");
@@ -116,6 +118,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             context.put(value, null);
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
+        } finally {
+            ReflectionUtil.changeIllegalAccessLogger(oldLogger);
         }
     }
 
