@@ -85,7 +85,7 @@ public class TabFrameDemo implements ComponentDemo {
             panel.add(label);
             tabbedPopup.getTabbedPane().addTab("Tab " + i, panel);
         }
-            /* Activate for custom tab demo.
+            /* Activate for custom tab.
             tabFrame.setUserTabComponentAt(new JLabel("NORTH (custom tab)") {{
                 setBorder(new EmptyBorder(0, 5, 0, 5));
                 setOpaque(false);

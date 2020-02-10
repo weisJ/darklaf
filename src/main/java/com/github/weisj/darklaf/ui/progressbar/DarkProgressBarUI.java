@@ -36,12 +36,14 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkProgressBarUI extends BasicProgressBarUI {
+public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyChangeListener {
 
     private static final int CYCLE_TIME_DEFAULT = 800;
     private static final int REPAINT_INTERVAL_DEFAULT = 50;
@@ -77,6 +79,18 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         failedEndColor = UIManager.getColor("ProgressBar.failedEndColor");
         passedColor = UIManager.getColor("ProgressBar.passedColor");
         passedEndColor = UIManager.getColor("ProgressBar.passedEndColor");
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        progressBar.addPropertyChangeListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        progressBar.removePropertyChangeListener(this);
     }
 
     @Override
@@ -191,36 +205,6 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
         return new RoundRectangle2D.Float(x, y, w, h, ar, ar);
     }
 
-    private void paintString(@NotNull final Graphics2D g, final int x, final int y,
-                             final int w, final int h, final int fillStart, final int amountFull) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        String progressString = progressBar.getString();
-        g.setFont(progressBar.getFont());
-        Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
-
-        if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
-            g.setColor(getSelectionBackground());
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-            g.setColor(getSelectionForeground());
-            g.clipRect(fillStart, y, amountFull, h);
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-        } else { // VERTICAL
-            g.setColor(getSelectionBackground());
-            AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
-            g.setFont(progressBar.getFont().deriveFont(rotate));
-            renderLocation = getStringPlacement(g, progressString, x, y, w, h);
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-            g.setColor(getSelectionForeground());
-            g.clipRect(x, fillStart, w, amountFull);
-
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-        }
-        config.restore();
-    }
-
     @Override
     protected void paintDeterminate(@NotNull final Graphics g, final JComponent c) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -245,13 +229,21 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
                 int yOffset = r.y + (r.height - pHeight) / 2;
 
                 fullShape = getShapedRect(r.x, yOffset, r.width, pHeight, pHeight);
-                coloredShape = getShapedRect(r.x, yOffset, amountFull, pHeight, pHeight);
+                if (progressBar.getComponentOrientation().isLeftToRight()) {
+                    coloredShape = getShapedRect(r.x, yOffset, amountFull, pHeight, pHeight);
+                } else {
+                    coloredShape = getShapedRect(r.x + r.width - amountFull, yOffset, amountFull, pHeight, pHeight);
+                }
             } else {
                 int pWidth = progressBar.getPreferredSize().width;
                 int xOffset = r.x + (r.width - pWidth) / 2;
 
                 fullShape = getShapedRect(xOffset, r.y, pWidth, r.height, pWidth);
-                coloredShape = getShapedRect(xOffset, r.y, pWidth, amountFull, pWidth);
+                if (progressBar.getComponentOrientation().isLeftToRight()) {
+                    coloredShape = getShapedRect(xOffset, r.y, pWidth, amountFull, pWidth);
+                } else {
+                    coloredShape = getShapedRect(xOffset, r.y + r.height - amountFull, pWidth, amountFull, pWidth);
+                }
             }
             g2.setColor(getRemainderColor());
             g2.fill(fullShape);
@@ -263,16 +255,54 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
             } else {
                 g2.setColor(getFinishedColor());
             }
+
             g2.fill(coloredShape);
 
             if (progressBar.isStringPainted()) {
                 GraphicsContext config = GraphicsUtil.setupAAPainting(g);
-                paintString(g, i.left, i.top, r.width, r.height, amountFull, i);
+                Rectangle progressRect = coloredShape.getBounds();
+                if (progressBar.getOrientation() == JProgressBar.HORIZONTAL) {
+                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height, progressRect.x,
+                                progressRect.x + progressRect.width);
+                } else {
+                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height, progressRect.y,
+                                progressRect.y + progressRect.height);
+                }
                 config.restore();
             }
         } finally {
             g2.dispose();
         }
+    }
+
+    private void paintString(@NotNull final Graphics2D g, final int x, final int y,
+                             final int w, final int h, final int fillStart, final int amountFull) {
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
+        String progressString = progressBar.getString();
+        g.setFont(progressBar.getFont());
+        Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
+
+        if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
+            g.setColor(getSelectionBackground());
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+            g.setColor(getSelectionForeground());
+            g.clipRect(fillStart, y, amountFull, h);
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+        } else { // VERTICAL
+            AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
+            g.setFont(progressBar.getFont().deriveFont(rotate));
+            renderLocation = getStringPlacement(g, progressString, x, y, w, h);
+
+            g.setColor(getSelectionBackground());
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+            g.clipRect(x, fillStart, w, amountFull);
+            g.setColor(getSelectionForeground());
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+        }
+        config.restore();
     }
 
     protected Color getRemainderColor() {
@@ -315,5 +345,17 @@ public class DarkProgressBarUI extends BasicProgressBarUI {
     @Contract(pure = true)
     private static boolean isSimplified() {
         return UIManager.getBoolean("ProgressBar.isSimplified");
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if ("JProgressBar.failed".equals(key)) {
+            progressBar.repaint();
+        } else if ("JProgressBar.passed".equals(key)) {
+            progressBar.repaint();
+        } else if ("componentOrientation".equals(key)) {
+            progressBar.repaint();
+        }
     }
 }

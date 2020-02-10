@@ -73,7 +73,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
     protected static final Dimension vstrut5 = new Dimension(1, 5);
     protected static final Insets shrinkwrap = new Insets(0, 0, 0, 0);
     static final int space = 10;
-    // Preferred and Minimum sizes for the demo.dialog box
+    // Preferred and Minimum sizes for the dialog box
     protected static int PREF_WIDTH = 500;
     protected static int PREF_HEIGHT = 326;
     protected static Dimension PREF_SIZE = new Dimension(PREF_WIDTH, PREF_HEIGHT);
@@ -443,7 +443,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
     /*
      * Listen for filechooser property changes, such as
-     * the selected file changing, or the type of the demo.dialog changing.
+     * the selected file changing, or the type of the dialog changing.
      */
     public PropertyChangeListener createPropertyChangeListener(final JFileChooser fc) {
         return new PropertyChangeListener() {

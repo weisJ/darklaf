@@ -50,7 +50,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
     private String btnString2 = "Cancel";
 
     /**
-     * Creates the reusable demo.dialog.
+     * Creates the reusable dialog.
      */
     public CustomDialog(final Frame aFrame, final String aWord, final DialogDemo parent) {
         super(aFrame, true);
@@ -82,7 +82,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         String msgString2 = "(The answer is \"" + magicWord + "\".)";
         Object[] array = {msgString1, msgString2, textField};
 
-        //Create an array specifying the number of demo.dialog buttons
+        //Create an array specifying the number of dialog buttons
         //and their text.
         Object[] options = {btnString1, btnString2};
 
@@ -90,7 +90,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         optionPane = new JOptionPane(array, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION,
                                      null, options, options[0]);
 
-        //Make this demo.dialog display it.
+        //Make this dialog display it.
         setContentPane(optionPane);
 
         //Handle window closing correctly.
@@ -161,7 +161,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
                 typedText = textField.getText();
                 String ucText = typedText.toUpperCase();
                 if (magicWord.equals(ucText)) {
-                    //we're done; clear and dismiss the demo.dialog
+                    //we're done; clear and dismiss the dialog
                     clearAndHide();
                 } else {
                     //text was invalid
@@ -173,7 +173,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
                     typedText = null;
                     textField.requestFocusInWindow();
                 }
-            } else { //user closed demo.dialog or clicked cancel
+            } else { //user closed dialog or clicked cancel
                 dd.setLabel("It's OK.   We won't force you to type " + magicWord + ".");
                 typedText = null;
                 clearAndHide();
@@ -182,7 +182,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
     }
 
     /**
-     * This method clears the demo.dialog and hides it.
+     * This method clears the dialog and hides it.
      */
     public void clearAndHide() {
         textField.setText(null);

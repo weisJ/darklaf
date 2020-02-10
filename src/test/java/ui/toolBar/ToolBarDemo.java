@@ -53,7 +53,7 @@ package ui.toolBar;/*
  */
 
 /*
- * demo.toolBar.ToolBarDemo.java requires the following addditional files:
+ * toolBar.ToolBarDemo.java requires the following addditional files:
  * images/Back24.gif
  * images/Forward24.gif
  * images/Up24.gif
@@ -152,7 +152,7 @@ public class ToolBarDemo extends JPanel implements ActionListener {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("demo.toolBar.ToolBarDemo");
+        JFrame frame = new JFrame("toolBar.ToolBarDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add content to the window.

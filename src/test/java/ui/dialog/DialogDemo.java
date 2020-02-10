@@ -61,7 +61,7 @@ public class DialogDemo extends JPanel {
         JPanel featurePanel = createFeatureDialogBox();
         JPanel iconPanel = createIconDialogBox();
         label = new JLabel("Click the \"Show it!\" button"
-                                   + " to bring up the selected demo.dialog.",
+                                   + " to bring up the selected dialog.",
                            JLabel.CENTER);
 
         //Lay them out.
@@ -124,12 +124,12 @@ public class DialogDemo extends JPanel {
         showItButton.addActionListener(e -> {
             String command = group.getSelection().getActionCommand();
 
-            //ok demo.dialog
+            //ok dialog
             if (Objects.equals(command, defaultMessageCommand)) {
                 JOptionPane.showMessageDialog(frame,
                                               "Eggs aren't supposed to be green.");
 
-                //yes/no demo.dialog
+                //yes/no dialog
             } else if (Objects.equals(command, yesNoCommand)) {
                 int n = JOptionPane.showConfirmDialog(
                         frame, "Would you like green eggs and ham?",
@@ -215,14 +215,14 @@ public class DialogDemo extends JPanel {
         radioButtons[1] = new JRadioButton("Enter some text");
         radioButtons[1].setActionCommand(textEnteredCommand);
 
-        radioButtons[2] = new JRadioButton("Non-auto-closing demo.dialog");
+        radioButtons[2] = new JRadioButton("Non-auto-closing dialog");
         radioButtons[2].setActionCommand(nonAutoCommand);
 
-        radioButtons[3] = new JRadioButton("Input-validating demo.dialog "
+        radioButtons[3] = new JRadioButton("Input-validating dialog "
                                                    + "(with custom message area)");
         radioButtons[3].setActionCommand(customOptionCommand);
 
-        radioButtons[4] = new JRadioButton("Non-modal demo.dialog");
+        radioButtons[4] = new JRadioButton("Non-modal dialog");
         radioButtons[4].setActionCommand(nonModalCommand);
 
         for (int i = 0; i < numButtons; i++) {
@@ -277,10 +277,10 @@ public class DialogDemo extends JPanel {
                 //If you're here, the return value was null/empty.
                 setLabel("Come on, finish the sentence!");
 
-                //non-auto-closing demo.dialog
+                //non-auto-closing dialog
             } else if (Objects.equals(command, nonAutoCommand)) {
                 final JOptionPane optionPane = new JOptionPane(
-                        "The only way to close this demo.dialog is by\n"
+                        "The only way to close this dialog is by\n"
                                 + "pressing one of the following buttons.\n"
                                 + "Do you understand?",
                         JOptionPane.QUESTION_MESSAGE,
@@ -323,13 +323,13 @@ public class DialogDemo extends JPanel {
                     setLabel("Good.");
                 } else if (value == JOptionPane.NO_OPTION) {
                     setLabel("Try using the window decorations "
-                                     + "to close the non-auto-closing demo.dialog. "
+                                     + "to close the non-auto-closing dialog. "
                                      + "You can't!");
                 } else {
                     setLabel("Window unavoidably closed (ESC?).");
                 }
 
-                //non-auto-closing demo.dialog with custom message area
+                //non-auto-closing dialog with custom message area
                 //NOTE: if you don't intend to check the input,
                 //then just use showInputDialog instead.
             } else if (Objects.equals(command, customOptionCommand)) {
@@ -342,16 +342,16 @@ public class DialogDemo extends JPanel {
                     setLabel("Congratulations!  " + "You entered \"" + s + "\".");
                 }
 
-                //non-modal demo.dialog
+                //non-modal dialog
             } else if (Objects.equals(command, nonModalCommand)) {
-                //Create the demo.dialog.
+                //Create the dialog.
                 final JDialog dialog = new JDialog(frame, "A Non-Modal Dialog");
 
                 //Add contents to it. It must have a close button,
                 //since some L&Fs (notably Java/Metal) don't provide one
                 //in the window decorations for dialogs.
                 JLabel label = new JLabel("<html><p align=center>"
-                                                  + "This is a non-modal demo.dialog.<br>"
+                                                  + "This is a non-modal dialog.<br>"
                                                   + "You can have one or more of these up<br>"
                                                   + "and still use the main window.");
                 label.setHorizontalAlignment(JLabel.CENTER);
@@ -388,7 +388,7 @@ public class DialogDemo extends JPanel {
      * Creates the panel shown by the 3rd tab.
      * These dialogs are implemented using showMessageDialog, but
      * you can specify the icon (using similar code) for any other
-     * kind of demo.dialog, as well.
+     * kind of dialog, as well.
      */
     private JPanel createIconDialogBox() {
         JButton showItButton = null;
@@ -441,7 +441,7 @@ public class DialogDemo extends JPanel {
             } else if (Objects.equals(command, infoCommand)) {
                 JOptionPane.showMessageDialog(frame,
                                               "Eggs aren't supposed to be green.",
-                                              "Inane informational demo.dialog",
+                                              "Inane informational dialog",
                                               JOptionPane.INFORMATION_MESSAGE);
 
                 //XXX: It doesn't make sense to make a question with
@@ -450,7 +450,7 @@ public class DialogDemo extends JPanel {
                 //question icon
             } else if (Objects.equals(command, questionCommand)) {
                 JOptionPane.showMessageDialog(frame,
-                                              "You shouldn't use a message demo.dialog "
+                                              "You shouldn't use a message dialog "
                                                       + "(like this)\n"
                                                       + "for a question, OK?",
                                               "Inane question",
@@ -471,7 +471,7 @@ public class DialogDemo extends JPanel {
             } else if (Objects.equals(command, customCommand)) {
                 JOptionPane.showMessageDialog(frame,
                                               "Eggs aren't supposed to be green.",
-                                              "Inane custom demo.dialog",
+                                              "Inane custom dialog",
                                               JOptionPane.INFORMATION_MESSAGE,
                                               icon);
             }

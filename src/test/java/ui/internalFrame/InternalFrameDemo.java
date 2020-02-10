@@ -36,14 +36,14 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 
 /*
- * demo.internalFrame.InternalFrameDemo.java requires:
- *   demo.internalFrame.MyInternalFrame.java
+ * internalFrame.InternalFrameDemo.java requires:
+ *   internalFrame.MyInternalFrame.java
  */
 public class InternalFrameDemo extends JFrame implements ActionListener {
     private JDesktopPane desktop;
 
     private InternalFrameDemo() {
-        super("demo.internalFrame.InternalFrameDemo");
+        super("InternalFrameDemo");
 
         //Make the big window be indented 50 pixels from each edge
         //of the screen.

@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /*
- *  Change the LAF and recreate the defaults.UIManagerDefaults so that the properties
+ *  Change the LAF and recreate the UIManagerDefaults so that the properties
  *  of the new LAF are correctly displayed.
  */
 final class ChangeLookAndFeelAction extends AbstractAction {
