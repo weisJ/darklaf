@@ -1,12 +1,11 @@
+package defaults;
 /*
  *	This programs uses the information found in the UIManager
  *  to create a table of key/value pairs for each Swing component.
  */
-
 import com.github.weisj.darklaf.DarkLafInfo;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.ui.table.DarkColorTableCellRendererEditor;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
@@ -19,14 +18,9 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -68,7 +62,7 @@ public class UIManagerDefaults implements ItemListener {
     }
 
     /*
-     *  Build a GUI using the content pane and menu bar of UIManagerDefaults
+     *  Build a GUI using the content pane and menu bar of defaults.UIManagerDefaults
      */
     private static void createAndShowGUI() {
         final UIManagerDefaults application = new UIManagerDefaults();
@@ -97,7 +91,7 @@ public class UIManagerDefaults implements ItemListener {
      *  The content pane should be added to a high level container
      */
     @NotNull
-    private JComponent getContentPane() {
+    public JComponent getContentPane() {
         return contentPane;
     }
 
@@ -222,7 +216,7 @@ public class UIManagerDefaults implements ItemListener {
     /*
      *  When the LAF is changed we need to reset the content pane
      */
-    private void resetComponents() {
+    public void resetComponents() {
         items.clear();
         models.clear();
         ((DefaultTableModel) table.getModel()).setRowCount(0);
@@ -424,218 +418,4 @@ public class UIManagerDefaults implements ItemListener {
         }
     }
 
-    /**
-     * Thanks to Jeanette for the use of this code found at:
-     *
-     * <p>https://jdnc-incubator.dev.java.net/source/browse/jdnc-incubator/src/kleopatra/java/org
-     * /jdesktop/swingx/renderer/UIPropertiesViewer.java?rev=1.2&view=markup
-     *
-     * <p>Some ui-icons misbehave in that they unconditionally class-cast to the component type they
-     * are mostly painted on. Consequently they blow up if we are trying to paint them anywhere else (f.i. in a
-     * renderer).
-     *
-     * <p>This Icon is an adaption of a cool trick by Darryl Burke found at
-     * http://tips4java.wordpress.com/2008/12/18/icon-table-cell-renderer
-     *
-     * <p>The base idea is to instantiate a component of the type expected by the icon, let it paint
-     * into the graphics of a bufferedImage and create an ImageIcon from it. In subsequent calls the ImageIcon is used.
-     */
-    private static final class SafeIcon implements Icon {
-        private final Icon wrappee;
-        private Icon standIn;
-
-        @Contract(pure = true)
-        private SafeIcon(final Icon wrappee) {
-            this.wrappee = wrappee;
-        }
-
-        @Override
-        public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y) {
-            if (standIn == this) {
-                paintFallback(c, g, x, y);
-            } else if (standIn != null) {
-                standIn.paintIcon(c, g, x, y);
-            } else {
-                try {
-                    wrappee.paintIcon(c, g, x, y);
-                } catch (@NotNull final ClassCastException e) {
-                    createStandIn(e);
-                    standIn.paintIcon(c, g, x, y);
-                }
-            }
-        }
-
-        @Override
-        public int getIconWidth() {
-            return wrappee.getIconWidth();
-        }
-
-        @Override
-        public int getIconHeight() {
-            return wrappee.getIconHeight();
-        }
-
-        private void paintFallback(
-                final Component c, @NotNull final Graphics g, final int x, final int y) {
-            g.drawRect(x, y, getIconWidth(), getIconHeight());
-            g.drawLine(x, y, x + getIconWidth(), y + getIconHeight());
-            g.drawLine(x + getIconWidth(), y, x, y + getIconHeight());
-        }
-
-        private void createStandIn(@NotNull final ClassCastException e) {
-            try {
-                final Class<?> clazz = getClass(e);
-                final JComponent standInComponent = getSubstitute(clazz);
-                standIn = createImageIcon(standInComponent);
-            } catch (@NotNull final Exception e1) {
-                // something went wrong - fallback to this painting
-                standIn = this;
-            }
-        }
-
-        private Class<?> getClass(@NotNull final ClassCastException e) throws ClassNotFoundException {
-            String className = e.getMessage();
-            className = className.substring(className.lastIndexOf(" ") + 1);
-            return Class.forName(className);
-        }
-
-        private JComponent getSubstitute(@NotNull final Class<?> clazz) throws IllegalAccessException {
-            JComponent standInComponent = null;
-            try {
-                standInComponent = (JComponent) clazz.getDeclaredConstructor().newInstance();
-            } catch (@NotNull final InstantiationException e) {
-                standInComponent = new AbstractButton() {
-                };
-                ((AbstractButton) standInComponent).setModel(new DefaultButtonModel());
-            } catch (NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            return standInComponent;
-        }
-
-        @Contract("_ -> new")
-        @NotNull
-        private Icon createImageIcon(final JComponent standInComponent) {
-            final BufferedImage image =
-                    new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-            final Graphics g = image.createGraphics();
-            try {
-                wrappee.paintIcon(standInComponent, g, 0, 0);
-                return new ImageIcon(image);
-            } finally {
-                g.dispose();
-            }
-        }
-    }
-
-    /*
-     *  Render the value based on its class.
-     */
-    private static final class SampleRenderer extends JLabel implements TableCellRenderer {
-
-        private final DarkCellRendererToggleButton booleanRenderer =
-                new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
-
-        private SampleRenderer() {
-            super();
-            setHorizontalAlignment(SwingConstants.CENTER);
-            setOpaque(true);
-        }
-
-        @Contract("_, _, _, _, _, _ -> this")
-        @NotNull
-        public Component getTableCellRendererComponent(
-                final JTable table,
-                final Object sample,
-                final boolean isSelected,
-                final boolean hasFocus,
-                final int row,
-                final int column) {
-            setBackground(null);
-            setBorder(null);
-            setIcon(null);
-            setText("");
-
-            if (sample instanceof Color) {
-                setBackground((Color) sample);
-            } else if (sample instanceof Border) {
-                setBorder((Border) sample);
-            } else if (sample instanceof Font) {
-                setText("Sample");
-                setFont((Font) sample);
-            } else if (sample instanceof Icon) {
-                setIcon((Icon) sample);
-            } else if (sample instanceof Boolean) {
-                return booleanRenderer.getTableCellRendererComponent(table, sample, isSelected, hasFocus, row, column);
-            }
-            return this;
-        }
-
-        /*
-         *  Some icons are painted using inner classes and are not meant to be
-         *  shared by other items. This code will catch the
-         *  ClassCastException that is thrown.
-         */
-        public void paint(final Graphics g) {
-            try {
-                super.paint(g);
-            } catch (@NotNull final Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /*
-     *  Change the LAF and recreate the UIManagerDefaults so that the properties
-     *  of the new LAF are correctly displayed.
-     */
-    private static final class ChangeLookAndFeelAction extends AbstractAction {
-        private final UIManagerDefaults defaults;
-        private final String laf;
-
-        private ChangeLookAndFeelAction(final UIManagerDefaults defaults, final String laf, final String name) {
-            this.defaults = defaults;
-            this.laf = laf;
-            putValue(Action.NAME, name);
-            putValue(Action.SHORT_DESCRIPTION, getValue(Action.NAME));
-        }
-
-        public void actionPerformed(@NotNull final ActionEvent e) {
-            try {
-                UIManager.setLookAndFeel(laf);
-                defaults.resetComponents();
-
-                final JRootPane rootPane = SwingUtilities.getRootPane(defaults.getContentPane());
-                SwingUtilities.updateComponentTreeUI(rootPane);
-                //  Use custom decorations when supported by the LAF
-                final JFrame frame = (JFrame) SwingUtilities.windowForComponent(rootPane);
-                frame.dispose();
-
-                if (UIManager.getLookAndFeel().getSupportsWindowDecorations()) {
-                    frame.setUndecorated(true);
-                    frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-                } else {
-                    frame.setUndecorated(false);
-                }
-                frame.setVisible(true);
-            } catch (@NotNull final Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /*
-     *	Close the frame
-     */
-    private static final class ExitAction extends AbstractAction {
-        private ExitAction() {
-            putValue(Action.NAME, "Exit");
-            putValue(Action.SHORT_DESCRIPTION, getValue(Action.NAME));
-            putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
-        }
-
-        public void actionPerformed(final ActionEvent e) {
-            System.exit(0);
-        }
-    }
 }
