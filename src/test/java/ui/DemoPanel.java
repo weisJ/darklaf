@@ -21,36 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui;
+
+import com.github.weisj.darklaf.components.border.DarkBorders;
 
 import javax.swing.*;
-import java.util.Properties;
+import java.awt.*;
 
-public class SolarizedLightTheme extends Theme {
+public class DemoPanel extends JPanel {
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
+    private final JPanel controls;
+
+    public DemoPanel(final JComponent component) {
+        this(component, new GridBagLayout());
     }
 
-    @Override
-    public String getName() {
-        return "solarized_light";
+    public DemoPanel(final JComponent component, final LayoutManager layoutManager) {
+        super(new BorderLayout());
+        JPanel content = new JPanel(layoutManager);
+        content.add(component);
+        add(content, BorderLayout.CENTER);
+        controls = new JPanel();
+        controls.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
+        controls.setLayout(new BoxLayout(controls, BoxLayout.X_AXIS));
+        add(controls, BorderLayout.SOUTH);
     }
 
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean useDarkIcons() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public JPanel getControls() {
+        return controls;
     }
 }

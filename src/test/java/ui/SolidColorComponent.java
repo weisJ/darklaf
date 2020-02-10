@@ -21,36 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui;
 
 import javax.swing.*;
-import java.util.Properties;
+import java.awt.*;
 
-public class SolarizedLightTheme extends Theme {
+public class SolidColorComponent extends JPanel {
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
-    }
-
-    @Override
-    public String getName() {
-        return "solarized_light";
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean useDarkIcons() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public SolidColorComponent(final Color color, final int width, final int height) {
+        setBackground(color);
+        Dimension size = new Dimension(width, height);
+        setPreferredSize(size);
+        setMinimumSize(size);
+        setMaximumSize(size);
     }
 }

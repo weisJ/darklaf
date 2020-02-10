@@ -126,7 +126,7 @@ public final class IconLoader {
                 iconMap.put(key, icon);
                 return icon;
             } else {
-                Icon icon = new LazyImageIcon(path, key, IconLoader.class);
+                Icon icon = new LazyImageIcon(path, key, parentClass);
                 iconMap.put(key, icon);
                 return icon;
             }

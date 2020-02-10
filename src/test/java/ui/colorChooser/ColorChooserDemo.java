@@ -21,36 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui.colorChooser;
+
+import com.github.weisj.darklaf.LafManager;
 
 import javax.swing.*;
-import java.util.Properties;
+import java.awt.*;
 
-public class SolarizedLightTheme extends Theme {
+public final class ColorChooserDemo {
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
-    }
-
-    @Override
-    public String getName() {
-        return "solarized_light";
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean useDarkIcons() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public static void main(final String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            LafManager.install();
+            /*
+             * In newer versions of the JDK you can control whether the transparency slider is visible or not.
+             */
+            JColorChooser.showDialog(null, "Color Chooser with transparency", Color.RED);
+        });
     }
 }

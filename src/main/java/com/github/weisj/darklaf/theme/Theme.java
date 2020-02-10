@@ -162,6 +162,20 @@ public abstract class Theme {
     protected abstract IconTheme getPresetIconTheme();
 
     /**
+     * Load custom properties that are located under {@link #getResourcePath()}, with the name {@link
+     * #getName()}_{propertySuffix}.properties
+     *
+     * @param propertySuffix  the property suffix.
+     * @param properties      the properties to load into.
+     * @param currentDefaults the current ui defaults.
+     */
+    protected void loadCustomProperties(final String propertySuffix, final Properties properties,
+                                        final UIDefaults currentDefaults) {
+        String name = getResourcePath() + getName() + "_" + propertySuffix + ".properties";
+        PropertyLoader.putProperties(load(name), properties, currentDefaults);
+    }
+
+    /**
      * Load a properties file using {@link #getResourceAsStream(String)}.
      *
      * @param name the properties file to load.

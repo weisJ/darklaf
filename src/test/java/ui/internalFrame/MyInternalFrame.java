@@ -21,36 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui.internalFrame;
 
 import javax.swing.*;
-import java.util.Properties;
 
-public class SolarizedLightTheme extends Theme {
+public class MyInternalFrame extends JInternalFrame {
+    private static final int xOffset = 30, yOffset = 30;
+    private static int openFrameCount = 0;
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
-    }
-
-    @Override
-    public String getName() {
-        return "solarized_light";
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean useDarkIcons() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public MyInternalFrame() {
+        super("Document #" + (++openFrameCount), true, true, true, true);
+        setSize(300, 300);
+        setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
+        setJMenuBar(new JMenuBar() {{
+            add(new JMenu("Test") {{
+                add(new JMenuItem("Test Item"));
+            }});
+        }});
     }
 }

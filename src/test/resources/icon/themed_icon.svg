@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="TestIcon.color">
+            <stop offset="0" stop-color="#FF23B5"/>
+            <stop offset="1" stop-color="#FF23B5"/>
+        </linearGradient>
+    </defs>
+    <rect width="16" height="16" x="0" y="0" fill="url(#TestIcon.color)"/>
+</svg>

@@ -221,7 +221,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         if (parent.getClass().getName().startsWith("org.jdesktop.jdic.tray")
                 || (parent.getClass().getName().compareTo("javax.swing.Popup$HeavyWeightWindow") == 0)) {
             SwingUtilities.invokeLater(() -> {
-                rootPane.removeHierarchyListener(hierarchyListener);
+                if (rootPane != null) {
+                    rootPane.removeHierarchyListener(hierarchyListener);
+                }
                 hierarchyListener = null;
             });
         }

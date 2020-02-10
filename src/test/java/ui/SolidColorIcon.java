@@ -21,36 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.Properties;
+import java.awt.*;
 
-public class SolarizedLightTheme extends Theme {
+final class SolidColorIcon implements Icon {
+    private final int width;
+    private final int height;
+    private Color color;
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
+    SolidColorIcon(final Color color) {
+        this(color, 16, 16);
+    }
+
+    private SolidColorIcon(final Color color, final int width, final int height) {
+        this.color = color;
+        this.width = width;
+        this.height = height;
     }
 
     @Override
-    public String getName() {
-        return "solarized_light";
+    public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y) {
+        g.setColor(color);
+        g.fillRect(x, y, getIconWidth(), getIconHeight());
     }
 
     @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
+    public int getIconWidth() {
+        return width;
     }
 
     @Override
-    public boolean useDarkIcons() {
-        return false;
+    public int getIconHeight() {
+        return height;
     }
 
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(final Color c) {
+        this.color = c;
     }
 }

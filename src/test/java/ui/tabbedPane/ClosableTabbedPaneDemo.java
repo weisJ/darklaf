@@ -21,36 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui.tabbedPane;
+
+import com.github.weisj.darklaf.components.ClosableTabbedPane;
+import ui.ComponentDemo;
 
 import javax.swing.*;
-import java.util.Properties;
 
-public class SolarizedLightTheme extends Theme {
+public class ClosableTabbedPaneDemo extends TabbedPaneDemo {
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new ClosableTabbedPaneDemo());
+    }
+
+    protected JTabbedPane createTabbedPane() {
+        return new ClosableTabbedPane();
     }
 
     @Override
-    public String getName() {
-        return "solarized_light";
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean useDarkIcons() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public String getTitle() {
+        return "ClosableTabbPane Demo";
     }
 }
+

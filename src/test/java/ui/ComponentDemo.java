@@ -21,36 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui;
+
+import com.github.weisj.darklaf.LafManager;
 
 import javax.swing.*;
-import java.util.Properties;
+import java.awt.*;
 
-public class SolarizedLightTheme extends Theme {
+public interface ComponentDemo {
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
+    JComponent createComponent();
+
+    static void showDemo(final ComponentDemo demo) {
+        showDemo(demo, null);
     }
 
-    @Override
-    public String getName() {
-        return "solarized_light";
+    static void showDemo(final ComponentDemo demo, final Dimension dimension) {
+        SwingUtilities.invokeLater(() -> {
+            LafManager.install();
+            JFrame frame = new JFrame();
+            frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setTitle(demo.getTitle());
+            frame.setContentPane(demo.createComponent());
+            frame.pack();
+            if (dimension != null) frame.setSize(dimension);
+            frame.setVisible(true);
+        });
     }
 
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean useDarkIcons() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
-    }
+    String getTitle();
 }

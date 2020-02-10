@@ -21,36 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package ui.scrollPane;
+
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.util.StringUtil;
+import ui.ComponentDemo;
+import ui.DemoPanel;
+import ui.DemoResources;
 
 import javax.swing.*;
-import java.util.Properties;
+import java.awt.*;
 
-public class SolarizedLightTheme extends Theme {
+public class OverlayScrollPaneDemo implements ComponentDemo {
 
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new OverlayScrollPaneDemo(), new Dimension(500, 1000));
     }
 
     @Override
-    public String getName() {
-        return "solarized_light";
+    public JComponent createComponent() {
+        OverlayScrollPane scrollPane = new OverlayScrollPane(
+                new JTextArea(StringUtil.repeat(DemoResources.LOREM_IPSUM, 5)));
+        return new DemoPanel(scrollPane, new BorderLayout());
     }
 
     @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean useDarkIcons() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public String getTitle() {
+        return "OverlayScrollPane Demo";
     }
 }

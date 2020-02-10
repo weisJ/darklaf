@@ -50,7 +50,7 @@ public final class LafManager {
         /*
          * Disable for production.
          */
-        enableLogging(false);
+        enableLogging(true);
     }
 
     /**
@@ -111,6 +111,17 @@ public final class LafManager {
     }
 
     /**
+     * Reloads the icon theme. Forces icons to update their colors.
+     */
+    public static void reloadIconTheme() {
+        try {
+            setTheme(getTheme().getClass().newInstance());
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Overload for {@link #installTheme(Theme)}.
      *
      * @param theme the theme to install.
@@ -150,6 +161,29 @@ public final class LafManager {
             updateLafRecursively(childWindow);
         }
         SwingUtilities.updateComponentTreeUI(window);
+        //  Use custom decorations when supported by the LAF
+        if (window instanceof JFrame) {
+            JFrame frame = (JFrame) window;
+            frame.dispose();
+            if (UIManager.getLookAndFeel().getSupportsWindowDecorations()) {
+                frame.setUndecorated(true);
+                frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+            } else {
+                frame.setUndecorated(false);
+            }
+            frame.setVisible(true);
+        } else if (window instanceof JDialog) {
+            JDialog dialog = (JDialog) window;
+            boolean isVisible = dialog.isVisible();
+            dialog.dispose();
+            if (UIManager.getLookAndFeel().getSupportsWindowDecorations()) {
+                dialog.setUndecorated(true);
+                dialog.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+            } else {
+                dialog.setUndecorated(false);
+            }
+            dialog.setVisible(isVisible);
+        }
     }
 
 }

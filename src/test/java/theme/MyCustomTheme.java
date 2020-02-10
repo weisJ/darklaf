@@ -31,6 +31,7 @@ import javax.swing.*;
 import java.util.Properties;
 
 public class MyCustomTheme extends Theme {
+
     @Override
     public void loadGlobals(@NotNull final Properties properties, final UIDefaults currentDefaults) {
         super.loadGlobals(properties, currentDefaults);

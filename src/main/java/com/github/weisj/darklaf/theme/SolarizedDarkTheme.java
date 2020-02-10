@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import com.github.weisj.darklaf.util.PropertyLoader;
-
 import javax.swing.*;
 import java.util.Properties;
 
@@ -48,8 +46,7 @@ public class SolarizedDarkTheme extends Theme {
     @Override
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadUIProperties(properties, currentDefaults);
-        String name = getResourcePath() + getName() + "_ui.properties";
-        PropertyLoader.putProperties(load(name), properties, currentDefaults);
+        loadCustomProperties("ui", properties, currentDefaults);
     }
 
     @Override
