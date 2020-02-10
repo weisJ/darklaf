@@ -10,6 +10,7 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.logging.Logger;
 
 /**
  * @author Jannis Weis
@@ -30,7 +31,7 @@ public final class UIDemo {
                         taskpane.add(new AbstractAction("Test Task " + i) {
                             @Override
                             public void actionPerformed(final ActionEvent e) {
-                                System.out.println("hello from test task");
+                                Logger.getGlobal().info("hello from test task");
                             }
                         });
                     }

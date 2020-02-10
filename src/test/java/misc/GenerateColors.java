@@ -26,6 +26,7 @@ package misc;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 
 import java.awt.*;
+import java.util.logging.Logger;
 
 /**
  * Used to generate the color swatches for ColorChooser.
@@ -52,7 +53,7 @@ public final class GenerateColors {
             }
         }
         builder.append("};");
-        System.out.println(builder);
+        Logger.getGlobal().info(builder.toString());
     }
 
     private static Color colorFromPos(final int x, final int y, final int height, final int width) {
