@@ -96,3 +96,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
   * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the plaform folder.
 - [Arrow button cycle support for JComboBox.](https://github.com/weisJ/darklaf/issues/10)
 - Create missing demo classes. (See Todo's in test/ui/)
+
+# License
+This project is licensed under the [MIT license](https://github.com/weisJ/darklaf/blob/master/LICENSE).
+
