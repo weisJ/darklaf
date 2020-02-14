@@ -74,7 +74,7 @@ publishing {
             customizePom(pom)
             groupId = 'com.github.weisj'
             artifactId 'darklaf'
-            version = '1.3.3.2'
+            version = '1.3.3.3'
 
             from components.java
 
