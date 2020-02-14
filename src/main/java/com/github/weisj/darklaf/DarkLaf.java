@@ -121,7 +121,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         boolean useScreenMenuBar = "true".equalsIgnoreCase(System.getProperty("apple.laf.useScreenMenuBar",
                                                                               "false"));
         if (SystemInfo.isMac && !useScreenMenuBar) {
-            defaults.put("MenuBarUI", "com.weis.darklaf.ui.menu.DarkMenuBarUI");
+            defaults.put("MenuBarUI", "com.github.weisj.darklaf.ui.menu.DarkMenuBarUI");
             defaults.put("MenuUI", "javax.swing.plaf.basic.BasicMenuUI");
         }
     }
