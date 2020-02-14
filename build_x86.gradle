@@ -1,4 +1,5 @@
 import org.gradle.internal.jvm.Jvm
+import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.1.0'
@@ -206,7 +207,9 @@ compileJava {
 }
 
 tasks.withType(JavaCompile) {
-    dependsOn 'buildLibraries'
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        dependsOn 'buildLibraries'
+    }
     configure(options) {
         options.encoding = 'UTF-8'
         options.compilerArgs += [
