@@ -53,6 +53,10 @@ public class DarkButtonBorder implements Border, UIResource {
     private int minimumArc;
     private int borderSize;
     private int shadowSize;
+    private Insets insets;
+    private Insets thinInsets;
+    private Insets squareInsets;
+    private Insets squareThinInsets;
 
     public DarkButtonBorder() {
         shadowColor = UIManager.getColor("Button.shadow");
@@ -67,6 +71,10 @@ public class DarkButtonBorder implements Border, UIResource {
         minimumArc = UIManager.getInt("Button.minimumArc");
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowSize = UIManager.getInt("Button.shadowHeight");
+        insets = UIManager.getInsets("Button.borderInsets");
+        thinInsets = UIManager.getInsets("Button.thinBorderInsets");
+        squareInsets = UIManager.getInsets("Button.squareBorderInsets");
+        squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
     }
 
     @Override
@@ -157,12 +165,10 @@ public class DarkButtonBorder implements Border, UIResource {
             return new InsetsUIResource(0, 0, 0, 0);
         }
         int shadow = DarkButtonUI.isShadowVariant(c) ? 0 : getShadowSize();
-        int pad = isThin(c) ? 4 : 8;
-        if (DarkButtonUI.isSquare(c)) {
-            return new InsetsUIResource(pad, pad, pad + shadow, pad);
-        } else {
-            return new InsetsUIResource(pad, 2 * pad, pad + shadow, 2 * pad);
-        }
+        boolean square = DarkButtonUI.isSquare(c);
+        Insets pad = isThin(c) ? square ? squareThinInsets : thinInsets
+                               : square ? squareInsets : insets;
+        return new InsetsUIResource(pad.top, pad.left, pad.bottom + shadow, pad.right);
     }
 
     public boolean isBorderOpaque() {
