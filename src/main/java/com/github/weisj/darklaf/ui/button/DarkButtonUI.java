@@ -82,6 +82,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
         LookAndFeel.installProperty(b, "opaque", false);
+        b.setRolloverEnabled(UIManager.getBoolean("Button.rolloverEnabled"));
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");
         inactiveForeground = UIManager.getColor("Button.disabledText");
