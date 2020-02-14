@@ -156,15 +156,14 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             ((JComboBox<?>) editorComponent).removeAllItems();
             ((JComboBox<Object>) editorComponent).addItem(value);
             ((JComboBox<?>) editorComponent).setSelectedItem(value);
-        } else if (editorComponent instanceof JToggleButton && adjustBoolValue) {
+        } else if (editorComponent instanceof JToggleButton) {
             ((JToggleButton) editorComponent).setSelected(!(((JToggleButton) editorComponent).isSelected()));
             SwingUtilities.invokeLater(tree::stopEditing);
         }
         editorComponent.setOpaque(false);
         editorComponent.setComponentOrientation(tree.getComponentOrientation());
-
-        if (isSelected && editorComponent instanceof JToggleButton) {
-            if (DarkUIUtil.hasFocus(tree)) {
+        if (editorComponent instanceof JToggleButton) {
+            if (DarkUIUtil.hasFocus(tree) || DarkUIUtil.hasFocus(editorComponent)) {
                 editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
             } else {
                 editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));

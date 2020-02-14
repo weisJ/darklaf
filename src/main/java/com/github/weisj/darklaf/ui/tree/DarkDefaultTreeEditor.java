@@ -125,6 +125,7 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
                         p.x -= bounds.x + button.getX();
                         p.y -= bounds.y + button.getY();
+                        button.putClientProperty("JToggleButton.clearHitArea", true);
                         return button.contains(p);
                     }
                 }

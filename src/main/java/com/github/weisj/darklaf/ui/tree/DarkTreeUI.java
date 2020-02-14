@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
@@ -53,7 +54,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     public static final String TREE_TABLE_TREE_KEY = "JTree.treeTableTree";
     public static final String STRIPED_CLIENT_PROPERTY = "JTree.alternateRowColor";
 
-    private final MouseListener mySelectionListener = new MouseAdapter() {
+    private final MouseListener selectionListener = new MouseAdapter() {
         boolean handled = false;
 
         @Override
@@ -167,7 +168,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected void installListeners() {
         super.installListeners();
         tree.addPropertyChangeListener(this);
-        tree.addMouseListener(mySelectionListener);
+        tree.addMouseListener(selectionListener);
     }
 
     @Override
@@ -298,16 +299,38 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected FocusListener createFocusListener() {
         return new FocusListener() {
+
+            boolean focused = false;
+
             @Override
             public void focusGained(final FocusEvent e) {
-                tree.repaint();
+                if (!focused) {
+                    tree.repaint();
+                }
+                focused = true;
             }
 
             @Override
             public void focusLost(final FocusEvent e) {
-                tree.repaint();
+                tree.stopEditing();
+                if (!hasFocus()) {
+                    tree.repaint();
+                    focused = false;
+                }
             }
         };
+    }
+
+    protected boolean hasFocus() {
+        if (!DarkUIUtil.hasFocus(tree)) {
+            Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            boolean treeEditor = owner instanceof JComponent
+                    && Boolean.TRUE.equals(((JComponent) owner).getClientProperty("JToggleButton.isTreeCellEditor"));
+            boolean treeRenderer = owner instanceof JComponent
+                    && Boolean.TRUE.equals(((JComponent) owner).getClientProperty("JToggleButton.isTreeCellRenderer"));
+            return owner == null || treeEditor || treeRenderer;
+        }
+        return true;
     }
 
     @Override
@@ -332,7 +355,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        tree.removeMouseListener(mySelectionListener);
+        tree.removeMouseListener(selectionListener);
         tree.removePropertyChangeListener(this);
     }
 

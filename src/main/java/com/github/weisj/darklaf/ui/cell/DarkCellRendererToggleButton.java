@@ -114,6 +114,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellEditorCheckBox(final boolean opaque) {
             setOpaque(opaque);
+            putClientProperty("JToggleButton.isTreeCellEditor", true);
+            putClientProperty("JToggleButton.isTableCellEditor", true);
         }
 
         public void setHasFocus(final boolean hasFocus) {
@@ -137,6 +139,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellEditorRadioButton(final boolean opaque) {
             setOpaque(opaque);
+            putClientProperty("JToggleButton.isTreeCellEditor", true);
+            putClientProperty("JToggleButton.isTableCellEditor", true);
         }
 
         public void setHasFocus(final boolean hasFocus) {

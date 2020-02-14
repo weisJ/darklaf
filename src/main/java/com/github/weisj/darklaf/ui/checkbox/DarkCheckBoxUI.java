@@ -335,8 +335,12 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         String key = evt.getPropertyName();
         if ("componentOrientation".equals(key)) {
             checkBox.repaint();
+            hitArea.setRoundRect(0, 0, 0, 0, 0, 0);
         } else if ("JToggleButton.isTreeCellEditor".equals(key) || "JToggleButton.isTableCellEditor".equals(key)) {
             checkBox.repaint();
+            hitArea.setRoundRect(0, 0, 0, 0, 0, 0);
+        } else if ("JToggleButton.clearHitArea".equals(key)) {
+            hitArea.setRoundRect(0, 0, 0, 0, 0, 0);
         }
     }
 }

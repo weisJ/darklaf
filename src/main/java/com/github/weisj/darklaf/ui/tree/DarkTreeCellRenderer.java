@@ -59,7 +59,7 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             return rendererComponent;
         }
         Component comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-        if (sel && !DarkUIUtil.hasFocus(tree)) {
+        if (sel && !(DarkUIUtil.hasFocus(tree) || DarkUIUtil.hasFocus(comp))) {
             comp.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
         }
         return comp;
