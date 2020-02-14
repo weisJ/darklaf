@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -90,8 +89,7 @@ public class DarkSVGIcon implements Icon, Serializable {
 
     private void ensureLoaded() {
         if (!loaded.get()) {
-            File file = new File(uri);
-            LOGGER.info("Loading icon '" + file.getName() + "'.");
+            LOGGER.info("Loading icon '" + uri.toASCIIString() + "'.");
             icon.setSvgURI(uri);
             loaded.set(true);
         }
