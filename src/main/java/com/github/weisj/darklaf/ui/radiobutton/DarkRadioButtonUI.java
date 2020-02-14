@@ -36,6 +36,7 @@ import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.RectangularShape;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -52,7 +53,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
     private static Dimension size = new Dimension();
-    private final Ellipse2D hitArea = new Ellipse2D.Float();
+    private RectangularShape hitArea;
     protected JRadioButton radioButton;
     protected Color background;
     protected Color inactiveBackground;
@@ -154,25 +155,12 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         button.removePropertyChangeListener(this);
     }
 
-    protected String layoutRadioButton(final AbstractButton b, final FontMetrics fm) {
-        Insets i = b.getInsets();
-        size = b.getSize(size);
-        viewRect.x = i.left;
-        viewRect.y = i.top;
-        viewRect.width = size.width - (i.right + viewRect.x);
-        viewRect.height = size.height - (i.bottom + viewRect.y);
-        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
-        textRect.x = textRect.y = textRect.width = textRect.height = 0;
-
-        String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), getDefaultIcon(),
-                                                         b.getVerticalAlignment(), b.getHorizontalAlignment(),
-                                                         b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-                                                         viewRect, iconRect, textRect, b.getIconTextGap());
-
-        hitArea.setFrame(Math.max(iconRect.x, 0) + ICON_OFF,
-                         Math.max(iconRect.y, 0) + ICON_OFF,
-                         SIZE, SIZE);
-        return text;
+    @Override
+    public boolean contains(final JComponent c, final int x, final int y) {
+        if (hitArea == null || (hitArea.isEmpty() && c instanceof JRadioButton)) {
+            layoutRadioButton((JRadioButton) c, c.getFontMetrics(c.getFont()));
+        }
+        return hitArea.contains(x, y);
     }
 
     private void paintBackground(final JComponent c, final Graphics2D g) {
@@ -254,12 +242,33 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
                        : inactiveCheckColor;
     }
 
-    @Override
-    public boolean contains(final JComponent c, final int x, final int y) {
-        if (hitArea.isEmpty() && c instanceof JRadioButton) {
-            layoutRadioButton((JRadioButton) c, c.getFontMetrics(c.getFont()));
+    protected String layoutRadioButton(final AbstractButton b, final FontMetrics fm) {
+        Insets i = b.getInsets();
+        size = b.getSize(size);
+        viewRect.x = i.left;
+        viewRect.y = i.top;
+        viewRect.width = size.width - (i.right + viewRect.x);
+        viewRect.height = size.height - (i.bottom + viewRect.y);
+        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
+        textRect.x = textRect.y = textRect.width = textRect.height = 0;
+
+        String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), getDefaultIcon(),
+                                                         b.getVerticalAlignment(), b.getHorizontalAlignment(),
+                                                         b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+                                                         viewRect, iconRect, textRect, b.getIconTextGap());
+
+        if (DarkRadioButtonBorder.isTableCellEditor(b) || DarkRadioButtonBorder.isTreeCellEditor(b)) {
+            hitArea = new Ellipse2D.Float(Math.max(iconRect.x, 0) + ICON_OFF,
+                                          Math.max(iconRect.y, 0) + ICON_OFF,
+                                          SIZE, SIZE);
+        } else {
+            int x = Math.min(iconRect.x, textRect.x);
+            int y = Math.min(iconRect.y, textRect.y);
+            int xEnd = Math.max(iconRect.x + iconRect.width, textRect.x + textRect.width);
+            int yEnd = Math.max(iconRect.y + iconRect.height, textRect.y + textRect.y);
+            hitArea = new Rectangle(x, y, xEnd - x, yEnd - y);
         }
-        return hitArea.contains(x, y);
+        return text;
     }
 
     @Override

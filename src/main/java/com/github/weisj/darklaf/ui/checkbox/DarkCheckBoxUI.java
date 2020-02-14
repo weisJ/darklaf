@@ -170,9 +170,17 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
                                                          b.getVerticalAlignment(), b.getHorizontalAlignment(),
                                                          b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
                                                          viewRect, iconRect, textRect, b.getIconTextGap());
-        hitArea.setRoundRect(Math.max(iconRect.x, 0) + ICON_OFF,
-                             Math.max(iconRect.y, 0) + ICON_OFF,
-                             SIZE, SIZE, arcSize, arcSize);
+        if (DarkCheckBoxBorder.isTableCellEditor(b) || DarkCheckBoxBorder.isTreeCellEditor(b)) {
+            hitArea.setRoundRect(Math.max(iconRect.x, 0) + ICON_OFF,
+                                 Math.max(iconRect.y, 0) + ICON_OFF,
+                                 SIZE, SIZE, arcSize, arcSize);
+        } else {
+            int x = Math.min(iconRect.x, textRect.x);
+            int y = Math.min(iconRect.y, textRect.y);
+            int xEnd = Math.max(iconRect.x + iconRect.width, textRect.x + textRect.width);
+            int yEnd = Math.max(iconRect.y + iconRect.height, textRect.y + textRect.y);
+            hitArea.setRoundRect(x, y, xEnd - x, yEnd - y, 0, 0);
+        }
         return text;
     }
 

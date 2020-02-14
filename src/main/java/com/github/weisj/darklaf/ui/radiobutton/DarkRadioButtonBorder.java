@@ -53,16 +53,16 @@ public class DarkRadioButtonBorder implements Border, UIResource {
         return new InsetsUIResource(a, a, a, a);
     }
 
-    protected boolean isInCell(final Component c) {
+    protected static boolean isInCell(final Component c) {
         return isTreeCellEditor(c) || isTableCellEditor(c) || DarkUIUtil.isInCell(c);
     }
 
-    protected boolean isTreeCellEditor(final Component c) {
+    protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JToggleButton.isTreeCellEditor"));
     }
 
-    protected boolean isTableCellEditor(final Component c) {
+    protected static boolean isTableCellEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JToggleButton.isTreeCellEditor"));
     }
