@@ -32,6 +32,7 @@ import sun.swing.SwingUtilities2;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -203,15 +204,19 @@ public class DarkTableUI extends DarkTableUIBridge {
         Rectangle maxCell = table.getCellRect(rMax, cMax, true);
         Rectangle damagedArea = minCell.union(maxCell);
 
-        int draggedIndex = viewIndexForColumn(table.getTableHeader().getDraggedColumn());
+        JTableHeader header = table.getTableHeader();
+        int draggedIndex = -1;
+        if (header != null) {
+            draggedIndex = viewIndexForColumn(header.getDraggedColumn());
+        }
         if (table.getShowHorizontalLines()) {
             int tableWidth = damagedArea.x + damagedArea.width;
             if (table.getComponentOrientation().isLeftToRight()) {
-                if (draggedIndex == cMax) {
+                if (draggedIndex >= 0 && draggedIndex == cMax) {
                     tableWidth -= 1;
                 }
             } else {
-                if (draggedIndex == cMin) {
+                if (draggedIndex >= 0 && draggedIndex == cMin) {
                     tableWidth -= 1;
                 }
             }
