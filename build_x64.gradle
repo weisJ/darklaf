@@ -30,11 +30,10 @@ repositories {
 
 dependencies {
     compile 'com.metsci.ext.com.kitfox.svg:svg-salamander:[0.1.19,)'
-    compile 'org.jetbrains:annotations:16.0.1'
-    compile 'net.java.dev.jna:jna:4.1.0'
-    compile 'org.swinglabs:jxlayer:3.0.4'
-    compileOnly 'org.swinglabs:swingx:1.6.1'
-    testCompile 'org.swinglabs:swingx:1.6.1'
+    compile 'net.java.dev.jna:jna:[4.1.0,)'
+    compile 'org.swinglabs:jxlayer:[3.0.4,)'
+    compileOnly 'org.swinglabs:swingx:[1.6.1,)'
+    testCompile 'org.swinglabs:swingx:[1.6.1,)'
 }
 
 task sourceJar(type: Jar, dependsOn: classes) {
