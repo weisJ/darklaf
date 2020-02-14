@@ -3,15 +3,13 @@ package defaults;
  *	This programs uses the information found in the UIManager
  *  to create a table of key/value pairs for each Swing component.
  */
+
 import com.github.weisj.darklaf.DarkLafInfo;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.table.DarkColorTableCellRendererEditor;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -90,7 +88,7 @@ public class UIManagerDefaults implements ItemListener {
     /*
      *  The content pane should be added to a high level container
      */
-    @NotNull
+
     public JComponent getContentPane() {
         return contentPane;
     }
@@ -98,7 +96,7 @@ public class UIManagerDefaults implements ItemListener {
     /**
      * Create menu bar
      */
-    @NotNull
+
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
         menuBar.add(createFileMenu());
@@ -109,7 +107,7 @@ public class UIManagerDefaults implements ItemListener {
     /**
      * Create menu items for the Application menu
      */
-    @NotNull
+
     private JMenu createFileMenu() {
         final JMenu menu = new JMenu("Application");
         menu.setMnemonic('A');
@@ -121,7 +119,7 @@ public class UIManagerDefaults implements ItemListener {
     /**
      * Create menu items for the Look & Feel menu
      */
-    @NotNull
+
     private JMenu createLAFMenu() {
         final ButtonGroup bg = new ButtonGroup();
         final JMenu menu = new JMenu("Look & Feel");
@@ -146,7 +144,7 @@ public class UIManagerDefaults implements ItemListener {
     /*
      *  This panel is added to the North of the content pane
      */
-    @NotNull
+
     private JComponent buildNorthComponent() {
         comboBox = new JComboBox<String>() {
             @Override
@@ -192,8 +190,8 @@ public class UIManagerDefaults implements ItemListener {
     /*
      *  This panel is added to the Center of the content pane
      */
-    @Contract(" -> new")
-    @NotNull
+
+
     private JComponent buildCenterComponent() {
         final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0);
         table = new JTable(model);
@@ -264,8 +262,8 @@ public class UIManagerDefaults implements ItemListener {
     /*
      *  Parse the key to determine the item name to use
      */
-    @Nullable
-    private String getItemName(@NotNull final String key, final Object value) {
+
+    private String getItemName(final String key, final Object value) {
         //  Seems like this is an old check required for JDK1.4.2
         if (key.startsWith("class") || key.startsWith("javax")) {
             return null;
@@ -277,7 +275,7 @@ public class UIManagerDefaults implements ItemListener {
         }
     }
 
-    private String getComponentName(@NotNull final String key, final Object value) {
+    private String getComponentName(final String key, final Object value) {
         //  The key is of the form:
         //  "componentName.componentProperty", or
         //  "componentNameUI", or
@@ -300,28 +298,7 @@ public class UIManagerDefaults implements ItemListener {
         return componentName;
     }
 
-    private int componentNameEndOffset(@NotNull final String key) {
-        //  Handle Nimbus properties first
-        //  "ComboBox.scrollPane", "Table.editor" and "Tree.cellEditor"
-        //  have different format even within the Nimbus properties.
-        //  (the component name is specified in quotes)
-        if (key.startsWith("\"")) {
-            return key.indexOf("\"", 1) + 1;
-        }
-        int pos = key.indexOf(":");
-        if (pos != -1) {
-            return pos;
-        }
-        pos = key.indexOf("[");
-        if (pos != -1) {
-            return pos;
-        }
-        //  Handle normal properties
-        return key.indexOf(".");
-    }
-
-    @NotNull
-    private String getValueName(@NotNull final String key, final Object value) {
+    private String getValueName(final String key, final Object value) {
         if (value instanceof Icon) {
             return "Icon";
         } else if (value instanceof Font) {
@@ -353,10 +330,30 @@ public class UIManagerDefaults implements ItemListener {
         }
     }
 
+    private int componentNameEndOffset(final String key) {
+        //  Handle Nimbus properties first
+        //  "ComboBox.scrollPane", "Table.editor" and "Tree.cellEditor"
+        //  have different format even within the Nimbus properties.
+        //  (the component name is specified in quotes)
+        if (key.startsWith("\"")) {
+            return key.indexOf("\"", 1) + 1;
+        }
+        int pos = key.indexOf(":");
+        if (pos != -1) {
+            return pos;
+        }
+        pos = key.indexOf("[");
+        if (pos != -1) {
+            return pos;
+        }
+        //  Handle normal properties
+        return key.indexOf(".");
+    }
+
     /*
      *  Implement the ItemListener interface
      */
-    public void itemStateChanged(@NotNull final ItemEvent e) {
+    public void itemStateChanged(final ItemEvent e) {
         final String itemName = (String) e.getItem();
         changeTableModel(itemName);
         updateRowHeights();
@@ -414,7 +411,7 @@ public class UIManagerDefaults implements ItemListener {
                 }
                 table.setRowHeight(row, rowHeight);
             }
-        } catch (@NotNull final ClassCastException ignored) {
+        } catch (final ClassCastException ignored) {
         }
     }
 

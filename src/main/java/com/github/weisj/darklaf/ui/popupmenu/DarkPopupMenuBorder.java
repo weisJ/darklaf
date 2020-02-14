@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.popupmenu;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
@@ -41,12 +40,12 @@ public class DarkPopupMenuBorder extends MutableLineBorder implements UIResource
     }
 
     @Override
-    public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y, final int width, final int height) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
         setColor(UIManager.getDefaults().getColor("PopupMenu.borderColor"));
         super.paintBorder(c, g, x, y, width, height);
     }
 
-    @NotNull
+
     @Override
     public Insets getBorderInsets(final Component c) {
         return new InsetsUIResource(1, 1, 1, 1);

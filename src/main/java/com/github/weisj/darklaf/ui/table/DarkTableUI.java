@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -103,8 +101,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     };
     protected Color borderColor;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
     }
@@ -135,7 +132,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         table.removePropertyChangeListener(propertyChangeListener);
     }
 
-    protected static void setupRendererComponents(@NotNull final JTable table) {
+    protected static void setupRendererComponents(final JTable table) {
         DarkTableCellRenderer cellRenderer = new DarkTableCellRenderer();
         DarkTableCellEditor cellEditor = new DarkTableCellEditor();
         DarkColorTableCellRendererEditor colorRendererEditor = new DarkColorTableCellRendererEditor();
@@ -196,7 +193,7 @@ public class DarkTableUI extends DarkTableUIBridge {
 
 
     @Override
-    protected void paintGrid(@NotNull final Graphics g,
+    protected void paintGrid(final Graphics g,
                              final int rMin, final int rMax, final int cMin, final int cMax) {
         g.setColor(table.getGridColor());
 
@@ -312,18 +309,88 @@ public class DarkTableUI extends DarkTableUIBridge {
         return comp instanceof JScrollPane;
     }
 
-    protected static int adjustDistance(final int distance, @NotNull final Rectangle rect,
-                                        @NotNull final JTable comp) {
-        int dist = distance;
-        int min = 0;
-        int max = comp.getX() + comp.getWidth();
-        if (rect.x + dist <= min) {
-            dist = min - rect.x;
+    @Override
+    protected void paintDraggedArea(final Graphics g, final int rMin, final int rMax,
+                                    final int cMin, final int cMax,
+                                    final TableColumn draggedColumn, final int distance) {
+        int draggedColumnIndex = viewIndexForColumn(draggedColumn);
+
+        Rectangle minCell = table.getCellRect(rMin, draggedColumnIndex, true);
+        Rectangle maxCell = table.getCellRect(rMax, draggedColumnIndex, true);
+
+        Rectangle vacatedColumnRect = minCell.union(maxCell);
+
+        int dist = adjustDistance(distance, vacatedColumnRect, table);
+
+        // Paint a gray well in place of the moving column.
+        Container parent = table.getParent();
+        if (isInScrollPane()) {
+            JScrollPane par = DarkUIUtil.getParentOfType(JScrollPane.class, table);
+            if (par != null && par.getParent() != null) {
+                parent = par.getParent();
+            }
         }
-        if (rect.x + rect.width + dist >= max) {
-            dist = max - rect.x - rect.width;
+        int tableHeight = getPreferredSize(table).height;
+        g.setColor(parent.getBackground());
+        g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width - 1, tableHeight);
+
+
+        // Move to the where the cell has been dragged.
+        vacatedColumnRect.x += dist;
+
+        boolean ltr = table.getComponentOrientation().isLeftToRight();
+
+        // Fill the background.
+        g.setColor(table.getBackground());
+        g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width, tableHeight);
+
+
+        // Paint the vertical grid lines if necessary.
+        if (table.getShowVerticalLines()) {
+            g.setColor(table.getGridColor());
+            int x1 = vacatedColumnRect.x;
+            int y1 = 0;
+            int x2 = x1 + vacatedColumnRect.width - 1;
+            int y2 = y1 + tableHeight;
+
+            boolean onLeftEdge = ltr ? draggedColumnIndex == cMin : draggedColumnIndex == cMax;
+            boolean onRightEdge = ltr ? draggedColumnIndex == cMax : draggedColumnIndex == cMin;
+            if (scrollBarVisible()) {
+                if (isScrollPaneRtl()) {
+                    onLeftEdge = false;
+                } else {
+                    onRightEdge = false;
+                }
+            }
+            // Left
+            if (dist != 0 || !onLeftEdge) {
+                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl()) x1++;
+                g.fillRect(x1 - 1, y1, 1, y2 - y1);
+            }
+            // Right
+            if (dist != 0 || !onRightEdge) {
+                g.fillRect(x2, y1, 1, y2 - y1);
+            }
         }
-        return dist;
+
+        for (int row = rMin; row <= rMax; row++) {
+            // Render the cell value
+            Rectangle r = table.getCellRect(row, draggedColumnIndex, false);
+            r.x += dist;
+            paintCell(g, r, row, draggedColumnIndex);
+
+            // Paint the (lower) horizontal grid line if necessary.
+            if (table.getShowHorizontalLines()) {
+                g.setColor(table.getGridColor());
+                Rectangle rcr = table.getCellRect(row, draggedColumnIndex, true);
+                rcr.x += distance;
+                int x1 = rcr.x;
+                int y1 = rcr.y;
+                int x2 = x1 + rcr.width;
+                int y2 = y1 + rcr.height - 1;
+                g.fillRect(x1, y2, x2 - x1, 1);
+            }
+        }
     }
 
     protected class DarkHandler extends Handler {
@@ -437,91 +504,19 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
-    @Override
-    protected void paintDraggedArea(@NotNull final Graphics g, final int rMin, final int rMax,
-                                    final int cMin, final int cMax,
-                                    final TableColumn draggedColumn, final int distance) {
-        int draggedColumnIndex = viewIndexForColumn(draggedColumn);
-
-        Rectangle minCell = table.getCellRect(rMin, draggedColumnIndex, true);
-        Rectangle maxCell = table.getCellRect(rMax, draggedColumnIndex, true);
-
-        Rectangle vacatedColumnRect = minCell.union(maxCell);
-
-        int dist = adjustDistance(distance, vacatedColumnRect, table);
-
-        // Paint a gray well in place of the moving column.
-        Container parent = table.getParent();
-        if (isInScrollPane()) {
-            JScrollPane par = DarkUIUtil.getParentOfType(JScrollPane.class, table);
-            if (par != null && par.getParent() != null) {
-                parent = par.getParent();
-            }
+    protected static int adjustDistance(final int distance, final Rectangle rect,
+                                        final JTable comp) {
+        int dist = distance;
+        int min = 0;
+        int max = comp.getX() + comp.getWidth();
+        if (rect.x + dist <= min) {
+            dist = min - rect.x;
         }
-        int tableHeight = getPreferredSize(table).height;
-        g.setColor(parent.getBackground());
-        g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width - 1, tableHeight);
-
-
-        // Move to the where the cell has been dragged.
-        vacatedColumnRect.x += dist;
-
-        boolean ltr = table.getComponentOrientation().isLeftToRight();
-
-        // Fill the background.
-        g.setColor(table.getBackground());
-        g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width, tableHeight);
-
-
-        // Paint the vertical grid lines if necessary.
-        if (table.getShowVerticalLines()) {
-            g.setColor(table.getGridColor());
-            int x1 = vacatedColumnRect.x;
-            int y1 = 0;
-            int x2 = x1 + vacatedColumnRect.width - 1;
-            int y2 = y1 + tableHeight;
-
-            boolean onLeftEdge = ltr ? draggedColumnIndex == cMin : draggedColumnIndex == cMax;
-            boolean onRightEdge = ltr ? draggedColumnIndex == cMax : draggedColumnIndex == cMin;
-            if (scrollBarVisible()) {
-                if (isScrollPaneRtl()) {
-                    onLeftEdge = false;
-                } else {
-                    onRightEdge = false;
-                }
-            }
-            // Left
-            if (dist != 0 || !onLeftEdge) {
-                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl()) x1++;
-                g.fillRect(x1 - 1, y1, 1, y2 - y1);
-            }
-            // Right
-            if (dist != 0 || !onRightEdge) {
-                g.fillRect(x2, y1, 1, y2 - y1);
-            }
+        if (rect.x + rect.width + dist >= max) {
+            dist = max - rect.x - rect.width;
         }
-
-        for (int row = rMin; row <= rMax; row++) {
-            // Render the cell value
-            Rectangle r = table.getCellRect(row, draggedColumnIndex, false);
-            r.x += dist;
-            paintCell(g, r, row, draggedColumnIndex);
-
-            // Paint the (lower) horizontal grid line if necessary.
-            if (table.getShowHorizontalLines()) {
-                g.setColor(table.getGridColor());
-                Rectangle rcr = table.getCellRect(row, draggedColumnIndex, true);
-                rcr.x += distance;
-                int x1 = rcr.x;
-                int y1 = rcr.y;
-                int x2 = x1 + rcr.width;
-                int y2 = y1 + rcr.height - 1;
-                g.fillRect(x1, y2, x2 - x1, 1);
-            }
-        }
+        return dist;
     }
-
-
 
 
 }

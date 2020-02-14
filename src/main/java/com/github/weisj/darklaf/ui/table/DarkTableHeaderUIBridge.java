@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
@@ -63,11 +62,11 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 // Instance Variables
 //
     protected static final FocusListener focusListener = new FocusListener() {
-        public void focusGained(@NotNull final FocusEvent e) {
+        public void focusGained(final FocusEvent e) {
             repaintHeader(e.getSource());
         }
 
-        public void focusLost(@NotNull final FocusEvent e) {
+        public void focusLost(final FocusEvent e) {
             repaintHeader(e.getSource());
         }
 

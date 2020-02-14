@@ -33,9 +33,6 @@ package org.pbjar.jxlayer.plaf.ext;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
 import org.jdesktop.jxlayer.plaf.LayerUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -69,10 +66,10 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         new JInternalFrame();
     }
 
-    @Nullable
+
     private Component lastEnteredTarget, lastPressedTarget;
     private boolean dispatchingMode = false;
-    @Nullable
+
     private JXLayer<? extends V> installedLayer;
 
     /**
@@ -82,7 +79,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      */
     @SuppressWarnings("deprecation")
     @Override
-    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+    public boolean contains(final JComponent c, final int x, final int y) {
         return c.inside(x, y);
     }
 
@@ -95,7 +92,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void installUI(@NotNull final JComponent component) throws IllegalStateException {
+    public void installUI(final JComponent component) throws IllegalStateException {
         super.installUI(component);
         if (installedLayer != null) {
             throw new IllegalStateException(this.getClass().getName()
@@ -108,7 +105,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      * Overridden to remove the installed {@link JXLayer}.
      */
     @Override
-    public void uninstallUI(@NotNull final JComponent c) {
+    public void uninstallUI(final JComponent c) {
         installedLayer = null;
         super.uninstallUI(c);
     }
@@ -128,7 +125,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      * components according to their bounds.
      */
     @Override
-    public void eventDispatched(final AWTEvent event, @NotNull final JXLayer<? extends V> layer) {
+    public void eventDispatched(final AWTEvent event, final JXLayer<? extends V> layer) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseEvent = (MouseEvent) event;
             if (!dispatchingMode) {
@@ -161,8 +158,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      * registered.
      */
     @Override
-    protected void processMouseWheelEvent(@NotNull final MouseWheelEvent event,
-                                          @NotNull final JXLayer<? extends V> jxlayer) {
+    protected void processMouseWheelEvent(final MouseWheelEvent event,
+                                          final JXLayer<? extends V> jxlayer) {
         /*
          * Only process an event if it is not already consumed. This may be the
          * case if this LayerUI is contained in a wrapped hierarchy.
@@ -195,9 +192,9 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    @NotNull
-    private Point calculateTargetPoint(@NotNull final JXLayer<? extends V> layer,
-                                       @NotNull final MouseEvent mouseEvent) {
+
+    private Point calculateTargetPoint(final JXLayer<? extends V> layer,
+                                       final MouseEvent mouseEvent) {
         Point point = mouseEvent.getPoint();
         SwingUtilities.convertPointToScreen(point, mouseEvent.getComponent());
         SwingUtilities.convertPointFromScreen(point, layer);
@@ -221,9 +218,9 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         // }
     }
 
-    @NotNull
+
     private MouseWheelEvent createMouseWheelEvent(
-            @NotNull final MouseWheelEvent mouseWheelEvent, @NotNull final Point point, @NotNull final Component target) {
+            final MouseWheelEvent mouseWheelEvent, final Point point, final Component target) {
         return new MouseWheelEvent(target, //
                                    mouseWheelEvent.getID(), //
                                    mouseWheelEvent.getWhen(), //
@@ -238,16 +235,15 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         );
     }
 
-    private void dispatchMouseEvent(@Nullable final MouseEvent mouseEvent) {
+    private void dispatchMouseEvent(final MouseEvent mouseEvent) {
         if (mouseEvent != null) {
             Component target = mouseEvent.getComponent();
             target.dispatchEvent(mouseEvent);
         }
     }
 
-    @Contract("null -> null")
-    @Nullable
-    private Component findWheelListenerComponent(@Nullable final Component target) {
+
+    private Component findWheelListenerComponent(final Component target) {
         if (target == null) {
             return null;
         } else if (target.getMouseWheelListeners().length == 0) {
@@ -257,8 +253,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    private void generateEnterExitEvents(@NotNull final JXLayer<? extends V> layer,
-                                         @NotNull final MouseEvent originalEvent, final Component newTarget, @NotNull final Point realPoint) {
+    private void generateEnterExitEvents(final JXLayer<? extends V> layer,
+                                         final MouseEvent originalEvent, final Component newTarget, final Point realPoint) {
         if (lastEnteredTarget != newTarget) {
             dispatchMouseEvent(transformMouseEvent(layer, originalEvent,
                                                    lastEnteredTarget, realPoint, MouseEvent.MOUSE_EXITED));
@@ -269,8 +265,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    @Nullable
-    private Component getListeningComponent(@NotNull final MouseEvent event, @NotNull final Component component) {
+
+    private Component getListeningComponent(final MouseEvent event, final Component component) {
         Component comp;
         switch (event.getID()) {
             case MouseEvent.MOUSE_CLICKED:
@@ -293,8 +289,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         return comp;
     }
 
-    @Nullable
-    private Component getMouseListeningComponent(@NotNull final Component component) {
+
+    private Component getMouseListeningComponent(final Component component) {
         if (component.getMouseListeners().length > 0) {
             return component;
         } else {
@@ -308,8 +304,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     @SuppressWarnings("Duplicates")
-    @Nullable
-    private Component getMouseMotionListeningComponent(@NotNull final Component component) {
+
+    private Component getMouseMotionListeningComponent(final Component component) {
         /*
          * Mouse motion events may result in MOUSE_ENTERED and MOUSE_EXITED.
          *
@@ -329,8 +325,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    @Nullable
-    private Component getMouseWheelListeningComponent(@NotNull final Component component) {
+
+    private Component getMouseWheelListeningComponent(final Component component) {
         if (component.getMouseWheelListeners().length > 0) {
             return component;
         } else {
@@ -343,8 +339,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    @Nullable
-    private Component getTarget(@NotNull final JXLayer<? extends V> layer, @NotNull final Point targetPoint) {
+
+    private Component getTarget(final JXLayer<? extends V> layer, final Point targetPoint) {
         Component view = layer.getView();
         if (view == null) {
             return null;
@@ -357,8 +353,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     @SuppressWarnings("Duplicates")
-    private void redispatch(@NotNull final MouseEvent originalEvent,
-                            @NotNull final JXLayer<? extends V> layer) {
+    private void redispatch(final MouseEvent originalEvent,
+                            final JXLayer<? extends V> layer) {
         if (layer.getView() != null) {
             if (originalEvent.getComponent() != layer.getGlassPane()) {
                 originalEvent.consume();
@@ -407,23 +403,23 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    private void redispatchMouseWheelEvent(@NotNull final MouseWheelEvent mouseWheelEvent,
-                                           final Component target, @NotNull final JXLayer<? extends V> layer) {
+    private void redispatchMouseWheelEvent(final MouseWheelEvent mouseWheelEvent,
+                                           final Component target, final JXLayer<? extends V> layer) {
         MouseWheelEvent newEvent = this.transformMouseWheelEvent(
                 mouseWheelEvent, target, layer);
         processMouseWheelEvent(newEvent, layer);
     }
 
-    @Nullable
-    private MouseEvent transformMouseEvent(@NotNull final JXLayer<? extends V> layer,
-                                           @NotNull final MouseEvent mouseEvent, final Component target, @NotNull final Point realPoint) {
+
+    private MouseEvent transformMouseEvent(final JXLayer<? extends V> layer,
+                                           final MouseEvent mouseEvent, final Component target, final Point realPoint) {
         return transformMouseEvent(layer, mouseEvent, target, realPoint,
                                    mouseEvent.getID());
     }
 
-    @Nullable
-    private MouseEvent transformMouseEvent(@NotNull final JXLayer<? extends V> layer,
-                                           @NotNull final MouseEvent mouseEvent, @Nullable final Component target, @NotNull final Point targetPoint, final int id) {
+
+    private MouseEvent transformMouseEvent(final JXLayer<? extends V> layer,
+                                           final MouseEvent mouseEvent, final Component target, final Point targetPoint, final int id) {
         if (target == null) {
             return null;
         } else {
@@ -442,9 +438,9 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    @NotNull
+
     private MouseWheelEvent transformMouseWheelEvent(
-            @NotNull final MouseWheelEvent mouseWheelEvent, final Component t,
+            final MouseWheelEvent mouseWheelEvent, final Component t,
             final JXLayer<? extends V> layer) {
         Component target = t;
         if (target == null) {
@@ -456,8 +452,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
                                      point, target);
     }
 
-    @NotNull
-    private Point transformPoint(final JXLayer<? extends V> layer, @NotNull final Point point) {
+
+    private Point transformPoint(final JXLayer<? extends V> layer, final Point point) {
         AffineTransform transform = this.getTransform(layer);
         if (transform != null) {
             try {
@@ -469,7 +465,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         return point;
     }
 
-    @Nullable
+
     protected JXLayer<? extends V> getInstalledLayer() {
         return installedLayer;
     }

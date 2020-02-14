@@ -27,7 +27,6 @@ import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.decorators.CellRenderer;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -45,7 +44,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
     private final T toggleButton;
 
 
-    public DarkCellRendererToggleButton(@NotNull final T toggleButton) {
+    public DarkCellRendererToggleButton(final T toggleButton) {
         this.toggleButton = toggleButton;
     }
 

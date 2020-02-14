@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.color;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 
 /**
@@ -61,11 +58,11 @@ public class DarkColorModelHSL extends DarkColorModel {
     }
 
     @Override
-    public int[] getValuesFromColor(@NotNull final Color color) {
+    public int[] getValuesFromColor(final Color color) {
         return RGBtoHSL(color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    @NotNull
+
     private static int[] RGBtoHSL(final int r, final int g, final int b) {
         double max = max(r, g, b) / 255.0;
         double min = min(r, g, b) / 255.0;
@@ -83,7 +80,7 @@ public class DarkColorModelHSL extends DarkColorModel {
         return hsl;
     }
 
-    @Contract(pure = true)
+
     protected static double max(final double red, final double green, final double blue) {
         double max = Math.max(red, green);
         return Math.max(max, blue);
@@ -94,7 +91,7 @@ public class DarkColorModelHSL extends DarkColorModel {
         return Math.min(min, blue);
     }
 
-    @Contract(pure = true)
+
     private static double getHue(final double red, final double green, final double blue,
                                  final double max, final double min) {
         double hue = max - min;
@@ -115,12 +112,12 @@ public class DarkColorModelHSL extends DarkColorModel {
     }
 
     @Override
-    public Color getColorFromValues(@NotNull final int[] values) {
+    public Color getColorFromValues(final int[] values) {
         int[] rgb = HSLtoRGB(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0);
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
 
-    @NotNull
+
     private static int[] HSLtoRGB(final double h, final double saturation, final double lightness) {
         double hue = h;
 
@@ -139,7 +136,7 @@ public class DarkColorModelHSL extends DarkColorModel {
         return rgb;
     }
 
-    @Contract(pure = true)
+
     private static double normalize(final double q, final double p, final double color) {
         if (color < 1.0f) {
             return p + (q - p) * color;

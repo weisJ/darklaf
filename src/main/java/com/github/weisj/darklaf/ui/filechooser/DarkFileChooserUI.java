@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.ui.filechooser;
 
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareToggleButton;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.FilePane;
 
 import javax.accessibility.AccessibleContext;
@@ -47,8 +45,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         super(b);
     }
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkFileChooserUI((JFileChooser) c);
     }

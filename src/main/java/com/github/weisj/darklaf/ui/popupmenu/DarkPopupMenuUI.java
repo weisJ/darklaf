@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.popupmenu;
 
 import com.github.weisj.darklaf.util.ReflectionUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
@@ -63,13 +61,12 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public static final StringBuilder MOUSE_GRABBER_KEY = new StringBuilder(
             "javax.swing.plaf.basic.BasicPopupMenuUI.MouseGrabber");
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent x) {
         return new DarkPopupMenuUI();
     }
 
-    @NotNull
+
     static List<JPopupMenu> getPopups() {
         MenuSelectionManager msm = MenuSelectionManager.defaultManager();
         MenuElement[] p = msm.getSelectedPath();
@@ -138,7 +135,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             }
         }
 
-        void grabWindow(@NotNull final MenuElement[] newPath) {
+        void grabWindow(final MenuElement[] newPath) {
             // A grab needs to be added
             final Toolkit tk = Toolkit.getDefaultToolkit();
             java.security.AccessController.doPrivileged(
@@ -377,12 +374,12 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     protected static class StringBufferWrapper {
         private final StringBuffer buffer;
 
-        @Contract(pure = true)
+
         protected StringBufferWrapper(final StringBuffer buffer) {
             this.buffer = buffer;
         }
 
-        @Contract(value = "null -> false", pure = true)
+
         @Override
         public boolean equals(final Object obj) {
             if (obj instanceof StringBuffer) {

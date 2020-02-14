@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -32,7 +30,7 @@ import java.awt.*;
 public class ScrollableTabPanel extends JPanel implements UIResource {
     private DarkTabbedPaneUIBridge ui;
 
-    public ScrollableTabPanel(@NotNull final DarkTabbedPaneUIBridge ui) {
+    public ScrollableTabPanel(final DarkTabbedPaneUIBridge ui) {
         super(null);
         this.ui = ui;
         setOpaque(ui.tabPane.isOpaque());

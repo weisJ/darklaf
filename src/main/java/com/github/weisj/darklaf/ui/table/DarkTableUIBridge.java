@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -51,7 +50,7 @@ public class DarkTableUIBridge extends TableUIBridge {
     /**
      * Paint a representation of the <code>table</code> instance that was set in installUI().
      */
-    public void paint(@NotNull final Graphics g, final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         Rectangle clip = g.getClipBounds();
 
         Rectangle bounds = table.getBounds();

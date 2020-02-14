@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.separator;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSeparatorUI;
@@ -36,13 +33,12 @@ import java.awt.*;
  */
 public class DarkSeparatorUI extends BasicSeparatorUI {
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSeparatorUI();
     }
 
-    public void paint(final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         Dimension s = c.getSize();
 
         g.setColor(UIManager.getDefaults().getColor("Separator.foreground"));

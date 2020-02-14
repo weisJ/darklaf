@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.ui.button;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -72,7 +70,7 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     @Override
-    public void paintBorder(final Component c, @NotNull final Graphics g,
+    public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
         if (DarkButtonUI.isShadowVariant(c) || DarkButtonUI.isLabelButton(c)) {
             return;
@@ -116,7 +114,7 @@ public class DarkButtonBorder implements Border, UIResource {
         return square ? alt ? focusArc : squareFocusArc : alt ? squareFocusArc : focusArc;
     }
 
-    private void paintShadow(@NotNull final Graphics2D g2, final int width, final int height, final int arc) {
+    private void paintShadow(final Graphics2D g2, final int width, final int height, final int arc) {
         GraphicsContext context = new GraphicsContext(g2);
         int borderSize = getBorderSize();
         int shadowSize = getShadowSize();
@@ -142,7 +140,7 @@ public class DarkButtonBorder implements Border, UIResource {
         return borderSize;
     }
 
-    protected Color getBorderColor(@NotNull final Component c) {
+    protected Color getBorderColor(final Component c) {
         if (c.hasFocus()) {
             return focusBorderColor;
         } else if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
@@ -171,7 +169,7 @@ public class DarkButtonBorder implements Border, UIResource {
         return false;
     }
 
-    @Contract("null -> false")
+
     public static boolean isThin(final Component c) {
         return c instanceof JButton
                 && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.thin"));

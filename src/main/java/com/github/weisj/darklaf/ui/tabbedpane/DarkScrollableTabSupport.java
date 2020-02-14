@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -66,7 +64,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt("TabbedPane.maxPopupHeight"));
         PopupMenuListener popupMenuListener = new PopupMenuAdapter() {
             @Override
-            public void popupMenuWillBecomeInvisible(@NotNull final PopupMenuEvent e) {
+            public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
                 lastClickEvent = System.currentTimeMillis();
             }
         };
@@ -220,8 +218,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         moreTabsButton.repaint();
     }
 
-    @NotNull
-    @Contract("_ -> new")
+
     protected JMenuItem createMenuItem(final int i) {
         Icon icon = ui.tabPane.getIconAt(i);
         if (icon != null && !ui.tabPane.getComponentAt(i).isEnabled()) {

@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.Element;
@@ -38,8 +35,6 @@ import java.beans.PropertyChangeEvent;
 public class DarkTextPaneUI extends DarkEditorPaneUI {
 
 
-    @NotNull
-    @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTextPaneUI();
     }

@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -50,8 +47,7 @@ class MainSwatchPanel extends SwatchPanel {
         }
     }
 
-    @NotNull
-    @Contract(value = " -> new", pure = true)
+
     private int[] initRawValues() {
         return new int[]{
                 0, 0, 0,

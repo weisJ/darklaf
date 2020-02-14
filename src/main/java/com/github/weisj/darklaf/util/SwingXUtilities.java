@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.util;
 
 import org.jdesktop.jxlayer.JXLayer;
-import org.jetbrains.annotations.NotNull;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ import java.awt.geom.AffineTransform;
 
 public class SwingXUtilities {
 
-    @NotNull
+
     public static Point convertPointToParent(final Component source, final Point p) {
         JXLayer layer = DarkUIUtil.getParentOfType(JXLayer.class, source);
         if (layer != null && layer.getUI() instanceof TransformUI) {

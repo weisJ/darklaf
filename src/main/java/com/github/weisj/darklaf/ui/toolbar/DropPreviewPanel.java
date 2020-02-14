@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.toolbar;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -45,7 +43,7 @@ public class DropPreviewPanel extends JComponent {
     }
 
     @Override
-    public void paint(@NotNull final Graphics g) {
+    public void paint(final Graphics g) {
         g.setColor(getBackgroundColor());
         g.fillRect(0, 0, getWidth(), getHeight());
     }

@@ -24,8 +24,6 @@
 
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import java.awt.*;
@@ -77,7 +75,7 @@ public class ColorWheelPanel extends JPanel {
         }
     }
 
-    public void setColor(@NotNull final Color color, final Object source) {
+    public void setColor(final Color color, final Object source) {
         float[] hsb = new float[3];
         Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsb);
 

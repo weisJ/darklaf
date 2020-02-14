@@ -23,8 +23,6 @@
  */
 package ui;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -44,7 +42,7 @@ final class SolidColorIcon implements Icon {
     }
 
     @Override
-    public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y) {
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         g.setColor(color);
         g.fillRect(x, y, getIconWidth(), getIconHeight());
     }

@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.components.border.BubbleBorder;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -68,10 +67,10 @@ public class DarkTooltipBorder implements Border {
                                          height - ins.top - ins.bottom);
     }
 
-    protected boolean isPlain(@NotNull final Component c) {
-        if (!(c instanceof JComponent)) return false;
-        Object prop = ((JComponent) c).getClientProperty("JToolTip.style");
-        return prop == ToolTipStyle.PLAIN || "plain".equals(prop);
+    public int getPointerOffset(final Component c, final Dimension dimension) {
+        if (isPlain(c)) return 0;
+        return bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
+                + shadowBorder.getShadowSize();
     }
 
     private void adjustInsets(final Insets si) {
@@ -165,10 +164,10 @@ public class DarkTooltipBorder implements Border {
         bubbleBorder.setPointerSize(height);
     }
 
-    public int getPointerOffset(final Component c, @NotNull final Dimension dimension) {
-        if (isPlain(c)) return 0;
-        return bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
-                + shadowBorder.getShadowSize();
+    protected boolean isPlain(final Component c) {
+        if (!(c instanceof JComponent)) return false;
+        Object prop = ((JComponent) c).getClientProperty("JToolTip.style");
+        return prop == ToolTipStyle.PLAIN || "plain".equals(prop);
     }
 
     public int getShadowSize(final Component c) {

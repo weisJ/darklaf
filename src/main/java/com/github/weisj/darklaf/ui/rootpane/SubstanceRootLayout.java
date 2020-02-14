@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.rootpane;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -40,7 +38,7 @@ class SubstanceRootLayout implements LayoutManager2 {
     public void removeLayoutComponent(final Component comp) {
     }
 
-    public Dimension preferredLayoutSize(@NotNull final Container parent) {
+    public Dimension preferredLayoutSize(final Container parent) {
         Dimension cpd, mbd, tpd;
         int cpWidth = 0;
         int cpHeight = 0;
@@ -86,7 +84,7 @@ class SubstanceRootLayout implements LayoutManager2 {
                              cpHeight + mbHeight + tpHeight + i.top + i.bottom);
     }
 
-    public Dimension minimumLayoutSize(@NotNull final Container parent) {
+    public Dimension minimumLayoutSize(final Container parent) {
         Dimension cpd, mbd, tpd;
         int cpWidth = 0;
         int cpHeight = 0;
@@ -174,7 +172,7 @@ class SubstanceRootLayout implements LayoutManager2 {
     public void addLayoutComponent(final Component comp, final Object constraints) {
     }
 
-    public Dimension maximumLayoutSize(@NotNull final Container target) {
+    public Dimension maximumLayoutSize(final Container target) {
         Dimension cpd, mbd, tpd;
         int cpWidth = Integer.MAX_VALUE;
         int cpHeight = Integer.MAX_VALUE;

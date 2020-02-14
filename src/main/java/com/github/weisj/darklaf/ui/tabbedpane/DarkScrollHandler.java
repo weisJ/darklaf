@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.event.MouseEvent;
 
 public class DarkScrollHandler extends DarkHandler {
@@ -34,7 +32,7 @@ public class DarkScrollHandler extends DarkHandler {
     }
 
     @Override
-    public void mousePressed(@NotNull final MouseEvent e) {
+    public void mousePressed(final MouseEvent e) {
         ui.scrollableTabSupport.timer.stop();
         super.mousePressed(ui.convertEvent(e));
         ui.scrollableTabSupport.endScroll();

@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.ui.radiobutton;
 
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.MenuItemLayoutHelper;
 
 import javax.swing.*;
@@ -48,8 +46,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     private Icon radioSelectedDisabledIcon;
     private Icon radioSelectedFocusedIcon;
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonMenuItemUI();
     }
@@ -64,14 +61,14 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     }
 
     @Override
-    protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
-                                  @NotNull final MenuItemLayoutHelper.LayoutResult lr,
+    protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
+                                  final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
         Rectangle rect = lr.getCheckRect();
         getRadioIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y);
     }
 
-    protected Icon getRadioIcon(@NotNull final AbstractButton b) {
+    protected Icon getRadioIcon(final AbstractButton b) {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();

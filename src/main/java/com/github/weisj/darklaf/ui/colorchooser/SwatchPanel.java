@@ -27,9 +27,6 @@ import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -134,15 +131,14 @@ abstract class SwatchPanel extends JPanel {
         return getColorForCell(selCol, selRow);
     }
 
-    @Nullable
-    @Contract(pure = true)
+
     private Color getColorForCell(final int column, final int row) {
         int index = (row * numSwatches.width) + column;
         if (index >= colors.length) return null;
         return colors[(row * numSwatches.width) + column];
     }
 
-    public void paintComponent(@NotNull final Graphics g) {
+    public void paintComponent(final Graphics g) {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
         for (int row = 0; row < numSwatches.height; row++) {
@@ -167,7 +163,7 @@ abstract class SwatchPanel extends JPanel {
         }
     }
 
-    @Contract(pure = true)
+
     private int getYForRow(final int row) {
         return row * (swatchSize.height + gap.height);
     }
@@ -186,7 +182,7 @@ abstract class SwatchPanel extends JPanel {
         return new Dimension(x, y);
     }
 
-    public String getToolTipText(@NotNull final MouseEvent e) {
+    public String getToolTipText(final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
         if (color == null) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
@@ -218,8 +214,8 @@ abstract class SwatchPanel extends JPanel {
         return new Point(column, row);
     }
 
-    @NotNull
-    protected Rectangle getSwatchBounds(@NotNull final MouseEvent e) {
+
+    protected Rectangle getSwatchBounds(final MouseEvent e) {
         Point p = getCoordinatesForLocation(e.getX(), e.getY());
         int x = getXForColumn(p.x);
         int y = getYForRow(p.y);

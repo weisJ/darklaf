@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.color;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 
 /**
@@ -61,12 +58,11 @@ public class DarkColorModelHSB extends DarkColorModel {
     }
 
     @Override
-    public int[] getValuesFromColor(@NotNull final Color color) {
+    public int[] getValuesFromColor(final Color color) {
         return RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    @Contract("_, _, _ -> new")
-    @NotNull
+
     public static int[] RGBtoHSB(final int r, final int g, final int b) {
         double hue, saturation, brightness;
         int cmax = Math.max(r, g);
@@ -105,7 +101,7 @@ public class DarkColorModelHSB extends DarkColorModel {
     }
 
     @Override
-    public Color getColorFromValues(@NotNull final int[] values) {
+    public Color getColorFromValues(final int[] values) {
         int[] rgb = HSBtoRGB(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0);
         return new Color(rgb[0], rgb[1], rgb[2]);
     }

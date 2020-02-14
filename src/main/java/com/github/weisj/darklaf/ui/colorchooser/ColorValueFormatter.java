@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.colorchooser;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -56,7 +54,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     private JFormattedTextField text;
     private final DocumentFilter filter = new DocumentFilter() {
         @Override
-        public void remove(@NotNull final FilterBypass fb, final int offset,
+        public void remove(final FilterBypass fb, final int offset,
                            final int length) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() - length)) {
                 fb.remove(offset, length);
@@ -67,8 +65,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
 
         @Override
-        public void insertString(@NotNull final FilterBypass fb, final int offset,
-                                 @NotNull final String text, final AttributeSet set) throws BadLocationException {
+        public void insertString(final FilterBypass fb, final int offset,
+                                 final String text, final AttributeSet set) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length())
                     && isValid(text)) {
                 StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
@@ -83,8 +81,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
 
         @Override
-        public void replace(@NotNull final FilterBypass fb, final int offset, final int length,
-                            @NotNull final String text, final AttributeSet set) throws BadLocationException {
+        public void replace(final FilterBypass fb, final int offset, final int length,
+                            final String text, final AttributeSet set) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length() - length) && isValid(text)) {
                 StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.replace(offset, offset + length, text);
@@ -107,9 +105,9 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         errorTimer.setRepeats(false);
     }
 
-    @NotNull
+
     static ColorValueFormatter init(final DarkColorModel model, final int index,
-                                    final boolean hex, @NotNull final JFormattedTextField text) {
+                                    final boolean hex, final JFormattedTextField text) {
         ColorValueFormatter formatter = new ColorValueFormatter(model, index, hex);
         text.setFormatterFactory(new DefaultFormatterFactory(formatter));
         text.setMinimumSize(text.getPreferredSize());
@@ -151,7 +149,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         this.transparencyEnabled = transparencyEnabled;
     }
 
-    public void focusGained(@NotNull final FocusEvent event) {
+    public void focusGained(final FocusEvent event) {
         Object source = event.getSource();
         if (source instanceof JFormattedTextField) {
             this.text = (JFormattedTextField) source;
@@ -167,7 +165,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         SwingUtilities.invokeLater(() -> text.select(0, 0));
     }
 
-    @Contract(pure = true)
+
     private boolean isValid(final int length) {
         return (0 <= length) && (length <= getLength());
     }
@@ -176,12 +174,12 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         return hex ? getHexLength() : String.valueOf(model.getMaximum(fieldIndex)).length();
     }
 
-    @Contract(pure = true)
+
     private int getHexLength() {
         return transparencyEnabled ? 8 : 6;
     }
 
-    private boolean isValid(@NotNull final String text) {
+    private boolean isValid(final String text) {
         int length = text.length();
         for (int i = 0; i < length; i++) {
             char ch = text.charAt(i);
@@ -202,7 +200,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     }
 
     @Override
-    public Object stringToValue(@NotNull final String text) throws ParseException {
+    public Object stringToValue(final String text) throws ParseException {
         try {
             if (text.isEmpty()) {
                 return model.getDefault(fieldIndex);
@@ -238,7 +236,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
     }
 
-    @Contract("null -> fail")
+
     @Override
     public String valueToString(final Object object) throws ParseException {
         if (object instanceof Integer && !hex) {
@@ -258,7 +256,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         throw new ParseException("illegal object", 0);
     }
 
-    @Contract(pure = true)
+
     @Override
     protected DocumentFilter getDocumentFilter() {
         return this.filter;

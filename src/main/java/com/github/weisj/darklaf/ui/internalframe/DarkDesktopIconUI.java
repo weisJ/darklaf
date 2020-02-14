@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.ComponentUI;
@@ -112,7 +110,7 @@ public class DarkDesktopIconUI extends BasicDesktopIconUI {
     }
 
     class TitleListener implements PropertyChangeListener {
-        public void propertyChange(@NotNull final PropertyChangeEvent e) {
+        public void propertyChange(final PropertyChangeEvent e) {
             if (e.getPropertyName().equals("title")) {
                 button.setText((String) e.getNewValue());
             }

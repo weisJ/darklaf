@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 import java.util.Map;
 
@@ -35,16 +32,16 @@ import java.util.Map;
  */
 public final class GraphicsUtil {
 
-    @Contract(pure = true)
+
     private GraphicsUtil() {
     }
 
-    @NotNull
+
     public static GraphicsContext setupAntialiasing(final Graphics g2) {
         return setupAntialiasing(g2, true, false);
     }
 
-    @NotNull
+
     public static GraphicsContext setupAntialiasing(final Graphics g2, final boolean enableAA,
                                                     final boolean ignoreSystemSettings) {
         GraphicsContext config = new GraphicsContext(g2);
@@ -64,7 +61,7 @@ public final class GraphicsUtil {
         return config;
     }
 
-    @NotNull
+
     public static GraphicsContext setupAAPainting(final Graphics g) {
         GraphicsContext config = new GraphicsContext(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -73,7 +70,7 @@ public final class GraphicsUtil {
         return config;
     }
 
-    @NotNull
+
     public static GraphicsContext paintWithAlpha(final Graphics g, final float alpha) {
         assert 0.0F <= alpha && alpha <= 1.0F : "alpha should be in range 0.0f .. 1.0f";
 
@@ -83,7 +80,7 @@ public final class GraphicsUtil {
         return config;
     }
 
-    @NotNull
+
     public static GraphicsContext setupStrokePainting(final Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2);

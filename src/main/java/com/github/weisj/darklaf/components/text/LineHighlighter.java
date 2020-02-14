@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.components.text;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -59,8 +57,8 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
         this.color = color;
     }
 
-    public void paint(@NotNull final Graphics g, final int p0, final int p1, final Shape bounds,
-                      @NotNull final JTextComponent c) {
+    public void paint(final Graphics g, final int p0, final int p1, final Shape bounds,
+                      final JTextComponent c) {
         try {
             Rectangle r = c.modelToView(c.getCaretPosition());
             g.setColor(color);

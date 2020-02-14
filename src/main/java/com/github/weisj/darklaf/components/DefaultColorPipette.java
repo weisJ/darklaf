@@ -27,7 +27,6 @@ import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.TimerUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +51,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
     private Graphics2D zoomGraphics;
     private BufferedImage zoomImage;
 
-    public DefaultColorPipette(@NotNull final JComponent parent, @NotNull final ColorListener colorListener) {
+    public DefaultColorPipette(final JComponent parent, final ColorListener colorListener) {
         super(parent, colorListener);
         timer = TimerUtil.createNamedTimer("DefaultColorPipette", 5, e -> updatePipette());
         borderColor = UIManager.getColor("ColorChooser.pipetteBorderColor");
@@ -63,7 +62,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
     }
 
     @Override
-    protected Color getPixelColor(@NotNull final Point location) {
+    protected Color getPixelColor(final Point location) {
         return super.getPixelColor(getHotSPot(location));
     }
 
@@ -81,7 +80,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
     }
 
     @Override
-    @NotNull
+
     protected Window getOrCreatePickerWindow() {
         Window pickerWindow = getPickerWindow();
         if (pickerWindow == null) {
@@ -122,7 +121,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
     }
 
     @Override
-    protected Point adjustPickerLocation(@NotNull final Point mouseLocation, @NotNull final Window pickerWindow) {
+    protected Point adjustPickerLocation(final Point mouseLocation, final Window pickerWindow) {
         Point p = super.adjustPickerLocation(mouseLocation, pickerWindow);
         p.x += DIALOG_SIZE / 2 - MOUSE_OFF_X;
         p.y -= DIALOG_SIZE / 2 + MOUSE_OFF_Y;
@@ -164,7 +163,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
         zoomImage = null;
     }
 
-    protected Point getHotSPot(@NotNull final Point location) {
+    protected Point getHotSPot(final Point location) {
         location.x -= MOUSE_OFF_X - 2;
         location.y -= MOUSE_OFF_Y + 2;
         return location;

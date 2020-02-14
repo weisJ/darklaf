@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -107,8 +105,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected Component southComp;
     protected Component westComp;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabbedPaneUI();
     }
@@ -194,14 +191,14 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected void paintTabArea(@NotNull final Graphics g, final int tabPlacement, final int selectedIndex) {
+    protected void paintTabArea(final Graphics g, final int tabPlacement, final int selectedIndex) {
         paintTabAreaBackground(g, tabPlacement);
         paintTabAreaBorder(g, tabPlacement);
         super.paintTabArea(g, tabPlacement, selectedIndex);
     }
 
     @Override
-    protected void paintTabBackground(@NotNull final Graphics g, final int tabPlacement, final int tabIndex,
+    protected void paintTabBackground(final Graphics g, final int tabPlacement, final int tabIndex,
                                       final int x,
                                       final int y, final int w, final int h,
                                       final boolean isSelected) {
@@ -210,7 +207,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected void paintTabBorder(@NotNull final Graphics g, final int tabPlacement, final int tabIndex,
+    protected void paintTabBorder(final Graphics g, final int tabPlacement, final int tabIndex,
                                   final int x, final int y, final int w, final int h,
                                   final boolean isSelected) {
         g.setColor(getTabBorderColor());
@@ -277,27 +274,25 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         installTabContainer();
     }
 
-    protected void paintDrop(@NotNull final Graphics g) {
-        g.setColor(getDropColor());
-        GraphicsContext context = new GraphicsContext(g);
-        if (!scrollableTabLayoutEnabled()) {
-            ((Graphics2D) g).setComposite(DarkUIUtil.DROP_ALPHA);
+    protected void paintTabAreaBackground(final Graphics g, final int tabPlacement) {
+        g.setColor(getTabAreaBackground());
+        Rectangle b = getTabAreaBounds();
+        if (scrollableTabLayoutEnabled()) {
+            b.setLocation(0, 0);
         }
-        switch (tabPane.getTabPlacement()) {
-            case TOP:
-                g.fillRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height - 1);
-                break;
+        switch (tabPlacement) {
             case BOTTOM:
-                g.fillRect(dropRect.x, dropRect.y + 1, dropRect.width, dropRect.height - 1);
-                break;
-            case LEFT:
-                g.fillRect(dropRect.x, dropRect.y, dropRect.width - 1, dropRect.height);
+                b.y++;
+            case TOP:
+                b.height--;
                 break;
             case RIGHT:
-                g.fillRect(dropRect.x + 1, dropRect.y, dropRect.width - 1, dropRect.height);
+                b.x++;
+            case LEFT:
+                b.width--;
                 break;
         }
-        context.restore();
+        g.fillRect(b.x, b.y, b.width, b.height);
     }
 
     protected Component wrapClientComponent(final Component component) {
@@ -365,25 +360,25 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                                        final boolean isSelected) {
     }
 
-    protected void paintTabAreaBackground(@NotNull final Graphics g, final int tabPlacement) {
-        g.setColor(getTabAreaBackground());
-        Rectangle b = getTabAreaBounds();
-        if (scrollableTabLayoutEnabled()) {
-            b.setLocation(0, 0);
-        }
+    private void paintTabAreaBorder(final Graphics g, final int tabPlacement) {
+        int width = tabPane.getWidth();
+        int height = tabPane.getHeight();
+        int y = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
+        int x = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
         switch (tabPlacement) {
-            case BOTTOM:
-                b.y++;
             case TOP:
-                b.height--;
+                paintTabAreaBorder(g, tabPlacement, 0, 0, width, y);
+                break;
+            case BOTTOM:
+                paintTabAreaBorder(g, tabPlacement, 0, height - y, width, y + 1);
+                break;
+            case LEFT:
+                paintTabAreaBorder(g, tabPlacement, 0, 0, x, height);
                 break;
             case RIGHT:
-                b.x++;
-            case LEFT:
-                b.width--;
+                paintTabAreaBorder(g, tabPlacement, width - x, 0, x, height);
                 break;
         }
-        g.fillRect(b.x, b.y, b.width, b.height);
     }
 
     protected boolean shouldRotateTabRuns(final int tabPlacement) {
@@ -487,32 +482,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
-    private void paintTabAreaBorder(@NotNull final Graphics g, final int tabPlacement) {
-        int width = tabPane.getWidth();
-        int height = tabPane.getHeight();
-        int y = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
-        int x = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
-        switch (tabPlacement) {
-            case TOP:
-                paintTabAreaBorder(g, tabPlacement, 0, 0, width, y);
-                break;
-            case BOTTOM:
-                paintTabAreaBorder(g, tabPlacement, 0, height - y, width, y + 1);
-                break;
-            case LEFT:
-                paintTabAreaBorder(g, tabPlacement, 0, 0, x, height);
-                break;
-            case RIGHT:
-                paintTabAreaBorder(g, tabPlacement, width - x, 0, x, height);
-                break;
-        }
-    }
-
-    protected Color getTabAreaBackground() {
-        return tabAreaBackground;
-    }
-
-    protected void paintTabAreaBorder(@NotNull final Graphics g, final int tabPlacement,
+    protected void paintTabAreaBorder(final Graphics g, final int tabPlacement,
                                       final int x, final int y, final int w, final int h) {
         g.setColor(getTabBorderColor());
         switch (tabPlacement) {
@@ -529,6 +499,33 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                 g.fillRect(x, y, 1, h);
                 break;
         }
+    }
+
+    protected Color getTabAreaBackground() {
+        return tabAreaBackground;
+    }
+
+    protected void paintDrop(final Graphics g) {
+        g.setColor(getDropColor());
+        GraphicsContext context = new GraphicsContext(g);
+        if (!scrollableTabLayoutEnabled()) {
+            ((Graphics2D) g).setComposite(DarkUIUtil.DROP_ALPHA);
+        }
+        switch (tabPane.getTabPlacement()) {
+            case TOP:
+                g.fillRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height - 1);
+                break;
+            case BOTTOM:
+                g.fillRect(dropRect.x, dropRect.y + 1, dropRect.width, dropRect.height - 1);
+                break;
+            case LEFT:
+                g.fillRect(dropRect.x, dropRect.y, dropRect.width - 1, dropRect.height);
+                break;
+            case RIGHT:
+                g.fillRect(dropRect.x + 1, dropRect.y, dropRect.width - 1, dropRect.height);
+                break;
+        }
+        context.restore();
     }
 
     protected void layoutLeadingComponent(final Component comp, final int tabWidth, final int tabHeight,
@@ -611,7 +608,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         tabPane.repaint();
     }
 
-    protected MouseEvent convertEvent(@NotNull final MouseEvent e) {
+    protected MouseEvent convertEvent(final MouseEvent e) {
         Point p = e.getPoint();
         Point pos = scrollableTabSupport.viewport.getLocation();
         p.x += pos.x;

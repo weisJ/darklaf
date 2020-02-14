@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Nullable;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -36,7 +35,7 @@ public final class ReflectionUtil {
      * @param newLogger the new logger to use.
      * @return the logger that was used previously.
      */
-    @Nullable
+
     public static Object changeIllegalAccessLogger(final Object newLogger) {
         try {
             Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");

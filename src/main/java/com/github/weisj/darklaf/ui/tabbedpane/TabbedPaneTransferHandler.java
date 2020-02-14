@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.util.ImageUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -111,7 +109,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
      * @return Whether or not the import was successful.
      */
     @Override
-    public boolean importData(final JComponent c, @NotNull final Transferable t) {
+    public boolean importData(final JComponent c, final Transferable t) {
 
         boolean successful = false;
         if (hasTabFlavor(t.getTransferDataFlavors()) && mouseLocation != null) {
@@ -185,7 +183,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         return currentTransferable;
     }
 
-    protected void createDragImage(@NotNull final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
+    protected void createDragImage(final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
         Image tabImage = ImageUtil.scaledImageFromComponent(tabbedPane, currentTransferable.transferData.tabBounds);
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
@@ -220,7 +218,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         return false;
     }
 
-    @Contract("null -> null")
+
     private DarkTabbedPaneUI supportsIndicator(final Component c) {
         JComponent jc = (JComponent) c;
         ComponentUI ui;
@@ -242,7 +240,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     @Override
-    public void dragOver(@NotNull final DropTargetDragEvent e) {
+    public void dragOver(final DropTargetDragEvent e) {
         e.getDropTargetContext().getComponent().setCursor(Cursor.getDefaultCursor());
         mouseLocation = e.getLocation();
 
@@ -275,7 +273,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     @Override
-    public void dragExit(@NotNull final DropTargetEvent e) {
+    public void dragExit(final DropTargetEvent e) {
         Component c = e.getDropTargetContext().getComponent();
         lastTab = -1;
         DarkTabbedPaneUI ui = supportsIndicator(c);
@@ -285,7 +283,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     @Override
-    public void drop(@NotNull final DropTargetDropEvent e) {
+    public void drop(final DropTargetDropEvent e) {
         Component c = e.getDropTargetContext().getComponent();
         DarkTabbedPaneUI ui = supportsIndicator(c);
         if (ui != null) {
@@ -333,7 +331,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
 
         private final TabTransferData transferData;
 
-        public TabTransferable(@NotNull final JTabbedPane tabbedPane) {
+        public TabTransferable(final JTabbedPane tabbedPane) {
             int index = tabbedPane.getSelectedIndex();
             transferData = new TabTransferData(tabbedPane, index);
         }
@@ -353,7 +351,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             return tabFlavor.equals(flavor);
         }
 
-        @NotNull
+
         @Override
         public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
             if (!isDataFlavorSupported(flavor)) {
@@ -371,8 +369,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             private final int tabIndex;
             private final Rectangle tabBounds;
 
-            @Contract(pure = true)
-            public TabTransferData(@NotNull final JTabbedPane tabbedPane, final int tabIndex) {
+
+            public TabTransferData(final JTabbedPane tabbedPane, final int tabIndex) {
                 this.sourceTabbedPane = tabbedPane;
                 this.tabIndex = tabIndex;
                 this.tabBounds = tabbedPane.getBoundsAt(tabIndex);
@@ -391,7 +389,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         /**
          * a Drag gesture has been recognized
          */
-        public void dragGestureRecognized(@NotNull final DragGestureEvent dge) {
+        public void dragGestureRecognized(final DragGestureEvent dge) {
             JComponent c = (JComponent) dge.getComponent();
             TabbedPaneTransferHandler th = (TabbedPaneTransferHandler) c.getTransferHandler();
             Transferable t = th.createTransferable(c);
@@ -440,7 +438,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         /**
          * as the operation completes
          */
-        public void dragDropEnd(@NotNull final DragSourceDropEvent dsde) {
+        public void dragDropEnd(final DragSourceDropEvent dsde) {
             DragSourceContext dsc = dsde.getDragSourceContext();
             JComponent c = (JComponent) dsc.getComponent();
             if (dsde.getDropSuccess()) {

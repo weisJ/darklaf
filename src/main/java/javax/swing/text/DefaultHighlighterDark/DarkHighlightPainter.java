@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -120,7 +118,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
      * @param c      the editor
      */
     @Override
-    public void paint(final Graphics g, final int offs0, final int offs1, @NotNull final Shape bounds,
+    public void paint(final Graphics g, final int offs0, final int offs1, final Shape bounds,
                       final JTextComponent c) {
         Rectangle alloc = bounds.getBounds();
         Graphics2D g2d = (Graphics2D) g;
@@ -188,7 +186,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     @Override
     public Shape paintLayer(final Graphics g, final int offs0, final int offs1,
-                            final Shape bounds, final JTextComponent c, @NotNull final View view) {
+                            final Shape bounds, final JTextComponent c, final View view) {
         color = (Color) view.getAttributes().getAttribute(StyleConstantsEx.SelectedForeground);
         if (color == null) {
             color = c.getSelectedTextColor();
@@ -229,17 +227,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return dirtyShape;
     }
 
-    private void setupColor(final Graphics2D g2d, @NotNull final JTextComponent c) {
-        Paint paint = getPaint();
-        if (paint == null) {
-            g2d.setColor(c.getSelectionColor());
-        } else {
-            g2d.setPaint(paint);
-        }
-    }
-
     protected Shape paintLayerImpl(final Graphics2D g2d, final int offs0, final int offs1,
-                                   @NotNull final JTextComponent c) throws BadLocationException {
+                                   final JTextComponent c) throws BadLocationException {
         Shape dirtyShape;
         Rectangle posStart = c.modelToView(c.getSelectionStart());
         Rectangle posEnd = c.modelToView(c.getSelectionEnd());
@@ -325,7 +314,33 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return dirtyShape;
     }
 
-    @NotNull
+    private Shape paintSelectionStart(final Graphics2D g2d, final Rectangle r,
+                                      final JTextComponent c,
+                                      final Rectangle posStart,
+                                      final Rectangle posOffs0,
+                                      final boolean endBeforeStart, final boolean isSecondLastLine,
+                                      final boolean extendToEnd) {
+        if (DEBUG_COLOR) g2d.setColor(Color.RED);
+        Insets margin = c.getMargin();
+        boolean rounded = isRounded(c);
+        if (rounded && extendToEnd) r.width -= arcSize;
+        if (rounded) {
+            boolean roundLeftBottom = endBeforeStart && isSecondLastLine;
+            if (r.width < 2 * arcSize) r.width = 2 * arcSize;
+            paintRoundRect(g2d, r, arcSize, true, false, roundLeftBottom, false);
+            boolean drawCorner = posOffs0.equals(posStart) && !roundLeftBottom && r.x >= margin.left + arcSize;
+            if (drawCorner) {
+                paintStartArc(g2d, r);
+                r.x -= arcSize;
+                r.width += arcSize;
+            }
+        } else {
+            g2d.fillRect(r.x, r.y, r.width, r.height);
+        }
+        return r;
+    }
+
+
     private Shape paintMiddleSelection(final Graphics2D g, final Rectangle r, final JTextComponent c,
                                        final boolean toEndOfLine, final boolean toStartOfLine,
                                        final boolean isFirstLine, final boolean isLastLine,
@@ -350,8 +365,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     /*
      * Selection is contained to one line.
      */
-    @Contract("_, _, _, _, _ -> param3")
-    @NotNull
+
+
     private Shape paintSelection(final Graphics2D g2d, final JTextComponent c, final Rectangle r,
                                  final boolean selectionStart, final boolean selectionEnd) {
         if (DEBUG_COLOR) g2d.setColor(Color.BLUE);
@@ -363,43 +378,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return r;
     }
 
-    @Contract("_, _, _, _, _, _, _, _ -> param2")
-    @NotNull
-    private Shape paintSelectionStart(@NotNull final Graphics2D g2d, @NotNull final Rectangle r,
-                                      @NotNull final JTextComponent c,
-                                      @NotNull final Rectangle posStart,
-                                      final Rectangle posOffs0,
-                                      final boolean endBeforeStart, final boolean isSecondLastLine,
-                                      final boolean extendToEnd) {
-        if (DEBUG_COLOR) g2d.setColor(Color.RED);
-        Insets margin = c.getMargin();
-        boolean rounded = isRounded(c);
-        if (rounded && extendToEnd) r.width -= arcSize;
-        if (rounded) {
-            boolean roundLeftBottom = endBeforeStart && isSecondLastLine;
-            if (r.width < 2 * arcSize) r.width = 2 * arcSize;
-            paintRoundRect(g2d, r, arcSize, true, false, roundLeftBottom, false);
-            boolean drawCorner = posOffs0.equals(posStart) && !roundLeftBottom && r.x >= margin.left + arcSize;
-            if (drawCorner) {
-                paintStartArc(g2d, r);
-                r.x -= arcSize;
-                r.width += arcSize;
-            }
-        } else {
-            g2d.fillRect(r.x, r.y, r.width, r.height);
-        }
-        return r;
-    }
-
-    private boolean isRounded(final JTextComponent c) {
-        return !suppressRounded
-                && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty("JTextComponent.roundedSelection")));
-    }
-
-    @Contract("_, _, _, _, _, _, _, _, _ -> param2")
-    @NotNull
-    private Shape paintSelectionEnd(@NotNull final Graphics2D g2d, @NotNull final Rectangle r,
-                                    @NotNull final JTextComponent c, final Rectangle posStart,
+    private Shape paintSelectionEnd(final Graphics2D g2d, final Rectangle r,
+                                    final JTextComponent c, final Rectangle posStart,
                                     final boolean isFirstLine, final boolean isSecondLine,
                                     final boolean extendToStart, final boolean extendToEnd,
                                     final boolean endBeforeStart) {
@@ -427,7 +407,12 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return r;
     }
 
-    private Shape paintExtension(final Graphics2D g2d, @NotNull final JTextComponent c,
+    private boolean isRounded(final JTextComponent c) {
+        return !suppressRounded
+                && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty("JTextComponent.roundedSelection")));
+    }
+
+    private Shape paintExtension(final Graphics2D g2d, final JTextComponent c,
                                  final boolean isToEndOfLine, final boolean isToStartOfLine,
                                  final boolean isFirstLine, final boolean isLastLine,
                                  final boolean isSecondLine, final boolean isSecondLastLine,
@@ -476,7 +461,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return r;
     }
 
-    private void paintRoundRect(@NotNull final Graphics g, @NotNull final Rectangle r, final int arcSize,
+    private void paintRoundRect(final Graphics g, final Rectangle r, final int arcSize,
                                 final boolean leftTop, final boolean rightTop,
                                 final boolean leftBottom, final boolean rightBottom) {
         int aw = Math.min(arcSize, r.width);
@@ -486,6 +471,19 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         if (!leftBottom) g.fillRect(r.x, r.y + r.height - ah, aw, ah);
         if (!rightTop) g.fillRect(r.x + r.width - aw, r.y, aw, ah);
         if (!rightBottom) g.fillRect(r.x + r.width - aw, r.y + r.height - ah, aw, ah);
+    }
+
+    private void paintStartArc(final Graphics2D g2d, final Rectangle r) {
+        if (DEBUG_COLOR) g2d.setColor(Color.PINK);
+        Area arc = new Area(new Rectangle2D.Double(
+                r.x - arcSize + 0.25, r.y + r.height - arcSize + 0.25, arcSize, arcSize));
+        arc.subtract(new Area(new Arc2D.Double(
+                r.x - 2 * arcSize + 0.25,
+                r.y + r.height - 2 * arcSize + 0.25, 2 * arcSize, 2 * arcSize,
+                0, -90, Arc2D.Double.PIE)));
+        g2d.fill(arc);
+        r.x -= arcSize;
+        r.width += arcSize;
     }
 
     private void paintRoundedLeftRight(final Graphics g, final boolean left, final boolean right, final Rectangle r) {
@@ -503,20 +501,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         }
     }
 
-    private void paintStartArc(@NotNull final Graphics2D g2d, @NotNull final Rectangle r) {
-        if (DEBUG_COLOR) g2d.setColor(Color.PINK);
-        Area arc = new Area(new Rectangle2D.Double(
-                r.x - arcSize + 0.25, r.y + r.height - arcSize + 0.25, arcSize, arcSize));
-        arc.subtract(new Area(new Arc2D.Double(
-                r.x - 2 * arcSize + 0.25,
-                r.y + r.height - 2 * arcSize + 0.25, 2 * arcSize, 2 * arcSize,
-                0, -90, Arc2D.Double.PIE)));
-        g2d.fill(arc);
-        r.x -= arcSize;
-        r.width += arcSize;
-    }
-
-    private void paintEndArc(@NotNull final Graphics2D g2d, @NotNull final Rectangle r) {
+    private void paintEndArc(final Graphics2D g2d, final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
         Area arc = new Area(new Rectangle2D.Double(
                 r.x + r.width - 0.25, r.y - 0.25, arcSize, arcSize));
@@ -524,5 +509,14 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 r.x + r.width - 0.25,
                 r.y - 0.25, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.Double.PIE)));
         g2d.fill(arc);
+    }
+
+    private void setupColor(final Graphics2D g2d, final JTextComponent c) {
+        Paint paint = getPaint();
+        if (paint == null) {
+            g2d.setColor(c.getSelectionColor());
+        } else {
+            g2d.setPaint(paint);
+        }
     }
 }

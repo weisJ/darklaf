@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.rootpane;
 
-import org.jetbrains.annotations.Contract;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,7 +35,7 @@ public class TitlePaneIcon implements Icon {
     private final Icon inactiveIcon;
     private boolean active = true;
 
-    @Contract(pure = true)
+
     public TitlePaneIcon(final Icon active, final Icon inactive) {
         this.activeIcon = active;
         this.inactiveIcon = inactive;
@@ -52,7 +50,7 @@ public class TitlePaneIcon implements Icon {
         currentIcon().paintIcon(c, g, x, y);
     }
 
-    @Contract(pure = true)
+
     private Icon currentIcon() {
         return active ? activeIcon : inactiveIcon;
     }

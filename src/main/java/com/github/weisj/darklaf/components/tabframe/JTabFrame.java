@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.components.tabframe;
 
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.ui.tabframe.TabFrameTransferHandler;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -170,13 +168,15 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Get a list of tab components at the given alignment position.
+     * Insert a tab. A default tab component and popup component will be created.
      *
-     * @param a the alignment position.
-     * @return list of tab components at position.
+     * @param c     the component to add.
+     * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
+     * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
-    public List<TabFrameTab> tabsForAlignment(@NotNull final Alignment a) {
-        return tabLists[a.ordinal()];
+    public void insertTab(final Component c, final Alignment a, final int index) {
+        String title = c.getName();
+        insertTab(c, title == null ? "" : title, a, index);
     }
 
     /**
@@ -246,23 +246,11 @@ public class JTabFrame extends JComponent {
      * Insert a tab. A default tab component and popup component will be created.
      *
      * @param c     the component to add.
-     * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
-     * @param index the index to insert at.{@link TabFramePosition#getIndex()}
-     */
-    public void insertTab(@NotNull final Component c, final Alignment a, final int index) {
-        String title = c.getName();
-        insertTab(c, title == null ? "" : title, a, index);
-    }
-
-    /**
-     * Insert a tab. A default tab component and popup component will be created.
-     *
-     * @param c     the component to add.
      * @param title the title of the component.
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
-    public void insertTab(@NotNull final Component c, final String title, final Alignment a, final int index) {
+    public void insertTab(final Component c, final String title, final Alignment a, final int index) {
         insertTab(c, title, null, a, index);
     }
 
@@ -275,7 +263,7 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
-    public void insertTab(@NotNull final Component c, final String title, final Icon icon, final Alignment a,
+    public void insertTab(final Component c, final String title, final Icon icon, final Alignment a,
                           final int index) {
         TabFramePopup popup = new PanelPopup(title, icon, c);
         insertTab(popup, title, icon, a, index);
@@ -290,7 +278,7 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
-    public void insertTab(@NotNull final TabFramePopup c, final String title, final Icon icon, final Alignment a,
+    public void insertTab(final TabFramePopup c, final String title, final Icon icon, final Alignment a,
                           final int index) {
         if (a == Alignment.CENTER) {
             return;
@@ -306,7 +294,7 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
-    public void insertTab(@NotNull final TabFramePopup c, final TabFrameTab tab, final Alignment a, final int index) {
+    public void insertTab(final TabFramePopup c, final TabFrameTab tab, final Alignment a, final int index) {
         if (a == Alignment.CENTER) {
             return;
         }
@@ -318,14 +306,10 @@ public class JTabFrame extends JComponent {
         c.setIndex(index);
     }
 
-    protected TabFrameTab createDefaultTab(final String text, final Icon icon, final Alignment a, final int index) {
-        return new TabFrameTabLabel(text, icon, a, index, this);
-    }
-
     /*
      * Inserts a tab component at the given position.
      */
-    private void insertTabComp(@NotNull final TabFrameTab tabComp, final Alignment a, final int index) {
+    private void insertTabComp(final TabFrameTab tabComp, final Alignment a, final int index) {
         tabComp.setOrientation(a);
         getTabContainer(a).add(tabComp.getComponent());
         List<TabFrameTab> tabs = tabsForAlignment(a);
@@ -340,13 +324,17 @@ public class JTabFrame extends JComponent {
         tabs.add(index, tabComp);
     }
 
+    protected TabFrameTab createDefaultTab(final String text, final Icon icon, final Alignment a, final int index) {
+        return new TabFrameTabLabel(text, icon, a, index, this);
+    }
+
     /**
      * Get a list of components at the given alignment position.
      *
      * @param a the alignment position.
      * @return list of components at position.
      */
-    public List<TabFramePopup> compsForAlignment(@NotNull final Alignment a) {
+    public List<TabFramePopup> compsForAlignment(final Alignment a) {
         return popupLists[a.ordinal()];
     }
 
@@ -356,8 +344,8 @@ public class JTabFrame extends JComponent {
      * @param a the alignment position.{@link TabFramePosition#getAlignment()}
      * @return the tab container.
      */
-    @Contract(pure = true)
-    public JComponent getTabContainer(@NotNull final Alignment a) {
+
+    public JComponent getTabContainer(final Alignment a) {
         switch (a) {
             case NORTH:
             case NORTH_EAST:
@@ -376,6 +364,16 @@ public class JTabFrame extends JComponent {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    /**
+     * Get a list of tab components at the given alignment position.
+     *
+     * @param a the alignment position.
+     * @return list of tab components at position.
+     */
+    public List<TabFrameTab> tabsForAlignment(final Alignment a) {
+        return tabLists[a.ordinal()];
     }
 
     /**
@@ -461,7 +459,7 @@ public class JTabFrame extends JComponent {
     /*
      * Set the tab component at the given position.
      */
-    private void setTabComponent(@NotNull final TabFrameTab tab, final Alignment a, final int index) {
+    private void setTabComponent(final TabFrameTab tab, final Alignment a, final int index) {
         List<TabFrameTab> tabs = tabsForAlignment(a);
         TabFrameTab oldComp = tabs.get(index);
         getTabContainer(a).remove(oldComp.getComponent());
@@ -528,7 +526,7 @@ public class JTabFrame extends JComponent {
      * @param index   the index.{@link TabFramePosition#getIndex()}
      * @param enabled true if visible.
      */
-    public void toggleTab(@NotNull final Alignment a, final int index, final boolean enabled) {
+    public void toggleTab(final Alignment a, final int index, final boolean enabled) {
         int oldIndex = selectedIndices[a.getIndex()];
         if (content.isEnabled(a) == enabled && oldIndex == index) return;
         TabFrameTab compAtIndex = getTabComponentAt(a, index);
@@ -565,7 +563,7 @@ public class JTabFrame extends JComponent {
     /*
      * Set the visibility of the popup.
      */
-    private void setPopupVisibility(@NotNull final TabFrameTab tabComponent,
+    private void setPopupVisibility(final TabFrameTab tabComponent,
                                     final boolean selected) {
         Alignment a = tabComponent.getOrientation();
         TabFramePopup c = compsForAlignment(a).get(tabComponent.getIndex());
@@ -669,7 +667,7 @@ public class JTabFrame extends JComponent {
      * @param tabComp the tab to move.
      * @param a       the new alignment position.{@link TabFramePosition#getAlignment()}
      */
-    public void moveTab(@NotNull final TabFrameTab tabComp, final Alignment a) {
+    public void moveTab(final TabFrameTab tabComp, final Alignment a) {
         if (a == tabComp.getOrientation()) {
             return;
         }
@@ -823,7 +821,7 @@ public class JTabFrame extends JComponent {
      * @param a the alignment position.{@link TabFramePosition#getAlignment()}
      * @return the peer position.{@link TabFramePosition#getAlignment()}
      */
-    public Alignment getPeer(@NotNull final Alignment a) {
+    public Alignment getPeer(final Alignment a) {
         switch (a) {
             case NORTH:
             case SOUTH:
@@ -889,7 +887,7 @@ public class JTabFrame extends JComponent {
      * @param a the alignment position.{@link TabFramePosition#getAlignment()}
      * @return the current selected index at the alignment position.
      */
-    public int getSelectedIndex(@NotNull final Alignment a) {
+    public int getSelectedIndex(final Alignment a) {
         return selectedIndices[a.ordinal()];
     }
 
@@ -954,7 +952,7 @@ public class JTabFrame extends JComponent {
         private Alignment a;
         private int index;
 
-        @Contract(pure = true)
+
         public TabFramePosition(final Alignment a, final int index) {
             this.a = a;
             this.index = index;

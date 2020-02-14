@@ -30,7 +30,6 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.util.Pair;
 import com.kitfox.svg.app.beans.SVGIcon;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
@@ -86,7 +85,7 @@ public class AllIcons {
         });
     }
 
-    @NotNull
+
     private static List<Pair<String, Icon>> loadIcons() throws URISyntaxException {
         List<Pair<String, Icon>> list = new ArrayList<>();
         for (String folder : FOLDERS) {
@@ -108,7 +107,7 @@ public class AllIcons {
     }
 
     private static File[] getResourceFolderFiles(final String folder,
-                                                 @NotNull final Class<?> clazz) throws URISyntaxException {
+                                                 final Class<?> clazz) throws URISyntaxException {
         URL url = clazz.getResource(folder);
         return new File(url.toURI()).listFiles();
     }

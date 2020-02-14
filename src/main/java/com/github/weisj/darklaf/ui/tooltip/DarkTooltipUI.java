@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.ui.tooltip;
 
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -51,7 +49,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     protected JToolTip toolTip;
     protected MouseListener mouseListener = new MouseAdapter() {
         @Override
-        public void mouseEntered(@NotNull final MouseEvent e) {
+        public void mouseEntered(final MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) return;
             /*
              * We redispatch the event to the ToolTipManager with a corrected location.
@@ -71,7 +69,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
 
         @Override
-        public void mouseExited(@NotNull final MouseEvent e) {
+        public void mouseExited(final MouseEvent e) {
             boolean inside = isInside(e);
             if (!inside) {
                 ToolTipManager.sharedInstance().mouseExited(
@@ -83,7 +81,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     };
     protected MouseListener exitListener = new MouseAdapter() {
         @Override
-        public void mouseExited(@NotNull final MouseEvent e) {
+        public void mouseExited(final MouseEvent e) {
             ToolTipManager.sharedInstance().mouseExited(
                     new MouseEvent(toolTip.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
                                    Integer.MIN_VALUE, Integer.MIN_VALUE, e.getClickCount(), e.isPopupTrigger(),
@@ -91,9 +89,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     };
 
-    @NotNull
-    @Contract("_ -> new")
-    public static ComponentUI createUI(@NotNull final JComponent c) {
+
+    public static ComponentUI createUI(final JComponent c) {
         if (Boolean.TRUE.equals(c.getClientProperty("JComponent.plainTooltip"))) {
             return BasicToolTipUI.createUI(c);
         } else {
@@ -101,13 +98,13 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     }
 
-    protected boolean isInside(@NotNull final MouseEvent e) {
+    protected boolean isInside(final MouseEvent e) {
         Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), toolTip);
         return contains(toolTip, p.x, p.y);
     }
 
     @Override
-    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+    public boolean contains(final JComponent c, final int x, final int y) {
         Border b = c.getBorder();
         if (b instanceof DarkTooltipBorder) {
             Area insideArea = ((DarkTooltipBorder) b).getBackgroundArea(toolTip,
@@ -165,7 +162,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     @Override
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         if (((JToolTip) c).getTipText() == null) return;
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
@@ -175,7 +172,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         super.paint(g, c);
     }
 
-    public Dimension getPreferredSize(@NotNull final JComponent c) {
+    public Dimension getPreferredSize(final JComponent c) {
         Font font = c.getFont();
         FontMetrics fm = c.getFontMetrics(font);
         Insets insets = c.getInsets();
@@ -216,7 +213,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if (evt.getSource() instanceof JToolTip) {
             JToolTip tooltip = (JToolTip) evt.getSource();

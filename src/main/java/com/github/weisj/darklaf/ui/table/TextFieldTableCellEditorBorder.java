@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,8 +39,12 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
         borderColor = UIManager.getColor("TextField.border.enabled");
     }
 
+    protected static boolean parentLTR(final Component c) {
+        return c.getParent().getComponentOrientation().isLeftToRight();
+    }
+
     @Override
-    public void paintBorder(@NotNull final Component c, @NotNull final Graphics g, final int x, final int y,
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                             final int width, final int height) {
         g.setColor(borderColor);
         JTable table = DarkUIUtil.getParentOfType(JTable.class, c);
@@ -64,10 +66,6 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
         } else {
             DarkUIUtil.drawRect(g, x, y, width, height, 1);
         }
-    }
-
-    protected static boolean isInWrapper(@NotNull final Component c) {
-        return c.getParent() instanceof DarkTableCellEditor.IconWrapper;
     }
 
     @Override
@@ -92,11 +90,11 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
         return ins;
     }
 
-    protected static boolean parentLTR(@NotNull final Component c) {
-        return c.getParent().getComponentOrientation().isLeftToRight();
+    protected static boolean isInWrapper(final Component c) {
+        return c.getParent() instanceof DarkTableCellEditor.IconWrapper;
     }
 
-    @Contract("null -> false")
+
     protected static boolean isListEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.listCellEditor"))

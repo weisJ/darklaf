@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-
 import java.awt.*;
 import java.util.logging.Logger;
 
@@ -43,47 +41,47 @@ public final class Scale {
         LOGGER.info("Using screen scaling SCALE_X=" + SCALE_X + ", SCALE_Y=" + SCALE_Y);
     }
 
-    @Contract(pure = true)
+
     public static int scale(final int i) {
         return (int) (SCALE * i);
     }
 
-    @Contract(pure = true)
+
     public static float scale(final float f) {
         return (float) (SCALE * f);
     }
 
-    @Contract(pure = true)
+
     public static double scale(final double d) {
         return SCALE * d;
     }
 
-    @Contract(pure = true)
+
     public static int scaleWidth(final int i) {
         return (int) (SCALE_X * i);
     }
 
-    @Contract(pure = true)
+
     public static float scaleWidth(final float f) {
         return (float) (SCALE_X * f);
     }
 
-    @Contract(pure = true)
+
     public static double scaleWidth(final double d) {
         return SCALE_X * d;
     }
 
-    @Contract(pure = true)
+
     public static int scaleHeight(final int i) {
         return (int) (SCALE_Y * i);
     }
 
-    @Contract(pure = true)
+
     public static float scaleHeight(final float f) {
         return (float) (SCALE_Y * f);
     }
 
-    @Contract(pure = true)
+
     public static double scaleHeight(final double d) {
         return SCALE_Y * d;
     }

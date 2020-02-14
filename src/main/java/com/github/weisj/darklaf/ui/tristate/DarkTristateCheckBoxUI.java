@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.tristate;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.ui.checkbox.DarkCheckBoxUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -41,8 +39,7 @@ public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
     private Icon checkBoxIndeterminateDisabledIcon;
     private Icon checkBoxIndeterminateFocusedIcon;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTristateCheckBoxUI();
     }
@@ -56,7 +53,7 @@ public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
     }
 
     @Override
-    protected Icon getCheckIcon(@NotNull final AbstractButton b) {
+    protected Icon getCheckIcon(final AbstractButton b) {
         if (b instanceof TristateCheckBox) {
             TristateState state = ((TristateCheckBox) b).getState();
             if (state == TristateState.INDETERMINATE) {

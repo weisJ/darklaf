@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.components.alignment;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 import java.util.function.BiFunction;
 
@@ -67,7 +64,7 @@ public enum Alignment {
     private final BiFunction<Dimension, Rectangle, Point> alignInside;
     private final BiFunction<Dimension, Rectangle, Point> alignOutside;
 
-    @Contract(pure = true)
+
     Alignment(final BiFunction<Dimension, Rectangle, Point> alignInside,
               final BiFunction<Dimension, Rectangle, Point> alignOutside) {
         this.alignInside = alignInside;
@@ -83,11 +80,11 @@ public enum Alignment {
      * @param hint        preferred alignment.
      * @return fitting alignment. If none is found the default is {@link Alignment#CENTER}.
      */
-    @NotNull
-    public static Alignment getAlignment(@NotNull final Point point,
-                                         @NotNull final Dimension size,
-                                         @NotNull final Rectangle outerBounds,
-                                         @NotNull final Alignment hint) {
+
+    public static Alignment getAlignment(final Point point,
+                                         final Dimension size,
+                                         final Rectangle outerBounds,
+                                         final Alignment hint) {
         if (hint.canBeAligned(point, size, outerBounds)) {
             return hint;
         }
@@ -108,9 +105,9 @@ public enum Alignment {
      * @param outerBounds boundaries.
      * @return true if can be aligned.
      */
-    public boolean canBeAligned(@NotNull final Point point,
-                                @NotNull final Dimension size,
-                                @NotNull final Rectangle outerBounds) {
+    public boolean canBeAligned(final Point point,
+                                final Dimension size,
+                                final Rectangle outerBounds) {
         Point p = relativePos(size, point);
         return p.x >= outerBounds.x && p.y >= outerBounds.y
                 && p.x + size.width < outerBounds.x + outerBounds.width
@@ -124,7 +121,7 @@ public enum Alignment {
      * @param alignAt point to align at.
      * @return top/left position of aligned rectangle
      */
-    public Point relativePos(@NotNull final Dimension toAlign, @NotNull final Point alignAt) {
+    public Point relativePos(final Dimension toAlign, final Point alignAt) {
         return alignOutside(toAlign, new Rectangle(alignAt.x, alignAt.y, 0, 0));
     }
 
@@ -135,8 +132,8 @@ public enum Alignment {
      * @param innerBounds bounds of inside rectangle
      * @return top/left point of aligned rectangle
      */
-    public Point alignOutside(@NotNull final Dimension toAlign,
-                              @NotNull final Rectangle innerBounds) {
+    public Point alignOutside(final Dimension toAlign,
+                              final Rectangle innerBounds) {
         return this.alignOutside.apply(toAlign, innerBounds);
     }
 
@@ -146,7 +143,7 @@ public enum Alignment {
      *
      * @return the index.
      */
-    @Contract(pure = true)
+
     public int getIndex() {
         return this.ordinal();
     }
@@ -156,8 +153,8 @@ public enum Alignment {
      *
      * @return Alignment opposite on the compass.
      */
-    @Contract(pure = true)
-    @NotNull
+
+
     @SuppressWarnings("Duplicates")
     public Alignment opposite() {
         switch (this) {
@@ -184,8 +181,7 @@ public enum Alignment {
         }
     }
 
-    @NotNull
-    @Contract(pure = true)
+
     @SuppressWarnings("Duplicates")
     public Alignment anticlockwise() {
         switch (this) {
@@ -212,8 +208,7 @@ public enum Alignment {
         }
     }
 
-    @NotNull
-    @Contract(pure = true)
+
     @SuppressWarnings("Duplicates")
     public Alignment clockwise() {
         switch (this) {
@@ -240,9 +235,8 @@ public enum Alignment {
         }
     }
 
-    @NotNull
-    @Contract(pure = true)
-    public Insets maskInsets(@NotNull final Insets insets) {
+
+    public Insets maskInsets(final Insets insets) {
         switch (this) {
             case NORTH:
                 return new Insets(insets.top, 0, 0, 0);
@@ -274,8 +268,8 @@ public enum Alignment {
      * @param outerBounds bounds of outer rectangle
      * @return top/left point of aligned rectangle
      */
-    public Point alignInside(@NotNull final Dimension toAlign,
-                             @NotNull final Rectangle outerBounds) {
+    public Point alignInside(final Dimension toAlign,
+                             final Rectangle outerBounds) {
         return this.alignInside.apply(toAlign, outerBounds);
     }
 }

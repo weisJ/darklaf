@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.spinner;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -54,7 +53,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
     }
 
     @Override
-    public void paintBorder(@NotNull final Component c, final Graphics g2,
+    public void paintBorder(final Component c, final Graphics g2,
                             final int x, final int y, final int width, final int height) {
         boolean tableCellEditor = DarkSpinnerUI.isTableCellEditor(c);
         boolean treeCellEditor = !tableCellEditor && DarkSpinnerUI.isTreeCellEditor(c);
@@ -109,7 +108,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
         config.restore();
     }
 
-    protected Color getBorderColor(@NotNull final Component c) {
+    protected Color getBorderColor(final Component c) {
         return c.isEnabled() ? borderColor : inactiveBorderColor;
     }
 

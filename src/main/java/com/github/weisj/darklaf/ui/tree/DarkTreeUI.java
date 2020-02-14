@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.util.SystemInfo;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -75,7 +73,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             }
         }
 
-        private void handle(@NotNull final MouseEvent e) {
+        private void handle(final MouseEvent e) {
             final JTree tree = (JTree) e.getSource();
             if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
                 // if we can't stop any ongoing editing, do nothing
@@ -114,13 +112,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected Icon collapsed;
     private boolean myOldRepaintAllRowValue;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTreeUI();
     }
 
-    protected boolean isSelected(@NotNull final MouseEvent e) {
+    protected boolean isSelected(final MouseEvent e) {
         final JTree tree = (JTree) e.getSource();
         final int selected = tree.getClosestRowForLocation(e.getX(), e.getY());
         final int[] rows = tree.getSelectionRows();

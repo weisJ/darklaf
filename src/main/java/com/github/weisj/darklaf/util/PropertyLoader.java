@@ -26,9 +26,6 @@ package com.github.weisj.darklaf.util;
 import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
@@ -79,8 +76,8 @@ public final class PropertyLoader {
         objectsToLoad.clear();
     }
 
-    @NotNull
-    public static Properties loadProperties(@NotNull final Class<?> clazz, final String name, final String path) {
+
+    public static Properties loadProperties(final Class<?> clazz, final String name, final String path) {
         final Properties properties = new Properties();
         try (InputStream stream = clazz.getResourceAsStream(path + name + ".properties")) {
             properties.load(stream);
@@ -90,7 +87,7 @@ public final class PropertyLoader {
         return properties;
     }
 
-    public static void putProperties(@NotNull final Properties properties, final Properties accumulator,
+    public static void putProperties(final Properties properties, final Properties accumulator,
                                      final UIDefaults currentDefaults) {
         for (final String key : properties.stringPropertyNames()) {
             final String value = properties.getProperty(key);
@@ -105,17 +102,17 @@ public final class PropertyLoader {
         }
     }
 
-    private static Object parseValue(@NotNull final String key, @NotNull final String value,
+    private static Object parseValue(final String key, final String value,
                                      final Map<Object, Object> defaults) {
         return parseValue(key, value, false, defaults);
     }
 
-    private static String parseKey(@NotNull final String key) {
+    private static String parseKey(final String key) {
         return key.startsWith(REFERENCE_PREFIX) ? key.substring(REFERENCE_PREFIX.length()) : key;
     }
 
-    @Nullable
-    private static Object parseValue(@NotNull final String propertyKey, @NotNull final String value,
+
+    private static Object parseValue(final String propertyKey, final String value,
                                      final boolean ignoreRequest, final Map<Object, Object> defaults) {
         if ("null".equals(value)) {
             return null;
@@ -172,7 +169,7 @@ public final class PropertyLoader {
         return value;
     }
 
-    @NotNull
+
     private static Object parseInsets(final String value) {
         final List<String> numbers = StringUtil.split(value, ",");
         return new InsetsUIResource(
@@ -182,18 +179,17 @@ public final class PropertyLoader {
                 Integer.parseInt(numbers.get(3)));
     }
 
-    @NotNull
-    @Contract("_ -> new")
+
     private static Object parseFont(final String value) {
         try {
             final String[] decode = value.split("-");
             return new FontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
-        } catch (@NotNull final Exception e) {
+        } catch (final Exception e) {
             return new FontUIResource("Dialog", Font.PLAIN, 12);
         }
     }
 
-    private static Icon parseIcon(@NotNull final String value) {
+    private static Icon parseIcon(final String value) {
         String path = value;
         Dimension dim = new Dimension(16, 16);
         if (value.charAt(value.length() - 1) == ')') {
@@ -234,26 +230,26 @@ public final class PropertyLoader {
         return ICON_LOADER.getIcon(path, dim.width, dim.height);
     }
 
-    @NotNull
-    private static DimensionUIResource parseSize(@NotNull final String value) {
+
+    private static DimensionUIResource parseSize(final String value) {
         int[] dim = Arrays.stream(value.split(",", 2)).mapToInt(Integer::parseInt).toArray();
         return new DimensionUIResource(dim[0], dim[1]);
     }
 
-    @Nullable
-    private static Integer getInteger(@NotNull final String value) {
+
+    private static Integer getInteger(final String value) {
         try {
             return Integer.parseInt(value);
-        } catch (@NotNull final NumberFormatException ignored) {
+        } catch (final NumberFormatException ignored) {
             return null;
         }
     }
 
-    @Nullable
+
     private static Object parseObject(final String value) {
         try {
             return Class.forName(value).getDeclaredConstructor().newInstance();
-        } catch (@NotNull final Exception ignored) { }
+        } catch (final Exception ignored) { }
         return null;
     }
 
@@ -265,13 +261,13 @@ public final class PropertyLoader {
         final String value;
         final String key;
 
-        @Contract(pure = true)
+
         private ObjectRequest(final String key, final String value) {
             this.key = key;
             this.value = value;
         }
 
-        private void resolve(@NotNull final Map<String, Object> cache) {
+        private void resolve(final Map<String, Object> cache) {
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             if (cache.containsKey(value)) {
                 defaults.put(key, cache.get(value));
@@ -294,8 +290,7 @@ public final class PropertyLoader {
             }
         }
 
-        @NotNull
-        @Contract(pure = true)
+
         @Override
         public String toString() {
             return "[" + key + "," + value + "]";

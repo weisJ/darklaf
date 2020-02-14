@@ -28,8 +28,6 @@ import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.plaf.metal.MetalTaskPaneUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -46,8 +44,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     protected Icon openIcon;
     protected int arc;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTaskPaneUI();
     }
@@ -98,13 +95,13 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         protected Color color;
         protected int arc;
 
-        @Contract(pure = true)
+
         public DarkContentPaneBorder(final Color color, final int arc) {
             this.arc = arc;
             this.color = color;
         }
 
-        public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y,
+        public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                                 final int width, final int height) {
             Rectangle clip = g.getClip().getBounds();
             int h = height + arc;
@@ -134,7 +131,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     protected class DarkPaneBorder extends PaneBorder {
 
         @Override
-        protected void paintTitleBackground(@NotNull final JXTaskPane group, final Graphics g2) {
+        protected void paintTitleBackground(final JXTaskPane group, final Graphics g2) {
             Graphics2D g = (Graphics2D) g2;
             int w = group.getWidth();
             int h = getTitleHeight(group);
@@ -170,7 +167,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         }
 
         @Override
-        protected void paintExpandedControls(final JXTaskPane group, @NotNull final Graphics g, final int x,
+        protected void paintExpandedControls(final JXTaskPane group, final Graphics g, final int x,
                                              final int y, final int width, final int height) {
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(getPaintColor(group));

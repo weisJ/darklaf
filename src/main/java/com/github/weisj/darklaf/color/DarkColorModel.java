@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.color;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,12 +34,12 @@ public class DarkColorModel {
     private final String prefix;
     private final String[] labels;
 
-    @Contract(pure = true)
+
     public DarkColorModel() {
         this("rgb", "Red", "Green", "Blue");
     }
 
-    @Contract(pure = true)
+
     public DarkColorModel(final String name, final String... labels) {
         this.prefix = "ColorChooser." + name;
         this.labels = labels;
@@ -64,7 +61,7 @@ public class DarkColorModel {
         return 0;
     }
 
-    public final String getText(@NotNull final Component component, final String suffix) {
+    public final String getText(final Component component, final String suffix) {
         return UIManager.getString(this.prefix + suffix + "Text", component.getLocale());
     }
 
@@ -85,11 +82,11 @@ public class DarkColorModel {
         return new char[]{Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE};
     }
 
-    public int[] getValuesFromColor(@NotNull final Color color) {
+    public int[] getValuesFromColor(final Color color) {
         return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
     }
 
-    public Color getColorFromValues(@NotNull final int[] values) {
+    public Color getColorFromValues(final int[] values) {
         return new Color(values[0], values[1], values[2]);
     }
 }

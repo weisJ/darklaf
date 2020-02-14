@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.components.tristate;
 
 import com.github.weisj.darklaf.DarkLaf;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -76,8 +74,7 @@ public class TristateCheckBox extends JCheckBox {
         return (TristateButtonModel) super.getModel();
     }
 
-    @NotNull
-    @Contract(pure = true)
+
     public String getUIClassID() {
         if (UIManager.getLookAndFeel() instanceof DarkLaf) {
             return "TristateCheckBoxUI";

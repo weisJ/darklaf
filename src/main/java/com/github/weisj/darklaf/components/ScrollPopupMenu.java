@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.components;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.MenuKeyEvent;
@@ -79,7 +77,7 @@ public class ScrollPopupMenu extends JPopupMenu {
         addMenuKeyListener(menuKeyListener);
     }
 
-    @NotNull
+
     private OverlayScrollPane createScrollPane() {
         view = new JPanel(new BorderLayout());
         view.add(this, BorderLayout.CENTER);
@@ -106,7 +104,7 @@ public class ScrollPopupMenu extends JPopupMenu {
     }
 
     @Override
-    public JMenuItem add(@NotNull final JMenuItem menuItem) {
+    public JMenuItem add(final JMenuItem menuItem) {
         menuItem.getModel().addChangeListener(e -> contentPane.repaint(menuItem.getBounds()));
         return super.add(menuItem);
     }
@@ -133,7 +131,7 @@ public class ScrollPopupMenu extends JPopupMenu {
      *
      * @return scroll pane;
      */
-    @Nullable
+
     public JScrollPane getScrollPane() {
         return scrollPane;
     }

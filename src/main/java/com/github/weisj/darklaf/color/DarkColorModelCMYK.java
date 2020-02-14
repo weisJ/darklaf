@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.color;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 
 /**
@@ -65,11 +63,11 @@ public class DarkColorModelCMYK extends DarkColorModel {
     }
 
     @Override
-    public int[] getValuesFromColor(@NotNull final Color color) {
+    public int[] getValuesFromColor(final Color color) {
         return RGBtoCMYK(color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    @NotNull
+
     private static int[] RGBtoCMYK(final int r, final int g, final int b) {
         double max = DarkColorModelHSL.max(r / 255.0, g / 255.0, b / 255.0);
         if (max > 0.0f) {
@@ -86,12 +84,12 @@ public class DarkColorModelCMYK extends DarkColorModel {
     }
 
     @Override
-    public Color getColorFromValues(@NotNull final int[] values) {
+    public Color getColorFromValues(final int[] values) {
         int[] rgb = CMYKtoRGB(values[0] / 100.0, values[1] / 100.0, values[2] / 100.0, values[3] / 100.0);
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
 
-    @NotNull
+
     private static int[] CMYKtoRGB(final double c, final double m, final double y, final double k) {
         rgb[0] = (int) Math.round(255 * (1.0f + c * k - k - c));
         rgb[1] = (int) Math.round(255 * (1.0f + m * k - k - m));

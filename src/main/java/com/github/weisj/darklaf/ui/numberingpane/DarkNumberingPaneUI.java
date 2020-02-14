@@ -30,8 +30,6 @@ import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -69,8 +67,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
     protected int maxIconWidth = 0;
     protected Color oldBackground;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkNumberingPaneUI();
     }
@@ -149,7 +146,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     @Override
-    public void paint(final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         if (c.isOpaque()) {
             g.setColor(c.getBackground());
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
@@ -185,7 +182,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         return new Dimension(maxIconWidth + pad + textWidth, viewport.getView().getHeight());
     }
 
-    protected int drawHighlightBackground(@NotNull final Graphics g, final int currOffset) {
+    protected int drawHighlightBackground(final Graphics g, final int currOffset) {
         g.setColor(backgroundHighlight);
         Rectangle rect;
         try {
@@ -197,8 +194,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
         return rect.y;
     }
 
-    protected void drawNumbering(@NotNull final Graphics g, final int startLine, final int endLine, final int yCur,
-                                 @NotNull final Element root, final int descent) {
+    protected void drawNumbering(final Graphics g, final int startLine, final int endLine, final int yCur,
+                                 final Element root, final int descent) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
         int digits = String.valueOf(root.getElementCount()).length();
@@ -214,7 +211,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         config.restore();
     }
 
-    protected void paintIcons(final Graphics g, final int startLine, final int endLine, @NotNull final Element root) {
+    protected void paintIcons(final Graphics g, final int startLine, final int endLine, final Element root) {
         List<Map.Entry<Position, Icon>> icons = numberingPane.getIconsInRange(root.getElement(startLine).getStartOffset(),
                                                                               root.getElement(endLine).getEndOffset());
         for (Map.Entry<Position, Icon> icon : icons) {
@@ -323,7 +320,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         }
 
         @Override
-        public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+        public void propertyChange(final PropertyChangeEvent evt) {
             String key = evt.getPropertyName();
             if ("caret".equals(key)) {
                 if (evt.getNewValue() instanceof Caret) {

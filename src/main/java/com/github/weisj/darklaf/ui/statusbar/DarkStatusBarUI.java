@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.ui.statusbar;
 
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -41,8 +39,7 @@ public class DarkStatusBarUI extends BasicStatusBarUI {
     protected Color background;
     protected Color borderColor;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkStatusBarUI();
     }
@@ -55,7 +52,7 @@ public class DarkStatusBarUI extends BasicStatusBarUI {
     }
 
     @Override
-    protected void paintBackground(final Graphics2D g, @NotNull final JXStatusBar bar) {
+    protected void paintBackground(final Graphics2D g, final JXStatusBar bar) {
         if (bar.isOpaque()) {
             g.setColor(background);
             g.fillRect(0, 0, bar.getWidth(), bar.getHeight());

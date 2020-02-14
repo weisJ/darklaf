@@ -27,9 +27,6 @@ import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +87,7 @@ public class ToolTipContext implements ToolTipListener {
      *
      * @param c the component which the tooltip belongs to.
      */
-    @Contract("null -> fail")
+
     public ToolTipContext(final JComponent c) {
         this(c, null, null, null, true, null);
     }
@@ -105,7 +102,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param alignInside         {@link #setAlignInside(boolean)}
      * @param toolTipRectSupplier {@link #setToolTipRectSupplier(Function)}
      */
-    @Contract("null, _, _, _, _, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment, final Alignment centerAlignment,
                           final AlignmentStrategy alignmentStrategy,
                           final boolean alignInside, final Function<MouseEvent, Rectangle> toolTipRectSupplier) {
@@ -274,7 +271,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param c         the component which the tooltip belongs to.
      * @param alignment {@link #setAlignment(Alignment)}
      */
-    @Contract("null, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment) {
         this(c, alignment, null, null, true, null);
     }
@@ -286,7 +283,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param alignment       {@link #setAlignment(Alignment)}
      * @param centerAlignment {@link #setCenterAlignment(Alignment)}
      */
-    @Contract("null, _, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment, final Alignment centerAlignment) {
         this(c, alignment, centerAlignment, null, true, null);
     }
@@ -298,7 +295,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param alignment   {@link #setAlignment(Alignment)}
      * @param alignInside {@link #setAlignInside(boolean)}
      */
-    @Contract("null, _, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment, final boolean alignInside) {
         this(c, alignment, null, null, alignInside, null);
     }
@@ -311,7 +308,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param centerAlignment {@link #setCenterAlignment(Alignment)}
      * @param alignInside     {@link #setAlignInside(boolean)}
      */
-    @Contract("null, _, _, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment, final Alignment centerAlignment,
                           final boolean alignInside) {
         this(c, alignment, centerAlignment, null, alignInside, null);
@@ -324,7 +321,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param alignment         {@link #setAlignment(Alignment)}
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
      */
-    @Contract("null, _, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment, final AlignmentStrategy alignmentStrategy) {
         this(c, alignment, null, alignmentStrategy, true, null);
     }
@@ -337,7 +334,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param centerAlignment   {@link #setCenterAlignment(Alignment)}
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
      */
-    @Contract("null, _, _, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment, final Alignment centerAlignment,
                           final AlignmentStrategy alignmentStrategy) {
         this(c, alignment, centerAlignment, alignmentStrategy, true, null);
@@ -351,7 +348,7 @@ public class ToolTipContext implements ToolTipListener {
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
      * @param alignInside       {@link #setAlignInside(boolean)}
      */
-    @Contract("null, _, _, _ -> fail")
+
     public ToolTipContext(final JComponent c, final Alignment alignment, final AlignmentStrategy alignmentStrategy,
                           final boolean alignInside) {
         this(c, alignment, null, alignmentStrategy, alignInside, null);
@@ -410,11 +407,11 @@ public class ToolTipContext implements ToolTipListener {
     /**
      * Calculates the tooltip location.
      *
-     * @see JComponent#getToolTipLocation(MouseEvent)
      * @param event the mouse event.
      * @return the tooltip location.
+     * @see JComponent#getToolTipLocation(MouseEvent)
      */
-    public Point getToolTipLocation(@NotNull final MouseEvent event) {
+    public Point getToolTipLocation(final MouseEvent event) {
         Rectangle rect = toolTipRectSupplier.apply(event);
         if (applyInsetsToRect) {
             DarkUIUtil.applyInsets(rect, c.getInsets(calcInsets));
@@ -471,8 +468,8 @@ public class ToolTipContext implements ToolTipListener {
         return dim;
     }
 
-    @Nullable
-    private Point alignCenter(final Dimension dim, @NotNull final Rectangle rect) {
+
+    private Point alignCenter(final Dimension dim, final Rectangle rect) {
         rect.x += rect.width / 2;
         rect.y += rect.height / 2;
         rect.width = 1;
@@ -492,7 +489,7 @@ public class ToolTipContext implements ToolTipListener {
         return adjustPoint(p, alignment, dim, true);
     }
 
-    @Contract("_, _, _, _ -> param1")
+
     private Point adjustPoint(final Point p, final Alignment align, final Dimension dim, final boolean outside) {
         int factor = outside ? 1 : -1;
         if (align == Alignment.NORTH_EAST || align == Alignment.SOUTH_EAST) {

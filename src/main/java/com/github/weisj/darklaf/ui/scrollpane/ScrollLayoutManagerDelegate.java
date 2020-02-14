@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.scrollpane;
 
-import org.jetbrains.annotations.Contract;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,7 +32,7 @@ import java.awt.*;
 public class ScrollLayoutManagerDelegate extends ScrollPaneLayout {
     private final ScrollPaneLayout delegate;
 
-    @Contract(pure = true)
+
     public ScrollLayoutManagerDelegate(final ScrollPaneLayout delegate) {
         if (delegate == null) {
             throw new IllegalArgumentException("Delegate is null");

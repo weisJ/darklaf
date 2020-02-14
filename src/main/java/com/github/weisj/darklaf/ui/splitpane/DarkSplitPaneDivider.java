@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.splitpane;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -113,7 +112,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
             setFocusPainted(false);
         }
 
-        @Contract(pure = true)
+
         @SuppressWarnings("deprecation")
         public boolean isFocusTraversable() {
             return false;

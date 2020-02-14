@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.spinner;
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -92,13 +90,12 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     private JButton prevButton;
     private Component editorComponent;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSpinnerUI();
     }
 
-    protected static boolean usePlusMinusIcons(@NotNull final JSpinner spinner) {
+    protected static boolean usePlusMinusIcons(final JSpinner spinner) {
         return "plusMinus".equals(spinner.getClientProperty("JSpinner.variant"));
     }
 
@@ -205,7 +202,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
     }
 
-    @NotNull
+
     private JButton createArrow(final int direction) {
         Insets insets = new Insets(0, BUTTON_PAD, 0, BUTTON_PAD);
         JButton button = ArrowButton.createUpDownArrow(spinner,
@@ -241,7 +238,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     }
 
     @Override
-    public void paint(final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         int size = borderSize;
         int width = c.getWidth();
         int height = c.getHeight();
@@ -280,17 +277,17 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         return c == null || !c.isEnabled() ? inactiveBackground : background;
     }
 
-    protected static boolean isTableCellEditor(@NotNull final Component c) {
+    protected static boolean isTableCellEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
     }
 
-    protected static boolean isTreeCellEditor(@NotNull final Component c) {
+    protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTreeCellEditor"));
     }
 
-    private void paintSpinBackground(@NotNull final Graphics2D g, final int width, final int height,
+    private void paintSpinBackground(final Graphics2D g, final int width, final int height,
                                      final int bSize, final int arc) {
         Rectangle bounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
@@ -314,7 +311,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("opaque".equals(key)) {
             boolean val = Boolean.TRUE.equals(evt.getNewValue());
@@ -351,7 +348,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         private final Icon mathIcon;
 
 
-        @Contract(pure = true)
         public SpinnerIcon(final JSpinner spinner, final Icon icon, final Icon mathIcon) {
             this.spinner = spinner;
             this.icon = icon;

@@ -28,8 +28,6 @@ import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,8 +116,7 @@ class SlideComponent extends JComponent implements ColorListener {
         setToolTipText(getToolTipText(null));
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private Rectangle getKnobRect() {
         if (vertical) {
             return new Rectangle(1, pointerValue - 6, 12, 12);
@@ -221,7 +218,7 @@ class SlideComponent extends JComponent implements ColorListener {
         drawKnob(g2d, vertical ? 7 : pointerValue, vertical ? pointerValue : 7, vertical);
     }
 
-    protected void drawKnob(@NotNull final Graphics2D g2d, int x, int y, final boolean vertical) {
+    protected void drawKnob(final Graphics2D g2d, int x, int y, final boolean vertical) {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (vertical) {
             y -= 6;
@@ -309,7 +306,7 @@ class SlideComponent extends JComponent implements ColorListener {
             }
         }
 
-        @Contract(pure = true)
+
         private static float getMaxValue(final Unit unit) {
             return LEVEL.equals(unit) ? LEVEL_MAX_VALUE : PERCENT_MAX_VALUE;
         }

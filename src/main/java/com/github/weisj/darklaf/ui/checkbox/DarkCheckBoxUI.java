@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -77,8 +75,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     private Icon checkBoxSelectedDisabledIcon;
     private Icon checkBoxSelectedFocusedIcon;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkCheckBoxUI();
     }
@@ -133,7 +130,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     }
 
     @Override
-    public synchronized void paint(final Graphics g2d, @NotNull final JComponent c) {
+    public synchronized void paint(final Graphics g2d, final JComponent c) {
         Graphics2D g = (Graphics2D) g2d;
         JCheckBox b = (JCheckBox) c;
         FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, c.getFont());
@@ -159,7 +156,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         }
     }
 
-    protected String layoutCheckBox(@NotNull final JCheckBox b, final FontMetrics fm) {
+    protected String layoutCheckBox(final JCheckBox b, final FontMetrics fm) {
         Insets i = b.getInsets();
         size = b.getSize(size);
         viewRect.x = i.left;
@@ -179,14 +176,14 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         return text;
     }
 
-    private void paintBackground(@NotNull final JComponent c, final Graphics2D g) {
+    private void paintBackground(final JComponent c, final Graphics2D g) {
         if (c.isOpaque()) {
             g.setColor(c.getBackground());
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
     }
 
-    public static Icon getIconBullet(final JComponent c, final Graphics2D g, @NotNull final AbstractButton b) {
+    public static Icon getIconBullet(final JComponent c, final Graphics2D g, final AbstractButton b) {
         ButtonModel model = b.getModel();
         Icon icon = b.getIcon();
         if (!model.isEnabled()) {
@@ -220,7 +217,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         return icon;
     }
 
-    protected Icon getCheckIcon(@NotNull final AbstractButton b) {
+    protected Icon getCheckIcon(final AbstractButton b) {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();
@@ -230,7 +227,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
                                   : checkBoxDisabledIcon;
     }
 
-    protected void paintDarkCheck(final JComponent c, final Graphics2D g, @NotNull final JCheckBox b) {
+    protected void paintDarkCheck(final JComponent c, final Graphics2D g, final JCheckBox b) {
         GraphicsContext config = new GraphicsContext(g);
         boolean enabled = b.isEnabled();
         g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
@@ -243,7 +240,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         config.restore();
     }
 
-    public static void paintText(@NotNull final Graphics2D g, @NotNull final AbstractButton b,
+    public static void paintText(final Graphics2D g, final AbstractButton b,
                                  final Rectangle textRect, final String text, final FontMetrics fm,
                                  final Color disabledTextColor) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
@@ -266,7 +263,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         return new IconUIResource(EmptyIcon.create(20));
     }
 
-    protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus,
+    protected void paintCheckBorder(final Graphics2D g, final boolean enabled, final boolean focus,
                                     final boolean selected, final int arcSize, final int borderSize) {
         Graphics2D g2 = (Graphics2D) g.create();
         Color bgColor = getFillColor(selected, enabled);
@@ -287,7 +284,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         g2.dispose();
     }
 
-    protected void paintCheckArrow(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
+    protected void paintCheckArrow(final Graphics2D g, final boolean enabled, final boolean focus) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         Color color = getCheckColor(focus, enabled);
@@ -318,7 +315,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     }
 
     @Override
-    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+    public boolean contains(final JComponent c, final int x, final int y) {
         if (hitArea.isEmpty() && c instanceof JCheckBox) {
             layoutCheckBox((JCheckBox) c, c.getFontMetrics(c.getFont()));
         }
@@ -326,7 +323,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("componentOrientation".equals(key)) {
             checkBox.repaint();

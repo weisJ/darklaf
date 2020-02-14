@@ -28,9 +28,6 @@ import com.github.weisj.darklaf.decorators.MouseMovementListener;
 import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -77,7 +74,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     private long lastSearchEvent;
     private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
         @Override
-        public void popupMenuWillBecomeInvisible(@NotNull final PopupMenuEvent e) {
+        public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
             lastSearchEvent = System.currentTimeMillis();
         }
     };
@@ -102,30 +99,29 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         }
     };
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTextFieldUI();
     }
 
-    @Contract(pure = true)
+
     protected static Icon getClearIcon(final boolean clearHovered) {
         return clearHovered ? clearHover : clear;
     }
 
-    @NotNull
-    public static Rectangle getTextRect(@NotNull final JComponent c) {
+
+    public static Rectangle getTextRect(final JComponent c) {
         Insets i = c.getInsets();
         Dimension dim = c.getSize();
         return new Rectangle(i.left, i.top, dim.width - i.left - i.right, dim.height - i.top - i.bottom);
     }
 
-    public static boolean chooseAlternativeArc(@NotNull final Component c) {
+    public static boolean chooseAlternativeArc(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.alternativeArc"));
     }
 
-    public static boolean isOver(@NotNull final Point p, @NotNull final Icon icon, final Point e) {
+    public static boolean isOver(final Point p, final Icon icon, final Point e) {
         return new Rectangle(p.x, p.y,
                              icon.getIconWidth(), icon.getIconHeight()).contains(e);
     }
@@ -166,8 +162,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return ClickAction.NONE;
     }
 
-    @Nullable
-    private static JPopupMenu getSearchPopup(@NotNull final JComponent c) {
+
+    private static JPopupMenu getSearchPopup(final JComponent c) {
         Object value = c.getClientProperty("JTextField.Search.FindPopup");
         return value instanceof JPopupMenu ? (JPopupMenu) value : null;
     }
@@ -178,11 +174,11 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return new Point(r.x + DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
     }
 
-    @NotNull
-    @Contract("_ -> new")
-    public Rectangle getDrawingRect(@NotNull final JTextComponent c) {
-        int w = borderSize;
-        return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
+    protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
+        g.setColor(getBackgroundColor(c));
+        Rectangle r = getDrawingRect(getComponent());
+        int arc = getArcSize(c);
+        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
     }
 
     protected static Icon getSearchIcon(final Component c) {
@@ -193,20 +189,18 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return isSearchField(c) && getSearchPopup((JComponent) c) != null;
     }
 
-    @Contract("null -> false")
+
     public static boolean isSearchField(final Component c) {
         return c instanceof JTextField && "search".equals(((JTextField) c).getClientProperty("JTextField.variant"));
     }
 
-    protected void paintBorderBackground(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
-        g.setColor(getBackgroundColor(c));
-        Rectangle r = getDrawingRect(getComponent());
-        int arc = getArcSize(c);
-        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
+    protected Color getBackgroundColor(final JTextComponent c) {
+        return c.isEnabled() && c.isEditable() ? background : inactiveBackground;
     }
 
-    protected Color getBackgroundColor(@NotNull final JTextComponent c) {
-        return c.isEnabled() && c.isEditable() ? background : inactiveBackground;
+    public Rectangle getDrawingRect(final JTextComponent c) {
+        int w = borderSize;
+        return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
     }
 
     protected int getArcSize(final Component c) {
@@ -218,7 +212,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
                                                 : (alt ? searchArcSize : arcSize);
     }
 
-    protected void paintSearchField(@NotNull final Graphics2D g, @NotNull final JTextComponent c) {
+    protected void paintSearchField(final Graphics2D g, final JTextComponent c) {
         g.setColor(getBackgroundColor(c));
         Rectangle r = getDrawingRect(getComponent());
         int arc = getArcSize(c);

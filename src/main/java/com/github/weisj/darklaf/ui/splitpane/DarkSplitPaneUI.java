@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.splitpane;
 
 import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -49,8 +47,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
         this.style = style;
     }
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSplitPaneUI(Style.DEFAULT);
     }
@@ -121,7 +118,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("JSplitPane.style".equals(key)) {
             Object val = evt.getNewValue();
@@ -156,7 +153,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
         final private String name;
 
-        @Contract(pure = true)
+
         Style(final String name) {
             this.name = name;
         }
@@ -164,18 +161,18 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
     private final class ThinDivider extends BasicSplitPaneDivider {
 
-        private ThinDivider(@NotNull final BasicSplitPaneUI ui) {
+        private ThinDivider(final BasicSplitPaneUI ui) {
             super(ui);
         }
 
-        @Contract(pure = true)
+
         @Override
         public int getDividerSize() {
             return style == Style.LINE ? 1 : 0;
         }
 
         @Override
-        public void paint(@NotNull final Graphics g) {
+        public void paint(final Graphics g) {
             if (style == Style.LINE) {
                 g.setColor(getDividerLineColor());
                 if (orientation == JSplitPane.HORIZONTAL_SPLIT) {

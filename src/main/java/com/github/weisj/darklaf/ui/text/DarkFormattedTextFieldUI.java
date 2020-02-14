@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -42,8 +39,7 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
 
     private JFormattedTextField textField;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkFormattedTextFieldUI();
     }

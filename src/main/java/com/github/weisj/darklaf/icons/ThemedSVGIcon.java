@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.icons;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.Theme;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.net.URI;
@@ -37,7 +36,7 @@ public class ThemedSVGIcon extends DarkSVGIcon {
 
     private Theme currentTheme;
 
-    public ThemedSVGIcon(@NotNull final URI uri, final int displayWidth, final int displayHeight) {
+    public ThemedSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
         super(uri, displayWidth, displayHeight);
     }
 

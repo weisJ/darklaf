@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,17 +33,16 @@ import java.util.List;
  */
 public final class StringUtil {
 
-    @Contract(pure = true)
+
     private StringUtil() {
     }
 
-    @Contract("null -> null; !null -> !null")
+
     public static String toUpperCase(final String a) {
         return a == null ? null : toUpperCase((CharSequence) a).toString();
     }
 
-    @NotNull
-    @Contract("null -> fail")
+
     public static CharSequence toUpperCase(final CharSequence s) {
         if (s == null) {
             throw new NullPointerException("CharSequence can't be null");
@@ -65,7 +61,7 @@ public final class StringUtil {
         return answer;
     }
 
-    @Contract(pure = true)
+
     public static char toUpperCase(final char a) {
         if (a < 'a') {
             return a;
@@ -82,7 +78,7 @@ public final class StringUtil {
         return split(s, separator, excludeSeparator, true);
     }
 
-    public static List<String> split(final String s, @NotNull final String separator,
+    public static List<String> split(final String s, final String separator,
                                      final boolean excludeSeparator, final boolean excludeEmptyStrings) {
         if (separator.isEmpty()) {
             return Collections.singletonList(s);
@@ -111,7 +107,7 @@ public final class StringUtil {
         }
     }
 
-    public static int indexOfIgnoreCase(@NotNull final String where, final char what, int fromIndex) {
+    public static int indexOfIgnoreCase(final String where, final char what, int fromIndex) {
         int sourceCount = where.length();
         if (fromIndex >= sourceCount) {
             return -1;
@@ -134,7 +130,7 @@ public final class StringUtil {
         return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
     }
 
-    @Contract(pure = true)
+
     public static char toLowerCase(final char a) {
         if (a >= 'A' && (a < 'a' || a > 'z')) {
             return a <= 'Z' ? (char) (a + 32) : Character.toLowerCase(a);
@@ -244,8 +240,8 @@ public final class StringUtil {
         return s.trim().length() == 0;
     }
 
-    @NotNull
-    public static String repeat(@NotNull final String s, final int count) {
+
+    public static String repeat(final String s, final int count) {
         if (count <= 0) return s;
         if (count == 1) return s;
         StringBuilder builder = new StringBuilder(s.length() * count);

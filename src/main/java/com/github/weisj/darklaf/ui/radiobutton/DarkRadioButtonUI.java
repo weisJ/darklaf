@@ -28,8 +28,6 @@ import com.github.weisj.darklaf.ui.checkbox.DarkCheckBoxUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -74,8 +72,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     private Icon radioSelectedDisabledIcon;
     private Icon radioSelectedFocusedIcon;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonUI();
     }
@@ -116,7 +113,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     }
 
     @Override
-    public synchronized void paint(final Graphics g2d, @NotNull final JComponent c) {
+    public synchronized void paint(final Graphics g2d, final JComponent c) {
         Graphics2D g = (Graphics2D) g2d;
         AbstractButton b = (AbstractButton) c;
 
@@ -157,7 +154,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         button.removePropertyChangeListener(this);
     }
 
-    protected String layoutRadioButton(@NotNull final AbstractButton b, final FontMetrics fm) {
+    protected String layoutRadioButton(final AbstractButton b, final FontMetrics fm) {
         Insets i = b.getInsets();
         size = b.getSize(size);
         viewRect.x = i.left;
@@ -178,14 +175,14 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         return text;
     }
 
-    private void paintBackground(@NotNull final JComponent c, final Graphics2D g) {
+    private void paintBackground(final JComponent c, final Graphics2D g) {
         if (c.isOpaque()) {
             g.setColor(c.getBackground());
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
     }
 
-    protected Icon getRadioIcon(@NotNull final AbstractButton b) {
+    protected Icon getRadioIcon(final AbstractButton b) {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();
@@ -195,7 +192,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
                                   : radioDisabledIcon;
     }
 
-    protected void paintDarkBullet(final JComponent c, final Graphics2D g, @NotNull final AbstractButton b) {
+    protected void paintDarkBullet(final JComponent c, final Graphics2D g, final AbstractButton b) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         boolean enabled = b.isEnabled();
         g.translate(iconRect.x + ICON_OFF, iconRect.y + ICON_OFF);
@@ -214,7 +211,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         return new IconUIResource(EmptyIcon.create(20));
     }
 
-    protected void paintCheckBorder(@NotNull final Graphics2D g, final boolean enabled, final boolean focus,
+    protected void paintCheckBorder(final Graphics2D g, final boolean enabled, final boolean focus,
                                     final boolean selected) {
         Graphics2D g2 = (Graphics2D) g.create();
         Color bgColor = getFillColor(selected, enabled);
@@ -233,7 +230,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         g2.dispose();
     }
 
-    protected void paintCheckBullet(@NotNull final Graphics2D g, final boolean enabled, final boolean focus) {
+    protected void paintCheckBullet(final Graphics2D g, final boolean enabled, final boolean focus) {
         Color color = getCheckColor(focus, enabled);
         g.setColor(color);
         g.translate(0.2, 0.2);
@@ -266,7 +263,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("componentOrientation".equals(key)) {
             radioButton.repaint();

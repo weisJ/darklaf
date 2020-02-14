@@ -29,8 +29,6 @@ import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
 import com.github.weisj.darklaf.util.ImageUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,7 +98,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         startTimer.setRepeats(false);
     }
 
-    @Contract("null -> null")
+
     private TabFrameUI getUI(final Component c) {
         if (c instanceof JTabFrame) return ((JTabFrame) c).getUI();
         return null;
@@ -135,7 +133,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     }
 
     @Override
-    public void dragOver(@NotNull final DropTargetDragEvent e) {
+    public void dragOver(final DropTargetDragEvent e) {
         e.getDropTargetContext().getComponent().setCursor(Cursor.getDefaultCursor());
         mouseLocation = e.getLocation();
 
@@ -204,7 +202,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     }
 
     @Override
-    public void dragExit(@NotNull final DropTargetEvent e) {
+    public void dragExit(final DropTargetEvent e) {
         Component c = e.getDropTargetContext().getComponent();
         TabFrameUI ui = getUI(c);
         if (ui != null) {
@@ -215,7 +213,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     }
 
     @Override
-    public void drop(@NotNull final DropTargetDropEvent e) {
+    public void drop(final DropTargetDropEvent e) {
         Component c = e.getDropTargetContext().getComponent();
         TabFrameUI ui = getUI(c);
         if (ui != null) {
@@ -241,7 +239,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
      * @return Whether or not the import was successful.
      */
     @Override
-    public boolean importData(final JComponent c, @NotNull final Transferable t) {
+    public boolean importData(final JComponent c, final Transferable t) {
         boolean successful = false;
         if (hasTabFlavor(t.getTransferDataFlavors()) && mouseLocation != null) {
             try {
@@ -293,7 +291,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     public void dropActionChanged(final DropTargetDragEvent e) {
     }
 
-    protected Transferable createTransferable(final JComponent c, @NotNull final DragGestureEvent dge) {
+    protected Transferable createTransferable(final JComponent c, final DragGestureEvent dge) {
         JTabFrame tabFrame = (JTabFrame) c;
         if (tabFrame.isInTransfer()) {
             currentTransferable = new TabTransferable(tabFrame, tabFrame.getTransferInfo());
@@ -312,7 +310,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         return currentTransferable;
     }
 
-    protected void createDragImage(@NotNull final TabFrameUI ui) {
+    protected void createDragImage(final TabFrameUI ui) {
         Component comp = currentTransferable.transferData.tab.getComponent();
         Image tabImage = ImageUtil.scaledImageFromComponent(comp, new Rectangle(0, 0, comp.getWidth(),
                                                                                 comp.getHeight()));
@@ -372,7 +370,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         private final TabTransferData transferData;
 
-        public TabTransferable(@NotNull final JTabFrame tabFrame, @NotNull final JTabFrame.TabFramePosition ind) {
+        public TabTransferable(final JTabFrame tabFrame, final JTabFrame.TabFramePosition ind) {
             transferData = new TabTransferData(tabFrame, ind.getAlignment(), ind.getIndex());
         }
 
@@ -391,7 +389,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             return tabFlavor.equals(flavor);
         }
 
-        @NotNull
+
         @Override
         public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
             if (!isDataFlavorSupported(flavor)) {
@@ -411,8 +409,8 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             private final TabFrameTab tab;
             private final boolean wasSelected;
 
-            @Contract(pure = true)
-            public TabTransferData(@NotNull final JTabFrame tabbedPane, final Alignment tabAlignment,
+
+            public TabTransferData(final JTabFrame tabbedPane, final Alignment tabAlignment,
                                    final int tabIndex) {
                 this.sourceTabFrame = tabbedPane;
                 this.tabAlignment = tabAlignment;
@@ -434,7 +432,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         /**
          * a Drag gesture has been recognized
          */
-        public void dragGestureRecognized(@NotNull final DragGestureEvent dge) {
+        public void dragGestureRecognized(final DragGestureEvent dge) {
             JComponent c = (JComponent) dge.getComponent();
             TabFrameTransferHandler th = (TabFrameTransferHandler) c.getTransferHandler();
             Transferable t = th.createTransferable(c, dge);
@@ -483,7 +481,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         /**
          * as the operation completes
          */
-        public void dragDropEnd(@NotNull final DragSourceDropEvent dsde) {
+        public void dragDropEnd(final DragSourceDropEvent dsde) {
             DragSourceContext dsc = dsde.getDragSourceContext();
             JComponent c = (JComponent) dsc.getComponent();
             if (dsde.getDropSuccess()) {

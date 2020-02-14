@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.colorchooser;
 
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -80,7 +79,7 @@ public class DarkPreviewPanel extends JPanel {
         return new Dimension(x, y);
     }
 
-    private int paintSquares(@NotNull final Graphics g, final int offsetX) {
+    private int paintSquares(final Graphics g, final int offsetX) {
         Color color = getForeground();
 
         g.setColor(Color.white);
@@ -146,7 +145,7 @@ public class DarkPreviewPanel extends JPanel {
 
     }
 
-    private int paintText(@NotNull final Graphics g, final int offsetX) {
+    private int paintText(final Graphics g, final int offsetX) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setFont(getFont());
         JComponent host = getColorChooser();
@@ -183,7 +182,7 @@ public class DarkPreviewPanel extends JPanel {
         return width + TEXT_GAP * 3;
     }
 
-    private int paintSwatch(@NotNull final Graphics g, final int offsetX) {
+    private int paintSwatch(final Graphics g, final int offsetX) {
         g.setColor(oldColor);
         g.fillRect(offsetX, 0, SWATCH_WIDTH, SQUARE_SIZE + SQUARE_GAP / 2);
         g.setColor(getForeground());

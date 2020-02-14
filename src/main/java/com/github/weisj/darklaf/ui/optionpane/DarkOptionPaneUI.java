@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.optionpane;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.DefaultLookup;
 
 import javax.swing.*;
@@ -36,8 +34,6 @@ import java.awt.*;
 public class DarkOptionPaneUI extends BasicOptionPaneUI {
 
 
-    @NotNull
-    @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent x) {
         return new DarkOptionPaneUI();
     }

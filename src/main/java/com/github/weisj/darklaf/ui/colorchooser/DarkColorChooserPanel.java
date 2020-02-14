@@ -28,8 +28,6 @@ import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.util.ColorUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -68,7 +66,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     private Icon pipetteIcon;
     private Icon pipetteHoverIcon;
 
-    @Contract("null -> fail")
+
     public DarkColorChooserPanel(final DarkColorModel... colorModels) {
         if (colorModels == null || colorModels.length == 0) {
             throw new IllegalArgumentException("Must pass at least one valid colorModel");
@@ -186,7 +184,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return (DarkColorModel) formatBox.getSelectedItem();
     }
 
-    @NotNull
+
     private JComponent buildTopPanel(final boolean enablePipette) {
         final JPanel result = new JPanel(new BorderLayout());
 
@@ -241,7 +239,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return result;
     }
 
-    @NotNull
+
     private JFormattedTextField createColorField(final boolean hex) {
         JFormattedTextField field = new JFormattedTextField(0);
         field.setColumns(hex ? 8 : 4);
@@ -399,7 +397,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
 
-    private void applyColorToHEX(@NotNull final Color c) {
+    private void applyColorToHEX(final Color c) {
         boolean changingOld = isChanging;
         isChanging = true;
         boolean transparencyEnabled = isColorTransparencySelectionEnabled();

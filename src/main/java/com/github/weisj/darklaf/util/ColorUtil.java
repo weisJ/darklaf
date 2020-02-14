@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 
 /**
@@ -33,31 +30,28 @@ import java.awt.*;
  */
 public final class ColorUtil {
 
-    @Contract(pure = true)
+
     private ColorUtil() {
 
     }
 
-    @NotNull
-    @Contract("_, _ -> new")
-    public static Color shift(@NotNull final Color c, final double d) {
+
+    public static Color shift(final Color c, final double d) {
         return new Color(shift(c.getRed(), d), shift(c.getGreen(), d), shift(c.getBlue(), d), c.getAlpha());
     }
 
-    @Contract(pure = true)
+
     private static int shift(final int colorComponent, final double d) {
         int n = (int) ((double) colorComponent * d);
         return n > 255 ? 255 : (Math.max(n, 0));
     }
 
-    @NotNull
-    @Contract("_, _ -> new")
+
     public static Color toAlpha(final Color color, final double alpha) {
         return toAlpha(color, (int) (alpha * 255));
     }
 
-    @NotNull
-    @Contract("_, _ -> new")
+
     public static Color toAlpha(final Color color, final int a) {
         Color c = color != null ? color : Color.black;
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), Math.min(Math.max(0, a), 255));
@@ -71,8 +65,8 @@ public final class ColorUtil {
         }
     }
 
-    @NotNull
-    public static Color fromHex(@NotNull String str) {
+
+    public static Color fromHex(String str) {
         if (str.startsWith("#")) {
             str = str.substring(1);
         }
@@ -88,7 +82,7 @@ public final class ColorUtil {
         }
     }
 
-    @NotNull
+
     public static Color removeAlpha(final Color color) {
         return toAlpha(color, 255);
     }

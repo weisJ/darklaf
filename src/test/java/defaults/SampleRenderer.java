@@ -1,8 +1,6 @@
 package defaults;
 
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -23,8 +21,7 @@ final class SampleRenderer extends JLabel implements TableCellRenderer {
         setOpaque(true);
     }
 
-    @Contract("_, _, _, _, _, _ -> this")
-    @NotNull
+
     public Component getTableCellRendererComponent(
             final JTable table,
             final Object sample,
@@ -60,7 +57,7 @@ final class SampleRenderer extends JLabel implements TableCellRenderer {
     public void paint(final Graphics g) {
         try {
             super.paint(g);
-        } catch (@NotNull final Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }

@@ -29,8 +29,6 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.PropertyLoader;
 import com.github.weisj.darklaf.util.SystemInfo;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -72,13 +70,13 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                 final String name = UIManager.getSystemLookAndFeelClassName();
                 base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
             }
-        } catch (@NotNull final Exception e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
             throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
         }
     }
 
-    @Contract(pure = true)
+
     public static boolean isDecorationsEnabled() {
         return LafManager.getTheme().useCustomDecorations() && decorationsEnabled;
     }
@@ -113,7 +111,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             JDialog.setDefaultLookAndFeelDecorated(true);
 
             return defaults;
-        } catch (@NotNull final Exception e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
         return super.getDefaults();
@@ -128,14 +126,14 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
-    @NotNull
+
     @Override
     public String getName() {
         return NAME;
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
-    private static void initInputMapDefaults(@NotNull final UIDefaults defaults) {
+    private static void initInputMapDefaults(final UIDefaults defaults) {
         // Make ENTER work in JTrees
         final InputMap treeInputMap = (InputMap) defaults.get("Tree.focusInputMap");
         if (treeInputMap != null) {
@@ -172,7 +170,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
-    private void loadThemeDefaults(@NotNull final UIDefaults defaults) {
+    private void loadThemeDefaults(final UIDefaults defaults) {
         Properties uiProps = new Properties();
         final Theme currentTheme = LafManager.getTheme();
         currentTheme.loadDefaults(uiProps, defaults);
@@ -189,7 +187,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
-    private void initIdeaDefaults(@NotNull final UIDefaults defaults) {
+    private void initIdeaDefaults(final UIDefaults defaults) {
         defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
                 new Object[]{
                         "ctrl C", "copy",
@@ -244,20 +242,20 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                 }));
     }
 
-    @NotNull
+
     @Override
     public String getID() {
         return getName();
     }
 
-    private static void patchComboBox(@NotNull final UIDefaults metalDefaults, @NotNull final UIDefaults defaults) {
+    private static void patchComboBox(final UIDefaults metalDefaults, final UIDefaults defaults) {
         defaults.remove("ComboBox.ancestorInputMap");
         defaults.remove("ComboBox.actionMap");
         defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));
         defaults.put("ComboBox.actionMap", metalDefaults.get("ComboBox.actionMap"));
     }
 
-    private static void installCutCopyPasteShortcuts(@NotNull final InputMap inputMap,
+    private static void installCutCopyPasteShortcuts(final InputMap inputMap,
                                                      final boolean useSimpleActionKeys) {
         final String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
         final String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
@@ -272,7 +270,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
     }
 
-    private void installGlobals(@NotNull final Properties uiProps, final UIDefaults defaults) {
+    private void installGlobals(final Properties uiProps, final UIDefaults defaults) {
         final HashMap<String, Object> globalSettings = new HashMap<>();
         final String prefix = "global.";
         for (final Object key : uiProps.keySet()) {
@@ -292,7 +290,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         }
     }
 
-    @NotNull
+
     @Override
     public String getDescription() {
         return "Dark Look and feel based on Darcula-LAF";
@@ -341,7 +339,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                     "loadSystemColors", UIDefaults.class, String[].class, boolean.class);
             superMethod.setAccessible(true);
             superMethod.invoke(base, defaults, systemColors, useNative);
-        } catch (@NotNull final Exception e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
     }
@@ -355,28 +353,28 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         return true;
     }
 
-    private void callInit(@NotNull final String method, final UIDefaults defaults) {
+    private void callInit(final String method, final UIDefaults defaults) {
         try {
             final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method, UIDefaults.class);
             superMethod.setAccessible(true);
             superMethod.invoke(base, defaults);
-        } catch (@NotNull final Exception e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
     }
 
-    private void call(@NotNull final String method) {
+    private void call(final String method) {
         try {
             final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method);
             superMethod.setAccessible(true);
             superMethod.invoke(base);
-        } catch (@NotNull final Exception e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         if ("lookAndFeel".equals(evt.getPropertyName())) {
             if (UIManager.getLookAndFeel() == this) {
                 PropertyLoader.finish();

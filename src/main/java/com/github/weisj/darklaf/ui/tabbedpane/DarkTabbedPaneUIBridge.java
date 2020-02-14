@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
@@ -257,7 +256,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      *
      * @param map the map
      */
-    public static void loadActionMap(@NotNull final LazyActionMap map) {
+    public static void loadActionMap(final LazyActionMap map) {
         map.put(new Actions(Actions.NEXT));
         map.put(new Actions(Actions.PREVIOUS));
         map.put(new Actions(Actions.RIGHT));

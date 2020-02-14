@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.util;
 
 
-import org.jetbrains.annotations.Contract;
-
 /**
  * @author Konstantin Bulenkov
  */
@@ -67,7 +65,7 @@ public class SystemInfo {
         isUndefined = !isX86 & !isX64;
     }
 
-    @Contract(pure = true)
+
     public SystemInfo() {
     }
 

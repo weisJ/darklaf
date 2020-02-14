@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import org.jetbrains.annotations.Contract;
-
 class WeakLineBorder extends MutableLineBorder {
 
     private int left;
@@ -49,7 +47,7 @@ class WeakLineBorder extends MutableLineBorder {
         return result;
     }
 
-    @Contract(value = "null -> false", pure = true)
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

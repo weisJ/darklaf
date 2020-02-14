@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -54,7 +52,7 @@ class RecentSwatchPanel extends SwatchPanel {
     }
 
     @Override
-    public String getToolTipText(@NotNull final MouseEvent e) {
+    public String getToolTipText(final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
         if (color == defaultRecentColor || color == null) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();

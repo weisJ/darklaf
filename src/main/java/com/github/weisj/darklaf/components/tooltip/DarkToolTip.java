@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.util.Animator;
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -134,7 +133,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         if ("tiptext".equals(evt.getPropertyName())) {
             setPreferredSize(getUI().getPreferredSize(this));
             if (!Objects.equals(evt.getNewValue(), evt.getOldValue())) {

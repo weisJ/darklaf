@@ -31,8 +31,6 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.FocusManager;
 import javax.swing.*;
@@ -73,8 +71,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     private MutableLineBorder contentBorder;
     private boolean oldFocus;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkPanelPopupUI();
     }
@@ -204,7 +201,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
     }
 
-    public final Dimension getPreferredSize(@NotNull final JComponent c) {
+    public final Dimension getPreferredSize(final JComponent c) {
         if (!c.isEnabled()) {
             return new Dimension(0, 0);
         } else {
@@ -213,7 +210,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     @Override
-    public Dimension getMinimumSize(@NotNull final JComponent c) {
+    public Dimension getMinimumSize(final JComponent c) {
         if (!c.isEnabled()) {
             return new Dimension(0, 0);
         } else {
@@ -222,7 +219,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     @Override
-    public Dimension getMaximumSize(@NotNull final JComponent c) {
+    public Dimension getMaximumSize(final JComponent c) {
         if (!c.isEnabled()) {
             return new Dimension(0, 0);
         } else {
@@ -231,7 +228,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("open".equals(key)) {
             if (Boolean.TRUE.equals(evt.getNewValue())) {
@@ -297,8 +294,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                                  tabFrame.getContentPane().isEnabled(tabFrame.getPeer(popupComponent.getAlignment())));
     }
 
-    @NotNull
-    protected Insets getBorderSize(@NotNull final Alignment a, final boolean[] info) {
+
+    protected Insets getBorderSize(final Alignment a, final boolean[] info) {
         Insets insets = new Insets(0, 0, 0, 0);
         switch (a) {
             case NORTH:
@@ -342,7 +339,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
     }
 
-    protected void applyBorderInsets(@NotNull final Insets insets) {
+    protected void applyBorderInsets(final Insets insets) {
         headerBorder.setInsets(insets.top, insets.left, 1, insets.right);
         contentBorder.setInsets(0, insets.left, insets.bottom, insets.right);
     }
@@ -352,7 +349,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     }
 
     @Override
-    public void eventDispatched(@NotNull final AWTEvent event) {
+    public void eventDispatched(final AWTEvent event) {
         if (event.getID() == FocusEvent.FOCUS_GAINED) {
             Component focusOwner = FocusManager.getCurrentManager().getFocusOwner();
             if (focusOwner instanceof JTabFrame) return;
@@ -371,7 +368,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         protected final ToolTipContext context = new ToolTipContext(this);
         protected final DarkPanelPopupUI ui;
 
-        public HeaderButton(@NotNull final Icon icon, final DarkPanelPopupUI ui) {
+        public HeaderButton(final Icon icon, final DarkPanelPopupUI ui) {
             super(icon);
             this.ui = ui;
             putClientProperty("JButton.square", true);
@@ -401,7 +398,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             return context.getToolTip();
         }
 
-        protected void setAlignment(@NotNull final Alignment a, final boolean peerEnabled) {
+        protected void setAlignment(final Alignment a, final boolean peerEnabled) {
             switch (a) {
                 case NORTH:
                     context.setCenterAlignment(peerEnabled ? Alignment.SOUTH : Alignment.SOUTH_WEST);

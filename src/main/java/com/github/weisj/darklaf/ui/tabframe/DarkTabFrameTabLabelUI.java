@@ -30,8 +30,6 @@ import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.label.DarkLabelUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -70,14 +68,13 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private Rectangle paintTextR = new Rectangle();
     private boolean printing;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabFrameTabLabelUI();
     }
 
     @Override
-    public void paint(@NotNull final Graphics g, final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         g.setColor(getBackground(tabComponent));
         g.fillRect(0, 0, tabComponent.getWidth(), tabComponent.getHeight());
 
@@ -245,7 +242,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         tabFrame.getActionMap().remove(accAction);
     }
 
-    public Color getBackground(@NotNull final TabFrameTabLabel tab) {
+    public Color getBackground(final TabFrameTabLabel tab) {
         if (printing) return tab.getBackground();
         return tab.isSelected()
                ? selectedColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
@@ -261,7 +258,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         return rotatableIcon;
     }
 
-    private String layout(@NotNull final JLabel label, final FontMetrics fm,
+    private String layout(final JLabel label, final FontMetrics fm,
                           final int width, final int height) {
         Insets insets = label.getInsets(null);
         String text = label.getText();
@@ -275,7 +272,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         return layoutCL(label, fm, text, getIcon(), paintViewR, paintIconR, paintTextR);
     }
 
-    protected Alignment mapOrientation(@NotNull final Alignment newValue) {
+    protected Alignment mapOrientation(final Alignment newValue) {
         switch (newValue) {
             case CENTER:
             case NORTH:

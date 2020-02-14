@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.internalframe;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.rootpane.TitlePaneIcon;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
@@ -153,7 +152,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         setButtonIcons();
     }
 
-    protected void addSystemMenuItems(@NotNull final JMenu systemMenu) {
+    protected void addSystemMenuItems(final JMenu systemMenu) {
         JMenuItem mi = systemMenu.add(restoreAction);
         mi.setMnemonic(getButtonMnemonic("restore"));
         mi.setIcon(minimizeIcon);
@@ -184,7 +183,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     }
 
     @Override
-    public void paintComponent(@NotNull final Graphics g) {
+    public void paintComponent(final Graphics g) {
         g.setColor(getTitleBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(border);
@@ -208,7 +207,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
     }
 
-    @NotNull
+
     private static JButton createButton(final String accessibleName) {
         JButton button = new JButton();
         button.setFocusable(false);

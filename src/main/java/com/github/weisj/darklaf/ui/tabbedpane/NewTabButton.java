@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -34,7 +32,7 @@ public class NewTabButton extends JPanel implements UIResource {
     protected final JButton button;
     protected DarkTabbedPaneUI ui;
 
-    protected NewTabButton(@NotNull final DarkTabbedPaneUI ui) {
+    protected NewTabButton(final DarkTabbedPaneUI ui) {
         this.ui = ui;
         button = createButton();
         button.addActionListener(e -> {

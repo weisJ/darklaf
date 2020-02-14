@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -99,11 +98,11 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         return component;
     }
 
-    protected static boolean isBooleanRenderingEnabled(@NotNull final JTable table) {
+    protected static boolean isBooleanRenderingEnabled(final JTable table) {
         return Boolean.TRUE.equals(table.getClientProperty("JTable.renderBooleanAsCheckBox"));
     }
 
-    protected TableCellRenderer getBooleanRenderer(@NotNull final JTable table) {
+    protected TableCellRenderer getBooleanRenderer(final JTable table) {
         if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
             return radioRenderer;
         }

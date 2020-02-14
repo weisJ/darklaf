@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import org.jetbrains.annotations.Contract;
-
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.tree.TreeCellEditor;
@@ -38,7 +36,7 @@ public class TreeCellEditorDelegate implements TreeCellEditor {
 
     private final TreeCellEditor editor;
 
-    @Contract(pure = true)
+
     public TreeCellEditorDelegate(final TreeCellEditor editor) {
         this.editor = editor;
     }

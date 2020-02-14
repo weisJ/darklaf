@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.components;
 
 import com.github.weisj.darklaf.ui.scrollpane.ScrollLayoutManagerDelegate;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ScrollPaneUI;
@@ -91,7 +89,7 @@ public class OverlayScrollPane extends JLayeredPane {
      *
      * @return the scrollPane
      */
-    @NotNull
+
     public JScrollPane getScrollPane() {
         return scrollPane;
     }
@@ -113,8 +111,7 @@ public class OverlayScrollPane extends JLayeredPane {
         controlPanel.showHorizontalScrollBar(policy != JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     }
 
-    @Contract(pure = true)
-    @NotNull
+
     public JScrollBar getVerticalScrollBar() {
         return scrollPane.verticalScrollBar;
     }
@@ -124,8 +121,7 @@ public class OverlayScrollPane extends JLayeredPane {
         return scrollPane.getPreferredSize();
     }
 
-    @Contract(pure = true)
-    @NotNull
+
     public JScrollBar getHorizontalScrollBar() {
         return scrollPane.horizontalScrollBar;
     }
@@ -145,7 +141,7 @@ public class OverlayScrollPane extends JLayeredPane {
             setOpaque(false);
         }
 
-        @Contract(pure = true)
+
         @Override
         public boolean isOpaque() {
             return false;
@@ -259,7 +255,7 @@ public class OverlayScrollPane extends JLayeredPane {
         private boolean showVertical;
         private boolean showHorizontal;
 
-        private ControlPanel(@NotNull final OScrollPane scrollPane) {
+        private ControlPanel(final OScrollPane scrollPane) {
             setLayout(null);
 
             scrollPane.setVerticalScrollBar(scrollPane.verticalScrollBar);
@@ -301,7 +297,7 @@ public class OverlayScrollPane extends JLayeredPane {
                     && scrollPane.verticalScrollBar.getBounds().contains(x, y);
         }
 
-        @Contract(pure = true)
+
         @Override
         public boolean isOpaque() {
             return false;

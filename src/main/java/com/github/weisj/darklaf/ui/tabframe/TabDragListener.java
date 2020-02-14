@@ -27,7 +27,6 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SwingXUtilities;
 import org.jdesktop.jxlayer.JXLayer;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +43,7 @@ public class TabDragListener extends MouseAdapter {
     }
 
     @Override
-    public void mousePressed(@NotNull final MouseEvent e) {
+    public void mousePressed(final MouseEvent e) {
         origin = e.getPoint();
     }
 
@@ -54,7 +53,7 @@ public class TabDragListener extends MouseAdapter {
     }
 
     @Override
-    public void mouseDragged(@NotNull final MouseEvent e) {
+    public void mouseDragged(final MouseEvent e) {
         if (origin == null) origin = e.getPoint();
         if (distance(origin, e.getPoint()) < 100) return;
         TransferHandler th = tabComponent.getTabFrame().getTransferHandler();
@@ -72,7 +71,7 @@ public class TabDragListener extends MouseAdapter {
         }
     }
 
-    protected int distance(@NotNull final Point p1, @NotNull final Point p2) {
+    protected int distance(final Point p1, final Point p2) {
         return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
     }
 }

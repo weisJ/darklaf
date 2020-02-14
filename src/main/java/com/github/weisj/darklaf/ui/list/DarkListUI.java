@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.list;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -42,8 +40,7 @@ public class DarkListUI extends DarkListUIBridge {
         UIManager.put("List.cellRenderer", new DarkListCellRenderer());
     }
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent list) {
         return new DarkListUI();
     }
@@ -141,10 +138,10 @@ public class DarkListUI extends DarkListUIBridge {
         rendererPane.removeAll();
     }
 
-    protected void paintCell(final Graphics g, final int index, @NotNull final Rectangle rowBounds,
-                             @NotNull final ListCellRenderer<Object> cellRenderer,
-                             @NotNull final ListModel<Object> dataModel,
-                             @NotNull final ListSelectionModel selModel, final int leadIndex, final int row) {
+    protected void paintCell(final Graphics g, final int index, final Rectangle rowBounds,
+                             final ListCellRenderer<Object> cellRenderer,
+                             final ListModel<Object> dataModel,
+                             final ListSelectionModel selModel, final int leadIndex, final int row) {
         boolean empty = index >= list.getModel().getSize();
         Object value = empty ? null : dataModel.getElementAt(index);
         boolean cellHasFocus = list.hasFocus() && (index == leadIndex);

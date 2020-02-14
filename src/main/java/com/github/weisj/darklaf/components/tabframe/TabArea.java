@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -36,7 +34,7 @@ public final class TabArea extends JPanel {
     }
 
     @Override
-    public void paint(@NotNull final Graphics g) {
+    public void paint(final Graphics g) {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
         paintChildren(g);

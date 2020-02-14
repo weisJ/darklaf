@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.button;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -71,8 +69,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     protected Color sliderBorderColor;
     protected Color inactiveSliderBorderColor;
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkToggleButtonUI();
     }
@@ -93,7 +90,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     }
 
     @Override
-    public void paint(final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         if (isSlider(c)) {
             GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
             AbstractButton b = (AbstractButton) c;
@@ -109,8 +106,19 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
     }
 
+    protected Color getBackgroundColor(final JComponent c) {
+        if (c instanceof JToggleButton && c.isEnabled()) {
+            if (((JToggleButton) c).isSelected()) {
+                return background;
+            } else {
+                return backgroundInactive;
+            }
+        }
+        return super.getBackgroundColor(c);
+    }
+
     @Override
-    protected String layout(@NotNull final AbstractButton b, final JComponent c,
+    protected String layout(final AbstractButton b, final JComponent c,
                             final FontMetrics fm, final int width, final int height) {
         if (isSlider(c)) {
             Insets i = b.getInsets();
@@ -139,19 +147,8 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
     }
 
-    protected Color getBackgroundColor(@NotNull final JComponent c) {
-        if (c instanceof JToggleButton && c.isEnabled()) {
-            if (((JToggleButton) c).isSelected()) {
-                return background;
-            } else {
-                return backgroundInactive;
-            }
-        }
-        return super.getBackgroundColor(c);
-    }
-
     @Override
-    public boolean contains(@NotNull final JComponent c, final int x, final int y) {
+    public boolean contains(final JComponent c, final int x, final int y) {
         if (!isSlider(c)) return super.contains(c, x, y);
         if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
         Rectangle bounds = getSliderBounds(c);
@@ -159,13 +156,13 @@ public class DarkToggleButtonUI extends DarkButtonUI {
                                           bounds.height, bounds.height).contains(x, y);
     }
 
-    @Contract("null -> false")
+
     private static boolean isSlider(final JComponent c) {
         return c instanceof JToggleButton
                 && "slider".equals(c.getClientProperty("JToggleButton.variant"));
     }
 
-    private void paintSlider(@NotNull final Graphics2D g, final AbstractButton c) {
+    private void paintSlider(final Graphics2D g, final AbstractButton c) {
         Rectangle bounds = getSliderBounds(c);
         g.translate(bounds.x, bounds.y);
 
@@ -198,8 +195,8 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         config.restore();
     }
 
-    @NotNull
-    private Rectangle getSliderBounds(@NotNull final JComponent c) {
+
+    private Rectangle getSliderBounds(final JComponent c) {
         int x = borderSize;
         int y = (c.getHeight() - sliderSize.height) / 2;
         rect.x = x;
@@ -212,18 +209,18 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         return rect;
     }
 
-    protected Color getToggleBorderColor(@NotNull final AbstractButton b) {
+    protected Color getToggleBorderColor(final AbstractButton b) {
         if (b.hasFocus()) {
             return focusBorderColor;
         }
         return b.isEnabled() ? borderColor : inactiveBorderColor;
     }
 
-    protected Color getSliderColor(@NotNull final AbstractButton b) {
+    protected Color getSliderColor(final AbstractButton b) {
         return b.isEnabled() ? sliderColor : inactiveSliderColor;
     }
 
-    protected Color getSliderBorderColor(@NotNull final AbstractButton b) {
+    protected Color getSliderBorderColor(final AbstractButton b) {
         return b.isEnabled() ? sliderBorderColor : inactiveSliderBorderColor;
     }
 

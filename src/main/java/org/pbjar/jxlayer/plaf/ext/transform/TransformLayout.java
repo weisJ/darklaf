@@ -33,7 +33,6 @@ package org.pbjar.jxlayer.plaf.ext.transform;
 
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
-import org.jetbrains.annotations.NotNull;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
@@ -74,7 +73,7 @@ public class TransformLayout extends DefaultLayerLayout {
      * Overridden to apply a preferred transform on the {@link Dimension} object returned from the super
      * implementation.
      */
-    @NotNull
+
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
         return transform(parent, super.preferredLayoutSize(parent));
@@ -84,7 +83,7 @@ public class TransformLayout extends DefaultLayerLayout {
      * Overridden to apply a preferred transform on the {@link Dimension} object returned from the super
      * implementation.
      */
-    @NotNull
+
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
         return transform(parent, super.minimumLayoutSize(parent));
@@ -120,9 +119,9 @@ public class TransformLayout extends DefaultLayerLayout {
         super.layoutContainer(parent);
     }
 
-    @NotNull
+
     @SuppressWarnings("unchecked")
-    private Dimension transform(final Container parent, @NotNull final Dimension size) {
+    private Dimension transform(final Container parent, final Dimension size) {
         JXLayer<JComponent> layer = (JXLayer<JComponent>) parent;
         LayerUI<?> ui = layer.getUI();
         if (ui instanceof TransformUI) {

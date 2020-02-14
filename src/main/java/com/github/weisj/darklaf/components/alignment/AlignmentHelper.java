@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.components.alignment;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 import java.util.function.BiFunction;
 
@@ -58,10 +55,10 @@ final class AlignmentHelper {
      * @param mapperY y component mapper.
      * @return mapper that aligns a rectangle relative to other rectangle.
      */
-    @NotNull
-    @Contract(pure = true)
-    static BiFunction<Dimension, Rectangle, Point> align(@NotNull final Mapper mapperX,
-                                                         @NotNull final Mapper mapperY) {
+
+
+    static BiFunction<Dimension, Rectangle, Point> align(final Mapper mapperX,
+                                                         final Mapper mapperY) {
         return (d, p) -> new Point(mapperX.apply(d, p), mapperY.apply(d, p));
     }
 

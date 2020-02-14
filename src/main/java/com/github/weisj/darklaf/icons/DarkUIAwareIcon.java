@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.icons;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.Theme;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -61,7 +59,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
      * @param h           height of icon.
      * @param parentClass the class to resolve the path while lazy loading.
      */
-    @Contract(pure = true)
+
     public DarkUIAwareIcon(final String darkKey, final String lightKey, final int w, final int h,
                            final Class<?> parentClass) {
         this.darkKey = darkKey;
@@ -72,8 +70,8 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
         this.dual = new DarkUIAwareIcon(this);
     }
 
-    @Contract(pure = true)
-    private DarkUIAwareIcon(@NotNull final DarkUIAwareIcon dual) {
+
+    private DarkUIAwareIcon(final DarkUIAwareIcon dual) {
         this.darkKey = dual.lightKey;
         this.lightKey = dual.darkKey;
         this.dual = dual;
@@ -82,7 +80,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
         this.parentClass = dual.parentClass;
     }
 
-    public void paintIcon(final Component c, @NotNull final Graphics g2,
+    public void paintIcon(final Component c, final Graphics g2,
                           final int x, final int y, final double scale) {
         ensureLoaded();
         Graphics2D g = (Graphics2D) g2.create();
@@ -98,7 +96,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
         }
     }
 
-    @Contract(pure = true)
+
     private boolean isLoaded() {
         return loaded && LafManager.getTheme().equals(currentTheme);
     }

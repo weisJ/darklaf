@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -102,8 +100,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         super(b);
     }
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSliderUI((JSlider) c);
     }
@@ -205,7 +202,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     @Override
-    public void paint(@NotNull final Graphics g2, final JComponent c) {
+    public void paint(final Graphics g2, final JComponent c) {
         super.paint(g2, c);
         if (showVolumeIcon(c)) {
             getVolumeIcon().paintIcon(c, g2, iconRect.x, iconRect.y);
@@ -326,7 +323,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    @NotNull
+
     protected Color getDisabledTickColor() {
         return inactiveTickForeground;
     }
@@ -364,8 +361,24 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    private static boolean isVolumeSlider(@NotNull final JComponent c) {
-        return "volume".equals(c.getClientProperty("Slider.variant"));
+    private Area getHorizontalSliderShape(final Area track) {
+        double x = thumbRect.x + thumbRect.width / 2.0;
+        Area leftArea = new Area(new Rectangle2D.Double(0, 0, x, slider.getHeight()));
+        Area rightArea = new Area(new Rectangle2D.Double(x, 0, slider.getWidth() - x, slider.getHeight()));
+        if (slider.getComponentOrientation().isLeftToRight()) {
+            if (slider.getInverted()) {
+                track.intersect(rightArea);
+            } else {
+                track.intersect(leftArea);
+            }
+        } else {
+            if (!slider.getInverted()) {
+                track.intersect(rightArea);
+            } else {
+                track.intersect(leftArea);
+            }
+        }
+        return track;
     }
 
     protected Icon getVolumeIcon() {
@@ -390,8 +403,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return slider.getOrientation() == JSlider.HORIZONTAL;
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private Area getHorizontalTrackShape() {
         int arc = arcSize;
         int yOff = (trackRect.height / 2) - trackSize / 2;
@@ -405,30 +417,17 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    @Contract("_ -> param1")
-    @NotNull
-    private Area getHorizontalSliderShape(@NotNull final Area track) {
-        double x = thumbRect.x + thumbRect.width / 2.0;
-        Area leftArea = new Area(new Rectangle2D.Double(0, 0, x, slider.getHeight()));
-        Area rightArea = new Area(new Rectangle2D.Double(x, 0, slider.getWidth() - x, slider.getHeight()));
-        if (slider.getComponentOrientation().isLeftToRight()) {
-            if (slider.getInverted()) {
-                track.intersect(rightArea);
-            } else {
-                track.intersect(leftArea);
-            }
+    private Area getVerticalSliderShape(final Area track) {
+        int y = thumbRect.y + thumbRect.height / 2;
+        if (slider.getInverted()) {
+            track.intersect(new Area(new Rectangle2D.Double(0, 0, slider.getWidth(), y)));
         } else {
-            if (!slider.getInverted()) {
-                track.intersect(rightArea);
-            } else {
-                track.intersect(leftArea);
-            }
+            track.intersect(new Area(new Rectangle2D.Double(0, y, slider.getWidth(), slider.getHeight() - y)));
         }
         return track;
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private Area getVerticalTrackShape() {
         int arc = arcSize;
         int xOff = (trackRect.width / 2) - trackSize / 2;
@@ -447,19 +446,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return isPlainThumb() && showVolumeIcon(slider) ? ICON_BAR_EXT : 0;
     }
 
-    @Contract("_ -> param1")
-    @NotNull
-    private Area getVerticalSliderShape(@NotNull final Area track) {
-        int y = thumbRect.y + thumbRect.height / 2;
-        if (slider.getInverted()) {
-            track.intersect(new Area(new Rectangle2D.Double(0, 0, slider.getWidth(), y)));
-        } else {
-            track.intersect(new Area(new Rectangle2D.Double(0, y, slider.getWidth(), slider.getHeight() - y)));
-        }
-        return track;
-    }
-
-    private void paintPlainSliderThumb(@NotNull final Graphics2D g) {
+    private void paintPlainSliderThumb(final Graphics2D g) {
         int r = plainThumbRadius;
         int x = isHorizontal() ? 4 : (thumbRect.width - r) / 2;
         int y = isHorizontal() ? (thumbRect.height - r) / 2 : 4;
@@ -479,6 +466,10 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             g.fill(innerThumb);
         }
         g.translate(-x, -y);
+    }
+
+    private static boolean isVolumeSlider(final JComponent c) {
+        return "volume".equals(c.getClientProperty("Slider.variant"));
     }
 
     private void paintSliderThumb(final Graphics2D g) {
@@ -511,7 +502,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    @NotNull
+
     private Path2D getHorizontalThumbShape() {
         int w = thumbRect.width;
         int h = thumbRect.height;
@@ -526,7 +517,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return shape;
     }
 
-    @NotNull
+
     private Path2D getVerticalThumbShapeLR() {
         int w = thumbRect.width;
         int h = thumbRect.height;
@@ -541,7 +532,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return shape;
     }
 
-    @NotNull
+
     private Path2D getVerticalThumbShapeRL() {
         int w = thumbRect.width;
         int h = thumbRect.height;
@@ -556,7 +547,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return shape;
     }
 
-    @NotNull
+
     protected Color getThumbColor() {
         if (isVolumeSlider(slider)) {
             return slider.isEnabled() ? volumeThumbBackground : volumeThumbInactiveBackground;
@@ -565,17 +556,17 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    @NotNull
+
     protected Color getThumbBorderColor() {
         return slider.isEnabled() ? thumbBorderColor : thumbInactiveBorderColor;
     }
 
-    @NotNull
+
     protected Color getTrackBackground() {
         return trackBackground;
     }
 
-    @NotNull
+
     protected Color getSelectedTrackColor() {
         if (isVolumeSlider(slider)) {
             return slider.isEnabled() ? selectedVolumeTrackBackground : selectedVolumeTrackInactiveBackground;
@@ -584,12 +575,12 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    private boolean instantScrollEnabled(@NotNull final JComponent c) {
+    private boolean instantScrollEnabled(final JComponent c) {
         return Boolean.TRUE.equals(c.getClientProperty("Slider.instantScrollEnabled"));
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("Slider.variant".equals(key)) {
             slider.repaint();

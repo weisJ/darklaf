@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.list;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ListUI;
@@ -33,7 +32,7 @@ import java.awt.*;
 public class DarkListCellRenderer extends DefaultListCellRenderer {
 
     @Override
-    public Component getListCellRendererComponent(@NotNull final JList<?> list, final Object value,
+    public Component getListCellRendererComponent(final JList<?> list, final Object value,
                                                   final int index, final boolean isSelected,
                                                   final boolean cellHasFocus) {
         if (getHorizontalAlignment() != CENTER) {

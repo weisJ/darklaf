@@ -29,8 +29,6 @@ import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.tabbedpane.MoreTabsButton;
 import com.github.weisj.darklaf.ui.tabbedpane.NewTabButton;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -53,8 +51,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     private JPanel holder;
     private JButton newTabButton;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabbedPopupUI();
     }
@@ -134,7 +131,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     }
 
     @Override
-    protected void applyBorderInsets(@NotNull final Insets insets) {
+    protected void applyBorderInsets(final Insets insets) {
         border.setInsets(insets.top, insets.left, insets.bottom, insets.right);
     }
 
@@ -146,7 +143,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
 
     protected class TabFrameNewTabButton extends NewTabButton {
 
-        protected TabFrameNewTabButton(@NotNull final DarkTabbedPaneUI ui) {
+        protected TabFrameNewTabButton(final DarkTabbedPaneUI ui) {
             super(ui);
         }
 

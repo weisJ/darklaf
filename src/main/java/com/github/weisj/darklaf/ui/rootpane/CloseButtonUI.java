@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.rootpane;
 
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +44,7 @@ public class CloseButtonUI extends DarkButtonUI {
     }
 
     @Override
-    protected Color getShadowColor(@NotNull final AbstractButton c) {
+    protected Color getShadowColor(final AbstractButton c) {
         return c.getModel().isArmed() ? closeClick : closeHover;
     }
 }

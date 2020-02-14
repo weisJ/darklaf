@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -77,7 +74,7 @@ public abstract class Animator {
         startTime = -1;
     }
 
-    @NotNull
+
     private static ScheduledExecutorService createScheduler() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, r -> {
             final Thread thread = new Thread(r, "Darcula Animations");
@@ -189,7 +186,7 @@ public abstract class Animator {
         return ticker != null;
     }
 
-    @Contract(pure = true)
+
     public final boolean isForward() {
         return forward;
     }

@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.icons;
 
 import com.github.weisj.darklaf.components.alignment.Alignment;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,12 +34,12 @@ public class RotatableIcon implements Icon {
     private Icon icon;
     private Alignment alignment;
 
-    @Contract(pure = true)
+
     public RotatableIcon() {
         this(null);
     }
 
-    @Contract(pure = true)
+
     public RotatableIcon(final Icon icon) {
         setIcon(icon);
         this.alignment = null;
@@ -63,7 +62,7 @@ public class RotatableIcon implements Icon {
         }
     }
 
-    @Contract(pure = true)
+
     private double getAngle() {
         double angle = 0.0;
         switch (alignment) {

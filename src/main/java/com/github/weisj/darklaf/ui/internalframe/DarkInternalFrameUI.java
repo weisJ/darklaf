@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -40,8 +37,7 @@ public class DarkInternalFrameUI extends BasicInternalFrameUI {
         super(b);
     }
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent b) {
         return new DarkInternalFrameUI((JInternalFrame) b);
     }

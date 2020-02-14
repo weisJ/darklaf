@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -79,11 +78,11 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
         return val;
     }
 
-    protected static boolean isBooleanRenderingEnabled(@NotNull final JTree tree) {
+    protected static boolean isBooleanRenderingEnabled(final JTree tree) {
         return Boolean.TRUE.equals(tree.getClientProperty("JTree.renderBooleanAsCheckBox"));
     }
 
-    protected DarkCellRendererToggleButton getBooleanRenderer(@NotNull final JTree table) {
+    protected DarkCellRendererToggleButton getBooleanRenderer(final JTree table) {
         if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
             return radioRenderer;
         }

@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.components.uiresource;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 public final class Insets2D implements Cloneable {
 
     public double top;
@@ -41,7 +38,7 @@ public final class Insets2D implements Cloneable {
      * @param bottom the inset from the bottom.
      * @param right  the inset from the right.
      */
-    @Contract(pure = true)
+
     public Insets2D(final double top, final double left, final double bottom, final double right) {
         this.top = top;
         this.left = left;
@@ -65,7 +62,7 @@ public final class Insets2D implements Cloneable {
         this.right = right;
     }
 
-    @Contract(pure = true)
+
     @Override
     public int hashCode() {
         double sum1 = left + bottom;
@@ -76,7 +73,7 @@ public final class Insets2D implements Cloneable {
         return (int) (sum3 * (sum3 + 1) / 2 + val2);
     }
 
-    @Contract(value = "null -> false", pure = true)
+
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof Insets2D) {
@@ -87,14 +84,13 @@ public final class Insets2D implements Cloneable {
         return false;
     }
 
-    @NotNull
-    @Contract(value = " -> new", pure = true)
+
     @Override
     public Insets2D clone() {
         return new Insets2D(top, left, bottom, right);
     }
 
-    @NotNull
+
     public String toString() {
         return getClass().getName() + "[top=" + top + ",left=" + left + ",bottom=" + bottom + ",right=" + right + "]";
     }

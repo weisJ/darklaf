@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.icons;
 
 import com.github.weisj.darklaf.util.Scale;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +32,7 @@ public class ScaledIcon implements Icon {
 
     private Image img;
 
-    @Contract(pure = true)
+
     public ScaledIcon(final Image img) {
         this.img = img;
     }

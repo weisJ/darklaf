@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.popupmenu;
 
 import com.github.weisj.darklaf.ui.separator.DarkSeparatorUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -36,15 +34,14 @@ import java.awt.*;
  */
 public class DarkPopupMenuSeparatorUI extends DarkSeparatorUI {
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkPopupMenuSeparatorUI();
     }
 
 
     @Override
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         Dimension s = c.getSize();
         g.setColor(UIManager.getDefaults().getColor("PopupMenu.borderColor"));
         g.fillRect(0, 0, s.width, 1);

@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.ui.table.TextFieldTableCellEditorBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -109,7 +107,7 @@ public class DarkTextBorder implements Border, UIResource {
         config.restore();
     }
 
-    @Contract("null -> false")
+
     protected static boolean isCellEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.cellEditor"));
@@ -131,13 +129,13 @@ public class DarkTextBorder implements Border, UIResource {
         return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
     }
 
-    @Contract("null -> false")
+
     protected static boolean hasError(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.hasError"));
     }
 
-    protected Color getBorderColor(@NotNull final Component c) {
+    protected Color getBorderColor(final Component c) {
         boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();
         boolean focus = DarkUIUtil.hasFocus(c);
         boolean error = hasError(c);

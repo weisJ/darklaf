@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Function;
@@ -406,8 +403,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
-    @NotNull
-    @Contract("_ -> new")
+
+
     protected Point getMargins(final int tabPlacement) {
         Dimension size = ui.tabPane.getSize();
         Insets insets = ui.tabPane.getInsets();
@@ -500,7 +497,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
     }
 
-    protected void shiftBoundsToVisibleX(@NotNull final Rectangle selectedBounds, final int leftMargin,
+    protected void shiftBoundsToVisibleX(final Rectangle selectedBounds, final int leftMargin,
                                          final int rightMargin, final int tabCount) {
         if (selectedBounds.x + selectedBounds.width > rightMargin) {
             //SelectedTab is not fully visible. Covered on right side.
@@ -512,7 +509,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
     }
 
-    protected void shiftBoundsToVisibleY(@NotNull final Rectangle selectedBounds, final int topMargin,
+    protected void shiftBoundsToVisibleY(final Rectangle selectedBounds, final int topMargin,
                                          final int bottomMargin, final int tabCount) {
         if (selectedBounds.y + selectedBounds.height > bottomMargin) {
             //SelectedTab is not fully visible. Covered on right side.
@@ -686,14 +683,14 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
     }
 
-    @Contract(pure = true)
+
     protected boolean isVisibleX(final int i, final int shift, final int minX, final int maxX) {
         int begin = ui.rects[i].x + shift;
         int end = begin + ui.rects[i].width;
         return !(begin >= maxX || end < minX);
     }
 
-    @Contract(pure = true)
+
     protected boolean isVisibleY(final int i, final int shift, final int minX, final int maxX) {
         int begin = ui.rects[i].y + shift;
         int end = begin + ui.rects[i].height;

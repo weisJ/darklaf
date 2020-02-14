@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -76,8 +74,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     protected Color arrowBackgroundEnd;
     private Insets boxPadding;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkComboBoxUI();
     }
@@ -140,7 +137,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
                 process(e);
             }
 
-            private void process(@NotNull final KeyEvent e) {
+            private void process(final KeyEvent e) {
                 final int code = e.getKeyCode();
                 if ((code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN) && e.getModifiersEx() == 0) {
                     comboBox.dispatchEvent(e);
@@ -187,7 +184,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         paintCurrentValue(g, r, hasFocus);
     }
 
-    private void paintBackground(final Graphics g, @NotNull final JComponent c, final int width, final int height) {
+    private void paintBackground(final Graphics g, final JComponent c, final int width, final int height) {
         final Container parent = c.getParent();
         if (parent != null && parent.isOpaque()) {
             g.setColor(parent.getBackground());
@@ -207,18 +204,18 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         }
     }
 
-    protected Color getBackground(@NotNull final JComboBox c) {
+    protected Color getBackground(final JComboBox c) {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) return editBackground;
         return background;
     }
 
-    protected static boolean isTableCellEditor(@NotNull final Component c) {
+    protected static boolean isTableCellEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
     }
 
-    protected static boolean isTreeCellEditor(@NotNull final Component c) {
+    protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTreeCellEditor"));
     }
@@ -396,7 +393,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         }
     }
 
-    protected Paint getArrowBackground(@NotNull final JComboBox<?> c) {
+    protected Paint getArrowBackground(final JComboBox<?> c) {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) {
             return new GradientPaint(0, borderSize, arrowBackgroundStart,
@@ -427,7 +424,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("componentOrientation".equals(key)) {
             comboBox.doLayout();

@@ -36,9 +36,6 @@ import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.jdesktop.swingx.ForwardingRepaintManager;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.pbjar.jxlayer.plaf.ext.transform.DefaultTransformModel;
 import org.pbjar.jxlayer.plaf.ext.transform.TransformLayout;
 import org.pbjar.jxlayer.plaf.ext.transform.TransformModel;
@@ -156,20 +153,20 @@ public class TransformUI extends MouseEventUI<JComponent> {
     private final RepaintManagerProvider rpmProvider =
             new RepaintManagerProvider() {
 
-                @NotNull
+
                 @Override
                 public Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass() {
                     return TransformRPMSwingX.class;
                 }
 
-                @NotNull
+
                 @Override
                 public Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass() {
                     return TransformRPMFallBack.class;
                 }
 
                 @Override
-                public boolean isAdequate(@NotNull final Class<? extends RepaintManager> manager) {
+                public boolean isAdequate(final Class<? extends RepaintManager> manager) {
                     return manager.isAnnotationPresent(TransformRPMAnnotation.class);
                 }
             };
@@ -178,7 +175,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
     private JComponent view;
     private final PropertyChangeListener viewChangeListener =
             evt -> setView((JComponent) evt.getNewValue());
-    @Nullable
+
     private TransformModel transformModel;
     private LayoutManager originalLayout;
 
@@ -240,7 +237,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      *
      * @param hints the new rendering hints
      */
-    public void addRenderingHints(@NotNull final Map<RenderingHints.Key, Object> hints) {
+    public void addRenderingHints(final Map<RenderingHints.Key, Object> hints) {
         this.renderingHints.putAll(hints);
     }
 
@@ -250,8 +247,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @return the {@link TransformModel}
      * @see #setModel(TransformModel)
      */
-    @Contract(pure = true)
-    @Nullable
+
+
     public final TransformModel getModel() {
         return transformModel;
     }
@@ -263,8 +260,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @throws NullPointerException if transformModel is {@code null}
      * @see #getModel()
      */
-    @Contract("null -> fail")
-    public final void setModel(@Nullable final TransformModel transformModel) throws NullPointerException {
+
+    public final void setModel(final TransformModel transformModel) throws NullPointerException {
         if (transformModel == null) {
             throw new NullPointerException("The TransformModel may not be null");
         }
@@ -290,7 +287,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @param layer the {@link JXLayer}.
      * @return a {@link AffineTransform} instance or {@code null}
      */
-    @NotNull
+
     public AffineTransform getPreferredTransform(final Dimension size, final JXLayer<? extends JComponent> layer) {
         return this.transformModel != null ? this.transformModel.getPreferredTransform(size, layer)
                                            : new AffineTransform();
@@ -390,7 +387,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @see #uninstallUI(JComponent)
      */
     @Override
-    public void installUI(@NotNull final JComponent component) {
+    public void installUI(final JComponent component) {
         super.installUI(component);
         JXLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
         originalLayout = installedLayer.getLayout();
@@ -408,7 +405,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @param c the component.
      */
     @Override
-    public void uninstallUI(@NotNull final JComponent c) {
+    public void uninstallUI(final JComponent c) {
         JXLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
         Objects.requireNonNull(installedLayer)
                .removePropertyChangeListener(KEY_VIEW, this.viewChangeListener);
@@ -437,7 +434,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      *
      * @param hints the new rendering hints or {@code null} to clear all rendering hints
      */
-    public void setRenderingHints(@Nullable final Map<RenderingHints.Key, Object> hints) {
+    public void setRenderingHints(final Map<RenderingHints.Key, Object> hints) {
         this.renderingHints.clear();
         if (hints != null) {
             this.renderingHints.putAll(hints);
@@ -451,7 +448,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @param layer the layer
      * @return the argument rectangle if no {@link AffineTransform} is available, else a new rectangle
      */
-    public final Rectangle transform(@NotNull final Rectangle rect, final JXLayer<? extends JComponent> layer) {
+    public final Rectangle transform(final Rectangle rect, final JXLayer<? extends JComponent> layer) {
         AffineTransform at = getTransform(layer);
         if (at == null) {
             return rect;
@@ -475,7 +472,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
     /*
      * Get the most suitable background color.
      */
-    private Color getBackgroundColor(@NotNull final JXLayer<? extends JComponent> layer) {
+    private Color getBackgroundColor(final JXLayer<? extends JComponent> layer) {
         Container colorProvider = layer.getView() == null ? layer : layer.getView();
         while (colorProvider != null && !colorProvider.isOpaque()) {
             colorProvider = colorProvider.getParent();
@@ -523,7 +520,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @see #paint(Graphics, JComponent)
      */
     @Override
-    protected final void paintLayer(@NotNull final Graphics2D g2, @NotNull final JXLayer<? extends JComponent> layer) {
+    protected final void paintLayer(final Graphics2D g2, final JXLayer<? extends JComponent> layer) {
         JComponent view = layer.getView();
         if (view != null) {
             if (view.getX() < 0 || view.getY() < 0) {
@@ -546,7 +543,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * <p>In {@code enabled} state this method is delegated to the {@link TransformModel} that has
      * been set. Otherwise {@code null} will be returned.
      */
-    @NotNull
+
     @Override
     protected final AffineTransform getTransform(final JXLayer<? extends JComponent> layer) {
         return transformModel != null ? transformModel.getTransform(layer)
@@ -561,7 +558,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @see #addRenderingHints(Map)
      * @see #addRenderingHint(RenderingHints.Key, Object)
      */
-    @NotNull
+
     @Override
     protected Map<RenderingHints.Key, Object> getRenderingHints(final JXLayer<? extends JComponent> layer) {
         return renderingHints;
@@ -593,7 +590,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
          * current {@link RepaintManager}.
          */
         @Override
-        public void addDirtyRegion(@NotNull final JComponent c, final int x, final int y, final int w, final int h) {
+        public void addDirtyRegion(final JComponent c, final int x, final int y, final int w, final int h) {
             if (c.isShowing()) {
                 JXLayer<? extends JComponent> layer = findJXLayer(c);
                 TransformUI ui = (TransformUI) layer.getUI();
@@ -615,7 +612,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
          * @param c a component
          * @return the ancestor {@link JXLayer} instance
          */
-        @NotNull
+
         @SuppressWarnings("unchecked")
         private JXLayer<? extends JComponent> findJXLayer(final JComponent c) {
             JXLayer<?> layer = (JXLayer<?>) SwingUtilities.getAncestorOfClass(JXLayer.class, c);

@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,9 +36,9 @@ public class TabbedPaneUtil implements SwingConstants {
     private static final Rectangle EMPTY_RECT = new Rectangle(0, 0, 0, 0);
 
     public static int getDroppedTabIndex(final Rectangle tabBounds,
-                                         @NotNull final JTabbedPane tabbedPane,
+                                         final JTabbedPane tabbedPane,
                                          final DarkTabbedPaneUI ui,
-                                         @NotNull final Point p) {
+                                         final Point p) {
         int tab = tabbedPane.indexAtLocation(p.x, p.y);
         if (ui != null) {
             if (tab == -1) {
@@ -113,9 +111,9 @@ public class TabbedPaneUtil implements SwingConstants {
         return tab;
     }
 
-    @Contract("_, _, _, _, _, _, _, _ -> param5")
-    public static Rectangle getDropRect(@NotNull final DarkTabbedPaneUI ui,
-                                        @NotNull final JTabbedPane destTabbedPane, final JTabbedPane source,
+
+    public static Rectangle getDropRect(final DarkTabbedPaneUI ui,
+                                        final JTabbedPane destTabbedPane, final JTabbedPane source,
                                         final Point mouseLocation, final Rectangle tabBounds,
                                         final int tab, final int sourceIndex, final int lastTab) {
         if (destTabbedPane.getTabCount() == 0) return new Rectangle(0, 0, 0, 0);
@@ -131,7 +129,7 @@ public class TabbedPaneUtil implements SwingConstants {
         return tabBounds;
     }
 
-    private static void calculateDropRectScrollLayout(@NotNull final JTabbedPane destTabbedPane, final JTabbedPane source,
+    private static void calculateDropRectScrollLayout(final JTabbedPane destTabbedPane, final JTabbedPane source,
                                                       final Rectangle tabBounds, final int tab, final int sourceIndex,
                                                       final int lastTab, final int tabPlacement, final Rectangle destRect) {
         boolean lastInSource = false;
@@ -181,8 +179,8 @@ public class TabbedPaneUtil implements SwingConstants {
         }
     }
 
-    private static void calculateDropRectWrapLayout(@NotNull final DarkTabbedPaneUI ui,
-                                                    @NotNull final JTabbedPane destTabbedPane,
+    private static void calculateDropRectWrapLayout(final DarkTabbedPaneUI ui,
+                                                    final JTabbedPane destTabbedPane,
                                                     final JTabbedPane source, final Point mouseLocation,
                                                     final Rectangle tabBounds, final int tab, final int sourceIndex,
                                                     final Rectangle destRect) {

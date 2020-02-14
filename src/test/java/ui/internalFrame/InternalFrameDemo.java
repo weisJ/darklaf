@@ -24,8 +24,6 @@
 package ui.internalFrame;
 
 import com.github.weisj.darklaf.LafManager;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +62,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(InternalFrameDemo::createAndShowGUI);
     }
 
-    @NotNull
+
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -118,7 +116,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
     }
 
     //React to menu selections.
-    public void actionPerformed(@NotNull final ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if ("new".equals(e.getActionCommand())) {
             createFrame();
         } else {
@@ -127,7 +125,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
     }
 
     //Quit the application.
-    @Contract(" -> fail")
+
     private void quit() {
         System.exit(0);
     }

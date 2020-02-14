@@ -1,7 +1,5 @@
 package defaults;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -20,7 +18,7 @@ final class ChangeLookAndFeelAction extends AbstractAction {
         putValue(Action.SHORT_DESCRIPTION, getValue(Action.NAME));
     }
 
-    public void actionPerformed(@NotNull final ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         try {
             UIManager.setLookAndFeel(laf);
             defaults.resetComponents();
@@ -38,7 +36,7 @@ final class ChangeLookAndFeelAction extends AbstractAction {
                 frame.setUndecorated(false);
             }
             frame.setVisible(true);
-        } catch (@NotNull final Exception ex) {
+        } catch (final Exception ex) {
             ex.printStackTrace();
         }
     }

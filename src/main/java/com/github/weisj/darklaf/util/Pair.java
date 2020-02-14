@@ -23,14 +23,12 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-
 public class Pair<T, H> {
 
     private T first;
     private H second;
 
-    @Contract(pure = true)
+
     public Pair(final T first, final H second) {
         this.first = first;
         this.second = second;

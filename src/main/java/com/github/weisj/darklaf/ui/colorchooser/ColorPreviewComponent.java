@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -47,7 +44,7 @@ final class ColorPreviewComponent extends JComponent {
     }
 
     @Override
-    protected void paintComponent(@NotNull final Graphics g) {
+    protected void paintComponent(final Graphics g) {
         final Insets i = getInsets();
         final Rectangle r = getBounds();
 
@@ -67,8 +64,7 @@ final class ColorPreviewComponent extends JComponent {
         g.fillRect(i.left, i.top + height - 1, width, 1);
     }
 
-    @NotNull
-    @Contract(value = " -> new", pure = true)
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(100, 32);

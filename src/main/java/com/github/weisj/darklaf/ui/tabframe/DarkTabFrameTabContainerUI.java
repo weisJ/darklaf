@@ -29,8 +29,6 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameTabContainer;
 import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -60,8 +58,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     private Color hoverColor;
     private boolean printing;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabFrameTabContainerUI();
     }
@@ -162,7 +159,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("content".equals(key)) {
             Object oldVal = evt.getOldValue();
@@ -199,13 +196,13 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     @Override
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         g.setColor(getBackground(tabContainer));
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
         super.paint(g, c);
     }
 
-    public Color getBackground(@NotNull final TabFrameTabContainer tab) {
+    public Color getBackground(final TabFrameTabContainer tab) {
         if (printing) return tab.getBackground();
         return tab.isSelected()
                ? selectedColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()

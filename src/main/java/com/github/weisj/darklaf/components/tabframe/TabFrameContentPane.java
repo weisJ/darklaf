@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.components.tabframe;
 
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -137,15 +135,15 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         return new TabFrameSplitPane(name);
     }
 
-    protected <T> void setupSplitterPanes(@NotNull final BiConsumer<? super ToggleSplitPane, T> consumer,
-                                        final T flag) {
+    protected <T> void setupSplitterPanes(final BiConsumer<? super ToggleSplitPane, T> consumer,
+                                          final T flag) {
         consumer.accept(bottomSplitter, flag);
         consumer.accept(leftSplitter, flag);
         consumer.accept(rightSplitter, flag);
         consumer.accept(topSplitter, flag);
     }
 
-    protected <T> void setupSplitPanes(@NotNull final BiConsumer<? super ToggleSplitPane, T> consumer,
+    protected <T> void setupSplitPanes(final BiConsumer<? super ToggleSplitPane, T> consumer,
                                        final T flag) {
         consumer.accept(topSplit, flag);
         consumer.accept(leftSplit, flag);
@@ -174,9 +172,19 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      *
      * @param a       position of panel.
      * @param enabled true if should be shown.
+     */
+    public void setEnabled(final Alignment a, final boolean enabled) {
+        setEnabled(a, enabled, false);
+    }
+
+    /**
+     * Show or hide the corresponding panel.
+     *
+     * @param a       position of panel.
+     * @param enabled true if should be shown.
      * @param force   whether to force the layout process.
      */
-    public void setEnabled(@NotNull final Alignment a, final boolean enabled, final boolean force) {
+    public void setEnabled(final Alignment a, final boolean enabled, final boolean force) {
         if (enabled == isEnabled(a) && !force) return;
         switch (a) {
             case NORTH:
@@ -251,11 +259,11 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @param proportions the layout proportions
      * @param weights     the layout weights
      */
-    private void changeStatus(final boolean enabled, @NotNull final Alignment peer,
-                              @NotNull final ToggleSplitPane split,
-                              @NotNull final ToggleSplitPane splitter,
-                              @NotNull final LayoutProportions proportions,
-                              @NotNull final LayoutWeights weights) {
+    private void changeStatus(final boolean enabled, final Alignment peer,
+                              final ToggleSplitPane split,
+                              final ToggleSplitPane splitter,
+                              final LayoutProportions proportions,
+                              final LayoutWeights weights) {
         if (enabled) {
             enable(split, weights.splitEnable);
             if (!isEnabled(peer)) {
@@ -274,13 +282,13 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /*
      * Update the flags.
      */
-    private void setEnabledFlag(@NotNull final Alignment a, final boolean e) {
+    private void setEnabledFlag(final Alignment a, final boolean e) {
         if (a != Alignment.CENTER) {
             enabled[a.getIndex()] = e;
         }
     }
 
-    private void enable(@NotNull final ToggleSplitPane splitPane, final double weight) {
+    private void enable(final ToggleSplitPane splitPane, final double weight) {
         boolean restore = !splitPane.isResizable();
         splitPane.setEnabled(true);
         splitPane.setResizable(true);
@@ -288,16 +296,6 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         if (restore) {
             splitPane.restorePosition();
         }
-    }
-
-    private void disable(@NotNull final ToggleSplitPane splitPane, final double weight, final double location) {
-        if (splitPane.isResizable()) {
-            splitPane.savePosition();
-        }
-        splitPane.setResizeWeight(weight);
-        splitPane.forceSetDividerLocation(location);
-        splitPane.setEnabled(false);
-        splitPane.setResizable(false);
     }
 
     public Component getContent() {
@@ -309,14 +307,14 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         rightSplit.setLeftComponent(pane);
     }
 
-    /**
-     * Show or hide the corresponding panel.
-     *
-     * @param a       position of panel.
-     * @param enabled true if should be shown.
-     */
-    public void setEnabled(@NotNull final Alignment a, final boolean enabled) {
-        setEnabled(a, enabled, false);
+    private void disable(final ToggleSplitPane splitPane, final double weight, final double location) {
+        if (splitPane.isResizable()) {
+            splitPane.savePosition();
+        }
+        splitPane.setResizeWeight(weight);
+        splitPane.forceSetDividerLocation(location);
+        splitPane.setEnabled(false);
+        splitPane.setResizable(false);
     }
 
     /**
@@ -325,7 +323,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @param a the position of the panel.
      * @return true if enabled.
      */
-    public boolean isEnabled(@NotNull final Alignment a) {
+    public boolean isEnabled(final Alignment a) {
         if (a == Alignment.CENTER) {
             return false;
         } else {
@@ -333,7 +331,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         }
     }
 
-    public void setComponentAt(@NotNull final Alignment a, final Component c) {
+    public void setComponentAt(final Alignment a, final Component c) {
         switch (a) {
             case NORTH:
                 ((PopupContainer) topSplitter.getLeftComponent()).setPopup(c);
@@ -374,13 +372,13 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      *
      * @return array of status of panels.
      */
-    @NotNull
+
     public boolean[] getStatus() {
         return enabled;
     }
 
     @Override
-    public PopupContainer getContainer(@NotNull final Alignment alignment) {
+    public PopupContainer getContainer(final Alignment alignment) {
         PopupContainer popupComponent;
         switch (alignment) {
             case NORTH:
@@ -419,8 +417,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @param a the position.
      * @return the popup component at position.
      */
-    @NotNull
-    public Component getPopupComponent(@NotNull final Alignment a) {
+
+    public Component getPopupComponent(final Alignment a) {
         return getContainer(a).getPopup();
     }
 
@@ -430,7 +428,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         protected final double splitDisable;
         protected final double splitterDisable;
 
-        @Contract(pure = true)
+
         public LayoutProportions(final double splitRestore, final double splitterPeerDisable,
                                  final double splitDisable, final double splitterDisable) {
             this.splitRestore = splitRestore;
@@ -446,7 +444,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         protected final double splitDisable;
         protected final double splitterPeerDisable;
 
-        @Contract(pure = true)
+
         public LayoutWeights(final double splitEnable, final double splitterDisable,
                              final double splitDisable, final double splitterPeerDisable) {
             this.splitEnable = splitEnable;

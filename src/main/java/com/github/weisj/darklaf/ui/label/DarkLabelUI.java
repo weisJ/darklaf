@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.label;
 
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -39,7 +38,7 @@ public class DarkLabelUI extends BasicLabelUI {
 
     protected static final DarkLabelUI darkLabelUI = new DarkLabelUI();
 
-    @Contract(pure = true)
+
     public static ComponentUI createUI(final JComponent c) {
         return darkLabelUI;
     }

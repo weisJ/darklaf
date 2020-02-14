@@ -26,7 +26,6 @@ package com.github.weisj.darklaf;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.theme.Theme;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -139,7 +138,7 @@ public final class LafManager {
         try {
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
-        } catch (@NotNull final ClassNotFoundException
+        } catch (final ClassNotFoundException
                 | InstantiationException
                 | IllegalAccessException
                 | UnsupportedLookAndFeelException e) {
@@ -156,7 +155,7 @@ public final class LafManager {
         }
     }
 
-    private static void updateLafRecursively(@NotNull final Window window) {
+    private static void updateLafRecursively(final Window window) {
         for (final Window childWindow : window.getOwnedWindows()) {
             updateLafRecursively(childWindow);
         }

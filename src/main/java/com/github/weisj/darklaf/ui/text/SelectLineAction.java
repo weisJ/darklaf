@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
-import org.jetbrains.annotations.Contract;
-
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
@@ -104,7 +102,7 @@ public class SelectLineAction extends TextAction {
 
         }
 
-        @Contract(pure = true)
+
         private int getFirstNonWhitespacePos() {
             int offset = currentLine.offset;
             int end = offset + currentLine.count - 1;

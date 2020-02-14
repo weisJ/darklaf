@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.tabframe;
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -47,8 +45,8 @@ public class TabFrameLayout implements LayoutManager {
     private int rightHeight;
     private int bottomHeight;
 
-    @Contract(pure = true)
-    public TabFrameLayout(@NotNull final JTabFrame tabFrame, final DarkTabFrameUI ui) {
+
+    public TabFrameLayout(final JTabFrame tabFrame, final DarkTabFrameUI ui) {
         this.tabFrame = tabFrame;
         this.ui = ui;
         shift = new int[4];
@@ -63,7 +61,7 @@ public class TabFrameLayout implements LayoutManager {
     public void removeLayoutComponent(final Component comp) {
     }
 
-    @NotNull
+
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getPreferredSize();
@@ -73,7 +71,7 @@ public class TabFrameLayout implements LayoutManager {
                                      + tabFrame.getBottomTabContainer().getHeight() + b.height);
     }
 
-    @NotNull
+
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getMinimumSize();
@@ -84,7 +82,7 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     @Override
-    public void layoutContainer(@NotNull final Container parent) {
+    public void layoutContainer(final Container parent) {
         Dimension dim = parent.getSize();
         int topSize = tabFrame.getTopTabCount();
         int bottomSize = tabFrame.getBottomTabCount();
@@ -268,7 +266,7 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    public int getShift(@NotNull final Alignment a) {
+    public int getShift(final Alignment a) {
         switch (a) {
             case NORTH:
             case EAST:
@@ -279,7 +277,7 @@ public class TabFrameLayout implements LayoutManager {
         return shift[getIndex(a)];
     }
 
-    protected int getIndex(@NotNull final Alignment a) {
+    protected int getIndex(final Alignment a) {
         switch (a) {
             case NORTH:
             case NORTH_EAST:
@@ -301,7 +299,7 @@ public class TabFrameLayout implements LayoutManager {
         draggedOver[getIndex(a)] = b;
     }
 
-    protected int layoutTabArea(@NotNull final Point start, @NotNull final Alignment a,
+    protected int layoutTabArea(final Point start, final Alignment a,
                                 final boolean forward, final int size) {
         int x = start.x;
         int y = start.y;
@@ -355,7 +353,7 @@ public class TabFrameLayout implements LayoutManager {
         return x;
     }
 
-    public int getTabWidth(@NotNull final Component c) {
+    public int getTabWidth(final Component c) {
         int maxWidth = tabFrame.getMaxTabWidth();
         int width = c.getPreferredSize().width;
         if (maxWidth < 0) {

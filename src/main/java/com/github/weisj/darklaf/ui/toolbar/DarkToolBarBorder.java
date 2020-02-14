@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.toolbar;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.UIResource;
@@ -46,7 +43,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
     }
 
 
-    public void paintBorder(final Component c, @NotNull final Graphics g,
+    public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int w, final int h) {
         g.translate(x, y);
 
@@ -68,7 +65,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
         g.translate(-x, -y);
     }
 
-    @Contract("null -> false")
+
     private boolean isFloatable(final Component c) {
         return c instanceof JToolBar && ((JToolBar) c).isFloatable();
     }

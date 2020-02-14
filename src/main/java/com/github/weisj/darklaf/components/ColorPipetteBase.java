@@ -28,8 +28,6 @@ package com.github.weisj.darklaf.components;
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPipette;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicRootPaneUI;
@@ -51,13 +49,13 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
     private Color currentColor;
     private Color initialColor;
 
-    public ColorPipetteBase(@NotNull final JComponent parent, @NotNull final ColorListener colorListener) {
+    public ColorPipetteBase(final JComponent parent, final ColorListener colorListener) {
         this.parent = parent;
         this.colorListener = colorListener;
         robot = createRobot();
     }
 
-    @Nullable
+
     private static Robot createRobot() {
         try {
             return new Robot();
@@ -78,28 +76,28 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         this.closeAction = closeAction;
     }
 
-    protected Color getPixelColor(@NotNull final Point location) {
+    protected Color getPixelColor(final Point location) {
         return robot.getPixelColor(location.x, location.y);
     }
 
-    @Nullable
+
     protected Color getInitialColor() {
         return initialColor;
     }
 
     @Override
-    public void setInitialColor(@Nullable final Color initialColor) {
+    public void setInitialColor(final Color initialColor) {
         this.initialColor = initialColor;
         setColor(initialColor);
     }
 
-    @Nullable
+
     @Override
     public Color getColor() {
         return currentColor;
     }
 
-    protected void setColor(@Nullable final Color color) {
+    protected void setColor(final Color color) {
         currentColor = color;
     }
 
@@ -140,7 +138,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         Toolkit.getDefaultToolkit().removeAWTEventListener(this);
     }
 
-    @NotNull
+
     protected Window getOrCreatePickerWindow() {
         if (pickerWindow == null) {
             Window owner = SwingUtilities.getWindowAncestor(parent);
@@ -152,7 +150,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         return pickerWindow;
     }
 
-    @Nullable
+
     protected Point updateLocation() {
         PointerInfo pointerInfo = MouseInfo.getPointerInfo();
         if (pointerInfo == null) return null;
@@ -169,18 +167,18 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         return new PickerWindow(parent);
     }
 
-    @Nullable
+
     protected Window getPickerWindow() {
         return pickerWindow;
     }
 
-    protected Point adjustPickerLocation(@NotNull final Point mouseLocation, @NotNull final Window pickerWindow) {
+    protected Point adjustPickerLocation(final Point mouseLocation, final Window pickerWindow) {
         return new Point(mouseLocation.x - pickerWindow.getWidth() / 2,
                          mouseLocation.y - pickerWindow.getHeight() / 2);
     }
 
     @Override
-    public void eventDispatched(@NotNull final AWTEvent event) {
+    public void eventDispatched(final AWTEvent event) {
         if (pickerWindow == null || !pickerWindow.isVisible()) return;
         switch (event.getID()) {
             case MouseEvent.MOUSE_PRESSED:
@@ -221,7 +219,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
 
     protected abstract void updatePipette(final boolean force);
 
-    protected void notifyListener(@NotNull final Color c) {
+    protected void notifyListener(final Color c) {
         colorListener.colorChanged(c, this);
     }
 

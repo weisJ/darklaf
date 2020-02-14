@@ -23,10 +23,6 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import javax.swing.*;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -48,13 +44,13 @@ public final class IconLoader {
     private final Map<IconKey, DarkUIAwareIcon> awareIconMap = new HashMap<>();
     private final Map<IconKey, Icon> iconMap = new HashMap<>();
 
-    @Contract(pure = true)
+
     private IconLoader(final Class<?> parentClass) {
         this.parentClass = parentClass;
         iconLoaderMap.put(parentClass, this);
     }
 
-    @Contract(pure = true)
+
     public static IconLoader get() {
         return instance;
     }
@@ -87,9 +83,9 @@ public final class IconLoader {
     /*
      * Helper method to create the icons.
      */
-    @Contract(value = "_, _, _ -> new", pure = true)
-    @NotNull
-    public DarkUIAwareIcon create(@NotNull final String name, final int w, final int h) {
+
+
+    public DarkUIAwareIcon create(final String name, final int w, final int h) {
         return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, parentClass);
     }
 
@@ -133,8 +129,11 @@ public final class IconLoader {
         }
     }
 
-    @NotNull
-    public Icon loadSVGIcon(@NotNull final String name, final int w, final int h, final boolean themed) {
+    public Icon loadSVGIcon(final String name, final boolean themed) {
+        return loadSVGIcon(name, DEFAULT_W, DEFAULT_H, themed);
+    }
+
+    public Icon loadSVGIcon(final String name, final int w, final int h, final boolean themed) {
         try {
             if (themed) {
                 return new ThemedSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
@@ -148,12 +147,7 @@ public final class IconLoader {
         return EmptyIcon.create(0);
     }
 
-    @NotNull
-    public Icon loadSVGIcon(@NotNull final String name, final boolean themed) {
-        return loadSVGIcon(name, DEFAULT_W, DEFAULT_H, themed);
-    }
 
-    @Nullable
     public ImageIcon createImageIcon(final String path,
                                      final String description) {
         java.net.URL imgURL = parentClass.getResource(path);
@@ -170,7 +164,7 @@ public final class IconLoader {
         int w;
         int h;
 
-        @Contract(pure = true)
+
         private IconKey(final String path, final int w, final int h) {
             this.path = path;
             this.w = w;
@@ -182,7 +176,7 @@ public final class IconLoader {
             return Objects.hash(path, w, h);
         }
 
-        @Contract(value = "null -> false", pure = true)
+
         @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
@@ -199,8 +193,7 @@ public final class IconLoader {
             return Objects.equals(path, iconKey.path);
         }
 
-        @NotNull
-        @Contract(pure = true)
+
         @Override
         public String toString() {
             return "[path=" + path + ", w=" + w + ", h=" + h + "]";

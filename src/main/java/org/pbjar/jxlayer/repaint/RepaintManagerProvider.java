@@ -32,7 +32,6 @@
 package org.pbjar.jxlayer.repaint;
 
 import org.jdesktop.swingx.ForwardingRepaintManager;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -51,7 +50,7 @@ public interface RepaintManagerProvider {
      *
      * @return a class object
      */
-    @NotNull
+
     Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass();
 
     /**
@@ -62,7 +61,7 @@ public interface RepaintManagerProvider {
      *
      * @return a class object
      */
-    @NotNull
+
     Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass();
 
     /**

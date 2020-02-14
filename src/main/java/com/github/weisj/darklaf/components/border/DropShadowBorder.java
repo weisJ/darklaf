@@ -25,8 +25,6 @@ package com.github.weisj.darklaf.components.border;
 
 
 import com.github.weisj.darklaf.util.ImageUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -65,18 +63,18 @@ public class DropShadowBorder implements Border, Serializable {
     private boolean showBottomShadow;
     private boolean showRightShadow;
 
-    @Contract(pure = true)
+
     public DropShadowBorder() {
         this(Color.BLACK, 5);
     }
 
-    @Contract(pure = true)
+
     public DropShadowBorder(final Color shadowColor, final int shadowSize) {
         this(shadowColor, shadowSize, .5f, 12, false, true,
              true, true);
     }
 
-    @Contract(pure = true)
+
     public DropShadowBorder(final Color shadowColor, final int shadowSize,
                             final float shadowOpacity, final int cornerSize, final boolean showTopShadow,
                             final boolean showLeftShadow, final boolean showBottomShadow, final boolean showRightShadow) {
@@ -90,7 +88,7 @@ public class DropShadowBorder implements Border, Serializable {
         this.showRightShadow = showRightShadow;
     }
 
-    @Contract(pure = true)
+
     public DropShadowBorder(final boolean showLeftShadow) {
         this(Color.BLACK, 5, .5f, 12,
              false, showLeftShadow, true, true);
@@ -99,7 +97,7 @@ public class DropShadowBorder implements Border, Serializable {
     /**
      * {@inheritDoc}
      */
-    public void paintBorder(final Component c, @NotNull final Graphics graphics,
+    public void paintBorder(final Component c, final Graphics graphics,
                             final int x, final int y, final int width, final int height) {
         /*
          * 1) Get images for this border
@@ -235,7 +233,7 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
-    @NotNull
+
     private Map<Position, BufferedImage> getImages(final Graphics2D g2) {
         //first, check to see if an image for this size has already been rendered
         //if so, use the cache. Else, draw and save
@@ -337,7 +335,7 @@ public class DropShadowBorder implements Border, Serializable {
      * Returns a new BufferedImage that represents a subregion of the given BufferedImage.  (Note that this method does
      * not use BufferedImage.getSubimage(), which will defeat image acceleration strategies on later JDKs.)
      */
-    @NotNull
+
     private BufferedImage getSubImage(final BufferedImage img, final int x, final int y, final int w, final int h) {
         BufferedImage ret = ImageUtil.createCompatibleTranslucentImage(w, h);
         Graphics2D g2 = ret.createGraphics();

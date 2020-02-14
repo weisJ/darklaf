@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
@@ -251,7 +250,7 @@ public class DarkListUIBridge extends BasicListUI {
      *
      * @param map the map
      */
-    public static void loadActionMap(@NotNull final LazyActionMap map) {
+    public static void loadActionMap(final LazyActionMap map) {
         map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN));
         map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_EXTEND));
         map.put(new Actions(Actions.SELECT_PREVIOUS_COLUMN_CHANGE_LEAD));

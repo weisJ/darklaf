@@ -27,7 +27,6 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.DarkMetalTheme;
 import com.github.weisj.darklaf.util.PropertyLoader;
 import com.github.weisj.darklaf.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -76,7 +75,7 @@ public abstract class Theme {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void loadDefaults(@NotNull final Properties properties, final UIDefaults currentDefaults) {
+    public void loadDefaults(final Properties properties, final UIDefaults currentDefaults) {
         String name = getResourcePath() + getName() + "_defaults.properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
@@ -87,7 +86,7 @@ public abstract class Theme {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void loadGlobals(@NotNull final Properties properties, final UIDefaults currentDefaults) {
+    public void loadGlobals(final Properties properties, final UIDefaults currentDefaults) {
         PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"),
                                      properties, currentDefaults);
     }

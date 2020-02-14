@@ -27,7 +27,6 @@ import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.DarkTableCellRenderer;
 import com.github.weisj.darklaf.ui.table.TextFieldTableCellEditorBorder;
-import org.jetbrains.annotations.NotNull;
 import sun.awt.AWTAccessor;
 import sun.awt.shell.ShellFolder;
 import sun.awt.shell.ShellFolderColumnInfo;
@@ -1765,7 +1764,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         JFileChooser chooser;
         DateFormat df;
 
-        DetailsTableCellRenderer(@NotNull final JFileChooser chooser) {
+        DetailsTableCellRenderer(final JFileChooser chooser) {
             this.chooser = chooser;
             df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
                                                 chooser.getLocale());
@@ -1898,7 +1897,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
     @SuppressWarnings("serial") // JDK-implementation class
     protected class FileRenderer extends DarkListCellRenderer {
 
-        public Component getListCellRendererComponent(@NotNull final JList<?> list, final Object value,
+        public Component getListCellRendererComponent(final JList<?> list, final Object value,
                                                       final int index, boolean isSelected,
                                                       final boolean cellHasFocus) {
 

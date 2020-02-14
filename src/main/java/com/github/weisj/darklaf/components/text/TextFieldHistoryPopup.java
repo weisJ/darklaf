@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.components.text;
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.decorators.PlainAction;
 import com.github.weisj.darklaf.util.StringUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +54,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * @param capacity  the length of the history.
      * @param maxH      maximum height.
      */
-    public TextFieldHistoryPopup(@NotNull final SearchTextField textField, final int capacity, final int maxH) {
+    public TextFieldHistoryPopup(final SearchTextField textField, final int capacity, final int maxH) {
         super(maxH);
         this.textField = textField;
         textField.addSearchListener(this);
@@ -107,7 +106,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
     }
 
     @Override
-    public void searchPerformed(@NotNull final SearchEvent e) {
+    public void searchPerformed(final SearchEvent e) {
         String text = e.getText();
         if (!StringUtil.isBlank(text)) {
             addEntry(text);

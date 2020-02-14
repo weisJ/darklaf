@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.progressbar;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -59,8 +57,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     private Color passedColor;
     private Color passedEndColor;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkProgressBarUI();
     }
@@ -99,7 +96,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     }
 
     @Override
-    protected void paintIndeterminate(@NotNull final Graphics g, @NotNull final JComponent c) {
+    protected void paintIndeterminate(final Graphics g, final JComponent c) {
 
         Graphics2D g2 = (Graphics2D) g.create();
         try {
@@ -183,11 +180,11 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         }
     }
 
-    protected static boolean hasFailed(@NotNull final JComponent c) {
+    protected static boolean hasFailed(final JComponent c) {
         return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.failed"));
     }
 
-    protected static boolean hasPassed(@NotNull final JComponent c) {
+    protected static boolean hasPassed(final JComponent c) {
         return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.passed"));
     }
 
@@ -199,14 +196,43 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         return indeterminateEndColor;
     }
 
-    @NotNull
-    @Contract("_, _, _, _, _ -> new")
+
     private Shape getShapedRect(final float x, final float y, final float w, final float h, final float ar) {
         return new RoundRectangle2D.Float(x, y, w, h, ar, ar);
     }
 
+    private void paintString(final Graphics2D g, final int x, final int y,
+                             final int w, final int h, final int fillStart, final int amountFull) {
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
+        String progressString = progressBar.getString();
+        g.setFont(progressBar.getFont());
+        Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
+
+        if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
+            g.setColor(getSelectionBackground());
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+            g.setColor(getSelectionForeground());
+            g.clipRect(fillStart, y, amountFull, h);
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+        } else { // VERTICAL
+            AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
+            g.setFont(progressBar.getFont().deriveFont(rotate));
+            renderLocation = getStringPlacement(g, progressString, x, y, w, h);
+
+            g.setColor(getSelectionBackground());
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+
+            g.clipRect(x, fillStart, w, amountFull);
+            g.setColor(getSelectionForeground());
+            g.drawString(progressString, renderLocation.x, renderLocation.y);
+        }
+        config.restore();
+    }
+
     @Override
-    protected void paintDeterminate(@NotNull final Graphics g, final JComponent c) {
+    protected void paintDeterminate(final Graphics g, final JComponent c) {
         Graphics2D g2 = (Graphics2D) g.create();
         try {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -275,36 +301,6 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         }
     }
 
-    private void paintString(@NotNull final Graphics2D g, final int x, final int y,
-                             final int w, final int h, final int fillStart, final int amountFull) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        String progressString = progressBar.getString();
-        g.setFont(progressBar.getFont());
-        Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
-
-        if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
-            g.setColor(getSelectionBackground());
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-            g.setColor(getSelectionForeground());
-            g.clipRect(fillStart, y, amountFull, h);
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-        } else { // VERTICAL
-            AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
-            g.setFont(progressBar.getFont().deriveFont(rotate));
-            renderLocation = getStringPlacement(g, progressString, x, y, w, h);
-
-            g.setColor(getSelectionBackground());
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-            g.clipRect(x, fillStart, w, amountFull);
-            g.setColor(getSelectionForeground());
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-        }
-        config.restore();
-    }
-
     protected Color getRemainderColor() {
         return trackColor;
     }
@@ -342,7 +338,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         }
     }
 
-    @Contract(pure = true)
+
     private static boolean isSimplified() {
         return UIManager.getBoolean("ProgressBar.isSimplified");
     }

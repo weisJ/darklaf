@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellEditor;
@@ -83,7 +82,7 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
         return comp;
     }
 
-    protected DarkTreeCellEditor getBooleanEditor(@NotNull final JTree table) {
+    protected DarkTreeCellEditor getBooleanEditor(final JTree table) {
         if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
             return radioButtonEditor;
         }

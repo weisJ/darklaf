@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.components;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
@@ -85,7 +83,7 @@ public class ClosableTabbedPane extends JTabbedPane {
         return false;
     }
 
-    private void notifyTabListeners(@NotNull final TabEvent event) {
+    private void notifyTabListeners(final TabEvent event) {
         TabListener[] listeners = listenerList.getListeners(TabListener.class);
         switch (event.getID()) {
             case TabEvent.TAB_CLOSED:

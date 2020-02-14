@@ -27,7 +27,6 @@ package com.github.weisj.darklaf.ui.colorchooser;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,7 +117,7 @@ public class ColorWheel extends JComponent {
         setColor(ColorUtil.toAlpha(rgb, opacity), this, h, s, b);
     }
 
-    public void setColor(@NotNull final Color color, final Object source,
+    public void setColor(final Color color, final Object source,
                          final float h, final float s, final float b) {
         myColor = color;
         myHue = h;

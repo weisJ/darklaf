@@ -34,8 +34,6 @@ package org.pbjar.jxlayer.plaf.ext.transform;
 import com.github.weisj.darklaf.log.LogFormatter;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
@@ -93,8 +91,8 @@ public final class TransformRPMImpl {
      * otherwise
      */
     @SuppressWarnings("unchecked")
-    public static boolean addDirtyRegion(@NotNull final JComponent aComponent, final int x, final int y,
-                                         final int w, final int h, @NotNull final RepaintManager manager) {
+    public static boolean addDirtyRegion(final JComponent aComponent, final int x, final int y,
+                                         final int w, final int h, final RepaintManager manager) {
         if (aComponent.isShowing()) {
             JXLayer<?> layer = findJXLayer(aComponent);
             if (layer != null) {
@@ -178,7 +176,7 @@ public final class TransformRPMImpl {
      * @param aComponent some component
      * @return a {@link JXLayer} instance or {@code null}
      */
-    @Nullable
+
     private static JXLayer<?> findJXLayer(final JComponent aComponent) {
 
         JXLayer<?> layer = (JXLayer<?>) SwingUtilities.getAncestorOfClass(

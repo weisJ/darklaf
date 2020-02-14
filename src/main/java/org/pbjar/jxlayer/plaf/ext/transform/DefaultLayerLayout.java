@@ -31,7 +31,6 @@ package org.pbjar.jxlayer.plaf.ext.transform;
  */
 
 import org.jdesktop.jxlayer.JXLayer;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -57,7 +56,7 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
     /**
      * {@inheritDoc}
      */
-    @NotNull
+
     public Dimension preferredLayoutSize(final Container parent) {
         JXLayer<?> layer = (JXLayer<?>) parent;
         Insets insets = layer.getInsets();
@@ -76,7 +75,7 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
     /**
      * {@inheritDoc}
      */
-    @NotNull
+
     public Dimension minimumLayoutSize(final Container parent) {
         JXLayer<?> layer = (JXLayer<?>) parent;
         Insets insets = layer.getInsets();

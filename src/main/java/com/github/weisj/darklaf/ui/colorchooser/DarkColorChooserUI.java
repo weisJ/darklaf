@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelCMYK;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -73,8 +71,7 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
         }
     };
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkColorChooserUI();
     }

@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.components.tabframe;
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.tabframe.DarkTabFrameTabLabelUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +55,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
      * @param parent      the parent layout manager.
      */
     public TabFrameTabLabel(final String title, final Icon icon, final Alignment orientation,
-                            final int index, @NotNull final JTabFrame parent) {
+                            final int index, final JTabFrame parent) {
         this.index = index;
         this.accelerator = -1;
         this.parent = parent;
@@ -157,7 +155,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
      *
      * @param title the title
      */
-    public void setTitle(@Nullable final String title) {
+    public void setTitle(final String title) {
         if (Objects.equals(title, this.title)) return;
         String oldTitle = this.title;
         this.title = title;

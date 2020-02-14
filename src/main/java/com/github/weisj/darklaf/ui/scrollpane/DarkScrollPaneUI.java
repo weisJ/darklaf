@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.scrollpane;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollPaneUI;
@@ -96,8 +93,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     };
     private ScrollPaneLayout oldLayout;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkScrollPaneUI();
     }

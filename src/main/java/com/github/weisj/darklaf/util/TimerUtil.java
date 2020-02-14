@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
@@ -33,10 +30,10 @@ import java.awt.event.ActionListener;
  * @author Jannis Weis
  */
 public final class TimerUtil {
-    @Contract("_, _, _ -> new")
-    @NotNull
-    public static Timer createNamedTimer(@NotNull final String name, final int delay,
-                                         @NotNull final ActionListener listener) {
+
+
+    public static Timer createNamedTimer(final String name, final int delay,
+                                         final ActionListener listener) {
         return new Timer(delay, listener) {
             @Override
             public String toString() {
@@ -45,9 +42,8 @@ public final class TimerUtil {
         };
     }
 
-    @Contract("_, _ -> new")
-    @NotNull
-    public static Timer createNamedTimer(@NotNull final String name, final int delay) {
+
+    public static Timer createNamedTimer(final String name, final int delay) {
         return new Timer(delay, null) {
             @Override
             public String toString() {

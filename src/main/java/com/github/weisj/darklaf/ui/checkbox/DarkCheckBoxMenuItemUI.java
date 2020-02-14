@@ -27,8 +27,6 @@ import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import sun.swing.MenuItemLayoutHelper;
 
 import javax.swing.*;
@@ -51,8 +49,6 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
     private Icon checkBoxSelectedFocusedIcon;
 
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
     public static ComponentUI createUI(final JComponent c) {
         return new DarkCheckBoxMenuItemUI();
     }
@@ -63,8 +59,8 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
         c.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 
-    protected void paintCheckIcon(final Graphics g2, @NotNull final MenuItemLayoutHelper lh,
-                                  @NotNull final MenuItemLayoutHelper.LayoutResult lr,
+    protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
+                                  final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
@@ -74,7 +70,7 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
         g.setColor(foreground);
     }
 
-    protected Icon getCheckBoxIcon(@NotNull final AbstractButton b) {
+    protected Icon getCheckBoxIcon(final AbstractButton b) {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();

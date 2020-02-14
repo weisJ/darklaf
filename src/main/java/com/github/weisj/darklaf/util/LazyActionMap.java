@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.ActionMapUIResource;
 import java.lang.reflect.InvocationTargetException;
@@ -80,7 +78,7 @@ public class LazyActionMap extends ActionMapUIResource {
      *                    registered on.
      * @return the action map
      */
-    @NotNull
+
     public static ActionMap getActionMap(final Class<?> loaderClass,
                                          final String defaultsKey) {
         ActionMap map = (ActionMap) UIManager.get(defaultsKey);

@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.decorators;
 
-import org.jetbrains.annotations.Contract;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.function.Consumer;
@@ -33,7 +31,7 @@ public class MouseResponder implements MouseListener {
 
     private final Consumer<MouseEvent> consumer;
 
-    @Contract(pure = true)
+
     public MouseResponder(final Consumer<MouseEvent> consumer) {
         this.consumer = consumer;
     }

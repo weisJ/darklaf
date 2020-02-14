@@ -32,7 +32,6 @@
 package org.pbjar.jxlayer.plaf.ext.transform;
 
 import org.jdesktop.swingx.ForwardingRepaintManager;
-import org.jetbrains.annotations.NotNull;
 import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
 
@@ -58,7 +57,7 @@ public class TransformRPMSwingX extends ForwardingRepaintManager {
      *
      * @param delegate the delegate {@link RepaintManager}
      */
-    public TransformRPMSwingX(@NotNull final RepaintManager delegate) {
+    public TransformRPMSwingX(final RepaintManager delegate) {
         super(delegate);
         TransformRPMImpl.hackInitialization(delegate, this);
     }
@@ -67,7 +66,7 @@ public class TransformRPMSwingX extends ForwardingRepaintManager {
      * Delegates and then marks a JXLayer ancestor as dirty with the transformed rectangle.
      */
     @Override
-    public void addDirtyRegion(@NotNull final JComponent c, final int x, final int y, final int w, final int h) {
+    public void addDirtyRegion(final JComponent c, final int x, final int y, final int w, final int h) {
         if (!TransformRPMImpl.addDirtyRegion(c, x, y, w, h, this)) {
             super.addDirtyRegion(c, x, y, w, h);
         }

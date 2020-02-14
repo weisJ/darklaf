@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.components.border;
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
@@ -95,7 +93,7 @@ public class BubbleBorder extends AbstractBorder {
      * @param color border colour
      * @return this
      */
-    @NotNull
+
     public BubbleBorder setColor(final Color color) {
         this.color = color;
         return this;
@@ -137,7 +135,7 @@ public class BubbleBorder extends AbstractBorder {
      * @param n new thickness
      * @return this
      */
-    @NotNull
+
     public BubbleBorder setThickness(final int n) {
         thickness = Math.max(n, 0);
         stroke = new BasicStroke(thickness);
@@ -154,33 +152,12 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     /**
-     * Set the corner radius.
-     *
-     * @param radius radius of corner.
-     * @return this
-     */
-    @NotNull
-    public BubbleBorder setRadius(final int radius) {
-        this.radius = radius;
-        return setPointerSize(pointerSize);
-    }
-
-    /**
-     * Get the pointer size.
-     *
-     * @return size of pointer.
-     */
-    public int getPointerSize() {
-        return pointerSize;
-    }
-
-    /**
      * Set the pointer size Clips at 0.
      *
      * @param size size of pointer.
      * @return this
      */
-    @NotNull
+
     public BubbleBorder setPointerSize(final int size) {
         pointerSize = Math.max(size, 0);
         int left = thickness;
@@ -213,6 +190,27 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     /**
+     * Get the pointer size.
+     *
+     * @return size of pointer.
+     */
+    public int getPointerSize() {
+        return pointerSize;
+    }
+
+    /**
+     * Set the corner radius.
+     *
+     * @param radius radius of corner.
+     * @return this
+     */
+
+    public BubbleBorder setRadius(final int radius) {
+        this.radius = radius;
+        return setPointerSize(pointerSize);
+    }
+
+    /**
      * Get the Alignment the pointer follows. Default is {@link Alignment#NORTH}
      *
      * @return alignment
@@ -229,7 +227,7 @@ public class BubbleBorder extends AbstractBorder {
      * @param side direction in which the pointer should point.
      * @return this.
      */
-    @NotNull
+
     public BubbleBorder setPointerSide(final Alignment side) {
         this.pointerSide = side;
         setPointerSize(pointerSize);
@@ -240,7 +238,7 @@ public class BubbleBorder extends AbstractBorder {
         return (int) calculatePointerPad(w, h, Alignment.NORTH_WEST);
     }
 
-    @Contract(pure = true)
+
     private double calculatePointerPad(final int width, final int height, final Alignment side) {
         double pointerPad;
         switch (side) {
@@ -268,19 +266,19 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     @Override
-    public void paintBorder(@NotNull final Component c, final Graphics g,
+    public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
         Area area = getInnerArea(x, y, width, height);
         paintBorder(g, area);
     }
 
-    @NotNull
+
     @Override
     public Insets getBorderInsets(final Component c) {
         return new Insets(insets.top, insets.left, insets.bottom, insets.right);
     }
 
-    @NotNull
+
     @Override
     public Insets getBorderInsets(final Component c, final Insets insets) {
         return getBorderInsets(c);
@@ -306,15 +304,15 @@ public class BubbleBorder extends AbstractBorder {
         config.restore();
     }
 
-    @Contract("_, _, _, _ -> new")
+
     public RoundRectangle2D.Double calculateBubbleRect(final int x, final int y,
                                                        final int width, final int height) {
         return new RoundRectangle2D.Double(x + insets.left, y + insets.top, width - insets.left - insets.right,
                                            height - insets.top - insets.bottom, radius, radius);
     }
 
-    @NotNull
-    private Path2D creatPointerShape(final double pointerPad, @NotNull final RoundRectangle2D.Double bubble) {
+
+    private Path2D creatPointerShape(final double pointerPad, final RoundRectangle2D.Double bubble) {
         final double w = pointerWidth / 2.0;
         final Path2D pointer = new Path2D.Double(Path2D.WIND_EVEN_ODD);
         double x = bubble.x;

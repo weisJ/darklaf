@@ -25,7 +25,6 @@ package theme;
 
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Properties;
@@ -33,7 +32,7 @@ import java.util.Properties;
 public class MyCustomTheme extends Theme {
 
     @Override
-    public void loadGlobals(@NotNull final Properties properties, final UIDefaults currentDefaults) {
+    public void loadGlobals(final Properties properties, final UIDefaults currentDefaults) {
         super.loadGlobals(properties, currentDefaults);
         /*
          * Properties in the globals file should have a 'globals.' to be applied globally.

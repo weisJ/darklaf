@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -117,7 +115,7 @@ public class TreeRendererComponent extends Container {
     /**
      * Calculate the y location for the icon.
      */
-    private int calculateIconY(@NotNull final Icon icon) {
+    private int calculateIconY(final Icon icon) {
         int iconHeight = icon.getIconHeight();
         int textHeight = renderComponent.getFontMetrics(renderComponent.getFont()).getHeight();
         int textY = iconHeight / 2 - textHeight / 2;

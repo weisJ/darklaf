@@ -25,7 +25,6 @@
 package com.github.weisj.darklaf.ui.colorchooser;
 
 import com.github.weisj.darklaf.components.Disposable;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -35,9 +34,9 @@ import java.awt.image.ImageObserver;
  * @author Konstantin Bulenkov
  */
 public interface ColorPipette extends ImageObserver, Disposable {
-    void setInitialColor(@Nullable Color initialColor);
+    void setInitialColor(Color initialColor);
 
-    @Nullable
+
     Color getColor();
 
     Window show();

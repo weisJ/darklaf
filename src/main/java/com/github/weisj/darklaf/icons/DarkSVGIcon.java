@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.icons;
 
 import com.kitfox.svg.app.beans.SVGIcon;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +54,7 @@ public class DarkSVGIcon implements Icon, Serializable {
      * @param displayWidth  display width of icon.
      * @param displayHeight display height of icon.
      */
-    public DarkSVGIcon(@NotNull final URI uri, final int displayWidth, final int displayHeight) {
+    public DarkSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
         this.uri = uri;
         size = new Dimension(displayWidth, displayHeight);
         icon = new SVGIcon();
@@ -65,8 +63,8 @@ public class DarkSVGIcon implements Icon, Serializable {
         loaded = new AtomicBoolean(false);
     }
 
-    @Contract(pure = true)
-    private DarkSVGIcon(final int width, final int height, @NotNull final DarkSVGIcon icon) {
+
+    private DarkSVGIcon(final int width, final int height, final DarkSVGIcon icon) {
         this.size = new Dimension(width, height);
         this.icon = icon.icon;
         this.uri = icon.uri;
@@ -104,7 +102,7 @@ public class DarkSVGIcon implements Icon, Serializable {
      * @param y        the y coordinate
      * @param rotation the rotation in radians.
      */
-    public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y,
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y,
                           final double rotation) {
         ensureLoaded();
         Graphics2D g2 = (Graphics2D) g.create();

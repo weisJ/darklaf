@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -57,7 +56,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         this((JToggleButton) checkBox);
     }
 
-    public DarkTreeCellEditor(@NotNull final JToggleButton toggleButton) {
+    public DarkTreeCellEditor(final JToggleButton toggleButton) {
         super(dummyCheckBox);
         editorComponent = toggleButton;
         delegate = new EditorDelegate() {
@@ -101,7 +100,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         setClickCountToStart(2);
     }
 
-    public DarkTreeCellEditor(@NotNull final JSpinner spinner) {
+    public DarkTreeCellEditor(final JSpinner spinner) {
         super(dummyCheckBox);
         editorComponent = spinner;
         spinner.putClientProperty("JSpinner.isTreeCellEditor", Boolean.TRUE);

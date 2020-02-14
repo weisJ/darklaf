@@ -27,7 +27,6 @@ import com.github.weisj.darklaf.components.JXPopupMenu;
 import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.icons.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -61,7 +60,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
         tab.getComponent().addPropertyChangeListener(this);
     }
 
-    protected void createAndAdd(final Alignment a, @NotNull final JMenu menu) {
+    protected void createAndAdd(final Alignment a, final JMenu menu) {
         JMenuItem menuItem = createMenuItem(a);
         actions[a.ordinal()] = menuItem;
         menu.add(menuItem);
@@ -76,7 +75,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
         return menuItem;
     }
 
-    protected void moveTo(@NotNull final Alignment a) {
+    protected void moveTo(final Alignment a) {
         if (disabled >= 0) {
             actions[disabled].setEnabled(true);
         }
@@ -85,7 +84,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
         tab.getTabFrame().moveTab(tab, a);
     }
 
-    protected String getDescription(@NotNull final Alignment a) {
+    protected String getDescription(final Alignment a) {
         switch (a) {
             case NORTH:
                 return "Top Left";
@@ -109,7 +108,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
         }
     }
 
-    protected Icon createIcon(@NotNull final Alignment a, final boolean enabled) {
+    protected Icon createIcon(final Alignment a, final boolean enabled) {
         String suffix = enabled ? "" : "Disabled";
         switch (a) {
             case NORTH:
@@ -135,7 +134,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         if ("orientation".equals(evt.getPropertyName())) {
             Object a = evt.getNewValue();
             if (a instanceof Alignment) {

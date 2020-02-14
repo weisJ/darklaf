@@ -24,9 +24,6 @@
 package com.github.weisj.darklaf.ui.toolbar;
 
 import com.github.weisj.darklaf.decorators.MouseResponder;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -48,13 +45,12 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     private Dimension horizontalDim = new Dimension(0, 0);
     private Timer timer = new Timer(5, e -> dragTo());
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkToolBarUI();
     }
 
-    @Nullable
+
     private static Robot createRobot() {
         try {
             return new Robot();
@@ -287,7 +283,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     @Override
-    protected void paintDragWindow(@NotNull final Graphics g) {
+    protected void paintDragWindow(final Graphics g) {
         g.setColor(dragWindow.getBackground());
         int w = dragWindow.getWidth();
         int h = dragWindow.getHeight();
@@ -299,7 +295,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         g.fillRect(0, h - 1, w, 1);
     }
 
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         g.setColor(background);
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }

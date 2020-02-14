@@ -23,14 +23,12 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 
 public class DarkScrollableTabViewport extends ScrollableTabViewport {
     protected final Point viewPos = new Point(0, 0);
 
-    public DarkScrollableTabViewport(@NotNull final DarkTabbedPaneUIBridge ui) {
+    public DarkScrollableTabViewport(final DarkTabbedPaneUIBridge ui) {
         super(ui);
     }
 

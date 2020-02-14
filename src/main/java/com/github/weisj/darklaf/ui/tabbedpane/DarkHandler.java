@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.UIResource;
@@ -47,7 +45,7 @@ public class DarkHandler extends TabbedPaneHandler {
     }
 
     @Override
-    public void propertyChange(@NotNull final PropertyChangeEvent e) {
+    public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String key = e.getPropertyName();
         if ("TabbedPane.maxPopupHeight".equals(key)) {
@@ -154,7 +152,7 @@ public class DarkHandler extends TabbedPaneHandler {
         }
     }
 
-    public void stateChanged(@NotNull final ChangeEvent e) {
+    public void stateChanged(final ChangeEvent e) {
         JTabbedPane tabPane = (JTabbedPane) e.getSource();
         ui.setFocusIndex(tabPane.getSelectedIndex(), true);
     }
@@ -227,7 +225,7 @@ public class DarkHandler extends TabbedPaneHandler {
     }
 
     @Override
-    public void componentAdded(@NotNull final ContainerEvent e) {
+    public void componentAdded(final ContainerEvent e) {
         if (!(e.getChild() instanceof UIResource)) {
             e.getChild().addFocusListener(ui.focusListener);
         }
@@ -235,7 +233,7 @@ public class DarkHandler extends TabbedPaneHandler {
     }
 
     @Override
-    public void componentRemoved(@NotNull final ContainerEvent e) {
+    public void componentRemoved(final ContainerEvent e) {
         if (!(e.getChild() instanceof UIResource)) {
             e.getChild().removeFocusListener(ui.focusListener);
         }

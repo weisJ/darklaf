@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
@@ -42,7 +40,7 @@ public class MutableLineBorder extends EmptyBorder {
     }
 
     @Override
-    public void paintBorder(final Component c, @NotNull final Graphics g, final int x, final int y,
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                             final int width, final int height) {
         g.setColor(getColor());
         g.fillRect(x, y, width - right, top);

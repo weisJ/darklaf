@@ -28,9 +28,6 @@ package org.pbjar.jxlayer.plaf.ext.transform;
  */
 
 import org.jdesktop.jxlayer.JXLayer;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -75,9 +72,9 @@ public class DefaultTransformModel implements TransformModel {
         listeners.put(listener, null);
     }
 
-    @NotNull
+
     @Override
-    public AffineTransform getPreferredTransform(@Nullable final Dimension size, final JXLayer<?> layer) {
+    public AffineTransform getPreferredTransform(final Dimension size, final JXLayer<?> layer) {
         Point2D p = getRotationCenter(size);
         double centerX = p.getX();
         double centerY = p.getY();
@@ -95,7 +92,7 @@ public class DefaultTransformModel implements TransformModel {
      * @param size the size.
      * @return center of rotation.
      */
-    public Point2D getRotationCenter(@Nullable final Dimension size) {
+    public Point2D getRotationCenter(final Dimension size) {
         if (supplier != null) {
             return supplier.apply(size);
         }
@@ -111,7 +108,7 @@ public class DefaultTransformModel implements TransformModel {
      * @param centerY a center Y
      * @return a new {@link AffineTransform}
      */
-    @NotNull
+
     protected AffineTransform transformNoScale(final double centerX, final double centerY) {
         AffineTransform at = new AffineTransform();
         at.translate(centerX, centerY);
@@ -132,9 +129,9 @@ public class DefaultTransformModel implements TransformModel {
         return (Double) getValue(Type.Rotation);
     }
 
-    @NotNull
+
     @SuppressWarnings("unchecked")
-    protected <T> T getValue(@NotNull final Type type) {
+    protected <T> T getValue(final Type type) {
         return (T) values[type.ordinal()];
     }
 
@@ -180,15 +177,60 @@ public class DefaultTransformModel implements TransformModel {
     }
 
     /**
-     * Set a value and fire a PropertyChange.
+     * Return the currently active {@link AffineTransform}. Recalculate if needed.
      *
-     * @param type     the value type
-     * @param newValue the new value
+     * @return the currently active {@link AffineTransform}
      */
-    private void setValue(@NotNull final Type type, final Object newValue) {
-        Object oldValue = values[type.ordinal()];
-        values[type.ordinal()] = newValue;
-        fireChangeEvent(oldValue, newValue);
+
+    @Override
+    public AffineTransform getTransform(final JXLayer<? extends JComponent> layer) {
+        JComponent view = layer == null ? null : layer.getView();
+        /*
+         * Set the current actual program values in addition to the user options.
+         */
+        setValue(Type.LayerWidth, layer == null ? 0 : layer.getWidth());
+        setValue(Type.LayerHeight, layer == null ? 0 : layer.getHeight());
+        setValue(Type.ViewWidth, view == null ? 0 : view.getWidth());
+        setValue(Type.ViewHeight, view == null ? 0 : view.getHeight());
+        /*
+         * If any change to previous values, recompute the transform.
+         */
+        if (!Arrays.equals(prevValues, values) || !valid) {
+            System.arraycopy(values, 0, prevValues, 0, values.length);
+            transform.setToIdentity();
+            if (view != null) {
+                Point2D p = getRotationCenter(layer == null ? null : layer.getSize());
+                double centerX = p.getX();
+                double centerY = p.getY();
+
+                AffineTransform nonScaledTransform = transformNoScale(centerX, centerY);
+
+                double scaleX;
+                double scaleY;
+                if (getValue(Type.ScaleToPreferredSize)) {
+                    scaleX = getValue(Type.PreferredScale);
+                    scaleY = scaleX;
+                } else {
+                    Area area = new Area(new Rectangle2D.Double(0, 0, view.getWidth(), view.getHeight()));
+                    area.transform(nonScaledTransform);
+                    Rectangle2D bounds = area.getBounds2D();
+                    scaleX = layer == null ? 0 : layer.getWidth() / bounds.getWidth();
+                    scaleY = layer == null ? 0 : layer.getHeight() / bounds.getHeight();
+
+                    if (getValue(Type.PreserveAspectRatio)) {
+                        scaleX = Math.min(scaleX, scaleY);
+                        scaleY = scaleX;
+                    }
+                }
+
+                transform.translate(centerX, centerY);
+                transform.scale(getValue(Type.Mirror) ? -scaleX : scaleX, scaleY);
+                transform.translate(-centerX, -centerY);
+                transform.concatenate(nonScaledTransform);
+            }
+        }
+        valid = true;
+        return transform;
     }
 
     /**
@@ -242,60 +284,15 @@ public class DefaultTransformModel implements TransformModel {
     }
 
     /**
-     * Return the currently active {@link AffineTransform}. Recalculate if needed.
+     * Set a value and fire a PropertyChange.
      *
-     * @return the currently active {@link AffineTransform}
+     * @param type     the value type
+     * @param newValue the new value
      */
-    @NotNull
-    @Override
-    public AffineTransform getTransform(@Nullable final JXLayer<? extends JComponent> layer) {
-        JComponent view = layer == null ? null : layer.getView();
-        /*
-         * Set the current actual program values in addition to the user options.
-         */
-        setValue(Type.LayerWidth, layer == null ? 0 : layer.getWidth());
-        setValue(Type.LayerHeight, layer == null ? 0 : layer.getHeight());
-        setValue(Type.ViewWidth, view == null ? 0 : view.getWidth());
-        setValue(Type.ViewHeight, view == null ? 0 : view.getHeight());
-        /*
-         * If any change to previous values, recompute the transform.
-         */
-        if (!Arrays.equals(prevValues, values) || !valid) {
-            System.arraycopy(values, 0, prevValues, 0, values.length);
-            transform.setToIdentity();
-            if (view != null) {
-                Point2D p = getRotationCenter(layer == null ? null : layer.getSize());
-                double centerX = p.getX();
-                double centerY = p.getY();
-
-                AffineTransform nonScaledTransform = transformNoScale(centerX, centerY);
-
-                double scaleX;
-                double scaleY;
-                if (getValue(Type.ScaleToPreferredSize)) {
-                    scaleX = getValue(Type.PreferredScale);
-                    scaleY = scaleX;
-                } else {
-                    Area area = new Area(new Rectangle2D.Double(0, 0, view.getWidth(), view.getHeight()));
-                    area.transform(nonScaledTransform);
-                    Rectangle2D bounds = area.getBounds2D();
-                    scaleX = layer == null ? 0 : layer.getWidth() / bounds.getWidth();
-                    scaleY = layer == null ? 0 : layer.getHeight() / bounds.getHeight();
-
-                    if (getValue(Type.PreserveAspectRatio)) {
-                        scaleX = Math.min(scaleX, scaleY);
-                        scaleY = scaleX;
-                    }
-                }
-
-                transform.translate(centerX, centerY);
-                transform.scale(getValue(Type.Mirror) ? -scaleX : scaleX, scaleY);
-                transform.translate(-centerX, -centerY);
-                transform.concatenate(nonScaledTransform);
-            }
-        }
-        valid = true;
-        return transform;
+    private void setValue(final Type type, final Object newValue) {
+        Object oldValue = values[type.ordinal()];
+        values[type.ordinal()] = newValue;
+        fireChangeEvent(oldValue, newValue);
     }
 
     @Override
@@ -319,7 +316,7 @@ public class DefaultTransformModel implements TransformModel {
      * @param oldValue an old value
      * @param newValue a new value
      */
-    protected void fireChangeEvent(@NotNull final Object oldValue, final Object newValue) {
+    protected void fireChangeEvent(final Object oldValue, final Object newValue) {
         if (!oldValue.equals(newValue)) {
             ChangeEvent event = new ChangeEvent(this);
             for (ChangeListener listener : listeners.keySet()) {
@@ -476,12 +473,12 @@ public class DefaultTransformModel implements TransformModel {
 
         private final Object defaultValue;
 
-        @Contract(pure = true)
+
         Type(final Object defaultValue) {
             this.defaultValue = defaultValue;
         }
 
-        @NotNull
+
         public static Object[] createArray() {
             Object[] array = new Object[values().length];
             for (Type type : values()) {

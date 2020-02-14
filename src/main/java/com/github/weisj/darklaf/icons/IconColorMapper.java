@@ -32,7 +32,6 @@ import com.kitfox.svg.SVGRoot;
 import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +45,7 @@ import java.util.logging.Logger;
 public final class IconColorMapper {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
 
-    public static void patchColors(@NotNull final SVGIcon svgIcon) {
+    public static void patchColors(final SVGIcon svgIcon) {
         SVGUniverse universe = svgIcon.getSvgUniverse();
         SVGDiagram diagram = universe.getDiagram(svgIcon.getSvgURI());
         try {
@@ -56,7 +55,7 @@ public final class IconColorMapper {
         }
     }
 
-    private static void loadColors(@NotNull final SVGDiagram diagram) throws SVGElementException {
+    private static void loadColors(final SVGDiagram diagram) throws SVGElementException {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
         if (defs == null) return;
@@ -80,7 +79,7 @@ public final class IconColorMapper {
         }
     }
 
-    @NotNull
+
     private static LinearGradient createColor(final Color c, final String name) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);

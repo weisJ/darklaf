@@ -53,14 +53,13 @@ package ui.toolBar;/*
  */
 
 /*
- * toolBar.ToolBarDemo.java requires the following addditional files:
+ * toolBar.ToolBarDemo.java requires the following additional files:
  * images/Back24.gif
  * images/Forward24.gif
  * images/Up24.gif
  */
 
 import com.github.weisj.darklaf.LafManager;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -93,7 +92,7 @@ public class ToolBarDemo extends JPanel implements ActionListener {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void addButtons(@NotNull final JToolBar toolBar) {
+    private void addButtons(final JToolBar toolBar) {
         JButton button;
 
         //first button
@@ -112,7 +111,7 @@ public class ToolBarDemo extends JPanel implements ActionListener {
         toolBar.add(button);
     }
 
-    @NotNull
+
     private JButton makeNavigationButton(final String imageName,
                                          final String actionCommand,
                                          final String toolTipText,
@@ -163,7 +162,7 @@ public class ToolBarDemo extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    public void actionPerformed(@NotNull final ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         String cmd = e.getActionCommand();
         String description = null;
 

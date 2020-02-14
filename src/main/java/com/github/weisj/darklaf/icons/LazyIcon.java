@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import org.jetbrains.annotations.Contract;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -42,7 +40,7 @@ public abstract class LazyIcon implements Icon, UIResource {
     private boolean loaded;
     private Icon icon;
 
-    @Contract(pure = true)
+
     public LazyIcon(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
         this.path = path;
         this.key = key;

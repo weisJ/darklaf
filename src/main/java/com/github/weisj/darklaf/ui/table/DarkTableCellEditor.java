@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.ui.combobox.DarkComboBoxUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -89,7 +87,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         setClickCountToStart(2);
     }
 
-    public DarkTableCellEditor(@NotNull final JSpinner spinner) {
+    public DarkTableCellEditor(final JSpinner spinner) {
         super(dummyCheckBox);
         editorComponent = spinner;
         spinner.putClientProperty("JSpinner.isTableCellEditor", Boolean.TRUE);
@@ -129,7 +127,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         this((JToggleButton) checkBox);
     }
 
-    public DarkTableCellEditor(@NotNull final JToggleButton toggleButton) {
+    public DarkTableCellEditor(final JToggleButton toggleButton) {
         super(dummyCheckBox);
         editorComponent = toggleButton;
         delegate = new EditorDelegate() {
@@ -259,13 +257,13 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         return comp;
     }
 
-    @Contract("null, _ -> false")
+
     private boolean useBooleanEditor(final Object value, final JTable table) {
         return value instanceof Boolean && DarkTableCellRenderer.isBooleanRenderingEnabled(table)
                 && !(editorComponent instanceof JCheckBox || editorComponent instanceof JRadioButton);
     }
 
-    protected TableCellEditor getBooleanEditor(@NotNull final JTable table) {
+    protected TableCellEditor getBooleanEditor(final JTable table) {
         if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
             return radioButtonEditor;
         }
@@ -289,7 +287,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             this.iconGap = iconGap;
         }
 
-        protected void init(@NotNull final JComponent component, final Icon icon, final boolean ltr) {
+        protected void init(final JComponent component, final Icon icon, final boolean ltr) {
             setComponentOrientation(ltr ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT);
             if (c != null) {
                 remove(c);

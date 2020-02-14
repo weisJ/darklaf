@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.util.DarkSwingUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -52,13 +50,13 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     //
     // PropertyChangeListener
     //
-    @Contract(pure = true)
+
     protected TabbedPaneHandler(final DarkTabbedPaneUIBridge ui) {
         this.ui = ui;
     }
 
 
-    public void propertyChange(@NotNull final PropertyChangeEvent e) {
+    public void propertyChange(final PropertyChangeEvent e) {
         JTabbedPane pane = (JTabbedPane) e.getSource();
         String name = e.getPropertyName();
         boolean isScrollLayout = ui.scrollableTabLayoutEnabled();
@@ -250,7 +248,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
    changes to tab text, this code should be removed and
    replaced by something which uses that.  */
 
-    public void componentAdded(@NotNull final ContainerEvent e) {
+    public void componentAdded(final ContainerEvent e) {
         JTabbedPane tp = (JTabbedPane) e.getContainer();
         Component child = e.getChild();
         if (child instanceof UIResource) {
@@ -260,7 +258,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         updateHtmlViews(tp.indexOfComponent(child), true);
     }
 
-    public void componentRemoved(@NotNull final ContainerEvent e) {
+    public void componentRemoved(final ContainerEvent e) {
         JTabbedPane tp = (JTabbedPane) e.getContainer();
         Component child = e.getChild();
         if (child instanceof UIResource) {

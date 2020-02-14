@@ -28,9 +28,6 @@ import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.platform.windows.JNIDecorations;
 import com.github.weisj.darklaf.util.Scale;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import sun.awt.SunToolkit;
 
 import javax.accessibility.AccessibleContext;
@@ -60,19 +57,23 @@ public class DarkTitlePane extends JComponent {
     private static final int ICON_WIDTH = 32;
     private static final int ICON_SIZE = ICON_WIDTH - 3 * PAD;
     private final JRootPane rootPane;
-    private final ContainerListener rootPaneContainerListener = new ContainerListener() {
+    private final ContainerListener layeredPaneContainerListener = new ContainerListener() {
         @Override
-        public void componentAdded(@NotNull final ContainerEvent e) {
-            if (e.getChild() instanceof JLayeredPane) {
-                ((JLayeredPane) e.getChild()).addContainerListener(layeredPaneContainerListener);
+        public void componentAdded(final ContainerEvent e) {
+            if (e.getChild() instanceof JMenuBar) {
+                menuBar = getRootPane().getJMenuBar();
+                //Otherwise a white bar will appear where the menuBar used to be.
+                menuBar.setPreferredSize(new Dimension(0, 0));
+                add(menuBar);
+            }
+            if (getRootPane().getJMenuBar() == null && menuBar != null) {
+                remove(menuBar);
+                menuBar = null;
             }
         }
 
         @Override
-        public void componentRemoved(@NotNull final ContainerEvent e) {
-            if (e.getChild() instanceof JLayeredPane) {
-                ((JLayeredPane) e.getChild()).removeContainerListener(layeredPaneContainerListener);
-            }
+        public void componentRemoved(final ContainerEvent e) {
         }
     };
     private boolean oldResizable;
@@ -109,23 +110,19 @@ public class DarkTitlePane extends JComponent {
     };
     private long windowHandle;
     private JMenuBar menuBar;
-    private final ContainerListener layeredPaneContainerListener = new ContainerListener() {
+    private final ContainerListener rootPaneContainerListener = new ContainerListener() {
         @Override
-        public void componentAdded(@NotNull final ContainerEvent e) {
-            if (e.getChild() instanceof JMenuBar) {
-                menuBar = getRootPane().getJMenuBar();
-                //Otherwise a white bar will appear where the menuBar used to be.
-                menuBar.setPreferredSize(new Dimension(0, 0));
-                add(menuBar);
-            }
-            if (getRootPane().getJMenuBar() == null && menuBar != null) {
-                remove(menuBar);
-                menuBar = null;
+        public void componentAdded(final ContainerEvent e) {
+            if (e.getChild() instanceof JLayeredPane) {
+                ((JLayeredPane) e.getChild()).addContainerListener(layeredPaneContainerListener);
             }
         }
 
         @Override
         public void componentRemoved(final ContainerEvent e) {
+            if (e.getChild() instanceof JLayeredPane) {
+                ((JLayeredPane) e.getChild()).removeContainerListener(layeredPaneContainerListener);
+            }
         }
     };
     private int state;
@@ -148,12 +145,12 @@ public class DarkTitlePane extends JComponent {
         setLayout(createLayout());
     }
 
-    @NotNull
+
     private static JButton createButton(final String accessibleName, final Icon icon, final Action action) {
         return createButton(accessibleName, icon, action, false);
     }
 
-    @NotNull
+
     private static JButton createButton(final String accessibleName, final Icon icon, final Action action,
                                         final boolean close) {
         JButton button;
@@ -241,14 +238,12 @@ public class DarkTitlePane extends JComponent {
         addAncestorListener(ancestorListener);
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private WindowListener createWindowListener() {
         return new DarkTitlePane.WindowHandler();
     }
 
-    @NotNull
-    @Contract(value = " -> new", pure = true)
+
     private PropertyChangeListener createWindowPropertyChangeListener() {
         return new PropertyChangeHandler();
     }
@@ -328,7 +323,7 @@ public class DarkTitlePane extends JComponent {
         return windowIconButton;
     }
 
-    @NotNull
+
     private JPopupMenu createMenu() {
         JPopupMenu menu = new JPopupMenu();
         if (getWindowDecorationStyle() == JRootPane.FRAME) {
@@ -337,7 +332,7 @@ public class DarkTitlePane extends JComponent {
         return menu;
     }
 
-    private void addMenuItems(@NotNull final JPopupMenu menu) {
+    private void addMenuItems(final JPopupMenu menu) {
         menu.add(new JMenuItem(restoreAction) {{
             setDisabledIcon(restoreIcon);
         }});
@@ -362,7 +357,7 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-    @Contract(pure = true)
+
     private Window getWindow() {
         return window;
     }
@@ -409,8 +404,7 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-    @NotNull
-    @Contract(value = " -> new", pure = true)
+
     private LayoutManager createLayout() {
         return new TitlePaneLayout();
     }
@@ -461,8 +455,7 @@ public class DarkTitlePane extends JComponent {
         return rootPane;
     }
 
-    @Nullable
-    @Contract(pure = true)
+
     private Frame getFrame() {
         Window window = getWindow();
 
@@ -543,7 +536,7 @@ public class DarkTitlePane extends JComponent {
         }
     }
 
-    protected boolean isResizable(final Window window, @NotNull final JRootPane rootPane) {
+    protected boolean isResizable(final Window window, final JRootPane rootPane) {
         if (JRootPane.NONE == rootPane.getWindowDecorationStyle()) {
             return false;
         } else {
@@ -747,7 +740,7 @@ public class DarkTitlePane extends JComponent {
     }
 
     protected class PropertyChangeHandler implements PropertyChangeListener {
-        public void propertyChange(@NotNull final PropertyChangeEvent pce) {
+        public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
             if ("resizable".equals(name) || "state".equals(name)) {
                 Frame frame = getFrame();

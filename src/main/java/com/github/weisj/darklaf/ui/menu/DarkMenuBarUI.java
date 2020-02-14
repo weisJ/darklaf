@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.menu;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalMenuBarUI;
 import java.awt.*;
@@ -44,7 +42,7 @@ public class DarkMenuBarUI extends MetalMenuBarUI {
     }
 
     @Override
-    public void paint(@NotNull final Graphics g, @NotNull final JComponent c) {
+    public void paint(final Graphics g, final JComponent c) {
         g.setColor(background);
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }

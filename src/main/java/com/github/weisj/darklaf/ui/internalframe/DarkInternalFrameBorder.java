@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.internalframe;
 
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
@@ -43,7 +42,7 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
     }
 
     @Override
-    public void paintBorder(final Component c, @NotNull final Graphics graphics, final int x, final int y,
+    public void paintBorder(final Component c, final Graphics graphics, final int x, final int y,
                             final int width, final int height) {
         if (c instanceof JInternalFrame && ((JInternalFrame) c).isMaximum()) {
             return;

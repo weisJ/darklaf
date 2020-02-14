@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.text;
 import com.github.weisj.darklaf.decorators.MouseMovementListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -80,7 +78,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     private boolean showTriggered = false;
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
-        public void mousePressed(@NotNull final MouseEvent e) {
+        public void mousePressed(final MouseEvent e) {
             if (hasShowIcon(editor) && isOverEye(e.getPoint())) {
                 ((JPasswordField) getComponent()).setEchoChar((char) 0);
                 showTriggered = true;
@@ -98,8 +96,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         }
     };
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkPasswordFieldUI();
     }
@@ -188,13 +185,13 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         return showPressed;
     }
 
-    @Contract("null -> false")
+
     public static boolean hasShowIcon(final Component c) {
         return c instanceof JPasswordField
                 && Boolean.TRUE.equals(((JComponent) c).getClientProperty("PasswordField.view"));
     }
 
-    @NotNull
+
     private Point getShowIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getShowIcon().getIconWidth();

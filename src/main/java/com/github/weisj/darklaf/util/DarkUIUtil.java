@@ -25,9 +25,6 @@ package com.github.weisj.darklaf.util;
 
 import com.github.weisj.darklaf.decorators.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
@@ -78,7 +75,7 @@ public final class DarkUIUtil {
         doPaint(g, width, height, arc, bw);
     }
 
-    private static void doPaint(@NotNull final Graphics2D g, final int width, final int height, final float arc,
+    private static void doPaint(final Graphics2D g, final int width, final int height, final float arc,
                                 final float bw) {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
 
@@ -125,13 +122,13 @@ public final class DarkUIUtil {
         config.restore();
     }
 
-    public static void fillRoundRect(@NotNull final Graphics2D g, final float x, final float y,
+    public static void fillRoundRect(final Graphics2D g, final float x, final float y,
                                      final float width, final float height, final int arc) {
         g.fill(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
     }
 
-    @NotNull
-    public static Color blendColors(@NotNull final Color color1, @NotNull final Color color2, final double percent) {
+
+    public static Color blendColors(final Color color1, final Color color2, final double percent) {
         if (percent == 1) return color1;
         if (percent == 0) return color2;
         double inverse_percent = 1.0 - percent;
@@ -182,16 +179,15 @@ public final class DarkUIUtil {
         return ActionEvent.ALT_MASK;
     }
 
-    @Nullable
-    @Contract(pure = true)
-    public static Object getUIOfType(final ComponentUI ui, @NotNull final Class<?> klass) {
+
+    public static Object getUIOfType(final ComponentUI ui, final Class<?> klass) {
         if (klass.isInstance(ui)) {
             return ui;
         }
         return null;
     }
 
-    public static void doNotCancelPopupSetup(@NotNull final JComponent component) {
+    public static void doNotCancelPopupSetup(final JComponent component) {
         component.putClientProperty("doNotCancelPopup", DarkPopupMenuUI.HIDE_POPUP_KEY);
         component.putClientProperty("doNotCancelOnScroll", Boolean.TRUE);
     }
@@ -205,7 +201,7 @@ public final class DarkUIUtil {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
+
     public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {
         for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
             if (cls.isAssignableFrom(eachParent.getClass())) {
@@ -215,21 +211,20 @@ public final class DarkUIUtil {
         return null;
     }
 
-    @Contract("null -> null")
-    @Nullable
-    public static Window getWindow(@Nullable final Component component) {
+
+    public static Window getWindow(final Component component) {
         if (component == null) {
             return null;
         }
         return component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);
     }
 
-    public static boolean isTooltipShowing(@NotNull final JComponent component) {
+    public static boolean isTooltipShowing(final JComponent component) {
         AbstractAction hideTipAction = (AbstractAction) component.getActionMap().get("hideTip");
         return hideTipAction.isEnabled();
     }
 
-    @Nullable
+
     public static MenuElement findEnabledChild(final MenuElement[] e, final MenuElement elem, final boolean forward) {
         for (int i = 0; i < e.length; i++) {
             if (e[i] == elem) {
@@ -251,7 +246,7 @@ public final class DarkUIUtil {
         return result;
     }
 
-    @Nullable
+
     private static MenuElement nextEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
         for (int i = fromIndex; i <= toIndex; i++) {
             if (e[i] != null) {
@@ -266,7 +261,7 @@ public final class DarkUIUtil {
         return null;
     }
 
-    @Nullable
+
     private static MenuElement previousEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
         for (int i = fromIndex; i >= toIndex; i--) {
             if (e[i] != null) {
@@ -281,7 +276,7 @@ public final class DarkUIUtil {
         return null;
     }
 
-    public static void drawRect(@NotNull final Graphics g, final int x, final int y,
+    public static void drawRect(final Graphics g, final int x, final int y,
                                 final int width, final int height, final int thickness) {
         g.fillRect(x, y, width, thickness);
         g.fillRect(x, y + thickness, thickness, height - 2 * thickness);
@@ -289,7 +284,7 @@ public final class DarkUIUtil {
         g.fillRect(x, y + height - thickness, width, thickness);
     }
 
-    public static boolean isOverText(@NotNull final MouseEvent e, final int index, final JList list) {
+    public static boolean isOverText(final MouseEvent e, final int index, final JList list) {
         Rectangle bounds = list.getCellBounds(index, index);
         if (!bounds.contains(e.getPoint())) return false;
         //noinspection unchecked
@@ -314,7 +309,7 @@ public final class DarkUIUtil {
         return textRect.contains(p);
     }
 
-    public static boolean isOverText(@NotNull final MouseEvent e, final int row, final int column,
+    public static boolean isOverText(final MouseEvent e, final int row, final int column,
                                      final JTable table) {
         Rectangle bounds = table.getCellRect(row, column, false);
         if (!bounds.contains(e.getPoint())) return false;
@@ -327,12 +322,12 @@ public final class DarkUIUtil {
         }
     }
 
-    public static boolean isMenuShortcutKeyDown(@NotNull final InputEvent event) {
+    public static boolean isMenuShortcutKeyDown(final InputEvent event) {
         return (event.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0;
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
-    public static void rotateRectangle(@NotNull final Rectangle rect) {
+    public static void rotateRectangle(final Rectangle rect) {
         int tmp = rect.x;
         rect.x = rect.y;
         rect.y = tmp;
@@ -342,7 +337,7 @@ public final class DarkUIUtil {
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
-    public static void rotatePoint(@NotNull final Point p) {
+    public static void rotatePoint(final Point p) {
         int tmp = p.x;
         p.x = p.y;
         p.y = tmp;

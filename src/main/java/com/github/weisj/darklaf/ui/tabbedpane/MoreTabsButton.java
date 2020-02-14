@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +53,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         return ui.getTabAreaBackground();
     }
 
-    protected void paintButton(@NotNull final Graphics g) {
+    protected void paintButton(final Graphics g) {
         FontMetrics metrics = g.getFontMetrics();
         String label = getLabelString();
         int labelWidth = metrics.stringWidth(label);
@@ -83,7 +82,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         config.restore();
     }
 
-    @NotNull
+
     protected String getLabelString() {
         int invisible = Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible, ui.tabPane.getTabCount());
         return invisible >= 100 ? INFINITY : String.valueOf(invisible);

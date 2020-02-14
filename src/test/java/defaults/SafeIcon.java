@@ -1,8 +1,5 @@
 package defaults;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,13 +24,13 @@ final class SafeIcon implements Icon {
     private final Icon wrappee;
     private Icon standIn;
 
-    @Contract(pure = true)
+
     SafeIcon(final Icon wrappee) {
         this.wrappee = wrappee;
     }
 
     @Override
-    public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y) {
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         if (standIn == this) {
             paintFallback(c, g, x, y);
         } else if (standIn != null) {
@@ -41,7 +38,7 @@ final class SafeIcon implements Icon {
         } else {
             try {
                 wrappee.paintIcon(c, g, x, y);
-            } catch (@NotNull final ClassCastException e) {
+            } catch (final ClassCastException e) {
                 createStandIn(e);
                 standIn.paintIcon(c, g, x, y);
             }
@@ -59,34 +56,34 @@ final class SafeIcon implements Icon {
     }
 
     private void paintFallback(
-            final Component c, @NotNull final Graphics g, final int x, final int y) {
+            final Component c, final Graphics g, final int x, final int y) {
         g.drawRect(x, y, getIconWidth(), getIconHeight());
         g.drawLine(x, y, x + getIconWidth(), y + getIconHeight());
         g.drawLine(x + getIconWidth(), y, x, y + getIconHeight());
     }
 
-    private void createStandIn(@NotNull final ClassCastException e) {
+    private void createStandIn(final ClassCastException e) {
         try {
             final Class<?> clazz = getClass(e);
             final JComponent standInComponent = getSubstitute(clazz);
             standIn = createImageIcon(standInComponent);
-        } catch (@NotNull final Exception e1) {
+        } catch (final Exception e1) {
             // something went wrong - fallback to this painting
             standIn = this;
         }
     }
 
-    private Class<?> getClass(@NotNull final ClassCastException e) throws ClassNotFoundException {
+    private Class<?> getClass(final ClassCastException e) throws ClassNotFoundException {
         String className = e.getMessage();
         className = className.substring(className.lastIndexOf(" ") + 1);
         return Class.forName(className);
     }
 
-    private JComponent getSubstitute(@NotNull final Class<?> clazz) throws IllegalAccessException {
+    private JComponent getSubstitute(final Class<?> clazz) throws IllegalAccessException {
         JComponent standInComponent = null;
         try {
             standInComponent = (JComponent) clazz.getDeclaredConstructor().newInstance();
-        } catch (@NotNull final InstantiationException e) {
+        } catch (final InstantiationException e) {
             standInComponent = new AbstractButton() {
             };
             ((AbstractButton) standInComponent).setModel(new DefaultButtonModel());
@@ -96,8 +93,7 @@ final class SafeIcon implements Icon {
         return standInComponent;
     }
 
-    @Contract("_ -> new")
-    @NotNull
+
     private Icon createImageIcon(final JComponent standInComponent) {
         final BufferedImage image =
                 new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);

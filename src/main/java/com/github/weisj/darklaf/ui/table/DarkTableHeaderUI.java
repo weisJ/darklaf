@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.util.GraphicsContext;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -44,8 +42,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     protected Color borderColor;
     protected Color background;
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableHeaderUI();
     }
@@ -82,7 +79,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     }
 
     @Override
-    public void paint(final Graphics g2, final @NotNull JComponent c) {
+    public void paint(final Graphics g2, final JComponent c) {
         final Graphics2D g = (Graphics2D) g2;
         final GraphicsContext config = new GraphicsContext(g);
 

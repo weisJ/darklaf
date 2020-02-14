@@ -31,7 +31,6 @@ import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.util.StringUtil;
-import org.jetbrains.annotations.NotNull;
 import ui.ComponentDemo;
 import ui.DemoResources;
 
@@ -45,7 +44,7 @@ public class TabFrameDemo implements ComponentDemo {
         ComponentDemo.showDemo(new TabFrameDemo(), new Dimension(1000, 500));
     }
 
-    @NotNull
+
     private static Component createTextArea() {
         NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {{
             setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));

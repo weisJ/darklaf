@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.decorators;
 
-import org.jetbrains.annotations.Contract;
-
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -38,7 +36,7 @@ public class HoverListener implements MouseListener {
     private boolean hover = false;
     private boolean scheduled = false;
 
-    @Contract(pure = true)
+
     public HoverListener(final JComponent component) {
         this.component = component;
     }

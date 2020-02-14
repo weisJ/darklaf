@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.scrollpane;
 import com.github.weisj.darklaf.decorators.MouseMovementListener;
 import com.github.weisj.darklaf.util.Animator;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -109,7 +107,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     };
     private final AdjustmentListener adjustmentListener = new AdjustmentListener() {
         @Override
-        public void adjustmentValueChanged(@NotNull final AdjustmentEvent e) {
+        public void adjustmentValueChanged(final AdjustmentEvent e) {
             if (!e.getValueIsAdjusting()) return;
 
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
@@ -130,7 +128,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     private final MouseListener mouseListener = new MouseAdapter() {
 
         @Override
-        public void mouseReleased(@NotNull final MouseEvent e) {
+        public void mouseReleased(final MouseEvent e) {
             if (!getTrackBounds().contains(e.getPoint())) {
                 mouseOverTrack = false;
                 resetTrackAnimator();
@@ -166,15 +164,14 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         }
     };
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkScrollBarUI();
     }
 
     @SuppressWarnings("MagicConstant")
-    public static void doScroll(@NotNull final JScrollBar toScroll, final JViewport vp,
-                                @NotNull final MouseWheelEvent e, final boolean leftToRight) {
+    public static void doScroll(final JScrollBar toScroll, final JViewport vp,
+                                final MouseWheelEvent e, final boolean leftToRight) {
         int direction = e.getWheelRotation() < 0 ? -1 : 1;
         int orientation = toScroll.getOrientation();
         if (!leftToRight && orientation == JScrollBar.HORIZONTAL) {
@@ -325,7 +322,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         }
     }
 
-    static void scrollByBlock(@NotNull final JScrollBar scrollbar, final int direction) {
+    static void scrollByBlock(final JScrollBar scrollbar, final int direction) {
         // This method is called from BasicScrollPaneUI to implement wheel
         // scrolling, and also from scrollByBlock().
         int oldValue = scrollbar.getValue();
@@ -436,7 +433,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         return new EmptyButton();
     }
 
-    protected void paintTrack(@NotNull final Graphics g, @NotNull final JComponent c, @NotNull final Rectangle bounds) {
+    protected void paintTrack(final Graphics g, final JComponent c, final Rectangle bounds) {
         if (c.isOpaque()) {
             g.setColor(scrollbar.getBackground());
             g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -448,13 +445,13 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         g2.dispose();
     }
 
-    protected void paintThumb(@NotNull final Graphics g, final JComponent c, @NotNull final Rectangle thumbBounds) {
+    protected void paintThumb(final Graphics g, final JComponent c, final Rectangle thumbBounds) {
         if (!thumbBounds.isEmpty() && scrollbar.isEnabled()) {
             paintMaxiThumb((Graphics2D) g, thumbBounds);
         }
     }
 
-    protected void paintMaxiThumb(@NotNull final Graphics2D g, @NotNull final Rectangle rect) {
+    protected void paintMaxiThumb(final Graphics2D g, final Rectangle rect) {
         final Composite c = g.getComposite();
         g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
         Color thumbColor = getThumbColor();
@@ -466,7 +463,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         g.setComposite(c);
     }
 
-    @NotNull
+
     private Color getThumbColor() {
         return DarkUIUtil.blendColors(thumbFadeEndColor, thumbFadeStartColor, thumbAlpha);
     }
@@ -492,8 +489,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         return true;
     }
 
-    @NotNull
-    @Contract(value = " -> new", pure = true)
+
     protected Color getTrackColor() {
         return trackBackground;
     }
@@ -515,8 +511,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         return scrollbar.getClientProperty("ScrollBar.thin") == Boolean.TRUE;
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private Animator createTrackFadeoutAnimator() {
         return new Animator("Track fadeout", FADEOUT_FRAMES_COUNT,
                             FADEOUT_FRAMES_COUNT * FADEOUT_FRAME_COUNT_FACTOR, false) {
@@ -540,8 +535,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         };
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private Animator createThumbFadeoutAnimator() {
         return new Animator("Adjustment fadeout", FADEOUT_FRAMES_COUNT,
                             FADEOUT_FRAMES_COUNT * FADEOUT_FRAME_COUNT_FACTOR, false) {
@@ -566,8 +560,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         };
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private Animator createTrackFadeinAnimator() {
         return new Animator("Track fadein", FADEIN_FRAMES_COUNT,
                             FADEIN_FRAMES_COUNT * FADEIN_FRAME_COUNT_FACTOR, false) {
@@ -588,8 +581,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         };
     }
 
-    @NotNull
-    @Contract(" -> new")
+
     private Animator createThumbFadeinAnimator() {
         return new Animator("Adjustment fadein", FADEIN_FRAMES_COUNT / 2,
                             FADEIN_FRAMES_COUNT * FADEIN_FRAME_COUNT_FACTOR, false) {
@@ -621,7 +613,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         resetAnimators(thumbFadeinAnimator, thumbFadeoutAnimator, mouseOverThumb, thumbAlpha, MAX_THUMB_ALPHA);
     }
 
-    private void resetAnimators(@NotNull final Animator fadeInAnimator, @NotNull final Animator fadeOutAnimator,
+    private void resetAnimators(final Animator fadeInAnimator, final Animator fadeOutAnimator,
                                 final boolean overAnimatedComponent, final float currentAlpha, final float maxAlpha) {
         fadeInAnimator.reset();
         fadeOutAnimator.reset();
@@ -654,22 +646,19 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             setRequestFocusEnabled(false);
         }
 
-        @NotNull
-        @Contract(pure = true)
+
         @Override
         public Dimension getPreferredSize() {
             return getMaximumSize();
         }
 
-        @NotNull
-        @Contract(value = " -> new", pure = true)
+
         @Override
         public Dimension getMaximumSize() {
             return new Dimension(0, 0);
         }
 
-        @NotNull
-        @Contract(pure = true)
+
         @Override
         public Dimension getMinimumSize() {
             return getMaximumSize();

@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.util.Map;
@@ -36,14 +34,14 @@ public final class DarkBorders {
     private static Map<WeakLineBorder, WeakLineBorder> lineBorderMap = new WeakHashMap<>();
     private static Map<WeakLineBorder, WeakLineBorder> lineWidgetBorderMap = new WeakHashMap<>();
 
-    @NotNull
+
     public static Border createLineBorder(final int top, final int left, final int bottom, final int right) {
         return createBorder(top, left, bottom, right, lineBorderMap, "border");
     }
 
-    @NotNull
+
     private static Border createBorder(final int top, final int left, final int bottom, final int right,
-                                       @NotNull final Map<WeakLineBorder, WeakLineBorder> map, final String key) {
+                                       final Map<WeakLineBorder, WeakLineBorder> map, final String key) {
         WeakLineBorder border = null;
         KEY.setInsets(top, left, bottom, right);
         if (map.containsKey(KEY)) {
@@ -57,7 +55,7 @@ public final class DarkBorders {
         return border;
     }
 
-    @NotNull
+
     public static Border createWidgetLineBorder(final int top, final int left, final int bottom, final int right) {
         return createBorder(top, left, bottom, right, lineWidgetBorderMap, "borderSecondary");
     }

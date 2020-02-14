@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -44,7 +43,7 @@ public class DarkTreeCellBorder implements Border, UIResource {
     }
 
     @Override
-    public void paintBorder(final Component c, @NotNull final Graphics g, final int x,
+    public void paintBorder(final Component c, final Graphics g, final int x,
                             final int y, final int width, final int height) {
         g.setColor(borderColor);
         DarkUIUtil.drawRect(g, 0, 0, width, height, 1);

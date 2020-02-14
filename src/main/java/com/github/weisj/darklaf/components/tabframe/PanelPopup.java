@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.components.tabframe;
 
 import com.github.weisj.darklaf.components.alignment.Alignment;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;
@@ -132,7 +131,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
         }
     }
 
-    @Contract(pure = true)
+
     private boolean isOpen() {
         return open;
     }

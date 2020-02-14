@@ -25,8 +25,6 @@
 package com.github.weisj.darklaf.ui.rootpane;
 
 import com.github.weisj.darklaf.platform.windows.JNIDecorations;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -53,8 +51,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private PropertyChangeListener propertyChangeListener;
 
 
-    @NotNull
-    @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent comp) {
         return new DarkRootPaneUI();
     }
@@ -159,7 +155,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         }
     }
 
-    public void installBorder(@NotNull final JRootPane root) {
+    public void installBorder(final JRootPane root) {
         int style = root.getWindowDecorationStyle();
         if (style == JRootPane.NONE) {
             LookAndFeel.uninstallBorder(root);
@@ -172,7 +168,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         return new DarkTitlePane(root);
     }
 
-    private void setTitlePane(@NotNull final JRootPane root, final DarkTitlePane titlePane) {
+    private void setTitlePane(final JRootPane root, final DarkTitlePane titlePane) {
         JLayeredPane layeredPane = root.getLayeredPane();
         JComponent oldTitlePane = getTitlePane();
 
@@ -202,7 +198,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         root.setLayout(layoutManager);
     }
 
-    @Contract(pure = true)
+
     protected JComponent getTitlePane() {
         return titlePane;
     }

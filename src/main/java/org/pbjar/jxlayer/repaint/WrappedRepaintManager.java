@@ -32,9 +32,6 @@
 package org.pbjar.jxlayer.repaint;
 
 import org.jdesktop.swingx.ForwardingRepaintManager;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.applet.Applet;
@@ -59,7 +56,7 @@ public class WrappedRepaintManager extends RepaintManager {
     /**
      * The wrapped manager.
      */
-    @NotNull
+
     private final RepaintManager delegate;
 
     /**
@@ -67,8 +64,8 @@ public class WrappedRepaintManager extends RepaintManager {
      *
      * @param delegate an existing RepaintManager
      */
-    @Contract("null -> fail")
-    public WrappedRepaintManager(@Nullable final RepaintManager delegate) {
+
+    public WrappedRepaintManager(final RepaintManager delegate) {
         if (delegate == null) {
             throw new NullPointerException();
         }
@@ -162,7 +159,7 @@ public class WrappedRepaintManager extends RepaintManager {
      *
      * @return the delegate
      */
-    @Nullable
+
     public RepaintManager getDelegateManager() {
         return delegate;
     }

@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -35,7 +32,7 @@ import java.awt.image.BufferedImage;
  */
 public final class ImageUtil {
 
-    @Contract(pure = true)
+
     private ImageUtil() {
     }
 
@@ -46,8 +43,8 @@ public final class ImageUtil {
      * @param bounds the bounds inside the component to capture.
      * @return image containing the captured area.
      */
-    @NotNull
-    public static Image scaledImageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds) {
+
+    public static Image scaledImageFromComponent(final Component c, final Rectangle bounds) {
         return scaledImageFromComponent(c, bounds, Scale.SCALE_X, Scale.SCALE_Y);
     }
 
@@ -60,8 +57,8 @@ public final class ImageUtil {
      * @param scaley the y scale
      * @return image containing the captured area.
      */
-    @NotNull
-    public static Image scaledImageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds,
+
+    public static Image scaledImageFromComponent(final Component c, final Rectangle bounds,
                                                  final double scalex, final double scaley) {
         BufferedImage image;
         boolean scale = scalex != 1.0 || scaley != 1.0;
@@ -89,13 +86,13 @@ public final class ImageUtil {
      * @param bounds the bounds inside the component to capture.
      * @return image containing the captured area.
      */
-    @NotNull
-    public static Image imageFromComponent(@NotNull final Component c, @NotNull final Rectangle bounds) {
+
+    public static Image imageFromComponent(final Component c, final Rectangle bounds) {
         return scaledImageFromComponent(c, bounds, 1.0, 1.0);
     }
 
-    @NotNull
-    public static Icon cropIcon(@NotNull final Icon icon, int maxWidth, int maxHeight) {
+
+    public static Icon cropIcon(final Icon icon, int maxWidth, int maxHeight) {
         if (icon.getIconHeight() <= maxHeight && icon.getIconWidth() <= maxWidth) {
             return icon;
         }
@@ -138,8 +135,7 @@ public final class ImageUtil {
         }
     }
 
-    @NotNull
-    @Contract("null -> fail")
+
     public static BufferedImage toBufferedImage(final Image image) {
         if (image == null) {
             throw new NullPointerException("Can't covert null image");
@@ -157,8 +153,7 @@ public final class ImageUtil {
         }
     }
 
-    @NotNull
-    @Contract("_, _, _ -> new")
+
     public static BufferedImage createImage(final int width, final int height, final int type) {
         return new BufferedImage(Scale.scaleWidth(width), Scale.scaleHeight(height), type) {
             @Override

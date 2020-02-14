@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -33,7 +31,7 @@ import java.awt.*;
         // Superclass is not serializable across versions
 class ScrollableTabViewport extends JViewport implements UIResource {
 
-    public ScrollableTabViewport(@NotNull final DarkTabbedPaneUIBridge ui) {
+    public ScrollableTabViewport(final DarkTabbedPaneUIBridge ui) {
         super();
         setName("TabbedPane.scrollableViewport");
         setScrollMode(SIMPLE_SCROLL_MODE);

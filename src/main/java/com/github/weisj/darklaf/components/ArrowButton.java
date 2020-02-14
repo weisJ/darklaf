@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.components;
 
 import com.github.weisj.darklaf.icons.UIAwareIcon;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
@@ -37,18 +35,18 @@ import java.awt.*;
  */
 public final class ArrowButton implements SwingConstants {
 
-    @Contract(pure = true)
+
     private ArrowButton() {
     }
 
-    @NotNull
+
     public static JButton createUpDownArrow(final JComponent parent, final int orientation,
                                             final boolean center) {
         return createUpDownArrow(parent, orientation, center, false,
                                  new Insets(0, 0, 0, 0));
     }
 
-    @NotNull
+
     public static JButton createUpDownArrow(final JComponent parent, final int orientation,
                                             final boolean center, final boolean applyInsetsOnSize,
                                             final Insets insets) {
@@ -66,8 +64,7 @@ public final class ArrowButton implements SwingConstants {
         return createUpDownArrow(parent, icon, icon.getDual(), orientation, center, applyInsetsOnSize, insets);
     }
 
-    @Contract("_, _, _, _, _, _, _ -> new")
-    @NotNull
+
     public static JButton createUpDownArrow(final JComponent parent,
                                             final Icon activeIcon, final Icon inactiveIcon,
                                             final int orientation, final boolean center,
@@ -103,14 +100,13 @@ public final class ArrowButton implements SwingConstants {
                 getIcon().paintIcon(this, g, x, y);
             }
 
-            @NotNull
+
             @Override
             public Insets getInsets() {
                 return getInsets(new Insets(0, 0, 0, 0));
             }
 
-            @NotNull
-            @Contract("_ -> param1")
+
             @Override
             public Insets getInsets(final Insets i) {
                 i.left = insets.left;
@@ -120,7 +116,7 @@ public final class ArrowButton implements SwingConstants {
                 return i;
             }
 
-            @Contract(pure = true)
+
             @Override
             public boolean isOpaque() {
                 return false;

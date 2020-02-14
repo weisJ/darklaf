@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.text;
 
 import com.github.weisj.darklaf.ui.html.DarkHTML;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -51,8 +49,7 @@ import java.beans.PropertyChangeEvent;
  */
 public class DarkTextAreaUI extends DarkTextUI {
 
-    @NotNull
-    @Contract("_ -> new")
+
     public static ComponentUI createUI(final JComponent ta) {
         return new DarkTextAreaUI();
     }

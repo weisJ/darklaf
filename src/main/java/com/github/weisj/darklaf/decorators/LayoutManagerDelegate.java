@@ -23,14 +23,12 @@
  */
 package com.github.weisj.darklaf.decorators;
 
-import org.jetbrains.annotations.Contract;
-
 import java.awt.*;
 
 public class LayoutManagerDelegate implements LayoutManager {
     private final LayoutManager delegate;
 
-    @Contract(pure = true)
+
     public LayoutManagerDelegate(final LayoutManager delegate) {
         if (delegate == null) {
             throw new IllegalArgumentException("Delegate is null");

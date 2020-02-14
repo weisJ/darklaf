@@ -32,8 +32,6 @@
 package org.pbjar.jxlayer.plaf.ext.transform;
 
 import org.jdesktop.jxlayer.JXLayer;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
@@ -47,7 +45,7 @@ import java.util.Map;
  */
 public final class TransformUtils {
 
-    @Contract(pure = true)
+
     private TransformUtils() {
     }
 
@@ -57,7 +55,7 @@ public final class TransformUtils {
      * @param component the component.
      * @return the JXLayer.
      */
-    @NotNull
+
     public static JXLayer<JComponent> createTransformJXLayer(final JComponent component) {
         return createTransformJXLayer(component, 1.0, null);
     }
@@ -70,7 +68,7 @@ public final class TransformUtils {
      * @param hints     the rendering hints.
      * @return the JXLayer.
      */
-    @NotNull
+
     public static JXLayer<JComponent> createTransformJXLayer(
             final JComponent component, final double scale, final Map<RenderingHints.Key, Object> hints) {
         DefaultTransformModel model = new DefaultTransformModel();
@@ -86,8 +84,8 @@ public final class TransformUtils {
      * @param hints     the rendering hints.
      * @return the JXLayer.
      */
-    @Contract("_, _, _ -> new")
-    @NotNull
+
+
     public static JXLayer<JComponent> createTransformJXLayer(
             final JComponent component, final TransformModel model, final Map<RenderingHints.Key, Object> hints) {
         TransformUI ui = new TransformUI(model);
@@ -102,7 +100,7 @@ public final class TransformUtils {
      * @param scale     the scaling
      * @return the JXLayer.
      */
-    @NotNull
+
     public static JXLayer<JComponent> createTransformJXLayer(final JComponent component, final double scale) {
         return createTransformJXLayer(component, scale, null);
     }
@@ -114,7 +112,7 @@ public final class TransformUtils {
      * @param model     the transform model.
      * @return the JXLayer.
      */
-    @NotNull
+
     public static JXLayer<JComponent> createTransformJXLayer(
             final JComponent component, final TransformModel model) {
         return createTransformJXLayer(component, model, null);

@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.text;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
@@ -135,7 +134,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
      * @param e the mouse event
      */
     @Override
-    public void mouseClicked(@NotNull final MouseEvent e) {
+    public void mouseClicked(final MouseEvent e) {
         if (!e.isConsumed()) {
             JTextComponent textArea = getComponent();
             int clickCount = e.getClickCount();
@@ -193,7 +192,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-    private void adjustCaretLocation(@NotNull final MouseEvent e) {
+    private void adjustCaretLocation(final MouseEvent e) {
         if (e.isShiftDown() && getDot() != -1) {
             moveCaret(e);
         } else {

@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.platform.NativeUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 import java.io.IOException;
@@ -107,7 +106,7 @@ public class JNIDecorations {
         }
     }
 
-    @Contract(pure = true)
+
     public static boolean isCustomDecorationSupported() {
         return supported;
     }

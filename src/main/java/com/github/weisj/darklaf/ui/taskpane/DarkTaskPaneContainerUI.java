@@ -24,8 +24,6 @@
 package com.github.weisj.darklaf.ui.taskpane;
 
 import org.jdesktop.swingx.plaf.basic.BasicTaskPaneContainerUI;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -33,8 +31,6 @@ import javax.swing.plaf.ComponentUI;
 public class DarkTaskPaneContainerUI extends BasicTaskPaneContainerUI {
 
 
-    @NotNull
-    @Contract("_ -> new")
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTaskPaneContainerUI();
     }

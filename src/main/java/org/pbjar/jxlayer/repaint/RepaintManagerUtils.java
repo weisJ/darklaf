@@ -33,9 +33,6 @@ package org.pbjar.jxlayer.repaint;
 
 import com.github.weisj.darklaf.log.LogFormatter;
 import org.jdesktop.swingx.ForwardingRepaintManager;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +62,7 @@ public final class RepaintManagerUtils {
         LOGGER.addHandler(handler);
     }
 
-    @Contract(pure = true)
+
     private RepaintManagerUtils() {
     }
 
@@ -75,8 +72,8 @@ public final class RepaintManagerUtils {
      *
      * @return an {@link Action} object
      */
-    @Contract(" -> new")
-    @NotNull
+
+
     public static Action createRPDisplayAction() {
         return new DisplayAction();
     }
@@ -89,7 +86,7 @@ public final class RepaintManagerUtils {
      * @param provider the provider
      */
     public static void ensureRepaintManagerSet(
-            final Component c, @NotNull final RepaintManagerProvider provider) {
+            final Component c, final RepaintManagerProvider provider) {
         ensureImpl(RepaintManager.currentManager(c), provider);
     }
 
@@ -100,7 +97,7 @@ public final class RepaintManagerUtils {
      * @param provider the provider that provides for the type and implementation of a delegated RepaintManager
      */
     private static void ensureImpl(
-            @NotNull final RepaintManager delegate, @NotNull final RepaintManagerProvider provider) {
+            final RepaintManager delegate, final RepaintManagerProvider provider) {
         /*
          * Setup a traversal variable.
          */
@@ -127,9 +124,9 @@ public final class RepaintManagerUtils {
         }
     }
 
-    @NotNull
+
     private static RepaintManager createManager(
-            @NotNull final Class<? extends RepaintManager> clazz, final RepaintManager delegate) {
+            final Class<? extends RepaintManager> clazz, final RepaintManager delegate) {
         try {
             RepaintManager newManager = clazz.getConstructor(RepaintManager.class).newInstance(delegate);
             return newManager;
@@ -146,7 +143,7 @@ public final class RepaintManagerUtils {
      * @param provider the provider
      */
     public static void ensureRepaintManagerSet(
-            final JComponent c, @NotNull final RepaintManagerProvider provider) {
+            final JComponent c, final RepaintManagerProvider provider) {
         ensureImpl(RepaintManager.currentManager(c), provider);
     }
 
@@ -175,7 +172,7 @@ public final class RepaintManagerUtils {
         }
 
         @Override
-        public void actionPerformed(@NotNull final ActionEvent e) {
+        public void actionPerformed(final ActionEvent e) {
             JComponent c = (JComponent) e.getSource();
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -194,7 +191,7 @@ public final class RepaintManagerUtils {
                     c, message, "The RepaintManager tree", JOptionPane.INFORMATION_MESSAGE);
         }
 
-        private void appendClass(@NotNull final PrintWriter writer, @NotNull final Object obj) {
+        private void appendClass(final PrintWriter writer, final Object obj) {
             Class<?> clazz = obj.getClass();
             String prefix = "Class:   ";
             while (clazz != null) {
@@ -204,9 +201,9 @@ public final class RepaintManagerUtils {
             }
         }
 
-        private void appendDelegates(@NotNull final PrintWriter writer, @NotNull final Object rp) {
+        private void appendDelegates(final PrintWriter writer, final Object rp) {
             appendClass(writer, rp);
-            @Nullable RepaintManager delegate;
+            RepaintManager delegate;
             if (rp instanceof WrappedRepaintManager) {
                 delegate = ((WrappedRepaintManager) rp).getDelegateManager();
             } else if (swingX) {

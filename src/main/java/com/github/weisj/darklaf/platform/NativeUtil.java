@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.platform;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -55,7 +52,7 @@ public class NativeUtil {
      */
     private static File temporaryDir;
 
-    @Contract(pure = true)
+
     private NativeUtil() {
     }
 
@@ -73,7 +70,7 @@ public class NativeUtil {
      *                                  java.lang.String)}).
      * @throws FileNotFoundException    If the file could not be found inside the JAR.
      */
-    @Contract("null -> fail")
+
     public static void loadLibraryFromJar(final String path) throws IOException {
 
         if (null == path || !path.startsWith("/")) {
@@ -120,7 +117,7 @@ public class NativeUtil {
         }
     }
 
-    @NotNull
+
     private static File createTempDirectory(final String prefix) throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         File generatedDir = new File(tempDir, prefix + System.nanoTime());
