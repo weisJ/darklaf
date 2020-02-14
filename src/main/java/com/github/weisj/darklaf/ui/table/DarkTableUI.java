@@ -274,9 +274,10 @@ public class DarkTableUI extends DarkTableUIBridge {
     protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
                                        final boolean scrollLtR, final int column, final int draggedIndex,
                                        final int cMin, final int cMax) {
-        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
-                                  table.getCellRect(0, draggedIndex, true),
-                                  table);
+        JTableHeader header = table.getTableHeader();
+        int dist = header != null ? adjustDistance(header.getDraggedDistance(),
+                                                   table.getCellRect(0, draggedIndex, true),
+                                                   table) : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
         if (!scrollVisible) {
             if (ltr) {
@@ -466,10 +467,13 @@ public class DarkTableUI extends DarkTableUIBridge {
 
         boolean scrollLtR = !isScrollPaneRtl();
         boolean ltr = table.getComponentOrientation().isLeftToRight();
-        int draggedIndex = viewIndexForColumn(table.getTableHeader().getDraggedColumn());
-        int dist = adjustDistance(table.getTableHeader().getDraggedDistance(),
-                                  table.getCellRect(row, draggedIndex, true),
-                                  table);
+
+        JTableHeader header = table.getTableHeader();
+        int draggedIndex = header != null ? viewIndexForColumn(header.getDraggedColumn())
+                                          : -1;
+        int dist = header != null ? adjustDistance(header.getDraggedDistance(),
+                                                   table.getCellRect(row, draggedIndex, true),
+                                                   table) : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
         Rectangle r = new Rectangle(cellRect);
         if (!scrollBarVisible()) {
