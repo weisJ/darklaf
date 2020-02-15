@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.metsci.ext.com.kitfox.svg:svg-salamander:0.1.19'
+    compile 'com.formdev:svgSalamander:1.1.2.1'
     compile 'net.java.dev.jna:jna:4.1.0'
     compile 'org.swinglabs:jxlayer:3.0.4'
     compileOnly 'org.swinglabs:swingx:1.6.1'

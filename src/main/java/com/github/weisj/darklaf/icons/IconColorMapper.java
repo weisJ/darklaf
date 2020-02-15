@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.icons;
 
+import com.github.weisj.darklaf.util.Pair;
 import com.kitfox.svg.Defs;
 import com.kitfox.svg.LinearGradient;
 import com.kitfox.svg.SVGDiagram;
@@ -30,6 +31,7 @@ import com.kitfox.svg.SVGElement;
 import com.kitfox.svg.SVGElementException;
 import com.kitfox.svg.SVGRoot;
 import com.kitfox.svg.SVGUniverse;
+import com.kitfox.svg.Stop;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 
@@ -74,16 +76,41 @@ public final class IconColorMapper {
                     c = Color.RED;
                     LOGGER.warning("Could not load color with id'" + id + "'. Using Color.RED instead.");
                 }
-                themedDefs.loaderAddChild(null, createColor(c, id));
+                Pair<LinearGradient, Runnable> result = createColor(c, id);
+                LinearGradient gradient = result.getFirst();
+                Runnable finalizer = result.getSecond();
+                themedDefs.loaderAddChild(null, gradient);
+                finalizer.run();
             }
         }
     }
 
 
-    private static LinearGradient createColor(final Color c, final String name) throws SVGElementException {
+    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
-        grad.setStops(new Color[]{c, c}, new float[]{0.0f, 1.0f});
-        return grad;
+        return new Pair<>(grad, () -> {
+            Stop stop1 = new Stop();
+            Stop stop2 = new Stop();
+            String color = toHexString(c);
+            System.out.println(c + " " + color);
+            try {
+                stop1.addAttribute("stop-color", AnimationElement.AT_XML, color);
+                stop1.addAttribute("offset", AnimationElement.AT_XML, "0");
+                stop2.addAttribute("stop-color", AnimationElement.AT_XML, color);
+                stop2.addAttribute("offset", AnimationElement.AT_XML, "1");
+                grad.loaderAddChild(null, stop1);
+                grad.loaderAddChild(null, stop2);
+            } catch (SVGElementException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private static String toHexString(final Color color) {
+        int r = color.getRed();
+        int b = color.getBlue();
+        int g = color.getGreen();
+        return String.format("#%02X%02X%02X", r, g, b);
     }
 }
