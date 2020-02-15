@@ -10,11 +10,16 @@ plugins {
     id 'cpp'
 }
 
-def signingKey = project.findProperty('signingKeyProp') ?: System.getenv('signingKeyProp') ?: ""
-def signingPassword = project.findProperty('signingPasswordProp') ?: System.getenv('signingPasswordProp') ?: ""
-def deployRepoUrl = project.findProperty('deployRepoUrlProp') ?: System.getenv('deployRepoUrlProp') ?: ""
-def deployRepoUsername = project.findProperty('deployRepoUsernameProp') ?: System.getenv('deployRepoUsernameProp') ?: ""
-def deployRepoPassword = project.findProperty('deployRepoPasswordProp') ?: System.getenv('deployRepoPasswordProp') ?: ""
+def signingKey = (project.findProperty('signingKeyProp')
+        ?: System.getenv('signingKeyProp') ?: "") as String
+def signingPassword = (project.findProperty('signingPasswordProp')
+        ?: System.getenv('signingPasswordProp') ?: "") as String
+def deployRepoUrl = (project.findProperty('deployRepoUrlProp')
+        ?: System.getenv('deployRepoUrlProp') ?: "") as String
+def deployRepoUsername =( project.findProperty('deployRepoUsernameProp')
+        ?: System.getenv('deployRepoUsernameProp') ?: "") as String
+def deployRepoPassword = (project.findProperty('deployRepoPasswordProp')
+        ?: System.getenv('deployRepoPasswordProp') ?: "") as String
 if (signingKey.isEmpty()) {
     project.gradle.startParameter.excludedTaskNames.add('signArchives')
 }
@@ -209,12 +214,12 @@ compileJava {
 tasks.withType(JavaCompile) {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         dependsOn 'buildLibraries'
-    }
-    configure(options) {
-        options.encoding = 'UTF-8'
-        options.compilerArgs += [
-                '-h', file("${projectDir}/src/jniplatform/cpp"),
-        ]
+        configure(options) {
+            options.encoding = 'UTF-8'
+            options.compilerArgs += [
+                    '-h', file("${projectDir}/src/jniplatform/cpp"),
+            ]
+        }
     }
 }
 
