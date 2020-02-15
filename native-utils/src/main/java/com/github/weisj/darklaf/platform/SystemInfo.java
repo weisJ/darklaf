@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.platform;
 
+import java.util.regex.Pattern;
 
 /**
  * @author Konstantin Bulenkov
@@ -109,12 +110,12 @@ public class SystemInfo {
     }
 
     public static boolean isJavaVersionAtLeast(final String v) {
-        return StringUtil.compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
+        return compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
     }
 
     private static boolean isOracleJvm() {
         String vendor = getJavaVmVendor();
-        return vendor != null && StringUtil.containsIgnoreCase(vendor, "Oracle");
+        return vendor != null && containsIgnoreCase(vendor, "Oracle");
     }
 
     public static String getJavaVmVendor() {
@@ -123,11 +124,17 @@ public class SystemInfo {
 
     private static boolean isSunJvm() {
         String vendor = getJavaVmVendor();
-        return vendor != null && StringUtil.containsIgnoreCase(vendor, "Sun") && StringUtil.containsIgnoreCase(vendor, "Microsystems");
+        return vendor != null && containsIgnoreCase(vendor, "Sun") &&
+            containsIgnoreCase(vendor, "Microsystems");
     }
 
     private static boolean isAppleJvm() {
         String vendor = getJavaVmVendor();
-        return vendor != null && StringUtil.containsIgnoreCase(vendor, "Apple");
+        return vendor != null && containsIgnoreCase(vendor, "Apple");
+    }
+
+    private static boolean containsIgnoreCase(String text, String pattern) {
+        return Pattern.compile(pattern, Pattern.LITERAL | Pattern.CASE_INSENSITIVE)
+            .matcher(text).find();
     }
 }

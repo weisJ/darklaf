@@ -26,7 +26,7 @@ package com.github.weisj.darklaf.ui.button;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
