@@ -23,9 +23,8 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
@@ -81,15 +80,15 @@ public class JNIDecorations {
     }
 
     private static boolean loadLibrary() {
-        if (!SystemInfo.isWindows || !DarkLaf.isDecorationsEnabled()) {
+        if (!SystemInfo.isWindows) {
             return false;
         }
         if (loaded) return true;
         try {
             if (SystemInfo.isX86) {
-                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/windows/x86/jniplatform.dll");
+                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86/libdarklaf-windows.dll");
             } else if (SystemInfo.isX64) {
-                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/windows/x64/jniplatform.dll");
+                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86-64/libdarklaf-windows.dll");
             } else {
                 LOGGER.warning("Could not determine jre model '"
                                        + SystemInfo.jreArchitecture
@@ -97,10 +96,10 @@ public class JNIDecorations {
                 return false;
             }
             loaded = true;
-            LOGGER.info("Loaded jniplatform.dll. Decorations are enabled.");
+            LOGGER.info("Loaded libdarklaf-windows.dll. Decorations are enabled.");
             return true;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not load decorations library. Decorations will be disabled",
+            LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-windows.dll. Decorations will be disabled",
                        e.getMessage());
             return false;
         }
