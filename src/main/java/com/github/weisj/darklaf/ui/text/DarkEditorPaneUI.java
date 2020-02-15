@@ -291,7 +291,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
      *
      * @param evt the property change event
      */
-    protected void propertyChange(final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         String name = evt.getPropertyName();
         if ("editorKit".equals(name)) {

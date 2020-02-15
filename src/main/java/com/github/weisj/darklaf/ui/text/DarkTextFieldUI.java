@@ -30,7 +30,6 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
@@ -174,13 +173,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return new Point(r.x + DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
     }
 
-    protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
-        g.setColor(getBackgroundColor(c));
-        Rectangle r = getDrawingRect(getComponent());
-        int arc = getArcSize(c);
-        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
-    }
-
     protected static Icon getSearchIcon(final Component c) {
         return isSearchFieldWithHistoryPopup(c) ? searchWithHistory : search;
     }
@@ -194,33 +186,38 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return c instanceof JTextField && "search".equals(((JTextField) c).getClientProperty("JTextField.variant"));
     }
 
-    protected Color getBackgroundColor(final JTextComponent c) {
-        return c.isEnabled() && c.isEditable() ? background : inactiveBackground;
+    protected void paintBackground(final Graphics graphics) {
+        Graphics2D g = (Graphics2D) graphics;
+        JTextComponent c = this.getComponent();
+
+        GraphicsContext config = new GraphicsContext(g);
+        if (isSearchField(c)) {
+            Container parent = c.getParent();
+            if (c.isOpaque() && parent != null) {
+                g.setColor(parent.getBackground());
+                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            }
+            paintSearchField(g, c);
+        } else {
+            super.paintBackground(g);
+        }
+        config.restore();
     }
 
+    @Override
     public Rectangle getDrawingRect(final JTextComponent c) {
         int w = borderSize;
         return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
     }
 
-    protected int getArcSize(final Component c) {
+    @Override
+    protected int getArcSize(final JComponent c) {
         boolean alt = chooseAlternativeArc(c);
         if (!alt && !isSearchField(c)) {
             return 0;
         }
         return DarkTextFieldUI.isSearchField(c) ? (alt ? arcSize : searchArcSize)
                                                 : (alt ? searchArcSize : arcSize);
-    }
-
-    protected void paintSearchField(final Graphics2D g, final JTextComponent c) {
-        g.setColor(getBackgroundColor(c));
-        Rectangle r = getDrawingRect(getComponent());
-        int arc = getArcSize(c);
-        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
-        paintSearchIcon(g);
-        if (c.getText().length() > 0) {
-            paintClearIcon(g);
-        }
     }
 
     private void paintClearIcon(final Graphics2D g) {
@@ -301,26 +298,15 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         c.removeKeyListener(keyListener);
     }
 
-    protected void paintBackground(final Graphics graphics) {
-        Graphics2D g = (Graphics2D) graphics;
-        JTextComponent c = this.getComponent();
-
-        Container parent = c.getParent();
-        if (c.isOpaque() && parent != null) {
-            g.setColor(parent.getBackground());
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+    protected void paintSearchField(final Graphics2D g, final JTextComponent c) {
+        g.setColor(c.getBackground());
+        Rectangle r = getDrawingRect(getComponent());
+        int arc = getArcSize(c);
+        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
+        paintSearchIcon(g);
+        if (c.getText().length() > 0) {
+            paintClearIcon(g);
         }
-
-        GraphicsContext config = new GraphicsContext(g);
-        Border border = c.getBorder();
-        if (isSearchField(c)) {
-            paintSearchField(g, c);
-        } else if (border instanceof DarkTextBorder) {
-            paintBorderBackground(g, c);
-        } else {
-            super.paintBackground(g);
-        }
-        config.restore();
     }
 
     private enum ClickAction {

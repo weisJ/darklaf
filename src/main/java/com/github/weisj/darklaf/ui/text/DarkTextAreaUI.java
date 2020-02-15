@@ -49,7 +49,6 @@ import java.beans.PropertyChangeEvent;
  */
 public class DarkTextAreaUI extends DarkTextUI {
 
-
     public static ComponentUI createUI(final JComponent ta) {
         return new DarkTextAreaUI();
     }
@@ -66,7 +65,7 @@ public class DarkTextAreaUI extends DarkTextUI {
      *
      * @param evt the property change event
      */
-    protected void propertyChange(final PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         if (evt.getPropertyName().equals("lineWrap") ||
                 evt.getPropertyName().equals("wrapStyleWord") ||

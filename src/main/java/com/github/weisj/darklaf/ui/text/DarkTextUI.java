@@ -24,12 +24,14 @@
 package com.github.weisj.darklaf.ui.text;
 
 import com.github.weisj.darklaf.util.DarkSwingUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import sun.awt.SunToolkit;
 import sun.swing.DefaultLookup;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.plaf.ComponentInputMapUIResource;
 import javax.swing.plaf.InputMapUIResource;
@@ -44,13 +46,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Jannis Weis
  */
-public abstract class DarkTextUI extends BasicTextUI {
+public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener {
 
     protected JTextComponent editor;
 
@@ -75,10 +79,75 @@ public abstract class DarkTextUI extends BasicTextUI {
     }
 
     @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        String key = evt.getPropertyName();
+        if ("JTextComponent.roundedSelection".equals(key)) {
+            editor.repaint();
+        }
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        editor.addPropertyChangeListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        editor.removePropertyChangeListener(this);
+    }
+
+    @Override
+    protected void paintBackground(final Graphics g) {
+        Container parent = editor.getParent();
+        if (editor.isOpaque() && parent != null) {
+            g.setColor(parent.getBackground());
+            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
+        }
+
+        Border border = editor.getBorder();
+        if (border instanceof DarkTextBorder) {
+            paintBorderBackground((Graphics2D) g, editor);
+        } else if (border != null) {
+            Insets ins = border.getBorderInsets(editor);
+            if (ins != null) {
+                g.setColor(editor.getBackground());
+                g.fillRect(ins.left, ins.top, editor.getWidth() - ins.left - ins.right,
+                           editor.getHeight() - ins.top - ins.bottom);
+            }
+        }
+    }
+
+    @Override
     protected void paintSafely(final Graphics g) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         super.paintSafely(g);
         config.restore();
+    }
+
+    protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
+        g.setColor(c.getBackground());
+        Rectangle r = getDrawingRect(c);
+        int arc = getArcSize(c);
+        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
+    }
+
+    public Rectangle getDrawingRect(final JTextComponent c) {
+        Border border = c.getBorder();
+        int w = 0;
+        if (border instanceof DarkTextBorder) {
+            w = ((DarkTextBorder) border).getBorderSize();
+        }
+        return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
+    }
+
+    protected int getArcSize(final JComponent c) {
+        Border border = c.getBorder();
+        if (border instanceof DarkTextBorder) {
+            return ((DarkTextBorder) border).getArcSize(c);
+        }
+        return 0;
     }
 
     protected void installKeyboardActions() {

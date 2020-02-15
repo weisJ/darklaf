@@ -195,6 +195,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Shape dirtyShape = null;
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = GraphicsUtil.setupAAPainting(g2d);
+        Insets ins = c.getInsets();
+        g2d.setClip(ins.left, ins.top, c.getWidth() - ins.left - ins.right,
+                    c.getHeight() - ins.top - ins.bottom);
         if (getAlpha() < 1.0f) {
             g2d.setComposite(getAlphaComposite());
         }
@@ -224,6 +227,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 repaintCount = 2;
             }
         }
+        context.restore();
         return dirtyShape;
     }
 
@@ -231,6 +235,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                    final JTextComponent c) throws BadLocationException {
         Shape dirtyShape;
         Rectangle posStart = c.modelToView(c.getSelectionStart());
+        Rectangle posStartPrev = c.modelToView(Math.max(0, c.getSelectionStart() - 1));
         Rectangle posEnd = c.modelToView(c.getSelectionEnd());
         Rectangle posEndPrev = c.modelToView(Math.max(0, c.getSelectionEnd() - 1));
         Rectangle posOffs0 = c.modelToView(offs0);
@@ -241,8 +246,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean selectionStart = c.getSelectionStart() >= offs0;
         boolean selectionEnd = c.getSelectionEnd() <= offs1;
 
-        Insets margin = c.getMargin();
-        boolean firstLineNotPainted = posOffs0Prev.y + posOffs0Prev.height == posOffs0.y;
+        Insets margin = c.getInsets();
+
+        boolean firstLineNotPainted = posStartPrev.y + posStartPrev.height == posStart.y;
         boolean lastLineNotPainted = posOffs1Next.y == posEnd.y && posOffs1.y == posOffs1Forward.y;
         boolean isToEndOfLine = posOffs1.y < posEnd.y && !lastLineNotPainted;
         boolean isToStartOfLine = !selectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
@@ -278,12 +284,12 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             dirtyShape = paintMiddleSelection(g2d, alloc, c,
                                               false, false,
                                               isFirstLine, isLastLine, isSecondLastLine, isSecondLine,
-                                              firstLineNotPainted);
+                                              firstLineNotPainted, lastLineNotPainted);
         } else if (!selectionStart && !selectionEnd) {
             if (DEBUG_COLOR) g2d.setColor(Color.ORANGE);
             dirtyShape = paintMiddleSelection(g2d, alloc, c,
                                               isToEndOfLine, isToStartOfLine, isFirstLine, isLastLine,
-                                              isSecondLastLine, isSecondLine, firstLineNotPainted);
+                                              isSecondLastLine, isSecondLine, firstLineNotPainted, lastLineNotPainted);
         } else {
             // Should only render part of View.
             //Start/End parts of selection
@@ -314,6 +320,28 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return dirtyShape;
     }
 
+    private Shape paintMiddleSelection(final Graphics2D g, final Rectangle r, final JTextComponent c,
+                                       final boolean toEndOfLine, final boolean toStartOfLine,
+                                       final boolean isFirstLine, final boolean isLastLine,
+                                       final boolean isSecondLastLine, final boolean isSecondLine,
+                                       final boolean firstLineNotPainted, final boolean lastLineNotPainted) {
+        if (toStartOfLine) {
+            r.width -= arcSize;
+            r.x += arcSize;
+        }
+        if (toEndOfLine) {
+            r.width -= arcSize;
+        }
+        if (!isRounded(c)) {
+            g.fillRect(r.x, r.y, r.width, r.height);
+        } else {
+            boolean firstVisual = isFirstLine || (isSecondLine && firstLineNotPainted);
+            boolean lastVisual = isLastLine || (isSecondLine && lastLineNotPainted);
+            paintRoundRect(g, r, arcSize, firstVisual, firstVisual, isLastLine, lastVisual);
+        }
+        return r;
+    }
+
     private Shape paintSelectionStart(final Graphics2D g2d, final Rectangle r,
                                       final JTextComponent c,
                                       final Rectangle posStart,
@@ -321,7 +349,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                       final boolean endBeforeStart, final boolean isSecondLastLine,
                                       final boolean extendToEnd) {
         if (DEBUG_COLOR) g2d.setColor(Color.RED);
-        Insets margin = c.getMargin();
+        Insets margin = c.getInsets();
         boolean rounded = isRounded(c);
         if (rounded && extendToEnd) r.width -= arcSize;
         if (rounded) {
@@ -336,28 +364,6 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             }
         } else {
             g2d.fillRect(r.x, r.y, r.width, r.height);
-        }
-        return r;
-    }
-
-
-    private Shape paintMiddleSelection(final Graphics2D g, final Rectangle r, final JTextComponent c,
-                                       final boolean toEndOfLine, final boolean toStartOfLine,
-                                       final boolean isFirstLine, final boolean isLastLine,
-                                       final boolean isSecondLastLine, final boolean isSecondLine,
-                                       final boolean firstLineNotPainted) {
-        if (toStartOfLine) {
-            r.width -= arcSize;
-            r.x += arcSize;
-        }
-        if (toEndOfLine) {
-            r.width -= arcSize;
-        }
-        if (!isRounded(c)) {
-            g.fillRect(r.x, r.y, r.width, r.height);
-        } else {
-            boolean firstVisual = isFirstLine || (isSecondLine && firstLineNotPainted);
-            paintRoundRect(g, r, arcSize, firstVisual, firstVisual, isLastLine, isLastLine || isSecondLastLine);
         }
         return r;
     }
@@ -385,7 +391,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                     final boolean endBeforeStart) {
         if (DEBUG_COLOR) g2d.setColor(Color.GREEN);
         boolean rounded = isRounded(c);
-        Insets margin = c.getMargin();
+        Insets margin = c.getInsets();
         if (r.x + r.width >= c.getWidth() - margin.right - arcSize / 2.0) {
             int end = c.getWidth() - margin.right;
             r.width = end - r.x;
@@ -419,18 +425,18 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                  final boolean selectionStart, final boolean selectionEnd,
                                  final Rectangle posStart, final Rectangle posEnd,
                                  final Rectangle r) {
-        Insets margin = c.getMargin();
+        Insets ins = c.getInsets();
         boolean rounded = isRounded(c);
         if (isToEndOfLine) {
             if (DEBUG_COLOR) g2d.setColor(Color.CYAN);
             int start = r.x + r.width;
-            int w = c.getWidth() - start - margin.right;
+            int w = c.getWidth() - start - ins.right;
             w = Math.max(2 * arcSize, w);
-            start = Math.min(start, c.getWidth() - margin.right - w);
+            start = Math.min(start, c.getWidth() - ins.right - w);
             if (rounded) {
                 boolean roundTop = isFirstLine || selectionStart;
                 boolean roundBottom = isLastLine || (isSecondLastLine && posEnd.x + posEnd.width <= start + w - arcSize);
-                boolean roundLeftTop = isFirstLine && start == margin.left;
+                boolean roundLeftTop = isFirstLine && start == ins.left;
                 paintRoundRect(g2d, new Rectangle(start, r.y, w, r.height), arcSize,
                                roundLeftTop, roundTop, false, roundBottom);
             } else {
@@ -441,7 +447,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         }
         if (isToStartOfLine) {
             if (DEBUG_COLOR) g2d.setColor(Color.CYAN.darker());
-            int start = margin.left;
+            int start = ins.left;
             int end = r.x;
             int w = end - start;
             w = Math.max(2 * arcSize, w);
@@ -449,11 +455,11 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             if (rounded) {
                 boolean roundTop = isFirstLine || (isSecondLine && posStart.x >= start + arcSize);
                 boolean roundBottom = isLastLine || selectionEnd;
-                boolean roundRightBottom = isLastLine && end == c.getWidth() - margin.right;
+                boolean roundRightBottom = isLastLine && end == c.getWidth() - ins.right;
                 paintRoundRect(g2d, new Rectangle(start, r.y, w, r.height), arcSize,
                                roundTop, false, roundBottom, roundRightBottom);
             } else {
-                g2d.fillRect(r.x, r.y, end - r.x, r.height);
+                g2d.fillRect(start, r.y, w, r.height);
             }
             r.width += w;
             r.x = start;

@@ -27,7 +27,6 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.Element;
 import javax.swing.text.View;
-import java.beans.PropertyChangeEvent;
 
 /**
  * @author Jannis Weis
@@ -46,11 +45,6 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-    }
-
-    @Override
-    protected void propertyChange(final PropertyChangeEvent evt) {
-        super.propertyChange(evt);
     }
 
     @Override

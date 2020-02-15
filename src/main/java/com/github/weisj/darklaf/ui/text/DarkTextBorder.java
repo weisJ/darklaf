@@ -129,6 +129,9 @@ public class DarkTextBorder implements Border, UIResource {
         return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
     }
 
+    public int getBorderSize() {
+        return borderSize;
+    }
 
     protected static boolean hasError(final Component c) {
         return c instanceof JComponent
