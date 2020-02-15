@@ -243,31 +243,15 @@ task buildLibraries {
     finalizedBy(copyLibraries)
 }
 
-task put_files_in_META_INF  {
-    def resDir = new File(buildDir, 'generated/files_for_META_INF/')
-    def destDir = new File(resDir, 'META-INF/')
-    java {
-        sourceSets {
-            main.resources {
-                srcDir resDir
-            }
-        }
+tasks.withType(Jar) {
+    from(project.projectDir) {
+        include("LICENSE")
+        into("META-INF/license")
     }
-    doLast {
-        destDir.mkdirs()
-        copy {
-            from 'licenses'
-            into destDir
-        }
-        copy {
-             from 'LICENSE'
-            into destDir
-        }
+    from("${project.projectDir}/licenses") {
+        include("*")
+        into("META-INF/license")
     }
-}
-
-processResources {
-    dependsOn('put_files_in_META_INF')
 }
 
 shadowJar {

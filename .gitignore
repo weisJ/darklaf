@@ -44,3 +44,6 @@ venv/
 Thumbs.db
 /.recommenders/
 /key.gpg
+
+# Project
+bin/
