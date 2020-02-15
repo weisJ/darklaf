@@ -95,7 +95,6 @@ Here is a list of things that currently are not finished or need refinement. Thi
   * See [jniplatform/cpp](https://github.com/weisJ/darklaf/tree/master/src/jniplatform/cpp) for the windows implementation.
 - [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
   * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the plaform folder.
-- [Arrow button cycle support for JComboBox.](https://github.com/weisJ/darklaf/issues/10)
 - Create missing demo classes. (See Todo's in test/ui/)
 
 # License
