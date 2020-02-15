@@ -23,33 +23,24 @@
  */
 package ui.text;
 
-import com.github.weisj.darklaf.LafManager;
+import ui.ComponentDemo;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 
-public class TextDemo {
+public class TextPaneDemo extends TextComponentDemo {
 
     public static void main(final String[] args) {
-        /*Todo Rework Demo:
-         * Split up into: JTextField, JFormattedTextField, JTextArea, JEditorPane, JTextPane, JPasswordField.
-         */
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            JFrame f = new JFrame();
-            f.setTitle("Text Test");
-            JPanel p = new JPanel();
-            p.add(new JTextField("Test"));
-            p.add(new JPasswordField("Test"));
-            p.add(new JFormattedTextField("Test"));
-            p.add(new JTextArea("Test\n" + "Test\n" + "Test\n" + "Test..............\n"));
-            p.add(new JTextPane() {{setText("Test\n" + "Test\n" + "Test\n" + "Test..............\n");}});
-            p.add(new JEditorPane() {{setText("Test\n" + "Test\n" + "Test\n" + "Test..............\n");}});
-            f.setContentPane(p);
-            f.setSize(400, 400);
-            f.pack();
-            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            f.setLocationRelativeTo(null);
-            f.setVisible(true);
-        });
+        ComponentDemo.showDemo(new TextPaneDemo());
+    }
+
+    @Override
+    protected JTextComponent createTextComponent() {
+        return new JTextPane();
+    }
+
+    @Override
+    public String getTitle() {
+        return "TextArea Demo";
     }
 }
