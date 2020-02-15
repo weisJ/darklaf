@@ -118,7 +118,9 @@ public final class DarkUIUtil {
     public static void paintLineBorder(final Graphics2D g, final float x, final float y,
                                        final float width, final float height, final int arc) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-        g.draw(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
+        Stroke stroke = g.getStroke();
+        float lw = stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1;
+        g.draw(new RoundRectangle2D.Float(x - lw, y - lw, width + lw, height + lw, arc, arc));
         config.restore();
     }
 
