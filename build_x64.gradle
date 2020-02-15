@@ -25,6 +25,9 @@ if (signingKey.isEmpty()) {
 }
 
 project.gradle.startParameter.excludedTaskNames.add('jniplatformStaticLibrary')
+if (!Os.is(Os.FAMILY_WINDOWS)) {
+    project.gradle.startParameter.excludedTaskNames.add('jniplatformSharedLibrary')
+}
 
 repositories {
     mavenLocal()
