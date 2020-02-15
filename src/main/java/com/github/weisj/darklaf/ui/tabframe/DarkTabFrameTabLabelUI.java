@@ -64,8 +64,6 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private Color selectedColor;
     private Color hoverColor;
     private RotatableIcon rotatableIcon = new RotatableIcon();
-    private Rectangle paintIconR = new Rectangle();
-    private Rectangle paintTextR = new Rectangle();
     private boolean printing;
 
 
@@ -256,20 +254,6 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
             rotatableIcon.setOrientation(mapOrientation(tabComponent.getOrientation()));
         }
         return rotatableIcon;
-    }
-
-    private String layout(final JLabel label, final FontMetrics fm,
-                          final int width, final int height) {
-        Insets insets = label.getInsets(null);
-        String text = label.getText();
-        Rectangle paintViewR = new Rectangle();
-        paintViewR.x = insets.left;
-        paintViewR.y = insets.top;
-        paintViewR.width = width - (insets.left + insets.right);
-        paintViewR.height = height - (insets.top + insets.bottom);
-        paintIconR.x = paintIconR.y = paintIconR.width = paintIconR.height = 0;
-        paintTextR.x = paintTextR.y = paintTextR.width = paintTextR.height = 0;
-        return layoutCL(label, fm, text, getIcon(), paintViewR, paintIconR, paintTextR);
     }
 
     protected Alignment mapOrientation(final Alignment newValue) {

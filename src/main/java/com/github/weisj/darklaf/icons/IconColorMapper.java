@@ -93,7 +93,6 @@ public final class IconColorMapper {
             Stop stop1 = new Stop();
             Stop stop2 = new Stop();
             String color = toHexString(c);
-            System.out.println(c + " " + color);
             try {
                 stop1.addAttribute("stop-color", AnimationElement.AT_XML, color);
                 stop1.addAttribute("offset", AnimationElement.AT_XML, "0");
