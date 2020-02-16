@@ -185,57 +185,6 @@ public final class StringUtil {
         }
     }
 
-    public static int compareVersionNumbers(final String v1, final String v2) {
-        if (v1 == null && v2 == null) {
-            return 0;
-        } else if (v1 == null) {
-            return -1;
-        } else if (v2 == null) {
-            return 1;
-        } else {
-            String[] part1 = v1.split("[._\\-]");
-            String[] part2 = v2.split("[._\\-]");
-
-            int idx;
-            for (idx = 0; idx < part1.length && idx < part2.length; ++idx) {
-                String p1 = part1[idx];
-                String p2 = part2[idx];
-                int cmp;
-                if (p1.matches("\\d+") && p2.matches("\\d+")) {
-                    cmp = (Integer.valueOf(p1)).compareTo(Integer.valueOf(p2));
-                } else {
-                    cmp = part1[idx].compareTo(part2[idx]);
-                }
-
-                if (cmp != 0) {
-                    return cmp;
-                }
-            }
-
-            if (part1.length == part2.length) {
-                return 0;
-            } else {
-                boolean left = part1.length > idx;
-
-                for (String[] parts = left ? part1 : part2; idx < parts.length; ++idx) {
-                    String p = parts[idx];
-                    int cmp;
-                    if (p.matches("\\d+")) {
-                        cmp = (Integer.valueOf(p)).compareTo(0);
-                    } else {
-                        cmp = 1;
-                    }
-
-                    if (cmp != 0) {
-                        return left ? cmp : -cmp;
-                    }
-                }
-
-                return 0;
-            }
-        }
-    }
-
     public static boolean isBlank(final String s) {
         return s.trim().length() == 0;
     }

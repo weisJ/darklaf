@@ -21,7 +21,9 @@ repo/
 
 # intelliJ
 .idea/
-out/
+/out/
+/buildSrc/out/
+/*/out/
 
 # VS Code
 .vscode/
@@ -30,9 +32,10 @@ out/
 target/
 
 # gradle
-/build
-/.gradle
-gradle.properties
+/.gradle/
+/build/
+/buildSrc/.gradle/
+/*/build/
 
 # Python
 venv/
@@ -46,4 +49,6 @@ Thumbs.db
 /key.gpg
 
 # Project
-bin/
+/bin/
+/buildSrc/bin/
+/*/bin/

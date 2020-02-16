@@ -25,7 +25,7 @@ package com.github.weisj.darklaf.ui.radiobutton;
 
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.platform.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.border.Border;
