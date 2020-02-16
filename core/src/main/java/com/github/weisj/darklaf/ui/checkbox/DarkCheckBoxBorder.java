@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.checkbox;
 
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.platform.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -43,13 +42,18 @@ public class DarkCheckBoxBorder implements Border, UIResource {
                             final int width, final int height) {
     }
 
+    private final Insets insets;
+
+    public DarkCheckBoxBorder() {
+        insets = UIManager.getInsets("CheckBox.borderInsets");
+    }
+
     @Override
     public Insets getBorderInsets(final Component c) {
         if (isInCell(c)) {
-            return new Insets(0, 0, 0, 0);
+            return new InsetsUIResource(0, 0, 0, 0);
         }
-        final int a = SystemInfo.isMac ? 2 : 4;
-        return new InsetsUIResource(a, a, a, a);
+        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }
 
     protected static boolean isInCell(final Component c) {

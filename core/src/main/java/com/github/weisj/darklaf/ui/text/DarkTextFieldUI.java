@@ -35,14 +35,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -170,7 +163,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Point getSearchIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getSearchIcon(getComponent()).getIconWidth();
-        return new Point(r.x + DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
+        Insets ins = DarkUIUtil.getBorderInsets(editor);
+        return new Point(r.x + ins.left, r.y + (r.height - w) / 2);
     }
 
     protected static Icon getSearchIcon(final Component c) {
@@ -233,7 +227,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Point getClearIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getClearIcon(clearHovered).getIconWidth();
-        return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
+        Insets ins = DarkUIUtil.getBorderInsets(editor);
+        return new Point(r.x + r.width - w - ins.left, r.y + (r.height - w) / 2);
     }
 
     protected void showSearchPopup() {

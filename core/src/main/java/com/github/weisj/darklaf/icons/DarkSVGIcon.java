@@ -58,7 +58,7 @@ public class DarkSVGIcon implements Icon, Serializable {
         this.uri = uri;
         size = new Dimension(displayWidth, displayHeight);
         icon = new SVGIcon();
-        icon.setScaleToFit(true);
+        icon.setAutosize(SVGIcon.AUTOSIZE_STRETCH);
         icon.setAntiAlias(true);
         loaded = new AtomicBoolean(false);
     }

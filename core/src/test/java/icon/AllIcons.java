@@ -95,10 +95,10 @@ public class AllIcons {
                     int SIZE = 30;
                     ThemedSVGIcon icon = (ThemedSVGIcon) IconLoader.get().loadSVGIcon(folder + "/" + f.getName(), SIZE, SIZE, true);
                     SVGIcon svgIcon = icon.getSVGIcon();
-                    boolean scale = svgIcon.isScaleToFit();
-                    svgIcon.setScaleToFit(false);
+                    int autosize = svgIcon.getAutosize();
+                    svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
                     icon.setDisplaySize(svgIcon.getIconWidth() * 2, svgIcon.getIconHeight() * 2);
-                    svgIcon.setScaleToFit(scale);
+                    svgIcon.setAutosize(autosize);
                     list.add(new Pair<>(f.getName(), icon));
                 }
             }

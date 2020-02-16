@@ -32,16 +32,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.Arrays;
 
 /**
@@ -50,8 +41,8 @@ import java.util.Arrays;
  */
 public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
-    protected static Icon show;
-    protected static Icon showPressed;
+    protected Icon show;
+    protected Icon showPressed;
     private final FocusListener focusListener = new FocusAdapter() {
         public void focusGained(final FocusEvent e) {
             getComponent().repaint();
@@ -185,24 +176,24 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         return showPressed;
     }
 
-
     public static boolean hasShowIcon(final Component c) {
         return c instanceof JPasswordField
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("PasswordField.view"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("PasswordField.view"));
     }
 
 
     private Point getShowIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getShowIcon().getIconWidth();
-        return new Point(r.x + r.width - w - DarkTextBorder.PADDING, r.y + (r.height - w) / 2);
+        Insets ins = DarkUIUtil.getBorderInsets(editor);
+        return new Point(r.x + r.width - w - ins.left, r.y + (r.height - w) / 2);
     }
 
     private boolean isOverEye(final Point p) {
         return showShowIcon() && DarkTextFieldUI.isOver(getShowIconCoord(), getShowIcon(), p);
     }
 
-    protected static Icon getShowIcon() {
+    protected Icon getShowIcon() {
         return show;
     }
 

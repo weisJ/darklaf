@@ -43,6 +43,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
     protected Color inactiveBorderColor;
     protected int arc;
     protected int borderSize;
+    protected Insets insets;
+    protected Insets cellInsets;
 
     public DarkSpinnerBorder() {
         focusBorderColor = UIManager.getColor("Spinner.focusBorderColor");
@@ -50,6 +52,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
         inactiveBorderColor = UIManager.getColor("Spinner.inactiveBorderColor");
         arc = UIManager.getInt("Spinner.arc");
         borderSize = UIManager.getInt("Spinner.borderThickness");
+        cellInsets = UIManager.getInsets("Spinner.cellEditorInsets");
+        insets = UIManager.getInsets("Spinner.insets");
     }
 
     @Override
@@ -115,9 +119,9 @@ public class DarkSpinnerBorder implements Border, UIResource {
     @Override
     public Insets getBorderInsets(final Component c) {
         if (DarkSpinnerUI.isTableCellEditor(c) || DarkSpinnerUI.isTreeCellEditor(c)) {
-            return new InsetsUIResource(2, 5, 2, 5);
+            return new InsetsUIResource(cellInsets.top, insets.left, insets.bottom, insets.right);
         }
-        return new InsetsUIResource(7, 7, 7, 7);
+        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }
 
     @Override
