@@ -33,6 +33,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 
 /**
@@ -178,15 +179,15 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     public static boolean hasShowIcon(final Component c) {
         return c instanceof JPasswordField
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("PasswordField.view"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JPasswordField.showViewIcon"));
     }
 
 
     private Point getShowIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getShowIcon().getIconWidth();
-        Insets ins = DarkUIUtil.getBorderInsets(editor);
-        return new Point(r.x + r.width - w - ins.left, r.y + (r.height - w) / 2);
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - borderSize, r.y + (r.height - w) / 2),
+                                               w, editor);
     }
 
     private boolean isOverEye(final Point p) {
@@ -210,6 +211,20 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         super.installUI(c);
         if (c instanceof JPasswordField) {
             echo_dot = ((JPasswordField) c).getEchoChar();
+        }
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+        String key = evt.getPropertyName();
+        if ("JPasswordField.showViewIcon".equals(key)) {
+            editor.doLayout();
+            Component parent = editor.getParent();
+            if (parent instanceof JComponent) {
+                parent.doLayout();
+            }
+            editor.repaint();
         }
     }
 }

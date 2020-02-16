@@ -82,7 +82,7 @@ public final class DarkUIUtil {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
 
         Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, arc + bw, arc + bw);
-        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, arc, arc);
+        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, arc - bw, arc - bw);
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         path.append(outerRect, false);
         path.append(innerRect, false);
@@ -352,6 +352,13 @@ public final class DarkUIUtil {
         Border border = comp.getBorder();
         if (border == null) return new InsetsUIResource(0, 0, 0, 0);
         return border.getBorderInsets(comp);
+    }
+
+    public static Point adjustForOrientation(final Point p, final int w, final Component c) {
+        if (!c.getComponentOrientation().isLeftToRight()) {
+            p.x = c.getWidth() - p.x - w;
+        }
+        return p;
     }
 
     public enum Outline {

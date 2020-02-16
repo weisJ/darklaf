@@ -116,19 +116,19 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     }
 
     protected void error() {
-        text.putClientProperty("JTextField.hasError", true);
+        text.putClientProperty("JTextComponent.hasError", true);
         text.repaint();
         errorTimer.restart();
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        text.putClientProperty("JTextField.hasError", false);
+        text.putClientProperty("JTextComponent.hasError", false);
         text.repaint();
     }
 
     private void commit() {
-        text.putClientProperty("JTextField.hasError", false);
+        text.putClientProperty("JTextComponent.hasError", false);
         text.repaint();
         SwingUtilities.invokeLater(() -> {
             try {

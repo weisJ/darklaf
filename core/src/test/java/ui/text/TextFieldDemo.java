@@ -23,49 +23,52 @@
  */
 package ui.text;
 
-import com.github.weisj.darklaf.ui.text.DarkTextBorder;
-import com.github.weisj.darklaf.util.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 
-public abstract class TextComponentDemo<T extends JTextComponent> implements ComponentDemo {
+public class TextFieldDemo implements ComponentDemo {
+
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new TextFieldDemo());
+    }
 
     @Override
     public JComponent createComponent() {
-        T text = createTextComponent();
-        text.setText(StringUtil.repeat(StringUtil.repeat("Word ", 5) + "\n", 5));
-        DemoPanel panel = new DemoPanel(text);
-        Border textBorder = new DarkTextBorder();
-        Border border = text.getBorder();
-
+        JTextField textField = new JTextField("Demo TextField");
+        DemoPanel panel = new DemoPanel(textField);
         JPanel controlPanel = panel.getControls();
         controlPanel.setLayout(new GridLayout(3, 2));
         controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(text.isEnabled());
-            addActionListener(e -> text.setEnabled(isSelected()));
+            setSelected(textField.isEnabled());
+            addActionListener(e -> textField.setEnabled(isSelected()));
         }});
         controlPanel.add(new JCheckBox("editable") {{
-            setSelected(text.isEditable());
-            addActionListener(e -> text.setEditable(isSelected()));
+            setSelected(textField.isEditable());
+            addActionListener(e -> textField.setEditable(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("text border") {{
-            setSelected(false);
-            addActionListener(e -> text.setBorder(isSelected() ? textBorder : border));
+        controlPanel.add(new JCheckBox("LeftToRight") {{
+            setEnabled(true);
+            addActionListener(e -> textField.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                  : ComponentOrientation.RIGHT_TO_LEFT));
         }});
         controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {{
             setSelected(true);
-            addActionListener(e -> text.putClientProperty("JTextComponent.roundedSelection", isSelected()));
+            addActionListener(e -> textField.putClientProperty("JTextComponent.roundedSelection", isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("JTextField.variant = search") {{
+            addActionListener(e -> textField.putClientProperty("JTextField.variant", isSelected() ? "search" : ""));
         }});
         controlPanel.add(new JCheckBox("JTextComponent.hasError") {{
-            addActionListener(e -> text.putClientProperty("JTextComponent.hasError", isSelected()));
+            addActionListener(e -> textField.putClientProperty("JTextComponent.hasError", isSelected()));
         }});
         return panel;
     }
 
-    protected abstract T createTextComponent();
+    @Override
+    public String getTitle() {
+        return "TextField Demo";
+    }
 }

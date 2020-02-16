@@ -152,7 +152,7 @@ public final class UIDemo {
                         add(new JPasswordField("Password"));
                         add(new JPasswordField("VeryStrongPassword") {{
                             putClientProperty("JTextField.alternativeArc", Boolean.TRUE);
-                            putClientProperty("PasswordField.view", Boolean.TRUE);
+                            putClientProperty("JPasswordField.showViewIcon", Boolean.TRUE);
                         }});
                     }});
                     panel.add(new JPanel() {{
