@@ -35,13 +35,8 @@ import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -125,14 +120,14 @@ public final class PropertyLoader {
         }
 
         Object returnVal = new LoadError();
-        if (key.endsWith("Insets")) {
+        if (key.endsWith("Insets") || key.endsWith(".insets")) {
             returnVal = parseInsets(value);
         } else if (!skipObjects
-                && (key.endsWith("Border")
-                || key.endsWith(".border")
-                || key.endsWith(".component")
-                || key.endsWith("Component")
-                || key.endsWith("Renderer"))) {
+            && (key.endsWith("Border")
+            || key.endsWith(".border")
+            || key.endsWith(".component")
+            || key.endsWith("Component")
+            || key.endsWith("Renderer"))) {
             return new ObjectRequest(key, value);
         } else if (key.endsWith(".font")) {
             returnVal = parseFont(value);

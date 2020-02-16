@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 
 import javax.swing.border.AbstractBorder;
+import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
@@ -74,7 +75,7 @@ public class BubbleBorder extends AbstractBorder {
         this.radius = radius;
         this.pointerSize = pointerSize;
         this.pointerWidth = pointerSize;
-        insets = new Insets(0, 0, 0, 0);
+        insets = new InsetsUIResource(0, 0, 0, 0);
         setThickness(thickness);
     }
 
@@ -275,7 +276,7 @@ public class BubbleBorder extends AbstractBorder {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        return new Insets(insets.top, insets.left, insets.bottom, insets.right);
+        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }
 
 

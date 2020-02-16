@@ -37,9 +37,11 @@ import java.awt.*;
 public class DarkTreeCellBorder implements Border, UIResource {
 
     protected Color borderColor;
+    protected Insets insets;
 
     public DarkTreeCellBorder() {
         borderColor = UIManager.getColor("Tree.editorBorderColor");
+        insets = UIManager.getInsets("Tree.editorBorderInsets");
     }
 
     @Override
@@ -51,7 +53,7 @@ public class DarkTreeCellBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        return new InsetsUIResource(2, 5, 2, 5);
+        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }
 
     @Override

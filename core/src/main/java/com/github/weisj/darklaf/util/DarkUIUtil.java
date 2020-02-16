@@ -28,7 +28,9 @@ import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.InsetsUIResource;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
@@ -344,6 +346,12 @@ public final class DarkUIUtil {
         int tmp = p.x;
         p.x = p.y;
         p.y = tmp;
+    }
+
+    public static Insets getBorderInsets(final JComponent comp) {
+        Border border = comp.getBorder();
+        if (border == null) return new InsetsUIResource(0, 0, 0, 0);
+        return border.getBorderInsets(comp);
     }
 
     public enum Outline {
