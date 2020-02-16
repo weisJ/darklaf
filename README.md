@@ -82,11 +82,10 @@ They can be found [here](https://github.com/weisJ/darklaf/wiki/Features#alternat
 This LookAndFeel supports custom window decorations (only on Windows at this point). In contrast to most other LaFs the native window behaviour is not compromised giving a seamless experience that still looks native.
 
 # Build
-To build the project replace the ````build.gradle```` script with the one
-fitting your platform i.e.
-- You only have a x86 toolchain installation -> ````build_x86.gradle````
-- You only have a x64 toolchain installation -> ````build_x64.gradle````
-- You have a 86x_64x_multilib toolchain installation -> ````build.gradle````
+
+    ./gradlew build
+
+When building on Windows, you need a C++ toolchain installed to build native extension.
 
 # Contribute
 Here is a list of things that currently are not finished or need refinement. This list is a work in progress and being updated regulary. If you find any problems with the LaF feel free to submit an issue:
