@@ -17,6 +17,7 @@ rootProject.name = "darklaf"
 include(
     "dependencies-bom",
     "native-utils",
+    "core",
     "windows"
 )
 
