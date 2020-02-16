@@ -36,7 +36,6 @@ import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -375,10 +374,10 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             putClientProperty("JButton.alternativeArc", Boolean.TRUE);
             putClientProperty("JButton.variant", "shadow");
             setRolloverEnabled(true);
-            setMargin(new InsetsUIResource(2, 2, 2, 2));
+            setMargin(UIManager.getInsets("TabFramePopup.headerButton.insets"));
             setFocus(false);
             setOpaque(false);
-            context.setToolTipInsets(new Insets(2, 5, 2, 5));
+            context.setToolTipInsets(UIManager.getInsets("TabFramePopup.headerButton.tooltipInsets"));
         }
 
         public void setFocus(final boolean focus) {

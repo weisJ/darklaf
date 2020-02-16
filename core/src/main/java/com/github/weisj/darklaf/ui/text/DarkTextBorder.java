@@ -40,7 +40,6 @@ import java.awt.*;
  */
 public class DarkTextBorder implements Border, UIResource {
 
-    public final static int PADDING = 4;
     private static final Border editorBorder = new TextFieldTableCellEditorBorder();
     protected Color errorBorderColor;
     protected Color focusErrorBorderColor;
@@ -52,6 +51,7 @@ public class DarkTextBorder implements Border, UIResource {
     protected int arc;
     protected int minimumArc;
     protected int searchArc;
+    protected Insets padding;
 
     public DarkTextBorder() {
         focusErrorBorderColor = UIManager.getColor("TextField.border.focusError");
@@ -63,6 +63,7 @@ public class DarkTextBorder implements Border, UIResource {
         arc = UIManager.getInt("TextField.arc");
         searchArc = UIManager.getInt("TextField.searchArc");
         minimumArc = UIManager.getInt("TextField.minimumArc");
+        padding = UIManager.getInsets("TextField.insets");
     }
 
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y,
@@ -161,16 +162,16 @@ public class DarkTextBorder implements Border, UIResource {
         if (isCellEditor(c)) {
             return editorBorder.getBorderInsets(c);
         }
-        Insets insets = new Insets(borderSize + PADDING, borderSize + PADDING,
-                                   borderSize + PADDING, borderSize + PADDING);
+        Insets insets = new Insets(borderSize + padding.top, borderSize + padding.left,
+            borderSize + padding.bottom, borderSize + padding.right);
         if (DarkTextFieldUI.isSearchField(c)) {
             int searchWidth = DarkTextFieldUI.getSearchIcon(c).getIconWidth();
             int clearWidth = DarkTextFieldUI.getClearIcon(false).getIconWidth();
-            insets.left += PADDING + searchWidth;
-            insets.right += PADDING + clearWidth;
+            insets.left += padding.left + searchWidth;
+            insets.right += padding.right + clearWidth;
         } else if (DarkPasswordFieldUI.hasShowIcon(c)) {
             int eyeWidth = DarkPasswordFieldUI.getShowIcon().getIconWidth();
-            insets.right += PADDING + eyeWidth;
+            insets.right += padding.right + eyeWidth;
         }
         return insets;
     }

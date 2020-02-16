@@ -33,14 +33,15 @@ import java.awt.*;
 public class MoreTabsButton extends DarkTabAreaButton {
 
     protected final static String INFINITY = "\u221e";
-    protected final static int PAD = 2;
     protected final Icon icon;
     protected DarkTabbedPaneUI ui;
+    protected final int pad;
 
     public MoreTabsButton(final DarkTabbedPaneUI ui) {
         super(ui);
         this.ui = ui;
         icon = ui.getMoreTabsIcon();
+        pad = UIManager.getInt("TabbedPane.moreTabsButton.pad");
         setIcon(EmptyIcon.create(icon.getIconWidth(), icon.getIconHeight()));
         putClientProperty("JButton.variant", "onlyLabel");
         putClientProperty("JButton.square", true);
@@ -57,7 +58,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         FontMetrics metrics = g.getFontMetrics();
         String label = getLabelString();
         int labelWidth = metrics.stringWidth(label);
-        int x = (getWidth() - (icon.getIconWidth() + labelWidth + PAD)) / 2 + PAD;
+        int x = (getWidth() - (icon.getIconWidth() + labelWidth + pad)) / 2 + pad;
         int y = (getHeight() - icon.getIconHeight()) / 2;
 
 
@@ -78,7 +79,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         icon.paintIcon(this, g, x, y);
         config.restore();
         config = GraphicsUtil.setupAntialiasing(g);
-        g.drawString(label, x + icon.getIconWidth() + PAD, y + icon.getIconHeight() - off);
+        g.drawString(label, x + icon.getIconWidth() + pad, y + icon.getIconHeight() - off);
         config.restore();
     }
 
@@ -92,7 +93,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
     public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
         FontMetrics metrics = getFontMetrics(getFont());
-        size.width += metrics.stringWidth(getLabelString()) + 3 * PAD;
+        size.width += metrics.stringWidth(getLabelString()) + 3 * pad;
         return size;
     }
 }
