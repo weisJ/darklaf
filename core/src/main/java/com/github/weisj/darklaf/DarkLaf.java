@@ -105,7 +105,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             loadThemeDefaults(defaults);
             initIdeaDefaults(defaults);
             patchComboBox(metalDefaults, defaults);
-            adjustPlatformSpecifics(defaults);
 
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
@@ -117,15 +116,13 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         return super.getDefaults();
     }
 
-    protected void adjustPlatformSpecifics(final UIDefaults defaults) {
-        boolean useScreenMenuBar = "true".equalsIgnoreCase(System.getProperty("apple.laf.useScreenMenuBar",
-                                                                              "false"));
-        if (SystemInfo.isMac && !useScreenMenuBar) {
-            defaults.put("MenuBarUI", "com.github.weisj.darklaf.ui.menu.DarkMenuBarUI");
-            defaults.put("MenuUI", "com.github.weisj.darklaf.ui.menu.DarkMenuUI");
-        } else {
-            defaults.remove("MenuBarUI");
-            defaults.remove("MenuUI");
+    protected void adjustPlatformSpecifics(final Properties uiProps) {
+        boolean useScreenMenuBar = Boolean.getBoolean("apple.laf.useScreenMenuBar");
+        // If user wants to use Apple menu bar, then we need to keep the default
+        // component for MenuBarUI and MenuUI
+        if (SystemInfo.isMac && useScreenMenuBar) {
+            uiProps.remove("MenuBarUI");
+            uiProps.remove("MenuUI");
         }
     }
 
@@ -182,6 +179,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         currentTheme.loadUIProperties(uiProps, defaults);
         currentTheme.loadIconProperties(uiProps, defaults);
         currentTheme.loadPlatformProperties(uiProps, defaults);
+        adjustPlatformSpecifics(uiProps);
         defaults.putAll(uiProps);
 
         StyleSheet styleSheet = currentTheme.loadStyleSheet();
