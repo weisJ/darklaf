@@ -1,7 +1,7 @@
 # Darklaf - A Darcula Look and Feel
 
 [![CI Status](https://github.com/weisJ/darklaf/workflows/CI/badge.svg?branch=master)](https://github.com/weisJ/darklaf/actions)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.weisj/darklaf.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.weisj%22%20AND%20a:%22darklaf-core%22)
+![Maven Central](https://img.shields.io/maven-central/v/com.github.weisj/darklaf-core?label=Maven%20Central)
 
 This project is based on the [darcula](https://github.com/bulenkov/Darcula) look and feel for Swing.
 
