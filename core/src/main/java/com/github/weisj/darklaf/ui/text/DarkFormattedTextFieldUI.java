@@ -28,6 +28,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.Document;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
@@ -52,6 +53,11 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
     public void installUI(final JComponent c) {
         textField = (JFormattedTextField) c;
         super.installUI(c);
+    }
+
+    @Override
+    protected void paintBackground(final Graphics graphics) {
+        super.paintBackground(graphics);
     }
 
     @Override

@@ -128,7 +128,9 @@ public final class DarkUIUtil {
 
     public static void fillRoundRect(final Graphics2D g, final float x, final float y,
                                      final float width, final float height, final int arc) {
-        g.fill(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
+        Stroke stroke = g.getStroke();
+        float lw = stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1;
+        g.fill(new RoundRectangle2D.Float(x - lw, y - lw, width + lw, height + lw, arc, arc));
     }
 
 

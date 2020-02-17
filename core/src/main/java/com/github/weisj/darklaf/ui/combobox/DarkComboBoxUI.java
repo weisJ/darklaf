@@ -47,8 +47,6 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyChangeListener {
 
-    private static final int BUTTON_PAD = 7;
-
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mousePressed(final MouseEvent e) {
@@ -68,7 +66,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     protected Color arrowBackgroundEnd;
     private Insets boxPadding;
     private Insets cellPadding;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkComboBoxUI();
@@ -163,11 +160,14 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     }
 
     protected JButton createArrowButton() {
+        int buttonPad = UIManager.getInt("ComboBox.buttonPad");
         JButton button = ArrowButton.createUpDownArrow(comboBox,
-                                                       UIManager.getIcon("ComboBox.arrow.icon"),
+                                                       new ComboIcon(comboBox,
+                                                                     UIManager.getIcon("ComboBox.arrowEditable.icon"),
+                                                                     UIManager.getIcon("ComboBox.arrow.icon")),
                                                        UIManager.getIcon("ComboBox.arrowInactive.icon"),
                                                        SwingConstants.SOUTH, true, false,
-                                                       new Insets(0, BUTTON_PAD, 0, BUTTON_PAD));
+                                                       new Insets(0, buttonPad, 0, buttonPad));
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return button;
@@ -325,7 +325,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             Area rect;
             Area iconRect;
             if (!isTableCellEditor && !isTreeCellEditor) {
-                rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
+                rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize, width - 2 * bSize + 2,
                                                             height - 2 * bSize, arc, arc));
                 iconRect = new Area(new Rectangle(off, 0, width, height));
             } else {
@@ -428,6 +428,38 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             comboBox.repaint();
         } else if ("JComboBox.isTableCellEditor".equals(key) || "JComboBox.isTreeCellEditor".equals(key)) {
             comboBox.repaint();
+        }
+    }
+
+    private static class ComboIcon implements Icon {
+
+        private final JComboBox<?> box;
+        private final Icon editableIcon;
+        private final Icon icon;
+
+        private ComboIcon(final JComboBox<?> box, final Icon editableIcon, final Icon icon) {
+            this.box = box;
+            this.editableIcon = editableIcon;
+            this.icon = icon;
+        }
+
+        private Icon getIcon() {
+            return box.isEditable() ? editableIcon : icon;
+        }
+
+        @Override
+        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+            getIcon().paintIcon(c, g, x, y);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return getIcon().getIconWidth();
+        }
+
+        @Override
+        public int getIconHeight() {
+            return getIcon().getIconHeight();
         }
     }
 }

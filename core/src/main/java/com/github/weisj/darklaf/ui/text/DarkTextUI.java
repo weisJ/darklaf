@@ -97,9 +97,14 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     @Override
     protected void paintBackground(final Graphics g) {
-        Container parent = editor.getParent();
-        if (editor.isOpaque() && parent != null) {
-            g.setColor(parent.getBackground());
+        if (editor.isOpaque()) {
+            Container parent = editor.getParent();
+            if (parent != null) {
+                g.setColor(parent.getBackground());
+            }
+            if (DarkTextBorder.isCellEditor(editor) || DarkUIUtil.isInCell(editor)) {
+                g.setColor(editor.getBackground());
+            }
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
 
@@ -113,6 +118,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 g.fillRect(ins.left, ins.top, editor.getWidth() - ins.left - ins.right,
                            editor.getHeight() - ins.top - ins.bottom);
             }
+        } else {
+            g.setColor(editor.getBackground());
+            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
     }
 

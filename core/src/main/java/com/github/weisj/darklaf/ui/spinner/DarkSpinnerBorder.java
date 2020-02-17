@@ -121,7 +121,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
         if (DarkSpinnerUI.isTableCellEditor(c) || DarkSpinnerUI.isTreeCellEditor(c)) {
             return new InsetsUIResource(cellInsets.top, insets.left, insets.bottom, insets.right);
         }
-        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
+        return new InsetsUIResource(insets.top + borderSize, insets.left + borderSize,
+                                    insets.bottom + borderSize, insets.right + borderSize);
     }
 
     @Override

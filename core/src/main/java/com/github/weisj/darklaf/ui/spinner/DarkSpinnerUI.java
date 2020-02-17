@@ -35,12 +35,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
@@ -52,7 +47,6 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListener {
 
-    private static final int BUTTON_PAD = 7;
     private final FocusListener focusListener = new FocusAdapter() {
         @Override
         public void focusGained(final FocusEvent e) {
@@ -204,7 +198,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
 
     private JButton createArrow(final int direction) {
-        Insets insets = new Insets(0, BUTTON_PAD, 0, BUTTON_PAD);
+        int buttonPad = UIManager.getInt("Spinner.buttonPad");
+        Insets insets = new Insets(0, buttonPad, 0, buttonPad);
         JButton button = ArrowButton.createUpDownArrow(spinner,
                                                        getArrowIcon(direction),
                                                        getArrowInactiveIcon(direction), direction,
@@ -244,14 +239,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         int height = c.getHeight();
         JComponent editor = spinner.getEditor();
         if (editorComponent != null) {
-            if (!editorComponent.isEnabled()) {
-                if (compColor == null) {
-                    compColor = editorComponent.getBackground();
-                    editorComponent.setBackground(getBackground(c));
-                } else {
-                    compColor = null;
-                }
-            }
+            editorComponent.setBackground(getBackground(c));
             g.setColor(editorComponent.getBackground());
         } else {
             ((Graphics2D) g).setPaint(getBackground(c));
@@ -292,7 +280,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         Rectangle bounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
         int off = leftToRight ? bounds.x : bounds.x + bounds.width;
-        Area rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize, height - 2 * bSize,
+        Area rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 2, height - 2 * bSize + 1,
                                                          arc, arc));
         Area iconRect = new Area(new Rectangle(off, 0, width, height));
         if (leftToRight) {
