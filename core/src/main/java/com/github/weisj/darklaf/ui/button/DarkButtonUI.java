@@ -23,10 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.platform.SystemInfo;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -126,16 +126,13 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         g.setColor(getForeground(button));
         FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
         int mnemonicIndex = button.getDisplayedMnemonicIndex();
-        if (model.isEnabled()) {
-            SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
-                                                      textRect.x + this.getTextShiftOffset(),
-                                                      textRect.y + metrics.getAscent() + getTextShiftOffset());
-        } else {
+        if (!model.isEnabled()) {
             g.setColor(inactiveForeground);
-            SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1,
-                                                      textRect.x + getTextShiftOffset(),
-                                                      textRect.y + metrics.getAscent() + getTextShiftOffset());
+            mnemonicIndex = -1;
         }
+        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
+                                                  textRect.x + getTextShiftOffset(),
+                                                  textRect.y + metrics.getAscent() + getTextShiftOffset());
         config.restore();
     }
 
@@ -145,6 +142,11 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         AbstractButton b = (AbstractButton) c;
         paintButton(g, c);
 
+        if (isDefaultButton(b)) {
+            g.setFont(g.getFont().deriveFont(Font.BOLD));
+        } else if (g.getFont().isBold()) {
+            g.setFont(g.getFont().deriveFont(Font.PLAIN));
+        }
         String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
                              b.getWidth(), b.getHeight());
 
@@ -281,11 +283,6 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
 
     protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
-        if (isDefaultButton(b)) {
-            g.setFont(g.getFont().deriveFont(Font.BOLD));
-        } else if (g.getFont().isBold()) {
-            g.setFont(g.getFont().deriveFont(Font.PLAIN));
-        }
         g.setClip(textRect);
         if (text != null && !text.equals("")) {
             View v = (View) c.getClientProperty(BasicHTML.propertyKey);
