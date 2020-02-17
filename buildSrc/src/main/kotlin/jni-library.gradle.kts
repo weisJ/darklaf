@@ -23,10 +23,10 @@ tasks.compileJava {
     // The nested output is not marked automatically as an output of the task regarding task dependencies.
     // So we mark it manually here.
     // See https://github.com/gradle/gradle/issues/6619.
-    outputs.dir(options.headerOutputDirectory);
+    outputs.dir(options.headerOutputDirectory)
     // Cannot do incremental header generation, since the pattern for cleaning them up is currently wrong.
     // See https://github.com/gradle/gradle/issues/12084.
-    options.isIncremental = false;
+    options.isIncremental = false
 }
 
 tasks.withType<CppCompile>().configureEach {
@@ -71,9 +71,10 @@ afterEvaluate {
     tasks.jar {
         // Publish non-optimized, debuggable binary to simplify analysis in case of crashes
         library.binaries.get()
-            .filter { it.isDebuggable && !it.isOptimized }
+            .filter { it.isOptimized }
             .filterIsInstance<CppSharedLibrary>()
             .forEach { binary ->
+                binary.linkTask.get().debuggable.set(false)
                 dependsOn(binary.linkTask)
                 val variantName = binary.targetMachine.let {
                     "${it.operatingSystemFamily}-${it.architecture}"

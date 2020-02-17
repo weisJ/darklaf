@@ -15,19 +15,20 @@ dependencies {
 library {
     targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)
     binaries.configureEach {
-        compileTask.get().compilerArgs.addAll(toolChain.let {
-            if (it is Gcc || it is Clang) listOf("--std=c++11")
-            else emptyList()
-        })
+        compileTask.get().compilerArgs.addAll(
+            when (toolChain) {
+                is Gcc, is Clang, is VisualCpp -> listOf("--std=c++11")
+                else -> emptyList()
+            }
+        )
     }
     binaries.whenElementFinalized(CppSharedLibrary::class) {
         linkTask.get().linkerArgs.addAll(
-            "dwmapi.lib",
-            "user32.lib",
-            "Gdi32.lib",
-            "-ldwmapi",
-            "-lGdi32",
-            "-luser32"
+            when (toolChain) {
+                is Gcc, is Clang -> listOf("-ldwmapi", "-lGdi32", "-luser32")
+                is VisualCpp -> listOf("dwmapi.lib", "user32.lib", "Gdi32.lib")
+                else -> emptyList()
+            }
         )
     }
 }
