@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.rootpane;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,7 +33,7 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-class SubstanceRootLayout implements LayoutManager2 {
+class DarkSubstanceRootLayout implements LayoutManager2 {
     public void addLayoutComponent(final String name, final Component comp) {
     }
 
@@ -47,6 +49,13 @@ class SubstanceRootLayout implements LayoutManager2 {
         int tpWidth = 0;
         int tpHeight = 0;
         Insets i = parent.getInsets();
+
+        //Compensate for the insets of the native window peer that include the decorations.
+        Window window = DarkUIUtil.getWindow(parent);
+        Insets peerInsets = window != null ? window.getInsets() : new Insets(0, 0, 0, 0);
+        i.set(i.top - peerInsets.top, i.left - peerInsets.left,
+              i.bottom - peerInsets.bottom, i.right - peerInsets.right);
+
         JRootPane root = (JRootPane) parent;
 
         if (root.getContentPane() != null) {
@@ -79,8 +88,7 @@ class SubstanceRootLayout implements LayoutManager2 {
             }
         }
 
-        return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth)
-                                     + i.left + i.right,
+        return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right,
                              cpHeight + mbHeight + tpHeight + i.top + i.bottom);
     }
 

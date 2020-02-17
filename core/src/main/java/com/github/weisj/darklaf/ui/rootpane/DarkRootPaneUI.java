@@ -139,7 +139,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     private void installClientDecorations(final JRootPane root) {
-        installBorder(root);
         DarkTitlePane titlePane = createTitlePane(root);
         setTitlePane(root, titlePane);
         updateWindow(root.getParent());
@@ -152,15 +151,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
             }
             root.revalidate();
             root.repaint();
-        }
-    }
-
-    public void installBorder(final JRootPane root) {
-        int style = root.getWindowDecorationStyle();
-        if (style == JRootPane.NONE) {
-            LookAndFeel.uninstallBorder(root);
-        } else {
-            LookAndFeel.uninstallBorder(root);
         }
     }
 
@@ -198,13 +188,12 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         root.setLayout(layoutManager);
     }
 
-
     protected JComponent getTitlePane() {
         return titlePane;
     }
 
     protected LayoutManager createLayoutManager() {
-        return new SubstanceRootLayout();
+        return new DarkSubstanceRootLayout();
     }
 
     @Override

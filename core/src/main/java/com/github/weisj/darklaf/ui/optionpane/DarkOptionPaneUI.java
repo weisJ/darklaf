@@ -39,8 +39,8 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
     }
 
     @Override
-    protected void installDefaults() {
-        super.installDefaults();
+    protected LayoutManager createLayoutManager() {
+        return super.createLayoutManager();
     }
 
     @Override
@@ -52,10 +52,10 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
             bottom.setBorder(border);
         }
         bottom.setLayout(new DarkButtonAreaLayout(
-                DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false),
-                DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
-                DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER),
-                DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false)));
+            DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false),
+            DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
+            DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER),
+            DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false)));
         addButtonComponents(bottom, getButtons(), getInitialValueIndex());
         return bottom;
     }
