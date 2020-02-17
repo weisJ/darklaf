@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
@@ -137,6 +138,16 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     }
 
     @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        AbstractButton b = (AbstractButton) c;
+        Font oldFont = b.getFont();
+        b.setFont(b.getFont().deriveFont(Font.BOLD));
+        Dimension size = BasicGraphicsUtils.getPreferredButtonSize(b, b.getIconTextGap());
+        b.setFont(oldFont);
+        return size;
+    }
+
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         GraphicsContext config = new GraphicsContext(g);
         AbstractButton b = (AbstractButton) c;
@@ -147,6 +158,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         } else if (g.getFont().isBold()) {
             g.setFont(g.getFont().deriveFont(Font.PLAIN));
         }
+
         String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
                              b.getWidth(), b.getHeight());
 
