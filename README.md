@@ -22,7 +22,7 @@ This project is available on Maven Central:
 ````xml
 <dependency>
   <groupId>com.github.weisj</groupId>
-  <artifactId>darklaf</artifactId>
+  <artifactId>darklaf-core</artifactId>
   <version>[1.3.3.5,)</version>
 </dependency>
 ````
@@ -92,6 +92,16 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
   * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the plaform folder.
 - Create missing demo classes. (See Todo's in test/ui/)
+
+# Artifacts
+- Group ID: ````com.github.weisj````
+- Version: ````1.3.3.5````
+- Artifact IDs:
+  - ````darklaf-core```` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
+  - ````darklaf-native-utils```` Library to handle loading of native libraries.
+  - ````darklaf-windows```` Native code specific to the windows platform.
+
+
 
 # License
 This project is licensed under the [MIT license](https://github.com/weisJ/darklaf/blob/master/LICENSE).
