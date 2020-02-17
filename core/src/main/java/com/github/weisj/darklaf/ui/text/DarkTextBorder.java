@@ -49,8 +49,9 @@ public class DarkTextBorder implements Border, UIResource {
 
     protected int borderSize;
     protected int arc;
-    protected int minimumArc;
     protected int searchArc;
+    protected int focusArc;
+    protected int searchFocusArc;
     protected Insets padding;
     protected Icon showIcon;
 
@@ -62,8 +63,9 @@ public class DarkTextBorder implements Border, UIResource {
         inactiveBorderColor = UIManager.getColor("TextField.border.disabled");
         borderSize = UIManager.getInt("TextField.borderThickness");
         arc = UIManager.getInt("TextField.arc");
+        focusArc = UIManager.getInt("TextField.focusArc");
         searchArc = UIManager.getInt("TextField.searchArc");
-        minimumArc = UIManager.getInt("TextField.minimumArc");
+        searchFocusArc = UIManager.getInt("TextField.searchFocusArc");
         padding = UIManager.getInsets("TextField.insets");
         showIcon = UIManager.getIcon("PasswordField.show.icon");
     }
@@ -80,19 +82,11 @@ public class DarkTextBorder implements Border, UIResource {
     }
 
     protected int getArcSize(final Component c) {
-        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
-        if (!alt && !DarkTextFieldUI.isSearchField(c)) {
-            return 0;
-        }
-        return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
+        return DarkTextFieldUI.isSearchField(c) ? searchArc : arc;
     }
 
     protected int getFocusArcSize(final Component c) {
-        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
-        if (!alt && !DarkTextFieldUI.isSearchField(c)) {
-            return minimumArc;
-        }
-        return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
+        return DarkTextFieldUI.isSearchField(c) ? searchFocusArc : focusArc;
     }
 
     public int getBorderSize() {
@@ -110,36 +104,15 @@ public class DarkTextBorder implements Border, UIResource {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         int arcSize = getArcSize(c);
         int focusArcSize = getFocusArcSize(c);
-        if (!DarkTextFieldUI.isSearchField(c)) {
-            if (hasError(c)) {
-                DarkUIUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
-                                              c.hasFocus(), DarkUIUtil.Outline.error);
-            } else if (c.hasFocus()) {
-                DarkUIUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize);
-            }
-            g.setColor(getBorderColor(c));
-
-            if (DarkTextFieldUI.chooseAlternativeArc(c)) {
-                DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
-                                           height - 2 * borderSize, arcSize);
-            } else {
-                DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
-                                           height - 2 * borderSize, 0);
-            }
-        } else if (DarkTextFieldUI.isSearchField(c)) {
-            g.setColor(getBorderColor(c));
-            if (((JComponent) c).getClientProperty("JTextField.Search.noBorderRing") != Boolean.TRUE) {
-                if (hasError(c)) {
-                    DarkUIUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
-                                                  c.hasFocus(), DarkUIUtil.Outline.error);
-                } else if (c.hasFocus()) {
-                    DarkUIUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
-                }
-                g.setColor(getBorderColor(c));
-                DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
-                                           height - 2 * borderSize, arcSize);
-            }
+        if (hasError(c)) {
+            DarkUIUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
+                                          c.hasFocus(), DarkUIUtil.Outline.error);
+        } else if (c.hasFocus()) {
+            DarkUIUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize);
         }
+        g.setColor(getBorderColor(c));
+        DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
+                                   height - 2 * borderSize, arcSize);
         g.translate(-x, -y);
         config.restore();
     }

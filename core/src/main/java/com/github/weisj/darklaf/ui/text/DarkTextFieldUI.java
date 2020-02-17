@@ -108,11 +108,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return new Rectangle(i.left, i.top, dim.width - i.left - i.right, dim.height - i.top - i.bottom);
     }
 
-    public static boolean chooseAlternativeArc(final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.alternativeArc"));
-    }
-
     public static boolean isOver(final Point p, final Icon icon, final Point e) {
         return new Rectangle(p.x, p.y,
                              icon.getIconWidth(), icon.getIconHeight()).contains(e);
@@ -206,12 +201,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     @Override
     protected int getArcSize(final JComponent c) {
-        boolean alt = chooseAlternativeArc(c);
-        if (!alt && !isSearchField(c)) {
-            return 0;
-        }
-        return DarkTextFieldUI.isSearchField(c) ? (alt ? arcSize : searchArcSize)
-                                                : (alt ? searchArcSize : arcSize);
+        return DarkTextFieldUI.isSearchField(c) ? searchArcSize : arcSize;
     }
 
     private void paintClearIcon(final Graphics2D g) {

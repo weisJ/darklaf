@@ -38,9 +38,7 @@ import javax.swing.plaf.InputMapUIResource;
 import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
@@ -52,6 +50,17 @@ import java.util.Set;
 public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener {
 
     protected JTextComponent editor;
+    private FocusListener focusListener = new FocusListener() {
+        @Override
+        public void focusGained(final FocusEvent e) {
+            editor.repaint();
+        }
+
+        @Override
+        public void focusLost(final FocusEvent e) {
+            editor.repaint();
+        }
+    };
 
     @Override
     protected Caret createCaret() {
@@ -87,12 +96,15 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected void installListeners() {
         super.installListeners();
         editor.addPropertyChangeListener(this);
+        editor.addFocusListener(focusListener);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
         editor.removePropertyChangeListener(this);
+        editor.removeFocusListener(focusListener);
+        focusListener = null;
     }
 
     @Override
