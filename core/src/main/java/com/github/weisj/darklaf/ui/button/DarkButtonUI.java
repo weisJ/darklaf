@@ -227,9 +227,9 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
 
     protected Color getBackgroundColor(final JComponent c) {
         boolean defaultButton = isDefaultButton(c);
-        boolean rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
-                && (((JButton) c).getModel().isRollover())));
-        boolean clicked = c instanceof JButton && ((JButton) c).getModel().isArmed();
+        boolean rollOver = c instanceof JButton && (((JButton) c).isRolloverEnabled()
+            && (((JButton) c).getModel().isRollover()));
+        boolean clicked = c instanceof JButton && (((JButton) c).getModel().isArmed());
         if (c.isEnabled()) {
             if (defaultButton) {
                 if (clicked) {
