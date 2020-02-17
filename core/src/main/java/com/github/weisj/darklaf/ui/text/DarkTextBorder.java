@@ -68,6 +68,37 @@ public class DarkTextBorder implements Border, UIResource {
         showIcon = UIManager.getIcon("PasswordField.show.icon");
     }
 
+    protected static boolean hasError(final Component c) {
+        return c instanceof JComponent
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextComponent.hasError"));
+    }
+
+
+    protected static boolean isCellEditor(final Component c) {
+        return c instanceof JComponent
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.cellEditor"));
+    }
+
+    protected int getArcSize(final Component c) {
+        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
+        if (!alt && !DarkTextFieldUI.isSearchField(c)) {
+            return 0;
+        }
+        return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
+    }
+
+    protected int getFocusArcSize(final Component c) {
+        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
+        if (!alt && !DarkTextFieldUI.isSearchField(c)) {
+            return minimumArc;
+        }
+        return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
+    }
+
+    public int getBorderSize() {
+        return borderSize;
+    }
+
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y,
                             final int width, final int height) {
         if (isCellEditor(c)) {
@@ -98,7 +129,10 @@ public class DarkTextBorder implements Border, UIResource {
         } else if (DarkTextFieldUI.isSearchField(c)) {
             g.setColor(getBorderColor(c));
             if (((JComponent) c).getClientProperty("JTextField.Search.noBorderRing") != Boolean.TRUE) {
-                if (c.hasFocus()) {
+                if (hasError(c)) {
+                    DarkUIUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
+                                                  c.hasFocus(), DarkUIUtil.Outline.error);
+                } else if (c.hasFocus()) {
                     DarkUIUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
                 }
                 g.setColor(getBorderColor(c));
@@ -108,37 +142,6 @@ public class DarkTextBorder implements Border, UIResource {
         }
         g.translate(-x, -y);
         config.restore();
-    }
-
-
-    protected static boolean isCellEditor(final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.cellEditor"));
-    }
-
-    protected int getArcSize(final Component c) {
-        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
-        if (!alt && !DarkTextFieldUI.isSearchField(c)) {
-            return 0;
-        }
-        return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
-    }
-
-    protected int getFocusArcSize(final Component c) {
-        boolean alt = DarkTextFieldUI.chooseAlternativeArc(c);
-        if (!alt && !DarkTextFieldUI.isSearchField(c)) {
-            return minimumArc;
-        }
-        return DarkTextFieldUI.isSearchField(c) ? (alt ? arc : searchArc) : (alt ? searchArc : arc);
-    }
-
-    public int getBorderSize() {
-        return borderSize;
-    }
-
-    protected static boolean hasError(final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.hasError"));
     }
 
     protected Color getBorderColor(final Component c) {
@@ -173,7 +176,11 @@ public class DarkTextBorder implements Border, UIResource {
             insets.right += padding.right + clearWidth;
         } else if (DarkPasswordFieldUI.hasShowIcon(c)) {
             int eyeWidth = showIcon.getIconWidth();
-            insets.right += padding.right + eyeWidth;
+            if (c.getComponentOrientation().isLeftToRight()) {
+                insets.right += padding.right + eyeWidth;
+            } else {
+                insets.left += padding.left + eyeWidth;
+            }
         }
         return insets;
     }

@@ -99,9 +99,9 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
         if (textField == null) return;
         try {
             textField.getFormatter().stringToValue(textField.getText());
-            textField.putClientProperty("JTextField.hasError", false);
+            textField.putClientProperty("JTextComponent.hasError", false);
         } catch (ParseException e) {
-            textField.putClientProperty("JTextField.hasError", true);
+            textField.putClientProperty("JTextComponent.hasError", true);
         }
     }
 }

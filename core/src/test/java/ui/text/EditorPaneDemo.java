@@ -26,16 +26,15 @@ package ui.text;
 import ui.ComponentDemo;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 
-public class EditorPaneDemo extends TextComponentDemo {
+public class EditorPaneDemo extends TextComponentDemo<JEditorPane> {
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new EditorPaneDemo());
     }
 
     @Override
-    protected JTextComponent createTextComponent() {
+    protected JEditorPane createTextComponent() {
         return new JEditorPane();
     }
 

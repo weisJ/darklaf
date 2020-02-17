@@ -36,12 +36,7 @@ import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.plaf.ComponentInputMapUIResource;
 import javax.swing.plaf.InputMapUIResource;
 import javax.swing.plaf.basic.BasicTextUI;
-import javax.swing.text.Caret;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.EditorKit;
-import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.TextAction;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -82,6 +77,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if ("JTextComponent.roundedSelection".equals(key)) {
+            editor.repaint();
+        } else if ("JTextComponent.hasError".equals(key)) {
             editor.repaint();
         }
     }

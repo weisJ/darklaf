@@ -26,16 +26,15 @@ package ui.text;
 import ui.ComponentDemo;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 
-public class TextAreaDemo extends TextComponentDemo {
+public class TextAreaDemo extends TextComponentDemo<JTextArea> {
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new TextAreaDemo());
     }
 
     @Override
-    protected JTextComponent createTextComponent() {
+    protected JTextArea createTextComponent() {
         return new JTextArea();
     }
 

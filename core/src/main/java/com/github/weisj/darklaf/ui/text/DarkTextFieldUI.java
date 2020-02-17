@@ -163,8 +163,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Point getSearchIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getSearchIcon(getComponent()).getIconWidth();
-        Insets ins = DarkUIUtil.getBorderInsets(editor);
-        return new Point(r.x + ins.left, r.y + (r.height - w) / 2);
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + borderSize, r.y + (r.height - w) / 2),
+                                               w, editor);
     }
 
     protected static Icon getSearchIcon(final Component c) {
@@ -227,9 +227,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Point getClearIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getClearIcon(clearHovered).getIconWidth();
-        Insets ins = DarkUIUtil.getBorderInsets(editor);
-        return new Point(r.x + r.width - w - ins.left, r.y + (r.height - w) / 2);
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - borderSize, r.y + (r.height - w) / 2),
+                                               w, editor);
     }
+
 
     protected void showSearchPopup() {
         if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
@@ -257,11 +258,11 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         clear = UIManager.getIcon("TextField.search.clear.icon");
         searchWithHistory = UIManager.getIcon("TextField.search.searchWithHistory.icon");
         search = UIManager.getIcon("TextField.search.search.icon");
-
     }
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
+        super.propertyChange(evt);
         String key = evt.getPropertyName();
         if ("JTextField.Search.FindPopup".equals(key)) {
             Object oldVal = evt.getOldValue();
@@ -272,6 +273,13 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             if (newVal instanceof JPopupMenu) {
                 ((JPopupMenu) newVal).addPopupMenuListener(searchPopupListener);
             }
+        } else if ("JTextField.variant".equals(key)) {
+            editor.doLayout();
+            Component parent = editor.getParent();
+            if (parent instanceof JComponent) {
+                parent.doLayout();
+            }
+            editor.repaint();
         }
     }
 
