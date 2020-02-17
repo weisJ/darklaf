@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="Windows.Icons.windowMinimize.color">
+            <stop offset="0" stop-color="#A9A9A9"/>
+            <stop offset="1" stop-color="#A9A9A9"/>
+        </linearGradient>
+    </defs>
+    <rect width="10" height="1" x="3" y="8" fill="url(#Windows.Icons.windowMinimize.color)" fill-rule="evenodd"/>
+</svg>

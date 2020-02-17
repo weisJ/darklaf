@@ -21,33 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorations;
-
-import com.github.weisj.darklaf.ui.rootpane.CustomTitlePane;
+package com.github.weisj.darklaf.platform.windows.ui;
 
 import javax.swing.*;
+import java.awt.*;
 
-public interface JNIDecorationsProvider {
+/**
+ * @author Jannis Weis
+ */
+public class TitlePaneIcon implements Icon {
 
-    /**
-     * Create the custom title pane.
-     *
-     * @param rootPane The root pane to create the title pane for.
-     * @return the custom title pane.
-     */
-    CustomTitlePane createTitlePane(final JRootPane rootPane);
+    private final Icon activeIcon;
+    private final Icon inactiveIcon;
+    private boolean active = true;
 
-    /**
-     * Returns whether custom decorations are supported.
-     *
-     * @return true if decorations are supported.
-     */
-    boolean isCustomDecorationSupported();
 
-    /**
-     * Load the decorations library if necessary.
-     *
-     * @return true if successful and library wasn't already loaded.
-     */
-    boolean updateLibrary();
+    public TitlePaneIcon(final Icon active, final Icon inactive) {
+        this.activeIcon = active;
+        this.inactiveIcon = inactive;
+    }
+
+    public void setActive(final boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        currentIcon().paintIcon(c, g, x, y);
+    }
+
+
+    private Icon currentIcon() {
+        return active ? activeIcon : inactiveIcon;
+    }
+
+    @Override
+    public int getIconWidth() {
+        return currentIcon().getIconWidth();
+    }
+
+    @Override
+    public int getIconHeight() {
+        return currentIcon().getIconHeight();
+    }
 }

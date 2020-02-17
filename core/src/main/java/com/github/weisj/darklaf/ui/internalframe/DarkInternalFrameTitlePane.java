@@ -23,8 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
-import com.github.weisj.darklaf.decorations.windows.TitlePaneIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.platform.windows.ui.TitlePaneIcon;
 import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;

@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorations.windows;
+package com.github.weisj.darklaf.platform.windows.ui;
 
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
-import com.github.weisj.darklaf.ui.rootpane.CustomTitlePane;
 
 import javax.swing.*;
 

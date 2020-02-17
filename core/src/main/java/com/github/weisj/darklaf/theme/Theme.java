@@ -25,8 +25,8 @@ package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.DarkMetalTheme;
-import com.github.weisj.darklaf.util.PropertyLoader;
 import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.util.PropertyLoader;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -53,7 +53,7 @@ public abstract class Theme {
             "toggleButton", "toolBar", "toolTip", "tree",
     };
     private static final String[] ICON_PROPERTIES = new String[]{
-            "control", "dialog", "files", "indicator", "menu", "misc", "navigation", "window"
+        "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
     };
 
     public UIManager.LookAndFeelInfo createLookAndFeelInfo() {
@@ -135,9 +135,27 @@ public abstract class Theme {
      * @param currentDefaults the current ui defaults.
      */
     public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        final String osPrefix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, osPrefix, "properties/platform/"),
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "properties/platform/"),
                                      properties, currentDefaults);
+    }
+
+    /**
+     * Load the platform defaults.
+     *
+     * @param properties      the properties to load the values into.
+     * @param currentDefaults the current ui defaults.
+     */
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName() + "_decorations",
+                                                                   "properties/platform/"),
+                                     properties, currentDefaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName() + "_icons",
+                                                                   "properties/platform/"),
+                                     properties, currentDefaults);
+    }
+
+    private String getOsName() {
+        return SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
     }
 
     /**

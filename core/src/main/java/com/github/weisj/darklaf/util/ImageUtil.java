@@ -154,17 +154,6 @@ public final class ImageUtil {
     }
 
 
-    public static BufferedImage createImage(final int width, final int height, final int type) {
-        return new BufferedImage(Scale.scaleWidth(width), Scale.scaleHeight(height), type) {
-            @Override
-            public Graphics2D createGraphics() {
-                Graphics2D g = super.createGraphics();
-                g.scale(Scale.SCALE_X, Scale.SCALE_Y);
-                return g;
-            }
-        };
-    }
-
     public static BufferedImage createCompatibleTranslucentImage(final int width,
                                                                  final int height) {
         return isHeadless() ?

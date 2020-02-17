@@ -21,17 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorations.windows;
-
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+package com.github.weisj.darklaf.platform.windows.ui;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 
 /**
  * @author Jannis Weis
  */
-public class CloseButtonUI extends DarkButtonUI {
+public class CloseButtonUI extends BasicButtonUI {
+
+    protected static final Rectangle viewRect = new Rectangle();
+    protected static final Rectangle textRect = new Rectangle();
+    protected static final Rectangle iconRect = new Rectangle();
 
     protected Color closeHover;
     protected Color closeClick;
@@ -43,8 +46,34 @@ public class CloseButtonUI extends DarkButtonUI {
         closeClick = UIManager.getColor("TitlePane.close.clickColor");
     }
 
+    protected String layout(final AbstractButton b, final JComponent c, final FontMetrics fm,
+                            final int width, final int height) {
+        Insets i = b.getInsets();
+        viewRect.x = i.left;
+        viewRect.y = i.top;
+        viewRect.width = width - (i.right + viewRect.x);
+        viewRect.height = height - (i.bottom + viewRect.y);
+
+        textRect.x = textRect.y = textRect.width = textRect.height = 0;
+        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
+
+        // layout the text and icon
+        return SwingUtilities.layoutCompoundLabel(
+            b, fm, b.getText(), b.getIcon(),
+            b.getVerticalAlignment(), b.getHorizontalAlignment(),
+            b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+            viewRect, iconRect, textRect,
+            b.getText() == null ? 0 : b.getIconTextGap());
+    }
+
     @Override
-    protected Color getShadowColor(final AbstractButton c) {
+    public void paint(final Graphics g, final JComponent c) {
+        g.setColor(getBackground((AbstractButton) c));
+        g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        paintIcon(g, c, iconRect);
+    }
+
+    protected Color getBackground(final AbstractButton c) {
         return c.getModel().isArmed() ? closeClick : closeHover;
     }
 }

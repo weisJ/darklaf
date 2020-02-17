@@ -23,12 +23,15 @@
  */
 package com.github.weisj.darklaf.platform;
 
+import java.awt.*;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class SystemInfo {
+    public static final double SCALE;
     public static final String X86 = "32";
     public static final String X64 = "64";
     public static final String OS_NAME = System.getProperty("os.name");
@@ -49,6 +52,9 @@ public class SystemInfo {
     public static final boolean isX64;
     public static final boolean isUndefined;
     protected static final String _OS_NAME;
+    public static final double SCALE_X;
+    public static final double SCALE_Y;
+    private static final Logger LOGGER = Logger.getLogger(SystemInfo.class.getName());
 
     static {
         _OS_NAME = OS_NAME.toLowerCase();
@@ -64,10 +70,12 @@ public class SystemInfo {
         isX64 = X64.equals(jreArchitecture);
         isX86 = X86.equals(jreArchitecture);
         isUndefined = !isX86 & !isX64;
-    }
-
-
-    public SystemInfo() {
+        DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        SCALE_X = mode.getWidth() / (double) screenSize.width;
+        SCALE_Y = mode.getHeight() / (double) screenSize.height;
+        SCALE = SCALE_X;
+        LOGGER.fine("Using screen scaling SCALE_X=" + SCALE_X + ", SCALE_Y=" + SCALE_Y);
     }
 
     public static boolean isOsVersionAtLeast(final String version) {
@@ -133,7 +141,7 @@ public class SystemInfo {
         return vendor != null && containsIgnoreCase(vendor, "Apple");
     }
 
-    private static boolean containsIgnoreCase(String text, String pattern) {
+    private static boolean containsIgnoreCase(final String text, final String pattern) {
         return Pattern.compile(pattern, Pattern.LITERAL | Pattern.CASE_INSENSITIVE)
             .matcher(text).find();
     }

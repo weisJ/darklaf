@@ -21,12 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.rootpane;
+package ui.internalFrame;
 
 import javax.swing.*;
 
-public abstract class CustomTitlePane extends JComponent {
+public class DemoInternalFrame extends JInternalFrame {
+    private static final int xOffset = 30, yOffset = 30;
+    private static int openFrameCount = 0;
 
-
-    public abstract void uninstall();
+    public DemoInternalFrame() {
+        super("Document #" + (++openFrameCount), true, true, true, true);
+        setSize(300, 300);
+        setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
+        setJMenuBar(new JMenuBar() {{
+            add(new JMenu("Test") {{
+                add(new JMenuItem("Test Item"));
+            }});
+        }});
+    }
 }

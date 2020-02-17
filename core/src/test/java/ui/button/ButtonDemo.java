@@ -96,12 +96,9 @@ public class ButtonDemo implements ComponentDemo {
                                                (b, c) -> button.putClientProperty("JButton.shadow.hover", b ? c : null)));
         controlPanel.add(new QuickColorChooser("JButton.shadow.click", Color.BLACK,
                                                (b, c) -> button.putClientProperty("JButton.shadow.click", b ? c : null)));
-        controlPanel.add(new JCheckBox("defaultButtonFollowsFocus") {{
-            setSelected(true);
-            addActionListener(e -> {
-                UIManager.put("Button.defaultButtonFollowsFocus", isSelected());
-                button.getRootPane().setDefaultButton(null);
-            });
+        controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {{
+            setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
+            addActionListener(e -> UIManager.put("Button.defaultButtonFollowsFocus", isSelected()));
         }});
         return panel;
     }

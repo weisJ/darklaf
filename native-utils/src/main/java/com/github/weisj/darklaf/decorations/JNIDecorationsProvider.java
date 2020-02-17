@@ -23,35 +23,29 @@
  */
 package com.github.weisj.darklaf.decorations;
 
-import com.github.weisj.darklaf.decorations.windows.WindowsDecorationsProvider;
-import com.github.weisj.darklaf.platform.SystemInfo;
-import com.github.weisj.darklaf.ui.rootpane.CustomTitlePane;
-
 import javax.swing.*;
 
-public final class JNIDecorations {
+public interface JNIDecorationsProvider {
 
-    private static JNIDecorationsProvider decorationsProvider;
+    /**
+     * Create the custom title pane.
+     *
+     * @param rootPane The root pane to create the title pane for.
+     * @return the custom title pane.
+     */
+    CustomTitlePane createTitlePane(final JRootPane rootPane);
 
-    static {
-        //Extend for different platforms.
-        if (SystemInfo.isWindows) {
-            decorationsProvider = new WindowsDecorationsProvider();
-        } else {
-            decorationsProvider = new DefaultDecorationsProvider();
-        }
-    }
+    /**
+     * Returns whether custom decorations are supported.
+     *
+     * @return true if decorations are supported.
+     */
+    boolean isCustomDecorationSupported();
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return decorationsProvider.createTitlePane(rootPane);
-    }
-
-
-    public static boolean isCustomDecorationSupported() {
-        return decorationsProvider.isCustomDecorationSupported();
-    }
-
-    public static boolean updateLibrary() {
-        return decorationsProvider.updateLibrary();
-    }
+    /**
+     * Load the decorations library if necessary.
+     *
+     * @return true if successful and library wasn't already loaded.
+     */
+    boolean updateLibrary();
 }

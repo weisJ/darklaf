@@ -22,13 +22,11 @@
  * SOFTWARE.
  */
 
-package com.github.weisj.darklaf.decorations.windows;
+package com.github.weisj.darklaf.platform.windows.ui;
 
-import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import com.github.weisj.darklaf.icons.ScaledIcon;
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
-import com.github.weisj.darklaf.ui.rootpane.CustomTitlePane;
-import com.github.weisj.darklaf.util.Scale;
 import sun.awt.SunToolkit;
 
 import javax.accessibility.AccessibleContext;
@@ -89,7 +87,7 @@ public class DarkTitlePaneWindows extends CustomTitlePane {
     private Action minimizeAction;
     private JLabel titleLabel;
     private Window window;
-    private final AncestorListener ancestorListener = new AncestorAdapter() {
+    private final AncestorListener ancestorListener = new AncestorListener() {
         @Override
         public void ancestorAdded(final AncestorEvent event) {
             if (window != null) {
@@ -102,6 +100,14 @@ public class DarkTitlePaneWindows extends CustomTitlePane {
                     window.setSize(size);
                 });
             }
+        }
+
+        @Override
+        public void ancestorRemoved(final AncestorEvent event) {
+        }
+
+        @Override
+        public void ancestorMoved(final AncestorEvent event) {
         }
     };
     private long windowHandle;
@@ -149,16 +155,10 @@ public class DarkTitlePaneWindows extends CustomTitlePane {
 
     private static JButton createButton(final String accessibleName, final Icon icon, final Action action,
                                         final boolean close) {
-        JButton button;
+        JButton button = new JButton();
         if (close) {
-            button = new JButton() {
-                @Override
-                public void updateUI() {
-                }
-            };
-            button.setUI(new CloseButtonUI());
-        } else {
-            button = new JButton();
+            button.putClientProperty("JButton.shadow.hover", UIManager.getColor("TitlePane.close.rollOverColor"));
+            button.putClientProperty("JButton.shadow.click", UIManager.getColor("TitlePane.close.clickColor"));
         }
         button.setFocusable(false);
         button.setOpaque(true);
@@ -574,12 +574,12 @@ public class DarkTitlePaneWindows extends CustomTitlePane {
         if (icons.size() == 0) {
             systemIcon = UIManager.getIcon("TitlePane.icon");
         } else if (icons.size() == 1) {
-            systemIcon = new ScaledIcon(icons.get(0).getScaledInstance(Scale.scaleWidth(ICON_SIZE),
-                                                                       Scale.scaleHeight(ICON_SIZE),
+            systemIcon = new ScaledIcon(icons.get(0).getScaledInstance((int) (SystemInfo.SCALE_X * ICON_SIZE),
+                                                                       (int) (SystemInfo.SCALE_Y * ICON_SIZE),
                                                                        Image.SCALE_AREA_AVERAGING));
         } else {
-            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, Scale.scaleWidth(ICON_SIZE),
-                                                                      Scale.scaleHeight(ICON_SIZE))
+            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, (int) (SystemInfo.SCALE_X * ICON_SIZE),
+                                                                      (int) (SystemInfo.SCALE_Y * ICON_SIZE))
             );
         }
         if (windowIconButton != null) {
@@ -712,9 +712,10 @@ public class DarkTitlePaneWindows extends CustomTitlePane {
                 right = tmp;
 
             }
-            JNIDecorationsWindows.updateValues(windowHandle, Scale.scaleWidth(left),
-                                               Scale.scaleWidth(right),
-                                               Scale.scaleHeight(height));
+            JNIDecorationsWindows.updateValues(windowHandle,
+                                               (int) (SystemInfo.SCALE_X * left),
+                                               (int) (SystemInfo.SCALE_X * right),
+                                               (int) (SystemInfo.SCALE_Y * height));
 
         }
 

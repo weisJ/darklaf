@@ -21,22 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui.internalFrame;
+package com.github.weisj.darklaf.platform;
+
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
+import com.github.weisj.darklaf.platform.windows.ui.WindowsDecorationsProvider;
 
 import javax.swing.*;
 
-public class MyInternalFrame extends JInternalFrame {
-    private static final int xOffset = 30, yOffset = 30;
-    private static int openFrameCount = 0;
+public final class JNIDecorations {
 
-    public MyInternalFrame() {
-        super("Document #" + (++openFrameCount), true, true, true, true);
-        setSize(300, 300);
-        setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
-        setJMenuBar(new JMenuBar() {{
-            add(new JMenu("Test") {{
-                add(new JMenuItem("Test Item"));
-            }});
-        }});
+    private static JNIDecorationsProvider decorationsProvider;
+
+    static {
+        //Extend for different platforms.
+        if (SystemInfo.isWindows) {
+            decorationsProvider = new WindowsDecorationsProvider();
+        } else {
+            decorationsProvider = new DefaultDecorationsProvider();
+        }
+    }
+
+    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
+        return decorationsProvider.createTitlePane(rootPane);
+    }
+
+
+    public static boolean isCustomDecorationSupported() {
+        return decorationsProvider.isCustomDecorationSupported();
+    }
+
+    public static boolean updateLibrary() {
+        return decorationsProvider.updateLibrary();
     }
 }

@@ -106,7 +106,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
 
     //Create a new internal frame.
     private void createFrame() {
-        MyInternalFrame frame = new MyInternalFrame();
+        DemoInternalFrame frame = new DemoInternalFrame();
         frame.setVisible(true);
         desktop.add(frame);
         try {
