@@ -43,7 +43,7 @@ public class ButtonDemo implements ComponentDemo {
         JButton button = new JButton("Test Button", icon);
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(5, 2));
+        controlPanel.setLayout(new GridLayout(6, 2));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
@@ -96,6 +96,13 @@ public class ButtonDemo implements ComponentDemo {
                                                (b, c) -> button.putClientProperty("JButton.shadow.hover", b ? c : null)));
         controlPanel.add(new QuickColorChooser("JButton.shadow.click", Color.BLACK,
                                                (b, c) -> button.putClientProperty("JButton.shadow.click", b ? c : null)));
+        controlPanel.add(new JCheckBox("defaultButtonFollowsFocus") {{
+            setSelected(true);
+            addActionListener(e -> {
+                UIManager.put("Button.defaultButtonFollowsFocus", isSelected());
+                button.getRootPane().setDefaultButton(null);
+            });
+        }});
         return panel;
     }
 
