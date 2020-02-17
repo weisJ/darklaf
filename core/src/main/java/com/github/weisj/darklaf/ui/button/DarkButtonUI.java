@@ -229,7 +229,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         boolean defaultButton = isDefaultButton(c);
         boolean rollOver = (c instanceof JButton && (((JButton) c).isRolloverEnabled()
                 && (((JButton) c).getModel().isRollover())));
-        boolean clicked = rollOver && ((JButton) c).getModel().isArmed();
+        boolean clicked = c instanceof JButton && ((JButton) c).getModel().isArmed();
         if (c.isEnabled()) {
             if (defaultButton) {
                 if (clicked) {
