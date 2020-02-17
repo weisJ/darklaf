@@ -220,8 +220,14 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
         if (editorComponent instanceof JComboBox) {
             ((JComboBox<?>) editorComponent).removeAllItems();
-            ((JComboBox<Object>) editorComponent).addItem(value);
-            ((JComboBox<?>) editorComponent).setSelectedItem(value);
+            if (value != null && value.getClass().isArray()) {
+                for (Object obj : (Object[]) value) {
+                    ((JComboBox<Object>) editorComponent).addItem(obj);
+                }
+            } else {
+                ((JComboBox<Object>) editorComponent).addItem(value);
+                ((JComboBox<?>) editorComponent).setSelectedItem(value);
+            }
         } else if (editorComponent instanceof JSpinner) {
             Component rendererComp = table.getCellRenderer(row, column)
                                           .getTableCellRendererComponent(table, value, isSelected, false, row, column);

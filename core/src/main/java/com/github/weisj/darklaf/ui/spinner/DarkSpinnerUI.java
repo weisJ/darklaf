@@ -238,6 +238,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         int width = c.getWidth();
         int height = c.getHeight();
         JComponent editor = spinner.getEditor();
+
         if (editorComponent != null) {
             editorComponent.setBackground(getBackground(c));
             g.setColor(editorComponent.getBackground());
@@ -280,8 +281,13 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         Rectangle bounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
         int off = leftToRight ? bounds.x : bounds.x + bounds.width;
-        Area rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 2, height - 2 * bSize + 1,
-                                                         arc, arc));
+        Area rect;
+        if (!isTableCellEditor(spinner)) {
+            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 2, height - 2 * bSize + 1,
+                                                        arc, arc));
+        } else {
+            rect = new Area(new Rectangle(0, 0, width, height));
+        }
         Area iconRect = new Area(new Rectangle(off, 0, width, height));
         if (leftToRight) {
             rect.intersect(iconRect);

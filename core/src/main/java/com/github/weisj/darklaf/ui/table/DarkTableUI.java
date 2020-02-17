@@ -62,7 +62,7 @@ public class DarkTableUI extends DarkTableUIBridge {
             if (oldVal instanceof Component) {
                 Container oldUnwrapped = SwingUtilities.getUnwrappedParent((Component) oldVal);
                 if ((oldUnwrapped instanceof JScrollPane)
-                        && ((JComponent) oldUnwrapped).getBorder() instanceof UIResource) {
+                    && ((JComponent) oldUnwrapped).getBorder() instanceof UIResource) {
                     LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
                 }
             }
@@ -72,6 +72,9 @@ public class DarkTableUI extends DarkTableUIBridge {
                     LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                 }
             }
+        } else if ("componentOrientation".equals(key)) {
+            table.doLayout();
+            table.repaint();
         }
     };
     protected Color selectionBackground;
