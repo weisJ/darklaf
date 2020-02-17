@@ -65,10 +65,10 @@ public final class LafManager {
             try (InputStream inputStream = DarkLaf.class.getClassLoader()
                                                         .getResourceAsStream("com/github/weisj/darklaf/log/logging.properties")) {
                 if (inputStream != null) {
-                    Logger.getGlobal().info("Loading logging configuration.");
+                    Logger.getGlobal().fine("Loading logging configuration.");
                     LogManager.getLogManager().readConfiguration(inputStream);
                 }
-                Logger.getGlobal().info("Loaded logging config" + LogManager.getLogManager().toString());
+                Logger.getGlobal().fine(() -> "Loaded logging config" + LogManager.getLogManager().toString());
             } catch (IOException e) {
                 Logger.getGlobal().log(Level.SEVERE, "init logging system", e);
             }

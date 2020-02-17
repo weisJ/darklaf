@@ -55,7 +55,7 @@ public abstract class LazyIcon implements Icon, UIResource {
 
     private void ensureLoaded() {
         if (!loaded) {
-            LOGGER.info("Loading icon '" + path + "'. Resolving from " + parentClass);
+            LOGGER.fine(() -> "Loading icon '" + path + "'. Resolving from " + parentClass);
             icon = loadIcon();
             loaded = true;
             if (icon == null) {

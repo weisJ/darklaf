@@ -87,7 +87,7 @@ public class DarkSVGIcon implements Icon, Serializable {
 
     private void ensureLoaded() {
         if (!loaded.get()) {
-            LOGGER.info("Loading icon '" + uri.toASCIIString() + "'.");
+            LOGGER.fine(() -> "Loading icon '" + uri.toASCIIString() + "'.");
             icon.setSvgURI(uri);
             loaded.set(true);
         }
