@@ -36,15 +36,11 @@ import java.util.logging.Logger;
 /**
  * @author Jannis Weis
  */
-public class JNIDecorations {
+public class JNIDecorationsWindows {
 
-    private static final Logger LOGGER = Logger.getLogger(JNIDecorations.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JNIDecorationsWindows.class.getName());
     private static boolean supported;
     private static boolean loaded;
-
-    static {
-        updateLibrary();
-    }
 
     public static native void updateValues(final long hwnd, final int left, final int right, final int height);
 

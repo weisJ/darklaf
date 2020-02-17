@@ -44,6 +44,7 @@ public final class LafManager {
 
     private static Theme theme;
     private static boolean logEnabled = false;
+    private static boolean decorationsOverwrite = true;
 
     static {
         /*
@@ -74,6 +75,32 @@ public final class LafManager {
             }
         }
         LafManager.logEnabled = logEnabled;
+    }
+
+    /**
+     * Returns whther custom decorations should be used.
+     * If this returns true decorations still might not be used if the theme or platform don't support them.
+     *
+     * @return true if decorations should be used.
+     */
+    public static boolean isDecorationsEnabled() {
+        return decorationsOverwrite;
+    }
+
+    /**
+     * Set globally whether decorations are enabled. By default this is true.
+     * Decorations are used if this value is set to true and the current platform and theme support
+     * custom decorations.
+     *
+     * @param enabled true if decorations should be used if available.
+     */
+    public static void setDecorationsEnabled(final boolean enabled) {
+        if (decorationsOverwrite != enabled) {
+            decorationsOverwrite = enabled;
+            if (!decorationsOverwrite) {
+                updateLaf();
+            }
+        }
     }
 
     /**

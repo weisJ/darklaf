@@ -24,11 +24,11 @@
 package com.github.weisj.darklaf;
 
 import com.github.weisj.darklaf.components.border.DarkBorders;
-import com.github.weisj.darklaf.platform.windows.JNIDecorations;
+import com.github.weisj.darklaf.decorations.JNIDecorations;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.PropertyLoader;
-import com.github.weisj.darklaf.platform.SystemInfo;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -55,7 +55,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
-    private static boolean decorationsEnabled = true;
     private final BasicLookAndFeel base;
 
     /**
@@ -77,22 +76,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
 
-    public static boolean isDecorationsEnabled() {
-        return LafManager.getTheme().useCustomDecorations() && decorationsEnabled;
-    }
-
-    public static void setDecorationsEnabled(final boolean decorationsEnabled) {
-        if (DarkLaf.decorationsEnabled != decorationsEnabled) {
-            DarkLaf.decorationsEnabled = decorationsEnabled;
-            if (decorationsEnabled) {
-                boolean update = JNIDecorations.updateLibrary();
-                if (update) {
-                    LafManager.updateLaf();
-                }
-            }
-        }
-    }
-
     @Override
     public UIDefaults getDefaults() {
         try {
@@ -104,16 +87,21 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             initInputMapDefaults(defaults);
             loadThemeDefaults(defaults);
             initIdeaDefaults(defaults);
-            patchComboBox(metalDefaults, defaults);
 
-            JFrame.setDefaultLookAndFeelDecorated(true);
-            JDialog.setDefaultLookAndFeelDecorated(true);
+            patchComboBox(metalDefaults, defaults);
+            setupDecorations();
 
             return defaults;
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
         return super.getDefaults();
+    }
+
+    private void setupDecorations() {
+        JNIDecorations.updateLibrary();
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        JDialog.setDefaultLookAndFeelDecorated(true);
     }
 
     protected void adjustPlatformSpecifics(final Properties uiProps) {
@@ -184,7 +172,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
         StyleSheet styleSheet = currentTheme.loadStyleSheet();
         new HTMLEditorKit().setStyleSheet(styleSheet);
-        setDecorationsEnabled(currentTheme.useCustomDecorations());
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
@@ -388,8 +375,9 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public boolean getSupportsWindowDecorations() {
-        return LafManager.getTheme().useCustomDecorations()
-                && JNIDecorations.isCustomDecorationSupported();
+        return LafManager.isDecorationsEnabled()
+            && LafManager.getTheme().useCustomDecorations()
+            && JNIDecorations.isCustomDecorationSupported();
     }
 
 

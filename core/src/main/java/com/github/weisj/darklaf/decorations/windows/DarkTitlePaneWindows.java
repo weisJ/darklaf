@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-package com.github.weisj.darklaf.ui.rootpane;
+package com.github.weisj.darklaf.decorations.windows;
 
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.icons.ScaledIcon;
-import com.github.weisj.darklaf.platform.windows.JNIDecorations;
+import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
+import com.github.weisj.darklaf.ui.rootpane.CustomTitlePane;
 import com.github.weisj.darklaf.util.Scale;
 import sun.awt.SunToolkit;
 
@@ -36,12 +37,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -50,7 +46,7 @@ import java.util.List;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkTitlePane extends JComponent {
+public class DarkTitlePaneWindows extends CustomTitlePane {
     private static final int PAD = 5;
     private static final int BAR_HEIGHT = 28;
     private static final int BUTTON_WIDTH = 46;
@@ -133,7 +129,7 @@ public class DarkTitlePane extends JComponent {
     private Color activeForeground;
     private Color border;
 
-    public DarkTitlePane(final JRootPane root) {
+    public DarkTitlePaneWindows(final JRootPane root) {
         this.rootPane = root;
         rootPane.addContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
@@ -192,7 +188,7 @@ public class DarkTitlePane extends JComponent {
 
     protected void uninstallDecorations() {
         window = null;
-        JNIDecorations.uninstallDecorations(windowHandle);
+        JNIDecorationsWindows.uninstallDecorations(windowHandle);
         windowHandle = 0;
         rootPane.removeContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().removeContainerListener(layeredPaneContainerListener);
@@ -205,12 +201,12 @@ public class DarkTitlePane extends JComponent {
     public void install() {
         if (window != null) {
             if (window instanceof Dialog || window instanceof Frame) {
-                windowHandle = JNIDecorations.getHWND(window);
+                windowHandle = JNIDecorationsWindows.getHWND(window);
 
-                JNIDecorations.installDecorations(windowHandle);
+                JNIDecorationsWindows.installDecorations(windowHandle);
                 updateResizeBehaviour();
                 Color color = window.getBackground();
-                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+                JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
 
             if (window instanceof Frame) {
@@ -240,7 +236,7 @@ public class DarkTitlePane extends JComponent {
 
 
     private WindowListener createWindowListener() {
-        return new DarkTitlePane.WindowHandler();
+        return new DarkTitlePaneWindows.WindowHandler();
     }
 
 
@@ -363,15 +359,15 @@ public class DarkTitlePane extends JComponent {
     }
 
     private void minimize() {
-        JNIDecorations.minimize(windowHandle);
+        JNIDecorationsWindows.minimize(windowHandle);
     }
 
     private void maximize() {
-        JNIDecorations.maximize(windowHandle);
+        JNIDecorationsWindows.maximize(windowHandle);
     }
 
     private void restore() {
-        JNIDecorations.restore(windowHandle);
+        JNIDecorationsWindows.restore(windowHandle);
     }
 
     private void createActions() {
@@ -473,7 +469,7 @@ public class DarkTitlePane extends JComponent {
         boolean res = isResizable(window, rootPane);
         if (oldResizable != res) {
             oldResizable = res;
-            JNIDecorations.setResizable(windowHandle, res);
+            JNIDecorationsWindows.setResizable(windowHandle, res);
         }
     }
 
@@ -716,9 +712,9 @@ public class DarkTitlePane extends JComponent {
                 right = tmp;
 
             }
-            JNIDecorations.updateValues(windowHandle, Scale.scaleWidth(left),
-                                        Scale.scaleWidth(right),
-                                        Scale.scaleHeight(height));
+            JNIDecorationsWindows.updateValues(windowHandle, Scale.scaleWidth(left),
+                                               Scale.scaleWidth(right),
+                                               Scale.scaleHeight(height));
 
         }
 
@@ -748,7 +744,7 @@ public class DarkTitlePane extends JComponent {
                     setState(frame.getExtendedState(), true);
                 }
                 if ("resizable".equals(name)) {
-                    JNIDecorations.setResizable(windowHandle, Boolean.TRUE.equals(pce.getNewValue()));
+                    JNIDecorationsWindows.setResizable(windowHandle, Boolean.TRUE.equals(pce.getNewValue()));
                     getRootPane().repaint();
                 }
             } else if ("title".equals(name)) {
@@ -763,7 +759,7 @@ public class DarkTitlePane extends JComponent {
                 repaint();
             } else if ("background".equals(name) && pce.getNewValue() instanceof Color) {
                 Color color = (Color) pce.getNewValue();
-                JNIDecorations.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+                JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
         }
     }

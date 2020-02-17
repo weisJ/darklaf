@@ -21,30 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.rootpane;
+package com.github.weisj.darklaf.decorations;
 
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.decorations.windows.WindowsDecorationsProvider;
+import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.ui.rootpane.CustomTitlePane;
 
 import javax.swing.*;
-import java.awt.*;
 
-/**
- * @author Jannis Weis
- */
-public class CloseButtonUI extends DarkButtonUI {
+public final class JNIDecorations {
 
-    protected Color closeHover;
-    protected Color closeClick;
+    private static JNIDecorationsProvider decorationsProvider;
 
-    @Override
-    protected void installDefaults(final AbstractButton b) {
-        super.installDefaults(b);
-        closeHover = UIManager.getColor("TitlePane.close.rollOverColor");
-        closeClick = UIManager.getColor("TitlePane.close.clickColor");
+    static {
+        //Extend for different platforms.
+        if (SystemInfo.isWindows) {
+            decorationsProvider = new WindowsDecorationsProvider();
+        } else {
+            decorationsProvider = new DefaultDecorationsProvider();
+        }
     }
 
-    @Override
-    protected Color getShadowColor(final AbstractButton c) {
-        return c.getModel().isArmed() ? closeClick : closeHover;
+    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
+        return decorationsProvider.createTitlePane(rootPane);
+    }
+
+
+    public static boolean isCustomDecorationSupported() {
+        return decorationsProvider.isCustomDecorationSupported();
+    }
+
+    public static boolean updateLibrary() {
+        return decorationsProvider.updateLibrary();
     }
 }

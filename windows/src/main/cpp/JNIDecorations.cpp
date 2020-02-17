@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "JNIDecorations.h"
-#include "com_github_weisj_darklaf_platform_windows_JNIDecorations.h"
+#include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
 #include <dwmapi.h>
 #include <iostream>
 #include <map>
@@ -130,7 +130,7 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_setResizable(JNIEnv *env, jclass obj, jlong hwnd, jboolean res)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizable(JNIEnv *env, jclass obj, jlong hwnd, jboolean res)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
@@ -141,7 +141,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_setResizable(JNIEn
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_updateValues(JNIEnv *env, jclass obj, jlong hwnd,
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv *env, jclass obj, jlong hwnd,
                                                                            jint l, jint r, jint h)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
@@ -155,7 +155,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_updateValues(JNIEn
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_setBackground(JNIEnv *env, jclass obj, jlong hwnd, jint r, jint g, jint b)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackground(JNIEnv *env, jclass obj, jlong hwnd, jint r, jint g, jint b)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
@@ -166,7 +166,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_setBackground(JNIE
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
 
@@ -194,7 +194,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_installDecorations
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
@@ -209,21 +209,21 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_uninstallDecoratio
 //Window functions.
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_minimize(JNIEnv *env, jclass obj, jlong hwnd)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_minimize(JNIEnv *env, jclass obj, jlong hwnd)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_MINIMIZE);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_maximize(JNIEnv *env, jclass obj, jlong hwnd)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_maximize(JNIEnv *env, jclass obj, jlong hwnd)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_MAXIMIZE);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorations_restore(JNIEnv *env, jclass obj, jlong hwnd)
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv *env, jclass obj, jlong hwnd)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_RESTORE);

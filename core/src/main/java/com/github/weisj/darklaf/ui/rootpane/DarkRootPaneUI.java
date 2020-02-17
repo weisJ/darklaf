@@ -24,7 +24,7 @@
 
 package com.github.weisj.darklaf.ui.rootpane;
 
-import com.github.weisj.darklaf.platform.windows.JNIDecorations;
+import com.github.weisj.darklaf.decorations.JNIDecorations;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -42,7 +42,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener {
     private Window window;
-    private DarkTitlePane titlePane;
+    private CustomTitlePane titlePane;
     private LayoutManager layoutManager;
     private LayoutManager oldLayout;
     private JRootPane rootPane;
@@ -139,7 +139,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     private void installClientDecorations(final JRootPane root) {
-        DarkTitlePane titlePane = createTitlePane(root);
+        CustomTitlePane titlePane = JNIDecorations.createTitlePane(root);
         setTitlePane(root, titlePane);
         updateWindow(root.getParent());
         installLayout(root);
@@ -154,11 +154,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         }
     }
 
-    protected DarkTitlePane createTitlePane(final JRootPane root) {
-        return new DarkTitlePane(root);
-    }
-
-    private void setTitlePane(final JRootPane root, final DarkTitlePane titlePane) {
+    private void setTitlePane(final JRootPane root, final CustomTitlePane titlePane) {
         JLayeredPane layeredPane = root.getLayeredPane();
         JComponent oldTitlePane = getTitlePane();
 
@@ -222,8 +218,11 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
         if (currWindow != null) {
             if (currWindow != window) {
-                if (!JNIDecorations.isCustomDecorationSupported()) return;
-                if (rootPane.getWindowDecorationStyle() == JRootPane.NONE) return;
+                if (!JNIDecorations.isCustomDecorationSupported()
+                    || rootPane.getWindowDecorationStyle() == JRootPane.NONE) {
+                    uninstallClientDecorations(rootPane);
+                    return;
+                }
                 updateClientDecoration();
             }
             window = currWindow;
