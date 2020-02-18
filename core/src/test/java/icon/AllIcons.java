@@ -35,15 +35,22 @@ import javax.swing.*;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class AllIcons {
 
     private static String[] FOLDERS = new String[]{
-            "control", "dialog", "files", "indicator", "menu", "misc", "navigation", "window",
+        "icons/control", "icons/dialog", "icons/files", "icons/indicator", "icons/menu", "icons/misc",
+        "icons/navigation", "platform/windows/icons/window", "platform/windows/icons"
     };
 
     public static void main(final String[] args) {
@@ -79,38 +86,51 @@ public class AllIcons {
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
-            } catch (URISyntaxException e) {
+            } catch (URISyntaxException | IOException e) {
                 e.printStackTrace();
             }
         });
     }
 
 
-    private static List<Pair<String, Icon>> loadIcons() throws URISyntaxException {
+    private static List<Pair<String, Icon>> loadIcons() throws URISyntaxException, IOException {
         List<Pair<String, Icon>> list = new ArrayList<>();
         for (String folder : FOLDERS) {
-            File[] files = getResourceFolderFiles("icons/" + folder, DarkLaf.class);
-            for (File f : files) {
-                if (f.getName().endsWith(".svg")) {
-                    int SIZE = 30;
-                    ThemedSVGIcon icon = (ThemedSVGIcon) IconLoader.get().loadSVGIcon(folder + "/" + f.getName(),
-                                                                                      SIZE, SIZE, true);
-                    SVGIcon svgIcon = icon.getSVGIcon();
-                    int autosize = svgIcon.getAutosize();
-                    svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
-                    icon.setDisplaySize(svgIcon.getIconWidth() * 2, svgIcon.getIconHeight() * 2);
-                    svgIcon.setAutosize(autosize);
-                    list.add(new Pair<>(f.getName(), icon));
-                }
+            Pair<Stream<Path>, Optional<FileSystem>> files = walk(folder, DarkLaf.class);
+            try (FileSystem fs = files.getSecond().isPresent() ? files.getSecond().get() : null) {
+                files.getFirst().forEach(p -> {
+                    if (p.getFileName().toString().endsWith(".svg")) {
+                        int SIZE = 30;
+                        ThemedSVGIcon icon = (ThemedSVGIcon) IconLoader.get(DarkLaf.class)
+                                                                       .loadSVGIcon(folder + "/" + p.getFileName(),
+                                                                                    SIZE, SIZE, true);
+                        SVGIcon svgIcon = icon.getSVGIcon();
+                        int autosize = svgIcon.getAutosize();
+                        svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
+                        int width = Math.min(svgIcon.getIconWidth() * 2, 100);
+                        int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
+                        icon.setDisplaySize(width, height);
+                        svgIcon.setAutosize(autosize);
+                        list.add(new Pair<>(p.getFileName().toString(), icon));
+                    }
+                });
             }
         }
         return list;
     }
 
-    private static File[] getResourceFolderFiles(final String folder,
-                                                 final Class<?> clazz) throws URISyntaxException {
-        URL url = clazz.getResource(folder);
-        return new File(url.toURI()).listFiles();
+    public static Pair<Stream<Path>, Optional<FileSystem>> walk(final String path, final Class<?> clazz)
+        throws URISyntaxException, IOException {
+        URI uri = clazz.getResource(path).toURI();
+        if ("jar".equals(uri.getScheme())) {
+            FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+            Path resourcePath = fileSystem.getPath("com/github/weisj/darklaf/" + path);
+            // Get all contents of a resource (skip resource itself), if entry is a directory remove trailing /
+            return new Pair<>(Files.walk(resourcePath, 1), Optional.of(fileSystem));
+        } else {
+            return new Pair<>(Arrays.stream(Optional.ofNullable(new File(uri).listFiles())
+                                                    .orElse(new File[0])).map(File::toPath), Optional.empty());
+        }
     }
 
     private static final class IconListRenderer extends JLabel implements ListCellRenderer<Pair<String, Icon>> {

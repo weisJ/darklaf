@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 public final class UIDemo {
 
     public static void main(final String[] args) {
-        System.setProperty("org.apache.batik.warn_destination", "false");
         SwingUtilities.invokeLater(
                 () -> {
                     LafManager.install();
