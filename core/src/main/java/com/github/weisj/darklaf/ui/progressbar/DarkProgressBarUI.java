@@ -208,26 +208,21 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         g.setFont(progressBar.getFont());
         Point renderLocation = getStringPlacement(g, progressString, x, y, w, h);
 
+        g.setColor(getSelectionBackground());
         if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
-            g.setColor(getSelectionBackground());
             g.drawString(progressString, renderLocation.x, renderLocation.y);
-
-            g.setColor(getSelectionForeground());
             g.clipRect(fillStart, y, amountFull, h);
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
-
         } else { // VERTICAL
             AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
             g.setFont(progressBar.getFont().deriveFont(rotate));
             renderLocation = getStringPlacement(g, progressString, x, y, w, h);
 
-            g.setColor(getSelectionBackground());
             g.drawString(progressString, renderLocation.x, renderLocation.y);
 
             g.clipRect(x, fillStart, w, amountFull);
-            g.setColor(getSelectionForeground());
-            g.drawString(progressString, renderLocation.x, renderLocation.y);
         }
+        g.setColor(getSelectionForeground());
+        g.drawString(progressString, renderLocation.x, renderLocation.y);
         config.restore();
     }
 
