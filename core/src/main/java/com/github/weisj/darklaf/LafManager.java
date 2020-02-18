@@ -168,6 +168,7 @@ public final class LafManager {
      */
     public static void install() {
         try {
+            getTheme();
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
         } catch (final ClassNotFoundException

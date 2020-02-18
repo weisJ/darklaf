@@ -25,9 +25,10 @@ package com.github.weisj.darklaf.platform;
 
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
-import com.github.weisj.darklaf.platform.windows.ui.WindowsDecorationsProvider;
+import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
 
 import javax.swing.*;
+import java.util.Properties;
 
 public final class JNIDecorations {
 
@@ -53,5 +54,9 @@ public final class JNIDecorations {
 
     public static boolean updateLibrary() {
         return decorationsProvider.updateLibrary();
+    }
+
+    public static void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
+        decorationsProvider.loadDecorationProperties(uiProps, defaults);
     }
 }

@@ -139,21 +139,6 @@ public abstract class Theme {
                                      properties, currentDefaults);
     }
 
-    /**
-     * Load the platform defaults.
-     *
-     * @param properties      the properties to load the values into.
-     * @param currentDefaults the current ui defaults.
-     */
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName() + "_decorations",
-                                                                   "properties/platform/"),
-                                     properties, currentDefaults);
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName() + "_icons",
-                                                                   "properties/platform/"),
-                                     properties, currentDefaults);
-    }
-
     private String getOsName() {
         return SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
     }

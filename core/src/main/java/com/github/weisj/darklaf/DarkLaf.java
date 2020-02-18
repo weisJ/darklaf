@@ -166,7 +166,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         currentTheme.loadUIProperties(uiProps, defaults);
         currentTheme.loadIconProperties(uiProps, defaults);
         currentTheme.loadPlatformProperties(uiProps, defaults);
-        currentTheme.loadDecorationProperties(uiProps, defaults);
+        JNIDecorations.loadDecorationProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
         defaults.putAll(uiProps);
 

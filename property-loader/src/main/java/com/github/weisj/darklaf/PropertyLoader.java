@@ -76,19 +76,25 @@ public final class PropertyLoader {
 
     public static Properties loadProperties(final Class<?> clazz, final String name, final String path) {
         final Properties properties = new Properties();
-        try (InputStream stream = clazz.getResourceAsStream(path + name + ".properties")) {
+        String p = path + name + ".properties";
+        try (InputStream stream = clazz.getResourceAsStream(p)) {
             properties.load(stream);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not load" + name + ".properties", e.getMessage());
+        } catch (IOException | NullPointerException e) {
+            LOGGER.log(Level.SEVERE, "Could not load " + p + " " + e.getMessage(), e.getStackTrace());
         }
         return properties;
     }
 
     public static void putProperties(final Properties properties, final Properties accumulator,
                                      final UIDefaults currentDefaults) {
+        putProperties(properties, accumulator, currentDefaults, ICON_LOADER);
+    }
+
+    public static void putProperties(final Properties properties, final Properties accumulator,
+                                     final UIDefaults currentDefaults, final IconLoader iconLoader) {
         for (final String key : properties.stringPropertyNames()) {
             final String value = properties.getProperty(key);
-            Object parsed = parseValue(key, value, accumulator);
+            Object parsed = parseValue(key, value, accumulator, iconLoader);
             if (parsed instanceof ObjectRequest) {
                 objectsToLoad.add((ObjectRequest) parsed);
             } else if (parsed != null) {
@@ -100,8 +106,8 @@ public final class PropertyLoader {
     }
 
     private static Object parseValue(final String key, final String value,
-                                     final Map<Object, Object> defaults) {
-        return parseValue(key, value, false, defaults);
+                                     final Map<Object, Object> defaults, final IconLoader iconLoader) {
+        return parseValue(key, value, false, defaults, iconLoader);
     }
 
     private static String parseKey(final String key) {
@@ -110,7 +116,8 @@ public final class PropertyLoader {
 
 
     private static Object parseValue(final String propertyKey, final String value,
-                                     final boolean ignoreRequest, final Map<Object, Object> defaults) {
+                                     final boolean ignoreRequest, final Map<Object, Object> defaults,
+                                     final IconLoader iconLoader) {
         if ("null".equals(value)) {
             return null;
         }
@@ -134,7 +141,7 @@ public final class PropertyLoader {
         } else if (key.endsWith(".font")) {
             returnVal = parseFont(value);
         } else if (key.endsWith(".icon") || key.endsWith("Icon")) {
-            returnVal = parseIcon(value);
+            returnVal = parseIcon(value, iconLoader);
         } else if (key.endsWith("Size") || key.endsWith(".size")) {
             returnVal = parseSize(value);
         } else if ("null".equalsIgnoreCase(value)) {
@@ -185,7 +192,7 @@ public final class PropertyLoader {
         }
     }
 
-    private static Icon parseIcon(final String value) {
+    private static Icon parseIcon(final String value, final IconLoader iconLoader) {
         String path = value;
         Dimension dim = new Dimension(16, 16);
         if (value.charAt(value.length() - 1) == ')') {
@@ -210,9 +217,9 @@ public final class PropertyLoader {
             }
             String iconPath = path.substring(0, path.length() - tag.length());
             if (tag.equals(THEMED_KEY)) {
-                return ICON_LOADER.getIcon(iconPath, dim.width, dim.height, true);
+                return iconLoader.getIcon(iconPath, dim.width, dim.height, true);
             } else {
-                DarkUIAwareIcon icon = ICON_LOADER.getUIAwareIcon(iconPath, dim.width, dim.height);
+                DarkUIAwareIcon icon = iconLoader.getUIAwareIcon(iconPath, dim.width, dim.height);
                 if (tag.equals(DUAL_KEY)) {
                     return icon.getDual();
                 } else {
@@ -223,7 +230,7 @@ public final class PropertyLoader {
         if (path.equals("empty")) {
             return EmptyIcon.create(dim.width, dim.height);
         }
-        return ICON_LOADER.getIcon(path, dim.width, dim.height);
+        return iconLoader.getIcon(path, dim.width, dim.height);
     }
 
 
@@ -270,7 +277,7 @@ public final class PropertyLoader {
             } else {
                 Object obj = parseObject(value);
                 if (obj == null) {
-                    obj = parseValue(key, value, true, defaults);
+                    obj = parseValue(key, value, true, defaults, ICON_LOADER);
                     if (obj instanceof ObjectRequest) {
                         LOGGER.severe("Failed to resolve object. " + this);
                         return;
