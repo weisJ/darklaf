@@ -60,7 +60,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
     public DarkUIAwareIcon(final String darkKey, final String lightKey, final int w, final int h,
                            final Class<?> parentClass) {
-        IconLoader.registerAwareIcon(this, null);
+        IconLoader.registerAwareIcon(this);
         this.darkKey = darkKey;
         this.lightKey = lightKey;
         this.w = w;
@@ -71,7 +71,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
 
     private DarkUIAwareIcon(final DarkUIAwareIcon dual) {
-        IconLoader.registerAwareIcon(this, null);
+        IconLoader.registerAwareIcon(this);
         this.darkKey = dual.lightKey;
         this.lightKey = dual.darkKey;
         this.dual = dual;
@@ -98,7 +98,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
 
     private boolean isLoaded() {
-        return loaded && (currentStyle != IconLoader.getAwareStyle(this));
+        return loaded && (currentStyle == IconLoader.getAwareStyle(this));
     }
 
     private void loadIcon() {

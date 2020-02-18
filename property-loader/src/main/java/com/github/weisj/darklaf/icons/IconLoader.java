@@ -39,8 +39,11 @@ public final class IconLoader {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
     private static final IconLoader instance = new IconLoader(IconLoader.class);
+
     private static final Map<UIAwareIcon, AwareIconStyle> uiAwareIconStatus = new WeakHashMap<>();
     private static final Map<ThemedSVGIcon, Object> themedIconStatus = new WeakHashMap<>();
+    private static Object currentThemeKey;
+    private static AwareIconStyle currentAwareStyle;
 
     private static final int DEFAULT_W = 16;
     private static final int DEFAULT_H = 16;
@@ -69,10 +72,12 @@ public final class IconLoader {
     }
 
     public static void updateAwareStyle(final AwareIconStyle style) {
+        currentAwareStyle = style;
         uiAwareIconStatus.entrySet().forEach(e -> e.setValue(style));
     }
 
     public static void updateThemeStatus(final Object theme) {
+        currentThemeKey = theme;
         themedIconStatus.entrySet().forEach(e -> e.setValue(theme));
     }
 
@@ -84,12 +89,12 @@ public final class IconLoader {
         return themedIconStatus.get(icon);
     }
 
-    public static void registerAwareIcon(final UIAwareIcon icon, final AwareIconStyle style) {
-        uiAwareIconStatus.put(icon, style);
+    public static void registerAwareIcon(final UIAwareIcon icon) {
+        uiAwareIconStatus.put(icon, currentAwareStyle);
     }
 
-    public static void registerThemedIcon(final ThemedSVGIcon icon, final Object status) {
-        themedIconStatus.put(icon, status);
+    public static void registerThemedIcon(final ThemedSVGIcon icon) {
+        themedIconStatus.put(icon, currentThemeKey);
     }
 
     public DarkUIAwareIcon getUIAwareIcon(final String path) {

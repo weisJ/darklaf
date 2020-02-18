@@ -35,7 +35,7 @@ public class ThemedSVGIcon extends DarkSVGIcon {
 
     public ThemedSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
         super(uri, displayWidth, displayHeight);
-        IconLoader.registerThemedIcon(this, new Object());
+        IconLoader.registerThemedIcon(this);
     }
 
     @Override
