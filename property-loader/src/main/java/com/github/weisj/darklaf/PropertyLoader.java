@@ -21,11 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf;
 
 import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.StringUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
@@ -173,7 +175,6 @@ public final class PropertyLoader {
                 Integer.parseInt(numbers.get(2)),
                 Integer.parseInt(numbers.get(3)));
     }
-
 
     private static Object parseFont(final String value) {
         try {

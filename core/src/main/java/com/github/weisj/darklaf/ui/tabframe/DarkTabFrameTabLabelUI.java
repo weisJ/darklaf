@@ -23,12 +23,12 @@
  */
 package com.github.weisj.darklaf.ui.tabframe;
 
-import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabLabel;
 import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.label.DarkLabelUI;
+import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import sun.swing.SwingUtilities2;
 

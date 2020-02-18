@@ -9,11 +9,12 @@ plugins {
 
 dependencies {
     implementation(project(":darklaf-native-utils"))
+    implementation(project(":darklaf-utils"))
     implementation(project(":darklaf-windows"))
-    implementation("com.formdev:svgSalamander")
-    implementation("net.java.dev.jna:jna")
+    implementation(project(":darklaf-property-loader"))
     implementation("org.swinglabs:jxlayer")
     compileOnly("org.swinglabs:swingx")
+    testImplementation("com.formdev:svgSalamander")
     testImplementation("org.swinglabs:swingx")
 }
 

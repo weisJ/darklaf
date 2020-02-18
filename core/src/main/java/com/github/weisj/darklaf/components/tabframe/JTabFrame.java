@@ -23,8 +23,8 @@
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.ui.tabframe.TabFrameTransferHandler;
+import com.github.weisj.darklaf.util.Alignment;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

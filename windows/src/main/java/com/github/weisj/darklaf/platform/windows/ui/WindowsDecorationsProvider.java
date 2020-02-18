@@ -23,11 +23,13 @@
  */
 package com.github.weisj.darklaf.platform.windows.ui;
 
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 
 import javax.swing.*;
+import java.util.Properties;
 
 public class WindowsDecorationsProvider implements JNIDecorationsProvider {
 
@@ -44,5 +46,15 @@ public class WindowsDecorationsProvider implements JNIDecorationsProvider {
     @Override
     public boolean updateLibrary() {
         return JNIDecorationsWindows.updateLibrary();
+    }
+
+    @Override
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(getClass(), "windows_decorations",
+                                                                   "properties/platform/"),
+                                     properties, currentDefaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(getClass(), "windows_icons",
+                                                                   "properties/platform/"),
+                                     properties, currentDefaults);
     }
 }

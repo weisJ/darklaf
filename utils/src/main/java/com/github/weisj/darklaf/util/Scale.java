@@ -24,13 +24,11 @@
 package com.github.weisj.darklaf.util;
 
 import java.awt.*;
-import java.util.logging.Logger;
 
-public final class Scale {
+public class Scale {
     public static final double SCALE;
     public static final double SCALE_X;
     public static final double SCALE_Y;
-    private static final Logger LOGGER = Logger.getLogger(Scale.class.getName());
 
     static {
         DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
@@ -38,7 +36,6 @@ public final class Scale {
         SCALE_X = mode.getWidth() / (double) screenSize.width;
         SCALE_Y = mode.getHeight() / (double) screenSize.height;
         SCALE = SCALE_X;
-        LOGGER.info("Using screen scaling SCALE_X=" + SCALE_X + ", SCALE_Y=" + SCALE_Y);
     }
 
 

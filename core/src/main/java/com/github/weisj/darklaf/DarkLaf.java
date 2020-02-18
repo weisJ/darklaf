@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.platform.JNIDecorations;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import com.github.weisj.darklaf.util.PropertyLoader;
 import sun.awt.AppContext;
 
 import javax.swing.*;

@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.components.alignment;
+package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 import java.util.function.BiFunction;
 
-import static com.github.weisj.darklaf.components.alignment.AlignmentHelper.*;
+import static com.github.weisj.darklaf.util.AlignmentHelper.*;
 
 /**
  * @author Jannis Weis

@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.Theme;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -46,9 +43,10 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
     private final int w;
     private final int h;
     private final Class<?> parentClass;
-    private Theme currentTheme;
     private transient boolean loaded;
     private transient Icon icon;
+    private AwareIconStyle currentStyle;
+
 
     /**
      * Create new ui aware icon.
@@ -62,6 +60,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
     public DarkUIAwareIcon(final String darkKey, final String lightKey, final int w, final int h,
                            final Class<?> parentClass) {
+        IconLoader.registerAwareIcon(this, null);
         this.darkKey = darkKey;
         this.lightKey = lightKey;
         this.w = w;
@@ -72,6 +71,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
 
     private DarkUIAwareIcon(final DarkUIAwareIcon dual) {
+        IconLoader.registerAwareIcon(this, null);
         this.darkKey = dual.lightKey;
         this.lightKey = dual.darkKey;
         this.dual = dual;
@@ -98,12 +98,12 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
 
     private boolean isLoaded() {
-        return loaded && LafManager.getTheme().equals(currentTheme);
+        return loaded && (currentStyle != IconLoader.getAwareStyle(this));
     }
 
     private void loadIcon() {
-        currentTheme = LafManager.getTheme();
-        if (currentTheme.useDarkIcons()) {
+        currentStyle = IconLoader.getAwareStyle(this);
+        if (currentStyle == AwareIconStyle.DARK) {
             icon = IconLoader.get(parentClass).getIcon(darkKey, w, h);
         } else {
             icon = IconLoader.get(parentClass).getIcon(lightKey, w, h);

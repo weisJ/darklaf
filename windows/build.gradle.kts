@@ -9,6 +9,8 @@ fun DependencyHandlerScope.javaImplementation(dep: Any) {
 
 dependencies {
     javaImplementation(project(":darklaf-native-utils"))
+    javaImplementation(project(":darklaf-utils"))
+    javaImplementation(project(":darklaf-property-loader"))
     javaImplementation("net.java.dev.jna:jna")
 }
 
