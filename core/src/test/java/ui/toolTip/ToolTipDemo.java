@@ -23,11 +23,11 @@
  */
 package ui.toolTip;
 
-import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
+import com.github.weisj.darklaf.util.Alignment;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 

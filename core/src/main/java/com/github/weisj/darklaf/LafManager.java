@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf;
 
+import com.github.weisj.darklaf.icons.AwareIconStyle;
+import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.theme.Theme;
@@ -110,7 +112,7 @@ public final class LafManager {
      */
     public static Theme getTheme() {
         if (theme == null) {
-            theme = new IntelliJTheme();
+            setTheme(new IntelliJTheme());
         }
         return theme;
     }
@@ -122,6 +124,9 @@ public final class LafManager {
      */
     public static void setTheme(final Theme theme) {
         LafManager.theme = theme;
+        IconLoader.updateAwareStyle(theme.useDarkIcons() ? AwareIconStyle.DARK
+                                                         : AwareIconStyle.LIGHT);
+        IconLoader.updateThemeStatus(theme);
     }
 
 
@@ -163,6 +168,7 @@ public final class LafManager {
      */
     public static void install() {
         try {
+            getTheme();
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
         } catch (final ClassNotFoundException

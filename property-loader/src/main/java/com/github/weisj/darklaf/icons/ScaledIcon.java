@@ -21,41 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorations;
+package com.github.weisj.darklaf.icons;
+
+import com.github.weisj.darklaf.util.Scale;
 
 import javax.swing.*;
-import java.util.Properties;
+import java.awt.*;
 
-public interface JNIDecorationsProvider {
+public class ScaledIcon implements Icon {
 
-    /**
-     * Create the custom title pane.
-     *
-     * @param rootPane The root pane to create the title pane for.
-     * @return the custom title pane.
-     */
-    CustomTitlePane createTitlePane(final JRootPane rootPane);
+    private Image img;
+    public ScaledIcon(final Image img) {
+        this.img = img;
+    }
 
-    /**
-     * Returns whether custom decorations are supported.
-     *
-     * @return true if decorations are supported.
-     */
-    boolean isCustomDecorationSupported();
+    @Override
+    public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
+        Graphics2D g = (Graphics2D) g2;
+        g.translate(x, y);
+        g.scale(1.0 / Scale.SCALE_X, 1.0 / Scale.SCALE_Y);
+        g.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
+    }
 
-    /**
-     * Load the decorations library if necessary.
-     *
-     * @return true if successful and library wasn't already loaded.
-     */
-    boolean updateLibrary();
+    @Override
+    public int getIconWidth() {
+        return (int) (img.getWidth(null) / Scale.SCALE_X);
+    }
 
-    /**
-     * Load the necessary properties into the  defaults.
-     *
-     * @param properties      the properties to load the values into.
-     * @param currentDefaults the current ui defaults.
-     */
-    void loadDecorationProperties(Properties properties, UIDefaults currentDefaults);
-
+    @Override
+    public int getIconHeight() {
+        return (int) (img.getHeight(null) / Scale.SCALE_Y);
+    }
 }

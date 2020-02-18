@@ -18,7 +18,9 @@ include(
     "dependencies-bom",
     "native-utils",
     "core",
-    "windows"
+    "windows",
+    "property-loader",
+    "utils"
 )
 
 for (p in rootProject.children) {

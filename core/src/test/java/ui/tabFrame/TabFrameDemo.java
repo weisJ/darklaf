@@ -23,13 +23,13 @@
  */
 package ui.tabFrame;
 
-import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
 import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoResources;

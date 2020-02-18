@@ -23,12 +23,32 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import javax.swing.*;
+import java.awt.*;
+import java.net.URI;
 
 /**
  * @author Jannis Weis
  */
-public interface UIAwareIcon extends Icon {
+public class ThemedSVGIcon extends DarkSVGIcon {
 
-    UIAwareIcon getDual();
+    private Object currentTheme;
+
+    public ThemedSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
+        super(uri, displayWidth, displayHeight);
+        IconLoader.registerThemedIcon(this, new Object());
+    }
+
+    @Override
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        ensureTheme();
+        super.paintIcon(c, g, x, y);
+    }
+
+    private void ensureTheme() {
+        Object theme = IconLoader.getThemeStatus(this);
+        if (currentTheme != theme) {
+            IconColorMapper.patchColors(getSVGIcon());
+            currentTheme = theme;
+        }
+    }
 }

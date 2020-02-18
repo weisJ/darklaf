@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import com.github.weisj.darklaf.util.PropertyLoader;
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.platform.SystemInfo;
 
 import javax.swing.*;

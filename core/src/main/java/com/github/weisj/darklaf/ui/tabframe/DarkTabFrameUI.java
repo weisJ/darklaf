@@ -23,14 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.tabframe;
 
-import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.components.tabframe.JTabFrame;
-import com.github.weisj.darklaf.components.tabframe.PopupContainer;
-import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
-import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
-import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
+import com.github.weisj.darklaf.components.tabframe.*;
 import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
+import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.Pair;
 import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.transform.DefaultTransformModel;

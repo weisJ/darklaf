@@ -23,11 +23,11 @@
  */
 package com.github.weisj.darklaf.ui.tabframe;
 
-import com.github.weisj.darklaf.components.alignment.Alignment;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabContainer;
 import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
+import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;

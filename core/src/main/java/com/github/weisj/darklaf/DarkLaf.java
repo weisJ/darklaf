@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.platform.JNIDecorations;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import com.github.weisj.darklaf.util.PropertyLoader;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -167,7 +166,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         currentTheme.loadUIProperties(uiProps, defaults);
         currentTheme.loadIconProperties(uiProps, defaults);
         currentTheme.loadPlatformProperties(uiProps, defaults);
-        currentTheme.loadDecorationProperties(uiProps, defaults);
+        JNIDecorations.loadDecorationProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
         defaults.putAll(uiProps);
 

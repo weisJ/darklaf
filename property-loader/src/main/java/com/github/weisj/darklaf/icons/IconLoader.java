@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,12 +39,14 @@ public final class IconLoader {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
     private static final IconLoader instance = new IconLoader(IconLoader.class);
+    private static final Map<UIAwareIcon, AwareIconStyle> uiAwareIconStatus = new WeakHashMap<>();
+    private static final Map<ThemedSVGIcon, Object> themedIconStatus = new WeakHashMap<>();
+
     private static final int DEFAULT_W = 16;
     private static final int DEFAULT_H = 16;
     private final Class<?> parentClass;
     private final Map<IconKey, DarkUIAwareIcon> awareIconMap = new HashMap<>();
     private final Map<IconKey, Icon> iconMap = new HashMap<>();
-
 
     private IconLoader(final Class<?> parentClass) {
         this.parentClass = parentClass;
@@ -63,6 +66,30 @@ public final class IconLoader {
             iconLoaderMap.put(parentClass, loader);
             return loader;
         }
+    }
+
+    public static void updateAwareStyle(final AwareIconStyle style) {
+        uiAwareIconStatus.entrySet().forEach(e -> e.setValue(style));
+    }
+
+    public static void updateThemeStatus(final Object theme) {
+        themedIconStatus.entrySet().forEach(e -> e.setValue(theme));
+    }
+
+    public static AwareIconStyle getAwareStyle(final UIAwareIcon icon) {
+        return uiAwareIconStatus.get(icon);
+    }
+
+    public static Object getThemeStatus(final ThemedSVGIcon icon) {
+        return themedIconStatus.get(icon);
+    }
+
+    public static void registerAwareIcon(final UIAwareIcon icon, final AwareIconStyle style) {
+        uiAwareIconStatus.put(icon, style);
+    }
+
+    public static void registerThemedIcon(final ThemedSVGIcon icon, final Object status) {
+        themedIconStatus.put(icon, status);
     }
 
     public DarkUIAwareIcon getUIAwareIcon(final String path) {

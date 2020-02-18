@@ -93,7 +93,8 @@ public class AllIcons {
             for (File f : files) {
                 if (f.getName().endsWith(".svg")) {
                     int SIZE = 30;
-                    ThemedSVGIcon icon = (ThemedSVGIcon) IconLoader.get().loadSVGIcon(folder + "/" + f.getName(), SIZE, SIZE, true);
+                    ThemedSVGIcon icon = (ThemedSVGIcon) IconLoader.get().loadSVGIcon(folder + "/" + f.getName(),
+                                                                                      SIZE, SIZE, true);
                     SVGIcon svgIcon = icon.getSVGIcon();
                     int autosize = svgIcon.getAutosize();
                     svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);

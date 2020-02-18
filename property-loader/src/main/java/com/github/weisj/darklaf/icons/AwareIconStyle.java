@@ -21,37 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.windows.ui;
+package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.platform.SystemInfo;
-
-import javax.swing.*;
-import java.awt.*;
-
-public class ScaledIcon implements Icon {
-
-    private Image img;
-
-
-    public ScaledIcon(final Image img) {
-        this.img = img;
-    }
-
-    @Override
-    public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
-        Graphics2D g = (Graphics2D) g2;
-        g.translate(x, y);
-        g.scale(1.0 / SystemInfo.SCALE_X, 1.0 / SystemInfo.SCALE_Y);
-        g.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
-    }
-
-    @Override
-    public int getIconWidth() {
-        return (int) (img.getWidth(null) / SystemInfo.SCALE_X);
-    }
-
-    @Override
-    public int getIconHeight() {
-        return (int) (img.getHeight(null) / SystemInfo.SCALE_Y);
-    }
+public enum AwareIconStyle {
+    DARK,
+    LIGHT
 }

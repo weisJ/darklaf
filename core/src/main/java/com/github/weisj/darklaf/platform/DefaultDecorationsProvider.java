@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
 
 import javax.swing.*;
+import java.util.Properties;
 
 public class DefaultDecorationsProvider implements JNIDecorationsProvider {
     @Override
@@ -46,5 +47,9 @@ public class DefaultDecorationsProvider implements JNIDecorationsProvider {
     @Override
     public boolean updateLibrary() {
         return false;
+    }
+
+    @Override
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
     }
 }

@@ -82,7 +82,6 @@ public final class ColorUtil {
         }
     }
 
-
     public static Color removeAlpha(final Color color) {
         return toAlpha(color, 255);
     }

@@ -21,13 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.windows.ui;
+package com.github.weisj.darklaf.platform.windows;
 
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
-import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
+import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.platform.windows.ui.DarkTitlePaneWindows;
 
 import javax.swing.*;
+import java.util.Properties;
 
 public class WindowsDecorationsProvider implements JNIDecorationsProvider {
 
@@ -44,5 +47,16 @@ public class WindowsDecorationsProvider implements JNIDecorationsProvider {
     @Override
     public boolean updateLibrary() {
         return JNIDecorationsWindows.updateLibrary();
+    }
+
+    @Override
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+        IconLoader iconLoader = IconLoader.get(WindowsDecorationsProvider.class);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class,
+                                                                   "windows_decorations", ""),
+                                     properties, currentDefaults, iconLoader);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class,
+                                                                   "windows_icons", ""),
+                                     properties, currentDefaults, iconLoader);
     }
 }

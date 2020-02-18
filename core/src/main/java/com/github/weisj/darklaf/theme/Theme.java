@@ -25,8 +25,8 @@ package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.DarkMetalTheme;
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.platform.SystemInfo;
-import com.github.weisj.darklaf.util.PropertyLoader;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -136,21 +136,6 @@ public abstract class Theme {
      */
     public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
         PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "properties/platform/"),
-                                     properties, currentDefaults);
-    }
-
-    /**
-     * Load the platform defaults.
-     *
-     * @param properties      the properties to load the values into.
-     * @param currentDefaults the current ui defaults.
-     */
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName() + "_decorations",
-                                                                   "properties/platform/"),
-                                     properties, currentDefaults);
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName() + "_icons",
-                                                                   "properties/platform/"),
                                      properties, currentDefaults);
     }
 

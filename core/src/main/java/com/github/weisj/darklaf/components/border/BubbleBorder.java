@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import com.github.weisj.darklaf.components.alignment.Alignment;
+import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 

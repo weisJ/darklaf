@@ -24,14 +24,7 @@
 package com.github.weisj.darklaf.icons;
 
 import com.github.weisj.darklaf.util.Pair;
-import com.kitfox.svg.Defs;
-import com.kitfox.svg.LinearGradient;
-import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElement;
-import com.kitfox.svg.SVGElementException;
-import com.kitfox.svg.SVGRoot;
-import com.kitfox.svg.SVGUniverse;
-import com.kitfox.svg.Stop;
+import com.kitfox.svg.*;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 
