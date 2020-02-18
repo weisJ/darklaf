@@ -99,7 +99,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - Artifact IDs:
   - ````darklaf-core```` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
   - ````darklaf-native-utils```` Library to handle loading of native libraries.
-  - ````darklaf-windows```` Native code specific to the windows platform.
+  - ````darklaf-windows```` Code specific to window decorations on windows.
 
 
 
