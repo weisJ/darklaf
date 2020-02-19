@@ -24,7 +24,6 @@
 package ui.checkBox;
 
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -41,8 +40,8 @@ public class TriCheckBoxDemo implements ComponentDemo {
     public JComponent createComponent() {
         TristateCheckBox button = new TristateCheckBox("Test TriCheckBox");
         DemoPanel panel = new DemoPanel(button);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 1", "[][grow]"));
+
+        JPanel controlPanel = panel.addControls(1);
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));

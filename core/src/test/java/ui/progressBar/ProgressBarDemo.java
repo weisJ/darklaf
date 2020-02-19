@@ -23,7 +23,6 @@
  */
 package ui.progressBar;
 
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -46,8 +45,8 @@ public class ProgressBarDemo implements ComponentDemo {
         progressBar.setMaximum(100);
         progressBar.setValue(50);
         DemoPanel panel = new DemoPanel(progressBar);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(progressBar.isEnabled());
             addActionListener(e -> progressBar.setEnabled(isSelected()));
@@ -71,7 +70,9 @@ public class ProgressBarDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("JProgressBar.passed") {{
             addActionListener(e -> progressBar.putClientProperty("JProgressBar.passed", isSelected()));
         }});
-        controlPanel.add(new JLabel("orientation:", JLabel.RIGHT));
+
+        controlPanel = panel.addControls();
+        controlPanel.add(new JLabel("Orientation:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
                 put("HORIZONTAL", JProgressBar.HORIZONTAL);
@@ -81,14 +82,17 @@ public class ProgressBarDemo implements ComponentDemo {
             addItem("VERTICAL");
             setSelectedItem("HORIZONTAL");
             addItemListener(e -> progressBar.setOrientation(mapping.get(e.getItem().toString())));
-        }});
-        controlPanel.add(new JLabel("value:", JLabel.RIGHT));
-        controlPanel.add(new JSlider() {{
-            setMinimum(progressBar.getMinimum());
-            setMaximum(progressBar.getMaximum());
-            setValue(progressBar.getValue());
-            addChangeListener(e -> progressBar.setValue(getValue()));
-        }});
+        }}, "sgx");
+        controlPanel.add(new JLabel("Value:", JLabel.RIGHT));
+        controlPanel.add(new JPanel() {{
+            //Wrap in JPanel. Otherwise, the slider appears too low.
+            add(new JSlider() {{
+                setMinimum(progressBar.getMinimum());
+                setMaximum(progressBar.getMaximum());
+                setValue(progressBar.getValue());
+                addChangeListener(e -> progressBar.setValue(getValue()));
+            }});
+        }}, "sgx");
         return panel;
     }
 

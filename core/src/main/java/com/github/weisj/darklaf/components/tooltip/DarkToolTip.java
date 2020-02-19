@@ -48,6 +48,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     public DarkToolTip(final Alignment alignment) {
         setAlignment(alignment);
+        setOpaque(false);
         fadeAnimator = new FadeInAnimator();
         addPropertyChangeListener(this);
         addAncestorListener(new AncestorAdapter() {

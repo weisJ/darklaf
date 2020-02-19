@@ -24,7 +24,6 @@
 package ui.tabbedPane;
 
 import com.github.weisj.darklaf.util.StringUtil;
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -54,9 +53,9 @@ public class TabbedPaneDemo implements ComponentDemo {
         }
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        DemoPanel panel = new DemoPanel(tabbedPane, new BorderLayout());
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        DemoPanel panel = new DemoPanel(tabbedPane, new BorderLayout(), 0);
+
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JLabel("TabLayoutPolicy:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
@@ -68,7 +67,7 @@ public class TabbedPaneDemo implements ComponentDemo {
             setSelectedItem("SCROLL_TAB_LAYOUT");
             //noinspection MagicConstant
             addItemListener(e -> tabbedPane.setTabLayoutPolicy(mapping.get(e.getItem().toString())));
-        }});
+        }}, "sgx");
         controlPanel.add(new JLabel("TabPlacement:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
@@ -84,7 +83,9 @@ public class TabbedPaneDemo implements ComponentDemo {
             setSelectedItem("TOP");
             //noinspection MagicConstant
             addItemListener(e -> tabbedPane.setTabPlacement(mapping.get(e.getItem().toString())));
-        }});
+        }}, "sgx");
+
+        controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("LeftToRight") {{
             setSelected(tabbedPane.getComponentOrientation().isLeftToRight());
             addActionListener(e -> tabbedPane.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT

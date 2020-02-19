@@ -25,7 +25,6 @@ package ui.text;
 
 import com.github.weisj.darklaf.ui.text.DarkTextBorder;
 import com.github.weisj.darklaf.util.StringUtil;
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -43,8 +42,7 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
         Border textBorder = new DarkTextBorder();
         Border border = text.getBorder();
 
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(text.isEnabled());
             addActionListener(e -> text.setEnabled(isSelected()));

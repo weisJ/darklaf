@@ -24,7 +24,6 @@
 package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.QuickColorChooser;
@@ -43,8 +42,7 @@ public class ButtonDemo implements ComponentDemo {
         Icon icon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
         JButton button = new JButton("Test Button", icon);
         DemoPanel panel = new DemoPanel(button);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
@@ -79,11 +77,15 @@ public class ButtonDemo implements ComponentDemo {
             setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
             addActionListener(e -> UIManager.put("Button.defaultButtonFollowsFocus", isSelected()));
         }});
+
+        controlPanel = panel.addControls();
         controlPanel.add(new QuickColorChooser("JButton.shadow.hover", Color.BLACK,
                                                (b, c) -> button.putClientProperty("JButton.shadow.hover", b ? c : null)));
         controlPanel.add(new QuickColorChooser("JButton.shadow.click", Color.BLACK,
                                                (b, c) -> button.putClientProperty("JButton.shadow.click", b ? c : null)));
-        controlPanel.add(new JLabel("JButton.variant"));
+
+        controlPanel = panel.addControls();
+        controlPanel.add(new JLabel("JButton.variant:"));
         controlPanel.add(new JComboBox<String>() {{
             addItem("onlyLabel");
             addItem("shadow");

@@ -24,7 +24,6 @@
 package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -42,8 +41,8 @@ public class ToggleButtonDemo implements ComponentDemo {
         Icon icon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
         JToggleButton button = new JToggleButton("Test ToggleButton", icon);
         DemoPanel panel = new DemoPanel(button);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
@@ -65,7 +64,9 @@ public class ToggleButtonDemo implements ComponentDemo {
             setSelected(button.isRolloverEnabled());
             addActionListener(e -> button.setRolloverEnabled(isSelected()));
         }}, "span");
-        controlPanel.add(new JLabel("JToggleButton.variant"));
+
+        controlPanel = panel.addControls();
+        controlPanel.add(new JLabel("JToggleButton.variant:"));
         controlPanel.add(new JComboBox<String>() {{
             addItem("slider");
             addItem("none");

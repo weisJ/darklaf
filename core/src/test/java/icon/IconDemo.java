@@ -63,8 +63,8 @@ public class IconDemo implements ComponentDemo {
         iconPanel.add(new JLabel("Themed icon", themedIcon, JLabel.LEFT));
         iconPanel.add(new JLabel("Image icon", imageIcon, JLabel.LEFT));
 
-        DemoPanel panel = new DemoPanel(iconPanel, new BorderLayout());
-        JPanel controlPanel = panel.getControls();
+        DemoPanel panel = new DemoPanel(iconPanel, new BorderLayout(), 0);
+        JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new FlowLayout());
 
         controlPanel.add(new JToggleButton("Light/Dark") {{

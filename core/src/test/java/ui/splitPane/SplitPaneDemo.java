@@ -23,7 +23,6 @@
  */
 package ui.splitPane;
 
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -50,9 +49,9 @@ public final class SplitPaneDemo implements ComponentDemo {
         splitPane.setLeftComponent(leftPanel);
         splitPane.setRightComponent(rightPanel);
 
-        DemoPanel panel = new DemoPanel(splitPane, new BorderLayout());
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        DemoPanel panel = new DemoPanel(splitPane, new BorderLayout(), 0);
+
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("ContinuousLayout") {{
             setSelected(splitPane.isContinuousLayout());
             addActionListener(e -> splitPane.setContinuousLayout(isSelected()));
@@ -61,6 +60,8 @@ public final class SplitPaneDemo implements ComponentDemo {
             setSelected(splitPane.isOneTouchExpandable());
             addActionListener(e -> splitPane.setOneTouchExpandable(isSelected()));
         }});
+
+        controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Orientation:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
@@ -72,7 +73,7 @@ public final class SplitPaneDemo implements ComponentDemo {
             setSelectedItem("HORIZONTAL_SPLIT");
             //noinspection MagicConstant
             addItemListener(e -> splitPane.setOrientation(mapping.get(e.getItem().toString())));
-        }});
+        }}, "sgx");
         controlPanel.add(new JLabel("JSplitPane.style:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             addItem("default");
@@ -80,7 +81,7 @@ public final class SplitPaneDemo implements ComponentDemo {
             addItem("invisible");
             setSelectedItem("default");
             addItemListener(e -> splitPane.putClientProperty("JSplitPane.style", e.getItem()));
-        }});
+        }}, "sgx");
         return panel;
     }
 

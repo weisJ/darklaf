@@ -23,7 +23,6 @@
  */
 package ui.slider;
 
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -42,8 +41,8 @@ public class SliderDemo implements ComponentDemo {
         slider.setMajorTickSpacing(20);
         slider.setMinorTickSpacing(5);
         DemoPanel panel = new DemoPanel(slider);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Orientation:"));
         controlPanel.add(new JComboBox<String>() {{
             setEditable(false);
@@ -54,6 +53,7 @@ public class SliderDemo implements ComponentDemo {
                 slider.setOrientation(e.getItem() == "Vertical" ? JSlider.VERTICAL : JSlider.HORIZONTAL);
             });
         }});
+        controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(slider.isEnabled());
             addActionListener(e -> slider.setEnabled(isSelected()));

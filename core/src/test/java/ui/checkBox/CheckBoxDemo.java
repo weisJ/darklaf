@@ -23,7 +23,6 @@
  */
 package ui.checkBox;
 
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -40,8 +39,8 @@ public class CheckBoxDemo implements ComponentDemo {
     public JComponent createComponent() {
         JCheckBox button = new JCheckBox("Test CheckBox");
         DemoPanel panel = new DemoPanel(button);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 1", "[][grow]"));
+
+        JPanel controlPanel = panel.addControls(1);
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));

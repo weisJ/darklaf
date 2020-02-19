@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui;
+package ui.label;
 
 import com.github.weisj.darklaf.icons.IconLoader;
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,8 +41,8 @@ public class LabelDemo implements ComponentDemo {
         Icon icon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
         JLabel label = new JLabel("Test Label", icon, JLabel.LEFT);
         DemoPanel panel = new DemoPanel(label);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(2, 2));
+
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(label.isEnabled());
             addActionListener(e -> label.setEnabled(isSelected()));

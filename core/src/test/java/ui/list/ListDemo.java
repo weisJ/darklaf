@@ -23,7 +23,6 @@
  */
 package ui.list;
 
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -41,16 +40,18 @@ public final class ListDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         String[] week = {"Monday", "Tuesday", "Wednesday",
-                "Thursday", "Friday", "Saturday", "Sunday"};
+            "Thursday", "Friday", "Saturday", "Sunday"};
         JList<String> list = new JList<>(week);
         list.setSelectedIndex(2);
-        DemoPanel panel = new DemoPanel(list, new BorderLayout());
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        DemoPanel panel = new DemoPanel(list, new BorderLayout(), 0);
+
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("JList.alternateRowColor") {{
             setSelected(Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor")));
             addActionListener(e -> list.putClientProperty("JList.alternateRowColor", isSelected()));
         }}, "span");
+
+        controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Layout orientation:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
@@ -64,7 +65,7 @@ public final class ListDemo implements ComponentDemo {
             setSelectedItem("VERTICAL");
             //noinspection MagicConstant
             addItemListener(e -> list.setLayoutOrientation(mapping.get(e.getItem().toString())));
-        }});
+        }}, "sgx");
         controlPanel.add(new JLabel("Selection mode:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
@@ -79,7 +80,7 @@ public final class ListDemo implements ComponentDemo {
             list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             //noinspection MagicConstant
             addItemListener(e -> list.setSelectionMode(mapping.get(e.getItem().toString())));
-        }});
+        }}, "sgx");
         return panel;
     }
 

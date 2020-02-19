@@ -23,7 +23,6 @@
  */
 package ui.spinner;
 
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -40,8 +39,8 @@ public class SpinnerDemo implements ComponentDemo {
     public JComponent createComponent() {
         JSpinner spinner = new JSpinner();
         DemoPanel panel = new DemoPanel(spinner);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 1", "[][grow]"));
+
+        JPanel controlPanel = panel.addControls(1);
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(spinner.isEnabled());
             addActionListener(e -> spinner.setEnabled(isSelected()));

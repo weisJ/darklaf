@@ -24,7 +24,6 @@
 package ui.table;
 
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -76,8 +75,7 @@ public class TableDemo implements ComponentDemo {
         JTableHeader header = table.getTableHeader();
         DemoPanel panel = new DemoPanel(new JScrollPane(table));
 
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(table.isEnabled());
             addActionListener(e -> table.setEnabled(isSelected()));

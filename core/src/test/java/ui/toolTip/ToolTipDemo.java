@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import com.github.weisj.darklaf.util.Alignment;
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -47,33 +46,34 @@ public class ToolTipDemo implements ComponentDemo {
         ToolTipContext context = button.getToolTipContext();
         button.setToolTipText("ToolTip demo text!");
 
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        JPanel controlPanel = panel.addControls();
 
         controlPanel.add(new JCheckBox("Align inside") {{
             setSelected(context.isAlignInside());
             addActionListener(e -> context.setAlignInside(isSelected()));
         }}, "span");
+
+        controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Tooltip Style:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {{
             setSelectedItem(ToolTipStyle.BALLOON);
             addItemListener(e -> context.setToolTipStyle((ToolTipStyle) e.getItem()));
-        }});
+        }}, "sgx");
         controlPanel.add(new JLabel("Alignment:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {{
             setSelectedItem(context.getAlignment());
             addItemListener(e -> context.setAlignment((Alignment) e.getItem()));
-        }});
+        }}, "sgx");
         controlPanel.add(new JLabel("Center Alignment:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {{
             setSelectedItem(context.getCenterAlignment());
             addItemListener(e -> context.setCenterAlignment((Alignment) e.getItem()));
-        }});
+        }}, "sgx");
         controlPanel.add(new JLabel("Alignment Strategy:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<AlignmentStrategy>(AlignmentStrategy.values()) {{
             setSelectedItem(context.getAlignmentStrategy());
             addItemListener(e -> context.setAlignmentStrategy((AlignmentStrategy) e.getItem()));
-        }});
+        }}, "sgx");
         return panel;
     }
 

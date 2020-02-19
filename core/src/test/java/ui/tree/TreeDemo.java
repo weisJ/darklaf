@@ -55,8 +55,8 @@ public class TreeDemo implements ComponentDemo {
         root.add(parent2);
 
         JTree tree = new JTree(root);
-        DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout());
-        JPanel controlPanel = panel.getControls();
+        DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
+        JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("editable") {{
             setSelected(tree.isEditable());

@@ -23,7 +23,6 @@
  */
 package ui.comboBox;
 
-import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -43,8 +42,8 @@ public class ComboBoxDemo implements ComponentDemo {
             comboBox.addItem("Item " + i);
         }
         DemoPanel panel = new DemoPanel(comboBox);
-        JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new MigLayout("fillx, wrap 1", "[][grow]"));
+
+        JPanel controlPanel = panel.addControls(1);
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(comboBox.isEnabled());
             addActionListener(e -> comboBox.setEnabled(isSelected()));

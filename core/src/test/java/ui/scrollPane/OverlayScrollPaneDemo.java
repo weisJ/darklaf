@@ -42,7 +42,7 @@ public class OverlayScrollPaneDemo implements ComponentDemo {
     public JComponent createComponent() {
         OverlayScrollPane scrollPane = new OverlayScrollPane(
                 new JTextArea(StringUtil.repeat(DemoResources.LOREM_IPSUM, 5)));
-        return new DemoPanel(scrollPane, new BorderLayout());
+        return new DemoPanel(scrollPane, new BorderLayout(), 0);
     }
 
     @Override

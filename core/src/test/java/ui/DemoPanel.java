@@ -24,6 +24,7 @@
 package ui;
 
 import com.github.weisj.darklaf.components.border.DarkBorders;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,21 +34,37 @@ public class DemoPanel extends JPanel {
     private final JPanel controls;
 
     public DemoPanel(final JComponent component) {
-        this(component, new GridBagLayout());
+        this(component, 10);
     }
 
-    public DemoPanel(final JComponent component, final LayoutManager layoutManager) {
+    public DemoPanel(final JComponent component, final int hGap) {
+        this(component, new GridBagLayout(), hGap);
+    }
+
+    public DemoPanel(final JComponent component, final LayoutManager layoutManager, final int hGap) {
         super(new BorderLayout());
+        JPanel contentHolder = new JPanel(new BorderLayout());
+        contentHolder.add(Box.createVerticalStrut(hGap), BorderLayout.NORTH);
+        contentHolder.add(Box.createVerticalStrut(hGap), BorderLayout.SOUTH);
         JPanel content = new JPanel(layoutManager);
         content.add(component);
-        add(content, BorderLayout.CENTER);
+
+        contentHolder.add(content, BorderLayout.CENTER);
+        add(contentHolder, BorderLayout.CENTER);
         controls = new JPanel();
-        controls.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
-        controls.setLayout(new BoxLayout(controls, BoxLayout.X_AXIS));
+        controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
         add(controls, BorderLayout.SOUTH);
     }
 
-    public JPanel getControls() {
-        return controls;
+    public JPanel addControls(final int columns) {
+        JPanel control = new JPanel();
+        control.setLayout(new MigLayout("fillx, wrap " + columns, "[][grow]"));
+        control.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
+        controls.add(control);
+        return control;
+    }
+
+    public JPanel addControls() {
+        return addControls(2);
     }
 }
