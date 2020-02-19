@@ -119,8 +119,9 @@ public class DarkTooltipBorder implements Border {
 
     @Override
     public Insets getBorderInsets(final Component c) {
+        Insets uIns = getUserInsets(c);
         if (isPlain(c)) {
-            return new Insets(1, 1, 1, 1);
+            return new Insets(1 + uIns.top, 1 + uIns.left, 1 + uIns.bottom, 1 + uIns.right);
         }
         Insets ins = new Insets(0, 0, 0, 0);
         Insets bi = bubbleBorder.getBorderInsets(c);
@@ -129,7 +130,6 @@ public class DarkTooltipBorder implements Border {
         ins.left = Math.max(bi.left, si.left);
         ins.right = Math.max(bi.right, si.right);
         ins.top = Math.max(bi.top, si.top);
-        Insets uIns = getUserInsets(c);
         ins.left += 5 + uIns.left;
         ins.top += 5 + uIns.top;
         ins.right += 5 + uIns.right;

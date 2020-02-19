@@ -246,6 +246,9 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                     }
                 }
             }
+            if ("JToolTip.style".equals(key)) {
+                tooltip.setPreferredSize(getPreferredSize(tooltip));
+            }
         }
     }
 

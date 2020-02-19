@@ -159,7 +159,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
 
         public FadeInAnimator() {
-            super("Track fadeout", FADEIN_FRAMES_COUNT / 2,
+            super("Tooltip fadein", FADEIN_FRAMES_COUNT / 2,
                   FADEIN_FRAMES_COUNT * 25, false);
         }
 
