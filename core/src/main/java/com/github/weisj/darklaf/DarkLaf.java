@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.platform.JNIDecorations;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.util.ReflectiveWarningSuppressor;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -65,8 +66,10 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             if (SystemInfo.isWindows || SystemInfo.isLinux) {
                 base = new MetalLookAndFeel();
             } else {
-                final String name = UIManager.getSystemLookAndFeelClassName();
-                base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
+                try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
+                    final String name = UIManager.getSystemLookAndFeelClassName();
+                    base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
+                }
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());

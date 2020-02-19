@@ -54,8 +54,8 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
     public void installComponents(final JFileChooser fc) {
         FileSystemView fsv = fc.getFileSystemView();
 
-        fc.setBorder(new EmptyBorder(12, 12, 11, 11));
-        fc.setLayout(new BorderLayout(0, 11));
+        fc.setBorder(new EmptyBorder(10, 10, 10, 10));
+        fc.setLayout(new BorderLayout(0, 10));
 
         filePane = new DarkFilePane(new MetalFileChooserUIAccessor());
         fc.addPropertyChangeListener(filePane);
@@ -65,7 +65,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         // ********************************* //
 
         // Directory manipulation buttons
-        JPanel topPanel = new JPanel(new BorderLayout(11, 0));
+        JPanel topPanel = new JPanel(new BorderLayout(10, 0));
         JPanel topButtonPanel = new JPanel();
         topButtonPanel.setLayout(new BoxLayout(topButtonPanel, BoxLayout.LINE_AXIS));
         topPanel.add(topButtonPanel, BorderLayout.AFTER_LINE_ENDS);
@@ -278,7 +278,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         filesOfTypePanel.add(filterComboBox);
 
         // buttons
-        getButtonPanel().setLayout(new ButtonAreaLayout());
+        getButtonPanel().setLayout(new DarkButtonAreaLayout());
 
         approveButton = new TooltipAwareButton(getApproveButtonText(fc));
         // Note: Metal does not use mnemonics for approve and cancel
@@ -296,5 +296,12 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         }
 
         groupLabels(new AlignedLabel[]{fileNameLabel, filesOfTypeLabel});
+    }
+
+    protected static class DarkButtonAreaLayout extends ButtonAreaLayout {
+
+        protected DarkButtonAreaLayout() {
+            topMargin = 10;
+        }
     }
 }

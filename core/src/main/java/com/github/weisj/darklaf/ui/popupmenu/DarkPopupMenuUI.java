@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
-import com.github.weisj.darklaf.util.ReflectionUtil;
+import com.github.weisj.darklaf.util.ReflectiveWarningSuppressor;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
@@ -34,12 +34,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.applet.Applet;
 import java.awt.*;
-import java.awt.event.AWTEventListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -100,9 +95,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
      * implementation for it that is a bit more generous with closing the popup.
      */
     private void removeOldMouseGrabber() {
-        Object oldLogger = ReflectionUtil.changeIllegalAccessLogger(null);
         AppContext context = AppContext.getAppContext();
-        try {
+        try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
             Field field = BasicPopupMenuUI.class.getDeclaredField("MOUSE_GRABBER_KEY");
             field.setAccessible(true);
             Object value = field.get(null);
@@ -115,8 +109,6 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             context.put(value, null);
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
-        } finally {
-            ReflectionUtil.changeIllegalAccessLogger(oldLogger);
         }
     }
 
