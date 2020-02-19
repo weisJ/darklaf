@@ -290,9 +290,8 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          * On macOS the default PopupFactory is overwritten with a custom one, which always uses heavyweight popups.
          * This is disadvantageous for the behaviour of custom tooltips.
          */
-        PopupFactory popupFactory = PopupFactory.getSharedInstance();
         call("initialize");
-        PopupFactory.setSharedInstance(popupFactory);
+        PopupFactory.setSharedInstance(new PopupFactory());
         PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
     }
