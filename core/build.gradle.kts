@@ -15,6 +15,8 @@ dependencies {
     implementation("org.swinglabs:jxlayer")
     compileOnly("org.swinglabs:swingx")
     testImplementation("com.formdev:svgSalamander")
+    testImplementation("com.miglayout:miglayout-core")
+    testImplementation("com.miglayout:miglayout-swing")
     testImplementation("org.swinglabs:swingx")
 }
 
