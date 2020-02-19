@@ -208,12 +208,12 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
 
     protected static boolean isTableCellEditor(final Component c) {
         return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
     }
 
     protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTreeCellEditor"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTreeCellEditor"));
     }
 
     private Color getForeground() {
@@ -237,7 +237,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         int buttonWidth = squareButton
                           ? buttonHeight
                           : arrowButton.getPreferredSize().width
-                                  + arrowButton.getInsets().left + arrowButton.getInsets().right;
+                              + arrowButton.getInsets().left + arrowButton.getInsets().right;
         //adjust the size based on the button width
         size.height += insets.top + insets.bottom;
         size.width += insets.left + insets.right + buttonWidth;
@@ -251,25 +251,16 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     @Override
     protected Rectangle rectangleForCurrentValue() {
         Rectangle rect = super.rectangleForCurrentValue();
-        if (comboBox.isEditable() && !comboBox.getComponentOrientation().isLeftToRight()) {
-            rect.x += borderSize;
-            rect.width -= borderSize;
+        if (comboBox.isEditable()) {
+            if (comboBox.getComponentOrientation().isLeftToRight()) {
+                rect.x += boxPadding.left;
+                rect.width -= boxPadding.left;
+            } else {
+                rect.width -= borderSize + 1;
+                rect.x += 1;
+            }
         }
         return rect;
-    }
-
-    @Override
-    protected Insets getInsets() {
-        if (isTableCellEditor(comboBox)) {
-            return new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right);
-        }
-        if (comboBox.getComponentOrientation().isLeftToRight()) {
-            return new InsetsUIResource(borderSize + boxPadding.top, borderSize + boxPadding.left,
-                borderSize + boxPadding.bottom, borderSize);
-        } else {
-            return new InsetsUIResource(borderSize + boxPadding.top, borderSize,
-                borderSize + boxPadding.bottom, borderSize + boxPadding.right);
-        }
     }
 
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
@@ -293,9 +284,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
 
         boolean shouldValidate = c instanceof JPanel;
         Rectangle r = new Rectangle(bounds);
-        if (isTableCellEditor(comboBox)) {
-            r.x--;
-        }
         currentValuePane.paintComponent(g, c, comboBox, r.x, r.y, r.width, r.height, shouldValidate);
         // return opaque for combobox popup items painting
         if (changeOpaque) {
@@ -406,7 +394,11 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         if (isTableCellEditor(c) || isTreeCellEditor(c)) {
             return new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right);
         }
-        return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
+        if (comboBox.getComponentOrientation().isLeftToRight()) {
+            return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);
+        } else {
+            return new InsetsUIResource(boxPadding.top, borderSize, boxPadding.bottom, boxPadding.right);
+        }
     }
 
     @Override
@@ -424,6 +416,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         if ("componentOrientation".equals(key)) {
             comboBox.doLayout();
             comboBox.repaint();
+            comboBox.getEditor().getEditorComponent().setComponentOrientation(comboBox.getComponentOrientation());
         } else if ("editable".equals(key)) {
             comboBox.repaint();
         } else if ("JComboBox.isTableCellEditor".equals(key) || "JComboBox.isTreeCellEditor".equals(key)) {

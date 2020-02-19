@@ -173,8 +173,10 @@ public class DarkButtonBorder implements Border, UIResource {
         }
         int shadow = DarkButtonUI.isShadowVariant(c) ? 0 : getShadowSize();
         boolean square = DarkButtonUI.isSquare(c);
-        Insets pad = isThin(c) ? square ? squareThinInsets : thinInsets
-            : square ? squareInsets : insets;
+        Insets pad = isThin(c) ? square ? squareThinInsets
+                                        : thinInsets
+                               : square ? squareInsets
+                                        : insets;
         return new InsetsUIResource(pad.top, pad.left, pad.bottom + shadow, pad.right);
     }
 
