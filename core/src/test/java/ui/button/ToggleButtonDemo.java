@@ -24,6 +24,7 @@
 package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -42,7 +43,7 @@ public class ToggleButtonDemo implements ComponentDemo {
         JToggleButton button = new JToggleButton("Test ToggleButton", icon);
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
@@ -52,22 +53,6 @@ public class ToggleButtonDemo implements ComponentDemo {
             addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                                                                                : ComponentOrientation.RIGHT_TO_LEFT));
         }});
-        controlPanel.add(new JCheckBox("Rollover") {{
-            setSelected(button.isRolloverEnabled());
-            addActionListener(e -> button.setRolloverEnabled(isSelected()));
-        }});
-        controlPanel.add(new JComboBox<String>() {{
-            addItem("JToggleButton.variant = slider");
-            addItem("no JToggleButton.variant");
-            setSelectedItem("no JToggleButton.variant");
-            addItemListener(e -> {
-                if (e.getItem().equals("JToggleButton.variant = slider")) {
-                    button.putClientProperty("JToggleButton.variant", "slider");
-                } else {
-                    button.putClientProperty("JToggleButton.variant", null);
-                }
-            });
-        }});
         controlPanel.add(new JCheckBox("JToggleButton.isTreeCellEditor") {{
             setSelected(false);
             addActionListener(e -> button.putClientProperty("JToggleButton.isTreeCellEditor", isSelected()));
@@ -75,6 +60,23 @@ public class ToggleButtonDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("JToggleButton.isTableCellEditor") {{
             setSelected(false);
             addActionListener(e -> button.putClientProperty("JToggleButton.isTableCellEditor", isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("Rollover") {{
+            setSelected(button.isRolloverEnabled());
+            addActionListener(e -> button.setRolloverEnabled(isSelected()));
+        }}, "span");
+        controlPanel.add(new JLabel("JToggleButton.variant"));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem("slider");
+            addItem("none");
+            setSelectedItem("no JToggleButton.variant");
+            addItemListener(e -> {
+                if (e.getItem().equals("slider")) {
+                    button.putClientProperty("JToggleButton.variant", "slider");
+                } else {
+                    button.putClientProperty("JToggleButton.variant", null);
+                }
+            });
         }});
         return panel;
     }

@@ -24,6 +24,7 @@
 package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.QuickColorChooser;
@@ -43,7 +44,7 @@ public class ButtonDemo implements ComponentDemo {
         JButton button = new JButton("Test Button", icon);
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(6, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
@@ -74,31 +75,28 @@ public class ButtonDemo implements ComponentDemo {
             setSelected(false);
             addActionListener(e -> button.putClientProperty("JButton.alternativeArc", isSelected()));
         }});
-        controlPanel.add(new JComboBox<String>() {{
-            addItem("JButton.variant = onlyLabel");
-            addItem("JButton.variant = shadow");
-            addItem("JButton.variant = fullShadow");
-            addItem("no JButton.variant");
-            setSelectedItem("no JButton.variant");
-            addItemListener(e -> {
-                if (e.getItem().equals("JButton.variant = onlyLabel")) {
-                    button.putClientProperty("JButton.variant", "onlyLabel");
-                } else if (e.getItem().equals("JButton.variant = shadow")) {
-                    button.putClientProperty("JButton.variant", "shadow");
-                } else if (e.getItem().equals("JButton.variant = fullShadow")) {
-                    button.putClientProperty("JButton.variant", "fullShadow");
-                } else {
-                    button.putClientProperty("JButton.variant", null);
-                }
-            });
+        controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {{
+            setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
+            addActionListener(e -> UIManager.put("Button.defaultButtonFollowsFocus", isSelected()));
         }});
         controlPanel.add(new QuickColorChooser("JButton.shadow.hover", Color.BLACK,
                                                (b, c) -> button.putClientProperty("JButton.shadow.hover", b ? c : null)));
         controlPanel.add(new QuickColorChooser("JButton.shadow.click", Color.BLACK,
                                                (b, c) -> button.putClientProperty("JButton.shadow.click", b ? c : null)));
-        controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {{
-            setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
-            addActionListener(e -> UIManager.put("Button.defaultButtonFollowsFocus", isSelected()));
+        controlPanel.add(new JLabel("JButton.variant"));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem("onlyLabel");
+            addItem("shadow");
+            addItem("fullShadow");
+            addItem("none");
+            setSelectedItem("no JButton.variant");
+            addItemListener(e -> {
+                if (e.getItem().equals("none")) {
+                    button.putClientProperty("JButton.variant", null);
+                } else {
+                    button.putClientProperty("JButton.variant", e.getItem());
+                }
+            });
         }});
         return panel;
     }

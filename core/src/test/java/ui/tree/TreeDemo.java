@@ -25,6 +25,7 @@ package ui.tree;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -56,7 +57,7 @@ public class TreeDemo implements ComponentDemo {
         JTree tree = new JTree(root);
         DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout());
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(5, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("editable") {{
             setSelected(tree.isEditable());
             addActionListener(e -> tree.setEditable(isSelected()));
@@ -77,8 +78,7 @@ public class TreeDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("JTree.renderBooleanAsCheckBox") {{
             setSelected(Boolean.TRUE.equals(tree.getClientProperty("JTree.renderBooleanAsCheckBox")));
             addActionListener(e -> tree.putClientProperty("JTree.renderBooleanAsCheckBox", isSelected()));
-        }});
-        controlPanel.add(new JLabel());
+        }}, "span");
         controlPanel.add(new JLabel("JTree.booleanRenderType:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             addItem("checkBox");

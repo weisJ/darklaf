@@ -23,6 +23,7 @@
  */
 package ui.radioButton;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -40,7 +41,7 @@ public class RadioButtonDemo implements ComponentDemo {
         JRadioButton button = new JRadioButton("Test RadioButton");
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 1", "[][grow]"));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));

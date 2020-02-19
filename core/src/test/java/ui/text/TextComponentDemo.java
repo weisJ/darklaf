@@ -25,13 +25,13 @@ package ui.text;
 
 import com.github.weisj.darklaf.ui.text.DarkTextBorder;
 import com.github.weisj.darklaf.util.StringUtil;
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
-import java.awt.*;
 
 public abstract class TextComponentDemo<T extends JTextComponent> implements ComponentDemo {
 
@@ -44,7 +44,7 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
         Border border = text.getBorder();
 
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(text.isEnabled());
             addActionListener(e -> text.setEnabled(isSelected()));

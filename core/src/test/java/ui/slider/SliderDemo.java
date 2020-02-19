@@ -23,6 +23,7 @@
  */
 package ui.slider;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -42,16 +43,8 @@ public class SliderDemo implements ComponentDemo {
         slider.setMinorTickSpacing(5);
         DemoPanel panel = new DemoPanel(slider);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(6, 2));
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(slider.isEnabled());
-            addActionListener(e -> slider.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(slider.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> slider.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                               : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        controlPanel.add(new JLabel("Orientation:"));
         controlPanel.add(new JComboBox<String>() {{
             setEditable(false);
             addItem("Horizontal");
@@ -60,6 +53,15 @@ public class SliderDemo implements ComponentDemo {
             addItemListener(e -> {
                 slider.setOrientation(e.getItem() == "Vertical" ? JSlider.VERTICAL : JSlider.HORIZONTAL);
             });
+        }});
+        controlPanel.add(new JCheckBox("enabled") {{
+            setSelected(slider.isEnabled());
+            addActionListener(e -> slider.setEnabled(isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("LeftToRight") {{
+            setSelected(slider.getComponentOrientation().isLeftToRight());
+            addActionListener(e -> slider.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                               : ComponentOrientation.RIGHT_TO_LEFT));
         }});
         controlPanel.add(new JCheckBox("inverted") {{
             setSelected(slider.getInverted());

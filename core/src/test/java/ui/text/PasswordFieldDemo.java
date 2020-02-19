@@ -23,6 +23,7 @@
  */
 package ui.text;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -40,7 +41,7 @@ public class PasswordFieldDemo implements ComponentDemo {
         JPasswordField textField = new JPasswordField("Demo PasswordField");
         DemoPanel panel = new DemoPanel(textField);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(textField.isEnabled());
             addActionListener(e -> textField.setEnabled(isSelected()));

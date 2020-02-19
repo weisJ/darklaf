@@ -23,6 +23,7 @@
  */
 package ui.splitPane;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -51,7 +52,7 @@ public final class SplitPaneDemo implements ComponentDemo {
 
         DemoPanel panel = new DemoPanel(splitPane, new BorderLayout());
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("ContinuousLayout") {{
             setSelected(splitPane.isContinuousLayout());
             addActionListener(e -> splitPane.setContinuousLayout(isSelected()));

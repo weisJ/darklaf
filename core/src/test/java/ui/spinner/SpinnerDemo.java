@@ -23,6 +23,7 @@
  */
 package ui.spinner;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -40,7 +41,7 @@ public class SpinnerDemo implements ComponentDemo {
         JSpinner spinner = new JSpinner();
         DemoPanel panel = new DemoPanel(spinner);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 1", "[][grow]"));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(spinner.isEnabled());
             addActionListener(e -> spinner.setEnabled(isSelected()));
@@ -53,7 +54,6 @@ public class SpinnerDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("JSpinner.variant = plusMinus") {{
             addActionListener(e -> spinner.putClientProperty("JSpinner.variant", isSelected() ? "plusMinus" : null));
         }});
-        controlPanel.add(new JLabel());
         controlPanel.add(new JCheckBox("JSpinner.isTreeCellEditor") {{
             setSelected(false);
             addActionListener(e -> spinner.putClientProperty("JSpinner.isTreeCellEditor", isSelected()));

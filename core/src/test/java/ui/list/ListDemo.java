@@ -23,6 +23,7 @@
  */
 package ui.list;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -45,12 +46,11 @@ public final class ListDemo implements ComponentDemo {
         list.setSelectedIndex(2);
         DemoPanel panel = new DemoPanel(list, new BorderLayout());
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
-        controlPanel.add(new JLabel());
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("JList.alternateRowColor") {{
             setSelected(Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor")));
             addActionListener(e -> list.putClientProperty("JList.alternateRowColor", isSelected()));
-        }});
+        }}, "span");
         controlPanel.add(new JLabel("Layout orientation:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{

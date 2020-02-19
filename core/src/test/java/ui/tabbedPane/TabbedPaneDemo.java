@@ -24,6 +24,7 @@
 package ui.tabbedPane;
 
 import com.github.weisj.darklaf.util.StringUtil;
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -55,21 +56,7 @@ public class TabbedPaneDemo implements ComponentDemo {
 
         DemoPanel panel = new DemoPanel(tabbedPane, new BorderLayout());
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(7, 2));
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(tabbedPane.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> tabbedPane.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                   : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JCheckBox("JTabbedPane.dndEnabled") {{
-            setSelected(false);
-            addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.dndEnabled", isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("JTabbedPane.showNewTabButton") {{
-            setSelected(false);
-            addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.showNewTabButton", isSelected()));
-        }});
-        controlPanel.add(new JLabel());
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JLabel("TabLayoutPolicy:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
             Map<String, Integer> mapping = new HashMap<String, Integer>() {{
@@ -97,6 +84,19 @@ public class TabbedPaneDemo implements ComponentDemo {
             setSelectedItem("TOP");
             //noinspection MagicConstant
             addItemListener(e -> tabbedPane.setTabPlacement(mapping.get(e.getItem().toString())));
+        }});
+        controlPanel.add(new JCheckBox("LeftToRight") {{
+            setSelected(tabbedPane.getComponentOrientation().isLeftToRight());
+            addActionListener(e -> tabbedPane.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                   : ComponentOrientation.RIGHT_TO_LEFT));
+        }});
+        controlPanel.add(new JCheckBox("JTabbedPane.dndEnabled") {{
+            setSelected(false);
+            addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.dndEnabled", isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("JTabbedPane.showNewTabButton") {{
+            setSelected(false);
+            addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.showNewTabButton", isSelected()));
         }});
         controlPanel.add(new JCheckBox("JTabbedPane.leadingComponent") {{
             setSelected(false);

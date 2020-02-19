@@ -23,6 +23,7 @@
  */
 package ui.scrollPane;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
@@ -58,13 +59,12 @@ public final class ScrollPaneDemo implements ComponentDemo {
 
 
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(3, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("LeftToRight") {{
             setSelected(scrollPane.getComponentOrientation().isLeftToRight());
             addActionListener(e -> scrollPane.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                                                                                    : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JLabel());
+        }}, "span");
         controlPanel.add(new JCheckBox("UpperLeft corner") {{
             addActionListener(e -> scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, isSelected() ? upperLeft : null));
         }});

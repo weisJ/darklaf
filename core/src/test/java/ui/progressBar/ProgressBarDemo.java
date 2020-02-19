@@ -23,6 +23,7 @@
  */
 package ui.progressBar;
 
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -46,7 +47,7 @@ public class ProgressBarDemo implements ComponentDemo {
         progressBar.setValue(50);
         DemoPanel panel = new DemoPanel(progressBar);
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(5, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(progressBar.isEnabled());
             addActionListener(e -> progressBar.setEnabled(isSelected()));
