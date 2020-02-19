@@ -43,6 +43,18 @@ import java.beans.PropertyChangeListener;
 public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener {
 
     protected JToolTip toolTip;
+    protected MouseListener exitListener = new MouseAdapter() {
+        @Override
+        public void mouseExited(final MouseEvent e) {
+            boolean inside = isInside(e);
+            if (!inside) {
+                ToolTipManager.sharedInstance().mouseExited(
+                    new MouseEvent(toolTip.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
+                                   Integer.MIN_VALUE, Integer.MIN_VALUE, e.getClickCount(), e.isPopupTrigger(),
+                                   e.getButton()));
+            }
+        }
+    };
     protected MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseEntered(final MouseEvent e) {
@@ -66,22 +78,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
 
         @Override
         public void mouseExited(final MouseEvent e) {
-            boolean inside = isInside(e);
-            if (!inside) {
-                ToolTipManager.sharedInstance().mouseExited(
-                        new MouseEvent(toolTip.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
-                                       Integer.MIN_VALUE, Integer.MIN_VALUE, e.getClickCount(), e.isPopupTrigger(),
-                                       e.getButton()));
-            }
-        }
-    };
-    protected MouseListener exitListener = new MouseAdapter() {
-        @Override
-        public void mouseExited(final MouseEvent e) {
-            ToolTipManager.sharedInstance().mouseExited(
-                    new MouseEvent(toolTip.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
-                                   Integer.MIN_VALUE, Integer.MIN_VALUE, e.getClickCount(), e.isPopupTrigger(),
-                                   e.getButton()));
+            exitListener.mouseExited(e);
         }
     };
 
@@ -95,8 +92,14 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     protected boolean isInside(final MouseEvent e) {
-        Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), toolTip);
-        return contains(toolTip, p.x, p.y);
+        Point screenPos = e.getPoint();
+        SwingUtilities.convertPointToScreen(screenPos, e.getComponent());
+        Point toolTipPoint = new Point(screenPos.x, screenPos.y);
+        Point compPoint = new Point(screenPos.x, screenPos.y);
+        SwingUtilities.convertPointFromScreen(toolTipPoint, toolTip);
+        SwingUtilities.convertPointFromScreen(compPoint, toolTip.getComponent());
+        return toolTip.getComponent().contains(compPoint)
+            || contains(toolTip, toolTipPoint.x, toolTipPoint.y);
     }
 
     @Override
