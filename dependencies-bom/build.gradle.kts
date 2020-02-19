@@ -33,5 +33,7 @@ dependencies {
         apiv("org.swinglabs:jxlayer")
         apiv("org.swinglabs:swingx")
         apiv("com.formdev:svgSalamander")
+        apiv("com.miglayout:miglayout-core", "miglayout")
+        apiv("com.miglayout:miglayout-swing", "miglayout")
     }
 }
