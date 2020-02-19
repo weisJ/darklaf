@@ -193,7 +193,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
         Window w = SwingUtilities.getWindowAncestor(toolTip);
-        if (w != null && !isDecorated(w) && w.getClass().getEnclosingClass().equals(Popup.class)) {
+        if (w != null && !isDecorated(w) && (w.getClass().getEnclosingClass().equals(Popup.class))) {
             w.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
         }
     }

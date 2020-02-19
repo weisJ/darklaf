@@ -54,12 +54,16 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         addAncestorListener(new AncestorAdapter() {
             @Override
             public void ancestorAdded(final AncestorEvent event) {
-                setVisible(true);
-                notifyToolTipListeners(ToolTipEvent.SHOWN);
+                boolean resume = false;
                 if (Math.abs(System.currentTimeMillis() - lastHidden) < REPAINT_THRESHOLD) {
                     alpha = 1.0f;
                 } else {
                     alpha = 0;
+                    resume = true;
+                }
+                setVisible(true);
+                notifyToolTipListeners(ToolTipEvent.SHOWN);
+                if (resume) {
                     fadeAnimator.reset();
                     fadeAnimator.resume();
                 }
