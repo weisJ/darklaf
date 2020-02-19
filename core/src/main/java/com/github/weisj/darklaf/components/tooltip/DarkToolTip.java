@@ -167,13 +167,13 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         @Override
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
             alpha = ((float) frame * MAX_ALPHA) / totalFrames;
-            repaint();
+            paintImmediately(0, 0, getWidth(), getHeight());
         }
 
         @Override
         protected void paintCycleEnd() {
             alpha = MAX_ALPHA;
-            repaint();
+            paintImmediately(0, 0, getWidth(), getHeight());
         }
     }
 

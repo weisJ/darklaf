@@ -32,14 +32,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -62,11 +55,11 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
 
     private final MouseWheelListener mouseWheelListener = e -> {
         if (scrollbar.getParent() instanceof JScrollPane
-                && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()) {
+            && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()) {
             return;
         }
-        if (scrollbar.getOrientation() == VERTICAL && !e.isShiftDown()
-                || scrollbar.getOrientation() == HORIZONTAL && e.isShiftDown()) {
+        if (scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
+            || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()) {
             scrollbar.setValueIsAdjusting(true);
             Object sp = scrollbar.getClientProperty("JScrollBar.scrollPaneParent");
             if (scrollbar.getParent() instanceof JScrollPane) {
@@ -521,7 +514,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
                     trackAlpha *= (float) (1 - (double) frame / totalFrames);
                 }
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
             }
 
@@ -529,7 +522,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             protected void paintCycleEnd() {
                 trackAlpha = 0;
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
             }
         };
@@ -546,7 +539,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
                     thumbAlpha *= (float) (1 - (double) frame / totalFrames);
                 }
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
             }
 
@@ -554,7 +547,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             protected void paintCycleEnd() {
                 thumbAlpha = 0;
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
             }
         };
@@ -567,7 +560,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             public void paintNow(final int frame, final int totalFrames, final int cycle) {
                 trackAlpha = ((float) frame * MAX_TRACK_ALPHA) / totalFrames;
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
             }
 
@@ -575,7 +568,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             protected void paintCycleEnd() {
                 trackAlpha = MAX_TRACK_ALPHA;
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
             }
         };
@@ -589,7 +582,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             public void paintNow(final int frame, final int totalFrames, final int cycle) {
                 thumbAlpha = ((float) frame * MAX_THUMB_ALPHA) / totalFrames;
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
             }
 
@@ -597,7 +590,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             protected void paintCycleEnd() {
                 thumbAlpha = MAX_THUMB_ALPHA;
                 if (scrollbar != null) {
-                    scrollbar.getParent().repaint();
+                    ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
                 }
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(p, scrollbar);
@@ -625,7 +618,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             fadeInAnimator.suspend();
             int startFrame = 0;
             if (currentAlpha < maxAlpha) {
-                startFrame = (int) ((1 - currentAlpha / maxAlpha) * fadeInAnimator.getTotalFrames());
+                startFrame = (int) ((1.0 - currentAlpha / maxAlpha) * (fadeOutAnimator.getTotalFrames()));
             }
             fadeOutAnimator.resume(startFrame);
         }
