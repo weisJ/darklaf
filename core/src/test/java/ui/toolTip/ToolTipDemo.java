@@ -33,7 +33,6 @@ import ui.ComponentDemo;
 import ui.DemoPanel;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class ToolTipDemo implements ComponentDemo {
 
