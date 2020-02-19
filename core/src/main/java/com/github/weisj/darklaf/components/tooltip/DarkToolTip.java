@@ -122,6 +122,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         super.removeNotify();
         notifyToolTipListeners(ToolTipEvent.HIDDEN);
         lastHidden = System.currentTimeMillis();
+        alpha = 0;
     }
 
     @Override
@@ -155,13 +156,11 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     protected class FadeInAnimator extends Animator {
         private static final int DELAY_FRAMES = 6;
-        private static final int FADEOUT_FRAMES_COUNT = 10 + DELAY_FRAMES;
-        private static final int FADEIN_FRAMES_COUNT = FADEOUT_FRAMES_COUNT / 2;
+        private static final int FADEIN_FRAMES_COUNT = DELAY_FRAMES + 10;
 
 
         public FadeInAnimator() {
-            super("Tooltip fadein", FADEIN_FRAMES_COUNT / 2,
-                  FADEIN_FRAMES_COUNT * 25, false);
+            super("Tooltip fadein", FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * 15, false);
         }
 
         @Override
