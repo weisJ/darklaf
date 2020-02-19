@@ -55,25 +55,40 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
-    private final BasicLookAndFeel base;
+    private BasicLookAndFeel base;
 
     /**
      * Create Custom Darcula LaF.
      */
     public DarkLaf() {
-        try {
-            LafManager.getTheme().beforeInstall();
-            if (SystemInfo.isWindows || SystemInfo.isLinux) {
-                base = new MetalLookAndFeel();
+        LafManager.getTheme().beforeInstall();
+
+        if (SystemInfo.isWindows || SystemInfo.isLinux) {
+            base = new MetalLookAndFeel();
+        } else {
+            final String systemLafClassName = UIManager.getSystemLookAndFeelClassName();
+            final LookAndFeel currentLaf = UIManager.getLookAndFeel();
+            if (systemLafClassName.equals(currentLaf.getClass().getName())) {
+                base = currentOrFallback(currentLaf);
             } else {
                 try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
                     final String name = UIManager.getSystemLookAndFeelClassName();
                     base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
+                } catch (IllegalAccessException e) {
+                    base = currentOrFallback(currentLaf);
+                } catch (final Exception e) {
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
+                    throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
                 }
             }
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
-            throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
+        }
+    }
+
+    private BasicLookAndFeel currentOrFallback(final LookAndFeel currentLaf) {
+        if (currentLaf instanceof BasicLookAndFeel) {
+            return (BasicLookAndFeel) currentLaf;
+        } else {
+            return new MetalLookAndFeel();
         }
     }
 
