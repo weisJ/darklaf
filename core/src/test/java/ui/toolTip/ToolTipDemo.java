@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import com.github.weisj.darklaf.util.Alignment;
+import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -48,13 +49,12 @@ public class ToolTipDemo implements ComponentDemo {
         button.setToolTipText("ToolTip demo text!");
 
         JPanel controlPanel = panel.getControls();
-        controlPanel.setLayout(new GridLayout(4, 2));
+        controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
 
-        controlPanel.add(new JLabel());
         controlPanel.add(new JCheckBox("Align inside") {{
             setSelected(context.isAlignInside());
             addActionListener(e -> context.setAlignInside(isSelected()));
-        }});
+        }}, "span");
         controlPanel.add(new JLabel("Tooltip Style:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {{
             setSelectedItem(ToolTipStyle.BALLOON);
