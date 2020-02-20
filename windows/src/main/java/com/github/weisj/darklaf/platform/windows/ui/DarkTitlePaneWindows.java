@@ -24,10 +24,10 @@
 
 package com.github.weisj.darklaf.platform.windows.ui;
 
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.util.Scale;
-import com.github.weisj.decorations.CustomTitlePane;
 import sun.awt.SunToolkit;
 
 import javax.accessibility.AccessibleContext;
