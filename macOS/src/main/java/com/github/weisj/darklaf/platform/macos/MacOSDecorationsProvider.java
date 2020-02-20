@@ -21,46 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
+package com.github.weisj.darklaf.platform.macos;
 
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
-import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
-import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.icons.IconLoader;
 
 import javax.swing.*;
 import java.util.Properties;
 
-public final class Decorations {
+public class MacOSDecorationsProvider implements DecorationsProvider {
 
-    private static DecorationsProvider decorationsProvider;
-
-    static {
-        //Extend for different platforms.
-        if (SystemInfo.isWindows) {
-            decorationsProvider = new WindowsDecorationsProvider();
-        } else if (SystemInfo.isMac) {
-            decorationsProvider = new MacOSDecorationsProvider();
-        } else {
-            decorationsProvider = new DefaultDecorationsProvider();
-        }
+    @Override
+    public CustomTitlePane createTitlePane(final JRootPane rootPane) {
+        return null;
     }
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return decorationsProvider.createTitlePane(rootPane);
+    @Override
+    public boolean isCustomDecorationSupported() {
+        return true;
     }
 
+    @Override
+    public void initialize() {
 
-    public static boolean isCustomDecorationSupported() {
-        return decorationsProvider.isCustomDecorationSupported();
     }
 
-    public static void initialize() {
-        decorationsProvider.initialize();
-    }
-
-    public static void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
-        decorationsProvider.loadDecorationProperties(uiProps, defaults);
+    @Override
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+        IconLoader iconLoader = IconLoader.get(MacOSDecorationsProvider.class);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(MacOSDecorationsProvider.class,
+                                                                   "macos_decorations", ""),
+                                     properties, currentDefaults, iconLoader);
     }
 }

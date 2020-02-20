@@ -24,8 +24,8 @@
 
 package com.github.weisj.darklaf.ui.rootpane;
 
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.Decorations;
-import com.github.weisj.decorations.CustomTitlePane;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

@@ -23,8 +23,8 @@
  */
 package com.github.weisj.darklaf.platform;
 
-import com.github.weisj.decorations.CustomTitlePane;
-import com.github.weisj.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.decorations.DecorationsProvider;
 
 import javax.swing.*;
 import java.util.Properties;
@@ -45,8 +45,7 @@ public class DefaultDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public boolean initialize() {
-        return false;
+    public void initialize() {
     }
 
     @Override

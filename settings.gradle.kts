@@ -18,10 +18,11 @@ include(
     "dependencies-bom",
     "native-utils",
     "core",
+    "property-loader",
+    "utils",
     "decorations-base",
     "windows",
-    "property-loader",
-    "utils"
+    "macos"
 )
 
 for (p in rootProject.children) {

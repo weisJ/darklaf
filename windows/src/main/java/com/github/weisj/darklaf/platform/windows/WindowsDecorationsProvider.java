@@ -27,7 +27,7 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.platform.windows.ui.DarkTitlePaneWindows;
+import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
 
 import javax.swing.*;
 import java.util.Properties;
@@ -36,7 +36,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
 
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return new DarkTitlePaneWindows(rootPane);
+        return new WindowsTitlePane(rootPane);
     }
 
     @Override

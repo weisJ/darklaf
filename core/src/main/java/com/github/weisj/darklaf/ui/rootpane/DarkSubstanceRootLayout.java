@@ -155,8 +155,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
 
         if ((root.getWindowDecorationStyle() != JRootPane.NONE)
                 && (root.getUI() instanceof DarkRootPaneUI)) {
-            JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                    .getTitlePane();
+            JComponent titlePane = ((DarkRootPaneUI) root.getUI()).getTitlePane();
             if (titlePane != null) {
                 Dimension tpd = titlePane.getPreferredSize();
                 if (tpd != null) {

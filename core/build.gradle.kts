@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":darklaf-utils"))
     implementation(project(":darklaf-decorations-base"))
     implementation(project(":darklaf-windows"))
+    implementation(project(":darklaf-macos"))
     implementation(project(":darklaf-property-loader"))
     implementation("org.swinglabs:jxlayer")
     compileOnly("org.swinglabs:swingx")
