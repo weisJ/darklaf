@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.platform.JNIDecorations;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import com.github.weisj.darklaf.util.ReflectiveWarningSuppressor;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -55,31 +54,36 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
-    private BasicLookAndFeel base;
+    private final BasicLookAndFeel base;
 
     /**
      * Create Custom Darcula LaF.
      */
     public DarkLaf() {
         LafManager.getTheme().beforeInstall();
+        base = getBase();
+    }
 
+    private BasicLookAndFeel getBase() {
+        BasicLookAndFeel baseLaf;
         if (SystemInfo.isWindows || SystemInfo.isLinux) {
-            base = new MetalLookAndFeel();
+            baseLaf = new MetalLookAndFeel();
         } else {
             final String systemLafClassName = UIManager.getSystemLookAndFeelClassName();
             final LookAndFeel currentLaf = UIManager.getLookAndFeel();
             if (currentLaf != null && systemLafClassName.equals(currentLaf.getClass().getName())) {
-                base = currentOrFallback(currentLaf);
+                baseLaf = currentOrFallback(currentLaf);
             } else {
-                try {	                
+                try {
                     UIManager.setLookAndFeel(systemLafClassName);
-                    base = currentOrFallback(UIManager.getLookAndFeel());
-                } catch (final Exception e) {	
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());	
-                    throw new IllegalStateException("Could not load base LaF class." + e.getMessage());	
+                    baseLaf = currentOrFallback(UIManager.getLookAndFeel());
+                } catch (final Exception e) {
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
+                    throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
                 }
             }
         }
+        return baseLaf;
     }
 
     private BasicLookAndFeel currentOrFallback(final LookAndFeel currentLaf) {
