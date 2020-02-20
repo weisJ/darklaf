@@ -68,18 +68,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         } else {
             final String systemLafClassName = UIManager.getSystemLookAndFeelClassName();
             final LookAndFeel currentLaf = UIManager.getLookAndFeel();
-            if (systemLafClassName.equals(currentLaf.getClass().getName())) {
+            if (currentLaf != null && systemLafClassName.equals(currentLaf.getClass().getName())) {
                 base = currentOrFallback(currentLaf);
             } else {
-                try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
-                    final String name = UIManager.getSystemLookAndFeelClassName();
-                    base = (BasicLookAndFeel) Class.forName(name).getDeclaredConstructor().newInstance();
-                } catch (IllegalAccessException e) {
-                    base = currentOrFallback(currentLaf);
-                } catch (final Exception e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
-                    throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
-                }
+                UIManager.setLookAndFeel(systemLafClassName);
+                base = currentOrFallback(UIManager.getLookAndFeel());
             }
         }
     }
