@@ -23,10 +23,10 @@
  */
 package com.github.weisj.darklaf.platform;
 
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
 import com.github.weisj.darklaf.util.SystemInfo;
-import com.github.weisj.decorations.CustomTitlePane;
-import com.github.weisj.decorations.DecorationsProvider;
 
 import javax.swing.*;
 import java.util.Properties;
