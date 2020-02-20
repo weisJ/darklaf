@@ -23,13 +23,13 @@
  */
 package com.github.weisj.darklaf.platform;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
+import com.github.weisj.decorations.CustomTitlePane;
+import com.github.weisj.decorations.DecorationsProvider;
 
 import javax.swing.*;
 import java.util.Properties;
 
-public class DefaultDecorationsProvider implements JNIDecorationsProvider {
+public class DefaultDecorationsProvider implements DecorationsProvider {
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane) {
         return new CustomTitlePane() {
@@ -45,7 +45,7 @@ public class DefaultDecorationsProvider implements JNIDecorationsProvider {
     }
 
     @Override
-    public boolean updateLibrary() {
+    public boolean initialize() {
         return false;
     }
 

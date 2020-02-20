@@ -21,42 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
-
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
-import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
+package com.github.weisj.decorations;
 
 import javax.swing.*;
 import java.util.Properties;
 
-public final class JNIDecorations {
+public interface DecorationsProvider {
 
-    private static JNIDecorationsProvider decorationsProvider;
+    /**
+     * Create the custom title pane.
+     *
+     * @param rootPane The root pane to create the title pane for.
+     * @return the custom title pane.
+     */
+    CustomTitlePane createTitlePane(final JRootPane rootPane);
 
-    static {
-        //Extend for different platforms.
-        if (SystemInfo.isWindows) {
-            decorationsProvider = new WindowsDecorationsProvider();
-        } else {
-            decorationsProvider = new DefaultDecorationsProvider();
-        }
-    }
+    /**
+     * Returns whether custom decorations are supported.
+     *
+     * @return true if decorations are supported.
+     */
+    boolean isCustomDecorationSupported();
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return decorationsProvider.createTitlePane(rootPane);
-    }
+    /**
+     * Initialize all necessary resources.
+     */
+    void initialize();
 
+    /**
+     * Load the necessary properties into the  defaults.
+     *
+     * @param properties      the properties to load the values into.
+     * @param currentDefaults the current ui defaults.
+     */
+    void loadDecorationProperties(Properties properties, UIDefaults currentDefaults);
 
-    public static boolean isCustomDecorationSupported() {
-        return decorationsProvider.isCustomDecorationSupported();
-    }
-
-    public static boolean updateLibrary() {
-        return decorationsProvider.updateLibrary();
-    }
-
-    public static void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
-        decorationsProvider.loadDecorationProperties(uiProps, defaults);
-    }
 }

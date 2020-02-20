@@ -24,10 +24,10 @@
 package com.github.weisj.darklaf;
 
 import com.github.weisj.darklaf.components.border.DarkBorders;
-import com.github.weisj.darklaf.platform.JNIDecorations;
-import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.util.SystemInfo;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -118,7 +118,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
     private void setupDecorations() {
-        JNIDecorations.updateLibrary();
+        Decorations.initialize();
         JFrame.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
     }
@@ -186,7 +186,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         currentTheme.loadUIProperties(uiProps, defaults);
         currentTheme.loadIconProperties(uiProps, defaults);
         currentTheme.loadPlatformProperties(uiProps, defaults);
-        JNIDecorations.loadDecorationProperties(uiProps, defaults);
+        Decorations.loadDecorationProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
         defaults.putAll(uiProps);
 
@@ -402,7 +402,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     public boolean getSupportsWindowDecorations() {
         return LafManager.isDecorationsEnabled()
             && LafManager.getTheme().useCustomDecorations()
-            && JNIDecorations.isCustomDecorationSupported();
+            && Decorations.isCustomDecorationSupported();
     }
 
 

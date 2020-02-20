@@ -18,6 +18,7 @@ include(
     "dependencies-bom",
     "native-utils",
     "core",
+    "decorations-base",
     "windows",
     "property-loader",
     "utils"

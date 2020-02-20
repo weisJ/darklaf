@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -35,12 +35,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;

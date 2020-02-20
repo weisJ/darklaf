@@ -24,15 +24,15 @@
 package com.github.weisj.darklaf.platform.windows;
 
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.JNIDecorationsProvider;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.windows.ui.DarkTitlePaneWindows;
+import com.github.weisj.decorations.CustomTitlePane;
+import com.github.weisj.decorations.DecorationsProvider;
 
 import javax.swing.*;
 import java.util.Properties;
 
-public class WindowsDecorationsProvider implements JNIDecorationsProvider {
+public class WindowsDecorationsProvider implements DecorationsProvider {
 
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane) {
@@ -45,8 +45,8 @@ public class WindowsDecorationsProvider implements JNIDecorationsProvider {
     }
 
     @Override
-    public boolean updateLibrary() {
-        return JNIDecorationsWindows.updateLibrary();
+    public void initialize() {
+        JNIDecorationsWindows.updateLibrary();
     }
 
     @Override

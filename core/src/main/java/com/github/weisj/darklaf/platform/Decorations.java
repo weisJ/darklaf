@@ -21,41 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorations;
+package com.github.weisj.darklaf.platform;
+
+import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
+import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.decorations.CustomTitlePane;
+import com.github.weisj.decorations.DecorationsProvider;
 
 import javax.swing.*;
 import java.util.Properties;
 
-public interface JNIDecorationsProvider {
+public final class Decorations {
 
-    /**
-     * Create the custom title pane.
-     *
-     * @param rootPane The root pane to create the title pane for.
-     * @return the custom title pane.
-     */
-    CustomTitlePane createTitlePane(final JRootPane rootPane);
+    private static DecorationsProvider decorationsProvider;
 
-    /**
-     * Returns whether custom decorations are supported.
-     *
-     * @return true if decorations are supported.
-     */
-    boolean isCustomDecorationSupported();
+    static {
+        //Extend for different platforms.
+        if (SystemInfo.isWindows) {
+            decorationsProvider = new WindowsDecorationsProvider();
+        } else {
+            decorationsProvider = new DefaultDecorationsProvider();
+        }
+    }
 
-    /**
-     * Load the decorations library if necessary.
-     *
-     * @return true if successful and library wasn't already loaded.
-     */
-    boolean updateLibrary();
+    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
+        return decorationsProvider.createTitlePane(rootPane);
+    }
 
-    /**
-     * Load the necessary properties into the  defaults.
-     *
-     * @param properties      the properties to load the values into.
-     * @param currentDefaults the current ui defaults.
-     */
-    void loadDecorationProperties(Properties properties, UIDefaults currentDefaults);
 
+    public static boolean isCustomDecorationSupported() {
+        return decorationsProvider.isCustomDecorationSupported();
+    }
+
+    public static void initialize() {
+        decorationsProvider.initialize();
+    }
+
+    public static void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
+        decorationsProvider.loadDecorationProperties(uiProps, defaults);
+    }
 }

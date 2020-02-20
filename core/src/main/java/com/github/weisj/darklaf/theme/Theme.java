@@ -26,7 +26,7 @@ package com.github.weisj.darklaf.theme;
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.DarkMetalTheme;
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;

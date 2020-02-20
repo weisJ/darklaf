@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.platform.windows;
 
 import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.util.SystemInfo;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
@@ -63,7 +63,7 @@ public class JNIDecorationsWindows {
     }
 
     /**
-     * Load the decorations library if necessary.
+     * Load the decorations-library if necessary.
      *
      * @return true if successful and library wasn't already loaded.
      */
