@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
 
 public class DefaultDecorationsProvider implements DecorationsProvider {
@@ -50,5 +51,10 @@ public class DefaultDecorationsProvider implements DecorationsProvider {
 
     @Override
     public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+    }
+
+    @Override
+    public Insets getWindowSizeAdjustment(final Window window) {
+        return new Insets(0, 0, 0, 0);
     }
 }
