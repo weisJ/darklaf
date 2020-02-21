@@ -30,13 +30,14 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
 
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return new MacOSTitlePane();
+        return new MacOSTitlePane(rootPane);
     }
 
     @Override
@@ -54,5 +55,10 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
         PropertyLoader.putProperties(PropertyLoader.loadProperties(MacOSDecorationsProvider.class,
                                                                    "macos_decorations", ""),
                                      properties, currentDefaults, iconLoader);
+    }
+
+    @Override
+    public Insets getWindowSizeAdjustment(final Window window) {
+        return new Insets(0, 0, 0, 0);
     }
 }
