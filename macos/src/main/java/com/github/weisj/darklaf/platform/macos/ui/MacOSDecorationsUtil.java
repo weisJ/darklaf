@@ -26,7 +26,9 @@ package com.github.weisj.darklaf.platform.macos.ui;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.peer.WindowPeer;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -73,8 +75,8 @@ public class MacOSDecorationsUtil {
     }
 
     private static Object getPlatformWindow(final JRootPane rootPane) {
-        WindowPeer peer = (WindowPeer) SwingUtilities.getWindowAncestor(rootPane).getPeer();
-        if (peer.getClass().getName().equals("sun.lwawt.LWWindowPeer")) {
+        WindowPeer peer = getPeer(SwingUtilities.getWindowAncestor(rootPane));
+        if (peer != null && peer.getClass().getName().equals("sun.lwawt.LWWindowPeer")) {
             try {
                 Method getPlatformWindow = peer.getClass().getDeclaredMethod("getPlatformWindow");
                 getPlatformWindow.setAccessible(true);
@@ -85,6 +87,17 @@ public class MacOSDecorationsUtil {
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+
+    private static WindowPeer getPeer(final Window window) {
+        try {
+            Field peerField = Component.class.getDeclaredField("peer");
+            peerField.setAccessible(true);
+            return (WindowPeer) peerField.get(window);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
         return null;
     }

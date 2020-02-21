@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 
 import javax.swing.*;
 import java.util.Properties;
@@ -35,7 +36,7 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
 
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return null;
+        return new MacOSTitlePane();
     }
 
     @Override
@@ -45,7 +46,6 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
 
     @Override
     public void initialize() {
-
     }
 
     @Override

@@ -124,6 +124,4 @@ public class MacOSTitlePane extends CustomTitlePane {
         MacOSDecorationsUtil.setFullWindowContentEnabled(getRootPane(), oldIsFullWindowContent);
         MacOSDecorationsUtil.setTransparentTitleBarEnabled(getRootPane(), oldIsTransparentTitleBar);
     }
-
-
 }
