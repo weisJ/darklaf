@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.windows.ui;
+package com.github.weisj.darklaf.icons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,14 +29,14 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class TitlePaneIcon implements Icon {
+public class ToggleIcon implements Icon {
 
     private final Icon activeIcon;
     private final Icon inactiveIcon;
     private boolean active = true;
 
 
-    public TitlePaneIcon(final Icon active, final Icon inactive) {
+    public ToggleIcon(final Icon active, final Icon inactive) {
         this.activeIcon = active;
         this.inactiveIcon = inactive;
     }

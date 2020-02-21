@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.ui.internalframe;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.platform.windows.ui.TitlePaneIcon;
+import com.github.weisj.darklaf.icons.ToggleIcon;
 import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
@@ -53,9 +53,9 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     private Color selectedButtonColorHover;
     private Color selectedButtonColorClick;
 
-    private TitlePaneIcon minimizeIcon;
-    private TitlePaneIcon maximizeIcon;
-    private TitlePaneIcon iconifyIcon;
+    private ToggleIcon minimizeIcon;
+    private ToggleIcon maximizeIcon;
+    private ToggleIcon iconifyIcon;
 
     private PropertyChangeListener propertyChangeListener2;
 
@@ -109,12 +109,12 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         super.installDefaults();
 
         closeIcon = UIManager.getIcon("InternalFrameTitlePane.close.icon");
-        minimizeIcon = new TitlePaneIcon(UIManager.getIcon("InternalFrameTitlePane.minimize.icon"),
-                                         EmptyIcon.create(16));
-        maximizeIcon = new TitlePaneIcon(UIManager.getIcon("InternalFrameTitlePane.maximize.icon"),
-                                         EmptyIcon.create(16));
-        iconifyIcon = new TitlePaneIcon(UIManager.getIcon("InternalFrameTitlePane.iconify.icon"),
-                                        EmptyIcon.create(16));
+        minimizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.minimize.icon"),
+                                      EmptyIcon.create(16));
+        maximizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.maximize.icon"),
+                                      EmptyIcon.create(16));
+        iconifyIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.iconify.icon"),
+                                     EmptyIcon.create(16));
         minIcon = minimizeIcon;
         maxIcon = maximizeIcon;
         iconIcon = iconifyIcon;

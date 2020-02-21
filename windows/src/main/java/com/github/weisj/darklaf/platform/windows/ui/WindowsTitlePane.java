@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.platform.windows.ui;
 
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.icons.ScaledIcon;
+import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.util.Scale;
 import sun.awt.SunToolkit;
@@ -74,10 +75,10 @@ public class WindowsTitlePane extends CustomTitlePane {
     private boolean oldResizable;
     private PropertyChangeListener propertyChangeListener;
     private WindowListener windowListener;
-    private TitlePaneIcon closeIcon;
-    private TitlePaneIcon maximizeIcon;
-    private TitlePaneIcon restoreIcon;
-    private TitlePaneIcon minimizeIcon;
+    private ToggleIcon closeIcon;
+    private ToggleIcon maximizeIcon;
+    private ToggleIcon restoreIcon;
+    private ToggleIcon minimizeIcon;
     private JButton windowIconButton;
     private JButton closeButton;
     private JButton maximizeToggleButton;
@@ -155,10 +156,17 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private static JButton createButton(final String accessibleName, final Icon icon, final Action action,
                                         final boolean close) {
-        JButton button = new JButton();
+        JButton button = new JButton() {
+            @Override
+            public boolean isRolloverEnabled() {
+                return true;
+            }
+        };
         if (close) {
-            button.putClientProperty("JButton.shadow.hover", UIManager.getColor("Windows.TitlePane.close.rollOverColor"));
-            button.putClientProperty("JButton.shadow.click", UIManager.getColor("Windows.TitlePane.close.clickColor"));
+            button.putClientProperty("JButton.shadow.hover",
+                                     UIManager.getColor("Windows.TitlePane.close.rollOverColor"));
+            button.putClientProperty("JButton.shadow.click",
+                                     UIManager.getColor("Windows.TitlePane.close.clickColor"));
         }
         button.setFocusable(false);
         button.setOpaque(true);
@@ -381,14 +389,14 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private void createIcons() {
-        minimizeIcon = new TitlePaneIcon(UIManager.getIcon("Windows.TitlePane.minimize.icon"),
-                                         UIManager.getIcon("Windows.TitlePane.minimizeInactive.icon"));
-        maximizeIcon = new TitlePaneIcon(UIManager.getIcon("Windows.TitlePane.maximize.icon"),
-                                         UIManager.getIcon("Windows.TitlePane.maximizeInactive.icon"));
-        restoreIcon = new TitlePaneIcon(UIManager.getIcon("Windows.TitlePane.restore.icon"),
-                                        UIManager.getIcon("Windows.TitlePane.restoreInactive.icon"));
-        closeIcon = new TitlePaneIcon(UIManager.getIcon("Windows.TitlePane.close.icon"),
-                                      UIManager.getIcon("Windows.TitlePane.close.icon"));
+        minimizeIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.minimize.icon"),
+                                      UIManager.getIcon("Windows.TitlePane.minimizeInactive.icon"));
+        maximizeIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.maximize.icon"),
+                                      UIManager.getIcon("Windows.TitlePane.maximizeInactive.icon"));
+        restoreIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.restore.icon"),
+                                     UIManager.getIcon("Windows.TitlePane.restoreInactive.icon"));
+        closeIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.close.icon"),
+                                   UIManager.getIcon("Windows.TitlePane.close.icon"));
     }
 
     private void createButtons() {
