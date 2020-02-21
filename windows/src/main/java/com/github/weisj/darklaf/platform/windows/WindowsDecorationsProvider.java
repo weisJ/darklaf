@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
@@ -58,5 +59,13 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
         PropertyLoader.putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class,
                                                                    "windows_icons", ""),
                                      properties, currentDefaults, iconLoader);
+    }
+
+    @Override
+    public Insets getWindowSizeAdjustment(final Window window) {
+        //Compensate for the insets of the native window peer that include the decorations.
+        Insets insets = window != null ? window.getInsets() : new Insets(0, 0, 0, 0);
+        insets.set(-insets.top, -insets.left, -insets.bottom, -insets.right);
+        return insets;
     }
 }

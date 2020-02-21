@@ -30,6 +30,7 @@ import java.awt.*;
 
 public class MacOSTitlePane extends CustomTitlePane {
 
+    private final JRootPane rootPane;
     boolean oldIsFullWindowContent;
     boolean oldIsTransparentTitleBar;
     private Window window;
@@ -38,7 +39,8 @@ public class MacOSTitlePane extends CustomTitlePane {
     private Color border;
     private int barHeight;
 
-    public MacOSTitlePane() {
+    public MacOSTitlePane(final JRootPane rootPane) {
+        this.rootPane = rootPane;
         determineColors();
     }
 
@@ -61,6 +63,11 @@ public class MacOSTitlePane extends CustomTitlePane {
         }
         inactiveBackground = UIManager.getColor("MacOS.TitlePane.inactiveBackground");
         border = UIManager.getColor("MacOS.TitlePane.borderColor");
+    }
+
+    @Override
+    public JRootPane getRootPane() {
+        return rootPane;
     }
 
     @Override

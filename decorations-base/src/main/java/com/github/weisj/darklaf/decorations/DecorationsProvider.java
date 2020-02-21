@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.decorations;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
 
 public interface DecorationsProvider {
@@ -56,4 +57,11 @@ public interface DecorationsProvider {
      */
     void loadDecorationProperties(Properties properties, UIDefaults currentDefaults);
 
+    /**
+     * Get adjustments that need to be applied to the window size.
+     *
+     * @param window the target window.
+     * @return Adjustments as insets.
+     */
+    Insets getWindowSizeAdjustment(final Window window);
 }

@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
 
 public final class Decorations {
@@ -62,5 +63,9 @@ public final class Decorations {
 
     public static void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
         decorationsProvider.loadDecorationProperties(uiProps, defaults);
+    }
+
+    public static Insets getWindowSizeAdjustment(final Window window) {
+        return decorationsProvider.getWindowSizeAdjustment(window);
     }
 }
