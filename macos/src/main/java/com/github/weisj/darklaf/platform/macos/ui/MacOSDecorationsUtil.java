@@ -23,96 +23,59 @@
  */
 package com.github.weisj.darklaf.platform.macos.ui;
 
+import com.github.weisj.darklaf.platform.PointerUtil;
+import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.peer.WindowPeer;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class MacOSDecorationsUtil {
 
     private static final String FULL_WINDOW_CONTENT_KEY = "apple.awt.fullWindowContent";
     private static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
 
-    private static final int FULL_WINDOW_CONTENT_MASK = 1 << 14;
-    private static final int TRANSPARENT_TITLE_BAR_MASK = 1 << 18;
-
-    protected static boolean isFullWindowContentEnabled(final JRootPane rootPane) {
-        if (rootPane == null) return false;
-        if (SystemInfo.isJavaVersionAtLeast("12")) {
-            return Boolean.TRUE.equals(rootPane.getClientProperty(FULL_WINDOW_CONTENT_KEY));
-        }
-        return false;
-    }
-
-    protected static boolean isTransparentTitleBarEnabled(final JRootPane rootPane) {
-        if (rootPane == null) return false;
-        if (SystemInfo.isJavaVersionAtLeast("12")) {
-            return Boolean.TRUE.equals(rootPane.getClientProperty(TRANSPARENT_TITLE_BAR_KEY));
-        }
-        return false;
-    }
-
-    protected static void setFullWindowContentEnabled(final JRootPane rootPane, final boolean enabled) {
-        if (rootPane == null) return;
-        if (SystemInfo.isJavaVersionAtLeast("12")) {
-            rootPane.putClientProperty(FULL_WINDOW_CONTENT_KEY, enabled);
+    protected static DecorationInformation installDecorations(final JRootPane rootPane) {
+        long windowHandle = PointerUtil.getHWND(rootPane);
+        boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
+        boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
+        boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");
+        if (!jniInstall) {
+            setTransparentTitleBarEnabled(rootPane, true);
+            setFullWindowContentEnabled(rootPane, true);
         } else {
-            setStyleBits(rootPane, FULL_WINDOW_CONTENT_MASK, enabled);
+            JNIDecorationsMacOS.installDecorations(windowHandle);
         }
+        return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar, jniInstall, rootPane);
     }
 
-    protected static void setTransparentTitleBarEnabled(final JRootPane rootPane, final boolean enabled) {
-        if (rootPane == null) return;
-        if (SystemInfo.isJavaVersionAtLeast("12")) {
-            rootPane.putClientProperty(TRANSPARENT_TITLE_BAR_KEY, enabled);
+    protected static void uninstallDecorations(final DecorationInformation information) {
+        if (information == null) return;
+        if (information.jniInstalled) {
+            JNIDecorationsMacOS.uninstallDecorations(information.windowHandle);
         } else {
-            setStyleBits(rootPane, TRANSPARENT_TITLE_BAR_MASK, enabled);
+            setFullWindowContentEnabled(information.rootPane, information.fullWindowContentEnabled);
+            setTransparentTitleBarEnabled(information.rootPane, information.transparentTitleBarEnabled);
         }
     }
 
-    private static Object getPlatformWindow(final JRootPane rootPane) {
-        WindowPeer peer = getPeer(SwingUtilities.getWindowAncestor(rootPane));
-        if (peer != null && peer.getClass().getName().equals("sun.lwawt.LWWindowPeer")) {
-            try {
-                Method getPlatformWindow = peer.getClass().getDeclaredMethod("getPlatformWindow");
-                getPlatformWindow.setAccessible(true);
-                Object platformWindow = getPlatformWindow.invoke(peer);
-                if (platformWindow.getClass().getName().equals("sun.lwawt.macosx.CPlatformWindow")) {
-                    return platformWindow;
-                }
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
+    private static boolean isFullWindowContentEnabled(final JRootPane rootPane) {
+        if (rootPane == null) return false;
+        return Boolean.TRUE.equals(rootPane.getClientProperty(FULL_WINDOW_CONTENT_KEY));
     }
 
-    private static WindowPeer getPeer(final Window window) {
-        try {
-            Field peerField = Component.class.getDeclaredField("peer");
-            peerField.setAccessible(true);
-            return (WindowPeer) peerField.get(window);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private static boolean isTransparentTitleBarEnabled(final JRootPane rootPane) {
+        if (rootPane == null) return false;
+        return Boolean.TRUE.equals(rootPane.getClientProperty(TRANSPARENT_TITLE_BAR_KEY));
     }
 
-    private static void setStyleBits(final JRootPane rootPane, final int mask, final boolean value) {
-        Object platformWindow = getPlatformWindow(rootPane);
-        if (platformWindow != null) {
-            try {
-                Method setStyleBits = platformWindow.getClass().getDeclaredMethod("setStyleBits",
-                                                                                  int.class, boolean.class);
-                setStyleBits.setAccessible(true);
-                setStyleBits.invoke(platformWindow, mask, value);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
+    private static void setFullWindowContentEnabled(final JRootPane rootPane,
+                                                    final boolean enabled) {
+        if (rootPane == null) return;
+        rootPane.putClientProperty(FULL_WINDOW_CONTENT_KEY, enabled);
+    }
+
+    private static void setTransparentTitleBarEnabled(final JRootPane rootPane, final boolean enabled) {
+        if (rootPane == null) return;
+        rootPane.putClientProperty(TRANSPARENT_TITLE_BAR_KEY, enabled);
     }
 }
