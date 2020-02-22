@@ -35,10 +35,16 @@ import java.awt.*;
  * @author Jannis Weis
  */
 class DarkSubstanceRootLayout implements LayoutManager2 {
+
+    @Override
     public void addLayoutComponent(final String name, final Component comp) {
     }
 
+    @Override
     public void removeLayoutComponent(final Component comp) {
+    }
+
+    public void addLayoutComponent(final Component comp, final Object constraints) {
     }
 
     public Dimension preferredLayoutSize(final Container parent) {
@@ -170,12 +176,8 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             nextY += mbd.height;
         }
         if (root.getContentPane() != null) {
-
             root.getContentPane().setBounds(0, nextY, w, h < nextY ? 0 : h - nextY);
         }
-    }
-
-    public void addLayoutComponent(final Component comp, final Object constraints) {
     }
 
     public Dimension maximumLayoutSize(final Container target) {

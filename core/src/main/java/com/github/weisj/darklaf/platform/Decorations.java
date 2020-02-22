@@ -48,8 +48,8 @@ public final class Decorations {
         }
     }
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return decorationsProvider.createTitlePane(rootPane);
+    public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
+        return decorationsProvider.createTitlePane(rootPane, decorationStyle);
     }
 
 

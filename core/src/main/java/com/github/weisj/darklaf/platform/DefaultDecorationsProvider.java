@@ -32,7 +32,7 @@ import java.util.Properties;
 
 public class DefaultDecorationsProvider implements DecorationsProvider {
     @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane) {
+    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
         return new CustomTitlePane() {
             @Override
             public void uninstall() {

@@ -33,8 +33,6 @@ import sun.awt.SunToolkit;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.*;
@@ -89,29 +87,6 @@ public class WindowsTitlePane extends CustomTitlePane {
     private Action minimizeAction;
     private JLabel titleLabel;
     private Window window;
-    private final AncestorListener ancestorListener = new AncestorListener() {
-        @Override
-        public void ancestorAdded(final AncestorEvent event) {
-            if (window != null) {
-                //Force window to recalculate bounds.
-                SwingUtilities.invokeLater(() -> {
-                    Dimension size = window.getSize();
-                    size.height += 1;
-                    window.setSize(size);
-                    size.height -= 1;
-                    window.setSize(size);
-                });
-            }
-        }
-
-        @Override
-        public void ancestorRemoved(final AncestorEvent event) {
-        }
-
-        @Override
-        public void ancestorMoved(final AncestorEvent event) {
-        }
-    };
     private long windowHandle;
     private JMenuBar menuBar;
     private final ContainerListener rootPaneContainerListener = new ContainerListener() {
@@ -137,13 +112,13 @@ public class WindowsTitlePane extends CustomTitlePane {
     private Color activeForeground;
     private Color border;
 
-    public WindowsTitlePane(final JRootPane root) {
+    public WindowsTitlePane(final JRootPane root, final int decorationStyle) {
         this.rootPane = root;
         rootPane.addContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
         state = -1;
         oldResizable = true;
-        installSubcomponents();
+        installSubcomponents(decorationStyle);
         installDefaults();
         setLayout(createLayout());
     }
@@ -191,7 +166,6 @@ public class WindowsTitlePane extends CustomTitlePane {
             window.removeWindowListener(windowListener);
             window.removePropertyChangeListener(propertyChangeListener);
         }
-        removeAncestorListener(ancestorListener);
     }
 
     protected void uninstallDecorations() {
@@ -240,7 +214,6 @@ public class WindowsTitlePane extends CustomTitlePane {
             propertyChangeListener = createWindowPropertyChangeListener();
             window.addPropertyChangeListener(propertyChangeListener);
         }
-        addAncestorListener(ancestorListener);
     }
 
 
@@ -253,8 +226,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         return new PropertyChangeHandler();
     }
 
-    private void installSubcomponents() {
-        int decorationStyle = getWindowDecorationStyle();
+    private void installSubcomponents(final int decorationStyle) {
         titleLabel = new JLabel();
         titleLabel.setHorizontalAlignment(JLabel.LEFT);
         add(titleLabel);

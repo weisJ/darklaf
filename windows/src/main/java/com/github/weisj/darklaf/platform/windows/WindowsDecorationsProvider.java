@@ -36,8 +36,8 @@ import java.util.Properties;
 public class WindowsDecorationsProvider implements DecorationsProvider {
 
     @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return new WindowsTitlePane(rootPane);
+    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
+        return new WindowsTitlePane(rootPane, decorationStyle);
     }
 
     @Override
