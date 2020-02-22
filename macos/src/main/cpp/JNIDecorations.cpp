@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "com_github_weisj_darklaf_platform_macos_JNIDecorationsWindows.h"
+#include "com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS.h"
 #include "Cocoa/Cocoa.h"
 
 #define OBJC(jl) ((id)jlong_to_ptr(jl))
