@@ -107,6 +107,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     @Override
     public void paint(final Graphics g) {
+        if (alpha == 0) return;
         GraphicsContext config = new GraphicsContext(g);
         if (alpha != MAX_ALPHA) {
             ((Graphics2D) g).setComposite(COMPOSITE.derive(alpha));

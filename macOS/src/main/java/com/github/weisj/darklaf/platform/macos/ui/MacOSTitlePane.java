@@ -38,6 +38,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     private Color activeBackground;
     private Color border;
     private int barHeight;
+    private DecorationInformation decorationInformation;
 
     public MacOSTitlePane(final JRootPane rootPane) {
         this.rootPane = rootPane;
@@ -119,16 +120,12 @@ public class MacOSTitlePane extends CustomTitlePane {
         determineColors();
         barHeight = window.getInsets().top;
         JRootPane rootPane = getRootPane();
-        oldIsFullWindowContent = MacOSDecorationsUtil.isFullWindowContentEnabled(rootPane);
-        oldIsTransparentTitleBar = MacOSDecorationsUtil.isTransparentTitleBarEnabled(rootPane);
-        MacOSDecorationsUtil.setFullWindowContentEnabled(rootPane, true);
-        MacOSDecorationsUtil.setTransparentTitleBarEnabled(rootPane, true);
+        decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane);
     }
 
 
     @Override
     public void uninstall() {
-        MacOSDecorationsUtil.setFullWindowContentEnabled(getRootPane(), oldIsFullWindowContent);
-        MacOSDecorationsUtil.setTransparentTitleBarEnabled(getRootPane(), oldIsTransparentTitleBar);
+        MacOSDecorationsUtil.uninstallDecorations(decorationInformation);
     }
 }

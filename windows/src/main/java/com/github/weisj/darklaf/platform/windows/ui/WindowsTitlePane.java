@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.platform.windows.ui;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
+import com.github.weisj.darklaf.platform.PointerUtil;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.util.Scale;
 import sun.awt.SunToolkit;
@@ -183,7 +184,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     public void install() {
         if (window != null) {
             if (window instanceof Dialog || window instanceof Frame) {
-                windowHandle = JNIDecorationsWindows.getHWND(window);
+                windowHandle = PointerUtil.getHWND(window);
 
                 JNIDecorationsWindows.installDecorations(windowHandle);
                 updateResizeBehaviour();

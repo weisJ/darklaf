@@ -213,11 +213,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
              * Force the window peer to relayout and repaint.
              * e.g. on windows this is necessary to properly remove the title bar.
              */
-            Dimension size = window.getSize();
-            size.height += 1;
-            window.setSize(size);
-            size.height -= 1;
-            window.setSize(size);
+            window.pack();
         }
     }
 

@@ -25,10 +25,7 @@ package com.github.weisj.darklaf.platform.windows;
 
 import com.github.weisj.darklaf.platform.NativeUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,10 +54,6 @@ public class JNIDecorationsWindows {
     public static native void installDecorations(final long hwnd);
 
     public static native void uninstallDecorations(final long hwnd);
-
-    public static long getHWND(final Component component) {
-        return Pointer.nativeValue(Native.getComponentPointer(component));
-    }
 
     /**
      * Load the decorations-library if necessary.
