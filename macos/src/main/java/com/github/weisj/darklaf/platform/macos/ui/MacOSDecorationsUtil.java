@@ -35,6 +35,7 @@ public class MacOSDecorationsUtil {
     private static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
 
     protected static DecorationInformation installDecorations(final JRootPane rootPane) {
+        if (rootPane == null) return null;
         long windowHandle = PointerUtil.getHWND(rootPane);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
@@ -59,23 +60,19 @@ public class MacOSDecorationsUtil {
     }
 
     private static boolean isFullWindowContentEnabled(final JRootPane rootPane) {
-        if (rootPane == null) return false;
         return Boolean.TRUE.equals(rootPane.getClientProperty(FULL_WINDOW_CONTENT_KEY));
     }
 
     private static boolean isTransparentTitleBarEnabled(final JRootPane rootPane) {
-        if (rootPane == null) return false;
         return Boolean.TRUE.equals(rootPane.getClientProperty(TRANSPARENT_TITLE_BAR_KEY));
     }
 
     private static void setFullWindowContentEnabled(final JRootPane rootPane,
                                                     final boolean enabled) {
-        if (rootPane == null) return;
         rootPane.putClientProperty(FULL_WINDOW_CONTENT_KEY, enabled);
     }
 
     private static void setTransparentTitleBarEnabled(final JRootPane rootPane, final boolean enabled) {
-        if (rootPane == null) return;
         rootPane.putClientProperty(TRANSPARENT_TITLE_BAR_KEY, enabled);
     }
 }
