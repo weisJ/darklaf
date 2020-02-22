@@ -14,10 +14,6 @@ dependencies {
     javaImplementation(project(":darklaf-property-loader"))
 }
 
-extensions.configure<CppLibrary> {
-    source.from(file("src/main/objectiveCpp"))
-}
-
 library {
     targetMachines.addAll(machines.macOS.x86, machines.macOS.x86_64)
 }
