@@ -17,11 +17,12 @@ dependencies {
 library {
     targetMachines.addAll(machines.macOS.x86_64)
     binaries.configureEach {
-        compileTask.get().compilerArgs.addAll(
-            listOf("-x", "objective-c++")
-        )
+        compileTask.get().let {
+            it.compilerArgs.addAll(listOf("-x", "objective-c++"))
+            it.source.from(file("src/main/objectiveCpp/JNIDecorations.mm"))
+        }
     }
     binaries.whenElementFinalized(CppSharedLibrary::class) {
-        linkTask.get().linkerArgs.addAll(listOf("-lobjc"))
+        linkTask.get().linkerArgs.addAll(listOf("-lobjc", "-framework", "AppKit"))
     }
 }

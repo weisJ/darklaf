@@ -27,15 +27,19 @@ import com.github.weisj.darklaf.decorations.CustomTitlePane;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class MacOSTitlePane extends CustomTitlePane {
 
     private final JRootPane rootPane;
-    boolean oldIsFullWindowContent;
-    boolean oldIsTransparentTitleBar;
     private Window window;
+    private WindowListener windowListener;
     private Color inactiveBackground;
     private Color activeBackground;
+    private Color inactiveForeground;
+    private Color activeForeground;
     private Color border;
     private int barHeight;
     private DecorationInformation decorationInformation;
@@ -49,20 +53,25 @@ public class MacOSTitlePane extends CustomTitlePane {
         switch (getWindowDecorationStyle()) {
             case JRootPane.ERROR_DIALOG:
                 activeBackground = UIManager.getColor("MacOS.OptionPane.errorDialog.titlePane.background");
+                activeForeground = UIManager.getColor("MacOS.OptionPane.errorDialog.titlePane.foreground");
                 break;
             case JRootPane.QUESTION_DIALOG:
             case JRootPane.COLOR_CHOOSER_DIALOG:
             case JRootPane.FILE_CHOOSER_DIALOG:
                 activeBackground = UIManager.getColor("MacOS.OptionPane.questionDialog.titlePane.background");
+                activeForeground = UIManager.getColor("MacOS.OptionPane.questionDialog.titlePane.foreground");
                 break;
             case JRootPane.WARNING_DIALOG:
                 activeBackground = UIManager.getColor("MacOS.OptionPane.warningDialog.titlePane.background");
+                activeForeground = UIManager.getColor("MacOS.OptionPane.warningDialog.titlePane.foreground");
                 break;
             default: //JRootPane.Frame
                 activeBackground = UIManager.getColor("MacOS.TitlePane.background");
+                activeForeground = UIManager.getColor("MacOS.TitlePane.foreground");
                 break;
         }
         inactiveBackground = UIManager.getColor("MacOS.TitlePane.inactiveBackground");
+        inactiveForeground = UIManager.getColor("MacOS.TitlePane.inactiveForeground");
         border = UIManager.getColor("MacOS.TitlePane.borderColor");
     }
 
@@ -121,11 +130,44 @@ public class MacOSTitlePane extends CustomTitlePane {
         barHeight = window.getInsets().top;
         JRootPane rootPane = getRootPane();
         decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane);
+        installListeners();
+        MacOSDecorationsUtil.setTitleColor(decorationInformation, activeForeground);
     }
 
 
     @Override
     public void uninstall() {
+        uninstallListeners();
         MacOSDecorationsUtil.uninstallDecorations(decorationInformation);
+    }
+
+    private void installListeners() {
+        if (window != null) {
+            windowListener = createWindowListener();
+            window.addWindowListener(windowListener);
+        }
+    }
+
+    private void uninstallListeners() {
+        if (window != null) {
+            window.removeWindowListener(windowListener);
+            windowListener = null;
+        }
+    }
+
+
+    private WindowListener createWindowListener() {
+        return new WindowHandler();
+    }
+
+    protected class WindowHandler extends WindowAdapter {
+
+        public void windowActivated(final WindowEvent ev) {
+            MacOSDecorationsUtil.setTitleColor(decorationInformation, Color.RED);
+        }
+
+        public void windowDeactivated(final WindowEvent ev) {
+            MacOSDecorationsUtil.setTitleColor(decorationInformation, Color.GREEN);
+        }
     }
 }

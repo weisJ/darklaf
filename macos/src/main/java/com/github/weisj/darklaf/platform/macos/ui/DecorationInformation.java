@@ -32,15 +32,19 @@ class DecorationInformation {
     protected final boolean transparentTitleBarEnabled;
     protected final boolean jniInstalled;
     protected final JRootPane rootPane;
+    public final boolean useNativeColor;
 
     protected DecorationInformation(final long windowHandle,
                                     final boolean fullWindowContentEnabled,
                                     final boolean transparentTitleBarEnabled,
-                                    final boolean jniInstalled, final JRootPane rootPane) {
+                                    final boolean jniInstalled,
+                                    final JRootPane rootPane,
+                                    final boolean useNativeColor) {
         this.windowHandle = windowHandle;
         this.fullWindowContentEnabled = fullWindowContentEnabled;
         this.transparentTitleBarEnabled = transparentTitleBarEnabled;
         this.jniInstalled = jniInstalled;
         this.rootPane = rootPane;
+        this.useNativeColor = useNativeColor;
     }
 }

@@ -26,27 +26,49 @@
 
 #define OBJC(jl) ((id)((void*)(jl)))
 
-JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleColor(JNIEnv *env, jclass obj, jlong hwnd)
-{
-    NSWindow *nsWindow = OBJC(hwnd);
-    NSView *contentView = nsWindow.contentView;
-    NSColor *color = [NSColor colorWithCalibratedRed:255 green:0 blue:0 alpha:1.0f];
-    for (NSView *view in contentView.superview.subviews)
-    {
-        if ([view isKindOfClass:[NSTextField class]])
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [((NSTextField *)view) setTextColor: color];
-            });
-            return;
+NSTextField* findView(NSArray<__kindof NSView *> *subviews) {
+    for (NSView *view in subviews) {
+        if ([view isKindOfClass:[NSTextField class]]) {
+            return (NSTextField *)view;
+        } else {
+            return findView([view subviews]);
         }
     }
+    return nil;
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleColor(JNIEnv *env, jclass obj, jlong hwnd,
+                                                                               jint r, jint g, jint b) {
+    NSWindow *nsWindow = OBJC(hwnd);
+    NSView *contentView = [nsWindow contentView];
+    NSTextField *textField = findView([[contentView superview] subviews]);
+    if (textField == nil) {
+        printf("TextField not found");
+        return;
+    }
+    NSColor *color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0f];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        textField.textColor = color;
+    });
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setDarkTheme(JNIEnv *env, jclass obj, jlong hwnd,
+                                                                              jboolean darkEnabled) {
+     NSWindow *nsWindow = OBJC(hwnd);
+     dispatch_async(dispatch_get_main_queue(), ^{
+          if (darkEnabled) {
+            nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+          } else {
+            nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+          }
+     });
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
@@ -55,8 +77,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorati
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask &= ~NSWindowStyleMaskFullSizeContentView;

@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MacOSDecorationsUtil {
 
@@ -46,8 +47,13 @@ public class MacOSDecorationsUtil {
         } else {
             JNIDecorationsMacOS.installDecorations(windowHandle);
         }
-        JNIDecorationsMacOS.setTitleColor(windowHandle);
-        return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar, jniInstall, rootPane);
+        boolean useNativeColor = SystemInfo.isOsVersionAtLeast("10.14") && false;
+        if (useNativeColor) {
+            boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
+            JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
+        }
+        return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar,
+                                         jniInstall, rootPane, useNativeColor);
     }
 
     protected static void uninstallDecorations(final DecorationInformation information) {
@@ -58,6 +64,14 @@ public class MacOSDecorationsUtil {
             setFullWindowContentEnabled(information.rootPane, information.fullWindowContentEnabled);
             setTransparentTitleBarEnabled(information.rootPane, information.transparentTitleBarEnabled);
         }
+        if (information.useNativeColor) {
+            JNIDecorationsMacOS.setDarkTheme(information.windowHandle, false);
+        }
+    }
+
+    protected static void setTitleColor(final DecorationInformation information, final Color color) {
+        if (information == null || information.useNativeColor) return;
+        JNIDecorationsMacOS.setTitleColor(information.windowHandle, color.getRed(), color.getGreen(), color.getBlue());
     }
 
     private static boolean isFullWindowContentEnabled(final JRootPane rootPane) {
