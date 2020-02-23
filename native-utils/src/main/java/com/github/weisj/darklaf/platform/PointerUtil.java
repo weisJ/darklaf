@@ -28,6 +28,7 @@ import com.sun.jna.Pointer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class PointerUtil {
@@ -56,10 +57,10 @@ public class PointerUtil {
             Object peer = getPeer.invoke(window);
             Method getPlatformWindow = peer.getClass().getMethod("getPlatformWindow");
             Object platformWindow = getPlatformWindow.invoke(peer);
-            Method getContentView = platformWindow.getClass().getMethod("getContentView");
-            Object contentView = getContentView.invoke(platformWindow);
-            Method getAwtView = contentView.getClass().getMethod("getAWTView");
-            return (Long) getAwtView.invoke(contentView);
+            Class<?> CFRetainedResource = Class.forName("sun.lwawt.macosx.CFRetainedResource");
+            Field ptr = CFRetainedResource.getDeclaredField("ptr");
+            ptr.setAccessible(true);
+            return (Long) ptr.get(platformWindow);
         } catch (Exception ignored) {
         }
         return 0;
