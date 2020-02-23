@@ -36,7 +36,7 @@ public class MacOSDecorationsUtil {
 
     protected static DecorationInformation installDecorations(final JRootPane rootPane) {
         if (rootPane == null) return null;
-        long windowHandle = PointerUtil.getHWND(rootPane);
+        long windowHandle = PointerUtil.getHWND(SwingUtilities.getWindowAncestor(rootPane));
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
         boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");

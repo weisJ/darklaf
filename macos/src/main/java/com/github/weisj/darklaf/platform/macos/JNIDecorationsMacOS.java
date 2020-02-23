@@ -23,9 +23,61 @@
  */
 package com.github.weisj.darklaf.platform.macos;
 
+import com.github.weisj.darklaf.platform.NativeUtil;
+import com.github.weisj.darklaf.util.SystemInfo;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class JNIDecorationsMacOS {
+
+    private static final Logger LOGGER = Logger.getLogger(JNIDecorationsMacOS.class.getName());
+    private static boolean supported;
+    private static boolean loaded;
 
     public static native void installDecorations(final long hwnd);
 
     public static native void uninstallDecorations(final long hwnd);
+
+    /**
+     * Load the decorations-library if necessary.
+     *
+     * @return true if successful and library wasn't already loaded.
+     */
+    public static boolean updateLibrary() {
+        boolean oldLoaded = loaded;
+        if (!supported) {
+            supported = loadLibrary();
+        }
+        return supported && !oldLoaded;
+    }
+
+    private static boolean loadLibrary() {
+        if (!SystemInfo.isWindows) {
+            return false;
+        }
+        if (loaded) return true;
+        try {
+            if (SystemInfo.isX64) {
+                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/libdarklaf-macos.dylib");
+            } else {
+                LOGGER.warning("JRE model '"
+                                   + SystemInfo.jreArchitecture
+                                   + "' not supported. Decorations will be disabled");
+                return false;
+            }
+            loaded = true;
+            LOGGER.info("Loaded libdarklaf-macos.dylib. Decorations are enabled.");
+            return true;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll. Decorations will be disabled",
+                       e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean isCustomDecorationSupported() {
+        return supported;
+    }
 }

@@ -42,11 +42,12 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
 
     @Override
     public boolean isCustomDecorationSupported() {
-        return true;
+        return JNIDecorationsMacOS.isCustomDecorationSupported();
     }
 
     @Override
     public void initialize() {
+        JNIDecorationsMacOS.updateLibrary();
     }
 
     @Override
