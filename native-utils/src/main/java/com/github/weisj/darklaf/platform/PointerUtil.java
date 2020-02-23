@@ -26,7 +26,9 @@ package com.github.weisj.darklaf.platform;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
+import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Method;
 
 public class PointerUtil {
 
@@ -37,6 +39,30 @@ public class PointerUtil {
      * @return the handle.
      */
     public static long getHWND(final Component component) {
-        return Pointer.nativeValue(Native.getComponentPointer(component));
+        if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
+            return getHWNDMacOS(component);
+        } else {
+            return Pointer.nativeValue(Native.getComponentPointer(component));
+        }
     }
+
+    private static long getHWNDMacOS(final Component component) {
+        long handle = Pointer.nativeValue(Native.getComponentPointer(component));
+        if (handle != 0) return handle;
+
+        Window window = SwingUtilities.getWindowAncestor(component);
+        try {
+            Method getPeer = Window.class.getMethod("getPeer");
+            Object peer = getPeer.invoke(window);
+            Method getPlatformWindow = peer.getClass().getMethod("getPlatformWindow");
+            Object platformWindow = getPlatformWindow.invoke(peer);
+            Method getContentView = platformWindow.getClass().getMethod("getContentView");
+            Object contentView = getContentView.invoke(platformWindow);
+            Method getAwtView = contentView.getClass().getMethod("getAWTView");
+            return (Long) getAwtView.invoke(contentView);
+        } catch (Exception ignored) {
+        }
+        return 0;
+    }
+
 }
