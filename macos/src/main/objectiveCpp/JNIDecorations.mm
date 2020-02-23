@@ -47,7 +47,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleColor(J
         printf("TextField not found");
         return;
     }
-    NSColor *color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0f];
+    NSColor *color = [NSColor colorWithCalibratedRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:1.0f];
     dispatch_async(dispatch_get_main_queue(), ^{
         textField.textColor = color;
     });
