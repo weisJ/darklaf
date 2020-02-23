@@ -15,5 +15,13 @@ dependencies {
 }
 
 library {
-    targetMachines.addAll(machines.macOS.x86, machines.macOS.x86_64)
+    targetMachines.addAll(machines.macOS.x86_64)
+    binaries.configureEach {
+        compileTask.get().compilerArgs.addAll(
+            listOf("-x", "objective-c++")
+        )
+    }
+    binaries.whenElementFinalized(CppSharedLibrary::class) {
+        linkTask.get().linkerArgs.addAll(listOf("-lobjc"))
+    }
 }

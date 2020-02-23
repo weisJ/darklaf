@@ -21,25 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS.h"
-#include "Cocoa/Cocoa.h"
+#import "com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS.h"
+#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
-#define OBJC(jl) ((id)jlong_to_ptr(jl))
+#define OBJC(jl) ((id)((void*)(jl)))
 #define FULL_WINDOW_CONTENT 1 << 14
 #define TRANSPARENT_TITLE_BAR 1 << 18
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *, jclass, jlong)
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
-    NSWindow *nsWindow = OBJC(windowPtr);
-    window.styleMask |= FULL_WINDOW_CONTENT
-    window.styleMask |= TRANSPARENT_TITLE_BAR;
+    NSWindow *nsWindow = OBJC(hwnd);
+    nsWindow.styleMask |= FULL_WINDOW_CONTENT;
+    nsWindow.styleMask |= TRANSPARENT_TITLE_BAR;
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *, jclass, jlong)
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
-    NSWindow *nsWindow = OBJC(windowPtr);
-    window.styleMask &= ~FULL_WINDOW_CONTENT;
-    window.styleMask &= ~TRANSPARENT_TITLE_BAR;
+    NSWindow *nsWindow = OBJC(hwnd);
+    nsWindow.styleMask &= ~(FULL_WINDOW_CONTENT);
+    nsWindow.styleMask &= ~(TRANSPARENT_TITLE_BAR);
 }
