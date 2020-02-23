@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 #import "com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS.h"
-#import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 
 #define OBJC(jl) ((id)((void*)(jl)))
-#define FULL_WINDOW_CONTENT 1 << 14
-#define TRANSPARENT_TITLE_BAR 1 << 18
+#define FULL_WINDOW_CONTENT (1 << 14)
+#define TRANSPARENT_TITLE_BAR (1 << 18)
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
@@ -41,6 +40,6 @@ JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     NSWindow *nsWindow = OBJC(hwnd);
-    nsWindow.styleMask &= ~(FULL_WINDOW_CONTENT);
-    nsWindow.styleMask &= ~(TRANSPARENT_TITLE_BAR);
+    nsWindow.styleMask &= ~FULL_WINDOW_CONTENT;
+    nsWindow.styleMask &= ~TRANSPARENT_TITLE_BAR;
 }

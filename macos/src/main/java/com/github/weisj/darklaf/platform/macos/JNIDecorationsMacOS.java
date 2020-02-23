@@ -54,7 +54,7 @@ public class JNIDecorationsMacOS {
     }
 
     private static boolean loadLibrary() {
-        if (!SystemInfo.isWindows) {
+        if (!SystemInfo.isMac) {
             return false;
         }
         if (loaded) return true;
