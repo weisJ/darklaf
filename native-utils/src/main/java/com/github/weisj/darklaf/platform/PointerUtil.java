@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.platform;
 
 import com.sun.jna.Native;
-import com.sun.jna.Pointer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,18 +42,19 @@ public class PointerUtil {
         if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
             return getHWNDMacOS(component);
         } else {
-            return Pointer.nativeValue(Native.getComponentPointer(component));
+            return Native.getComponentID(component);
         }
     }
 
     private static long getHWNDMacOS(final Component component) {
-        long handle = Pointer.nativeValue(Native.getComponentPointer(component));
+        long handle = Native.getComponentID(component);
         if (handle != 0) return handle;
 
         Window window = SwingUtilities.getWindowAncestor(component);
         try {
-            Method getPeer = Window.class.getMethod("getPeer");
-            Object peer = getPeer.invoke(window);
+            Field peerField = Component.class.getDeclaredField("peer");
+            peerField.setAccessible(true);
+            Object peer = peerField.get(window);
             Method getPlatformWindow = peer.getClass().getMethod("getPlatformWindow");
             Object platformWindow = getPlatformWindow.invoke(peer);
             Class<?> CFRetainedResource = Class.forName("sun.lwawt.macosx.CFRetainedResource");

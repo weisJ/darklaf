@@ -25,14 +25,13 @@
 #import <Cocoa/Cocoa.h>
 
 #define OBJC(jl) ((id)((void*)(jl)))
-#define FULL_WINDOW_CONTENT (1 << 15)
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
-        nsWindow.styleMask |= FULL_WINDOW_CONTENT;
+        nsWindow.styleMask |= NSFullSizeContentViewWindowMask ;
         nsWindow.styleMask = true;
     });
 }
@@ -42,7 +41,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecora
 {
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
-        nsWindow.styleMask &= ~FULL_WINDOW_CONTENT;
+        nsWindow.styleMask &= ~NSFullSizeContentViewWindowMask ;
         nsWindow.styleMask = false;
     });
 }
