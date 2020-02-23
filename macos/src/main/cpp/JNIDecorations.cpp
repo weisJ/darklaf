@@ -25,7 +25,7 @@
 #import <Cocoa/Cocoa.h>
 
 #define OBJC(jl) ((id)((void*)(jl)))
-#define FULL_WINDOW_CONTENT (1 << 14)
+#define FULL_WINDOW_CONTENT (1 << 15)
 #define TRANSPARENT_TITLE_BAR (1 << 18)
 
 JNIEXPORT void JNICALL
