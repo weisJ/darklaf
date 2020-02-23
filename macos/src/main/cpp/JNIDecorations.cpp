@@ -26,13 +26,15 @@
 
 #define OBJC(jl) ((id)((void*)(jl)))
 
+
+
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask |= NSFullSizeContentViewWindowMask ;
-        nsWindow.styleMask = true;
+        nsWindow.titlebarAppearsTransparent  = true;
     });
 }
 
@@ -42,6 +44,6 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecora
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask &= ~NSFullSizeContentViewWindowMask ;
-        nsWindow.styleMask = false;
+        nsWindow.titlebarAppearsTransparent  = false;
     });
 }
