@@ -23,7 +23,6 @@
  */
 #import "com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS.h"
 #import <Cocoa/Cocoa.h>
-#import <JavaNativeFoundation/JavaNativeFoundation.h>
 
 #define OBJC(jl) ((id)((void*)(jl)))
 #define FULL_WINDOW_CONTENT (1 << 14)
@@ -32,19 +31,19 @@
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
-JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    nsWindow.styleMask |= FULL_WINDOW_CONTENT;
-    nsWindow.styleMask |= TRANSPARENT_TITLE_BAR;
-JNF_COCOA_EXIT(env);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        nsWindow.styleMask |= FULL_WINDOW_CONTENT;
+        nsWindow.styleMask |= TRANSPARENT_TITLE_BAR;
+    });
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
-JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    nsWindow.styleMask &= ~FULL_WINDOW_CONTENT;
-    nsWindow.styleMask &= ~TRANSPARENT_TITLE_BAR;
-JNF_COCOA_EXIT(env);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        nsWindow.styleMask &= ~FULL_WINDOW_CONTENT;
+        nsWindow.styleMask &= ~TRANSPARENT_TITLE_BAR;
+    });
 }
