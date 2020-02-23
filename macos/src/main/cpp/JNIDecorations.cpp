@@ -26,15 +26,31 @@
 
 #define OBJC(jl) ((id)((void*)(jl)))
 
-
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleColor(JNIEnv *env, jclass obj, jlong hwnd)
+{
+    NSWindow *nsWindow = OBJC(hwnd);
+    NSView *contentView = nsWindow.contentView;
+    NSColor *color = [NSColor colorWithCalibratedRed:255 green:0 blue:0 alpha:1.0f];
+    for (NSView *view in contentView.superview.subviews)
+    {
+        if ([view isKindOfClass:[NSTextField class]])
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [((NSTextField *)view) setTextColor: color];
+            });
+            return;
+        }
+    }
+}
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
-        nsWindow.styleMask |= NSFullSizeContentViewWindowMask ;
-        nsWindow.titlebarAppearsTransparent  = true;
+        nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        nsWindow.titlebarAppearsTransparent = true;
     });
 }
 
@@ -43,7 +59,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecora
 {
     NSWindow *nsWindow = OBJC(hwnd);
     dispatch_async(dispatch_get_main_queue(), ^{
-        nsWindow.styleMask &= ~NSFullSizeContentViewWindowMask ;
-        nsWindow.titlebarAppearsTransparent  = false;
+        nsWindow.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
+        nsWindow.titlebarAppearsTransparent = false;
     });
 }

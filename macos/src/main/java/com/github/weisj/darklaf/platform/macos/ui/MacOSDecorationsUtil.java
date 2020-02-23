@@ -46,6 +46,7 @@ public class MacOSDecorationsUtil {
         } else {
             JNIDecorationsMacOS.installDecorations(windowHandle);
         }
+        JNIDecorationsMacOS.setTitleColor(windowHandle);
         return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar, jniInstall, rootPane);
     }
 
