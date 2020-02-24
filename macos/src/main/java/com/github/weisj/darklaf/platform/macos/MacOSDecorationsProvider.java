@@ -37,7 +37,7 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
 
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
-        return new MacOSTitlePane(rootPane, decorationStyle);
+        return new MacOSTitlePane(rootPane);
     }
 
     @Override

@@ -634,6 +634,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         private int computeHeight() {
+            if (hideTitleBar()) return 0;
             FontMetrics fm = rootPane.getFontMetrics(getFont());
             int height = fm.getHeight() + 7;
             if (menuBar != null) {
@@ -643,7 +644,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         public void layoutContainer(final Container c) {
-            if (getWindowDecorationStyle() == JRootPane.NONE && menuBar == null && titleLabel.getText().length() == 0) {
+            if (hideTitleBar()) {
                 if (windowIconButton != null) windowIconButton.setBounds(0, 0, 0, 0);
                 if (closeButton != null) closeButton.setBounds(0, 0, 0, 0);
                 if (minimizeButton != null) minimizeButton.setBounds(0, 0, 0, 0);

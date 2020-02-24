@@ -140,10 +140,10 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private void installClientDecorations(final JRootPane root) {
         int style = windowDecorationsStyle < 0 ? root.getWindowDecorationStyle() : windowDecorationsStyle;
         CustomTitlePane titlePane = Decorations.createTitlePane(root, style);
-        setTitlePane(root, titlePane);
         updateWindow(root.getParent());
         setWindowDecorated();
         installLayout(root);
+        setTitlePane(root, titlePane);
     }
 
     private void setWindowDecorated() {

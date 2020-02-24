@@ -37,7 +37,6 @@ import java.beans.PropertyChangeListener;
 public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
 
     private final JRootPane rootPane;
-    private int style;
     private Window window;
     private WindowListener windowListener;
     private Color inactiveBackground;
@@ -49,11 +48,11 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
     private JLabel titleLabel;
     private PropertyChangeHandler propertyChangeListener;
 
-    public MacOSTitlePane(final JRootPane rootPane, final int style) {
+    public MacOSTitlePane(final JRootPane rootPane) {
         super();
         this.rootPane = rootPane;
-        this.style = style;
         determineColors();
+        setLayout(this);
     }
 
     protected void determineColors() {
@@ -144,8 +143,10 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
 
     @Override
     public void uninstall() {
-        remove(titleLabel);
-        titleLabel = null;
+        if (titleLabel != null) {
+            remove(titleLabel);
+            titleLabel = null;
+        }
         uninstallListeners();
         MacOSDecorationsUtil.uninstallDecorations(decorationInformation);
         decorationInformation = null;
