@@ -36,13 +36,15 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Properties;
+import java.text.AttributedCharacterIterator;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,6 +110,9 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             initIdeaDefaults(defaults);
 
             patchComboBox(metalDefaults, defaults);
+            if (SystemInfo.isMac) {
+                patchMacOSFonts(defaults);
+            }
             setupDecorations();
 
             return defaults;
@@ -115,6 +120,24 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
         return super.getDefaults();
+    }
+
+    private void patchMacOSFonts(final UIDefaults defaults) {
+        Set<Map.Entry<Object, Object>> entries = defaults.entrySet();
+        for (Map.Entry<Object, Object> entry : entries) {
+            if (entry.getValue() instanceof Font) {
+                Font font = (Font) entry.getValue();
+                entry.setValue(macOSFontFromFont(font));
+            }
+        }
+    }
+
+    private Font macOSFontFromFont(final Font font) {
+        Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
+                                                                                                  TextAttribute.KERNING_ON);
+        Font macFont = new Font(SystemInfo.isMacOSCatalina ? ".AppleSystemUIFont" : ".SF NS Text",
+                                font.getStyle(), font.getSize()).deriveFont(attributes);
+        return macFont == null ? font : macFont;
     }
 
     private void setupDecorations() {

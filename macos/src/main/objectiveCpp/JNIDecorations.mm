@@ -26,30 +26,27 @@
 
 #define OBJC(jl) ((id)((void*)(jl)))
 
-NSTextField* findView(NSArray<__kindof NSView *> *subviews) {
-    for (NSView *view in subviews) {
-        if ([view isKindOfClass:[NSTextField class]]) {
-            return (NSTextField *)view;
-        } else {
-            return findView([view subviews]);
-        }
-    }
-    return nil;
+JNIEXPORT jboolean JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_isFullscreen(JNIEnv *env, jclass obj, jlong hwnd) {
+    NSWindow *nsWindow = OBJC(hwnd);
+    return (jboolean)(([nsWindow styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask);
+}
+
+JNIEXPORT jdouble JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getTitleFontSize(JNIEnv *env, jclass obj, jlong hwnd) {
+    return (jdouble)[[NSFont titleBarFontOfSize:0] pointSize]
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleColor(JNIEnv *env, jclass obj, jlong hwnd,
-                                                                               jint r, jint g, jint b) {
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleEnabled(JNIEnv *env, jclass obj, jlong hwnd,
+                                                                                 jboolean enabled) {
     NSWindow *nsWindow = OBJC(hwnd);
-    NSView *contentView = [nsWindow contentView];
-    NSTextField *textField = findView([[contentView superview] subviews]);
-    if (textField == nil) {
-        printf("TextField not found");
-        return;
-    }
-    NSColor *color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0f];
     dispatch_async(dispatch_get_main_queue(), ^{
-        textField.textColor = color;
+        if (enabled) {
+            nsWindow.titleVisibility = NSWindowTitleVisible;
+        } else {
+            nsWindow.titleVisibility = NSWindowTitleHidden;
+        }
     });
 }
 

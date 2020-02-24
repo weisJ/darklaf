@@ -37,7 +37,8 @@ public class MacOSDecorationsUtil {
 
     protected static DecorationInformation installDecorations(final JRootPane rootPane) {
         if (rootPane == null) return null;
-        long windowHandle = PointerUtil.getHWND(SwingUtilities.getWindowAncestor(rootPane));
+        Window window = SwingUtilities.getWindowAncestor(rootPane);
+        long windowHandle = PointerUtil.getHWND(window);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
         boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");
@@ -47,13 +48,16 @@ public class MacOSDecorationsUtil {
         } else {
             JNIDecorationsMacOS.installDecorations(windowHandle);
         }
-        boolean useNativeColor = SystemInfo.isOsVersionAtLeast("10.14") && false;
-        if (useNativeColor) {
+        boolean titleVisible = SystemInfo.isMacOSMojave;
+        JNIDecorationsMacOS.setTitleEnabled(windowHandle, titleVisible);
+        if (titleVisible) {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
             JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
         }
+        float titleFontSize = (float) JNIDecorationsMacOS.getTitleFontSize(windowHandle);
+        int titleBarHeight = window.getInsets().top;
         return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar,
-                                         jniInstall, rootPane, useNativeColor);
+                                         jniInstall, rootPane, titleVisible, titleBarHeight, titleFontSize);
     }
 
     protected static void uninstallDecorations(final DecorationInformation information) {
@@ -64,14 +68,7 @@ public class MacOSDecorationsUtil {
             setFullWindowContentEnabled(information.rootPane, information.fullWindowContentEnabled);
             setTransparentTitleBarEnabled(information.rootPane, information.transparentTitleBarEnabled);
         }
-        if (information.useNativeColor) {
-            JNIDecorationsMacOS.setDarkTheme(information.windowHandle, false);
-        }
-    }
-
-    protected static void setTitleColor(final DecorationInformation information, final Color color) {
-        if (information == null || information.useNativeColor) return;
-        JNIDecorationsMacOS.setTitleColor(information.windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+        JNIDecorationsMacOS.setTitleEnabled(information.windowHandle, true);
     }
 
     private static boolean isFullWindowContentEnabled(final JRootPane rootPane) {

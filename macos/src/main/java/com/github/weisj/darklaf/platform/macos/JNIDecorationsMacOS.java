@@ -40,9 +40,13 @@ public class JNIDecorationsMacOS {
 
     public static native void uninstallDecorations(final long hwnd);
 
-    public static native void setTitleColor(final long hwnd, final int red, final int green, final int blue);
+    public static native void setTitleEnabled(final long hwnd, final boolean enabled);
 
     public static native void setDarkTheme(final long hwnd, final boolean darkEnabled);
+
+    public static native boolean isFullscreen(final long hwnd);
+
+    public static native double getTitleFontSize(final long hwnd);
 
     /**
      * Load the decorations-library if necessary.

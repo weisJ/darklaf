@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.platform.macos.ui;
 
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class MacOSTitlePane extends CustomTitlePane {
+public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
 
     private final JRootPane rootPane;
     private Window window;
@@ -41,10 +42,11 @@ public class MacOSTitlePane extends CustomTitlePane {
     private Color inactiveForeground;
     private Color activeForeground;
     private Color border;
-    private int barHeight;
     private DecorationInformation decorationInformation;
+    private JLabel titleLabel;
 
     public MacOSTitlePane(final JRootPane rootPane) {
+        super();
         this.rootPane = rootPane;
         determineColors();
     }
@@ -80,22 +82,6 @@ public class MacOSTitlePane extends CustomTitlePane {
         return rootPane;
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        if (window == null) return super.getPreferredSize();
-        return new Dimension(0, barHeight);
-    }
-
-    @Override
-    public Dimension getMinimumSize() {
-        return getPreferredSize();
-    }
-
-    @Override
-    public Dimension getMaximumSize() {
-        return getPreferredSize();
-    }
-
     public void paintComponent(final Graphics g) {
         Window window = getWindow();
         boolean active = window == null || window.isActive();
@@ -107,8 +93,11 @@ public class MacOSTitlePane extends CustomTitlePane {
         g.setColor(background);
         g.fillRect(0, 0, width, height);
 
-        g.setColor(border);
-        g.fillRect(0, height - 1, width, 1);
+        boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
+        if (!isFullscreen) {
+            g.setColor(border);
+            g.fillRect(0, height - 1, width, 1);
+        }
     }
 
     public void addNotify() {
@@ -127,18 +116,25 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     private void install() {
         determineColors();
-        barHeight = window.getInsets().top;
         JRootPane rootPane = getRootPane();
         decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane);
         installListeners();
-        MacOSDecorationsUtil.setTitleColor(decorationInformation, activeForeground);
+        if (!decorationInformation.titleVisible) {
+            titleLabel = new JLabel();
+            titleLabel.setFont(titleLabel.getFont().deriveFont(decorationInformation.titleFontSize));
+            titleLabel.setForeground(activeForeground);
+            add(titleLabel);
+        }
     }
 
 
     @Override
     public void uninstall() {
+        remove(titleLabel);
+        titleLabel = null;
         uninstallListeners();
         MacOSDecorationsUtil.uninstallDecorations(decorationInformation);
+        decorationInformation = null;
     }
 
     private void installListeners() {
@@ -155,19 +151,63 @@ public class MacOSTitlePane extends CustomTitlePane {
         }
     }
 
-
     private WindowListener createWindowListener() {
         return new WindowHandler();
+    }
+
+    @Override
+    public void addLayoutComponent(final String name, final Component comp) {
+    }
+
+    @Override
+    public void removeLayoutComponent(final Component comp) {
+    }
+
+    @Override
+    public Dimension preferredLayoutSize(final Container parent) {
+        if (window == null) return super.getPreferredSize();
+        boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
+        int height = decorationInformation.titleBarHeight;
+        if (isFullscreen) {
+            height = 0;
+        } else if (useCustomTitle()) {
+            height = Math.max(height, titleLabel.getPreferredSize().height);
+        }
+        return new Dimension(0, height);
+    }
+
+    @Override
+    public Dimension minimumLayoutSize(final Container parent) {
+        return preferredLayoutSize(parent);
+    }
+
+    private boolean useCustomTitle() {
+        return titleLabel != null && decorationInformation != null && !decorationInformation.titleVisible;
+    }
+
+    @Override
+    public void layoutContainer(final Container parent) {
+        if (useCustomTitle()) {
+            int width = parent.getWidth();
+            int height = parent.getHeight();
+            int labelWidth = titleLabel.getPreferredSize().width;
+            int x = (width - labelWidth) / 2;
+            titleLabel.setBounds(x, 0, labelWidth, height);
+        }
     }
 
     protected class WindowHandler extends WindowAdapter {
 
         public void windowActivated(final WindowEvent ev) {
-            MacOSDecorationsUtil.setTitleColor(decorationInformation, Color.RED);
+            if (useCustomTitle()) {
+                titleLabel.setForeground(activeForeground);
+            }
         }
 
         public void windowDeactivated(final WindowEvent ev) {
-            MacOSDecorationsUtil.setTitleColor(decorationInformation, Color.GREEN);
+            if (useCustomTitle()) {
+                titleLabel.setForeground(inactiveForeground);
+            }
         }
     }
 }
