@@ -413,8 +413,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         g.setColor(background);
         g.fillRect(0, 0, width, height);
 
-        g.setColor(border);
-        g.fillRect(0, height - 1, width, 1);
+        if (getWindowDecorationStyle() != JRootPane.NONE) {
+            g.setColor(border);
+            g.fillRect(0, height - 1, width, 1);
+        }
     }
 
     public void addNotify() {
@@ -611,6 +613,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
+    private boolean hideTitleBar() {
+        return getWindowDecorationStyle() == JRootPane.NONE && menuBar == null && titleLabel.getText().length() == 0;
+    }
+
     private class TitlePaneLayout implements LayoutManager {
         public void addLayoutComponent(final String name, final Component c) {
         }
@@ -637,6 +643,14 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         public void layoutContainer(final Container c) {
+            if (getWindowDecorationStyle() == JRootPane.NONE && menuBar == null && titleLabel.getText().length() == 0) {
+                if (windowIconButton != null) windowIconButton.setBounds(0, 0, 0, 0);
+                if (closeButton != null) closeButton.setBounds(0, 0, 0, 0);
+                if (minimizeButton != null) minimizeButton.setBounds(0, 0, 0, 0);
+                if (maximizeToggleButton != null) maximizeToggleButton.setBounds(0, 0, 0, 0);
+                if (titleLabel != null) titleLabel.setBounds(0, 0, 0, 0);
+                return;
+            }
             boolean leftToRight = isLeftToRight(window);
 
             int w = getWidth();

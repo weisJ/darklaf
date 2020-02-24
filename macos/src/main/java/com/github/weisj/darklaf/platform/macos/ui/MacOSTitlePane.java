@@ -31,10 +31,13 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
 
     private final JRootPane rootPane;
+    private int style;
     private Window window;
     private WindowListener windowListener;
     private Color inactiveBackground;
@@ -44,10 +47,12 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
     private Color border;
     private DecorationInformation decorationInformation;
     private JLabel titleLabel;
+    private PropertyChangeHandler propertyChangeListener;
 
-    public MacOSTitlePane(final JRootPane rootPane) {
+    public MacOSTitlePane(final JRootPane rootPane, final int style) {
         super();
         this.rootPane = rootPane;
+        this.style = style;
         determineColors();
     }
 
@@ -93,8 +98,7 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
         g.setColor(background);
         g.fillRect(0, 0, width, height);
 
-        boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
-        if (!isFullscreen) {
+        if (!hideTitleBar()) {
             g.setColor(border);
             g.fillRect(0, height - 1, width, 1);
         }
@@ -123,8 +127,18 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
             titleLabel = new JLabel();
             titleLabel.setFont(titleLabel.getFont().deriveFont(decorationInformation.titleFontSize));
             titleLabel.setForeground(activeForeground);
+            titleLabel.setText(getTitle());
             add(titleLabel);
         }
+    }
+
+    private String getTitle() {
+        if (window instanceof Frame) {
+            return ((Frame) window).getTitle();
+        } else if (window instanceof Dialog) {
+            return ((Dialog) window).getTitle();
+        }
+        return "";
     }
 
 
@@ -139,8 +153,10 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
 
     private void installListeners() {
         if (window != null) {
-            windowListener = createWindowListener();
+            windowListener = new WindowHandler();
             window.addWindowListener(windowListener);
+            propertyChangeListener = new PropertyChangeHandler();
+            window.addPropertyChangeListener(propertyChangeListener);
         }
     }
 
@@ -148,11 +164,9 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
         if (window != null) {
             window.removeWindowListener(windowListener);
             windowListener = null;
+            window.removePropertyChangeListener(propertyChangeListener);
+            propertyChangeListener = null;
         }
-    }
-
-    private WindowListener createWindowListener() {
-        return new WindowHandler();
     }
 
     @Override
@@ -166,14 +180,18 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
         if (window == null) return super.getPreferredSize();
-        boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
         int height = decorationInformation.titleBarHeight;
-        if (isFullscreen) {
+        if (hideTitleBar()) {
             height = 0;
         } else if (useCustomTitle()) {
             height = Math.max(height, titleLabel.getPreferredSize().height);
         }
         return new Dimension(0, height);
+    }
+
+    private boolean hideTitleBar() {
+        boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
+        return isFullscreen || getWindowDecorationStyle() == JRootPane.NONE || getTitle().length() == 0;
     }
 
     @Override
@@ -187,7 +205,7 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
 
     @Override
     public void layoutContainer(final Container parent) {
-        if (useCustomTitle()) {
+        if (useCustomTitle() && !hideTitleBar()) {
             int width = parent.getWidth();
             int height = parent.getHeight();
             int labelWidth = titleLabel.getPreferredSize().width;
@@ -207,6 +225,16 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
         public void windowDeactivated(final WindowEvent ev) {
             if (useCustomTitle()) {
                 titleLabel.setForeground(inactiveForeground);
+            }
+        }
+    }
+
+    protected class PropertyChangeHandler implements PropertyChangeListener {
+        public void propertyChange(final PropertyChangeEvent pce) {
+            String name = pce.getPropertyName();
+            if ("title".equals(name)) {
+                titleLabel.setText(pce.getNewValue().toString());
+                repaint();
             }
         }
     }
