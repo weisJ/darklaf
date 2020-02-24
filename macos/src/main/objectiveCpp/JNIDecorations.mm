@@ -29,12 +29,12 @@
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_isFullscreen(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);
-    return (jboolean)(([nsWindow styleMask] & NSFullScreenWindowMask) == NSFullScreenWindowMask);
+    return (jboolean)(([nsWindow styleMask] & NSWindowStyleMaskFullScreen) == NSWindowStyleMaskFullScreen);
 }
 
 JNIEXPORT jdouble JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getTitleFontSize(JNIEnv *env, jclass obj, jlong hwnd) {
-    return (jdouble)[[NSFont titleBarFontOfSize:0] pointSize]
+    return (jdouble)[[NSFont titleBarFontOfSize:0] pointSize];
 }
 
 JNIEXPORT void JNICALL
