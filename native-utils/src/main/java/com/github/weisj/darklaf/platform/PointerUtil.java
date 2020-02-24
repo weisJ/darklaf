@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.platform;
 
+import com.github.weisj.darklaf.util.ReflectiveWarningSuppressor;
 import com.sun.jna.Native;
 import sun.awt.AWTAccessor;
 
@@ -51,8 +52,9 @@ public class PointerUtil {
         long handle = Native.getComponentID(component);
         if (handle != 0) return handle;
 
-        Window window = SwingUtilities.getWindowAncestor(component);
-        try {
+        Window window = component instanceof Window ? (Window) component
+                                                    : SwingUtilities.getWindowAncestor(component);
+        try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
             Object peer = AWTAccessor.getComponentAccessor().getPeer(window);
             Method getPlatformWindow = peer.getClass().getMethod("getPlatformWindow");
             Object platformWindow = getPlatformWindow.invoke(peer);

@@ -34,7 +34,7 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
+public class MacOSTitlePane extends CustomTitlePane {
 
     private final JRootPane rootPane;
     private Window window;
@@ -47,12 +47,12 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
     private DecorationInformation decorationInformation;
     private JLabel titleLabel;
     private PropertyChangeHandler propertyChangeListener;
+    private boolean hideTitleBar = false;
 
     public MacOSTitlePane(final JRootPane rootPane) {
         super();
         this.rootPane = rootPane;
         determineColors();
-        setLayout(this);
     }
 
     protected void determineColors() {
@@ -171,16 +171,17 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
     }
 
     @Override
-    public void addLayoutComponent(final String name, final Component comp) {
+    public Dimension getMinimumSize() {
+        return getPreferredSize();
     }
 
     @Override
-    public void removeLayoutComponent(final Component comp) {
+    public Dimension getMaximumSize() {
+        return getPreferredSize();
     }
 
     @Override
-    public Dimension preferredLayoutSize(final Container parent) {
-        if (window == null) return super.getPreferredSize();
+    public Dimension getPreferredSize() {
         int height = decorationInformation.titleBarHeight;
         if (hideTitleBar()) {
             height = 0;
@@ -195,23 +196,23 @@ public class MacOSTitlePane extends CustomTitlePane implements LayoutManager {
         return isFullscreen || getWindowDecorationStyle() == JRootPane.NONE || getTitle().length() == 0;
     }
 
-    @Override
-    public Dimension minimumLayoutSize(final Container parent) {
-        return preferredLayoutSize(parent);
-    }
-
     private boolean useCustomTitle() {
         return titleLabel != null && decorationInformation != null && !decorationInformation.titleVisible;
     }
 
     @Override
-    public void layoutContainer(final Container parent) {
-        if (useCustomTitle() && !hideTitleBar()) {
-            int width = parent.getWidth();
-            int height = parent.getHeight();
+    public void doLayout() {
+        boolean hide = hideTitleBar();
+        if (useCustomTitle() && !hide) {
+            int width = getWidth();
+            int height = getHeight();
             int labelWidth = titleLabel.getPreferredSize().width;
             int x = (width - labelWidth) / 2;
             titleLabel.setBounds(x, 0, labelWidth, height);
+        }
+        if (hide != hideTitleBar) {
+            hideTitleBar = hide;
+            getParent().doLayout();
         }
     }
 

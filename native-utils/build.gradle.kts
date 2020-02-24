@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":darklaf-utils"))
     implementation("net.java.dev.jna:jna")
 }
 
