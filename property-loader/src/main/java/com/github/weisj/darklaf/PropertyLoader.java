@@ -35,8 +35,10 @@ import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
+import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.AttributedCharacterIterator;
 import java.util.List;
 import java.util.*;
 import java.util.logging.Level;
@@ -55,6 +57,8 @@ public final class PropertyLoader {
     private static final String REFERENCE_PREFIX = "%";
 
     private static final Collection<ObjectRequest> objectsToLoad = new HashSet<>();
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
+                                                                                                                   TextAttribute.KERNING_ON);
 
     public static void finish() {
         Map<String, Object> cache = new HashMap<>();
@@ -184,12 +188,14 @@ public final class PropertyLoader {
     }
 
     private static Object parseFont(final String value) {
+        Font font;
         try {
             final String[] decode = value.split("-");
-            return new FontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
+            font = new FontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
         } catch (final Exception e) {
-            return new FontUIResource("Dialog", Font.PLAIN, 12);
+            font = new FontUIResource("Dialog", Font.PLAIN, 12);
         }
+        return new FontUIResource(font.deriveFont(attributes));
     }
 
     private static Icon parseIcon(final String value, final IconLoader iconLoader) {
