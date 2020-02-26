@@ -198,7 +198,9 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     protected void dragTo() {
         if (toolBar.isFloatable()) {
             Point offset = dragWindow.getOffset();
-            Point global = MouseInfo.getPointerInfo().getLocation();
+            PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+            if (pointerInfo == null) return;
+            Point global = pointerInfo.getLocation();
             Point dragPoint = new Point(global.x - offset.x, global.y - offset.y);
             ensureDockingSource();
 

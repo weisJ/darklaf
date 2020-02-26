@@ -41,7 +41,7 @@ import java.util.Objects;
  */
 public class DialogDemo extends JPanel {
     private JLabel label;
-    private ImageIcon icon = createImageIcon("images/middle.gif");
+    private ImageIcon icon = createImageIcon("middle.gif");
     private JFrame frame;
     private String simpleDialogDesc = "Some simple message dialogs";
     private String iconDesc = "A JOptionPane has its choice of icons";

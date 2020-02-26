@@ -80,6 +80,10 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
                 comp.setForeground(UIManager.getColor("List.selectionForegroundInactive"));
             }
         }
+        if (getText().isEmpty()) {
+            //Fix cell height for empty string.
+            setText(" ");
+        }
         return comp;
     }
 }
