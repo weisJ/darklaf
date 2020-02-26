@@ -50,12 +50,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected static Icon search;
     protected static Icon searchWithHistory;
     private final FocusListener focusListener = new FocusAdapter() {
-        public void focusGained(final FocusEvent e) {
-            getComponent().repaint();
-        }
-
         public void focusLost(final FocusEvent e) {
-            getComponent().repaint();
+            if (!Boolean.TRUE.equals(getComponent().getClientProperty("JTextField.keepSelectionOnFocusLost"))) {
+                getComponent().select(0, 0);
+            }
         }
     };
     protected int arcSize;
