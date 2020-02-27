@@ -33,7 +33,6 @@ import java.util.logging.Logger;
 public class JNIDecorationsMacOS {
 
     private static final Logger LOGGER = Logger.getLogger(JNIDecorationsMacOS.class.getName());
-    private static boolean supported;
     private static boolean loaded;
 
     public static native void installDecorations(final long hwnd);
@@ -54,11 +53,7 @@ public class JNIDecorationsMacOS {
      * @return true if successful and library wasn't already loaded.
      */
     public static boolean updateLibrary() {
-        boolean oldLoaded = loaded;
-        if (!supported) {
-            supported = loadLibrary();
-        }
-        return supported && !oldLoaded;
+        return !loaded && loadLibrary();
     }
 
     private static boolean loadLibrary() {
@@ -79,13 +74,13 @@ public class JNIDecorationsMacOS {
             LOGGER.info("Loaded libdarklaf-macos.dylib. Decorations are enabled.");
             return true;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll. Decorations will be disabled",
-                       e.getMessage());
+            LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-macos.dylib." +
+                " Decorations will be disabled", e);
             return false;
         }
     }
 
     public static boolean isCustomDecorationSupported() {
-        return supported;
+        return loaded;
     }
 }

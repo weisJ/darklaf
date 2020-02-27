@@ -36,7 +36,6 @@ import java.util.logging.Logger;
 public class JNIDecorationsWindows {
 
     private static final Logger LOGGER = Logger.getLogger(JNIDecorationsWindows.class.getName());
-    private static boolean supported;
     private static boolean loaded;
 
     public static native void updateValues(final long hwnd, final int left, final int right, final int height);
@@ -61,11 +60,7 @@ public class JNIDecorationsWindows {
      * @return true if successful and library wasn't already loaded.
      */
     public static boolean updateLibrary() {
-        boolean oldLoaded = loaded;
-        if (!supported) {
-            supported = loadLibrary();
-        }
-        return supported && !oldLoaded;
+        return !loaded && loadLibrary();
     }
 
     private static boolean loadLibrary() {
@@ -88,14 +83,14 @@ public class JNIDecorationsWindows {
             LOGGER.info("Loaded darklaf-windows.dll. Decorations are enabled.");
             return true;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll. Decorations will be disabled",
-                       e.getMessage());
+            LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll." +
+                " Decorations will be disabled", e);
             return false;
         }
     }
 
 
     public static boolean isCustomDecorationSupported() {
-        return supported;
+        return loaded;
     }
 }
