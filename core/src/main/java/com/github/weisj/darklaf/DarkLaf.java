@@ -44,7 +44,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.text.AttributedCharacterIterator;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -123,8 +126,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
     private void patchMacOSFonts(final UIDefaults defaults) {
-        Set<Map.Entry<Object, Object>> entries = defaults.entrySet();
-        for (Map.Entry<Object, Object> entry : entries) {
+        for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
             if (entry.getValue() instanceof Font) {
                 Font font = (Font) entry.getValue();
                 entry.setValue(macOSFontFromFont(font));
