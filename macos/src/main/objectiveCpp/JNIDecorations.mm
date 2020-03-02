@@ -31,7 +31,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPoi
     jlong ptr = 0;
     if (env && peer) {
         jclass class_peer = env->GetObjectClass(peer);
-        jfieldID fid_platformWindow = env->GetFieldID(class_peer, "platformWindow", "Lsun/lwawt/PlatformWindow");
+        jfieldID fid_platformWindow = env->GetFieldID(class_peer, "platformWindow", "Lsun/lwawt/PlatformWindow;");
         if (fid_platformWindow) {
             jobject platformWindow = env->GetObjectField(peer, fid_platformWindow);
             if (platformWindow) {
