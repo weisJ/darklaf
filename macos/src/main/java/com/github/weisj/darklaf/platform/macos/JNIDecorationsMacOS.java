@@ -37,6 +37,7 @@ public class JNIDecorationsMacOS {
 
     private static final Logger LOGGER = Logger.getLogger(JNIDecorationsMacOS.class.getName());
     private static boolean loaded;
+    private static boolean attemptedLoad;
 
     private static native long getComponentPointer(final WindowPeer peer);
 
@@ -59,34 +60,31 @@ public class JNIDecorationsMacOS {
 
     /**
      * Load the decorations-library if necessary.
-     *
-     * @return true if successful and library wasn't already loaded.
      */
-    public static boolean updateLibrary() {
-        return !loaded && loadLibrary();
+    public static void updateLibrary() {
+        if (!loaded && !attemptedLoad) {
+            loadLibrary();
+        }
     }
 
-    private static boolean loadLibrary() {
-        if (!SystemInfo.isMac) {
-            return false;
+    private static void loadLibrary() {
+        attemptedLoad = true;
+        if (!SystemInfo.isMac || loaded) {
+            return;
         }
-        if (loaded) return true;
         try {
             if (SystemInfo.isX64) {
                 NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/libdarklaf-macos.dylib");
+                loaded = true;
+                LOGGER.info("Loaded libdarklaf-macos.dylib. Decorations are enabled.");
             } else {
                 LOGGER.warning("JRE model '"
                                    + SystemInfo.jreArchitecture
                                    + "' not supported. Decorations will be disabled");
-                return false;
             }
-            loaded = true;
-            LOGGER.info("Loaded libdarklaf-macos.dylib. Decorations are enabled.");
-            return true;
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-macos.dylib." +
                 " Decorations will be disabled", e);
-            return false;
         }
     }
 
