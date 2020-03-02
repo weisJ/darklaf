@@ -26,10 +26,22 @@
 
 #define OBJC(jl) ((id)((void*)(jl)))
 
+JNIEXPORT jlong JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPointer(JNIEnv *env, jclass cls, jobject peer) {
+    jclass class_peer = env->GetObjectClass(peer);
+    jfieldID fid_platformWindow = env->GetFieldID(class_peer, "platformWindow", "Lsun/lwawt/PlatformWindow");
+    jobject platformWindow = env->GetObjectField(peer, fid_platformWindow);
+
+    jclass class_platformWindow = env->GetObjectClass(platformWindow);
+    jfieldID fid_ptr = env->GetFieldID(class_platformWindow, "ptr", "J");
+    jlong ptr = env->GetLongField(platformWindow, fid_ptr);
+    return ptr;
+}
+
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_isFullscreen(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);
-    return (jboolean)(([nsWindow styleMask] & NSFullScreenWindowMask) != 0);
+    return (jboolean)(([nsWindow styleMask] & NSWindowStyleMaskFullScreen) != 0);
 }
 
 JNIEXPORT jdouble JNICALL
@@ -47,6 +59,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleEnabled
         } else {
             nsWindow.titleVisibility = NSWindowTitleHidden;
         }
+        [nsWindow contentView].needsDisplay = true;
     });
 }
 
@@ -60,6 +73,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setDarkTheme(JN
           } else {
             nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
           }
+          [nsWindow contentView].needsDisplay = true;
      });
 }
 
@@ -70,6 +84,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorati
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
         nsWindow.titlebarAppearsTransparent = true;
+        [nsWindow contentView].needsDisplay = true;
     });
 }
 
@@ -79,5 +94,6 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecora
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
         nsWindow.titlebarAppearsTransparent = false;
+        [nsWindow contentView].needsDisplay = true;
     });
 }

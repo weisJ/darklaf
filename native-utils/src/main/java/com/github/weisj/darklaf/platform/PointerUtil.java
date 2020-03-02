@@ -23,14 +23,10 @@
  */
 package com.github.weisj.darklaf.platform;
 
-import com.github.weisj.darklaf.util.ReflectiveWarningSuppressor;
 import com.sun.jna.Native;
-import sun.awt.AWTAccessor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class PointerUtil {
 
@@ -41,30 +37,8 @@ public class PointerUtil {
      * @return the handle.
      */
     public static long getHWND(final Component component) {
-        if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
-            return getHWNDMacOS(component);
-        } else {
-            return Native.getComponentID(component);
-        }
-    }
-
-    private static long getHWNDMacOS(final Component component) {
-        long handle = Native.getComponentID(component);
-        if (handle != 0) return handle;
-
         Window window = component instanceof Window ? (Window) component
                                                     : SwingUtilities.getWindowAncestor(component);
-        try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
-            Object peer = AWTAccessor.getComponentAccessor().getPeer(window);
-            Method getPlatformWindow = peer.getClass().getMethod("getPlatformWindow");
-            Object platformWindow = getPlatformWindow.invoke(peer);
-            Class<?> CFRetainedResource = Class.forName("sun.lwawt.macosx.CFRetainedResource");
-            Field ptr = CFRetainedResource.getDeclaredField("ptr");
-            ptr.setAccessible(true);
-            return (Long) ptr.get(platformWindow);
-        } catch (Exception ignored) {
-        }
-        return 0;
+        return Native.getComponentID(window);
     }
-
 }

@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.platform.macos.ui;
 
-import com.github.weisj.darklaf.platform.PointerUtil;
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -38,7 +37,7 @@ public class MacOSDecorationsUtil {
     protected static DecorationInformation installDecorations(final JRootPane rootPane) {
         if (rootPane == null) return null;
         Window window = SwingUtilities.getWindowAncestor(rootPane);
-        long windowHandle = PointerUtil.getHWND(window);
+        long windowHandle = JNIDecorationsMacOS.getComponentPointer(window);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
         boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");

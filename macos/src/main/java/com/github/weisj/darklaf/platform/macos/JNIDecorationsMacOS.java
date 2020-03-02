@@ -25,7 +25,10 @@ package com.github.weisj.darklaf.platform.macos;
 
 import com.github.weisj.darklaf.platform.NativeUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
+import sun.awt.AWTAccessor;
 
+import java.awt.*;
+import java.awt.peer.WindowPeer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +37,8 @@ public class JNIDecorationsMacOS {
 
     private static final Logger LOGGER = Logger.getLogger(JNIDecorationsMacOS.class.getName());
     private static boolean loaded;
+
+    private static native long getComponentPointer(final WindowPeer peer);
 
     public static native void installDecorations(final long hwnd);
 
@@ -46,6 +51,11 @@ public class JNIDecorationsMacOS {
     public static native boolean isFullscreen(final long hwnd);
 
     public static native double getTitleFontSize(final long hwnd);
+
+    public static long getComponentPointer(final Window window) {
+        WindowPeer peer = (WindowPeer) AWTAccessor.getComponentAccessor().getPeer(window);
+        return getComponentPointer(peer);
+    }
 
     /**
      * Load the decorations-library if necessary.
