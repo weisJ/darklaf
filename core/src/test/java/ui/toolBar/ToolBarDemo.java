@@ -140,8 +140,6 @@ public class ToolBarDemo extends JPanel implements ActionListener {
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
-            //Turn off metal's use of bold fonts
-            UIManager.put("swing.boldMetal", Boolean.FALSE);
             createAndShowGUI();
         });
     }
@@ -159,6 +157,7 @@ public class ToolBarDemo extends JPanel implements ActionListener {
 
         //Display the window.
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 

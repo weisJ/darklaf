@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.toolbar;
 
 import com.github.weisj.darklaf.decorators.MouseResponder;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -65,6 +66,13 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         previewPanel.setToolBar(toolBar);
         dragWindow = createDragWindow(toolBar);
         floatingToolBar = createFloatingWindow(toolBar);
+    }
+
+    @Override
+    protected RootPaneContainer createFloatingWindow(final JToolBar toolbar) {
+        RootPaneContainer floatingToolbar = super.createFloatingWindow(toolbar);
+        floatingToolbar.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+        return floatingToolbar;
     }
 
     @Override
@@ -236,6 +244,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     protected void startDrag() {
+        DarkUIUtil.getWindow(floatingToolBar.getRootPane()).setVisible(false);
         if (!dragWindow.isVisible()) {
             dragWindow.getContentPane().add(toolBar);
             updateDockingSource();
