@@ -99,7 +99,7 @@ afterEvaluate {
                     it.forEach { binary ->
                         binary.linkTask.get().debuggable.set(false)
                         dependsOn(binary.linkTask)
-                        val variantName = getVariantName(binary.targetMachine)
+                        val variantName = binary.targetMachine.variantName
                         into("$libraryPath/$variantName") {
                             from(binary.runtimeFile)
                         }
