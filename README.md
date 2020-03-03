@@ -85,6 +85,13 @@ This LookAndFeel supports custom window decorations (only on Windows at this poi
 
 When building on Windows, you need a C++ toolchain installed to build native extension.
 
+If you wan't to build for platforms different than your machine you can download the repsective native libraries
+from the latest run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22) and place it in the corresponding `<variant>/libraries` folder.
+Further details can be found in the repsective `library.md` file. They are automatically included when building the project.
+When building the project there will be a messsage for every library that needs to be manually included.
+
+Note: You can still build the project without the libraries, but then custom decorations won't be supported.
+
 # Contribute
 Here is a list of things that currently are not finished or need refinement. This list is a work in progress and being updated regulary. If you find any problems with the LaF feel free to submit an issue:
 
