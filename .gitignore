@@ -53,3 +53,5 @@ Thumbs.db
 /bin/
 /buildSrc/bin/
 /*/bin/
+*.dylib
+*.dll
