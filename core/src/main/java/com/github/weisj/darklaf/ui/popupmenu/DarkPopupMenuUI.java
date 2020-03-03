@@ -366,21 +366,20 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     protected static class StringBufferWrapper {
         private final StringBuffer buffer;
 
-
         protected StringBufferWrapper(final StringBuffer buffer) {
             this.buffer = buffer;
         }
 
+        @Override
+        public String toString() {
+            return buffer.toString();
+        }
 
+        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
         @Override
         public boolean equals(final Object obj) {
-            if (obj instanceof StringBuffer) {
-                return ((StringBuffer) obj).toString().equals(buffer.toString());
-            } else if (obj instanceof StringBufferWrapper) {
-                //noinspection EqualsBetweenInconvertibleTypes,EqualsOnSuspiciousObject
-                return equals(((StringBufferWrapper) obj).buffer);
-            }
-            return false;
+            if (obj == null || buffer == null) return false;
+            return toString().equals(obj.toString());
         }
     }
 }
