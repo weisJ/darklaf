@@ -9,6 +9,9 @@ on:
     paths:
     - '**.cpp'
     - '**.mm'
+  release:
+    types:
+    - published
   schedule:
     - cron:  '0 0 1 * *'
 jobs:
