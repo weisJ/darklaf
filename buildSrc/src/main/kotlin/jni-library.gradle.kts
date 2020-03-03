@@ -82,7 +82,7 @@ afterEvaluate {
             .filterIsInstance<CppSharedLibrary>().let {
                 if (it.isEmpty()) {
                     library.targetMachines.get().forEach { targetMachine ->
-                        val variantName = getVariantName(targetMachine)
+                        val variantName = targetMachine.variantName
                         val libraryFile = file("libraries/$variantName/$defaultLibraryName")
                         if (!libraryFile.exists()) {
                             logger.warn(
