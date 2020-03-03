@@ -24,12 +24,12 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>[1.3.3.6,)</version>
+  <version>[1.4.0.0,)</version>
 </dependency>
 ````
 ### Gradle
 ````
-implementation 'com.github.weisj:darklaf-core:[1.3.3.6,)'
+implementation 'com.github.weisj:darklaf-core:[1.4.0.0,)'
 ````
 
 ## Installation
@@ -102,14 +102,16 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - Create missing demo classes. (See Todo's in test/ui/)
 
 # Artifacts
-- Group ID: ````com.github.weisj````
-- Version: ````1.3.3.6````
+- Group ID: `com.github.weisj`
+- Version: `1.4.0.0`
 - Artifact IDs:
-  - ````darklaf-core```` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
-  - ````darklaf-native-utils```` Loading of native libraries.
-  - ````darklaf-windows```` Code specific to window decorations on windows.
-  - ````darklaf-property-loader```` Library to load and parse property files and icon.
-  - ````darklaf-utils```` Shared utility classes for other modules.
+  - `darklaf-core` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
+  - `darklaf-property-loader` Library to load and parse property files and icon.
+  - `darklaf-utils` Shared utility classes for other modules.
+  - `darklaf-decorations-base` Common classes for the decorations modules.
+  - `darklaf-native-utils` Loading of native libraries.
+  - `darklaf-windows` Code specific to window decorations on windows.
+  - `darklaf-macos` Code specific to window decorations on macOS.
 
 
 
