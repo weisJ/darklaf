@@ -49,4 +49,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: libdarklaf-macos.dylib
-        path: macos/build/lib/main/release/x86-64/libdarklaf-macos.dylib
+        path: macos/build/lib/main/release/stripped/libdarklaf-macos.dylib
