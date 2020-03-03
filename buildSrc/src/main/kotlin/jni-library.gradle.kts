@@ -1,4 +1,6 @@
+
 import org.gradle.internal.jvm.Jvm
+import org.gradle.kotlin.dsl.invoke
 
 plugins {
     `cpp-library`
@@ -7,6 +9,8 @@ plugins {
 
 // This configuration might be used for adding cpp-only dependencies
 val jniImplementation by configurations.creating
+
+val defaultLibraryName: String by project
 
 configurations.matching {
     it.name.startsWith("cppCompile") ||
@@ -57,6 +61,12 @@ fun Provider<String>.overrideToString() = object {
     override fun toString() = orNull ?: ""
 }
 
+fun getVariantName(targetMachine: TargetMachine): String {
+    return targetMachine.let {
+        "${it.operatingSystemFamily}-${it.architecture}"
+    }
+}
+
 // Gradle populates library.binaries in afterEvaluate, so we can't access it earlier
 afterEvaluate {
     // C++ library is built for Windows only, so we skip it otherwise
@@ -70,17 +80,34 @@ afterEvaluate {
     }
     tasks.jar {
         // Publish non-optimized, debuggable binary to simplify analysis in case of crashes
+        val libraryPath = "com/github/weisj/darklaf/platform/${project.name}"
         library.binaries.get()
             .filter { it.isOptimized }
-            .filterIsInstance<CppSharedLibrary>()
-            .forEach { binary ->
-                binary.linkTask.get().debuggable.set(false)
-                dependsOn(binary.linkTask)
-                val variantName = binary.targetMachine.let {
-                    "${it.operatingSystemFamily}-${it.architecture}"
-                }
-                into("com/github/weisj/darklaf/platform/${project.name}/$variantName") {
-                    from(binary.runtimeFile)
+            .filterIsInstance<CppSharedLibrary>().let {
+                if (it.isEmpty()) {
+                    library.targetMachines.get().forEach { targetMachine ->
+                        val variantName = getVariantName(targetMachine)
+                        val libraryFile = file("libraries/$variantName/$defaultLibraryName")
+                        if (!libraryFile.exists()) {
+                            logger.warn(
+                                "Library $libraryFile for targetMachine $variantName does not exist. Download it from "
+                                        + "https://github.com/weisJ/darklaf"
+                            )
+                        } else {
+                            into("$libraryPath/$variantName") {
+                                from(libraryFile)
+                            }
+                        }
+                    }
+                } else {
+                    it.forEach { binary ->
+                        binary.linkTask.get().debuggable.set(false)
+                        dependsOn(binary.linkTask)
+                        val variantName = getVariantName(binary.targetMachine)
+                        into("$libraryPath/$variantName") {
+                            from(binary.runtimeFile)
+                        }
+                    }
                 }
             }
     }

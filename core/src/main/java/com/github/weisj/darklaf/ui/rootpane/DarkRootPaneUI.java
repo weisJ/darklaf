@@ -181,7 +181,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         root.setLayout(layoutManager);
     }
 
-    protected JComponent getTitlePane() {
+    protected CustomTitlePane getTitlePane() {
         return titlePane;
     }
 

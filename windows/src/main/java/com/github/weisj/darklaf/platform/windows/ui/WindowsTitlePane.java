@@ -160,12 +160,29 @@ public class WindowsTitlePane extends CustomTitlePane {
         uninstallListeners();
         uninstallDecorations();
         removeAll();
+        if (menuBar != null) {
+            getRootPane().setJMenuBar(menuBar);
+        }
+    }
+
+    @Override
+    public Insets getWindowSizeAdjustment() {
+        //Compensate for the insets of the native window peer that include the decorations.
+        Insets insets = window != null && windowHandle != 0
+                        ? window.getInsets()
+                        : new Insets(0, 0, 0, 0);
+        insets.set(-insets.top, -insets.left, -insets.bottom, -insets.right);
+        return insets;
     }
 
     private void uninstallListeners() {
         if (window != null) {
             window.removeWindowListener(windowListener);
             window.removePropertyChangeListener(propertyChangeListener);
+        }
+        if (rootPane != null) {
+            rootPane.removeContainerListener(rootPaneContainerListener);
+            rootPane.getLayeredPane().removeContainerListener(layeredPaneContainerListener);
         }
     }
 
@@ -185,11 +202,15 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (window != null) {
             if (window instanceof Dialog || window instanceof Frame) {
                 windowHandle = PointerUtil.getHWND(window);
-
-                JNIDecorationsWindows.installDecorations(windowHandle);
-                updateResizeBehaviour();
-                Color color = window.getBackground();
-                JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+                if (windowHandle != 0) {
+                    JNIDecorationsWindows.installDecorations(windowHandle);
+                    updateResizeBehaviour();
+                    Color color = window.getBackground();
+                    JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+                } else {
+                    uninstall();
+                    return;
+                }
             }
 
             if (window instanceof Frame) {
@@ -614,7 +635,10 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
-        return getWindowDecorationStyle() == JRootPane.NONE && menuBar == null && titleLabel.getText().length() == 0;
+        return windowHandle == 0
+            || (getWindowDecorationStyle() == JRootPane.NONE
+            && menuBar == null
+            && titleLabel.getText().length() == 0);
     }
 
     private class TitlePaneLayout implements LayoutManager {
@@ -625,6 +649,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         public Dimension preferredLayoutSize(final Container c) {
+            if (hideTitleBar()) return new Dimension(0, 0);
             int size = computeHeight();
             return new Dimension(size + 1, size + 1);
         }

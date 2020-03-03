@@ -425,10 +425,9 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public boolean getSupportsWindowDecorations() {
-        return LafManager.isDecorationsEnabled()
+        return !"false".equals(System.getProperty("darklaf.decorations"))
+            && LafManager.isDecorationsEnabled()
             && LafManager.getTheme().useCustomDecorations()
             && Decorations.isCustomDecorationSupported();
     }
-
-
 }

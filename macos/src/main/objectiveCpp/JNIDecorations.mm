@@ -27,20 +27,25 @@
 #define OBJC(jl) ((id)((void*)(jl)))
 
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPointer(JNIEnv *env, jclass cls, jobject peer) {
-    jlong ptr = 0;
-    if (env && peer) {
-        jclass class_peer = env->GetObjectClass(peer);
-        jfieldID fid_platformWindow = env->GetFieldID(class_peer, "platformWindow", "Lsun/lwawt/PlatformWindow;");
-        if (fid_platformWindow) {
-            jobject platformWindow = env->GetObjectField(peer, fid_platformWindow);
-            if (platformWindow) {
-                jclass class_platformWindow = env->GetObjectClass(platformWindow);
-                jfieldID fid_ptr = env->GetFieldID(class_platformWindow, "ptr", "J");
-                ptr = env->GetLongField(platformWindow, fid_ptr);
-            }
-        }
-    }
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPointer(JNIEnv *env, jclass cls, jobject window) {
+    if (!env || !window) return 0;
+    jclass class_window = env->GetObjectClass(window);
+    jfieldID fid_peer = env->GetFieldID(class_window, "peer", "Ljava.awt.peer/ComponentPeer;");
+
+    if (!fid_peer) return 0;
+    jobject peer = env->GetObjectField(window, fid_peer);
+
+    if (!peer) return 0;
+    jclass class_peer = env->GetObjectClass(peer);
+    jfieldID fid_platformWindow = env->GetFieldID(class_peer, "platformWindow", "Lsun/lwawt/PlatformWindow;");
+
+    if (!fid_platformWindow) return 0;
+    jobject platformWindow = env->GetObjectField(peer, fid_platformWindow);
+
+    if (!platformWindow) return 0;
+    jclass class_platformWindow = env->GetObjectClass(platformWindow);
+    jfieldID fid_ptr = env->GetFieldID(class_platformWindow, "ptr", "J");
+    jlong ptr = env->GetLongField(platformWindow, fid_ptr);
     return ptr;
 }
 

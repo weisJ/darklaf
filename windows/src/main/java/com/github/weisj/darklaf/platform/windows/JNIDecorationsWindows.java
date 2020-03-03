@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.platform.windows;
 import com.github.weisj.darklaf.platform.NativeUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,7 +80,8 @@ public class JNIDecorationsWindows {
             }
             loaded = true;
             LOGGER.info("Loaded darklaf-windows.dll. Decorations are enabled.");
-        } catch (IOException e) {
+        } catch (Exception e) {
+            //Library not found, SecurityManager prevents library loading etc.
             LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll." +
                 " Decorations will be disabled", e);
         }
