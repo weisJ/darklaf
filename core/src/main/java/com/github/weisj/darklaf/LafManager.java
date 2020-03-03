@@ -49,9 +49,6 @@ public final class LafManager {
     private static boolean decorationsOverwrite = true;
 
     static {
-        /*
-         * Disable for production.
-         */
         enableLogging(true);
     }
 
