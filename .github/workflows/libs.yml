@@ -9,6 +9,8 @@ on:
     paths:
     - '**.cpp'
     - '**.mm'
+  schedule:
+    - cron:  '0 0 1 * *'
 jobs:
   windows:
     name: Windows (Java 11)
