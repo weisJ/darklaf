@@ -30,7 +30,7 @@ JNIEXPORT jlong JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPointer(JNIEnv *env, jclass cls, jobject window) {
     if (!env || !window) return 0;
     jclass class_window = env->GetObjectClass(window);
-    jfieldID fid_peer = env->GetFieldID(class_window, "peer", "Ljava.awt.peer/ComponentPeer;");
+    jfieldID fid_peer = env->GetFieldID(class_window, "peer", "Ljava/awt/peer/ComponentPeer;");
 
     if (!fid_peer) return 0;
     jobject peer = env->GetObjectField(window, fid_peer);
