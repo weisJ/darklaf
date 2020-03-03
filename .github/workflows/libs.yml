@@ -22,12 +22,12 @@ jobs:
     - name: Build
       run: ./gradlew :darklaf-windows:build
     - name: Upload x86 artifact
-    - uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v1
       with:
         name: darklaf-windows_x86.dll
         path: windows/build/lib/main/release/x86/darklaf-windows.dll
     - name: Upload x86-64 artifact
-    - uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v1
       with:
         name: darklaf-windows_x86-64.dll
         path: windows/build/lib/main/release/x86-64/darklaf-windows.dll
