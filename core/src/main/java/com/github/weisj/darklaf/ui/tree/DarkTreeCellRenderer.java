@@ -66,7 +66,7 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
     }
 
     public static Object unwrapBooleanIfPossible(final Object value) {
-        Object val = value;
+        Object val = value == null ? " " : value;
         if (val instanceof DefaultMutableTreeNode) {
             val = ((DefaultMutableTreeNode) val).getUserObject();
         }
