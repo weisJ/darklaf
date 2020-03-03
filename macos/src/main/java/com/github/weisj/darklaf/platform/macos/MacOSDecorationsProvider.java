@@ -21,40 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
+package com.github.weisj.darklaf.platform.macos;
 
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Properties;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
+public class MacOSDecorationsProvider implements DecorationsProvider {
+
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
-        return new CustomTitlePane() {
-            @Override
-            public void uninstall() {
-            }
-
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
-        };
+        return new MacOSTitlePane(rootPane);
     }
 
     @Override
     public boolean isCustomDecorationSupported() {
-        return false;
+        return JNIDecorationsMacOS.isCustomDecorationSupported();
     }
 
     @Override
     public void initialize() {
+        JNIDecorationsMacOS.updateLibrary();
     }
 
     @Override
     public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+        IconLoader iconLoader = IconLoader.get(MacOSDecorationsProvider.class);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(MacOSDecorationsProvider.class,
+                                                                   "macos_decorations", ""),
+                                     properties, currentDefaults, iconLoader);
     }
 }

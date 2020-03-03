@@ -25,6 +25,7 @@
 package ui.dialog;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.DarculaTheme;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -86,111 +87,11 @@ public class DialogDemo extends JPanel {
         label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
-    /**
-     * Creates the panel shown by the first tab.
-     */
-    private JPanel createSimpleDialogBox() {
-        final int numButtons = 4;
-        JRadioButton[] radioButtons = new JRadioButton[numButtons];
-        final ButtonGroup group = new ButtonGroup();
-
-        JButton showItButton = null;
-
-        final String defaultMessageCommand = "default";
-        final String yesNoCommand = "yesno";
-        final String yeahNahCommand = "yeahnah";
-        final String yncCommand = "ync";
-
-        radioButtons[0] = new JRadioButton("OK (in the L&F's words)");
-        radioButtons[0].setActionCommand(defaultMessageCommand);
-
-        radioButtons[1] = new JRadioButton("Yes/No (in the L&F's words)");
-        radioButtons[1].setActionCommand(yesNoCommand);
-
-        radioButtons[2] = new JRadioButton("Yes/No "
-                                                   + "(in the programmer's words)");
-        radioButtons[2].setActionCommand(yeahNahCommand);
-
-        radioButtons[3] = new JRadioButton("Yes/No/Cancel "
-                                                   + "(in the programmer's words)");
-        radioButtons[3].setActionCommand(yncCommand);
-
-        for (int i = 0; i < numButtons; i++) {
-            group.add(radioButtons[i]);
-        }
-        radioButtons[0].setSelected(true);
-
-        showItButton = new JButton("Show it!");
-        showItButton.addActionListener(e -> {
-            String command = group.getSelection().getActionCommand();
-
-            //ok dialog
-            if (Objects.equals(command, defaultMessageCommand)) {
-                JOptionPane.showMessageDialog(frame,
-                                              "Eggs aren't supposed to be green.");
-
-                //yes/no dialog
-            } else if (Objects.equals(command, yesNoCommand)) {
-                int n = JOptionPane.showConfirmDialog(
-                        frame, "Would you like green eggs and ham?",
-                        "An Inane Question",
-                        JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    setLabel("Ewww!");
-                } else if (n == JOptionPane.NO_OPTION) {
-                    setLabel("Me neither!");
-                } else {
-                    setLabel("Come on -- tell me!");
-                }
-
-                //yes/no (not in those words)
-            } else if (Objects.equals(command, yeahNahCommand)) {
-                Object[] options = {"Yes, please", "No way!"};
-                int n = JOptionPane.showOptionDialog(frame,
-                                                     "Would you like green eggs and ham?",
-                                                     "A Silly Question",
-                                                     JOptionPane.YES_NO_OPTION,
-                                                     JOptionPane.QUESTION_MESSAGE,
-                                                     null,
-                                                     options,
-                                                     options[0]);
-                if (n == JOptionPane.YES_OPTION) {
-                    setLabel("You're kidding!");
-                } else if (n == JOptionPane.NO_OPTION) {
-                    setLabel("I don't like them, either.");
-                } else {
-                    setLabel("Come on -- 'fess up!");
-                }
-
-                //yes/no/cancel (not in those words)
-            } else if (Objects.equals(command, yncCommand)) {
-                Object[] options = {"Yes, please",
-                        "No, thanks",
-                        "No eggs, no ham!"};
-                int n = JOptionPane.showOptionDialog(frame,
-                                                     "Would you like some green eggs to go "
-                                                             + "with that ham?",
-                                                     "A Silly Question",
-                                                     JOptionPane.YES_NO_CANCEL_OPTION,
-                                                     JOptionPane.QUESTION_MESSAGE,
-                                                     null,
-                                                     options,
-                                                     options[2]);
-                if (n == JOptionPane.YES_OPTION) {
-                    setLabel("Here you go: green eggs and ham!");
-                } else if (n == JOptionPane.NO_OPTION) {
-                    setLabel("OK, just the ham, then.");
-                } else if (n == JOptionPane.CANCEL_OPTION) {
-                    setLabel("Well, I'm certainly not going to eat them!");
-                } else {
-                    setLabel("Please tell me what you want!");
-                }
-            }
-        });
-
-        return createPane(simpleDialogDesc + ":",
-                          radioButtons,
-                          showItButton);
+    public static void main(final String[] args) {
+        //Schedule a job for the event-dispatching thread:
+        //creating and showing this application's GUI.
+        LafManager.install(new DarculaTheme());
+        javax.swing.SwingUtilities.invokeLater(DialogDemo::createAndShowGUI);
     }
 
     /**
@@ -545,11 +446,110 @@ public class DialogDemo extends JPanel {
         }
     }
 
-    public static void main(final String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        LafManager.install();
-        javax.swing.SwingUtilities.invokeLater(DialogDemo::createAndShowGUI);
+    /**
+     * Creates the panel shown by the first tab.
+     */
+    private JPanel createSimpleDialogBox() {
+        final int numButtons = 4;
+        JRadioButton[] radioButtons = new JRadioButton[numButtons];
+        final ButtonGroup group = new ButtonGroup();
+
+        JButton showItButton = null;
+
+        final String defaultMessageCommand = "default";
+        final String yesNoCommand = "yesno";
+        final String yeahNahCommand = "yeahnah";
+        final String yncCommand = "ync";
+
+        radioButtons[0] = new JRadioButton("OK (in the L&F's words)");
+        radioButtons[0].setActionCommand(defaultMessageCommand);
+
+        radioButtons[1] = new JRadioButton("Yes/No (in the L&F's words)");
+        radioButtons[1].setActionCommand(yesNoCommand);
+
+        radioButtons[2] = new JRadioButton("Yes/No "
+                                               + "(in the programmer's words)");
+        radioButtons[2].setActionCommand(yeahNahCommand);
+
+        radioButtons[3] = new JRadioButton("Yes/No/Cancel "
+                                               + "(in the programmer's words)");
+        radioButtons[3].setActionCommand(yncCommand);
+
+        for (int i = 0; i < numButtons; i++) {
+            group.add(radioButtons[i]);
+        }
+        radioButtons[0].setSelected(true);
+
+        showItButton = new JButton("Show it!");
+        showItButton.addActionListener(e -> {
+            String command = group.getSelection().getActionCommand();
+
+            //ok dialog
+            if (Objects.equals(command, defaultMessageCommand)) {
+                JOptionPane.showMessageDialog(frame, "Eggs aren't supposed to be green.");
+
+                //yes/no dialog
+            } else if (Objects.equals(command, yesNoCommand)) {
+                int n = JOptionPane.showConfirmDialog(
+                    frame, "Would you like green eggs and ham?",
+                    "An Inane Question",
+                    JOptionPane.YES_NO_OPTION);
+                if (n == JOptionPane.YES_OPTION) {
+                    setLabel("Ewww!");
+                } else if (n == JOptionPane.NO_OPTION) {
+                    setLabel("Me neither!");
+                } else {
+                    setLabel("Come on -- tell me!");
+                }
+
+                //yes/no (not in those words)
+            } else if (Objects.equals(command, yeahNahCommand)) {
+                Object[] options = {"Yes, please", "No way!"};
+                int n = JOptionPane.showOptionDialog(frame,
+                                                     "Would you like green eggs and ham?",
+                                                     "A Silly Question",
+                                                     JOptionPane.YES_NO_OPTION,
+                                                     JOptionPane.QUESTION_MESSAGE,
+                                                     null,
+                                                     options,
+                                                     options[0]);
+                if (n == JOptionPane.YES_OPTION) {
+                    setLabel("You're kidding!");
+                } else if (n == JOptionPane.NO_OPTION) {
+                    setLabel("I don't like them, either.");
+                } else {
+                    setLabel("Come on -- 'fess up!");
+                }
+
+                //yes/no/cancel (not in those words)
+            } else if (Objects.equals(command, yncCommand)) {
+                Object[] options = {"Yes, please",
+                    "No, thanks",
+                    "No eggs, no ham!"};
+                int n = JOptionPane.showOptionDialog(frame,
+                                                     "Would you like some green eggs to go "
+                                                         + "with that ham?",
+                                                     "A Silly Question",
+                                                     JOptionPane.YES_NO_CANCEL_OPTION,
+                                                     JOptionPane.QUESTION_MESSAGE,
+                                                     null,
+                                                     options,
+                                                     options[2]);
+                if (n == JOptionPane.YES_OPTION) {
+                    setLabel("Here you go: green eggs and ham!");
+                } else if (n == JOptionPane.NO_OPTION) {
+                    setLabel("OK, just the ham, then.");
+                } else if (n == JOptionPane.CANCEL_OPTION) {
+                    setLabel("Well, I'm certainly not going to eat them!");
+                } else {
+                    setLabel("Please tell me what you want!");
+                }
+            }
+        });
+
+        return createPane(simpleDialogDesc + ":",
+                          radioButtons,
+                          showItButton);
     }
 
     /**

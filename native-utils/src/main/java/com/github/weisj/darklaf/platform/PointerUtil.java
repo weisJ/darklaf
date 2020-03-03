@@ -21,47 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.windows.ui;
+package com.github.weisj.darklaf.platform;
+
+import com.sun.jna.Native;
 
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * @author Jannis Weis
- */
-public class TitlePaneIcon implements Icon {
+public class PointerUtil {
 
-    private final Icon activeIcon;
-    private final Icon inactiveIcon;
-    private boolean active = true;
-
-
-    public TitlePaneIcon(final Icon active, final Icon inactive) {
-        this.activeIcon = active;
-        this.inactiveIcon = inactive;
-    }
-
-    public void setActive(final boolean active) {
-        this.active = active;
-    }
-
-    @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        currentIcon().paintIcon(c, g, x, y);
-    }
-
-
-    private Icon currentIcon() {
-        return active ? activeIcon : inactiveIcon;
-    }
-
-    @Override
-    public int getIconWidth() {
-        return currentIcon().getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-        return currentIcon().getIconHeight();
+    /**
+     * Get the window handle for the window the given component descends from.
+     *
+     * @param component the component.
+     * @return the handle.
+     */
+    public static long getHWND(final Component component) {
+        Window window = component instanceof Window ? (Window) component
+                                                    : SwingUtilities.getWindowAncestor(component);
+        return Native.getComponentID(window);
     }
 }

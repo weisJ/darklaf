@@ -142,7 +142,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizabl
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv *env, jclass obj, jlong hwnd,
-                                                                           jint l, jint r, jint h)
+                                                                                  jint l, jint r, jint h)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
@@ -173,7 +173,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDeco
     auto it = wrapper_map.find(handle);
     if (it != wrapper_map.end())
     {
-        //Prevent multiple installations overwriding the real window procedure.
+        //Prevent multiple installations overriding the real window procedure.
         return;
     }
 
@@ -200,7 +200,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
     auto wrap = wrapper_map[handle];
     if (wrap)
     {
-        SetWindowLongPtr((HWND)hwnd, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
+        SetWindowLongPtr(handle, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
         wrapper_map.erase(handle);
         delete (wrap);
     }

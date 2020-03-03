@@ -49,6 +49,8 @@ public class SystemInfo {
     public static final boolean isX64;
     public static final boolean isUndefined;
     protected static final String _OS_NAME;
+    public static boolean isMacOSMojave;
+    public static boolean isMacOSCatalina;
 
     static {
         _OS_NAME = OS_NAME.toLowerCase();
@@ -64,6 +66,8 @@ public class SystemInfo {
         isX64 = X64.equals(jreArchitecture);
         isX86 = X86.equals(jreArchitecture);
         isUndefined = !isX86 & !isX64;
+        isMacOSMojave = isMac && isOsVersionAtLeast("10.14");
+        isMacOSCatalina = isMac && isOsVersionAtLeast("10.15");
     }
 
     public static boolean isOsVersionAtLeast(final String version) {

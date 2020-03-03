@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.rootpane;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.decorations.CustomTitlePane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,10 +34,16 @@ import java.awt.*;
  * @author Jannis Weis
  */
 class DarkSubstanceRootLayout implements LayoutManager2 {
+
+    @Override
     public void addLayoutComponent(final String name, final Component comp) {
     }
 
+    @Override
     public void removeLayoutComponent(final Component comp) {
+    }
+
+    public void addLayoutComponent(final Component comp, final Object constraints) {
     }
 
     public Dimension preferredLayoutSize(final Container parent) {
@@ -50,11 +56,14 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         int tpHeight = 0;
         Insets i = parent.getInsets();
 
-        //Compensate for the insets of the native window peer that include the decorations.
-        Window window = DarkUIUtil.getWindow(parent);
-        Insets peerInsets = window != null ? window.getInsets() : new Insets(0, 0, 0, 0);
-        i.set(i.top - peerInsets.top, i.left - peerInsets.left,
-              i.bottom - peerInsets.bottom, i.right - peerInsets.right);
+        Insets sizeAdjustment = new Insets(0, 0, 0, 0);
+        CustomTitlePane titlePane = getTitlePane(SwingUtilities.getRootPane(parent));
+        if (titlePane != null) {
+            sizeAdjustment = titlePane.getWindowSizeAdjustment();
+        }
+
+        i.set(i.top + sizeAdjustment.top, i.left + sizeAdjustment.left,
+              i.bottom + sizeAdjustment.bottom, i.right + sizeAdjustment.right);
 
         JRootPane root = (JRootPane) parent;
 
@@ -76,15 +85,11 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             }
         }
 
-        if ((root.getWindowDecorationStyle() != JRootPane.NONE)
-                && (root.getUI() instanceof DarkRootPaneUI)) {
-            JComponent titlePane = ((DarkRootPaneUI) root.getUI()).getTitlePane();
-            if (titlePane != null) {
-                tpd = titlePane.getPreferredSize();
-                if (tpd != null) {
-                    tpWidth = tpd.width;
-                    tpHeight = tpd.height;
-                }
+        if (titlePane != null) {
+            tpd = titlePane.getPreferredSize();
+            if (tpd != null) {
+                tpWidth = tpd.width;
+                tpHeight = tpd.height;
             }
         }
 
@@ -134,8 +139,16 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         }
 
         return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth)
-                                     + i.left + i.right, cpHeight + mbHeight + tpHeight + i.top
-                                     + i.bottom);
+                                 + i.left + i.right, cpHeight + mbHeight + tpHeight + i.top
+                                 + i.bottom);
+    }
+
+    protected CustomTitlePane getTitlePane(final JRootPane root) {
+        if ((root.getWindowDecorationStyle() != JRootPane.NONE)
+            && (root.getUI() instanceof DarkRootPaneUI)) {
+            return ((DarkRootPaneUI) root.getUI()).getTitlePane();
+        }
+        return null;
     }
 
     public void layoutContainer(final Container parent) {
@@ -153,17 +166,13 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             root.getGlassPane().setBounds(i.left, i.top, w, h);
         }
 
-        if ((root.getWindowDecorationStyle() != JRootPane.NONE)
-                && (root.getUI() instanceof DarkRootPaneUI)) {
-            JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                    .getTitlePane();
-            if (titlePane != null) {
-                Dimension tpd = titlePane.getPreferredSize();
-                if (tpd != null) {
-                    int tpHeight = tpd.height;
-                    titlePane.setBounds(0, 0, w, tpHeight);
-                    nextY += tpHeight;
-                }
+        JComponent titlePane = getTitlePane(root);
+        if (titlePane != null) {
+            Dimension tpd = titlePane.getPreferredSize();
+            if (tpd != null) {
+                int tpHeight = tpd.height;
+                titlePane.setBounds(0, 0, w, tpHeight);
+                nextY += tpHeight;
             }
         }
         if (root.getJMenuBar() != null) {
@@ -172,12 +181,8 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             nextY += mbd.height;
         }
         if (root.getContentPane() != null) {
-
             root.getContentPane().setBounds(0, nextY, w, h < nextY ? 0 : h - nextY);
         }
-    }
-
-    public void addLayoutComponent(final Component comp, final Object constraints) {
     }
 
     public Dimension maximumLayoutSize(final Container target) {

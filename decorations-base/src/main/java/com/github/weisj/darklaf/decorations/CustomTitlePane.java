@@ -24,8 +24,11 @@
 package com.github.weisj.darklaf.decorations;
 
 import javax.swing.*;
+import java.awt.*;
 
 public abstract class CustomTitlePane extends JComponent {
 
     public abstract void uninstall();
+
+    public abstract Insets getWindowSizeAdjustment();
 }

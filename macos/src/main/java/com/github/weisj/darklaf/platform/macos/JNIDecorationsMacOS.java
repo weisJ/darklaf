@@ -21,38 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.windows;
+package com.github.weisj.darklaf.platform.macos;
 
 import com.github.weisj.darklaf.platform.NativeUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
+import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Jannis Weis
- */
-public class JNIDecorationsWindows {
+public class JNIDecorationsMacOS {
 
-    private static final Logger LOGGER = Logger.getLogger(JNIDecorationsWindows.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JNIDecorationsMacOS.class.getName());
     private static boolean loaded;
     private static boolean attemptedLoad;
 
-    public static native void updateValues(final long hwnd, final int left, final int right, final int height);
-
-    public static native void setResizable(final long hwnd, final boolean resizable);
-
-    public static native void setBackground(final long hwnd, final int r, final int g, final int b);
-
-    public static native void minimize(final long hwnd);
-
-    public static native void maximize(final long hwnd);
-
-    public static native void restore(final long hwnd);
+    public static native long getComponentPointer(final Window window);
 
     public static native void installDecorations(final long hwnd);
 
     public static native void uninstallDecorations(final long hwnd);
+
+    public static native void setTitleEnabled(final long hwnd, final boolean enabled);
+
+    public static native void setDarkTheme(final long hwnd, final boolean darkEnabled);
+
+    public static native boolean isFullscreen(final long hwnd);
+
+    public static native double getTitleFontSize(final long hwnd);
 
     /**
      * Load the decorations-library if necessary.
@@ -64,29 +60,26 @@ public class JNIDecorationsWindows {
     }
 
     private static void loadLibrary() {
-        if (!SystemInfo.isWindows || loaded) {
+        attemptedLoad = true;
+        if (!SystemInfo.isMac || loaded) {
             return;
         }
         try {
-            if (SystemInfo.isX86) {
-                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86/darklaf-windows.dll");
-            } else if (SystemInfo.isX64) {
-                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86-64/darklaf-windows.dll");
+            if (SystemInfo.isX64) {
+                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/libdarklaf-macos.dylib");
+                loaded = true;
+                LOGGER.info("Loaded libdarklaf-macos.dylib. Decorations are enabled.");
             } else {
-                LOGGER.warning("Could not determine jre model '"
+                LOGGER.warning("JRE model '"
                                    + SystemInfo.jreArchitecture
-                                   + "'. Decorations will be disabled");
-                return;
+                                   + "' not supported. Decorations will be disabled");
             }
-            loaded = true;
-            LOGGER.info("Loaded darklaf-windows.dll. Decorations are enabled.");
         } catch (Exception e) {
             //Library not found, SecurityManager prevents library loading etc.
-            LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll." +
+            LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-macos.dylib." +
                 " Decorations will be disabled", e);
         }
     }
-
 
     public static boolean isCustomDecorationSupported() {
         return loaded;

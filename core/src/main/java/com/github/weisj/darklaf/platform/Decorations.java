@@ -23,8 +23,10 @@
  */
 package com.github.weisj.darklaf.platform;
 
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -36,21 +38,31 @@ public final class Decorations {
     private static DecorationsProvider decorationsProvider;
 
     static {
-        //Extend for different platforms.
-        if (SystemInfo.isWindows) {
-            decorationsProvider = new WindowsDecorationsProvider();
-        } else {
+        try {
+            //Extend for different platforms.
+            if (SystemInfo.isWindows) {
+                decorationsProvider = new WindowsDecorationsProvider();
+            } else if (SystemInfo.isMac) {
+                decorationsProvider = new MacOSDecorationsProvider();
+            } else {
+                decorationsProvider = new DefaultDecorationsProvider();
+            }
+        } catch (Exception e) {
+            //If decorations modules are not available disable them.
             decorationsProvider = new DefaultDecorationsProvider();
         }
     }
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane) {
-        return decorationsProvider.createTitlePane(rootPane);
+    public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
+        return decorationsProvider.createTitlePane(rootPane, decorationStyle);
     }
 
 
     public static boolean isCustomDecorationSupported() {
-        return decorationsProvider.isCustomDecorationSupported();
+        return decorationsProvider.isCustomDecorationSupported()
+            && !"false".equals(System.getProperty("darklaf.decorations"))
+            && LafManager.isDecorationsEnabled()
+            && LafManager.getTheme().useCustomDecorations();
     }
 
     public static void initialize() {

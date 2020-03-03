@@ -21,40 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
-
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.DecorationsProvider;
+package com.github.weisj.darklaf.icons;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Properties;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
-    @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
-        return new CustomTitlePane() {
-            @Override
-            public void uninstall() {
-            }
+/**
+ * @author Jannis Weis
+ */
+public class ToggleIcon implements Icon {
 
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
-        };
+    private final Icon activeIcon;
+    private final Icon inactiveIcon;
+    private boolean active = true;
+
+
+    public ToggleIcon(final Icon active, final Icon inactive) {
+        this.activeIcon = active;
+        this.inactiveIcon = inactive;
+    }
+
+    public void setActive(final boolean active) {
+        this.active = active;
     }
 
     @Override
-    public boolean isCustomDecorationSupported() {
-        return false;
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        currentIcon().paintIcon(c, g, x, y);
+    }
+
+
+    private Icon currentIcon() {
+        return active ? activeIcon : inactiveIcon;
     }
 
     @Override
-    public void initialize() {
+    public int getIconWidth() {
+        return currentIcon().getIconWidth();
     }
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+    public int getIconHeight() {
+        return currentIcon().getIconHeight();
     }
 }
