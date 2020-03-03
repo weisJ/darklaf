@@ -49,7 +49,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private LayoutManager oldLayout;
     private JRootPane rootPane;
 
-    private HierarchyListener hierarchyListener;
     private boolean decorationStyleLock = false;
     private int windowDecorationsStyle = -1;
 
@@ -70,19 +69,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         uninstallClientDecorations(rootPane);
         layoutManager = null;
         rootPane = null;
-    }
-
-    @Override
-    protected void installListeners(final JRootPane root) {
-        super.installListeners(root);
-        root.addHierarchyListener(this);
-    }
-
-    @Override
-    protected void uninstallListeners(final JRootPane root) {
-        root.removeHierarchyListener(hierarchyListener);
-        hierarchyListener = null;
-        super.uninstallListeners(root);
     }
 
     @Override
@@ -110,6 +96,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     private void uninstallClientDecorations(final JRootPane root) {
         uninstallBorder(root);
+        root.removeHierarchyListener(this);
         if (titlePane != null) {
             titlePane.uninstall();
             setTitlePane(root, null);
@@ -144,6 +131,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         setWindowDecorated();
         installLayout(root);
         setTitlePane(root, titlePane);
+        root.addHierarchyListener(this);
     }
 
     private void setWindowDecorated() {
@@ -200,9 +188,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
             || (parent.getClass().getName().equals("javax.swing.Popup$HeavyWeightWindow"))) {
             SwingUtilities.invokeLater(() -> {
                 if (rootPane != null) {
-                    rootPane.removeHierarchyListener(hierarchyListener);
+                    rootPane.removeHierarchyListener(this);
                 }
-                hierarchyListener = null;
             });
         }
         if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
