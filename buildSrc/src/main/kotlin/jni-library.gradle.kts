@@ -87,7 +87,7 @@ afterEvaluate {
                         if (!libraryFile.exists()) {
                             logger.warn(
                                 "Library $libraryFile for targetMachine $variantName does not exist. Download it from "
-                                        + "https://github.com/weisJ/darklaf"
+                                        + "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22"
                             )
                         } else {
                             into("$libraryPath/$variantName") {
