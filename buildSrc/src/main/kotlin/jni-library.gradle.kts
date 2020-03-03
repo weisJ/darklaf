@@ -61,7 +61,7 @@ fun Provider<String>.overrideToString() = object {
     override fun toString() = orNull ?: ""
 }
 
-val TargetMachine.getVariantName: String get() = "$operatingSystemFamily-$architecture"
+val TargetMachine.variantName: String get() = "$operatingSystemFamily-$architecture"
 
 // Gradle populates library.binaries in afterEvaluate, so we can't access it earlier
 afterEvaluate {
