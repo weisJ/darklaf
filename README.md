@@ -85,10 +85,11 @@ This LookAndFeel supports custom window decorations (only on Windows at this poi
 
 When building on Windows, you need a C++ toolchain installed to build native extension.
 
-If you wan't to build for platforms different than your machine you can download the repsective native libraries
+If you wan't to build for platforms different than your machine you can download the respective native libraries
 from the latest run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22) and place it in the corresponding `<variant>/libraries` folder.
-Further details can be found in the repsective `library.md` file. They are automatically included when building the project.
-When building the project there will be a messsage for every library that needs to be manually included.
+Further details can be found in the respective `library.md` file. The libraries are then automatically included in the jar
+when building the project.
+When building the project there will be a message for every library that needs to be manually included.
 
 Note: You can still build the project without the libraries, but then custom decorations won't be supported.
 
@@ -96,7 +97,7 @@ Note: You can still build the project without the libraries, but then custom dec
 Here is a list of things that currently are not finished or need refinement. This list is a work in progress and being updated regulary. If you find any problems with the LaF feel free to submit an issue:
 
 - [Native window decorations on Linux and MacOS.](https://github.com/weisJ/darklaf/issues/2)
-  * See [jniplatform/cpp](https://github.com/weisJ/darklaf/tree/master/src/jniplatform/cpp) for the windows implementation.
+  * See [/windows](https://github.com/weisJ/darklaf/tree/master/windows) for the windows implementation.
 - [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
   * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the plaform folder.
 - Create missing demo classes. (See Todo's in test/ui/)
