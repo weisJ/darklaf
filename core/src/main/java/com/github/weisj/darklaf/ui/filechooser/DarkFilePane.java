@@ -25,9 +25,9 @@ package com.github.weisj.darklaf.ui.filechooser;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.table.TextFieldTableCellEditorBorder;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import sun.awt.AWTAccessor;
-import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -378,8 +378,8 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 Point p = evt.getPoint();
                 index = table.rowAtPoint(p);
 
-                boolean pointOutsidePrefSize = SwingUtilities2.pointOutsidePrefSize(table, index,
-                                                                                    table.columnAtPoint(p), p);
+                boolean pointOutsidePrefSize = DarkSwingUtil.pointOutsidePrefSize(table, index,
+                                                                                  table.columnAtPoint(p), p);
 
                 if (pointOutsidePrefSize && !fullRowSelection) {
                     return;

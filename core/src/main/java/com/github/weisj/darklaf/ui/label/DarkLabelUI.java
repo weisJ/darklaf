@@ -23,9 +23,9 @@
  */
 package com.github.weisj.darklaf.ui.label;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -67,7 +67,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
             return;
         }
 
-        FontMetrics fm = SwingUtilities2.getFontMetrics(label, g);
+        FontMetrics fm = DarkSwingUtil.getFontMetrics(label, g);
         String clippedText = layout(label, fm, c.getWidth(), c.getHeight());
 
         if (icon != null) {
@@ -97,8 +97,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
                                      final int textX, final int textY) {
         int accChar = l.getDisplayedMnemonicIndex();
         g.setColor(inactiveForeground);
-        SwingUtilities2.drawStringUnderlineCharAt(l, g, s, accChar,
-                                                  textX, textY);
+        DarkSwingUtil.drawStringUnderlineCharAt(l, g, s, accChar, textX, textY);
     }
 
     protected Icon getIcon(final JLabel label) {

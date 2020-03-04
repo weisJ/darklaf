@@ -27,24 +27,18 @@ import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Position;
-import javax.swing.text.View;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Note this class only sits inside this weird package because of a hack used in {@link
- * SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent)} that makes it impossible for custom
+ * Note this class only sits inside this weird package because of a hack used in
+ * SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent) that makes it impossible for custom
  * highlighters to use the correct text foreground specified by {@link JTextComponent#getSelectedTextColor()}.
  *
  * @author Jannis Weis

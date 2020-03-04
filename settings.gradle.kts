@@ -9,6 +9,7 @@ pluginManagement {
         idv("com.github.vlsi.ide", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.license-gather", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.stage-vote-release", "com.github.vlsi.vlsi-release-plugins")
+        idv("org.javamodularity.moduleplugin", "org.javamodularity.moduleplugin")
     }
 }
 

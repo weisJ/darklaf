@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.platform.windows;
 
 import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.utils.SystemInfo;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -23,9 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -36,12 +35,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
-import java.util.Objects;
 
 /**
  * The type Dark table header ui bridge.
@@ -623,217 +620,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     }
 
     /**
-     * The type Actions.
-     */
-    protected static class Actions extends UIAction {
-        /**
-         * The constant TOGGLE_SORT_ORDER.
-         */
-        public static final String TOGGLE_SORT_ORDER =
-                "toggleSortOrder";
-        /**
-         * The constant SELECT_COLUMN_TO_LEFT.
-         */
-        public static final String SELECT_COLUMN_TO_LEFT =
-                "selectColumnToLeft";
-        /**
-         * The constant SELECT_COLUMN_TO_RIGHT.
-         */
-        public static final String SELECT_COLUMN_TO_RIGHT =
-                "selectColumnToRight";
-        /**
-         * The constant MOVE_COLUMN_LEFT.
-         */
-        public static final String MOVE_COLUMN_LEFT =
-                "moveColumnLeft";
-        /**
-         * The constant MOVE_COLUMN_RIGHT.
-         */
-        public static final String MOVE_COLUMN_RIGHT =
-                "moveColumnRight";
-        /**
-         * The constant RESIZE_LEFT.
-         */
-        public static final String RESIZE_LEFT =
-                "resizeLeft";
-        /**
-         * The constant RESIZE_RIGHT.
-         */
-        public static final String RESIZE_RIGHT =
-                "resizeRight";
-        /**
-         * The constant FOCUS_TABLE.
-         */
-        public static final String FOCUS_TABLE =
-                "focusTable";
-
-        /**
-         * Instantiates a new Actions.
-         *
-         * @param name the name
-         */
-        public Actions(final String name) {
-            super(name);
-        }
-
-        /**
-         * Accept boolean.
-         *
-         * @param sender the sender
-         * @return the boolean
-         */
-        public boolean accept(final Object sender) {
-            if (sender instanceof JTableHeader) {
-                JTableHeader th = (JTableHeader) sender;
-                TableColumnModel cm = th.getColumnModel();
-                if (cm.getColumnCount() <= 0) {
-                    return false;
-                }
-
-                String key = getName();
-                DarkTableHeaderUIBridge ui =
-                        (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
-                if (ui != null) {
-                    if (Objects.equals(key, MOVE_COLUMN_LEFT)) {
-                        return th.getReorderingAllowed()
-                                && maybeMoveColumn(true, th, ui, false);
-                    } else if (Objects.equals(key, MOVE_COLUMN_RIGHT)) {
-                        return th.getReorderingAllowed()
-                                && maybeMoveColumn(false, th, ui, false);
-                    } else if (Objects.equals(key, RESIZE_LEFT) ||
-                            Objects.equals(key, RESIZE_RIGHT)) {
-                        return canResize(cm.getColumn(ui.getSelectedColumnIndex()), th);
-                    } else if (Objects.equals(key, FOCUS_TABLE)) {
-                        return (th.getTable() != null);
-                    }
-                }
-            }
-            return true;
-        }
-
-        /**
-         * Maybe move column boolean.
-         *
-         * @param leftArrow the left arrow
-         * @param th        the th
-         * @param ui        the ui
-         * @param doIt      the do it
-         * @return the boolean
-         */
-        protected boolean maybeMoveColumn(final boolean leftArrow, final JTableHeader th,
-                                          final DarkTableHeaderUIBridge ui, final boolean doIt) {
-            int oldIndex = ui.getSelectedColumnIndex();
-            int newIndex;
-
-            if (th.getComponentOrientation().isLeftToRight()) {
-                newIndex = leftArrow ? ui.selectPreviousColumn(doIt)
-                                     : ui.selectNextColumn(doIt);
-            } else {
-                newIndex = leftArrow ? ui.selectNextColumn(doIt)
-                                     : ui.selectPreviousColumn(doIt);
-            }
-
-            if (newIndex != oldIndex) {
-                if (doIt) {
-                    th.getColumnModel().moveColumn(oldIndex, newIndex);
-                } else {
-                    return true; // we'd do the move if asked
-                }
-            }
-
-            return false;
-        }
-
-        public void actionPerformed(final ActionEvent e) {
-            JTableHeader th = (JTableHeader) e.getSource();
-            DarkTableHeaderUIBridge ui =
-                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
-            if (ui == null) {
-                return;
-            }
-
-            String name = getName();
-            if (Objects.equals(TOGGLE_SORT_ORDER, name)) {
-                JTable table = th.getTable();
-                RowSorter<?> sorter = table == null ? null : table.getRowSorter();
-                if (sorter != null) {
-                    int columnIndex = ui.getSelectedColumnIndex();
-                    columnIndex = table.convertColumnIndexToModel(
-                            columnIndex);
-                    sorter.toggleSortOrder(columnIndex);
-                }
-            } else if (Objects.equals(SELECT_COLUMN_TO_LEFT, name)) {
-                if (th.getComponentOrientation().isLeftToRight()) {
-                    ui.selectPreviousColumn(true);
-                } else {
-                    ui.selectNextColumn(true);
-                }
-            } else if (Objects.equals(SELECT_COLUMN_TO_RIGHT, name)) {
-                if (th.getComponentOrientation().isLeftToRight()) {
-                    ui.selectNextColumn(true);
-                } else {
-                    ui.selectPreviousColumn(true);
-                }
-            } else if (Objects.equals(MOVE_COLUMN_LEFT, name)) {
-                moveColumn(true, th, ui);
-            } else if (Objects.equals(MOVE_COLUMN_RIGHT, name)) {
-                moveColumn(false, th, ui);
-            } else if (Objects.equals(RESIZE_LEFT, name)) {
-                resize(true, th, ui);
-            } else if (Objects.equals(RESIZE_RIGHT, name)) {
-                resize(false, th, ui);
-            } else if (Objects.equals(FOCUS_TABLE, name)) {
-                JTable table = th.getTable();
-                if (table != null) {
-                    table.requestFocusInWindow();
-                }
-            }
-        }
-
-        /**
-         * Move column.
-         *
-         * @param leftArrow the left arrow
-         * @param th        the th
-         * @param ui        the ui
-         */
-        protected void moveColumn(final boolean leftArrow, final JTableHeader th,
-                                  final DarkTableHeaderUIBridge ui) {
-            maybeMoveColumn(leftArrow, th, ui, true);
-        }
-
-        /**
-         * Resize.
-         *
-         * @param leftArrow the left arrow
-         * @param th        the th
-         * @param ui        the ui
-         */
-        protected void resize(final boolean leftArrow, final JTableHeader th,
-                              final DarkTableHeaderUIBridge ui) {
-            int columnIndex = ui.getSelectedColumnIndex();
-            TableColumn resizingColumn =
-                    th.getColumnModel().getColumn(columnIndex);
-
-            th.setResizingColumn(resizingColumn);
-            int oldWidth = resizingColumn.getWidth();
-            int newWidth = oldWidth;
-
-            if (th.getComponentOrientation().isLeftToRight()) {
-                newWidth = newWidth + (leftArrow ? -1 : 1);
-            } else {
-                newWidth = newWidth + (leftArrow ? 1 : -1);
-            }
-
-            ui.changeColumnWidth(resizingColumn, th, oldWidth, newWidth);
-        }
-    }
-
-//
-// Size Methods
-//
-
-    /**
      * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
      * {@code DarkTableHeaderUIBridge}.
      */
@@ -991,14 +777,14 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                         header.setDraggedDistance(draggedDistance - direction * width);
 
                         //Cache the selected column.
-                        int selectedIndex = SwingUtilities2.convertColumnIndexToModel(header.getColumnModel(),
-                                                                                      getSelectedColumnIndex());
+                        int selectedIndex = DarkSwingUtil.convertColumnIndexToModel(header.getColumnModel(),
+                                                                                    getSelectedColumnIndex());
 
                         //Now do the move.
                         cm.moveColumn(columnIndex, newColumnIndex);
 
                         //Update the selected index.
-                        selectColumn(SwingUtilities2.convertColumnIndexToView(header.getColumnModel(), selectedIndex),
+                        selectColumn(DarkSwingUtil.convertColumnIndexToView(header.getColumnModel(), selectedIndex),
                                      false);
 
                         return;

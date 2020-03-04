@@ -24,7 +24,7 @@
 package ui.scrollPane;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.utils.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;

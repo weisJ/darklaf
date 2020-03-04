@@ -23,9 +23,9 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.InsetsUIResource;

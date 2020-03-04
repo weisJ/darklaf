@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.components.tabframe;
 
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;

@@ -25,7 +25,7 @@ package com.github.weisj.darklaf.ui.tabframe;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
-import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import java.awt.*;
 import java.util.Arrays;

@@ -24,7 +24,7 @@
 package theme;
 
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.utils.SystemInfo;
 
 import javax.swing.*;
 import java.util.Properties;

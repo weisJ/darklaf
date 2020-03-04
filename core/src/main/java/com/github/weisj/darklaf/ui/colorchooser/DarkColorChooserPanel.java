@@ -27,7 +27,7 @@ package com.github.weisj.darklaf.ui.colorchooser;
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.utils.ColorUtil;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;

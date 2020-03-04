@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import sun.awt.SunToolkit;
-import sun.swing.DefaultLookup;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -226,9 +225,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected InputMap getInputMap() {
         InputMap map = new InputMapUIResource();
 
-        InputMap shared =
-                (InputMap) DefaultLookup.get(editor, this,
-                                             getPropertyPrefix() + ".focusInputMap");
+        InputMap shared = (InputMap) UIManager.get(getPropertyPrefix() + ".focusInputMap", editor.getLocale());
         if (shared != null) {
             map.setParent(shared);
         }

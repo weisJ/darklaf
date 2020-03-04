@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.platform.macos.ui;
 
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.utils.SystemInfo;
 
 import javax.swing.*;
 import java.awt.*;

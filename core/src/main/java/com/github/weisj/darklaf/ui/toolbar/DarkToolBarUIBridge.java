@@ -23,10 +23,9 @@
  */
 package com.github.weisj.darklaf.ui.toolbar;
 
+import com.github.weisj.darklaf.bridge.DarkUIActionBridge;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
-import sun.swing.DefaultLookup;
-import sun.swing.UIAction;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -38,15 +37,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -560,7 +551,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
 
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            return (InputMap) DefaultLookup.get(toolBar, this, "ToolBar.ancestorInputMap");
+            return (InputMap) UIManager.get("ToolBar.ancestorInputMap", toolBar.getLocale());
         }
         return null;
     }
@@ -922,7 +913,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     }
 
 
-    protected static class Actions extends UIAction {
+    protected static class Actions extends DarkUIActionBridge {
         protected static final String NAVIGATE_RIGHT = "navigateRight";
         protected static final String NAVIGATE_LEFT = "navigateLeft";
         protected static final String NAVIGATE_UP = "navigateUp";

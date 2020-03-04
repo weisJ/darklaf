@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.util.Scale;
+import com.github.weisj.darklaf.utils.Scale;
 
 import javax.swing.*;
 import java.awt.*;

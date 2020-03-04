@@ -25,10 +25,10 @@ package com.github.weisj.darklaf.ui.radiobutton;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.checkbox.DarkCheckBoxUI;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -120,7 +120,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
         Font f = c.getFont();
         g.setFont(f);
-        FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, f);
+        FontMetrics fm = DarkSwingUtil.getFontMetrics(c, g, f);
 
         String text = layoutRadioButton(b, fm);
 

@@ -23,7 +23,7 @@
  */
 package ui.tabbedPane;
 
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.utils.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 

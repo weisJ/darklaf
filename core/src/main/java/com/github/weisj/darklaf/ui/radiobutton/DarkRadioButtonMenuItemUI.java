@@ -23,9 +23,9 @@
  */
 package com.github.weisj.darklaf.ui.radiobutton;
 
+import com.github.weisj.darklaf.bridge.DarkMenuItemLayoutHelperBridge;
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
-import sun.swing.MenuItemLayoutHelper;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -61,8 +61,8 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     }
 
     @Override
-    protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
-                                  final MenuItemLayoutHelper.LayoutResult lr,
+    protected void paintCheckIcon(final Graphics g2, final DarkMenuItemLayoutHelperBridge lh,
+                                  final DarkMenuItemLayoutHelperBridge.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
         Rectangle rect = lr.getCheckRect();
         getRadioIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y);

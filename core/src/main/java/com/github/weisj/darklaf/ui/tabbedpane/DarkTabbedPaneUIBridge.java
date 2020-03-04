@@ -23,11 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
+import com.github.weisj.darklaf.bridge.DarkUIActionBridge;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
-import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -571,7 +570,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         String title = tabPane.getTitleAt(tabIndex);
         Font font = tabPane.getFont();
-        FontMetrics metrics = SwingUtilities2.getFontMetrics(tabPane, g, font);
+        FontMetrics metrics = DarkSwingUtil.getFontMetrics(tabPane, g, font);
         Icon icon = getIconForTab(tabIndex);
 
         layoutLabel(tabPlacement, metrics, tabIndex, title, icon,
@@ -581,7 +580,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             String clippedTitle = title;
 
             if (!scrollableTabLayoutEnabled() && isHorizontalTabPlacement()) {
-                clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, textRect.width);
+                clippedTitle = DarkSwingUtil.clipStringIfNecessary(null, metrics, title, textRect.width);
             }
 
             paintText(g, tabPlacement, font, metrics, tabIndex, clippedTitle, textRect, isSelected);
@@ -728,19 +727,19 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     }
                 }
                 g.setColor(fg);
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
+                DarkSwingUtil.drawStringUnderlineCharAt(tabPane, g,
+                                                        title, mnemIndex,
+                                                        textRect.x, textRect.y + metrics.getAscent());
 
             } else { // tab disabled
                 g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
+                DarkSwingUtil.drawStringUnderlineCharAt(tabPane, g,
+                                                        title, mnemIndex,
+                                                        textRect.x, textRect.y + metrics.getAscent());
                 g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x - 1, textRect.y + metrics.getAscent() - 1);
+                DarkSwingUtil.drawStringUnderlineCharAt(tabPane, g,
+                                                        title, mnemIndex,
+                                                        textRect.x - 1, textRect.y + metrics.getAscent() - 1);
 
             }
         }
@@ -810,8 +809,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected int getTabLabelShiftX(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
         String propKey = (isSelected ? "selectedLabelShift" : "labelShift");
-        int nudge = DefaultLookup.getInt(
-                tabPane, this, "TabbedPane." + propKey, 1);
+        int nudge = UIManager.getInt("TabbedPane." + propKey, tabPane.getLocale());
 
         switch (tabPlacement) {
             case LEFT:
@@ -835,8 +833,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
-        int nudge = (isSelected ? DefaultLookup.getInt(tabPane, this, "TabbedPane.selectedLabelShift", -1) :
-                     DefaultLookup.getInt(tabPane, this, "TabbedPane.labelShift", 1));
+        int nudge = (isSelected ? UIManager.getInt("TabbedPane.selectedLabelShift", tabPane.getLocale())
+                                : UIManager.getInt("TabbedPane.labelShift", tabPane.getLocale()));
 
         switch (tabPlacement) {
             case BOTTOM:
@@ -1030,11 +1028,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            return (InputMap) DefaultLookup.get(tabPane, this,
-                                                "TabbedPane.ancestorInputMap");
+            return (InputMap) UIManager.get("TabbedPane.ancestorInputMap", tabPane.getLocale());
         } else if (condition == JComponent.WHEN_FOCUSED) {
-            return (InputMap) DefaultLookup.get(tabPane, this,
-                                                "TabbedPane.focusInputMap");
+            return (InputMap) UIManager.get("TabbedPane.focusInputMap", tabPane.getLocale());
         }
         return null;
     }
@@ -1590,7 +1586,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             } else {
                 // plain text
                 String title = tabPane.getTitleAt(tabIndex);
-                width += SwingUtilities2.stringWidth(tabPane, metrics, title);
+                width += DarkSwingUtil.stringWidth(tabPane, metrics, title);
             }
         }
         return width;
@@ -1718,9 +1714,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected void navigateSelectedTab(final int direction) {
         int tabPlacement = tabPane.getTabPlacement();
-        int current = DefaultLookup.getBoolean(tabPane, this,
-                                               "TabbedPane.selectionFollowsFocus", true) ?
-                      tabPane.getSelectedIndex() : getFocusIndex();
+        int current = UIManager.getBoolean("TabbedPane.selectionFollowsFocus", tabPane.getLocale())
+                      ? tabPane.getSelectedIndex()
+                      : getFocusIndex();
         int tabCount = tabPane.getTabCount();
         boolean leftToRight = tabPane.getComponentOrientation().isLeftToRight();
 
@@ -1895,8 +1891,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param index the index
      */
     protected void navigateTo(final int index) {
-        if (DefaultLookup.getBoolean(tabPane, this,
-                                     "TabbedPane.selectionFollowsFocus", true)) {
+        if (UIManager.getBoolean("TabbedPane.selectionFollowsFocus", tabPane.getLocale())) {
             tabPane.setSelectedIndex(index);
         } else {
             // Just move focus (not selection)
@@ -2195,7 +2190,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     // protected in the next release where
     // API changes are allowed
     boolean requestFocusForVisibleComponent() {
-        return SwingUtilities2.tabbedPaneChangeFocusTo(getVisibleComponent());
+        return DarkSwingUtil.tabbedPaneChangeFocusTo(getVisibleComponent());
     }
 
     /**
@@ -2229,7 +2224,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * The type Actions.
      */
-    protected static class Actions extends UIAction {
+    protected static class Actions extends DarkUIActionBridge {
         /**
          * The Next.
          */

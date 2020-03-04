@@ -23,11 +23,11 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
-import sun.swing.SwingUtilities2;
+import com.github.weisj.darklaf.utils.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -125,15 +125,15 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         AbstractButton button = (AbstractButton) c;
         ButtonModel model = button.getModel();
         g.setColor(getForeground(button));
-        FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
+        FontMetrics metrics = DarkSwingUtil.getFontMetrics(c, g);
         int mnemonicIndex = button.getDisplayedMnemonicIndex();
         if (!model.isEnabled()) {
             g.setColor(inactiveForeground);
             mnemonicIndex = -1;
         }
-        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
-                                                  textRect.x + getTextShiftOffset(),
-                                                  textRect.y + metrics.getAscent() + getTextShiftOffset());
+        DarkSwingUtil.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
+                                                textRect.x + getTextShiftOffset(),
+                                                textRect.y + metrics.getAscent() + getTextShiftOffset());
         config.restore();
     }
 
@@ -159,7 +159,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
             g.setFont(g.getFont().deriveFont(Font.PLAIN));
         }
 
-        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
+        String text = layout(b, c, DarkSwingUtil.getFontMetrics(b, g),
                              b.getWidth(), b.getHeight());
 
         paintIcon(g, b, c);

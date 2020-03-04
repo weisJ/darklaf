@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
-import sun.swing.SwingUtilities2;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -209,7 +209,7 @@ public class DarkTableUIBridge extends TableUIBridge {
             int y = damagedArea.y;
             for (int row = rMin; row <= rMax; row++) {
                 y += table.getRowHeight(row);
-                SwingUtilities2.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
+                DarkSwingUtil.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
             }
         }
         if (table.getShowVerticalLines()) {
@@ -221,14 +221,14 @@ public class DarkTableUIBridge extends TableUIBridge {
                 for (int column = cMin; column <= cMax; column++) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
-                    SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                    DarkSwingUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                 }
             } else {
                 x = damagedArea.x;
                 for (int column = cMax; column >= cMin; column--) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
-                    SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                    DarkSwingUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                 }
             }
         }

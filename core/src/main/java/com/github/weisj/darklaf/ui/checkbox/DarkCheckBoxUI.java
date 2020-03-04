@@ -24,10 +24,10 @@
 package com.github.weisj.darklaf.ui.checkbox;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -129,31 +129,22 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         button.removePropertyChangeListener(this);
     }
 
-    @Override
-    public synchronized void paint(final Graphics g2d, final JComponent c) {
-        Graphics2D g = (Graphics2D) g2d;
-        JCheckBox b = (JCheckBox) c;
-        FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, c.getFont());
-
-        String text = layoutCheckBox(b, fm);
-
-        paintBackground(c, g);
-
-        Icon icon = getIconBullet(c, g, b);
-        if (icon != null) {
-            icon.paintIcon(c, g, iconRect.x, iconRect.y);
+    public static void paintText(final Graphics2D g, final AbstractButton b,
+                                 final Rectangle textRect, final String text, final FontMetrics fm,
+                                 final Color disabledTextColor) {
+        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
+        g.setFont(b.getFont());
+        View view = (View) b.getClientProperty(BasicHTML.propertyKey);
+        if (view != null) {
+            view.paint(g, textRect);
         } else {
-            Icon checkIcon = getCheckIcon(b);
-            if (checkIcon != null) {
-                checkIcon.paintIcon(c, g, iconRect.x, iconRect.y + 1);
-            } else {
-                paintDarkCheck(c, g, b);
-            }
+            g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
+            DarkSwingUtil.drawStringUnderlineCharAt(b, g, text,
+                                                    b.getDisplayedMnemonicIndex(),
+                                                    textRect.x,
+                                                    textRect.y + fm.getAscent());
         }
-
-        if (text != null) {
-            paintText(g, b, textRect, text, fm, getDisabledTextColor());
-        }
+        context.restore();
     }
 
     protected String layoutCheckBox(final JCheckBox b, final FontMetrics fm) {
@@ -248,22 +239,31 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
         config.restore();
     }
 
-    public static void paintText(final Graphics2D g, final AbstractButton b,
-                                 final Rectangle textRect, final String text, final FontMetrics fm,
-                                 final Color disabledTextColor) {
-        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
-        g.setFont(b.getFont());
-        View view = (View) b.getClientProperty(BasicHTML.propertyKey);
-        if (view != null) {
-            view.paint(g, textRect);
+    @Override
+    public synchronized void paint(final Graphics g2d, final JComponent c) {
+        Graphics2D g = (Graphics2D) g2d;
+        JCheckBox b = (JCheckBox) c;
+        FontMetrics fm = DarkSwingUtil.getFontMetrics(c, g, c.getFont());
+
+        String text = layoutCheckBox(b, fm);
+
+        paintBackground(c, g);
+
+        Icon icon = getIconBullet(c, g, b);
+        if (icon != null) {
+            icon.paintIcon(c, g, iconRect.x, iconRect.y);
         } else {
-            g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
-            SwingUtilities2.drawStringUnderlineCharAt(b, g, text,
-                                                      b.getDisplayedMnemonicIndex(),
-                                                      textRect.x,
-                                                      textRect.y + fm.getAscent());
+            Icon checkIcon = getCheckIcon(b);
+            if (checkIcon != null) {
+                checkIcon.paintIcon(c, g, iconRect.x, iconRect.y + 1);
+            } else {
+                paintDarkCheck(c, g, b);
+            }
         }
-        context.restore();
+
+        if (text != null) {
+            paintText(g, b, textRect, text, fm, getDisabledTextColor());
+        }
     }
 
     @Override

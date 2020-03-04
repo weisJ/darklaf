@@ -21,43 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.utils;
 
 import java.awt.*;
 import java.util.function.BiFunction;
-
-import static com.github.weisj.darklaf.util.AlignmentHelper.*;
 
 /**
  * @author Jannis Weis
  */
 public enum Alignment {
-    NORTH(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_TOP_INSIDE),
-          AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_TOP_OUTSIDE)
+    NORTH(AlignmentHelper.align(AlignmentHelper.HOR_CENTER_INSIDE, AlignmentHelper.VERT_TOP_INSIDE),
+          AlignmentHelper.align(AlignmentHelper.HOR_CENTER_OUTSIDE, AlignmentHelper.VERT_TOP_OUTSIDE)
     ),
-    SOUTH(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_BOTTOM_INSIDE),
-          AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_BOTTOM_OUTSIDE)
+    SOUTH(AlignmentHelper.align(AlignmentHelper.HOR_CENTER_INSIDE, AlignmentHelper.VERT_BOTTOM_INSIDE),
+          AlignmentHelper.align(AlignmentHelper.HOR_CENTER_OUTSIDE, AlignmentHelper.VERT_BOTTOM_OUTSIDE)
     ),
-    EAST(AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_CENTER_INSIDE),
-         AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_CENTER_OUTSIDE)
+    EAST(AlignmentHelper.align(AlignmentHelper.HOR_RIGHT_INSIDE, AlignmentHelper.VERT_CENTER_INSIDE),
+         AlignmentHelper.align(AlignmentHelper.HOR_RIGHT_OUTSIDE, AlignmentHelper.VERT_CENTER_OUTSIDE)
     ),
-    WEST(AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_CENTER_INSIDE),
-         AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_CENTER_OUTSIDE)
+    WEST(AlignmentHelper.align(AlignmentHelper.HOR_LEFT_INSIDE, AlignmentHelper.VERT_CENTER_INSIDE),
+         AlignmentHelper.align(AlignmentHelper.HOR_LEFT_OUTSIDE, AlignmentHelper.VERT_CENTER_OUTSIDE)
     ),
-    NORTH_EAST(AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_TOP_INSIDE),
-               AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_TOP_OUTSIDE)
+    NORTH_EAST(AlignmentHelper.align(AlignmentHelper.HOR_RIGHT_INSIDE, AlignmentHelper.VERT_TOP_INSIDE),
+               AlignmentHelper.align(AlignmentHelper.HOR_RIGHT_OUTSIDE, AlignmentHelper.VERT_TOP_OUTSIDE)
     ),
-    NORTH_WEST(AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_TOP_INSIDE),
-               AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_TOP_OUTSIDE)
+    NORTH_WEST(AlignmentHelper.align(AlignmentHelper.HOR_LEFT_INSIDE, AlignmentHelper.VERT_TOP_INSIDE),
+               AlignmentHelper.align(AlignmentHelper.HOR_LEFT_OUTSIDE, AlignmentHelper.VERT_TOP_OUTSIDE)
     ),
-    SOUTH_EAST(AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_BOTTOM_INSIDE),
-               AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_BOTTOM_OUTSIDE)
+    SOUTH_EAST(AlignmentHelper.align(AlignmentHelper.HOR_RIGHT_INSIDE, AlignmentHelper.VERT_BOTTOM_INSIDE),
+               AlignmentHelper.align(AlignmentHelper.HOR_RIGHT_OUTSIDE, AlignmentHelper.VERT_BOTTOM_OUTSIDE)
     ),
-    SOUTH_WEST(AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_BOTTOM_INSIDE),
-               AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_BOTTOM_OUTSIDE)
+    SOUTH_WEST(AlignmentHelper.align(AlignmentHelper.HOR_LEFT_INSIDE, AlignmentHelper.VERT_BOTTOM_INSIDE),
+               AlignmentHelper.align(AlignmentHelper.HOR_LEFT_OUTSIDE, AlignmentHelper.VERT_BOTTOM_OUTSIDE)
     ),
-    CENTER(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_CENTER_INSIDE),
-           AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_CENTER_OUTSIDE)
+    CENTER(AlignmentHelper.align(AlignmentHelper.HOR_CENTER_INSIDE, AlignmentHelper.VERT_CENTER_INSIDE),
+           AlignmentHelper.align(AlignmentHelper.HOR_CENTER_OUTSIDE, AlignmentHelper.VERT_CENTER_OUTSIDE)
     );
 
 

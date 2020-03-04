@@ -28,7 +28,7 @@ import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.utils.SystemInfo;
 
 import javax.swing.*;
 import java.util.Properties;

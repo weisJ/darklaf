@@ -1,11 +1,13 @@
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.properties.dsl.props
+import org.javamodularity.moduleplugin.extensions.ModularityExtension
 
 plugins {
     id("com.github.vlsi.crlf")
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
+    id("org.javamodularity.moduleplugin") apply (false)
 }
 
 val skipJavadoc by props()
@@ -57,6 +59,7 @@ allprojects {
         fileMode = "664".toInt(8)
     }
 
+
     plugins.withType<JavaLibraryPlugin> {
         dependencies {
             // cpp-library is not compatible with java-library
@@ -69,6 +72,10 @@ allprojects {
                 "compileOnly"(bom)
                 "runtimeOnly"(bom)
             }
+        }
+        apply(plugin = "org.javamodularity.moduleplugin")
+        configure<ModularityExtension> {
+            mixedJavaRelease(8)
         }
     }
 
@@ -94,19 +101,38 @@ allprojects {
 
     plugins.withType<JavaPlugin> {
         configure<JavaPluginExtension> {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
             withSourcesJar()
-            if (!skipJavadoc) {
+            if (!skipJavadoc && false) {
                 withJavadocJar()
             }
         }
-
         apply(plugin = "maven-publish")
 
         tasks {
             withType<JavaCompile>().configureEach {
                 options.encoding = "UTF-8"
+                doFirst {
+                    println("Task: $name Options: ${options.compilerArgs}")
+                    options.compilerArgs.let { list ->
+                        if (list.isNotEmpty()) {
+                            var releaseVersion = ""
+                            var index = -1
+                            for (i in 0 until list.size) {
+                                if (list[i].endsWith("-release")) {
+                                    releaseVersion = list[i + 1]
+                                    index = i
+                                    break
+                                }
+                            }
+                            if (index >= 0) {
+                                list.removeAt(index + 1)
+                                list.removeAt(index)
+                                list.addAll(listOf("-source", releaseVersion, "-target", releaseVersion))
+                            }
+                        }
+                    }
+                    println("Task: $name Patched options: ${options.compilerArgs}")
+                }
             }
 
             withType<Jar>().configureEach {
@@ -163,87 +189,88 @@ allprojects {
                     }
                 }
             }
-        }
 
-        configure<PublishingExtension> {
-            if (project.path.startsWith(":darklaf-dependencies-bom") ||
-                    project.path == ":") {
-                // We don't it to Central for now
-                return@configure
-            }
-
-            publications {
-                create<MavenPublication>(project.name) {
-                    artifactId = project.name
-                    version = rootProject.version.toString()
-                    description = project.description
-                    from(project.components.get("java"))
+            configure<PublishingExtension> {
+                if (project.path.startsWith(":darklaf-dependencies-bom") ||
+                    project.path == ":"
+                ) {
+                    // We don't it to Central for now
+                    return@configure
                 }
-                withType<MavenPublication> {
-                    // Use the resolved versions in pom.xml
-                    // Gradle might have different resolution rules, so we set the versions
-                    // that were used in Gradle build/test.
-                    versionMapping {
-                        usage(Usage.JAVA_RUNTIME) {
-                            fromResolutionResult()
-                        }
-                        usage(Usage.JAVA_API) {
-                            fromResolutionOf("runtimeClasspath")
-                        }
+
+                publications {
+                    create<MavenPublication>(project.name) {
+                        artifactId = project.name
+                        version = rootProject.version.toString()
+                        description = project.description
+                        from(project.components.get("java"))
                     }
-                    pom {
-                        withXml {
-                            val sb = asString()
-                            var s = sb.toString()
-                            // <scope>compile</scope> is Maven default, so delete it
-                            s = s.replace("<scope>compile</scope>", "")
-                            // Cut <dependencyManagement> because all dependencies have the resolved versions
-                            s = s.replace(
-                                Regex(
-                                    "<dependencyManagement>.*?</dependencyManagement>",
-                                    RegexOption.DOT_MATCHES_ALL
-                                ),
-                                ""
-                            )
-                            sb.setLength(0)
-                            sb.append(s)
-                            // Re-format the XML
-                            asNode()
-                        }
-
-
-                        description.set(
-                            project.description
-                                ?: "A themeable Look and Feel for java swing"
-                        )
-                        name.set(
-                            (project.findProperty("artifact.name") as? String)
-                                ?: project.name.capitalize().replace("-", " ")
-                        )
-                        url.set("https://github.com/weisJ/darklaf")
-                        organization {
-                            name.set("com.github.weisj")
-                            url.set("https://github.com/weisj")
-                        }
-                        issueManagement {
-                            system.set("GitHub")
-                            url.set("https://github.com/weisJ/darklaf/issues")
-                        }
-                        licenses {
-                            license {
-                                name.set("MIT")
-                                url.set("https://github.com/weisJ/darklaf/blob/master/LICENSE")
-                                distribution.set("repo")
+                    withType<MavenPublication> {
+                        // Use the resolved versions in pom.xml
+                        // Gradle might have different resolution rules, so we set the versions
+                        // that were used in Gradle build/test.
+                        versionMapping {
+                            usage(Usage.JAVA_RUNTIME) {
+                                fromResolutionResult()
+                            }
+                            usage(Usage.JAVA_API) {
+                                fromResolutionOf("runtimeClasspath")
                             }
                         }
-                        scm {
+                        pom {
+                            withXml {
+                                val sb = asString()
+                                var s = sb.toString()
+                                // <scope>compile</scope> is Maven default, so delete it
+                                s = s.replace("<scope>compile</scope>", "")
+                                // Cut <dependencyManagement> because all dependencies have the resolved versions
+                                s = s.replace(
+                                    Regex(
+                                        "<dependencyManagement>.*?</dependencyManagement>",
+                                        RegexOption.DOT_MATCHES_ALL
+                                    ),
+                                    ""
+                                )
+                                sb.setLength(0)
+                                sb.append(s)
+                                // Re-format the XML
+                                asNode()
+                            }
+
+
+                            description.set(
+                                project.description
+                                    ?: "A themeable Look and Feel for java swing"
+                            )
+                            name.set(
+                                (project.findProperty("artifact.name") as? String)
+                                    ?: project.name.capitalize().replace("-", " ")
+                            )
                             url.set("https://github.com/weisJ/darklaf")
-                            connection.set("scm:git:git://github.com/weisJ/darklaf.git")
-                            developerConnection.set("scm:git:ssh://git@github.com:weisj/darklaf.git")
-                        }
-                        developers {
-                            developer {
-                                name.set("Jannis Weis")
+                            organization {
+                                name.set("com.github.weisj")
+                                url.set("https://github.com/weisj")
+                            }
+                            issueManagement {
+                                system.set("GitHub")
+                                url.set("https://github.com/weisJ/darklaf/issues")
+                            }
+                            licenses {
+                                license {
+                                    name.set("MIT")
+                                    url.set("https://github.com/weisJ/darklaf/blob/master/LICENSE")
+                                    distribution.set("repo")
+                                }
+                            }
+                            scm {
+                                url.set("https://github.com/weisJ/darklaf")
+                                connection.set("scm:git:git://github.com/weisJ/darklaf.git")
+                                developerConnection.set("scm:git:ssh://git@github.com:weisj/darklaf.git")
+                            }
+                            developers {
+                                developer {
+                                    name.set("Jannis Weis")
+                                }
                             }
                         }
                     }

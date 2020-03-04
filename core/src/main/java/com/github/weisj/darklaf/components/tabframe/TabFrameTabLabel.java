@@ -25,7 +25,7 @@ package com.github.weisj.darklaf.components.tabframe;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.tabframe.DarkTabFrameTabLabelUI;
-import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.*;
 import java.awt.*;

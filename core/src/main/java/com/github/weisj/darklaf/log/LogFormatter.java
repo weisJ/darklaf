@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.log;
 
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.utils.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

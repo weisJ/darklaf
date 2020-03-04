@@ -29,8 +29,8 @@ import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
 import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.utils.Alignment;
+import com.github.weisj.darklaf.utils.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoResources;
 

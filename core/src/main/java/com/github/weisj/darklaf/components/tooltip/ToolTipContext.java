@@ -25,8 +25,8 @@ package com.github.weisj.darklaf.components.tooltip;
 
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
-import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.*;
 import java.awt.*;

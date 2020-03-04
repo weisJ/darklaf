@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.utils.Pair;
 import com.kitfox.svg.*;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;

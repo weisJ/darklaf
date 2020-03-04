@@ -29,8 +29,8 @@ import com.github.weisj.darklaf.components.tabframe.PanelPopup;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
-import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.FocusManager;
 import javax.swing.*;

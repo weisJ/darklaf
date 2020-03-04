@@ -27,8 +27,8 @@ import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabContainer;
 import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
-import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

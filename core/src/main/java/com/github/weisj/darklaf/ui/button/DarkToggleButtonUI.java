@@ -23,10 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -94,7 +94,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         if (isSlider(c)) {
             GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
             AbstractButton b = (AbstractButton) c;
-            String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
+            String text = layout(b, c, DarkSwingUtil.getFontMetrics(b, g),
                                  b.getWidth(), b.getHeight());
 
             paintSlider((Graphics2D) g, b);

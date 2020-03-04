@@ -25,7 +25,7 @@ package com.github.weisj.darklaf.ui.internalframe;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
-import sun.swing.SwingUtilities2;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -272,12 +272,12 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
 
             FontMetrics fm = frame.getFontMetrics(getFont());
             String frameTitle = frame.getTitle();
-            int title_w = frameTitle != null ? SwingUtilities2.stringWidth(frame, fm, frameTitle) : 0;
+            int title_w = frameTitle != null ? DarkSwingUtil.stringWidth(frame, fm, frameTitle) : 0;
             int title_length = frameTitle != null ? frameTitle.length() : 0;
 
             // Leave room for three characters in the title.
             if (title_length > 3) {
-                int subtitle_w = SwingUtilities2.stringWidth(frame, fm, frameTitle.substring(0, 3) + "...");
+                int subtitle_w = DarkSwingUtil.stringWidth(frame, fm, frameTitle.substring(0, 3) + "...");
                 width += Math.min(title_w, subtitle_w);
             } else {
                 width += title_w;

@@ -23,12 +23,12 @@
  */
 package com.github.weisj.darklaf.ui.menu;
 
+import com.github.weisj.darklaf.bridge.DarkMenuItemLayoutHelperBridge;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.StringUtil;
-import sun.swing.MenuItemLayoutHelper;
-import sun.swing.SwingUtilities2;
+import com.github.weisj.darklaf.utils.StringUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -60,7 +60,7 @@ public class DarkMenuUI extends BasicMenuUI {
 
     protected Icon getArrowIcon() {
         boolean hover = menuItem.getModel().isArmed()
-                || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
+            || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
         return hover ? arrowIconHover : arrowIcon;
     }
 
@@ -69,13 +69,13 @@ public class DarkMenuUI extends BasicMenuUI {
         return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
     }
 
-    private static void rightAlignAccText(final MenuItemLayoutHelper lh,
-                                          final MenuItemLayoutHelper.LayoutResult lr) {
+    private static void rightAlignAccText(final DarkMenuItemLayoutHelperBridge lh,
+                                          final DarkMenuItemLayoutHelperBridge.LayoutResult lr) {
         Rectangle accRect = lr.getAccRect();
         ButtonModel model = lh.getMenuItem().getModel();
         if (model.isEnabled()) {
             accRect.x = lh.getViewRect().x + lh.getViewRect().width
-                    - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
+                - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
         }
     }
 
@@ -93,12 +93,12 @@ public class DarkMenuUI extends BasicMenuUI {
         Rectangle viewRect = new Rectangle(0, 0, mi.getWidth(), mi.getHeight());
         DarkUIUtil.applyInsets(viewRect, mi.getInsets());
 
-        MenuItemLayoutHelper lh = new MenuItemLayoutHelper(mi, checkIcon,
-                                                           arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
-                                                           mi.getComponentOrientation().isLeftToRight(), mi.getFont(),
-                                                           acceleratorFont, MenuItemLayoutHelper.useCheckAndArrow(menuItem),
-                                                           getPropertyPrefix());
-        MenuItemLayoutHelper.LayoutResult lr = lh.layoutMenuItem();
+        DarkMenuItemLayoutHelperBridge lh = new DarkMenuItemLayoutHelperBridge(mi, checkIcon,
+                                                                               arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
+                                                                               mi.getComponentOrientation().isLeftToRight(), mi.getFont(),
+                                                                               acceleratorFont, DarkMenuItemLayoutHelperBridge.useCheckAndArrow(menuItem),
+                                                                               getPropertyPrefix());
+        DarkMenuItemLayoutHelperBridge.LayoutResult lr = lh.layoutMenuItem();
 
         paintBackground(g, mi, background);
         paintCheckIcon(g, lh, lr, holdc, foreground);
@@ -113,13 +113,13 @@ public class DarkMenuUI extends BasicMenuUI {
         g.setFont(holdf);
     }
 
-    protected void paintCheckIcon(final Graphics g, final MenuItemLayoutHelper lh,
-                                  final MenuItemLayoutHelper.LayoutResult lr,
+    protected void paintCheckIcon(final Graphics g, final DarkMenuItemLayoutHelperBridge lh,
+                                  final DarkMenuItemLayoutHelperBridge.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
         if (lh.getCheckIcon() != null) {
             ButtonModel model = lh.getMenuItem().getModel();
             if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                    && model.isSelected())) {
+                && model.isSelected())) {
                 g.setColor(foreground);
             } else {
                 g.setColor(holdc);
@@ -132,8 +132,8 @@ public class DarkMenuUI extends BasicMenuUI {
         }
     }
 
-    protected void paintAccText(final Graphics g, final MenuItemLayoutHelper lh,
-                                final MenuItemLayoutHelper.LayoutResult lr) {
+    protected void paintAccText(final Graphics g, final DarkMenuItemLayoutHelperBridge lh,
+                                final DarkMenuItemLayoutHelperBridge.LayoutResult lr) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         rightAlignAccText(lh, lr);
         if (!StringUtil.isBlank(lh.getAccText())) {
@@ -143,18 +143,18 @@ public class DarkMenuUI extends BasicMenuUI {
                 // *** paint the accText disabled
                 if (disabledForeground != null) {
                     g.setColor(disabledForeground);
-                    SwingUtilities2.drawString(lh.getMenuItem(), g,
-                                               lh.getAccText(), lr.getAccRect().x,
-                                               lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
+                    DarkSwingUtil.drawString(lh.getMenuItem(), g,
+                                             lh.getAccText(), lr.getAccRect().x,
+                                             lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
                 } else {
                     g.setColor(lh.getMenuItem().getBackground().brighter());
-                    SwingUtilities2.drawString(lh.getMenuItem(), g,
-                                               lh.getAccText(), lr.getAccRect().x,
-                                               lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
+                    DarkSwingUtil.drawString(lh.getMenuItem(), g,
+                                             lh.getAccText(), lr.getAccRect().x,
+                                             lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
                     g.setColor(lh.getMenuItem().getBackground().darker());
-                    SwingUtilities2.drawString(lh.getMenuItem(), g,
-                                               lh.getAccText(), lr.getAccRect().x - 1,
-                                               lr.getAccRect().y + lh.getFontMetrics().getAscent() - 1);
+                    DarkSwingUtil.drawString(lh.getMenuItem(), g,
+                                             lh.getAccText(), lr.getAccRect().x - 1,
+                                             lr.getAccRect().y + lh.getFontMetrics().getAscent() - 1);
                 }
             } else {
                 // *** paint the accText normally
@@ -165,16 +165,16 @@ public class DarkMenuUI extends BasicMenuUI {
                 } else {
                     g.setColor(acceleratorForeground);
                 }
-                SwingUtilities2.drawString(lh.getMenuItem(), g, lh.getAccText(),
-                                           lr.getAccRect().x, lr.getAccRect().y +
-                                                   lh.getAccFontMetrics().getAscent());
+                DarkSwingUtil.drawString(lh.getMenuItem(), g, lh.getAccText(),
+                                         lr.getAccRect().x, lr.getAccRect().y +
+                                             lh.getAccFontMetrics().getAscent());
             }
         }
         config.restore();
     }
 
-    protected void paintIcon(final Graphics g, final MenuItemLayoutHelper lh,
-                             final MenuItemLayoutHelper.LayoutResult lr, final Color holdc) {
+    protected void paintIcon(final Graphics g, final DarkMenuItemLayoutHelperBridge lh,
+                             final DarkMenuItemLayoutHelperBridge.LayoutResult lr, final Color holdc) {
         if (lh.getIcon() != null) {
             Icon icon;
             ButtonModel model = lh.getMenuItem().getModel();
@@ -197,8 +197,8 @@ public class DarkMenuUI extends BasicMenuUI {
         }
     }
 
-    protected void paintText(final Graphics g, final MenuItemLayoutHelper lh,
-                             final MenuItemLayoutHelper.LayoutResult lr) {
+    protected void paintText(final Graphics g, final DarkMenuItemLayoutHelperBridge lh,
+                             final DarkMenuItemLayoutHelperBridge.LayoutResult lr) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         if (!StringUtil.isBlank(lh.getText())) {
             if (lh.getHtmlView() != null) {
@@ -212,13 +212,13 @@ public class DarkMenuUI extends BasicMenuUI {
         config.restore();
     }
 
-    protected void paintArrowIcon(final Graphics g, final MenuItemLayoutHelper lh,
-                                  final MenuItemLayoutHelper.LayoutResult lr,
+    protected void paintArrowIcon(final Graphics g, final DarkMenuItemLayoutHelperBridge lh,
+                                  final DarkMenuItemLayoutHelperBridge.LayoutResult lr,
                                   final Color foreground) {
         if (lh.getArrowIcon() != null) {
             ButtonModel model = lh.getMenuItem().getModel();
             if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                    && model.isSelected())) {
+                && model.isSelected())) {
                 g.setColor(foreground);
             }
             if (lh.useCheckAndArrow()) {

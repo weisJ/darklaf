@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.filechooser;
 
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareToggleButton;
-import sun.swing.FilePane;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -161,7 +160,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         listViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         listViewButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         listViewButton.setMargin(shrinkwrap);
-        listViewButton.addActionListener(filePane.getViewTypeAction(FilePane.VIEWTYPE_LIST));
+        listViewButton.addActionListener(filePane.getViewTypeAction(DarkFilePane.VIEWTYPE_LIST));
         topButtonPanel.add(listViewButton);
         topButtonPanel.add(Box.createRigidArea(hstrut5));
         viewButtonGroup.add(listViewButton);
@@ -175,7 +174,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         detailsViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         detailsViewButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         detailsViewButton.setMargin(shrinkwrap);
-        detailsViewButton.addActionListener(filePane.getViewTypeAction(FilePane.VIEWTYPE_DETAILS));
+        detailsViewButton.addActionListener(filePane.getViewTypeAction(DarkFilePane.VIEWTYPE_DETAILS));
         topButtonPanel.add(detailsViewButton);
         viewButtonGroup.add(detailsViewButton);
 
@@ -185,11 +184,11 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
             if ("viewType".equals(e.getPropertyName())) {
                 int viewType = filePane.getViewType();
                 switch (viewType) {
-                    case FilePane.VIEWTYPE_LIST:
+                    case DarkFilePane.VIEWTYPE_LIST:
                         listViewButton.setSelected(true);
                         break;
 
-                    case FilePane.VIEWTYPE_DETAILS:
+                    case DarkFilePane.VIEWTYPE_DETAILS:
                         detailsViewButton.setSelected(true);
                         break;
                 }

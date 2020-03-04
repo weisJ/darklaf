@@ -24,8 +24,8 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -223,7 +223,7 @@ public class DarkTableUI extends DarkTableUIBridge {
             int y = damagedArea.y;
             for (int row = rMin; row <= rMax; row++) {
                 y += table.getRowHeight(row);
-                SwingUtilities2.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
+                DarkSwingUtil.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
             }
         }
 
@@ -237,25 +237,25 @@ public class DarkTableUI extends DarkTableUIBridge {
             if (ltr) {
                 x = damagedArea.x;
                 if (scrollPaneRtl && scrollBarVisible()) {
-                    SwingUtilities2.drawVLine(g, x, 0, tableHeight - 1);
+                    DarkSwingUtil.drawVLine(g, x, 0, tableHeight - 1);
                 }
                 for (int column = cMin; column <= cMax; column++) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
                     if (showVerticalLine(true, scrollVisible, !scrollPaneRtl, column, draggedIndex, cMin, cMax)) {
-                        SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                        DarkSwingUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                     }
                 }
             } else {
                 x = damagedArea.x;
                 if (scrollPaneRtl && scrollBarVisible()) {
-                    SwingUtilities2.drawVLine(g, x, 0, tableHeight - 1);
+                    DarkSwingUtil.drawVLine(g, x, 0, tableHeight - 1);
                 }
                 for (int column = cMax; column >= cMin; column--) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
                     if (showVerticalLine(false, scrollVisible, !scrollPaneRtl, column, draggedIndex, cMin, cMax)) {
-                        SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                        DarkSwingUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                     }
                 }
             }
@@ -447,7 +447,7 @@ public class DarkTableUI extends DarkTableUIBridge {
             table.editCellAt(row, column, null);
             Component editorComponent = table.getEditorComponent();
             if (editorComponent != null && !editorComponent.hasFocus()) {
-                SwingUtilities2.compositeRequestFocus(editorComponent);
+                DarkSwingUtil.compositeRequestFocus(editorComponent);
             }
         }
 

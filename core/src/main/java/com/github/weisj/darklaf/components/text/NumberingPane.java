@@ -23,19 +23,11 @@
  */
 package com.github.weisj.darklaf.components.text;
 
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.utils.StringUtil;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Position;
-import javax.swing.text.Segment;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.text.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NumberingPane extends JComponent {

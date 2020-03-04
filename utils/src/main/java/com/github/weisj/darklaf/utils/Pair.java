@@ -21,18 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.utils;
 
-public class ReflectiveWarningSuppressor implements AutoCloseable {
+public class Pair<T, H> {
 
-    private final Object oldLogger;
+    private T first;
+    private H second;
 
-    public ReflectiveWarningSuppressor() {
-        oldLogger = ReflectionUtil.changeIllegalAccessLogger(null);
+
+    public Pair(final T first, final H second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public H getSecond() {
+        return second;
+    }
+
+    public T getFirst() {
+        return first;
+    }
+
+    public void setFirst(final T first) {
+        this.first = first;
+    }
+
+    public void setSecond(final H second) {
+        this.second = second;
     }
 
     @Override
-    public void close() {
-        ReflectionUtil.changeIllegalAccessLogger(oldLogger);
+    public String toString() {
+        return "[" + first.toString() + "," + second.toString() + "]";
     }
 }

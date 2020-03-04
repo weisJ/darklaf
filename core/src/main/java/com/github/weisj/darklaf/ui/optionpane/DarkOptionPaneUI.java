@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.optionpane;
 
-import sun.swing.DefaultLookup;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
@@ -46,16 +44,16 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
     @Override
     protected Container createButtonArea() {
         JPanel bottom = new JPanel();
-        Border border = (Border) DefaultLookup.get(optionPane, this, "OptionPane.buttonAreaBorder");
+        Border border = (Border) UIManager.get("OptionPane.buttonAreaBorder", optionPane.getLocale());
         bottom.setName("OptionPane.buttonArea");
         if (border != null) {
             bottom.setBorder(border);
         }
         bottom.setLayout(new DarkButtonAreaLayout(
-            DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false),
-            DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
-            DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER),
-            DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false)));
+            UIManager.getBoolean("OptionPane.sameSizeButtons", optionPane.getLocale()),
+            UIManager.getInt("OptionPane.buttonPadding", optionPane.getLocale()),
+            UIManager.getInt("OptionPane.buttonOrientation", optionPane.getLocale()),
+            UIManager.getBoolean("OptionPane.isYesLast", optionPane.getLocale())));
         addButtonComponents(bottom, getButtons(), getInitialValueIndex());
         return bottom;
     }

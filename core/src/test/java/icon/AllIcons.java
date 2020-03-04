@@ -28,7 +28,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.ThemedSVGIcon;
-import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.utils.Pair;
 import com.kitfox.svg.app.beans.SVGIcon;
 
 import javax.swing.*;

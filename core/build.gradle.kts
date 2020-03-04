@@ -1,5 +1,6 @@
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
+import org.javamodularity.moduleplugin.extensions.CompileModuleOptions
 
 plugins {
     `java-library`
@@ -20,6 +21,16 @@ dependencies {
     testImplementation("com.miglayout:miglayout-core")
     testImplementation("com.miglayout:miglayout-swing")
     testImplementation("org.swinglabs:swingx")
+}
+
+tasks.compileJava {
+    extensions.configure<CompileModuleOptions> {
+        addExports = mapOf(
+            "java.desktop/sun.awt" to "darklaf.core",
+            "java.desktop/sun.awt.shell" to "darklaf.core",
+            "java.desktop/com.sun.java.swing" to "darklaf.core"
+        )
+    }
 }
 
 tasks.jar {

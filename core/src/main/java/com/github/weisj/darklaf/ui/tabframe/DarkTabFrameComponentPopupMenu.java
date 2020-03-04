@@ -26,7 +26,7 @@ package com.github.weisj.darklaf.ui.tabframe;
 import com.github.weisj.darklaf.components.JXPopupMenu;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;

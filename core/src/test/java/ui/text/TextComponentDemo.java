@@ -24,7 +24,7 @@
 package ui.text;
 
 import com.github.weisj.darklaf.ui.text.DarkTextBorder;
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.utils.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 

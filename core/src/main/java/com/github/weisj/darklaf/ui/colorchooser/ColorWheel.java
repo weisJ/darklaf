@@ -24,9 +24,9 @@
 package com.github.weisj.darklaf.ui.colorchooser;
 
 
-import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.utils.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;

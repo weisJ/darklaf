@@ -25,12 +25,12 @@
 package com.github.weisj.darklaf.platform.windows.ui;
 
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.icons.IconUtil;
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.platform.PointerUtil;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
-import com.github.weisj.darklaf.util.Scale;
-import sun.awt.SunToolkit;
+import com.github.weisj.darklaf.utils.Scale;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -583,8 +583,8 @@ public class WindowsTitlePane extends CustomTitlePane {
                                                                        Scale.scaleHeight(ICON_SIZE),
                                                                        Image.SCALE_AREA_AVERAGING));
         } else {
-            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, Scale.scaleWidth(ICON_SIZE),
-                                                                      Scale.scaleHeight(ICON_SIZE))
+            systemIcon = new ScaledIcon(IconUtil.getScaledIconImage(icons, Scale.scaleWidth(ICON_SIZE),
+                                                                    Scale.scaleHeight(ICON_SIZE))
             );
         }
         if (windowIconButton != null) {

@@ -23,9 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import sun.awt.shell.ShellFolder;
-import sun.swing.FilePane;
-import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -40,11 +39,7 @@ import javax.swing.plaf.basic.BasicDirectoryModel;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 import javax.swing.plaf.metal.MetalFileChooserUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -267,7 +262,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
         listViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         listViewButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         listViewButton.setMargin(shrinkwrap);
-        listViewButton.addActionListener(filePane.getViewTypeAction(FilePane.VIEWTYPE_LIST));
+        listViewButton.addActionListener(filePane.getViewTypeAction(DarkFilePane.VIEWTYPE_LIST));
         topButtonPanel.add(listViewButton);
         viewButtonGroup.add(listViewButton);
 
@@ -279,7 +274,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
         detailsViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         detailsViewButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         detailsViewButton.setMargin(shrinkwrap);
-        detailsViewButton.addActionListener(filePane.getViewTypeAction(FilePane.VIEWTYPE_DETAILS));
+        detailsViewButton.addActionListener(filePane.getViewTypeAction(DarkFilePane.VIEWTYPE_DETAILS));
         topButtonPanel.add(detailsViewButton);
         viewButtonGroup.add(detailsViewButton);
 
@@ -288,11 +283,11 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
                 if ("viewType".equals(e.getPropertyName())) {
                     int viewType = filePane.getViewType();
                     switch (viewType) {
-                        case FilePane.VIEWTYPE_LIST:
+                        case DarkFilePane.VIEWTYPE_LIST:
                             listViewButton.setSelected(true);
                             break;
 
-                        case FilePane.VIEWTYPE_DETAILS:
+                        case DarkFilePane.VIEWTYPE_DETAILS:
                             detailsViewButton.setSelected(true);
                             break;
                     }
@@ -438,7 +433,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     protected Integer getMnemonic(final String key, final Locale l) {
-        return SwingUtilities2.getUIDefaultsInt(key, l);
+        return DarkSwingUtil.getUIDefaultsInt(key, l);
     }
 
     /*
@@ -696,7 +691,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      */
     protected ActionMap createActionMap() {
         ActionMap map = new ActionMapUIResource();
-        FilePane.addActionsToMap(map, filePane.getActions());
+        DarkFilePane.addActionsToMap(map, filePane.getActions());
         return map;
     }
 
@@ -1040,7 +1035,8 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      *
      * @deprecated As of JDK version 9. Obsolete class.
      */
-    protected class SingleClickListener extends MouseAdapter {
+    @Deprecated
+    protected static class SingleClickListener extends MouseAdapter {
         /**
          * Constructs an instance of {@code SingleClickListener}.
          *
@@ -1056,7 +1052,8 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * @deprecated As of JDK version 9. Obsolete class.
      */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected class FileRenderer extends DefaultListCellRenderer {
+    @Deprecated
+    protected static class FileRenderer extends DefaultListCellRenderer {
     }
 
     //
@@ -1088,7 +1085,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
     }
 
-    class IndentIcon implements Icon {
+    static class IndentIcon implements Icon {
 
         Icon icon = null;
         int depth = 0;
@@ -1146,7 +1143,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
                 return;
             }
 
-            boolean useShellFolder = FilePane.usesShellFolder(chooser);
+            boolean useShellFolder = DarkFilePane.usesShellFolder(chooser);
 
             directories.clear();
 

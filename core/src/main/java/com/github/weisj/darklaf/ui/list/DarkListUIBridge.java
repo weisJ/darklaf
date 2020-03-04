@@ -23,33 +23,22 @@
  */
 package com.github.weisj.darklaf.ui.list;
 
+import com.github.weisj.darklaf.bridge.DarkUIActionBridge;
 import com.github.weisj.darklaf.ui.BasicTransferable;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
-import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
 
 import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.MouseInputListener;
+import javax.swing.event.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -762,13 +751,11 @@ public class DarkListUIBridge extends BasicListUI {
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_FOCUSED) {
-            InputMap keyMap = (InputMap) DefaultLookup.get(
-                    list, this, "List.focusInputMap");
+            InputMap keyMap = (InputMap) UIManager.get("List.focusInputMap", list.getLocale());
             InputMap rtlKeyMap;
 
-            if (isLeftToRight ||
-                    ((rtlKeyMap = (InputMap) DefaultLookup.get(list, this,
-                                                               "List.focusInputMap.RightToLeft")) == null)) {
+            if (isLeftToRight
+                || ((rtlKeyMap = (InputMap) UIManager.get("List.focusInputMap.RightToLeft", list.getLocale())) == null)) {
                 return keyMap;
             } else {
                 rtlKeyMap.setParent(keyMap);
@@ -1494,7 +1481,7 @@ public class DarkListUIBridge extends BasicListUI {
             return;
         }
 
-        Color c = DefaultLookup.getColor(list, this, "List.dropLineColor", null);
+        Color c = UIManager.getColor("List.dropLineColor", list.getLocale());
         if (c != null) {
             g.setColor(c);
             Rectangle rect = getDropLineRect(loc);
@@ -1781,16 +1768,16 @@ public class DarkListUIBridge extends BasicListUI {
 
     }
 
-    private static class Actions extends UIAction {
+    private static class Actions extends DarkUIActionBridge {
         private static final String SELECT_PREVIOUS_COLUMN =
-                "selectPreviousColumn";
+            "selectPreviousColumn";
         private static final String SELECT_PREVIOUS_COLUMN_EXTEND =
-                "selectPreviousColumnExtendSelection";
+            "selectPreviousColumnExtendSelection";
         private static final String SELECT_PREVIOUS_COLUMN_CHANGE_LEAD =
-                "selectPreviousColumnChangeLead";
+            "selectPreviousColumnChangeLead";
         private static final String SELECT_NEXT_COLUMN = "selectNextColumn";
         private static final String SELECT_NEXT_COLUMN_EXTEND =
-                "selectNextColumnExtendSelection";
+            "selectNextColumnExtendSelection";
         private static final String SELECT_NEXT_COLUMN_CHANGE_LEAD =
                 "selectNextColumnChangeLead";
         private static final String SELECT_PREVIOUS_ROW = "selectPreviousRow";
@@ -2234,7 +2221,7 @@ public class DarkListUIBridge extends BasicListUI {
                     list.setSelectionInterval(0, size - 1);
 
                     // this is done to restore the anchor and lead
-                    SwingUtilities2.setLeadAnchorWithoutSelection(lsm, anchor, lead);
+                    DarkSwingUtil.setLeadAnchorWithoutSelection(lsm, anchor, lead);
 
                     list.setValueIsAdjusting(false);
                 }
@@ -2833,7 +2820,7 @@ public class DarkListUIBridge extends BasicListUI {
         }
 
         public void mousePressed(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
+            if (DarkSwingUtil.shouldIgnore(e, list)) {
                 return;
             }
 
@@ -2842,7 +2829,7 @@ public class DarkListUIBridge extends BasicListUI {
 
             // different behavior if drag is enabled
             if (dragEnabled) {
-                int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
+                int row = DarkSwingUtil.loc2IndexFileList(list, e.getPoint());
                 // if we have a valid row and this is a drag initiating event
                 if (row != -1 && DragRecognitionSupport.mousePressed(e)) {
                     dragPressDidSelection = false;
@@ -2871,7 +2858,7 @@ public class DarkListUIBridge extends BasicListUI {
             }
 
             if (grabFocus) {
-                SwingUtilities2.adjustFocus(list);
+                DarkSwingUtil.adjustFocus(list);
             }
 
             adjustSelection(e);
@@ -2883,7 +2870,7 @@ public class DarkListUIBridge extends BasicListUI {
          * @param e the e
          */
         protected void adjustSelection(final MouseEvent e) {
-            int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
+            int row = DarkSwingUtil.loc2IndexFileList(list, e.getPoint());
             if (row < 0) {
                 // If shift is down in multi-select, we should do nothing.
                 // For single select or non-shift-click, clear the selection
@@ -2927,14 +2914,14 @@ public class DarkListUIBridge extends BasicListUI {
         }
 
         public void mouseReleased(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
+            if (DarkSwingUtil.shouldIgnore(e, list)) {
                 return;
             }
 
             if (list.getDragEnabled()) {
                 MouseEvent me = DragRecognitionSupport.mouseReleased(e);
                 if (me != null) {
-                    SwingUtilities2.adjustFocus(list);
+                    DarkSwingUtil.adjustFocus(list);
                     if (!dragPressDidSelection) {
                         adjustSelection(me);
                     }
@@ -2952,13 +2939,13 @@ public class DarkListUIBridge extends BasicListUI {
 
         public void dragStarting(final MouseEvent me) {
             if (DarkUIUtil.isMenuShortcutKeyDown(me)) {
-                int row = SwingUtilities2.loc2IndexFileList(list, me.getPoint());
+                int row = DarkSwingUtil.loc2IndexFileList(list, me.getPoint());
                 list.addSelectionInterval(row, row);
             }
         }
 
         public void mouseDragged(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
+            if (DarkSwingUtil.shouldIgnore(e, list)) {
                 return;
             }
 

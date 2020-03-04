@@ -23,11 +23,11 @@
  */
 package com.github.weisj.darklaf.ui.checkbox;
 
+import com.github.weisj.darklaf.bridge.DarkMenuItemLayoutHelperBridge;
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.MenuItemLayoutHelper;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -59,8 +59,8 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
         c.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
     }
 
-    protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
-                                  final MenuItemLayoutHelper.LayoutResult lr,
+    protected void paintCheckIcon(final Graphics g2, final DarkMenuItemLayoutHelperBridge lh,
+                                  final DarkMenuItemLayoutHelperBridge.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);

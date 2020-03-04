@@ -25,18 +25,12 @@ package com.github.weisj.darklaf.components.text;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.decorators.PlainAction;
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Jannis Weis

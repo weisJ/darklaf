@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
-import com.github.weisj.darklaf.util.ReflectiveWarningSuppressor;
-import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
@@ -35,9 +33,6 @@ import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +47,8 @@ import java.util.List;
 public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     public static final StringBufferWrapper HIDE_POPUP_KEY = new StringBufferWrapper(new StringBuffer(
-            "doNotCancelPopup"));
-    public static final StringBuilder MOUSE_GRABBER_KEY = new StringBuilder(
-            "javax.swing.plaf.basic.BasicPopupMenuUI.MouseGrabber");
+        "doNotCancelPopup"));
+    protected static MouseGrabber mouseGrabber;
 
 
     public static ComponentUI createUI(final JComponent x) {
@@ -75,18 +69,16 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         return list;
     }
 
+    public static MouseGrabber getMouseGrabber() {
+        return mouseGrabber;
+    }
+
     @Override
     protected void installListeners() {
         super.installListeners();
         removeOldMouseGrabber();
-        AppContext context = AppContext.getAppContext();
-        synchronized (MOUSE_GRABBER_KEY) {
-            MouseGrabber mouseGrabber = (MouseGrabber) context.get(
-                    MOUSE_GRABBER_KEY);
-            if (mouseGrabber == null) {
-                mouseGrabber = new MouseGrabber();
-                context.put(MOUSE_GRABBER_KEY, mouseGrabber);
-            }
+        if (mouseGrabber == null) {
+            mouseGrabber = new MouseGrabber();
         }
     }
 
@@ -95,21 +87,15 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
      * implementation for it that is a bit more generous with closing the popup.
      */
     private void removeOldMouseGrabber() {
-        AppContext context = AppContext.getAppContext();
-        try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
-            Field field = BasicPopupMenuUI.class.getDeclaredField("MOUSE_GRABBER_KEY");
-            field.setAccessible(true);
-            Object value = field.get(null);
-            Object mouseGrabber = context.get(value);
-            if (mouseGrabber != null) {
-                Method method = mouseGrabber.getClass().getDeclaredMethod("uninstall");
-                method.setAccessible(true);
-                method.invoke(mouseGrabber);
+        MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
+        ChangeListener mouseGrabber = null;
+        for (ChangeListener listener : menuSelectionManager.getChangeListeners()) {
+            if (listener.getClass().getEnclosingClass().getName().endsWith("BasicPopupMenuUI")) {
+                mouseGrabber = listener;
+                break;
             }
-            context.put(value, null);
-        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
         }
+        menuSelectionManager.removeChangeListener(mouseGrabber);
     }
 
     public static class MouseGrabber implements ChangeListener,
@@ -162,11 +148,9 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         }
 
         public void uninstall() {
-            synchronized (MOUSE_GRABBER_KEY) {
-                MenuSelectionManager.defaultManager().removeChangeListener(this);
-                ungrabWindow();
-                AppContext.getAppContext().remove(MOUSE_GRABBER_KEY);
-            }
+            MenuSelectionManager.defaultManager().removeChangeListener(this);
+            ungrabWindow();
+            mouseGrabber = null;
         }
 
         void ungrabWindow() {

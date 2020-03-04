@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.utils.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

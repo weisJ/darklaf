@@ -23,13 +23,12 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.bridge.DarkUIActionBridge;
 import com.github.weisj.darklaf.ui.BasicTransferable;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
-import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -40,21 +39,10 @@ import javax.swing.plaf.TableHeaderUI;
 import javax.swing.plaf.TableUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTableUI;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
@@ -287,7 +275,7 @@ public abstract class TableUIBridge extends TableUI {
             return false;
         }
 
-        return SwingUtilities2.pointOutsidePrefSize(table, row, column, p);
+        return DarkSwingUtil.pointOutsidePrefSize(table, row, column, p);
     }
 
 //
@@ -397,9 +385,6 @@ public abstract class TableUIBridge extends TableUI {
      */
     protected void installKeyboardActions() {
         LazyActionMap.installLazyActionMap(table, TableUIBridge.class, "Table.actionMap");
-//        var map = new LazyActionMap(null);
-//        loadActionMap(map);
-//        SwingUtilities.replaceUIActionMap(table, map);
         InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         SwingUtilities.replaceUIInputMap(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, inputMap);
     }
@@ -453,14 +438,11 @@ public abstract class TableUIBridge extends TableUI {
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            InputMap keyMap =
-                    (InputMap) DefaultLookup.get(table, this,
-                                                 "Table.ancestorInputMap");
+            InputMap keyMap = (InputMap) UIManager.get("Table.ancestorInputMap", table.getLocale());
             InputMap rtlKeyMap;
 
             if (table.getComponentOrientation().isLeftToRight() ||
-                    ((rtlKeyMap = (InputMap) DefaultLookup.get(table, this,
-                                                               "Table.ancestorInputMap.RightToLeft")) == null)) {
+                ((rtlKeyMap = (InputMap) UIManager.get("Table.ancestorInputMap.RightToLeft", table.getLocale())) == null)) {
                 return keyMap;
             } else {
                 rtlKeyMap.setParent(keyMap);
@@ -906,7 +888,7 @@ public abstract class TableUIBridge extends TableUI {
             int y = damagedArea.y;
             for (int row = rMin; row <= rMax; row++) {
                 y += table.getRowHeight(row);
-                SwingUtilities2.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
+                DarkSwingUtil.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
             }
         }
         if (table.getShowVerticalLines()) {
@@ -918,14 +900,14 @@ public abstract class TableUIBridge extends TableUI {
                 for (int column = cMin; column <= cMax; column++) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
-                    SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                    DarkSwingUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                 }
             } else {
                 x = damagedArea.x;
                 for (int column = cMax; column >= cMin; column--) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
-                    SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                    DarkSwingUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                 }
             }
         }
@@ -1097,7 +1079,7 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * The type Actions.
      */
-    protected static class Actions extends UIAction {
+    protected static class Actions extends DarkUIActionBridge {
         /**
          * The constant CANCEL_EDITING.
          */
@@ -2284,14 +2266,14 @@ public abstract class TableUIBridge extends TableUI {
         }
 
         public void mousePressed(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, table)) {
+            if (DarkSwingUtil.shouldIgnore(e, table)) {
                 return;
             }
 
             if (table.isEditing() && !table.getCellEditor().stopCellEditing()) {
                 Component editorComponent = table.getEditorComponent();
                 if (editorComponent != null && !editorComponent.hasFocus()) {
-                    SwingUtilities2.compositeRequestFocus(editorComponent);
+                    DarkSwingUtil.compositeRequestFocus(editorComponent);
                 }
                 return;
             }
@@ -2312,7 +2294,7 @@ public abstract class TableUIBridge extends TableUI {
             if (table.getDragEnabled()) {
                 mousePressedDND(e);
             } else {
-                SwingUtilities2.adjustFocus(table);
+                DarkSwingUtil.adjustFocus(table);
                 if (!isFileList) {
                     setValueIsAdjusting(true);
                 }
@@ -2321,7 +2303,7 @@ public abstract class TableUIBridge extends TableUI {
         }
 
         public void mouseReleased(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, table)) {
+            if (DarkSwingUtil.shouldIgnore(e, table)) {
                 return;
             }
 
@@ -2347,7 +2329,7 @@ public abstract class TableUIBridge extends TableUI {
         protected void mouseReleasedDND(final MouseEvent e) {
             MouseEvent me = DragRecognitionSupport.mouseReleased(e);
             if (me != null) {
-                SwingUtilities2.adjustFocus(table);
+                DarkSwingUtil.adjustFocus(table);
                 if (!dragPressDidSelection) {
                     adjustSelection(me);
                 }
@@ -2449,7 +2431,7 @@ public abstract class TableUIBridge extends TableUI {
             Point p = e.getPoint();
             Point p2 = SwingUtilities.convertPoint(table, p, editorComponent);
             dispatchComponent = SwingUtilities.getDeepestComponentAt(editorComponent, p2.x, p2.y);
-            SwingUtilities2.setSkipClickCount(dispatchComponent, e.getClickCount() - 1);
+            DarkSwingUtil.setSkipClickCount(dispatchComponent, e.getClickCount() - 1);
         }
 
         /**
@@ -2507,7 +2489,7 @@ public abstract class TableUIBridge extends TableUI {
             }
 
             if (grabFocus) {
-                SwingUtilities2.adjustFocus(table);
+                DarkSwingUtil.adjustFocus(table);
             }
 
             adjustSelection(e);
@@ -2567,7 +2549,7 @@ public abstract class TableUIBridge extends TableUI {
             table.editCellAt(pressedRow, pressedCol, null);
             Component editorComponent = table.getEditorComponent();
             if (editorComponent != null && !editorComponent.hasFocus()) {
-                SwingUtilities2.compositeRequestFocus(editorComponent);
+                DarkSwingUtil.compositeRequestFocus(editorComponent);
             }
         }
 
@@ -2585,7 +2567,7 @@ public abstract class TableUIBridge extends TableUI {
         }
 
         public void mouseDragged(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, table)) {
+            if (DarkSwingUtil.shouldIgnore(e, table)) {
                 return;
             }
 

@@ -23,17 +23,13 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.util.DarkSwingUtil;
+
 import javax.swing.*;
 import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.text.Document;
-import javax.swing.text.EditorKit;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
@@ -139,7 +135,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
                     }
                 }
             }
-            String cssRule = sun.swing.SwingUtilities2.displayPropertiesToCSS(font, fg);
+            String cssRule = DarkSwingUtil.displayPropertiesToCSS(font, fg);
             styleSheet.addRule(cssRule);
             documentStyleSheet.addStyleSheet(styleSheet);
             documentStyleSheet.addRule("BASE_SIZE " +

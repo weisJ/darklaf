@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.util;
 
+import com.github.weisj.darklaf.utils.Scale;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;

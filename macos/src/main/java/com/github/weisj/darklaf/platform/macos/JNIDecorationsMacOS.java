@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.platform.macos;
 
 import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.utils.SystemInfo;
 
 import java.awt.*;
 import java.util.logging.Level;

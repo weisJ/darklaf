@@ -28,9 +28,9 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameTabLabel;
 import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.label.DarkLabelUI;
-import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import sun.swing.SwingUtilities2;
+import com.github.weisj.darklaf.utils.Alignment;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -84,7 +84,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
             return;
         }
 
-        FontMetrics fm = SwingUtilities2.getFontMetrics(label, g);
+        FontMetrics fm = DarkSwingUtil.getFontMetrics(label, g);
         String clippedText = layout(label, fm, c.getWidth(), c.getHeight());
 
         if (icon != null) {
