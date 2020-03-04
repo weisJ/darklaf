@@ -69,11 +69,16 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     protected abstract DarkCaret.CaretStyle getDefaultCaretStyle();
 
+    protected Color disabledColor;
+    protected Color inactiveColor;
+
     @Override
     protected void installDefaults() {
         super.installDefaults();
         editor.putClientProperty("JTextComponent.roundedSelection",
                                  UIManager.getBoolean("TextComponent.roundedSelection"));
+        disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
+        inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
     }
 
     @Override
@@ -107,6 +112,16 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         focusListener = null;
     }
 
+    protected Color getBackground(final JTextComponent c) {
+        if (!c.isEnabled()) {
+            return disabledColor;
+        } else if (!c.isEditable()) {
+            return inactiveColor;
+        } else {
+            return c.getBackground();
+        }
+    }
+
     @Override
     protected void paintBackground(final Graphics g) {
         if (editor.isOpaque()) {
@@ -115,7 +130,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 g.setColor(parent.getBackground());
             }
             if (DarkTextBorder.isCellEditor(editor) || DarkUIUtil.isInCell(editor)) {
-                g.setColor(editor.getBackground());
+                g.setColor(getBackground(editor));
             }
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
@@ -126,12 +141,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         } else if (border != null) {
             Insets ins = border.getBorderInsets(editor);
             if (ins != null) {
-                g.setColor(editor.getBackground());
+                g.setColor(getBackground(editor));
                 g.fillRect(ins.left, ins.top, editor.getWidth() - ins.left - ins.right,
                            editor.getHeight() - ins.top - ins.bottom);
             }
         } else {
-            g.setColor(editor.getBackground());
+            g.setColor(getBackground(editor));
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
     }
@@ -144,7 +159,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
-        g.setColor(c.getBackground());
+        g.setColor(getBackground(c));
         Rectangle r = getDrawingRect(c);
         int arc = getArcSize(c);
         DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
