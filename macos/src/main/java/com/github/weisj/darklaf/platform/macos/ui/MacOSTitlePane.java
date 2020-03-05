@@ -243,7 +243,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
             if ("title".equals(name)) {
-                titleLabel.setText(pce.getNewValue().toString());
+                titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
                 repaint();
             }
         }

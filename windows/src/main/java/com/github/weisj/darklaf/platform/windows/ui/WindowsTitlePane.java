@@ -771,7 +771,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                     getRootPane().repaint();
                 }
             } else if ("title".equals(name)) {
-                titleLabel.setText(pce.getNewValue().toString());
+                titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
                 repaint();
             } else if ("componentOrientation".equals(name)) {
                 revalidate();
@@ -782,6 +782,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 repaint();
             } else if ("background".equals(name) && pce.getNewValue() instanceof Color) {
                 Color color = (Color) pce.getNewValue();
+                if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
         }

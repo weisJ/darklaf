@@ -51,10 +51,10 @@ public class DarkTableUI extends DarkTableUIBridge {
     private final PropertyChangeListener propertyChangeListener = e -> {
         String key = e.getPropertyName();
         if ("showHorizontalLines".equals(key)) {
-            boolean b = (boolean) e.getNewValue();
+            boolean b = Boolean.TRUE.equals(e.getNewValue());
             table.setRowMargin(b ? 1 : 0);
         } else if ("showVerticalLines".equals(key)) {
-            boolean b = (boolean) e.getNewValue();
+            boolean b = Boolean.TRUE.equals(e.getNewValue());
             table.getColumnModel().setColumnMargin(b ? 1 : 0);
         } else if ("ancestor".equals(key)) {
             Object oldVal = e.getOldValue();
