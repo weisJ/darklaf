@@ -24,12 +24,12 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>[1.4.0.2,)</version>
+  <version>[1.4.0.3,)</version>
 </dependency>
 ````
 ### Gradle
 ````
-implementation 'com.github.weisj:darklaf-core:[1.4.0.2,)'
+implementation 'com.github.weisj:darklaf-core:[1.4.0.3,)'
 ````
 
 ## Installation
@@ -99,12 +99,12 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [Native window decorations on Linux and MacOS.](https://github.com/weisJ/darklaf/issues/2)
   * See [/windows](https://github.com/weisJ/darklaf/tree/master/windows) for the windows implementation.
 - [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
-  * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the plaform folder.
+  * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the platform folder.
 - Create missing demo classes. (See Todo's in test/ui/)
 
 # Artifacts
 - Group ID: `com.github.weisj`
-- Version: `1.4.0.2`
+- Version: `1.4.0.3`
 - Artifact IDs:
   - `darklaf-core` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
   - `darklaf-property-loader` Library to load and parse property files and icon.
