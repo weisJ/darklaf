@@ -206,6 +206,9 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         Properties uiProps = new Properties();
         final Theme currentTheme = LafManager.getTheme();
         currentTheme.loadDefaults(uiProps, defaults);
+        //Load overwrites the user has set.
+        PropertyLoader.putProperties(LafManager.getUserProperties(), uiProps, defaults);
+
         currentTheme.loadGlobals(uiProps, defaults);
         installGlobals(uiProps, defaults);
         currentTheme.loadUIProperties(uiProps, defaults);

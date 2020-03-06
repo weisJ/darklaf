@@ -33,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -47,6 +48,7 @@ public final class LafManager {
     private static Theme theme;
     private static boolean logEnabled = false;
     private static boolean decorationsOverwrite = true;
+    private static Properties properties = new Properties();
 
     static {
         enableLogging(true);
@@ -215,4 +217,66 @@ public final class LafManager {
         }
     }
 
+    /**
+     * Set a custom property.
+     * <p>
+     * Note: These properties are loaded
+     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
+     * specified in `[theme]_defaults.properties`.
+     *
+     * @param key   the key.
+     * @param value the value.
+     */
+    public static void setProperty(final String key, final String value) {
+        properties.setProperty(key, value);
+    }
+
+    /**
+     * Remove a custom property.
+     * <p>
+     * Note: These properties are loaded
+     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
+     * specified in `[theme]_defaults.properties`.
+     *
+     * @param key the key.
+     */
+    public static void removeProperty(final String key) {
+        properties.remove(key);
+    }
+
+    /**
+     * Remove all custom properties.
+     * <p>
+     * Note: These properties are loaded
+     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
+     * specified in `[theme]_defaults.properties`.
+     */
+    public static void clearProperties() {
+        properties.clear();
+    }
+
+    /**
+     * Get the custom properties.
+     * <p>
+     * Note: These properties are loaded
+     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
+     * specified in `[theme]_defaults.properties`.
+     */
+    public static Properties getUserProperties() {
+        return properties;
+    }
+
+    /**
+     * Remove a custom property.
+     * <p>
+     * Note: These properties are loaded
+     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
+     * specified in `[theme]_defaults.properties`.
+     *
+     * @param key the key.
+     * @return the value associated with `key`.
+     */
+    public String getProperty(final String key) {
+        return properties.getProperty(key);
+    }
 }

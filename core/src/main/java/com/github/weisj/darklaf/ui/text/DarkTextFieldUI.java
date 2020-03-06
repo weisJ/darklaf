@@ -273,6 +273,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     @Override
     protected void installListeners() {
+        super.installListeners();
         JTextComponent c = getComponent();
         c.addMouseListener(mouseListener);
         c.addMouseMotionListener(mouseMotionListener);
