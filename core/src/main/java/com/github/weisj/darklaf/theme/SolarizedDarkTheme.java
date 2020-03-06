@@ -39,6 +39,11 @@ public class SolarizedDarkTheme extends Theme {
     }
 
     @Override
+    protected Class<? extends Theme> getLoaderClass() {
+        return SolarizedDarkTheme.class;
+    }
+
+    @Override
     public boolean useDarkIcons() {
         return true;
     }

@@ -41,6 +41,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Theme for {@link DarkLaf}.
+ *
  * @author Jannis Weis
  */
 public abstract class Theme {
@@ -71,6 +73,10 @@ public abstract class Theme {
 
     /**
      * Load the theme defaults.
+     * <p>
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
+     * to return the class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -82,6 +88,10 @@ public abstract class Theme {
 
     /**
      * Load the global values.
+     * <p>
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
+     * to return the class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -93,6 +103,10 @@ public abstract class Theme {
 
     /**
      * Load the icon defaults.
+     * <p>
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
+     * to return the class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
@@ -107,6 +121,10 @@ public abstract class Theme {
 
     /**
      * Load the general properties file for the icon themes.
+     * <p>
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
+     * to return the class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
@@ -130,6 +148,9 @@ public abstract class Theme {
 
     /**
      * Load the platform defaults.
+     * <p>
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
+     * instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -145,6 +166,9 @@ public abstract class Theme {
 
     /**
      * Load the ui defaults.
+     * <p>
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
+     * instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -166,6 +190,9 @@ public abstract class Theme {
     /**
      * Load custom properties that are located under {@link #getResourcePath()}, with the name {@link
      * #getName()}_{propertySuffix}.properties
+     * <p>
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
+     * instead of {@link #load(String)}.
      *
      * @param propertySuffix  the property suffix.
      * @param properties      the properties to load into.
@@ -178,14 +205,28 @@ public abstract class Theme {
     }
 
     /**
-     * Load a properties file using {@link #getResourceAsStream(String)}.
+     * Load a .properties file using {@link #getLoaderClass()}} to resolve the file path.
+     * <p>
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
+     * instead.
      *
      * @param name the properties file to load.
      * @return the properties.
      */
     protected Properties load(final String name) {
+        return loadWithClass(name, getLoaderClass());
+    }
+
+    /**
+     * Load a .properties file.
+     *
+     * @param name        the properties file to load.
+     * @param loaderClass the class to resolve the file location from.
+     * @return the properties.
+     */
+    protected Properties loadWithClass(final String name, final Class<?> loaderClass) {
         final Properties properties = new Properties();
-        try (InputStream stream = getResourceAsStream(name)) {
+        try (InputStream stream = loaderClass.getResourceAsStream(name)) {
             properties.load(stream);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Could not load " + name + ".properties. " + e.getMessage(), e.getStackTrace());
@@ -194,7 +235,7 @@ public abstract class Theme {
     }
 
     /**
-     * The path to the resources location relative to the classpath of {@link #getLoaderClass()}.
+     * The path to the resource location relative to the classpath of {@link #getLoaderClass()}.
      *
      * @return the relative resource path
      */
@@ -210,24 +251,13 @@ public abstract class Theme {
     public abstract String getName();
 
     /**
-     * Load a resource as an InputStream. By default this will the {@link ClassLoader#getResourceAsStream(String)}
-     * method from the class returned by {@link #getLoaderClass()}.
-     *
-     * @param name resource to load.
-     * @return the InputStream.
-     */
-    protected InputStream getResourceAsStream(final String name) {
-        return getLoaderClass().getResourceAsStream(name);
-    }
-
-    /**
-     * The class used to determine the runtime location of resources. By default this is the same class as the theme.
+     * The class used to determine the runtime location of resources.
+     * It is advised to explicitly return the class instead of using {@link #getClass()} to protect
+     * against extending the theme.
      *
      * @return the loader class.
      */
-    protected Class<? extends Theme> getLoaderClass() {
-        return this.getClass();
-    }
+    protected abstract Class<? extends Theme> getLoaderClass();
 
     /**
      * Load the css style sheet used for html display in text components with a {@link
@@ -236,8 +266,19 @@ public abstract class Theme {
      * @return the {@link StyleSheet}.
      */
     public StyleSheet loadStyleSheet() {
+        return loadStyleSheetWithClass(getLoaderClass());
+    }
+
+    /**
+     * Load the css style sheet used for html display in text components with a {@link
+     * javax.swing.text.html.HTMLEditorKit}.
+     *
+     * @param loaderClass the class to resolve the location of the style sheet.
+     * @return the {@link StyleSheet}.
+     */
+    public StyleSheet loadStyleSheetWithClass(final Class<?> loaderClass) {
         StyleSheet styleSheet = new StyleSheet();
-        try (InputStream in = getResourceAsStream(getResourcePath() + getName() + "_styleSheet.css");
+        try (InputStream in = loaderClass.getResourceAsStream(getResourcePath() + getName() + "_styleSheet.css");
              InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
              BufferedReader r = new BufferedReader(inReader)) {
             styleSheet.loadRules(r, null);

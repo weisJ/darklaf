@@ -64,6 +64,11 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
+    protected Class<? extends Theme> getLoaderClass() {
+        return IntelliJTheme.class;
+    }
+
+    @Override
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);

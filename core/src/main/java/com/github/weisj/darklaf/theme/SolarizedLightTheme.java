@@ -39,6 +39,11 @@ public class SolarizedLightTheme extends Theme {
     }
 
     @Override
+    protected Class<? extends Theme> getLoaderClass() {
+        return SolarizedLightTheme.class;
+    }
+
+    @Override
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);

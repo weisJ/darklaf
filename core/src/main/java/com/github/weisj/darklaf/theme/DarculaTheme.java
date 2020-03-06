@@ -39,6 +39,11 @@ public class DarculaTheme extends Theme {
     }
 
     @Override
+    protected Class<? extends Theme> getLoaderClass() {
+        return DarculaTheme.class;
+    }
+
+    @Override
     public boolean useDarkIcons() {
         return true;
     }

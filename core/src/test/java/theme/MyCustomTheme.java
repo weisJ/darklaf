@@ -74,6 +74,11 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
+    protected Class<? extends Theme> getLoaderClass() {
+        return MyCustomTheme.class;
+    }
+
+    @Override
     public boolean useDarkIcons() {
         return false;
     }
