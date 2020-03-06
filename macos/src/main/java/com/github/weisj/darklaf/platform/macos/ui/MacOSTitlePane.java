@@ -200,8 +200,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
         return (decorationInformation != null && decorationInformation.windowHandle == 0)
             || isFullscreen
-            || getWindowDecorationStyle() == JRootPane.NONE
-            || getTitle().length() == 0;
+            || getWindowDecorationStyle() == JRootPane.NONE;
     }
 
     private boolean useCustomTitle() {

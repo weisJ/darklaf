@@ -144,8 +144,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
     }
 
     protected CustomTitlePane getTitlePane(final JRootPane root) {
-        if ((root.getWindowDecorationStyle() != JRootPane.NONE)
-            && (root.getUI() instanceof DarkRootPaneUI)) {
+        if (root.getUI() instanceof DarkRootPaneUI) {
             return ((DarkRootPaneUI) root.getUI()).getTitlePane();
         }
         return null;

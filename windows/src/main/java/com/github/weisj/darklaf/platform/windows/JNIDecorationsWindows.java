@@ -64,6 +64,7 @@ public class JNIDecorationsWindows {
     }
 
     private static void loadLibrary() {
+        attemptedLoad = true;
         if (!SystemInfo.isWindows || loaded) {
             return;
         }
