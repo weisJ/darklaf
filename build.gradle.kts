@@ -73,17 +73,20 @@ allprojects {
     }
 
     plugins.withId("cpp-library") {
-        tasks.withType<PublishToMavenRepository>()
-            .matching {
-                it.name.startsWith("publishMain") ||
-                    it.name.startsWith("signMain") ||
-                    it.name.startsWith("generatePomFileForMain") ||
-                    it.name.startsWith("generateMetadataFileForMain")
+        listOf(AbstractPublishToMaven::class, GenerateMavenPom::class, GenerateModuleMetadata::class)
+            .forEach { type ->
+                tasks.withType(type)
+                    .matching {
+                        it.name.startsWith("publishMain") ||
+                                it.name.startsWith("signMain") ||
+                                it.name.startsWith("generatePomFileForMain") ||
+                                it.name.startsWith("generateMetadataFileForMain")
+                    }
+                    .configureEach {
+                        // We don't need to publish CPP artifacts (e.g. header files)
+                        enabled = false
+                    }
             }
-            .configureEach {
-            // We don't need to publish CPP artifacts (e.g. header files)
-            enabled = false
-        }
     }
 
     if (!enableGradleMetadata) {
@@ -103,6 +106,7 @@ allprojects {
         }
 
         apply(plugin = "maven-publish")
+        val generatePomFile by props()
 
         tasks {
             withType<JavaCompile>().configureEach {
@@ -177,7 +181,7 @@ allprojects {
                     artifactId = project.name
                     version = rootProject.version.toString()
                     description = project.description
-                    from(project.components.get("java"))
+                    from(project.components["java"])
                 }
                 withType<MavenPublication> {
                     // Use the resolved versions in pom.xml
@@ -207,6 +211,9 @@ allprojects {
                             )
                             sb.setLength(0)
                             sb.append(s)
+                            if (generatePomFile && !version.endsWith("SNAPSHOT")) {
+                                file("$projectDir/pom.xml").writeText(sb.toString())
+                            }
                             // Re-format the XML
                             asNode()
                         }
