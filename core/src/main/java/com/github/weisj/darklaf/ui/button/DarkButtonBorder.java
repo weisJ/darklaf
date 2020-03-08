@@ -79,6 +79,12 @@ public class DarkButtonBorder implements Border, UIResource {
         squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
         labelInsets = UIManager.getInsets("Button.onlyLabelInsets");
         shadowInsets = UIManager.getInsets("Button.fullShadowInsets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
+        if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
+        if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
+        if (squareInsets == null) squareInsets = new Insets(0, 0, 0, 0);
+        if (shadowInsets == null) shadowInsets = new Insets(0, 0, 0, 0);
+        if (labelInsets == null) labelInsets = new Insets(0, 0, 0, 0);
     }
 
     @Override

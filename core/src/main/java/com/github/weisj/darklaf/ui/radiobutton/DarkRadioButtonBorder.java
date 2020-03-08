@@ -43,10 +43,11 @@ public class DarkRadioButtonBorder implements Border, UIResource {
                             final int width, final int height) {
     }
 
-    private final Insets insets;
+    private Insets insets;
 
     public DarkRadioButtonBorder() {
         insets = UIManager.getInsets("RadioButton.borderInsets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
     @Override

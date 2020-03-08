@@ -68,6 +68,7 @@ public class DarkTextBorder implements Border, UIResource {
         searchFocusArc = UIManager.getInt("TextField.searchFocusArc");
         padding = UIManager.getInsets("TextField.insets");
         showIcon = UIManager.getIcon("PasswordField.show.icon");
+        if (padding == null) padding = new Insets(0, 0, 0, 0);
     }
 
     protected static boolean hasError(final Component c) {

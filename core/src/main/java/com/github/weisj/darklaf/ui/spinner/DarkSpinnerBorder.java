@@ -54,6 +54,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
         borderSize = UIManager.getInt("Spinner.borderThickness");
         cellInsets = UIManager.getInsets("Spinner.cellEditorInsets");
         insets = UIManager.getInsets("Spinner.insets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
+        if (cellInsets == null) cellInsets = new Insets(0, 0, 0, 0);
     }
 
     @Override

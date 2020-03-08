@@ -42,10 +42,11 @@ public class DarkCheckBoxBorder implements Border, UIResource {
                             final int width, final int height) {
     }
 
-    private final Insets insets;
+    private Insets insets;
 
     public DarkCheckBoxBorder() {
         insets = UIManager.getInsets("CheckBox.borderInsets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
     @Override

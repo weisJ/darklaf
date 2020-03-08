@@ -87,6 +87,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         arrowBackgroundStart = UIManager.getColor("ComboBox.arrowBackgroundStart");
         arrowBackgroundEnd = UIManager.getColor("ComboBox.arrowBackgroundEnd");
         cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
+        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
+        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
     }
 
     @Override
@@ -394,7 +396,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         if (isTableCellEditor(c) || isTreeCellEditor(c)) {
             return new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right);
         }
-        if (comboBox.getComponentOrientation().isLeftToRight()) {
+        if (c.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);
         } else {
             return new InsetsUIResource(boxPadding.top, borderSize, boxPadding.bottom, boxPadding.right);

@@ -42,6 +42,7 @@ public class DarkTreeCellBorder implements Border, UIResource {
     public DarkTreeCellBorder() {
         borderColor = UIManager.getColor("Tree.editorBorderColor");
         insets = UIManager.getInsets("Tree.editorBorderInsets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
     @Override
