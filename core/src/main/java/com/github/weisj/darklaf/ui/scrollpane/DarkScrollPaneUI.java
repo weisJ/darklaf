@@ -126,8 +126,21 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     public void installUI(final JComponent x) {
         super.installUI(x);
         oldLayout = (ScrollPaneLayout) x.getLayout();
+        if (oldLayout instanceof ScrollLayoutManagerDelegate) {
+            oldLayout = ((ScrollLayoutManagerDelegate) oldLayout).getDelegate();
+        }
         if (oldLayout != null) {
             x.setLayout(new ScrollLayoutManagerDelegate(oldLayout) {
+
+                @Override
+                public void addLayoutComponent(final String name, final Component comp) {
+                    if (name != null && name.toUpperCase().endsWith("CORNER")) {
+                        Component oldComp = getDelegate().getCorner(name);
+                        getDelegate().removeLayoutComponent(oldComp);
+                    }
+                    super.addLayoutComponent(name, comp);
+                }
+
                 @Override
                 public void layoutContainer(final Container parent) {
                     super.layoutContainer(parent);

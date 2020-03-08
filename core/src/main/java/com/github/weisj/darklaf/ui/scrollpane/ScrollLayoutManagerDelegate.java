@@ -50,6 +50,11 @@ public class ScrollLayoutManagerDelegate extends ScrollPaneLayout {
     }
 
     @Override
+    public void syncWithScrollPane(final JScrollPane sp) {
+        delegate.syncWithScrollPane(sp);
+    }
+
+    @Override
     public void removeLayoutComponent(final Component comp) {
         delegate.removeLayoutComponent(comp);
     }
