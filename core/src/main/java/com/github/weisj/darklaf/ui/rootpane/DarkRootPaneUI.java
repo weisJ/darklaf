@@ -61,6 +61,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public void installUI(final JComponent c) {
         super.installUI(c);
         rootPane = (JRootPane) c;
+        updateClientDecoration();
     }
 
     @Override
