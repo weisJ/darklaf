@@ -39,7 +39,9 @@ import java.awt.*;
  */
 public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
 
-    private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> menuItem.setArmed(true));
+    private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
+        if (menuItem != null) menuItem.setArmed(true);
+    });
 
     private Icon checkBoxIcon;
     private Icon checkBoxDisabledIcon;
