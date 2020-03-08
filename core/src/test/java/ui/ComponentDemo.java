@@ -24,9 +24,11 @@
 package ui;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public interface ComponentDemo {
 
@@ -40,14 +42,51 @@ public interface ComponentDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.install();
             JFrame frame = new JFrame();
-            frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setTitle(demo.getTitle());
             frame.setContentPane(demo.createComponent());
+            frame.setJMenuBar(demo.createMenuBar());
             frame.pack();
             if (dimension != null) frame.setSize(dimension);
             frame.setVisible(true);
+            frame.setLocationRelativeTo(null);
         });
+    }
+
+    static JMenu createThemeMenu() {
+        String currentThemeName = LafManager.getTheme().getClass().getSimpleName();
+        JMenu menu = new JMenu("Theme");
+        ButtonGroup bg = new ButtonGroup();
+        for (Theme theme : new Theme[]{new DarculaTheme(),
+                                       new IntelliJTheme(),
+                                       new SolarizedLightTheme(),
+                                       new SolarizedDarkTheme()}) {
+            createThemeItem(currentThemeName, menu, bg, theme);
+        }
+        return menu;
+    }
+
+    static void createThemeItem(final String currentThemeName, final JMenu menu,
+                                final ButtonGroup bg, final Theme theme) {
+        final String name = theme.getClass().getSimpleName();
+        final Action action = new AbstractAction(name) {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                LafManager.install(theme);
+            }
+        };
+        final JRadioButtonMenuItem mi = new JRadioButtonMenuItem(action);
+        menu.add(mi);
+        bg.add(mi);
+        if (name.equals(currentThemeName)) {
+            mi.setSelected(true);
+        }
+    }
+
+    default JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(createThemeMenu());
+        return menuBar;
     }
 
     String getTitle();
