@@ -4,11 +4,9 @@ package defaults;
  *  to create a table of key/value pairs for each Swing component.
  */
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.table.DarkColorTableCellRendererEditor;
-import org.jdesktop.swingx.JXTaskPane;
-import org.jdesktop.swingx.JXTaskPaneContainer;
+import ui.ComponentDemo;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,141 +14,44 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.*;
 
-public class UIManagerDefaults implements ItemListener {
+public class UIManagerDefaults implements ItemListener, ComponentDemo {
     private static final String[] COLUMN_NAMES = {"Key", "Value", "Sample"};
     private static String selectedItem;
-
-    private final JComponent contentPane;
-    private final TreeMap<String, TreeMap<String, Object>> items;
-    private final HashMap<String, DefaultTableModel> models;
-    private JMenuBar menuBar;
+    private final TreeMap<String, TreeMap<String, Object>> items = new TreeMap<>();
+    private final HashMap<String, DefaultTableModel> models = new HashMap<>();
     private JComboBox<String> comboBox;
     private JRadioButton byComponent;
     private JTable table;
 
-    /*
-     * Constructor
-     */
-    private UIManagerDefaults() {
-        new JXTaskPaneContainer();
-        new JXTaskPane();
-        items = new TreeMap<>();
-        models = new HashMap<>();
-
-        contentPane = new JPanel(new BorderLayout());
-        contentPane.add(buildNorthComponent(), BorderLayout.NORTH);
-        contentPane.add(buildCenterComponent(), BorderLayout.CENTER);
-
-        resetComponents();
-    }
 
     public static void main(final String[] args) {
-        LafManager.install();
-        SwingUtilities.invokeLater(UIManagerDefaults::createAndShowGUI);
+        ComponentDemo.showDemo(new UIManagerDefaults());
     }
 
-    /*
-     *  Build a GUI using the content pane and menu bar of defaults.UIManagerDefaults
-     */
-    private static void createAndShowGUI() {
-        final UIManagerDefaults application = new UIManagerDefaults();
-        final JFrame frame = new JFrame("UIManager Defaults");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setJMenuBar(application.getMenuBar());
-        frame.getContentPane().add(application.getContentPane());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
-
-    /*
-     *  A menu can also be added which provides the ability to switch
-     *  between different LAF's.
-     */
-    private JMenuBar getMenuBar() {
-        if (menuBar == null) {
-            menuBar = createMenuBar();
-        }
-
-        return menuBar;
-    }
-
-    /*
-     *  The content pane should be added to a high level container
-     */
-
-    public JComponent getContentPane() {
+    @Override
+    public JComponent createComponent() {
+        JComponent contentPane = new JPanel(new BorderLayout());
+        createPreviewPanel();
+        contentPane.add(createSelectionPanel(), BorderLayout.NORTH);
+        contentPane.add(createPreviewPanel(), BorderLayout.CENTER);
+        resetComponents();
         return contentPane;
     }
 
-    /**
-     * Create menu bar
-     */
-
-    private JMenuBar createMenuBar() {
-        final JMenuBar menuBar = new JMenuBar();
-        menuBar.add(createFileMenu());
-        menuBar.add(createLAFMenu());
-        return menuBar;
-    }
-
-    /**
-     * Create menu items for the Application menu
-     */
-
-    private JMenu createFileMenu() {
-        final JMenu menu = new JMenu("Application");
-        menu.setMnemonic('A');
-        ExitAction item = new ExitAction();
-        menu.add(item);
-        return menu;
-    }
-
-    /**
-     * Create menu items for the Look & Feel menu
-     */
-
-    private JMenu createLAFMenu() {
-        final ButtonGroup bg = new ButtonGroup();
-        final JMenu menu = new JMenu("Look & Feel");
-        menu.setMnemonic('L');
-        final String lafId = LafManager.getTheme().getName();
-
-        Theme[] themes = {new DarculaTheme(), new IntelliJTheme(), new SolarizedDarkTheme(), new SolarizedLightTheme()};
-        for (Theme theme : themes) {
-            final String name = theme.getName();
-            final Action action = new AbstractAction(name) {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    LafManager.install(theme);
-                }
-            };
-            final JRadioButtonMenuItem mi = new JRadioButtonMenuItem(action);
-            menu.add(mi);
-            bg.add(mi);
-            if (name.equals(lafId)) {
-                mi.setSelected(true);
-            }
-        }
-        return menu;
+    @Override
+    public String getTitle() {
+        return "UIManager Defaults";
     }
 
     /*
      *  This panel is added to the North of the content pane
      */
-
-    private JComponent buildNorthComponent() {
-        comboBox = new JComboBox<String>() {
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(200, getUI().getPreferredSize(this).height);
-            }
-        };
+    private JComponent createSelectionPanel() {
+        comboBox = new JComboBox<>();
 
         final JLabel label = new JLabel("Select Item:");
         label.setDisplayedMnemonic('S');
@@ -186,12 +87,7 @@ public class UIManagerDefaults implements ItemListener {
         return panel;
     }
 
-    /*
-     *  This panel is added to the Center of the content pane
-     */
-
-
-    private JComponent buildCenterComponent() {
+    private JComponent createPreviewPanel() {
         final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0);
         table = new JTable(model);
         table.setAutoCreateColumnsFromModel(false);
@@ -207,7 +103,7 @@ public class UIManagerDefaults implements ItemListener {
         d.height = 350;
         table.setPreferredScrollableViewportSize(d);
 
-        return new JScrollPane(table);
+        return new OverlayScrollPane(table);
     }
 
     /*
@@ -242,18 +138,18 @@ public class UIManagerDefaults implements ItemListener {
      */
     private void buildItemsMap() {
         final UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-        //  Build of Map of items and a Map of attributes for each item
+        //  Build of Map of items, and a Map of attributes for each item
         for (final Object key : new HashSet<>(defaults.keySet())) {
             final Object value = defaults.get(key);
             final String itemName = getItemName(key.toString(), value);
             if (itemName == null) {
                 continue;
             }
-            //  Get the attribute map for this componenent, or
+            //  Get the attribute map for this component, or
             //  create a map when one is not found
             final TreeMap<String, Object> attributeMap =
                     items.computeIfAbsent(itemName, k -> new TreeMap<>());
-            //  Add the attribute to the map for this componenent
+            //  Add the attribute to the map for this component
             attributeMap.put(key.toString(), value);
         }
     }
@@ -413,5 +309,4 @@ public class UIManagerDefaults implements ItemListener {
         } catch (final ClassCastException ignored) {
         }
     }
-
 }
