@@ -690,8 +690,12 @@ public class WindowsTitlePane extends CustomTitlePane {
             int right = 0;
 
             if (windowIconButton != null) {
-                windowIconButton.setBounds(start, y, ICON_WIDTH, height);
-                start += ICON_WIDTH + PAD;
+                int windowButtonWidth = windowIconButton.getIcon() != null ?
+                                        Math.max(windowIconButton.getIcon().getIconHeight(),
+                                                 windowIconButton.getIcon().getIconWidth()) : ICON_WIDTH;
+                windowButtonWidth = Math.min(ICON_WIDTH, windowButtonWidth);
+                windowIconButton.setBounds(start + PAD / 2, y, windowButtonWidth, height);
+                start += windowButtonWidth + PAD;
                 left = start;
             }
             if (menuBar != null) {
