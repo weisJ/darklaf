@@ -323,7 +323,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                     && Boolean.TRUE.equals(((JComponent) owner).getClientProperty("JToggleButton.isTreeCellEditor"));
             boolean treeRenderer = owner instanceof JComponent
                     && Boolean.TRUE.equals(((JComponent) owner).getClientProperty("JToggleButton.isTreeCellRenderer"));
-            return owner == null || treeEditor || treeRenderer;
+            return treeEditor || treeRenderer;
         }
         return true;
     }
@@ -363,7 +363,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         if (treeState == null) {
             return;
         }
-
         Rectangle paintBounds = g.getClipBounds();
 
         Insets insets = tree.getInsets();
@@ -501,7 +500,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected Color getRowBackground(final int row, final boolean selected) {
         if (selected) {
             boolean isTableTree = Boolean.TRUE.equals(tree.getClientProperty(TREE_TABLE_TREE_KEY));
-            return getTreeSelectionBackground(tree.hasFocus() || isTableTree || tree.isEditing());
+            return getTreeSelectionBackground(hasFocus() || isTableTree || tree.isEditing());
         }
         if (Boolean.TRUE.equals(tree.getClientProperty(STRIPED_CLIENT_PROPERTY)) && row % 2 == 1) {
             return alternativeBackground;
