@@ -160,7 +160,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
         static Style get(final String style) {
             try {
-                return valueOf(style);
+                return valueOf(style.toLowerCase());
             } catch (IllegalArgumentException e) {
                 return GRIP;
             }
