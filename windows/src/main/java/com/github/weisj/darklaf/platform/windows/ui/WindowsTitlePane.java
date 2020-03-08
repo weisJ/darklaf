@@ -188,8 +188,10 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     protected void uninstallDecorations() {
         window = null;
-        JNIDecorationsWindows.uninstallDecorations(windowHandle);
-        windowHandle = 0;
+        if (windowHandle != 0) {
+            JNIDecorationsWindows.uninstallDecorations(windowHandle);
+            windowHandle = 0;
+        }
         rootPane.removeContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().removeContainerListener(layeredPaneContainerListener);
         if (menuBar != null) {
