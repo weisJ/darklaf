@@ -49,7 +49,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
 
     public static ComponentUI createUI(final JComponent c) {
-        return new DarkSplitPaneUI(Style.DEFAULT);
+        return new DarkSplitPaneUI(Style.get(UIManager.getString("SplitPane.defaultDividerStyle")));
     }
 
     @Override
@@ -88,7 +88,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
     @Override
     public BasicSplitPaneDivider createDefaultDivider() {
-        if (style == Style.DEFAULT) {
+        if (style == Style.GRIP) {
             return new DarkSplitPaneDivider(this);
         } else {
             return new ThinDivider(this);
@@ -102,7 +102,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             @Override
             public void layoutContainer(final Container parent) {
                 super.layoutContainer(parent);
-                if (style != Style.DEFAULT) {
+                if (style != Style.GRIP) {
                     Rectangle bounds = getDivider().getBounds();
                     if (getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
                         bounds.x -= DIVIDER_DRAG_OFFSET;
@@ -128,10 +128,10 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             } else if (Style.LINE.name.equals(val)) {
                 style = Style.LINE;
             } else {
-                style = Style.DEFAULT;
+                style = Style.GRIP;
             }
             if (oldStyle != style) {
-                if (style == Style.DEFAULT || oldStyle == Style.DEFAULT) {
+                if (style == Style.GRIP || oldStyle == Style.GRIP) {
                     splitPane.setUI(new DarkSplitPaneUI(style));
                 } else {
                     splitPane.doLayout();
@@ -147,7 +147,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     private enum Style {
-        DEFAULT("default"),
+        GRIP("grip"),
         LINE("line"),
         INVISIBLE("invisible");
 
@@ -156,6 +156,14 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
         Style(final String name) {
             this.name = name;
+        }
+
+        static Style get(final String style) {
+            try {
+                return valueOf(style);
+            } catch (IllegalArgumentException e) {
+                return GRIP;
+            }
         }
     }
 

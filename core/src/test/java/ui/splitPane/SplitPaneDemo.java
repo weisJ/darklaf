@@ -76,10 +76,10 @@ public final class SplitPaneDemo implements ComponentDemo {
         }}, "sgx");
         controlPanel.add(new JLabel("JSplitPane.style:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
-            addItem("default");
+            addItem("grip");
             addItem("line");
             addItem("invisible");
-            setSelectedItem("default");
+            setSelectedItem(UIManager.get("SplitPane.defaultDividerStyle"));
             addItemListener(e -> splitPane.putClientProperty("JSplitPane.style", e.getItem()));
         }}, "sgx");
         return panel;
