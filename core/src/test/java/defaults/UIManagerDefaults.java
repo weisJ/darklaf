@@ -4,9 +4,8 @@ package defaults;
  *  to create a table of key/value pairs for each Swing component.
  */
 
-import com.github.weisj.darklaf.DarkLafInfo;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.theme.*;
 import com.github.weisj.darklaf.ui.table.DarkColorTableCellRendererEditor;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
@@ -17,13 +16,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 
 public class UIManagerDefaults implements ItemListener {
     private static final String[] COLUMN_NAMES = {"Key", "Value", "Sample"};
@@ -54,7 +50,6 @@ public class UIManagerDefaults implements ItemListener {
     }
 
     public static void main(final String[] args) {
-        UIManager.installLookAndFeel(new DarkLafInfo());
         LafManager.install();
         SwingUtilities.invokeLater(UIManagerDefaults::createAndShowGUI);
     }
@@ -124,13 +119,17 @@ public class UIManagerDefaults implements ItemListener {
         final ButtonGroup bg = new ButtonGroup();
         final JMenu menu = new JMenu("Look & Feel");
         menu.setMnemonic('L');
-        final String lafId = UIManager.getLookAndFeel().getID();
-        final UIManager.LookAndFeelInfo[] lafInfo = UIManager.getInstalledLookAndFeels();
+        final String lafId = LafManager.getTheme().getName();
 
-        for (final UIManager.LookAndFeelInfo lookAndFeelInfo : lafInfo) {
-            final String laf = lookAndFeelInfo.getClassName();
-            final String name = lookAndFeelInfo.getName();
-            final Action action = new ChangeLookAndFeelAction(this, laf, name);
+        Theme[] themes = {new DarculaTheme(), new IntelliJTheme(), new SolarizedDarkTheme(), new SolarizedLightTheme()};
+        for (Theme theme : themes) {
+            final String name = theme.getName();
+            final Action action = new AbstractAction(name) {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    LafManager.install(theme);
+                }
+            };
             final JRadioButtonMenuItem mi = new JRadioButtonMenuItem(action);
             menu.add(mi);
             bg.add(mi);
@@ -208,7 +207,7 @@ public class UIManagerDefaults implements ItemListener {
         d.height = 350;
         table.setPreferredScrollableViewportSize(d);
 
-        return new OverlayScrollPane(table);
+        return new JScrollPane(table);
     }
 
     /*
