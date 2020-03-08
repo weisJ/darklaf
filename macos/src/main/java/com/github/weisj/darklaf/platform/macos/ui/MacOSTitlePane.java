@@ -158,7 +158,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private void installListeners() {
-        if (window != null) {
+        if (window != null && useCustomTitle()) {
             windowListener = new WindowHandler();
             window.addWindowListener(windowListener);
             propertyChangeListener = new PropertyChangeHandler();
@@ -226,22 +226,18 @@ public class MacOSTitlePane extends CustomTitlePane {
     protected class WindowHandler extends WindowAdapter {
 
         public void windowActivated(final WindowEvent ev) {
-            if (useCustomTitle()) {
-                titleLabel.setForeground(activeForeground);
-            }
+            titleLabel.setForeground(activeForeground);
         }
 
         public void windowDeactivated(final WindowEvent ev) {
-            if (useCustomTitle()) {
-                titleLabel.setForeground(inactiveForeground);
-            }
+            titleLabel.setForeground(inactiveForeground);
         }
     }
 
     protected class PropertyChangeHandler implements PropertyChangeListener {
         public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
-            if (useCustomTitle() && "title".equals(name)) {
+            if ("title".equals(name)) {
                 titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
                 repaint();
             }
