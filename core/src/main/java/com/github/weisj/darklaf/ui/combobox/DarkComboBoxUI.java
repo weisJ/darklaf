@@ -74,7 +74,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-        comboBox.setBorder(this);
         boxPadding = UIManager.getInsets("ComboBox.insets");
         borderSize = UIManager.getInt("ComboBox.borderThickness");
         background = UIManager.getColor("ComboBox.activeBackground");
@@ -89,6 +88,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
         if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
         if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
+        comboBox.setBorder(this);
     }
 
     @Override
