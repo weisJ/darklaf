@@ -42,6 +42,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     protected Icon bottomOneTouch;
     protected Icon verticalSplit;
     protected Icon horizontalSplit;
+    protected Color borderColor;
 
     public DarkSplitPaneDivider(final BasicSplitPaneUI ui) {
         super(ui);
@@ -51,6 +52,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         bottomOneTouch = UIManager.getIcon("SplitPaneDivider.bottomOneTouch.icon");
         verticalSplit = UIManager.getIcon("SplitPane.verticalGlue.icon");
         horizontalSplit = UIManager.getIcon("SplitPane.horizontalGlue.icon");
+        borderColor = UIManager.getColor("SplitPane.dividerLineColor");
     }
 
 
@@ -61,10 +63,16 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
             Icon icon = getVerticalSplitIcon();
             icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2,
                            (getHeight() - icon.getIconHeight()) / 2);
+            g.setColor(borderColor);
+            g.fillRect(0, 0, getWidth(), 1);
+            g.fillRect(0, getHeight() - 1, getWidth(), 1);
         } else {
             Icon icon = getHorizontalSplitIcon();
             icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2,
                            (getHeight() - icon.getIconHeight()) / 2);
+            g.setColor(borderColor);
+            g.fillRect(0, 0, 1, getHeight());
+            g.fillRect(getWidth() - 1, 0, 1, getHeight());
         }
     }
 
