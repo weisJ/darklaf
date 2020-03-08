@@ -64,7 +64,7 @@ public class MacOSDecorationsUtil {
     }
 
     protected static void uninstallDecorations(final DecorationInformation information) {
-        if (information == null) return;
+        if (information == null || information.windowHandle == 0) return;
         if (information.jniInstalled) {
             JNIDecorationsMacOS.uninstallDecorations(information.windowHandle);
         } else {
