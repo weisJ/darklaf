@@ -42,6 +42,8 @@ public class JNIDecorationsMacOS {
 
     public static native long releaseWindow(final long hwnd);
 
+    public static native double getTitleBarHeight(final long hwnd);
+
     public static native void installDecorations(final long hwnd);
 
     public static native void uninstallDecorations(final long hwnd);
@@ -53,6 +55,7 @@ public class JNIDecorationsMacOS {
     public static native boolean isFullscreen(final long hwnd);
 
     public static native double getTitleFontSize(final long hwnd);
+
 
     /**
      * Load the decorations-library if necessary.

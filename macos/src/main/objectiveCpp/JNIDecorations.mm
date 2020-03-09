@@ -64,6 +64,14 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_releaseWindow(J
        });
 }
 
+JNIEXPORT jlong JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getTitleBarHeight(JNIEnv *env, jclass obj, jlong hwnd) {
+     NSWindow *nsWindow = OBJC(hwnd);
+     auto windowFrameHeight = [[[nsWindow contentView] frame] height];
+     auto contentLayoutRectHeight  = [[nsWindow contentLayoutRect] height];
+     return (jdouble)(windowFrameHeight - contentLayoutRectHeight);
+}
+
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_isFullscreen(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);

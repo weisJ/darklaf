@@ -46,7 +46,7 @@ public class MacOSDecorationsUtil {
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
         float titleFontSize = (float) JNIDecorationsMacOS.getTitleFontSize(windowHandle);
-        int titleBarHeight = window.getInsets().top;
+        int titleBarHeight = (int) JNIDecorationsMacOS.getTitleBarHeight(windowHandle);
 
         boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");
         if (!jniInstall) {
