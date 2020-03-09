@@ -49,6 +49,21 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPoi
     return ptr;
 }
 
+JNIEXPORT jlong JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_retainWindow(JNIEnv *env, jclass obj, jlong hwnd) {
+     NSWindow *nsWindow = OBJC(hwnd);
+       [nsWindow retain];
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_releaseWindow(JNIEnv *env, jclass obj, jlong hwnd) {
+       NSWindow *nsWindow = OBJC(hwnd);
+       //Ensure any queued operation on nsWindow is finished first.
+       dispatch_async(dispatch_get_main_queue(), ^{
+            [nsWindow release];
+       });
+}
+
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_isFullscreen(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);
@@ -64,7 +79,6 @@ JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleEnabled(JNIEnv *env, jclass obj, jlong hwnd,
                                                                                  jboolean enabled) {
     NSWindow *nsWindow = OBJC(hwnd);
-    [nsWindow retain];
     dispatch_async(dispatch_get_main_queue(), ^{
         if (enabled) {
             nsWindow.titleVisibility = NSWindowTitleVisible;
@@ -72,7 +86,6 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleEnabled
             nsWindow.titleVisibility = NSWindowTitleHidden;
         }
         [nsWindow contentView].needsDisplay = true;
-        [nsWindow release];
     });
 }
 
@@ -80,7 +93,6 @@ JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setDarkTheme(JNIEnv *env, jclass obj, jlong hwnd,
                                                                               jboolean darkEnabled) {
      NSWindow *nsWindow = OBJC(hwnd);
-     [nsWindow retain];
      dispatch_async(dispatch_get_main_queue(), ^{
           if (darkEnabled) {
             nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
@@ -88,31 +100,25 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setDarkTheme(JN
             nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
           }
           [nsWindow contentView].needsDisplay = true;
-          [nsWindow release];
      });
 }
-
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);
-    [nsWindow retain];
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
         nsWindow.titlebarAppearsTransparent = true;
         [nsWindow contentView].needsDisplay = true;
-        [nsWindow release];
     });
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     NSWindow *nsWindow = OBJC(hwnd);
-    [nsWindow retain];
     dispatch_async(dispatch_get_main_queue(), ^{
         nsWindow.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
         nsWindow.titlebarAppearsTransparent = false;
         [nsWindow contentView].needsDisplay = true;
-        [nsWindow release];
     });
 }

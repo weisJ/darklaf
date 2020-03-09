@@ -42,6 +42,7 @@ public class MacOSDecorationsUtil {
             return new DecorationInformation(0, false, false,
                                              false, rootPane, false, 0, 0);
         }
+        JNIDecorationsMacOS.retainWindow(windowHandle);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
         boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");
@@ -72,6 +73,7 @@ public class MacOSDecorationsUtil {
             setTransparentTitleBarEnabled(information.rootPane, information.transparentTitleBarEnabled);
         }
         JNIDecorationsMacOS.setTitleEnabled(information.windowHandle, true);
+        JNIDecorationsMacOS.retainWindow(information.windowHandle);
     }
 
     private static boolean isFullWindowContentEnabled(final JRootPane rootPane) {

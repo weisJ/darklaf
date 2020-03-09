@@ -38,6 +38,10 @@ public class JNIDecorationsMacOS {
 
     public static native long getComponentPointer(final Window window);
 
+    public static native long retainWindow(final long hwnd);
+
+    public static native long releaseWindow(final long hwnd);
+
     public static native void installDecorations(final long hwnd);
 
     public static native void uninstallDecorations(final long hwnd);
