@@ -45,6 +45,9 @@ public class MacOSDecorationsUtil {
         JNIDecorationsMacOS.retainWindow(windowHandle);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
+        float titleFontSize = (float) JNIDecorationsMacOS.getTitleFontSize(windowHandle);
+        int titleBarHeight = window.getInsets().top;
+
         boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");
         if (!jniInstall) {
             setTransparentTitleBarEnabled(rootPane, true);
@@ -58,8 +61,6 @@ public class MacOSDecorationsUtil {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
             JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
         }
-        float titleFontSize = (float) JNIDecorationsMacOS.getTitleFontSize(windowHandle);
-        int titleBarHeight = window.getInsets().top;
         return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar,
                                          jniInstall, rootPane, titleVisible, titleBarHeight, titleFontSize);
     }
@@ -73,7 +74,7 @@ public class MacOSDecorationsUtil {
             setTransparentTitleBarEnabled(information.rootPane, information.transparentTitleBarEnabled);
         }
         JNIDecorationsMacOS.setTitleEnabled(information.windowHandle, true);
-        JNIDecorationsMacOS.retainWindow(information.windowHandle);
+        JNIDecorationsMacOS.releaseWindow(information.windowHandle);
     }
 
     private static boolean isFullWindowContentEnabled(final JRootPane rootPane) {
