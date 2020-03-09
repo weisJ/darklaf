@@ -64,11 +64,11 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_releaseWindow(J
        });
 }
 
-JNIEXPORT jlong JNICALL
+JNIEXPORT jdouble JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getTitleBarHeight(JNIEnv *env, jclass obj, jlong hwnd) {
      NSWindow *nsWindow = OBJC(hwnd);
-     auto windowFrameHeight = [[[nsWindow contentView] frame] height];
-     auto contentLayoutRectHeight  = [[nsWindow contentLayoutRect] height];
+     auto windowFrameHeight = nsWindow.contentView.frame.height;
+     auto contentLayoutRectHeight  = nsWindow.contentLayoutRect.height;
      return (jdouble)(windowFrameHeight - contentLayoutRectHeight);
 }
 
