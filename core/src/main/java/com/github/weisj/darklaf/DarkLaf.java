@@ -57,6 +57,7 @@ import java.util.logging.Logger;
 public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener {
 
 
+    public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
     private final BasicLookAndFeel base;
@@ -225,8 +226,8 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     private void loadSystemOverwrites(final Properties uiProps, final UIDefaults defaults) {
         Properties overwrites = PropertyLoader.loadProperties(DarkLaf.class, "overwrites", "properties/");
-        overwrites.values().removeIf(v -> System.getProperty(v.toString()) == null);
-        overwrites.entrySet().forEach(e -> e.setValue(System.getProperty(e.getValue().toString())));
+        overwrites.values().removeIf(v -> System.getProperty(SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
+        overwrites.entrySet().forEach(e -> e.setValue(System.getProperty(SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
         PropertyLoader.putProperties(overwrites, uiProps, defaults);
     }
 

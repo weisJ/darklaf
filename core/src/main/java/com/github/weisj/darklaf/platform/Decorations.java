@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.platform;
 
+import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
@@ -60,7 +61,7 @@ public final class Decorations {
 
     public static boolean isCustomDecorationSupported() {
         return decorationsProvider.isCustomDecorationSupported()
-            && !"false".equals(System.getProperty("darklaf.decorations"))
+            && !"false".equals(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + "decorations"))
             && LafManager.isDecorationsEnabled()
             && LafManager.getTheme().useCustomDecorations();
     }
