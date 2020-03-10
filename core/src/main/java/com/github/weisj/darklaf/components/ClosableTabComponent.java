@@ -28,11 +28,7 @@ import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 /**
  * @author Jannis Weis
@@ -96,6 +92,7 @@ public class ClosableTabComponent extends JPanel {
         protected TabButton(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;
             putClientProperty("JButton.variant", "onlyLabel");
+            putClientProperty("JButton.noShadowOverwrite", true);
             setOpaque(false);
             setRolloverEnabled(true);
             setIcon(UIManager.getIcon("TabbedPane.tabCloseIcon"));

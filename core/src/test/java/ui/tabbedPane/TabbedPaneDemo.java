@@ -65,7 +65,6 @@ public class TabbedPaneDemo implements ComponentDemo {
             addItem("SCROLL_TAB_LAYOUT");
             addItem("WRAP_TAB_LAYOUT");
             setSelectedItem("SCROLL_TAB_LAYOUT");
-            //noinspection MagicConstant
             addItemListener(e -> tabbedPane.setTabLayoutPolicy(mapping.get(e.getItem().toString())));
         }}, "sgx");
         controlPanel.add(new JLabel("TabPlacement:", JLabel.RIGHT));

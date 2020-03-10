@@ -70,6 +70,10 @@ public final class ArrowButton implements SwingConstants {
                                             final int orientation, final boolean center,
                                             final boolean applyInsetsOnSize, final Insets insets) {
         return new BasicArrowButton(orientation, null, null, null, null) {
+            {
+                putClientProperty("JButton.noShadowOverwrite", true);
+            }
+
             @Override
             public void paint(final Graphics g) {
                 int x = (getWidth() - getIcon().getIconWidth()) / 2;

@@ -129,7 +129,6 @@ abstract class TabbedPaneScrollLayout extends TabbedPaneLayout {
             }
         }
         ui.tabScroller.tabPanel.setPreferredSize(new Dimension(totalWidth, totalHeight));
-        ui.tabScroller.tabPanel.invalidate();
     }
 
     protected int preferredTabAreaWidth(final int tabPlacement, final int height) {

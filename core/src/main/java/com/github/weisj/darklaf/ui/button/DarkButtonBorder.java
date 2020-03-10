@@ -177,22 +177,17 @@ public class DarkButtonBorder implements Border, UIResource {
         if (DarkButtonUI.isLabelButton(c)) {
             return new InsetsUIResource(labelInsets.top, labelInsets.left, labelInsets.bottom, labelInsets.right);
         }
-        int shadow = DarkButtonUI.isShadowVariant(c) ? 0 : getShadowSize();
+        boolean shadowVariant = DarkButtonUI.isShadowVariant(c);
+        int shadow = shadowVariant ? 0 : getShadowSize();
         boolean square = DarkButtonUI.isSquare(c);
-        Insets pad = isThin(c) ? square ? squareThinInsets
-                                        : thinInsets
-                               : square ? squareInsets
-                                        : insets;
+        Insets pad = DarkButtonUI.isThin(c) ? square ? squareThinInsets
+                                                     : thinInsets
+                                            : square ? squareInsets
+                                                     : insets;
         return new InsetsUIResource(pad.top, pad.left, pad.bottom + shadow, pad.right);
     }
 
     public boolean isBorderOpaque() {
         return false;
-    }
-
-
-    public static boolean isThin(final Component c) {
-        return c instanceof JButton
-                && Boolean.TRUE.equals(((JButton) c).getClientProperty("JButton.thin"));
     }
 }

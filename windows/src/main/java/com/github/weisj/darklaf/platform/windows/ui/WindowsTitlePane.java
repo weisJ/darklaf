@@ -144,6 +144,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             button.putClientProperty("JButton.shadow.click",
                                      UIManager.getColor("Windows.TitlePane.close.clickColor"));
         }
+        button.putClientProperty("JButton.noShadowOverwrite", true);
         button.setFocusable(false);
         button.setOpaque(true);
         button.setRolloverEnabled(true);
@@ -312,6 +313,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     protected JButton createWindowIcon() {
         windowIconButton = new JButton();
+        windowIconButton.putClientProperty("JButton.noShadowOverwrite", true);
         windowIconButton.setComponentPopupMenu(createMenu());
         windowIconButton.putClientProperty("JButton.variant", "onlyLabel");
         windowIconButton.addActionListener(e -> windowIconButton

@@ -388,7 +388,6 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             }
         }
         ui.tabScroller.tabPanel.setPreferredSize(tabBounds.getSize());
-        ui.tabScroller.tabPanel.invalidate();
     }
 
 
@@ -456,23 +455,29 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         if (horizontal) {
             if (leftToRight) {
                 if (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width + buttonBounds.width > maxVal) {
-                    ui.tabPane.add(button);
+                    if (button.getParent() != ui.tabPane) ui.tabPane.add(button);
                 } else {
-                    ui.scrollableTabSupport.tabPanel.add(button);
+                    if (button.getParent() != ui.scrollableTabSupport.tabPanel) {
+                        ui.scrollableTabSupport.tabPanel.add(button);
+                    }
                 }
             } else {
                 int x = ui.rects[tabCount - 1].x;
                 if (x - buttonBounds.width < minVal) {
-                    ui.tabPane.add(button);
+                    if (button.getParent() != ui.tabPane) ui.tabPane.add(button);
                 } else {
-                    ui.scrollableTabSupport.tabPanel.add(button);
+                    if (button.getParent() != ui.scrollableTabSupport.tabPanel) {
+                        ui.scrollableTabSupport.tabPanel.add(button);
+                    }
                 }
             }
         } else {
             if (ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height + buttonBounds.height > maxVal) {
-                ui.tabPane.add(button);
+                if (button.getParent() != ui.tabPane) ui.tabPane.add(button);
             } else {
-                ui.scrollableTabSupport.tabPanel.add(button);
+                if (button.getParent() != ui.scrollableTabSupport.tabPanel) {
+                    ui.scrollableTabSupport.tabPanel.add(button);
+                }
             }
         }
     }

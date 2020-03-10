@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
+import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.ComponentUI;
@@ -50,7 +52,7 @@ public class DarkDesktopIconUI extends BasicDesktopIconUI {
         Icon icon = frame.getFrameIcon();
         String title = frame.getTitle();
 
-        button = new JButton(title, icon);
+        button = new JButtonUIResource(title, icon);
         button.setOpaque(false);
         button.putClientProperty("JButton.variant", "fullShadow");
         button.putClientProperty("JButton.shadow.hover", UIManager.getColor("DesktopIcon.hoverColor"));

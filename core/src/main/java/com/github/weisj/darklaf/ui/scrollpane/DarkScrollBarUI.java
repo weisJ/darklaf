@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -633,7 +634,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         return bounds != null && bounds.contains(p);
     }
 
-    private static final class EmptyButton extends JButton {
+    private static final class EmptyButton extends JButton implements UIResource {
         private EmptyButton() {
             setFocusable(false);
             setRequestFocusEnabled(false);

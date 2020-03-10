@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
+import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import sun.swing.SwingUtilities2;
@@ -209,7 +210,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
 
 
     private static JButton createButton(final String accessibleName) {
-        JButton button = new JButton();
+        JButton button = new JButtonUIResource();
         button.setFocusable(false);
         button.setOpaque(true);
         button.setRolloverEnabled(true);

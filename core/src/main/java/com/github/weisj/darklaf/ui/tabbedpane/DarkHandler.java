@@ -83,6 +83,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.scrollableTabSupport.newTabButton.setVisible(show);
             }
             ui.tabPane.doLayout();
+            ui.tabPane.repaint();
         } else if ("JTabbedPane.leadingComponent".equals(key)) {
             ui.tabPane.remove(ui.leadingComp);
             Object val = e.getNewValue();

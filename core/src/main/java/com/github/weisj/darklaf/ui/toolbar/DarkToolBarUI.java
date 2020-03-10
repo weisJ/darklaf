@@ -51,7 +51,6 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         return new DarkToolBarUI();
     }
 
-
     private static Robot createRobot() {
         try {
             return new Robot();

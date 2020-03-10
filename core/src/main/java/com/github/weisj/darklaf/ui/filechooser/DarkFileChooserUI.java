@@ -102,6 +102,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // Up Button
         JButton upFolderButton = new TooltipAwareButton(getChangeToParentDirectoryAction());
+        upFolderButton.putClientProperty("JButton.noShadowOverwrite", true);
         upFolderButton.setText(null);
         upFolderButton.setIcon(upFolderIcon);
         upFolderButton.setToolTipText(upFolderToolTipText);
@@ -120,6 +121,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
 
         JButton b = new TooltipAwareButton(homeFolderIcon);
+        b.putClientProperty("JButton.noShadowOverwrite", true);
         b.setToolTipText(toolTipText);
         b.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
                             homeFolderAccessibleName);
@@ -134,6 +136,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         // New Directory Button
         if (!UIManager.getBoolean("FileChooser.readOnly")) {
             b = new TooltipAwareButton(filePane.getNewFolderAction());
+            b.putClientProperty("JButton.noShadowOverwrite", true);
             b.setText(null);
             b.setIcon(newFolderIcon);
             b.setToolTipText(newFolderToolTipText);
@@ -151,6 +154,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // List Button
         listViewButton = new TooltipAwareToggleButton(listViewIcon);
+        listViewButton.putClientProperty("JButton.noShadowOverwrite", true);
         listViewButton.putClientProperty("JButton.square", Boolean.TRUE);
         listViewButton.setToolTipText(listViewButtonToolTipText);
         listViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
@@ -168,6 +172,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // Details Button
         detailsViewButton = new TooltipAwareToggleButton(detailsViewIcon);
+        detailsViewButton.putClientProperty("JButton.noShadowOverwrite", true);
         detailsViewButton.putClientProperty("JButton.square", Boolean.TRUE);
         detailsViewButton.setToolTipText(detailsViewButtonToolTipText);
         detailsViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
@@ -281,12 +286,14 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         getButtonPanel().setLayout(new DarkButtonAreaLayout());
 
         approveButton = new TooltipAwareButton(getApproveButtonText(fc));
+        approveButton.putClientProperty("JButton.noShadowOverwrite", true);
         // Note: Metal does not use mnemonics for approve and cancel
         approveButton.addActionListener(getApproveSelectionAction());
         approveButton.setToolTipText(getApproveButtonToolTipText(fc));
         getButtonPanel().add(approveButton);
 
         cancelButton = new TooltipAwareButton(cancelButtonText);
+        cancelButton.putClientProperty("JButton.noShadowOverwrite", true);
         cancelButton.setToolTipText(cancelButtonToolTipText);
         cancelButton.addActionListener(getCancelSelectionAction());
         getButtonPanel().add(cancelButton);
