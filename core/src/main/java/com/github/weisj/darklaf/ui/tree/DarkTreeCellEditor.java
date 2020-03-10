@@ -31,6 +31,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.tree.TreeCellEditor;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -40,7 +42,7 @@ import java.util.EventObject;
 /**
  * @author Jannis Weis
  */
-public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEditor {
+public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEditor, FocusListener {
 
     private static final JCheckBox dummyCheckBox = new JCheckBox();
     private JTree tree;
@@ -50,6 +52,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
     public DarkTreeCellEditor(final JTextField textField) {
         super(textField);
         textField.setBorder(UIManager.getBorder("Tree.editorBorder"));
+        textField.addFocusListener(this);
     }
 
     public DarkTreeCellEditor(final JCheckBox checkBox) {
@@ -76,6 +79,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         toggleButton.putClientProperty("JToggleButton.isTreeCellEditor", Boolean.TRUE);
         toggleButton.addActionListener(delegate);
         toggleButton.setRequestFocusEnabled(false);
+        toggleButton.addFocusListener(this);
         setClickCountToStart(1);
     }
 
@@ -97,12 +101,14 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
             }
         });
+        comboBox.addFocusListener(this);
         setClickCountToStart(2);
     }
 
     public DarkTreeCellEditor(final JSpinner spinner) {
         super(dummyCheckBox);
         editorComponent = spinner;
+        editorComponent.addFocusListener(this);
         spinner.putClientProperty("JSpinner.isTreeCellEditor", Boolean.TRUE);
         setClickCountToStart(2);
         delegate = new EditorDelegate() {
@@ -162,13 +168,30 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         }
         editorComponent.setOpaque(false);
         editorComponent.setComponentOrientation(tree.getComponentOrientation());
-        if (editorComponent instanceof JToggleButton) {
-            if (DarkUIUtil.hasFocus(tree) || DarkUIUtil.hasFocus(editorComponent)) {
-                editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
-            } else {
-                editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
-            }
+        if (DarkUIUtil.hasFocus(tree) || DarkUIUtil.hasFocus(editorComponent)) {
+            editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
+        } else {
+            editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
         }
         return editorComponent;
+    }
+
+
+    protected void updateFocus() {
+        if (DarkUIUtil.hasFocus(editorComponent)) {
+            editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
+        } else {
+            editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
+        }
+    }
+
+    @Override
+    public void focusGained(final FocusEvent e) {
+        updateFocus();
+    }
+
+    @Override
+    public void focusLost(final FocusEvent e) {
+        updateFocus();
     }
 }

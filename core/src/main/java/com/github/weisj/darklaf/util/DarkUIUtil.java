@@ -164,6 +164,7 @@ public final class DarkUIUtil {
     }
 
     public static boolean hasFocus(final Component c) {
+        if (c == null) return false;
         if (c.hasFocus()) return true;
         if (c instanceof Window) {
             return hasFocus(c);

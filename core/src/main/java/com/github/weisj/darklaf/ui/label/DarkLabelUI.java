@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.label;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import sun.swing.SwingUtilities2;
@@ -44,11 +45,13 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     protected static final DarkLabelUI darkLabelUI = new DarkLabelUI();
 
     private final Color inactiveForeground;
+    private final Color cellForegroundNoFocus;
     protected Rectangle paintIconR = new Rectangle();
     protected Rectangle paintTextR = new Rectangle();
 
     public DarkLabelUI() {
         inactiveForeground = UIManager.getColor("Label.inactiveForeground");
+        cellForegroundNoFocus = UIManager.getColor("Label.cellForegroundNoFocus");
     }
 
     public static ComponentUI createUI(final JComponent c) {
@@ -90,6 +93,23 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
             }
         }
         config.restore();
+    }
+
+    @Override
+    protected void paintEnabledText(final JLabel l, final Graphics g, final String s,
+                                    final int textX, final int textY) {
+        int mnemIndex = l.getDisplayedMnemonicIndex();
+        boolean focus = DarkUIUtil.hasFocus(l)
+            || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTree.class, l))
+            || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTable.class, l))
+            || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JList.class, l));
+        if (DarkUIUtil.isInCell(l) && !focus) {
+            g.setColor(cellForegroundNoFocus);
+        } else {
+            g.setColor(l.getForeground());
+        }
+        SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex,
+                                                  textX, textY);
     }
 
     @Override
