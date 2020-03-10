@@ -637,10 +637,12 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
+        String title = titleLabel.getText();
+        if (title == null) title = "";
         return windowHandle == 0
             || (getWindowDecorationStyle() == JRootPane.NONE
             && menuBar == null
-            && titleLabel.getText().length() == 0);
+            && title.length() == 0);
     }
 
     private class TitlePaneLayout implements LayoutManager {
