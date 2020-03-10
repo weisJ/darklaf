@@ -193,28 +193,8 @@ public final class LafManager {
         }
         SwingUtilities.updateComponentTreeUI(window);
         //  Use custom decorations when supported by the LAF
-        if (window instanceof JFrame) {
-            JFrame frame = (JFrame) window;
-            frame.dispose();
-            if (UIManager.getLookAndFeel().getSupportsWindowDecorations()) {
-                frame.setUndecorated(true);
-                frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-            } else {
-                frame.setUndecorated(false);
-            }
-            frame.setVisible(true);
-        } else if (window instanceof JDialog) {
-            JDialog dialog = (JDialog) window;
-            boolean isVisible = dialog.isVisible();
-            dialog.dispose();
-            if (UIManager.getLookAndFeel().getSupportsWindowDecorations()) {
-                dialog.setUndecorated(true);
-                dialog.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-            } else {
-                dialog.setUndecorated(false);
-            }
-            dialog.setVisible(isVisible);
-        }
+        window.dispose();
+        window.setVisible(true);
     }
 
     /**

@@ -67,9 +67,10 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_releaseWindow(J
 JNIEXPORT jdouble JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getTitleBarHeight(JNIEnv *env, jclass obj, jlong hwnd) {
      NSWindow *nsWindow = OBJC(hwnd);
-     CGFloat windowFrameHeight = nsWindow.contentView.frame.size.height;
-     CGFloat contentLayoutRectHeight  = nsWindow.contentLayoutRect.size.height;
-     return (jdouble)(windowFrameHeight - contentLayoutRectHeight);
+     NSRect frame = NSMakeRect(0.0, 0.0, 100.0, 100.0);
+     NSUInteger windowStyle = nsWindow.styleMask & ~NSWindowStyleMaskFullSizeContentView;
+     NSRect rect = [NSWindow contentRectForFrameRect:frame styleMask:windowStyle];
+     return (jdouble)(frame.size.height - rect.size.height);
 }
 
 JNIEXPORT jboolean JNICALL

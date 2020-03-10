@@ -34,6 +34,8 @@ import javax.swing.plaf.basic.BasicRootPaneUI;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 
 
@@ -48,6 +50,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private LayoutManager layoutManager;
     private LayoutManager oldLayout;
     private JRootPane rootPane;
+    private DisposeListener disposeListener = new DisposeListener();
 
     private boolean decorationStyleLock = false;
     private int windowDecorationsStyle = -1;
@@ -110,6 +113,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         }
         if (window != null) {
             window.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            window.removeWindowListener(disposeListener);
         }
         window = null;
     }
@@ -159,7 +163,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     private void updateWindow(final Component parent) {
+        if (window != null) window.removeWindowListener(disposeListener);
         window = DarkUIUtil.getWindow(parent);
+        if (window != null) window.addWindowListener(disposeListener);
     }
 
     private void installLayout(final JRootPane root) {
@@ -223,6 +229,13 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         uninstallClientDecorations(rootPane);
         if (Decorations.isCustomDecorationSupported()) {
             installClientDecorations(rootPane);
+        }
+    }
+
+    protected class DisposeListener extends WindowAdapter {
+        @Override
+        public void windowClosing(final WindowEvent e) {
+            uninstallClientDecorations(rootPane);
         }
     }
 }
