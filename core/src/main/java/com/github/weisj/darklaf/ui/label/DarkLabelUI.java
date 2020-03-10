@@ -103,7 +103,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
             || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTree.class, l))
             || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTable.class, l))
             || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JList.class, l));
-        if (DarkUIUtil.isInCell(l) && !focus) {
+        if (DarkUIUtil.getParentOfType(PopupMenu.class, l) != null && DarkUIUtil.isInCell(l) && !focus) {
             g.setColor(cellForegroundNoFocus);
         } else {
             g.setColor(l.getForeground());
