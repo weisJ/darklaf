@@ -144,7 +144,6 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         b.setFont(b.getFont().deriveFont(Font.BOLD));
         Dimension size = BasicGraphicsUtils.getPreferredButtonSize(b, b.getIconTextGap());
         b.setFont(oldFont);
-//        size.width += 2 * borderSize;
         return size;
     }
 
