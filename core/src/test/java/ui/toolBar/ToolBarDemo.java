@@ -59,7 +59,7 @@ package ui.toolBar;/*
  * images/Up24.gif
  */
 
-import com.github.weisj.darklaf.LafManager;
+import ui.ComponentDemo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +67,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 
-public class ToolBarDemo extends JPanel implements ActionListener {
+public class ToolBarDemo extends JPanel implements ActionListener, ComponentDemo {
     private static final String PREVIOUS = "previous";
     private static final String UP = "up";
     private static final String NEXT = "next";
@@ -75,42 +75,26 @@ public class ToolBarDemo extends JPanel implements ActionListener {
 
     private ToolBarDemo() {
         super(new BorderLayout());
+    }
 
-        //Create the toolbar.
-        JToolBar toolBar = new JToolBar("Still draggable");
-        addButtons(toolBar);
-
-        //Create the text area used for output.  Request
-        //enough space for 5 rows and 30 columns.
-        textArea = new JTextArea(5, 30);
-        textArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-
-        //Lay out the main panel.
-        setPreferredSize(new Dimension(450, 130));
-        add(toolBar, BorderLayout.PAGE_START);
-        add(scrollPane, BorderLayout.CENTER);
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new ToolBarDemo());
     }
 
     private void addButtons(final JToolBar toolBar) {
         JButton button;
-
-        //first button
         button = makeNavigationButton("Back24", PREVIOUS,
                                       "Back to previous something-or-other", "Previous");
         toolBar.add(button);
-
-        //second button
+        toolBar.addSeparator();
         button = makeNavigationButton("Up24", UP,
                                       "Up to something-or-other", "Up");
         toolBar.add(button);
-
-        //third button
+        toolBar.addSeparator();
         button = makeNavigationButton("Forward24", NEXT,
                                       "Forward to something-or-other", "Next");
         toolBar.add(button);
     }
-
 
     private JButton makeNavigationButton(final String imageName,
                                          final String actionCommand,
@@ -126,39 +110,13 @@ public class ToolBarDemo extends JPanel implements ActionListener {
         button.setToolTipText(toolTipText);
         button.addActionListener(this);
 
-        if (imageURL != null) {                      //image found
+        if (imageURL != null) {
             button.setIcon(new ImageIcon(imageURL, altText));
-        } else {                                     //no image found
+        } else {
             button.setText(altText);
         }
 
         return button;
-    }
-
-    public static void main(final String[] args) {
-        //Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            createAndShowGUI();
-        });
-    }
-
-    /**
-     * Create the GUI and show it.  For thread safety, this method should be invoked from the event dispatch thread.
-     */
-    private static void createAndShowGUI() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("toolBar.ToolBarDemo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Add content to the window.
-        frame.add(new ToolBarDemo());
-
-        //Display the window.
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
 
     public void actionPerformed(final ActionEvent e) {
@@ -181,5 +139,29 @@ public class ToolBarDemo extends JPanel implements ActionListener {
         String newline = "\n";
         textArea.append(actionDescription + newline);
         textArea.setCaretPosition(textArea.getDocument().getLength());
+    }
+
+    @Override
+    public JComponent createComponent() {
+        //Create the toolbar.
+        JToolBar toolBar = new JToolBar();
+        addButtons(toolBar);
+
+        //Create the text area used for output.  Request
+        //enough space for 5 rows and 30 columns.
+        textArea = new JTextArea(5, 30);
+        textArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        //Lay out the main panel.
+        setPreferredSize(new Dimension(450, 130));
+        add(toolBar, BorderLayout.PAGE_START);
+        add(scrollPane, BorderLayout.CENTER);
+        return this;
+    }
+
+    @Override
+    public String getTitle() {
+        return "ToolBar Demo";
     }
 }

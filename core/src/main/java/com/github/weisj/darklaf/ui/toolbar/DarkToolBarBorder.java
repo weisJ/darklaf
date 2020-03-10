@@ -68,15 +68,15 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
             JToolBar toolBar = (JToolBar) c;
             g.setColor(borderColor);
             if (toolBar.getOrientation() == JToolBar.HORIZONTAL) {
-                if (BorderLayout.NORTH.equals(constraints)) {
+                if (BorderLayout.NORTH.equals(constraints) || BorderLayout.PAGE_START.equals(constraints)) {
                     g.fillRect(0, toolBar.getHeight() - 1, toolBar.getWidth(), 1);
-                } else if (BorderLayout.SOUTH.equals(constraints)) {
+                } else if (BorderLayout.SOUTH.equals(constraints) || BorderLayout.PAGE_END.equals(constraints)) {
                     g.fillRect(0, 0, toolBar.getWidth(), 1);
                 }
             } else {
-                if (BorderLayout.WEST.equals(constraints)) {
+                if (BorderLayout.WEST.equals(constraints) || BorderLayout.LINE_START.equals(constraints)) {
                     g.fillRect(toolBar.getWidth() - 1, 0, 1, toolBar.getHeight());
-                } else if (BorderLayout.EAST.equals(constraints)) {
+                } else if (BorderLayout.EAST.equals(constraints) || BorderLayout.LINE_END.equals(constraints)) {
                     g.fillRect(0, 0, 1, toolBar.getHeight());
                 }
             }

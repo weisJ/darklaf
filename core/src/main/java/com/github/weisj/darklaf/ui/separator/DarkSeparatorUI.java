@@ -33,27 +33,38 @@ import java.awt.*;
  */
 public class DarkSeparatorUI extends BasicSeparatorUI {
 
+    protected Color color;
+    protected Dimension size;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSeparatorUI();
     }
 
-    public void paint(final Graphics g, final JComponent c) {
-        Dimension s = c.getSize();
+    @Override
+    protected void installDefaults(final JSeparator s) {
+        super.installDefaults(s);
+        s.setAlignmentX(Component.LEFT_ALIGNMENT);
+        color = UIManager.getColor("Separator.foreground");
+        size = UIManager.getDimension("Separator.size");
+    }
 
-        g.setColor(UIManager.getDefaults().getColor("Separator.foreground"));
+    @SuppressWarnings("SuspiciousNameCombination")
+    public void paint(final Graphics g, final JComponent c) {
+        if (!(c instanceof JSeparator)) return;
+        g.setColor(color);
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
-            g.fillRect(0, 0, 1, s.height);
+            g.fillRect(size.width / 2, 0, 1, size.height);
         } else {
-            g.fillRect(0, 0, s.width, 1);
+            g.fillRect(0, size.width / 2, size.height, 1);
         }
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public Dimension getPreferredSize(final JComponent c) {
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
-            return new Dimension(1, 0);
+            return new Dimension(size.width, size.height);
         } else {
-            return new Dimension(0, 1);
+            return new Dimension(size.height, size.width);
         }
     }
 

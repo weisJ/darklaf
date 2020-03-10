@@ -62,6 +62,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
+        toolBar.setLayout(new DarkToolBarLayout(toolBar));
         previewPanel.setToolBar(toolBar);
         dragWindow = createDragWindow(toolBar);
         floatingToolBar = createFloatingWindow(toolBar);
@@ -70,8 +71,15 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     @Override
     protected RootPaneContainer createFloatingWindow(final JToolBar toolbar) {
         RootPaneContainer floatingToolbar = super.createFloatingWindow(toolbar);
-        floatingToolbar.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+        updateFloatingWindowDecorations();
         return floatingToolbar;
+    }
+
+    protected void updateFloatingWindowDecorations() {
+        String name = toolBar.getName();
+        if ((name == null || name.isEmpty()) && floatingToolBar != null && floatingToolBar.getRootPane() != null) {
+            floatingToolBar.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+        }
     }
 
     @Override
@@ -102,6 +110,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
                 }
 
                 floatingToolBar.getContentPane().add(toolBar, BorderLayout.CENTER);
+                updateFloatingWindowDecorations();
                 if (floatingToolBar instanceof Window) {
                     ((Window) floatingToolBar).pack();
                     ((Window) floatingToolBar).setLocation(floatingX, floatingY);
