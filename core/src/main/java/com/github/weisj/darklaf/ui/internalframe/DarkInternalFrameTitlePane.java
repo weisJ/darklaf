@@ -210,10 +210,14 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
 
 
     private static JButton createButton(final String accessibleName) {
-        JButton button = new JButtonUIResource();
+        JButton button = new JButtonUIResource() {
+            @Override
+            public boolean isRolloverEnabled() {
+                return true;
+            }
+        };
         button.setFocusable(false);
         button.setOpaque(true);
-        button.setRolloverEnabled(true);
         button.putClientProperty("JButton.variant", "fullShadow");
         button.putClientProperty("paintActive", Boolean.TRUE);
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
