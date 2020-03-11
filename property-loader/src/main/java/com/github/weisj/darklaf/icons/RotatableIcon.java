@@ -39,10 +39,9 @@ public class RotatableIcon implements Icon {
         this(null);
     }
 
-
     public RotatableIcon(final Icon icon) {
         setIcon(icon);
-        this.alignment = null;
+        setOrientation(null);
     }
 
     public void setIcon(final Icon icon) {
@@ -110,6 +109,6 @@ public class RotatableIcon implements Icon {
     }
 
     public void setOrientation(final Alignment alignment) {
-        this.alignment = alignment;
+        this.alignment = alignment != null ? alignment : Alignment.NORTH;
     }
 }

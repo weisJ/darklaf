@@ -27,7 +27,6 @@ import com.kitfox.svg.app.beans.SVGIcon;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -108,8 +107,7 @@ public class DarkSVGIcon implements Icon, Serializable {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.translate(x, y);
         if (rotation != 0) {
-            g2.setTransform(AffineTransform.getRotateInstance(rotation, size.width / 2.0,
-                                                              size.height / 2.0));
+            g2.rotate(rotation, size.width / 2.0, size.height / 2.0);
         }
         icon.setPreferredSize(size);
         icon.paintIcon(c, g2, 0, 0);

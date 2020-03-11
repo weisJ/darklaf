@@ -436,6 +436,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             g.setColor(scrollbar.getBackground());
             g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
         }
+        if (trackAlpha == 0) return;
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setColor(getTrackColor());
         g2.setComposite(COMPOSITE.derive(trackAlpha));

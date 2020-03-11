@@ -79,7 +79,7 @@ public abstract class Animator {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, r -> {
             final Thread thread = new Thread(r, "Darcula Animations");
             thread.setDaemon(true);
-            thread.setPriority(Thread.NORM_PRIORITY);
+            thread.setPriority(Thread.MAX_PRIORITY);
             return thread;
         });
         executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);

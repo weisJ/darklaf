@@ -132,15 +132,11 @@ public class OverlayScrollPane extends JLayeredPane {
 
     private static final class PopupScrollBar extends JScrollBar {
 
-        private final JScrollPane pane;
-
-        private PopupScrollBar(final int direction, final JScrollPane pane) {
+        private PopupScrollBar(final int direction) {
             super(direction);
-            this.pane = pane;
             putClientProperty("JScrollBar.fastWheelScrolling", true);
             setOpaque(false);
         }
-
 
         @Override
         public boolean isOpaque() {
@@ -166,6 +162,7 @@ public class OverlayScrollPane extends JLayeredPane {
                 @Override
                 public void layoutContainer(final Container parent) {
                     super.layoutContainer(parent);
+                    viewport = getViewport();
                     if (viewport != null) {
                         Rectangle bounds = viewport.getBounds();
                         Rectangle vertBounds = verticalScrollBar.getBounds();
@@ -217,11 +214,11 @@ public class OverlayScrollPane extends JLayeredPane {
          */
         public void setUI(final ScrollPaneUI ui) {
             if (verticalScrollBar == null) {
-                verticalScrollBar = new PopupScrollBar(JScrollBar.VERTICAL, this);
+                verticalScrollBar = new PopupScrollBar(JScrollBar.VERTICAL);
                 verticalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
             }
             if (horizontalScrollBar == null) {
-                horizontalScrollBar = new PopupScrollBar(JScrollBar.HORIZONTAL, this);
+                horizontalScrollBar = new PopupScrollBar(JScrollBar.HORIZONTAL);
                 horizontalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
             }
             super.setUI(ui);
@@ -257,7 +254,6 @@ public class OverlayScrollPane extends JLayeredPane {
 
         private ControlPanel(final OScrollPane scrollPane) {
             setLayout(null);
-
             scrollPane.setVerticalScrollBar(scrollPane.verticalScrollBar);
             if (scrollPane.getVerticalScrollBarPolicy() != JScrollPane.VERTICAL_SCROLLBAR_NEVER) {
                 showVertical = true;
