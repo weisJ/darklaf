@@ -93,10 +93,10 @@ public class DarkTableUIBridge extends TableUIBridge {
         // For FIT_WIDTH, all columns should be printed irrespective of
         // how many columns are visible. So, we used clip which is already set to
         // total col width instead of visible region
-        // Since JTable.PrintMode is not accessible
-        // from here, we aet "Table.printMode" in TablePrintable#print and
+        // Since JDarkTableUI.KEY_IS_PRINT_MODE is not accessible
+        // from here, we aet DarkTableUI.KEY_IS_PRINT_MODE in TablePrintable#print and
         // access from here.
-        Object printMode = table.getClientProperty("Table.printMode");
+        Object printMode = table.getClientProperty(DarkTableUI.KEY_IS_PRINT_MODE);
         if ((printMode == JTable.PrintMode.FIT_WIDTH)) {
             upperLeft = clip.getLocation();
             lowerRight = new Point(clip.x + clip.width - 1,

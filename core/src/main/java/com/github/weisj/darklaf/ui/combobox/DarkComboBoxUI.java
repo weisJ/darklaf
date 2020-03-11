@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -46,6 +47,10 @@ import java.beans.PropertyChangeListener;
  * @author Jannis Weis
  */
 public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyChangeListener {
+
+    public static final String KEY_PREFIX = "JComboBox.";
+    public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
+    public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
 
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
@@ -91,11 +96,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         comboBox.setBorder(this);
     }
 
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        LookAndFeel.installProperty(comboBox, "opaque", false);
-        arcSize = UIManager.getInt("ComboBox.arc");
+    protected static boolean isTableCellEditor(final Component c) {
+        return c instanceof JComponent
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TABLE_EDITOR));
     }
 
     @Override
@@ -208,14 +211,16 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         return background;
     }
 
-    protected static boolean isTableCellEditor(final Component c) {
-        return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTableCellEditor"));
-    }
-
     protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JComboBox.isTreeCellEditor"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TREE_EDITOR));
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        LookAndFeel.installProperty(comboBox, PropertyKey.OPAQUE, false);
+        arcSize = UIManager.getInt("ComboBox.arc");
     }
 
     private Color getForeground() {
@@ -415,13 +420,14 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("componentOrientation".equals(key)) {
+        if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             comboBox.doLayout();
             comboBox.repaint();
             comboBox.getEditor().getEditorComponent().setComponentOrientation(comboBox.getComponentOrientation());
-        } else if ("editable".equals(key)) {
+        } else if (PropertyKey.EDITABLE.equals(key)) {
             comboBox.repaint();
-        } else if ("JComboBox.isTableCellEditor".equals(key) || "JComboBox.isTreeCellEditor".equals(key)) {
+        } else if (DarkComboBoxUI.KEY_IS_TABLE_EDITOR.equals(key)
+            || DarkComboBoxUI.KEY_IS_TREE_EDITOR.equals(key)) {
             comboBox.repaint();
         }
     }

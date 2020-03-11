@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -31,11 +32,11 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
+public class TextTableCellEditorBorder extends DarkTableCellBorder {
 
     protected Color borderColor;
 
-    public TextFieldTableCellEditorBorder() {
+    public TextTableCellEditorBorder() {
         borderColor = UIManager.getColor("TextField.border.enabled");
     }
 
@@ -68,6 +69,16 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
         }
     }
 
+    protected static boolean isListEditor(final Component c) {
+        return c instanceof JComponent
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_IS_LIST_RENDER))
+            && c.getParent() instanceof JList;
+    }
+
+    protected static boolean isInWrapper(final Component c) {
+        return c.getParent() instanceof DarkTableCellEditor.IconWrapper;
+    }
+
     @Override
     public Insets getBorderInsets(final Component c) {
         Insets ins = super.getBorderInsets();
@@ -78,7 +89,7 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
                 ins.right -= ((DarkTableCellEditor.IconWrapper) c.getParent()).getIconCompGap();
             }
         } else if (isListEditor(c)) {
-            ListCellRenderer renderer = ((JList) c.getParent()).getCellRenderer();
+            ListCellRenderer<?> renderer = ((JList<?>) c.getParent()).getCellRenderer();
             if (renderer instanceof JLabel) {
                 if (parentLTR(c)) {
                     ins.left -= ((JLabel) renderer).getIconTextGap() - 1;
@@ -88,17 +99,6 @@ public class TextFieldTableCellEditorBorder extends DarkTableCellBorder {
             }
         }
         return ins;
-    }
-
-    protected static boolean isInWrapper(final Component c) {
-        return c.getParent() instanceof DarkTableCellEditor.IconWrapper;
-    }
-
-
-    protected static boolean isListEditor(final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.listCellEditor"))
-                && c.getParent() instanceof JList;
     }
 
 }

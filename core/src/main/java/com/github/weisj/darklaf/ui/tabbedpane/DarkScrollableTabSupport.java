@@ -59,9 +59,9 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         moreTabsButton.addActionListener(this);
 
         newTabButton = ui.createNewTabButton();
-        newTabButton.setVisible(Boolean.TRUE.equals(ui.tabPane.getClientProperty("JTabbedPane.showNewTabButton")));
+        newTabButton.setVisible(Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON)));
 
-        scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt("TabbedPane.maxPopupHeight"));
+        scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt(DarkTabbedPaneUI.KEY_MAX_POPUP_HEIGHT));
         PopupMenuListener popupMenuListener = new PopupMenuAdapter() {
             @Override
             public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {

@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
@@ -659,7 +660,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         View v = getTextViewForTab(tabIndex);
         if (v != null) {
-            tabPane.putClientProperty("html", v);
+            tabPane.putClientProperty(PropertyKey.HTML, v);
         }
 
         SwingUtilities.layoutCompoundLabel(tabPane,
@@ -673,7 +674,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                                            textRect,
                                            textIconGap);
 
-        tabPane.putClientProperty("html", null);
+        tabPane.putClientProperty(PropertyKey.HTML, null);
 
         int xNudge = getTabLabelShiftX(tabPlacement, tabIndex, isSelected);
         int yNudge = getTabLabelShiftY(tabPlacement, tabIndex, isSelected);
@@ -908,7 +909,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (opaque == null) {
             opaque = Boolean.FALSE;
         }
-        LookAndFeel.installProperty(tabPane, "opaque", opaque);
+        LookAndFeel.installProperty(tabPane, PropertyKey.OPAQUE, opaque);
 
         // Fix for 6711145 BasicTabbedPanuUI should not throw a NPE if these
         // keys are missing. So we are setting them to there default values here

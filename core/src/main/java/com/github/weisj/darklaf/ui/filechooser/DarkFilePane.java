@@ -24,7 +24,8 @@
 package com.github.weisj.darklaf.ui.filechooser;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.table.TextFieldTableCellEditorBorder;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import sun.awt.AWTAccessor;
 import sun.swing.SwingUtilities2;
@@ -58,7 +59,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         megaByteString = UIManager.getString("FileChooser.fileSizeMegaBytes");
         gigaByteString = UIManager.getString("FileChooser.fileSizeGigaBytes");
         editCell = new JTextField();
-        editCell.setBorder(new TextFieldTableCellEditorBorder());
+        editCell.setBorder(new TextTableCellEditorBorder());
         editCell.putClientProperty("JTextField.listCellEditor", true);
     }
 
@@ -206,7 +207,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         detailsTable.addMouseListener(getMouseHandler());
 
         // 4835633 : tell BasicTableUI that this is a file list
-        detailsTable.putClientProperty("Table.isFileList", Boolean.TRUE);
+        detailsTable.putClientProperty(DarkTableUI.KEY_IS_FILE_LIST, Boolean.TRUE);
 
         if (listViewWindowsStyle) {
             detailsTable.addFocusListener(repaintListener);

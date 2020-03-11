@@ -92,6 +92,6 @@ public final class GraphicsUtil {
     }
 
     public static boolean isHighDpiEnabled() {
-        return "true".equalsIgnoreCase(System.getProperty("hidpi"));
+        return PropertyValue.TRUE.equalsIgnoreCase(System.getProperty("hidpi"));
     }
 }

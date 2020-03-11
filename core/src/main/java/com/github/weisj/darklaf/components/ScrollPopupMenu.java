@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.components;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.event.MenuKeyEvent;
@@ -85,7 +86,7 @@ public class ScrollPopupMenu extends JPopupMenu {
                 new OverlayScrollPane(view, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                       JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         JScrollBar bar = overlayScrollPane.getVerticalScrollBar();
-        bar.putClientProperty("ScrollBar.thin", Boolean.TRUE);
+        bar.putClientProperty("JScrollBar.thin", Boolean.TRUE);
         DarkUIUtil.doNotCancelPopupSetup(bar);
         DarkUIUtil.doNotCancelPopupSetup(overlayScrollPane.getScrollPane());
         return overlayScrollPane;
@@ -169,7 +170,7 @@ public class ScrollPopupMenu extends JPopupMenu {
             }
             firePopupMenuWillBecomeVisible();
             showPopup();
-            firePropertyChange("visible", Boolean.FALSE, Boolean.TRUE);
+            firePropertyChange(PropertyKey.VISIBLE, Boolean.FALSE, Boolean.TRUE);
         } else {
             hidePopup();
         }
@@ -180,7 +181,7 @@ public class ScrollPopupMenu extends JPopupMenu {
             firePopupMenuWillBecomeInvisible();
             popWin.setVisible(false);
             popWin = null;
-            firePropertyChange("visible", Boolean.TRUE, Boolean.FALSE);
+            firePropertyChange(PropertyKey.VISIBLE, Boolean.TRUE, Boolean.FALSE);
             if (isPopupMenu()) {
                 MenuSelectionManager.defaultManager().clearSelectedPath();
             }

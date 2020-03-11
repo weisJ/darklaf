@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.StringUtil;
 
 import javax.swing.*;
@@ -122,7 +123,7 @@ public final class PropertyLoader {
     private static Object parseValue(final String propertyKey, final String value,
                                      final boolean ignoreRequest, final Map<Object, Object> defaults,
                                      final IconLoader iconLoader) {
-        if ("null".equals(value)) {
+        if (PropertyValue.NULL.equals(value)) {
             return null;
         }
         String key = propertyKey;
@@ -148,22 +149,22 @@ public final class PropertyLoader {
             returnVal = parseIcon(value, iconLoader);
         } else if (key.endsWith("Size") || key.endsWith(".size")) {
             returnVal = parseSize(value);
-        } else if ("null".equalsIgnoreCase(value)) {
+        } else if (PropertyValue.NULL.equalsIgnoreCase(value)) {
             returnVal = null;
         } else if (value.startsWith("%")) {
             String val = value.substring(1);
             if (!defaults.containsKey(val)) {
                 LOGGER.warning("Could not reference value '" + val + "'while loading '" + key + "'. " +
-                                       "May be a forward reference");
+                                   "May be a forward reference");
             }
             returnVal = defaults.get(val);
         }
         if (returnVal instanceof LoadError) {
             final Color color = ColorUtil.fromHex(value, null);
             final Integer invVal = getInteger(value);
-            final Boolean boolVal = "true".equalsIgnoreCase(value)
+            final Boolean boolVal = PropertyValue.TRUE.equalsIgnoreCase(value)
                                     ? Boolean.TRUE
-                                    : "false".equalsIgnoreCase(value) ? Boolean.FALSE : null;
+                                    : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
             if (color != null && (value.length() == 6 || value.length() == 8)) {
                 return new ColorUIResource(color);
             } else if (invVal != null) {

@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
@@ -357,7 +358,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     protected void installDefaults() {
         LookAndFeel.installColorsAndFont(header, "TableHeader.background",
                                          "TableHeader.foreground", "TableHeader.font");
-        LookAndFeel.installProperty(header, "opaque", Boolean.TRUE);
+        LookAndFeel.installProperty(header, PropertyKey.OPAQUE, Boolean.TRUE);
     }
 
 

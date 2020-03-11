@@ -24,6 +24,9 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.ui.combobox.DarkComboBoxUI;
+import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
+import com.github.weisj.darklaf.util.PropertyValue;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -61,8 +64,8 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
     public DarkTableCellEditor(final JTextField textField) {
         super(textField);
-        textField.setBorder(new TextFieldTableCellEditorBorder());
-        textField.putClientProperty("JTextField.isCellEditor", Boolean.TRUE);
+        textField.setBorder(new TextTableCellEditorBorder());
+        textField.putClientProperty(DarkTextUI.KEY_IS_TABLE_EDITOR, Boolean.TRUE);
         setClickCountToStart(2);
     }
 
@@ -140,7 +143,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                 if (value instanceof Boolean) {
                     selected = (Boolean) value;
                 } else if (value instanceof String) {
-                    selected = value.equals("true");
+                    selected = value.equals(PropertyValue.TRUE);
                 }
                 toggleButton.setSelected(selected);
             }
@@ -232,15 +235,15 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             Component rendererComp = table.getCellRenderer(row, column)
                                           .getTableCellRendererComponent(table, value, isSelected, false, row, column);
             if (rendererComp instanceof JTextField) {
-                editorComponent.putClientProperty("JSpinner.cellEditorAlignment",
+                editorComponent.putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT,
                                                   ((JTextField) rendererComp).getHorizontalAlignment());
             } else if (rendererComp instanceof JLabel) {
-                editorComponent.putClientProperty("JSpinner.cellEditorAlignment",
+                editorComponent.putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT,
                                                   ((JLabel) rendererComp).getHorizontalAlignment());
             }
         }
 
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = table.getBackground();
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
@@ -270,7 +273,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     }
 
     protected TableCellEditor getBooleanEditor(final JTable table) {
-        if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
+        if (DarkTableUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE))) {
             return radioButtonEditor;
         }
         return checkBoxEditor;

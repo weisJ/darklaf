@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.ui.BasicTransferable;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
@@ -40,21 +41,10 @@ import javax.swing.plaf.TableHeaderUI;
 import javax.swing.plaf.TableUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTableUI;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
@@ -109,7 +99,7 @@ public abstract class TableUIBridge extends TableUI {
 //  Helper class for keyboard actions
 //
     /**
-     * Local cache of Table's client property "Table.isFileList"
+     * Local cache of Table's client property DarkTableUI.KEY_IS_FILE_LIST
      */
     protected boolean isFileList = false;
 
@@ -280,7 +270,7 @@ public abstract class TableUIBridge extends TableUI {
     /*
      * Returns true if the given point is outside the preferredSize of the
      * item at the given row of the table.  (Column must be 0).
-     * Returns false if the "Table.isFileList" client property is not set.
+     * Returns false if the DarkTableUI.KEY_IS_FILE_LIST client property is not set.
      */
     protected boolean pointOutsidePrefSize(final int row, final int column, final Point p) {
         if (!isFileList) {
@@ -323,7 +313,7 @@ public abstract class TableUIBridge extends TableUI {
         // developer changes the font, it's there responsability to update
         // the row height.
 
-        LookAndFeel.installProperty(table, "opaque", Boolean.TRUE);
+        LookAndFeel.installProperty(table, PropertyKey.OPAQUE, Boolean.TRUE);
 
         Color sbg = table.getSelectionBackground();
         if (sbg == null || sbg instanceof UIResource) {
@@ -352,7 +342,7 @@ public abstract class TableUIBridge extends TableUI {
             }
         }
 
-        isFileList = Boolean.TRUE.equals(table.getClientProperty("Table.isFileList"));
+        isFileList = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_IS_FILE_LIST));
     }
 
     /**
@@ -566,9 +556,9 @@ public abstract class TableUIBridge extends TableUI {
         // how many columns are visible. So, we used clip which is already set to
         // total col width instead of visible region
         // Since JTable.PrintMode is not accessible
-        // from here, we aet "Table.printMode" in TablePrintable#print and
+        // from here, we aet DarkTableUI.KEY_IS_PRINT_MODE in TablePrintable#print and
         // access from here.
-        Object printMode = table.getClientProperty("Table.printMode");
+        Object printMode = table.getClientProperty(DarkTableUI.KEY_IS_PRINT_MODE);
         if ((printMode == JTable.PrintMode.FIT_WIDTH)) {
             upperLeft = clip.getLocation();
             lowerRight = new Point(clip.x + clip.width - 1,
@@ -1881,17 +1871,17 @@ public abstract class TableUIBridge extends TableUI {
             String key = getName();
 
             if (sender instanceof JTable &&
-                    Boolean.TRUE.equals(((JTable) sender).getClientProperty("Table.isFileList"))) {
+                Boolean.TRUE.equals(((JTable) sender).getClientProperty(DarkTableUI.KEY_IS_FILE_LIST))) {
                 if (Objects.equals(key, NEXT_COLUMN) ||
-                        Objects.equals(key, NEXT_COLUMN_CELL) ||
-                        Objects.equals(key, NEXT_COLUMN_EXTEND_SELECTION) ||
-                        Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) ||
-                        Objects.equals(key, PREVIOUS_COLUMN) ||
-                        Objects.equals(key, PREVIOUS_COLUMN_CELL) ||
-                        Objects.equals(key, PREVIOUS_COLUMN_EXTEND_SELECTION) ||
-                        Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD) ||
-                        Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) ||
-                        Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
+                    Objects.equals(key, NEXT_COLUMN_CELL) ||
+                    Objects.equals(key, NEXT_COLUMN_EXTEND_SELECTION) ||
+                    Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) ||
+                    Objects.equals(key, PREVIOUS_COLUMN) ||
+                    Objects.equals(key, PREVIOUS_COLUMN_CELL) ||
+                    Objects.equals(key, PREVIOUS_COLUMN_EXTEND_SELECTION) ||
+                    Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD) ||
+                    Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) ||
+                    Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
                         Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
                         Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
                         Objects.equals(key, FIRST_COLUMN) ||
@@ -2621,9 +2611,9 @@ public abstract class TableUIBridge extends TableUI {
         public void propertyChange(final PropertyChangeEvent event) {
             String changeName = event.getPropertyName();
 
-            if ("componentOrientation".equals(changeName)) {
+            if (PropertyKey.COMPONENT_ORIENTATION.equals(changeName)) {
                 InputMap inputMap = getInputMap(
-                        JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+                    JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
                 SwingUtilities.replaceUIInputMap(table,
                                                  JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
@@ -2638,8 +2628,8 @@ public abstract class TableUIBridge extends TableUI {
                 JTable.DropLocation oldValue = (JTable.DropLocation) event.getOldValue();
                 repaintDropLocation(oldValue);
                 repaintDropLocation(table.getDropLocation());
-            } else if ("Table.isFileList".equals(changeName)) {
-                isFileList = Boolean.TRUE.equals(table.getClientProperty("Table.isFileList"));
+            } else if (DarkTableUI.KEY_IS_FILE_LIST.equals(changeName)) {
+                isFileList = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_IS_FILE_LIST));
                 table.revalidate();
                 table.repaint();
                 if (isFileList) {

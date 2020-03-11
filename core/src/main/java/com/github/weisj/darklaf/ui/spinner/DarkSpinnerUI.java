@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.spinner;
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -47,6 +48,14 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListener {
 
+    public static final String KEY_PREFIX = "JSpinner.";
+    public static final String KEY_VARIANT = KEY_PREFIX + "variant";
+    public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
+    public static final String KEY_IS_TREE_RENDER = KEY_PREFIX + "isTreeCellRenderer";
+    public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
+    public static final String KEY_IS_TABLE_RENDERER = KEY_PREFIX + "isTableCellRenderer";
+    public static final String KEY_EDITOR_ALIGNMENT = KEY_PREFIX + "cellEditorAlignment";
+    public static final String VARIANT_PLUS_MINUS = "plusMinus";
     private final FocusListener focusListener = new FocusAdapter() {
         @Override
         public void focusGained(final FocusEvent e) {
@@ -80,7 +89,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     protected Icon plusInactiveIcon;
     protected Icon minusInactiveIcon;
     private JComponent editor;
-    private Color compColor;
     private JButton prevButton;
     private Component editorComponent;
 
@@ -90,7 +98,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     }
 
     protected static boolean usePlusMinusIcons(final JSpinner spinner) {
-        return "plusMinus".equals(spinner.getClientProperty("JSpinner.variant"));
+        return VARIANT_PLUS_MINUS.equals(spinner.getClientProperty(KEY_VARIANT));
     }
 
     @Override
@@ -107,26 +115,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         spinner.removePropertyChangeListener(this);
     }
 
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        arc = UIManager.getInt("Spinner.arc");
-        borderSize = UIManager.getInt("Spinner.borderThickness");
-        background = UIManager.getColor("Spinner.activeBackground");
-        inactiveBackground = UIManager.getColor("Spinner.inactiveBackground");
-        arrowBackgroundStart = UIManager.getColor("Spinner.arrowBackgroundStart");
-        arrowBackgroundEnd = UIManager.getColor("Spinner.arrowBackgroundEnd");
-
-        arrowDownIcon = UIManager.getIcon("Spinner.arrowDown.icon");
-        arrowUpIcon = UIManager.getIcon("Spinner.arrowUp.icon");
-        minusIcon = UIManager.getIcon("Spinner.minus.icon");
-        plusIcon = UIManager.getIcon("Spinner.plus.icon");
-
-        arrowDownInactiveIcon = UIManager.getIcon("Spinner.arrowDownInactive.icon");
-        arrowUpInactiveIcon = UIManager.getIcon("Spinner.arrowUpInactive.icon");
-        minusInactiveIcon = UIManager.getIcon("Spinner.minusInactive.icon");
-        plusInactiveIcon = UIManager.getIcon("Spinner.plusInactive.icon");
-        LookAndFeel.installProperty(spinner, "opaque", false);
+    protected static boolean isTableCellEditor(final Component c) {
+        return c instanceof JComponent
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TABLE_EDITOR));
     }
 
     protected LayoutManager createLayout() {
@@ -266,14 +257,31 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         return c == null || !c.isEnabled() ? inactiveBackground : background;
     }
 
-    protected static boolean isTableCellEditor(final Component c) {
-        return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTableCellEditor"));
-    }
-
     protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JSpinner.isTreeCellEditor"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TREE_EDITOR));
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        arc = UIManager.getInt("Spinner.arc");
+        borderSize = UIManager.getInt("Spinner.borderThickness");
+        background = UIManager.getColor("Spinner.activeBackground");
+        inactiveBackground = UIManager.getColor("Spinner.inactiveBackground");
+        arrowBackgroundStart = UIManager.getColor("Spinner.arrowBackgroundStart");
+        arrowBackgroundEnd = UIManager.getColor("Spinner.arrowBackgroundEnd");
+
+        arrowDownIcon = UIManager.getIcon("Spinner.arrowDown.icon");
+        arrowUpIcon = UIManager.getIcon("Spinner.arrowUp.icon");
+        minusIcon = UIManager.getIcon("Spinner.minus.icon");
+        plusIcon = UIManager.getIcon("Spinner.plus.icon");
+
+        arrowDownInactiveIcon = UIManager.getIcon("Spinner.arrowDownInactive.icon");
+        arrowUpInactiveIcon = UIManager.getIcon("Spinner.arrowUpInactive.icon");
+        minusInactiveIcon = UIManager.getIcon("Spinner.minusInactive.icon");
+        plusInactiveIcon = UIManager.getIcon("Spinner.plusInactive.icon");
+        LookAndFeel.installProperty(spinner, PropertyKey.OPAQUE, false);
     }
 
     private void paintSpinBackground(final Graphics2D g, final int width, final int height,
@@ -307,13 +315,13 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("opaque".equals(key)) {
+        if (PropertyKey.OPAQUE.equals(key)) {
             boolean val = Boolean.TRUE.equals(evt.getNewValue());
             spinner.getEditor().setOpaque(val);
             if (editorComponent instanceof JComponent) {
                 ((JComponent) editorComponent).setOpaque(val);
             }
-        } else if ("JSpinner.isTableCellEditor".equals(key)) {
+        } else if (KEY_IS_TABLE_EDITOR.equals(key)) {
             if (Boolean.FALSE.equals(evt.getNewValue())) {
                 if (editor instanceof JSpinner.DefaultEditor) {
                     // if editor alignment isn't set in LAF, we get 0 (CENTER) here
@@ -323,14 +331,14 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                 }
             }
             spinner.repaint();
-        } else if ("JSpinner.cellEditorAlignment".equals(key) && isTableCellEditor(spinner)) {
+        } else if (KEY_EDITOR_ALIGNMENT.equals(key) && isTableCellEditor(spinner)) {
             if (editorComponent instanceof JTextField && evt.getNewValue() instanceof Integer) {
                 ((JTextField) editorComponent).setHorizontalAlignment((Integer) evt.getNewValue());
             }
             spinner.repaint();
-        } else if ("JSpinner.variant".equals(key)) {
+        } else if (KEY_VARIANT.equals(key)) {
             spinner.repaint();
-        } else if ("JSpinner.isTreeCellEditor".equals(key)) {
+        } else if (KEY_IS_TREE_EDITOR.equals(key)) {
             spinner.repaint();
         }
     }

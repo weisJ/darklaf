@@ -23,6 +23,7 @@
  */
 package ui.slider;
 
+import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -83,14 +84,16 @@ public class SliderDemo implements ComponentDemo {
             setSelected(slider.getPaintTrack());
             addActionListener(e -> slider.setPaintTrack(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("Slider.variant = volume") {{
-            addActionListener(e -> slider.putClientProperty("Slider.variant", isSelected() ? "volume" : null));
+        controlPanel.add(new JCheckBox(DarkSliderUI.KEY_VARIANT + " = " + DarkSliderUI.VARIANT_VOLUME) {{
+            addActionListener(e -> slider.putClientProperty(DarkSliderUI.KEY_VARIANT, isSelected()
+                                                                                      ? DarkSliderUI.VARIANT_VOLUME
+                                                                                      : null));
         }});
-        controlPanel.add(new JCheckBox("Slider.instantScrollEnabled") {{
-            addActionListener(e -> slider.putClientProperty("Slider.instantScrollEnabled", isSelected()));
+        controlPanel.add(new JCheckBox(DarkSliderUI.KEY_INSTANT_SCROLL) {{
+            addActionListener(e -> slider.putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("Slider.volume.showIcon") {{
-            addActionListener(e -> slider.putClientProperty("Slider.volume.showIcon", isSelected()));
+        controlPanel.add(new JCheckBox(DarkSliderUI.KEY_SHOW_VOLUME_ICON) {{
+            addActionListener(e -> slider.putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, isSelected()));
         }});
         return panel;
     }

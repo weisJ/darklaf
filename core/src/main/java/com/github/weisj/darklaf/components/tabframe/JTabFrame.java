@@ -41,6 +41,8 @@ import java.util.Objects;
  */
 public class JTabFrame extends JComponent {
 
+    public static final String KEY_DND = "dndEnabled";
+
     private final JComponent bottomTabs = createTabContainer();
     private final JComponent topTabs = createTabContainer();
     private final JComponent leftTabs = createTabContainer();
@@ -537,7 +539,7 @@ public class JTabFrame extends JComponent {
             getPopupComponentAt(a).doLayout();
             getPopupComponentAt(a).requestFocus();
         }
-        firePropertyChange("visibleTab", new TabFramePosition(a, oldIndex), new TabFramePosition(a, index));
+        firePropertyChange(TabFramePopup.KEY_VISIBLE_TAB, new TabFramePosition(a, oldIndex), new TabFramePosition(a, index));
     }
 
     /**
@@ -931,7 +933,7 @@ public class JTabFrame extends JComponent {
         if (getDropTarget() != null) {
             getDropTarget().setActive(dndEnabled);
         }
-        firePropertyChange("dndEnabled", old, dndEnabled);
+        firePropertyChange(KEY_DND, old, dndEnabled);
     }
 
     /**

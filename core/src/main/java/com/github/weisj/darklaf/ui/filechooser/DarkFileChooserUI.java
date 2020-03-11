@@ -41,6 +41,8 @@ import java.io.File;
 
 public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
+    public static final String KEY_VIEW_TYPE = "viewType";
+
     public DarkFileChooserUI(final JFileChooser b) {
         super(b);
     }
@@ -187,7 +189,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         topButtonPanel.add(Box.createGlue());
 
         filePane.addPropertyChangeListener(e -> {
-            if ("viewType".equals(e.getPropertyName())) {
+            if (KEY_VIEW_TYPE.equals(e.getPropertyName())) {
                 int viewType = filePane.getViewType();
                 switch (viewType) {
                     case FilePane.VIEWTYPE_LIST:

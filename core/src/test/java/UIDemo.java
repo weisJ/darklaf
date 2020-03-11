@@ -3,6 +3,7 @@ import com.github.weisj.darklaf.components.text.SearchTextField;
 import com.github.weisj.darklaf.components.text.SearchTextFieldWithHistory;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
@@ -208,19 +209,19 @@ public final class UIDemo {
                             setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                         }});
                         add(new JSlider() {{
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_VARIANT, DarkSliderUI.VARIANT_VOLUME);
+                            putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, Boolean.TRUE);
                         }});
                         add(new JSlider() {{
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                         add(new JSlider() {{
                             setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                     }});
                     panel.add(new JPanel() {{
@@ -277,7 +278,7 @@ public final class UIDemo {
                             setPaintLabels(true);
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                         add(new JSlider() {{
                             setSnapToTicks(true);
@@ -288,7 +289,7 @@ public final class UIDemo {
                             setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                     }});
                     panel.add(new JPanel() {{
@@ -309,14 +310,14 @@ public final class UIDemo {
                             setOrientation(VERTICAL);
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                         add(new JSlider() {{
                             setOrientation(VERTICAL);
                             setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                     }});
                     panel.add(new JPanel() {{
@@ -379,7 +380,7 @@ public final class UIDemo {
                             setPaintLabels(true);
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                         add(new JSlider() {{
                             setOrientation(VERTICAL);
@@ -391,7 +392,7 @@ public final class UIDemo {
                             setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                             putClientProperty("Slider.variant", "volume");
                             putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty("Slider.volume.showIcon", Boolean.TRUE);
+                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
                         }});
                     }});
 

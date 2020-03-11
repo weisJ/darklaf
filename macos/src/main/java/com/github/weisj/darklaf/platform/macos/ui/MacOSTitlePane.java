@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.platform.macos.ui;
 
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -237,7 +238,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     protected class PropertyChangeHandler implements PropertyChangeListener {
         public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
-            if ("title".equals(name)) {
+            if (PropertyKey.TITLE.equals(name)) {
                 titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
                 repaint();
             }

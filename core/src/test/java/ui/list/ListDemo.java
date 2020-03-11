@@ -23,6 +23,7 @@
  */
 package ui.list;
 
+import com.github.weisj.darklaf.ui.list.DarkListUI;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -40,15 +41,15 @@ public final class ListDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         String[] week = {"Monday", "Tuesday", "Wednesday",
-            "Thursday", "Friday", "Saturday", "Sunday"};
+                         "Thursday", "Friday", "Saturday", "Sunday"};
         JList<String> list = new JList<>(week);
         list.setSelectedIndex(2);
         DemoPanel panel = new DemoPanel(list, new BorderLayout(), 0);
 
         JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("JList.alternateRowColor") {{
-            setSelected(Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor")));
-            addActionListener(e -> list.putClientProperty("JList.alternateRowColor", isSelected()));
+        controlPanel.add(new JCheckBox(DarkListUI.KEY_ALTERNATE_ROW_COLOR) {{
+            setSelected(Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR)));
+            addActionListener(e -> list.putClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
         }}, "span");
 
         controlPanel = panel.addControls();

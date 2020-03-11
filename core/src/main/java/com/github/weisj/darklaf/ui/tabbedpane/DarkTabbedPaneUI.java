@@ -37,11 +37,29 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.util.TooManyListenersException;
+import java.util.function.Consumer;
 
 /**
  * @author Jannis Weis
  */
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
+
+    public static final String KEY_PREFIX = "JTabbedPane.";
+    public static final String KEY_DND = KEY_PREFIX + "dndEnabled";
+    public static final String KEY_NORTH_COMP = KEY_PREFIX + "northComponent";
+    public static final String KEY_WEST_COMP = KEY_PREFIX + "westComponent";
+    public static final String KEY_EAST_COMP = KEY_PREFIX + "eastComponent";
+    public static final String KEY_SOUTH_COMP = KEY_PREFIX + "southComponent";
+    public static final String KEY_LEADING_COMP = KEY_PREFIX + "leadingComponent";
+    public static final String KEY_TRAILING_COMP = KEY_PREFIX + "trailingComponent";
+    public static final String KEY_SHOW_NEW_TAB_BUTTON = KEY_PREFIX + "showNewTabButton";
+    public static final String KEY_DRAW_FOCUS_BAR = KEY_PREFIX + "drawFocusBar";
+    public static final String KEY_TAB_PLACEMENT = "tabPlacement";
+    public static final String KEY_CONTENT_BORDER_INSETS = KEY_PREFIX + "contentBorderInsets";
+    public static final String KEY_TAB_AREA_INSETS = KEY_PREFIX + "tabAreaInsets";
+    public static final String KEY_MAX_POPUP_HEIGHT = KEY_PREFIX + "maxPopupHeight";
+    public static final String KEY_NEW_TAB_ACTION = KEY_PREFIX + "newTabAction";
+    public static final String KEY_ROTATE_TAB_RUNS = KEY_PREFIX + "rotateTabRuns";
 
     protected static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler.UIResource();
     protected final FocusListener focusListener = new FocusListener() {
@@ -79,6 +97,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected int dropSourceIndex = -1;
     protected boolean sourceEqualsTarget;
     protected boolean drawDropRect;
+    protected int focusSize;
 
     protected boolean dragging;
     protected Rectangle dragRect = new Rectangle();
@@ -115,7 +134,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Action getNewTabAction() {
-        Object action = tabPane.getClientProperty("JTabbedPane.newTabAction");
+        Object action = tabPane.getClientProperty(KEY_NEW_TAB_ACTION);
         return action instanceof Action ? (Action) action : null;
     }
 
@@ -234,7 +253,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         if (isSelected) {
             if (!drawFocusBar()) return;
             g.setColor(getAccentColor());
-            int focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
             switch (tabPlacement) {
                 case LEFT:
                     g.fillRect(r.x + r.width - focusSize, r.y, focusSize, r.height);
@@ -382,7 +400,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected boolean shouldRotateTabRuns(final int tabPlacement) {
-        return Boolean.TRUE.equals(tabPane.getClientProperty("JTabbedPane.rotateTabRuns"));
+        return Boolean.TRUE.equals(tabPane.getClientProperty(KEY_ROTATE_TAB_RUNS));
     }
 
     @Override
@@ -458,7 +476,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected boolean drawFocusBar() {
-        return !Boolean.FALSE.equals(tabPane.getClientProperty("JTabbedPane.drawFocusBar"));
+        return !Boolean.FALSE.equals(tabPane.getClientProperty(KEY_DRAW_FOCUS_BAR));
     }
 
     protected Color getAccentColor() {
@@ -698,55 +716,41 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         hoverBackground = UIManager.getColor("TabbedPane.hoverBackground");
         tabAreaBackground = UIManager.getColor("TabbedPane.tabAreaBackground");
 
+        focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
         moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
         newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
 
-        Object ins = tabPane.getClientProperty("JTabbedPane.tabAreaInsets");
+        Object ins = tabPane.getClientProperty(KEY_TAB_AREA_INSETS);
         if (ins instanceof Insets) {
             tabAreaInsets = (Insets) ins;
         }
-        ins = tabPane.getClientProperty("JTabbedPane.contentBorderInsets");
+        ins = tabPane.getClientProperty(KEY_CONTENT_BORDER_INSETS);
         if (ins instanceof Insets) {
             contentBorderInsets = (Insets) ins;
         }
-        Object lead = tabPane.getClientProperty("JTabbedPane.leadingComponent");
-        if (lead instanceof Component) {
-            leadingComp = wrapClientComponent((Component) lead);
-            tabPane.add(leadingComp);
+        installComponent(KEY_LEADING_COMP, c -> leadingComp = c);
+        installComponent(KEY_TRAILING_COMP, c -> trailingComp = c);
+        installComponent(KEY_NORTH_COMP, c -> northComp = c);
+        installComponent(KEY_SOUTH_COMP, c -> southComp = c);
+        installComponent(KEY_WEST_COMP, c -> westComp = c);
+        installComponent(KEY_EAST_COMP, c -> eastComp = c);
+        dndEnabled = Boolean.TRUE.equals(tabPane.getClientProperty(KEY_DND));
+    }
+
+    protected void installComponent(final String key, final Consumer<Component> setter) {
+        Object comp = tabPane.getClientProperty(key);
+        if (comp instanceof Component) {
+            Component wrapped = wrapClientComponent((Component) comp);
+            setter.accept(wrapped);
+            tabPane.add(wrapped);
         }
-        Object trail = tabPane.getClientProperty("JTabbedPane.trailingComponent");
-        if (trail instanceof Component) {
-            trailingComp = wrapClientComponent((Component) trail);
-            tabPane.add(trailingComp);
-        }
-        Object north = tabPane.getClientProperty("JTabbedPane.northComponent");
-        if (north instanceof Component) {
-            northComp = wrapClientComponent((Component) north);
-            tabPane.add(northComp);
-        }
-        Object south = tabPane.getClientProperty("JTabbedPane.southComponent");
-        if (south instanceof Component) {
-            southComp = wrapClientComponent((Component) south);
-            tabPane.add(southComp);
-        }
-        Object west = tabPane.getClientProperty("JTabbedPane.westComponent");
-        if (west instanceof Component) {
-            westComp = wrapClientComponent((Component) west);
-            tabPane.add(westComp);
-        }
-        Object east = tabPane.getClientProperty("JTabbedPane.eastComponent");
-        if (east instanceof Component) {
-            eastComp = wrapClientComponent((Component) east);
-            tabPane.add(eastComp);
-        }
-        dndEnabled = Boolean.TRUE.equals(tabPane.getClientProperty("JTabbedPane.dndEnabled"));
     }
 
     @Override
     public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
         Rectangle rect = super.getTabBounds(pane, i);
         if (scrollableTabLayoutEnabled() && rect != null
-                && dropTargetIndex >= 0 && i == dropTargetIndex) {
+            && dropTargetIndex >= 0 && i == dropTargetIndex) {
             int tabPlacement = pane.getTabPlacement();
             if (tabPlacement == TOP || tabPlacement == BOTTOM) {
                 if (pane.getComponentOrientation().isLeftToRight()) {

@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.tabframe;
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.PanelPopup;
+import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
@@ -229,29 +230,29 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("open".equals(key)) {
+        if (TabFramePopup.KEY_OPEN.equals(key)) {
             if (Boolean.TRUE.equals(evt.getNewValue())) {
                 setHeaderBackground(true);
             }
-        } else if ("content".equals(key)) {
+        } else if (TabFramePopup.KEY_CONTENT.equals(key)) {
             if (content == null) return;
             content.add((Component) evt.getNewValue(), BorderLayout.CENTER);
             content.invalidate();
-        } else if ("title".equals(key)) {
+        } else if (TabFramePopup.KEY_TITLE.equals(key)) {
             if (label == null) return;
             label.setText(evt.getNewValue().toString());
             label.repaint();
-        } else if ("icon".equals(key)) {
+        } else if (TabFramePopup.KEY_ICON.equals(key)) {
             if (label == null) return;
             label.setIcon((Icon) evt.getNewValue());
             label.repaint();
-        } else if ("visibleTab".equals(key)) {
+        } else if (TabFramePopup.KEY_VISIBLE_TAB.equals(key)) {
             if (evt.getNewValue() instanceof JTabFrame.TabFramePosition) {
                 if (((JTabFrame.TabFramePosition) evt.getNewValue()).getAlignment() == popupComponent.getAlignment()) {
                     updateBorder(true);
                 }
             }
-        } else if ("tabFrame".equals(key)) {
+        } else if (TabFramePopup.KEY_TAB_FRAME_PARENT.equals(key)) {
             Object oldVal = evt.getOldValue();
             Object newVal = evt.getNewValue();
             if (oldVal instanceof JTabFrame) {
@@ -260,10 +261,10 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             if (newVal instanceof JTabFrame) {
                 ((JTabFrame) newVal).addPropertyChangeListener(this);
             }
-        } else if ("peerInsets".equals(key)) {
+        } else if (TabFramePopup.KEY_PEER_INSETS.equals(key)) {
             updateBorder(false);
             updateTooltip();
-        } else if ("alignment".equals(key)) {
+        } else if (TabFramePopup.KEY_ALIGNMENT.equals(key)) {
             updateTooltip();
         }
     }
@@ -281,7 +282,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             if (notifyPeer) {
                 try {
                     Component peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
-                    peer.firePropertyChange("peerInsets", 0, 1);
+                    peer.firePropertyChange(TabFramePopup.KEY_PEER_INSETS, 0, 1);
                 } catch (IndexOutOfBoundsException ignored) {/*may happen during transfer*/}
             }
         }

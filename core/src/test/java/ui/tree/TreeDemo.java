@@ -25,6 +25,8 @@ package ui.tree;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+import com.github.weisj.darklaf.util.PropertyKey;
 import net.miginfocom.swing.MigLayout;
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -58,7 +60,7 @@ public class TreeDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
-        controlPanel.add(new JCheckBox("editable") {{
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
             setSelected(tree.isEditable());
             addActionListener(e -> tree.setEditable(isSelected()));
         }});
@@ -71,20 +73,20 @@ public class TreeDemo implements ComponentDemo {
             setSelected(tree.getShowsRootHandles());
             addActionListener(e -> tree.setShowsRootHandles(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JTree.alternateRowColor") {{
-            setSelected(Boolean.TRUE.equals(tree.getClientProperty("JTree.alternateRowColor")));
-            addActionListener(e -> tree.putClientProperty("JTree.alternateRowColor", isSelected()));
+        controlPanel.add(new JCheckBox(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR) {{
+            setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR)));
+            addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JTree.renderBooleanAsCheckBox") {{
-            setSelected(Boolean.TRUE.equals(tree.getClientProperty("JTree.renderBooleanAsCheckBox")));
-            addActionListener(e -> tree.putClientProperty("JTree.renderBooleanAsCheckBox", isSelected()));
+        controlPanel.add(new JCheckBox(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX) {{
+            setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX)));
+            addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected()));
         }}, "span");
-        controlPanel.add(new JLabel("JTree.booleanRenderType:", JLabel.RIGHT));
+        controlPanel.add(new JLabel(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE + ":", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{
-            addItem("checkBox");
-            addItem("radioButton");
-            setSelectedItem(tree.getClientProperty("JTree.booleanRenderType"));
-            addItemListener(e -> tree.putClientProperty("JTree.booleanRenderType", e.getItem()));
+            addItem(DarkTreeUI.RENDER_TYPE_CHECKBOX);
+            addItem(DarkTreeUI.RENDER_TYPE_RADIOBUTTON);
+            setSelectedItem(tree.getClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE));
+            addItemListener(e -> tree.putClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, e.getItem()));
         }});
         controlPanel.add(new JLabel("JTree.lineStyle:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {{

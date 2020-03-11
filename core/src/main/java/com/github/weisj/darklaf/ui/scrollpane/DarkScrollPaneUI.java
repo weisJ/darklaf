@@ -35,9 +35,11 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkScrollPaneUI extends BasicScrollPaneUI {
 
+    public static final String KEY_VERTICALS_SCROLL_BAR = "verticalScrollBar";
+    public static final String KEY_HORIZONTAL_SCROLL_BAR = "horizontalScrollBar";
     private final MouseWheelListener verticalMouseWheelListener = e -> {
         if (!scrollpane.isWheelScrollingEnabled()
-                || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
+            || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
             return;
         }
         JScrollBar scrollbar = scrollpane.getHorizontalScrollBar();
@@ -70,7 +72,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     private final PropertyChangeListener propertyChangeListener = e -> {
         if (e.getSource() == scrollpane) {
             String propertyName = e.getPropertyName();
-            if ("verticalScrollBar".equals(propertyName)) {
+            if (KEY_VERTICALS_SCROLL_BAR.equals(propertyName)) {
                 Object old = e.getOldValue();
                 Object newVal = e.getNewValue();
                 if (old instanceof JScrollBar) {
@@ -79,7 +81,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 if (newVal instanceof JScrollBar) {
                     ((JScrollBar) newVal).addMouseWheelListener(verticalMouseWheelListener);
                 }
-            } else if ("horizontalScrollBar".equals(propertyName)) {
+            } else if (KEY_HORIZONTAL_SCROLL_BAR.equals(propertyName)) {
                 Object old = e.getOldValue();
                 Object newVal = e.getNewValue();
                 if (old instanceof JScrollBar) {

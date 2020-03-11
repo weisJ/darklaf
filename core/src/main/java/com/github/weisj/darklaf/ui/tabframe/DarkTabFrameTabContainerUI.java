@@ -24,11 +24,13 @@
 package com.github.weisj.darklaf.ui.tabframe;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
+import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabContainer;
 import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -42,6 +44,7 @@ import java.beans.PropertyChangeListener;
 
 public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyChangeListener {
 
+    private static final String ACCELERATOR_PREFIX = "accelerator_";
     protected TabFrameTabContainer tabContainer;
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
@@ -95,8 +98,8 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         if (acc < 0) return;
         tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
-                     "accelerator_" + acc);
-        tabFrame.getActionMap().put("accelerator_" + acc, createAcceleratorAction(tabFrame));
+                     ACCELERATOR_PREFIX + acc);
+        tabFrame.getActionMap().put(ACCELERATOR_PREFIX + acc, createAcceleratorAction(tabFrame));
     }
 
     protected Action createAcceleratorAction(final JTabFrame tabFrame) {
@@ -147,7 +150,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     protected void uninstallAccelerator(final JTabFrame tabFrame) {
         if (tabFrame == null) return;
         int acc = tabContainer.getAccelerator();
-        String accAction = "accelerator_" + acc;
+        String accAction = ACCELERATOR_PREFIX + acc;
         tabFrame.getActionMap().remove(accAction);
     }
 
@@ -161,7 +164,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("content".equals(key)) {
+        if (TabFrameTab.KEY_CONTENT.equals(key)) {
             Object oldVal = evt.getOldValue();
             Object newVal = evt.getNewValue();
             if (oldVal instanceof Component) {
@@ -176,21 +179,21 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
                 ((Component) newVal).addMouseListener(dragListener);
                 ((Component) newVal).addMouseMotionListener(dragListener);
             }
-        } else if ("selected".equals(key)) {
+        } else if (TabFrameTab.KEY_SELECTED.equals(key)) {
             if (tabContainer == null) return;
             tabContainer.repaint();
-        } else if ("accelerator".equals(key)) {
+        } else if (TabFrameTab.KEY_ACCELERATOR.equals(key)) {
             if (tabContainer == null) return;
             uninstallAccelerator(tabContainer.getTabFrame());
             installAccelerator(tabContainer.getTabFrame());
-        } else if ("tabFrame".equals(key)) {
+        } else if (TabFrameTab.KEY_TAB_FRAME_PARENT.equals(key)) {
             if (evt.getOldValue() instanceof JTabFrame) {
                 uninstallAccelerator((JTabFrame) evt.getOldValue());
             }
             if (evt.getNewValue() instanceof JTabFrame) {
                 installAccelerator((JTabFrame) evt.getNewValue());
             }
-        } else if ("paintingForPrint".equals(key)) {
+        } else if (PropertyKey.PAINTING_FOR_PRINT.equals(key)) {
             printing = Boolean.TRUE.equals(evt.getNewValue());
         }
     }

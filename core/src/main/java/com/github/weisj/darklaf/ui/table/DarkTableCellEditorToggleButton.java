@@ -55,7 +55,7 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         }
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = table.getBackground();
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;

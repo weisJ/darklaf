@@ -83,7 +83,7 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     }
 
     protected DarkTreeCellEditor getBooleanEditor(final JTree table) {
-        if ("radioButton".equals(table.getClientProperty("JTree.booleanRenderType"))) {
+        if (DarkTreeUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE))) {
             return radioButtonEditor;
         }
         return checkBoxEditor;

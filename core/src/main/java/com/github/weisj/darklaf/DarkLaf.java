@@ -58,6 +58,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
+    public static final String LOOK_AND_FEEL_PROPERTY = "lookAndFeel";
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
     private final BasicLookAndFeel base;
@@ -425,7 +426,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        if ("lookAndFeel".equals(evt.getPropertyName())) {
+        if (LOOK_AND_FEEL_PROPERTY.equals(evt.getPropertyName())) {
             if (UIManager.getLookAndFeel() == this) {
                 PropertyLoader.finish();
             }

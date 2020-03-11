@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.splitpane;
 
 import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -37,6 +38,12 @@ import java.beans.PropertyChangeListener;
  * @author Jannis Weis
  */
 public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeListener {
+
+    public static final String KEY_PREFIX = "JSplitPane.";
+    public static final String KEY_STYLE = KEY_PREFIX + "style";
+    public static final String STYLE_GRIP = "grip";
+    public static final String STYLE_LINE = "line";
+    public static final String STYLE_INVISIBLE = "invisible";
 
     private static final int DIVIDER_DRAG_SIZE = 10;
     private static final int DIVIDER_DRAG_OFFSET = 5;
@@ -120,7 +127,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("JSplitPane.style".equals(key)) {
+        if (KEY_STYLE.equals(key)) {
             Object val = evt.getNewValue();
             Style oldStyle = style;
             if (Style.INVISIBLE.name.equals(val)) {
@@ -137,7 +144,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
                     splitPane.doLayout();
                 }
             }
-        } else if ("orientation".equals(key)) {
+        } else if (PropertyKey.ORIENTATION.equals(key)) {
             splitPane.doLayout();
         }
     }
@@ -147,9 +154,9 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     private enum Style {
-        GRIP("grip"),
-        LINE("line"),
-        INVISIBLE("invisible");
+        GRIP(STYLE_GRIP),
+        LINE(STYLE_LINE),
+        INVISIBLE(STYLE_INVISIBLE);
 
         final private String name;
 

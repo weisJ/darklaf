@@ -23,17 +23,13 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.util.PropertyKey;
+
 import javax.swing.*;
 import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.text.Document;
-import javax.swing.text.EditorKit;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
@@ -142,8 +138,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
             String cssRule = sun.swing.SwingUtilities2.displayPropertiesToCSS(font, fg);
             styleSheet.addRule(cssRule);
             documentStyleSheet.addStyleSheet(styleSheet);
-            documentStyleSheet.addRule("BASE_SIZE " +
-                                               component.getFont().getSize());
+            documentStyleSheet.addRule("BASE_SIZE " + component.getFont().getSize());
             Style style = ((StyledDocument) document).getStyle(StyleContext.DEFAULT_STYLE);
             if (!font.equals(style.getAttribute(FONT_ATTRIBUTE_KEY))) {
                 style.addAttribute(FONT_ATTRIBUTE_KEY, font);
@@ -313,21 +308,21 @@ public class DarkEditorPaneUI extends DarkTextUI {
                 }
             }
             updateFocusTraversalKeys();
-        } else if ("editable".equals(name)) {
+        } else if (PropertyKey.EDITABLE.equals(name)) {
             updateFocusTraversalKeys();
-        } else if ("foreground".equals(name)
-                || "font".equals(name)
-                || "document".equals(name)
-                || JEditorPane.W3C_LENGTH_UNITS.equals(name)
-                || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
+        } else if (PropertyKey.FOREGROUND.equals(name)
+            || PropertyKey.FONT.equals(name)
+            || PropertyKey.DOCUMENT.equals(name)
+            || JEditorPane.W3C_LENGTH_UNITS.equals(name)
+            || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
         ) {
             JComponent c = getComponent();
             updateDisplayProperties(c.getFont(), c.getForeground());
             if (JEditorPane.W3C_LENGTH_UNITS.equals(name)
-                    || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
+                || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
                 modelChanged();
             }
-            if ("foreground".equals(name)) {
+            if (PropertyKey.FOREGROUND.equals(name)) {
                 Object honorDisplayPropertiesObject = c.getClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
                 boolean honorDisplayProperties = false;
                 if (honorDisplayPropertiesObject instanceof Boolean) {

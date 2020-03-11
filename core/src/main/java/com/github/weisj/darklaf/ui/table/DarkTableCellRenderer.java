@@ -41,9 +41,13 @@ import java.awt.*;
 public class DarkTableCellRenderer extends DefaultTableCellRenderer {
 
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
+        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(true));
+        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(true));
+
+    protected static boolean isBooleanRenderingEnabled(final JTable table) {
+        return Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
+    }
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value,
@@ -64,7 +68,7 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
                 && !table.isEditing()
                 && DarkUIUtil.hasFocus(table)) {
             component.setBorder(UIManager.getBorder("Table.focusSelectedCellHighlightBorder"));
-            component.putClientProperty("JTable.rowFocusBorder", true);
+            component.putClientProperty(DarkTableUI.KEY_SHOW_ROW_FOCUS_BORDER, true);
             JTableHeader header = table.getTableHeader();
             TableColumn draggedColumn = (header == null) ? null : header.getDraggedColumn();
             boolean forceLeft = false;
@@ -74,13 +78,13 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
                 forceLeft = column == index + 1 || column == index;
                 forceRight = column == index - 1 || column == index;
             }
-            component.putClientProperty("JTable.forcePaintRight", forceRight);
-            component.putClientProperty("JTable.forcePaintLeft", forceLeft);
+            component.putClientProperty(DarkTableUI.KEY_FORCE_RIGHT_BORDER, forceRight);
+            component.putClientProperty(DarkTableUI.KEY_FORCE_LEFT_BORDER, forceLeft);
         } else {
-            component.putClientProperty("JTable.rowFocusBorder", false);
+            component.putClientProperty(DarkTableUI.KEY_SHOW_ROW_FOCUS_BORDER, false);
         }
 
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = table.getBackground();
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
@@ -98,12 +102,8 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         return component;
     }
 
-    protected static boolean isBooleanRenderingEnabled(final JTable table) {
-        return Boolean.TRUE.equals(table.getClientProperty("JTable.renderBooleanAsCheckBox"));
-    }
-
     protected TableCellRenderer getBooleanRenderer(final JTable table) {
-        if ("radioButton".equals(table.getClientProperty("JTable.booleanRenderType"))) {
+        if (DarkTableUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE))) {
             return radioRenderer;
         }
         return checkBoxRenderer;

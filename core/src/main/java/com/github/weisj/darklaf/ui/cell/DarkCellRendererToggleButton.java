@@ -25,6 +25,8 @@ package com.github.weisj.darklaf.ui.cell;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.decorators.CellRenderer;
+import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -58,7 +60,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(focus);
 
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty("JTable.alternateRowColor"));
+        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
@@ -114,8 +116,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellEditorCheckBox(final boolean opaque) {
             setOpaque(opaque);
-            putClientProperty("JToggleButton.isTreeCellEditor", true);
-            putClientProperty("JToggleButton.isTableCellEditor", true);
+            putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, true);
+            putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, true);
         }
 
         public void setHasFocus(final boolean hasFocus) {
@@ -139,8 +141,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellEditorRadioButton(final boolean opaque) {
             setOpaque(opaque);
-            putClientProperty("JToggleButton.isTreeCellEditor", true);
-            putClientProperty("JToggleButton.isTableCellEditor", true);
+            putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, true);
+            putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, true);
         }
 
         public void setHasFocus(final boolean hasFocus) {

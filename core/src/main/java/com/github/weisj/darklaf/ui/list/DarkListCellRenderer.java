@@ -43,7 +43,7 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
             }
         }
         Component comp = null;
-        boolean isEditing = Boolean.TRUE.equals(list.getClientProperty("JList.isEditing"));
+        boolean isEditing = Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_IS_EDITING));
         if (isEditing) {
             if (list.getSelectionModel().getLeadSelectionIndex() == index) {
                 comp = super.getListCellRendererComponent(list, value, index, false, false);
@@ -52,7 +52,7 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
         if (comp == null) {
             comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }
-        boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor"));
+        boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR));
         int layout = list.getLayoutOrientation();
         if (layout == JList.VERTICAL) {
             alternativeRow = alternativeRow && index % 2 == 1;

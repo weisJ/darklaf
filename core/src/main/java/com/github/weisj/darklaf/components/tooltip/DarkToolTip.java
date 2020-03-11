@@ -39,6 +39,7 @@ import java.util.Objects;
 
 public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
+    public static final String TIP_TEXT_PROPERTY = "tiptext";
     private static final long REPAINT_THRESHOLD = 150;
     private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     private static final float MAX_ALPHA = 1.0f;
@@ -141,7 +142,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        if ("tiptext".equals(evt.getPropertyName())) {
+        if (TIP_TEXT_PROPERTY.equals(evt.getPropertyName())) {
             setPreferredSize(getUI().getPreferredSize(this));
             if (!Objects.equals(evt.getNewValue(), evt.getOldValue())) {
                 notifyToolTipListeners(ToolTipEvent.TEXT);

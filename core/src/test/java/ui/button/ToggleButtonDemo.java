@@ -24,6 +24,7 @@
 package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -52,13 +53,13 @@ public class ToggleButtonDemo implements ComponentDemo {
             addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                                                                                : ComponentOrientation.RIGHT_TO_LEFT));
         }});
-        controlPanel.add(new JCheckBox("JToggleButton.isTreeCellEditor") {{
+        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TREE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JToggleButton.isTreeCellEditor", isSelected()));
+            addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JToggleButton.isTableCellEditor") {{
+        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JToggleButton.isTableCellEditor", isSelected()));
+            addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, isSelected()));
         }});
         controlPanel.add(new JCheckBox("Rollover") {{
             setSelected(button.isRolloverEnabled());

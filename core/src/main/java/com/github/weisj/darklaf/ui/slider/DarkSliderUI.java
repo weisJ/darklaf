@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -34,11 +35,7 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.geom.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -46,6 +43,14 @@ import java.beans.PropertyChangeListener;
  * @author Jannis Weis
  */
 public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListener {
+
+    public static final String KEY_PREFIX = "JSlider.";
+    public static final String KEY_THUMB_ARROW_SHAPE = KEY_PREFIX + "paintThumbArrowShape";
+    public static final String KEY_SHOW_VOLUME_ICON = KEY_PREFIX + "volume.showIcon";
+    public static final String KEY_VARIANT = KEY_PREFIX + "variant";
+    public static final String KEY_INSTANT_SCROLL = KEY_PREFIX + "instantScrollEnabled";
+    public static final String KEY_SHOW_FOCUS_GLOW = KEY_PREFIX + "paintFocusGlow";
+    public static final String VARIANT_VOLUME = "volume";
 
     private static final int ICON_BAR_EXT = 5;
     private static final int ICON_PAD = 10;
@@ -105,43 +110,13 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return new DarkSliderUI((JSlider) c);
     }
 
-    @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        slider.putClientProperty("Slider.paintFocusGlow", UIManager.getBoolean("Slider.paintFocusGlow"));
+    private static boolean showVolumeIcon(final JComponent c) {
+        return isVolumeSlider(c)
+            && Boolean.TRUE.equals(c.getClientProperty(KEY_SHOW_VOLUME_ICON));
     }
 
-    @Override
-    protected void installDefaults(final JSlider slider) {
-        super.installDefaults(slider);
-        LookAndFeel.installProperty(slider, "opaque", false);
-        arcSize = UIManager.getInt("Slider.arc");
-        trackSize = UIManager.getInt("Slider.trackThickness");
-        plainThumbRadius = UIManager.getInt("Slider.plainThumbRadius");
-        thumbSize = UIManager.getDimension("Slider.thumbSize");
-        inactiveTickForeground = UIManager.getColor("Slider.disabledTickColor");
-        trackBackground = UIManager.getColor("Slider.trackBackground");
-        selectedTrackBackground = UIManager.getColor("Slider.selectedTrackColor");
-        selectedTrackInactiveBackground = UIManager.getColor("Slider.disabledTrackColor");
-        selectedVolumeTrackBackground = UIManager.getColor("Slider.volume.selectedTrackColor");
-        selectedVolumeTrackInactiveBackground = UIManager.getColor("Slider.volume.disabledTrackColor");
-        thumbBackground = UIManager.getColor("Slider.activeThumbFill");
-        thumbInactiveBackground = UIManager.getColor("Slider.inactiveThumbFill");
-        volumeThumbBackground = UIManager.getColor("Slider.volume.activeThumbFill");
-        volumeThumbInactiveBackground = UIManager.getColor("Slider.volume.inactiveThumbFill");
-        thumbBorderColor = UIManager.getColor("Slider.thumbBorderColor");
-        thumbInactiveBorderColor = UIManager.getColor("Slider.thumbBorderColorDisabled");
-
-        volume0 = UIManager.getIcon("Slider.volume.enabled_level_0.icon");
-        volume1 = UIManager.getIcon("Slider.volume.enabled_level_1.icon");
-        volume2 = UIManager.getIcon("Slider.volume.enabled_level_2.icon");
-        volume3 = UIManager.getIcon("Slider.volume.enabled_level_3.icon");
-        volume4 = UIManager.getIcon("Slider.volume.enabled_level_4.icon");
-        volume0Inactive = UIManager.getIcon("Slider.volume.disabled_level_0.icon");
-        volume1Inactive = UIManager.getIcon("Slider.volume.disabled_level_1.icon");
-        volume2Inactive = UIManager.getIcon("Slider.volume.disabled_level_2.icon");
-        volume3Inactive = UIManager.getIcon("Slider.volume.disabled_level_3.icon");
-        volume4Inactive = UIManager.getIcon("Slider.volume.disabled_level_4.icon");
+    private static boolean isVolumeSlider(final JComponent c) {
+        return VARIANT_VOLUME.equals(c.getClientProperty(KEY_VARIANT));
     }
 
     @Override
@@ -328,15 +303,43 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return inactiveTickForeground;
     }
 
-    protected boolean isPlainThumb() {
-        Boolean paintThumbArrowShape = (Boolean) slider.getClientProperty("Slider.paintThumbArrowShape");
-        return (!slider.getPaintTicks() && paintThumbArrowShape == null) ||
-                paintThumbArrowShape == Boolean.FALSE;
+    @Override
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+        slider.putClientProperty(KEY_SHOW_FOCUS_GLOW, UIManager.getBoolean("Slider.paintFocusGlow"));
     }
 
-    private static boolean showVolumeIcon(final JComponent c) {
-        return isVolumeSlider(c)
-                && Boolean.TRUE.equals(c.getClientProperty("Slider.volume.showIcon"));
+    @Override
+    protected void installDefaults(final JSlider slider) {
+        super.installDefaults(slider);
+        LookAndFeel.installProperty(slider, PropertyKey.OPAQUE, false);
+        arcSize = UIManager.getInt("Slider.arc");
+        trackSize = UIManager.getInt("Slider.trackThickness");
+        plainThumbRadius = UIManager.getInt("Slider.plainThumbRadius");
+        thumbSize = UIManager.getDimension("Slider.thumbSize");
+        inactiveTickForeground = UIManager.getColor("Slider.disabledTickColor");
+        trackBackground = UIManager.getColor("Slider.trackBackground");
+        selectedTrackBackground = UIManager.getColor("Slider.selectedTrackColor");
+        selectedTrackInactiveBackground = UIManager.getColor("Slider.disabledTrackColor");
+        selectedVolumeTrackBackground = UIManager.getColor("Slider.volume.selectedTrackColor");
+        selectedVolumeTrackInactiveBackground = UIManager.getColor("Slider.volume.disabledTrackColor");
+        thumbBackground = UIManager.getColor("Slider.activeThumbFill");
+        thumbInactiveBackground = UIManager.getColor("Slider.inactiveThumbFill");
+        volumeThumbBackground = UIManager.getColor("Slider.volume.activeThumbFill");
+        volumeThumbInactiveBackground = UIManager.getColor("Slider.volume.inactiveThumbFill");
+        thumbBorderColor = UIManager.getColor("Slider.thumbBorderColor");
+        thumbInactiveBorderColor = UIManager.getColor("Slider.thumbBorderColorDisabled");
+
+        volume0 = UIManager.getIcon("Slider.volume.enabled_level_0.icon");
+        volume1 = UIManager.getIcon("Slider.volume.enabled_level_1.icon");
+        volume2 = UIManager.getIcon("Slider.volume.enabled_level_2.icon");
+        volume3 = UIManager.getIcon("Slider.volume.enabled_level_3.icon");
+        volume4 = UIManager.getIcon("Slider.volume.enabled_level_4.icon");
+        volume0Inactive = UIManager.getIcon("Slider.volume.disabled_level_0.icon");
+        volume1Inactive = UIManager.getIcon("Slider.volume.disabled_level_1.icon");
+        volume2Inactive = UIManager.getIcon("Slider.volume.disabled_level_2.icon");
+        volume3Inactive = UIManager.getIcon("Slider.volume.disabled_level_3.icon");
+        volume4Inactive = UIManager.getIcon("Slider.volume.disabled_level_4.icon");
     }
 
     protected void calculateIconRect() {
@@ -468,8 +471,10 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         g.translate(-x, -y);
     }
 
-    private static boolean isVolumeSlider(final JComponent c) {
-        return "volume".equals(c.getClientProperty("Slider.variant"));
+    protected boolean isPlainThumb() {
+        Boolean paintThumbArrowShape = (Boolean) slider.getClientProperty(KEY_THUMB_ARROW_SHAPE);
+        return (!slider.getPaintTicks() && paintThumbArrowShape == null) ||
+            paintThumbArrowShape == Boolean.FALSE;
     }
 
     private void paintSliderThumb(final Graphics2D g) {
@@ -489,7 +494,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private boolean paintFocus() {
-        return slider.hasFocus() && Boolean.TRUE.equals(slider.getClientProperty("Slider.paintFocusGlow"));
+        return slider.hasFocus() && Boolean.TRUE.equals(slider.getClientProperty(KEY_SHOW_FOCUS_GLOW));
     }
 
     private Path2D getThumbShape() {
@@ -576,15 +581,15 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private boolean instantScrollEnabled(final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty("Slider.instantScrollEnabled"));
+        return Boolean.TRUE.equals(c.getClientProperty(KEY_INSTANT_SCROLL));
     }
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("Slider.variant".equals(key)) {
+        if (KEY_VARIANT.equals(key)) {
             slider.repaint();
-        } else if ("Slider.volume.showIcon".equals(key)) {
+        } else if (DarkSliderUI.KEY_SHOW_VOLUME_ICON.equals(key)) {
             calculateGeometry();
             slider.repaint();
         }

@@ -28,28 +28,20 @@ import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
 import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.MouseInputListener;
+import javax.swing.event.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -656,7 +648,7 @@ public class DarkListUIBridge extends BasicListUI {
 
         LookAndFeel.installColorsAndFont(list, "List.background", "List.foreground", "List.font");
 
-        LookAndFeel.installProperty(list, "opaque", Boolean.TRUE);
+        LookAndFeel.installProperty(list, PropertyKey.OPAQUE, Boolean.TRUE);
 
         if (list.getCellRenderer() == null) {
             @SuppressWarnings("unchecked")
@@ -2694,8 +2686,8 @@ public class DarkListUIBridge extends BasicListUI {
             } else if (Objects.equals(propertyName, "cellRenderer")) {
                 updateLayoutStateNeeded |= cellRendererChanged;
                 redrawList();
-            } else if (Objects.equals(propertyName, "font")
-                    || DarkSwingUtil.isScaleChanged(e)) {
+            } else if (Objects.equals(propertyName, PropertyKey.FONT)
+                || DarkSwingUtil.isScaleChanged(e)) {
                 updateLayoutStateNeeded |= fontChanged;
                 redrawList();
             } else if (Objects.equals(propertyName, "prototypeCellValue")) {
@@ -2711,7 +2703,7 @@ public class DarkListUIBridge extends BasicListUI {
                 list.repaint();
             } else if (Objects.equals(propertyName, "selectionBackground")) {
                 list.repaint();
-            } else if ("layoutOrientation".equals(propertyName)) {
+            } else if (PropertyKey.LAYOUT_ORIENTATION.equals(propertyName)) {
                 updateLayoutStateNeeded |= layoutOrientationChanged;
                 layoutOrientation = list.getLayoutOrientation();
                 redrawList();
@@ -2720,7 +2712,7 @@ public class DarkListUIBridge extends BasicListUI {
                     updateLayoutStateNeeded |= layoutOrientationChanged;
                     redrawList();
                 }
-            } else if ("componentOrientation".equals(propertyName)) {
+            } else if (PropertyKey.COMPONENT_ORIENTATION.equals(propertyName)) {
                 isLeftToRight = list.getComponentOrientation().isLeftToRight();
                 updateLayoutStateNeeded |= componentOrientationChanged;
                 redrawList();

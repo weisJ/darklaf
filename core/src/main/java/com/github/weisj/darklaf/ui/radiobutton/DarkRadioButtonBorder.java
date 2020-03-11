@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.radiobutton;
 
 
+import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -64,12 +65,12 @@ public class DarkRadioButtonBorder implements Border, UIResource {
 
     protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JToggleButton.isTreeCellEditor"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
     }
 
     protected static boolean isTableCellEditor(final Component c) {
         return c instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JToggleButton.isTreeCellEditor"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
     }
 
     @Override

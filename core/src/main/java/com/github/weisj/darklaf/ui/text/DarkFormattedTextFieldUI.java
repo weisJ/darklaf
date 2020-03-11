@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.util.PropertyKey;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -63,7 +65,7 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
-        if ("document".equals(evt.getPropertyName())) {
+        if (PropertyKey.DOCUMENT.equals(evt.getPropertyName())) {
             Object oldDoc = evt.getOldValue();
             Object newDoc = evt.getNewValue();
             if (oldDoc instanceof Document) {

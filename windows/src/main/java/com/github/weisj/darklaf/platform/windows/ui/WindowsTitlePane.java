@@ -29,6 +29,7 @@ import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.platform.PointerUtil;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
+import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.Scale;
 import sun.awt.SunToolkit;
 
@@ -46,6 +47,9 @@ import java.util.List;
  * @author Jannis Weis
  */
 public class WindowsTitlePane extends CustomTitlePane {
+    public static final String KEY_RESIZABLE = "resizable";
+    public static final String KEY_STATE = "state";
+    public static final String KEY_ICON_IMAGE = "iconImage";
     private static final int PAD = 5;
     private static final int BAR_HEIGHT = 28;
     private static final int BUTTON_WIDTH = 46;
@@ -771,26 +775,26 @@ public class WindowsTitlePane extends CustomTitlePane {
     protected class PropertyChangeHandler implements PropertyChangeListener {
         public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
-            if ("resizable".equals(name) || "state".equals(name)) {
+            if (KEY_RESIZABLE.equals(name) || KEY_STATE.equals(name)) {
                 Frame frame = getFrame();
                 if (frame != null) {
                     setState(frame.getExtendedState(), true);
                 }
-                if ("resizable".equals(name)) {
+                if (KEY_RESIZABLE.equals(name)) {
                     JNIDecorationsWindows.setResizable(windowHandle, Boolean.TRUE.equals(pce.getNewValue()));
                     getRootPane().repaint();
                 }
-            } else if ("title".equals(name)) {
+            } else if (PropertyKey.TITLE.equals(name)) {
                 titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
                 repaint();
-            } else if ("componentOrientation".equals(name)) {
+            } else if (PropertyKey.COMPONENT_ORIENTATION.equals(name)) {
                 revalidate();
                 repaint();
-            } else if ("iconImage".equals(name)) {
+            } else if (KEY_ICON_IMAGE.equals(name)) {
                 updateSystemIcon();
                 revalidate();
                 repaint();
-            } else if ("background".equals(name) && pce.getNewValue() instanceof Color) {
+            } else if (PropertyKey.BACKGROUND.equals(name) && pce.getNewValue() instanceof Color) {
                 Color color = (Color) pce.getNewValue();
                 if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());

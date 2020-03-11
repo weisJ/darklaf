@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -47,16 +48,32 @@ import java.util.function.Supplier;
  */
 public class DarkTableUI extends DarkTableUIBridge {
 
-    private static final int ROW_HEIGHT = 22;
+    public static final String KEY_PREFIX = "JTable.";
+    public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
+    public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
+    public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
+    public static final String KEY_SHOW_ROW_FOCUS_BORDER = KEY_PREFIX + "rowFocusBorder";
+    public static final String KEY_FORCE_LEFT_BORDER = KEY_PREFIX + "forcePaintLeft";
+    public static final String KEY_FORCE_RIGHT_BORDER = KEY_PREFIX + "forcePaintRight";
+    public static final String KEY_FILE_CHOOSER_PARENT = KEY_PREFIX + "fileChooserParent";
+    public static final String KEY_FILENAME_COLUMN_INDEX = KEY_PREFIX + "fileNameColumnIndex";
+    public static final String KEY_HORIZONTAL_LINES = "showHorizontalLines";
+    public static final String KEY_VERTICAL_LINES = "showVerticalLines";
+    public static final String KEY_IS_FILE_LIST = "Table.isFileList";
+    public static final String KEY_IS_PRINT_MODE = "Table.printMode";
+    public static final String RENDER_TYPE_CHECKBOX = "checkBox";
+    public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
+
+    private static final int ROW_HEIGHT_FALLBACK = 22;
     private final PropertyChangeListener propertyChangeListener = e -> {
         String key = e.getPropertyName();
-        if ("showHorizontalLines".equals(key)) {
+        if (KEY_HORIZONTAL_LINES.equals(key)) {
             boolean b = Boolean.TRUE.equals(e.getNewValue());
             table.setRowMargin(b ? 1 : 0);
-        } else if ("showVerticalLines".equals(key)) {
+        } else if (KEY_VERTICAL_LINES.equals(key)) {
             boolean b = Boolean.TRUE.equals(e.getNewValue());
             table.getColumnModel().setColumnMargin(b ? 1 : 0);
-        } else if ("ancestor".equals(key)) {
+        } else if (PropertyKey.ANCESTOR.equals(key)) {
             Object oldVal = e.getOldValue();
             Object newVal = e.getNewValue();
             if (oldVal instanceof Component) {
@@ -72,7 +89,7 @@ public class DarkTableUI extends DarkTableUIBridge {
                     LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                 }
             }
-        } else if ("componentOrientation".equals(key)) {
+        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             table.doLayout();
             table.repaint();
         }
@@ -181,13 +198,13 @@ public class DarkTableUI extends DarkTableUIBridge {
         super.installDefaults();
         int rowHeight = UIManager.getInt("Table.rowHeight");
         if (rowHeight > 0) {
-            table.setRowHeight(ROW_HEIGHT);
+            table.setRowHeight(ROW_HEIGHT_FALLBACK);
         }
         table.setDefaultEditor(Object.class, new DarkTableCellEditor());
-        table.putClientProperty("JTable.renderBooleanAsCheckBox",
+        table.putClientProperty(KEY_RENDER_BOOLEAN_AS_CHECKBOX,
                                 UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
-        table.putClientProperty("JTable.booleanRenderType", UIManager.getString("Table.booleanRenderType"));
-        table.putClientProperty("JTable.alternateRowColor", UIManager.getBoolean("Table.alternateRowColor"));
+        table.putClientProperty(KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
+        table.putClientProperty(KEY_ALTERNATE_ROW_COLOR, UIManager.getBoolean("Table.alternateRowColor"));
         setupRendererComponents(table);
         borderColor = UIManager.getColor("TableHeader.borderColor");
         selectionFocusBackground = UIManager.getColor("Table.focusSelectionBackground");
@@ -430,16 +447,16 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
 
         protected JFileChooser getFileChooser() {
-            Object obj = table.getClientProperty("JTable.fileChooserParent");
-            if (obj instanceof Supplier) {
-                Object supplied = ((Supplier) obj).get();
+            Object obj = table.getClientProperty(DarkTableUI.KEY_FILE_CHOOSER_PARENT);
+            if (obj instanceof Supplier<?>) {
+                Object supplied = ((Supplier<?>) obj).get();
                 return supplied instanceof JFileChooser ? (JFileChooser) supplied : null;
             }
             return null;
         }
 
         protected Integer getFileNameColumnIndex() {
-            Object obj = table.getClientProperty("JTable.fileNameColumnIndex");
+            Object obj = table.getClientProperty(DarkTableUI.KEY_FILENAME_COLUMN_INDEX);
             return obj instanceof Integer ? (Integer) obj : 0;
         }
 

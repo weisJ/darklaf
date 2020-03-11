@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.awt.shell.ShellFolder;
 import sun.swing.FilePane;
 import sun.swing.SwingUtilities2;
@@ -40,11 +41,7 @@ import javax.swing.plaf.basic.BasicDirectoryModel;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 import javax.swing.plaf.metal.MetalFileChooserUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -285,7 +282,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         filePane.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent e) {
-                if ("viewType".equals(e.getPropertyName())) {
+                if (DarkFileChooserUI.KEY_VIEW_TYPE.equals(e.getPropertyName())) {
                     int viewType = filePane.getViewType();
                     switch (viewType) {
                         case FilePane.VIEWTYPE_LIST:
@@ -470,7 +467,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
                     doApproveButtonMnemonicChanged(e);
                 } else if (s.equals(JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY)) {
                     doControlButtonsChanged(e);
-                } else if (s.equals("componentOrientation")) {
+                } else if (s.equals(PropertyKey.COMPONENT_ORIENTATION)) {
                     ComponentOrientation o = (ComponentOrientation) e.getNewValue();
                     JFileChooser cc = (JFileChooser) e.getSource();
                     if (o != e.getOldValue()) {
@@ -478,7 +475,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
                     }
                 } else if (Objects.equals(s, "FileChooser.useShellFolder")) {
                     doDirectoryChanged(e);
-                } else if (s.equals("ancestor")) {
+                } else if (PropertyKey.ANCESTOR.equals(s)) {
                     if (e.getOldValue() == null && e.getNewValue() != null) {
                         // Ancestor was added, set initial focus
                         fileNameTextField.selectAll();

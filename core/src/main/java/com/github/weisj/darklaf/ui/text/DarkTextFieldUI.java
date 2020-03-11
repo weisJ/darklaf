@@ -45,13 +45,18 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener {
 
+    public static final String KEY_PREFIX = "JTextField.";
+    public static final String KEY_VARIANT = KEY_PREFIX + "variant";
+    public static final String KEY_KEEP_SELECTION_ON_FOCUS_LOST = KEY_PREFIX + "keepSelectionOnFocusLost";
+    public static final String KEY_FIND_POPUP = KEY_PREFIX + "Search.FindPopup";
+    public static final String VARIANT_SEARCH = "search";
     protected static Icon clear;
     protected static Icon clearHover;
     protected static Icon search;
     protected static Icon searchWithHistory;
     private final FocusListener focusListener = new FocusAdapter() {
         public void focusLost(final FocusEvent e) {
-            if (!Boolean.TRUE.equals(getComponent().getClientProperty("JTextField.keepSelectionOnFocusLost"))) {
+            if (!Boolean.TRUE.equals(getComponent().getClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST))) {
                 getComponent().select(0, 0);
             }
         }
@@ -149,7 +154,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
 
     private static JPopupMenu getSearchPopup(final JComponent c) {
-        Object value = c.getClientProperty("JTextField.Search.FindPopup");
+        Object value = c.getClientProperty(KEY_FIND_POPUP);
         return value instanceof JPopupMenu ? (JPopupMenu) value : null;
     }
 
@@ -170,7 +175,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
 
     public static boolean isSearchField(final Component c) {
-        return c instanceof JTextField && "search".equals(((JTextField) c).getClientProperty("JTextField.variant"));
+        return c instanceof JTextField && VARIANT_SEARCH.equals(((JTextField) c).getClientProperty(KEY_VARIANT));
     }
 
     protected void paintBackground(final Graphics graphics) {
@@ -252,7 +257,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         String key = evt.getPropertyName();
-        if ("JTextField.Search.FindPopup".equals(key)) {
+        if (KEY_FIND_POPUP.equals(key)) {
             Object oldVal = evt.getOldValue();
             Object newVal = evt.getNewValue();
             if (oldVal instanceof JPopupMenu) {
@@ -261,7 +266,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             if (newVal instanceof JPopupMenu) {
                 ((JPopupMenu) newVal).addPopupMenuListener(searchPopupListener);
             }
-        } else if ("JTextField.variant".equals(key)) {
+        } else if (KEY_VARIANT.equals(key)) {
             editor.doLayout();
             Component parent = editor.getParent();
             if (parent instanceof JComponent) {

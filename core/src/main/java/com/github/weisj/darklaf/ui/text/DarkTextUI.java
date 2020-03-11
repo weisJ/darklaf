@@ -49,6 +49,13 @@ import java.util.Set;
  */
 public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener {
 
+    public static final String KEY_PREFIX = "JTextComponent.";
+    public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
+    public static final String KEY_HAS_ERROR = KEY_PREFIX + "hasError";
+    public static final String KEY_IS_CELL_EDITOR = KEY_PREFIX + "cellEditor";
+    public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
+    public static final String KEY_IS_LIST_RENDER = KEY_PREFIX + "listCellEditor";
+
     protected JTextComponent editor;
     private FocusListener focusListener = new FocusListener() {
         @Override
@@ -75,7 +82,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        editor.putClientProperty("JTextComponent.roundedSelection",
+        editor.putClientProperty(KEY_ROUNDED_SELECTION,
                                  UIManager.getBoolean("TextComponent.roundedSelection"));
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
@@ -84,15 +91,15 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void uninstallDefaults() {
         super.uninstallDefaults();
-        editor.putClientProperty("JTextComponent.roundedSelection", null);
+        editor.putClientProperty(KEY_ROUNDED_SELECTION, null);
     }
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("JTextComponent.roundedSelection".equals(key)) {
+        if (KEY_ROUNDED_SELECTION.equals(key)) {
             editor.repaint();
-        } else if ("JTextComponent.hasError".equals(key)) {
+        } else if (KEY_HAS_ERROR.equals(key)) {
             editor.repaint();
         }
     }

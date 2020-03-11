@@ -51,7 +51,7 @@ public final class DarkUIUtil {
     public final static AlphaComposite GLOW_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
     public final static AlphaComposite DROP_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     public final static AlphaComposite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
-    public static final boolean USE_QUARTZ = "true".equals(System.getProperty("apple.awt.graphics.UseQuartz"));
+    public static final boolean USE_QUARTZ = PropertyValue.TRUE.equals(System.getProperty("apple.awt.graphics.UseQuartz"));
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
 
@@ -196,8 +196,8 @@ public final class DarkUIUtil {
     }
 
     public static void doNotCancelPopupSetup(final JComponent component) {
-        component.putClientProperty("doNotCancelPopup", DarkPopupMenuUI.HIDE_POPUP_KEY);
-        component.putClientProperty("doNotCancelOnScroll", Boolean.TRUE);
+        component.putClientProperty(DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP, DarkPopupMenuUI.HIDE_POPUP_VALUE);
+        component.putClientProperty(DarkPopupMenuUI.KEY_DO_NOT_CANCEL_ON_SCROLL, Boolean.TRUE);
     }
 
     public static boolean isInCell(final Component c) {

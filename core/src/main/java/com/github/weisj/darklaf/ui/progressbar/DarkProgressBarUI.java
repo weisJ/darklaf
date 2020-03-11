@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.progressbar;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -43,11 +44,14 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyChangeListener {
 
+    public static final String KEY_PREFIX = "JProgressBar.";
+    public static final String KEY_FAILED = KEY_PREFIX + "failed";
+    public static final String KEY_PASSED = KEY_PREFIX + "passed";
+
     private static final int CYCLE_TIME_DEFAULT = 800;
     private static final int REPAINT_INTERVAL_DEFAULT = 50;
     private static final int CYCLE_TIME_SIMPLIFIED = 1000;
     private static final int REPAINT_INTERVAL_SIMPLIFIED = 500;
-    private static final int DEFAULT_WIDTH = 4;
     private Color trackColor;
     private Color progressColor;
     private Color indeterminateStartColor;
@@ -56,26 +60,15 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     private Color failedEndColor;
     private Color passedColor;
     private Color passedEndColor;
+    private int stripeWidth;
 
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkProgressBarUI();
     }
 
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        UIManager.put("ProgressBar.repaintInterval", isSimplified() ? REPAINT_INTERVAL_SIMPLIFIED : REPAINT_INTERVAL_DEFAULT);
-        UIManager.put("ProgressBar.cycleTime", isSimplified() ? CYCLE_TIME_SIMPLIFIED : CYCLE_TIME_DEFAULT);
-        trackColor = UIManager.getColor("ProgressBar.trackColor");
-        progressColor = UIManager.getColor("ProgressBar.progressColor");
-        indeterminateStartColor = UIManager.getColor("ProgressBar.indeterminateStartColor");
-        indeterminateEndColor = UIManager.getColor("ProgressBar.indeterminateEndColor");
-
-        failedColor = UIManager.getColor("ProgressBar.failedColor");
-        failedEndColor = UIManager.getColor("ProgressBar.failedEndColor");
-        passedColor = UIManager.getColor("ProgressBar.passedColor");
-        passedEndColor = UIManager.getColor("ProgressBar.passedEndColor");
+    protected static boolean hasFailed(final JComponent c) {
+        return Boolean.TRUE.equals(c.getClientProperty(KEY_FAILED));
     }
 
     @Override
@@ -180,12 +173,24 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         }
     }
 
-    protected static boolean hasFailed(final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.failed"));
+    protected static boolean hasPassed(final JComponent c) {
+        return Boolean.TRUE.equals(c.getClientProperty(KEY_PASSED));
     }
 
-    protected static boolean hasPassed(final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty("JProgressBar.passed"));
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        UIManager.put("ProgressBar.repaintInterval", isSimplified() ? REPAINT_INTERVAL_SIMPLIFIED : REPAINT_INTERVAL_DEFAULT);
+        UIManager.put("ProgressBar.cycleTime", isSimplified() ? CYCLE_TIME_SIMPLIFIED : CYCLE_TIME_DEFAULT);
+        trackColor = UIManager.getColor("ProgressBar.trackColor");
+        progressColor = UIManager.getColor("ProgressBar.progressColor");
+        indeterminateStartColor = UIManager.getColor("ProgressBar.indeterminateStartColor");
+        indeterminateEndColor = UIManager.getColor("ProgressBar.indeterminateEndColor");
+        stripeWidth = UIManager.getInt("ProgressBar.stripeWidth");
+        failedColor = UIManager.getColor("ProgressBar.failedColor");
+        failedEndColor = UIManager.getColor("ProgressBar.failedEndColor");
+        passedColor = UIManager.getColor("ProgressBar.passedColor");
+        passedEndColor = UIManager.getColor("ProgressBar.passedEndColor");
     }
 
     protected Color getStartColor() {
@@ -321,16 +326,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     }
 
     private int getStripeWidth() {
-        Object ho = progressBar.getClientProperty("ProgressBar.stripeWidth");
-        if (ho != null) {
-            try {
-                return Integer.parseInt(ho.toString());
-            } catch (NumberFormatException nfe) {
-                return DEFAULT_WIDTH;
-            }
-        } else {
-            return DEFAULT_WIDTH;
-        }
+        return stripeWidth;
     }
 
 
@@ -341,11 +337,11 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("JProgressBar.failed".equals(key)) {
+        if (KEY_FAILED.equals(key)) {
             progressBar.repaint();
-        } else if ("JProgressBar.passed".equals(key)) {
+        } else if (KEY_PASSED.equals(key)) {
             progressBar.repaint();
-        } else if ("componentOrientation".equals(key)) {
+        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             progressBar.repaint();
         }
     }

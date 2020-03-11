@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.components.JXPopupMenu;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -135,7 +136,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        if ("orientation".equals(evt.getPropertyName())) {
+        if (TabFrameTab.KEY_ORIENTATION.equals(evt.getPropertyName())) {
             Object a = evt.getNewValue();
             if (a instanceof Alignment) {
                 if (disabled >= 0) {
@@ -144,7 +145,7 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
                 disabled = ((Alignment) a).ordinal();
                 actions[disabled].setEnabled(false);
             }
-        } else if ("componentPopupMenu".equals(evt.getPropertyName())) {
+        } else if (PropertyKey.COMPONENT_POPUP_MENU.equals(evt.getPropertyName())) {
             if (evt.getNewValue() != this) {
                 tab.getComponent().removePropertyChangeListener(this);
             }

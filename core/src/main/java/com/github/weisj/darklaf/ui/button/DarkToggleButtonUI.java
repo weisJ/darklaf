@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.button;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -39,22 +40,30 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkToggleButtonUI extends DarkButtonUI {
 
+    public static final String KEY_PREFIX = "JToggleButton.";
+    public static final String KEY_VARIANT = KEY_PREFIX + "variant";
+    public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
+    public static final String KEY_IS_TREE_RENDER = KEY_PREFIX + "isTreeCellRenderer";
+    public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
+    public static final String KEY_IS_TABLE_RENDERER = KEY_PREFIX + "isTableCellRenderer";
+    public static final String KEY_CLEAR_HIT_AREA = KEY_PREFIX + "clearHitArea";
+    public static final String VARIANT_SLIDER = "slider";
     private static final Rectangle rect = new Rectangle();
 
     private final PropertyChangeListener propertyChangeListener = evt -> {
         String key = evt.getPropertyName();
-        if ("JToggleButton.variant".equals(key)) {
+        if (KEY_VARIANT.equals(key)) {
             Object oldVal = evt.getOldValue();
             Object newVal = evt.getNewValue();
             if (oldVal != null && oldVal.equals(newVal)) {
                 return;
             }
-            if ("slider".equals(newVal)) {
+            if (VARIANT_SLIDER.equals(newVal)) {
                 button.setBorderPainted(false);
             } else {
                 button.setBorderPainted(true);
             }
-        } else if ("componentOrientation".equals(key)) {
+        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             button.repaint();
         }
     };
@@ -159,7 +168,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
 
     private static boolean isSlider(final JComponent c) {
         return c instanceof JToggleButton
-                && "slider".equals(c.getClientProperty("JToggleButton.variant"));
+            && VARIANT_SLIDER.equals(c.getClientProperty(KEY_VARIANT));
     }
 
     private void paintSlider(final Graphics2D g, final AbstractButton c) {

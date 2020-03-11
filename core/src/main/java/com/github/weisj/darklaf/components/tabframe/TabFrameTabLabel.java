@@ -99,7 +99,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
         if (this.orientation == a) return;
         Alignment oldOrientation = this.orientation;
         this.orientation = a;
-        firePropertyChange("orientation", oldOrientation, orientation);
+        firePropertyChange(KEY_ORIENTATION, oldOrientation, orientation);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
         if (selected == this.selected) return;
         boolean oldSelected = this.selected;
         this.selected = selected;
-        firePropertyChange("selected", oldSelected, selected);
+        firePropertyChange(KEY_SELECTED, oldSelected, selected);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
         if (this.accelerator == accelerator) return;
         int oldAccelerator = this.accelerator;
         this.accelerator = accelerator;
-        firePropertyChange("accelerator", oldAccelerator, accelerator);
+        firePropertyChange(KEY_ACCELERATOR, oldAccelerator, accelerator);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
     public void setTabFrame(final JTabFrame parent) {
         JTabFrame old = this.parent;
         this.parent = parent;
-        firePropertyChange("tabFrame", old, parent);
+        firePropertyChange(KEY_TAB_FRAME_PARENT, old, parent);
     }
 
     /**
@@ -159,6 +159,6 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
         if (Objects.equals(title, this.title)) return;
         String oldTitle = this.title;
         this.title = title;
-        firePropertyChange("title", oldTitle, selected);
+        firePropertyChange(KEY_TITLE, oldTitle, selected);
     }
 }

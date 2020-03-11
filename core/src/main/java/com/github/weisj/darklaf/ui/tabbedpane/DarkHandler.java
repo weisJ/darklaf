@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
+import com.github.weisj.darklaf.util.PropertyKey;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.UIResource;
@@ -48,32 +50,32 @@ public class DarkHandler extends TabbedPaneHandler {
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String key = e.getPropertyName();
-        if ("TabbedPane.maxPopupHeight".equals(key)) {
+        if (DarkTabbedPaneUI.KEY_MAX_POPUP_HEIGHT.equals(key)) {
             Integer newVal = (Integer) e.getNewValue();
             if (newVal != null && newVal >= 0) {
                 ui.scrollableTabSupport.scrollPopupMenu.setMaxHeight(newVal);
             }
-        } else if ("JTabbedPane.tabAreaInsets".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_TAB_AREA_INSETS.equals(key)) {
             Object ins = e.getNewValue();
             if (ins instanceof Insets) {
                 ui.tabAreaInsets = (Insets) ins;
             } else if (ins == null) {
                 ui.tabAreaInsets = new Insets(0, 0, 0, 0);
             }
-        } else if ("JTabbedPane.contentBorderInsets".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_CONTENT_BORDER_INSETS.equals(key)) {
             Object ins = e.getNewValue();
             if (ins instanceof Insets) {
                 ui.contentBorderInsets = (Insets) ins;
             } else if (ins == null) {
                 ui.contentBorderInsets = new Insets(0, 0, 0, 0);
             }
-        } else if ("tabPlacement".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_TAB_PLACEMENT.equals(key)) {
             if (ui.scrollableTabLayoutEnabled()) {
                 ui.currentShiftX = 0;
                 ui.currentShiftY = 0;
                 ui.scrollLayout.calculateTabRects(ui.tabPane.getTabPlacement(), ui.tabPane.getTabCount());
             }
-        } else if ("JTabbedPane.showNewTabButton".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON.equals(key)) {
             Object val = e.getNewValue();
             if (val instanceof Boolean && ui.scrollableTabLayoutEnabled()) {
                 boolean show = (Boolean) val;
@@ -84,7 +86,7 @@ public class DarkHandler extends TabbedPaneHandler {
             }
             ui.tabPane.doLayout();
             ui.tabPane.repaint();
-        } else if ("JTabbedPane.leadingComponent".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_LEADING_COMP.equals(key)) {
             ui.tabPane.remove(ui.leadingComp);
             Object val = e.getNewValue();
             if (val instanceof Component) {
@@ -94,7 +96,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.leadingComp = null;
             }
             ui.tabPane.doLayout();
-        } else if ("JTabbedPane.trailingComponent".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_TRAILING_COMP.equals(key)) {
             ui.tabPane.remove(ui.trailingComp);
             Object val = e.getNewValue();
             if (val instanceof Component) {
@@ -104,13 +106,13 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.trailingComp = null;
             }
             ui.tabPane.doLayout();
-        } else if ("JTabbedPane.dndEnabled".equals(key)) {
-            ui.dndEnabled = Boolean.TRUE.equals(ui.tabPane.getClientProperty("JTabbedPane.dndEnabled"));
+        } else if (DarkTabbedPaneUI.KEY_DND.equals(key)) {
+            ui.dndEnabled = Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_DND));
             ui.tabPane.getDropTarget().setActive(ui.dndEnabled);
-        } else if ("componentOrientation".equals(key)) {
+        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             ui.tabPane.doLayout();
             ui.tabPane.repaint();
-        } else if ("JTabbedPane.northComponent".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_NORTH_COMP.equals(key)) {
             ui.tabPane.remove(ui.northComp);
             Object val = e.getNewValue();
             if (val instanceof Component) {
@@ -120,7 +122,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.northComp = null;
             }
             ui.tabPane.doLayout();
-        } else if ("JTabbedPane.southComponent".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_SOUTH_COMP.equals(key)) {
             ui.tabPane.remove(ui.southComp);
             Object val = e.getNewValue();
             if (val instanceof Component) {
@@ -130,7 +132,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.southComp = null;
             }
             ui.tabPane.doLayout();
-        } else if ("JTabbedPane.eastComponent".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_EAST_COMP.equals(key)) {
             ui.tabPane.remove(ui.eastComp);
             Object val = e.getNewValue();
             if (val instanceof Component) {
@@ -140,7 +142,7 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.eastComp = null;
             }
             ui.tabPane.doLayout();
-        } else if ("JTabbedPane.westComponent".equals(key)) {
+        } else if (DarkTabbedPaneUI.KEY_WEST_COMP.equals(key)) {
             ui.tabPane.remove(ui.westComp);
             Object val = e.getNewValue();
             if (val instanceof Component) {

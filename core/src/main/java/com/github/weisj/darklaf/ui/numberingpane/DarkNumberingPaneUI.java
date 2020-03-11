@@ -30,17 +30,13 @@ import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Position;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -86,7 +82,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                                          "NumberingPane.font");
         foregroundHighlight = UIManager.getColor("NumberingPane.currentLineForeground");
         backgroundHighlight = UIManager.getColor("NumberingPane.currentLineBackground");
-        LookAndFeel.installProperty(c, "opaque", true);
+        LookAndFeel.installProperty(c, PropertyKey.OPAQUE, true);
         LookAndFeel.installBorder(c, "NumberingPane.border");
     }
 
@@ -322,7 +318,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
             String key = evt.getPropertyName();
-            if ("caret".equals(key)) {
+            if (PropertyKey.CARET.equals(key)) {
                 if (evt.getNewValue() instanceof Caret) {
                     Object oldCaret = evt.getOldValue();
                     if (oldCaret instanceof Caret) {
@@ -335,10 +331,10 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         ((Caret) newCaret).addChangeListener(currentLinePainter);
                     }
                 }
-            } else if ("font".equals(key)) {
+            } else if (PropertyKey.FONT.equals(key)) {
                 Font font = textComponent.getFont();
                 numberingPane.setFont(font.deriveFont(Math.max(font.getSize() - 1, 1.0f)));
-            } else if ("editorPane".equals(key)) {
+            } else if (NumberingPane.KEY_EDITOR.equals(key)) {
                 Object newPane = evt.getNewValue();
                 if (textComponent != null) {
                     currentLinePainter.setComponent(null);
@@ -354,7 +350,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         currentHighlight = textComponent.getHighlighter().addHighlight(0, 0, currentLinePainter);
                         textComponent.getCaret().addChangeListener(currentLinePainter);
                         currentLinePainter.setComponent(textComponent);
-                    } catch (BadLocationException ignored) {}
+                    } catch (BadLocationException ignored) {
+                    }
                     textComponent.addPropertyChangeListener(getPropertyChangeListener());
                     textComponent.getCaret().addChangeListener(getChangeListener());
                     Font font = textComponent.getFont();
@@ -362,7 +359,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                     oldBackground = textComponent.getBackground();
                     textComponent.setBackground(UIManager.getColor("NumberingPane.textBackground"));
                 }
-            } else if ("icons".equals(key)) {
+            } else if (NumberingPane.KEY_ICONS.equals(key)) {
                 Object oldVal = evt.getOldValue();
                 Object newVal = evt.getNewValue();
                 if (oldVal instanceof Icon) {
@@ -371,7 +368,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 if (newVal instanceof Icon) {
                     maxIconWidth = Math.max(maxIconWidth, ((Icon) newVal).getIconWidth());
                 }
-            } else if ("ancestor".equals(key)) {
+            } else if (PropertyKey.ANCESTOR.equals(key)) {
                 if (evt.getSource() == numberingPane) {
                     JScrollPane parent = DarkUIUtil.getParentOfType(JScrollPane.class, (Component) evt.getNewValue());
                     if (parent != null) {
@@ -380,7 +377,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         viewport = null;
                     }
                 }
-            } else if ("minimumIconWidth".equals(key)) {
+            } else if (NumberingPane.KEY_MIN_ICON_WIDTH.equals(key)) {
                 maxIconWidth = calculateMaxIconWidth();
             }
         }

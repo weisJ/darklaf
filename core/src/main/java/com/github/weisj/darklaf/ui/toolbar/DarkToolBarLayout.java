@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.toolbar;
 
+import com.github.weisj.darklaf.util.PropertyKey;
+
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -99,7 +101,7 @@ public class DarkToolBarLayout implements LayoutManager2, Serializable, Property
 
     public void propertyChange(final PropertyChangeEvent e) {
         String name = e.getPropertyName();
-        if (name.equals("orientation")) {
+        if (name.equals(PropertyKey.ORIENTATION)) {
             int o = (Integer) e.getNewValue();
             if (o == JToolBar.VERTICAL) {
                 lm = new BoxLayout(toolBar, BoxLayout.PAGE_AXIS);

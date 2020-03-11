@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.ui.table.TextFieldTableCellEditorBorder;
+import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
@@ -40,7 +40,7 @@ import java.awt.*;
  */
 public class DarkTextBorder implements Border, UIResource {
 
-    private static final Border editorBorder = new TextFieldTableCellEditorBorder();
+    private static final Border editorBorder = new TextTableCellEditorBorder();
     protected Color errorBorderColor;
     protected Color focusErrorBorderColor;
     protected Color focusBorderColor;
@@ -73,13 +73,13 @@ public class DarkTextBorder implements Border, UIResource {
 
     protected static boolean hasError(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextComponent.hasError"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_HAS_ERROR));
     }
 
 
     protected static boolean isCellEditor(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JTextField.cellEditor"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_IS_CELL_EDITOR));
     }
 
     protected int getArcSize(final Component c) {

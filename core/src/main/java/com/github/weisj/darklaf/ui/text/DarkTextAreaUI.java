@@ -24,23 +24,12 @@
 package com.github.weisj.darklaf.ui.text;
 
 import com.github.weisj.darklaf.ui.html.DarkHTML;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.BoxView;
-import javax.swing.text.CompositeView;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.GlyphView;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.ParagraphView;
-import javax.swing.text.PlainView;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.View;
-import javax.swing.text.ViewFactory;
-import javax.swing.text.WrappedPlainView;
+import javax.swing.text.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 
@@ -68,11 +57,11 @@ public class DarkTextAreaUI extends DarkTextUI {
     public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         if (evt.getPropertyName().equals("lineWrap") ||
-                evt.getPropertyName().equals("wrapStyleWord") ||
-                evt.getPropertyName().equals("tabSize")) {
+            evt.getPropertyName().equals("wrapStyleWord") ||
+            evt.getPropertyName().equals("tabSize")) {
             // rebuild the view
             modelChanged();
-        } else if ("editable".equals(evt.getPropertyName())) {
+        } else if (PropertyKey.EDITABLE.equals(evt.getPropertyName())) {
             updateFocusTraversalKeys();
         }
     }

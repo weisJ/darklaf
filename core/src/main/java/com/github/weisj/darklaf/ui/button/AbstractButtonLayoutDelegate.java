@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import com.github.weisj.darklaf.util.PropertyKey;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,7 +34,7 @@ public class AbstractButtonLayoutDelegate extends AbstractButton {
 
     public void setDelegate(final AbstractButton delegate) {
         this.delegate = delegate;
-        if (delegate != null) putClientProperty("html", delegate.getClientProperty("html"));
+        if (delegate != null) putClientProperty(PropertyKey.HTML, delegate.getClientProperty(PropertyKey.HTML));
     }
 
     @Override

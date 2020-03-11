@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.util.DarkSwingUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -32,13 +33,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
@@ -78,11 +73,11 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
                 ui.tabScroller.createButtons(ui);
             }
             ui.calculatedBaseline = false;
-        } else if (Objects.equals(name, "opaque") && isScrollLayout) {
+        } else if (Objects.equals(name, PropertyKey.OPAQUE) && isScrollLayout) {
             boolean newVal = (Boolean) e.getNewValue();
             ui.tabScroller.tabPanel.setOpaque(newVal);
             ui.tabScroller.viewport.setOpaque(newVal);
-        } else if (Objects.equals(name, "background") && isScrollLayout) {
+        } else if (Objects.equals(name, PropertyKey.BACKGROUND) && isScrollLayout) {
             Color newVal = (Color) e.getNewValue();
             ui.tabScroller.tabPanel.setBackground(newVal);
             ui.tabScroller.viewport.setBackground(newVal);
@@ -91,7 +86,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
                 ui.tabContainer.removeUnusedTabComponents();
             }
             Component c = ui.tabPane.getTabComponentAt(
-                    (Integer) e.getNewValue());
+                (Integer) e.getNewValue());
             if (c != null) {
                 if (ui.tabContainer == null) {
                     ui.installTabContainer();
@@ -105,7 +100,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         } else if (Objects.equals(name, "indexForNullComponent")) {
             ui.isRunsDirty = true;
             updateHtmlViews((Integer) e.getNewValue(), true);
-        } else if (Objects.equals(name, "font") || DarkSwingUtil.isScaleChanged(e)) {
+        } else if (Objects.equals(name, PropertyKey.FONT) || DarkSwingUtil.isScaleChanged(e)) {
             ui.calculatedBaseline = false;
         }
     }
@@ -270,8 +265,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         // currently no IndexPropertyChangeEvent.  Once
         // IndexPropertyChangeEvents have been added this code should be
         // modified to use it.
-        Integer indexObj =
-                (Integer) tp.getClientProperty("__index_to_remove__");
+        Integer indexObj = (Integer) tp.getClientProperty("__index_to_remove__");
         if (indexObj != null) {
             int index = indexObj;
             if (ui.htmlViews != null && ui.htmlViews.size() > index) {

@@ -24,9 +24,11 @@
 package com.github.weisj.darklaf.ui.checkbox;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -95,7 +97,7 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     @Override
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        LookAndFeel.installProperty(b, "opaque", false);
+        LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
         checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
         checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
         checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");
@@ -333,13 +335,14 @@ public class DarkCheckBoxUI extends MetalCheckBoxUI implements PropertyChangeLis
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if ("componentOrientation".equals(key)) {
+        if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             checkBox.repaint();
             hitArea.setRoundRect(0, 0, 0, 0, 0, 0);
-        } else if ("JToggleButton.isTreeCellEditor".equals(key) || "JToggleButton.isTableCellEditor".equals(key)) {
+        } else if (DarkToggleButtonUI.KEY_IS_TREE_EDITOR.equals(key)
+            || DarkToggleButtonUI.KEY_IS_TABLE_EDITOR.equals(key)) {
             checkBox.repaint();
             hitArea.setRoundRect(0, 0, 0, 0, 0, 0);
-        } else if ("JToggleButton.clearHitArea".equals(key)) {
+        } else if (DarkToggleButtonUI.KEY_CLEAR_HIT_AREA.equals(key)) {
             hitArea.setRoundRect(0, 0, 0, 0, 0, 0);
         }
     }

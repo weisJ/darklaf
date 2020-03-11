@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.toolbar;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.DefaultLookup;
 import sun.swing.UIAction;
 
@@ -38,15 +39,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -180,7 +173,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         floatingToolBar = null;
 
         setOrientation(toolBar.getOrientation());
-        LookAndFeel.installProperty(c, "opaque", Boolean.TRUE);
+        LookAndFeel.installProperty(c, PropertyKey.OPAQUE, Boolean.TRUE);
 
         if (c.getClientProperty(FOCUSED_COMP_INDEX) != null) {
             focusedCompIndex = (Integer) (c.getClientProperty(FOCUSED_COMP_INDEX));
@@ -1044,7 +1037,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             String propertyName = evt.getPropertyName();
             if (Objects.equals(propertyName, "lookAndFeel")) {
                 toolBar.updateUI();
-            } else if (Objects.equals(propertyName, "orientation")) {
+            } else if (Objects.equals(propertyName, PropertyKey.ORIENTATION)) {
                 // Search for JSeparator components and change it's orientation
                 // to match the toolbar and flip it's orientation.
                 Component[] components = toolBar.getComponents();

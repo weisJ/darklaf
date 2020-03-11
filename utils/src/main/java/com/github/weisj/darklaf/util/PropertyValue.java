@@ -21,44 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.internalframe;
+package com.github.weisj.darklaf.util;
 
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicInternalFrameUI;
-import java.awt.*;
-
-/**
- * @author Jannis Weis
- */
-public class DarkInternalFrameUI extends BasicInternalFrameUI {
-
-    public DarkInternalFrameUI(final JInternalFrame b) {
-        super(b);
-    }
-
-
-    public static ComponentUI createUI(final JComponent b) {
-        return new DarkInternalFrameUI((JInternalFrame) b);
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        LookAndFeel.installProperty(frame, PropertyKey.OPAQUE, false);
-    }
-
-    @Override
-    protected JComponent createNorthPane(final JInternalFrame w) {
-        this.titlePane = new DarkInternalFrameTitlePane(w);
-        this.titlePane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 0));
-        return this.titlePane;
-    }
-
-    @Override
-    public void paint(final Graphics g, final JComponent c) {
-        super.paint(g, c);
-    }
+public class PropertyValue {
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+    public static final String NULL = "null";
 }

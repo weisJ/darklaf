@@ -38,6 +38,8 @@ import java.awt.event.WindowEvent;
  */
 public class DarkToolBarUI extends DarkToolBarUIBridge {
 
+    public static final String KEY_PREFIX = "JToolBar.";
+    public static final String KEY_USE_TOOL_BAR_BACKGROUND = KEY_PREFIX + "drag.useToolbarBackground";
     private static final Robot robot = createRobot();
 
     private final DropPreviewPanel previewPanel = new DropPreviewPanel();

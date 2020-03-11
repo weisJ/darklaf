@@ -24,6 +24,7 @@
 package ui.table;
 
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
+import com.github.weisj.darklaf.util.PropertyKey;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -80,7 +81,7 @@ public class TableDemo implements ComponentDemo {
             setSelected(table.isEnabled());
             addActionListener(e -> table.setEnabled(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("editable") {{
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
             setSelected(editable.get());
             addActionListener(e -> editable.set(isSelected()));
         }});

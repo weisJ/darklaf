@@ -23,6 +23,7 @@
  */
 package ui.checkBox;
 
+import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -54,13 +55,13 @@ public class CheckBoxDemo implements ComponentDemo {
             setSelected(button.isRolloverEnabled());
             addActionListener(e -> button.setRolloverEnabled(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JToggleButton.isTreeCellEditor") {{
+        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TREE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JToggleButton.isTreeCellEditor", isSelected()));
+            addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JToggleButton.isTableCellEditor") {{
+        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JToggleButton.isTableCellEditor", isSelected()));
+            addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, isSelected()));
         }});
         return panel;
     }

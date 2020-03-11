@@ -74,7 +74,7 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
         remove(content);
         this.content = content;
         add(content, BorderLayout.CENTER);
-        firePropertyChange("content", old, content);
+        firePropertyChange(KEY_CONTENT, old, content);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
         if (this.orientation == a) return;
         Alignment oldOrientation = this.orientation;
         this.orientation = a;
-        firePropertyChange("orientation", oldOrientation, orientation);
+        firePropertyChange(KEY_ORIENTATION, oldOrientation, orientation);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
         if (selected == this.selected) return;
         boolean oldSelected = this.selected;
         this.selected = selected;
-        firePropertyChange("selected", oldSelected, selected);
+        firePropertyChange(KEY_SELECTED, oldSelected, selected);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
         if (this.accelerator == accelerator) return;
         int oldAccelerator = this.accelerator;
         this.accelerator = accelerator;
-        firePropertyChange("accelerator", oldAccelerator, accelerator);
+        firePropertyChange(KEY_ACCELERATOR, oldAccelerator, accelerator);
     }
 
     @Override
@@ -148,6 +148,6 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
     public void setTabFrame(final JTabFrame parent) {
         JTabFrame old = this.parent;
         this.parent = parent;
-        firePropertyChange("tabFrame", old, parent);
+        firePropertyChange(KEY_TAB_FRAME_PARENT, old, parent);
     }
 }

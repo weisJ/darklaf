@@ -38,6 +38,8 @@ import java.awt.*;
 
 public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
+    public static final String KEY_COLLAPSED = "collapsed";
+
     protected boolean isCollapsed;
     protected Color borderColor;
     protected Icon collapsedIcon;
@@ -66,7 +68,8 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     @Override
     protected void installListeners() {
         super.installListeners();
-        group.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY, e -> isCollapsed = "collapsed".equals(e.getNewValue()));
+        group.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY,
+                                        e -> isCollapsed = KEY_COLLAPSED.equals(e.getNewValue()));
     }
 
     @Override

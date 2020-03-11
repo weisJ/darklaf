@@ -51,10 +51,12 @@ import java.util.List;
  */
 public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
-    public static final StringBufferWrapper HIDE_POPUP_KEY = new StringBufferWrapper(new StringBuffer(
-            "doNotCancelPopup"));
+    public static final String KEY_DO_NOT_CANCEL_POPUP = "doNotCancelPopup";
+    public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
+    public static final StringBufferWrapper HIDE_POPUP_VALUE = new StringBufferWrapper(new StringBuffer(
+        "doNotCancelPopup"));
     public static final StringBuilder MOUSE_GRABBER_KEY = new StringBuilder(
-            "javax.swing.plaf.basic.BasicPopupMenuUI.MouseGrabber");
+        "javax.swing.plaf.basic.BasicPopupMenuUI.MouseGrabber");
 
 
     public static ComponentUI createUI(final JComponent x) {
@@ -230,11 +232,11 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
              */
                 case MouseEvent.MOUSE_PRESSED:
                     if (isInPopup(src) ||
-                            (src instanceof JMenu && ((JMenu) src).isSelected())) {
+                        (src instanceof JMenu && ((JMenu) src).isSelected())) {
                         return;
                     }
                     if (!(src instanceof JComponent) ||
-                            !HIDE_POPUP_KEY.equals(((JComponent) src).getClientProperty("doNotCancelPopup"))) {
+                        !HIDE_POPUP_VALUE.equals(((JComponent) src).getClientProperty(KEY_DO_NOT_CANCEL_POPUP))) {
                         // Cancel popup only if this property was not set.
                         // If this property is set to TRUE component wants
                         // to deal with this event by himself.
@@ -311,7 +313,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                 } else if (c instanceof JPopupMenu) {
                     return true;
                 } else if (c instanceof JComponent
-                        && Boolean.TRUE.equals(((JComponent) c).getClientProperty("doNotCancelOnScroll"))) {
+                    && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_DO_NOT_CANCEL_ON_SCROLL))) {
                     /*
                      * Change here: allows scrollable components that contain the popupMenu.
                      */

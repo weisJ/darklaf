@@ -41,6 +41,10 @@ import java.awt.event.*;
  */
 public class DarkScrollBarUI extends BasicScrollBarUI {
 
+    public static final String KEY_PREFIX = "JScrollBar.";
+    public static final String KEY_SCROLL_PANE_PARENT = KEY_PREFIX + "scrollPaneParent";
+    public static final String KEY_FAST_WHEEL_SCROLLING = KEY_PREFIX + "fastWheelScrolling";
+    public static final String KEY_THIN = KEY_PREFIX + "thin";
     private static final float THUMB_ALPHA = 0.6f;
     private static final float MAX_TRACK_ALPHA = 0.3f;
     private static final float MAX_THUMB_ALPHA = 1;
@@ -62,7 +66,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
         if (scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
             || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()) {
             scrollbar.setValueIsAdjusting(true);
-            Object sp = scrollbar.getClientProperty("JScrollBar.scrollPaneParent");
+            Object sp = scrollbar.getClientProperty(KEY_SCROLL_PANE_PARENT);
             if (scrollbar.getParent() instanceof JScrollPane) {
                 doScroll(scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
                          scrollbar.getParent().getComponentOrientation().isLeftToRight());
@@ -177,7 +181,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
 
             boolean limitScroll = Math.abs(e.getWheelRotation()) == 1;
 
-            Object fastWheelScroll = toScroll.getClientProperty("JScrollBar.fastWheelScrolling");
+            Object fastWheelScroll = toScroll.getClientProperty(KEY_FAST_WHEEL_SCROLLING);
             Component comp = vp == null ? null : vp.getView();
             if (Boolean.TRUE.equals(fastWheelScroll) && comp instanceof Scrollable) {
                 Scrollable scrollComp = (Scrollable) comp;
@@ -502,7 +506,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     }
 
     protected boolean isThin() {
-        return scrollbar.getClientProperty("ScrollBar.thin") == Boolean.TRUE;
+        return scrollbar.getClientProperty(KEY_THIN) == Boolean.TRUE;
     }
 
 

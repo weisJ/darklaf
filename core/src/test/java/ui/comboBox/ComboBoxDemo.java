@@ -23,6 +23,7 @@
  */
 package ui.comboBox;
 
+import com.github.weisj.darklaf.util.PropertyKey;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -48,7 +49,7 @@ public class ComboBoxDemo implements ComponentDemo {
             setSelected(comboBox.isEnabled());
             addActionListener(e -> comboBox.setEnabled(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("editable") {{
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
             setSelected(comboBox.isEditable());
             addActionListener(e -> comboBox.setEditable(isSelected()));
         }});

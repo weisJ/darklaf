@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.ui.rootpane;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -79,7 +80,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String propertyName = e.getPropertyName();
-        if ("windowDecorationStyle".equals(propertyName)) {
+        if (PropertyKey.WINDOW_DECORATIONS_STYLE.equals(propertyName)) {
             if (!decorationStyleLock) {
                 windowDecorationsStyle = rootPane.getWindowDecorationStyle();
                 updateClientDecoration();
@@ -93,7 +94,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
                     decorationStyleLock = false;
                 }
             }
-        } else if ("ancestor".equals(propertyName)) {
+        } else if (PropertyKey.ANCESTOR.equals(propertyName)) {
             updateWindow(rootPane.getParent());
         }
     }

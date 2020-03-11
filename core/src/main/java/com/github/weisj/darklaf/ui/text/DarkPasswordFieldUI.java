@@ -42,6 +42,8 @@ import java.util.Arrays;
  */
 public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
+    public static final String KEY_PREFIX = "JPasswordField.";
+    public static final String KEY_SHOW_VIEW_BUTTON = "JPasswordField.showViewIcon";
     protected Icon show;
     protected Icon showPressed;
     private final FocusListener focusListener = new FocusAdapter() {
@@ -179,7 +181,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     public static boolean hasShowIcon(final Component c) {
         return c instanceof JPasswordField
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty("JPasswordField.showViewIcon"));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_SHOW_VIEW_BUTTON));
     }
 
 
@@ -218,7 +220,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         String key = evt.getPropertyName();
-        if ("JPasswordField.showViewIcon".equals(key)) {
+        if (KEY_SHOW_VIEW_BUTTON.equals(key)) {
             editor.doLayout();
             Component parent = editor.getParent();
             if (parent instanceof JComponent) {

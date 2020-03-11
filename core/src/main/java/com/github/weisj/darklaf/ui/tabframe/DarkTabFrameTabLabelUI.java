@@ -24,12 +24,14 @@
 package com.github.weisj.darklaf.ui.tabframe;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
+import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabLabel;
 import com.github.weisj.darklaf.decorators.HoverListener;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.label.DarkLabelUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -47,6 +49,7 @@ import java.beans.PropertyChangeListener;
 
 public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChangeListener {
 
+    private static final String ACCELERATOR_PREFIX = "accelerator_";
     private TabFrameTabLabel tabComponent;
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
@@ -165,27 +168,27 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String key = e.getPropertyName();
-        if ("selected".equals(key)) {
+        if (TabFrameTab.KEY_SELECTED.equals(key)) {
             tabComponent.setForeground(Boolean.TRUE.equals(e.getNewValue())
                                        ? selectedFontColor : defaultFontColor);
             tabComponent.repaint();
-        } else if ("title".equals(key)) {
+        } else if (TabFrameTab.KEY_TITLE.equals(key)) {
             updateText();
-        } else if ("accelerator".equals(key)) {
+        } else if (TabFrameTab.KEY_ACCELERATOR.equals(key)) {
             updateText();
             if (tabComponent == null) return;
             uninstallAccelerator(tabComponent.getTabFrame());
             installAccelerator(tabComponent.getTabFrame());
-        } else if ("orientation".equals(key)) {
+        } else if (TabFrameTab.KEY_ORIENTATION.equals(key)) {
             rotatableIcon.setOrientation(mapOrientation(tabComponent.getOrientation()));
-        } else if ("tabFrame".equals(key)) {
+        } else if (TabFrameTab.KEY_TAB_FRAME_PARENT.equals(key)) {
             if (e.getOldValue() instanceof JTabFrame) {
                 uninstallAccelerator((JTabFrame) e.getOldValue());
             }
             if (e.getNewValue() instanceof JTabFrame) {
                 installAccelerator((JTabFrame) e.getNewValue());
             }
-        } else if ("paintingForPrint".equals(key)) {
+        } else if (PropertyKey.PAINTING_FOR_PRINT.equals(key)) {
             printing = Boolean.TRUE.equals(e.getNewValue());
         }
     }
@@ -209,8 +212,8 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         if (acc < 0) return;
         tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
-                     "accelerator_" + acc);
-        tabFrame.getActionMap().put("accelerator_" + acc, createAcceleratorAction(tabFrame));
+                     ACCELERATOR_PREFIX + acc);
+        tabFrame.getActionMap().put(ACCELERATOR_PREFIX + acc, createAcceleratorAction(tabFrame));
     }
 
     protected Action createAcceleratorAction(final JTabFrame tabFrame) {
@@ -236,7 +239,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     protected void uninstallAccelerator(final JTabFrame tabFrame) {
         if (tabFrame == null) return;
         int acc = tabComponent.getAccelerator();
-        String accAction = "accelerator_" + acc;
+        String accAction = ACCELERATOR_PREFIX + acc;
         tabFrame.getActionMap().remove(accAction);
     }
 

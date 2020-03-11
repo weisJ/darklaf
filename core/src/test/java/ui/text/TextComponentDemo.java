@@ -24,6 +24,7 @@
 package ui.text;
 
 import com.github.weisj.darklaf.ui.text.DarkTextBorder;
+import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -47,7 +48,7 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
             setSelected(text.isEnabled());
             addActionListener(e -> text.setEnabled(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("editable") {{
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
             setSelected(text.isEditable());
             addActionListener(e -> text.setEditable(isSelected()));
         }});

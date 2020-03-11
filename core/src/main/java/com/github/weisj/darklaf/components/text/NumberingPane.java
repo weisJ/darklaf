@@ -26,20 +26,15 @@ package com.github.weisj.darklaf.components.text;
 import com.github.weisj.darklaf.util.StringUtil;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Position;
-import javax.swing.text.Segment;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.text.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NumberingPane extends JComponent {
 
+    public static final String KEY_EDITOR = "editorPane";
+    public static final String KEY_ICONS = "icons";
+    public static final String KEY_MIN_ICON_WIDTH = "minimumIconWidth";
     private JTextComponent textComponent;
     private Map<Position, Icon> iconMap;
     private Map<Position, List<IconListener>> listenerMap;
@@ -68,7 +63,7 @@ public class NumberingPane extends JComponent {
     public void setTextComponent(final JTextComponent textComponent) {
         JTextComponent old = this.textComponent;
         this.textComponent = textComponent;
-        firePropertyChange("editorPane", old, textComponent);
+        firePropertyChange(KEY_EDITOR, old, textComponent);
     }
 
     public int getIconCount() {
@@ -114,7 +109,7 @@ public class NumberingPane extends JComponent {
         if (icon != null) {
             iconMap.put(pos, icon);
         }
-        firePropertyChange("icons", null, icon);
+        firePropertyChange(KEY_ICONS, null, icon);
         return pos;
     }
 
@@ -174,7 +169,7 @@ public class NumberingPane extends JComponent {
     public void setMinimumIconWidth(final int width) {
         int old = this.width;
         this.width = Math.max(width, 0);
-        firePropertyChange("minimumIconWidth", old, width);
+        firePropertyChange(KEY_MIN_ICON_WIDTH, old, width);
     }
 
     public Collection<Icon> getIcons() {
@@ -187,7 +182,7 @@ public class NumberingPane extends JComponent {
 
     public void removeIconAt(final Position position) {
         Icon icon = iconMap.remove(position);
-        firePropertyChange("icons", icon, icon);
+        firePropertyChange(KEY_ICONS, icon, icon);
     }
 
     public List<IconListener> getIconListeners() {

@@ -26,7 +26,9 @@ package com.github.weisj.darklaf.ui.filechooser;
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.DarkTableCellRenderer;
-import com.github.weisj.darklaf.ui.table.TextFieldTableCellEditorBorder;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.awt.AWTAccessor;
 import sun.awt.shell.ShellFolder;
 import sun.awt.shell.ShellFolderColumnInfo;
@@ -36,51 +38,21 @@ import sun.swing.SwingUtilities2;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.event.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.basic.BasicDirectoryModel;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.table.*;
 import javax.swing.text.Position;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -471,7 +443,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         revalidate();
         repaint();
         updateViewMenu();
-        firePropertyChange("viewType", oldValue, viewType);
+        firePropertyChange(DarkFileChooserUI.KEY_VIEW_TYPE, oldValue, viewType);
     }
 
     public Action getViewTypeAction(final int viewType) {
@@ -741,7 +713,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         if (tableCellEditor == null) {
             tableCellEditor = new DetailsTableCellEditor(new JTextField() {
                 {
-                    super.setBorder(new TextFieldTableCellEditorBorder());
+                    super.setBorder(new TextTableCellEditorBorder());
                 }
 
                 @Override
@@ -805,7 +777,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         // to our JList.
 
         // 4835633 : tell BasicTableUI that this is a file list
-        detailsTable.putClientProperty("Table.isFileList", Boolean.TRUE);
+        detailsTable.putClientProperty(DarkTableUI.KEY_IS_FILE_LIST, Boolean.TRUE);
 
         if (listViewWindowsStyle) {
             detailsTable.addFocusListener(repaintListener);
@@ -1218,7 +1190,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
             applyEdit();
         } else if (s.equals("busy")) {
             setCursor((Boolean) e.getNewValue() ? waitCursor : null);
-        } else if (s.equals("componentOrientation")) {
+        } else if (s.equals(PropertyKey.COMPONENT_ORIENTATION)) {
             ComponentOrientation o = (ComponentOrientation) e.getNewValue();
             JFileChooser cc = (JFileChooser) e.getSource();
             if (o != e.getOldValue()) {

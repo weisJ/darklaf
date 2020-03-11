@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.label;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -151,7 +152,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String key = e.getPropertyName();
-        if ("componentOrientation".equals(key)) {
+        if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             Object source = e.getSource();
             if (source instanceof JLabel) {
                 ((JLabel) source).doLayout();

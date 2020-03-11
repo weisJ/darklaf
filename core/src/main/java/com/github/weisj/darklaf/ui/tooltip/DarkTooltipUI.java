@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.tooltip;
 
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,6 +42,16 @@ import java.beans.PropertyChangeListener;
  * @author Jannis Weis
  */
 public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener {
+
+    public static final String KEY_PREFIX = "JToolTip.";
+    public static final String KEY_STYLE = KEY_PREFIX + "style";
+    public static final String KEY_INSETS = KEY_PREFIX + "insets";
+    public static final String KEY_POINTER_LOCATION = KEY_PREFIX + "pointerLocation";
+    public static final String KEY_POINTER_WIDTH = KEY_PREFIX + "pointerWidth";
+    public static final String KEY_POINTER_HEIGHT = KEY_PREFIX + "pointerHeight";
+    public static final String KEY_PLAIN_TOOLTIP = "JComponent.plainTooltip";
+    public static final String VARIANT_PLAIN = "plain";
+    public static final String VARIANT_BALLOON = "balloon";
 
     protected JToolTip toolTip;
     protected MouseListener exitListener = new MouseAdapter() {
@@ -84,7 +95,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
 
 
     public static ComponentUI createUI(final JComponent c) {
-        if (Boolean.TRUE.equals(c.getClientProperty("JComponent.plainTooltip"))) {
+        if (Boolean.TRUE.equals(c.getClientProperty(KEY_PLAIN_TOOLTIP))) {
             return BasicToolTipUI.createUI(c);
         } else {
             return new DarkTooltipUI();
@@ -132,7 +143,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         super.installDefaults(c);
         c.setOpaque(false);
         if (c.getBorder() instanceof DarkTooltipBorder) {
-            Alignment align = (Alignment) c.getClientProperty("JToolTip.pointerLocation");
+            Alignment align = (Alignment) c.getClientProperty(KEY_POINTER_LOCATION);
             ((DarkTooltipBorder) c.getBorder()).setPointerLocation(align == null ? Alignment.CENTER : align);
         }
     }
@@ -181,7 +192,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         String text = ((JToolTip) c).getTipText();
 
         if ((text != null) && !text.equals("")) {
-            View v = (View) c.getClientProperty("html");
+            View v = (View) c.getClientProperty(PropertyKey.HTML);
             if (v != null) {
                 prefSize.width += (int) v.getPreferredSpan(View.X_AXIS) + 6;
                 prefSize.height += (int) v.getPreferredSpan(View.Y_AXIS);
@@ -223,26 +234,26 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             if (tooltip.getBorder() instanceof DarkTooltipBorder) {
                 DarkTooltipBorder border = (DarkTooltipBorder) tooltip.getBorder();
                 Object newVal = evt.getNewValue();
-                if ("JToolTip.pointerLocation".equals(key)) {
+                if (KEY_POINTER_LOCATION.equals(key)) {
                     if (newVal instanceof Alignment) {
                         border.setPointerLocation((Alignment) newVal);
                     } else {
                         border.setPointerLocation(Alignment.CENTER);
                     }
                     updateSize();
-                } else if ("JToolTip.pointerHeight".equals(key)) {
+                } else if (KEY_POINTER_HEIGHT.equals(key)) {
                     if (newVal instanceof Integer) {
                         border.setPointerHeight((Integer) newVal);
                     }
                     updateSize();
-                } else if ("JToolTip.pointerWidth".equals(key)) {
+                } else if (KEY_POINTER_WIDTH.equals(key)) {
                     if (newVal instanceof Integer) {
                         border.setPointerWidth((Integer) newVal);
                     }
                     updateSize();
-                } else if ("JToolTip.insets".equals(key)) {
+                } else if (KEY_INSETS.equals(key)) {
                     updateSize();
-                } else if ("component".equals(key)) {
+                } else if (PropertyKey.COMPONENT.equals(key)) {
                     Object oldComp = evt.getOldValue();
                     if (oldComp instanceof Component) {
                         ((Component) oldComp).removeMouseListener(mouseListener);
@@ -253,7 +264,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                     }
                 }
             }
-            if ("JToolTip.style".equals(key)) {
+            if (KEY_STYLE.equals(key)) {
                 tooltip.setPreferredSize(getPreferredSize(tooltip));
             }
         }

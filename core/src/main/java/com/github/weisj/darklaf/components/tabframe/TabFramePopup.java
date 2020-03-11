@@ -29,6 +29,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public interface TabFramePopup {
+    String KEY_VISIBLE_TAB = "visibleTab";
+    String KEY_CONTENT = "content";
+    String KEY_TAB_FRAME_PARENT = "tabFrame";
+    String KEY_ALIGNMENT = "alignment";
+    String KEY_ICON = "icon";
+    String KEY_INDEX = "index";
+    String KEY_TITLE = "title";
+    String KEY_OPEN = "open";
+    String KEY_PEER_INSETS = "peerInsets";
 
     /**
      * Get the current content pane. A popup may hold more than one content pane. In this case this method should return

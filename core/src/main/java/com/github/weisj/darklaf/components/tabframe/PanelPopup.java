@@ -35,7 +35,6 @@ import java.awt.*;
  * @since 2019
  */
 public class PanelPopup extends JPanel implements TabFramePopup {
-
     private Component content;
     private boolean open;
     private JTabFrame parent;
@@ -112,7 +111,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
         if (content == null) {
             content = new JPanel();
         }
-        firePropertyChange("content", old, content);
+        firePropertyChange(KEY_CONTENT, old, content);
     }
 
     @Override
@@ -127,7 +126,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
             boolean oldOpen = isOpen();
             parent.closeTab(getAlignment(), getIndex());
             open = false;
-            firePropertyChange("open", oldOpen, false);
+            firePropertyChange(KEY_OPEN, oldOpen, false);
         }
     }
 
@@ -145,7 +144,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void setTabFrame(final JTabFrame parent) {
         JTabFrame old = this.parent;
         this.parent = parent;
-        firePropertyChange("tabFrame", old, parent);
+        firePropertyChange(KEY_TAB_FRAME_PARENT, old, parent);
     }
 
     @Override
@@ -161,7 +160,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
         }
         Alignment old = this.alignment;
         this.alignment = alignment;
-        firePropertyChange("alignment", old, alignment);
+        firePropertyChange(KEY_ALIGNMENT, old, alignment);
     }
 
     @Override
@@ -171,7 +170,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
             boolean oldOpen = isOpen();
             parent.openTab(getAlignment(), getIndex());
             open = true;
-            firePropertyChange("open", oldOpen, true);
+            firePropertyChange(KEY_OPEN, oldOpen, true);
             requestFocus();
         }
     }
@@ -185,7 +184,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void setTitle(final String title) {
         String old = this.title;
         this.title = title == null ? "" : title;
-        firePropertyChange("title", old, this.title);
+        firePropertyChange(KEY_TITLE, old, this.title);
     }
 
     @Override
@@ -197,7 +196,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void setIcon(final Icon icon) {
         Icon old = this.icon;
         this.icon = icon;
-        firePropertyChange("icon", old, icon);
+        firePropertyChange(KEY_ICON, old, icon);
     }
 
     @Override
@@ -209,6 +208,6 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void setIndex(final int index) {
         int old = this.index;
         this.index = index;
-        firePropertyChange("index", old, index);
+        firePropertyChange(KEY_INDEX, old, index);
     }
 }

@@ -29,6 +29,7 @@ import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -246,7 +247,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         field.setColumns(hex ? 8 : 4);
         if (!hex) {
             field.addPropertyChangeListener(e -> {
-                if ("value".equals(e.getPropertyName())) {
+                if (PropertyKey.VALUE.equals(e.getPropertyName())) {
                     updatePreviewFromTextFields();
                 }
             });

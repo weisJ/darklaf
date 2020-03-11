@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelCMYK;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -43,7 +44,7 @@ import java.beans.PropertyChangeListener;
 public class DarkColorChooserUI extends BasicColorChooserUI {
 
     private final PropertyChangeListener propertyChangeListener = e -> {
-        if ("ancestor".equals(e.getPropertyName())) {
+        if (PropertyKey.ANCESTOR.equals(e.getPropertyName())) {
             JComponent pane = (JComponent) e.getNewValue();
             if (pane != null) {
                 pane = (JComponent) pane.getRootPane().getContentPane();

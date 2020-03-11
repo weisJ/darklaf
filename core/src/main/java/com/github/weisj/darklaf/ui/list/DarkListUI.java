@@ -36,6 +36,16 @@ import java.beans.PropertyChangeEvent;
  */
 public class DarkListUI extends DarkListUIBridge {
 
+    public static final String KEY_PREFIX = "JList.";
+    public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
+    public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
+    public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
+    public static final String KEY_SHRINK_WRAP = KEY_PREFIX + "shrinkWrap";
+    public static final String KEY_FULL_ROW_SELECTION = KEY_PREFIX + "fullRowSelection";
+    public static final String KEY_IS_EDITING = KEY_PREFIX + "isEditing";
+    public static final String RENDER_TYPE_CHECKBOX = "checkBox";
+    public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
+
     static {
         UIManager.put("List.cellRenderer", new DarkListCellRenderer());
     }
@@ -48,7 +58,7 @@ public class DarkListUI extends DarkListUIBridge {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        list.putClientProperty("JList.alternateRowColor", UIManager.getBoolean("List.alternateRowColor"));
+        list.putClientProperty(KEY_ALTERNATE_ROW_COLOR, UIManager.getBoolean("List.alternateRowColor"));
     }
 
     @Override
@@ -153,7 +163,7 @@ public class DarkListUI extends DarkListUIBridge {
         int ch = rowBounds.height;
 
         if (empty) {
-            boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty("JList.alternateRowColor"));
+            boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty(KEY_ALTERNATE_ROW_COLOR));
             Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
             Color normalColor = list.getBackground();
             Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
@@ -165,7 +175,7 @@ public class DarkListUI extends DarkListUIBridge {
             Component rendererComponent =
                     cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-            if (Boolean.TRUE.equals(list.getClientProperty("JList.shrinkWrap"))) {
+            if (Boolean.TRUE.equals(list.getClientProperty(KEY_SHRINK_WRAP))) {
                 // Shrink renderer to preferred size. This is mostly used on Windows
                 // where selection is only shown around the file name, instead of
                 // across the whole list cell.
@@ -186,7 +196,7 @@ public class DarkListUI extends DarkListUIBridge {
         public void propertyChange(final PropertyChangeEvent e) {
             super.propertyChange(e);
             String key = e.getPropertyName();
-            if ("JList.alternateRowColor".equals(key)) {
+            if (KEY_ALTERNATE_ROW_COLOR.equals(key)) {
                 list.repaint();
             }
         }
@@ -197,9 +207,9 @@ public class DarkListUI extends DarkListUIBridge {
             if (row < 0) {
                 // If shift is down in multi-select, we should do nothing.
                 // For single select or non-shift-click, clear the selection
-                if (isFileList && !Boolean.TRUE.equals(list.getClientProperty("JList.fullRowSelection"))
-                        && e.getID() == MouseEvent.MOUSE_PRESSED &&
-                        (!e.isShiftDown() || list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
+                if (isFileList && !Boolean.TRUE.equals(list.getClientProperty(KEY_FULL_ROW_SELECTION))
+                    && e.getID() == MouseEvent.MOUSE_PRESSED &&
+                    (!e.isShiftDown() || list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
                     list.clearSelection();
                 }
             } else {

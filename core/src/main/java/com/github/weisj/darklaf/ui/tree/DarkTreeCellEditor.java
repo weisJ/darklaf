@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -76,7 +77,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             }
         };
         toggleButton.setFocusPainted(false);
-        toggleButton.putClientProperty("JToggleButton.isTreeCellEditor", Boolean.TRUE);
+        toggleButton.putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, Boolean.TRUE);
         toggleButton.addActionListener(delegate);
         toggleButton.setRequestFocusEnabled(false);
         toggleButton.addFocusListener(this);

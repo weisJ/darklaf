@@ -24,6 +24,7 @@
 package javax.swing.text.DefaultHighlighterDark;
 
 import com.github.weisj.darklaf.color.ColorWrapper;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
@@ -31,12 +32,7 @@ import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Position;
-import javax.swing.text.View;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
@@ -415,7 +411,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private boolean isRounded(final JTextComponent c) {
         return !suppressRounded
-                && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty("JTextComponent.roundedSelection")));
+            && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty(DarkTextUI.KEY_ROUNDED_SELECTION)));
     }
 
     private Shape paintExtension(final Graphics2D g2d, final JTextComponent c,

@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
+import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -46,8 +47,18 @@ import java.util.Enumeration;
  */
 public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
-    public static final String TREE_TABLE_TREE_KEY = "JTree.treeTableTree";
-    public static final String STRIPED_CLIENT_PROPERTY = "JTree.alternateRowColor";
+    public static final String KEY_PREFIX = "JTree.";
+    public static final String KEY_TREE_TABLE_TREE = KEY_PREFIX + "treeTableTree";
+    public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
+    public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
+    public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
+    public static final String KEY_LINE_STYLE = KEY_PREFIX + "lineStyle";
+    public static final String KEY_MAC_ACTIONS_INSTALLED = "MacTreeUi.actionsInstalled";
+    public static final String RENDER_TYPE_CHECKBOX = "checkBox";
+    public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
+    public static final String STYLE_LINE = "line";
+    public static final String STYLE_DASHED = "dashed";
+    public static final String STYLE_NONE = "none";
 
     private final MouseListener selectionListener = new MouseAdapter() {
         boolean handled = false;
@@ -132,7 +143,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         super.completeUIInstall();
         myOldRepaintAllRowValue = UIManager.getBoolean("Tree.repaintWholeRow");
         UIManager.put("Tree.repaintWholeRow", true);
-        tree.putClientProperty("JTree.alternateRowColor", UIManager.getBoolean("Tree.alternateRowColor"));
+        tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR,
+                               UIManager.getBoolean("Tree.alternateRowColor"));
     }
 
     @Override
@@ -152,11 +164,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         collapsedSelected = UIManager.getIcon("Tree.collapsed.selected.unfocused.icon");
         collapsedFocus = UIManager.getIcon("Tree.collapsed.unselected.focused.icon");
         collapsed = UIManager.getIcon("Tree.collapsed.unselected.unfocused.icon");
-        tree.putClientProperty("JTree.renderBooleanAsCheckBox",
+        tree.putClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX,
                                UIManager.getBoolean("Tree.renderBooleanAsCheckBox"));
-        tree.putClientProperty("JTree.booleanRenderType", UIManager.getString("Tree.booleanRenderType"));
+        tree.putClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Tree.booleanRenderType"));
         tree.setShowsRootHandles(true);
-        tree.putClientProperty("JTree.lineStyle", "Line");
+        tree.putClientProperty(KEY_LINE_STYLE, UIManager.getString("Tree.defaultLineStyle"));
     }
 
     @Override
@@ -170,9 +182,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected void installKeyboardActions() {
         super.installKeyboardActions();
 
-        if (Boolean.TRUE.equals(tree.getClientProperty("MacTreeUi.actionsInstalled"))) return;
+        if (Boolean.TRUE.equals(tree.getClientProperty(KEY_MAC_ACTIONS_INSTALLED))) return;
 
-        tree.putClientProperty("MacTreeUi.actionsInstalled", Boolean.TRUE);
+        tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
 
         final InputMap inputMap = tree.getInputMap(JComponent.WHEN_FOCUSED);
         inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
@@ -320,9 +332,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         if (!DarkUIUtil.hasFocus(tree)) {
             Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             boolean treeEditor = owner instanceof JComponent
-                    && Boolean.TRUE.equals(((JComponent) owner).getClientProperty("JToggleButton.isTreeCellEditor"));
+                && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
             boolean treeRenderer = owner instanceof JComponent
-                    && Boolean.TRUE.equals(((JComponent) owner).getClientProperty("JToggleButton.isTreeCellRenderer"));
+                && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_RENDER));
             return treeEditor || treeRenderer;
         }
         return true;
@@ -499,10 +511,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
     protected Color getRowBackground(final int row, final boolean selected) {
         if (selected) {
-            boolean isTableTree = Boolean.TRUE.equals(tree.getClientProperty(TREE_TABLE_TREE_KEY));
+            boolean isTableTree = Boolean.TRUE.equals(tree.getClientProperty(KEY_TREE_TABLE_TREE));
             return getTreeSelectionBackground(hasFocus() || isTableTree || tree.isEditing());
         }
-        if (Boolean.TRUE.equals(tree.getClientProperty(STRIPED_CLIENT_PROPERTY)) && row % 2 == 1) {
+        if (Boolean.TRUE.equals(tree.getClientProperty(KEY_ALTERNATE_ROW_COLOR)) && row % 2 == 1) {
             return alternativeBackground;
         } else {
             return tree.getBackground();
@@ -510,7 +522,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     }
 
     protected boolean shouldPaintLines() {
-        return !"None".equals(getLineStyle());
+        return !STYLE_NONE.equals(getLineStyle());
     }
 
     protected Color getLineColor(final TreePath path) {
@@ -545,7 +557,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     }
 
     protected String getLineStyle() {
-        return String.valueOf(tree.getClientProperty("JTree.lineStyle"));
+        return String.valueOf(tree.getClientProperty(KEY_LINE_STYLE));
     }
 
     protected boolean selectedChildOf(final TreePath path) {
@@ -557,7 +569,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     }
 
     protected boolean isDashedLine() {
-        return UIManager.getBoolean("Tree.lineTypeDashed") || "Dashed".equals(getLineStyle());
+        return STYLE_DASHED.equals(getLineStyle());
     }
 
     private void drawDashedLine(final Graphics g, final int x, int y1, final int y2) {
@@ -703,13 +715,13 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if (STRIPED_CLIENT_PROPERTY.equals(key)) {
+        if (KEY_ALTERNATE_ROW_COLOR.equals(key)) {
             tree.repaint();
-        } else if ("JTree.renderBooleanAsCheckBox".equals(key)) {
+        } else if (DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX.equals(key)) {
             tree.repaint();
-        } else if ("JTree.booleanRenderType".equals(key)) {
+        } else if (DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE.equals(key)) {
             tree.repaint();
-        } else if ("JTree.lineStyle".equals(key)) {
+        } else if (KEY_LINE_STYLE.equals(key)) {
             tree.repaint();
         }
     }

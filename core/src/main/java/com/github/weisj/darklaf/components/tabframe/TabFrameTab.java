@@ -28,6 +28,12 @@ import com.github.weisj.darklaf.util.Alignment;
 import java.awt.*;
 
 public interface TabFrameTab {
+    String KEY_SELECTED = "selected";
+    String KEY_CONTENT = "content";
+    String KEY_TAB_FRAME_PARENT = "tabFrame";
+    String KEY_ORIENTATION = "orientation";
+    String KEY_ACCELERATOR = "accelerator";
+    String KEY_TITLE = "title";
 
     /**
      * Get the index of the tab.

@@ -23,6 +23,7 @@
  */
 package ui.text;
 
+import com.github.weisj.darklaf.util.PropertyKey;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -45,7 +46,7 @@ public class PasswordFieldDemo implements ComponentDemo {
             setSelected(textField.isEnabled());
             addActionListener(e -> textField.setEnabled(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("editable") {{
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
             setSelected(textField.isEditable());
             addActionListener(e -> textField.setEditable(isSelected()));
         }});
