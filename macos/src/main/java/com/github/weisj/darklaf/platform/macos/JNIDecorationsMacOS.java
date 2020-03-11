@@ -38,9 +38,9 @@ public class JNIDecorationsMacOS {
 
     public static native long getComponentPointer(final Window window);
 
-    public static native long retainWindow(final long hwnd);
+    public static native void retainWindow(final long hwnd);
 
-    public static native long releaseWindow(final long hwnd);
+    public static native void releaseWindow(final long hwnd);
 
     public static native double getTitleBarHeight(final long hwnd);
 
