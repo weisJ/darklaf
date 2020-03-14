@@ -42,14 +42,16 @@ public final class Decorations {
     static {
         try {
             //Extend for different platforms.
-            if (SystemInfo.isWindows) {
+            boolean enableDecorations =
+                !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + "decorations"));
+            if (SystemInfo.isWindows && enableDecorations) {
                 decorationsProvider = new WindowsDecorationsProvider();
-            } else if (SystemInfo.isMac) {
+            } else if (SystemInfo.isMac && enableDecorations) {
                 decorationsProvider = new MacOSDecorationsProvider();
             } else {
                 decorationsProvider = new DefaultDecorationsProvider();
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //If decorations modules are not available disable them.
             decorationsProvider = new DefaultDecorationsProvider();
         }
@@ -62,7 +64,6 @@ public final class Decorations {
 
     public static boolean isCustomDecorationSupported() {
         return decorationsProvider.isCustomDecorationSupported()
-            && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + "decorations"))
             && LafManager.isDecorationsEnabled()
             && LafManager.getTheme().useCustomDecorations();
     }

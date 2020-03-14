@@ -81,7 +81,7 @@ public class JNIDecorationsWindows {
             }
             loaded = true;
             LOGGER.info("Loaded darklaf-windows.dll. Decorations are enabled.");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //Library not found, SecurityManager prevents library loading etc.
             LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll." +
                 " Decorations will be disabled", e);
