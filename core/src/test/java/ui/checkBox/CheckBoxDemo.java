@@ -71,4 +71,13 @@ public class CheckBoxDemo implements ComponentDemo {
         return "CheckBox Demo";
     }
 
+    @Override
+    public JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(ComponentDemo.createThemeMenu());
+        menuBar.add(new JMenu("Demo") {{
+            add(new JCheckBoxMenuItem("CheckBox menu item"));
+        }});
+        return menuBar;
+    }
 }

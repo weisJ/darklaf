@@ -71,4 +71,13 @@ public class RadioButtonDemo implements ComponentDemo {
         return "RadioButton Demo";
     }
 
+    @Override
+    public JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(ComponentDemo.createThemeMenu());
+        menuBar.add(new JMenu("Demo") {{
+            add(new JRadioButtonMenuItem("RadioButton menu item"));
+        }});
+        return menuBar;
+    }
 }

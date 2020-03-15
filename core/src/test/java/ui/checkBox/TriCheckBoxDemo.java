@@ -71,4 +71,14 @@ public class TriCheckBoxDemo implements ComponentDemo {
     public String getTitle() {
         return "TriCheckBox Demo";
     }
+
+    @Override
+    public JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(ComponentDemo.createThemeMenu());
+        menuBar.add(new JMenu("Demo") {{
+            add(new TristateCheckBox("TristateCheckBox menu item"));
+        }});
+        return menuBar;
+    }
 }
