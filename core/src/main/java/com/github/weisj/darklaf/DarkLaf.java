@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.SystemInfo;
 import sun.awt.AppContext;
 
@@ -365,6 +366,10 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                 Window window = SwingUtilities.getWindowAncestor(contents);
                 if (window != null) {
                     window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
+                    if (window instanceof RootPaneContainer) {
+                        JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
+                        rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_POPUP, true);
+                    }
                     Decorations.initPopupWindow(window);
                 }
                 return popup;

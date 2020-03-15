@@ -188,6 +188,7 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     @Override
     public Dimension getPreferredSize() {
+        if (decorationInformation == null) return new Dimension(0, 0);
         int height = decorationInformation.titleBarHeight;
         if (hideTitleBar()) {
             height = 0;

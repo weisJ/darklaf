@@ -46,6 +46,8 @@ import java.beans.PropertyChangeEvent;
  */
 public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener {
 
+    public static final String KEY_PREFIX = "JRootPane.";
+    public static final String KEY_IS_POPUP = KEY_PREFIX + "isPopup";
     private Window window;
     private CustomTitlePane titlePane;
     private LayoutManager layoutManager;
@@ -205,9 +207,13 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         }
     }
 
+    protected boolean isPopup(final JRootPane rootPane) {
+        return Boolean.TRUE.equals(rootPane.getClientProperty(KEY_IS_POPUP));
+    }
+
     protected void updateClientDecoration() {
         uninstallClientDecorations(rootPane);
-        if (Decorations.isCustomDecorationSupported()) {
+        if (Decorations.isCustomDecorationSupported() && !isPopup(rootPane)) {
             installClientDecorations(rootPane);
         }
     }
