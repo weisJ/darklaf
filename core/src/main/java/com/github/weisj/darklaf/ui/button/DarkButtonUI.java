@@ -222,17 +222,19 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         viewRect.y = i.top;
         viewRect.width = width - (i.right + viewRect.x);
         viewRect.height = height - (i.bottom + viewRect.y);
+        if (isSquare(c) && isIconOnly(b)) {
+            int size = Math.min(viewRect.width, viewRect.height);
+            viewRect.width = viewRect.height = size;
+        }
 
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
-
         // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(
-                b, fm, b.getText(), b.getIcon(),
-                b.getVerticalAlignment(), b.getHorizontalAlignment(),
-                b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-                viewRect, iconRect, textRect,
-                b.getText() == null ? 0 : b.getIconTextGap());
+        return SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), b.getIcon(),
+                                                  b.getVerticalAlignment(), b.getHorizontalAlignment(),
+                                                  b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+                                                  viewRect, iconRect, textRect,
+                                                  b.getText() == null || isIconOnly(b) ? 0 : b.getIconTextGap());
     }
 
     protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
