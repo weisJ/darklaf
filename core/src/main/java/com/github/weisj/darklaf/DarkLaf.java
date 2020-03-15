@@ -161,7 +161,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         // component for MenuBarUI and MenuUI
         if (SystemInfo.isMac && useScreenMenuBar) {
             uiProps.remove("MenuBarUI");
-            uiProps.remove("MenuUI");
         }
     }
 
