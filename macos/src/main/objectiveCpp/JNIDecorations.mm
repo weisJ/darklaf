@@ -119,14 +119,16 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setDarkTheme(JN
                                                                               jboolean darkEnabled) {
 JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
-        if (darkEnabled) {
-            nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
-        } else {
-            nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-        }
-        [nsWindow contentView].needsDisplay = true;
-    }];
+    if(!@available(macOS 10.14, *)) {
+        [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+            if (darkEnabled) {
+                nsWindow.appearance = [NSAppearance appearanceNamed:@"NSAppearanceNameDarkAqua"];
+            } else {
+                nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+            }
+            [nsWindow contentView].needsDisplay = true;
+        }];
+    }
 JNF_COCOA_EXIT(env);
 }
 

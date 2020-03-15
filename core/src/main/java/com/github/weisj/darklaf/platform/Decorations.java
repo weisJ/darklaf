@@ -44,9 +44,11 @@ public final class Decorations {
             //Extend for different platforms.
             boolean enableDecorations =
                 !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + "decorations"));
-            if (SystemInfo.isWindows && enableDecorations) {
+            if (SystemInfo.isWindows10 && enableDecorations) {
+                //Decorations are in the Windows10 visuals. Disable for older version.
                 decorationsProvider = new WindowsDecorationsProvider();
-            } else if (SystemInfo.isMac && enableDecorations) {
+            } else if (SystemInfo.isMacOSYosemite && enableDecorations) {
+                //Compiled binary needs at least macOS 10.10 (Yosemite).
                 decorationsProvider = new MacOSDecorationsProvider();
             } else {
                 decorationsProvider = new DefaultDecorationsProvider();

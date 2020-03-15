@@ -155,11 +155,7 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     @Override
     public Insets getWindowSizeAdjustment() {
-        if (!hideTitleBar()) {
-            return new Insets(decorationInformation.titleBarHeight, 0, 0, 0);
-        } else {
-            return new Insets(0, 0, 0, 0);
-        }
+        return new Insets(0, 0, 0, 0);
     }
 
     private void installListeners() {
