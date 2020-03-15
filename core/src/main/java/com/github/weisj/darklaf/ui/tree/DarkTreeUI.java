@@ -320,10 +320,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             @Override
             public void focusLost(final FocusEvent e) {
                 tree.stopEditing();
-                if (!hasFocus()) {
-                    tree.repaint();
-                    focused = false;
-                }
+                SwingUtilities.invokeLater(() -> {
+                    focused = hasFocus();
+                    if (!focused) {
+                        tree.repaint();
+                    }
+                });
             }
         };
     }
