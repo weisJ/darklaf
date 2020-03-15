@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
@@ -145,6 +146,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         Border border = editor.getBorder();
         if (border instanceof DarkTextBorder) {
             paintBorderBackground((Graphics2D) g, editor);
+        } else if (border instanceof DarkTableCellBorder) {
+            g.setColor(editor.getBackground());
+            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         } else if (border != null) {
             Insets ins = border.getBorderInsets(editor);
             if (ins != null) {
