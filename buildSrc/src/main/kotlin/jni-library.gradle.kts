@@ -1,4 +1,3 @@
-
 import org.gradle.internal.jvm.Jvm
 import org.gradle.kotlin.dsl.invoke
 
@@ -65,7 +64,7 @@ val TargetMachine.variantName: String get() = "$operatingSystemFamily-$architect
 
 // Gradle populates library.binaries in afterEvaluate, so we can't access it earlier
 afterEvaluate {
-    // C++ library is built for Windows only, so we skip it otherwise
+    // C++ library is built for Windows/macOS only, so we skip it otherwise
     library.developmentBinary.orNull?.let { it as CppSharedLibrary }?.let { developmentBinary ->
         tasks.test {
             dependsOn(developmentBinary.linkTask)
@@ -75,33 +74,51 @@ afterEvaluate {
         }
     }
     tasks.jar {
-        // Publish non-optimized, debuggable binary to simplify analysis in case of crashes
-        val libraryPath = "com/github/weisj/darklaf/platform/${project.name}"
+        //Disable all task. Tasks are reenabled if needed.
+        library.binaries.get().forEach {
+            it.compileTask.get().enabled = false
+        }
         library.binaries.get()
             .filter { it.isOptimized }
             .filterIsInstance<CppSharedLibrary>().let {
-                if (it.isEmpty()) {
-                    library.targetMachines.get().forEach { targetMachine ->
-                        val variantName = targetMachine.variantName
-                        val libraryFile = file("libraries/$variantName/$defaultLibraryName")
-                        if (!libraryFile.exists()) {
+                val taskMap = it.map { binary -> binary.targetPlatform.targetMachine to binary }.toMap()
+                library.targetMachines.get().forEach { targetMachine ->
+                    val libraryPath = "com/github/weisj/darklaf/platform/${project.name}"
+                    val variantName = targetMachine.variantName
+                    val libraryFile = file("libraries/$variantName/$defaultLibraryName")
+                    val relativePath = rootProject.relativePath(libraryFile)
+                    when {
+                        libraryFile.exists() -> {
+                            //Use provided library.
                             logger.warn(
-                                "Library $libraryFile for targetMachine $variantName does not exist. Download it from "
-                                        + "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22"
+                                "${project.name}: Using pre-build library $relativePath for targetMachine $variantName."
                             )
-                        } else {
                             into("$libraryPath/$variantName") {
                                 from(libraryFile)
                             }
                         }
-                    }
-                } else {
-                    it.forEach { binary ->
-                        binary.linkTask.get().debuggable.set(false)
-                        dependsOn(binary.linkTask)
-                        val variantName = binary.targetMachine.variantName
-                        into("$libraryPath/$variantName") {
-                            from(binary.runtimeFile)
+                        targetMachine in taskMap -> {
+                            taskMap[targetMachine]?.let { binary ->
+                                binary.compileTask.get().enabled = true
+                                // Publish optimized binary to reduce size.
+                                binary.linkTask.get().debuggable.set(false)
+                                //Build and copy library
+                                dependsOn(binary.linkTask)
+                                val variantName = binary.targetMachine.variantName
+                                into("$libraryPath/$variantName") {
+                                    from(binary.runtimeFile)
+                                }
+                            }
+                        }
+                        else -> {
+                            val downloadUrl =
+                                "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+branch%3Amaster"
+                            logger.warn(
+                                """
+                                ${project.name}: Library $relativePath for targetMachine $variantName does not exist.
+                                ${" ".repeat(project.name.length + 1)} Download it from $downloadUrl
+                                """.trimIndent()
+                            )
                         }
                     }
                 }
