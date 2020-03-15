@@ -36,6 +36,8 @@ import java.awt.*;
  */
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
 
+    public static final String KEY_PREFIX = "RadioButtonMenuItem";
+    public static final String KEY_NO_NOT_CLOSE_ON_CLICK = KEY_PREFIX + ".doNotCloseOnMouseClick";
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
         if (menuItem != null) menuItem.setArmed(true);
     });
@@ -58,7 +60,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
         acceleratorFont = UIManager.getFont("MenuItem.font");
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
         acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
-        c.putClientProperty("RadioButtonMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
+        c.putClientProperty(KEY_NO_NOT_CLOSE_ON_CLICK, UIManager.getBoolean(KEY_NO_NOT_CLOSE_ON_CLICK));
     }
 
     @Override

@@ -39,6 +39,8 @@ import java.awt.*;
  */
 public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
 
+    public static final String KEY_PREFIX = "CheckBoxMenuItem";
+    public static final String KEY_NO_NOT_CLOSE_ON_CLICK = KEY_PREFIX + ".doNotCloseOnMouseClick";
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
         if (menuItem != null) menuItem.setArmed(true);
     });
@@ -58,7 +60,7 @@ public class DarkCheckBoxMenuItemUI extends DarkMenuItemUIBase {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-        c.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", Boolean.TRUE);
+        c.putClientProperty(KEY_NO_NOT_CLOSE_ON_CLICK, UIManager.getBoolean(KEY_NO_NOT_CLOSE_ON_CLICK));
     }
 
     protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
