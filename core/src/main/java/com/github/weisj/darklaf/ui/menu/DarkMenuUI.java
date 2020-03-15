@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.menu;
 
+import com.github.weisj.darklaf.decorators.MouseDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
@@ -34,13 +35,54 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class DarkMenuUI extends BasicMenuUI {
 
     protected Icon arrowIconHover;
+    protected JMenu menu;
+    protected MouseListener mouseListener;
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkMenuUI();
+    }
+
+    @Override
+    public void installUI(final JComponent c) {
+        menu = (JMenu) c;
+        super.installUI(c);
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        for (MouseListener listener : menu.getMouseListeners()) {
+            if (listener.getClass().getEnclosingClass().equals(BasicMenuUI.class)) {
+                menu.removeMouseListener(listener);
+                mouseListener = new MouseDelegate(listener) {
+                    @Override
+                    public void mouseEntered(final MouseEvent e) {
+                        MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+                        MenuElement[] selectedPath = manager.getSelectedPath();
+                        for (MenuElement element : selectedPath) {
+                            if (element.equals(menu)) {
+                                return;
+                            }
+                        }
+                        super.mouseEntered(e);
+                    }
+                };
+                menu.addMouseListener(mouseListener);
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        menu.removeMouseListener(mouseListener);
     }
 
     @Override

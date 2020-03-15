@@ -33,6 +33,7 @@ import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
 
 public final class Decorations {
@@ -61,6 +62,10 @@ public final class Decorations {
 
     public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
         return decorationsProvider.createTitlePane(rootPane, decorationStyle);
+    }
+
+    public static void initPopupWindow(final Window window) {
+        decorationsProvider.initPopupWindow(window);
     }
 
 

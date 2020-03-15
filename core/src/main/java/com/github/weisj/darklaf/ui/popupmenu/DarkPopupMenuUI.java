@@ -57,7 +57,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         "doNotCancelPopup"));
     public static final StringBuilder MOUSE_GRABBER_KEY = new StringBuilder(
         "javax.swing.plaf.basic.BasicPopupMenuUI.MouseGrabber");
-
+    public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkPopupMenuUI();

@@ -119,7 +119,12 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                 patchMacOSFonts(defaults);
             }
             setupDecorations();
-
+            String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
+            if (SystemInfo.isWindows10 && Decorations.isCustomDecorationSupported()) {
+                JPopupMenu.setDefaultLightWeightPopupEnabled(defaults.getBoolean(key + ".windows"));
+            } else {
+                JPopupMenu.setDefaultLightWeightPopupEnabled(defaults.getBoolean(key));
+            }
             return defaults;
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
@@ -349,7 +354,23 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          * This is disadvantageous for the behaviour of custom tooltips.
          */
         call("initialize");
-        PopupFactory.setSharedInstance(new PopupFactory());
+        PopupFactory.setSharedInstance(new PopupFactory() {
+            @Override
+            public Popup getPopup(final Component owner, final Component contents,
+                                  final int x, final int y) throws IllegalArgumentException {
+                Popup popup = super.getPopup(owner, contents, x, y);
+                // Sometimes the background is java.awt.SystemColor[i=7]
+                // It results in a flash of white background that is repainted with
+                // the proper popup background later.
+                // That is why we set window background explicitly.
+                Window window = SwingUtilities.getWindowAncestor(contents);
+                if (window != null) {
+                    window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
+                    Decorations.initPopupWindow(window);
+                }
+                return popup;
+            }
+        });
         PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
     }

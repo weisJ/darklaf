@@ -27,9 +27,13 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.platform.PointerUtil;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Properties;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
@@ -47,6 +51,23 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     @Override
     public void initialize() {
         JNIDecorationsWindows.updateLibrary();
+    }
+
+    @Override
+    public void initPopupWindow(final Window window) {
+        if (!window.isDisplayable()) {
+            window.addNotify();
+        }
+        long hwnd = PointerUtil.getHWND(window);
+        if (hwnd != 0) {
+            JNIDecorationsWindows.installPopupMenuDecorations(hwnd);
+            window.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(final WindowEvent e) {
+                    JNIDecorationsWindows.uninstallDecorations(hwnd);
+                }
+            });
+        }
     }
 
     @Override

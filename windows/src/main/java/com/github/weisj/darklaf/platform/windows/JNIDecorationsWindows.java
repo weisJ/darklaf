@@ -54,6 +54,8 @@ public class JNIDecorationsWindows {
 
     public static native void uninstallDecorations(final long hwnd);
 
+    public static native void installPopupMenuDecorations(final long hwnd);
+
     /**
      * Load the decorations-library if necessary.
      */

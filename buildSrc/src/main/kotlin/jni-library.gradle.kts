@@ -104,7 +104,6 @@ afterEvaluate {
                                 binary.linkTask.get().debuggable.set(false)
                                 //Build and copy library
                                 dependsOn(binary.linkTask)
-                                val variantName = binary.targetMachine.variantName
                                 into("$libraryPath/$variantName") {
                                     from(binary.runtimeFile)
                                 }

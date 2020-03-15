@@ -34,6 +34,7 @@ std::map<HWND, WindowWrapper *> wrapper_map = std::map<HWND, WindowWrapper *>();
 
 LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapper)
 {
+    if (wrapper->popup_menu) return HTCLIENT;
     // Get the point coordinates for the hit test.
     POINT ptMouse = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
 
@@ -75,7 +76,9 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapp
     if (hit == HTNOWHERE || !wrapper->resizable)
     {
         //Handle window drag.
-        if (ptMouse.y < rcWindow.top + wrapper->height && ptMouse.x >= rcWindow.left + wrapper->left && ptMouse.x <= rcWindow.right - wrapper->right)
+        if (ptMouse.y < rcWindow.top + wrapper->height
+            && ptMouse.x >= rcWindow.left + wrapper->left
+            && ptMouse.x <= rcWindow.right - wrapper->right)
         {
             return HTCAPTION;
         }
@@ -165,32 +168,43 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackgrou
     }
 }
 
-JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
+void extend_client_frame(HWND handle)
 {
-    HWND handle = reinterpret_cast<HWND>(hwnd);
-
-    auto it = wrapper_map.find(handle);
-    if (it != wrapper_map.end())
-    {
-        //Prevent multiple installations overriding the real window procedure.
-        return;
-    }
-
     MARGINS margins = {0, 0, 0, 1};
     DwmExtendFrameIntoClientArea(handle, &margins);
+}
 
+void setup_window_style(HWND handle)
+{
     auto style = GetWindowLongPtr(handle, GWL_STYLE);
     SetWindowLongPtr(handle, GWL_STYLE, style | WS_THICKFRAME);
+}
+
+void install_decorations(HWND handle, bool is_popup)
+{
+    //Prevent multiple installations overriding the real window procedure.
+    auto it = wrapper_map.find(handle);
+    if (it != wrapper_map.end()) return;
+
+    extend_client_frame(handle);
+    setup_window_style(handle);
 
     SetWindowPos(handle, NULL, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
     WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWL_WNDPROC));
 
     WindowWrapper *wrapper = new WindowWrapper();
     wrapper->prev_proc = proc;
+    wrapper->popup_menu = is_popup;
     wrapper_map[handle] = wrapper;
 
-    SetWindowLongPtr((HWND)hwnd, GWL_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
+    SetWindowLongPtr(handle, GWL_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
+{
+    HWND handle = reinterpret_cast<HWND>(hwnd);
+    install_decorations(handle, false);
 }
 
 JNIEXPORT void JNICALL
@@ -204,6 +218,13 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
         wrapper_map.erase(handle);
         delete (wrap);
     }
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv *env, jclass obj, jlong hwnd)
+{
+    HWND handle = reinterpret_cast<HWND>(hwnd);
+    install_decorations(handle, true);
 }
 
 //Window functions.
