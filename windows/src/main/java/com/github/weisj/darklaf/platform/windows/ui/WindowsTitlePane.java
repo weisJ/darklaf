@@ -214,6 +214,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                     updateResizeBehaviour();
                     Color color = window.getBackground();
                     JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+                    forceNativeResize();
                 } else {
                     uninstall();
                     return;
@@ -229,11 +230,28 @@ public class WindowsTitlePane extends CustomTitlePane {
             if (window instanceof Dialog) {
                 titleLabel.setText(((Dialog) window).getTitle());
             }
+            determineColors();
             setActive(window.isActive());
             installListeners();
-            determineColors();
             updateSystemIcon();
         }
+    }
+
+    private void forceNativeResize() {
+        Rectangle bounds = window.getBounds();
+        Dimension size = bounds.getSize();
+        Point p = bounds.getLocation();
+        if (window.isPreferredSizeSet()) {
+            size = window.getPreferredSize();
+        } else {
+            p.x += size.width / 2;
+            p.y += size.height / 2;
+        }
+        //Resizing triggers #reshapeNativePeer
+        window.setSize(size.width, size.height + 1);
+        window.setSize(size.width, size.height);
+        window.setLocation(p.x - size.width / 2,
+                           p.y - size.height / 2);
     }
 
     private void installListeners() {

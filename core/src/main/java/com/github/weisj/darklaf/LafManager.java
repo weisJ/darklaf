@@ -192,10 +192,6 @@ public final class LafManager {
             updateLafRecursively(childWindow);
         }
         SwingUtilities.updateComponentTreeUI(window);
-        //Ensure decorations are applied appropriately.
-        boolean wasVisible = window.isVisible();
-        window.dispose();
-        window.setVisible(wasVisible);
     }
 
     /**

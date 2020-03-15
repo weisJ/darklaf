@@ -51,6 +51,8 @@ public class SystemInfo {
     protected static final String _OS_NAME;
     public static boolean isMacOSMojave;
     public static boolean isMacOSCatalina;
+    public static boolean isMacOSYosemite;
+    public static boolean isWindows10;
 
     static {
         _OS_NAME = OS_NAME.toLowerCase();
@@ -68,6 +70,8 @@ public class SystemInfo {
         isUndefined = !isX86 & !isX64;
         isMacOSMojave = isMac && isOsVersionAtLeast("10.14");
         isMacOSCatalina = isMac && isOsVersionAtLeast("10.15");
+        isMacOSYosemite = isMac && isOsVersionAtLeast("10.10");
+        isWindows10 = isWindows && isOsVersionAtLeast("10.0");
     }
 
     public static boolean isOsVersionAtLeast(final String version) {
