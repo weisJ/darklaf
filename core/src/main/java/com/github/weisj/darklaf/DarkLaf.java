@@ -360,7 +360,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                                   final int x, final int y) throws IllegalArgumentException {
                 Popup popup = super.getPopup(owner, contents, x, y);
                 // Sometimes the background is java.awt.SystemColor[i=7]
-                // It results in a flash of white background that is repainted with
+                // It results in a flash of white background, that is repainted with
                 // the proper popup background later.
                 // That is why we set window background explicitly.
                 Window window = SwingUtilities.getWindowAncestor(contents);
