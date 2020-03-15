@@ -203,27 +203,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
             updateClientDecoration();
         }
-        if (e.getChangeFlags() == HierarchyEvent.SHOWING_CHANGED) {
-            if (!window.isShowing()) return;
-            /*
-             * Force the window peer to relayout and repaint.
-             * e.g. on windows this is necessary to properly remove the title bar.
-             */
-            Rectangle bounds = window.getBounds();
-            Dimension size = bounds.getSize();
-            Point p = bounds.getLocation();
-            if (window.isPreferredSizeSet()) {
-                size = window.getPreferredSize();
-            } else {
-                p.x += size.width / 2;
-                p.y += size.height / 2;
-            }
-            //Resizing triggers #reshapeNativePeer
-            window.setSize(size.width, size.height + 1);
-            window.setSize(size.width, size.height);
-            window.setLocation(p.x - size.width / 2,
-                               p.y - size.height / 2);
-        }
     }
 
     protected void updateClientDecoration() {
