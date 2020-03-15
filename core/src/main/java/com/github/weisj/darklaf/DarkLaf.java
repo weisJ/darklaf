@@ -349,7 +349,21 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          * This is disadvantageous for the behaviour of custom tooltips.
          */
         call("initialize");
-        PopupFactory.setSharedInstance(new PopupFactory());
+        PopupFactory.setSharedInstance(new PopupFactory() {
+            @Override
+            public Popup getPopup(Component owner, Component contents, int x, int y) throws IllegalArgumentException {
+                Popup popup = super.getPopup(owner, contents, x, y);
+                // Sometimes the background is java.awt.SystemColor[i=7]
+                // It results in a flash of white background that is repainted with
+                // the proper popup background later.
+                // That is why we set window background explicitly.
+                Window window = SwingUtilities.getWindowAncestor(contents);
+                if (window != null) {
+                    window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
+                }
+                return popup;
+            }
+        });
         PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
     }
