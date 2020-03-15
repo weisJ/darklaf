@@ -45,20 +45,26 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
 
     protected static final DarkLabelUI darkLabelUI = new DarkLabelUI();
 
-    private final Color inactiveForeground;
-    private final Color cellForegroundNoFocus;
+    private Color inactiveForeground;
+    private Color cellForegroundNoFocus;
     protected Rectangle paintIconR = new Rectangle();
     protected Rectangle paintTextR = new Rectangle();
 
     public DarkLabelUI() {
-        inactiveForeground = UIManager.getColor("Label.inactiveForeground");
-        cellForegroundNoFocus = UIManager.getColor("Label.cellForegroundNoFocus");
+        installUI(null);
     }
 
     public static ComponentUI createUI(final JComponent c) {
         return darkLabelUI;
     }
 
+    @Override
+    public void installUI(final JComponent c) {
+        if (c != null) super.installUI(c);
+        //Ensure colors are up to date.
+        inactiveForeground = UIManager.getColor("Label.inactiveForeground");
+        cellForegroundNoFocus = UIManager.getColor("Label.cellForegroundNoFocus");
+    }
 
     @Override
     public void paint(final Graphics g, final JComponent c) {

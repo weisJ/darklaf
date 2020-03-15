@@ -34,7 +34,6 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
 /**
  * @author Konstantin Bulenkov
@@ -610,7 +609,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     }
 
     private void resetThumbAnimator() {
-        System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
         resetAnimators(thumbFadeinAnimator, thumbFadeoutAnimator, mouseOverThumb, thumbAlpha, MAX_THUMB_ALPHA);
     }
 

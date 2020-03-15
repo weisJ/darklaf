@@ -263,11 +263,9 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
-
     private WindowListener createWindowListener() {
         return new WindowsTitlePane.WindowHandler();
     }
-
 
     private PropertyChangeListener createWindowPropertyChangeListener() {
         return new PropertyChangeHandler();

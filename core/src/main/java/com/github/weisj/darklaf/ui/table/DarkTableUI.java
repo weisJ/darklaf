@@ -131,6 +131,12 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     @Override
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+
+    }
+
+    @Override
     protected void installListeners() {
         super.installListeners();
         table.addFocusListener(focusListener);

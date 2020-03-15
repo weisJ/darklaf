@@ -29,6 +29,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -41,7 +42,6 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     private static final int HEADER_HEIGHT = 26;
     protected Color borderColor;
     protected Color background;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableHeaderUI();
@@ -56,7 +56,8 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
             headerHeight = HEADER_HEIGHT;
         }
         header.setPreferredSize(new Dimension(dim.width, Math.max(dim.height, headerHeight)));
-        if (header.getDefaultRenderer() instanceof DefaultTableCellRenderer) {
+        TableCellRenderer defaultRenderer = header.getDefaultRenderer();
+        if (defaultRenderer instanceof DefaultTableCellRenderer) {
             DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) header.getDefaultRenderer();
             renderer.setHorizontalAlignment(SwingConstants.LEADING);
         }
