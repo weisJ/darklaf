@@ -81,7 +81,7 @@ public class JNIDecorationsMacOS {
                                    + SystemInfo.jreArchitecture
                                    + "' not supported. Decorations will be disabled");
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //Library not found, SecurityManager prevents library loading etc.
             LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-macos.dylib." +
                 " Decorations will be disabled", e);
