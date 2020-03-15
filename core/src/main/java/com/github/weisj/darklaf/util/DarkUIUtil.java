@@ -201,11 +201,12 @@ public final class DarkUIUtil {
     }
 
     public static boolean isInCell(final Component c) {
-        return getParentOfType(CellRendererPane.class, c) != null
-                || getParentOfType(TableCellRenderer.class, c) != null
-                || getParentOfType(TreeCellRenderer.class, c) != null
-                || getParentOfType(CellRenderer.class, c) != null
-                || getParentOfType(CellEditor.class, c) != null;
+        boolean inCellRenderer = getParentOfType(CellRendererPane.class, c) != null
+            || getParentOfType(TableCellRenderer.class, c) != null
+            || getParentOfType(TreeCellRenderer.class, c) != null
+            || getParentOfType(CellRenderer.class, c) != null
+            || getParentOfType(CellEditor.class, c) != null;
+        return inCellRenderer && getParentOfType(JComboBox.class, c) == null;
     }
 
     @SuppressWarnings("unchecked")
