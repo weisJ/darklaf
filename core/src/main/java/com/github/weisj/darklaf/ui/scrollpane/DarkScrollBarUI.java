@@ -34,6 +34,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 /**
  * @author Konstantin Bulenkov
@@ -115,8 +116,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
 
             Point p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, scrollbar);
-            if (!getThumbBounds().contains(p)) {
-                if (!thumbFadeinAnimator.isRunning() && e.getValueIsAdjusting()) {
+            if (!getThumbBounds().contains(p) && !e.getValueIsAdjusting()) {
+                if (!thumbFadeinAnimator.isRunning()) {
                     mouseOverThumb = true;
                     resetThumbAnimator();
                 }
@@ -600,7 +601,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
                 }
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(p, scrollbar);
-                if (!getThumbBounds().contains(p)) {
+                if (!getThumbBounds().contains(p) && !scrollbar.getValueIsAdjusting()) {
                     mouseOverThumb = false;
                     resetThumbAnimator();
                 }
@@ -609,7 +610,12 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
     }
 
     private void resetThumbAnimator() {
+        System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
         resetAnimators(thumbFadeinAnimator, thumbFadeoutAnimator, mouseOverThumb, thumbAlpha, MAX_THUMB_ALPHA);
+    }
+
+    private void resetTrackAnimator() {
+        resetAnimators(trackFadeinAnimator, trackFadeoutAnimator, mouseOverTrack, trackAlpha, MAX_TRACK_ALPHA);
     }
 
     private void resetAnimators(final Animator fadeInAnimator, final Animator fadeOutAnimator,
@@ -628,10 +634,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI {
             }
             fadeOutAnimator.resume(startFrame);
         }
-    }
-
-    private void resetTrackAnimator() {
-        resetAnimators(trackFadeinAnimator, trackFadeoutAnimator, mouseOverTrack, trackAlpha, MAX_TRACK_ALPHA);
     }
 
     private boolean isOverThumb(final Point p) {
