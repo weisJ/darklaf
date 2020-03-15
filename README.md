@@ -86,7 +86,7 @@ This LookAndFeel supports custom window decorations (only on Windows at this poi
 When building on Windows, you need a C++ toolchain installed to build native extension.
 
 If you wan't to build for platforms different than your machine you can download the respective native libraries
-from the latest run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22) and place it in the corresponding `<variant>/libraries` folder.
+from the latest successful run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+branch%3Amaster) and place it in the corresponding `<variant>/libraries` folder.
 Further details can be found in the respective `library.md` file. The libraries are then automatically included in the jar
 when building the project.
 When building the project there will be a message for every library that needs to be manually included.
