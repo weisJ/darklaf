@@ -22,6 +22,8 @@ fun ListProperty<String>.addJavaFrameworks() {
     addAll("-framework", "JavaNativeFoundation")
     add("-F")
     add(sdkRoot.map { "$it/System/Library/Frameworks/JavaVM.framework/Frameworks" })
+    add("-F")
+    add("/System/Library/Frameworks/JavaVM.framework/Frameworks")
 }
 
 library {
