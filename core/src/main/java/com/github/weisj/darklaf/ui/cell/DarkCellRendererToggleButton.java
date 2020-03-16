@@ -45,7 +45,6 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
     private final T toggleButton;
 
-
     public DarkCellRendererToggleButton(final T toggleButton) {
         this.toggleButton = toggleButton;
     }

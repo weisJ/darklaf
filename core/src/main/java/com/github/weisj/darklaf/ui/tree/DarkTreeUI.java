@@ -103,6 +103,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             }
         }
     };
+    protected MouseMotionListener popupListener;
     protected Color alternativeBackground;
     protected Color lineColor;
     protected Color focusSelectedLineColor;
@@ -118,7 +119,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected Icon collapsedFocus;
     protected Icon collapsed;
     private boolean myOldRepaintAllRowValue;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTreeUI();
@@ -174,8 +174,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void installListeners() {
         super.installListeners();
+        popupListener = createPopupMouseListener();
+        tree.addMouseMotionListener(popupListener);
         tree.addPropertyChangeListener(this);
         tree.addMouseListener(selectionListener);
+    }
+
+    protected MouseMotionListener createPopupMouseListener() {
+        return new PopupMouseListener(this, tree);
     }
 
     @Override
@@ -319,9 +325,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
             @Override
             public void focusLost(final FocusEvent e) {
-                tree.stopEditing();
                 focused = hasFocus(e != null ? e.getOppositeComponent() : null);
                 if (!focused) {
+                    tree.stopEditing();
                     tree.repaint();
                 }
             }
@@ -342,7 +348,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                 && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
             boolean treeRenderer = owner instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_RENDER));
-            return treeEditor || treeRenderer;
+            return treeEditor
+                || treeRenderer
+                || (tree.isEditing() && SwingUtilities.isDescendingFrom(owner, editingComponent));
         }
         return true;
     }
@@ -369,6 +377,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
+        tree.removeMouseMotionListener(popupListener);
         tree.removeMouseListener(selectionListener);
         tree.removePropertyChangeListener(this);
     }
@@ -382,6 +391,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         if (treeState == null) {
             return;
         }
+//        GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
+
         Rectangle paintBounds = g.getClipBounds();
 
         Insets insets = tree.getInsets();
@@ -480,14 +491,20 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         drawingCache.clear();
     }
 
-    protected Rectangle getPathBounds(final TreePath path, final Insets insets, Rectangle bounds) {
+    @Override
+    public void paintRow(final Graphics g, final Rectangle clipBounds, final Insets insets, final Rectangle bounds,
+                         final TreePath path, final int row, final boolean isExpanded, final boolean hasBeenExpanded,
+                         final boolean isLeaf) {
+        super.paintRow(g, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+    }
+
+    public Rectangle getPathBounds(final TreePath path, final Insets insets, Rectangle bounds) {
         bounds = treeState.getBounds(path, bounds);
         if (bounds != null) {
             if (tree.getComponentOrientation().isLeftToRight()) {
                 bounds.x += insets.left;
             } else {
-                bounds.x = tree.getWidth() - (bounds.x + bounds.width) -
-                        insets.right;
+                bounds.x = tree.getWidth() - (bounds.x + bounds.width) - insets.right;
             }
             bounds.y += insets.top;
         }
@@ -511,7 +528,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             rowGraphics.setColor(getRowBackground(row, selected));
             rowGraphics.fillRect(xOffset, bounds.y, containerWidth, bounds.height);
 
-            super.paintRow(rowGraphics, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+            paintRow(rowGraphics, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
             rowGraphics.dispose();
         }
     }
@@ -526,6 +543,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         } else {
             return tree.getBackground();
         }
+    }
+
+    public Component getEditingComponent() {
+        return editingComponent;
     }
 
     protected boolean shouldPaintLines() {
@@ -731,6 +752,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         } else if (KEY_LINE_STYLE.equals(key)) {
             tree.repaint();
         }
+    }
+
+    public boolean isLeaf(final Object lastPathComponent) {
+        return treeModel.isLeaf(lastPathComponent);
     }
 
     private abstract static class TreeUIAction extends AbstractAction implements UIResource {

@@ -44,11 +44,11 @@ public class TreeDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Node A");
-        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Leaf A");
+        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Node ANode ANode ANode ANode ANode A");
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Leaf ALeaf ALeaf ALeaf ALeaf A");
         DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
         DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf C");
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf CLeaf CLeaf CLeaf CLeaf CLeaf CLeaf CLeaf CLeaf C");
 
         parent1.add(child);
         parent1.add(child1);

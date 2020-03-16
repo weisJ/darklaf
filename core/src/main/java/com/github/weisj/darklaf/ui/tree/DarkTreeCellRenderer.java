@@ -83,7 +83,7 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
         return Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
     }
 
-    protected DarkCellRendererToggleButton getBooleanRenderer(final JTree table) {
+    protected DarkCellRendererToggleButton<?> getBooleanRenderer(final JTree table) {
         if (DarkTreeUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE))) {
             return radioRenderer;
         }

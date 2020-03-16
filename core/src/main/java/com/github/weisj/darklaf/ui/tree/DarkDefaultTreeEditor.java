@@ -99,16 +99,6 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     }
 
     @Override
-    public Object getCellEditorValue() {
-        return super.getCellEditorValue();
-    }
-
-    @Override
-    public boolean stopCellEditing() {
-        return super.stopCellEditing();
-    }
-
-    @Override
     protected boolean canEditImmediately(final EventObject event) {
         if (event != null && event.getSource() instanceof JTree) {
             JTree tree = ((JTree) event.getSource());
@@ -120,7 +110,7 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
                     Rectangle bounds = tree.getRowBounds(row);
                     if (bounds != null) {
                         DarkTreeCellRenderer rend = (DarkTreeCellRenderer) renderer;
-                        DarkCellRendererToggleButton booleanRend = rend.getBooleanRenderer(tree);
+                        DarkCellRendererToggleButton<?> booleanRend = rend.getBooleanRenderer(tree);
                         JToggleButton button = booleanRend.getButton();
 
                         p.x -= bounds.x + button.getX();
