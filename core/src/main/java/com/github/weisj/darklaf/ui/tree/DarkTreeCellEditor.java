@@ -47,8 +47,6 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
     private static final JCheckBox dummyCheckBox = new JCheckBox();
     private JTree tree;
-    private boolean adjustBoolValue;
-
 
     public DarkTreeCellEditor(final JTextField textField) {
         super(textField);
@@ -148,7 +146,6 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
-        adjustBoolValue = anEvent == null;
         return super.isCellEditable(anEvent);
     }
 
@@ -178,8 +175,8 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
     }
 
 
-    protected void updateFocus() {
-        if (DarkUIUtil.hasFocus(editorComponent)) {
+    protected void updateFocus(final FocusEvent e) {
+        if (DarkUIUtil.hasFocus(editorComponent, e)) {
             editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
         } else {
             editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
@@ -188,11 +185,11 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
     @Override
     public void focusGained(final FocusEvent e) {
-        updateFocus();
+        updateFocus(null);
     }
 
     @Override
     public void focusLost(final FocusEvent e) {
-        updateFocus();
+        updateFocus(e);
     }
 }

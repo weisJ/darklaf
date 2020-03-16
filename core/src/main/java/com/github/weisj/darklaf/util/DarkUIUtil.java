@@ -35,6 +35,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -164,12 +165,29 @@ public final class DarkUIUtil {
     }
 
     public static boolean hasFocus(final Component c) {
+        return hasFocus(c, null);
+    }
+
+    /**
+     * Returns whether the component has the focus, or one of the subcomponents has it.
+     *
+     * @param c the component.
+     * @param e an event associated with focusLost. optional (i.e. can be null).
+     * @return true if the component or one of its subcomponents has the focus.
+     */
+    public static boolean hasFocus(final Component c, final FocusEvent e) {
         if (c == null) return false;
         if (c.hasFocus()) return true;
         if (c instanceof Window) {
             return hasFocus(c);
         }
-        final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        Component owner = null;
+        if (e != null) {
+            owner = e.getOppositeComponent();
+        }
+        if (owner == null) {
+            owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        }
         return (owner != null && SwingUtilities.isDescendingFrom(owner, c));
     }
 

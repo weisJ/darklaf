@@ -320,19 +320,24 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             @Override
             public void focusLost(final FocusEvent e) {
                 tree.stopEditing();
-                SwingUtilities.invokeLater(() -> {
-                    focused = hasFocus();
-                    if (!focused) {
-                        tree.repaint();
-                    }
-                });
+                focused = hasFocus(e != null ? e.getOppositeComponent() : null);
+                if (!focused) {
+                    tree.repaint();
+                }
             }
         };
     }
 
     protected boolean hasFocus() {
+        return hasFocus(null);
+    }
+
+    protected boolean hasFocus(final Component other) {
+        Component owner = other;
         if (!DarkUIUtil.hasFocus(tree)) {
-            Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            if (owner == null) {
+                owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            }
             boolean treeEditor = owner instanceof JComponent
                 && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
             boolean treeRenderer = owner instanceof JComponent
