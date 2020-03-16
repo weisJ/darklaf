@@ -27,9 +27,11 @@ import com.github.weisj.darklaf.util.Pair;
 import com.kitfox.svg.*;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
+import com.kitfox.svg.xml.StyleAttribute;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +41,7 @@ import java.util.logging.Logger;
  */
 public final class IconColorMapper {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
+    private static final Color FALLBACK_COLOR = Color.RED;
 
     public static void patchColors(final SVGIcon svgIcon) {
         SVGUniverse universe = svgIcon.getSvgUniverse();
@@ -64,11 +67,8 @@ public final class IconColorMapper {
         for (Object child : children) {
             if (child instanceof LinearGradient) {
                 String id = ((LinearGradient) child).getId();
-                Color c = UIManager.getColor(id);
-                if (c == null) {
-                    c = Color.RED;
-                    LOGGER.warning("Could not load color with id'" + id + "'. Using Color.RED instead.");
-                }
+                String[] fallbacks = getFallbacks((LinearGradient) child);
+                Color c = resolveColor(id, fallbacks, FALLBACK_COLOR);
                 Pair<LinearGradient, Runnable> result = createColor(c, id);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
@@ -78,6 +78,29 @@ public final class IconColorMapper {
         }
     }
 
+    private static Color resolveColor(final String key, final String[] fallbacks, final Color fallbackColor) {
+        Color color = UIManager.getColor(key);
+        for (int i = 0; i < fallbacks.length && color == null; i++) {
+            color = UIManager.getColor(fallbacks[i]);
+        }
+        if (color == null) {
+            color = fallbackColor;
+            LOGGER.warning("Could not load color with id'" + key + "' fallbacks" + Arrays.toString(fallbacks)
+                               + " Using color " + fallbackColor + " instead.");
+        }
+        return color;
+    }
+
+    private static String[] getFallbacks(final LinearGradient child) {
+        StyleAttribute attribute = new StyleAttribute();
+        attribute.setName("fallback");
+        try {
+            child.getStyle(attribute);
+        } catch (SVGException e) {
+            return new String[0];
+        }
+        return attribute.getStringList();
+    }
 
     private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
