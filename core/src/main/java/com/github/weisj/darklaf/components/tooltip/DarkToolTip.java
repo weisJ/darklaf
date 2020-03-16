@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.components.tooltip;
 
-import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.Animator;
@@ -31,7 +30,6 @@ import com.github.weisj.darklaf.util.GraphicsContext;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -40,11 +38,9 @@ import java.util.Objects;
 public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     public static final String TIP_TEXT_PROPERTY = "tiptext";
-    private static final long REPAINT_THRESHOLD = 150;
     private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     private static final float MAX_ALPHA = 1.0f;
     private final Animator fadeAnimator;
-    private long lastHidden;
     private float alpha = 0;
 
     public DarkToolTip(final Alignment alignment) {
@@ -52,24 +48,16 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
         setOpaque(false);
         fadeAnimator = new FadeInAnimator();
         addPropertyChangeListener(this);
-        addAncestorListener(new AncestorAdapter() {
-            @Override
-            public void ancestorAdded(final AncestorEvent event) {
-                boolean resume = false;
-                if (Math.abs(System.currentTimeMillis() - lastHidden) < REPAINT_THRESHOLD) {
-                    alpha = 1.0f;
-                } else {
-                    alpha = 0;
-                    resume = true;
-                }
-                setVisible(true);
-                notifyToolTipListeners(ToolTipEvent.SHOWN);
-                if (resume) {
-                    fadeAnimator.reset();
-                    fadeAnimator.resume();
-                }
-            }
-        });
+    }
+
+    @Override
+    public void addNotify() {
+        alpha = 0;
+        setVisible(true);
+        notifyToolTipListeners(ToolTipEvent.SHOWN);
+        fadeAnimator.reset();
+        fadeAnimator.resume();
+        super.addNotify();
     }
 
     public void setAlignment(final Alignment alignment) {
@@ -127,7 +115,6 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     public void removeNotify() {
         super.removeNotify();
         notifyToolTipListeners(ToolTipEvent.HIDDEN);
-        lastHidden = System.currentTimeMillis();
         alpha = 0;
     }
 

@@ -64,10 +64,13 @@ public final class Decorations {
         return decorationsProvider.createTitlePane(rootPane, decorationStyle);
     }
 
-    public static void initPopupWindow(final Window window) {
-        decorationsProvider.initPopupWindow(window);
+    public static void installPopupWindow(final Window window) {
+        decorationsProvider.installPopupMenu(window);
     }
 
+    public static void uninstallPopupWindow(final Window window) {
+        decorationsProvider.uninstallPopupWindow(window);
+    }
 
     public static boolean isCustomDecorationSupported() {
         return decorationsProvider.isCustomDecorationSupported()

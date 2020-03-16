@@ -62,6 +62,12 @@ public interface DecorationsProvider {
     /**
      * Initialize the window of a popup menu.
      */
-    default void initPopupWindow(final Window window) {
+    default void installPopupMenu(final Window window) {
+    }
+
+    /**
+     * Uninstall the window of a popup menu.
+     */
+    default void uninstallPopupWindow(final Window window) {
     }
 }

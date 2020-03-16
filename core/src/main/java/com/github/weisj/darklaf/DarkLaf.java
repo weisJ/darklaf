@@ -26,8 +26,8 @@ package com.github.weisj.darklaf;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.SystemInfo;
 import sun.awt.AppContext;
 
@@ -354,27 +354,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          * This is disadvantageous for the behaviour of custom tooltips.
          */
         call("initialize");
-        PopupFactory.setSharedInstance(new PopupFactory() {
-            @Override
-            public Popup getPopup(final Component owner, final Component contents,
-                                  final int x, final int y) throws IllegalArgumentException {
-                Popup popup = super.getPopup(owner, contents, x, y);
-                // Sometimes the background is java.awt.SystemColor[i=7]
-                // It results in a flash of white background, that is repainted with
-                // the proper popup background later.
-                // That is why we set window background explicitly.
-                Window window = SwingUtilities.getWindowAncestor(contents);
-                if (window != null) {
-                    window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
-                    if (window instanceof RootPaneContainer) {
-                        JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
-                        rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_POPUP, true);
-                    }
-                    Decorations.initPopupWindow(window);
-                }
-                return popup;
-            }
-        });
+        PopupFactory.setSharedInstance(new DarkPopupFactory());
         PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
     }
@@ -465,4 +445,5 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     public boolean getSupportsWindowDecorations() {
         return Decorations.isCustomDecorationSupported();
     }
+
 }

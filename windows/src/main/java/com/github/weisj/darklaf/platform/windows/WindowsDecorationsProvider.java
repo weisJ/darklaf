@@ -54,7 +54,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void initPopupWindow(final Window window) {
+    public void installPopupMenu(final Window window) {
         if (!window.isDisplayable()) {
             window.addNotify();
         }
@@ -67,6 +67,17 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
                     JNIDecorationsWindows.uninstallDecorations(hwnd);
                 }
             });
+        }
+    }
+
+    @Override
+    public void uninstallPopupWindow(final Window window) {
+        if (window.isDisplayable()) {
+            long hwnd = PointerUtil.getHWND(window);
+            if (hwnd != 0) {
+                JNIDecorationsWindows.uninstallDecorations(hwnd);
+            }
+            window.dispose();
         }
     }
 

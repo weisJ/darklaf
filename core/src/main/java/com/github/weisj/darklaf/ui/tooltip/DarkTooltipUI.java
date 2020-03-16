@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.tooltip;
 
+import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
+import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -54,6 +56,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public static final String VARIANT_BALLOON = "balloon";
 
     protected JToolTip toolTip;
+    protected JRootPane lastRootPane;
+    protected ToolTipStyle style;
     protected MouseListener exitListener = new MouseAdapter() {
         @Override
         public void mouseExited(final MouseEvent e) {
@@ -130,6 +134,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         toolTip = (JToolTip) c;
         super.installUI(c);
         toolTip.setBorder(new DarkTooltipBorder());
+        toolTip.putClientProperty(KEY_STYLE, ToolTipStyle.BALLOON);
     }
 
     @Override
@@ -211,8 +216,17 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             //For MediumWeightPopup still need to make parent non opaque.
             ((JComponent) toolTip.getParent()).setOpaque(false);
         }
+        if (lastRootPane != null) {
+            lastRootPane.putClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP, false);
+        }
         if (w != null && !isDecorated(w) && (w.getClass().getEnclosingClass().equals(Popup.class))) {
             w.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
+            if (w instanceof RootPaneContainer) {
+                lastRootPane = ((RootPaneContainer) w).getRootPane();
+                if (lastRootPane != null) {
+                    lastRootPane.putClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP, true);
+                }
+            }
         }
     }
 
@@ -268,6 +282,13 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                 tooltip.setPreferredSize(getPreferredSize(tooltip));
             }
         }
+    }
+
+    protected ToolTipStyle getStyle() {
+        Object prop = toolTip.getClientProperty(KEY_STYLE);
+        String propValue = prop != null ? prop.toString() : null;
+        if (ToolTipStyle.BALLOON.name().equals(propValue)) return ToolTipStyle.BALLOON;
+        return ToolTipStyle.PLAIN;
     }
 
     protected void updateSize() {

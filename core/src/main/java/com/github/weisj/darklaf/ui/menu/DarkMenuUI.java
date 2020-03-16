@@ -61,6 +61,9 @@ public class DarkMenuUI extends BasicMenuUI {
             if (listener.getClass().getEnclosingClass().equals(BasicMenuUI.class)) {
                 menu.removeMouseListener(listener);
                 mouseListener = new MouseDelegate(listener) {
+                    private boolean pressed = false;
+                    private boolean wasEnabled = false;
+
                     @Override
                     public void mouseEntered(final MouseEvent e) {
                         MenuSelectionManager manager = MenuSelectionManager.defaultManager();
@@ -71,6 +74,23 @@ public class DarkMenuUI extends BasicMenuUI {
                             }
                         }
                         super.mouseEntered(e);
+                    }
+
+                    @Override
+                    public void mousePressed(final MouseEvent e) {
+                        pressed = true;
+                        wasEnabled = menu.isEnabled() && menu.isSelected() && menu.getPopupMenu().isShowing();
+                        super.mousePressed(e);
+                    }
+
+                    @Override
+                    public void mouseReleased(final MouseEvent e) {
+                        if (!menu.isEnabled()) return;
+                        if (pressed && wasEnabled) {
+                            pressed = false;
+                            return;
+                        }
+                        super.mouseReleased(e);
                     }
                 };
                 menu.addMouseListener(mouseListener);
