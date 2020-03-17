@@ -218,6 +218,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
         currentTheme.loadGlobals(uiProps, defaults);
         installGlobals(uiProps, defaults);
+        loadFontProperties(uiProps, defaults);
         currentTheme.loadUIProperties(uiProps, defaults);
         currentTheme.loadIconProperties(uiProps, defaults);
         currentTheme.loadPlatformProperties(uiProps, defaults);
@@ -228,6 +229,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
         StyleSheet styleSheet = currentTheme.loadStyleSheet();
         new HTMLEditorKit().setStyleSheet(styleSheet);
+    }
+
+    private void loadFontProperties(final Properties uiProps, final UIDefaults defaults) {
+        Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, "font", "properties/");
+        PropertyLoader.putProperties(fontProps, uiProps, defaults);
     }
 
     private void loadSystemOverwrites(final Properties uiProps, final UIDefaults defaults) {

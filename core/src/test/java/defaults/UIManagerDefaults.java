@@ -116,10 +116,10 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
 
         buildItemsMap();
         final Vector<String> comboBoxItems = new Vector<>(50);
-        FontMetrics fm = comboBox.getFontMetrics(comboBox.getFont());
         for (final Object key : items.keySet()) {
             comboBoxItems.add((String) key);
         }
+
         comboBox.removeItemListener(this);
         comboBox.setModel(new DefaultComboBoxModel<>(comboBoxItems));
         comboBox.setSelectedIndex(-1);
