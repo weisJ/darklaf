@@ -133,8 +133,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public void installUI(final JComponent c) {
         toolTip = (JToolTip) c;
         super.installUI(c);
-        toolTip.setBorder(new DarkTooltipBorder());
-        toolTip.putClientProperty(KEY_STYLE, ToolTipStyle.BALLOON);
     }
 
     @Override
@@ -147,9 +145,12 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     protected void installDefaults(final JComponent c) {
         super.installDefaults(c);
         c.setOpaque(false);
-        if (c.getBorder() instanceof DarkTooltipBorder) {
-            Alignment align = (Alignment) c.getClientProperty(KEY_POINTER_LOCATION);
-            ((DarkTooltipBorder) c.getBorder()).setPointerLocation(align == null ? Alignment.CENTER : align);
+        DarkTooltipBorder border = new DarkTooltipBorder();
+        Alignment align = (Alignment) c.getClientProperty(KEY_POINTER_LOCATION);
+        border.setPointerLocation(align == null ? Alignment.CENTER : align);
+        toolTip.setBorder(border);
+        if (toolTip.getClientProperty(KEY_STYLE) == null) {
+            toolTip.putClientProperty(KEY_STYLE, ToolTipStyle.BALLOON);
         }
     }
 
@@ -158,7 +159,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         super.installListeners(c);
         c.addHierarchyListener(this);
         c.addPropertyChangeListener(this);
-        toolTip.addMouseListener(exitListener);
+        c.addMouseListener(exitListener);
         Component comp = toolTip.getComponent();
         if (comp != null) {
             comp.addMouseListener(mouseListener);
@@ -169,7 +170,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     protected void uninstallListeners(final JComponent c) {
         super.uninstallListeners(c);
         c.removePropertyChangeListener(this);
-        toolTip.removeMouseListener(exitListener);
+        c.removeMouseListener(exitListener);
+        c.removeHierarchyListener(this);
         Component comp = toolTip.getComponent();
         if (comp != null) {
             comp.removeMouseListener(mouseListener);

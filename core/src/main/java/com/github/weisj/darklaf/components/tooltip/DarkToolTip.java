@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.components.tooltip;
 
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
+import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.Animator;
 import com.github.weisj.darklaf.util.GraphicsContext;
@@ -61,7 +62,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     }
 
     public void setAlignment(final Alignment alignment) {
-        putClientProperty("JToolTip.pointerLocation", alignment);
+        putClientProperty(DarkTooltipUI.KEY_POINTER_LOCATION, alignment);
     }
 
     public void notifyToolTipListeners(final ToolTipEvent event) {
@@ -83,7 +84,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     }
 
     public void setInsets(final Insets insets) {
-        putClientProperty("JToolTip.insets", insets);
+        putClientProperty(DarkTooltipUI.KEY_INSETS, insets);
     }
 
     public void addToolTipListener(final ToolTipListener listener) {
@@ -138,7 +139,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
     }
 
     public void setStyle(final ToolTipStyle style) {
-        putClientProperty("JToolTip.style", style);
+        putClientProperty(DarkTooltipUI.KEY_STYLE, style);
     }
 
     private enum ToolTipEvent {

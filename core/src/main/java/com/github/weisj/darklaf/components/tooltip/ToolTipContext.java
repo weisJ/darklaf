@@ -459,6 +459,11 @@ public class ToolTipContext implements ToolTipListener {
         return toolTip;
     }
 
+    public void updateToolTipUI() {
+        if (toolTip != null) toolTip.updateUI();
+        updateToolTip();
+    }
+
     private Dimension getContentSize() {
         Dimension dim = toolTip.getPreferredSize();
         Alignment align = alignment == Alignment.CENTER ? centerAlignment : alignment;

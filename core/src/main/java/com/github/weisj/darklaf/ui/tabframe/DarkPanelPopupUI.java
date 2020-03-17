@@ -382,6 +382,12 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             context.setToolTipInsets(UIManager.getInsets("TabFramePopup.headerButton.tooltipInsets"));
         }
 
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            if (context != null) context.updateToolTipUI();
+        }
+
         public void setFocus(final boolean focus) {
             putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, focus ? ui.headerButtonFocusHoverBackground
                                                                   : ui.headerButtonHoverBackground);

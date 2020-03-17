@@ -56,6 +56,12 @@ public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAw
     }
 
     @Override
+    public void updateUI() {
+        super.updateUI();
+        if (context != null) context.updateToolTipUI();
+    }
+
+    @Override
     public Point getToolTipLocation(final MouseEvent event) {
         return context.getToolTipLocation(event);
     }

@@ -116,6 +116,12 @@ abstract class SwatchPanel extends JPanel {
         });
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        if (toolTipContext != null) toolTipContext.updateToolTipUI();
+    }
+
     protected void initValues() {
 
     }

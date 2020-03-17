@@ -51,6 +51,12 @@ public class TooltipAwareButton extends JButton implements ToolTipAware {
         this(text, null);
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        if (context != null) context.updateToolTipUI();
+    }
+
     public TooltipAwareButton(final Action a) {
         super(a);
     }
