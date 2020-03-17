@@ -76,8 +76,8 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     protected Color shadowHover;
     protected Color shadowClick;
     protected AbstractButton button;
-    private int arc;
-    private int squareArc;
+    protected int arc;
+    protected int squareArc;
 
     protected final AbstractButtonLayoutDelegate layoutDelegate = new AbstractButtonLayoutDelegate() {
         @Override
@@ -199,7 +199,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         viewRect.y = i.top;
         viewRect.width = width - (i.right + viewRect.x);
         viewRect.height = height - (i.bottom + viewRect.y);
-        if (isSquare(c) && isIconOnly(b)) {
+        if (doConvertToShadow(b)) {
             int size = Math.min(viewRect.width, viewRect.height);
             viewRect.width = viewRect.height = size;
         }
@@ -345,6 +345,8 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         if (shouldDrawBackground(c)) {
             AbstractButton b = (AbstractButton) c;
             int arc = getArc(c);
+            int width = c.getWidth();
+            int height = c.getHeight();
             Insets margin = b.getMargin();
             if (margin instanceof UIResource) margin = new Insets(0, 0, 0, 0);
             if (isShadowVariant(c)) {
@@ -353,23 +355,27 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
                     g.setColor(getShadowColor(b));
                     if (isFullShadow(c)) {
                         g.fillRect(margin.left, margin.top,
-                                   c.getWidth() - margin.left - margin.right,
-                                   c.getHeight() - margin.top - margin.bottom);
+                                   width - margin.left - margin.right,
+                                   height - margin.top - margin.bottom);
+                    } else if (doConvertToShadow(b)) {
+                        int size = Math.min(width - margin.left - margin.right,
+                                            height - margin.left - margin.right);
+                        g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
                     } else {
                         g.fillRoundRect(margin.left, margin.top,
-                                        c.getWidth() - margin.left - margin.right,
-                                        c.getHeight() - margin.top - margin.bottom,
+                                        width - margin.left - margin.right,
+                                        height - margin.top - margin.bottom,
                                         arc, arc);
                     }
                 }
             } else {
                 g2.setColor(getBackgroundColor(c));
                 if (isSquare(c) && !chooseAlternativeArc(c)) {
-                    g2.fillRect(borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                c.getHeight() - 2 * borderSize - shadowHeight);
+                    g2.fillRect(borderSize, borderSize, width - 2 * borderSize,
+                                height - 2 * borderSize - shadowHeight);
                 } else {
-                    DarkUIUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize, c.getWidth() - 2 * borderSize,
-                                             c.getHeight() - 2 * borderSize - shadowHeight, arc);
+                    DarkUIUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize, width - 2 * borderSize,
+                                             height - 2 * borderSize - shadowHeight, arc);
                 }
             }
         }
