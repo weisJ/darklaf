@@ -50,6 +50,7 @@ public class DarkButtonListener extends BasicButtonListener {
         model.setRollover(false);
         model.setArmed(false);
     }
+    //A possible fix for shadow buttons being focusable.
 //
 //    public static void loadActionMap(final LazyActionMap map) {
 //        map.put(new Actions(Actions.PRESS));

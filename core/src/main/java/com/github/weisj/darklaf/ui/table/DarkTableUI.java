@@ -483,6 +483,12 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
+    protected boolean isFocusCell(final int row, final int col) {
+        boolean rowFocus = table.getSelectionModel().getLeadSelectionIndex() == row;
+        boolean columnFocus = table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == col;
+        return rowFocus && columnFocus;
+    }
+
     @Override
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
         Rectangle bounds = table.getVisibleRect();
@@ -523,7 +529,12 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
         }
+        if (!table.getShowVerticalLines() && column > cMin && isFocusCell(row, column)) {
+            r.x -= 1;
+            if (column < cMax) r.width += 1;
+        }
         if (table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column) {
+
             Component component = table.getEditorComponent();
             component.setBounds(r);
             component.validate();
