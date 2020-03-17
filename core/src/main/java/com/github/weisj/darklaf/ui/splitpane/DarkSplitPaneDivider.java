@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.splitpane;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -112,7 +113,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
 
     protected static class OneTouchButton extends JButton implements UIResource {
         protected OneTouchButton() {
-            putClientProperty("JButton.variant", "onlyLabel");
+            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
             setMinimumSize(new Dimension(ONE_TOUCH_SIZE, ONE_TOUCH_SIZE));
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             setRequestFocusEnabled(false);

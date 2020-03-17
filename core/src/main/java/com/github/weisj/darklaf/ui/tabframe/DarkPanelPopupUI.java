@@ -29,6 +29,7 @@ import com.github.weisj.darklaf.components.tabframe.PanelPopup;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -371,9 +372,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         public HeaderButton(final Icon icon, final DarkPanelPopupUI ui) {
             super(icon);
             this.ui = ui;
-            putClientProperty("JButton.square", true);
-            putClientProperty("JButton.alternativeArc", Boolean.TRUE);
-            putClientProperty("JButton.variant", "shadow");
+            putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+            putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
+            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
             setRolloverEnabled(true);
             setMargin(UIManager.getInsets("TabFramePopup.headerButton.insets"));
             setFocus(false);
@@ -382,10 +383,10 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
 
         public void setFocus(final boolean focus) {
-            putClientProperty("JButton.shadow.hover", focus ? ui.headerButtonFocusHoverBackground
-                                                            : ui.headerButtonHoverBackground);
-            putClientProperty("JButton.shadow.click", focus ? ui.headerButtonFocusClickBackground
-                                                            : ui.headerButtonClickBackground);
+            putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, focus ? ui.headerButtonFocusHoverBackground
+                                                                  : ui.headerButtonHoverBackground);
+            putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, focus ? ui.headerButtonFocusClickBackground
+                                                                  : ui.headerButtonClickBackground);
         }
 
         @Override

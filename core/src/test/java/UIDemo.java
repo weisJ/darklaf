@@ -3,6 +3,7 @@ import com.github.weisj.darklaf.components.text.SearchTextField;
 import com.github.weisj.darklaf.components.text.SearchTextFieldWithHistory;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.JXTaskPane;
@@ -84,22 +85,22 @@ public final class UIDemo {
                         add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
                             add(new JButton("IconButton", folderIcon) {{
                                 setRolloverEnabled(true);
-                                putClientProperty("JButton.variant", "shadow");
+                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
                             }});
                             add(new JButton(folderIcon) {{
                                 setRolloverEnabled(true);
-                                putClientProperty("JButton.square", true);
-                                putClientProperty("JButton.variant", "shadow");
+                                putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
                             }});
                             add(new JButton(folderIcon) {{
                                 setRolloverEnabled(true);
-                                putClientProperty("JButton.square", true);
-                                putClientProperty("JButton.thin", Boolean.TRUE);
-                                putClientProperty("JButton.alternativeArc", Boolean.TRUE);
-                                putClientProperty("JButton.variant", "shadow");
+                                putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+                                putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
+                                putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
+                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
                             }});
                             add(new JButton(folderIcon) {{
-                                putClientProperty("JButton.variant", "onlyLabel");
+                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
                             }});
                         }});
                         add(new JToggleButton("toggle") {{
@@ -167,7 +168,7 @@ public final class UIDemo {
                             putClientProperty("JToggleButton.variant", "slider");
                         }});
                         add(new JButton("square") {{
-                            putClientProperty("JButton.square", true);
+                            putClientProperty(DarkButtonUI.KEY_SQUARE, true);
                         }});
                     }});
                     panel.add(taskpanecontainer);

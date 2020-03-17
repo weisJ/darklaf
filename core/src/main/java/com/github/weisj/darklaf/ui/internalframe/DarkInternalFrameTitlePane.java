@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.internalframe;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
@@ -218,7 +219,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         };
         button.setFocusable(false);
         button.setOpaque(true);
-        button.putClientProperty("JButton.variant", "fullShadow");
+        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_FULL_SHADOW);
         button.putClientProperty("paintActive", Boolean.TRUE);
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
         button.setText(null);
@@ -237,12 +238,12 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         menu.setBackground(bg);
         menu.setOpaque(false);
 
-        iconButton.putClientProperty("JButton.shadow.hover", colorHover);
-        closeButton.putClientProperty("JButton.shadow.hover", colorHover);
-        maxButton.putClientProperty("JButton.shadow.hover", colorHover);
-        iconButton.putClientProperty("JButton.shadow.click", colorClick);
-        closeButton.putClientProperty("JButton.shadow.click", colorClick);
-        maxButton.putClientProperty("JButton.shadow.click", colorClick);
+        iconButton.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, colorHover);
+        closeButton.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, colorHover);
+        maxButton.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, colorHover);
+        iconButton.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, colorClick);
+        closeButton.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, colorClick);
+        maxButton.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, colorClick);
 
         super.paintChildren(g);
     }

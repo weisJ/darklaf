@@ -30,6 +30,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
+import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
@@ -57,6 +58,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     public static final String VARIANT_ONLY_LABEL = "onlyLabel";
     public static final String VARIANT_FULL_SHADOW = "fullShadow";
     public static final String VARIANT_SHADOW = "shadow";
+    public static final String VARIANT_NONE = "none";
     protected static final Rectangle viewRect = new Rectangle();
     protected static final Rectangle textRect = new Rectangle();
     protected static final Rectangle iconRect = new Rectangle();
@@ -83,10 +85,6 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
             return delegate != null ? delegate.getFont().deriveFont(Font.BOLD) : null;
         }
     };
-    protected boolean oldRolloverEnabled;
-    protected boolean oldThin;
-    protected boolean oldSquare;
-    protected boolean oldAltArc;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkButtonUI();
@@ -118,8 +116,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         if (isFullShadow(c)) return true;
         if (c instanceof JButton) {
             JButton b = (JButton) c;
-            return (isIconOnly(b) && convertIconButtonToShadow(b))
-                || VARIANT_SHADOW.equals(b.getClientProperty(KEY_VARIANT));
+            return doConvertToShadow((AbstractButton) c) || VARIANT_SHADOW.equals(b.getClientProperty(KEY_VARIANT));
         }
         return false;
     }
@@ -180,32 +177,12 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         return c instanceof JButton && Boolean.TRUE.equals(((JButton) c).getClientProperty(KEY_SQUARE));
     }
 
-    protected Color getBackgroundColor(final JComponent c) {
-        boolean defaultButton = isDefaultButton(c);
-        boolean rollOver = c instanceof JButton && (((JButton) c).isRolloverEnabled()
-            && (((JButton) c).getModel().isRollover()));
-        boolean clicked = c instanceof JButton && (((JButton) c).getModel().isArmed());
-        if (c.isEnabled()) {
-            if (defaultButton) {
-                if (clicked) {
-                    return defaultClickBackground;
-                } else if (rollOver) {
-                    return defaultHoverBackground;
-                } else {
-                    return defaultBackground;
-                }
-            } else {
-                if (clicked) {
-                    return clickBackground;
-                } else if (rollOver) {
-                    return hoverBackground;
-                } else {
-                    return background;
-                }
-            }
-        } else {
-            return inactiveBackground;
+    public static boolean isThin(final Component c) {
+        if (c instanceof JButton) {
+            boolean isThin = Boolean.TRUE.equals(((JButton) c).getClientProperty(KEY_THIN));
+            return isThin || doConvertToShadow((AbstractButton) c);
         }
+        return false;
     }
 
     protected int getArc(final Component c) {
@@ -258,9 +235,36 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         }
     }
 
-    public static boolean isThin(final Component c) {
-        return c instanceof JButton
-            && Boolean.TRUE.equals(((JButton) c).getClientProperty(KEY_THIN));
+    protected static boolean doConvertToShadow(final AbstractButton b) {
+        return isIconOnly(b) && convertIconButtonToShadow(b);
+    }
+
+    protected Color getBackgroundColor(final JComponent c) {
+        boolean defaultButton = isDefaultButton(c);
+        AbstractButton b = (AbstractButton) c;
+        boolean rollOver = (b.isRolloverEnabled() || doConvertToShadow(b)) && (((JButton) c).getModel().isRollover());
+        boolean clicked = b.getModel().isArmed();
+        if (c.isEnabled()) {
+            if (defaultButton) {
+                if (clicked) {
+                    return defaultClickBackground;
+                } else if (rollOver) {
+                    return defaultHoverBackground;
+                } else {
+                    return defaultBackground;
+                }
+            } else {
+                if (clicked) {
+                    return clickBackground;
+                } else if (rollOver) {
+                    return hoverBackground;
+                } else {
+                    return background;
+                }
+            }
+        } else {
+            return inactiveBackground;
+        }
     }
 
     protected static boolean convertIconButtonToShadow(final AbstractButton b) {
@@ -290,6 +294,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         squareArc = UIManager.getInt("Button.squareArc");
     }
 
+
     protected Color getShadowColor(final AbstractButton c) {
         Object colorHover = c.getClientProperty(KEY_HOVER_COLOR);
         Object colorClick = c.getClientProperty(KEY_CLICK_COLOR);
@@ -301,26 +306,11 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     public void installUI(final JComponent c) {
         button = (AbstractButton) c;
         super.installUI(c);
-        oldRolloverEnabled = button.isRolloverEnabled();
-        updateRolloverEnabled();
     }
 
-    public void updateRolloverEnabled() {
-        if (isIconOnly(button) && convertIconButtonToShadow(button)) {
-            oldRolloverEnabled = button.isRolloverEnabled();
-            oldThin = isThin(button);
-            oldSquare = isSquare(button);
-            oldAltArc = chooseAlternativeArc(button);
-            button.setRolloverEnabled(true);
-            button.putClientProperty(KEY_SQUARE, true);
-            button.putClientProperty(KEY_THIN, true);
-            button.putClientProperty(KEY_ALT_ARC, true);
-        } else {
-            button.setRolloverEnabled(oldRolloverEnabled);
-            button.putClientProperty(KEY_SQUARE, oldSquare);
-            button.putClientProperty(KEY_THIN, oldThin);
-            button.putClientProperty(KEY_ALT_ARC, oldAltArc);
-        }
+    @Override
+    protected BasicButtonListener createButtonListener(final AbstractButton b) {
+        return new DarkButtonListener(b);
     }
 
     @Override
@@ -412,10 +402,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if (key.startsWith(KEY_PREFIX)) {
-            button.repaint();
             button.revalidate();
-        } else if (JButton.TEXT_CHANGED_PROPERTY.equals(key)) {
-            updateRolloverEnabled();
         }
     }
 }

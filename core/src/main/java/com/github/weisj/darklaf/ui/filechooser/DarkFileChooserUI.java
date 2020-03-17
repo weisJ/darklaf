@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.filechooser;
 
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareToggleButton;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import sun.swing.FilePane;
 
 import javax.accessibility.AccessibleContext;
@@ -104,7 +105,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // Up Button
         JButton upFolderButton = new TooltipAwareButton(getChangeToParentDirectoryAction());
-        upFolderButton.putClientProperty("JButton.noShadowOverwrite", true);
+        upFolderButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         upFolderButton.setText(null);
         upFolderButton.setIcon(upFolderIcon);
         upFolderButton.setToolTipText(upFolderToolTipText);
@@ -123,7 +124,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
 
         JButton b = new TooltipAwareButton(homeFolderIcon);
-        b.putClientProperty("JButton.noShadowOverwrite", true);
+        b.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         b.setToolTipText(toolTipText);
         b.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
                             homeFolderAccessibleName);
@@ -138,7 +139,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         // New Directory Button
         if (!UIManager.getBoolean("FileChooser.readOnly")) {
             b = new TooltipAwareButton(filePane.getNewFolderAction());
-            b.putClientProperty("JButton.noShadowOverwrite", true);
+            b.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
             b.setText(null);
             b.setIcon(newFolderIcon);
             b.setToolTipText(newFolderToolTipText);
@@ -156,8 +157,8 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // List Button
         listViewButton = new TooltipAwareToggleButton(listViewIcon);
-        listViewButton.putClientProperty("JButton.noShadowOverwrite", true);
-        listViewButton.putClientProperty("JButton.square", Boolean.TRUE);
+        listViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+        listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
         listViewButton.setToolTipText(listViewButtonToolTipText);
         listViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
                                          listViewButtonAccessibleName);
@@ -174,8 +175,8 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // Details Button
         detailsViewButton = new TooltipAwareToggleButton(detailsViewIcon);
-        detailsViewButton.putClientProperty("JButton.noShadowOverwrite", true);
-        detailsViewButton.putClientProperty("JButton.square", Boolean.TRUE);
+        detailsViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+        detailsViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
         detailsViewButton.setToolTipText(detailsViewButtonToolTipText);
         detailsViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
                                             detailsViewButtonAccessibleName);
@@ -288,14 +289,14 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         getButtonPanel().setLayout(new DarkButtonAreaLayout());
 
         approveButton = new TooltipAwareButton(getApproveButtonText(fc));
-        approveButton.putClientProperty("JButton.noShadowOverwrite", true);
+        approveButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         // Note: Metal does not use mnemonics for approve and cancel
         approveButton.addActionListener(getApproveSelectionAction());
         approveButton.setToolTipText(getApproveButtonToolTipText(fc));
         getButtonPanel().add(approveButton);
 
         cancelButton = new TooltipAwareButton(cancelButtonText);
-        cancelButton.putClientProperty("JButton.noShadowOverwrite", true);
+        cancelButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         cancelButton.setToolTipText(cancelButtonToolTipText);
         cancelButton.addActionListener(getCancelSelectionAction());
         getButtonPanel().add(cancelButton);

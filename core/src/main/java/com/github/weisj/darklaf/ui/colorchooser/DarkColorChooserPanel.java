@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -193,8 +194,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         final JPanel previewPanel = new JPanel(new BorderLayout());
         if (enablePipette && pipette != null) {
             JButton pipetteButton = new JButtonUIResource();
-            pipetteButton.putClientProperty("JButton.variant", "onlyLabel");
-            pipetteButton.putClientProperty("JButton.thin", Boolean.TRUE);
+            pipetteButton.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
+            pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
             pipetteButton.setRolloverEnabled(true);
             pipetteButton.setIcon(getPipetteIcon());
             pipetteButton.setRolloverIcon(getPipetteRolloverIcon());

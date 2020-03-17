@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.components;
 
 import com.github.weisj.darklaf.icons.UIAwareIcon;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
@@ -71,7 +72,7 @@ public final class ArrowButton implements SwingConstants {
                                             final boolean applyInsetsOnSize, final Insets insets) {
         return new BasicArrowButton(orientation, null, null, null, null) {
             {
-                putClientProperty("JButton.noShadowOverwrite", true);
+                putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
             }
 
             @Override
