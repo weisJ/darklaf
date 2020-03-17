@@ -44,7 +44,7 @@ import java.util.function.Consumer;
  */
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
-    public static final String KEY_PREFIX = "JTabbedPane.";
+    protected static final String KEY_PREFIX = "JTabbedPane.";
     public static final String KEY_DND = KEY_PREFIX + "dndEnabled";
     public static final String KEY_NORTH_COMP = KEY_PREFIX + "northComponent";
     public static final String KEY_WEST_COMP = KEY_PREFIX + "westComponent";

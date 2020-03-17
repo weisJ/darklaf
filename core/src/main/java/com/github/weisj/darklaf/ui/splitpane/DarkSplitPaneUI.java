@@ -39,7 +39,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JSplitPane.";
+    protected static final String KEY_PREFIX = "JSplitPane.";
     public static final String KEY_STYLE = KEY_PREFIX + "style";
     public static final String STYLE_GRIP = "grip";
     public static final String STYLE_LINE = "line";

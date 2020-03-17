@@ -45,7 +45,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JButton.";
+    protected static final String KEY_PREFIX = "JButton.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_HOVER_COLOR = KEY_PREFIX + "shadow.hover";
     public static final String KEY_CLICK_COLOR = KEY_PREFIX + "shadow.click";

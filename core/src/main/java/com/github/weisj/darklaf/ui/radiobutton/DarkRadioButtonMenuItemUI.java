@@ -36,7 +36,7 @@ import java.awt.*;
  */
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
 
-    public static final String KEY_PREFIX = "RadioButtonMenuItem";
+    protected static final String KEY_PREFIX = "RadioButtonMenuItem";
     public static final String KEY_NO_NOT_CLOSE_ON_CLICK = KEY_PREFIX + ".doNotCloseOnMouseClick";
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
         if (menuItem != null) menuItem.setArmed(true);

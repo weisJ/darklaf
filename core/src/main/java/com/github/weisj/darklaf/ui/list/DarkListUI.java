@@ -36,7 +36,7 @@ import java.beans.PropertyChangeEvent;
  */
 public class DarkListUI extends DarkListUIBridge {
 
-    public static final String KEY_PREFIX = "JList.";
+    protected static final String KEY_PREFIX = "JList.";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
     public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
     public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";

@@ -48,7 +48,7 @@ import java.util.function.Supplier;
  */
 public class DarkTableUI extends DarkTableUIBridge {
 
-    public static final String KEY_PREFIX = "JTable.";
+    protected static final String KEY_PREFIX = "JTable.";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
     public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
     public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";

@@ -50,7 +50,7 @@ import java.util.Set;
  */
 public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JTextComponent.";
+    protected static final String KEY_PREFIX = "JTextComponent.";
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
     public static final String KEY_HAS_ERROR = KEY_PREFIX + "hasError";
     public static final String KEY_IS_CELL_EDITOR = KEY_PREFIX + "cellEditor";

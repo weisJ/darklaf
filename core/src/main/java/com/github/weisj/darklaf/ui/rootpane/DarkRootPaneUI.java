@@ -46,7 +46,7 @@ import java.beans.PropertyChangeEvent;
  */
 public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener {
 
-    public static final String KEY_PREFIX = "JRootPane.";
+    protected static final String KEY_PREFIX = "JRootPane.";
     public static final String KEY_IS_POPUP = KEY_PREFIX + "isPopup";
     public static final String KEY_IS_TOOLTIP = KEY_PREFIX + "isToolTip";
     private Window window;

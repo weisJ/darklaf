@@ -47,7 +47,7 @@ import java.util.Enumeration;
  */
 public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JTree.";
+    protected static final String KEY_PREFIX = "JTree.";
     public static final String KEY_TREE_TABLE_TREE = KEY_PREFIX + "treeTableTree";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
     public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";

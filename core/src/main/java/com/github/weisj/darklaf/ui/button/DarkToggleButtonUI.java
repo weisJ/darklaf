@@ -40,7 +40,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkToggleButtonUI extends DarkButtonUI {
 
-    public static final String KEY_PREFIX = "JToggleButton.";
+    protected static final String KEY_PREFIX = "JToggleButton.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
     public static final String KEY_IS_TREE_RENDER = KEY_PREFIX + "isTreeCellRenderer";

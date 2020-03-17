@@ -48,7 +48,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JSpinner.";
+    protected static final String KEY_PREFIX = "JSpinner.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
     public static final String KEY_IS_TREE_RENDER = KEY_PREFIX + "isTreeCellRenderer";

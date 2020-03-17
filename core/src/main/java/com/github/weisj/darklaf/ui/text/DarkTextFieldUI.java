@@ -45,7 +45,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JTextField.";
+    protected static final String KEY_PREFIX = "JTextField.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_KEEP_SELECTION_ON_FOCUS_LOST = KEY_PREFIX + "keepSelectionOnFocusLost";
     public static final String KEY_FIND_POPUP = KEY_PREFIX + "Search.FindPopup";

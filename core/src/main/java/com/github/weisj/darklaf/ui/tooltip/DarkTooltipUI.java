@@ -45,7 +45,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener {
 
-    public static final String KEY_PREFIX = "JToolTip.";
+    protected static final String KEY_PREFIX = "JToolTip.";
     public static final String KEY_STYLE = KEY_PREFIX + "style";
     public static final String KEY_INSETS = KEY_PREFIX + "insets";
     public static final String KEY_POINTER_LOCATION = KEY_PREFIX + "pointerLocation";

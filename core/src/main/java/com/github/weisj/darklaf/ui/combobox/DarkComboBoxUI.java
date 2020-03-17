@@ -48,7 +48,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JComboBox.";
+    protected static final String KEY_PREFIX = "JComboBox.";
     public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
     public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
 
