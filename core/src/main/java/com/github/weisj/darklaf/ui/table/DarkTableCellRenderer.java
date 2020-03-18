@@ -63,9 +63,8 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         this.setVerticalAlignment(SwingConstants.CENTER);
         setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && (hasFocus
-            || (table.getSelectionModel().getLeadSelectionIndex() == row
-            && DarkTableCellFocusBorder.isRowFocusBorder(table)));
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
+            && hasFocus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
 
         if (DarkTableCellFocusBorder.isRowFocusBorder(table)
             && table.getSelectionModel().getLeadSelectionIndex() == row
