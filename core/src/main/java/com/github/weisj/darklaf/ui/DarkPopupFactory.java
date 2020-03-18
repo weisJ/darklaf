@@ -31,14 +31,16 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DarkPopupFactory extends PopupFactory {
+
     @Override
-    protected Popup getPopup(final Component owner, final Component contents,
-                             final int x, final int y, final boolean heavyWeight) throws IllegalArgumentException {
-        Popup popup = super.getPopup(owner, contents, x, y, heavyWeight);
+    public Popup getPopup(final Component owner, final Component contents,
+                          final int x, final int y) throws IllegalArgumentException {
+        Popup popup = super.getPopup(owner, contents, x, y);
         if (popup.getClass().getSimpleName().endsWith("MediumWeightPopup")) {
             if (contents instanceof JToolTip
                 && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder) {
-                popup = super.getPopup(owner, contents, x, y, true);
+                // null owner forces a heavyweight popup.
+                popup = super.getPopup(null, contents, x, y);
             } else {
                 JRootPane rootPane = SwingUtilities.getRootPane(contents);
                 // Prevents decorations from being reinstalled.
