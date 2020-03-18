@@ -52,6 +52,7 @@ public class NewTabButton extends JPanel implements UIResource {
     protected JButton createButton() {
         JButton button = new JButtonUIResource();
         button.setIcon(ui.getNewTabIcon());
+        button.setFocusable(false);
         button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
         button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);

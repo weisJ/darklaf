@@ -46,6 +46,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
         setIcon(EmptyIcon.create(icon.getIconWidth(), icon.getIconHeight()));
         putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
         putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        setFocusable(false);
         setFont(getFont().deriveFont(8f));
     }
 
