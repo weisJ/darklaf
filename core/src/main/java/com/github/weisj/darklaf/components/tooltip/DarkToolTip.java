@@ -38,7 +38,6 @@ import java.util.Objects;
 
 public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
-    public static final String TIP_TEXT_PROPERTY = "tiptext";
     private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     private static final float MAX_ALPHA = 1.0f;
     private final Animator fadeAnimator;
@@ -130,7 +129,7 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        if (TIP_TEXT_PROPERTY.equals(evt.getPropertyName())) {
+        if (DarkTooltipUI.TIP_TEXT_PROPERTY.equals(evt.getPropertyName())) {
             setPreferredSize(getUI().getPreferredSize(this));
             if (!Objects.equals(evt.getNewValue(), evt.getOldValue())) {
                 notifyToolTipListeners(ToolTipEvent.TEXT);
@@ -169,19 +168,4 @@ public class DarkToolTip extends JToolTip implements PropertyChangeListener {
             paintImmediately(0, 0, getWidth(), getHeight());
         }
     }
-
-    @Override
-    public void setTipText(final String tipText) {
-        if (tipText != null && !tipText.startsWith("<html>")) {
-            if (tipText.contains("\n")) {
-                super.setTipText("<html>" + tipText.replaceAll("\n", "<\\br>") + "</html>");
-            } else {
-                super.setTipText("<html><body><nobr>" + tipText + "</nobr></body></html>");
-            }
-        } else {
-            super.setTipText(tipText);
-        }
-    }
-
-
 }

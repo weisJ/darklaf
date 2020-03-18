@@ -54,10 +54,12 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public static final String KEY_PLAIN_TOOLTIP = "JComponent.plainTooltip";
     public static final String VARIANT_PLAIN = "plain";
     public static final String VARIANT_BALLOON = "balloon";
+    public static final String TIP_TEXT_PROPERTY = "tiptext";
 
     protected JToolTip toolTip;
     protected JRootPane lastRootPane;
     protected ToolTipStyle style;
+    protected boolean isTipTextChanging;
     protected MouseListener exitListener = new MouseAdapter() {
         @Override
         public void mouseExited(final MouseEvent e) {
@@ -149,9 +151,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         Alignment align = (Alignment) c.getClientProperty(KEY_POINTER_LOCATION);
         border.setPointerLocation(align == null ? Alignment.CENTER : align);
         toolTip.setBorder(border);
-        if (toolTip.getClientProperty(KEY_STYLE) == null) {
-            toolTip.putClientProperty(KEY_STYLE, ToolTipStyle.BALLOON);
-        }
+        updateStyle();
     }
 
     @Override
@@ -197,7 +197,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         Dimension prefSize = new Dimension(insets.left + insets.right,
                                            insets.top + insets.bottom);
         String text = ((JToolTip) c).getTipText();
-
         if ((text != null) && !text.equals("")) {
             View v = (View) c.getClientProperty(PropertyKey.HTML);
             if (v != null) {
@@ -278,11 +277,39 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                     if (newComp instanceof Component) {
                         ((Component) newComp).addMouseListener(mouseListener);
                     }
+                    updateStyle();
+                } else if (TIP_TEXT_PROPERTY.equals(key)) {
+                    if (!isTipTextChanging) {
+                        isTipTextChanging = true;
+                        String tipText = tooltip.getTipText();
+                        if (tipText != null && !tipText.startsWith("<html>")) {
+                            if (tipText.contains("\n")) {
+                                tooltip.setTipText("<html>" + tipText.replaceAll("\n", "<\\br>") + "</html>");
+                            } else {
+                                tooltip.setTipText("<html><body><nobr>" + tipText + "</nobr></body></html>");
+                            }
+                        } else {
+                            tooltip.setTipText(tipText);
+                        }
+                        updateSize();
+                        isTipTextChanging = false;
+                    }
                 }
             }
             if (KEY_STYLE.equals(key)) {
-                tooltip.setPreferredSize(getPreferredSize(tooltip));
+                updateSize();
             }
+        }
+    }
+
+    private void updateStyle() {
+        JComponent comp = toolTip.getComponent();
+        if (comp != null) {
+            Object style = comp.getClientProperty(KEY_STYLE);
+            Object tooltipStyle = toolTip.getClientProperty(KEY_STYLE);
+            toolTip.putClientProperty(KEY_STYLE, style instanceof ToolTipStyle ? style :
+                                                 tooltipStyle instanceof ToolTipStyle ? tooltipStyle
+                                                                                      : ToolTipStyle.BALLOON);
         }
     }
 
