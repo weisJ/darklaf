@@ -235,7 +235,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     }
 
     protected static boolean doConvertToShadow(final AbstractButton b) {
-        return isIconOnly(b) && !b.isFocusable() && convertIconButtonToShadow(b);
+        return isIconOnly(b) && !b.isFocusable() && convertIconButtonToShadow(b) && (b instanceof JButton);
     }
 
     protected Color getBackgroundColor(final JComponent c) {
