@@ -52,7 +52,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
     public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
     public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
-    public static final String KEY_SHOW_ROW_FOCUS_BORDER = KEY_PREFIX + "rowFocusBorder";
+    public static final String KEY_FULL_ROW_FOCUS_BORDER = KEY_PREFIX + "rowFocusBorder";
     public static final String KEY_FORCE_LEFT_BORDER = KEY_PREFIX + "forcePaintLeft";
     public static final String KEY_FORCE_RIGHT_BORDER = KEY_PREFIX + "forcePaintRight";
     public static final String KEY_FILE_CHOOSER_PARENT = KEY_PREFIX + "fileChooserParent";

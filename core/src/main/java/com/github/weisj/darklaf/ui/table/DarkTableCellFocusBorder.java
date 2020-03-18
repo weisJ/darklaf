@@ -62,9 +62,9 @@ public class DarkTableCellFocusBorder extends DarkCellBorder {
         }
     }
 
-    protected static boolean isRowFocusBorder(final Component c) {
+    public static boolean isRowFocusBorder(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_SHOW_ROW_FOCUS_BORDER));
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER));
     }
 
     protected static boolean forcePaintLeft(final Component c) {

@@ -63,12 +63,17 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         this.setVerticalAlignment(SwingConstants.CENTER);
         setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
+            && table.getSelectionModel().getLeadSelectionIndex() == row
+            && (table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column
+            || DarkTableCellFocusBorder.isRowFocusBorder(table));
+
         if (DarkTableCellFocusBorder.isRowFocusBorder(table)
-                && table.getSelectionModel().getLeadSelectionIndex() == row
-                && !table.isEditing()
-                && DarkUIUtil.hasFocus(table)) {
+            && table.getSelectionModel().getLeadSelectionIndex() == row
+            && !table.isEditing()
+            && DarkUIUtil.hasFocus(table)) {
             component.setBorder(UIManager.getBorder("Table.focusSelectedCellHighlightBorder"));
-            component.putClientProperty(DarkTableUI.KEY_SHOW_ROW_FOCUS_BORDER, true);
+            component.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, true);
             JTableHeader header = table.getTableHeader();
             TableColumn draggedColumn = (header == null) ? null : header.getDraggedColumn();
             boolean forceLeft = false;
@@ -81,14 +86,14 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
             component.putClientProperty(DarkTableUI.KEY_FORCE_RIGHT_BORDER, forceRight);
             component.putClientProperty(DarkTableUI.KEY_FORCE_LEFT_BORDER, forceLeft);
         } else {
-            component.putClientProperty(DarkTableUI.KEY_SHOW_ROW_FOCUS_BORDER, false);
+            component.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, false);
         }
 
         boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = table.getBackground();
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-        if (!(isSelected) || table.isEditing()) {
+        if (!isSelected || isLeadSelectionCell || table.isEditing()) {
             component.setBackground(background);
             component.setForeground(table.getForeground());
         } else {
