@@ -52,6 +52,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public static final String KEY_PLAIN_TOOLTIP = "JComponent.plainTooltip";
     public static final String VARIANT_PLAIN = "plain";
     public static final String VARIANT_BALLOON = "balloon";
+    public static final String VARIANT_PLAIN_BALLOON = "plainBalloon";
     public static final String TIP_TEXT_PROPERTY = "tiptext";
     public static final String KEY_PAINT_ALPHA = KEY_PREFIX + "paintAlpha";
     public static final String KEY_CONTEXT = KEY_PREFIX + "toolTipContext";
@@ -340,12 +341,21 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     private void updateStyle() {
         JComponent comp = toolTip.getComponent();
         if (comp != null) {
-            Object style = comp.getClientProperty(KEY_STYLE);
-            Object tooltipStyle = toolTip.getClientProperty(KEY_STYLE);
-            toolTip.putClientProperty(KEY_STYLE, style instanceof ToolTipStyle ? style :
-                                                 tooltipStyle instanceof ToolTipStyle ? tooltipStyle
-                                                                                      : ToolTipStyle.PLAIN_BALLOON);
+            ToolTipStyle style = getStyle(comp.getClientProperty(KEY_STYLE));
+            ToolTipStyle tooltipStyle = getStyle(toolTip.getClientProperty(KEY_STYLE));
+            toolTip.putClientProperty(KEY_STYLE, style != null ? style :
+                                                 tooltipStyle != null ? tooltipStyle
+                                                                      : ToolTipStyle.PLAIN_BALLOON);
         }
+    }
+
+    private ToolTipStyle getStyle(final Object style) {
+        if (style instanceof ToolTipStyle) return (ToolTipStyle) style;
+        String name = style.toString();
+        if (VARIANT_PLAIN_BALLOON.equals(name)) return ToolTipStyle.PLAIN_BALLOON;
+        if (VARIANT_BALLOON.equals(name)) return ToolTipStyle.BALLOON;
+        if (VARIANT_PLAIN.equals(name)) return ToolTipStyle.PLAIN;
+        return null;
     }
 
     protected void updateSize() {
