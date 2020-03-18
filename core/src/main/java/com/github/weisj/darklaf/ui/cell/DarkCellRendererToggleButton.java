@@ -61,10 +61,9 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(focus);
 
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
-            && table.getSelectionModel().getLeadSelectionIndex() == row
-            && (table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column
-            || DarkTableCellFocusBorder.isRowFocusBorder(table));
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && (focus
+            || (table.getSelectionModel().getLeadSelectionIndex() == row
+            && DarkTableCellFocusBorder.isRowFocusBorder(table)));
 
         boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
