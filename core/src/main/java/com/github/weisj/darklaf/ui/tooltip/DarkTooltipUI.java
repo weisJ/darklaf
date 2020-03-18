@@ -98,6 +98,11 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             exitListener.mouseExited(e);
         }
     };
+    protected PropertyChangeListener componentPropertyChaneListener = e -> {
+        if (KEY_STYLE.equals(e.getPropertyName())) {
+            updateStyle();
+        }
+    };
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -272,10 +277,12 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                     Object oldComp = evt.getOldValue();
                     if (oldComp instanceof Component) {
                         ((Component) oldComp).removeMouseListener(mouseListener);
+                        ((Component) oldComp).removePropertyChangeListener(componentPropertyChaneListener);
                     }
                     Object newComp = evt.getNewValue();
                     if (newComp instanceof Component) {
                         ((Component) newComp).addMouseListener(mouseListener);
+                        ((Component) newComp).addPropertyChangeListener(componentPropertyChaneListener);
                     }
                     updateStyle();
                 } else if (TIP_TEXT_PROPERTY.equals(key)) {
