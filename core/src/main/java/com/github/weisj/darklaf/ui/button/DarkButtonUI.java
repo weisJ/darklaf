@@ -141,8 +141,8 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     }
 
     public static boolean isFullShadow(final Component c) {
-        return c instanceof JButton
-            && VARIANT_FULL_SHADOW.equals(((JButton) c).getClientProperty(KEY_VARIANT));
+        return c instanceof AbstractButton
+            && VARIANT_FULL_SHADOW.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
     }
 
     protected static boolean isIconOnly(final AbstractButton b) {
@@ -162,8 +162,8 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     }
 
     public static boolean isNoArc(final Component c) {
-        return c instanceof JButton
-            && Boolean.TRUE.equals(((JButton) c).getClientProperty(KEY_NO_ARC));
+        return c instanceof AbstractButton
+            && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_NO_ARC));
     }
 
     private boolean shouldDrawBackground(final JComponent c) {
@@ -174,12 +174,12 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     }
 
     public static boolean isSquare(final Component c) {
-        return c instanceof JButton && Boolean.TRUE.equals(((JButton) c).getClientProperty(KEY_SQUARE));
+        return c instanceof AbstractButton && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_SQUARE));
     }
 
     public static boolean isThin(final Component c) {
-        if (c instanceof JButton) {
-            boolean isThin = Boolean.TRUE.equals(((JButton) c).getClientProperty(KEY_THIN));
+        if (c instanceof AbstractButton) {
+            boolean isThin = Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_THIN));
             return isThin || doConvertToShadow((AbstractButton) c);
         }
         return false;

@@ -90,8 +90,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                 return d;
             }
         };
-        directoryComboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY,
-                                            lookInLabelText);
+        directoryComboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY, lookInLabelText);
         lookInLabel.setLabelFor(directoryComboBox);
         directoryComboBoxModel = createDirectoryComboBoxModel(fc);
         directoryComboBox.setModel(directoryComboBoxModel);
@@ -106,6 +105,9 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         // Up Button
         JButton upFolderButton = new TooltipAwareButton(getChangeToParentDirectoryAction());
         upFolderButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+        upFolderButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        upFolderButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
+        upFolderButton.setFocusable(false);
         upFolderButton.setText(null);
         upFolderButton.setIcon(upFolderIcon);
         upFolderButton.setToolTipText(upFolderToolTipText);
@@ -130,6 +132,9 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                             homeFolderAccessibleName);
         b.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         b.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+        b.setFocusable(false);
+        b.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        b.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         b.setMargin(shrinkwrap);
 
         b.addActionListener(getGoHomeAction());
@@ -141,6 +146,9 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
             b = new TooltipAwareButton(filePane.getNewFolderAction());
             b.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
             b.setText(null);
+            b.setFocusable(false);
+            b.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+            b.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
             b.setIcon(newFolderIcon);
             b.setToolTipText(newFolderToolTipText);
             b.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
@@ -158,11 +166,12 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         // List Button
         listViewButton = new TooltipAwareToggleButton(listViewIcon);
         listViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+        listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        listViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
+        listViewButton.setFocusable(false);
         listViewButton.setToolTipText(listViewButtonToolTipText);
-        listViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                                         listViewButtonAccessibleName);
-
+        listViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, listViewButtonAccessibleName);
 
         listViewButton.setSelected(true);
         listViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -176,10 +185,11 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         // Details Button
         detailsViewButton = new TooltipAwareToggleButton(detailsViewIcon);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
-        detailsViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
+        detailsViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        detailsViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
+        detailsViewButton.setFocusable(false);
         detailsViewButton.setToolTipText(detailsViewButtonToolTipText);
-        detailsViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                                            detailsViewButtonAccessibleName);
+        detailsViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, detailsViewButtonAccessibleName);
         detailsViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         detailsViewButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         detailsViewButton.setMargin(shrinkwrap);
