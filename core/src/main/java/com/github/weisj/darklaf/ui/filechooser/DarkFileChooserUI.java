@@ -107,7 +107,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         upFolderButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         upFolderButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         upFolderButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
-        upFolderButton.setFocusable(false);
         upFolderButton.setText(null);
         upFolderButton.setIcon(upFolderIcon);
         upFolderButton.setToolTipText(upFolderToolTipText);
@@ -176,7 +175,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         listViewButton.setMargin(shrinkwrap);
         listViewButton.addActionListener(filePane.getViewTypeAction(FilePane.VIEWTYPE_LIST));
         topButtonPanel.add(listViewButton);
-        topButtonPanel.add(Box.createRigidArea(hstrut5));
         viewButtonGroup.add(listViewButton);
 
         // Details Button
