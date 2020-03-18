@@ -132,7 +132,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                             homeFolderAccessibleName);
         b.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         b.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-        b.setFocusable(false);
         b.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         b.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         b.setMargin(shrinkwrap);
@@ -146,7 +145,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
             b = new TooltipAwareButton(filePane.getNewFolderAction());
             b.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
             b.setText(null);
-            b.setFocusable(false);
             b.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
             b.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
             b.setIcon(newFolderIcon);
@@ -169,7 +167,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
-        listViewButton.setFocusable(false);
         listViewButton.setToolTipText(listViewButtonToolTipText);
         listViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, listViewButtonAccessibleName);
 
@@ -187,7 +184,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
-        detailsViewButton.setFocusable(false);
         detailsViewButton.setToolTipText(detailsViewButtonToolTipText);
         detailsViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, detailsViewButtonAccessibleName);
         detailsViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
