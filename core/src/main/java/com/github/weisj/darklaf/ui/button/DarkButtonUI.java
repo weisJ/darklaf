@@ -195,14 +195,13 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     protected String layout(final AbstractButton b, final JComponent c, final FontMetrics fm,
                             final int width, final int height) {
         Insets i = b.getInsets();
+        if (!isShadowVariant(b)) {
+            i = new Insets(i.top, borderSize, i.bottom, borderSize);
+        }
         viewRect.x = i.left;
         viewRect.y = i.top;
-        viewRect.width = width - (i.right + viewRect.x);
-        viewRect.height = height - (i.bottom + viewRect.y);
-        if (doConvertToShadow(b)) {
-            int size = Math.min(viewRect.width, viewRect.height);
-            viewRect.width = viewRect.height = size;
-        }
+        viewRect.width = width - (i.right + i.left);
+        viewRect.height = height - (i.bottom + i.top);
 
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
@@ -324,7 +323,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     public void paint(final Graphics g, final JComponent c) {
         GraphicsContext config = new GraphicsContext(g);
         AbstractButton b = (AbstractButton) c;
-        paintButton(g, c);
+        paintButtonBackground(g, c);
 
         if (isDefaultButton(b)) {
             g.setFont(g.getFont().deriveFont(Font.BOLD));
@@ -332,15 +331,14 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
             g.setFont(g.getFont().deriveFont(Font.PLAIN));
         }
 
-        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g),
-                             b.getWidth() + 2, b.getHeight());
+        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
 
         paintIcon(g, b, c);
         paintText(g, b, c, text);
         config.restore();
     }
 
-    protected void paintButton(final Graphics g, final JComponent c) {
+    protected void paintButtonBackground(final Graphics g, final JComponent c) {
         Graphics2D g2 = (Graphics2D) g;
         if (shouldDrawBackground(c)) {
             AbstractButton b = (AbstractButton) c;
