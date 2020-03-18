@@ -289,8 +289,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                 filterComboBox.setEnabled(filterComboBox.getItemCount() > 1);
             }
         });
-        filterComboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY,
-                                         filesOfTypeLabelText);
+        filterComboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY, filesOfTypeLabelText);
         filesOfTypeLabel.setLabelFor(filterComboBox);
         filterComboBox.setRenderer(createFilterComboBoxRenderer());
         filesOfTypePanel.add(filterComboBox);
@@ -316,6 +315,11 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         }
 
         groupLabels(new AlignedLabel[]{fileNameLabel, filesOfTypeLabel});
+    }
+
+    @Override
+    protected ListCellRenderer<Object> createFilterComboBoxRenderer() {
+        return new DarkFilterComboBoxRenderer();
     }
 
     protected static class DarkButtonAreaLayout extends ButtonAreaLayout {

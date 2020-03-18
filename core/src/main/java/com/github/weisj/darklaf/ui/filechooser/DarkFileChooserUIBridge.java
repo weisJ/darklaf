@@ -785,7 +785,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      *
      * @return a {@code Renderer} for types {@code ComboBox}
      */
-    protected FilterComboBoxRenderer createFilterComboBoxRenderer() {
+    protected ListCellRenderer<Object> createFilterComboBoxRenderer() {
         return new FilterComboBoxRenderer();
     }
 

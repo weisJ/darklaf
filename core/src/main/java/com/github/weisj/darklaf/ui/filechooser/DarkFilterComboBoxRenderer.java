@@ -21,22 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui.fileChooser;
+package com.github.weisj.darklaf.ui.filechooser;
 
-import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 
-public final class FileChooserDemo {
+public class DarkFilterComboBoxRenderer extends DarkListCellRenderer {
 
-    public static void main(final String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install();
-            JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
-            chooser.addChoosableFileFilter(new FileNameExtensionFilter("Test Filter", ".svg"));
-            chooser.setMultiSelectionEnabled(true);
-            chooser.showOpenDialog(null);
-        });
+    public Component getListCellRendererComponent(final JList<?> list,
+                                                  final Object value, final int index, final boolean isSelected,
+                                                  final boolean cellHasFocus) {
+
+        Object val = value;
+        if (value instanceof FileFilter) {
+            val = ((FileFilter) value).getDescription();
+        }
+        return super.getListCellRendererComponent(list, val, index, isSelected, cellHasFocus);
     }
 }
