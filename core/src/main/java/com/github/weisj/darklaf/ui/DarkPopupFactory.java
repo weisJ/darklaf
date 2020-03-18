@@ -64,7 +64,6 @@ public class DarkPopupFactory extends PopupFactory {
                 Decorations.uninstallPopupWindow(window);
             }
         }
-        System.out.println(popup + " " + contents);
         return popup;
     }
 }

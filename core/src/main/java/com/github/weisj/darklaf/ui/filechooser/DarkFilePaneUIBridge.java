@@ -1731,12 +1731,12 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
     }
 
     @SuppressWarnings("serial")
-            // JDK-implementation class
-    class DetailsTableCellRenderer extends DarkTableCellRenderer {
+    // JDK-implementation class
+    public class DetailsTableCellRenderer extends DarkTableCellRenderer {
         JFileChooser chooser;
         DateFormat df;
 
-        DetailsTableCellRenderer(final JFileChooser chooser) {
+        public DetailsTableCellRenderer(final JFileChooser chooser) {
             this.chooser = chooser;
             df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
                                                 chooser.getLocale());

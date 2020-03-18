@@ -101,44 +101,35 @@ public class DarkListUI extends DarkListUIBridge {
 
         int startColumn, endColumn;
         if (c.getComponentOrientation().isLeftToRight()) {
-            startColumn = convertLocationToColumn(paintBounds.x,
-                                                  paintBounds.y);
-            endColumn = convertLocationToColumn(paintBounds.x +
-                                                        paintBounds.width,
-                                                paintBounds.y);
+            startColumn = convertLocationToColumn(paintBounds.x, paintBounds.y);
+            endColumn = convertLocationToColumn(paintBounds.x + paintBounds.width, paintBounds.y);
         } else {
-            startColumn = convertLocationToColumn(paintBounds.x +
-                                                          paintBounds.width,
-                                                  paintBounds.y);
-            endColumn = convertLocationToColumn(paintBounds.x,
-                                                paintBounds.y);
+            startColumn = convertLocationToColumn(paintBounds.x + paintBounds.width, paintBounds.y);
+            endColumn = convertLocationToColumn(paintBounds.x, paintBounds.y);
         }
         int maxY = paintBounds.y + paintBounds.height;
+        int maxX = paintBounds.x + paintBounds.width;
         int leadIndex = adjustIndex(list.getLeadSelectionIndex(), list);
-        int rowIncrement = (layoutOrientation == JList.HORIZONTAL_WRAP) ?
-                           columnCount : 1;
+        int rowIncrement = (layoutOrientation == JList.HORIZONTAL_WRAP) ? columnCount : 1;
 
 
-        for (int colCounter = startColumn; colCounter <= endColumn;
-             colCounter++) {
-            // And then how many rows in this columnn
+        Rectangle rowBounds;
+        for (int colCounter = startColumn; colCounter <= endColumn; colCounter++) {
             int row = convertLocationToRowInColumn(paintBounds.y, colCounter);
             int rowCount = Math.max(rowsPerColumn, getRowCount(colCounter));
             int index = getModelIndex(colCounter, row);
-            Rectangle rowBounds = getCellBounds(list, index, index);
+            rowBounds = getCellBounds(list, index);
 
             if (rowBounds == null) {
                 // Not valid, bail!
                 return;
             }
+            int bgWidth = colCounter == endColumn ? maxX - rowBounds.x : 0;
             while (row < rowCount && rowBounds.y < maxY) {
                 rowBounds.height = getHeight(colCounter, row);
-                g.setClip(rowBounds.x, rowBounds.y, rowBounds.width,
-                          rowBounds.height);
-                g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width,
-                           paintBounds.height);
-                paintCell(g, index, rowBounds, renderer, dataModel, selModel,
-                          leadIndex, row);
+                g.setClip(rowBounds.x, rowBounds.y, bgWidth > 0 ? bgWidth : rowBounds.width, rowBounds.height);
+                g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);
+                paintCell(g, index, rowBounds, renderer, dataModel, selModel, leadIndex, row, bgWidth);
                 rowBounds.y += rowBounds.height;
                 index += rowIncrement;
                 row++;
@@ -151,7 +142,8 @@ public class DarkListUI extends DarkListUIBridge {
     protected void paintCell(final Graphics g, final int index, final Rectangle rowBounds,
                              final ListCellRenderer<Object> cellRenderer,
                              final ListModel<Object> dataModel,
-                             final ListSelectionModel selModel, final int leadIndex, final int row) {
+                             final ListSelectionModel selModel, final int leadIndex, final int row,
+                             final int bgWidth) {
         boolean empty = index >= list.getModel().getSize();
         Object value = empty ? null : dataModel.getElementAt(index);
         boolean cellHasFocus = list.hasFocus() && (index == leadIndex);
@@ -162,19 +154,19 @@ public class DarkListUI extends DarkListUIBridge {
         int cw = rowBounds.width;
         int ch = rowBounds.height;
 
-        if (empty) {
+        if (empty || bgWidth > 0) {
             boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty(KEY_ALTERNATE_ROW_COLOR));
             Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
             Color normalColor = list.getBackground();
             Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
             Color c = g.getColor();
             g.setColor(background);
-            g.fillRect(cx, cy, cw, ch);
+            g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
             g.setColor(c);
-        } else {
+        }
+        if (!empty) {
             Component rendererComponent =
-                    cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
+                cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (Boolean.TRUE.equals(list.getClientProperty(KEY_SHRINK_WRAP))) {
                 // Shrink renderer to preferred size. This is mostly used on Windows
                 // where selection is only shown around the file name, instead of
@@ -185,7 +177,6 @@ public class DarkListUI extends DarkListUIBridge {
                 }
                 cw = w;
             }
-
             rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
         }
     }
