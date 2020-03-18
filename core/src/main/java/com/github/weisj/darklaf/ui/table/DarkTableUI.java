@@ -425,10 +425,15 @@ public class DarkTableUI extends DarkTableUIBridge {
                 case KeyEvent.VK_CAPS_LOCK:
                 case KeyEvent.VK_HOME:
                 case KeyEvent.VK_WINDOWS:
+                case KeyEvent.VK_CONTEXT_MENU:
+                case KeyEvent.VK_PRINTSCREEN:
+                case KeyEvent.VK_NUM_LOCK:
+                case KeyEvent.VK_SCROLL_LOCK:
                     return true;
                 default:
                     break;
             }
+            return event.isControlDown();
         }
         return false;
     }
