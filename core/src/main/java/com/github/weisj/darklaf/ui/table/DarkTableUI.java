@@ -36,10 +36,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.util.function.Supplier;
 
@@ -420,6 +417,23 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
+    public static boolean ignoreKeyCodeOnEdit(final KeyEvent event) {
+        if (event != null) {
+            int keyCode = event.getKeyCode();
+            switch (keyCode) {
+                case KeyEvent.VK_ALT_GRAPH:
+                case KeyEvent.VK_META:
+                case KeyEvent.VK_CAPS_LOCK:
+                case KeyEvent.VK_HOME:
+                case KeyEvent.VK_WINDOWS:
+                    return true;
+                default:
+                    break;
+            }
+        }
+        return false;
+    }
+
     protected class DarkHandler extends Handler {
 
         protected int lastIndex = -1;
@@ -480,6 +494,12 @@ public class DarkTableUI extends DarkTableUIBridge {
 
         @Override
         public void actionPerformed(final ActionEvent ae) {
+        }
+
+        @Override
+        public void keyTyped(final KeyEvent e) {
+            if (ignoreKeyCodeOnEdit(e)) return;
+            super.keyTyped(e);
         }
     }
 
