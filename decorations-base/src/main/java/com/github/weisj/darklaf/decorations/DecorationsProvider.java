@@ -34,10 +34,11 @@ public interface DecorationsProvider {
      *
      * @param rootPane        The root pane to create the title pane for.
      * @param decorationStyle The style of the decorations.
+     * @param window          The target window.
      * @return the custom title pane.
      * @see JRootPane#getWindowDecorationStyle()
      */
-    CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle);
+    CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window);
 
     /**
      * Returns whether custom decorations are supported.

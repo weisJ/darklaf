@@ -25,15 +25,26 @@ package com.github.weisj.darklaf.ui;
 
 import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DarkPopupFactory extends PopupFactory {
     @Override
-    public Popup getPopup(final Component owner, final Component contents,
-                          final int x, final int y) throws IllegalArgumentException {
-        Popup popup = super.getPopup(owner, contents, x, y);
+    protected Popup getPopup(final Component owner, final Component contents,
+                             final int x, final int y, final boolean heavyWeight) throws IllegalArgumentException {
+        Popup popup = super.getPopup(owner, contents, x, y, heavyWeight);
+        if (popup.getClass().getSimpleName().endsWith("MediumWeightPopup")) {
+            if (contents instanceof JToolTip
+                && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder) {
+                popup = super.getPopup(owner, contents, x, y, true);
+            } else {
+                JRootPane rootPane = SwingUtilities.getRootPane(contents);
+                // Prevents decorations from being reinstalled.
+                if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_MEDIUM_WEIGHT_POPUP_ROOT, true);
+            }
+        }
         // Sometimes the background is java.awt.SystemColor[i=7]
         // It results in a flash of white background, that is repainted with
         // the proper popup background later.
@@ -53,6 +64,7 @@ public class DarkPopupFactory extends PopupFactory {
                 Decorations.uninstallPopupWindow(window);
             }
         }
+        System.out.println(popup + " " + contents);
         return popup;
     }
 }

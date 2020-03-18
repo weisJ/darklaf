@@ -38,7 +38,7 @@ import java.beans.PropertyChangeListener;
 public class MacOSTitlePane extends CustomTitlePane {
 
     private final JRootPane rootPane;
-    private Window window;
+    private final Window window;
     private WindowListener windowListener;
     private Color inactiveBackground;
     private Color activeBackground;
@@ -50,9 +50,9 @@ public class MacOSTitlePane extends CustomTitlePane {
     private PropertyChangeHandler propertyChangeListener;
     private boolean hideTitleBar = false;
 
-    public MacOSTitlePane(final JRootPane rootPane) {
-        super();
+    public MacOSTitlePane(final JRootPane rootPane, final Window window) {
         this.rootPane = rootPane;
+        this.window = window;
         determineColors();
     }
 
@@ -104,12 +104,6 @@ public class MacOSTitlePane extends CustomTitlePane {
         }
     }
 
-    public void addNotify() {
-        super.addNotify();
-        window = SwingUtilities.getWindowAncestor(this);
-        install();
-    }
-
     public Window getWindow() {
         return window;
     }
@@ -118,7 +112,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         return getRootPane().getWindowDecorationStyle();
     }
 
-    private void install() {
+    public void install() {
         determineColors();
         JRootPane rootPane = getRootPane();
         decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane);

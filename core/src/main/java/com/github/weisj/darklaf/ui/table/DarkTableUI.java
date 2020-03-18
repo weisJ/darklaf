@@ -130,7 +130,6 @@ public class DarkTableUI extends DarkTableUIBridge {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-
     }
 
     @Override
@@ -201,7 +200,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         super.installDefaults();
         int rowHeight = UIManager.getInt("Table.rowHeight");
         if (rowHeight > 0) {
-            table.setRowHeight(ROW_HEIGHT_FALLBACK);
+            LookAndFeel.installProperty(table, "rowHeight", ROW_HEIGHT_FALLBACK);
         }
         table.setDefaultEditor(Object.class, new DarkTableCellEditor());
         table.putClientProperty(KEY_RENDER_BOOLEAN_AS_CHECKBOX,
