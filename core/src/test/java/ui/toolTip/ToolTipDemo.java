@@ -26,7 +26,7 @@ package ui.toolTip;
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
+import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
 import com.github.weisj.darklaf.util.Alignment;
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -41,10 +41,12 @@ public class ToolTipDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        TooltipAwareButton button = new TooltipAwareButton("Demo Button");
+        JButton button = new JButton("Demo Button");
         DemoPanel panel = new DemoPanel(button);
-        ToolTipContext context = button.getToolTipContext();
-        button.setToolTipText("ToolTip demo text!");
+        ToolTipContext context = new ToolTipContext(button).setAlignment(Alignment.CENTER)
+                                                           .setCenterAlignment(Alignment.SOUTH);
+        button.putClientProperty(DarkTooltipUI.KEY_CONTEXT, context);
+        button.setToolTipText("This is the ToolTip demo text!");
 
         JPanel controlPanel = panel.addControls();
 

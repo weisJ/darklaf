@@ -25,9 +25,7 @@ package com.github.weisj.darklaf.ui.tooltip;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -55,6 +53,12 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public static final String VARIANT_PLAIN = "plain";
     public static final String VARIANT_BALLOON = "balloon";
     public static final String TIP_TEXT_PROPERTY = "tiptext";
+    public static final String KEY_PAINT_ALPHA = KEY_PREFIX + "paintAlpha";
+    public static final String KEY_CONTEXT = KEY_PREFIX + "toolTipContext";
+    static final float MAX_ALPHA = 1.0f;
+    private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
+    private Animator fadeAnimator;
+    private float alpha = 0;
 
     protected JToolTip toolTip;
     protected JRootPane lastRootPane;
@@ -103,6 +107,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             updateStyle();
         }
     };
+    private boolean added;
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -151,6 +156,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     @Override
     protected void installDefaults(final JComponent c) {
         super.installDefaults(c);
+        fadeAnimator = new FadeInAnimator();
         c.setOpaque(false);
         DarkTooltipBorder border = new DarkTooltipBorder();
         Alignment align = (Alignment) c.getClientProperty(KEY_POINTER_LOCATION);
@@ -186,12 +192,25 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     @Override
     public void paint(final Graphics g, final JComponent c) {
         if (((JToolTip) c).getTipText() == null) return;
+        if (added) {
+            added = false;
+            alpha = 0;
+            fadeAnimator.reset();
+            fadeAnimator.resume();
+        }
+        toolTip.putClientProperty(KEY_PAINT_ALPHA, alpha);
+        if (alpha == 0) return;
+        GraphicsContext config = new GraphicsContext(g);
+        if (alpha != MAX_ALPHA) {
+            ((Graphics2D) g).setComposite(COMPOSITE.derive(alpha));
+        }
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
             Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
             ((Graphics2D) g).fill(area);
         }
         super.paint(g, c);
+        config.restore();
     }
 
     public Dimension getPreferredSize(final JComponent c) {
@@ -301,6 +320,15 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                         updateSize();
                         isTipTextChanging = false;
                     }
+                } else if (PropertyKey.ANCESTOR.equals(key)) {
+                    if (evt.getOldValue() == null) {
+                        //Added to hierarchy. Schedule animation start.
+                        added = true;
+                        ToolTipUtil.applyContext(toolTip);
+                    }
+                    if (evt.getNewValue() == null) {
+                        alpha = 0;
+                    }
                 }
             }
             if (KEY_STYLE.equals(key)) {
@@ -316,19 +344,34 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             Object tooltipStyle = toolTip.getClientProperty(KEY_STYLE);
             toolTip.putClientProperty(KEY_STYLE, style instanceof ToolTipStyle ? style :
                                                  tooltipStyle instanceof ToolTipStyle ? tooltipStyle
-                                                                                      : ToolTipStyle.BALLOON);
+                                                                                      : ToolTipStyle.PLAIN_BALLOON);
         }
-    }
-
-    protected ToolTipStyle getStyle() {
-        Object prop = toolTip.getClientProperty(KEY_STYLE);
-        String propValue = prop != null ? prop.toString() : null;
-        if (ToolTipStyle.BALLOON.name().equals(propValue)) return ToolTipStyle.BALLOON;
-        return ToolTipStyle.PLAIN;
     }
 
     protected void updateSize() {
         toolTip.setTipText(toolTip.getTipText());
         toolTip.setPreferredSize(getPreferredSize(toolTip));
+    }
+
+    protected class FadeInAnimator extends Animator {
+        private static final int DELAY_FRAMES = 6;
+        private static final int FADEIN_FRAMES_COUNT = DELAY_FRAMES + 10;
+
+
+        public FadeInAnimator() {
+            super("Tooltip fadein", FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * 20, false);
+        }
+
+        @Override
+        public void paintNow(final int frame, final int totalFrames, final int cycle) {
+            alpha = ((float) frame * MAX_ALPHA) / totalFrames;
+            toolTip.paintImmediately(0, 0, toolTip.getWidth(), toolTip.getHeight());
+        }
+
+        @Override
+        protected void paintCycleEnd() {
+            alpha = MAX_ALPHA;
+            toolTip.paintImmediately(0, 0, toolTip.getWidth(), toolTip.getHeight());
+        }
     }
 }

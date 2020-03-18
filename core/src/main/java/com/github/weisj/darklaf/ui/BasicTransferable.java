@@ -28,11 +28,8 @@ import javax.swing.plaf.UIResource;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
+import java.io.*;
+import java.util.logging.Logger;
 
 /**
  * A transferable implementation for the default data transfer of some Swing components.
@@ -63,7 +60,7 @@ public class BasicTransferable implements Transferable, UIResource {
             stringFlavors[1] = DataFlavor.stringFlavor;
 
         } catch (ClassNotFoundException cle) {
-            System.err.println("error initializing javax.swing.plaf.basic.BasicTranserable");
+            Logger.getGlobal().severe("error initializing javax.swing.plaf.basic.BasicTranserable");
         }
     }
 

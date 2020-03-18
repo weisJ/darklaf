@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -45,6 +46,7 @@ public class DarkTooltipBorder implements Border {
                                                                        false, true,
                                                                        true, true);
     private final BubbleBorder bubbleBorder;
+    private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
 
     public DarkTooltipBorder() {
         bubbleBorder = new BubbleBorder(UIManager.getColor("ToolTip.borderColor"));
@@ -86,9 +88,25 @@ public class DarkTooltipBorder implements Border {
         }
     }
 
+    protected float getAlpha(final Component c) {
+        if (c instanceof JComponent) {
+            Object alpha = ((JComponent) c).getClientProperty(DarkTooltipUI.KEY_PAINT_ALPHA);
+            if (alpha instanceof Float) {
+                return (float) alpha;
+            }
+        }
+        return DarkTooltipUI.MAX_ALPHA;
+    }
+
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
+        float alpha = getAlpha(c);
+        if (alpha == 0) return;
+        GraphicsContext context = new GraphicsContext(g);
+        if (alpha != DarkTooltipUI.MAX_ALPHA) {
+            ((Graphics2D) g).setComposite(COMPOSITE.derive(alpha));
+        }
         if (isPlain(c)) {
             g.setColor(bubbleBorder.getColor());
             DarkUIUtil.drawRect(g, x, y, width, height, 1);
@@ -115,6 +133,7 @@ public class DarkTooltipBorder implements Border {
         shadowBorder.paintBorder(c, g, x + bw, y + bw + off, width - 2 * bw, height - 2 * bw - off);
         g.setClip(oldClip);
         bubbleBorder.paintBorder(g, bubbleArea);
+        context.restore();
     }
 
     @Override
