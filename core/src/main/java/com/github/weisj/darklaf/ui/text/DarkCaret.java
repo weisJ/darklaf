@@ -28,13 +28,8 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
+import javax.swing.text.*;
 import javax.swing.text.DefaultHighlighterDark.DarkHighlightPainter;
-import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Position;
-import javax.swing.text.Segment;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
@@ -228,6 +223,15 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     @Override
     protected Highlighter.HighlightPainter getSelectionPainter() {
         return selectionPainter;
+    }
+
+    @Override
+    public boolean isSelectionVisible() {
+        return super.isSelectionVisible() && selectionPainter.isEnabled();
+    }
+
+    public void setPaintSelectionHighlight(final boolean paintSelectionHighlight) {
+        selectionPainter.setEnabled(paintSelectionHighlight);
     }
 
     public boolean getPasteOnMiddleMouseClick() {

@@ -61,11 +61,19 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     private FocusListener focusListener = new FocusListener() {
         @Override
         public void focusGained(final FocusEvent e) {
+            Caret caret = editor.getCaret();
+            if (caret instanceof DarkCaret) {
+                ((DarkCaret) caret).setPaintSelectionHighlight(true);
+            }
             editor.repaint();
         }
 
         @Override
         public void focusLost(final FocusEvent e) {
+            Caret caret = editor.getCaret();
+            if (caret instanceof DarkCaret) {
+                ((DarkCaret) caret).setPaintSelectionHighlight(false);
+            }
             editor.repaint();
         }
     };

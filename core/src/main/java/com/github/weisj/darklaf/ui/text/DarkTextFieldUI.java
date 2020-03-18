@@ -54,13 +54,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected static Icon clearHover;
     protected static Icon search;
     protected static Icon searchWithHistory;
-    private final FocusListener focusListener = new FocusAdapter() {
-        public void focusLost(final FocusEvent e) {
-            if (Boolean.FALSE.equals(getComponent().getClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST))) {
-                getComponent().select(0, 0);
-            }
-        }
-    };
     protected int arcSize;
     protected int searchArcSize;
     protected int borderSize;
@@ -284,7 +277,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         JTextComponent c = getComponent();
         c.addMouseListener(mouseListener);
         c.addMouseMotionListener(mouseMotionListener);
-        c.addFocusListener(focusListener);
         c.addKeyListener(keyListener);
     }
 
@@ -293,7 +285,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         JTextComponent c = getComponent();
         c.removeMouseListener(mouseListener);
         c.removeMouseMotionListener(mouseMotionListener);
-        c.removeFocusListener(focusListener);
         c.removeKeyListener(keyListener);
     }
 
