@@ -90,16 +90,6 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         return new DarkButtonUI();
     }
 
-    public static boolean chooseAlternativeArc(final Component c) {
-        return c instanceof JButton
-            && Boolean.TRUE.equals(((JButton) c).getClientProperty(KEY_ALT_ARC));
-    }
-
-    public static boolean isLabelButton(final Component c) {
-        return c instanceof JButton
-            && VARIANT_ONLY_LABEL.equals(((JButton) c).getClientProperty(KEY_VARIANT));
-    }
-
     @Override
     protected void installListeners(final AbstractButton b) {
         super.installListeners(b);
@@ -159,6 +149,16 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
             fg = defaultForeground;
         }
         return fg;
+    }
+
+    public static boolean chooseAlternativeArc(final Component c) {
+        return c instanceof AbstractButton
+            && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_ALT_ARC));
+    }
+
+    public static boolean isLabelButton(final Component c) {
+        return c instanceof AbstractButton
+            && VARIANT_ONLY_LABEL.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
     }
 
     public static boolean isNoArc(final Component c) {
