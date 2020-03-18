@@ -301,9 +301,13 @@ public final class PropertyLoader {
     }
 
 
-    private static DimensionUIResource parseSize(final String value) {
-        int[] dim = Arrays.stream(value.split(",", 2)).mapToInt(Integer::parseInt).toArray();
-        return new DimensionUIResource(dim[0], dim[1]);
+    private static Object parseSize(final String value) {
+        try {
+            int[] dim = Arrays.stream(value.split(",", 2)).mapToInt(Integer::parseInt).toArray();
+            return new DimensionUIResource(dim[0], dim[1]);
+        } catch (IndexOutOfBoundsException | NumberFormatException e) {
+            return new LoadError();
+        }
     }
 
 
