@@ -130,6 +130,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
+        table.setSurrendersFocusOnKeystroke(true);
     }
 
     @Override
