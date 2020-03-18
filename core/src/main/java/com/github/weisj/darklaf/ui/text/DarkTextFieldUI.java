@@ -56,7 +56,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected static Icon searchWithHistory;
     private final FocusListener focusListener = new FocusAdapter() {
         public void focusLost(final FocusEvent e) {
-            if (!Boolean.TRUE.equals(getComponent().getClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST))) {
+            if (Boolean.FALSE.equals(getComponent().getClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST))) {
                 getComponent().select(0, 0);
             }
         }
@@ -242,6 +242,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        editor.putClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST,
+                                 UIManager.getBoolean("TextField.keepSelectionOnFocusLost"));
         arcSize = UIManager.getInt("TextField.arc");
         borderSize = UIManager.getInt("TextField.borderThickness");
         searchArcSize = UIManager.getInt("TextField.searchArc");

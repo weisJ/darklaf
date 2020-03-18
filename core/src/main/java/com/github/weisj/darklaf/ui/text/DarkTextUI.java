@@ -83,8 +83,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        editor.putClientProperty(KEY_ROUNDED_SELECTION,
-                                 UIManager.getBoolean("TextComponent.roundedSelection"));
+        editor.putClientProperty(KEY_ROUNDED_SELECTION, UIManager.getBoolean("TextComponent.roundedSelection"));
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
     }
@@ -237,9 +236,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected InputMap getInputMap() {
         InputMap map = new InputMapUIResource();
 
-        InputMap shared =
-                (InputMap) DefaultLookup.get(editor, this,
-                                             getPropertyPrefix() + ".focusInputMap");
+        InputMap shared = (InputMap) DefaultLookup.get(editor, this, getPropertyPrefix() + ".focusInputMap");
         if (shared != null) {
             map.setParent(shared);
         }
@@ -270,8 +267,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         if (getEditorKit(editor) instanceof DefaultEditorKit) {
             if (map != null) {
                 Object obj = map.get(DefaultEditorKit.insertBreakAction);
-                if (obj != null
-                        && obj instanceof DefaultEditorKit.InsertBreakAction) {
+                if (obj instanceof DefaultEditorKit.InsertBreakAction) {
                     Action action = new TextActionWrapper((TextAction) obj);
                     componentMap.put(action.getValue(Action.NAME), action);
                 }
@@ -307,8 +303,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 km.clear();
                 if (accelerator != '\0') {
                     km.put(KeyStroke.getKeyStroke(accelerator, getFocusAcceleratorKeyMask()), "requestFocus");
-                    km.put(KeyStroke.getKeyStroke(accelerator,
-                                                  DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
+                    km.put(KeyStroke.getKeyStroke(accelerator, DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
                            "requestFocus");
                 }
             }
@@ -326,12 +321,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         for (Action a : actions) {
             map.put(a.getValue(Action.NAME), a);
         }
-        map.put(TransferHandler.getCutAction().getValue(Action.NAME),
-                TransferHandler.getCutAction());
-        map.put(TransferHandler.getCopyAction().getValue(Action.NAME),
-                TransferHandler.getCopyAction());
-        map.put(TransferHandler.getPasteAction().getValue(Action.NAME),
-                TransferHandler.getPasteAction());
+        map.put(TransferHandler.getCutAction().getValue(Action.NAME), TransferHandler.getCutAction());
+        map.put(TransferHandler.getCopyAction().getValue(Action.NAME), TransferHandler.getCopyAction());
+        map.put(TransferHandler.getPasteAction().getValue(Action.NAME), TransferHandler.getPasteAction());
         return map;
     }
 
@@ -357,14 +349,10 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
          */
         EditorKit editorKit = getEditorKit(editor);
         if (editorKit instanceof DefaultEditorKit) {
-            Set<AWTKeyStroke> storedForwardTraversalKeys =
-                    editor.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> storedBackwardTraversalKeys =
-                    editor.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> forwardTraversalKeys =
-                    new HashSet<>(storedForwardTraversalKeys);
-            Set<AWTKeyStroke> backwardTraversalKeys =
-                    new HashSet<>(storedBackwardTraversalKeys);
+            Set<AWTKeyStroke> storedForwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> storedBackwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<>(storedForwardTraversalKeys);
+            Set<AWTKeyStroke> backwardTraversalKeys = new HashSet<>(storedBackwardTraversalKeys);
             if (editor.isEditable()) {
                 forwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
                 backwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK));
