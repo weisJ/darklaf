@@ -349,8 +349,9 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     }
 
-    private ToolTipStyle getStyle(final Object style) {
+    public static ToolTipStyle getStyle(final Object style) {
         if (style instanceof ToolTipStyle) return (ToolTipStyle) style;
+        if (style == null) return null;
         String name = style.toString();
         if (VARIANT_PLAIN_BALLOON.equals(name)) return ToolTipStyle.PLAIN_BALLOON;
         if (VARIANT_BALLOON.equals(name)) return ToolTipStyle.BALLOON;

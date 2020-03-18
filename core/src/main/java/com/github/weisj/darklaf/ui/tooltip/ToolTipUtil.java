@@ -133,7 +133,8 @@ public class ToolTipUtil {
         if (context instanceof ToolTipContext) {
             return (ToolTipContext) context;
         }
-        if (ToolTipStyle.BALLOON.equals(comp.getClientProperty(DarkTooltipUI.KEY_STYLE))) {
+        Object style = comp.getClientProperty(DarkTooltipUI.KEY_STYLE);
+        if (ToolTipStyle.BALLOON.equals(DarkTooltipUI.getStyle(style))) {
             return DEFAULT_CONTEXT;
         }
         return null;
