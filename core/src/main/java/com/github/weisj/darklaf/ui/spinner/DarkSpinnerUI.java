@@ -168,7 +168,11 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     @Override
     protected JComponent createEditor() {
         editor = super.createEditor();
-        editorComponent = ((JSpinner.DefaultEditor) editor).getTextField();
+        if (editor instanceof JSpinner.DefaultEditor) {
+            editorComponent = ((JSpinner.DefaultEditor) editor).getTextField();
+        } else {
+            editorComponent = editor;
+        }
         editorComponent.addFocusListener(focusListener);
         return editor;
     }
