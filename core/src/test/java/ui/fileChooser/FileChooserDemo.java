@@ -24,7 +24,6 @@
 package ui.fileChooser;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.DarculaTheme;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -33,7 +32,7 @@ public final class FileChooserDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install(new DarculaTheme());
+            LafManager.install();
             JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
             chooser.addChoosableFileFilter(new FileNameExtensionFilter("Test Filter", ".svg"));
             chooser.setMultiSelectionEnabled(true);
