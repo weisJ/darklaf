@@ -455,19 +455,20 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         readOnly = UIManager.getBoolean("FileChooser.readOnly");
 
         // TUDU: On windows, get the following localized strings from the OS
+        UIDefaults metal = MetalUIDefaults.DEFAULTS;
 
         viewMenuLabelText =
-                UIManager.getString("FileChooser.viewMenuLabelText", l);
+                metal.getString("FileChooser.viewMenuLabelText", l);
         refreshActionLabelText =
-                UIManager.getString("FileChooser.refreshActionLabelText", l);
+                metal.getString("FileChooser.refreshActionLabelText", l);
         newFolderActionLabelText =
-                UIManager.getString("FileChooser.newFolderActionLabelText", l);
+                metal.getString("FileChooser.newFolderActionLabelText", l);
 
         viewTypeActionNames = new String[VIEWTYPE_COUNT];
         viewTypeActionNames[VIEWTYPE_LIST] =
-                UIManager.getString("FileChooser.listViewActionLabelText", l);
+                metal.getString("FileChooser.listViewActionLabelText", l);
         viewTypeActionNames[VIEWTYPE_DETAILS] =
-                UIManager.getString("FileChooser.detailsViewActionLabelText", l);
+                metal.getString("FileChooser.detailsViewActionLabelText", l);
 
         kiloByteString = UIManager.getString("FileChooser.fileSizeKiloBytes", l);
         megaByteString = UIManager.getString("FileChooser.fileSizeMegaBytes", l);
@@ -602,7 +603,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 String title = dataItem.getTitle();
                 if (title != null && title.startsWith("FileChooser.") && title.endsWith("HeaderText")) {
                     // the column must have a string resource that we try to get
-                    String uiTitle = UIManager.getString(title, table.getLocale());
+                    String uiTitle = MetalUIDefaults.DEFAULTS.getString(title, table.getLocale());
                     if (uiTitle != null) {
                         title = uiTitle;
                     }

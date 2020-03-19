@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.ui.filechooser;
 import com.github.weisj.darklaf.util.PropertyKey;
 import sun.awt.shell.ShellFolder;
 import sun.swing.FilePane;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -173,36 +172,45 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         Locale l = fc.getLocale();
 
-        lookInLabelMnemonic = getMnemonic("FileChooser.lookInLabelMnemonic", l);
-        lookInLabelText = UIManager.getString("FileChooser.lookInLabelText", l);
-        saveInLabelText = UIManager.getString("FileChooser.saveInLabelText", l);
+        UIDefaults defaults = MetalUIDefaults.DEFAULTS;
 
-        fileNameLabelMnemonic = getMnemonic("FileChooser.fileNameLabelMnemonic", l);
-        fileNameLabelText = UIManager.getString("FileChooser.fileNameLabelText", l);
-        folderNameLabelMnemonic = getMnemonic("FileChooser.folderNameLabelMnemonic", l);
-        folderNameLabelText = UIManager.getString("FileChooser.folderNameLabelText", l);
+        lookInLabelMnemonic = getMnemonic(defaults, "FileChooser.lookInLabelMnemonic", l);
+        lookInLabelText = defaults.getString("FileChooser.lookInLabelText", l);
+        saveInLabelText = defaults.getString("FileChooser.saveInLabelText", l);
 
-        filesOfTypeLabelMnemonic = getMnemonic("FileChooser.filesOfTypeLabelMnemonic", l);
-        filesOfTypeLabelText = UIManager.getString("FileChooser.filesOfTypeLabelText", l);
+        fileNameLabelMnemonic = getMnemonic(defaults, "FileChooser.fileNameLabelMnemonic", l);
+        fileNameLabelText = defaults.getString("FileChooser.fileNameLabelText", l);
+        folderNameLabelMnemonic = getMnemonic(defaults, "FileChooser.folderNameLabelMnemonic", l);
+        folderNameLabelText = defaults.getString("FileChooser.folderNameLabelText", l);
 
-        upFolderToolTipText = UIManager.getString("FileChooser.upFolderToolTipText", l);
-        upFolderAccessibleName = UIManager.getString("FileChooser.upFolderAccessibleName", l);
+        filesOfTypeLabelMnemonic = getMnemonic(defaults, "FileChooser.filesOfTypeLabelMnemonic", l);
+        filesOfTypeLabelText = defaults.getString("FileChooser.filesOfTypeLabelText", l);
 
-        homeFolderToolTipText = UIManager.getString("FileChooser.homeFolderToolTipText", l);
-        homeFolderAccessibleName = UIManager.getString("FileChooser.homeFolderAccessibleName", l);
+        upFolderToolTipText = defaults.getString("FileChooser.upFolderToolTipText", l);
+        upFolderAccessibleName = defaults.getString("FileChooser.upFolderAccessibleName", l);
 
-        newFolderToolTipText = UIManager.getString("FileChooser.newFolderToolTipText", l);
-        newFolderAccessibleName = UIManager.getString("FileChooser.newFolderAccessibleName", l);
+        homeFolderToolTipText = defaults.getString("FileChooser.homeFolderToolTipText", l);
+        homeFolderAccessibleName = defaults.getString("FileChooser.homeFolderAccessibleName", l);
 
-        listViewButtonToolTipText = UIManager.getString("FileChooser.listViewButtonToolTipText", l);
-        listViewButtonAccessibleName = UIManager.getString("FileChooser.listViewButtonAccessibleName", l);
+        newFolderToolTipText = defaults.getString("FileChooser.newFolderToolTipText", l);
+        newFolderAccessibleName = defaults.getString("FileChooser.newFolderAccessibleName", l);
 
-        detailsViewButtonToolTipText = UIManager.getString("FileChooser.detailsViewButtonToolTipText", l);
-        detailsViewButtonAccessibleName = UIManager.getString("FileChooser.detailsViewButtonAccessibleName", l);
+        listViewButtonToolTipText = defaults.getString("FileChooser.listViewButtonToolTipText", l);
+        listViewButtonAccessibleName = defaults.getString("FileChooser.listViewButtonAccessibleName", l);
+
+        detailsViewButtonToolTipText = defaults.getString("FileChooser.detailsViewButtonToolTipText", l);
+        detailsViewButtonAccessibleName = defaults.getString("FileChooser.detailsViewButtonAccessibleName", l);
     }
 
-    protected Integer getMnemonic(final String key, final Locale l) {
-        return SwingUtilities2.getUIDefaultsInt(key, l);
+    protected Integer getMnemonic(UIDefaults defaults, final String key, final Locale l) {
+        Object value = defaults.get(key, l);
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+        if (value instanceof String) {
+            return Integer.parseInt((String) value);
+        }
+        return 0;
     }
 
     /*
