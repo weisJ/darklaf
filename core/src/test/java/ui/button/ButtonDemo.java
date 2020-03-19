@@ -25,6 +25,7 @@ package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.AlignmentExt;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.QuickColorChooser;
@@ -94,6 +95,21 @@ public class ButtonDemo implements ComponentDemo {
             addItem(DarkButtonUI.VARIANT_ONLY_LABEL);
             setSelectedItem(DarkButtonUI.VARIANT_NONE);
             addItemListener(e -> button.putClientProperty(DarkButtonUI.KEY_VARIANT, e.getItem()));
+        }});
+        controlPanel.add(new JLabel(DarkButtonUI.KEY_CORNER + ":"));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem("None");
+            for (AlignmentExt a : AlignmentExt.values()) {
+                addItem(a.name());
+            }
+            setSelectedItem("None");
+            addItemListener(e -> {
+                if ("None".equals(e.getItem())) {
+                    button.putClientProperty(DarkButtonUI.KEY_CORNER, null);
+                } else {
+                    button.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.valueOf(e.getItem().toString()));
+                }
+            });
         }});
         controlPanel.add(new JCheckBox("Icon Only") {{
             setSelected(false);

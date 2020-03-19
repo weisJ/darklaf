@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.filechooser;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareToggleButton;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.AlignmentExt;
 import sun.swing.FilePane;
 
 import javax.accessibility.AccessibleContext;
@@ -107,6 +108,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         upFolderButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         upFolderButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         upFolderButton.setText(null);
+        upFolderButton.setFocusPainted(false);
         upFolderButton.setIcon(upFolderIcon);
         upFolderButton.setToolTipText(upFolderToolTipText);
         upFolderButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
@@ -125,6 +127,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         JButton b = new TooltipAwareButton(homeFolderIcon);
         b.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         b.setToolTipText(toolTipText);
+        b.setFocusPainted(false);
         b.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
                             homeFolderAccessibleName);
         b.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -160,10 +163,12 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // List Button
         listViewButton = new TooltipAwareToggleButton(listViewIcon);
+        listViewButton.setFocusPainted(false);
         listViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
+        listViewButton.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.LEFT);
         listViewButton.setToolTipText(listViewButtonToolTipText);
         listViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, listViewButtonAccessibleName);
 
@@ -177,9 +182,11 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         // Details Button
         detailsViewButton = new TooltipAwareToggleButton(detailsViewIcon);
+        detailsViewButton.setFocusPainted(false);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
+        detailsViewButton.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.RIGHT);
         detailsViewButton.setToolTipText(detailsViewButtonToolTipText);
         detailsViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, detailsViewButtonAccessibleName);
         detailsViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
