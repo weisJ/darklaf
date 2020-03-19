@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
-import com.github.weisj.darklaf.util.ReflectiveWarningSuppressor;
-import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
@@ -35,9 +33,6 @@ import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,16 +50,15 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
     public static final StringBufferWrapper HIDE_POPUP_VALUE = new StringBufferWrapper(new StringBuffer(
         "doNotCancelPopup"));
-    public static final StringBuilder MOUSE_GRABBER_KEY = new StringBuilder(
-        "javax.swing.plaf.basic.BasicPopupMenuUI.MouseGrabber");
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
+    protected static MouseGrabber mouseGrabber;
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkPopupMenuUI();
     }
 
 
-    static List<JPopupMenu> getPopups() {
+    public static List<JPopupMenu> getPopups() {
         MenuSelectionManager msm = MenuSelectionManager.defaultManager();
         MenuElement[] p = msm.getSelectedPath();
 
@@ -77,18 +71,16 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         return list;
     }
 
+    public static MouseGrabber getMouseGrabber() {
+        return mouseGrabber;
+    }
+
     @Override
     protected void installListeners() {
         super.installListeners();
         removeOldMouseGrabber();
-        AppContext context = AppContext.getAppContext();
-        synchronized (MOUSE_GRABBER_KEY) {
-            MouseGrabber mouseGrabber = (MouseGrabber) context.get(
-                    MOUSE_GRABBER_KEY);
-            if (mouseGrabber == null) {
-                mouseGrabber = new MouseGrabber();
-                context.put(MOUSE_GRABBER_KEY, mouseGrabber);
-            }
+        if (mouseGrabber == null) {
+            mouseGrabber = new MouseGrabber();
         }
     }
 
@@ -97,25 +89,19 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
      * implementation for it that is a bit more generous with closing the popup.
      */
     private void removeOldMouseGrabber() {
-        AppContext context = AppContext.getAppContext();
-        try (ReflectiveWarningSuppressor sup = new ReflectiveWarningSuppressor()) {
-            Field field = BasicPopupMenuUI.class.getDeclaredField("MOUSE_GRABBER_KEY");
-            field.setAccessible(true);
-            Object value = field.get(null);
-            Object mouseGrabber = context.get(value);
-            if (mouseGrabber != null) {
-                Method method = mouseGrabber.getClass().getDeclaredMethod("uninstall");
-                method.setAccessible(true);
-                method.invoke(mouseGrabber);
+        MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
+        ChangeListener mouseGrabber = null;
+        for (ChangeListener listener : menuSelectionManager.getChangeListeners()) {
+            if (listener.getClass().getEnclosingClass().getName().endsWith("BasicPopupMenuUI")) {
+                mouseGrabber = listener;
+                break;
             }
-            context.put(value, null);
-        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
         }
+        menuSelectionManager.removeChangeListener(mouseGrabber);
     }
 
     public static class MouseGrabber implements ChangeListener,
-            AWTEventListener, ComponentListener, WindowListener {
+        AWTEventListener, ComponentListener, WindowListener {
 
         Window grabbedWindow;
         MenuElement[] lastPathSelected;
@@ -129,17 +115,17 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             }
         }
 
-        void grabWindow(final MenuElement[] newPath) {
+        protected void grabWindow(final MenuElement[] newPath) {
             // A grab needs to be added
             final Toolkit tk = Toolkit.getDefaultToolkit();
             java.security.AccessController.doPrivileged(
-                    (PrivilegedAction<Object>) () -> {
-                        tk.addAWTEventListener(MouseGrabber.this,
-                                               AWTEvent.MOUSE_EVENT_MASK
-                                                       | AWTEvent.MOUSE_MOTION_EVENT_MASK
-                                                       | AWTEvent.MOUSE_WHEEL_EVENT_MASK
-                                                       | AWTEvent.WINDOW_EVENT_MASK
-                                                       | SunToolkit.GRAB_EVENT_MASK);
+                (PrivilegedAction<Object>) () -> {
+                    tk.addAWTEventListener(MouseGrabber.this,
+                                           AWTEvent.MOUSE_EVENT_MASK
+                                               | AWTEvent.MOUSE_MOTION_EVENT_MASK
+                                               | AWTEvent.MOUSE_WHEEL_EVENT_MASK
+                                               | AWTEvent.WINDOW_EVENT_MASK
+                                               | SunToolkit.GRAB_EVENT_MASK);
                         return null;
                     }
             );
@@ -164,26 +150,24 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         }
 
         public void uninstall() {
-            synchronized (MOUSE_GRABBER_KEY) {
-                MenuSelectionManager.defaultManager().removeChangeListener(this);
-                ungrabWindow();
-                AppContext.getAppContext().remove(MOUSE_GRABBER_KEY);
-            }
+            MenuSelectionManager.defaultManager().removeChangeListener(this);
+            ungrabWindow();
+            mouseGrabber = null;
         }
 
-        void ungrabWindow() {
+        protected void ungrabWindow() {
             final Toolkit tk = Toolkit.getDefaultToolkit();
             // The grab should be removed
             java.security.AccessController.doPrivileged(
-                    (PrivilegedAction<Object>) () -> {
-                        tk.removeAWTEventListener(MouseGrabber.this);
-                        return null;
-                    }
+                (PrivilegedAction<Object>) () -> {
+                    tk.removeAWTEventListener(MouseGrabber.this);
+                    return null;
+                }
             );
             realUngrabWindow();
         }
 
-        void realUngrabWindow() {
+        protected void realUngrabWindow() {
             Toolkit tk = Toolkit.getDefaultToolkit();
             if (grabbedWindow != null) {
                 if (tk instanceof sun.awt.SunToolkit) {
@@ -275,11 +259,11 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                     break;
                 case MouseEvent.MOUSE_WHEEL:
                     if (isInPopup(src)
-                            || ((src instanceof JComboBox) && ((JComboBox) src).isPopupVisible())
-                            || ((src instanceof JWindow) && src.isVisible())
-                            || ((src instanceof JMenuItem) && src.isVisible())
-                            || (src instanceof JFrame)
-                            || (src instanceof JDialog)) {
+                        || ((src instanceof JComboBox) && ((JComboBox<?>) src).isPopupVisible())
+                        || ((src instanceof JWindow) && src.isVisible())
+                        || ((src instanceof JMenuItem) && src.isVisible())
+                        || (src instanceof JFrame)
+                        || (src instanceof JDialog)) {
                         return;
                     }
                     cancelPopupMenu();
@@ -287,7 +271,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             }
         }
 
-        void cancelPopupMenu() {
+        protected void cancelPopupMenu() {
             // We should ungrab window if a user code throws
             // an unexpected runtime exception. See 6495920.
             try {
@@ -306,7 +290,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         }
 
         @SuppressWarnings("deprecation")
-        boolean isInPopup(final Component src) {
+        protected boolean isInPopup(final Component src) {
             for (Component c = src; c != null; c = c.getParent()) {
                 if (c instanceof Applet || c instanceof Window) {
                     break;
