@@ -192,7 +192,12 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
         if (comboBox.isEditable() && comboBox.getEditor() != null) {
-            g.setColor(comboBox.getEditor().getEditorComponent().getBackground());
+            Component editorComp = comboBox.getEditor().getEditorComponent();
+            if (comboBox.isEnabled()) {
+                g.setColor(editorComp.getBackground());
+            } else {
+                g.setColor(inactiveBackground);
+            }
         } else {
             g.setColor(getBackground(comboBox));
         }
@@ -205,7 +210,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         }
     }
 
-    protected Color getBackground(final JComboBox c) {
+    protected Color getBackground(final JComboBox<?> c) {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) return editBackground;
         return background;
@@ -320,8 +325,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             Area rect;
             Area iconRect;
             if (!isTableCellEditor && !isTreeCellEditor) {
-                rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize, width - 2 * bSize + 2,
-                                                            height - 2 * bSize, arc, arc));
+                rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 2,
+                                                            height - 2 * bSize + 2, arc, arc));
                 iconRect = new Area(new Rectangle(off, 0, width, height));
             } else {
                 rect = new Area(new Rectangle(0, 0, width, height));
