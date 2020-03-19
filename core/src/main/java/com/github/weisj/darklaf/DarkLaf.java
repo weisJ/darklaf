@@ -43,7 +43,6 @@ import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Method;
 import java.text.AttributedCharacterIterator;
 import java.util.Collections;
 import java.util.HashMap;
@@ -105,12 +104,9 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public UIDefaults getDefaults() {
+        final UIDefaults metalDefaults = new MetalLookAndFeel().getDefaults();
+        final UIDefaults defaults = base.getDefaults();
         try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("getDefaults");
-            superMethod.setAccessible(true);
-            final UIDefaults metalDefaults = (UIDefaults) superMethod.invoke(new MetalLookAndFeel());
-            final UIDefaults defaults = (UIDefaults) superMethod.invoke(base);
-
             initInputMapDefaults(defaults);
             loadThemeDefaults(defaults);
             initIdeaDefaults(defaults);
@@ -130,7 +126,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
-        return super.getDefaults();
+        return defaults;
     }
 
     private void patchMacOSFonts(final UIDefaults defaults) {
@@ -359,7 +355,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          * On macOS the default PopupFactory is overwritten with a custom one, which always uses heavyweight popups.
          * This is disadvantageous for the behaviour of custom tooltips.
          */
-        call("initialize");
+        base.initialize();
         PopupFactory.setSharedInstance(new DarkPopupFactory());
         PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
@@ -367,7 +363,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public void uninitialize() {
-        call("uninitialize");
+        base.uninitialize();
         AppContext context = AppContext.getAppContext();
         UIManager.removePropertyChangeListener(this);
         synchronized (DarkPopupMenuUI.MOUSE_GRABBER_KEY) {
@@ -379,60 +375,13 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
     @Override
-    protected void initClassDefaults(final UIDefaults defaults) {
-        callInit("initClassDefaults", defaults);
-    }
-
-    @Override
     public boolean isNativeLookAndFeel() {
         return true;
     }
 
     @Override
-    protected void initSystemColorDefaults(final UIDefaults defaults) {
-        callInit("initSystemColorDefaults", defaults);
-    }
-
-    @Override
-    protected void loadSystemColors(final UIDefaults defaults, final String[] systemColors,
-                                    final boolean useNative) {
-        try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(
-                    "loadSystemColors", UIDefaults.class, String[].class, boolean.class);
-            superMethod.setAccessible(true);
-            superMethod.invoke(base, defaults, systemColors, useNative);
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
-    }
-
-    public void initComponentDefaults(final UIDefaults defaults) {
-        callInit("initComponentDefaults", defaults);
-    }
-
-    @Override
     public boolean isSupportedLookAndFeel() {
         return true;
-    }
-
-    private void callInit(final String method, final UIDefaults defaults) {
-        try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method, UIDefaults.class);
-            superMethod.setAccessible(true);
-            superMethod.invoke(base, defaults);
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
-    }
-
-    private void call(final String method) {
-        try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method);
-            superMethod.setAccessible(true);
-            superMethod.invoke(base);
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
     }
 
     @Override
