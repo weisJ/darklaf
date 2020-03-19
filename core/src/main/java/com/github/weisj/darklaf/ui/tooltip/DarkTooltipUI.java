@@ -218,7 +218,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         Font font = c.getFont();
         FontMetrics fm = c.getFontMetrics(font);
         Insets insets = c.getInsets();
-
         Dimension prefSize = new Dimension(insets.left + insets.right,
                                            insets.top + insets.bottom);
         String text = ((JToolTip) c).getTipText();
@@ -360,8 +359,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     protected void updateSize() {
-        toolTip.setTipText(toolTip.getTipText());
-        toolTip.setPreferredSize(getPreferredSize(toolTip));
+        toolTip.doLayout();
     }
 
     protected class FadeInAnimator extends Animator {

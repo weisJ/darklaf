@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -77,6 +78,7 @@ public class ToolTipContext {
     private JToolTip toolTip;
     private Insets insets;
     private ToolTipStyle style;
+    private boolean ignoreBorder;
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
@@ -171,6 +173,10 @@ public class ToolTipContext {
     public ToolTipContext setAlignInside(final boolean alignInside) {
         this.alignInside = alignInside;
         return this;
+    }
+
+    public boolean isIgnoreBorder() {
+        return ignoreBorder;
     }
 
     /**
@@ -407,6 +413,18 @@ public class ToolTipContext {
     }
 
     /**
+     * Sets whether the border should be ignored when aligning outside. If true the tooltip is aligned w.r.t. to
+     * the content rect and not the component bounds.
+     *
+     * @param ignoreBorder true if border insets should be ignored.
+     * @return this.
+     */
+    public ToolTipContext setIgnoreBorder(final boolean ignoreBorder) {
+        this.ignoreBorder = ignoreBorder;
+        return this;
+    }
+
+    /**
      * Calculates the tooltip location.
      *
      * @param mp         the mouse position in the target component coordinate space.
@@ -418,7 +436,7 @@ public class ToolTipContext {
         if (target == null) return null;
         updateToolTip();
         MouseEvent event = processEvent(mouseEvent, mp);
-        Rectangle rect = toolTipRectSupplier.apply(event);
+        Rectangle rect = getTargetRect(event);
         if (applyInsetsToRect) {
             DarkUIUtil.applyInsets(rect, target.getInsets(calcInsets));
         }
@@ -438,6 +456,21 @@ public class ToolTipContext {
         }
 
         return alignmentStrategy.align(compPoint, mousePoint);
+    }
+
+    private Rectangle getTargetRect(final MouseEvent event) {
+        Rectangle rect = toolTipRectSupplier.apply(event);
+        if (ignoreBorder) {
+            Border border = target.getBorder();
+            if (border != null) {
+                Insets ins = border.getBorderInsets(target);
+                rect.x += ins.left;
+                rect.y += ins.top;
+                rect.width -= ins.left + ins.right;
+                rect.height -= ins.top + ins.bottom;
+            }
+        }
+        return rect;
     }
 
     private MouseEvent processEvent(final MouseEvent mouseEvent, final Point mp) {
