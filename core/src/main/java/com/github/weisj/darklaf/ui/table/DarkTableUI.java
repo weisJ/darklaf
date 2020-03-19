@@ -438,10 +438,11 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                 case KeyEvent.VK_NUM_LOCK:
                 case KeyEvent.VK_SCROLL_LOCK:
                     return true;
+                case KeyEvent.VK_C:
+                    return (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() & event.getModifiersEx()) != 0;
                 default:
                     break;
             }
-            return event.isControlDown();
         }
         return false;
     }
