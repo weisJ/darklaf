@@ -800,5 +800,4 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     public JButton createMoreTabsButton() {
         return new MoreTabsButton(this);
     }
-
 }

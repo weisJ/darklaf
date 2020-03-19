@@ -75,10 +75,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
             Object newVal = e.getNewValue();
             if (oldVal instanceof Component) {
                 Container oldUnwrapped = SwingUtilities.getUnwrappedParent((Component) oldVal);
-                if ((oldUnwrapped instanceof JScrollPane)
-                    && ((JComponent) oldUnwrapped).getBorder() instanceof UIResource) {
-                    LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
-                }
+                LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
             }
             if (newVal instanceof Component) {
                 Container newUnwrapped = SwingUtilities.getUnwrappedParent((Component) newVal);
@@ -154,6 +151,13 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         table.removePropertyChangeListener(propertyChangeListener);
     }
 
+    @Override
+    protected void uninstallDefaults() {
+        super.uninstallDefaults();
+        Container oldUnwrapped = SwingUtilities.getUnwrappedParent(table.getParent());
+        LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
+    }
+
     protected static void setupRendererComponents(final JTable table) {
         DarkTableCellRenderer cellRenderer = new DarkTableCellRenderer();
         DarkTableCellEditor cellEditor = new DarkTableCellEditor();
@@ -174,21 +178,6 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         table.setDefaultEditor(Float.class, cellEditor);
         table.setDefaultEditor(Boolean.class, cellEditor);
         table.setDefaultEditor(Color.class, colorRendererEditor);
-    }
-
-    @Override
-    public Dimension getPreferredSize(final JComponent c) {
-        Dimension prefSize = super.getPreferredSize(c);
-        if (!isInScrollPane()) {
-            return prefSize;
-        } else {
-            Dimension dim = SwingUtilities.getUnwrappedParent(table).getSize();
-            if (dim.width < prefSize.width || dim.height < prefSize.height) {
-                return prefSize;
-            } else {
-                return dim;
-            }
-        }
     }
 
     protected Color getBorderColor() {

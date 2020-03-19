@@ -128,7 +128,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     public void installUI(final JComponent x) {
         super.installUI(x);
         oldLayout = (ScrollPaneLayout) x.getLayout();
-        if (oldLayout instanceof ScrollLayoutManagerDelegate) {
+        while (oldLayout instanceof ScrollLayoutManagerDelegate) {
             oldLayout = ((ScrollLayoutManagerDelegate) oldLayout).getDelegate();
         }
         if (oldLayout != null) {

@@ -21,47 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.ui.tabbedpane;
 
-import java.awt.*;
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
-public class LayoutManagerDelegate implements LayoutManager {
-    private final LayoutManager delegate;
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
+public class DarkTabbedPaneBorder extends MutableLineBorder implements UIResource {
 
-    public LayoutManagerDelegate(final LayoutManager delegate) {
-        if (delegate == null) {
-            throw new IllegalArgumentException("Delegate is null");
-        }
-        this.delegate = delegate;
-    }
-
-    public LayoutManager getDelegate() {
-        return delegate;
-    }
-
-    @Override
-    public void addLayoutComponent(final String name, final Component comp) {
-        delegate.addLayoutComponent(name, comp);
-    }
-
-    @Override
-    public void removeLayoutComponent(final Component comp) {
-        delegate.removeLayoutComponent(comp);
-    }
-
-    @Override
-    public Dimension preferredLayoutSize(final Container parent) {
-        return delegate.preferredLayoutSize(parent);
-    }
-
-    @Override
-    public Dimension minimumLayoutSize(final Container parent) {
-        return delegate.minimumLayoutSize(parent);
-    }
-
-    @Override
-    public void layoutContainer(final Container parent) {
-        delegate.layoutContainer(parent);
+    public DarkTabbedPaneBorder() {
+        super(1, 1, 1, 1, UIManager.getColor("TabbedPane.borderColor"));
     }
 }
