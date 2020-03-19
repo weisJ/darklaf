@@ -38,9 +38,10 @@ public class DarkPopupFactory extends PopupFactory {
         Popup popup = super.getPopup(owner, contents, x, y);
         boolean isMediumWeight = popup.getClass().getSimpleName().endsWith("MediumWeightPopup");
         boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
+        boolean isBalloonTooltip = contents instanceof JToolTip
+            && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder;
         if (isMediumWeight || isLightWeight) {
-            if (contents instanceof JToolTip
-                && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder) {
+            if (isBalloonTooltip) {
                 // null owner forces a heavyweight popup.
                 popup = super.getPopup(null, contents, x, y);
             } else if (isMediumWeight) {
@@ -66,6 +67,9 @@ public class DarkPopupFactory extends PopupFactory {
                 Decorations.installPopupWindow(window);
             } else {
                 Decorations.uninstallPopupWindow(window);
+            }
+            if (isBalloonTooltip) {
+                window.setOpacity(0.0f);
             }
         }
         return popup;

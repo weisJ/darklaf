@@ -54,10 +54,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public static final String VARIANT_BALLOON = "balloon";
     public static final String VARIANT_PLAIN_BALLOON = "plainBalloon";
     public static final String TIP_TEXT_PROPERTY = "tiptext";
-    public static final String KEY_PAINT_ALPHA = KEY_PREFIX + "paintAlpha";
     public static final String KEY_CONTEXT = KEY_PREFIX + "toolTipContext";
     static final float MAX_ALPHA = 1.0f;
-    private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     private Animator fadeAnimator;
     private float alpha = 0;
 
@@ -199,12 +197,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             fadeAnimator.reset();
             fadeAnimator.resume();
         }
-        toolTip.putClientProperty(KEY_PAINT_ALPHA, alpha);
-        if (alpha == 0) return;
         GraphicsContext config = new GraphicsContext(g);
-        if (alpha != MAX_ALPHA) {
-            ((Graphics2D) g).setComposite(COMPOSITE.derive(alpha));
-        }
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
             Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
@@ -374,13 +367,15 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         @Override
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
             alpha = ((float) frame * MAX_ALPHA) / totalFrames;
-            toolTip.paintImmediately(0, 0, toolTip.getWidth(), toolTip.getHeight());
+            Window window = SwingUtilities.getWindowAncestor(toolTip);
+            if (window != null) window.setOpacity(alpha);
         }
 
         @Override
         protected void paintCycleEnd() {
             alpha = MAX_ALPHA;
-            toolTip.paintImmediately(0, 0, toolTip.getWidth(), toolTip.getHeight());
+            Window window = SwingUtilities.getWindowAncestor(toolTip);
+            if (window != null) window.setOpacity(alpha);
         }
     }
 }
