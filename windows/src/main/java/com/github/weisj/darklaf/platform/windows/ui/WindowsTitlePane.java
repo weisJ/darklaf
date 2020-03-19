@@ -462,7 +462,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         g.setColor(background);
         g.fillRect(0, 0, width, height);
 
-        if (getWindowDecorationStyle() != JRootPane.NONE) {
+        if (getWindowDecorationStyle() != JRootPane.NONE && menuBar != null) {
             g.setColor(border);
             g.fillRect(0, height - 1, width, 1);
         }
