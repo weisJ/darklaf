@@ -32,6 +32,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.DefaultEditorKit;
@@ -141,8 +142,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     private Font macOSFontFromFont(final Font font) {
         Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
                                                                                                   TextAttribute.KERNING_ON);
-        Font macFont = new FontUIResource(SystemInfo.isMacOSCatalina ? ".AppleSystemUIFont" : ".SF NS Text",
-                                          font.getStyle(), font.getSize()).deriveFont(attributes);
+        String fontName = SystemInfo.isMacOSCatalina ? ".AppleSystemUIFont" : ".SF NS Text";
+        Font macFont = new Font(fontName, font.getStyle(), font.getSize()).deriveFont(attributes);
+        if (font instanceof UIResource) {
+            macFont = new FontUIResource(macFont);
+        }
         return macFont == null ? font : macFont;
     }
 
