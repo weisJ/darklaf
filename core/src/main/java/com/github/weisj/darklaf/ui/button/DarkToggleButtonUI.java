@@ -121,7 +121,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         boolean clicked = b.getModel().isArmed();
         if (c.isEnabled()) {
             if (clicked) {
-                return background;
+                return clickBackground;
             } else if (rollOver) {
                 return hoverBackground;
             } else {
