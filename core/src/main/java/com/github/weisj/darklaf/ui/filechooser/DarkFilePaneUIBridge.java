@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.ui.filechooser;
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.DarkTableCellRenderer;
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.util.PropertyKey;
 import sun.awt.AWTAccessor;
@@ -35,14 +34,12 @@ import sun.awt.shell.ShellFolderColumnInfo;
 import sun.swing.FilePane;
 import sun.swing.SwingUtilities2;
 
-import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.basic.BasicDirectoryModel;
 import javax.swing.table.*;
-import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -65,7 +62,7 @@ import java.util.concurrent.Callable;
  *
  * @author Leif Samuelsson
  */
-public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListener {
+public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListener {
 
     // Constants for actions. These are used for the actions' ACTION_COMMAND_KEY
     // and as keys in the action maps for FilePane and the corresponding UI classes
@@ -425,8 +422,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         boolean isFocusOwner = false;
 
         if (currentViewPanel != null) {
-            Component owner = DefaultKeyboardFocusManager.
-                                                                 getCurrentKeyboardFocusManager().getPermanentFocusOwner();
+            Component owner = DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
 
             isFocusOwner = owner == detailsTable || owner == list;
 
@@ -585,83 +581,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         }
     }
 
-    public JPanel createList() {
-        JPanel p = new JPanel(new BorderLayout());
-        final JFileChooser fileChooser = getFileChooser();
-
-        @SuppressWarnings("serial") // anonymous class
-        final JList<Object> list = new JList<Object>() {
-            public int getNextMatch(final String prefix, final int startIndex, final Position.Bias bias) {
-                ListModel<?> model = getModel();
-                int max = model.getSize();
-                if (prefix == null || startIndex < 0 || startIndex >= max) {
-                    throw new IllegalArgumentException();
-                }
-                // start search from the next element before/after the selected element
-                boolean backwards = (bias == Position.Bias.Backward);
-                for (int i = startIndex; backwards ? i >= 0 : i < max; i += (backwards ? -1 : 1)) {
-                    String filename = fileChooser.getName((File) model.getElementAt(i));
-                    if (filename.regionMatches(true, 0, prefix, 0, prefix.length())) {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-        };
-        list.setCellRenderer(new FileRenderer());
-        list.setLayoutOrientation(JList.VERTICAL_WRAP);
-
-        // 4835633 : tell BasicListUI that this is a file list
-        list.putClientProperty("List.isFileList", Boolean.TRUE);
-
-        if (listViewWindowsStyle) {
-            list.addFocusListener(repaintListener);
-        }
-
-        updateListRowCount(list);
-
-        getModel().addListDataListener(new ListDataListener() {
-            public void intervalAdded(final ListDataEvent e) {
-                updateListRowCount(list);
-            }
-
-            public void intervalRemoved(final ListDataEvent e) {
-                updateListRowCount(list);
-            }
-
-            public void contentsChanged(final ListDataEvent e) {
-                if (isShowing()) {
-                    clearSelection();
-                }
-                updateListRowCount(list);
-            }
-        });
-
-        getModel().addPropertyChangeListener(this);
-
-        if (fileChooser.isMultiSelectionEnabled()) {
-            list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        } else {
-            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        }
-        list.setModel(new SortableListModel());
-
-        list.addListSelectionListener(createListSelectionListener());
-        list.addMouseListener(getMouseHandler());
-
-        JScrollPane scrollPane = new JScrollPane(list);
-        if (listViewBackground != null) {
-            list.setBackground(listViewBackground);
-        }
-        if (listViewBorder != null) {
-            scrollPane.setBorder(listViewBorder);
-        }
-
-        list.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, filesListAccessibleName);
-
-        p.add(scrollPane, BorderLayout.CENTER);
-        return p;
-    }
+    public abstract JPanel createList();
 
     protected DetailsTableModel getDetailsTableModel() {
         if (detailsTableModel == null) {
@@ -724,124 +644,7 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         return tableCellEditor;
     }
 
-    public JPanel createDetailsView() {
-        final JFileChooser chooser = getFileChooser();
-
-        JPanel p = new JPanel(new BorderLayout());
-
-        @SuppressWarnings("serial") // anonymous class
-        final JTable detailsTable = new JTable(getDetailsTableModel()) {
-            public void tableChanged(final TableModelEvent e) {
-                super.tableChanged(e);
-
-                if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
-                    // update header with possibly changed column set
-                    updateDetailsColumnModel(this);
-                }
-            }
-
-            // Handle Escape key events here
-            protected boolean processKeyBinding(final KeyStroke ks, final KeyEvent e, final int condition, final boolean pressed) {
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE && getCellEditor() == null) {
-                    // We are not editing, forward to filechooser.
-                    chooser.dispatchEvent(e);
-                    return true;
-                }
-                return super.processKeyBinding(ks, e, condition, pressed);
-            }
-        };
-
-        detailsTable.setRowSorter(getRowSorter());
-        detailsTable.setAutoCreateColumnsFromModel(false);
-        detailsTable.setComponentOrientation(chooser.getComponentOrientation());
-        detailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        detailsTable.setShowGrid(false);
-        detailsTable.putClientProperty("JTable.autoStartsEdit", Boolean.FALSE);
-        detailsTable.addKeyListener(detailsKeyListener);
-
-        Font font = list.getFont();
-        detailsTable.setFont(font);
-
-        TableCellRenderer headerRenderer =
-                new AlignableTableHeaderRenderer(detailsTable.getTableHeader().getDefaultRenderer());
-        detailsTable.getTableHeader().setDefaultRenderer(headerRenderer);
-        TableCellRenderer cellRenderer = new DetailsTableCellRenderer(chooser);
-        detailsTable.setDefaultRenderer(Object.class, cellRenderer);
-
-        // So that drag can be started on a mouse press
-        detailsTable.getColumnModel().getSelectionModel().
-                setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        detailsTable.addMouseListener(getMouseHandler());
-        // No need to addListSelectionListener because selections are forwarded
-        // to our JList.
-
-        // 4835633 : tell BasicTableUI that this is a file list
-        detailsTable.putClientProperty(DarkTableUI.KEY_IS_FILE_LIST, Boolean.TRUE);
-
-        if (listViewWindowsStyle) {
-            detailsTable.addFocusListener(repaintListener);
-        }
-
-        // TAB/SHIFT-TAB should transfer focus and ENTER should select an item.
-        // We don't want them to navigate within the table
-        ActionMap am = SwingUtilities.getUIActionMap(detailsTable);
-        am.remove("selectNextRowCell");
-        am.remove("selectPreviousRowCell");
-        am.remove("selectNextColumnCell");
-        am.remove("selectPreviousColumnCell");
-        detailsTable.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-                                           null);
-        detailsTable.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
-                                           null);
-
-        JScrollPane scrollpane = new JScrollPane(detailsTable);
-        scrollpane.setComponentOrientation(chooser.getComponentOrientation());
-        LookAndFeel.installColors(scrollpane.getViewport(), "Table.background", "Table.foreground");
-
-        // Adjust width of first column so the table fills the viewport when
-        // first displayed (temporary listener).
-        scrollpane.addComponentListener(new ComponentAdapter() {
-            public void componentResized(final ComponentEvent e) {
-                JScrollPane sp = (JScrollPane) e.getComponent();
-                fixNameColumnWidth(sp.getViewport().getSize().width);
-                sp.removeComponentListener(this);
-            }
-        });
-
-        // 4835633.
-        // If the mouse is pressed in the area below the Details view table, the
-        // event is not dispatched to the Table MouseListener but to the
-        // scrollpane.  Listen for that here so we can clear the selection.
-        scrollpane.addMouseListener(new MouseAdapter() {
-            public void mousePressed(final MouseEvent e) {
-                JScrollPane jsp = ((JScrollPane) e.getComponent());
-                JTable table = (JTable) jsp.getViewport().getView();
-
-                if (!e.isShiftDown() || table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) {
-                    clearSelection();
-                    TableCellEditor tce = table.getCellEditor();
-                    if (tce != null) {
-                        tce.stopCellEditing();
-                    }
-                }
-            }
-        });
-
-        detailsTable.setForeground(list.getForeground());
-        detailsTable.setBackground(list.getBackground());
-
-        if (listViewBorder != null) {
-            scrollpane.setBorder(listViewBorder);
-        }
-        p.add(scrollpane, BorderLayout.CENTER);
-
-        detailsTableModel.fireTableStructureChanged();
-
-        detailsTable.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, filesDetailsAccessibleName);
-
-        return p;
-    } // createDetailsView
+    public abstract JPanel createDetailsView();
 
     protected void fixNameColumnWidth(final int viewWidth) {
         TableColumn nameCol = detailsTable.getColumnModel().getColumn(COLUMN_FILENAME);
@@ -873,64 +676,12 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         lastIndex = -1;
     }
 
-    protected void cancelEdit() {
-        if (editFile != null) {
-            editFile = null;
-            list.remove(editCell);
-            repaint();
-        } else if (detailsTable != null && detailsTable.isEditing()) {
-            detailsTable.getCellEditor().cancelCellEditing();
-        }
-    }
+    protected abstract void cancelEdit();
 
     /**
      * @param index visual index of the file to be edited
      */
-    @SuppressWarnings("deprecation")
-    protected void editFileName(final int index) {
-        JFileChooser chooser = getFileChooser();
-        File currentDirectory = chooser.getCurrentDirectory();
-
-        if (readOnly || !canWrite(currentDirectory, chooser)) {
-            return;
-        }
-
-        ensureIndexIsVisible(index);
-        switch (viewType) {
-            case VIEWTYPE_LIST:
-                editFile = (File) getModel().getElementAt(getRowSorter().convertRowIndexToModel(index));
-                Rectangle r = list.getCellBounds(index, index);
-                if (editCell == null) {
-                    editCell = new JTextField();
-                    editCell.setName("Tree.cellEditor");
-                    editCell.addActionListener(new EditActionListener());
-                    editCell.addFocusListener(editorFocusListener);
-                    editCell.setNextFocusableComponent(list);
-                }
-                list.add(editCell);
-                editCell.setText(chooser.getName(editFile));
-                ComponentOrientation orientation = list.getComponentOrientation();
-                editCell.setComponentOrientation(orientation);
-
-                Icon icon = chooser.getIcon(editFile);
-
-                // PENDING - grab padding (4) below from defaults table.
-                int editX = icon == null ? 20 : icon.getIconWidth() + 4;
-
-                if (orientation.isLeftToRight()) {
-                    editCell.setBounds(editX + r.x, r.y, r.width - editX, r.height);
-                } else {
-                    editCell.setBounds(r.x, r.y, r.width - editX, r.height);
-                }
-                editCell.requestFocus();
-                editCell.selectAll();
-                break;
-
-            case VIEWTYPE_DETAILS:
-                detailsTable.editCellAt(index, COLUMN_FILENAME);
-                break;
-        }
-    }
+    protected abstract void editFileName(final int index);
 
     protected void applyEdit() {
         if (editFile != null && editFile.exists()) {
@@ -1244,73 +995,15 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
         }
     }
 
-    public JPopupMenu getComponentPopupMenu() {
-        JPopupMenu popupMenu = getFileChooser().getComponentPopupMenu();
-        if (popupMenu != null) {
-            return popupMenu;
-        }
-
-        JMenu viewMenu = getViewMenu();
-        if (contextMenu == null) {
-            contextMenu = new JPopupMenu();
-            if (viewMenu != null) {
-                contextMenu.add(viewMenu);
-                if (listViewWindowsStyle) {
-                    contextMenu.addSeparator();
-                }
-            }
-            ActionMap actionMap = getActionMap();
-            Action refreshAction = actionMap.get(ACTION_REFRESH);
-            Action newFolderAction = actionMap.get(ACTION_NEW_FOLDER);
-            if (refreshAction != null) {
-                contextMenu.add(refreshAction);
-                if (listViewWindowsStyle && newFolderAction != null) {
-                    contextMenu.addSeparator();
-                }
-            }
-            if (newFolderAction != null) {
-                contextMenu.add(newFolderAction);
-            }
-        }
-        if (viewMenu != null) {
-            viewMenu.getPopupMenu().setInvoker(viewMenu);
-        }
-        return contextMenu;
-    }
+    public abstract JPopupMenu getComponentPopupMenu();
 
     protected JFileChooser getFileChooser() {
         return fileChooserUIAccessor.getFileChooser();
     }
 
-    public JMenu getViewMenu() {
-        if (viewMenu == null) {
-            viewMenu = new JMenu(viewMenuLabelText);
-            ButtonGroup viewButtonGroup = new ButtonGroup();
+    public abstract JMenu getViewMenu();
 
-            for (int i = 0; i < VIEWTYPE_COUNT; i++) {
-                JRadioButtonMenuItem mi =
-                        new JRadioButtonMenuItem(new ViewTypeAction(i));
-                viewButtonGroup.add(mi);
-                viewMenu.add(mi);
-            }
-            updateViewMenu();
-        }
-        return viewMenu;
-    }
-
-    protected void updateViewMenu() {
-        if (viewMenu != null) {
-            Component[] comps = viewMenu.getMenuComponents();
-            for (Component comp : comps) {
-                if (comp instanceof JRadioButtonMenuItem) {
-                    JRadioButtonMenuItem mi = (JRadioButtonMenuItem) comp;
-                    if (((ViewTypeAction) mi.getAction()).viewType == viewType) {
-                        mi.setSelected(true);
-                    }
-                }
-            }
-        }
-    }
+    protected abstract void updateViewMenu();
 
     protected Handler getMouseHandler() {
         if (handler == null) {
@@ -1380,8 +1073,8 @@ public class DarkFilePaneUIBridge extends JPanel implements PropertyChangeListen
     }
 
     @SuppressWarnings("serial")
-            // JDK-implementation class
-    class ViewTypeAction extends AbstractAction {
+    // JDK-implementation class
+    protected class ViewTypeAction extends AbstractAction {
         protected int viewType;
 
         ViewTypeAction(final int viewType) {

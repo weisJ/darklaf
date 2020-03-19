@@ -38,7 +38,6 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.File;
 
 public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
@@ -120,7 +119,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         topButtonPanel.add(Box.createRigidArea(hstrut5));
 
         // Home Button
-        File homeDir = fsv.getHomeDirectory();
         String toolTipText = homeFolderToolTipText;
 
 

@@ -359,6 +359,37 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
     }
 
     @Override
+    public JMenu getViewMenu() {
+        if (viewMenu == null) {
+            viewMenu = new JMenu(viewMenuLabelText);
+            ButtonGroup viewButtonGroup = new ButtonGroup();
+
+            for (int i = 0; i < VIEWTYPE_COUNT; i++) {
+                JRadioButtonMenuItem mi = new JRadioButtonMenuItem(new ViewTypeAction(i));
+                viewButtonGroup.add(mi);
+                viewMenu.add(mi);
+            }
+            updateViewMenu();
+        }
+        return viewMenu;
+    }
+
+    @Override
+    protected void updateViewMenu() {
+        if (viewMenu != null) {
+            Component[] comps = viewMenu.getMenuComponents();
+            for (Component comp : comps) {
+                if (comp instanceof JRadioButtonMenuItem) {
+                    JRadioButtonMenuItem mi = (JRadioButtonMenuItem) comp;
+                    if (((ViewTypeAction) mi.getAction()).viewType == viewType) {
+                        mi.setSelected(true);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     protected Handler getMouseHandler() {
         if (handler == null) {
             handler = new DarkHandler();
