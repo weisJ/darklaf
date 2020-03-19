@@ -235,30 +235,55 @@ public enum Alignment {
         }
     }
 
-
     public Insets maskInsets(final Insets insets) {
+        return maskInsets(insets, 0);
+    }
+
+
+    public Insets maskInsets(final Insets insets, final int maskValue) {
+        return maskInsets(insets.top, insets.left, insets.bottom, insets.right, maskValue);
+    }
+
+    public Insets maskInsets(final int top, final int left, final int bottom, final int right, final int mask) {
         switch (this) {
             case NORTH:
-                return new Insets(insets.top, 0, 0, 0);
+                return new Insets(top, mask, mask, mask);
             case NORTH_EAST:
-                return new Insets(insets.top, 0, 0, insets.right);
+                return new Insets(top, mask, mask, right);
             case EAST:
-                return new Insets(0, 0, 0, insets.right);
+                return new Insets(mask, mask, mask, right);
             case SOUTH_EAST:
-                return new Insets(0, 0, insets.bottom, insets.right);
+                return new Insets(mask, mask, bottom, right);
             case SOUTH:
-                return new Insets(0, 0, insets.bottom, 0);
+                return new Insets(mask, mask, bottom, mask);
             case SOUTH_WEST:
-                return new Insets(0, insets.left, insets.bottom, 0);
+                return new Insets(mask, left, bottom, mask);
             case WEST:
-                return new Insets(0, insets.left, 0, 0);
+                return new Insets(mask, left, mask, mask);
             case NORTH_WEST:
-                return new Insets(insets.top, insets.left, 0, 0);
+                return new Insets(top, left, mask, mask);
             case CENTER:
-                return new Insets(0, 0, 0, 0);
+                return new Insets(mask, mask, mask, mask);
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    public Insets maskInsetsInverted(final Insets insets) {
+        return maskInsetsInverted(insets, 0);
+    }
+
+    public Insets maskInsetsInverted(final Insets insets, final int mask) {
+        return maskInsetsInverted(insets.top, insets.left, insets.bottom, insets.right, mask);
+    }
+
+    public Insets maskInsetsInverted(final int top, final int left, final int bottom, final int right, final int mask) {
+        Insets masking = maskInsets(0, 0, 0, 0, 1);
+        Insets maskVal = maskInsets(mask, mask, mask, mask, 0);
+        return new Insets(top * masking.top + maskVal.top,
+                          left * masking.left + maskVal.left,
+                          bottom * masking.bottom + maskVal.bottom,
+                          right * masking.right + maskVal.right);
     }
 
     /**

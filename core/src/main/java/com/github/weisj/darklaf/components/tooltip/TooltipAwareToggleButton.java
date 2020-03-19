@@ -23,17 +23,14 @@
  */
 package com.github.weisj.darklaf.components.tooltip;
 
+import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
 import com.github.weisj.darklaf.util.Alignment;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
 
 public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAware {
 
-    private final ToolTipContext context = new ToolTipContext(this)
-            .setAlignment(Alignment.CENTER)
-            .setCenterAlignment(Alignment.SOUTH);
+    private ToolTipContext context;
 
     public TooltipAwareToggleButton() {
         this(null, null);
@@ -41,6 +38,13 @@ public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAw
 
     public TooltipAwareToggleButton(final String text, final Icon icon) {
         super(text, icon);
+    }
+
+    @Override
+    public void updateUI() {
+        putClientProperty(DarkTooltipUI.KEY_CONTEXT, getToolTipContext());
+        putClientProperty(DarkTooltipUI.KEY_STYLE, ToolTipStyle.BALLOON);
+        super.updateUI();
     }
 
     public TooltipAwareToggleButton(final Icon icon) {
@@ -56,23 +60,13 @@ public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAw
     }
 
     @Override
-    public void updateUI() {
-        super.updateUI();
-        if (context != null) context.updateToolTipUI();
-    }
-
-    @Override
-    public Point getToolTipLocation(final MouseEvent event) {
-        return context.getToolTipLocation(event);
-    }
-
-    @Override
-    public JToolTip createToolTip() {
-        return context.getToolTip();
-    }
-
-    @Override
     public ToolTipContext getToolTipContext() {
+        if (context == null) {
+            context = new ToolTipContext().setAlignment(Alignment.SOUTH)
+                                          .setCenterAlignment(Alignment.SOUTH)
+                                          .setAlignInside(false)
+                                          .setIgnoreBorder(true);
+        }
         return context;
     }
 }

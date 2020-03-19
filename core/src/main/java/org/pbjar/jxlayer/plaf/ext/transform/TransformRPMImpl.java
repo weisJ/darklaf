@@ -41,6 +41,7 @@ import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -165,7 +166,7 @@ public final class TransformRPMImpl {
                         break;
                 }
             } catch (Throwable t) {
-                t.printStackTrace(System.out);
+                LOGGER.log(Level.SEVERE, t.getMessage(), t.getStackTrace());
             }
         }
     }

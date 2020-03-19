@@ -55,6 +55,7 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     public static final String KEY_SQUARE = KEY_PREFIX + "square";
     public static final String KEY_THIN = KEY_PREFIX + "thin";
     public static final String KEY_NO_SHADOW_OVERWRITE = KEY_PREFIX + "noShadowOverwrite";
+    public static final String KEY_CORNER = KEY_PREFIX + "cornerFlag";
     public static final String VARIANT_ONLY_LABEL = "onlyLabel";
     public static final String VARIANT_FULL_SHADOW = "fullShadow";
     public static final String VARIANT_SHADOW = "shadow";
@@ -198,6 +199,17 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         if (!isShadowVariant(b)) {
             i = new Insets(i.top, borderSize, i.bottom, borderSize);
         }
+
+        AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
+        Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
+        if (corner != null) {
+            insetMask = corner.maskInsetsInverted(insetMask, 0);
+        }
+        i.left -= insetMask.left;
+        i.right -= insetMask.right;
+        i.top -= insetMask.top;
+        i.bottom -= insetMask.bottom;
+
         viewRect.x = i.left;
         viewRect.y = i.top;
         viewRect.width = width - (i.right + i.left);
@@ -348,33 +360,59 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
             Insets margin = b.getMargin();
             if (margin instanceof UIResource) margin = new Insets(0, 0, 0, 0);
             if (isShadowVariant(c)) {
-                if (b.isEnabled() && b.getModel().isRollover()) {
-                    GraphicsUtil.setupAAPainting(g2);
-                    g.setColor(getShadowColor(b));
-                    if (isFullShadow(c)) {
-                        g.fillRect(margin.left, margin.top,
-                                   width - margin.left - margin.right,
-                                   height - margin.top - margin.bottom);
-                    } else if (doConvertToShadow(b)) {
-                        int size = Math.min(width - margin.left - margin.right,
-                                            height - margin.left - margin.right);
-                        g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
-                    } else {
-                        g.fillRoundRect(margin.left, margin.top,
-                                        width - margin.left - margin.right,
-                                        height - margin.top - margin.bottom,
-                                        arc, arc);
-                    }
-                }
+                paintShadowBackground(g, c, g2, b, arc, width, height, margin);
             } else {
-                g2.setColor(getBackgroundColor(c));
-                if (isSquare(c) && !chooseAlternativeArc(c)) {
-                    g2.fillRect(borderSize, borderSize, width - 2 * borderSize,
-                                height - 2 * borderSize - shadowHeight);
-                } else {
-                    DarkUIUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize, width - 2 * borderSize,
-                                             height - 2 * borderSize - shadowHeight, arc);
-                }
+                paintDefaultBackground((Graphics2D) g, c, g2, arc, width, height);
+            }
+        }
+    }
+
+    protected void paintDefaultBackground(final Graphics2D g, final JComponent c, final Graphics2D g2,
+                                          final int arc, final int width, final int height) {
+        g2.setColor(getBackgroundColor(c));
+        int shadow = DarkButtonBorder.showDropShadow(c) ? shadowHeight : 0;
+        int effectiveArc = isSquare(c) && !chooseAlternativeArc(c) ? 0 : arc;
+        Rectangle bgRect = getEffectiveRect(width, height, c, -(effectiveArc + 1));
+        if (effectiveArc == 0) {
+            g2.fillRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height - shadow);
+        } else {
+            DarkUIUtil.fillRoundRect(g, bgRect.x, bgRect.y, bgRect.width, bgRect.height - shadow, effectiveArc);
+        }
+    }
+
+    protected Rectangle getEffectiveRect(final int width, final int height, final JComponent c, final int adjustment) {
+        AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
+        Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
+        if (corner != null) {
+            insetMask = corner.maskInsets(insetMask, adjustment);
+        }
+
+        int bx = insetMask.left;
+        int by = insetMask.top;
+        int bw = width - insetMask.left - insetMask.right;
+        int bh = height - insetMask.top - insetMask.bottom;
+        return new Rectangle(bx, by, bw, bh);
+    }
+
+    protected void paintShadowBackground(final Graphics g, final JComponent c, final Graphics2D g2,
+                                         final AbstractButton b, final int arc,
+                                         final int width, final int height, final Insets margin) {
+        if (b.isEnabled() && b.getModel().isRollover()) {
+            GraphicsUtil.setupAAPainting(g2);
+            g.setColor(getShadowColor(b));
+            if (isFullShadow(c)) {
+                g.fillRect(margin.left, margin.top,
+                           width - margin.left - margin.right,
+                           height - margin.top - margin.bottom);
+            } else if (doConvertToShadow(b)) {
+                int size = Math.min(width - margin.left - margin.right,
+                                    height - margin.left - margin.right);
+                g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
+            } else {
+                g.fillRoundRect(margin.left, margin.top,
+                                width - margin.left - margin.right,
+                                height - margin.top - margin.bottom,
+                                arc, arc);
             }
         }
     }

@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 /**
  * @author Jannis Weis
  */
-public class DarkTableUI extends DarkTableUIBridge {
+public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
 
     protected static final String KEY_PREFIX = "JTable.";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
@@ -86,6 +86,7 @@ public class DarkTableUI extends DarkTableUIBridge {
                     LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                 }
             }
+            checkFocus();
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             table.doLayout();
             table.repaint();
@@ -93,31 +94,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     };
     protected Color selectionBackground;
     protected Color selectionFocusBackground;
-    private final FocusListener focusListener = new FocusListener() {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            Color bg = table.getSelectionBackground();
-            if (bg instanceof UIResource) {
-                table.setSelectionBackground(selectionFocusBackground);
-            }
-            table.repaint();
-        }
-
-        @Override
-        public void focusLost(final FocusEvent e) {
-            Color bg = table.getSelectionBackground();
-            if (bg instanceof UIResource) {
-                if (table.isEditing()) {
-                    table.setSelectionBackground(table.getBackground());
-                } else {
-                    table.setSelectionBackground(selectionBackground);
-                }
-            }
-            table.repaint();
-        }
-    };
     protected Color borderColor;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
@@ -136,7 +113,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     @Override
     protected void installListeners() {
         super.installListeners();
-        table.addFocusListener(focusListener);
+        table.addFocusListener(this);
         table.addPropertyChangeListener(propertyChangeListener);
     }
 
@@ -149,9 +126,31 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     @Override
+    public void focusGained(final FocusEvent e) {
+        Color bg = table.getSelectionBackground();
+        if (bg instanceof UIResource) {
+            table.setSelectionBackground(selectionFocusBackground);
+        }
+        table.repaint();
+    }
+
+    @Override
+    public void focusLost(final FocusEvent e) {
+        Color bg = table.getSelectionBackground();
+        if (bg instanceof UIResource) {
+            if (table.isEditing()) {
+                table.setSelectionBackground(table.getBackground());
+            } else {
+                table.setSelectionBackground(selectionBackground);
+            }
+        }
+        table.repaint();
+    }
+
+    @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        table.removeFocusListener(focusListener);
+        table.removeFocusListener(this);
         table.removePropertyChangeListener(propertyChangeListener);
     }
 
@@ -214,6 +213,14 @@ public class DarkTableUI extends DarkTableUIBridge {
         selectionBackground = UIManager.getColor("Table.selectionNoFocusBackground");
     }
 
+    protected void checkFocus() {
+        boolean focus = DarkUIUtil.hasFocus(table);
+        if (focus) {
+            focusGained(null);
+        } else {
+            focusLost(null);
+        }
+    }
 
     @Override
     protected void paintGrid(final Graphics g,
@@ -446,16 +453,16 @@ public class DarkTableUI extends DarkTableUIBridge {
         @Override
         public void mouseClicked(final MouseEvent e) {
             super.mouseClicked(e);
-            if (isFileList) {
+            if (isFileList && SwingUtilities.isLeftMouseButton(e)) {
                 int row = table.rowAtPoint(e.getPoint());
                 JFileChooser fc = getFileChooser();
                 if (row < 0 || fc == null) return;
                 int column = getFileNameColumnIndex();
                 boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
-                        && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
+                    && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
                 if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
-                        && isSelected && lastIndex == row
-                        && DarkUIUtil.isOverText(e, row, column, table)) {
+                    && isSelected && lastIndex == row
+                    && DarkUIUtil.isOverText(e, row, column, table)) {
                     startEditing(row, column);
                 } else {
                     lastIndex = row;

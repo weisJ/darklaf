@@ -29,7 +29,6 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.SystemInfo;
-import sun.awt.AppContext;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLookAndFeel;
@@ -364,13 +363,10 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     @Override
     public void uninitialize() {
         base.uninitialize();
-        AppContext context = AppContext.getAppContext();
         UIManager.removePropertyChangeListener(this);
-        synchronized (DarkPopupMenuUI.MOUSE_GRABBER_KEY) {
-            Object grabber = context.get(DarkPopupMenuUI.MOUSE_GRABBER_KEY);
-            if (grabber != null) {
-                ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
-            }
+        DarkPopupMenuUI.MouseGrabber mouseGrabber = DarkPopupMenuUI.getMouseGrabber();
+        if (mouseGrabber != null) {
+            mouseGrabber.uninstall();
         }
     }
 

@@ -116,14 +116,28 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     }
 
     protected Color getBackgroundColor(final JComponent c) {
-        if (c instanceof JToggleButton && c.isEnabled()) {
-            if (((JToggleButton) c).isSelected()) {
-                return background;
+        AbstractButton b = (AbstractButton) c;
+        boolean rollOver = (b.isRolloverEnabled() || doConvertToShadow(b)) && (((JButton) c).getModel().isRollover());
+        boolean clicked = b.getModel().isArmed();
+        if (c.isEnabled()) {
+            if (clicked) {
+                return clickBackground;
+            } else if (rollOver) {
+                return hoverBackground;
             } else {
-                return backgroundInactive;
+                if (c instanceof JToggleButton && c.isEnabled()) {
+                    if (((JToggleButton) c).isSelected()) {
+                        return background;
+                    } else {
+                        return backgroundInactive;
+                    }
+                } else {
+                    return super.getBackgroundColor(c);
+                }
             }
+        } else {
+            return inactiveBackground;
         }
-        return super.getBackgroundColor(c);
     }
 
     @Override

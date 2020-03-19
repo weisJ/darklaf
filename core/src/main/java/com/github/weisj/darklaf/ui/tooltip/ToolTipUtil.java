@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tooltip;
 
-import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.util.Alignment;
@@ -31,11 +30,14 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.BiConsumer;
 
 public class ToolTipUtil {
 
-    private final static ToolTipContext DEFAULT_CONTEXT = new ToolTipContext().setAlignment(Alignment.CENTER)
-                                                                              .setCenterAlignment(Alignment.SOUTH);
+    private final static ToolTipContext DEFAULT_CONTEXT = new ToolTipContext().setAlignment(Alignment.SOUTH)
+                                                                              .setCenterAlignment(Alignment.SOUTH)
+                                                                              .setAlignInside(false)
+                                                                              .setIgnoreBorder(true);
 
     public static void applyContext(final JToolTip toolTip) {
         JComponent target = toolTip.getComponent();
@@ -56,28 +58,28 @@ public class ToolTipUtil {
     }
 
     protected static Point getBestPositionMatch(final ToolTipContext context, final Point p) {
-        if (context.getAlignment() != Alignment.CENTER
-            || context.getAlignmentStrategy() != AlignmentStrategy.COMPONENT_BOTH) {
-            return context.getToolTipLocation(p, null);
-        }
         // For now adjustments are only made when the alignment is in the center and no mouse coordinates are used.
         Rectangle screenBounds = getScreenBounds(context.getTarget(), p);
         Rectangle windowBounds = DarkUIUtil.getWindow(context.getTarget()).getBounds();
         Rectangle tooltipBounds = new Rectangle();
         tooltipBounds.setSize(context.getToolTip().getPreferredSize());
 
-        Alignment original = context.getCenterAlignment();
-        Alignment[] alignments = getAlignments(original);
+        Alignment original = context.getAlignment();
+        Alignment originalCenter = context.getCenterAlignment();
+        boolean isCenter = original == Alignment.CENTER;
+        Alignment[] alignments = getAlignments(isCenter ? originalCenter : original);
         Point pos = null;
+        BiConsumer<ToolTipContext, Alignment> setter = isCenter ? ToolTipContext::setCenterAlignment
+                                                                : ToolTipContext::setAlignment;
         // Check if a position keeps the tooltip inside the window.
         for (Alignment a : alignments) {
-            pos = tryPosition(a, context, p, tooltipBounds, windowBounds, screenBounds);
+            pos = tryPosition(a, context, p, tooltipBounds, windowBounds, screenBounds, setter);
             if (pos != null) break;
         }
         if (pos == null) {
             //Try again with screen bounds instead.
             for (Alignment a : alignments) {
-                pos = tryPosition(a, context, p, tooltipBounds, screenBounds, screenBounds);
+                pos = tryPosition(a, context, p, tooltipBounds, screenBounds, screenBounds, setter);
                 if (pos != null) break;
             }
         }
@@ -86,10 +88,12 @@ public class ToolTipUtil {
          * we surrender and leave the tooltip as it was.
          */
         if (pos == null) {
+            context.setAlignment(Alignment.CENTER);
             context.setCenterAlignment(Alignment.CENTER);
         }
         context.updateToolTip();
-        context.setCenterAlignment(original);
+        context.setAlignment(original);
+        context.setCenterAlignment(originalCenter);
         return pos;
     }
 
@@ -109,8 +113,11 @@ public class ToolTipUtil {
 
     protected static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
                                        final Rectangle tooltipBounds, final Rectangle boundary,
-                                       final Rectangle screenBoundary) {
+                                       final Rectangle screenBoundary,
+                                       final BiConsumer<ToolTipContext, Alignment> setter) {
+        setter.accept(context, a);
         context.setCenterAlignment(a);
+        context.updateToolTip();
         Point pos = context.getToolTipLocation(p, null);
         Point screenPos = new Point(pos.x, pos.y);
         SwingUtilities.convertPointToScreen(screenPos, context.getTarget());
