@@ -248,8 +248,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
             new Object[]{
                 "ctrl C", "copy",
+                "meta C", "copy",
                 "ctrl V", "paste",
+                "meta V", "paste",
                 "ctrl X", "cut",
+                "meta X", "cut",
                 "COPY", "copy",
                 "PASTE", "paste",
                 "CUT", "cut",
