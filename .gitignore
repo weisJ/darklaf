@@ -55,3 +55,8 @@ Thumbs.db
 /*/bin/
 *.dylib
 *.dll
+
+# Eclipse
+.classpath
+.project
+.settings
