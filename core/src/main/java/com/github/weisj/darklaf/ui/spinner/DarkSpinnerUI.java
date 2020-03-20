@@ -357,6 +357,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                 }
             }
             spinner.revalidate();
+            spinner.repaint();
         } else if (KEY_EDITOR_ALIGNMENT.equals(key) && isTableCellEditor(spinner)) {
             if (editorComponent instanceof JTextField && evt.getNewValue() instanceof Integer) {
                 ((JTextField) editorComponent).setHorizontalAlignment((Integer) evt.getNewValue());
@@ -366,6 +367,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             spinner.repaint();
         } else if (KEY_IS_TREE_EDITOR.equals(key)) {
             spinner.revalidate();
+            spinner.repaint();
         }
     }
 

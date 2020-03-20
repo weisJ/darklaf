@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.combobox;
 
 import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
@@ -228,6 +229,23 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         arcSize = UIManager.getInt("ComboBox.arc");
     }
 
+    @Override
+    protected LayoutManager createLayoutManager() {
+        return new LayoutManagerDelegate(super.createLayoutManager()) {
+            @Override
+            public void layoutContainer(final Container parent) {
+                super.layoutContainer(parent);
+                if (isTreeCellEditor(comboBox) || isTableCellEditor(comboBox)) {
+                    int adj = borderSize / 2;
+                    if (!comboBox.getComponentOrientation().isLeftToRight()) adj *= -1;
+                    Rectangle bounds = arrowButton.getBounds();
+                    bounds.x += adj;
+                    arrowButton.setBounds(bounds);
+                }
+            }
+        };
+    }
+
     private Color getForeground() {
         return comboBox.isEnabled() ? comboBox.getForeground() : inactiveForeground;
     }
@@ -325,8 +343,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             Area rect;
             Area iconRect;
             if (!isTableCellEditor && !isTreeCellEditor) {
-                rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 2,
-                                                            height - 2 * bSize + 2, arc, arc));
+                rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
+                                                            height - 2 * bSize + 1, arc, arc));
                 iconRect = new Area(new Rectangle(off, 0, width, height));
             } else {
                 rect = new Area(new Rectangle(0, 0, width, height));
@@ -341,7 +359,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             g.fill(rect);
 
             g.setColor(getBorderColor());
-            g.fillRect(off, bSize, 1, height - 2 * bSize);
+            g.fillRect(off, bSize - 1, 1, height - 2 * bSize + 1);
         }
 
         if (!isTableCellEditor && !isTreeCellEditor) {
@@ -433,6 +451,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             comboBox.repaint();
         } else if (DarkComboBoxUI.KEY_IS_TABLE_EDITOR.equals(key)
             || DarkComboBoxUI.KEY_IS_TREE_EDITOR.equals(key)) {
+            comboBox.revalidate();
             comboBox.repaint();
         }
     }
