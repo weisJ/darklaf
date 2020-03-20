@@ -31,6 +31,7 @@ import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeListener;
@@ -77,6 +78,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     protected Color inactiveSliderColor;
     protected Color sliderBorderColor;
     protected Color inactiveSliderBorderColor;
+    protected Color selectedForeground;
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -96,6 +98,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         inactiveSliderColor = UIManager.getColor("ToggleButton.disabledSliderKnobFillColor");
         sliderBorderColor = UIManager.getColor("ToggleButton.sliderKnobBorderColor");
         inactiveSliderBorderColor = UIManager.getColor("ToggleButton.disabledSliderKnobBorderColor");
+        selectedForeground = UIManager.getColor("ToggleButton.selectedForeground");
     }
 
     @Override
@@ -113,6 +116,14 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         } else {
             super.paint(g, c);
         }
+    }
+
+    @Override
+    protected Color getForeground(final AbstractButton button) {
+        if (button.isSelected() && !isSlider(button) && button.getForeground() instanceof UIResource) {
+            return selectedForeground;
+        }
+        return super.getForeground(button);
     }
 
     protected Color getBackgroundColor(final JComponent c) {

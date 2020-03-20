@@ -122,7 +122,6 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
         int mnemonicIndex = button.getDisplayedMnemonicIndex();
         if (!model.isEnabled()) {
-            g.setColor(inactiveForeground);
             mnemonicIndex = -1;
         }
         SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
@@ -148,6 +147,9 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         Color fg = button.getForeground();
         if (fg instanceof UIResource && isDefaultButton(button) && !isShadowVariant(button)) {
             fg = defaultForeground;
+        }
+        if (fg instanceof UIResource && !button.getModel().isEnabled()) {
+            fg = inactiveForeground;
         }
         return fg;
     }
