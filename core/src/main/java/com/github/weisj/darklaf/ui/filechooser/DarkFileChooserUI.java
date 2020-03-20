@@ -108,7 +108,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         upFolderButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         upFolderButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         upFolderButton.setText(null);
-        upFolderButton.setFocusPainted(false);
         upFolderButton.setIcon(upFolderIcon);
         upFolderButton.setToolTipText(upFolderToolTipText);
         upFolderButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
@@ -127,7 +126,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         JButton b = new TooltipAwareButton(homeFolderIcon);
         b.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         b.setToolTipText(toolTipText);
-        b.setFocusPainted(false);
         b.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
                             homeFolderAccessibleName);
         b.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -145,7 +143,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
             b = new TooltipAwareButton(filePane.getNewFolderAction());
             b.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
             b.setText(null);
-            b.setFocusPainted(false);
             b.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
             b.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
             b.setIcon(newFolderIcon);
@@ -166,7 +163,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         listViewButton = new TooltipAwareToggleButton(listViewIcon);
         Icon selectedListViewIcon = UIManager.getIcon("FileChooser.listViewSelectedIcon");
         listViewButton.setSelectedIcon(selectedListViewIcon);
-        listViewButton.setFocusPainted(false);
         listViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         listViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
@@ -187,7 +183,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         detailsViewButton = new TooltipAwareToggleButton(detailsViewIcon);
         Icon selectedDetailsViewIcon = UIManager.getIcon("FileChooser.detailsViewSelectedIcon");
         detailsViewButton.setSelectedIcon(selectedDetailsViewIcon);
-        detailsViewButton.setFocusPainted(false);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         detailsViewButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
