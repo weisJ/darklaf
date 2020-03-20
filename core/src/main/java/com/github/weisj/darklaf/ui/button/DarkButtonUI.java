@@ -362,17 +362,25 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
             if (isShadowVariant(c)) {
                 paintShadowBackground(g, c, g2, b, arc, width, height, margin);
             } else {
-                paintDefaultBackground((Graphics2D) g, c, g2, arc, width, height);
+                paintDefaultBackground((Graphics2D) g, b, g2, arc, width, height);
             }
         }
     }
 
-    protected void paintDefaultBackground(final Graphics2D g, final JComponent c, final Graphics2D g2,
+    protected void paintDefaultBackground(final Graphics2D g, final AbstractButton c, final Graphics2D g2,
                                           final int arc, final int width, final int height) {
-        g2.setColor(getBackgroundColor(c));
         int shadow = DarkButtonBorder.showDropShadow(c) ? shadowHeight : 0;
         int effectiveArc = isSquare(c) && !chooseAlternativeArc(c) ? 0 : arc;
-        Rectangle bgRect = getEffectiveRect(width, height, c, -(effectiveArc + 1));
+        AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
+        boolean focus = c.hasFocus() && c.isFocusPainted();
+
+        Rectangle bgRect = getEffectiveRect(width, height, c, -(effectiveArc + 1), corner, focus);
+        g2.setColor(getBackgroundColor(c));
+        paintBackgroundRect(g, g2, shadow, effectiveArc, bgRect);
+    }
+
+    private void paintBackgroundRect(final Graphics2D g, final Graphics2D g2,
+                                     final int shadow, final int effectiveArc, final Rectangle bgRect) {
         if (effectiveArc == 0) {
             g2.fillRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height - shadow);
         } else {
@@ -380,13 +388,12 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         }
     }
 
-    protected Rectangle getEffectiveRect(final int width, final int height, final JComponent c, final int adjustment) {
-        AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
+    protected Rectangle getEffectiveRect(final int width, final int height, final AbstractButton c,
+                                         final int adjustment, final AlignmentExt corner, final boolean focus) {
         Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
         if (corner != null) {
             insetMask = corner.maskInsets(insetMask, adjustment);
         }
-
         int bx = insetMask.left;
         int by = insetMask.top;
         int bw = width - insetMask.left - insetMask.right;

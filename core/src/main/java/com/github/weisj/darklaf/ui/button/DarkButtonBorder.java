@@ -148,13 +148,12 @@ public class DarkButtonBorder implements Border, UIResource {
         AlignmentExt corner = getCornerFlag(c);
 
         boolean paintShadow = showDropShadow(corner);
+        boolean focus = paintFocus(c);
         int shadowHeight = paintShadow ? getShadowSize() : 0;
         int borderSize = getBorderSize();
 
         Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
-        Insets focusIns = new Insets(0, 0, 0, 0);
         if (corner != null) {
-            focusIns = corner.maskInsets(focusIns, -borderSize - focusArc);
             insetMask = corner.maskInsets(insetMask, -arc);
         }
 
@@ -162,23 +161,27 @@ public class DarkButtonBorder implements Border, UIResource {
         int by = insetMask.top;
         int bw = width - insetMask.left - insetMask.right;
         int bh = height - insetMask.top - insetMask.bottom;
-        int fx = focusIns.left;
-        int fy = focusIns.top;
-        int fw = width - focusIns.left - focusIns.right;
-        int fh = height - focusIns.top - focusIns.bottom;
 
         if (c.isEnabled() && paintShadow) {
             paintShadow((Graphics2D) g, bx, by, bw, bh, arc);
         }
 
-        if (paintFocus(c)) {
-            g.translate(fx, fy);
-            DarkUIUtil.paintFocusBorder(g2, fw, fh - shadowHeight, focusArc, borderSize);
-            g.translate(-fx, -fy);
+        if (corner == null) {
+            if (focus) {
+                DarkUIUtil.paintFocusBorder(g2, width, height - shadowHeight, focusArc, borderSize);
+            }
+            g2.setColor(getBorderColor(c, focus));
+            DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
+        } else {
+            g2.setColor(getBorderColor(c, false));
+            DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
+            if (focus) {
+                g2.setColor(getBorderColor(c, true));
+                DarkUIUtil.paintLineBorder(g2, borderSize, borderSize, width - 2 * borderSize,
+                                           height - 2 * borderSize - shadowHeight, arc);
+                DarkUIUtil.paintFocusBorder(g2, width, height - shadowHeight, focusArc, borderSize);
+            }
         }
-
-        g2.setColor(getBorderColor(c));
-        DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
         config.restore();
     }
 
@@ -206,8 +209,8 @@ public class DarkButtonBorder implements Border, UIResource {
         return false;
     }
 
-    protected Color getBorderColor(final Component c) {
-        if (paintFocus(c)) {
+    protected Color getBorderColor(final Component c, final boolean focus) {
+        if (focus) {
             return focusBorderColor;
         } else if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
             return defaultBorderColor;
