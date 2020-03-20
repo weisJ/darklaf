@@ -68,33 +68,13 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     protected Color focusBorderColor;
     protected Color borderColor;
     protected Color inactiveBorderColor;
-    protected Color arrowBackgroundStart;
+    protected Color arrowBackground;
     protected Color arrowBackgroundEnd;
     private Insets boxPadding;
     private Insets cellPadding;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkComboBoxUI();
-    }
-
-    @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        boxPadding = UIManager.getInsets("ComboBox.insets");
-        borderSize = UIManager.getInt("ComboBox.borderThickness");
-        background = UIManager.getColor("ComboBox.activeBackground");
-        editBackground = UIManager.getColor("ComboBox.editBackground");
-        inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
-        inactiveForeground = UIManager.getColor("ComboBox.disabledForeground");
-        focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
-        borderColor = UIManager.getColor("ComboBox.activeBorderColor");
-        inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
-        arrowBackgroundStart = UIManager.getColor("ComboBox.arrowBackgroundStart");
-        arrowBackgroundEnd = UIManager.getColor("ComboBox.arrowBackgroundEnd");
-        cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
-        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
-        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
-        comboBox.setBorder(this);
     }
 
     protected static boolean isTableCellEditor(final Component c) {
@@ -114,6 +94,27 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         super.uninstallListeners();
         comboBox.removeMouseListener(mouseListener);
         comboBox.removePropertyChangeListener(this);
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        LookAndFeel.installProperty(comboBox, PropertyKey.OPAQUE, false);
+        arcSize = UIManager.getInt("ComboBox.arc");
+        boxPadding = UIManager.getInsets("ComboBox.insets");
+        borderSize = UIManager.getInt("ComboBox.borderThickness");
+        background = UIManager.getColor("ComboBox.activeBackground");
+        editBackground = UIManager.getColor("ComboBox.editBackground");
+        inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
+        inactiveForeground = UIManager.getColor("ComboBox.disabledForeground");
+        focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
+        borderColor = UIManager.getColor("ComboBox.activeBorderColor");
+        inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
+        arrowBackground = UIManager.getColor("ComboBox.arrowBackground");
+        cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
+        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
+        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
+        comboBox.setBorder(this);
     }
 
     @Override
@@ -220,13 +221,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     protected static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
             && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TREE_EDITOR));
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        LookAndFeel.installProperty(comboBox, PropertyKey.OPAQUE, false);
-        arcSize = UIManager.getInt("ComboBox.arc");
     }
 
     @Override
@@ -408,10 +402,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
 
     protected Paint getArrowBackground(final JComboBox<?> c) {
         if (!c.isEnabled()) return inactiveBackground;
-        if (c.isEditable()) {
-            return new GradientPaint(0, borderSize, arrowBackgroundStart,
-                                     0, c.getHeight() - borderSize, arrowBackgroundEnd);
-        }
+        if (c.isEditable()) return arrowBackground;
         return background;
     }
 

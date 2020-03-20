@@ -74,7 +74,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             spinner.getEditor().requestFocus();
         }
     };
-    protected Color arrowBackgroundStart;
+    protected Color arrowBackground;
     protected Color background;
     protected Color arrowBackgroundEnd;
     protected Icon arrowDownIcon;
@@ -294,8 +294,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         borderSize = UIManager.getInt("Spinner.borderThickness");
         background = UIManager.getColor("Spinner.activeBackground");
         inactiveBackground = UIManager.getColor("Spinner.inactiveBackground");
-        arrowBackgroundStart = UIManager.getColor("Spinner.arrowBackgroundStart");
-        arrowBackgroundEnd = UIManager.getColor("Spinner.arrowBackgroundEnd");
+        arrowBackground = UIManager.getColor("Spinner.arrowBackground");
 
         arrowDownIcon = UIManager.getIcon("Spinner.arrowDown.icon");
         arrowUpIcon = UIManager.getIcon("Spinner.arrowUp.icon");
@@ -333,9 +332,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     }
 
     protected Paint getArrowBackground(final JComponent c) {
-        return c == null || !c.isEnabled() ? inactiveBackground
-                                           : new GradientPaint(0, borderSize, arrowBackgroundStart,
-                                                               0, c.getHeight() - borderSize, arrowBackgroundEnd);
+        return c == null || !c.isEnabled() ? inactiveBackground : arrowBackground;
     }
 
     @Override
