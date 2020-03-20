@@ -91,6 +91,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        // OpenJDK BorderlessTextField has a bug with its setBorder implementation
+        // so we reset the border
+        // See https://mail.openjdk.java.net/pipermail/swing-dev/2020-March/010226.html
+        if (editor != null && "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(editor.getClass().getName())) {
+            editor.setBorder(null);
+        }
         editor.putClientProperty(KEY_ROUNDED_SELECTION, UIManager.getBoolean("TextComponent.roundedSelection"));
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
