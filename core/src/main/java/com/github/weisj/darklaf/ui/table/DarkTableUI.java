@@ -434,9 +434,10 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
             }
             if (table == null) return false;
             KeyStroke stroke = KeyStroke.getKeyStroke(event.getExtendedKeyCode(), event.getModifiersEx());
-            String actionName = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke).toString();
-            String cutActionName = TransferHandler.getCutAction().getValue(Action.NAME).toString();
-            String copyActionName = TransferHandler.getCopyAction().getValue(Action.NAME).toString();
+            String actionName = String.valueOf(table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
+            if ("null".equals(actionName)) actionName = null;
+            String cutActionName = String.valueOf(TransferHandler.getCutAction().getValue(Action.NAME));
+            String copyActionName = String.valueOf(TransferHandler.getCopyAction().getValue(Action.NAME));
             return Objects.equals(actionName, copyActionName) || Objects.equals(actionName, cutActionName);
         }
         return false;
