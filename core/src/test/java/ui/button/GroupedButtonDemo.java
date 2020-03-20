@@ -39,7 +39,7 @@ public class GroupedButtonDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        Box box = new Box(BoxLayout.LINE_AXIS);
+        Box box = Box.createHorizontalBox();
         Icon icon = IconLoader.get().getIcon("menu/listFiles.svg", 19, 19, true);
         Icon iconSelected = IconLoader.get().getIcon("menu/listFilesSelected.svg", 19, 19, true);
         ButtonGroup bg = new ButtonGroup();
@@ -49,7 +49,8 @@ public class GroupedButtonDemo implements ComponentDemo {
             b = createButton(icon, iconSelected, bg, AlignmentExt.MIDDLE_HORIZONTAL, b);
             box.add(b);
         }
-        box.add(createButton(icon, iconSelected, bg, AlignmentExt.RIGHT, b), true);
+        box.add(createButton(icon, iconSelected, bg, AlignmentExt.RIGHT, true, b));
+
         return new DemoPanel(box);
     }
 
@@ -69,7 +70,7 @@ public class GroupedButtonDemo implements ComponentDemo {
             if (prev != null) prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
             putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, prev);
             setSelected(isSelected);
-//            bg.add(this);
+            bg.add(this);
         }};
     }
 

@@ -229,7 +229,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
     }
 
     protected Component createTopButtonArea() {
-        Box box = new Box(BoxLayout.LINE_AXIS);
+        Box box = Box.createHorizontalBox();
 
         box.add(createUpFolderButton());
         box.add(makeHorizontalSpacer());
