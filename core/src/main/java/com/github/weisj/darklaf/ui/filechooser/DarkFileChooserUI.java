@@ -258,6 +258,8 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         Box box = Box.createHorizontalBox();
         listViewButton = createListViewButton();
         detailsViewButton = createDetailsViewButton();
+        listViewButton.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, detailsViewButton);
+        detailsViewButton.putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, listViewButton);
 
         box.add(listViewButton);
         box.add(detailsViewButton);
@@ -292,12 +294,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
     }
 
     protected JToggleButton createDetailsViewButton() {
-        JToggleButton button = new TooltipAwareToggleButton(detailsViewIcon) {
-            @Override
-            public boolean isFocusable() {
-                return super.isFocusable();
-            }
-        };
+        JToggleButton button = new TooltipAwareToggleButton(detailsViewIcon);
         setupButton(button, detailsViewButtonAccessibleName, detailsViewButtonToolTipText);
         Icon selectedDetailsViewIcon = UIManager.getIcon("FileChooser.detailsViewSelectedIcon");
         button.setSelectedIcon(selectedDetailsViewIcon);
