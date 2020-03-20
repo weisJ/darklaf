@@ -36,6 +36,8 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -44,7 +46,7 @@ import java.beans.PropertyChangeListener;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListener {
+public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListener, FocusListener {
 
     protected static final String KEY_PREFIX = "JButton.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
@@ -56,6 +58,10 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
     public static final String KEY_THIN = KEY_PREFIX + "thin";
     public static final String KEY_NO_SHADOW_OVERWRITE = KEY_PREFIX + "noShadowOverwrite";
     public static final String KEY_CORNER = KEY_PREFIX + "cornerFlag";
+    public static final String KEY_LEFT_NEIGHBOUR = KEY_PREFIX + "leftNeighbour";
+    public static final String KEY_RIGHT_NEIGHBOUR = KEY_PREFIX + "rightNeighbour";
+    public static final String KEY_TOP_NEIGHBOUR = KEY_PREFIX + "topNeighbour";
+    public static final String KEY_BOTTOM_NEIGHBOUR = KEY_PREFIX + "bottomNeighbour";
     public static final String VARIANT_ONLY_LABEL = "onlyLabel";
     public static final String VARIANT_FULL_SHADOW = "fullShadow";
     public static final String VARIANT_SHADOW = "shadow";
@@ -91,16 +97,18 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         return new DarkButtonUI();
     }
 
+    public static JComponent getNeighbour(final String key, final Component comp) {
+        if (!(comp instanceof JComponent)) return null;
+        Object obj = ((JComponent) comp).getClientProperty(key);
+        if (obj instanceof JComponent) return (JComponent) obj;
+        return null;
+    }
+
     @Override
     protected void installListeners(final AbstractButton b) {
         super.installListeners(b);
         b.addPropertyChangeListener(this);
-    }
-
-    @Override
-    protected void uninstallListeners(final AbstractButton b) {
-        super.uninstallListeners(b);
-        b.removePropertyChangeListener(this);
+        b.addFocusListener(this);
     }
 
     public static boolean isShadowVariant(final Component c) {
@@ -128,6 +136,13 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
                                                   textRect.x + getTextShiftOffset(),
                                                   textRect.y + metrics.getAscent() + getTextShiftOffset());
         config.restore();
+    }
+
+    @Override
+    protected void uninstallListeners(final AbstractButton b) {
+        super.uninstallListeners(b);
+        b.removePropertyChangeListener(this);
+        b.removeFocusListener(this);
     }
 
     public static boolean isFullShadow(final Component c) {
@@ -455,5 +470,22 @@ public class DarkButtonUI extends BasicButtonUI implements PropertyChangeListene
         if (key.startsWith(KEY_PREFIX)) {
             button.revalidate();
         }
+    }
+
+    @Override
+    public void focusGained(final FocusEvent e) {
+        repaintNeighbours();
+    }
+
+    @Override
+    public void focusLost(final FocusEvent e) {
+        repaintNeighbours();
+    }
+
+    protected void repaintNeighbours() {
+        DarkUIUtil.repaint(getNeighbour(KEY_LEFT_NEIGHBOUR, button));
+        DarkUIUtil.repaint(getNeighbour(KEY_TOP_NEIGHBOUR, button));
+        DarkUIUtil.repaint(getNeighbour(KEY_RIGHT_NEIGHBOUR, button));
+        DarkUIUtil.repaint(getNeighbour(KEY_BOTTOM_NEIGHBOUR, button));
     }
 }

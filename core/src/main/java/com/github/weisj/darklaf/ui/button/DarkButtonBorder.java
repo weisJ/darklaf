@@ -125,6 +125,10 @@ public class DarkButtonBorder implements Border, UIResource {
         return null;
     }
 
+    protected int getShadowSize(final JComponent c) {
+        return showDropShadow(c) ? getShadowSize() : 0;
+    }
+
     protected int getShadowSize() {
         return shadowSize;
     }
@@ -153,7 +157,9 @@ public class DarkButtonBorder implements Border, UIResource {
         int borderSize = getBorderSize();
 
         Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
+        Insets focusIns = new Insets(0, 0, 0, 0);
         if (corner != null) {
+            focusIns = corner.maskInsets(focusIns, -borderSize - focusArc);
             insetMask = corner.maskInsets(insetMask, -arc);
         }
 
@@ -161,28 +167,61 @@ public class DarkButtonBorder implements Border, UIResource {
         int by = insetMask.top;
         int bw = width - insetMask.left - insetMask.right;
         int bh = height - insetMask.top - insetMask.bottom;
+        int fx = focusIns.left;
+        int fy = focusIns.top;
+        int fw = width - focusIns.left - focusIns.right;
+        int fh = height - focusIns.top - focusIns.bottom;
 
         if (c.isEnabled() && paintShadow) {
             paintShadow((Graphics2D) g, bx, by, bw, bh, arc);
         }
 
-        if (corner == null) {
-            if (focus) {
-                DarkUIUtil.paintFocusBorder(g2, width, height - shadowHeight, focusArc, borderSize);
-            }
-            g2.setColor(getBorderColor(c, focus));
-            DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
-        } else {
-            g2.setColor(getBorderColor(c, false));
-            DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
-            if (focus) {
-                g2.setColor(getBorderColor(c, true));
-                DarkUIUtil.paintLineBorder(g2, borderSize, borderSize, width - 2 * borderSize,
-                                           height - 2 * borderSize - shadowHeight, arc);
-                DarkUIUtil.paintFocusBorder(g2, width, height - shadowHeight, focusArc, borderSize);
-            }
+        if (paintFocus(c)) {
+            g.translate(fx, fy);
+            DarkUIUtil.paintFocusBorder(g2, fw, fh - shadowHeight, focusArc, borderSize);
+            g.translate(-fx, -fy);
         }
+
+        g2.setColor(getBorderColor(c, focus));
+        DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
+        paintNeighbourFocus(g2, c, width, height);
         config.restore();
+    }
+
+    protected void paintNeighbourFocus(final Graphics2D g2, final Component c,
+                                       final int width, final int height) {
+        JComponent left = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_LEFT_NEIGHBOUR, c);
+        boolean paintLeft = DarkUIUtil.hasFocus(left);
+        if (paintLeft) {
+            g2.translate(-2 * borderSize, 0);
+            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, height - getShadowSize(left),
+                                        getFocusArc(left), borderSize);
+            g2.translate(2 * borderSize, 0);
+        }
+        JComponent right = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
+        boolean paintRight = DarkUIUtil.hasFocus(right);
+        if (paintRight) {
+            g2.translate(width - borderSize, 0);
+            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, height - getShadowSize(right),
+                                        getFocusArc(right), borderSize);
+            g2.translate(borderSize - width, 0);
+        }
+        JComponent top = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
+        boolean paintTop = DarkUIUtil.hasFocus(top);
+        if (paintTop) {
+            g2.translate(0, -2 * borderSize);
+            DarkUIUtil.paintFocusBorder(g2, width, 3 * borderSize,
+                                        getFocusArc(top), borderSize);
+            g2.translate(0, 2 * borderSize);
+        }
+        JComponent bottom = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
+        boolean paintBottom = DarkUIUtil.hasFocus(bottom);
+        if (paintBottom) {
+            g2.translate(0, height - borderSize);
+            DarkUIUtil.paintFocusBorder(g2, width, 3 * borderSize,
+                                        getFocusArc(bottom), borderSize);
+            g2.translate(0, borderSize - height);
+        }
     }
 
     protected boolean paintFocus(final Component c) {

@@ -43,26 +43,31 @@ public class GroupedButtonDemo implements ComponentDemo {
         Icon icon = IconLoader.get().getIcon("menu/listFiles.svg", 19, 19, true);
         Icon iconSelected = IconLoader.get().getIcon("menu/listFilesSelected.svg", 19, 19, true);
         ButtonGroup bg = new ButtonGroup();
-        box.add(createButton(icon, iconSelected, bg, AlignmentExt.LEFT));
+        AbstractButton b = createButton(icon, iconSelected, bg, AlignmentExt.LEFT, null);
+        box.add(b);
         for (int i = 0; i < 3; i++) {
-            box.add(createButton(icon, iconSelected, bg, AlignmentExt.MIDDLE_HORIZONTAL));
+            b = createButton(icon, iconSelected, bg, AlignmentExt.MIDDLE_HORIZONTAL, b);
+            box.add(b);
         }
-        box.add(createButton(icon, iconSelected, bg, AlignmentExt.RIGHT, true));
+        box.add(createButton(icon, iconSelected, bg, AlignmentExt.RIGHT, b), true);
         return new DemoPanel(box);
     }
 
     protected AbstractButton createButton(final Icon icon, final Icon selected,
-                                          final ButtonGroup bg, final AlignmentExt a) {
-        return createButton(icon, selected, bg, a, false);
+                                          final ButtonGroup bg, final AlignmentExt a,
+                                          final AbstractButton prev) {
+        return createButton(icon, selected, bg, a, false, prev);
     }
 
     protected AbstractButton createButton(final Icon icon, final Icon selected,
                                           final ButtonGroup bg, final AlignmentExt a,
-                                          final boolean isSelected) {
+                                          final boolean isSelected, final AbstractButton prev) {
         return new JToggleButton(icon) {{
             setSelectedIcon(selected);
             putClientProperty(DarkButtonUI.KEY_THIN, true);
             putClientProperty(DarkButtonUI.KEY_CORNER, a);
+            if (prev != null) prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
+            putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, prev);
             setSelected(isSelected);
 //            bg.add(this);
         }};

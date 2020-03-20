@@ -169,7 +169,10 @@ public final class DarkUIUtil {
             rectangle.width -= insets.left + insets.right;
             rectangle.height -= insets.top + insets.bottom;
         }
+    }
 
+    public static void repaint(final JComponent component) {
+        if (component != null) component.repaint();
     }
 
     public static boolean hasFocus(final Component c) {
