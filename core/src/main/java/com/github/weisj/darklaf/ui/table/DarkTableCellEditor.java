@@ -178,10 +178,10 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
         if (anEvent == null) return super.isCellEditable(anEvent);
-        if (anEvent instanceof KeyEvent) {
-            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent)) return false;
-        }
         JTable table = ((JTable) anEvent.getSource());
+        if (anEvent instanceof KeyEvent) {
+            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
+        }
         if (DarkTableCellRenderer.isBooleanRenderingEnabled(table) && anEvent instanceof MouseEvent) {
             Point p = ((MouseEvent) anEvent).getPoint();
             int row = table.rowAtPoint(p);

@@ -38,6 +38,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -413,7 +414,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         }
     }
 
-    public static boolean ignoreKeyCodeOnEdit(final KeyEvent event) {
+    public static boolean ignoreKeyCodeOnEdit(final KeyEvent event, final JTable table) {
         if (event != null) {
             int keyCode = event.getKeyCode();
             switch (keyCode) {
@@ -426,12 +427,17 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                 case KeyEvent.VK_PRINTSCREEN:
                 case KeyEvent.VK_NUM_LOCK:
                 case KeyEvent.VK_SCROLL_LOCK:
+                case KeyEvent.VK_CLEAR:
                     return true;
-                case KeyEvent.VK_C:
-                    return (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() & event.getModifiersEx()) != 0;
                 default:
                     break;
             }
+            if (table == null) return false;
+            KeyStroke stroke = KeyStroke.getKeyStroke(event.getExtendedKeyCode(), event.getModifiersEx());
+            String actionName = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke).toString();
+            String cutActionName = TransferHandler.getCutAction().getValue(Action.NAME).toString();
+            String copyActionName = TransferHandler.getCopyAction().getValue(Action.NAME).toString();
+            return Objects.equals(actionName, copyActionName) || Objects.equals(actionName, cutActionName);
         }
         return false;
     }
@@ -500,7 +506,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
 
         @Override
         public void keyTyped(final KeyEvent e) {
-            if (ignoreKeyCodeOnEdit(e)) return;
+            if (ignoreKeyCodeOnEdit(e, table)) return;
             super.keyTyped(e);
         }
     }
