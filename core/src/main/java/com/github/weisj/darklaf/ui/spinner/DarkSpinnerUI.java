@@ -111,6 +111,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
+        if (editor != null && editor.getComponents().length > 0) {
+            editor.getComponents()[0].removeFocusListener(focusListener);
+        }
         spinner.removeMouseListener(mouseListener);
         spinner.removePropertyChangeListener(this);
     }
@@ -181,6 +184,10 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     @Override
     protected void replaceEditor(final JComponent oldEditor, final JComponent newEditor) {
         super.replaceEditor(oldEditor, newEditor);
+        editor = newEditor;
+        if (oldEditor != null && oldEditor.getComponents().length > 0) {
+            oldEditor.getComponents()[0].removeFocusListener(focusListener);
+        }
         editor = newEditor;
         if (oldEditor != null && oldEditor.getComponents().length > 0) {
             oldEditor.getComponents()[0].removeFocusListener(focusListener);
