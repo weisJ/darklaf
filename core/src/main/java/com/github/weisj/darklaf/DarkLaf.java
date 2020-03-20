@@ -320,14 +320,15 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         final String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
         final String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
         final String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
+        final int mask = SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
         // Ctrl+Ins, Shift+Ins, Shift+Del
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_DOWN_MASK), copyActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_DOWN_MASK), cutActionKey);
         // Ctrl+C, Ctrl+V, Ctrl+X
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), copyActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), pasteActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask), copyActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, mask), pasteActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask), DefaultEditorKit.cutAction);
     }
 
     private void installGlobals(final Properties uiProps, final UIDefaults defaults) {
