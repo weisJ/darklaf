@@ -91,6 +91,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
     private JComponent editor;
     private JButton prevButton;
     private Component editorComponent;
+    private JButton nextButton;
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -135,9 +136,21 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                 }
             }
 
+            protected void adjustButton(final JComponent button, final int adj) {
+                Rectangle bounds = button.getBounds();
+                bounds.x += adj;
+                button.setBounds(bounds);
+            }
+
             @Override
             public void layoutContainer(final Container parent) {
                 super.layoutContainer(parent);
+                if (isTableCellEditor(spinner) || isTreeCellEditor(spinner)) {
+                    int adj = borderSize / 2;
+                    if (!spinner.getComponentOrientation().isLeftToRight()) adj *= -1;
+                    adjustButton(prevButton, adj);
+                    adjustButton(nextButton, adj);
+                }
                 if (editor != null && !spinner.getComponentOrientation().isLeftToRight()) {
                     Rectangle bounds = editor.getBounds();
                     bounds.x += borderSize;
@@ -160,7 +173,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
 
     @Override
     protected Component createNextButton() {
-        JButton nextButton = createArrow(SwingConstants.NORTH);
+        nextButton = createArrow(SwingConstants.NORTH);
         nextButton.setName("Spinner.nextButton");
         nextButton.setBorder(new EmptyBorder(1, 1, 1, 1));
         nextButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -273,6 +286,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TREE_EDITOR));
     }
 
+
     @Override
     protected void installDefaults() {
         super.installDefaults();
@@ -301,8 +315,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
         int off = leftToRight ? bounds.x : bounds.x + bounds.width;
         Area rect;
-        if (!isTableCellEditor(spinner)) {
-            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 2, height - 2 * bSize + 1,
+        if (!isTableCellEditor(spinner) && !isTreeCellEditor(spinner)) {
+            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
+                                                        height - 2 * bSize + 1,
                                                         arc, arc));
         } else {
             rect = new Area(new Rectangle(0, 0, width, height));
@@ -341,16 +356,16 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
                     text.setHorizontalAlignment(alignment);
                 }
             }
-            spinner.repaint();
+            spinner.revalidate();
         } else if (KEY_EDITOR_ALIGNMENT.equals(key) && isTableCellEditor(spinner)) {
             if (editorComponent instanceof JTextField && evt.getNewValue() instanceof Integer) {
                 ((JTextField) editorComponent).setHorizontalAlignment((Integer) evt.getNewValue());
             }
-            spinner.repaint();
+            spinner.revalidate();
         } else if (KEY_VARIANT.equals(key)) {
             spinner.repaint();
         } else if (KEY_IS_TREE_EDITOR.equals(key)) {
-            spinner.repaint();
+            spinner.revalidate();
         }
     }
 
