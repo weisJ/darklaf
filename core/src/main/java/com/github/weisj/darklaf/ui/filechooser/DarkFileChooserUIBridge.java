@@ -65,9 +65,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     // made most things in this class protected.
 
     protected static final Dimension hstrut5 = new Dimension(5, 1);
-    protected static final Dimension hstrut11 = new Dimension(11, 1);
     protected static final Dimension vstrut5 = new Dimension(1, 5);
-    protected static final Insets shrinkwrap = new Insets(0, 0, 0, 0);
     static final int space = 10;
     // Preferred and Minimum sizes for the dialog box
     protected static int PREF_WIDTH = 500;
@@ -202,7 +200,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         detailsViewButtonAccessibleName = defaults.getString("FileChooser.detailsViewButtonAccessibleName", l);
     }
 
-    protected Integer getMnemonic(UIDefaults defaults, final String key, final Locale l) {
+    protected Integer getMnemonic(final UIDefaults defaults, final String key, final Locale l) {
         Object value = defaults.get(key, l);
         if (value instanceof Integer) {
             return (Integer) value;
