@@ -48,6 +48,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     public static final String KEY_DO_NOT_CANCEL_POPUP = "doNotCancelPopup";
     public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
+    public static final String KEY_MAKE_VISIBLE = "PopupFactory.makeVisible";
     public static final StringBufferWrapper HIDE_POPUP_VALUE = new StringBufferWrapper(new StringBuffer(
         "doNotCancelPopup"));
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
@@ -57,6 +58,16 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         return new DarkPopupMenuUI();
     }
 
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        Window window = SwingUtilities.getWindowAncestor(c);
+        if (window != null
+            && Boolean.TRUE.equals(popupMenu.getClientProperty(KEY_MAKE_VISIBLE))) {
+            popupMenu.putClientProperty(KEY_MAKE_VISIBLE, false);
+            window.setOpacity(1);
+        }
+        super.paint(g, c);
+    }
 
     public static List<JPopupMenu> getPopups() {
         MenuSelectionManager msm = MenuSelectionManager.defaultManager();

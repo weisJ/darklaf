@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui;
 
 import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 
@@ -40,6 +41,7 @@ public class DarkPopupFactory extends PopupFactory {
         boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
         boolean isBalloonTooltip = contents instanceof JToolTip
             && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder;
+        boolean isPopupMenu = contents instanceof JPopupMenu;
         if (isMediumWeight || isLightWeight) {
             if (isBalloonTooltip) {
                 // null owner forces a heavyweight popup.
@@ -56,7 +58,6 @@ public class DarkPopupFactory extends PopupFactory {
         // That is why we set window background explicitly.
         Window window = SwingUtilities.getWindowAncestor(contents);
         if (window != null) {
-            window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
             boolean install = true;
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
@@ -68,7 +69,8 @@ public class DarkPopupFactory extends PopupFactory {
             } else {
                 Decorations.uninstallPopupWindow(window);
             }
-            if (isBalloonTooltip) {
+            if (isBalloonTooltip || isPopupMenu) {
+                if (isPopupMenu) ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);
                 window.setOpacity(0.0f);
             }
         }

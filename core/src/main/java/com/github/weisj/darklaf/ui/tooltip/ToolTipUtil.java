@@ -58,7 +58,9 @@ public class ToolTipUtil {
     }
 
     protected static Point getBestPositionMatch(final ToolTipContext context, final Point p) {
-        // For now adjustments are only made when the alignment is in the center and no mouse coordinates are used.
+        if (!context.isBestFit()) {
+            return context.getToolTipLocation(p, null);
+        }
         Rectangle screenBounds = getScreenBounds(context.getTarget(), p);
         Rectangle windowBounds = DarkUIUtil.getWindow(context.getTarget()).getBounds();
         Rectangle tooltipBounds = new Rectangle();

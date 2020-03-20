@@ -79,6 +79,7 @@ public class ToolTipContext {
     private Insets insets;
     private ToolTipStyle style;
     private boolean ignoreBorder;
+    private boolean bestFit;
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
@@ -177,6 +178,10 @@ public class ToolTipContext {
 
     public boolean isIgnoreBorder() {
         return ignoreBorder;
+    }
+
+    public boolean isBestFit() {
+        return bestFit;
     }
 
     /**
@@ -421,6 +426,17 @@ public class ToolTipContext {
      */
     public ToolTipContext setIgnoreBorder(final boolean ignoreBorder) {
         this.ignoreBorder = ignoreBorder;
+        return this;
+    }
+
+    /**
+     * Sets whether the tooltip should try its best to fit inside the window/screen.
+     *
+     * @param bestFit true if best fit adjustments should be made.
+     * @return this.
+     */
+    public ToolTipContext setUseBestFit(final boolean bestFit) {
+        this.bestFit = bestFit;
         return this;
     }
 

@@ -49,12 +49,20 @@ public class ToolTipDemo implements ComponentDemo {
         button.setToolTipText("This is the ToolTip demo text!");
         button.putClientProperty(DarkTooltipUI.KEY_STYLE, DarkTooltipUI.VARIANT_BALLOON);
 
-        JPanel controlPanel = panel.addControls();
+        JPanel controlPanel = panel.addControls(3);
 
         controlPanel.add(new JCheckBox("Align inside") {{
             setSelected(context.isAlignInside());
             addActionListener(e -> context.setAlignInside(isSelected()));
-        }}, "span");
+        }});
+        controlPanel.add(new JCheckBox("Ignore Border") {{
+            setSelected(context.isIgnoreBorder());
+            addActionListener(e -> context.setIgnoreBorder(isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("Use best fit") {{
+            setSelected(context.isBestFit());
+            addActionListener(e -> context.setUseBestFit(isSelected()));
+        }});
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Tooltip Style:", JLabel.RIGHT));
