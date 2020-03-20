@@ -160,7 +160,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
                 comboBox.repaint();
             }
         });
-        ((JComponent) comp).setBorder(null);
         return comboBoxEditor;
     }
 
