@@ -32,7 +32,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.geom.Point2D;
+import java.util.Objects;
 
 public class PopupMouseListener extends MouseMotionAdapter {
 
@@ -41,7 +41,6 @@ public class PopupMouseListener extends MouseMotionAdapter {
     private final PopupContent content;
     private final Rectangle boundsBuffer = new Rectangle();
     private Popup popup;
-    private GraphicsConfiguration oldGc;
 
     public PopupMouseListener(final DarkTreeUI treeUI, final JTree tree) {
         this.treeUI = treeUI;
@@ -74,24 +73,12 @@ public class PopupMouseListener extends MouseMotionAdapter {
         content.setRendererPath(row, path);
     }
 
-    protected void showPopup(final JViewport viewport, final Rectangle cellBounds) {
-        Point p = cellBounds.getLocation();
-        SwingUtilities.convertPointToScreen(p, viewport);
-        GraphicsConfiguration gc = viewport.getGraphicsConfiguration();
-
-        if (oldGc != gc) {
-            System.out.println("gc changed");
-            hidePopup();
-            oldGc = gc;
-        }
-
-        Point2D pos = new Point2D.Double(p.x, p.y);
-        Point2D res = gc.getDefaultTransform().transform(pos, new Point2D.Double());
-
+    protected void showPopup(final JComponent parent, final Rectangle cellBounds) {
         if (popup == null) {
-            popup = PopupFactory.getSharedInstance().getPopup(viewport, content,
-                                                              (int) Math.round(res.getX()),
-                                                              (int) Math.round(res.getY()));
+            Point p = cellBounds.getLocation();
+            Point screenPos = parent.getLocationOnScreen();
+            popup = PopupFactory.getSharedInstance().getPopup(parent, content,
+                                                              screenPos.x + p.x, screenPos.y + p.y);
             popup.show();
         }
         content.paintImmediately(0, 0, cellBounds.width, cellBounds.height);
@@ -99,13 +86,8 @@ public class PopupMouseListener extends MouseMotionAdapter {
 
     protected void hidePopup() {
         if (popup != null) {
-            System.out.println("hide");
-            Window window = SwingUtilities.getWindowAncestor(content);
             popup.hide();
             popup = null;
-            if (window != null && (window.getClass().getEnclosingClass().equals(Popup.class))) {
-                window.dispose();
-            }
         }
     }
 
@@ -123,13 +105,14 @@ public class PopupMouseListener extends MouseMotionAdapter {
                 Window w = SwingUtilities.getWindowAncestor(PopupContent.this);
                 if (lastRootPane != null) {
                     lastRootPane.putClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP, false);
+                    lastRootPane.putClientProperty("Window.shadow", true);
                 }
-                if (w != null && (w.getClass().getEnclosingClass().equals(Popup.class))) {
-                    if (w instanceof RootPaneContainer) {
-                        lastRootPane = ((RootPaneContainer) w).getRootPane();
-                        if (lastRootPane != null) {
-                            lastRootPane.putClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP, true);
-                        }
+                if (w instanceof RootPaneContainer
+                    && Objects.equals(w.getClass().getEnclosingClass(), Popup.class)) {
+                    lastRootPane = ((RootPaneContainer) w).getRootPane();
+                    if (lastRootPane != null) {
+                        lastRootPane.putClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP, true);
+                        lastRootPane.putClientProperty("Window.shadow", false);
                     }
                 }
             });
@@ -165,11 +148,12 @@ public class PopupMouseListener extends MouseMotionAdapter {
         }
 
         @Override
-        protected void paintComponent(final Graphics g) {
+        protected void paintComponent(final Graphics graphics) {
             if (tree.isEditing() && tree.getEditingPath().equals(path)) {
                 hidePopup();
                 return;
             }
+            Graphics2D g = (Graphics2D) graphics;
             Rectangle bounds = getBounds();
             bounds.setLocation(0, 0);
             g.setColor(getBackground());

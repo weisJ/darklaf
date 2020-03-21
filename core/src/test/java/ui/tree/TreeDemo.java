@@ -44,11 +44,11 @@ public class TreeDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Node ANode ANode ANode ANode ANode A");
-        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Leaf ALeaf ALeaf ALeaf ALeaf A");
+        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Very very very very very long node A");
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode("A loooooooooooooooooooooooooooooooooooooong leaf A");
         DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
         DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf CLeaf CLeaf CLeaf CLeaf CLeaf CLeaf CLeaf CLeaf C");
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
 
         parent1.add(child);
         parent1.add(child1);
@@ -57,7 +57,12 @@ public class TreeDemo implements ComponentDemo {
         root.add(parent2);
 
         JTree tree = new JTree(root);
-        DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
+        DemoPanel panel = new DemoPanel(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT) {{
+            setLeftComponent(new OverlayScrollPane(tree));
+            setRightComponent(new JPanel(new GridBagLayout()) {{
+                add(new JLabel("Move slider to cover tree-nodes."));
+            }});
+        }}, new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
