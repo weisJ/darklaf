@@ -36,23 +36,21 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTableUI extends DarkTableUIBridge {
+public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
 
-    public static final String KEY_PREFIX = "JTable.";
+    protected static final String KEY_PREFIX = "JTable.";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
     public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
     public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
-    public static final String KEY_SHOW_ROW_FOCUS_BORDER = KEY_PREFIX + "rowFocusBorder";
+    public static final String KEY_FULL_ROW_FOCUS_BORDER = KEY_PREFIX + "rowFocusBorder";
     public static final String KEY_FORCE_LEFT_BORDER = KEY_PREFIX + "forcePaintLeft";
     public static final String KEY_FORCE_RIGHT_BORDER = KEY_PREFIX + "forcePaintRight";
     public static final String KEY_FILE_CHOOSER_PARENT = KEY_PREFIX + "fileChooserParent";
@@ -78,10 +76,7 @@ public class DarkTableUI extends DarkTableUIBridge {
             Object newVal = e.getNewValue();
             if (oldVal instanceof Component) {
                 Container oldUnwrapped = SwingUtilities.getUnwrappedParent((Component) oldVal);
-                if ((oldUnwrapped instanceof JScrollPane)
-                    && ((JComponent) oldUnwrapped).getBorder() instanceof UIResource) {
-                    LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
-                }
+                LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
             }
             if (newVal instanceof Component) {
                 Container newUnwrapped = SwingUtilities.getUnwrappedParent((Component) newVal);
@@ -89,6 +84,7 @@ public class DarkTableUI extends DarkTableUIBridge {
                     LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                 }
             }
+            checkFocus();
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             table.doLayout();
             table.repaint();
@@ -96,31 +92,7 @@ public class DarkTableUI extends DarkTableUIBridge {
     };
     protected Color selectionBackground;
     protected Color selectionFocusBackground;
-    private final FocusListener focusListener = new FocusListener() {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            Color bg = table.getSelectionBackground();
-            if (bg instanceof UIResource) {
-                table.setSelectionBackground(selectionFocusBackground);
-            }
-            table.repaint();
-        }
-
-        @Override
-        public void focusLost(final FocusEvent e) {
-            Color bg = table.getSelectionBackground();
-            if (bg instanceof UIResource) {
-                if (table.isEditing()) {
-                    table.setSelectionBackground(table.getBackground());
-                } else {
-                    table.setSelectionBackground(selectionBackground);
-                }
-            }
-            table.repaint();
-        }
-    };
     protected Color borderColor;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
@@ -133,13 +105,13 @@ public class DarkTableUI extends DarkTableUIBridge {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-
+        table.setSurrendersFocusOnKeystroke(true);
     }
 
     @Override
     protected void installListeners() {
         super.installListeners();
-        table.addFocusListener(focusListener);
+        table.addFocusListener(this);
         table.addPropertyChangeListener(propertyChangeListener);
     }
 
@@ -152,10 +124,39 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     @Override
+    public void focusGained(final FocusEvent e) {
+        Color bg = table.getSelectionBackground();
+        if (bg instanceof UIResource) {
+            table.setSelectionBackground(selectionFocusBackground);
+        }
+        table.repaint();
+    }
+
+    @Override
+    public void focusLost(final FocusEvent e) {
+        Color bg = table.getSelectionBackground();
+        if (bg instanceof UIResource) {
+            if (table.isEditing()) {
+                table.setSelectionBackground(table.getBackground());
+            } else {
+                table.setSelectionBackground(selectionBackground);
+            }
+        }
+        table.repaint();
+    }
+
+    @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        table.removeFocusListener(focusListener);
+        table.removeFocusListener(this);
         table.removePropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    protected void uninstallDefaults() {
+        super.uninstallDefaults();
+        Container oldUnwrapped = SwingUtilities.getUnwrappedParent(table.getParent());
+        LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
     }
 
     protected static void setupRendererComponents(final JTable table) {
@@ -180,21 +181,6 @@ public class DarkTableUI extends DarkTableUIBridge {
         table.setDefaultEditor(Color.class, colorRendererEditor);
     }
 
-    @Override
-    public Dimension getPreferredSize(final JComponent c) {
-        Dimension prefSize = super.getPreferredSize(c);
-        if (!isInScrollPane()) {
-            return prefSize;
-        } else {
-            Dimension dim = SwingUtilities.getUnwrappedParent(table).getSize();
-            if (dim.width < prefSize.width || dim.height < prefSize.height) {
-                return prefSize;
-            } else {
-                return dim;
-            }
-        }
-    }
-
     protected Color getBorderColor() {
         return borderColor;
     }
@@ -204,7 +190,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         super.installDefaults();
         int rowHeight = UIManager.getInt("Table.rowHeight");
         if (rowHeight > 0) {
-            table.setRowHeight(ROW_HEIGHT_FALLBACK);
+            LookAndFeel.installProperty(table, "rowHeight", ROW_HEIGHT_FALLBACK);
         }
         table.setDefaultEditor(Object.class, new DarkTableCellEditor());
         table.putClientProperty(KEY_RENDER_BOOLEAN_AS_CHECKBOX,
@@ -217,6 +203,14 @@ public class DarkTableUI extends DarkTableUIBridge {
         selectionBackground = UIManager.getColor("Table.selectionNoFocusBackground");
     }
 
+    protected void checkFocus() {
+        boolean focus = DarkUIUtil.hasFocus(table);
+        if (focus) {
+            focusGained(null);
+        } else {
+            focusLost(null);
+        }
+    }
 
     @Override
     protected void paintGrid(final Graphics g,
@@ -420,6 +414,35 @@ public class DarkTableUI extends DarkTableUIBridge {
         }
     }
 
+    public static boolean ignoreKeyCodeOnEdit(final KeyEvent event, final JTable table) {
+        if (event != null) {
+            int keyCode = event.getKeyCode();
+            switch (keyCode) {
+                case KeyEvent.VK_ALT_GRAPH:
+                case KeyEvent.VK_META:
+                case KeyEvent.VK_CAPS_LOCK:
+                case KeyEvent.VK_HOME:
+                case KeyEvent.VK_WINDOWS:
+                case KeyEvent.VK_CONTEXT_MENU:
+                case KeyEvent.VK_PRINTSCREEN:
+                case KeyEvent.VK_NUM_LOCK:
+                case KeyEvent.VK_SCROLL_LOCK:
+                case KeyEvent.VK_CLEAR:
+                    return true;
+                default:
+                    break;
+            }
+            if (table == null) return false;
+            KeyStroke stroke = KeyStroke.getKeyStroke(event.getExtendedKeyCode(), event.getModifiersEx());
+            String actionName = String.valueOf(table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
+            if ("null".equals(actionName)) actionName = null;
+            String cutActionName = String.valueOf(TransferHandler.getCutAction().getValue(Action.NAME));
+            String copyActionName = String.valueOf(TransferHandler.getCopyAction().getValue(Action.NAME));
+            return Objects.equals(actionName, copyActionName) || Objects.equals(actionName, cutActionName);
+        }
+        return false;
+    }
+
     protected class DarkHandler extends Handler {
 
         protected int lastIndex = -1;
@@ -427,16 +450,16 @@ public class DarkTableUI extends DarkTableUIBridge {
         @Override
         public void mouseClicked(final MouseEvent e) {
             super.mouseClicked(e);
-            if (isFileList) {
+            if (isFileList && SwingUtilities.isLeftMouseButton(e)) {
                 int row = table.rowAtPoint(e.getPoint());
                 JFileChooser fc = getFileChooser();
                 if (row < 0 || fc == null) return;
                 int column = getFileNameColumnIndex();
                 boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
-                        && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
+                    && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
                 if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
-                        && isSelected && lastIndex == row
-                        && DarkUIUtil.isOverText(e, row, column, table)) {
+                    && isSelected && lastIndex == row
+                    && DarkUIUtil.isOverText(e, row, column, table)) {
                     startEditing(row, column);
                 } else {
                     lastIndex = row;
@@ -481,6 +504,18 @@ public class DarkTableUI extends DarkTableUIBridge {
         @Override
         public void actionPerformed(final ActionEvent ae) {
         }
+
+        @Override
+        public void keyTyped(final KeyEvent e) {
+            if (ignoreKeyCodeOnEdit(e, table)) return;
+            super.keyTyped(e);
+        }
+    }
+
+    protected boolean isFocusCell(final int row, final int col) {
+        boolean rowFocus = table.getSelectionModel().getLeadSelectionIndex() == row;
+        boolean columnFocus = table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == col;
+        return rowFocus && columnFocus;
     }
 
     @Override
@@ -523,7 +558,12 @@ public class DarkTableUI extends DarkTableUIBridge {
                 }
             }
         }
+        if (!table.getShowVerticalLines() && column > cMin && isFocusCell(row, column)) {
+            r.x -= 1;
+            if (column < cMax) r.width += 1;
+        }
         if (table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column) {
+
             Component component = table.getEditorComponent();
             component.setBounds(r);
             component.validate();

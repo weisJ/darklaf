@@ -24,23 +24,40 @@
 package com.github.weisj.darklaf.ui;
 
 import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DarkPopupFactory extends PopupFactory {
+
     @Override
     public Popup getPopup(final Component owner, final Component contents,
                           final int x, final int y) throws IllegalArgumentException {
         Popup popup = super.getPopup(owner, contents, x, y);
+        boolean isMediumWeight = popup.getClass().getSimpleName().endsWith("MediumWeightPopup");
+        boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
+        boolean isBalloonTooltip = contents instanceof JToolTip
+            && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder;
+        boolean isPopupMenu = contents instanceof JPopupMenu;
+        if (isMediumWeight || isLightWeight) {
+            if (isBalloonTooltip) {
+                // null owner forces a heavyweight popup.
+                popup = super.getPopup(null, contents, x, y);
+            } else if (isMediumWeight) {
+                JRootPane rootPane = SwingUtilities.getRootPane(contents);
+                // Prevents decorations from being reinstalled.
+                if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_MEDIUM_WEIGHT_POPUP_ROOT, true);
+            }
+        }
         // Sometimes the background is java.awt.SystemColor[i=7]
         // It results in a flash of white background, that is repainted with
         // the proper popup background later.
         // That is why we set window background explicitly.
         Window window = SwingUtilities.getWindowAncestor(contents);
         if (window != null) {
-            window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
             boolean install = true;
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
@@ -51,6 +68,10 @@ public class DarkPopupFactory extends PopupFactory {
                 Decorations.installPopupWindow(window);
             } else {
                 Decorations.uninstallPopupWindow(window);
+            }
+            if (isBalloonTooltip || isPopupMenu) {
+                if (isPopupMenu) ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);
+                window.setOpacity(0.0f);
             }
         }
         return popup;

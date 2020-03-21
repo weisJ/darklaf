@@ -77,7 +77,7 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
         if (anEvent instanceof MouseEvent) {
             return ((MouseEvent) anEvent).getClickCount() >= 2;
         }
-        return true;
+        return false;
     }
 
     @Override

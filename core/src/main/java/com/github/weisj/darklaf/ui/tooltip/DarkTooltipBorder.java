@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -40,10 +41,11 @@ import java.awt.geom.Rectangle2D;
  */
 public class DarkTooltipBorder implements Border {
 
-    private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK,
-                                                                       10, 0.2f, 10,
-                                                                       false, true,
-                                                                       true, true);
+    private static final int shadowSize = 12;
+    private static final int cornerSize = 2 * shadowSize;
+    private static final float opacity = 0.1f;
+    private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK, shadowSize, opacity, cornerSize,
+                                                                       false, true, true, true);
     private final BubbleBorder bubbleBorder;
 
     public DarkTooltipBorder() {
@@ -89,6 +91,7 @@ public class DarkTooltipBorder implements Border {
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
+        GraphicsContext context = new GraphicsContext(g);
         if (isPlain(c)) {
             g.setColor(bubbleBorder.getColor());
             DarkUIUtil.drawRect(g, x, y, width, height, 1);
@@ -100,6 +103,15 @@ public class DarkTooltipBorder implements Border {
         Area bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,
                                                     width - ins.left - ins.right,
                                                     height - ins.top - ins.bottom);
+        if (UIManager.getBoolean("ToolTip.paintShadow")) {
+            paintShadow(c, g, x, y, width, height, bubbleArea);
+        }
+        bubbleBorder.paintBorder(g, bubbleArea);
+        context.restore();
+    }
+
+    public void paintShadow(final Component c, final Graphics g, final int x, final int y,
+                            final int width, final int height, final Area bubbleArea) {
         Shape oldClip = g.getClip();
         Area clip = new Area(new Rectangle2D.Double(x, y, width, height));
         clip.subtract(bubbleArea);
@@ -108,13 +120,12 @@ public class DarkTooltipBorder implements Border {
         int off = 0;
         Alignment pointerSide = bubbleBorder.getPointerSide();
         if (pointerSide == Alignment.NORTH
-                || pointerSide == Alignment.NORTH_EAST
-                || pointerSide == Alignment.NORTH_WEST) {
+            || pointerSide == Alignment.NORTH_EAST
+            || pointerSide == Alignment.NORTH_WEST) {
             off = bubbleBorder.getPointerSize();
         }
         shadowBorder.paintBorder(c, g, x + bw, y + bw + off, width - 2 * bw, height - 2 * bw - off);
         g.setClip(oldClip);
-        bubbleBorder.paintBorder(g, bubbleArea);
     }
 
     @Override

@@ -44,7 +44,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JProgressBar.";
+    protected static final String KEY_PREFIX = "JProgressBar.";
     public static final String KEY_FAILED = KEY_PREFIX + "failed";
     public static final String KEY_PASSED = KEY_PREFIX + "passed";
 

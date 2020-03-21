@@ -116,7 +116,6 @@ class SlideComponent extends JComponent implements ColorListener {
         setToolTipText(getToolTipText(null));
     }
 
-
     private Rectangle getKnobRect() {
         if (vertical) {
             return new Rectangle(1, pointerValue - 6, 12, 12);
@@ -188,6 +187,7 @@ class SlideComponent extends JComponent implements ColorListener {
         borderColor = UIManager.getColor("ColorChooser.sliderBorderColor");
         shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
         knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
+        if (toolTipContext != null) toolTipContext.updateToolTipUI();
     }
 
     @Override

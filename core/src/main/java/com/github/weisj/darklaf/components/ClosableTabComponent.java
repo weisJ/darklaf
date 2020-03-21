@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.components;
 
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 
 import javax.swing.*;
@@ -91,8 +92,8 @@ public class ClosableTabComponent extends JPanel {
 
         protected TabButton(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;
-            putClientProperty("JButton.variant", "onlyLabel");
-            putClientProperty("JButton.noShadowOverwrite", true);
+            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
+            putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
             setOpaque(false);
             setRolloverEnabled(true);
             setIcon(UIManager.getIcon("TabbedPane.tabCloseIcon"));

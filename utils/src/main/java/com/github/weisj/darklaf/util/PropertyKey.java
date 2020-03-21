@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.util;
 
+import javax.swing.*;
+
 public class PropertyKey {
     public static final String COMPONENT_ORIENTATION = "componentOrientation";
     public static final String LAYOUT_ORIENTATION = "layoutOrientation";
@@ -43,4 +45,7 @@ public class PropertyKey {
     public static final String COMPONENT_POPUP_MENU = "componentPopupMenu";
     public static final String TITLE = "title";
     public static final String VISIBLE = "visible";
+    public static final String FOCUSABLE = "focusable";
+    public static final String ROLLOVER = AbstractButton.ROLLOVER_ENABLED_CHANGED_PROPERTY;
+    public static final String LAF = "lookAndFeel";
 }

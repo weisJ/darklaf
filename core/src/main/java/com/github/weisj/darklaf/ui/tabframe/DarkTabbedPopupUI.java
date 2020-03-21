@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.tabframe;
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.tabbedpane.MoreTabsButton;
 import com.github.weisj.darklaf.ui.tabbedpane.NewTabButton;
@@ -113,10 +114,10 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
         super.setHeaderBackground(focus);
         if (oldFocus != focus) {
             if (newTabButton != null) {
-                newTabButton.putClientProperty("JButton.shadow.hover", focus ? headerButtonFocusHoverBackground
-                                                                             : headerButtonHoverBackground);
-                newTabButton.putClientProperty("JButton.shadow.click", focus ? headerButtonFocusClickBackground
-                                                                             : headerButtonClickBackground);
+                newTabButton.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, focus ? headerButtonFocusHoverBackground
+                                                                                   : headerButtonHoverBackground);
+                newTabButton.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, focus ? headerButtonFocusClickBackground
+                                                                                   : headerButtonClickBackground);
                 newTabButton.repaint();
             }
             holder.setBackground(focus ? headerFocusBackground : headerBackground);
@@ -154,9 +155,9 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
         @Override
         protected JButton createButton() {
             HeaderButton button = new HeaderButton(ui.getNewTabIcon(), DarkTabbedPopupUI.this);
-            button.putClientProperty("JButton.variant", "shadow");
-            button.putClientProperty("JButton.square", true);
-            button.putClientProperty("JButton.thin", Boolean.TRUE);
+            button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+            button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+            button.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
             button.setRolloverEnabled(true);
             button.setOpaque(false);
             return button;

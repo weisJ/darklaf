@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.filechooser;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -86,7 +87,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 return -1;
             }
         };
-        list.setCellRenderer(new FileRenderer());
+        list.setCellRenderer(new DarkFileRenderer());
         list.setLayoutOrientation(JList.VERTICAL_WRAP);
         LookAndFeel.installColors(list, "FileView.background", "FileView.foreground");
 
@@ -358,6 +359,37 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
     }
 
     @Override
+    public JMenu getViewMenu() {
+        if (viewMenu == null) {
+            viewMenu = new JMenu(viewMenuLabelText);
+            ButtonGroup viewButtonGroup = new ButtonGroup();
+
+            for (int i = 0; i < VIEWTYPE_COUNT; i++) {
+                JRadioButtonMenuItem mi = new JRadioButtonMenuItem(new ViewTypeAction(i));
+                viewButtonGroup.add(mi);
+                viewMenu.add(mi);
+            }
+            updateViewMenu();
+        }
+        return viewMenu;
+    }
+
+    @Override
+    protected void updateViewMenu() {
+        if (viewMenu != null) {
+            Component[] comps = viewMenu.getMenuComponents();
+            for (Component comp : comps) {
+                if (comp instanceof JRadioButtonMenuItem) {
+                    JRadioButtonMenuItem mi = (JRadioButtonMenuItem) comp;
+                    if (((ViewTypeAction) mi.getAction()).viewType == viewType) {
+                        mi.setSelected(true);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     protected Handler getMouseHandler() {
         if (handler == null) {
             handler = new DarkHandler();
@@ -434,6 +466,29 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 getDoubleClickListener().mouseClicked(evt);
                 list.putClientProperty("List.isFileList", true);
             }
+        }
+    }
+
+    public class DarkFileRenderer extends DarkListCellRenderer {
+
+        @Override
+        public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+                                                      final boolean isSelected, final boolean cellHasFocus) {
+            Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (comp instanceof JLabel) {
+                File file = (File) value;
+                String fileName = getFileChooser().getName(file);
+                ((JLabel) comp).setText(fileName);
+                Icon icon = getFileChooser().getIcon(file);
+                if (icon != null) {
+                    ((JLabel) comp).setIcon(icon);
+                } else {
+                    if (getFileChooser().getFileSystemView().isTraversable(file)) {
+                        ((JLabel) comp).setText(fileName + File.separator);
+                    }
+                }
+            }
+            return comp;
         }
     }
 }

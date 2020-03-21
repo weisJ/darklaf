@@ -102,25 +102,20 @@ public class TableDemo implements ComponentDemo {
             setSelected(header.getReorderingAllowed());
             addActionListener(e -> header.setReorderingAllowed(isSelected()));
         }});
-        JRadioButton column = new JRadioButton("column selection allowed") {{
+        controlPanel.add(new JCheckBox("cell selection") {{
+            setSelected(table.getCellSelectionEnabled());
+            addActionListener(e -> table.setCellSelectionEnabled(isSelected()));
+        }});
+        controlPanel.add(new JCheckBox("column selection") {{
             setSelected(table.getColumnSelectionAllowed());
-            addActionListener(e -> {
-                table.setColumnSelectionAllowed(isSelected());
-                table.setRowSelectionAllowed(!isSelected());
-            });
-        }};
-        JRadioButton row = new JRadioButton("row selection allowed") {{
+            addActionListener(e -> table.setColumnSelectionAllowed(isSelected()));
+            table.addPropertyChangeListener(e -> setSelected(table.getColumnSelectionAllowed()));
+        }});
+        controlPanel.add(new JCheckBox("row selection") {{
             setSelected(table.getRowSelectionAllowed());
-            addActionListener(e -> {
-                table.setRowSelectionAllowed(isSelected());
-                table.setColumnSelectionAllowed(!isSelected());
-            });
-        }};
-        ButtonGroup group = new ButtonGroup();
-        group.add(column);
-        group.add(row);
-        controlPanel.add(column);
-        controlPanel.add(row);
+            addActionListener(e -> table.setRowSelectionAllowed(isSelected()));
+            table.addPropertyChangeListener(e -> setSelected(table.getRowSelectionAllowed()));
+        }});
         return panel;
     }
 

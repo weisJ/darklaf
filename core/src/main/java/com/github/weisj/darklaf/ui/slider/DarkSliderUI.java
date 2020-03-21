@@ -44,7 +44,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JSlider.";
+    protected static final String KEY_PREFIX = "JSlider.";
     public static final String KEY_THUMB_ARROW_SHAPE = KEY_PREFIX + "paintThumbArrowShape";
     public static final String KEY_SHOW_VOLUME_ICON = KEY_PREFIX + "volume.showIcon";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";

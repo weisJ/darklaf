@@ -42,7 +42,7 @@ import java.util.Arrays;
  */
 public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
-    public static final String KEY_PREFIX = "JPasswordField.";
+    protected static final String KEY_PREFIX = "JPasswordField.";
     public static final String KEY_SHOW_VIEW_BUTTON = "JPasswordField.showViewIcon";
     protected Icon show;
     protected Icon showPressed;

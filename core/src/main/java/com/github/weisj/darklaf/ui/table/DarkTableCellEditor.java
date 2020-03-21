@@ -34,6 +34,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -178,6 +179,9 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     public boolean isCellEditable(final EventObject anEvent) {
         if (anEvent == null) return super.isCellEditable(anEvent);
         JTable table = ((JTable) anEvent.getSource());
+        if (anEvent instanceof KeyEvent) {
+            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
+        }
         if (DarkTableCellRenderer.isBooleanRenderingEnabled(table) && anEvent instanceof MouseEvent) {
             Point p = ((MouseEvent) anEvent).getPoint();
             int row = table.rowAtPoint(p);

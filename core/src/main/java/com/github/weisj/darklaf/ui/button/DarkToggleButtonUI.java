@@ -31,6 +31,7 @@ import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeListener;
@@ -40,7 +41,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkToggleButtonUI extends DarkButtonUI {
 
-    public static final String KEY_PREFIX = "JToggleButton.";
+    protected static final String KEY_PREFIX = "JToggleButton.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
     public static final String KEY_IS_TREE_RENDER = KEY_PREFIX + "isTreeCellRenderer";
@@ -77,6 +78,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
     protected Color inactiveSliderColor;
     protected Color sliderBorderColor;
     protected Color inactiveSliderBorderColor;
+    protected Color selectedForeground;
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -96,6 +98,7 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         inactiveSliderColor = UIManager.getColor("ToggleButton.disabledSliderKnobFillColor");
         sliderBorderColor = UIManager.getColor("ToggleButton.sliderKnobBorderColor");
         inactiveSliderBorderColor = UIManager.getColor("ToggleButton.disabledSliderKnobBorderColor");
+        selectedForeground = UIManager.getColor("ToggleButton.selectedForeground");
     }
 
     @Override
@@ -115,15 +118,35 @@ public class DarkToggleButtonUI extends DarkButtonUI {
         }
     }
 
-    protected Color getBackgroundColor(final JComponent c) {
-        if (c instanceof JToggleButton && c.isEnabled()) {
-            if (((JToggleButton) c).isSelected()) {
-                return background;
-            } else {
-                return backgroundInactive;
-            }
+    @Override
+    protected Color getForeground(final AbstractButton button) {
+        if (button.isSelected() && !isSlider(button) && button.getForeground() instanceof UIResource) {
+            return selectedForeground;
         }
-        return super.getBackgroundColor(c);
+        return super.getForeground(button);
+    }
+
+    protected Color getBackgroundColor(final JComponent c) {
+        AbstractButton b = (AbstractButton) c;
+        boolean rollOver = (b.isRolloverEnabled() || doConvertToShadow(b)) && (((JButton) c).getModel().isRollover());
+        boolean clicked = b.getModel().isArmed();
+        boolean isSelected = c instanceof JToggleButton && ((JToggleButton) c).isSelected();
+        if (c.isEnabled()) {
+            if (isSelected) return background;
+            if (clicked) {
+                return clickBackground;
+            } else if (rollOver) {
+                return hoverBackground;
+            } else {
+                if (c instanceof JToggleButton) {
+                    return backgroundInactive;
+                } else {
+                    return super.getBackgroundColor(c);
+                }
+            }
+        } else {
+            return inactiveBackground;
+        }
     }
 
     @Override

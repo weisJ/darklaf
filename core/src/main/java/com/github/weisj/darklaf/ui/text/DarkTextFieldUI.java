@@ -45,7 +45,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JTextField.";
+    protected static final String KEY_PREFIX = "JTextField.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_KEEP_SELECTION_ON_FOCUS_LOST = KEY_PREFIX + "keepSelectionOnFocusLost";
     public static final String KEY_FIND_POPUP = KEY_PREFIX + "Search.FindPopup";
@@ -54,13 +54,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected static Icon clearHover;
     protected static Icon search;
     protected static Icon searchWithHistory;
-    private final FocusListener focusListener = new FocusAdapter() {
-        public void focusLost(final FocusEvent e) {
-            if (!Boolean.TRUE.equals(getComponent().getClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST))) {
-                getComponent().select(0, 0);
-            }
-        }
-    };
     protected int arcSize;
     protected int searchArcSize;
     protected int borderSize;
@@ -242,6 +235,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        editor.putClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST,
+                                 UIManager.getBoolean("TextField.keepSelectionOnFocusLost"));
         arcSize = UIManager.getInt("TextField.arc");
         borderSize = UIManager.getInt("TextField.borderThickness");
         searchArcSize = UIManager.getInt("TextField.searchArc");
@@ -282,7 +277,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         JTextComponent c = getComponent();
         c.addMouseListener(mouseListener);
         c.addMouseMotionListener(mouseMotionListener);
-        c.addFocusListener(focusListener);
         c.addKeyListener(keyListener);
     }
 
@@ -291,7 +285,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         JTextComponent c = getComponent();
         c.removeMouseListener(mouseListener);
         c.removeMouseMotionListener(mouseMotionListener);
-        c.removeFocusListener(focusListener);
         c.removeKeyListener(keyListener);
     }
 

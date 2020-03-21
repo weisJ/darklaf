@@ -36,6 +36,10 @@ public class LayoutManagerDelegate implements LayoutManager {
         this.delegate = delegate;
     }
 
+    public LayoutManager getDelegate() {
+        return delegate;
+    }
+
     @Override
     public void addLayoutComponent(final String name, final Component comp) {
         delegate.addLayoutComponent(name, comp);

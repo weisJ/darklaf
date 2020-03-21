@@ -55,11 +55,16 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         }
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
+            && table.getSelectionModel().getLeadSelectionIndex() == row
+            && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column
+            && !DarkTableCellFocusBorder.isRowFocusBorder(table);
+
         boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = table.getBackground();
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-        if (!(isSelected) || table.isEditing()) {
+        if (!isSelected || isLeadSelectionCell || table.isEditing()) {
             toggleButton.setBackground(background);
             toggleButton.setForeground(table.getForeground());
         } else {

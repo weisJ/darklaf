@@ -21,18 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.ui.filechooser;
 
-public class ReflectiveWarningSuppressor implements AutoCloseable {
+import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 
-    private final Object oldLogger;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 
-    public ReflectiveWarningSuppressor() {
-        oldLogger = ReflectionUtil.changeIllegalAccessLogger(null);
-    }
+public class DarkFilterComboBoxRenderer extends DarkListCellRenderer {
 
-    @Override
-    public void close() {
-        ReflectionUtil.changeIllegalAccessLogger(oldLogger);
+    public Component getListCellRendererComponent(final JList<?> list,
+                                                  final Object value, final int index, final boolean isSelected,
+                                                  final boolean cellHasFocus) {
+
+        Object val = value;
+        if (value instanceof FileFilter) {
+            val = ((FileFilter) value).getDescription();
+        }
+        return super.getListCellRendererComponent(list, val, index, isSelected, cellHasFocus);
     }
 }

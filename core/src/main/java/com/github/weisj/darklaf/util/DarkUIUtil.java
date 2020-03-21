@@ -100,6 +100,14 @@ public final class DarkUIUtil {
         config.restore();
     }
 
+    public static void fillFocusRect(final Graphics2D g, final int x, final int y, final int width, final int height) {
+        GraphicsContext config = new GraphicsContext(g);
+        g.setComposite(DarkUIUtil.GLOW_ALPHA);
+        Outline.focus.setGraphicsColor(g, true);
+        g.fillRect(x, y, width, height);
+        config.restore();
+    }
+
     public static void paintFocusOval(final Graphics2D g, final int x, final int y, final int width, final int height) {
         paintFocusOval(g, (float) x, (float) y, (float) width, (float) height);
     }
@@ -161,7 +169,10 @@ public final class DarkUIUtil {
             rectangle.width -= insets.left + insets.right;
             rectangle.height -= insets.top + insets.bottom;
         }
+    }
 
+    public static void repaint(final JComponent component) {
+        if (component != null) component.repaint();
     }
 
     public static boolean hasFocus(final Component c) {

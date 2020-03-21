@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.cell;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.decorators.CellRenderer;
 import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -59,11 +60,14 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(focus);
 
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
+            && focus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
+
         boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
         Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
         Color normalColor = UIManager.getColor("Table.background");
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-        if (!(isSelected) || table.isEditing()) {
+        if (!isSelected || isLeadSelectionCell || table.isEditing()) {
             toggleButton.setBackground(background);
             toggleButton.setForeground(table.getForeground());
         } else {

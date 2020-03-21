@@ -26,11 +26,8 @@ package com.github.weisj.darklaf.ui.filechooser;
 import com.github.weisj.darklaf.util.PropertyKey;
 import sun.awt.shell.ShellFolder;
 import sun.swing.FilePane;
-import sun.swing.SwingUtilities2;
 
-import javax.accessibility.AccessibleContext;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
@@ -41,7 +38,9 @@ import javax.swing.plaf.basic.BasicDirectoryModel;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 import javax.swing.plaf.metal.MetalFileChooserUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -58,7 +57,7 @@ import java.util.Vector;
  *
  * @author Jeff Dinkins
  */
-public class DarkFileChooserUIBridge extends BasicFileChooserUI {
+public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
     // Much of the Metal UI for JFilechooser is just a copy of
     // the windows implementation, but using Metal themed buttons, lists,
@@ -66,9 +65,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
     // made most things in this class protected.
 
     protected static final Dimension hstrut5 = new Dimension(5, 1);
-    protected static final Dimension hstrut11 = new Dimension(11, 1);
     protected static final Dimension vstrut5 = new Dimension(1, 5);
-    protected static final Insets shrinkwrap = new Insets(0, 0, 0, 0);
     static final int space = 10;
     // Preferred and Minimum sizes for the dialog box
     protected static int PREF_WIDTH = 500;
@@ -154,240 +151,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
         super.uninstallUI(c);
     }
 
-    public void installComponents(final JFileChooser fc) {
-        FileSystemView fsv = fc.getFileSystemView();
-
-        fc.setBorder(new EmptyBorder(12, 12, 11, 11));
-        fc.setLayout(new BorderLayout(0, 11));
-
-        filePane = new DarkFilePane(new MetalFileChooserUIAccessor());
-        fc.addPropertyChangeListener(filePane);
-
-        // ********************************* //
-        // **** Construct the top panel **** //
-        // ********************************* //
-
-        // Directory manipulation buttons
-        JPanel topPanel = new JPanel(new BorderLayout(11, 0));
-        JPanel topButtonPanel = new JPanel();
-        topButtonPanel.setLayout(new BoxLayout(topButtonPanel, BoxLayout.LINE_AXIS));
-        topPanel.add(topButtonPanel, BorderLayout.AFTER_LINE_ENDS);
-
-        // Add the top panel to the fileChooser
-        fc.add(topPanel, BorderLayout.NORTH);
-
-        // ComboBox Label
-        lookInLabel = new JLabel(lookInLabelText);
-        lookInLabel.setDisplayedMnemonic(lookInLabelMnemonic);
-        topPanel.add(lookInLabel, BorderLayout.BEFORE_LINE_BEGINS);
-
-        // CurrentDir ComboBox
-        @SuppressWarnings("serial") // anonymous class
-                JComboBox<Object> tmp1 = new JComboBox<Object>() {
-            public Dimension getPreferredSize() {
-                Dimension d = super.getPreferredSize();
-                // Must be small enough to not affect total width.
-                d.width = 150;
-                return d;
-            }
-        };
-        directoryComboBox = tmp1;
-        directoryComboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY,
-                                            lookInLabelText);
-        directoryComboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
-        lookInLabel.setLabelFor(directoryComboBox);
-        directoryComboBoxModel = createDirectoryComboBoxModel(fc);
-        directoryComboBox.setModel(directoryComboBoxModel);
-        directoryComboBox.addActionListener(directoryComboBoxAction);
-        directoryComboBox.setRenderer(createDirectoryComboBoxRenderer(fc));
-        directoryComboBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        directoryComboBox.setAlignmentY(JComponent.TOP_ALIGNMENT);
-        directoryComboBox.setMaximumRowCount(8);
-
-        topPanel.add(directoryComboBox, BorderLayout.CENTER);
-
-        // Up Button
-        JButton upFolderButton = new JButton(getChangeToParentDirectoryAction());
-        upFolderButton.setText(null);
-        upFolderButton.setIcon(upFolderIcon);
-        upFolderButton.setToolTipText(upFolderToolTipText);
-        upFolderButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                                         upFolderAccessibleName);
-        upFolderButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        upFolderButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-        upFolderButton.setMargin(shrinkwrap);
-
-        topButtonPanel.add(upFolderButton);
-        topButtonPanel.add(Box.createRigidArea(hstrut5));
-
-        // Home Button
-        File homeDir = fsv.getHomeDirectory();
-        String toolTipText = homeFolderToolTipText;
-
-
-        JButton b = new JButton(homeFolderIcon);
-        b.setToolTipText(toolTipText);
-        b.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                            homeFolderAccessibleName);
-        b.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        b.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-        b.setMargin(shrinkwrap);
-
-        b.addActionListener(getGoHomeAction());
-        topButtonPanel.add(b);
-        topButtonPanel.add(Box.createRigidArea(hstrut5));
-
-        // New Directory Button
-        if (!UIManager.getBoolean("FileChooser.readOnly")) {
-            b = new JButton(filePane.getNewFolderAction());
-            b.setText(null);
-            b.setIcon(newFolderIcon);
-            b.setToolTipText(newFolderToolTipText);
-            b.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                                newFolderAccessibleName);
-            b.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-            b.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-            b.setMargin(shrinkwrap);
-        }
-        topButtonPanel.add(b);
-        topButtonPanel.add(Box.createRigidArea(hstrut5));
-
-        // View button group
-        ButtonGroup viewButtonGroup = new ButtonGroup();
-
-        // List Button
-        listViewButton = new JToggleButton(listViewIcon);
-        listViewButton.setToolTipText(listViewButtonToolTipText);
-        listViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                                         listViewButtonAccessibleName);
-        listViewButton.setSelected(true);
-        listViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        listViewButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-        listViewButton.setMargin(shrinkwrap);
-        listViewButton.addActionListener(filePane.getViewTypeAction(FilePane.VIEWTYPE_LIST));
-        topButtonPanel.add(listViewButton);
-        viewButtonGroup.add(listViewButton);
-
-        // Details Button
-        detailsViewButton = new JToggleButton(detailsViewIcon);
-        detailsViewButton.setToolTipText(detailsViewButtonToolTipText);
-        detailsViewButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                                            detailsViewButtonAccessibleName);
-        detailsViewButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        detailsViewButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-        detailsViewButton.setMargin(shrinkwrap);
-        detailsViewButton.addActionListener(filePane.getViewTypeAction(FilePane.VIEWTYPE_DETAILS));
-        topButtonPanel.add(detailsViewButton);
-        viewButtonGroup.add(detailsViewButton);
-
-        filePane.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent e) {
-                if (DarkFileChooserUI.KEY_VIEW_TYPE.equals(e.getPropertyName())) {
-                    int viewType = filePane.getViewType();
-                    switch (viewType) {
-                        case FilePane.VIEWTYPE_LIST:
-                            listViewButton.setSelected(true);
-                            break;
-
-                        case FilePane.VIEWTYPE_DETAILS:
-                            detailsViewButton.setSelected(true);
-                            break;
-                    }
-                }
-            }
-        });
-
-        // ************************************** //
-        // ******* Add the directory pane ******* //
-        // ************************************** //
-        fc.add(getAccessoryPanel(), BorderLayout.AFTER_LINE_ENDS);
-        JComponent accessory = fc.getAccessory();
-        if (accessory != null) {
-            getAccessoryPanel().add(accessory);
-        }
-        filePane.setPreferredSize(LIST_PREF_SIZE);
-        fc.add(filePane, BorderLayout.CENTER);
-
-        // ********************************** //
-        // **** Construct the bottom panel ** //
-        // ********************************** //
-        JPanel bottomPanel = getBottomPanel();
-        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-        fc.add(bottomPanel, BorderLayout.SOUTH);
-
-        // FileName label and textfield
-        JPanel fileNamePanel = new JPanel();
-        fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.LINE_AXIS));
-        bottomPanel.add(fileNamePanel);
-        bottomPanel.add(Box.createRigidArea(vstrut5));
-
-        fileNameLabel = new AlignedLabel();
-        populateFileNameLabel();
-        fileNamePanel.add(fileNameLabel);
-
-        @SuppressWarnings("serial") // anonymous class
-                JTextField tmp2 = new JTextField(35) {
-            public Dimension getMaximumSize() {
-                return new Dimension(Short.MAX_VALUE, super.getPreferredSize().height);
-            }
-        };
-        fileNameTextField = tmp2;
-        fileNamePanel.add(fileNameTextField);
-        fileNameLabel.setLabelFor(fileNameTextField);
-        fileNameTextField.addFocusListener(
-                new FocusAdapter() {
-                    public void focusGained(final FocusEvent e) {
-                        if (!getFileChooser().isMultiSelectionEnabled()) {
-                            filePane.clearSelection();
-                        }
-                    }
-                }
-        );
-        if (fc.isMultiSelectionEnabled()) {
-            setFileName(fileNameString(fc.getSelectedFiles()));
-        } else {
-            setFileName(fileNameString(fc.getSelectedFile()));
-        }
-
-
-        // Filetype label and combobox
-        JPanel filesOfTypePanel = new JPanel();
-        filesOfTypePanel.setLayout(new BoxLayout(filesOfTypePanel, BoxLayout.LINE_AXIS));
-        bottomPanel.add(filesOfTypePanel);
-
-        AlignedLabel filesOfTypeLabel = new AlignedLabel(filesOfTypeLabelText);
-        filesOfTypeLabel.setDisplayedMnemonic(filesOfTypeLabelMnemonic);
-        filesOfTypePanel.add(filesOfTypeLabel);
-
-        filterComboBoxModel = createFilterComboBoxModel();
-        fc.addPropertyChangeListener(filterComboBoxModel);
-        filterComboBox = new JComboBox<>(filterComboBoxModel);
-        filterComboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY,
-                                         filesOfTypeLabelText);
-        filesOfTypeLabel.setLabelFor(filterComboBox);
-        filterComboBox.setRenderer(createFilterComboBoxRenderer());
-        filesOfTypePanel.add(filterComboBox);
-
-        // buttons
-        getButtonPanel().setLayout(new ButtonAreaLayout());
-
-        approveButton = new JButton(getApproveButtonText(fc));
-        // Note: Metal does not use mnemonics for approve and cancel
-        approveButton.addActionListener(getApproveSelectionAction());
-        approveButton.setToolTipText(getApproveButtonToolTipText(fc));
-        getButtonPanel().add(approveButton);
-
-        cancelButton = new JButton(cancelButtonText);
-        cancelButton.setToolTipText(cancelButtonToolTipText);
-        cancelButton.addActionListener(getCancelSelectionAction());
-        getButtonPanel().add(cancelButton);
-
-        if (fc.getControlButtonsAreShown()) {
-            addControlButtons();
-        }
-
-        groupLabels(new AlignedLabel[]{fileNameLabel, filesOfTypeLabel});
-    }
+    public abstract void installComponents(final JFileChooser fc);
 
     public void uninstallComponents(final JFileChooser fc) {
         fc.removeAll();
@@ -406,36 +170,45 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         Locale l = fc.getLocale();
 
-        lookInLabelMnemonic = getMnemonic("FileChooser.lookInLabelMnemonic", l);
-        lookInLabelText = UIManager.getString("FileChooser.lookInLabelText", l);
-        saveInLabelText = UIManager.getString("FileChooser.saveInLabelText", l);
+        UIDefaults defaults = MetalUIDefaults.DEFAULTS;
 
-        fileNameLabelMnemonic = getMnemonic("FileChooser.fileNameLabelMnemonic", l);
-        fileNameLabelText = UIManager.getString("FileChooser.fileNameLabelText", l);
-        folderNameLabelMnemonic = getMnemonic("FileChooser.folderNameLabelMnemonic", l);
-        folderNameLabelText = UIManager.getString("FileChooser.folderNameLabelText", l);
+        lookInLabelMnemonic = getMnemonic(defaults, "FileChooser.lookInLabelMnemonic", l);
+        lookInLabelText = defaults.getString("FileChooser.lookInLabelText", l);
+        saveInLabelText = defaults.getString("FileChooser.saveInLabelText", l);
 
-        filesOfTypeLabelMnemonic = getMnemonic("FileChooser.filesOfTypeLabelMnemonic", l);
-        filesOfTypeLabelText = UIManager.getString("FileChooser.filesOfTypeLabelText", l);
+        fileNameLabelMnemonic = getMnemonic(defaults, "FileChooser.fileNameLabelMnemonic", l);
+        fileNameLabelText = defaults.getString("FileChooser.fileNameLabelText", l);
+        folderNameLabelMnemonic = getMnemonic(defaults, "FileChooser.folderNameLabelMnemonic", l);
+        folderNameLabelText = defaults.getString("FileChooser.folderNameLabelText", l);
 
-        upFolderToolTipText = UIManager.getString("FileChooser.upFolderToolTipText", l);
-        upFolderAccessibleName = UIManager.getString("FileChooser.upFolderAccessibleName", l);
+        filesOfTypeLabelMnemonic = getMnemonic(defaults, "FileChooser.filesOfTypeLabelMnemonic", l);
+        filesOfTypeLabelText = defaults.getString("FileChooser.filesOfTypeLabelText", l);
 
-        homeFolderToolTipText = UIManager.getString("FileChooser.homeFolderToolTipText", l);
-        homeFolderAccessibleName = UIManager.getString("FileChooser.homeFolderAccessibleName", l);
+        upFolderToolTipText = defaults.getString("FileChooser.upFolderToolTipText", l);
+        upFolderAccessibleName = defaults.getString("FileChooser.upFolderAccessibleName", l);
 
-        newFolderToolTipText = UIManager.getString("FileChooser.newFolderToolTipText", l);
-        newFolderAccessibleName = UIManager.getString("FileChooser.newFolderAccessibleName", l);
+        homeFolderToolTipText = defaults.getString("FileChooser.homeFolderToolTipText", l);
+        homeFolderAccessibleName = defaults.getString("FileChooser.homeFolderAccessibleName", l);
 
-        listViewButtonToolTipText = UIManager.getString("FileChooser.listViewButtonToolTipText", l);
-        listViewButtonAccessibleName = UIManager.getString("FileChooser.listViewButtonAccessibleName", l);
+        newFolderToolTipText = defaults.getString("FileChooser.newFolderToolTipText", l);
+        newFolderAccessibleName = defaults.getString("FileChooser.newFolderAccessibleName", l);
 
-        detailsViewButtonToolTipText = UIManager.getString("FileChooser.detailsViewButtonToolTipText", l);
-        detailsViewButtonAccessibleName = UIManager.getString("FileChooser.detailsViewButtonAccessibleName", l);
+        listViewButtonToolTipText = defaults.getString("FileChooser.listViewButtonToolTipText", l);
+        listViewButtonAccessibleName = defaults.getString("FileChooser.listViewButtonAccessibleName", l);
+
+        detailsViewButtonToolTipText = defaults.getString("FileChooser.detailsViewButtonToolTipText", l);
+        detailsViewButtonAccessibleName = defaults.getString("FileChooser.detailsViewButtonAccessibleName", l);
     }
 
-    protected Integer getMnemonic(final String key, final Locale l) {
-        return SwingUtilities2.getUIDefaultsInt(key, l);
+    protected Integer getMnemonic(final UIDefaults defaults, final String key, final Locale l) {
+        Object value = defaults.get(key, l);
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+        if (value instanceof String) {
+            return Integer.parseInt((String) value);
+        }
+        return 0;
     }
 
     /*
@@ -443,45 +216,55 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * the selected file changing, or the type of the dialog changing.
      */
     public PropertyChangeListener createPropertyChangeListener(final JFileChooser fc) {
-        return new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent e) {
-                String s = e.getPropertyName();
-                if (s.equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
+        return e -> {
+            String s = e.getPropertyName();
+            switch (s) {
+                case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY:
                     doSelectedFileChanged(e);
-                } else if (s.equals(JFileChooser.SELECTED_FILES_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.SELECTED_FILES_CHANGED_PROPERTY:
                     doSelectedFilesChanged(e);
-                } else if (s.equals(JFileChooser.DIRECTORY_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.DIRECTORY_CHANGED_PROPERTY:
+                case "FileChooser.useShellFolder":
                     doDirectoryChanged(e);
-                } else if (s.equals(JFileChooser.FILE_FILTER_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.FILE_FILTER_CHANGED_PROPERTY:
                     doFilterChanged(e);
-                } else if (s.equals(JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY:
                     doFileSelectionModeChanged(e);
-                } else if (s.equals(JFileChooser.ACCESSORY_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.ACCESSORY_CHANGED_PROPERTY:
                     doAccessoryChanged(e);
-                } else if (s.equals(JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY) ||
-                        s.equals(JFileChooser.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY:
+                case JFileChooser.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY:
                     doApproveButtonTextChanged(e);
-                } else if (s.equals(JFileChooser.DIALOG_TYPE_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.DIALOG_TYPE_CHANGED_PROPERTY:
                     doDialogTypeChanged(e);
-                } else if (s.equals(JFileChooser.APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY:
                     doApproveButtonMnemonicChanged(e);
-                } else if (s.equals(JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY)) {
+                    break;
+                case JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY:
                     doControlButtonsChanged(e);
-                } else if (s.equals(PropertyKey.COMPONENT_ORIENTATION)) {
+                    break;
+                case PropertyKey.COMPONENT_ORIENTATION:
                     ComponentOrientation o = (ComponentOrientation) e.getNewValue();
                     JFileChooser cc = (JFileChooser) e.getSource();
                     if (o != e.getOldValue()) {
                         cc.applyComponentOrientation(o);
                     }
-                } else if (Objects.equals(s, "FileChooser.useShellFolder")) {
-                    doDirectoryChanged(e);
-                } else if (PropertyKey.ANCESTOR.equals(s)) {
+                    break;
+                case PropertyKey.ANCESTOR:
                     if (e.getOldValue() == null && e.getNewValue() != null) {
                         // Ancestor was added, set initial focus
                         fileNameTextField.selectAll();
                         fileNameTextField.requestFocus();
                     }
-                }
+                    break;
             }
         };
     }
@@ -785,7 +568,7 @@ public class DarkFileChooserUIBridge extends BasicFileChooserUI {
      *
      * @return a {@code Renderer} for types {@code ComboBox}
      */
-    protected FilterComboBoxRenderer createFilterComboBoxRenderer() {
+    protected ListCellRenderer<Object> createFilterComboBoxRenderer() {
         return new FilterComboBoxRenderer();
     }
 

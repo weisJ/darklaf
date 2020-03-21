@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 
@@ -43,8 +44,9 @@ public class MoreTabsButton extends DarkTabAreaButton {
         icon = ui.getMoreTabsIcon();
         pad = UIManager.getInt("TabbedPane.moreTabsButton.pad");
         setIcon(EmptyIcon.create(icon.getIconWidth(), icon.getIconHeight()));
-        putClientProperty("JButton.variant", "onlyLabel");
-        putClientProperty("JButton.square", true);
+        putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
+        putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        setFocusable(false);
         setFont(getFont().deriveFont(8f));
     }
 

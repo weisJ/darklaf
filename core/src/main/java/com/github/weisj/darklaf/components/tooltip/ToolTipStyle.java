@@ -25,5 +25,6 @@ package com.github.weisj.darklaf.components.tooltip;
 
 public enum ToolTipStyle {
     BALLOON,
+    PLAIN_BALLOON,
     PLAIN,
 }

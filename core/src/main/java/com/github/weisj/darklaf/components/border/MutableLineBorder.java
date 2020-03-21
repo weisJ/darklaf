@@ -23,19 +23,27 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.AbstractBorder;
 import java.awt.*;
 
 /**
  * @author Jannis Weis
  */
-public class MutableLineBorder extends EmptyBorder {
+public class MutableLineBorder extends AbstractBorder {
 
     private Color color;
+    protected int top;
+    protected int left;
+    protected int right;
+    protected int bottom;
+
 
     public MutableLineBorder(
-            final int top, final int left, final int bottom, final int right, final Color color) {
-        super(top, left, bottom, right);
+        final int top, final int left, final int bottom, final int right, final Color color) {
+        this.top = top;
+        this.left = left;
+        this.bottom = bottom;
+        this.right = right;
         this.color = color;
     }
 
@@ -68,6 +76,20 @@ public class MutableLineBorder extends EmptyBorder {
         setLeft(left);
         setRight(right);
     }
+
+    @Override
+    public Insets getBorderInsets(final Component c, final Insets insets) {
+        insets.left = left;
+        insets.top = top;
+        insets.right = right;
+        insets.bottom = bottom;
+        return insets;
+    }
+
+    public Insets getBorderInsets() {
+        return new Insets(top, left, bottom, right);
+    }
+
 
     public void setTop(final int top) {
         this.top = top;

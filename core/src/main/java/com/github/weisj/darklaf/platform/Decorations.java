@@ -60,8 +60,8 @@ public final class Decorations {
         }
     }
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle) {
-        return decorationsProvider.createTitlePane(rootPane, decorationStyle);
+    public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
+        return decorationsProvider.createTitlePane(rootPane, decorationStyle, window);
     }
 
     public static void installPopupWindow(final Window window) {

@@ -41,7 +41,7 @@ import java.awt.event.*;
  */
 public class DarkScrollBarUI extends BasicScrollBarUI {
 
-    public static final String KEY_PREFIX = "JScrollBar.";
+    protected static final String KEY_PREFIX = "JScrollBar.";
     public static final String KEY_SCROLL_PANE_PARENT = KEY_PREFIX + "scrollPaneParent";
     public static final String KEY_FAST_WHEEL_SCROLLING = KEY_PREFIX + "fastWheelScrolling";
     public static final String KEY_THIN = KEY_PREFIX + "thin";

@@ -59,6 +59,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private int repaintCount = 0;
     private int arcSize;
     private boolean suppressRounded = false;
+    private boolean enabled;
 
 
     public DarkHighlightPainter() {
@@ -81,11 +82,12 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         setPaint(paint);
         setRoundedEdges(rounded);
         setAlpha(alpha);
+        setEnabled(true);
         arcSize = UIManager.getInt("Highlight.arc");
         wrapper = new ColorWrapper(color) {
             @Override
             public boolean equals(final Object obj) {
-                return obj != null;
+                return obj != null && enabled;
             }
         };
     }
@@ -116,6 +118,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     @Override
     public void paint(final Graphics g, final int offs0, final int offs1, final Shape bounds,
                       final JTextComponent c) {
+        if (!enabled) return;
         Rectangle alloc = bounds.getBounds();
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2d);
@@ -183,6 +186,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     @Override
     public Shape paintLayer(final Graphics g, final int offs0, final int offs1,
                             final Shape bounds, final JTextComponent c, final View view) {
+        if (!enabled) return bounds;
         color = (Color) view.getAttributes().getAttribute(StyleConstantsEx.SelectedForeground);
         if (color == null) {
             color = c.getSelectedTextColor();
@@ -204,7 +208,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             context.restore();
         }
         /*
-         * To make sure the the right part of the highlight is actually painted we manually repaint
+         * To make sure the correct part of the highlight is actually painted we manually repaint
          * after the selection has changed.
          */
         if (dirtyShape != null && (selectionEnd != c.getSelectionEnd()
@@ -520,5 +524,13 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         } else {
             g2d.setPaint(paint);
         }
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
     }
 }

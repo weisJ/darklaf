@@ -23,17 +23,14 @@
  */
 package com.github.weisj.darklaf.components.tooltip;
 
+import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
 import com.github.weisj.darklaf.util.Alignment;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
 
 public class TooltipAwareButton extends JButton implements ToolTipAware {
 
-    private final ToolTipContext context = new ToolTipContext(this)
-            .setAlignment(Alignment.CENTER)
-            .setCenterAlignment(Alignment.SOUTH);
+    private ToolTipContext context;
 
     public TooltipAwareButton() {
         this(null, null);
@@ -56,17 +53,20 @@ public class TooltipAwareButton extends JButton implements ToolTipAware {
     }
 
     @Override
-    public Point getToolTipLocation(final MouseEvent event) {
-        return context.getToolTipLocation(event);
-    }
-
-    @Override
-    public JToolTip createToolTip() {
-        return context.getToolTip();
+    public void updateUI() {
+        putClientProperty(DarkTooltipUI.KEY_CONTEXT, getToolTipContext());
+        putClientProperty(DarkTooltipUI.KEY_STYLE, ToolTipStyle.BALLOON);
+        super.updateUI();
     }
 
     @Override
     public ToolTipContext getToolTipContext() {
+        if (context == null) {
+            context = new ToolTipContext().setAlignment(Alignment.SOUTH)
+                                          .setCenterAlignment(Alignment.SOUTH)
+                                          .setAlignInside(false)
+                                          .setIgnoreBorder(true);
+        }
         return context;
     }
 }

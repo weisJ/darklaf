@@ -117,8 +117,9 @@ public class WindowsTitlePane extends CustomTitlePane {
     private Color activeForeground;
     private Color border;
 
-    public WindowsTitlePane(final JRootPane root, final int decorationStyle) {
+    public WindowsTitlePane(final JRootPane root, final int decorationStyle, final Window window) {
         this.rootPane = root;
+        this.window = window;
         rootPane.addContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
         state = -1;
@@ -192,7 +193,6 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     protected void uninstallDecorations() {
-        window = null;
         if (windowHandle != 0) {
             JNIDecorationsWindows.uninstallDecorations(windowHandle);
             windowHandle = 0;
@@ -207,20 +207,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     public void install() {
         if (window != null) {
-            if (window instanceof Dialog || window instanceof Frame) {
-                windowHandle = PointerUtil.getHWND(window);
-                if (windowHandle != 0) {
-                    JNIDecorationsWindows.installDecorations(windowHandle);
-                    updateResizeBehaviour();
-                    Color color = window.getBackground();
-                    JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
-                    forceNativeResize();
-                } else {
-                    uninstall();
-                    return;
-                }
-            }
-
+            if (!installDecorations()) return;
             if (window instanceof Frame) {
                 titleLabel.setText(((Frame) window).getTitle());
                 setState(((Frame) window).getExtendedState());
@@ -235,6 +222,23 @@ public class WindowsTitlePane extends CustomTitlePane {
             installListeners();
             updateSystemIcon();
         }
+    }
+
+    private boolean installDecorations() {
+        if (window instanceof Dialog || window instanceof Frame) {
+            windowHandle = PointerUtil.getHWND(window);
+            if (windowHandle != 0) {
+                JNIDecorationsWindows.installDecorations(windowHandle);
+                updateResizeBehaviour();
+                Color color = window.getBackground();
+                JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+                forceNativeResize();
+            } else {
+                uninstall();
+                return false;
+            }
+        }
+        return true;
     }
 
     private void forceNativeResize() {
@@ -458,32 +462,17 @@ public class WindowsTitlePane extends CustomTitlePane {
         g.setColor(background);
         g.fillRect(0, 0, width, height);
 
-        if (getWindowDecorationStyle() != JRootPane.NONE) {
+        if (getWindowDecorationStyle() != JRootPane.NONE && menuBar != null) {
             g.setColor(border);
             g.fillRect(0, height - 1, width, 1);
         }
-    }
-
-    public void addNotify() {
-        super.addNotify();
-        uninstallListeners();
-        window = SwingUtilities.getWindowAncestor(this);
-        install();
-    }
-
-    public void removeNotify() {
-        super.removeNotify();
-        uninstallListeners();
     }
 
     public JRootPane getRootPane() {
         return rootPane;
     }
 
-
     private Frame getFrame() {
-        Window window = getWindow();
-
         if (window instanceof Frame) {
             return (Frame) window;
         }

@@ -21,16 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.components.tooltip;
+package com.github.weisj.darklaf.ui.button;
 
 import javax.swing.*;
-import java.util.EventListener;
+import javax.swing.plaf.basic.BasicButtonListener;
+import java.awt.event.MouseEvent;
 
-public interface ToolTipListener extends EventListener {
+public class DarkButtonListener extends BasicButtonListener {
 
-    void toolTipShown(JToolTip toolTip);
+    public DarkButtonListener(final AbstractButton b) {
+        super(b);
+    }
 
-    void toolTipHidden(JToolTip toolTip);
+    public void mouseEntered(final MouseEvent e) {
+        AbstractButton b = (AbstractButton) e.getSource();
+        ButtonModel model = b.getModel();
+        if (!SwingUtilities.isLeftMouseButton(e)) {
+            model.setRollover(true);
+        }
+        if (model.isPressed()) {
+            model.setArmed(true);
+        }
+    }
 
-    void textChanged(JToolTip toolTip);
+    public void mouseExited(final MouseEvent e) {
+        AbstractButton b = (AbstractButton) e.getSource();
+        ButtonModel model = b.getModel();
+        model.setRollover(false);
+        model.setArmed(false);
+    }
 }

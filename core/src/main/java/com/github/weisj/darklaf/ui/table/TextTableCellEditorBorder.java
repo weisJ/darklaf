@@ -50,8 +50,9 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
         g.setColor(borderColor);
         JTable table = DarkUIUtil.getParentOfType(JTable.class, c);
         if (table != null) {
+            int row = table.getEditingRow();
             if (!table.getShowHorizontalLines()) {
-                g.fillRect(0, 0, width, 1);
+                if (row > getMinRowIndex(table)) g.fillRect(0, 0, width, 1);
                 g.fillRect(0, height - 1, width, 1);
             }
             if (!table.getShowVerticalLines()) {
@@ -67,6 +68,16 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
         } else {
             DarkUIUtil.drawRect(g, x, y, width, height, 1);
         }
+    }
+
+    protected int getMinColumnIndex(final JTable table) {
+        Rectangle rect = table.getVisibleRect();
+        return table.columnAtPoint(rect.getLocation());
+    }
+
+    protected int getMinRowIndex(final JTable table) {
+        Rectangle rect = table.getVisibleRect();
+        return table.rowAtPoint(rect.getLocation());
     }
 
     protected static boolean isListEditor(final Component c) {
@@ -97,6 +108,10 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
                     ins.right -= ((JLabel) renderer).getIconTextGap() - 1;
                 }
             }
+        }
+        JTable table = DarkUIUtil.getParentOfType(JTable.class, c);
+        if (table != null && !table.getShowVerticalLines() && table.getEditingColumn() > getMinColumnIndex(table)) {
+            ins.left++;
         }
         return ins;
     }

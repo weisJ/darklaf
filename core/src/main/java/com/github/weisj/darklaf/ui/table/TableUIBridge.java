@@ -2217,8 +2217,7 @@ public abstract class TableUIBridge extends TableUI {
             if (map != null && map.get(keyStroke) != null) {
                 return;
             }
-            map = table.getInputMap(JComponent.
-                                            WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+            map = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
             if (map != null && map.get(keyStroke) != null) {
                 return;
             }

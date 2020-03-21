@@ -24,6 +24,8 @@
 package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.AlignmentExt;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.QuickColorChooser;
@@ -61,17 +63,17 @@ public class ButtonDemo implements ComponentDemo {
             setSelected(button.isRolloverEnabled());
             addActionListener(e -> button.setRolloverEnabled(isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JButton.square") {{
+        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_SQUARE) {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JButton.square", isSelected()));
+            addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_SQUARE, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JButton.thin") {{
+        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_THIN) {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JButton.thin", isSelected()));
+            addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_THIN, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JButton.alternativeArc") {{
+        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_ALT_ARC) {{
             setSelected(false);
-            addActionListener(e -> button.putClientProperty("JButton.alternativeArc", isSelected()));
+            addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, isSelected()));
         }});
         controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {{
             setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
@@ -79,26 +81,39 @@ public class ButtonDemo implements ComponentDemo {
         }});
 
         controlPanel = panel.addControls();
-        controlPanel.add(new QuickColorChooser("JButton.shadow.hover", Color.BLACK,
-                                               (b, c) -> button.putClientProperty("JButton.shadow.hover", b ? c : null)));
-        controlPanel.add(new QuickColorChooser("JButton.shadow.click", Color.BLACK,
-                                               (b, c) -> button.putClientProperty("JButton.shadow.click", b ? c : null)));
+        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
+                                               (b, c) -> button.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
+        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
+                                               (b, c) -> button.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)));
 
         controlPanel = panel.addControls();
-        controlPanel.add(new JLabel("JButton.variant:"));
+        controlPanel.add(new JLabel(DarkButtonUI.KEY_VARIANT + ":"));
         controlPanel.add(new JComboBox<String>() {{
-            addItem("onlyLabel");
-            addItem("shadow");
-            addItem("fullShadow");
-            addItem("none");
-            setSelectedItem("no JButton.variant");
+            addItem(DarkButtonUI.VARIANT_NONE);
+            addItem(DarkButtonUI.VARIANT_SHADOW);
+            addItem(DarkButtonUI.VARIANT_FULL_SHADOW);
+            addItem(DarkButtonUI.VARIANT_ONLY_LABEL);
+            setSelectedItem(DarkButtonUI.VARIANT_NONE);
+            addItemListener(e -> button.putClientProperty(DarkButtonUI.KEY_VARIANT, e.getItem()));
+        }});
+        controlPanel.add(new JLabel(DarkButtonUI.KEY_CORNER + ":"));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem("None");
+            for (AlignmentExt a : AlignmentExt.values()) {
+                addItem(a.name());
+            }
+            setSelectedItem("None");
             addItemListener(e -> {
-                if (e.getItem().equals("none")) {
-                    button.putClientProperty("JButton.variant", null);
+                if ("None".equals(e.getItem())) {
+                    button.putClientProperty(DarkButtonUI.KEY_CORNER, null);
                 } else {
-                    button.putClientProperty("JButton.variant", e.getItem());
+                    button.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.valueOf(e.getItem().toString()));
                 }
             });
+        }});
+        controlPanel.add(new JCheckBox("Icon Only") {{
+            setSelected(false);
+            addActionListener(e -> button.setText(isSelected() ? null : "Test Button"));
         }});
         return panel;
     }

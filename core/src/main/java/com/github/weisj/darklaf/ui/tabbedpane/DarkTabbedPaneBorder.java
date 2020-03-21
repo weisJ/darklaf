@@ -21,26 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.components;
+package com.github.weisj.darklaf.ui.tabbedpane;
+
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
 import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
-public class ShadowButton extends JButton {
+public class DarkTabbedPaneBorder extends MutableLineBorder implements UIResource {
 
-    public ShadowButton(final Icon icon) {
-        super(icon);
-        init();
-    }
-
-    private void init() {
-        setRolloverEnabled(true);
-        setOpaque(false);
-        putClientProperty("JButton.variant", "shadow");
-        putClientProperty("JButton.square", Boolean.TRUE);
-    }
-
-    public ShadowButton(final Action action) {
-        super(action);
-        init();
+    public DarkTabbedPaneBorder() {
+        super(1, 1, 1, 1, UIManager.getColor("TabbedPane.borderColor"));
     }
 }

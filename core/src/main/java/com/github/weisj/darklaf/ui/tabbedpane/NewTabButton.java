@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -51,10 +52,11 @@ public class NewTabButton extends JPanel implements UIResource {
     protected JButton createButton() {
         JButton button = new JButtonUIResource();
         button.setIcon(ui.getNewTabIcon());
-        button.putClientProperty("JButton.variant", "shadow");
-        button.putClientProperty("JButton.square", Boolean.TRUE);
-        button.putClientProperty("JButton.alternativeArc", Boolean.TRUE);
-        button.putClientProperty("JButton.thin", Boolean.TRUE);
+        button.setFocusable(false);
+        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+        button.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
+        button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
+        button.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
         button.setRolloverEnabled(true);
         button.setOpaque(false);
         Insets margin = UIManager.getInsets("TabbedPane.newTabButton.insets");

@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.combobox;
 
 import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
@@ -48,7 +49,7 @@ import java.beans.PropertyChangeListener;
  */
 public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyChangeListener {
 
-    public static final String KEY_PREFIX = "JComboBox.";
+    protected static final String KEY_PREFIX = "JComboBox.";
     public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
     public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
 
@@ -67,33 +68,13 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     protected Color focusBorderColor;
     protected Color borderColor;
     protected Color inactiveBorderColor;
-    protected Color arrowBackgroundStart;
+    protected Color arrowBackground;
     protected Color arrowBackgroundEnd;
     private Insets boxPadding;
     private Insets cellPadding;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkComboBoxUI();
-    }
-
-    @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        boxPadding = UIManager.getInsets("ComboBox.insets");
-        borderSize = UIManager.getInt("ComboBox.borderThickness");
-        background = UIManager.getColor("ComboBox.activeBackground");
-        editBackground = UIManager.getColor("ComboBox.editBackground");
-        inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
-        inactiveForeground = UIManager.getColor("ComboBox.disabledForeground");
-        focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
-        borderColor = UIManager.getColor("ComboBox.activeBorderColor");
-        inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
-        arrowBackgroundStart = UIManager.getColor("ComboBox.arrowBackgroundStart");
-        arrowBackgroundEnd = UIManager.getColor("ComboBox.arrowBackgroundEnd");
-        cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
-        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
-        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
-        comboBox.setBorder(this);
     }
 
     protected static boolean isTableCellEditor(final Component c) {
@@ -113,6 +94,27 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         super.uninstallListeners();
         comboBox.removeMouseListener(mouseListener);
         comboBox.removePropertyChangeListener(this);
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        LookAndFeel.installProperty(comboBox, PropertyKey.OPAQUE, false);
+        arcSize = UIManager.getInt("ComboBox.arc");
+        boxPadding = UIManager.getInsets("ComboBox.insets");
+        borderSize = UIManager.getInt("ComboBox.borderThickness");
+        background = UIManager.getColor("ComboBox.activeBackground");
+        editBackground = UIManager.getColor("ComboBox.editBackground");
+        inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
+        inactiveForeground = UIManager.getColor("ComboBox.disabledForeground");
+        focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
+        borderColor = UIManager.getColor("ComboBox.activeBorderColor");
+        inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
+        arrowBackground = UIManager.getColor("ComboBox.arrowBackground");
+        cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
+        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
+        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
+        comboBox.setBorder(this);
     }
 
     @Override
@@ -160,7 +162,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
                 comboBox.repaint();
             }
         });
-        ((JComponent) comp).setBorder(null);
         return comboBoxEditor;
     }
 
@@ -192,7 +193,12 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
         if (comboBox.isEditable() && comboBox.getEditor() != null) {
-            g.setColor(comboBox.getEditor().getEditorComponent().getBackground());
+            Component editorComp = comboBox.getEditor().getEditorComponent();
+            if (comboBox.isEnabled()) {
+                g.setColor(editorComp.getBackground());
+            } else {
+                g.setColor(inactiveBackground);
+            }
         } else {
             g.setColor(getBackground(comboBox));
         }
@@ -205,7 +211,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
         }
     }
 
-    protected Color getBackground(final JComboBox c) {
+    protected Color getBackground(final JComboBox<?> c) {
         if (!c.isEnabled()) return inactiveBackground;
         if (c.isEditable()) return editBackground;
         return background;
@@ -217,10 +223,20 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
     }
 
     @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        LookAndFeel.installProperty(comboBox, PropertyKey.OPAQUE, false);
-        arcSize = UIManager.getInt("ComboBox.arc");
+    protected LayoutManager createLayoutManager() {
+        return new LayoutManagerDelegate(super.createLayoutManager()) {
+            @Override
+            public void layoutContainer(final Container parent) {
+                super.layoutContainer(parent);
+                if (isTreeCellEditor(comboBox) || isTableCellEditor(comboBox)) {
+                    int adj = borderSize / 2;
+                    if (!comboBox.getComponentOrientation().isLeftToRight()) adj *= -1;
+                    Rectangle bounds = arrowButton.getBounds();
+                    bounds.x += adj;
+                    arrowButton.setBounds(bounds);
+                }
+            }
+        };
     }
 
     private Color getForeground() {
@@ -320,8 +336,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             Area rect;
             Area iconRect;
             if (!isTableCellEditor && !isTreeCellEditor) {
-                rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize, width - 2 * bSize + 2,
-                                                            height - 2 * bSize, arc, arc));
+                rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
+                                                            height - 2 * bSize + 1, arc, arc));
                 iconRect = new Area(new Rectangle(off, 0, width, height));
             } else {
                 rect = new Area(new Rectangle(0, 0, width, height));
@@ -336,7 +352,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             g.fill(rect);
 
             g.setColor(getBorderColor());
-            g.fillRect(off, bSize, 1, height - 2 * bSize);
+            g.fillRect(off, bSize - 1, 1, height - 2 * bSize + 1);
         }
 
         if (!isTableCellEditor && !isTreeCellEditor) {
@@ -385,10 +401,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
 
     protected Paint getArrowBackground(final JComboBox<?> c) {
         if (!c.isEnabled()) return inactiveBackground;
-        if (c.isEditable()) {
-            return new GradientPaint(0, borderSize, arrowBackgroundStart,
-                                     0, c.getHeight() - borderSize, arrowBackgroundEnd);
-        }
+        if (c.isEditable()) return arrowBackground;
         return background;
     }
 
@@ -428,6 +441,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements Border, PropertyC
             comboBox.repaint();
         } else if (DarkComboBoxUI.KEY_IS_TABLE_EDITOR.equals(key)
             || DarkComboBoxUI.KEY_IS_TREE_EDITOR.equals(key)) {
+            comboBox.revalidate();
             comboBox.repaint();
         }
     }

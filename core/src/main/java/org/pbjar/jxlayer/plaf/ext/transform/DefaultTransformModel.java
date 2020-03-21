@@ -81,7 +81,7 @@ public class DefaultTransformModel implements TransformModel {
         AffineTransform transform = transformNoScale(centerX, centerY);
         double scaleX = getValue(Type.PreferredScale);
         transform.translate(centerX, centerY);
-        transform.scale(getValue(Type.Mirror) ? -scaleX : scaleX, scaleX);
+        transform.scale((boolean) getValue(Type.Mirror) ? -scaleX : scaleX, scaleX);
         transform.translate(-centerX, -centerY);
         return transform;
     }
@@ -207,7 +207,7 @@ public class DefaultTransformModel implements TransformModel {
 
                 double scaleX;
                 double scaleY;
-                if (getValue(Type.ScaleToPreferredSize)) {
+                if ((boolean) getValue(Type.ScaleToPreferredSize)) {
                     scaleX = getValue(Type.PreferredScale);
                     scaleY = scaleX;
                 } else {
@@ -217,14 +217,14 @@ public class DefaultTransformModel implements TransformModel {
                     scaleX = layer == null ? 0 : layer.getWidth() / bounds.getWidth();
                     scaleY = layer == null ? 0 : layer.getHeight() / bounds.getHeight();
 
-                    if (getValue(Type.PreserveAspectRatio)) {
+                    if ((boolean) getValue(Type.PreserveAspectRatio)) {
                         scaleX = Math.min(scaleX, scaleY);
                         scaleY = scaleX;
                     }
                 }
 
                 transform.translate(centerX, centerY);
-                transform.scale(getValue(Type.Mirror) ? -scaleX : scaleX, scaleY);
+                transform.scale((boolean) getValue(Type.Mirror) ? -scaleX : scaleX, scaleY);
                 transform.translate(-centerX, -centerY);
                 transform.concatenate(nonScaledTransform);
             }

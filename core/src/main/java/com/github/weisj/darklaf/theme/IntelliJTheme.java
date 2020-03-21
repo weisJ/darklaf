@@ -23,9 +23,6 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.util.SystemInfo;
-
 import javax.swing.*;
 import java.util.Properties;
 
@@ -33,15 +30,6 @@ import java.util.Properties;
  * @author Jannis Weis
  */
 public class IntelliJTheme extends Theme {
-
-    @Override
-    public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadPlatformProperties(properties, currentDefaults);
-        if (SystemInfo.isMac) {
-            String name = getResourcePath() + getName() + "_mac.properties";
-            PropertyLoader.putProperties(load(name), properties, currentDefaults);
-        }
-    }
 
     @Override
     protected String getResourcePath() {

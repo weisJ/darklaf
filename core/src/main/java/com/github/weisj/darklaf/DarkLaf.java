@@ -29,9 +29,10 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.SystemInfo;
-import sun.awt.AppContext;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.DefaultEditorKit;
@@ -43,7 +44,6 @@ import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Method;
 import java.text.AttributedCharacterIterator;
 import java.util.Collections;
 import java.util.HashMap;
@@ -105,12 +105,9 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public UIDefaults getDefaults() {
+        final UIDefaults metalDefaults = new MetalLookAndFeel().getDefaults();
+        final UIDefaults defaults = base.getDefaults();
         try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("getDefaults");
-            superMethod.setAccessible(true);
-            final UIDefaults metalDefaults = (UIDefaults) superMethod.invoke(new MetalLookAndFeel());
-            final UIDefaults defaults = (UIDefaults) superMethod.invoke(base);
-
             initInputMapDefaults(defaults);
             loadThemeDefaults(defaults);
             initIdeaDefaults(defaults);
@@ -130,7 +127,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
-        return super.getDefaults();
+        return defaults;
     }
 
     private void patchMacOSFonts(final UIDefaults defaults) {
@@ -145,8 +142,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     private Font macOSFontFromFont(final Font font) {
         Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
                                                                                                   TextAttribute.KERNING_ON);
-        Font macFont = new Font(SystemInfo.isMacOSCatalina ? ".AppleSystemUIFont" : ".SF NS Text",
-                                font.getStyle(), font.getSize()).deriveFont(attributes);
+        String fontName = SystemInfo.isMacOSCatalina ? ".AppleSystemUIFont" : ".SF NS Text";
+        Font macFont = new Font(fontName, font.getStyle(), font.getSize()).deriveFont(attributes);
+        if (font instanceof UIResource) {
+            macFont = new FontUIResource(macFont);
+        }
         return macFont == null ? font : macFont;
     }
 
@@ -218,6 +218,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
         currentTheme.loadGlobals(uiProps, defaults);
         installGlobals(uiProps, defaults);
+        loadFontProperties(uiProps, defaults);
         currentTheme.loadUIProperties(uiProps, defaults);
         currentTheme.loadIconProperties(uiProps, defaults);
         currentTheme.loadPlatformProperties(uiProps, defaults);
@@ -228,6 +229,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
         StyleSheet styleSheet = currentTheme.loadStyleSheet();
         new HTMLEditorKit().setStyleSheet(styleSheet);
+    }
+
+    private void loadFontProperties(final Properties uiProps, final UIDefaults defaults) {
+        Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, "font", "properties/");
+        PropertyLoader.putProperties(fontProps, uiProps, defaults);
     }
 
     private void loadSystemOverwrites(final Properties uiProps, final UIDefaults defaults) {
@@ -242,8 +248,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
             new Object[]{
                 "ctrl C", "copy",
+                "meta C", "copy",
                 "ctrl V", "paste",
+                "meta V", "paste",
                 "ctrl X", "cut",
+                "meta X", "cut",
                 "COPY", "copy",
                 "PASTE", "paste",
                 "CUT", "cut",
@@ -311,14 +320,15 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
         final String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
         final String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
         final String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
+        final int mask = SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
         // Ctrl+Ins, Shift+Ins, Shift+Del
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_DOWN_MASK), copyActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_DOWN_MASK), cutActionKey);
         // Ctrl+C, Ctrl+V, Ctrl+X
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), copyActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), pasteActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask), copyActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, mask), pasteActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask), DefaultEditorKit.cutAction);
     }
 
     private void installGlobals(final Properties uiProps, final UIDefaults defaults) {
@@ -353,7 +363,7 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          * On macOS the default PopupFactory is overwritten with a custom one, which always uses heavyweight popups.
          * This is disadvantageous for the behaviour of custom tooltips.
          */
-        call("initialize");
+        base.initialize();
         PopupFactory.setSharedInstance(new DarkPopupFactory());
         PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
@@ -361,20 +371,12 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public void uninitialize() {
-        call("uninitialize");
-        AppContext context = AppContext.getAppContext();
+        base.uninitialize();
         UIManager.removePropertyChangeListener(this);
-        synchronized (DarkPopupMenuUI.MOUSE_GRABBER_KEY) {
-            Object grabber = context.get(DarkPopupMenuUI.MOUSE_GRABBER_KEY);
-            if (grabber != null) {
-                ((DarkPopupMenuUI.MouseGrabber) grabber).uninstall();
-            }
+        DarkPopupMenuUI.MouseGrabber mouseGrabber = DarkPopupMenuUI.getMouseGrabber();
+        if (mouseGrabber != null) {
+            mouseGrabber.uninstall();
         }
-    }
-
-    @Override
-    protected void initClassDefaults(final UIDefaults defaults) {
-        callInit("initClassDefaults", defaults);
     }
 
     @Override
@@ -383,50 +385,8 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     }
 
     @Override
-    protected void initSystemColorDefaults(final UIDefaults defaults) {
-        callInit("initSystemColorDefaults", defaults);
-    }
-
-    @Override
-    protected void loadSystemColors(final UIDefaults defaults, final String[] systemColors,
-                                    final boolean useNative) {
-        try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(
-                    "loadSystemColors", UIDefaults.class, String[].class, boolean.class);
-            superMethod.setAccessible(true);
-            superMethod.invoke(base, defaults, systemColors, useNative);
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
-    }
-
-    public void initComponentDefaults(final UIDefaults defaults) {
-        callInit("initComponentDefaults", defaults);
-    }
-
-    @Override
     public boolean isSupportedLookAndFeel() {
         return true;
-    }
-
-    private void callInit(final String method, final UIDefaults defaults) {
-        try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method, UIDefaults.class);
-            superMethod.setAccessible(true);
-            superMethod.invoke(base, defaults);
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
-    }
-
-    private void call(final String method) {
-        try {
-            final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method);
-            superMethod.setAccessible(true);
-            superMethod.invoke(base);
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
     }
 
     @Override

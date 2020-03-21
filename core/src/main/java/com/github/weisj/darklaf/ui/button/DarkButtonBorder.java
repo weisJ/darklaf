@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 
@@ -87,35 +88,19 @@ public class DarkButtonBorder implements Border, UIResource {
         if (labelInsets == null) labelInsets = new Insets(0, 0, 0, 0);
     }
 
-    @Override
-    public void paintBorder(final Component c, final Graphics g,
-                            final int x, final int y, final int width, final int height) {
-        if (DarkButtonUI.isShadowVariant(c) || DarkButtonUI.isLabelButton(c)) {
-            return;
-        }
-        Graphics2D g2 = (Graphics2D) g;
-        g2.translate(x, y);
+    public static boolean showDropShadow(final JComponent c) {
+        return showDropShadow(getCornerFlag(c));
+    }
 
-        int arc = getArc(c);
-        int focusArc = getFocusArc(c);
-        GraphicsContext config = new GraphicsContext(g);
-
-        if (c.isEnabled()) {
-            paintShadow(g2, width, height, arc);
-        }
-
-        int shadowHeight = getShadowSize();
-        int borderSize = getBorderSize();
-
-
-        if (c.hasFocus()) {
-            DarkUIUtil.paintFocusBorder(g2, width, height - shadowHeight, focusArc, borderSize);
-        }
-
-        g2.setColor(getBorderColor(c));
-        DarkUIUtil.paintLineBorder(g2, borderSize, borderSize, width - 2 * borderSize,
-                                   height - 2 * borderSize - shadowHeight, arc);
-        config.restore();
+    public static boolean showDropShadow(final AlignmentExt a) {
+        return a == null
+            || a == AlignmentExt.SOUTH
+            || a == AlignmentExt.SOUTH_EAST
+            || a == AlignmentExt.SOUTH_WEST
+            || a == AlignmentExt.LEFT
+            || a == AlignmentExt.RIGHT
+            || a == AlignmentExt.BOTTOM
+            || a == AlignmentExt.MIDDLE_HORIZONTAL;
     }
 
     protected int getArc(final Component c) {
@@ -132,22 +117,16 @@ public class DarkButtonBorder implements Border, UIResource {
         return square ? alt ? focusArc : squareFocusArc : alt ? squareFocusArc : focusArc;
     }
 
-    private void paintShadow(final Graphics2D g2, final int width, final int height, final int arc) {
-        GraphicsContext context = new GraphicsContext(g2);
-        int borderSize = getBorderSize();
-        int shadowSize = getShadowSize();
-        Area shadowShape = new Area(new RoundRectangle2D.Double(borderSize, borderSize,
-                                                                width - 2 * borderSize, height - 2 * borderSize,
-                                                                arc, arc));
-        Area innerArea = new Area(new RoundRectangle2D.Double(borderSize, borderSize,
-                                                              width - 2 * borderSize,
-                                                              height - 2 * borderSize - shadowSize,
-                                                              arc, arc));
-        shadowShape.subtract(innerArea);
-        g2.setComposite(DarkUIUtil.SHADOW_COMPOSITE);
-        g2.setColor(shadowColor);
-        g2.fill(shadowShape);
-        context.restore();
+    public static AlignmentExt getCornerFlag(final Component component) {
+        if (component instanceof JComponent) {
+            Object align = ((JComponent) component).getClientProperty(DarkButtonUI.KEY_CORNER);
+            return align instanceof AlignmentExt ? (AlignmentExt) align : null;
+        }
+        return null;
+    }
+
+    protected int getShadowSize(final JComponent c) {
+        return showDropShadow(c) ? getShadowSize() : 0;
     }
 
     protected int getShadowSize() {
@@ -158,8 +137,121 @@ public class DarkButtonBorder implements Border, UIResource {
         return borderSize;
     }
 
-    protected Color getBorderColor(final Component c) {
-        if (c.hasFocus()) {
+    @Override
+    public void paintBorder(final Component c, final Graphics g,
+                            final int x, final int y, final int width, final int height) {
+        if (DarkButtonUI.isShadowVariant(c) || DarkButtonUI.isLabelButton(c)) {
+            return;
+        }
+        Graphics2D g2 = (Graphics2D) g;
+        g2.translate(x, y);
+
+        int arc = getArc(c);
+        int focusArc = getFocusArc(c);
+        GraphicsContext config = new GraphicsContext(g);
+        AlignmentExt corner = getCornerFlag(c);
+
+        boolean paintShadow = showDropShadow(corner);
+        boolean focus = paintFocus(c);
+        int shadowHeight = paintShadow ? getShadowSize() : 0;
+        int borderSize = getBorderSize();
+
+        Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
+        Insets focusIns = new Insets(0, 0, 0, 0);
+        if (corner != null) {
+            focusIns = corner.maskInsets(focusIns, -borderSize - focusArc);
+            insetMask = corner.maskInsets(insetMask, -arc);
+        }
+
+        int bx = insetMask.left;
+        int by = insetMask.top;
+        int bw = width - insetMask.left - insetMask.right;
+        int bh = height - insetMask.top - insetMask.bottom;
+        int fx = focusIns.left;
+        int fy = focusIns.top;
+        int fw = width - focusIns.left - focusIns.right;
+        int fh = height - focusIns.top - focusIns.bottom;
+
+        if (c.isEnabled() && paintShadow) {
+            paintShadow((Graphics2D) g, bx, by, bw, bh, arc);
+        }
+
+        if (paintFocus(c)) {
+            g.translate(fx, fy);
+            DarkUIUtil.paintFocusBorder(g2, fw, fh - shadowHeight, focusArc, borderSize);
+            g.translate(-fx, -fy);
+        }
+
+        g2.setColor(getBorderColor(c, focus));
+        DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
+        if (corner != null) {
+            paintNeighbourFocus(g2, c, width, height);
+        }
+        config.restore();
+    }
+
+    protected void paintNeighbourFocus(final Graphics2D g2, final Component c,
+                                       final int width, final int height) {
+        JComponent left = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_LEFT_NEIGHBOUR, c);
+        boolean paintLeft = DarkUIUtil.hasFocus(left);
+        if (paintLeft) {
+            g2.translate(-2 * borderSize, 0);
+            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, height - getShadowSize(left),
+                                        getFocusArc(left), borderSize);
+            g2.translate(2 * borderSize, 0);
+        }
+        JComponent right = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
+        boolean paintRight = DarkUIUtil.hasFocus(right);
+        if (paintRight) {
+            g2.translate(width - borderSize, 0);
+            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, height - getShadowSize(right),
+                                        getFocusArc(right), borderSize);
+            g2.translate(borderSize - width, 0);
+        }
+        JComponent top = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
+        boolean paintTop = DarkUIUtil.hasFocus(top);
+        if (paintTop) {
+            g2.translate(0, -2 * borderSize);
+            DarkUIUtil.paintFocusBorder(g2, width, 3 * borderSize,
+                                        getFocusArc(top), borderSize);
+            g2.translate(0, 2 * borderSize);
+        }
+        JComponent bottom = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
+        boolean paintBottom = DarkUIUtil.hasFocus(bottom);
+        if (paintBottom) {
+            g2.translate(0, height - borderSize);
+            DarkUIUtil.paintFocusBorder(g2, width, 3 * borderSize,
+                                        getFocusArc(bottom), borderSize);
+            g2.translate(0, borderSize - height);
+        }
+    }
+
+    protected boolean paintFocus(final Component c) {
+        if (c instanceof AbstractButton) {
+            return ((AbstractButton) c).isFocusPainted() && c.hasFocus();
+        }
+        return c.hasFocus();
+    }
+
+    private void paintShadow(final Graphics2D g2, final int x, final int y,
+                             final int width, final int height, final int arc) {
+        GraphicsContext context = new GraphicsContext(g2);
+        int shadowSize = getShadowSize();
+        Area shadowShape = new Area(new RoundRectangle2D.Double(x, y, width, height, arc, arc));
+        Area innerArea = new Area(new RoundRectangle2D.Double(x, y, width, height - shadowSize, arc, arc));
+        shadowShape.subtract(innerArea);
+        g2.setComposite(DarkUIUtil.SHADOW_COMPOSITE);
+        g2.setColor(shadowColor);
+        g2.fill(shadowShape);
+        context.restore();
+    }
+
+    public boolean isBorderOpaque() {
+        return false;
+    }
+
+    protected Color getBorderColor(final Component c, final boolean focus) {
+        if (focus) {
             return focusBorderColor;
         } else if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
             return defaultBorderColor;
@@ -184,10 +276,19 @@ public class DarkButtonBorder implements Border, UIResource {
                                                      : thinInsets
                                             : square ? squareInsets
                                                      : insets;
-        return new InsetsUIResource(pad.top, pad.left, pad.bottom + shadow, pad.right);
+        return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
     }
 
-    public boolean isBorderOpaque() {
-        return false;
+    protected Insets maskInsets(final Insets ins, final Component c, final int shadow) {
+        ins.bottom += shadow;
+        AlignmentExt alignment = getCornerFlag(c);
+        if (alignment == null) return ins;
+        Insets insetMask = new Insets(borderSize, borderSize, borderSize + shadow, borderSize);
+        insetMask = alignment.maskInsetsInverted(insetMask);
+        ins.top -= insetMask.top;
+        ins.bottom -= insetMask.bottom;
+        ins.left -= insetMask.left;
+        ins.right -= insetMask.right;
+        return ins;
     }
 }
