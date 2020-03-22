@@ -28,7 +28,7 @@ import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -36,18 +36,15 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class DarkCheckBoxBorder implements Border, UIResource {
+public class DarkCheckBoxBorder extends EmptyBorder implements UIResource {
 
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                             final int width, final int height) {
     }
 
-    private Insets insets;
-
     public DarkCheckBoxBorder() {
-        insets = UIManager.getInsets("CheckBox.borderInsets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
+        super(UIManager.getInsets("CheckBox.borderInsets"));
     }
 
     @Override
@@ -55,7 +52,7 @@ public class DarkCheckBoxBorder implements Border, UIResource {
         if (isInCell(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
-        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
+        return new InsetsUIResource(top, left, bottom, right);
     }
 
     protected static boolean isInCell(final Component c) {
