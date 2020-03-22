@@ -135,15 +135,6 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
             x.setLayout(new ScrollLayoutManagerDelegate(oldLayout) {
 
                 @Override
-                public void addLayoutComponent(final String name, final Component comp) {
-                    if (name != null && name.toUpperCase().endsWith("CORNER")) {
-                        Component oldComp = getDelegate().getCorner(name);
-                        getDelegate().removeLayoutComponent(oldComp);
-                    }
-                    super.addLayoutComponent(name, comp);
-                }
-
-                @Override
                 public void layoutContainer(final Container parent) {
                     super.layoutContainer(parent);
                     JScrollBar vsb = scrollpane.getVerticalScrollBar();

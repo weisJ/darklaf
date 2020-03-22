@@ -346,7 +346,14 @@ public final class PropertyLoader {
             if (cache.containsKey(value)) {
                 defaults.put(key, cache.get(value));
             } else {
-                Object obj = parseObject(value);
+                Object obj;
+                if (key.endsWith("Component")) {
+                    // Swing components should not be reused, so we provide a factory
+                    // For instance, it prevents reuse of the same Table.scrollPaneCornerComponent
+                    obj = (UIDefaults.ActiveValue) (def) -> parseObject(value);
+                } else {
+                    obj = parseObject(value);
+                }
                 if (obj == null) {
                     obj = parseValue(key, value, true, defaults, defaults, ICON_LOADER);
                     if (obj instanceof ObjectRequest) {
