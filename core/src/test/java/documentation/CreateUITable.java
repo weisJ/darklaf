@@ -30,10 +30,7 @@ import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.theme.*;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.ImageUtil;
-import com.github.weisj.darklaf.util.Pair;
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.util.*;
 import com.kitfox.svg.app.beans.SVGIcon;
 import defaults.SampleRenderer;
 
@@ -46,7 +43,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -62,7 +58,6 @@ public class CreateUITable {
     private static final String IDENT = "    ";
 
     private static String workingFolder;
-    private final Map<String, String> imageMap = new HashMap<>();
     private UIDefaults currentDefaults;
 
     public static void main(final String[] args) throws IOException {
@@ -78,7 +73,7 @@ public class CreateUITable {
 
     public static void createThemeDefaultsPage(final Theme theme) throws IOException {
         workingFolder = FOLDER + theme.getName() + "/";
-        String htmlFile = workingFolder + "defaults.html";
+        String htmlFile = workingFolder + "defaults_" + SystemInfo.OS_NAME.replaceAll(" ", "_") + ".html";
         new File(workingFolder).mkdirs();
         new File(htmlFile).createNewFile();
 
@@ -94,7 +89,6 @@ public class CreateUITable {
 
     private String createTables(final Theme theme, final int ident) {
         UIDefaults defaults = setupThemeDefaults(theme);
-        imageMap.clear();
 
         String misc = "__Misc__";
 
@@ -110,7 +104,7 @@ public class CreateUITable {
                                      .map(s -> s.substring(misc.length())).collect(Collectors.toSet());
 
         StringBuilder builder = new StringBuilder();
-        appendGroup(ident, defaults, builder, "%", "Theme Colors");
+        appendGroup(ident, defaults, builder, "%", "Theme Defaults");
         groups.stream().sorted()
               .filter(s -> !s.startsWith(misc) && !s.equals("%"))
               .forEach(group -> appendGroup(ident, defaults, builder, group, group));
@@ -244,24 +238,24 @@ public class CreateUITable {
     private String parseImage(final String key, final Object value, final int ident) {
         String stringRepresentation = parseValue(value).replaceAll(" ", "");
         String path;
-        if (!(value instanceof Icon)) {
-            if (imageMap.containsKey(stringRepresentation)) {
-                path = imageMap.get(stringRepresentation);
-            } else {
+        try {
+            if (!(value instanceof Icon)) {
                 path = createImage(value, stringRepresentation);
-                imageMap.put(stringRepresentation, path);
+            } else {
+                path = createImage(value, key);
             }
-        } else {
-            path = createImage(value, key);
+        } catch (IOException ignored) {
+            return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
         }
         return StringUtil.repeat(IDENT, ident)
             + String.format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
     }
 
-    private String createImage(final Object value, final String name) {
+    private String createImage(final Object value, final String name) throws IOException {
         new File(workingFolder + "img/").mkdirs();
         String fileName = "img/" + name + ".png";
         File imageFile = new File(workingFolder + fileName);
+        if (!imageFile.createNewFile()) return fileName;
         JComponent comp = (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
         BufferedImage image = ImageUtil.createCompatibleTranslucentImage(SAMPLE_WIDTH, SAMPLE_HEIGHT);
         Graphics g = image.getGraphics();
@@ -273,10 +267,7 @@ public class CreateUITable {
         comp.setOpaque(false);
         comp.paint(g);
         g.dispose();
-        try {
-            ImageIO.write(image, "png", imageFile);
-        } catch (IOException e) {
-        }
+        ImageIO.write(image, "png", imageFile);
         return fileName;
     }
 
