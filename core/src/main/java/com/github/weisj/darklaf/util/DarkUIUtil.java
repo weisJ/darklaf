@@ -208,6 +208,16 @@ public final class DarkUIUtil {
         return SwingUtilities.getWindowAncestor(owner) == w;
     }
 
+    public static Container getUnwrappedParent(final Container comp) {
+        if (comp == null) return null;
+        return SwingUtilities.getUnwrappedParent(comp);
+    }
+
+    public static Container getUnwrappedParent(final Component comp) {
+        if (comp == null) return null;
+        return SwingUtilities.getUnwrappedParent(comp);
+    }
+
     public static int getFocusAcceleratorKeyMask() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         if (tk instanceof SunToolkit) {

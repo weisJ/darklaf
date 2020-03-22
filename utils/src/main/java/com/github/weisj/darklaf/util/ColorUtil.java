@@ -65,6 +65,13 @@ public final class ColorUtil {
         }
     }
 
+    public static String toHex(final Color color) {
+        if (color == null) return "";
+        int r = color.getRed();
+        int b = color.getBlue();
+        int g = color.getGreen();
+        return String.format("%02X%02X%02X", r, g, b);
+    }
 
     public static Color fromHex(String str) {
         if (str.startsWith("#")) {

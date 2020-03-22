@@ -75,11 +75,11 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
             Object oldVal = e.getOldValue();
             Object newVal = e.getNewValue();
             if (oldVal instanceof Component) {
-                Container oldUnwrapped = SwingUtilities.getUnwrappedParent((Component) oldVal);
+                Container oldUnwrapped = DarkUIUtil.getUnwrappedParent((Component) oldVal);
                 LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
             }
             if (newVal instanceof Component) {
-                Container newUnwrapped = SwingUtilities.getUnwrappedParent((Component) newVal);
+                Container newUnwrapped = DarkUIUtil.getUnwrappedParent((Component) newVal);
                 if ((newUnwrapped instanceof JScrollPane)) {
                     LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                 }
@@ -155,7 +155,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
     @Override
     protected void uninstallDefaults() {
         super.uninstallDefaults();
-        Container oldUnwrapped = SwingUtilities.getUnwrappedParent(table.getParent());
+        Container oldUnwrapped = DarkUIUtil.getUnwrappedParent(table.getParent());
         LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
     }
 
@@ -281,7 +281,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
 
     protected boolean isScrollPaneRtl() {
         if (!isInScrollPane()) return false;
-        Container comp = SwingUtilities.getUnwrappedParent(table).getParent();
+        Container comp = DarkUIUtil.getUnwrappedParent(table).getParent();
         return !comp.getComponentOrientation().isLeftToRight();
     }
 
@@ -323,7 +323,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
     }
 
     protected boolean isInScrollPane() {
-        Container comp = SwingUtilities.getUnwrappedParent(table);
+        Container comp = DarkUIUtil.getUnwrappedParent(table);
         if (comp != null) {
             comp = comp.getParent();
         }

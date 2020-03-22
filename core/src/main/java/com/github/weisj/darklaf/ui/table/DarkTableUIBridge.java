@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -114,7 +115,7 @@ public class DarkTableUIBridge extends TableUIBridge {
             cMax = table.getColumnCount() - 1;
         }
 
-        Container comp = SwingUtilities.getUnwrappedParent(table);
+        Component comp = DarkUIUtil.getUnwrappedParent(table);
         if (comp != null) {
             comp = comp.getParent();
         }

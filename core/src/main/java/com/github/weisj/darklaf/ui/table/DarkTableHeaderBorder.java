@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -61,7 +62,7 @@ public class DarkTableHeaderBorder extends MutableLineBorder implements UIResour
     }
 
     protected void adjustTop(final Component c) {
-        Component parent = SwingUtilities.getUnwrappedParent(c.getParent());
+        Component parent = DarkUIUtil.getUnwrappedParent(c.getParent());
         top = 0;
         if (parent instanceof JComponent) {
             if (hasBorderAbove((JComponent) parent, c)) return;

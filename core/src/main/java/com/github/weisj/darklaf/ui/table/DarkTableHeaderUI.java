@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 
 import javax.swing.*;
@@ -247,12 +248,12 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
 
     protected boolean isScrollPaneRtl() {
         if (!isInScrollPane()) return false;
-        Container comp = SwingUtilities.getUnwrappedParent(header).getParent();
+        Container comp = DarkUIUtil.getUnwrappedParent(header).getParent();
         return !comp.getComponentOrientation().isLeftToRight();
     }
 
     protected boolean scrollBarVisible() {
-        Container comp = SwingUtilities.getUnwrappedParent(header);
+        Component comp = DarkUIUtil.getUnwrappedParent(header);
         if (comp != null) {
             comp = comp.getParent();
         }
@@ -260,7 +261,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     }
 
     protected boolean isInScrollPane() {
-        Container comp = SwingUtilities.getUnwrappedParent(header);
+        Component comp = DarkUIUtil.getUnwrappedParent(header);
         if (comp != null) {
             comp = comp.getParent();
         }

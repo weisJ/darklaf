@@ -191,7 +191,7 @@ public final class StringUtil {
 
 
     public static String repeat(final String s, final int count) {
-        if (count <= 0) return s;
+        if (count <= 0) return "";
         if (count == 1) return s;
         StringBuilder builder = new StringBuilder(s.length() * count);
         for (int i = 0; i < count; i++) {

@@ -334,7 +334,7 @@ public abstract class TableUIBridge extends TableUI {
         }
 
         // install the scrollpane border
-        Container parent = SwingUtilities.getUnwrappedParent(table);  // should be viewport
+        Container parent = DarkUIUtil.getUnwrappedParent(table);  // should be viewport
         if (parent != null) {
             parent = parent.getParent();  // should be the scrollpane
             if (parent != null && parent instanceof JScrollPane) {
@@ -576,7 +576,7 @@ public abstract class TableUIBridge extends TableUI {
             cMax = table.getColumnCount() - 1;
         }
 
-        Container comp = SwingUtilities.getUnwrappedParent(table);
+        Container comp = DarkUIUtil.getUnwrappedParent(table);
         if (comp != null) {
             comp = comp.getParent();
         }
@@ -1443,8 +1443,8 @@ public abstract class TableUIBridge extends TableUI {
                         this.dy = 0;
                     }
                 } else {
-                    if (!(SwingUtilities.getUnwrappedParent(table).getParent() instanceof
-                            JScrollPane)) {
+                    if (!(DarkUIUtil.getUnwrappedParent(table).getParent() instanceof
+                        JScrollPane)) {
                         return;
                     }
 

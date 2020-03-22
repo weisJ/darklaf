@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.icons;
 
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.kitfox.svg.*;
 import com.kitfox.svg.animation.AnimationElement;
@@ -123,9 +124,6 @@ public final class IconColorMapper {
     }
 
     private static String toHexString(final Color color) {
-        int r = color.getRed();
-        int b = color.getBlue();
-        int g = color.getGreen();
-        return String.format("#%02X%02X%02X", r, g, b);
+        return "#" + ColorUtil.toHex(color);
     }
 }

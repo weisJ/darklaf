@@ -57,7 +57,6 @@ import java.util.logging.Logger;
  */
 public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener {
 
-
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
     public static final String LOOK_AND_FEEL_PROPERTY = "lookAndFeel";
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
@@ -365,7 +364,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          */
         base.initialize();
         PopupFactory.setSharedInstance(new DarkPopupFactory());
-        PropertyLoader.reset();
         UIManager.addPropertyChangeListener(this);
     }
 
@@ -391,12 +389,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        if (LOOK_AND_FEEL_PROPERTY.equals(evt.getPropertyName())) {
-            if (UIManager.getLookAndFeel() == this) {
-                PropertyLoader.finish();
-            }
-            UIManager.removePropertyChangeListener(this);
-        }
         DarkBorders.update();
     }
 

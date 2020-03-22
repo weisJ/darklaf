@@ -61,25 +61,13 @@ public final class PropertyLoader {
     private static final String FONT_SIZE = "withSize";
     private static final String FONT_STYLE = "withStyle";
 
-    private static final Collection<ObjectRequest> objectsToLoad = new HashSet<>();
+    private static boolean addReferenceInfo;
+
     private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
                                                                                                                    TextAttribute.KERNING_ON);
 
-    public static void finish() {
-        Map<String, Object> cache = new HashMap<>();
-        for (ObjectRequest request : objectsToLoad) {
-            try {
-                request.resolve(cache);
-            } catch (RuntimeException e) {
-                LOGGER.log(Level.SEVERE, "Could not load" + request, e.getMessage());
-            }
-        }
-        cache.clear();
-        reset();
-    }
-
-    public static void reset() {
-        objectsToLoad.clear();
+    public static void setAddReferenceInfo(final boolean addReferenceInfo) {
+        PropertyLoader.addReferenceInfo = addReferenceInfo;
     }
 
 
@@ -104,9 +92,7 @@ public final class PropertyLoader {
         for (final String key : properties.stringPropertyNames()) {
             final String value = properties.getProperty(key);
             Object parsed = parseValue(key, value, accumulator, currentDefaults, iconLoader);
-            if (parsed instanceof ObjectRequest) {
-                objectsToLoad.add((ObjectRequest) parsed);
-            } else if (parsed != null) {
+            if (parsed != null) {
                 accumulator.put(parseKey(key), parsed);
             } else {
                 currentDefaults.remove(parseKey(key));
@@ -120,6 +106,7 @@ public final class PropertyLoader {
     }
 
     private static String parseKey(final String key) {
+        if (addReferenceInfo) return key;
         return key.startsWith(REFERENCE_PREFIX) ? key.substring(REFERENCE_PREFIX.length()) : key;
     }
 
@@ -143,10 +130,10 @@ public final class PropertyLoader {
         } else if (!skipObjects
             && (key.endsWith("Border")
             || key.endsWith(".border")
-            || key.endsWith(".component")
-            || key.endsWith("Component")
             || key.endsWith("Renderer"))) {
-            return new ObjectRequest(key, value);
+            return (UIDefaults.LazyValue) def -> parseObject(value);
+        } else if (key.endsWith(".component") || key.endsWith("Component")) {
+            return (UIDefaults.ActiveValue) (def) -> parseObject(value);
         } else if (key.toLowerCase().endsWith("font")) {
             returnVal = parseFont(key, value, accumulator, currentDefaults);
         } else if (key.endsWith(".icon") || key.endsWith("Icon")) {
@@ -155,13 +142,20 @@ public final class PropertyLoader {
             returnVal = parseSize(value);
         } else if (PropertyValue.NULL.equalsIgnoreCase(value)) {
             returnVal = null;
-        } else if (value.startsWith("%")) {
-            String val = value.substring(1);
-            if (!accumulator.containsKey(val)) {
-                LOGGER.warning("Could not reference value '" + val + "'while loading '" + key + "'. " +
+        } else if (value.startsWith(REFERENCE_PREFIX)) {
+            String val = parseKey(value);
+            String referenceFreeKey = val.substring(REFERENCE_PREFIX.length());
+            boolean containsKey = accumulator.containsKey(val)
+                || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
+            if (!containsKey) {
+                LOGGER.warning("Could not reference value '" + val + "' while loading '" + key + "'. " +
                                    "May be a forward reference");
             }
             returnVal = accumulator.get(val);
+            if (addReferenceInfo) {
+                if (returnVal == null) returnVal = accumulator.get(referenceFreeKey);
+                returnVal = new Pair<>(value, returnVal);
+            }
         }
         if (returnVal instanceof LoadError) {
             final Color color = ColorUtil.fromHex(value, null);
@@ -330,51 +324,4 @@ public final class PropertyLoader {
     private static final class LoadError {
     }
 
-    private static final class ObjectRequest {
-
-        final String value;
-        final String key;
-
-
-        private ObjectRequest(final String key, final String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        private void resolve(final Map<String, Object> cache) {
-            UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-            if (cache.containsKey(value)) {
-                defaults.put(key, cache.get(value));
-            } else {
-                Object obj;
-                if (key.endsWith("Component")) {
-                    // Swing components should not be reused, so we provide a factory
-                    // For instance, it prevents reuse of the same Table.scrollPaneCornerComponent
-                    obj = (UIDefaults.ActiveValue) (def) -> parseObject(value);
-                } else {
-                    obj = parseObject(value);
-                }
-                if (obj == null) {
-                    obj = parseValue(key, value, true, defaults, defaults, ICON_LOADER);
-                    if (obj instanceof ObjectRequest) {
-                        LOGGER.severe("Failed to resolve object. " + this);
-                        return;
-                    }
-                } else {
-                    cache.put(value, obj);
-                }
-                if (obj == null) {
-                    defaults.remove(key);
-                } else {
-                    defaults.put(key, obj);
-                }
-            }
-        }
-
-
-        @Override
-        public String toString() {
-            return "[" + key + "," + value + "]";
-        }
-    }
 }

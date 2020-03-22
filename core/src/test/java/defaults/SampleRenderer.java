@@ -10,12 +10,12 @@ import java.awt.*;
 /*
  *  Render the value based on its class.
  */
-final class SampleRenderer extends JLabel implements TableCellRenderer {
+public class SampleRenderer extends JLabel implements TableCellRenderer {
 
     private final DarkCellRendererToggleButton booleanRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
+        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
 
-    SampleRenderer() {
+    public SampleRenderer() {
         super();
         setHorizontalAlignment(SwingConstants.CENTER);
         setOpaque(true);
