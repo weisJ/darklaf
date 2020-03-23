@@ -78,14 +78,14 @@ public class DropShadowBorder implements Border, Serializable {
     public DropShadowBorder(final Color shadowColor, final int shadowSize,
                             final float shadowOpacity, final int cornerSize, final boolean showTopShadow,
                             final boolean showLeftShadow, final boolean showBottomShadow, final boolean showRightShadow) {
-        this.shadowColor = shadowColor;
-        this.shadowSize = shadowSize;
-        this.shadowOpacity = shadowOpacity;
-        this.cornerSize = cornerSize;
-        this.showTopShadow = showTopShadow;
-        this.showLeftShadow = showLeftShadow;
-        this.showBottomShadow = showBottomShadow;
-        this.showRightShadow = showRightShadow;
+        setShadowColor(shadowColor);
+        setShadowSize(shadowSize);
+        setShadowOpacity(shadowOpacity);
+        setCornerSize(cornerSize);
+        setShowTopShadow(showTopShadow);
+        setShowLeftShadow(showLeftShadow);
+        setShowBottomShadow(showBottomShadow);
+        setShowRightShadow(showRightShadow);
     }
 
 
@@ -411,6 +411,7 @@ public class DropShadowBorder implements Border, Serializable {
 
     public DropShadowBorder setShadowColor(final Color shadowColor) {
         this.shadowColor = shadowColor;
+        if (shadowColor == null) this.shadowColor = Color.BLACK;
         return this;
     }
 

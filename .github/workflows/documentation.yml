@@ -1,8 +1,11 @@
 name: Documentation
 on:
   push:
-    branches:
-      - '*'
+    paths:
+      - '**.properties'
+  pull_request:
+    paths:
+      - '**.properties'
 
 jobs:
   gradle:

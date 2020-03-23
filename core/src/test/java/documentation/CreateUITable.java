@@ -239,11 +239,12 @@ public class CreateUITable {
     private String parseImage(final String key, final Object value, final int ident) {
         String stringRepresentation = parseValue(value).replaceAll(" ", "");
         String path;
+        Dimension size = new Dimension(SAMPLE_WIDTH, SAMPLE_HEIGHT);
         try {
             if (!(value instanceof Icon)) {
-                path = createImage(value, stringRepresentation);
+                path = createImage(value, stringRepresentation, size);
             } else {
-                path = createImage(value, key);
+                path = createImage(value, key, size);
             }
         } catch (IOException ignored) {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
@@ -252,7 +253,7 @@ public class CreateUITable {
             + String.format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
     }
 
-    private String createImage(final Object value, final String name) throws IOException {
+    private String createImage(final Object value, final String name, final Dimension size) throws IOException {
         new File(workingFolder + "img/").mkdirs();
         String fileName = "img/" + name + ".png";
         File imageFile = new File(workingFolder + fileName);
@@ -260,11 +261,16 @@ public class CreateUITable {
         JComponent comp = (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
         BufferedImage image = ImageUtil.createCompatibleTranslucentImage(SAMPLE_WIDTH, SAMPLE_HEIGHT);
         Graphics g = image.getGraphics();
+        if (value instanceof Icon) {
+            size.width = Math.max(size.width, ((Icon) value).getIconWidth());
+            size.height = Math.max(size.height, ((Icon) value).getIconHeight());
+        }
+
         if (!(value instanceof Icon) && !(value instanceof DropShadowBorder)) {
             g.setColor(new JPanel().getBackground());
-            g.fillRect(0, 0, SAMPLE_WIDTH, SAMPLE_HEIGHT);
+            g.fillRect(0, 0, size.width, size.height);
         }
-        comp.setBounds(0, 0, SAMPLE_WIDTH, SAMPLE_HEIGHT);
+        comp.setBounds(0, 0, size.width, size.height);
         comp.setOpaque(false);
         comp.paint(g);
         g.dispose();
