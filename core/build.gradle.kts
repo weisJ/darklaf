@@ -36,10 +36,11 @@ tasks.jar {
 
 val makeDocumentation by tasks.registering(JavaExec::class) {
     group = "Development"
-    description = "Builds and starts JMeter GUI"
+    description = "Builds the documentation"
     dependsOn(tasks.testClasses)
 
     workingDir = File(project.rootDir, "build")
+    workingDir.mkdirs()
     main = "documentation.CreateUITable"
     classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
 }

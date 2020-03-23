@@ -20,7 +20,7 @@ jobs:
           java-version: 11
       - uses: eskatos/gradle-command-action@v1
         with:
-          arguments: :darklaf-core:CreateUITable.main()
+          arguments: :darklaf-core:makeDocumentation
       - name: Upload documentation
         uses: actions/upload-artifact@v1
         with:
