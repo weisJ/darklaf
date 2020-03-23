@@ -18,6 +18,9 @@ Solarized Dark Theme | Solarized Light Theme
 # Usage & [Features](https://github.com/weisJ/darklaf/wiki/Features)
 A list of all features can be found [here](https://github.com/weisJ/darklaf/wiki/Features).
 The LaF is compatible with Java >=1.8 (you need >=1.9 to get proper scaling).
+
+You can find all property values on [weisj.github.io/darklaf/](https://weisj.github.io/darklaf/)
+
 This project is available on Maven Central:
 ### Maven
 ````xml
