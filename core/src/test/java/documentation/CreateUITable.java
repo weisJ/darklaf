@@ -82,8 +82,10 @@ public class CreateUITable {
                  new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)) {
             CreateUITable tableCreator = new CreateUITable();
             writer.append("<html>\n");
+            writer.append("<a href=\"../index.html\">back</a>\n");
             writer.append(tableCreator.getTableStyle());
             writer.append(tableCreator.createTables(theme, 0));
+            writer.append("<a href=\"../index.html\">back</a>\n");
             writer.append("</html>");
         }
     }
