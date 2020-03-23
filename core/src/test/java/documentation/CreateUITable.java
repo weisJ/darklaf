@@ -54,7 +54,7 @@ public class CreateUITable {
     private static final int SAMPLE_WIDTH = 150;
     private static final int SAMPLE_HEIGHT = 25;
 
-    private static final String FOLDER = "defaults/";
+    private static final String FOLDER = "documentation/";
     private static final String IDENT = "    ";
 
     private static String workingFolder;
@@ -73,7 +73,8 @@ public class CreateUITable {
 
     public static void createThemeDefaultsPage(final Theme theme) throws IOException {
         workingFolder = FOLDER + theme.getName() + "/";
-        String htmlFile = workingFolder + "defaults_" + SystemInfo.OS_NAME.replaceAll(" ", "_") + ".html";
+        String os = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
+        String htmlFile = workingFolder + "defaults_" + os + ".html";
         new File(workingFolder).mkdirs();
         new File(htmlFile).createNewFile();
 

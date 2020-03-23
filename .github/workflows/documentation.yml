@@ -1,0 +1,65 @@
+name: Documentation
+on:
+  push:
+    paths:
+      - '**.properties'
+  pull_request:
+    paths:
+      - '**.properties'
+jobs:
+  windows:
+    name: Windows (Java 11)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build
+        run: ./gradlew :darklaf-core:makeDocumentation
+      - name: Upload windows documentation
+        uses: actions/upload-artifact@v1
+        with:
+          name: documentation_windows
+          path: build/documentation
+
+  macOS:
+    name: macOS (Java 11)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build
+        run: ./gradlew makeDocumentation
+      - name: Upload macOS :darklaf-core:documentation
+        uses: actions/upload-artifact@v1
+        with:
+          name: documentation_windows
+          path: build/documentation
+
+  linux:
+    name: Linux (Java 8)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build
+        run: ./gradlew :darklaf-core:makeDocumentation
+      - name: Upload linux documentation
+        uses: actions/upload-artifact@v1
+        with:
+          name: documentation_windows
+          path: build/documentation

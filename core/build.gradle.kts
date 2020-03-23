@@ -34,6 +34,16 @@ tasks.jar {
     }
 }
 
+val makeDocumentation by tasks.registering(JavaExec::class) {
+    group = "Development"
+    description = "Builds and starts JMeter GUI"
+    dependsOn(tasks.testClasses)
+
+    workingDir = File(project.rootDir, "build")
+    main = "documentation.CreateUITable"
+    classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
+}
+
 tasks.shadowJar {
     exclude("help/")
     exclude("icons/")
