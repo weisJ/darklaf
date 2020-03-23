@@ -2,10 +2,10 @@ name: Documentation
 on:
   push:
     paths:
-      - '**.properties'
+      - '*'
   pull_request:
     paths:
-      - '**.properties'
+      - '*'
 
 jobs:
   gradle:
