@@ -3,9 +3,11 @@ on:
   push:
     paths:
       - '**.properties'
+      - '**/CreateUITable.java'
   pull_request:
     paths:
       - '**.properties'
+      - '**/CreateUITable.java'
 
 jobs:
   gradle:
