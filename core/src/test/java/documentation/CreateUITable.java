@@ -240,14 +240,15 @@ public class CreateUITable {
     }
 
     private String parseImage(final String key, final Object value, final int ident) {
-        String stringRepresentation = parseValue(value).replaceAll(" ", "");
+        String stringRepresentation = parseValue(value).replaceAll(" ", "").replaceAll("_", "");
+        String keyName = key.replace(" ", "").replaceAll("_", "");
         String path;
         Dimension size = new Dimension(SAMPLE_WIDTH, SAMPLE_HEIGHT);
         try {
             if (!(value instanceof Icon)) {
                 path = createImage(value, stringRepresentation, size);
             } else {
-                path = createImage(value, key, size);
+                path = createImage(value, keyName, size);
             }
         } catch (IOException ignored) {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
