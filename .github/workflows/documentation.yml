@@ -1,10 +1,7 @@
 name: Documentation
 on:
   push:
-    paths:
-      - '*'
-  pull_request:
-    paths:
+    branches:
       - '*'
 
 jobs:
