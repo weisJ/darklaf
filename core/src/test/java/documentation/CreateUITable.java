@@ -118,11 +118,12 @@ public class CreateUITable {
     }
 
     private UIDefaults setupThemeDefaults(final Theme theme) {
+        PropertyLoader.setAddReferenceInfo(true);
+        currentDefaults = UIManager.getLookAndFeelDefaults();
+        UIDefaults defaults = new DarkLaf().getDefaults();
         PropertyLoader.setAddReferenceInfo(false);
         LafManager.installTheme(theme);
-        PropertyLoader.setAddReferenceInfo(true);
-        currentDefaults = new DarkLaf().getDefaults();
-        return new DarkLaf().getDefaults();
+        return defaults;
     }
 
     private void appendGroup(final int ident, final UIDefaults defaults, final StringBuilder builder,
@@ -258,14 +259,13 @@ public class CreateUITable {
         String fileName = "img/" + name + ".png";
         File imageFile = new File(workingFolder + fileName);
         if (!imageFile.createNewFile()) return fileName;
-        JComponent comp = (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
-        BufferedImage image = ImageUtil.createCompatibleTranslucentImage(SAMPLE_WIDTH, SAMPLE_HEIGHT);
-        Graphics g = image.getGraphics();
         if (value instanceof Icon) {
             size.width = Math.max(size.width, ((Icon) value).getIconWidth());
             size.height = Math.max(size.height, ((Icon) value).getIconHeight());
         }
-
+        JComponent comp = (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
+        BufferedImage image = ImageUtil.createCompatibleTranslucentImage(size.width, size.height);
+        Graphics g = image.getGraphics();
         if (!(value instanceof Icon) && !(value instanceof DropShadowBorder)) {
             g.setColor(new JPanel().getBackground());
             g.fillRect(0, 0, size.width, size.height);
