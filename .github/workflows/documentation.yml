@@ -38,11 +38,11 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew makeDocumentation
-      - name: Upload macOS :darklaf-core:documentation
+        run: ./gradlew :darklaf-core:makeDocumentation
+      - name: Upload macOS documentation
         uses: actions/upload-artifact@v1
         with:
-          name: documentation_windows
+          name: documentation_macOS
           path: build/documentation
 
   linux:
@@ -61,5 +61,5 @@ jobs:
       - name: Upload linux documentation
         uses: actions/upload-artifact@v1
         with:
-          name: documentation_windows
+          name: documentation_linux
           path: build/documentation
