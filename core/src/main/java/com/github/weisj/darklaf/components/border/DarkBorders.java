@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.components.border;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -61,11 +62,13 @@ public final class DarkBorders {
     }
 
     public static void update(final UIDefaults defaults) {
+        Color borderColor = defaults.getColor("border");
         for (WeakLineBorder border : lineBorderMap.values()) {
-            border.setColor(defaults.getColor("border"));
+            border.setColor(borderColor);
         }
+        Color borderSecondaryColor = defaults.getColor("borderSecondary");
         for (WeakLineBorder border : lineWidgetBorderMap.values()) {
-            border.setColor(defaults.getColor("border"));
+            border.setColor(borderSecondaryColor);
         }
     }
 }
