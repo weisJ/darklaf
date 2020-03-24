@@ -26,14 +26,14 @@ package com.github.weisj.darklaf.components.border;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public final class DarkBorders {
 
-    private static final WeakLineBorder KEY = new WeakLineBorder(0, 0, 0, 0);
-    private static Map<WeakLineBorder, WeakLineBorder> lineBorderMap = new WeakHashMap<>();
-    private static Map<WeakLineBorder, WeakLineBorder> lineWidgetBorderMap = new WeakHashMap<>();
+    public static Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineBorderMap = new WeakHashMap<>();
+    private static Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineWidgetBorderMap = new WeakHashMap<>();
 
 
     public static Border createLineBorder(final int top, final int left, final int bottom, final int right) {
@@ -42,18 +42,15 @@ public final class DarkBorders {
 
 
     private static Border createBorder(final int top, final int left, final int bottom, final int right,
-                                       final Map<WeakLineBorder, WeakLineBorder> map, final String key) {
-        WeakLineBorder border = null;
-        KEY.setInsets(top, left, bottom, right);
-        if (map.containsKey(KEY)) {
-            border = map.get(KEY);
+                                       final Map<WeakLineBorder, WeakReference<WeakLineBorder>> map, final String key) {
+        WeakLineBorder border = new WeakLineBorder(top, left, bottom, right);
+        if (map.containsKey(border)) {
+            return map.get(border).get();
+        } else {
+            border.setColor(UIManager.getColor(key));
+            map.put(border, new WeakReference<>(border));
+            return border;
         }
-        if (border == null) {
-            border = new WeakLineBorder(top, left, bottom, right);
-            map.put(KEY, border);
-        }
-        border.setColor(UIManager.getColor(key));
-        return border;
     }
 
 
@@ -63,12 +60,14 @@ public final class DarkBorders {
 
     public static void update(final UIDefaults defaults) {
         Color borderColor = defaults.getColor("border");
-        for (WeakLineBorder border : lineBorderMap.values()) {
-            border.setColor(borderColor);
+        for (WeakReference<WeakLineBorder> border : lineBorderMap.values()) {
+            WeakLineBorder b = border.get();
+            if (b != null) b.setColor(borderColor);
         }
         Color borderSecondaryColor = defaults.getColor("borderSecondary");
-        for (WeakLineBorder border : lineWidgetBorderMap.values()) {
-            border.setColor(borderSecondaryColor);
+        for (WeakReference<WeakLineBorder> border : lineWidgetBorderMap.values()) {
+            WeakLineBorder b = border.get();
+            if (b != null) b.setColor(borderSecondaryColor);
         }
     }
 }
