@@ -73,28 +73,18 @@ public final class IconLoader {
 
     public static void updateAwareStyle(final AwareIconStyle style) {
         currentAwareStyle = style;
-        uiAwareIconStatus.entrySet().forEach(e -> e.setValue(style));
     }
 
     public static void updateThemeStatus(final Object theme) {
         currentThemeKey = theme;
-        themedIconStatus.entrySet().forEach(e -> e.setValue(theme));
     }
 
-    public static AwareIconStyle getAwareStyle(final UIAwareIcon icon) {
-        return uiAwareIconStatus.get(icon);
+    public static AwareIconStyle getAwareStyle() {
+        return currentAwareStyle;
     }
 
-    public static Object getThemeStatus(final ThemedSVGIcon icon) {
-        return themedIconStatus.get(icon);
-    }
-
-    public static void registerAwareIcon(final UIAwareIcon icon) {
-        uiAwareIconStatus.put(icon, currentAwareStyle);
-    }
-
-    public static void registerThemedIcon(final ThemedSVGIcon icon) {
-        themedIconStatus.put(icon, currentThemeKey);
+    public static Object getThemeStatus() {
+        return currentThemeKey;
     }
 
     public DarkUIAwareIcon getUIAwareIcon(final String path) {

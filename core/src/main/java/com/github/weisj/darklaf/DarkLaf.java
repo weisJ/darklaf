@@ -42,8 +42,6 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.AttributedCharacterIterator;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,10 +53,9 @@ import java.util.logging.Logger;
 /**
  * @author Jannis Weis
  */
-public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener {
+public class DarkLaf extends BasicLookAndFeel {
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
-    public static final String LOOK_AND_FEEL_PROPERTY = "lookAndFeel";
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     private static final String NAME = "Darklaf";
     private final BasicLookAndFeel base;
@@ -116,12 +113,16 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
                 patchMacOSFonts(defaults);
             }
             setupDecorations();
+
             String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
             if (SystemInfo.isWindows10 && Decorations.isCustomDecorationSupported()) {
                 JPopupMenu.setDefaultLightWeightPopupEnabled(defaults.getBoolean(key + ".windows"));
             } else {
                 JPopupMenu.setDefaultLightWeightPopupEnabled(defaults.getBoolean(key));
             }
+
+            // Update border colors.
+            DarkBorders.update(defaults);
             return defaults;
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
@@ -364,13 +365,11 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
          */
         base.initialize();
         PopupFactory.setSharedInstance(new DarkPopupFactory());
-        UIManager.addPropertyChangeListener(this);
     }
 
     @Override
     public void uninitialize() {
         base.uninitialize();
-        UIManager.removePropertyChangeListener(this);
         DarkPopupMenuUI.MouseGrabber mouseGrabber = DarkPopupMenuUI.getMouseGrabber();
         if (mouseGrabber != null) {
             mouseGrabber.uninstall();
@@ -386,12 +385,6 @@ public class DarkLaf extends BasicLookAndFeel implements PropertyChangeListener 
     public boolean isSupportedLookAndFeel() {
         return true;
     }
-
-    @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
-        DarkBorders.update();
-    }
-
 
     @Override
     public boolean getSupportsWindowDecorations() {

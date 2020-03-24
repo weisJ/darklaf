@@ -60,12 +60,12 @@ public final class DarkBorders {
         return createBorder(top, left, bottom, right, lineWidgetBorderMap, "borderSecondary");
     }
 
-    public static void update() {
+    public static void update(final UIDefaults defaults) {
         for (WeakLineBorder border : lineBorderMap.values()) {
-            border.setColor(UIManager.getColor("border"));
+            border.setColor(defaults.getColor("border"));
         }
         for (WeakLineBorder border : lineWidgetBorderMap.values()) {
-            border.setColor(UIManager.getColor("border"));
+            border.setColor(defaults.getColor("border"));
         }
     }
 }
