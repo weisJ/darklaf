@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>1.4.3.0</version>
+  <version>1.4.3.1</version>
   <name>Darklaf core</name>
   <description>A themeable Look and Feel for java swing</description>
   <url>https://github.com/weisJ/darklaf</url>
@@ -38,37 +38,37 @@
     <dependency>
       <groupId>com.github.weisj</groupId>
       <artifactId>darklaf-native-utils</artifactId>
-      <version>1.4.3.0</version>
+      <version>1.4.3.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.github.weisj</groupId>
       <artifactId>darklaf-utils</artifactId>
-      <version>1.4.3.0</version>
+      <version>1.4.3.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.github.weisj</groupId>
       <artifactId>darklaf-decorations-base</artifactId>
-      <version>1.4.3.0</version>
+      <version>1.4.3.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.github.weisj</groupId>
       <artifactId>darklaf-windows</artifactId>
-      <version>1.4.3.0</version>
+      <version>1.4.3.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.github.weisj</groupId>
       <artifactId>darklaf-macos</artifactId>
-      <version>1.4.3.0</version>
+      <version>1.4.3.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.github.weisj</groupId>
       <artifactId>darklaf-property-loader</artifactId>
-      <version>1.4.3.0</version>
+      <version>1.4.3.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
