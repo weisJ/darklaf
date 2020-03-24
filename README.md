@@ -27,12 +27,12 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>[1.4.2.0,)</version>
+  <version>[1.4.3.0,)</version>
 </dependency>
 ````
 ### Gradle
 ````
-implementation 'com.github.weisj:darklaf-core:[1.4.2.0,)'
+implementation 'com.github.weisj:darklaf-core:[1.4.3.0,)'
 ````
 
 ## Installation
@@ -88,7 +88,7 @@ This LookAndFeel supports custom window decorations (only on Windows at this poi
 
 When building on Windows, you need a C++ toolchain installed to build native extension.
 
-If you wan't to build for platforms different than your machine you can download the respective native libraries
+If you want to build for platforms different from your machine you can download the respective native libraries
 from the latest successful run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+branch%3Amaster) and place it in the corresponding `<variant>/libraries` folder.
 Further details can be found in the respective `library.md` file. The libraries are then automatically included in the jar
 when building the project.
@@ -99,15 +99,16 @@ Note: You can still build the project without the libraries, but then custom dec
 # Contribute
 Here is a list of things that currently are not finished or need refinement. This list is a work in progress and being updated regulary. If you find any problems with the LaF feel free to submit an issue:
 
-- [Native window decorations on Linux and MacOS.](https://github.com/weisJ/darklaf/issues/2)
-  * See [/windows](https://github.com/weisJ/darklaf/tree/master/windows) for the windows implementation.
+- [Native window decorations on Linux.](https://github.com/weisJ/darklaf/issues/2)
+  * See [/windows](https://github.com/weisJ/darklaf/tree/master/windows) for the Windows implementation.
+  * See [/macos(https://github.com/weisJ/darklaf/tree/master/macos) for the macOS implementation.
 - [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
   * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the platform folder.
 - Create missing demo classes. (See Todo's in test/ui/)
 
 # Artifacts
 - Group ID: `com.github.weisj`
-- Version: `1.4.2.0`
+- Version: `1.4.3.0`
 - Artifact IDs:
   - `darklaf-core` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
   - `darklaf-property-loader` Library to load and parse property files and icon.
