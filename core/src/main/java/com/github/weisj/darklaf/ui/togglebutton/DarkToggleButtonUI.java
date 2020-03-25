@@ -35,7 +35,6 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 
 /**
@@ -55,7 +54,6 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     protected Color sliderBorderColor;
     protected Color inactiveSliderBorderColor;
     protected Color selectedForeground;
-    protected KeyListener keyListener;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkToggleButtonUI();
@@ -75,26 +73,6 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         sliderBorderColor = UIManager.getColor("ToggleButton.sliderKnobBorderColor");
         inactiveSliderBorderColor = UIManager.getColor("ToggleButton.disabledSliderKnobBorderColor");
         selectedForeground = UIManager.getColor("ToggleButton.selectedForeground");
-    }
-
-    @Override
-    protected void installListeners(final AbstractButton b) {
-        super.installListeners(b);
-        keyListener = createKeyListener(b);
-        b.addKeyListener(keyListener);
-        ToggleButtonFocusNavigationActions.installActions(b);
-    }
-
-    @Override
-    protected void uninstallListeners(final AbstractButton b) {
-        super.uninstallListeners(b);
-        b.removeKeyListener(keyListener);
-        keyListener = null;
-        ToggleButtonFocusNavigationActions.uninstallActions(b);
-    }
-
-    protected KeyListener createKeyListener(final AbstractButton button) {
-        return new DarkToggleButtonKeyHandler();
     }
 
     @Override

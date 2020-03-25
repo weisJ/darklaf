@@ -29,29 +29,29 @@ import java.util.Enumeration;
 import java.util.HashSet;
 
 public class ButtonGroupInfo {
-    protected JToggleButton activeButton;
+    protected AbstractButton activeButton;
 
-    protected JToggleButton firstButton = null;
-    protected JToggleButton lastButton = null;
+    protected AbstractButton firstButton = null;
+    protected AbstractButton lastButton = null;
 
-    protected JToggleButton previousButton = null;
-    protected JToggleButton nextButton = null;
+    protected AbstractButton previousButton = null;
+    protected AbstractButton nextButton = null;
 
-    protected HashSet<JToggleButton> buttonsInGroup;
+    protected HashSet<AbstractButton> buttonsInGroup;
     protected boolean sourceFound = false;
 
-    public ButtonGroupInfo(final JToggleButton btn) {
+    public ButtonGroupInfo(final AbstractButton btn) {
         activeButton = btn;
         buttonsInGroup = new HashSet<>();
     }
 
-    public static boolean isValidToggleButtonObject(final Object obj) {
-        return obj instanceof JToggleButton
-            && ((JToggleButton) obj).isEnabled()
-            && ((JToggleButton) obj).isVisible();
+    public static boolean isValidButton(final Object obj) {
+        return obj instanceof AbstractButton
+            && ((AbstractButton) obj).isEnabled()
+            && ((AbstractButton) obj).isVisible();
     }
 
-    protected boolean containsInGroup(final JToggleButton button) {
+    protected boolean containsInGroup(final AbstractButton button) {
         return buttonsInGroup.contains(button);
     }
 
@@ -89,15 +89,15 @@ public class ButtonGroupInfo {
 
         while (e.hasMoreElements()) {
             AbstractButton curElement = e.nextElement();
-            if (!isValidToggleButtonObject(curElement)) {
+            if (!isValidButton(curElement)) {
                 continue;
             }
 
-            buttonsInGroup.add((JToggleButton) curElement);
+            buttonsInGroup.add(curElement);
 
             // If firstBtn is not set yet, curElement is that first button
             if (firstButton == null) {
-                firstButton = (JToggleButton) curElement;
+                firstButton = curElement;
             }
 
             if (activeButton == curElement) {
@@ -105,15 +105,15 @@ public class ButtonGroupInfo {
             } else if (!sourceFound) {
                 // The source has not been yet found and the current element
                 // is the last previousBtn
-                previousButton = (JToggleButton) curElement;
+                previousButton = curElement;
             } else if (nextButton == null) {
                 // The source has been found and the current element
                 // is the next valid button of the list
-                nextButton = (JToggleButton) curElement;
+                nextButton = curElement;
             }
 
-            // Set new last "valid" JToggleButton of the list
-            lastButton = (JToggleButton) curElement;
+            // Set new last "valid" AbstractButton of the list
+            lastButton = curElement;
         }
 
         return true;
@@ -131,7 +131,7 @@ public class ButtonGroupInfo {
         }
 
         if (sourceFound) {
-            JToggleButton newSelectedButton;
+            AbstractButton newSelectedButton;
             if (next) {
                 // Select Next button. Cycle to the first button if the source.
                 // button is the last of the group.
@@ -144,13 +144,12 @@ public class ButtonGroupInfo {
             if (newSelectedButton != null &&
                 (newSelectedButton != activeButton)) {
                 newSelectedButton.requestFocusInWindow();
-//                newSelectedButton.setSelected(true);
             }
         }
     }
 
     /**
-     * Find the button group the passed in JToggleButton belongs to, and
+     * Find the button group the passed in AbstractButton belongs to, and
      * move focus to next component of the last button in the group
      * or previous component of first button
      *

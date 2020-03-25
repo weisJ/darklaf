@@ -62,11 +62,11 @@ public class ToggleButtonFocusNavigationActions {
         Object eventSrc = event.getSource();
 
         // Check whether the source is JRadioButton, it so, whether it is visible
-        if (!ButtonGroupInfo.isValidToggleButtonObject(eventSrc)) {
+        if (!ButtonGroupInfo.isValidButton(eventSrc)) {
             return;
         }
 
-        ButtonGroupInfo btnGroupInfo = new ButtonGroupInfo((JToggleButton) eventSrc);
+        ButtonGroupInfo btnGroupInfo = new ButtonGroupInfo((AbstractButton) eventSrc);
         btnGroupInfo.selectNewButton(next);
     }
 

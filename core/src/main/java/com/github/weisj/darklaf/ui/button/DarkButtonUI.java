@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.util.*;
 import sun.swing.SwingUtilities2;
 
@@ -36,6 +38,7 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 
 /**
@@ -63,6 +66,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected AbstractButton button;
     protected int arc;
     protected int squareArc;
+    protected KeyListener keyListener;
 
     protected final AbstractButtonLayoutDelegate layoutDelegate = new AbstractButtonLayoutDelegate() {
         @Override
@@ -108,8 +112,28 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     @Override
+    protected void installListeners(final AbstractButton b) {
+        super.installListeners(b);
+        keyListener = createKeyListener(b);
+        b.addKeyListener(keyListener);
+        ToggleButtonFocusNavigationActions.installActions(b);
+    }
+
+    protected KeyListener createKeyListener(final AbstractButton button) {
+        return new DarkToggleButtonKeyHandler();
+    }
+
+    @Override
     protected BasicButtonListener createButtonListener(final AbstractButton b) {
         return new DarkButtonListener(b, this);
+    }
+
+    @Override
+    protected void uninstallListeners(final AbstractButton b) {
+        super.uninstallListeners(b);
+        b.removeKeyListener(keyListener);
+        keyListener = null;
+        ToggleButtonFocusNavigationActions.uninstallActions(b);
     }
 
     @Override
