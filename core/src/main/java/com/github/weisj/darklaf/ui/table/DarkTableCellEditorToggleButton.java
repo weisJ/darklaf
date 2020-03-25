@@ -57,7 +57,7 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && isSelected
-            && !DarkTableCellFocusBorder.isRowFocusBorder(table);
+                                      && !DarkTableCellFocusBorder.isRowFocusBorder(table);
 
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
         CellUtil.setupForeground(toggleButton, table, paintSelected, "Table.selectionForegroundInactive");

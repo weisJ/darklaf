@@ -32,7 +32,7 @@ import java.awt.*;
 public class DropPreviewPanel extends JComponent {
 
     private JToolBar toolBar;
-    private Color dropBackground;
+    private final Color dropBackground;
 
     public DropPreviewPanel() {
         dropBackground = UIManager.getColor("ToolBar.dropColor");
@@ -62,19 +62,25 @@ public class DropPreviewPanel extends JComponent {
 
     @Override
     public Dimension getPreferredSize() {
-        if (toolBar != null) { return toolBar.getPreferredSize(); }
+        if (toolBar != null) {
+            return toolBar.getPreferredSize();
+        }
         return super.getPreferredSize();
     }
 
     @Override
     public Dimension getMaximumSize() {
-        if (toolBar != null) { return toolBar.getMaximumSize(); }
+        if (toolBar != null) {
+            return toolBar.getMaximumSize();
+        }
         return super.getMinimumSize();
     }
 
     @Override
     public Dimension getMinimumSize() {
-        if (toolBar != null) { return toolBar.getMinimumSize(); }
+        if (toolBar != null) {
+            return toolBar.getMinimumSize();
+        }
         return super.getMinimumSize();
     }
 }

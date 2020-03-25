@@ -112,7 +112,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     private static boolean showVolumeIcon(final JComponent c) {
         return isVolumeSlider(c)
-            && Boolean.TRUE.equals(c.getClientProperty(KEY_SHOW_VOLUME_ICON));
+               && Boolean.TRUE.equals(c.getClientProperty(KEY_SHOW_VOLUME_ICON));
     }
 
     private static boolean isVolumeSlider(final JComponent c) {
@@ -413,10 +413,10 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         int w = showVolumeIcon(slider) ? trackRect.width + getIconBarExt() : trackRect.width;
         if (slider.getComponentOrientation().isLeftToRight()) {
             return new Area(new RoundRectangle2D.Double(
-                    trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc));
+                trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc));
         } else {
             return new Area(new RoundRectangle2D.Double(
-                    trackRect.x - getIconBarExt(), trackRect.y + yOff, w, trackSize, arc, arc));
+                trackRect.x - getIconBarExt(), trackRect.y + yOff, w, trackSize, arc, arc));
         }
     }
 
@@ -437,10 +437,10 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         int h = showVolumeIcon(slider) ? trackRect.height + getIconBarExt() : trackRect.height;
         if (slider.getComponentOrientation().isLeftToRight()) {
             return new Area(new RoundRectangle2D.Double(
-                    trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc));
+                trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc));
         } else {
             return new Area(new RoundRectangle2D.Double(
-                    trackRect.x + xOff, trackRect.y - getIconBarExt(), trackSize, h, arc, arc));
+                trackRect.x + xOff, trackRect.y - getIconBarExt(), trackSize, h, arc, arc));
 
         }
     }
@@ -474,7 +474,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected boolean isPlainThumb() {
         Boolean paintThumbArrowShape = (Boolean) slider.getClientProperty(KEY_THUMB_ARROW_SHAPE);
         return (!slider.getPaintTicks() && paintThumbArrowShape == null) ||
-            paintThumbArrowShape == Boolean.FALSE;
+               paintThumbArrowShape == Boolean.FALSE;
     }
 
     private void paintSliderThumb(final Graphics2D g) {
@@ -641,9 +641,9 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             if (tickSpacing != 0) {
                 if ((value - slider.getMinimum()) % tickSpacing != 0) {
                     float temp = (float) (value - slider.getMinimum())
-                            / (float) tickSpacing;
+                                 / (float) tickSpacing;
                     snappedValue = slider.getMinimum() +
-                            (Math.round(temp) * tickSpacing);
+                                   (Math.round(temp) * tickSpacing);
                 }
             }
             return snappedValue;

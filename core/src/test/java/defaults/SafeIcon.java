@@ -56,7 +56,7 @@ final class SafeIcon implements Icon {
     }
 
     private void paintFallback(
-            final Component c, final Graphics g, final int x, final int y) {
+        final Component c, final Graphics g, final int x, final int y) {
         g.drawRect(x, y, getIconWidth(), getIconHeight());
         g.drawLine(x, y, x + getIconWidth(), y + getIconHeight());
         g.drawLine(x + getIconWidth(), y, x, y + getIconHeight());
@@ -96,7 +96,7 @@ final class SafeIcon implements Icon {
 
     private Icon createImageIcon(final JComponent standInComponent) {
         final BufferedImage image =
-                new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+            new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         final Graphics g = image.createGraphics();
         try {
             wrappee.paintIcon(standInComponent, g, 0, 0);

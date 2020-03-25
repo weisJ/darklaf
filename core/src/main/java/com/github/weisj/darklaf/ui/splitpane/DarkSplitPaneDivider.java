@@ -37,13 +37,13 @@ import java.awt.*;
  */
 public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
 
-    protected Icon leftOneTouch;
-    protected Icon rightOneTouch;
-    protected Icon topOneTouch;
-    protected Icon bottomOneTouch;
-    protected Icon verticalSplit;
-    protected Icon horizontalSplit;
-    protected Color borderColor;
+    protected final Icon leftOneTouch;
+    protected final Icon rightOneTouch;
+    protected final Icon topOneTouch;
+    protected final Icon bottomOneTouch;
+    protected final Icon verticalSplit;
+    protected final Icon horizontalSplit;
+    protected final Color borderColor;
 
     public DarkSplitPaneDivider(final BasicSplitPaneUI ui) {
         super(ui);

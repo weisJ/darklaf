@@ -41,19 +41,19 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class DarkButtonBorder implements Border, UIResource {
 
-    private Color shadowColor;
-    private Color focusBorderColor;
-    private Color defaultBorderColor;
-    private Color borderColor;
-    private Color inactiveBorderColor;
+    private final Color shadowColor;
+    private final Color focusBorderColor;
+    private final Color defaultBorderColor;
+    private final Color borderColor;
+    private final Color inactiveBorderColor;
 
-    private int arc;
-    private int focusArc;
-    private int squareFocusArc;
-    private int squareArc;
-    private int minimumArc;
-    private int borderSize;
-    private int shadowSize;
+    private final int arc;
+    private final int focusArc;
+    private final int squareFocusArc;
+    private final int squareArc;
+    private final int minimumArc;
+    private final int borderSize;
+    private final int shadowSize;
     private Insets insets;
     private Insets thinInsets;
     private Insets squareInsets;
@@ -94,13 +94,13 @@ public class DarkButtonBorder implements Border, UIResource {
 
     public static boolean showDropShadow(final AlignmentExt a) {
         return a == null
-            || a == AlignmentExt.SOUTH
-            || a == AlignmentExt.SOUTH_EAST
-            || a == AlignmentExt.SOUTH_WEST
-            || a == AlignmentExt.LEFT
-            || a == AlignmentExt.RIGHT
-            || a == AlignmentExt.BOTTOM
-            || a == AlignmentExt.MIDDLE_HORIZONTAL;
+               || a == AlignmentExt.SOUTH
+               || a == AlignmentExt.SOUTH_EAST
+               || a == AlignmentExt.SOUTH_WEST
+               || a == AlignmentExt.LEFT
+               || a == AlignmentExt.RIGHT
+               || a == AlignmentExt.BOTTOM
+               || a == AlignmentExt.MIDDLE_HORIZONTAL;
     }
 
     protected int getArc(final Component c) {
@@ -275,7 +275,7 @@ public class DarkButtonBorder implements Border, UIResource {
         Insets pad = ButtonConstants.isThin(c) ? square ? squareThinInsets
                                                         : thinInsets
                                                : square ? squareInsets
-                                                     : insets;
+                                                        : insets;
         return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
     }
 

@@ -41,19 +41,19 @@ import java.awt.*;
 public class DarkTextBorder implements Border, UIResource {
 
     private static final Border editorBorder = new TextTableCellEditorBorder();
-    protected Color errorBorderColor;
-    protected Color focusErrorBorderColor;
-    protected Color focusBorderColor;
-    protected Color borderColor;
-    protected Color inactiveBorderColor;
+    protected final Color errorBorderColor;
+    protected final Color focusErrorBorderColor;
+    protected final Color focusBorderColor;
+    protected final Color borderColor;
+    protected final Color inactiveBorderColor;
 
-    protected int borderSize;
-    protected int arc;
-    protected int searchArc;
-    protected int focusArc;
-    protected int searchFocusArc;
+    protected final int borderSize;
+    protected final int arc;
+    protected final int searchArc;
+    protected final int focusArc;
+    protected final int searchFocusArc;
     protected Insets padding;
-    protected Icon showIcon;
+    protected final Icon showIcon;
 
     public DarkTextBorder() {
         focusErrorBorderColor = UIManager.getColor("TextField.border.focusError");
@@ -73,13 +73,13 @@ public class DarkTextBorder implements Border, UIResource {
 
     protected static boolean hasError(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_HAS_ERROR));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_HAS_ERROR));
     }
 
 
     protected static boolean isCellEditor(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_IS_CELL_EDITOR));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_IS_CELL_EDITOR));
     }
 
     protected int getArcSize(final Component c) {
@@ -142,7 +142,7 @@ public class DarkTextBorder implements Border, UIResource {
             return editorBorder.getBorderInsets(c);
         }
         Insets insets = new Insets(borderSize + padding.top, borderSize + padding.left,
-            borderSize + padding.bottom, borderSize + padding.right);
+                                   borderSize + padding.bottom, borderSize + padding.right);
         if (DarkTextFieldUI.isSearchField(c)) {
             int searchWidth = DarkTextFieldUI.getSearchIcon(c).getIconWidth();
             int clearWidth = DarkTextFieldUI.getClearIcon(false).getIconWidth();

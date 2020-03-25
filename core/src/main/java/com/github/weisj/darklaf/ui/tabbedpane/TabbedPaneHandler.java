@@ -39,7 +39,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Objects;
 
 public class TabbedPaneHandler implements ChangeListener, ContainerListener, FocusListener,
-        MouseListener, MouseMotionListener, PropertyChangeListener {
+                                          MouseListener, MouseMotionListener, PropertyChangeListener {
     private final DarkTabbedPaneUIBridge ui;
 
     //
@@ -146,7 +146,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
             int index = tabPane.getSelectedIndex();
             if (index < ui.rects.length && index != -1) {
                 ui.tabScroller.tabPanel.scrollRectToVisible(
-                        (Rectangle) ui.rects[index].clone());
+                    (Rectangle) ui.rects[index].clone());
             }
         }
     }

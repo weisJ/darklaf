@@ -67,7 +67,7 @@ public class DarkHTML extends BasicHTML {
                 rect = bounds.getBounds();
             }
             return rect.y + (int) (rect.height *
-                    child.getAlignment(View.Y_AXIS));
+                                   child.getAlignment(View.Y_AXIS));
         }
         return getBaseline(child, bounds);
     }

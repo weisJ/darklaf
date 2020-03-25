@@ -75,7 +75,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             if (source instanceof JTableHeader) {
                 JTableHeader th = (JTableHeader) source;
                 DarkTableHeaderUIBridge ui =
-                        (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
                 if (ui == null) {
                     return;
                 }
@@ -118,7 +118,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     protected static boolean canResize(final TableColumn column,
                                        final JTableHeader header) {
         return (column != null) && header.getResizingAllowed()
-                && column.getResizable();
+               && column.getResizable();
     }
 
 //
@@ -132,7 +132,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
      */
     protected void updateRolloverColumn(final MouseEvent e) {
         if (header.getDraggedColumn() == null &&
-                header.contains(e.getPoint())) {
+            header.contains(e.getPoint())) {
 
             int col = header.columnAtPoint(e.getPoint());
             if (col != rolloverColumn) {
@@ -225,9 +225,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
         //Test whether the header is in a scroll pane and has a table.
         if ((header.getParent() == null) ||
-                ((container = header.getParent().getParent()) == null) ||
-                !(container instanceof JScrollPane) ||
-                ((table = header.getTable()) == null)) {
+            ((container = header.getParent().getParent()) == null) ||
+            !(container instanceof JScrollPane) ||
+            ((table = header.getTable()) == null)) {
             return;
         }
 
@@ -274,14 +274,14 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         JTable table;
 
         if ((th.getParent() == null) ||
-                ((container = th.getParent().getParent()) == null) ||
-                !(container instanceof JScrollPane) ||
-                ((table = th.getTable()) == null)) {
+            ((container = th.getParent().getParent()) == null) ||
+            !(container instanceof JScrollPane) ||
+            ((table = th.getTable()) == null)) {
             return 0;
         }
 
         if (!container.getComponentOrientation().isLeftToRight() &&
-                !th.getComponentOrientation().isLeftToRight()) {
+            !th.getComponentOrientation().isLeftToRight()) {
             JViewport viewport = ((JScrollPane) container).getViewport();
             int viewportWidth = viewport.getWidth();
             int diff = newWidth - oldWidth;
@@ -297,7 +297,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
              * a view's position.
              */
             if ((newHeaderWidth >= viewportWidth) &&
-                    (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
+                (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
                 Point p = viewport.getViewPosition();
                 p.x = Math.max(0, Math.min(newHeaderWidth - viewportWidth,
                                            p.x + diff));
@@ -335,8 +335,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         }
 
         boolean hasFocus = !header.isPaintingForPrint()
-                && (columnIndex == getSelectedColumnIndex())
-                && header.hasFocus();
+                           && (columnIndex == getSelectedColumnIndex())
+                           && header.hasFocus();
         return renderer.getTableCellRendererComponent(header.getTable(),
                                                       aColumn.getHeaderValue(),
                                                       false, hasFocus,
@@ -631,42 +631,42 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
          * The constant TOGGLE_SORT_ORDER.
          */
         public static final String TOGGLE_SORT_ORDER =
-                "toggleSortOrder";
+            "toggleSortOrder";
         /**
          * The constant SELECT_COLUMN_TO_LEFT.
          */
         public static final String SELECT_COLUMN_TO_LEFT =
-                "selectColumnToLeft";
+            "selectColumnToLeft";
         /**
          * The constant SELECT_COLUMN_TO_RIGHT.
          */
         public static final String SELECT_COLUMN_TO_RIGHT =
-                "selectColumnToRight";
+            "selectColumnToRight";
         /**
          * The constant MOVE_COLUMN_LEFT.
          */
         public static final String MOVE_COLUMN_LEFT =
-                "moveColumnLeft";
+            "moveColumnLeft";
         /**
          * The constant MOVE_COLUMN_RIGHT.
          */
         public static final String MOVE_COLUMN_RIGHT =
-                "moveColumnRight";
+            "moveColumnRight";
         /**
          * The constant RESIZE_LEFT.
          */
         public static final String RESIZE_LEFT =
-                "resizeLeft";
+            "resizeLeft";
         /**
          * The constant RESIZE_RIGHT.
          */
         public static final String RESIZE_RIGHT =
-                "resizeRight";
+            "resizeRight";
         /**
          * The constant FOCUS_TABLE.
          */
         public static final String FOCUS_TABLE =
-                "focusTable";
+            "focusTable";
 
         /**
          * Instantiates a new Actions.
@@ -693,16 +693,16 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
                 String key = getName();
                 DarkTableHeaderUIBridge ui =
-                        (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
                 if (ui != null) {
                     if (Objects.equals(key, MOVE_COLUMN_LEFT)) {
                         return th.getReorderingAllowed()
-                                && maybeMoveColumn(true, th, ui, false);
+                               && maybeMoveColumn(true, th, ui, false);
                     } else if (Objects.equals(key, MOVE_COLUMN_RIGHT)) {
                         return th.getReorderingAllowed()
-                                && maybeMoveColumn(false, th, ui, false);
+                               && maybeMoveColumn(false, th, ui, false);
                     } else if (Objects.equals(key, RESIZE_LEFT) ||
-                            Objects.equals(key, RESIZE_RIGHT)) {
+                               Objects.equals(key, RESIZE_RIGHT)) {
                         return canResize(cm.getColumn(ui.getSelectedColumnIndex()), th);
                     } else if (Objects.equals(key, FOCUS_TABLE)) {
                         return (th.getTable() != null);
@@ -748,7 +748,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         public void actionPerformed(final ActionEvent e) {
             JTableHeader th = (JTableHeader) e.getSource();
             DarkTableHeaderUIBridge ui =
-                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+                (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
             if (ui == null) {
                 return;
             }
@@ -760,7 +760,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 if (sorter != null) {
                     int columnIndex = ui.getSelectedColumnIndex();
                     columnIndex = table.convertColumnIndexToModel(
-                            columnIndex);
+                        columnIndex);
                     sorter.toggleSortOrder(columnIndex);
                 }
             } else if (Objects.equals(SELECT_COLUMN_TO_LEFT, name)) {
@@ -814,7 +814,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                               final DarkTableHeaderUIBridge ui) {
             int columnIndex = ui.getSelectedColumnIndex();
             TableColumn resizingColumn =
-                    th.getColumnModel().getColumn(columnIndex);
+                th.getColumnModel().getColumn(columnIndex);
 
             th.setResizingColumn(resizingColumn);
             int oldWidth = resizingColumn.getWidth();
@@ -854,14 +854,14 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 return;
             }
             if (e.getClickCount() % 2 == 1 &&
-                    SwingUtilities.isLeftMouseButton(e)) {
+                SwingUtilities.isLeftMouseButton(e)) {
                 JTable table = header.getTable();
                 RowSorter<?> sorter;
                 if (table != null && (sorter = table.getRowSorter()) != null) {
                     int columnIndex = header.columnAtPoint(e.getPoint());
                     if (columnIndex != -1) {
                         columnIndex = table.convertColumnIndexToModel(
-                                columnIndex);
+                            columnIndex);
                         sorter.toggleSortOrder(columnIndex);
                     }
                 }
@@ -1016,7 +1016,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 return;
             }
             if (canResize(getResizingColumn(e.getPoint()), header) !=
-                    (header.getCursor() == resizeCursor)) {
+                (header.getCursor() == resizeCursor)) {
                 swapCursor();
             }
             updateRolloverColumn(e);

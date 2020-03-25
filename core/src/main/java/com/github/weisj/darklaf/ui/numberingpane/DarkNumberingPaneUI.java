@@ -202,14 +202,16 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 g.setColor(lineRect.y == yCur ? foregroundHighlight : numberingPane.getForeground());
                 g.drawString(String.format("%1$" + digits + "d", i), OUTER_PAD,
                              lineRect.y + lineRect.height - descent);
-            } catch (BadLocationException ignored) { }
+            } catch (BadLocationException ignored) {
+            }
         }
         config.restore();
     }
 
     protected void paintIcons(final Graphics g, final int startLine, final int endLine, final Element root) {
-        List<Map.Entry<Position, Icon>> icons = numberingPane.getIconsInRange(root.getElement(startLine).getStartOffset(),
-                                                                              root.getElement(endLine).getEndOffset());
+        List<Map.Entry<Position, Icon>> icons = numberingPane.getIconsInRange(
+            root.getElement(startLine).getStartOffset(),
+            root.getElement(endLine).getEndOffset());
         for (Map.Entry<Position, Icon> icon : icons) {
             Rectangle lineRect;
             try {
@@ -264,7 +266,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                                 listener.iconClicked(e);
                             }
                         }
-                    } catch (BadLocationException ignored) { }
+                    } catch (BadLocationException ignored) {
+                    }
                 }
                 IndexListener[] list = numberingPane.getIndexListeners();
                 for (IndexListener listener : list) {

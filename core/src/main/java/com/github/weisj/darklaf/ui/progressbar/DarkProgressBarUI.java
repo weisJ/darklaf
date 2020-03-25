@@ -146,13 +146,15 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
                     shape = getShapedRect(r.x, yOffset, r.width, pHeight, pHeight);
                     yOffset = r.y + pHeight / 2;
                     g2.setPaint(new GradientPaint(r.x + getAnimationIndex() * step * 2, yOffset, startColor,
-                                                  r.x + getFrameCount() * step + getAnimationIndex() * step * 2, yOffset,
+                                                  r.x + getFrameCount() * step + getAnimationIndex() * step * 2,
+                                                  yOffset,
                                                   endColor, true));
                 } else {
                     shape = getShapedRect(xOffset, r.y, pWidth, r.height, pWidth);
                     xOffset = r.x + pWidth / 2;
                     g2.setPaint(new GradientPaint(xOffset, r.y + getAnimationIndex() * step * 2, startColor,
-                                                  xOffset, r.y + getFrameCount() * step + getAnimationIndex() * step * 2,
+                                                  xOffset,
+                                                  r.y + getFrameCount() * step + getAnimationIndex() * step * 2,
                                                   endColor, true));
                 }
                 g2.fill(shape);
@@ -180,7 +182,8 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        UIManager.put("ProgressBar.repaintInterval", isSimplified() ? REPAINT_INTERVAL_SIMPLIFIED : REPAINT_INTERVAL_DEFAULT);
+        UIManager.put("ProgressBar.repaintInterval",
+                      isSimplified() ? REPAINT_INTERVAL_SIMPLIFIED : REPAINT_INTERVAL_DEFAULT);
         UIManager.put("ProgressBar.cycleTime", isSimplified() ? CYCLE_TIME_SIMPLIFIED : CYCLE_TIME_DEFAULT);
         trackColor = UIManager.getColor("ProgressBar.trackColor");
         progressColor = UIManager.getColor("ProgressBar.progressColor");

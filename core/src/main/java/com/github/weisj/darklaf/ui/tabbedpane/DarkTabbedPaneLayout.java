@@ -28,7 +28,7 @@ import java.awt.*;
 
 public class DarkTabbedPaneLayout extends TabbedPaneLayout {
 
-    private DarkTabbedPaneUI ui;
+    private final DarkTabbedPaneUI ui;
 
     public DarkTabbedPaneLayout(final DarkTabbedPaneUI ui) {
         super(ui);
@@ -72,7 +72,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
         //
         if (selectedComponent != null) {
             if (selectedComponent != visibleComponent &&
-                    visibleComponent != null) {
+                visibleComponent != null) {
                 Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
                     shouldChangeFocus = true;
@@ -94,7 +94,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cx = insets.left + tw + contentInsets.left + tabAreaInsets.left + tabAreaInsets.right;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
-                            - tabAreaInsets.left - tabAreaInsets.right;
+                         - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
                 case SwingConstants.RIGHT:
@@ -105,7 +105,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
-                            - tabAreaInsets.left - tabAreaInsets.right;
+                         - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
                 case SwingConstants.BOTTOM:
@@ -127,7 +127,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cy = insets.top + th + contentInsets.top + tabAreaInsets.top + tabAreaInsets.bottom;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                     ch = bounds.height - th - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom
-                            - tabAreaInsets.top - tabAreaInsets.bottom;
+                         - tabAreaInsets.top - tabAreaInsets.bottom;
                     break;
             }
 

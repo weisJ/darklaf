@@ -189,59 +189,59 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         switch (a) {
             case NORTH:
                 changeStatus(
-                        enabled, Alignment.NORTH_EAST,
-                        topSplit, topSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
-                        new LayoutWeights(0.0, 0.0, 0.0, 1.0));
+                    enabled, Alignment.NORTH_EAST,
+                    topSplit, topSplitter,
+                    new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
+                    new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
             case NORTH_EAST:
                 changeStatus(
-                        enabled, Alignment.NORTH,
-                        topSplit, topSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
-                        new LayoutWeights(0.0, 0.0, 1.0, 0.0));
+                    enabled, Alignment.NORTH,
+                    topSplit, topSplitter,
+                    new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
+                    new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
             case EAST:
                 changeStatus(
-                        enabled, Alignment.SOUTH_EAST,
-                        rightSplit, rightSplitter,
-                        new LayoutProportions(HORIZONTAL_PROP_RIGHT, 1.0, 1.0, 0.0),
-                        new LayoutWeights(1.0, 1.0, 0.0, 1.0));
+                    enabled, Alignment.SOUTH_EAST,
+                    rightSplit, rightSplitter,
+                    new LayoutProportions(HORIZONTAL_PROP_RIGHT, 1.0, 1.0, 0.0),
+                    new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
             case SOUTH_EAST:
                 changeStatus(
-                        enabled, Alignment.EAST,
-                        rightSplit, rightSplitter,
-                        new LayoutProportions(HORIZONTAL_PROP_RIGHT, 0.0, 1.0, 1.0),
-                        new LayoutWeights(1.0, 1.0, 1.0, 0.0));
+                    enabled, Alignment.EAST,
+                    rightSplit, rightSplitter,
+                    new LayoutProportions(HORIZONTAL_PROP_RIGHT, 0.0, 1.0, 1.0),
+                    new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
             case NORTH_WEST:
                 changeStatus(
-                        enabled, Alignment.WEST,
-                        leftSplit, leftSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
-                        new LayoutWeights(0.0, 0.0, 0.0, 1.0));
+                    enabled, Alignment.WEST,
+                    leftSplit, leftSplitter,
+                    new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
+                    new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
             case WEST:
                 changeStatus(
-                        enabled, Alignment.NORTH_WEST,
-                        leftSplit, leftSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
-                        new LayoutWeights(0.0, 0.0, 1.0, 0.0));
+                    enabled, Alignment.NORTH_WEST,
+                    leftSplit, leftSplitter,
+                    new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
+                    new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
             case SOUTH_WEST:
                 changeStatus(
-                        enabled, Alignment.SOUTH,
-                        bottomSplit, bottomSplitter,
-                        new LayoutProportions(VERTICAL_PROP_BOTTOM, 1.0, 1.0, 0.0),
-                        new LayoutWeights(1.0, 1.0, 0.0, 1.0));
+                    enabled, Alignment.SOUTH,
+                    bottomSplit, bottomSplitter,
+                    new LayoutProportions(VERTICAL_PROP_BOTTOM, 1.0, 1.0, 0.0),
+                    new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
             case SOUTH:
                 changeStatus(
-                        enabled, Alignment.SOUTH_WEST,
-                        bottomSplit, bottomSplitter,
-                        new LayoutProportions(VERTICAL_PROP_BOTTOM, 0.0, 1.0, 1.0),
-                        new LayoutWeights(1.0, 1.0, 1.0, 0.0));
+                    enabled, Alignment.SOUTH_WEST,
+                    bottomSplit, bottomSplitter,
+                    new LayoutProportions(VERTICAL_PROP_BOTTOM, 0.0, 1.0, 1.0),
+                    new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
             case CENTER:
                 break;

@@ -39,7 +39,8 @@ public class DarkTitledBorder extends MutableLineBorder implements UIResource {
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+                            final int height) {
         checkInsets(c);
         super.paintBorder(c, g, x, y, width, height);
     }
@@ -59,9 +60,9 @@ public class DarkTitledBorder extends MutableLineBorder implements UIResource {
                 String text = ((TitledBorder) border).getTitle();
                 int pos = ((TitledBorder) border).getTitlePosition();
                 boolean onTop = pos == TitledBorder.ABOVE_TOP
-                    || pos == TitledBorder.BELOW_TOP
-                    || pos == TitledBorder.TOP
-                    || pos == TitledBorder.DEFAULT_POSITION;
+                                || pos == TitledBorder.BELOW_TOP
+                                || pos == TitledBorder.TOP
+                                || pos == TitledBorder.DEFAULT_POSITION;
                 if (text == null || text.isEmpty() || !onTop) {
                     setInsets(1, 1, 1, 1);
                 }

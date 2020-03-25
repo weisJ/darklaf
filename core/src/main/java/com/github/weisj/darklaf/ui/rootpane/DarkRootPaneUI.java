@@ -55,7 +55,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private LayoutManager layoutManager;
     private LayoutManager oldLayout;
     private JRootPane rootPane;
-    private DisposeListener disposeListener = new DisposeListener();
+    private final DisposeListener disposeListener = new DisposeListener();
 
     private boolean decorationStyleLock = false;
     private int windowDecorationsStyle = -1;

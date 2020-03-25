@@ -168,6 +168,6 @@ public final class ImageUtil {
 
     private static GraphicsConfiguration getGraphicsConfiguration() {
         return GraphicsEnvironment.getLocalGraphicsEnvironment().
-                getDefaultScreenDevice().getDefaultConfiguration();
+            getDefaultScreenDevice().getDefaultConfiguration();
     }
 }

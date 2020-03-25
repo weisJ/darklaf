@@ -101,7 +101,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected int focusSize;
 
     protected boolean dragging;
-    protected Rectangle dragRect = new Rectangle();
+    protected final Rectangle dragRect = new Rectangle();
 
     protected Color dragBorderColor;
     protected Color dropBackground;

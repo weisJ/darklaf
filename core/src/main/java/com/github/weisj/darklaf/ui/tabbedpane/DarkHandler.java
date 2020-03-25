@@ -36,7 +36,7 @@ import java.beans.PropertyChangeEvent;
 
 public class DarkHandler extends TabbedPaneHandler {
 
-    protected DarkTabbedPaneUI ui;
+    protected final DarkTabbedPaneUI ui;
 
     protected Point origin;
     protected Point tabOrigin;

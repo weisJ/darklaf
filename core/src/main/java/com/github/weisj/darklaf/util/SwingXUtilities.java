@@ -33,12 +33,12 @@ import java.awt.geom.AffineTransform;
 public class SwingXUtilities {
 
 
+    @SuppressWarnings("unchecked")
     public static Point convertPointToParent(final Component source, final Point p) {
-        JXLayer layer = DarkUIUtil.getParentOfType(JXLayer.class, source);
+        JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class, source);
         if (layer != null && layer.getUI() instanceof TransformUI) {
             TransformUI ui = (TransformUI) layer.getUI();
             Point pos = SwingUtilities.convertPoint(source, p, layer);
-            //noinspection unchecked
             AffineTransform transform = ui.getPreferredTransform(layer.getSize(), layer);
             transform.transform(pos, pos);
             return pos;

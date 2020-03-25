@@ -80,12 +80,12 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     @Override
     protected AbstractColorChooserPanel[] createDefaultChoosers() {
         return new AbstractColorChooserPanel[]{
-                new DarkColorChooserPanel(new DarkColorModel(),
-                                          new DarkColorModelHSL(),
+            new DarkColorChooserPanel(new DarkColorModel(),
+                                      new DarkColorModelHSL(),
 //                                          new DarkColorModelHSB(),
-                                          new DarkColorModelCMYK()),
-                new DarkSwatchesChooserPanel(),
-        };
+                                      new DarkColorModelCMYK()),
+            new DarkSwatchesChooserPanel(),
+            };
     }
 
     @Override

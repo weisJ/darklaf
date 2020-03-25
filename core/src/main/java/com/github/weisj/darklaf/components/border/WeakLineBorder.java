@@ -25,10 +25,10 @@ package com.github.weisj.darklaf.components.border;
 
 class WeakLineBorder extends MutableLineBorder {
 
-    private int left;
-    private int top;
-    private int bottom;
-    private int right;
+    private final int left;
+    private final int top;
+    private final int bottom;
+    private final int right;
 
     public WeakLineBorder(final int top, final int left, final int bottom, final int right) {
         super(top, left, bottom, right, null);

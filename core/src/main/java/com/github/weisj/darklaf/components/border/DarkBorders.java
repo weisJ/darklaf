@@ -33,9 +33,9 @@ import java.util.WeakHashMap;
 
 public final class DarkBorders {
 
-    private static Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineBorderMap =
+    private static final Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineBorderMap =
         Collections.synchronizedMap(new WeakHashMap<>());
-    private static Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineWidgetBorderMap =
+    private static final Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineWidgetBorderMap =
         Collections.synchronizedMap(new WeakHashMap<>());
 
 

@@ -77,7 +77,8 @@ public class DropShadowBorder implements Border, Serializable {
 
     public DropShadowBorder(final Color shadowColor, final int shadowSize,
                             final float shadowOpacity, final int cornerSize, final boolean showTopShadow,
-                            final boolean showLeftShadow, final boolean showBottomShadow, final boolean showRightShadow) {
+                            final boolean showLeftShadow, final boolean showBottomShadow,
+                            final boolean showRightShadow) {
         setShadowColor(shadowColor);
         setShadowSize(shadowSize);
         setShadowOpacity(shadowOpacity);
@@ -166,8 +167,8 @@ public class DropShadowBorder implements Border, Serializable {
             if (showLeftShadow) {
                 assert topLeftShadowPoint != null && bottomLeftShadowPoint != null;
                 Rectangle leftShadowRect =
-                        new Rectangle(x, topLeftShadowPoint.y + shadowSize, shadowSize,
-                                      bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
+                    new Rectangle(x, topLeftShadowPoint.y + shadowSize, shadowSize,
+                                  bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
                 g2.drawImage(images[Position.LEFT.ordinal()],
                              leftShadowRect.x, leftShadowRect.y,
                              leftShadowRect.width, leftShadowRect.height, null);
@@ -176,9 +177,9 @@ public class DropShadowBorder implements Border, Serializable {
             if (showBottomShadow) {
                 assert bottomLeftShadowPoint != null && bottomRightShadowPoint != null;
                 Rectangle bottomShadowRect =
-                        new Rectangle(bottomLeftShadowPoint.x + shadowSize, y + height - shadowSize,
-                                      bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize,
-                                      shadowSize);
+                    new Rectangle(bottomLeftShadowPoint.x + shadowSize, y + height - shadowSize,
+                                  bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize,
+                                  shadowSize);
                 g2.drawImage(images[Position.BOTTOM.ordinal()],
                              bottomShadowRect.x, bottomShadowRect.y,
                              bottomShadowRect.width, bottomShadowRect.height, null);
@@ -187,8 +188,8 @@ public class DropShadowBorder implements Border, Serializable {
             if (showRightShadow) {
                 assert topRightShadowPoint != null && bottomRightShadowPoint != null;
                 Rectangle rightShadowRect =
-                        new Rectangle(x + width - shadowSize, topRightShadowPoint.y + shadowSize, shadowSize,
-                                      bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize);
+                    new Rectangle(x + width - shadowSize, topRightShadowPoint.y + shadowSize, shadowSize,
+                                  bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize);
                 g2.drawImage(images[Position.RIGHT.ordinal()],
                              rightShadowRect.x, rightShadowRect.y,
                              rightShadowRect.width, rightShadowRect.height, null);
@@ -197,8 +198,8 @@ public class DropShadowBorder implements Border, Serializable {
             if (showTopShadow) {
                 assert topLeftShadowPoint != null && topRightShadowPoint != null;
                 Rectangle topShadowRect =
-                        new Rectangle(topLeftShadowPoint.x + shadowSize, y,
-                                      topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize);
+                    new Rectangle(topLeftShadowPoint.x + shadowSize, y,
+                                  topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize);
                 g2.drawImage(images[Position.TOP.ordinal()],
                              topShadowRect.x, topShadowRect.y,
                              topShadowRect.width, topShadowRect.height, null);
@@ -210,11 +211,13 @@ public class DropShadowBorder implements Border, Serializable {
             }
             if (showLeftShadow || showBottomShadow) {
                 assert bottomLeftShadowPoint != null;
-                g2.drawImage(images[Position.BOTTOM_LEFT.ordinal()], bottomLeftShadowPoint.x, bottomLeftShadowPoint.y, null);
+                g2.drawImage(images[Position.BOTTOM_LEFT.ordinal()], bottomLeftShadowPoint.x, bottomLeftShadowPoint.y,
+                             null);
             }
             if (showRightShadow || showBottomShadow) {
                 assert bottomRightShadowPoint != null;
-                g2.drawImage(images[Position.BOTTOM_RIGHT.ordinal()], bottomRightShadowPoint.x, bottomRightShadowPoint.y, null);
+                g2.drawImage(images[Position.BOTTOM_RIGHT.ordinal()], bottomRightShadowPoint.x,
+                             bottomRightShadowPoint.y, null);
             }
             if (showRightShadow || showTopShadow) {
                 assert topRightShadowPoint != null;

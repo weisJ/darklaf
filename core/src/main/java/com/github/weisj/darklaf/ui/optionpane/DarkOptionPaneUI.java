@@ -39,11 +39,6 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
     }
 
     @Override
-    protected LayoutManager createLayoutManager() {
-        return super.createLayoutManager();
-    }
-
-    @Override
     protected Container createButtonArea() {
         JPanel bottom = new JPanel();
         Border border = (Border) DefaultLookup.get(optionPane, this, "OptionPane.buttonAreaBorder");
@@ -228,12 +223,12 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                             x = insets.left;
                             if (getSyncAllWidths()) {
                                 xOffset = (container.getWidth() - insets.left -
-                                        insets.right - totalButtonWidth) /
-                                        (numChildren - 1) + maxWidth;
+                                           insets.right - totalButtonWidth) /
+                                          (numChildren - 1) + maxWidth;
                             } else {
                                 xOffset = (container.getWidth() - insets.left -
-                                        insets.right - totalButtonWidth) /
-                                        (numChildren - 1);
+                                           insets.right - totalButtonWidth) /
+                                          (numChildren - 1);
                             }
                         }
                         break;
@@ -280,7 +275,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                             maxWidth = Math.max(maxWidth, aSize.width);
                         }
                         return new Dimension(extraWidth + (maxWidth * numChildren) +
-                                                     (numChildren - 1) * padding,
+                                             (numChildren - 1) * padding,
                                              extraHeight + height);
                     } else {
                         int totalWidth = 0;

@@ -52,7 +52,7 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Create new TextBubbleBorder with given colour.
      *
-     * @param color color of border
+     * @param color color of border.
      */
     public BubbleBorder(final Color color) {
         this(color, 2, 4, 5);
@@ -66,7 +66,7 @@ public class BubbleBorder extends AbstractBorder {
      * @param radius      corner radius of border.
      * @param pointerSize size of pointer. You can set this size to 0 to achieve no pointer, but it is not desirable.
      *                    The appropriate method for this is to set using {@link BubbleBorder#setPointerSide(Alignment)}
-     *                    to {@link Alignment#CENTER}
+     *                    to. {@link Alignment#CENTER}
      */
     public BubbleBorder(final Color color, final int thickness,
                         final int radius, final int pointerSize) {

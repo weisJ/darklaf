@@ -106,8 +106,8 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         Window picker = getOrCreatePickerWindow();
         Toolkit.getDefaultToolkit().addAWTEventListener(this,
                                                         AWTEvent.MOUSE_MOTION_EVENT_MASK
-                                                                | AWTEvent.MOUSE_EVENT_MASK
-                                                                | AWTEvent.KEY_EVENT_MASK);
+                                                        | AWTEvent.MOUSE_EVENT_MASK
+                                                        | AWTEvent.KEY_EVENT_MASK);
         updateLocation();
         picker.setVisible(true);
         return picker;

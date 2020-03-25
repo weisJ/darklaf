@@ -34,8 +34,8 @@ import java.awt.*;
  */
 public class DarkTableCellFocusBorder extends DarkCellBorder {
 
-    protected Color rowBorderColor;
-    protected Color borderColor;
+    protected final Color rowBorderColor;
+    protected final Color borderColor;
 
     public DarkTableCellFocusBorder() {
         rowBorderColor = UIManager.getColor("Table.focusRowBorderColor");
@@ -64,16 +64,16 @@ public class DarkTableCellFocusBorder extends DarkCellBorder {
 
     public static boolean isRowFocusBorder(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER));
     }
 
     protected static boolean forcePaintLeft(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FORCE_LEFT_BORDER));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FORCE_LEFT_BORDER));
     }
 
     protected static boolean forcePaintRight(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FORCE_RIGHT_BORDER));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FORCE_RIGHT_BORDER));
     }
 }

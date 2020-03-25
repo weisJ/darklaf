@@ -53,9 +53,9 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     private static final IconWrapper iconWrapper = new IconWrapper();
 
     private final DarkTableCellEditorToggleButton checkBoxEditor =
-            new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellCheckBox());
+        new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellCheckBox());
     private final DarkTableCellEditorToggleButton radioButtonEditor =
-            new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellRadioButton());
+        new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellRadioButton());
     private boolean value;
     private boolean isBooleanEditor;
     private JTable table;
@@ -273,7 +273,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
     private boolean useBooleanEditor(final Object value, final JTable table) {
         return value instanceof Boolean && DarkTableCellRenderer.isBooleanRenderingEnabled(table)
-                && !(editorComponent instanceof JCheckBox || editorComponent instanceof JRadioButton);
+               && !(editorComponent instanceof JCheckBox || editorComponent instanceof JRadioButton);
     }
 
     protected TableCellEditor getBooleanEditor(final JTable table) {

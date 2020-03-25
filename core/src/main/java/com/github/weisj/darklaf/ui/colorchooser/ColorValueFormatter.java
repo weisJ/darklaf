@@ -43,7 +43,7 @@ import static java.util.Locale.ENGLISH;
  * @author Jannis Weis
  */
 public final class ColorValueFormatter extends JFormattedTextField.AbstractFormatter implements FocusListener,
-        ActionListener {
+                                                                                                ActionListener {
 
     private final int fieldIndex;
     private final int radix;
@@ -68,7 +68,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         public void insertString(final FilterBypass fb, final int offset,
                                  final String text, final AttributeSet set) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length())
-                    && isValid(text)) {
+                && isValid(text)) {
                 StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.insert(offset, text);
                 if (hex || isValidValue(newText.toString())) {

@@ -68,18 +68,18 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     protected static final Dimension vstrut5 = new Dimension(1, 5);
     static final int space = 10;
     // Preferred and Minimum sizes for the dialog box
-    protected static int PREF_WIDTH = 500;
-    protected static int PREF_HEIGHT = 326;
-    protected static Dimension PREF_SIZE = new Dimension(PREF_WIDTH, PREF_HEIGHT);
-    protected static int MIN_WIDTH = 500;
-    protected static int MIN_HEIGHT = 326;
-    protected static int LIST_PREF_WIDTH = 405;
-    protected static int LIST_PREF_HEIGHT = 135;
-    protected static Dimension LIST_PREF_SIZE = new Dimension(LIST_PREF_WIDTH, LIST_PREF_HEIGHT);
+    protected static final int PREF_WIDTH = 500;
+    protected static final int PREF_HEIGHT = 326;
+    protected static final Dimension PREF_SIZE = new Dimension(PREF_WIDTH, PREF_HEIGHT);
+    protected static final int MIN_WIDTH = 500;
+    protected static final int MIN_HEIGHT = 326;
+    protected static final int LIST_PREF_WIDTH = 405;
+    protected static final int LIST_PREF_HEIGHT = 135;
+    protected static final Dimension LIST_PREF_SIZE = new Dimension(LIST_PREF_WIDTH, LIST_PREF_HEIGHT);
     protected JLabel lookInLabel;
     protected JComboBox<Object> directoryComboBox;
     protected DirectoryComboBoxModel directoryComboBoxModel;
-    protected Action directoryComboBoxAction = new DirectoryComboBoxAction();
+    protected final Action directoryComboBoxAction = new DirectoryComboBoxAction();
     protected FilterComboBoxModel filterComboBoxModel;
     protected JTextField fileNameTextField;
     protected DarkFilePaneUIBridge filePane;
@@ -273,7 +273,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         File f = (File) e.getNewValue();
         JFileChooser fc = getFileChooser();
         if (f != null
-                && ((fc.isFileSelectionEnabled() && !f.isDirectory())
+            && ((fc.isFileSelectionEnabled() && !f.isDirectory())
                 || (f.isDirectory() && fc.isDirectorySelectionEnabled()))) {
 
             setFileName(fileNameString(f));
@@ -284,8 +284,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         File[] files = (File[]) e.getNewValue();
         JFileChooser fc = getFileChooser();
         if (files != null
-                && files.length > 0
-                && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())) {
+            && files.length > 0
+            && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())) {
             setFileName(fileNameString(files));
         }
     }
@@ -322,9 +322,9 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         JFileChooser fc = getFileChooser();
         File currentDirectory = fc.getCurrentDirectory();
         if (currentDirectory != null
-                && fc.isDirectorySelectionEnabled()
-                && !fc.isFileSelectionEnabled()
-                && fc.getFileSystemView().isFileSystem(currentDirectory)) {
+            && fc.isDirectorySelectionEnabled()
+            && !fc.isFileSelectionEnabled()
+            && fc.getFileSystemView().isFileSystem(currentDirectory)) {
 
             setFileName(currentDirectory.getPath());
         } else {
@@ -545,8 +545,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         } else {
             JFileChooser fc = getFileChooser();
             if ((fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()) ||
-                    (fc.isDirectorySelectionEnabled() && fc.isFileSelectionEnabled()
-                            && fc.getFileSystemView().isFileSystemRoot(file))) {
+                (fc.isDirectorySelectionEnabled() && fc.isFileSelectionEnabled()
+                 && fc.getFileSystemView().isFileSystemRoot(file))) {
                 return file.getPath();
             } else {
                 return file.getName();
@@ -592,8 +592,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     protected static void groupLabels(final AlignedLabel[] group) {
-        for (int i = 0; i < group.length; i++) {
-            group[i].group = group;
+        for (AlignedLabel alignedLabel : group) {
+            alignedLabel.group = group;
         }
     }
 
@@ -631,8 +631,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         int prefWidth = PREF_SIZE.width;
         Dimension d = c.getLayout().preferredLayoutSize(c);
         if (d != null) {
-            return new Dimension(d.width < prefWidth ? prefWidth : d.width,
-                                 d.height < PREF_SIZE.height ? PREF_SIZE.height : d.height);
+            return new Dimension(Math.max(d.width, prefWidth),
+                                 Math.max(d.height, PREF_SIZE.height));
         } else {
             return new Dimension(prefWidth, PREF_SIZE.height);
         }
@@ -699,7 +699,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * right, flushed right. The widths of all components will be set to the largest preferred size width.
      */
     protected static class ButtonAreaLayout implements LayoutManager {
-        protected int hGap = 5;
+        protected final int hGap = 5;
         protected int topMargin = 17;
 
         public void addLayoutComponent(final String string, final Component comp) {
@@ -724,13 +724,13 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                     int extraWidth = cInsets.left + cInsets.right;
                     int maxWidth = 0;
 
-                    for (int counter = 0; counter < numChildren; counter++) {
-                        Dimension aSize = children[counter].getPreferredSize();
+                    for (Component child : children) {
+                        Dimension aSize = child.getPreferredSize();
                         height = Math.max(height, aSize.height);
                         maxWidth = Math.max(maxWidth, aSize.width);
                     }
                     return new Dimension(extraWidth + numChildren * maxWidth +
-                                                 (numChildren - 1) * hGap,
+                                         (numChildren - 1) * hGap,
                                          extraHeight + height);
                 }
             }
@@ -820,7 +820,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      *
      * @deprecated As of JDK version 9. Obsolete class.
      */
-    protected class SingleClickListener extends MouseAdapter {
+    protected static class SingleClickListener extends MouseAdapter {
         /**
          * Constructs an instance of {@code SingleClickListener}.
          *
@@ -836,16 +836,16 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * @deprecated As of JDK version 9. Obsolete class.
      */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected class FileRenderer extends DefaultListCellRenderer {
+    protected static class FileRenderer extends DefaultListCellRenderer {
     }
 
     //
     // Renderer for DirectoryComboBox
     //
     @SuppressWarnings("serial")
-            // Superclass is not serializable across versions
+        // Superclass is not serializable across versions
     class DirectoryComboBoxRenderer extends DefaultListCellRenderer {
-        IndentIcon ii = new IndentIcon();
+        final IndentIcon ii = new IndentIcon();
 
         public Component getListCellRendererComponent(final JList<?> list, final Object value,
                                                       final int index, final boolean isSelected,
@@ -859,8 +859,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             }
             File directory = (File) value;
             setText(getFileChooser().getName(directory));
-            Icon icon = getFileChooser().getIcon(directory);
-            ii.icon = icon;
+            ii.icon = getFileChooser().getIcon(directory);
             ii.depth = directoryComboBoxModel.getDepth(index);
             setIcon(ii);
 
@@ -868,7 +867,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
     }
 
-    class IndentIcon implements Icon {
+    static class IndentIcon implements Icon {
 
         Icon icon = null;
         int depth = 0;
@@ -896,11 +895,11 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class DirectoryComboBoxModel extends AbstractListModel<Object> implements ComboBoxModel<Object> {
-        Vector<File> directories = new Vector<File>();
+        final Vector<File> directories = new Vector<>();
         int[] depths = null;
         File selectedDirectory = null;
-        JFileChooser chooser = getFileChooser();
-        FileSystemView fsv = chooser.getFileSystemView();
+        final JFileChooser chooser = getFileChooser();
+        final FileSystemView fsv = chooser.getFileSystemView();
 
         /**
          * Constructs an instance of {@code DirectoryComboBoxModel}.
@@ -951,7 +950,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                 File sf = useShellFolder ? ShellFolder.getShellFolder(canonical)
                                          : canonical;
                 File f = sf;
-                Vector<File> path = new Vector<File>(10);
+                Vector<File> path = new Vector<>(10);
                 do {
                     path.addElement(f);
                 } while ((f = f.getParentFile()) != null);
@@ -1027,7 +1026,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * Data model for a type-face selection combo-box.
      */
     @SuppressWarnings("serial") // Same-version serialization only
-    protected class FilterComboBoxModel extends AbstractListModel<Object> implements ComboBoxModel<Object>, PropertyChangeListener {
+    protected class FilterComboBoxModel extends AbstractListModel<Object>
+        implements ComboBoxModel<Object>, PropertyChangeListener {
 
         /**
          * An array of file filters.
@@ -1071,6 +1071,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                 for (FileFilter filter : filters) {
                     if (filter == currentFilter) {
                         found = true;
+                        break;
                     }
                 }
                 if (!found) {
@@ -1124,7 +1125,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected class AlignedLabel extends JLabel {
+    protected static class AlignedLabel extends JLabel {
         protected AlignedLabel[] group;
         protected int maxWidth = 0;
 
@@ -1148,11 +1149,11 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         protected int getMaxWidth() {
             if (maxWidth == 0 && group != null) {
                 int max = 0;
-                for (int i = 0; i < group.length; i++) {
-                    max = Math.max(group[i].getSuperPreferredWidth(), max);
+                for (AlignedLabel label : group) {
+                    max = Math.max(label.getSuperPreferredWidth(), max);
                 }
-                for (int i = 0; i < group.length; i++) {
-                    group[i].maxWidth = max;
+                for (AlignedLabel alignedLabel : group) {
+                    alignedLabel.maxWidth = max;
                 }
             }
             return maxWidth;

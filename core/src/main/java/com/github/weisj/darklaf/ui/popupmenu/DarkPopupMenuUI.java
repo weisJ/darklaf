@@ -112,7 +112,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     }
 
     public static class MouseGrabber implements ChangeListener,
-        AWTEventListener, ComponentListener, WindowListener {
+                                                AWTEventListener, ComponentListener, WindowListener {
 
         Window grabbedWindow;
         MenuElement[] lastPathSelected;
@@ -133,13 +133,13 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                 (PrivilegedAction<Object>) () -> {
                     tk.addAWTEventListener(MouseGrabber.this,
                                            AWTEvent.MOUSE_EVENT_MASK
-                                               | AWTEvent.MOUSE_MOTION_EVENT_MASK
-                                               | AWTEvent.MOUSE_WHEEL_EVENT_MASK
-                                               | AWTEvent.WINDOW_EVENT_MASK
-                                               | SunToolkit.GRAB_EVENT_MASK);
-                        return null;
-                    }
-            );
+                                           | AWTEvent.MOUSE_MOTION_EVENT_MASK
+                                           | AWTEvent.MOUSE_WHEEL_EVENT_MASK
+                                           | AWTEvent.WINDOW_EVENT_MASK
+                                           | SunToolkit.GRAB_EVENT_MASK);
+                    return null;
+                }
+                                                       );
 
             Component invoker = newPath[0].getComponent();
             if (invoker instanceof JPopupMenu) {
@@ -174,7 +174,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                     tk.removeAWTEventListener(MouseGrabber.this);
                     return null;
                 }
-            );
+                                                       );
             realUngrabWindow();
         }
 
@@ -308,7 +308,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                 } else if (c instanceof JPopupMenu) {
                     return true;
                 } else if (c instanceof JComponent
-                    && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_DO_NOT_CANCEL_ON_SCROLL))) {
+                           && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_DO_NOT_CANCEL_ON_SCROLL))) {
                     /*
                      * Change here: allows scrollable components that contain the popupMenu.
                      */

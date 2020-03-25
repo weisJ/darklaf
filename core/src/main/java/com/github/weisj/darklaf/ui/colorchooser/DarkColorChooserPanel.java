@@ -49,7 +49,7 @@ import java.awt.event.KeyEvent;
 public class DarkColorChooserPanel extends AbstractColorChooserPanel implements ColorListener {
 
     public static final String TRANSPARENCY_ENABLED_PROPERTY
-            = "TransparencyEnabled";
+        = "TransparencyEnabled";
 
     private final ColorPipette pipette;
     private final ColorWheelPanel colorWheelPanel;
@@ -275,12 +275,13 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
                         int alpha = isColorTransparencySelectionEnabled()
                                     ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
                         Color c = new Color(
-                                Integer.valueOf(hexStr.substring(0, 2), 16),
-                                Integer.valueOf(hexStr.substring(2, 4), 16),
-                                Integer.valueOf(hexStr.substring(4, 6), 16),
-                                alpha);
+                            Integer.valueOf(hexStr.substring(0, 2), 16),
+                            Integer.valueOf(hexStr.substring(2, 4), 16),
+                            Integer.valueOf(hexStr.substring(4, 6), 16),
+                            alpha);
                         colorWheelPanel.setColor(c, textHex);
-                    } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
+                    } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
+                    }
                 }
             });
         }

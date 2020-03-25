@@ -150,7 +150,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                     }
                 }
             } else if (SwingUtilities.isMiddleMouseButton(e) &&
-                    getPasteOnMiddleMouseClick()) {
+                       getPasteOnMiddleMouseClick()) {
                 if (clickCount == 1 && textArea.isEditable() && textArea.isEnabled()) {
                     // Paste the system selection, if it exists (e.g., on UNIX
                     // platforms, the user can select text, the middle-mouse click
@@ -199,7 +199,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     private void adjustFocus(final boolean inWindow) {
         JTextComponent textArea = getComponent();
         if ((textArea != null) && textArea.isEnabled() &&
-                textArea.isRequestFocusEnabled()) {
+            textArea.isRequestFocusEnabled()) {
             if (inWindow) {
                 textArea.requestFocusInWindow();
             } else {
@@ -315,8 +315,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
      */
     private void selectWord(final MouseEvent e) {
         if (selectedWordEvent != null &&
-                selectedWordEvent.getX() == e.getX() &&
-                selectedWordEvent.getY() == e.getY()) {
+            selectedWordEvent.getX() == e.getX() &&
+            selectedWordEvent.getY() == e.getY()) {
             // We've already the done selection for this.
             return;
         }

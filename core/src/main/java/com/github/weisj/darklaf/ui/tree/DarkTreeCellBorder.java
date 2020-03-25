@@ -36,7 +36,7 @@ import java.awt.*;
  */
 public class DarkTreeCellBorder implements Border, UIResource {
 
-    protected Color borderColor;
+    protected final Color borderColor;
     protected Insets insets;
 
     public DarkTreeCellBorder() {

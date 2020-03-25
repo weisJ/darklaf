@@ -52,6 +52,7 @@ public class TabDragListener extends MouseAdapter {
         origin = null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void mouseDragged(final MouseEvent e) {
         if (origin == null) origin = e.getPoint();
@@ -60,7 +61,8 @@ public class TabDragListener extends MouseAdapter {
         if (th != null && tabComponent.getTabFrame().isDndEnabled()) {
             Point p = e.getPoint();
             p = SwingXUtilities.convertPointToParent(tabComponent.getComponent(), p);
-            JXLayer layer = DarkUIUtil.getParentOfType(JXLayer.class, tabComponent.getComponent());
+            JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class,
+                                                                             tabComponent.getComponent());
             p = SwingUtilities.convertPoint(layer != null ? layer : tabComponent.getComponent().getParent(),
                                             p, tabComponent.getTabFrame());
             tabComponent.getTabFrame().initTransfer(tabComponent.getOrientation(), tabComponent.getIndex());

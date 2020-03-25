@@ -34,7 +34,7 @@ import java.awt.*;
  */
 public class TextTableCellEditorBorder extends DarkTableCellBorder {
 
-    protected Color borderColor;
+    protected final Color borderColor;
 
     public TextTableCellEditorBorder() {
         borderColor = UIManager.getColor("TextField.border.enabled");
@@ -82,8 +82,8 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
 
     protected static boolean isListEditor(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_IS_LIST_RENDER))
-            && c.getParent() instanceof JList;
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_IS_LIST_RENDER))
+               && c.getParent() instanceof JList;
     }
 
     protected static boolean isInWrapper(final Component c) {

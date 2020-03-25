@@ -78,9 +78,9 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
     public void setupBorderStyle(final JTable table, final int row, final int column,
                                  final JComponent component, final boolean isRowFocus) {
         if (isRowFocus
-        && table.getSelectionModel().getLeadSelectionIndex() == row
-        && DarkUIUtil.hasFocus(table)
-        && !table.isEditing()) {
+            && table.getSelectionModel().getLeadSelectionIndex() == row
+            && DarkUIUtil.hasFocus(table)
+            && !table.isEditing()) {
             component.setBorder(UIManager.getBorder("Table.focusSelectedCellHighlightBorder"));
             component.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, true);
             JTableHeader header = table.getTableHeader();

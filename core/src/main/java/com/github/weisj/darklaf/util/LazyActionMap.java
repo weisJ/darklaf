@@ -104,12 +104,12 @@ public class LazyActionMap extends ActionMapUIResource {
                 method.invoke(klass, this);
             } catch (NoSuchMethodException nsme) {
                 assert false : "LazyActionMap unable to load actions " +
-                        klass;
+                               klass;
             } catch (IllegalAccessException
-                    | InvocationTargetException
-                    | IllegalArgumentException iae) {
+                | InvocationTargetException
+                | IllegalArgumentException iae) {
                 assert false : "LazyActionMap unable to load actions " +
-                        iae;
+                               iae;
             }
         }
     }

@@ -36,7 +36,7 @@ public class ColorWheelImageProducer extends MemoryImageSource {
     private final int[] myPixels;
     private final int myWidth;
     private final int myHeight;
-    private float myBrightness;
+    private final float myBrightness;
 
     private float[] myHues;
     private float[] mySat;
@@ -76,8 +76,8 @@ public class ColorWheelImageProducer extends MemoryImageSource {
 
                 int index = x + y * myWidth;
                 mySat[index] = (float) Math.sqrt(squarekx + ky
-                        * ky)
-                        / radius;
+                                                            * ky)
+                               / radius;
                 if (mySat[index] <= 1f) {
                     myAlphas[index] = 0xff000000;
                 } else {

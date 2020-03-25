@@ -45,7 +45,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         JScrollBar scrollbar = scrollpane.getHorizontalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
-                                 scrollpane.getComponentOrientation().isLeftToRight());
+                               scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final MouseWheelListener horizontalMouseWheelListener = e -> {
@@ -55,7 +55,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         JScrollBar scrollbar = scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
-                                 scrollpane.getComponentOrientation().isLeftToRight());
+                               scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final MouseWheelListener mouseWheelListener = e -> {
@@ -66,7 +66,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                                                : scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
-                                 scrollpane.getComponentOrientation().isLeftToRight());
+                               scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final PropertyChangeListener propertyChangeListener = e -> {

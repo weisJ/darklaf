@@ -47,8 +47,8 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
 
     private Color inactiveForeground;
     private Color cellForegroundNoFocus;
-    protected Rectangle paintIconR = new Rectangle();
-    protected Rectangle paintTextR = new Rectangle();
+    protected final Rectangle paintIconR = new Rectangle();
+    protected final Rectangle paintTextR = new Rectangle();
 
     public DarkLabelUI() {
         installUI(null);
@@ -107,10 +107,10 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
                                     final int textX, final int textY) {
         int mnemIndex = l.getDisplayedMnemonicIndex();
         boolean focus = DarkUIUtil.hasFocus(l)
-            || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTree.class, l))
-            || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTable.class, l))
-            || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JList.class, l))
-            || DarkUIUtil.getParentOfType(JPopupMenu.class, l) != null;
+                        || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTree.class, l))
+                        || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTable.class, l))
+                        || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JList.class, l))
+                        || DarkUIUtil.getParentOfType(JPopupMenu.class, l) != null;
         if (DarkUIUtil.isInCell(l) && !focus) {
             g.setColor(cellForegroundNoFocus);
         } else {

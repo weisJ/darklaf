@@ -42,9 +42,9 @@ abstract class SwatchPanel extends JPanel {
     protected Dimension numSwatches;
     protected Dimension gap;
     private final ToolTipContext toolTipContext = new ToolTipContext(this)
-            .setAlignment(Alignment.CENTER)
-            .setToolTipRectSupplier(this::getSwatchBounds)
-            .setHideOnExit(true);
+        .setAlignment(Alignment.CENTER)
+        .setToolTipRectSupplier(this::getSwatchBounds)
+        .setHideOnExit(true);
     private int selRow;
     private int selCol;
 
@@ -86,14 +86,14 @@ abstract class SwatchPanel extends JPanel {
                             selCol--;
                             repaint();
                         } else if (selCol < numSwatches.width - 1
-                                && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+                                   && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol++;
                             repaint();
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
                         if (selCol < numSwatches.width - 1
-                                && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+                            && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol++;
                             repaint();
                         } else if (selCol > 0 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {

@@ -29,7 +29,7 @@ import java.awt.*;
 
 public class DarkTabAreaButton extends JButton implements UIResource {
 
-    private DarkTabbedPaneUI ui;
+    private final DarkTabbedPaneUI ui;
 
     public DarkTabAreaButton(final DarkTabbedPaneUI ui) {
         this.ui = ui;

@@ -38,7 +38,7 @@ import java.beans.PropertyVetoException;
  *   internalFrame.MyInternalFrame.java
  */
 public class InternalFrameDemo extends JFrame implements ActionListener {
-    private JDesktopPane desktop;
+    private final JDesktopPane desktop;
 
     private InternalFrameDemo() {
         super("InternalFrameDemo");

@@ -38,7 +38,7 @@ public interface StateIconUI {
 
     Icon getDisabledIcon();
 
-    static Icon getStateIcon(final StateIconUI ui, final  AbstractButton b) {
+    static Icon getStateIcon(final StateIconUI ui, final AbstractButton b) {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();

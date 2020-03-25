@@ -30,11 +30,7 @@ import com.github.weisj.darklaf.util.TimerUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
@@ -47,7 +43,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
     private final Rectangle captureRect = new Rectangle();
     private final Point previousLocation = new Point();
     private final Timer timer;
-    protected Color borderColor;
+    protected final Color borderColor;
     private Graphics2D zoomGraphics;
     private BufferedImage zoomImage;
 
@@ -213,8 +209,8 @@ public class DefaultColorPipette extends ColorPipetteBase {
             if (pipette.isKeyDown() && pipette.getPressedKeyCode() == KeyEvent.VK_SHIFT) {
                 Shape oldCLip = g.getClip();
                 Ellipse2D.Float circ = new Ellipse2D.Float(icon.getIconWidth() - 4, 2,
-                                               getWidth() - icon.getIconWidth() - 2 + 4,
-                                               getHeight() - 2 - icon.getIconHeight() + 4);
+                                                           getWidth() - icon.getIconWidth() - 2 + 4,
+                                                           getHeight() - 2 - icon.getIconHeight() + 4);
                 g.setClip(circ);
                 g.drawImage(pipette.zoomImage, icon.getIconWidth() - 4, 2, null);
                 g.setClip(oldCLip);

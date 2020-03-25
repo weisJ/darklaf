@@ -83,7 +83,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
         Object honorDisplayPropertiesObject = c.getClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
         boolean honorDisplayProperties = false;
         Object w3cLengthUnitsObject = c.getClientProperty(JEditorPane.
-                                                                  W3C_LENGTH_UNITS);
+                                                              W3C_LENGTH_UNITS);
         boolean w3cLengthUnits = false;
         if (honorDisplayPropertiesObject instanceof Boolean) {
             honorDisplayProperties = (Boolean) honorDisplayPropertiesObject;
@@ -126,7 +126,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
         if (document instanceof HTMLDocument) {
             StyleSheet styleSheet = new StyleSheetUIResource();
             StyleSheet documentStyleSheet =
-                    ((HTMLDocument) document).getStyleSheet();
+                ((HTMLDocument) document).getStyleSheet();
             StyleSheet[] styleSheets = documentStyleSheet.getStyleSheets();
             if (styleSheets != null) {
                 for (StyleSheet s : styleSheets) {
@@ -311,10 +311,10 @@ public class DarkEditorPaneUI extends DarkTextUI {
         } else if (PropertyKey.EDITABLE.equals(name)) {
             updateFocusTraversalKeys();
         } else if (PropertyKey.FOREGROUND.equals(name)
-            || PropertyKey.FONT.equals(name)
-            || PropertyKey.DOCUMENT.equals(name)
-            || JEditorPane.W3C_LENGTH_UNITS.equals(name)
-            || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
+                   || PropertyKey.FONT.equals(name)
+                   || PropertyKey.DOCUMENT.equals(name)
+                   || JEditorPane.W3C_LENGTH_UNITS.equals(name)
+                   || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
         ) {
             JComponent c = getComponent();
             updateDisplayProperties(c.getFont(), c.getForeground());

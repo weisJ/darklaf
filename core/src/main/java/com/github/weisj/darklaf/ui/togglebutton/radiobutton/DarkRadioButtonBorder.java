@@ -43,7 +43,7 @@ public class DarkRadioButtonBorder extends EmptyBorder implements UIResource, To
     @Override
     public Insets getBorderInsets(final Component c, final Insets insets) {
         if (ToggleButtonConstants.isInCell(c)) {
-            insets.set(0,0,0,0);
+            insets.set(0, 0, 0, 0);
             return insets;
         }
         return super.getBorderInsets(c, insets);

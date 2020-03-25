@@ -87,7 +87,7 @@ public final class IconColorMapper {
         if (color == null) {
             color = fallbackColor;
             LOGGER.warning("Could not load color with id'" + key + "' fallbacks" + Arrays.toString(fallbacks)
-                               + " Using color " + fallbackColor + " instead.");
+                           + " Using color " + fallbackColor + " instead.");
         }
         return color;
     }
@@ -103,7 +103,8 @@ public final class IconColorMapper {
         return attribute.getStringList();
     }
 
-    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name) throws SVGElementException {
+    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name)
+        throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
         return new Pair<>(grad, () -> {

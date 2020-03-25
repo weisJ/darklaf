@@ -42,7 +42,7 @@ public enum AlignmentExt {
     MIDDLE_VERTICAL(null),
     BOTTOM(null);
 
-    private Alignment parent;
+    private final Alignment parent;
 
     AlignmentExt(final Alignment parent) {
         this.parent = parent;

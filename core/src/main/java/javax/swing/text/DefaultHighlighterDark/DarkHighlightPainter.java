@@ -50,14 +50,14 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private static final boolean DEBUG_COLOR = false;
     private Paint paint;
     private Color color;
-    private ColorWrapper wrapper;
+    private final ColorWrapper wrapper;
     private boolean roundedEdges;
     private AlphaComposite alphaComposite;
     private float alpha;
     private int selectionStart = -1;
     private int selectionEnd = -1;
     private int repaintCount = 0;
-    private int arcSize;
+    private final int arcSize;
     private boolean suppressRounded = false;
     private boolean enabled;
 
@@ -212,8 +212,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
          * after the selection has changed.
          */
         if (dirtyShape != null && (selectionEnd != c.getSelectionEnd()
-                || selectionStart != c.getSelectionStart()
-                || repaintCount < 2)) {
+                                   || selectionStart != c.getSelectionStart()
+                                   || repaintCount < 2)) {
             selectionStart = c.getSelectionStart();
             selectionEnd = c.getSelectionEnd();
             c.repaint(dirtyShape.getBounds());
@@ -267,8 +267,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean isSecondLastLine = alloc.y + alloc.height == posEnd.y;
         boolean isLastLine = alloc.y == posEnd.y || isSecondLastLine && posEnd.y != posEndPrev.y;
         boolean endBeforeStart = posEnd.x < (posStart.x + arcSize / 2.0)
-                && (posEnd.y == posStart.y + posStart.height
-                || (posEnd.y <= posStart.y + 2 * posStart.height && posEnd.x == margin.left));
+                                 && (posEnd.y == posStart.y + posStart.height
+                                     || (posEnd.y <= posStart.y + 2 * posStart.height && posEnd.x == margin.left));
 
         int originalWidth = alloc.width;
         int originalX = alloc.x;
@@ -402,7 +402,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             boolean roundLeftBottom = !isFirstLine && !extendToStart;
             boolean roundLeftTop = isSecondLine && !extendToStart && posStart.x >= r.x + arcSize;
             paintRoundRect(g2d, r, arcSize, roundLeftTop, roundRightTop, roundLeftBottom, !extendToEnd);
-            boolean drawCorner = !extendToEnd && !roundRightTop && r.x + r.width <= c.getWidth() - margin.right - arcSize;
+            boolean drawCorner = !extendToEnd && !roundRightTop
+                                 && r.x + r.width <= c.getWidth() - margin.right - arcSize;
             if (drawCorner) {
                 paintEndArc(g2d, r);
                 r.width += arcSize;
@@ -415,7 +416,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private boolean isRounded(final JTextComponent c) {
         return !suppressRounded
-            && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty(DarkTextUI.KEY_ROUNDED_SELECTION)));
+               && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty(DarkTextUI.KEY_ROUNDED_SELECTION)));
     }
 
     private Shape paintExtension(final Graphics2D g2d, final JTextComponent c,
@@ -435,7 +436,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             start = Math.min(start, c.getWidth() - ins.right - w);
             if (rounded) {
                 boolean roundTop = isFirstLine || selectionStart;
-                boolean roundBottom = isLastLine || (isSecondLastLine && posEnd.x + posEnd.width <= start + w - arcSize);
+                boolean roundBottom = isLastLine || (isSecondLastLine
+                                                     && posEnd.x + posEnd.width <= start + w - arcSize);
                 boolean roundLeftTop = isFirstLine && start == ins.left;
                 paintRoundRect(g2d, new Rectangle(start, r.y, w, r.height), arcSize,
                                roundLeftTop, roundTop, false, roundBottom);
@@ -482,11 +484,11 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private void paintStartArc(final Graphics2D g2d, final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
         Area arc = new Area(new Rectangle2D.Double(
-                r.x - arcSize + 0.25, r.y + r.height - arcSize + 0.25, arcSize, arcSize));
+            r.x - arcSize + 0.25, r.y + r.height - arcSize + 0.25, arcSize, arcSize));
         arc.subtract(new Area(new Arc2D.Double(
-                r.x - 2 * arcSize + 0.25,
-                r.y + r.height - 2 * arcSize + 0.25, 2 * arcSize, 2 * arcSize,
-                0, -90, Arc2D.Double.PIE)));
+            r.x - 2 * arcSize + 0.25,
+            r.y + r.height - 2 * arcSize + 0.25, 2 * arcSize, 2 * arcSize,
+            0, -90, Arc2D.Double.PIE)));
         g2d.fill(arc);
         r.x -= arcSize;
         r.width += arcSize;
@@ -510,10 +512,10 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private void paintEndArc(final Graphics2D g2d, final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
         Area arc = new Area(new Rectangle2D.Double(
-                r.x + r.width - 0.25, r.y - 0.25, arcSize, arcSize));
+            r.x + r.width - 0.25, r.y - 0.25, arcSize, arcSize));
         arc.subtract(new Area(new Arc2D.Double(
-                r.x + r.width - 0.25,
-                r.y - 0.25, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.Double.PIE)));
+            r.x + r.width - 0.25,
+            r.y - 0.25, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.Double.PIE)));
         g2d.fill(arc);
     }
 

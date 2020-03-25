@@ -33,7 +33,7 @@ import java.awt.*;
 public class NewTabButton extends JPanel implements UIResource {
 
     protected final JButton button;
-    protected DarkTabbedPaneUI ui;
+    protected final DarkTabbedPaneUI ui;
 
     protected NewTabButton(final DarkTabbedPaneUI ui) {
         this.ui = ui;

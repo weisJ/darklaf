@@ -46,7 +46,7 @@ import java.awt.event.MouseEvent;
 public class TabFrameTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
     private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType
-            + ";class=com.github.weisj.darklaf.components.tabframe.JTabFrame";
+                                            + ";class=com.github.weisj.darklaf.components.tabframe.JTabFrame";
     private static TabbedPaneDragGestureRecognizer recognizer = null;
     private final Timer timer;
     private final Timer startTimer;
@@ -70,7 +70,8 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             if (lastTabFrame != null) {
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(p, lastTabFrame);
-                DropTargetDragEvent evt = new DropTargetDragEvent(lastTabFrame.getDropTarget().getDropTargetContext(), p, MOVE, MOVE);
+                DropTargetDragEvent evt = new DropTargetDragEvent(lastTabFrame.getDropTarget().getDropTargetContext(),
+                                                                  p, MOVE, MOVE);
                 dragOver(evt);
             }
         });
@@ -102,10 +103,10 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         // only mouse events supported for drag operations
         if (!(e instanceof MouseEvent)
-                // only support known actions
-                || !(action == COPY || action == MOVE || action == LINK)
-                // only support valid source actions
-                || (srcActions & action) == 0) {
+            // only support known actions
+            || !(action == COPY || action == MOVE || action == LINK)
+            // only support valid source actions
+            || (srcActions & action) == 0) {
 
             action = NONE;
         }

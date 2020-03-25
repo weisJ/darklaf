@@ -195,8 +195,8 @@ public class MacOSTitlePane extends CustomTitlePane {
     private boolean hideTitleBar() {
         boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
         return (decorationInformation != null && decorationInformation.windowHandle == 0)
-            || isFullscreen
-            || getWindowDecorationStyle() == JRootPane.NONE;
+               || isFullscreen
+               || getWindowDecorationStyle() == JRootPane.NONE;
     }
 
     private boolean useCustomTitle() {

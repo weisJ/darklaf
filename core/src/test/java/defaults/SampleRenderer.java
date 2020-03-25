@@ -12,7 +12,7 @@ import java.awt.*;
  */
 public class SampleRenderer extends JLabel implements TableCellRenderer {
 
-    private final DarkCellRendererToggleButton booleanRenderer =
+    private final DarkCellRendererToggleButton<?> booleanRenderer =
         new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
 
     public SampleRenderer() {
@@ -23,12 +23,12 @@ public class SampleRenderer extends JLabel implements TableCellRenderer {
 
 
     public Component getTableCellRendererComponent(
-            final JTable table,
-            final Object sample,
-            final boolean isSelected,
-            final boolean hasFocus,
-            final int row,
-            final int column) {
+        final JTable table,
+        final Object sample,
+        final boolean isSelected,
+        final boolean hasFocus,
+        final int row,
+        final int column) {
         setBackground(null);
         setBorder(null);
         setIcon(null);

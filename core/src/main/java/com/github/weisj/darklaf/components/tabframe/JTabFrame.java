@@ -539,7 +539,8 @@ public class JTabFrame extends JComponent {
             getPopupComponentAt(a).doLayout();
             getPopupComponentAt(a).requestFocus();
         }
-        firePropertyChange(TabFramePopup.KEY_VISIBLE_TAB, new TabFramePosition(a, oldIndex), new TabFramePosition(a, index));
+        firePropertyChange(TabFramePopup.KEY_VISIBLE_TAB, new TabFramePosition(a, oldIndex),
+                           new TabFramePosition(a, index));
     }
 
     /**

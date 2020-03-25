@@ -49,15 +49,15 @@ public class JXPopupMenu extends JPopupMenu {
         super(label);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void show(final Component invoker, final int x, final int y) {
         Point p = new Point(x, y);
         if (invoker != null) {
-            JXLayer layer = DarkUIUtil.getParentOfType(JXLayer.class, invoker);
+            JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class, invoker);
             if (layer != null && layer.getUI() instanceof TransformUI) {
                 TransformUI ui = (TransformUI) layer.getUI();
                 p = SwingUtilities.convertPoint(invoker, p, layer);
-                //noinspection unchecked
                 AffineTransform transform = ui.getPreferredTransform(layer.getSize(), layer);
                 transform.transform(p, p);
                 super.show(layer, p.x, p.y);

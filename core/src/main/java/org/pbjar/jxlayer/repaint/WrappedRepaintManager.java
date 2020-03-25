@@ -213,7 +213,6 @@ public class WrappedRepaintManager extends RepaintManager {
     }
 
 
-
     /**
      * Just delegates. {@inheritDoc}
      */

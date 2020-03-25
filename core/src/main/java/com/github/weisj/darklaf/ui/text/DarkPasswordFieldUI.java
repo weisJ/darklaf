@@ -109,7 +109,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         Rectangle textRect = DarkTextFieldUI.getTextRect(getComponent());
         int rightMargin = useShow ? getShowIconCoord().x : textRect.x + textRect.width + 1;
         boolean insideTextArea = getDrawingRect(getComponent()).contains(p)
-                && p.x >= textRect.x && p.x < rightMargin;
+                                 && p.x >= textRect.x && p.x < rightMargin;
         if (insideTextArea) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else if (useShow && isOverEye(p)) {
@@ -181,7 +181,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     public static boolean hasShowIcon(final Component c) {
         return c instanceof JPasswordField
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_SHOW_VIEW_BUTTON));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_SHOW_VIEW_BUTTON));
     }
 
 

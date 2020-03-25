@@ -224,9 +224,9 @@ public class ToolTipContext {
      *
      * <p>Default will be {@link AlignmentStrategy#COMPONENT_BOTH}.
      *
-     * @see AlignmentStrategy
      * @param alignmentStrategy the alignment strategy.
      * @return this
+     * @see AlignmentStrategy
      */
     public ToolTipContext setAlignmentStrategy(final AlignmentStrategy alignmentStrategy) {
         this.alignmentStrategy = alignmentStrategy;
@@ -282,7 +282,8 @@ public class ToolTipContext {
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
      */
 
-    public ToolTipContext(final JComponent target, final Alignment alignment, final AlignmentStrategy alignmentStrategy) {
+    public ToolTipContext(final JComponent target, final Alignment alignment,
+                          final AlignmentStrategy alignmentStrategy) {
         this(target, alignment, null, alignmentStrategy, true, null);
     }
 
@@ -303,7 +304,7 @@ public class ToolTipContext {
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target                 the component which the tooltip belongs to.
+     * @param target            the component which the tooltip belongs to.
      * @param alignment         {@link #setAlignment(Alignment)}
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
      * @param alignInside       {@link #setAlignInside(boolean)}
@@ -392,9 +393,9 @@ public class ToolTipContext {
     }
 
     /**
-     * @see #setInsideArea(Area)
      * @param insideRect the rectangle to check.
      * @return this
+     * @see #setInsideArea(Area)
      */
     public ToolTipContext setInsideArea(final Rectangle insideRect) {
         this.hotSpotArea = new Area(insideRect);
@@ -418,8 +419,8 @@ public class ToolTipContext {
     }
 
     /**
-     * Sets whether the border should be ignored when aligning outside. If true the tooltip is aligned w.r.t. to
-     * the content rect and not the component bounds.
+     * Sets whether the border should be ignored when aligning outside. If true the tooltip is aligned w.r.t. to the
+     * content rect and not the component bounds.
      *
      * @param ignoreBorder true if border insets should be ignored.
      * @return this.

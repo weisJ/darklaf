@@ -317,7 +317,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         boolean defaultButton = ButtonConstants.isDefaultButton(c);
         AbstractButton b = (AbstractButton) c;
         boolean rollOver = (b.isRolloverEnabled() || ButtonConstants.doConvertToShadow(b))
-            && (((JButton) c).getModel().isRollover());
+                           && (((JButton) c).getModel().isRollover());
         boolean clicked = b.getModel().isArmed();
         if (c.isEnabled()) {
             if (defaultButton) {

@@ -124,17 +124,19 @@ public class TabbedPaneUtil implements SwingConstants {
             calculateDropRectScrollLayout(destTabbedPane, source, tabBounds, tab, sourceIndex,
                                           lastTab, tabPlacement, destRect);
         } else {
-            calculateDropRectWrapLayout(ui, destTabbedPane, source, mouseLocation, tabBounds, tab, sourceIndex, destRect);
+            calculateDropRectWrapLayout(ui, destTabbedPane, source, mouseLocation, tabBounds, tab, sourceIndex,
+                                        destRect);
         }
         return tabBounds;
     }
 
     private static void calculateDropRectScrollLayout(final JTabbedPane destTabbedPane, final JTabbedPane source,
                                                       final Rectangle tabBounds, final int tab, final int sourceIndex,
-                                                      final int lastTab, final int tabPlacement, final Rectangle destRect) {
+                                                      final int lastTab, final int tabPlacement,
+                                                      final Rectangle destRect) {
         boolean lastInSource = false;
         if (destTabbedPane == source && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1
-                && tab == source.getTabCount()))) {
+                                                                && tab == source.getTabCount()))) {
             lastInSource = true;
             destRect.width = tabBounds.width;
             destRect.height = tabBounds.height;
@@ -207,7 +209,7 @@ public class TabbedPaneUtil implements SwingConstants {
                 tabBounds.width = Math.min(tabBounds.width / 2, destRect.width / 2);
             } else {
                 if (destRect.y + destRect.height <= mouseLocation.y
-                        && prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
+                    && prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
                     destRect.x = prev.x + prev.width;
                     destRect.y = prev.y;
                     destRect.height = prev.height;

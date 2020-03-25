@@ -49,10 +49,10 @@ public class SystemInfo {
     public static final boolean isX64;
     public static final boolean isUndefined;
     protected static final String _OS_NAME;
-    public static boolean isMacOSMojave;
-    public static boolean isMacOSCatalina;
-    public static boolean isMacOSYosemite;
-    public static boolean isWindows10;
+    public static final boolean isMacOSMojave;
+    public static final boolean isMacOSCatalina;
+    public static final boolean isMacOSYosemite;
+    public static final boolean isWindows10;
 
     static {
         _OS_NAME = OS_NAME.toLowerCase();
@@ -129,7 +129,7 @@ public class SystemInfo {
     private static boolean isSunJvm() {
         String vendor = getJavaVmVendor();
         return vendor != null && containsIgnoreCase(vendor, "Sun") &&
-            containsIgnoreCase(vendor, "Microsystems");
+               containsIgnoreCase(vendor, "Microsystems");
     }
 
     private static boolean isAppleJvm() {
@@ -139,6 +139,6 @@ public class SystemInfo {
 
     private static boolean containsIgnoreCase(final String text, final String pattern) {
         return Pattern.compile(pattern, Pattern.LITERAL | Pattern.CASE_INSENSITIVE)
-            .matcher(text).find();
+                      .matcher(text).find();
     }
 }

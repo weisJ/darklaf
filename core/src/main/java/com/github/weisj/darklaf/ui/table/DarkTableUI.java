@@ -288,7 +288,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
     protected boolean scrollBarVisible() {
         JScrollPane comp = DarkUIUtil.getParentOfType(JScrollPane.class, table);
         return comp != null && comp.getVerticalScrollBar().isVisible()
-                && DarkUIUtil.getParentOfType(OverlayScrollPane.class, table) == null;
+               && DarkUIUtil.getParentOfType(OverlayScrollPane.class, table) == null;
     }
 
     protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
@@ -434,7 +434,8 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
             }
             if (table == null) return false;
             KeyStroke stroke = KeyStroke.getKeyStroke(event.getExtendedKeyCode(), event.getModifiersEx());
-            String actionName = String.valueOf(table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
+            String actionName = String.valueOf(
+                table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
             if ("null".equals(actionName)) actionName = null;
             String cutActionName = String.valueOf(TransferHandler.getCutAction().getValue(Action.NAME));
             String copyActionName = String.valueOf(TransferHandler.getCopyAction().getValue(Action.NAME));
@@ -456,7 +457,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                 if (row < 0 || fc == null) return;
                 int column = getFileNameColumnIndex();
                 boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
-                    && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
+                                     && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
                 if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
                     && isSelected && lastIndex == row
                     && DarkUIUtil.isOverText(e, row, column, table)) {

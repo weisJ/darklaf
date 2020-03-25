@@ -265,7 +265,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         int buttonWidth = squareButton
                           ? buttonHeight
                           : arrowButton.getPreferredSize().width
-                              + arrowButton.getInsets().left + arrowButton.getInsets().right;
+                            + arrowButton.getInsets().left + arrowButton.getInsets().right;
         //adjust the size based on the button width
         size.height += insets.top + insets.bottom;
         size.width += insets.left + insets.right + buttonWidth;

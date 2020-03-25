@@ -122,7 +122,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     @Override
     public void close() {
         if (parent != null && getAlignment() != null && getIndex() >= 0
-                && parent.isSelected(getAlignment(), getIndex())) {
+            && parent.isSelected(getAlignment(), getIndex())) {
             boolean oldOpen = isOpen();
             parent.closeTab(getAlignment(), getIndex());
             open = false;
@@ -166,7 +166,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     @Override
     public void open() {
         if (parent != null && getAlignment() != null && getIndex() >= 0
-                && !parent.isSelected(getAlignment(), getIndex())) {
+            && !parent.isSelected(getAlignment(), getIndex())) {
             boolean oldOpen = isOpen();
             parent.openTab(getAlignment(), getIndex());
             open = true;

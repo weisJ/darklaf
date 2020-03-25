@@ -59,7 +59,7 @@ public abstract class TableUIBridge extends TableUI {
      * The constant BASELINE_COMPONENT_KEY.
      */
     protected static final StringBuilder BASELINE_COMPONENT_KEY =
-            new StringBuilder("Table.baselineComponent");
+        new StringBuilder("Table.baselineComponent");
 
 //
 // Instance Variables
@@ -444,13 +444,13 @@ public abstract class TableUIBridge extends TableUI {
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
             InputMap keyMap =
-                    (InputMap) DefaultLookup.get(table, this,
-                                                 "Table.ancestorInputMap");
+                (InputMap) DefaultLookup.get(table, this,
+                                             "Table.ancestorInputMap");
             InputMap rtlKeyMap;
 
             if (table.getComponentOrientation().isLeftToRight() ||
-                    ((rtlKeyMap = (InputMap) DefaultLookup.get(table, this,
-                                                               "Table.ancestorInputMap.RightToLeft")) == null)) {
+                ((rtlKeyMap = (InputMap) DefaultLookup.get(table, this,
+                                                           "Table.ancestorInputMap.RightToLeft")) == null)) {
                 return keyMap;
             } else {
                 rtlKeyMap.setParent(keyMap);
@@ -505,7 +505,7 @@ public abstract class TableUIBridge extends TableUI {
      */
     protected void uninstallKeyboardActions() {
         SwingUtilities.replaceUIInputMap(table, JComponent.
-                WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
+            WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
         SwingUtilities.replaceUIActionMap(table, null);
     }
 
@@ -521,9 +521,9 @@ public abstract class TableUIBridge extends TableUI {
         bounds.x = bounds.y = 0;
 
         if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 ||
-                // this check prevents us from painting the entire table
-                // when the clip doesn't intersect our bounds at all
-                !bounds.intersects(clip)) {
+            // this check prevents us from painting the entire table
+            // when the clip doesn't intersect our bounds at all
+            !bounds.intersects(clip)) {
 
             paintDropLines(g);
             return;
@@ -588,7 +588,7 @@ public abstract class TableUIBridge extends TableUI {
             // but not when rmax is already pointing to index of last row
             // and if there is any selected rows
             if (rMax != (table.getRowCount() - 1) &&
-                    (table.getSelectedRow() == -1)) {
+                (table.getSelectedRow() == -1)) {
                 // Do not decrement rMax if rMax becomes
                 // less than or equal to rMin
                 // else cells will not be painted
@@ -665,17 +665,17 @@ public abstract class TableUIBridge extends TableUI {
         super.getBaseline(c, width, height);
         UIDefaults lafDefaults = UIManager.getLookAndFeelDefaults();
         Component renderer = (Component) lafDefaults.get(
-                BASELINE_COMPONENT_KEY);
+            BASELINE_COMPONENT_KEY);
         if (renderer == null) {
             DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
             renderer = tcr.getTableCellRendererComponent(
-                    table, "a", false, false, -1, -1);
+                table, "a", false, false, -1, -1);
             lafDefaults.put(BASELINE_COMPONENT_KEY, renderer);
         }
         renderer.setFont(table.getFont());
         int rowMargin = table.getRowMargin();
         return renderer.getBaseline(Integer.MAX_VALUE, table.getRowHeight() -
-                rowMargin) + rowMargin / 2;
+                                                       rowMargin) + rowMargin / 2;
     }
 
     /**
@@ -686,7 +686,7 @@ public abstract class TableUIBridge extends TableUI {
      * @since 1.6
      */
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-            final JComponent c) {
+        final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
     }
@@ -993,7 +993,7 @@ public abstract class TableUIBridge extends TableUI {
      */
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
         if (table.isEditing() && table.getEditingRow() == row &&
-                table.getEditingColumn() == column) {
+            table.getEditingColumn() == column) {
             Component component = table.getEditorComponent();
             component.setBounds(cellRect);
             component.validate();
@@ -1014,7 +1014,8 @@ public abstract class TableUIBridge extends TableUI {
      * @param draggedColumn the dragged column
      * @param distance      the distance
      */
-    protected void paintDraggedArea(final Graphics g, final int rMin, final int rMax, final TableColumn draggedColumn, final int distance) {
+    protected void paintDraggedArea(final Graphics g, final int rMin, final int rMax, final TableColumn draggedColumn,
+                                    final int distance) {
         int draggedColumnIndex = viewIndexForColumn(draggedColumn);
 
         Rectangle minCell = table.getCellRect(rMin, draggedColumnIndex, true);
@@ -1117,12 +1118,12 @@ public abstract class TableUIBridge extends TableUI {
          * The constant NEXT_ROW_EXTEND_SELECTION.
          */
         protected static final String NEXT_ROW_EXTEND_SELECTION =
-                "selectNextRowExtendSelection";
+            "selectNextRowExtendSelection";
         /**
          * The constant NEXT_ROW_CHANGE_LEAD.
          */
         protected static final String NEXT_ROW_CHANGE_LEAD =
-                "selectNextRowChangeLead";
+            "selectNextRowChangeLead";
         /**
          * The constant PREVIOUS_ROW.
          */
@@ -1135,12 +1136,12 @@ public abstract class TableUIBridge extends TableUI {
          * The constant PREVIOUS_ROW_EXTEND_SELECTION.
          */
         protected static final String PREVIOUS_ROW_EXTEND_SELECTION =
-                "selectPreviousRowExtendSelection";
+            "selectPreviousRowExtendSelection";
         /**
          * The constant PREVIOUS_ROW_CHANGE_LEAD.
          */
         protected static final String PREVIOUS_ROW_CHANGE_LEAD =
-                "selectPreviousRowChangeLead";
+            "selectPreviousRowChangeLead";
 
         /**
          * The constant NEXT_COLUMN.
@@ -1154,12 +1155,12 @@ public abstract class TableUIBridge extends TableUI {
          * The constant NEXT_COLUMN_EXTEND_SELECTION.
          */
         protected static final String NEXT_COLUMN_EXTEND_SELECTION =
-                "selectNextColumnExtendSelection";
+            "selectNextColumnExtendSelection";
         /**
          * The constant NEXT_COLUMN_CHANGE_LEAD.
          */
         protected static final String NEXT_COLUMN_CHANGE_LEAD =
-                "selectNextColumnChangeLead";
+            "selectNextColumnChangeLead";
         /**
          * The constant PREVIOUS_COLUMN.
          */
@@ -1168,101 +1169,101 @@ public abstract class TableUIBridge extends TableUI {
          * The constant PREVIOUS_COLUMN_CELL.
          */
         protected static final String PREVIOUS_COLUMN_CELL =
-                "selectPreviousColumnCell";
+            "selectPreviousColumnCell";
         /**
          * The constant PREVIOUS_COLUMN_EXTEND_SELECTION.
          */
         protected static final String PREVIOUS_COLUMN_EXTEND_SELECTION =
-                "selectPreviousColumnExtendSelection";
+            "selectPreviousColumnExtendSelection";
         /**
          * The constant PREVIOUS_COLUMN_CHANGE_LEAD.
          */
         protected static final String PREVIOUS_COLUMN_CHANGE_LEAD =
-                "selectPreviousColumnChangeLead";
+            "selectPreviousColumnChangeLead";
 
         /**
          * The constant SCROLL_LEFT_CHANGE_SELECTION.
          */
         protected static final String SCROLL_LEFT_CHANGE_SELECTION =
-                "scrollLeftChangeSelection";
+            "scrollLeftChangeSelection";
         /**
          * The constant SCROLL_LEFT_EXTEND_SELECTION.
          */
         protected static final String SCROLL_LEFT_EXTEND_SELECTION =
-                "scrollLeftExtendSelection";
+            "scrollLeftExtendSelection";
         /**
          * The constant SCROLL_RIGHT_CHANGE_SELECTION.
          */
         protected static final String SCROLL_RIGHT_CHANGE_SELECTION =
-                "scrollRightChangeSelection";
+            "scrollRightChangeSelection";
         /**
          * The constant SCROLL_RIGHT_EXTEND_SELECTION.
          */
         protected static final String SCROLL_RIGHT_EXTEND_SELECTION =
-                "scrollRightExtendSelection";
+            "scrollRightExtendSelection";
 
         /**
          * The constant SCROLL_UP_CHANGE_SELECTION.
          */
         protected static final String SCROLL_UP_CHANGE_SELECTION =
-                "scrollUpChangeSelection";
+            "scrollUpChangeSelection";
         /**
          * The constant SCROLL_UP_EXTEND_SELECTION.
          */
         protected static final String SCROLL_UP_EXTEND_SELECTION =
-                "scrollUpExtendSelection";
+            "scrollUpExtendSelection";
         /**
          * The constant SCROLL_DOWN_CHANGE_SELECTION.
          */
         protected static final String SCROLL_DOWN_CHANGE_SELECTION =
-                "scrollDownChangeSelection";
+            "scrollDownChangeSelection";
         /**
          * The constant SCROLL_DOWN_EXTEND_SELECTION.
          */
         protected static final String SCROLL_DOWN_EXTEND_SELECTION =
-                "scrollDownExtendSelection";
+            "scrollDownExtendSelection";
 
         /**
          * The constant FIRST_COLUMN.
          */
         protected static final String FIRST_COLUMN =
-                "selectFirstColumn";
+            "selectFirstColumn";
         /**
          * The constant FIRST_COLUMN_EXTEND_SELECTION.
          */
         protected static final String FIRST_COLUMN_EXTEND_SELECTION =
-                "selectFirstColumnExtendSelection";
+            "selectFirstColumnExtendSelection";
         /**
          * The constant LAST_COLUMN.
          */
         protected static final String LAST_COLUMN =
-                "selectLastColumn";
+            "selectLastColumn";
         /**
          * The constant LAST_COLUMN_EXTEND_SELECTION.
          */
         protected static final String LAST_COLUMN_EXTEND_SELECTION =
-                "selectLastColumnExtendSelection";
+            "selectLastColumnExtendSelection";
 
         /**
          * The constant FIRST_ROW.
          */
         protected static final String FIRST_ROW =
-                "selectFirstRow";
+            "selectFirstRow";
         /**
          * The constant FIRST_ROW_EXTEND_SELECTION.
          */
         protected static final String FIRST_ROW_EXTEND_SELECTION =
-                "selectFirstRowExtendSelection";
+            "selectFirstRowExtendSelection";
         /**
          * The constant LAST_ROW.
          */
         protected static final String LAST_ROW =
-                "selectLastRow";
+            "selectLastRow";
         /**
          * The constant LAST_ROW_EXTEND_SELECTION.
          */
         protected static final String LAST_ROW_EXTEND_SELECTION =
-                "selectLastRowExtendSelection";
+            "selectLastRowExtendSelection";
 
         /**
          * The constant ADD_TO_SELECTION.
@@ -1417,21 +1418,21 @@ public abstract class TableUIBridge extends TableUI {
             leadColumn = getAdjustedLead(table, false, csm);
 
             if (Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) ||        // Paging Actions
-                    Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
-                    Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
-                    Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
-                    Objects.equals(key, SCROLL_UP_CHANGE_SELECTION) ||
-                    Objects.equals(key, SCROLL_UP_EXTEND_SELECTION) ||
-                    Objects.equals(key, SCROLL_DOWN_CHANGE_SELECTION) ||
-                    Objects.equals(key, SCROLL_DOWN_EXTEND_SELECTION) ||
-                    Objects.equals(key, FIRST_COLUMN) ||
-                    Objects.equals(key, FIRST_COLUMN_EXTEND_SELECTION) ||
-                    Objects.equals(key, FIRST_ROW) ||
-                    Objects.equals(key, FIRST_ROW_EXTEND_SELECTION) ||
-                    Objects.equals(key, LAST_COLUMN) ||
-                    Objects.equals(key, LAST_COLUMN_EXTEND_SELECTION) ||
-                    Objects.equals(key, LAST_ROW) ||
-                    Objects.equals(key, LAST_ROW_EXTEND_SELECTION)) {
+                Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
+                Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
+                Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
+                Objects.equals(key, SCROLL_UP_CHANGE_SELECTION) ||
+                Objects.equals(key, SCROLL_UP_EXTEND_SELECTION) ||
+                Objects.equals(key, SCROLL_DOWN_CHANGE_SELECTION) ||
+                Objects.equals(key, SCROLL_DOWN_EXTEND_SELECTION) ||
+                Objects.equals(key, FIRST_COLUMN) ||
+                Objects.equals(key, FIRST_COLUMN_EXTEND_SELECTION) ||
+                Objects.equals(key, FIRST_ROW) ||
+                Objects.equals(key, FIRST_ROW_EXTEND_SELECTION) ||
+                Objects.equals(key, LAST_COLUMN) ||
+                Objects.equals(key, LAST_COLUMN_EXTEND_SELECTION) ||
+                Objects.equals(key, LAST_ROW) ||
+                Objects.equals(key, LAST_ROW_EXTEND_SELECTION)) {
                 if (toLimit) {
                     if (vertically) {
                         int rowCount = table.getRowCount();
@@ -1489,41 +1490,41 @@ public abstract class TableUIBridge extends TableUI {
                 }
             }
             if (Objects.equals(key, NEXT_ROW) ||  // Navigate Actions
-                    Objects.equals(key, NEXT_ROW_CELL) ||
-                    Objects.equals(key, NEXT_ROW_EXTEND_SELECTION) ||
-                    Objects.equals(key, NEXT_ROW_CHANGE_LEAD) ||
-                    Objects.equals(key, NEXT_COLUMN) ||
-                    Objects.equals(key, NEXT_COLUMN_CELL) ||
-                    Objects.equals(key, NEXT_COLUMN_EXTEND_SELECTION) ||
-                    Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) ||
-                    Objects.equals(key, PREVIOUS_ROW) ||
-                    Objects.equals(key, PREVIOUS_ROW_CELL) ||
-                    Objects.equals(key, PREVIOUS_ROW_EXTEND_SELECTION) ||
-                    Objects.equals(key, PREVIOUS_ROW_CHANGE_LEAD) ||
-                    Objects.equals(key, PREVIOUS_COLUMN) ||
-                    Objects.equals(key, PREVIOUS_COLUMN_CELL) ||
-                    Objects.equals(key, PREVIOUS_COLUMN_EXTEND_SELECTION) ||
-                    Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD) ||
-                    // Paging Actions.
-                    Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) ||
-                    Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
-                    Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
-                    Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
-                    Objects.equals(key, SCROLL_UP_CHANGE_SELECTION) ||
-                    Objects.equals(key, SCROLL_UP_EXTEND_SELECTION) ||
-                    Objects.equals(key, SCROLL_DOWN_CHANGE_SELECTION) ||
-                    Objects.equals(key, SCROLL_DOWN_EXTEND_SELECTION) ||
-                    Objects.equals(key, FIRST_COLUMN) ||
-                    Objects.equals(key, FIRST_COLUMN_EXTEND_SELECTION) ||
-                    Objects.equals(key, FIRST_ROW) ||
-                    Objects.equals(key, FIRST_ROW_EXTEND_SELECTION) ||
-                    Objects.equals(key, LAST_COLUMN) ||
-                    Objects.equals(key, LAST_COLUMN_EXTEND_SELECTION) ||
-                    Objects.equals(key, LAST_ROW) ||
-                    Objects.equals(key, LAST_ROW_EXTEND_SELECTION)) {
+                Objects.equals(key, NEXT_ROW_CELL) ||
+                Objects.equals(key, NEXT_ROW_EXTEND_SELECTION) ||
+                Objects.equals(key, NEXT_ROW_CHANGE_LEAD) ||
+                Objects.equals(key, NEXT_COLUMN) ||
+                Objects.equals(key, NEXT_COLUMN_CELL) ||
+                Objects.equals(key, NEXT_COLUMN_EXTEND_SELECTION) ||
+                Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) ||
+                Objects.equals(key, PREVIOUS_ROW) ||
+                Objects.equals(key, PREVIOUS_ROW_CELL) ||
+                Objects.equals(key, PREVIOUS_ROW_EXTEND_SELECTION) ||
+                Objects.equals(key, PREVIOUS_ROW_CHANGE_LEAD) ||
+                Objects.equals(key, PREVIOUS_COLUMN) ||
+                Objects.equals(key, PREVIOUS_COLUMN_CELL) ||
+                Objects.equals(key, PREVIOUS_COLUMN_EXTEND_SELECTION) ||
+                Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD) ||
+                // Paging Actions.
+                Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) ||
+                Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
+                Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
+                Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
+                Objects.equals(key, SCROLL_UP_CHANGE_SELECTION) ||
+                Objects.equals(key, SCROLL_UP_EXTEND_SELECTION) ||
+                Objects.equals(key, SCROLL_DOWN_CHANGE_SELECTION) ||
+                Objects.equals(key, SCROLL_DOWN_EXTEND_SELECTION) ||
+                Objects.equals(key, FIRST_COLUMN) ||
+                Objects.equals(key, FIRST_COLUMN_EXTEND_SELECTION) ||
+                Objects.equals(key, FIRST_ROW) ||
+                Objects.equals(key, FIRST_ROW_EXTEND_SELECTION) ||
+                Objects.equals(key, LAST_COLUMN) ||
+                Objects.equals(key, LAST_COLUMN_EXTEND_SELECTION) ||
+                Objects.equals(key, LAST_ROW) ||
+                Objects.equals(key, LAST_ROW_EXTEND_SELECTION)) {
 
                 if (table.isEditing() &&
-                        !table.getCellEditor().stopCellEditing()) {
+                    !table.getCellEditor().stopCellEditing()) {
                     return;
                 }
 
@@ -1545,10 +1546,11 @@ public abstract class TableUIBridge extends TableUI {
                 boolean changeLead = false;
                 if (Objects.equals(key, NEXT_ROW_CHANGE_LEAD) || Objects.equals(key, PREVIOUS_ROW_CHANGE_LEAD)) {
                     changeLead = (rsm.getSelectionMode()
-                            == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-                } else if (Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) || Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD)) {
+                                  == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                } else if (Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) || Objects.equals(key,
+                                                                                          PREVIOUS_COLUMN_CHANGE_LEAD)) {
                     changeLead = (csm.getSelectionMode()
-                            == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                                  == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                 }
 
                 if (changeLead) {
@@ -1558,7 +1560,7 @@ public abstract class TableUIBridge extends TableUI {
                         // for DefaultListSelectionModel
                         ((DefaultListSelectionModel) rsm).moveLeadSelectionIndex(leadRow);
                         if (getAdjustedLead(table, false, csm) == -1
-                                && table.getColumnCount() > 0) {
+                            && table.getColumnCount() > 0) {
 
                             ((DefaultListSelectionModel) csm).moveLeadSelectionIndex(0);
                         }
@@ -1567,7 +1569,7 @@ public abstract class TableUIBridge extends TableUI {
                         // for DefaultListSelectionModel
                         ((DefaultListSelectionModel) csm).moveLeadSelectionIndex(leadColumn);
                         if (getAdjustedLead(table, true, rsm) == -1
-                                && table.getRowCount() > 0) {
+                            && table.getRowCount() > 0) {
 
                             ((DefaultListSelectionModel) rsm).moveLeadSelectionIndex(0);
                         }
@@ -1770,8 +1772,8 @@ public abstract class TableUIBridge extends TableUI {
 
             // - nothing selected
             if (totalCount == 0 ||
-                    // - one item selected, and the lead is already selected
-                    (totalCount == 1 && table.isCellSelected(leadRow, leadColumn))) {
+                // - one item selected, and the lead is already selected
+                (totalCount == 1 && table.isCellSelected(leadRow, leadColumn))) {
 
                 stayInSelection = false;
 
@@ -1882,14 +1884,14 @@ public abstract class TableUIBridge extends TableUI {
                     Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD) ||
                     Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) ||
                     Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
-                        Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
-                        Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
-                        Objects.equals(key, FIRST_COLUMN) ||
-                        Objects.equals(key, FIRST_COLUMN_EXTEND_SELECTION) ||
-                        Objects.equals(key, LAST_COLUMN) ||
-                        Objects.equals(key, LAST_COLUMN_EXTEND_SELECTION) ||
-                        Objects.equals(key, NEXT_ROW_CELL) ||
-                        Objects.equals(key, PREVIOUS_ROW_CELL)) {
+                    Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
+                    Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
+                    Objects.equals(key, FIRST_COLUMN) ||
+                    Objects.equals(key, FIRST_COLUMN_EXTEND_SELECTION) ||
+                    Objects.equals(key, LAST_COLUMN) ||
+                    Objects.equals(key, LAST_COLUMN_EXTEND_SELECTION) ||
+                    Objects.equals(key, NEXT_ROW_CELL) ||
+                    Objects.equals(key, PREVIOUS_ROW_CELL)) {
 
                     return false;
                 }
@@ -1898,19 +1900,19 @@ public abstract class TableUIBridge extends TableUI {
             if (Objects.equals(key, CANCEL_EDITING) && sender instanceof JTable) {
                 return ((JTable) sender).isEditing();
             } else if (Objects.equals(key, NEXT_ROW_CHANGE_LEAD) ||
-                    Objects.equals(key, PREVIOUS_ROW_CHANGE_LEAD)) {
+                       Objects.equals(key, PREVIOUS_ROW_CHANGE_LEAD)) {
                 // discontinuous selection actions are only enabled for
                 // DefaultListSelectionModel
                 return sender != null &&
-                        ((JTable) sender).getSelectionModel()
-                                instanceof DefaultListSelectionModel;
+                       ((JTable) sender).getSelectionModel()
+                           instanceof DefaultListSelectionModel;
             } else if (Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) ||
-                    Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD)) {
+                       Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD)) {
                 // discontinuous selection actions are only enabled for
                 // DefaultListSelectionModel
                 return sender != null &&
-                        ((JTable) sender).getColumnModel().getSelectionModel()
-                                instanceof DefaultListSelectionModel;
+                       ((JTable) sender).getColumnModel().getSelectionModel()
+                           instanceof DefaultListSelectionModel;
             } else if (Objects.equals(key, ADD_TO_SELECTION) && sender instanceof JTable) {
                 // This action is typically bound to SPACE.
                 // If the table is already in an editing mode, SPACE should
@@ -1990,10 +1992,10 @@ public abstract class TableUIBridge extends TableUI {
 
                 htmlStr.append("<html>\n<body>\n<table>\n");
 
-                for (int row = 0; row < rows.length; row++) {
+                for (int value : rows) {
                     htmlStr.append("<tr>\n");
-                    for (int col = 0; col < cols.length; col++) {
-                        Object obj = table.getValueAt(rows[row], cols[col]);
+                    for (int i : cols) {
+                        Object obj = table.getValueAt(value, i);
                         String val = ((obj == null) ? "" : obj.toString());
                         plainStr.append(val).append('\t');
                         htmlStr.append("  <td>").append(val).append("</td>\n");
@@ -2100,8 +2102,8 @@ public abstract class TableUIBridge extends TableUI {
      * The type Handler.
      */
     protected class Handler implements FocusListener, MouseInputListener,
-            PropertyChangeListener, ListSelectionListener, ActionListener,
-            DragRecognitionSupport.BeforeDrag {
+                                       PropertyChangeListener, ListSelectionListener, ActionListener,
+                                       DragRecognitionSupport.BeforeDrag {
 
         /**
          * The Dispatch component.
@@ -2254,7 +2256,7 @@ public abstract class TableUIBridge extends TableUI {
                     Object binding = (map != null) ? map.get(keyStroke) : null;
                     if (binding == null) {
                         map = component.getInputMap(JComponent.
-                                                            WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+                                                        WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
                         binding = (map != null) ? map.get(keyStroke) : null;
                     }
                     if (binding != null) {
@@ -2292,10 +2294,10 @@ public abstract class TableUIBridge extends TableUI {
 
             if (isFileList) {
                 shouldStartTimer =
-                        table.isCellSelected(pressedRow, pressedCol) &&
-                                !e.isShiftDown() &&
-                                !DarkUIUtil.isMenuShortcutKeyDown(e) &&
-                                !outsidePrefSize;
+                    table.isCellSelected(pressedRow, pressedCol) &&
+                    !e.isShiftDown() &&
+                    !DarkUIUtil.isMenuShortcutKeyDown(e) &&
+                    !outsidePrefSize;
             }
 
             if (table.getDragEnabled()) {
@@ -2351,9 +2353,9 @@ public abstract class TableUIBridge extends TableUI {
                 Point p = e.getPoint();
 
                 if (pressedEvent != null &&
-                        table.rowAtPoint(p) == pressedRow &&
-                        table.columnAtPoint(p) == pressedCol &&
-                        table.editCellAt(pressedRow, pressedCol, pressedEvent)) {
+                    table.rowAtPoint(p) == pressedRow &&
+                    table.columnAtPoint(p) == pressedCol &&
+                    table.editCellAt(pressedRow, pressedCol, pressedEvent)) {
 
                     setDispatchComponent(pressedEvent);
                     repostEvent(pressedEvent);
@@ -2380,9 +2382,9 @@ public abstract class TableUIBridge extends TableUI {
                 // If shift is down in multi-select, we should just return.
                 // For single select or non-shift-click, clear the selection
                 if (e.getID() == MouseEvent.MOUSE_PRESSED &&
-                        (!e.isShiftDown() ||
-                                table.getSelectionModel().getSelectionMode() ==
-                                        ListSelectionModel.SINGLE_SELECTION)) {
+                    (!e.isShiftDown() ||
+                     table.getSelectionModel().getSelectionMode() ==
+                     ListSelectionModel.SINGLE_SELECTION)) {
                     table.clearSelection();
                     TableCellEditor tce = table.getCellEditor();
                     if (tce != null) {
@@ -2524,9 +2526,9 @@ public abstract class TableUIBridge extends TableUI {
 
             // if this is a single selection table
             if ((table.getSelectionModel().getSelectionMode() ==
-                    ListSelectionModel.SINGLE_SELECTION) &&
-                    (table.getColumnModel().getSelectionModel().getSelectionMode() ==
-                            ListSelectionModel.SINGLE_SELECTION)) {
+                 ListSelectionModel.SINGLE_SELECTION) &&
+                (table.getColumnModel().getSelectionModel().getSelectionMode() ==
+                 ListSelectionModel.SINGLE_SELECTION)) {
 
                 return true;
             }
@@ -2542,7 +2544,7 @@ public abstract class TableUIBridge extends TableUI {
         protected void setValueIsAdjusting(final boolean flag) {
             table.getSelectionModel().setValueIsAdjusting(flag);
             table.getColumnModel().getSelectionModel().
-                    setValueIsAdjusting(flag);
+                setValueIsAdjusting(flag);
         }
 
         public void valueChanged(final ListSelectionEvent e) {
@@ -2567,7 +2569,7 @@ public abstract class TableUIBridge extends TableUI {
                 table.getSelectionModel().addSelectionInterval(pressedRow,
                                                                pressedRow);
                 table.getColumnModel().getSelectionModel().
-                        addSelectionInterval(pressedCol, pressedCol);
+                    addSelectionInterval(pressedCol, pressedCol);
             }
 
             pressedEvent = null;
@@ -2621,7 +2623,7 @@ public abstract class TableUIBridge extends TableUI {
                 JTableHeader header = table.getTableHeader();
                 if (header != null) {
                     header.setComponentOrientation(
-                            (ComponentOrientation) event.getNewValue());
+                        (ComponentOrientation) event.getNewValue());
                 }
             } else if ("dropLocation".equals(changeName)) {
                 JTable.DropLocation oldValue = (JTable.DropLocation) event.getOldValue();

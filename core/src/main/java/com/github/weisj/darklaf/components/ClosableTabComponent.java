@@ -55,7 +55,7 @@ public class ClosableTabComponent extends JPanel {
 
     protected static class TabLabel extends JLabel {
 
-        private ClosableTabComponent tabComponent;
+        private final ClosableTabComponent tabComponent;
 
         protected TabLabel(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;
@@ -76,19 +76,6 @@ public class ClosableTabComponent extends JPanel {
     protected static class TabButton extends JButton implements ActionListener {
 
         private final ClosableTabComponent tabComponent;
-        private final MouseListener mouseListener = new MouseAdapter() {
-            @Override
-            public void mouseEntered(final MouseEvent e) {
-                ComponentUI ui = tabComponent.pane.getUI();
-                if (ui instanceof DarkTabbedPaneUI) {
-                    int i = tabComponent.pane.indexOfTabComponent(tabComponent);
-                    if (i != -1) {
-                        ((DarkTabbedPaneUI) ui).setRolloverTab(i);
-                        tabComponent.pane.repaint();
-                    }
-                }
-            }
-        };
 
         protected TabButton(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;
@@ -99,6 +86,19 @@ public class ClosableTabComponent extends JPanel {
             setIcon(UIManager.getIcon("TabbedPane.tabCloseIcon"));
             setRolloverIcon(UIManager.getIcon("TabbedPane.tabCloseHoverIcon"));
             addActionListener(this);
+            MouseListener mouseListener = new MouseAdapter() {
+                @Override
+                public void mouseEntered(final MouseEvent e) {
+                    ComponentUI ui = tabComponent.pane.getUI();
+                    if (ui instanceof DarkTabbedPaneUI) {
+                        int i = tabComponent.pane.indexOfTabComponent(tabComponent);
+                        if (i != -1) {
+                            ((DarkTabbedPaneUI) ui).setRolloverTab(i);
+                            tabComponent.pane.repaint();
+                        }
+                    }
+                }
+            };
             addMouseListener(mouseListener);
         }
 

@@ -37,7 +37,8 @@ import java.awt.event.MouseEvent;
  * press followed by movement by <code>DragSource.getDragThreshold()</code> pixels. An instance of this class is
  * maintained per AppContext, and the public static methods call into the appropriate instance.
  *
- * <p>This is a c and p of core (package private) needed for BasicXListUI. It differs from core in that references to sun
+ * <p>This is a c and p of core (package private) needed for BasicXListUI. It differs from core in that references to
+ * sun
  * packages have been replaced.
  * <ul>
  * <li> a static method of SunDragSourceContextPeer has been copied into SwingXUtilities
@@ -71,7 +72,7 @@ public class DragRecognitionSupport {
         component = (JComponent) me.getSource();
 
         if (mapDragOperationFromModifiers(me, component.getTransferHandler())
-                != TransferHandler.NONE) {
+            != TransferHandler.NONE) {
 
             motionThreshold = DragSource.getDragThreshold();
             dndArmedEvent = me;
@@ -96,7 +97,7 @@ public class DragRecognitionSupport {
 //        }
 
         DragRecognitionSupport support = (DragRecognitionSupport)
-                UIManager.get("sharedInstance.dragRecognitionSupport");
+            UIManager.get("sharedInstance.dragRecognitionSupport");
         if (support == null) {
             support = new DragRecognitionSupport();
             UIManager.put("sharedInstance.dragRecognitionSupport", support);
@@ -112,8 +113,8 @@ public class DragRecognitionSupport {
         }
         // PENDING JW: c'p from SunDragSourceContextPeer
         return SwingXUtilities.
-                                      convertModifiersToDropAction(me.getModifiersEx(),
-                                                                   th.getSourceActions(component));
+                                  convertModifiersToDropAction(me.getModifiersEx(),
+                                                               th.getSourceActions(component));
     }
 
     private void clearState() {
@@ -125,12 +126,12 @@ public class DragRecognitionSupport {
      * If a dnd recognition has been going on, return the MouseEvent that started the recognition. Otherwise, return
      * null.
      *
-     * @param  me the MouseEvent.
+     * @param me the MouseEvent.
      * @return true if mouse has been released.
      */
     public static MouseEvent mouseReleased(final MouseEvent me) {
         return getDragRecognitionSupport().
-                                                  mouseReleasedImpl(me);
+                                              mouseReleasedImpl(me);
     }
 
     /**

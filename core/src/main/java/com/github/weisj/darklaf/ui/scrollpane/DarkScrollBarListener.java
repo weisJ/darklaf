@@ -43,10 +43,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
     protected final JScrollBar scrollbar;
     private final DarkScrollBarUI ui;
 
-    private Animator trackFadeoutAnimator;
-    private Animator trackFadeinAnimator;
-    private Animator thumbFadeoutAnimator;
-    private Animator thumbFadeinAnimator;
+    private final Animator trackFadeoutAnimator;
+    private final Animator trackFadeinAnimator;
+    private final Animator thumbFadeoutAnimator;
+    private final Animator thumbFadeinAnimator;
 
     protected boolean mouseOverThumb = false;
     protected boolean mouseOverTrack = false;
@@ -183,7 +183,7 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
     }
 
     protected void resetAnimators(final Animator fadeInAnimator, final Animator fadeOutAnimator,
-                                final boolean overAnimatedComponent, final float currentAlpha, final float maxAlpha) {
+                                  final boolean overAnimatedComponent, final float currentAlpha, final float maxAlpha) {
         fadeInAnimator.reset();
         fadeOutAnimator.reset();
         if (scrollbar != null && (scrollbar.getValueIsAdjusting() || overAnimatedComponent)) {
@@ -221,7 +221,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class TrackFadeOutAnimator extends Animator {
         public TrackFadeOutAnimator() {
-            super("Track fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT, DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false);
+            super("Track fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
+                  DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false);
         }
 
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
@@ -245,7 +246,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class ThumbFadeInAnimator extends Animator {
         public ThumbFadeInAnimator() {
-            super("Thumb fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT / 2, DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
+            super("Thumb fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT / 2,
+                  DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
         }
 
         @Override
@@ -273,7 +275,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class TrackFadeInAnimator extends Animator {
         public TrackFadeInAnimator() {
-            super("Track fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT, DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
+            super("Track fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT,
+                  DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
         }
 
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
@@ -294,7 +297,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class ThumbFadeOutAnimator extends Animator {
         public ThumbFadeOutAnimator() {
-            super("Adjustment fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT, DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false);
+            super("Adjustment fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
+                  DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false);
         }
 
         @Override

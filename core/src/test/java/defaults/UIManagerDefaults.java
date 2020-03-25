@@ -146,7 +146,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
             //  Get the attribute map for this component, or
             //  create a map when one is not found
             final TreeMap<String, Object> attributeMap =
-                    items.computeIfAbsent(itemName, k -> new TreeMap<>());
+                items.computeIfAbsent(itemName, k -> new TreeMap<>());
             //  Add the attribute to the map for this component
             attributeMap.put(key.toString(), value);
         }
@@ -299,7 +299,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
 
                 for (int column = 0; column < table.getColumnCount(); column++) {
                     final Component comp =
-                            table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+                        table.prepareRenderer(table.getCellRenderer(row, column), row, column);
                     rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
                 }
                 table.setRowHeight(row, rowHeight);

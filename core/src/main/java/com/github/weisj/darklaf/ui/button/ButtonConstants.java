@@ -48,17 +48,17 @@ public interface ButtonConstants {
 
     static boolean chooseAlternativeArc(final Component c) {
         return c instanceof AbstractButton
-            && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_ALT_ARC));
+               && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_ALT_ARC));
     }
 
     static boolean isLabelButton(final Component c) {
         return c instanceof AbstractButton
-            && VARIANT_ONLY_LABEL.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
+               && VARIANT_ONLY_LABEL.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
     }
 
     static boolean isNoArc(final Component c) {
         return c instanceof AbstractButton
-            && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_NO_ARC));
+               && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_NO_ARC));
     }
 
     static boolean isSquare(final Component c) {
@@ -84,7 +84,7 @@ public interface ButtonConstants {
 
     static boolean isFullShadow(final Component c) {
         return c instanceof AbstractButton
-            && VARIANT_FULL_SHADOW.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
+               && VARIANT_FULL_SHADOW.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
     }
 
     static boolean doConvertToShadow(final AbstractButton b) {
@@ -93,8 +93,8 @@ public interface ButtonConstants {
 
     static boolean convertIconButtonToShadow(final AbstractButton b) {
         return !(b instanceof UIResource)
-            && UIManager.getBoolean("Button.convertIconOnlyToShadow")
-            && !Boolean.TRUE.equals(b.getClientProperty(KEY_NO_SHADOW_OVERWRITE));
+               && UIManager.getBoolean("Button.convertIconOnlyToShadow")
+               && !Boolean.TRUE.equals(b.getClientProperty(KEY_NO_SHADOW_OVERWRITE));
     }
 
     static boolean isIconOnly(final AbstractButton b) {

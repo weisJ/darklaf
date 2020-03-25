@@ -180,7 +180,7 @@ public class DarkTextAreaUI extends DarkTextUI {
      * @since 1.6
      */
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-            final JComponent c) {
+        final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
     }
@@ -317,7 +317,9 @@ public class DarkTextAreaUI extends DarkTextUI {
             }
 
             public float getPreferredSpan(final int axis) {
-                if (getViewCount() != 1) { throw new Error("One child view is assumed."); }
+                if (getViewCount() != 1) {
+                    throw new Error("One child view is assumed.");
+                }
 
                 View v = getView(0);
                 return v.getPreferredSpan(axis);

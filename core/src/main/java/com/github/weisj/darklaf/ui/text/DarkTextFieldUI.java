@@ -126,8 +126,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
             Cursor cursor = action == ClickAction.NONE
-                         ? Cursor.getDefaultCursor()
-                         : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                            ? Cursor.getDefaultCursor()
+                            : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
             getComponent().setCursor(cursor);
         }
     }

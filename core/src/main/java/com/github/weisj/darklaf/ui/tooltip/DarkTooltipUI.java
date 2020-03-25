@@ -52,7 +52,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     protected JRootPane lastRootPane;
     protected ToolTipStyle style;
     protected boolean isTipTextChanging;
-    protected MouseListener exitListener = new MouseAdapter() {
+    protected final MouseListener exitListener = new MouseAdapter() {
         @Override
         public void mouseExited(final MouseEvent e) {
             boolean inside = isInside(e);
@@ -64,7 +64,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             }
         }
     };
-    protected MouseListener mouseListener = new MouseAdapter() {
+    protected final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseEntered(final MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) return;
@@ -90,7 +90,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             exitListener.mouseExited(e);
         }
     };
-    protected PropertyChangeListener componentPropertyChaneListener = e -> {
+    protected final PropertyChangeListener componentPropertyChaneListener = e -> {
         if (KEY_STYLE.equals(e.getPropertyName())) {
             updateStyle();
         }
@@ -233,7 +233,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         SwingUtilities.convertPointFromScreen(toolTipPoint, toolTip);
         SwingUtilities.convertPointFromScreen(compPoint, toolTip.getComponent());
         return toolTip.getComponent().contains(compPoint)
-            || contains(toolTip, toolTipPoint.x, toolTipPoint.y);
+               || contains(toolTip, toolTipPoint.x, toolTipPoint.y);
     }
 
     @Override

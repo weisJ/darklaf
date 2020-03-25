@@ -54,11 +54,7 @@ public class TabbedPaneKeyboardShortcut extends JPanel {
     }
 
     public static void main(final String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                TabbedPaneKeyboardShortcut.showFrame();
-            }
-        });
+        SwingUtilities.invokeLater(() -> TabbedPaneKeyboardShortcut.showFrame());
     }
 
     public static void showFrame() {

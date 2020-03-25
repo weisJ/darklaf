@@ -24,13 +24,7 @@
 package com.github.weisj.darklaf.ui.text;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Segment;
-import javax.swing.text.TextAction;
+import javax.swing.text.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -80,7 +74,7 @@ public class SelectLineAction extends TextAction {
                     document.getText(currentLineStart, count, currentLine);
                     int firstNonWhitespace = getFirstNonWhitespacePos();
                     firstNonWhitespace = currentLineStart +
-                            (firstNonWhitespace - currentLine.offset);
+                                         (firstNonWhitespace - currentLine.offset);
                     if (caretPosition != firstNonWhitespace) {
                         newPos = firstNonWhitespace;
                     } else {

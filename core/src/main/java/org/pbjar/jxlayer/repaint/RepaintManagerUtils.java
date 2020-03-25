@@ -86,7 +86,7 @@ public final class RepaintManagerUtils {
      * @param provider the provider
      */
     public static void ensureRepaintManagerSet(
-            final Component c, final RepaintManagerProvider provider) {
+        final Component c, final RepaintManagerProvider provider) {
         ensureImpl(RepaintManager.currentManager(c), provider);
     }
 
@@ -97,7 +97,7 @@ public final class RepaintManagerUtils {
      * @param provider the provider that provides for the type and implementation of a delegated RepaintManager
      */
     private static void ensureImpl(
-            final RepaintManager delegate, final RepaintManagerProvider provider) {
+        final RepaintManager delegate, final RepaintManagerProvider provider) {
         /*
          * Setup a traversal variable.
          */
@@ -109,7 +109,7 @@ public final class RepaintManagerUtils {
                     manager = ((ForwardingRepaintManager) manager).getDelegateManager();
                 } else {
                     RepaintManager.setCurrentManager(
-                            createManager(provider.getForwardingRepaintManagerClass(), delegate));
+                        createManager(provider.getForwardingRepaintManagerClass(), delegate));
                     break;
                 }
             } else {
@@ -117,7 +117,7 @@ public final class RepaintManagerUtils {
                     manager = ((WrappedRepaintManager) manager).getDelegateManager();
                 } else {
                     RepaintManager.setCurrentManager(
-                            createManager(provider.getWrappedRepaintManagerClass(), delegate));
+                        createManager(provider.getWrappedRepaintManagerClass(), delegate));
                     break;
                 }
             }
@@ -126,10 +126,9 @@ public final class RepaintManagerUtils {
 
 
     private static RepaintManager createManager(
-            final Class<? extends RepaintManager> clazz, final RepaintManager delegate) {
+        final Class<? extends RepaintManager> clazz, final RepaintManager delegate) {
         try {
-            RepaintManager newManager = clazz.getConstructor(RepaintManager.class).newInstance(delegate);
-            return newManager;
+            return clazz.getConstructor(RepaintManager.class).newInstance(delegate);
         } catch (Throwable t) {
             throw new RuntimeException("Cannot instantiate " + clazz.getName(), t);
         }
@@ -143,7 +142,7 @@ public final class RepaintManagerUtils {
      * @param provider the provider
      */
     public static void ensureRepaintManagerSet(
-            final JComponent c, final RepaintManagerProvider provider) {
+        final JComponent c, final RepaintManagerProvider provider) {
         ensureImpl(RepaintManager.currentManager(c), provider);
     }
 
@@ -188,7 +187,7 @@ public final class RepaintManagerUtils {
             message.setText(text);
             message.setEditable(false);
             JOptionPane.showMessageDialog(
-                    c, message, "The RepaintManager tree", JOptionPane.INFORMATION_MESSAGE);
+                c, message, "The RepaintManager tree", JOptionPane.INFORMATION_MESSAGE);
         }
 
         private void appendClass(final PrintWriter writer, final Object obj) {

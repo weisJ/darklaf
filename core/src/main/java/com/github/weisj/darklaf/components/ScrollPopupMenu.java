@@ -83,8 +83,8 @@ public class ScrollPopupMenu extends JPopupMenu {
         view = new JPanel(new BorderLayout());
         view.add(this, BorderLayout.CENTER);
         OverlayScrollPane overlayScrollPane =
-                new OverlayScrollPane(view, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                      JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            new OverlayScrollPane(view, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         JScrollBar bar = overlayScrollPane.getVerticalScrollBar();
         bar.putClientProperty("JScrollBar.thin", Boolean.TRUE);
         DarkUIUtil.doNotCancelPopupSetup(bar);

@@ -162,7 +162,7 @@ public class ColorWheel extends JComponent {
 
         if (myImage == null) {
             myImage = createImage(new ColorWheelImageProducer(
-                    _size - BORDER_SIZE * 2, _size - BORDER_SIZE * 2, myBrightness));
+                _size - BORDER_SIZE * 2, _size - BORDER_SIZE * 2, myBrightness));
             myWheel = new Rectangle(BORDER_SIZE, BORDER_SIZE, _size - BORDER_SIZE * 2,
                                     _size - BORDER_SIZE * 2);
         }

@@ -134,7 +134,7 @@ public class ToolTipUtil {
             return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds);
         }
         return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds)
-            && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
+               && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
     }
 
     protected static ToolTipContext getToolTipContext(final JComponent comp) {

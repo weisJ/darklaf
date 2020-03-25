@@ -70,7 +70,7 @@ public final class TransformUtils {
      */
 
     public static JXLayer<JComponent> createTransformJXLayer(
-            final JComponent component, final double scale, final Map<RenderingHints.Key, Object> hints) {
+        final JComponent component, final double scale, final Map<RenderingHints.Key, Object> hints) {
         DefaultTransformModel model = new DefaultTransformModel();
         model.setScale(scale);
         return createTransformJXLayer(component, model, hints);
@@ -87,7 +87,7 @@ public final class TransformUtils {
 
 
     public static JXLayer<JComponent> createTransformJXLayer(
-            final JComponent component, final TransformModel model, final Map<RenderingHints.Key, Object> hints) {
+        final JComponent component, final TransformModel model, final Map<RenderingHints.Key, Object> hints) {
         TransformUI ui = new TransformUI(model);
         ui.setRenderingHints(hints);
         return new JXLayer<>(component, ui);
@@ -114,7 +114,7 @@ public final class TransformUtils {
      */
 
     public static JXLayer<JComponent> createTransformJXLayer(
-            final JComponent component, final TransformModel model) {
+        final JComponent component, final TransformModel model) {
         return createTransformJXLayer(component, model, null);
     }
 }

@@ -122,7 +122,7 @@ public class DarkMenuUI extends BasicMenuUI {
 
     protected Icon getArrowIcon() {
         boolean hover = menuItem.getModel().isArmed()
-                || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
+                        || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
         return hover ? arrowIconHover : arrowIcon;
     }
 
@@ -137,7 +137,7 @@ public class DarkMenuUI extends BasicMenuUI {
         ButtonModel model = lh.getMenuItem().getModel();
         if (model.isEnabled()) {
             accRect.x = lh.getViewRect().x + lh.getViewRect().width
-                    - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
+                        - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
         }
     }
 
@@ -156,9 +156,11 @@ public class DarkMenuUI extends BasicMenuUI {
         DarkUIUtil.applyInsets(viewRect, mi.getInsets());
 
         MenuItemLayoutHelper lh = new MenuItemLayoutHelper(mi, checkIcon,
-                                                           arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
+                                                           arrowIcon, viewRect, defaultTextIconGap,
+                                                           acceleratorDelimiter,
                                                            mi.getComponentOrientation().isLeftToRight(), mi.getFont(),
-                                                           acceleratorFont, MenuItemLayoutHelper.useCheckAndArrow(menuItem),
+                                                           acceleratorFont,
+                                                           MenuItemLayoutHelper.useCheckAndArrow(menuItem),
                                                            getPropertyPrefix());
         MenuItemLayoutHelper.LayoutResult lr = lh.layoutMenuItem();
 
@@ -181,7 +183,7 @@ public class DarkMenuUI extends BasicMenuUI {
         if (lh.getCheckIcon() != null) {
             ButtonModel model = lh.getMenuItem().getModel();
             if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                    && model.isSelected())) {
+                                    && model.isSelected())) {
                 g.setColor(foreground);
             } else {
                 g.setColor(holdc);
@@ -221,7 +223,7 @@ public class DarkMenuUI extends BasicMenuUI {
             } else {
                 // *** paint the accText normally
                 if (model.isArmed()
-                        || (lh.getMenuItem() instanceof JMenu
+                    || (lh.getMenuItem() instanceof JMenu
                         && model.isSelected())) {
                     g.setColor(acceleratorSelectionForeground);
                 } else {
@@ -229,7 +231,7 @@ public class DarkMenuUI extends BasicMenuUI {
                 }
                 SwingUtilities2.drawString(lh.getMenuItem(), g, lh.getAccText(),
                                            lr.getAccRect().x, lr.getAccRect().y +
-                                                   lh.getAccFontMetrics().getAscent());
+                                                              lh.getAccFontMetrics().getAscent());
             }
         }
         config.restore();
@@ -280,7 +282,7 @@ public class DarkMenuUI extends BasicMenuUI {
         if (lh.getArrowIcon() != null) {
             ButtonModel model = lh.getMenuItem().getModel();
             if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                    && model.isSelected())) {
+                                    && model.isSelected())) {
                 g.setColor(foreground);
             }
             if (lh.useCheckAndArrow()) {
@@ -308,7 +310,7 @@ public class DarkMenuUI extends BasicMenuUI {
             }
             g.setColor(oldColor);
         } else if (model.isArmed() || (menuItem instanceof JMenu &&
-                model.isSelected())) {
+                                       model.isSelected())) {
             g.setColor(bgColor);
             g.fillRect(0, 0, menuWidth, menuHeight);
             g.setColor(oldColor);

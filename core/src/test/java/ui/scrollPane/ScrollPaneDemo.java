@@ -66,16 +66,20 @@ public final class ScrollPaneDemo implements ComponentDemo {
 
         controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("UpperLeft corner") {{
-            addActionListener(e -> scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, isSelected() ? upperLeft : null));
+            addActionListener(
+                e -> scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, isSelected() ? upperLeft : null));
         }});
         controlPanel.add(new JCheckBox("UpperRight corner") {{
-            addActionListener(e -> scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, isSelected() ? upperRight : null));
+            addActionListener(
+                e -> scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, isSelected() ? upperRight : null));
         }});
         controlPanel.add(new JCheckBox("LowerLeft corner") {{
-            addActionListener(e -> scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, isSelected() ? lowerLeft : null));
+            addActionListener(
+                e -> scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, isSelected() ? lowerLeft : null));
         }});
         controlPanel.add(new JCheckBox("LowerRight corner") {{
-            addActionListener(e -> scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, isSelected() ? lowerRight : null));
+            addActionListener(
+                e -> scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, isSelected() ? lowerRight : null));
         }});
         return panel;
     }

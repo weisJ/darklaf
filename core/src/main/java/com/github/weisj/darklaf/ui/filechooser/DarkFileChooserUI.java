@@ -145,7 +145,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                     }
                 }
             }
-        );
+                                          );
         if (fileChooser.isMultiSelectionEnabled()) {
             setFileName(fileNameString(fileChooser.getSelectedFiles()));
         } else {

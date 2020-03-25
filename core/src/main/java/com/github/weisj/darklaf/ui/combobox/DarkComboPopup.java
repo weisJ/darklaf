@@ -58,7 +58,7 @@ public class DarkComboPopup extends BasicComboPopup {
      *
      * @param combo an instance of {@code JComboBox}
      */
-    public DarkComboPopup(final JComboBox combo) {
+    public DarkComboPopup(final JComboBox<Object> combo) {
         super(combo);
     }
 
@@ -115,11 +115,6 @@ public class DarkComboPopup extends BasicComboPopup {
     }
 
     @Override
-    protected void configureList() {
-        super.configureList();
-    }
-
-    @Override
     protected void togglePopup() {
         if (comboBox.getItemCount() == 0) return;
         if (visible) {
@@ -130,18 +125,6 @@ public class DarkComboPopup extends BasicComboPopup {
             SwingUtilities.invokeLater(this::show);
         }
     }
-
-    @Override
-    public void show() {
-        super.show();
-    }
-
-
-    @Override
-    public void hide() {
-        super.hide();
-    }
-
 
     protected void reset() {
         lastEvent = 0;

@@ -28,17 +28,7 @@ import com.github.weisj.darklaf.ui.html.DarkHTML;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.plaf.basic.BasicTextFieldUI;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.FieldView;
-import javax.swing.text.GlyphView;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.ParagraphView;
-import javax.swing.text.Position;
-import javax.swing.text.View;
-import javax.swing.text.ViewFactory;
+import javax.swing.text.*;
 import java.awt.*;
 
 /**
@@ -115,8 +105,8 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
                 }
                 if (fieldView instanceof I18nFieldView) {
                     int fieldBaseline = DarkHTML.getBaseline(
-                            fieldView, width - insets.left - insets.right,
-                            height);
+                        fieldView, width - insets.left - insets.right,
+                        height);
                     if (fieldBaseline < 0) {
                         return -1;
                     }
@@ -139,7 +129,7 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
      * @since 1.6
      */
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-            final JComponent c) {
+        final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CENTER_OFFSET;
     }
@@ -320,7 +310,7 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
          */
         public Shape modelToView(final int p0, final Position.Bias b0,
                                  final int p1, final Position.Bias b1, final Shape a)
-                throws BadLocationException {
+            throws BadLocationException {
             return super.modelToView(p0, b0, p1, b1, adjustAllocation(a));
         }
 

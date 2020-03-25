@@ -38,11 +38,11 @@ import java.awt.*;
  */
 public class DarkSpinnerBorder implements Border, UIResource {
 
-    protected Color focusBorderColor;
-    protected Color borderColor;
-    protected Color inactiveBorderColor;
-    protected int arc;
-    protected int borderSize;
+    protected final Color focusBorderColor;
+    protected final Color borderColor;
+    protected final Color inactiveBorderColor;
+    protected final int arc;
+    protected final int borderSize;
     protected Insets insets;
     protected Insets cellInsets;
 

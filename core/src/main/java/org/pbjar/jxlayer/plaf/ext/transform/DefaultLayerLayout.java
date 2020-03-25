@@ -104,8 +104,8 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
             Insets insets = layer.getInsets();
             view.setLocation(insets.left, insets.top);
             view.setSize(
-                    layer.getWidth() - insets.left - insets.right,
-                    layer.getHeight() - insets.top - insets.bottom);
+                layer.getWidth() - insets.left - insets.right,
+                layer.getHeight() - insets.top - insets.bottom);
         }
         if (glassPane != null) {
             glassPane.setLocation(0, 0);

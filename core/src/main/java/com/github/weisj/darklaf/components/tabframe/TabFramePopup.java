@@ -66,7 +66,7 @@ public interface TabFramePopup {
      */
     default void close() {
         if (getTabFrame() != null && getAlignment() != null && getIndex() >= 0
-                && getTabFrame().isSelected(getAlignment(), getIndex())) {
+            && getTabFrame().isSelected(getAlignment(), getIndex())) {
             getTabFrame().closeTab(getAlignment(), getIndex());
         }
     }
@@ -119,7 +119,7 @@ public interface TabFramePopup {
      */
     default void open() {
         if (getTabFrame() != null && getAlignment() != null && getIndex() >= 0
-                && !getTabFrame().isSelected(getAlignment(), getIndex())) {
+            && !getTabFrame().isSelected(getAlignment(), getIndex())) {
             getTabFrame().closeTab(getAlignment(), getIndex());
         }
     }

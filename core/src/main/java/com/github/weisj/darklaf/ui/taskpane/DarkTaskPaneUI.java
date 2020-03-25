@@ -95,8 +95,8 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     }
 
     protected static class DarkContentPaneBorder implements Border, UIResource {
-        protected Color color;
-        protected int arc;
+        protected final Color color;
+        protected final int arc;
 
 
         public DarkContentPaneBorder(final Color color, final int arc) {

@@ -32,8 +32,8 @@ import java.awt.*;
  */
 public class DarkTableHeaderCorner extends JComponent implements UIResource {
 
-    protected Color borderColor;
-    protected Color background;
+    protected final Color borderColor;
+    protected final Color background;
 
     public DarkTableHeaderCorner() {
         background = UIManager.getColor("TableHeader.background");

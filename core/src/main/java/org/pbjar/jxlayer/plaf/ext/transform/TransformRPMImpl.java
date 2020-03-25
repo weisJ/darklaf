@@ -59,7 +59,7 @@ public final class TransformRPMImpl {
      *
      * @see #hackInitialization(RepaintManager, RepaintManager)
      */
-    public static boolean hack = false;
+    public static final boolean hack = false;
 
     static {
         LOGGER.setUseParentHandlers(false);
@@ -147,22 +147,22 @@ public final class TransformRPMImpl {
                 switch (bufferStrategyType) {
                     case (0):
                         LOGGER.warning("Copied bufferStrategyType "
-                                               + bufferStrategyType
-                                               + ": BUFFER_STRATEGY_NOT_SPECIFIED");
+                                       + bufferStrategyType
+                                       + ": BUFFER_STRATEGY_NOT_SPECIFIED");
                         break;
                     case (1):
                         LOGGER.warning("Copied bufferStrategyType "
-                                               + bufferStrategyType
-                                               + ": BUFFER_STRATEGY_SPECIFIED_ON");
+                                       + bufferStrategyType
+                                       + ": BUFFER_STRATEGY_SPECIFIED_ON");
                         break;
                     case (2):
                         LOGGER.warning("Copied bufferStrategyType "
-                                               + bufferStrategyType
-                                               + ": BUFFER_STRATEGY_SPECIFIED_OFF");
+                                       + bufferStrategyType
+                                       + ": BUFFER_STRATEGY_SPECIFIED_OFF");
                         break;
                     default:
                         LOGGER.warning("Copied bufferStrategyType "
-                                               + bufferStrategyType + ": ???");
+                                       + bufferStrategyType + ": ???");
                         break;
                 }
             } catch (Throwable t) {
@@ -181,7 +181,7 @@ public final class TransformRPMImpl {
     private static JXLayer<?> findJXLayer(final JComponent aComponent) {
 
         JXLayer<?> layer = (JXLayer<?>) SwingUtilities.getAncestorOfClass(
-                JXLayer.class, aComponent);
+            JXLayer.class, aComponent);
         if (layer != null) {
             LayerUI<?> ui = ((JXLayer<?>) layer).getUI();
             if (ui instanceof TransformUI) {

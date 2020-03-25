@@ -54,11 +54,11 @@ import java.util.Objects;
  */
 public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingConstants {
     // Rollover button implementation.
-    protected static String IS_ROLLOVER = "JToolBar.isRollover";
+    protected static final String IS_ROLLOVER = "JToolBar.isRollover";
     protected static Border rolloverBorder;
     protected static Border nonRolloverBorder;
     protected static Border nonRolloverToggleBorder;
-    protected static String FOCUSED_COMP_INDEX = "JToolBar.focusedCompIndex";
+    protected static final String FOCUSED_COMP_INDEX = "JToolBar.focusedCompIndex";
     /**
      * The instance of {@code JToolBar}.
      */
@@ -115,8 +115,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      */
     protected String constraintBeforeFloating = BorderLayout.NORTH;
     protected boolean rolloverBorders = false;
-    protected HashMap<AbstractButton, Border> borderTable = new HashMap<>();
-    protected Hashtable<AbstractButton, Boolean> rolloverTable = new Hashtable<>();
+    protected final HashMap<AbstractButton, Border> borderTable = new HashMap<>();
+    protected final Hashtable<AbstractButton, Boolean> rolloverTable = new Hashtable<>();
     /**
      * As of Java 2 platform v1.3 this previously undocumented field is no longer used. Key bindings are now defined by
      * the LookAndFeel, please refer to the key bindings specification for further details.
@@ -189,7 +189,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         uninstallKeyboardActions();
 
         // Clear instance vars
-        if (isFloating()) { setFloating(false, null); }
+        if (isFloating()) {
+            setFloating(false, null);
+        }
 
         floatingToolBar = null;
         dragWindow = null;
@@ -332,11 +334,11 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             floatingColor = UIManager.getColor("ToolBar.floatingBackground");
         }
         if (dockingBorderColor == null ||
-                dockingBorderColor instanceof UIResource) {
+            dockingBorderColor instanceof UIResource) {
             dockingBorderColor = UIManager.getColor("ToolBar.dockingForeground");
         }
         if (floatingBorderColor == null ||
-                floatingBorderColor instanceof UIResource) {
+            floatingBorderColor instanceof UIResource) {
             floatingBorderColor = UIManager.getColor("ToolBar.floatingForeground");
         }
 
@@ -421,7 +423,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     public void setOrientation(final int orientation) {
         toolBar.setOrientation(orientation);
 
-        if (dragWindow != null) { dragWindow.setOrientation(orientation); }
+        if (dragWindow != null) {
+            dragWindow.setOrientation(orientation);
+        }
     }
 
     /**
@@ -440,10 +444,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         }
         UIDefaults table = UIManager.getLookAndFeelDefaults();
         return new CompoundBorder(new BasicBorders.RolloverButtonBorder(
-                table.getColor("controlShadow"),
-                table.getColor("controlDkShadow"),
-                table.getColor("controlHighlight"),
-                table.getColor("controlLtHighlight")),
+            table.getColor("controlShadow"),
+            table.getColor("controlDkShadow"),
+            table.getColor("controlHighlight"),
+            table.getColor("controlLtHighlight")),
                                   new EmptyBorder(0, 0, 0, 0));
     }
 
@@ -463,10 +467,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         }
         UIDefaults table = UIManager.getLookAndFeelDefaults();
         return new CompoundBorder(new BasicBorders.ButtonBorder(
-                table.getColor("Button.shadow"),
-                table.getColor("Button.darkShadow"),
-                table.getColor("Button.light"),
-                table.getColor("Button.highlight")),
+            table.getColor("Button.shadow"),
+            table.getColor("Button.darkShadow"),
+            table.getColor("Button.light"),
+            table.getColor("Button.highlight")),
                                   new EmptyBorder(0, 0, 0, 0));
     }
 
@@ -478,10 +482,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     protected Border createNonRolloverToggleBorder() {
         UIDefaults table = UIManager.getLookAndFeelDefaults();
         return new CompoundBorder(new BasicBorders.RadioButtonBorder(
-                table.getColor("ToggleButton.shadow"),
-                table.getColor("ToggleButton.darkShadow"),
-                table.getColor("ToggleButton.light"),
-                table.getColor("ToggleButton.highlight")),
+            table.getColor("ToggleButton.shadow"),
+            table.getColor("ToggleButton.darkShadow"),
+            table.getColor("ToggleButton.light"),
+            table.getColor("ToggleButton.highlight")),
                                   new EmptyBorder(0, 0, 0, 0));
     }
 
@@ -703,10 +707,14 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         switch (direction) {
             case EAST:
             case SOUTH:
-                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) { break; }
+                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) {
+                    break;
+                }
                 j = focusedCompIndex + 1;
                 while (j != focusedCompIndex) {
-                    if (j >= nComp) { j = 0; }
+                    if (j >= nComp) {
+                        j = 0;
+                    }
                     Component comp = toolBar.getComponentAtIndex(j++);
                     if (comp != null && comp.isFocusTraversable() && comp.isEnabled()) {
                         comp.requestFocus();
@@ -716,10 +724,14 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                 break;
             case WEST:
             case NORTH:
-                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) { break; }
+                if (focusedCompIndex < 0 || focusedCompIndex >= nComp) {
+                    break;
+                }
                 j = focusedCompIndex - 1;
                 while (j != focusedCompIndex) {
-                    if (j < 0) { j = nComp - 1; }
+                    if (j < 0) {
+                        j = nComp - 1;
+                    }
                     Component comp = toolBar.getComponentAtIndex(j--);
 
                     if (comp != null && comp.isFocusTraversable() && comp.isEnabled()) {
@@ -742,7 +754,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      */
     protected RootPaneContainer createFloatingWindow(final JToolBar toolbar) {
         @SuppressWarnings("serial")
-                // Superclass is not serializable across versions
+            // Superclass is not serializable across versions
         class ToolBarDialog extends JDialog {
             public ToolBarDialog(final Frame owner, final String title, final boolean modal) {
                 super(owner, title, modal);
@@ -756,7 +768,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             // the frame when contents change
             protected JRootPane createRootPane() {
                 @SuppressWarnings("serial") // anonymous class
-                        JRootPane rootPane = new JRootPane() {
+                    JRootPane rootPane = new JRootPane() {
                     protected boolean packing = false;
 
                     public void validate() {
@@ -946,7 +958,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
 
 
     protected class Handler implements ContainerListener,
-            FocusListener, MouseInputListener, PropertyChangeListener {
+                                       FocusListener, MouseInputListener, PropertyChangeListener {
 
         //
         // MouseInputListener (DockingListener)
@@ -1073,10 +1085,16 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     protected class FrameListener extends WindowAdapter {
         public void windowClosing(final WindowEvent w) {
             if (toolBar.isFloatable()) {
-                if (dragWindow != null) { dragWindow.setVisible(false); }
+                if (dragWindow != null) {
+                    dragWindow.setVisible(false);
+                }
                 floating = false;
-                if (floatingToolBar == null) { floatingToolBar = createFloatingWindow(toolBar); }
-                if (floatingToolBar instanceof Window) { ((Window) floatingToolBar).setVisible(false); }
+                if (floatingToolBar == null) {
+                    floatingToolBar = createFloatingWindow(toolBar);
+                }
+                if (floatingToolBar instanceof Window) {
+                    ((Window) floatingToolBar).setVisible(false);
+                }
                 floatingToolBar.getContentPane().remove(toolBar);
                 String constraint = constraintBeforeFloating;
                 if (toolBar.getOrientation() == JToolBar.HORIZONTAL) {
@@ -1088,12 +1106,18 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                         constraint = "West";
                     }
                 }
-                if (dockingSource == null) { dockingSource = toolBar.getParent(); }
-                if (propertyListener != null) { UIManager.removePropertyChangeListener(propertyListener); }
+                if (dockingSource == null) {
+                    dockingSource = toolBar.getParent();
+                }
+                if (propertyListener != null) {
+                    UIManager.removePropertyChangeListener(propertyListener);
+                }
                 dockingSource.add(toolBar, constraint);
                 dockingSource.invalidate();
                 Container dockingSourceParent = dockingSource.getParent();
-                if (dockingSourceParent != null) { dockingSourceParent.validate(); }
+                if (dockingSourceParent != null) {
+                    dockingSourceParent.validate();
+                }
                 dockingSource.repaint();
             }
         }
@@ -1120,7 +1144,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
          */
         public void setOrientation(final int o) {
             if (isShowing()) {
-                if (o == this.orientation) { return; }
+                if (o == this.orientation) {
+                    return;
+                }
                 this.orientation = o;
                 Dimension size = getSize();
                 setSize(new Dimension(size.height, size.width));
@@ -1170,7 +1196,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
          * @param c the new border color
          */
         public void setBorderColor(final Color c) {
-            if (this.borderColor == c) { return; }
+            if (this.borderColor == c) {
+                return;
+            }
             this.borderColor = c;
             repaint();
         }

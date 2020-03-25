@@ -303,7 +303,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected void uninstallKeyboardActions() {
         SwingUtilities.replaceUIActionMap(tabPane, null);
         SwingUtilities.replaceUIInputMap(tabPane, JComponent.
-                                                 WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
+                                             WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
                                          null);
         SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_FOCUSED,
                                          null);
@@ -440,7 +440,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     return baseline;
                 case JTabbedPane.BOTTOM:
                     baseline = height - insets.bottom -
-                            tabAreaInsets.bottom - maxTabHeight + baseline;
+                               tabAreaInsets.bottom - maxTabHeight + baseline;
                     return baseline;
             }
         }
@@ -455,7 +455,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @since 1.6
      */
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-            final JComponent c) {
+        final JComponent c) {
         super.getBaselineResizeBehavior(c);
         switch (tabPane.getTabPlacement()) {
             case JTabbedPane.LEFT:
@@ -508,7 +508,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int tabCount = tabPane.getTabCount();
 
         Rectangle iconRect = new Rectangle(),
-                textRect = new Rectangle();
+            textRect = new Rectangle();
         Rectangle clipRect = g.getClipBounds();
 
         // Paint tabRuns of tabs from back to front
@@ -812,7 +812,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         Rectangle tabRect = rects[tabIndex];
         String propKey = (isSelected ? "selectedLabelShift" : "labelShift");
         int nudge = DefaultLookup.getInt(
-                tabPane, this, "TabbedPane." + propKey, 1);
+            tabPane, this, "TabbedPane." + propKey, 1);
 
         switch (tabPlacement) {
             case LEFT:
@@ -950,10 +950,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected void installKeyboardActions() {
         InputMap km = getInputMap(JComponent.
-                                          WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+                                      WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         SwingUtilities.replaceUIInputMap(tabPane, JComponent.
-                                                 WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
+                                             WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
                                          km);
         km = getInputMap(JComponent.WHEN_FOCUSED);
         SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_FOCUSED, km);
@@ -1063,7 +1063,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, DarkUIUtil.getFocusAcceleratorKeyMask()),
                              "setSelectedIndex");
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_GRAPH_DOWN_MASK
-                                     | DarkUIUtil.getFocusAcceleratorKeyMask()),
+                                                              | DarkUIUtil.getFocusAcceleratorKeyMask()),
                              "setSelectedIndex");
         mnemonicToIndexMap.put(mnemonic, index);
     }
@@ -1253,16 +1253,16 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             Insets tabInsets = getTabInsets(tabPane.getTabPlacement(), tab);
             int cellHeight = maxTabHeight - tabInsets.top - tabInsets.bottom;
             return c.getBaseline(pref.width, pref.height) +
-                    (cellHeight - pref.height) / 2 + tabInsets.top;
+                   (cellHeight - pref.height) / 2 + tabInsets.top;
         } else {
             View view = getTextViewForTab(tab);
             if (view != null) {
                 int viewHeight = (int) view.getPreferredSpan(View.Y_AXIS);
                 int baseline = BasicHTML.getHTMLBaseline(
-                        view, (int) view.getPreferredSpan(View.X_AXIS), viewHeight);
+                    view, (int) view.getPreferredSpan(View.X_AXIS), viewHeight);
                 if (baseline >= 0) {
                     return maxTabHeight / 2 - viewHeight / 2 + baseline +
-                            getBaselineOffset();
+                           getBaselineOffset();
                 }
                 return -1;
             }
@@ -1271,7 +1271,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int fontHeight = metrics.getHeight();
         int fontBaseline = metrics.getAscent();
         return maxTabHeight / 2 - fontHeight / 2 + fontBaseline +
-                getBaselineOffset();
+               getBaselineOffset();
     }
 
     /**
@@ -1621,7 +1621,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
         return (horizRunCount > 0 ?
                 horizRunCount * (maxTabHeight - tabRunOverlay) + tabRunOverlay +
-                        tabAreaInsets.top + tabAreaInsets.bottom :
+                tabAreaInsets.top + tabAreaInsets.bottom :
                 0);
     }
 
@@ -1638,7 +1638,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
         return (vertRunCount > 0 ?
                 vertRunCount * (maxTabWidth - tabRunOverlay) + tabRunOverlay +
-                        tabAreaInsets.left + tabAreaInsets.right :
+                tabAreaInsets.left + tabAreaInsets.right :
                 0);
     }
 
@@ -2215,9 +2215,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected void setVisibleComponent(final Component component) {
         if (visibleComponent != null
-                && visibleComponent != component
-                && visibleComponent.getParent() == tabPane
-                && visibleComponent.isVisible()) {
+            && visibleComponent != component
+            && visibleComponent.getParent() == tabPane
+            && visibleComponent.isVisible()) {
 
             visibleComponent.setVisible(false);
         }
@@ -2271,7 +2271,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
          * The Request focus for visible.
          */
         static final String REQUEST_FOCUS_FOR_VISIBLE =
-                "requestFocusForVisibleComponent";
+            "requestFocusForVisibleComponent";
         /**
          * The Set selected.
          */
@@ -2302,8 +2302,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             String key = getName();
             JTabbedPane pane = (JTabbedPane) e.getSource();
             DarkTabbedPaneUIBridge ui = (DarkTabbedPaneUIBridge) DarkUIUtil
-                    .getUIOfType(pane.getUI(),
-                                 DarkTabbedPaneUIBridge.class);
+                .getUIOfType(pane.getUI(),
+                             DarkTabbedPaneUIBridge.class);
 
             if (ui == null) {
                 return;

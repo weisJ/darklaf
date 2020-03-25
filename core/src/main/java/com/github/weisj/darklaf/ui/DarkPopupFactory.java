@@ -40,7 +40,7 @@ public class DarkPopupFactory extends PopupFactory {
         boolean isMediumWeight = popup.getClass().getSimpleName().endsWith("MediumWeightPopup");
         boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
         boolean isBalloonTooltip = contents instanceof JToolTip
-            && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder;
+                                   && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder;
         boolean isPopupMenu = contents instanceof JPopupMenu;
         if (isMediumWeight || isLightWeight) {
             if (isBalloonTooltip) {

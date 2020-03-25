@@ -29,7 +29,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 
 public class ButtonGroupInfo {
-    protected AbstractButton activeButton;
+    protected final AbstractButton activeButton;
 
     protected AbstractButton firstButton = null;
     protected AbstractButton lastButton = null;
@@ -37,7 +37,7 @@ public class ButtonGroupInfo {
     protected AbstractButton previousButton = null;
     protected AbstractButton nextButton = null;
 
-    protected HashSet<AbstractButton> buttonsInGroup;
+    protected final HashSet<AbstractButton> buttonsInGroup;
     protected boolean sourceFound = false;
 
     public ButtonGroupInfo(final AbstractButton btn) {
@@ -47,8 +47,8 @@ public class ButtonGroupInfo {
 
     public static boolean isValidButton(final Object obj) {
         return obj instanceof AbstractButton
-            && ((AbstractButton) obj).isEnabled()
-            && ((AbstractButton) obj).isVisible();
+               && ((AbstractButton) obj).isEnabled()
+               && ((AbstractButton) obj).isVisible();
     }
 
     protected boolean containsInGroup(final AbstractButton button) {
@@ -120,8 +120,7 @@ public class ButtonGroupInfo {
     }
 
     /**
-     * Find the new radio button that focus needs to be
-     * moved to in the group, select the button
+     * Find the new radio button that focus needs to be moved to in the group, select the button
      *
      * @param next, indicate if it's arrow up/left or down/right
      */
@@ -149,9 +148,8 @@ public class ButtonGroupInfo {
     }
 
     /**
-     * Find the button group the passed in AbstractButton belongs to, and
-     * move focus to next component of the last button in the group
-     * or previous component of first button
+     * Find the button group the passed in AbstractButton belongs to, and move focus to next component of the last
+     * button in the group or previous component of first button
      *
      * @param next, indicate if jump to next component or previous
      */

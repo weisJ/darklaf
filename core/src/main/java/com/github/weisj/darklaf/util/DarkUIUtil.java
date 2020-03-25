@@ -52,7 +52,8 @@ public final class DarkUIUtil {
     public final static AlphaComposite GLOW_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
     public final static AlphaComposite DROP_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     public final static AlphaComposite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
-    public static final boolean USE_QUARTZ = PropertyValue.TRUE.equals(System.getProperty("apple.awt.graphics.UseQuartz"));
+    public static final boolean USE_QUARTZ = PropertyValue.TRUE.equals(
+        System.getProperty("apple.awt.graphics.UseQuartz"));
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
 
@@ -241,10 +242,10 @@ public final class DarkUIUtil {
 
     public static boolean isInCell(final Component c) {
         boolean inCellRenderer = getParentOfType(CellRendererPane.class, c) != null
-            || getParentOfType(TableCellRenderer.class, c) != null
-            || getParentOfType(TreeCellRenderer.class, c) != null
-            || getParentOfType(CellRenderer.class, c) != null
-            || getParentOfType(CellEditor.class, c) != null;
+                                 || getParentOfType(TableCellRenderer.class, c) != null
+                                 || getParentOfType(TreeCellRenderer.class, c) != null
+                                 || getParentOfType(CellRenderer.class, c) != null
+                                 || getParentOfType(CellEditor.class, c) != null;
         return inCellRenderer && getParentOfType(JComboBox.class, c) == null;
     }
 
@@ -300,8 +301,8 @@ public final class DarkUIUtil {
             if (e[i] != null) {
                 Component comp = e[i].getComponent();
                 if (comp != null
-                        && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                        && comp.isVisible()) {
+                    && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                    && comp.isVisible()) {
                     return e[i];
                 }
             }
@@ -315,8 +316,8 @@ public final class DarkUIUtil {
             if (e[i] != null) {
                 Component comp = e[i].getComponent();
                 if (comp != null
-                        && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                        && comp.isVisible()) {
+                    && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                    && comp.isVisible()) {
                     return e[i];
                 }
             }
@@ -332,13 +333,13 @@ public final class DarkUIUtil {
         g.fillRect(x, y + height - thickness, width, thickness);
     }
 
-    public static boolean isOverText(final MouseEvent e, final int index, final JList list) {
+    public static boolean isOverText(final MouseEvent e, final int index, final JList<?> list) {
         Rectangle bounds = list.getCellBounds(index, index);
         if (!bounds.contains(e.getPoint())) return false;
         //noinspection unchecked
         Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer())
-                .getListCellRendererComponent(list, list.getModel().getElementAt(index),
-                                              index, false, false);
+            .getListCellRendererComponent(list, list.getModel().getElementAt(index),
+                                          index, false, false);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {
@@ -362,7 +363,7 @@ public final class DarkUIUtil {
         Rectangle bounds = table.getCellRect(row, column, false);
         if (!bounds.contains(e.getPoint())) return false;
         Component cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(
-                table, table.getValueAt(row, column), false, false, row, column);
+            table, table.getValueAt(row, column), false, false, row, column);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {

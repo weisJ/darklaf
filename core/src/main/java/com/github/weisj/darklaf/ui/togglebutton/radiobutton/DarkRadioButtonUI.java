@@ -309,7 +309,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             radioButton.repaint();
             hitArea.setFrame(0, 0, 0, 0);
         } else if (DarkToggleButtonUI.KEY_IS_TREE_EDITOR.equals(key)
-            || DarkToggleButtonUI.KEY_IS_TABLE_EDITOR.equals(key)) {
+                   || DarkToggleButtonUI.KEY_IS_TABLE_EDITOR.equals(key)) {
             radioButton.repaint();
             hitArea.setFrame(0, 0, 0, 0);
         } else if (DarkToggleButtonUI.KEY_CLEAR_HIT_AREA.equals(key)) {

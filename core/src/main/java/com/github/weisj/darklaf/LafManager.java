@@ -33,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -48,7 +49,7 @@ public final class LafManager {
     private static Theme theme;
     private static boolean logEnabled = false;
     private static boolean decorationsOverwrite = true;
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
     static {
         enableLogging(true);
@@ -65,7 +66,8 @@ public final class LafManager {
             LogManager.getLogManager().reset();
         } else {
             try (InputStream inputStream = DarkLaf.class.getClassLoader()
-                                                        .getResourceAsStream("com/github/weisj/darklaf/log/logging.properties")) {
+                                                        .getResourceAsStream(
+                                                            "com/github/weisj/darklaf/log/logging.properties")) {
                 if (inputStream != null) {
                     Logger.getGlobal().fine("Loading logging configuration.");
                     LogManager.getLogManager().readConfiguration(inputStream);
@@ -79,8 +81,8 @@ public final class LafManager {
     }
 
     /**
-     * Returns whther custom decorations should be used.
-     * If this returns true decorations still might not be used if the theme or platform don't support them.
+     * Returns whther custom decorations should be used. If this returns true decorations still might not be used if the
+     * theme or platform don't support them.
      *
      * @return true if decorations should be used.
      */
@@ -89,9 +91,8 @@ public final class LafManager {
     }
 
     /**
-     * Set globally whether decorations are enabled. By default this is true.
-     * Decorations are used if this value is set to true and the current platform and theme support
-     * custom decorations.
+     * Set globally whether decorations are enabled. By default this is true. Decorations are used if this value is set
+     * to true and the current platform and theme support custom decorations.
      *
      * @param enabled true if decorations should be used if available.
      */
@@ -145,8 +146,11 @@ public final class LafManager {
      */
     public static void reloadIconTheme() {
         try {
-            setTheme(getTheme().getClass().newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
+            setTheme(getTheme().getClass().getDeclaredConstructor().newInstance());
+        } catch (InstantiationException
+            | IllegalAccessException
+            | NoSuchMethodException
+            | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
@@ -171,9 +175,9 @@ public final class LafManager {
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
         } catch (final ClassNotFoundException
-                | InstantiationException
-                | IllegalAccessException
-                | UnsupportedLookAndFeelException e) {
+            | InstantiationException
+            | IllegalAccessException
+            | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
     }
@@ -197,9 +201,8 @@ public final class LafManager {
     /**
      * Set a custom property.
      * <p>
-     * Note: These properties are loaded
-     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
-     * specified in `[theme]_defaults.properties`.
+     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
+     * used to overwrite the values specified in `[theme]_defaults.properties`.
      *
      * @param key   the key.
      * @param value the value.
@@ -211,9 +214,8 @@ public final class LafManager {
     /**
      * Remove a custom property.
      * <p>
-     * Note: These properties are loaded
-     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
-     * specified in `[theme]_defaults.properties`.
+     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
+     * used to overwrite the values specified in `[theme]_defaults.properties`.
      *
      * @param key the key.
      */
@@ -224,9 +226,8 @@ public final class LafManager {
     /**
      * Remove all custom properties.
      * <p>
-     * Note: These properties are loaded
-     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
-     * specified in `[theme]_defaults.properties`.
+     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
+     * used to overwrite the values specified in `[theme]_defaults.properties`.
      */
     public static void clearProperties() {
         properties.clear();
@@ -235,9 +236,8 @@ public final class LafManager {
     /**
      * Get the custom properties.
      * <p>
-     * Note: These properties are loaded
-     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
-     * specified in `[theme]_defaults.properties`.
+     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
+     * used to overwrite the values specified in `[theme]_defaults.properties`.
      */
     public static Properties getUserProperties() {
         return properties;
@@ -246,9 +246,8 @@ public final class LafManager {
     /**
      * Remove a custom property.
      * <p>
-     * Note: These properties are loaded
-     * after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be used to overwrite the values
-     * specified in `[theme]_defaults.properties`.
+     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
+     * used to overwrite the values specified in `[theme]_defaults.properties`.
      *
      * @param key the key.
      * @return the value associated with `key`.

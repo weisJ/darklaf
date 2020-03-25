@@ -194,7 +194,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         detailsTable.setFont(font);
 
         TableCellRenderer headerRenderer =
-                new AlignableTableHeaderRenderer(detailsTable.getTableHeader().getDefaultRenderer());
+            new AlignableTableHeaderRenderer(detailsTable.getTableHeader().getDefaultRenderer());
         detailsTable.getTableHeader().setDefaultRenderer(headerRenderer);
         TableCellRenderer cellRenderer = new DetailsTableCellRenderer(chooser);
         detailsTable.setDefaultRenderer(Object.class, cellRenderer);
@@ -301,7 +301,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 int editX = icon == null ? 20 : icon.getIconWidth() + 4;
 
                 int gap = 0;
-                ListCellRenderer renderer = list.getCellRenderer();
+                ListCellRenderer<?> renderer = list.getCellRenderer();
                 if (renderer instanceof JLabel) {
                     gap = ((JLabel) renderer).getIconTextGap() - 1;
                 }
@@ -446,9 +446,9 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 // For single click, we handle editing file name
                 if (evt.getClickCount() == 1 && source instanceof JList) {
                     if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
-                            && listSelectionModel.isSelectedIndex(index)
-                            && getEditIndex() == index && editFile == null
-                            && DarkUIUtil.isOverText(evt, index, list)) {
+                        && listSelectionModel.isSelectedIndex(index)
+                        && getEditIndex() == index && editFile == null
+                        && DarkUIUtil.isOverText(evt, index, list)) {
                         editFileName(index);
                     } else {
                         setEditIndex(index);

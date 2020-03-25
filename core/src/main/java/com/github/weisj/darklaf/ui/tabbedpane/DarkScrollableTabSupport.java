@@ -43,7 +43,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
     protected final JComponent newTabButton;
     protected final Timer timer;
     protected long lastClickEvent;
-    private DarkTabbedPaneUI ui;
+    private final DarkTabbedPaneUI ui;
 
     public DarkScrollableTabSupport(final DarkTabbedPaneUI ui, final int tabPlacement) {
         super(ui);
@@ -59,7 +59,8 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         moreTabsButton.addActionListener(this);
 
         newTabButton = ui.createNewTabButton();
-        newTabButton.setVisible(Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON)));
+        newTabButton.setVisible(
+            Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON)));
 
         scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt(DarkTabbedPaneUI.KEY_MAX_POPUP_HEIGHT));
         PopupMenuListener popupMenuListener = new PopupMenuAdapter() {
@@ -165,7 +166,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         int shift;
         if (horizontal) {
             int rightMargin = size.width - (insets.left + insets.right
-                    + tabAreaInsets.right + tabAreaInsets.left);
+                                            + tabAreaInsets.right + tabAreaInsets.left);
             if (moreTabsButton.isVisible()) {
                 rightMargin -= moreTabsButton.getWidth();
             }
@@ -182,7 +183,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
             ui.scrollShiftX += shift;
         } else {
             int bottomMargin = size.height - (insets.bottom + tabAreaInsets.bottom
-                    + insets.top + tabAreaInsets.top);
+                                              + insets.top + tabAreaInsets.top);
             if (moreTabsButton.isVisible()) {
                 bottomMargin -= moreTabsButton.getHeight();
             }

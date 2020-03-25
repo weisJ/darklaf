@@ -207,7 +207,7 @@ public class DarkLaf extends BasicLookAndFeel {
             // (Alloy license problem)
             installCutCopyPasteShortcuts(tableInputMap, true);
         }
-        final InputMap buttonInputMap  = (InputMap) defaults.get("Button.focusInputMap");
+        final InputMap buttonInputMap = (InputMap) defaults.get("Button.focusInputMap");
         if (buttonInputMap != null && !SystemInfo.isMac) {
             buttonInputMap.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
             buttonInputMap.put(KeyStroke.getKeyStroke("released ENTER"), "released");
@@ -244,7 +244,8 @@ public class DarkLaf extends BasicLookAndFeel {
     private void loadSystemOverwrites(final Properties uiProps, final UIDefaults defaults) {
         Properties overwrites = PropertyLoader.loadProperties(DarkLaf.class, "overwrites", "properties/");
         overwrites.values().removeIf(v -> System.getProperty(SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
-        overwrites.entrySet().forEach(e -> e.setValue(System.getProperty(SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
+        overwrites.entrySet().forEach(
+            e -> e.setValue(System.getProperty(SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
         PropertyLoader.putProperties(overwrites, uiProps, defaults);
     }
 

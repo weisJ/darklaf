@@ -53,7 +53,7 @@ class SlideComponent extends JComponent implements ColorListener {
     protected Color borderColor;
     protected Color shadowColor;
     protected Color knobFill;
-    private boolean isOpacity;
+    private final boolean isOpacity;
     private int pointerValue = 0;
     private int value = 0;
     private Unit unitType = Unit.LEVEL;

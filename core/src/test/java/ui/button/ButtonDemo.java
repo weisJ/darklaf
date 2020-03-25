@@ -82,9 +82,11 @@ public class ButtonDemo implements ComponentDemo {
 
         controlPanel = panel.addControls();
         controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
-                                               (b, c) -> button.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
+                                               (b, c) -> button
+                                                   .putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
         controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
-                                               (b, c) -> button.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)));
+                                               (b, c) -> button
+                                                   .putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)));
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel(DarkButtonUI.KEY_VARIANT + ":"));

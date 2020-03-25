@@ -72,7 +72,7 @@ public class DarkTooltipBorder implements Border {
     public int getPointerOffset(final Component c, final Dimension dimension) {
         if (isPlain(c)) return 0;
         return bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
-                + shadowBorder.getShadowSize();
+               + shadowBorder.getShadowSize();
     }
 
     private void adjustInsets(final Insets si) {

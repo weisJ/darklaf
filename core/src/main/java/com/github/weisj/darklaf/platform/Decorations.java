@@ -60,7 +60,8 @@ public final class Decorations {
         }
     }
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
+    public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle,
+                                                  final Window window) {
         return decorationsProvider.createTitlePane(rootPane, decorationStyle, window);
     }
 
@@ -74,8 +75,8 @@ public final class Decorations {
 
     public static boolean isCustomDecorationSupported() {
         return decorationsProvider.isCustomDecorationSupported()
-            && LafManager.isDecorationsEnabled()
-            && LafManager.getTheme().useCustomDecorations();
+               && LafManager.isDecorationsEnabled()
+               && LafManager.getTheme().useCustomDecorations();
     }
 
     public static void initialize() {

@@ -48,7 +48,7 @@ import java.util.stream.Stream;
 
 public class AllIcons {
 
-    private static String[] FOLDERS = new String[]{
+    private static final String[] FOLDERS = new String[]{
         "icons/control", "icons/dialog", "icons/files", "icons/indicator", "icons/menu", "icons/misc",
         "icons/navigation", "platform/windows/icons/window", "platform/windows/icons"
     };
@@ -59,7 +59,7 @@ public class AllIcons {
             try {
                 JFrame frame = new JFrame("Icons");
                 JList<Pair<String, Icon>> list = new JList<>(new ListModel<Pair<String, Icon>>() {
-                    List<Pair<String, Icon>> elements = loadIcons();
+                    final List<Pair<String, Icon>> elements = loadIcons();
 
                     @Override
                     public int getSize() {

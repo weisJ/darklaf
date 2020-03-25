@@ -30,7 +30,7 @@ import java.awt.*;
  * @author Jannis Weis
  */
 final class ColorPreviewComponent extends JComponent {
-    protected Color borderColor;
+    protected final Color borderColor;
     private Color myColor;
 
     ColorPreviewComponent() {

@@ -37,7 +37,7 @@ import java.beans.PropertyChangeListener;
 public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements PropertyChangeListener, UIResource {
 
     private final TabFrameTab tab;
-    private JMenuItem[] actions;
+    private final JMenuItem[] actions;
     private int disabled = -1;
 
     public DarkTabFrameComponentPopupMenu(final TabFrameTab tab) {

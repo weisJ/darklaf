@@ -27,12 +27,7 @@ package ui.dialog;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
@@ -40,14 +35,14 @@ import java.text.ParseException;
 /* 1.4 example used by DialogDemo.java. */
 class CustomDialog extends JDialog implements ActionListener, PropertyChangeListener {
     private String typedText = null;
-    private JFormattedTextField textField;
-    private DialogDemo dd;
+    private final JFormattedTextField textField;
+    private final DialogDemo dd;
 
-    private String magicWord;
-    private JOptionPane optionPane;
+    private final String magicWord;
+    private final JOptionPane optionPane;
 
-    private String btnString1 = "Enter";
-    private String btnString2 = "Cancel";
+    private static final String btnString1 = "Enter";
+    private static final String btnString2 = "Cancel";
 
     /**
      * Creates the reusable dialog.
@@ -141,8 +136,8 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         String prop = e.getPropertyName();
 
         if (isVisible()
-                && (e.getSource() == optionPane)
-                && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
+            && (e.getSource() == optionPane)
+            && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
                 JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))) {
             Object value = optionPane.getValue();
 
@@ -168,7 +163,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
                     textField.selectAll();
                     JOptionPane.showMessageDialog(CustomDialog.this,
                                                   "Sorry, \"" + typedText + "\" " + "isn't a valid response.\n"
-                                                          + "Please enter " + magicWord + ".",
+                                                  + "Please enter " + magicWord + ".",
                                                   "Try again", JOptionPane.ERROR_MESSAGE);
                     typedText = null;
                     textField.requestFocusInWindow();

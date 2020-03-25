@@ -108,9 +108,9 @@ public class ToggleSplitPane extends JSplitPane {
 
     public void forceSetDividerLocation(final double proportionalLocation) {
         if (proportionalLocation < 0.0 ||
-                proportionalLocation > 1.0) {
+            proportionalLocation > 1.0) {
             throw new IllegalArgumentException("proportional location must "
-                                                       + "be between 0.0 and 1.0.");
+                                               + "be between 0.0 and 1.0.");
         }
         if (getOrientation() == VERTICAL_SPLIT) {
             super.setDividerLocation((int) ((double) (getHeight()) * proportionalLocation));

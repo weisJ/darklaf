@@ -27,11 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.ProviderNotFoundException;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 /**
  * A simple library class which helps with loading dynamic libraries stored in the JAR archive. These libraries usually
@@ -135,8 +131,8 @@ public class NativeUtil {
                               .supportedFileAttributeViews()
                               .contains("posix");
         } catch (FileSystemNotFoundException
-                | ProviderNotFoundException
-                | SecurityException e) {
+            | ProviderNotFoundException
+            | SecurityException e) {
             return false;
         }
     }

@@ -25,9 +25,9 @@ package com.github.weisj.darklaf.ui.cell;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.decorators.CellRenderer;
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -42,7 +42,7 @@ import java.awt.*;
  * @author Jannis Weis
  */
 public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorToggleButton>
-        implements TableCellRenderer, TreeCellRenderer, SwingConstants {
+    implements TableCellRenderer, TreeCellRenderer, SwingConstants {
 
     private final T toggleButton;
 
@@ -62,13 +62,13 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHasFocus(focus);
 
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
-            && focus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
+                                      && focus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
         CellUtil.setupForeground(toggleButton, table, paintSelected,
-                                 "Table.selectionForeground","Table.selectionForegroundInactive");
-        CellUtil.setupBackground(toggleButton, table, paintSelected, row,DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "Table.background","Table.alternateRowBackground");
+                                 "Table.selectionForeground", "Table.selectionForegroundInactive");
+        CellUtil.setupBackground(toggleButton, table, paintSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
+                                 "Table.background", "Table.alternateRowBackground");
         return toggleButton;
     }
 
@@ -89,7 +89,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHasFocus(false);
 
         CellUtil.setupForeground(toggleButton, tree, selected,
-                                 "Tree.selectionForeground","Tree.selectionForegroundInactive");
+                                 "Tree.selectionForeground", "Tree.selectionForegroundInactive");
 
         return toggleButton;
     }

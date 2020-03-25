@@ -167,7 +167,7 @@ public class CreateUITable {
                   Object val1 = o1.getValue();
                   Object val2 = o2.getValue();
                   if (val1 instanceof Comparable) {
-                      return ((Comparable) val1).compareTo(val2);
+                      return ((Comparable<Object>) val1).compareTo(val2);
                   } else {
                       return val1.toString().compareTo(val2.toString());
                   }
@@ -178,16 +178,16 @@ public class CreateUITable {
 
     private String getTableStyle() {
         return "<style>\n"
-            + "table {\n"
-            + IDENT + "font-family: monospace;\n"
-            + IDENT + "font-size: 10pt;\n"
-            + IDENT + "border-collapse: collapse;\n"
-            + "}\n"
-            + "th, td {\n"
-            + IDENT + "padding: 4px 8px 4px 8px;\n"
-            + "}\n"
-            + "tr:nth-child(even) {background-color: #f2f2f2;}\n"
-            + "</style>\n";
+               + "table {\n"
+               + IDENT + "font-family: monospace;\n"
+               + IDENT + "font-size: 10pt;\n"
+               + IDENT + "border-collapse: collapse;\n"
+               + "}\n"
+               + "th, td {\n"
+               + IDENT + "padding: 4px 8px 4px 8px;\n"
+               + "}\n"
+               + "tr:nth-child(even) {background-color: #f2f2f2;}\n"
+               + "</style>\n";
     }
 
     private void appendRow(final StringBuilder builder,
@@ -213,13 +213,13 @@ public class CreateUITable {
         Object value = getValue(val);
         if (value instanceof Color) {
             return StringUtil.repeat(IDENT, ident)
-                + String.format("<td style=\"background-color: #%s\" width=\"%d\" height=\"%d\">\n",
-                                ColorUtil.toHex((Color) value), SAMPLE_WIDTH, SAMPLE_HEIGHT);
+                   + String.format("<td style=\"background-color: #%s\" width=\"%d\" height=\"%d\">\n",
+                                   ColorUtil.toHex((Color) value), SAMPLE_WIDTH, SAMPLE_HEIGHT);
         } else if (value instanceof DarkSVGIcon) {
             return parseSVGIcon((DarkSVGIcon) value, ident);
         } else if ((value instanceof Border && !(value instanceof EmptyBorder))
-            || value instanceof Font
-            || (value instanceof Icon && !(value instanceof EmptyIcon))) {
+                   || value instanceof Font
+                   || (value instanceof Icon && !(value instanceof EmptyIcon))) {
             return parseImage(key, value, ident);
         }
         return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
@@ -254,7 +254,8 @@ public class CreateUITable {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
         }
         return StringUtil.repeat(IDENT, ident)
-            + String.format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
+               + String.format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path,
+                               key);
     }
 
     private String createImage(final Object value, final String name, final Dimension size) throws IOException {
@@ -266,7 +267,8 @@ public class CreateUITable {
             size.width = Math.max(size.width, ((Icon) value).getIconWidth());
             size.height = Math.max(size.height, ((Icon) value).getIconHeight());
         }
-        JComponent comp = (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
+        JComponent comp = (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0,
+                                                                                          0);
         BufferedImage image = ImageUtil.createCompatibleTranslucentImage(size.width, size.height);
         Graphics g = image.getGraphics();
         if (!(value instanceof Icon) && !(value instanceof DropShadowBorder)) {

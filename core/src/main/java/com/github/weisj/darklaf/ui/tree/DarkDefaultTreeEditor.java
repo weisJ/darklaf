@@ -91,21 +91,11 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
     protected boolean isBooleanRenderer(final JTree tree, final int row) {
         boolean isBoolRenderer = realEditor instanceof DarkTreeCellEditor
-                && ((DarkTreeCellEditor) realEditor).isBooleanEditor(tree);
+                                 && ((DarkTreeCellEditor) realEditor).isBooleanEditor(tree);
         if (isBoolRenderer) return true;
         TreePath path = tree.getPathForRow(row);
         return path != null
-                && DarkTreeCellRenderer.unwrapBooleanIfPossible(path.getLastPathComponent()) instanceof Boolean;
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-        return super.getCellEditorValue();
-    }
-
-    @Override
-    public boolean stopCellEditing() {
-        return super.stopCellEditing();
+               && DarkTreeCellRenderer.unwrapBooleanIfPossible(path.getLastPathComponent()) instanceof Boolean;
     }
 
     @Override
@@ -120,7 +110,7 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
                     Rectangle bounds = tree.getRowBounds(row);
                     if (bounds != null) {
                         DarkTreeCellRenderer rend = (DarkTreeCellRenderer) renderer;
-                        DarkCellRendererToggleButton booleanRend = rend.getBooleanRenderer(tree);
+                        DarkCellRendererToggleButton<?> booleanRend = rend.getBooleanRenderer(tree);
                         JToggleButton button = booleanRend.getButton();
 
                         p.x -= bounds.x + button.getX();

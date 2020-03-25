@@ -29,7 +29,7 @@ import java.util.function.Function;
 
 public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
-    private DarkTabbedPaneUI ui;
+    private final DarkTabbedPaneUI ui;
 
     public DarkTabbedPaneScrollLayout(final DarkTabbedPaneUI ui) {
         super(ui);
@@ -71,7 +71,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         //
         if (selectedComponent != null) {
             if (selectedComponent != visibleComponent &&
-                    visibleComponent != null) {
+                visibleComponent != null) {
 
                 Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
@@ -96,7 +96,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     cx = insets.left + tw + contentInsets.left + tabAreaInsets.left + tabAreaInsets.right;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - tw - contentInsets.left - contentInsets.right
-                            - tabAreaInsets.left - tabAreaInsets.right;
+                         - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     tw -= tabAreaInsets.left + tabAreaInsets.right;
                     break;
@@ -313,7 +313,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                                    : new Rectangle(0, 0, 0, 0);
         if (!verticalTabRuns) {
             int rightMargin = size.width - (insets.right + tabAreaInsets.right
-                    + insets.left + tabAreaInsets.left);
+                                            + insets.left + tabAreaInsets.left);
             Point p = getMargins(tabPlacement);
             int leftMargin = p.x;
             int returnAt = p.y;
@@ -360,7 +360,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
         } else {
             int bottomMargin = size.height - (insets.bottom + tabAreaInsets.bottom
-                    + insets.top + tabAreaInsets.top);
+                                              + insets.top + tabAreaInsets.top);
             Point p = getMargins(tabPlacement);
             int topMargin = p.x;
             int returnAt = p.y;
@@ -413,7 +413,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         if (ui.isHorizontalTabPlacement()) {
             int leftMargin = 0;
             int returnAt = size.width - (insets.right + tabAreaInsets.right
-                    + insets.left + tabAreaInsets.left);
+                                         + insets.left + tabAreaInsets.left);
             if (tabsButton.isVisible()) {
                 returnAt -= tabsButton.getPreferredSize().width;
             }
@@ -424,7 +424,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         } else {
             int topMargin = 0;
             int returnAt = size.height - (insets.bottom + tabAreaInsets.bottom
-                    + insets.top + tabAreaInsets.top);
+                                          + insets.top + tabAreaInsets.top);
             if (tabsButton.isVisible()) {
                 returnAt -= tabsButton.getPreferredSize().height;
             }
@@ -570,7 +570,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
     protected void restoreHiddenTabsY(final int minY, final int maxY, final int tabCount) {
         if (ui.maxVisible < 0 || ui.maxVisible >= tabCount) return;
-        int space = Math.max(maxY - ui.rects[ui.maxVisible].y - ui.rects[ui.maxVisible].height - ui.currentShiftYTmp, 0);
+        int space = Math.max(maxY - ui.rects[ui.maxVisible].y - ui.rects[ui.maxVisible].height - ui.currentShiftYTmp,
+                             0);
         int shift = Math.min(minY - ui.rects[0].y - ui.currentShiftYTmp, space);
         shiftTabsY(shift, minY, maxY, tabCount, true);
     }

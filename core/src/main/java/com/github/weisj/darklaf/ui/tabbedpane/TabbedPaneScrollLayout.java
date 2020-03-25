@@ -123,7 +123,7 @@ abstract class TabbedPaneScrollLayout extends TabbedPaneLayout {
         // the bottom, flip x positions and adjust by widths
         if (!leftToRight && !verticalTabRuns) {
             int rightMargin = size.width
-                    - (insets.right + tabAreaInsets.right);
+                              - (insets.right + tabAreaInsets.right);
             for (i = 0; i < tabCount; i++) {
                 ui.rects[i].x = rightMargin - ui.rects[i].x - ui.rects[i].width;
             }

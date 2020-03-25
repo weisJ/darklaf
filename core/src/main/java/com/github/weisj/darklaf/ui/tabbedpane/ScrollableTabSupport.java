@@ -46,9 +46,9 @@ class ScrollableTabSupport {
 
     public String toString() {
         return "viewport.viewSize=" + viewport.getViewSize() + "\n" +
-                "viewport.viewRectangle=" + viewport.getViewRect() + "\n" +
-                "leadingTabIndex=" + leadingTabIndex + "\n" +
-                "tabViewPosition=" + tabViewPosition;
+               "viewport.viewRectangle=" + viewport.getViewRect() + "\n" +
+               "leadingTabIndex=" + leadingTabIndex + "\n" +
+               "tabViewPosition=" + tabViewPosition;
     }
 
 }

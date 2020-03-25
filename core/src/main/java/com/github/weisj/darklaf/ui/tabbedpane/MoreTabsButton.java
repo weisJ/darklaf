@@ -35,7 +35,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
 
     protected final static String INFINITY = "\u221e";
     protected final Icon icon;
-    protected DarkTabbedPaneUI ui;
+    protected final DarkTabbedPaneUI ui;
     protected final int pad;
 
     public MoreTabsButton(final DarkTabbedPaneUI ui) {
@@ -87,7 +87,8 @@ public class MoreTabsButton extends DarkTabAreaButton {
 
 
     protected String getLabelString() {
-        int invisible = Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible, ui.tabPane.getTabCount());
+        int invisible = Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible,
+                                 ui.tabPane.getTabCount());
         return invisible >= 100 ? INFINITY : String.valueOf(invisible);
     }
 

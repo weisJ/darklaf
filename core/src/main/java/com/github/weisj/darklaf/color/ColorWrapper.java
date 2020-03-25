@@ -43,7 +43,11 @@ public class ColorWrapper extends Color {
     }
 
     public void setColor(final Color color) {
-        if (color == null) { this.color = Color.BLACK; } else this.color = color;
+        if (color == null) {
+            this.color = Color.BLACK;
+        } else {
+            this.color = color;
+        }
     }
 
     @Override

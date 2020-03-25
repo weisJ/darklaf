@@ -28,7 +28,7 @@ import javax.swing.plaf.UIResource;
 import java.awt.*;
 
 @SuppressWarnings("serial")
-        // Superclass is not serializable across versions
+    // Superclass is not serializable across versions
 class ScrollableTabViewport extends JViewport implements UIResource {
 
     public ScrollableTabViewport(final DarkTabbedPaneUIBridge ui) {

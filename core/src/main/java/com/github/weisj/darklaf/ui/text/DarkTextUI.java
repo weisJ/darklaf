@@ -94,7 +94,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         // OpenJDK BorderlessTextField has a bug with its setBorder implementation
         // so we reset the border
         // See https://mail.openjdk.java.net/pipermail/swing-dev/2020-March/010226.html
-        if (editor != null && "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(editor.getClass().getName())) {
+        if (editor != null && "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(
+            editor.getClass().getName())) {
             editor.setBorder(null);
         }
         editor.putClientProperty(KEY_ROUNDED_SELECTION, UIManager.getBoolean("TextComponent.roundedSelection"));
@@ -304,12 +305,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
         if (changed || accelerator != '\0') {
             InputMap km = SwingUtilities.getUIInputMap
-                    (editor, JComponent.WHEN_IN_FOCUSED_WINDOW);
+                (editor, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
             if (km == null && accelerator != '\0') {
                 km = new ComponentInputMapUIResource(editor);
                 SwingUtilities.replaceUIInputMap(editor, JComponent.
-                        WHEN_IN_FOCUSED_WINDOW, km);
+                    WHEN_IN_FOCUSED_WINDOW, km);
                 ActionMap am = getActionMap();
                 SwingUtilities.replaceUIActionMap(editor, am);
             }
@@ -317,7 +318,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 km.clear();
                 if (accelerator != '\0') {
                     km.put(KeyStroke.getKeyStroke(accelerator, getFocusAcceleratorKeyMask()), "requestFocus");
-                    km.put(KeyStroke.getKeyStroke(accelerator, DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
+                    km.put(KeyStroke
+                               .getKeyStroke(accelerator, DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
                            "requestFocus");
                 }
             }
@@ -363,8 +365,10 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
          */
         EditorKit editorKit = getEditorKit(editor);
         if (editorKit instanceof DefaultEditorKit) {
-            Set<AWTKeyStroke> storedForwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> storedBackwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> storedForwardTraversalKeys = editor.getFocusTraversalKeys(
+                KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> storedBackwardTraversalKeys = editor.getFocusTraversalKeys(
+                KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
             Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<>(storedForwardTraversalKeys);
             Set<AWTKeyStroke> backwardTraversalKeys = new HashSet<>(storedBackwardTraversalKeys);
             if (editor.isEditable()) {
@@ -394,7 +398,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
      * Wrapper for text actions to return isEnabled false in case editor is non editable
      */
     public class TextActionWrapper extends TextAction {
-        TextAction action;
+        final TextAction action;
 
         public TextActionWrapper(final TextAction action) {
             super((String) action.getValue(Action.NAME));

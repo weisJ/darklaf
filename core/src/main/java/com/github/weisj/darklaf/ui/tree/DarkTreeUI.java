@@ -236,7 +236,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                     TreePath selectionPath = tree.getPathForRow(selectionRow);
                     if (selectionPath == null) return;
 
-                    if (tree.getModel().isLeaf(selectionPath.getLastPathComponent()) || tree.isCollapsed(selectionRow)) {
+                    if (tree.getModel().isLeaf(selectionPath.getLastPathComponent()) || tree.isCollapsed(
+                        selectionRow)) {
                         final TreePath parentPath = tree.getPathForRow(selectionRow).getParentPath();
                         if (parentPath != null) {
                             if (parentPath.getParentPath() != null || tree.isRootVisible()) {
@@ -339,9 +340,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                 owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             }
             boolean treeEditor = owner instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
+                                 && Boolean.TRUE.equals(
+                ((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
             boolean treeRenderer = owner instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_RENDER));
+                                   && Boolean.TRUE.equals(
+                ((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_RENDER));
             return treeEditor || treeRenderer;
         }
         return true;
@@ -437,7 +440,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                 path = (TreePath) paintingEnumerator.nextElement();
                 if (path != null) {
                     isLeaf = treeModel.isLeaf(path.getLastPathComponent());
-                    if (isLeaf) { isExpanded = hasBeenExpanded = false; } else {
+                    if (isLeaf) {
+                        isExpanded = hasBeenExpanded = false;
+                    } else {
                         isExpanded = treeState.getExpandedState(path);
                         hasBeenExpanded = tree.hasBeenExpanded(path);
                     }
@@ -447,7 +452,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                     // from under us (usually in another thread).
                     // Swing isn't multithreaded, but I'll put this
                     // check in anyway.
-                    { return; }
+                    {
+                        return;
+                    }
 
                     // See if the vertical line to the parent has been drawn.
                     parentPath = path.getParentPath();
@@ -467,7 +474,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                                            hasBeenExpanded, isLeaf);
                     }
                     paintRow(g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
-                    if ((bounds.y + bounds.height) >= endY) { done = true; }
+                    if ((bounds.y + bounds.height) >= endY) {
+                        done = true;
+                    }
                 } else {
                     done = true;
                 }
@@ -487,7 +496,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                 bounds.x += insets.left;
             } else {
                 bounds.x = tree.getWidth() - (bounds.x + bounds.width) -
-                        insets.right;
+                           insets.right;
             }
             bounds.y += insets.top;
         }
@@ -666,7 +675,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         }
 
         //Descend to deepest last child.
-        TreePath lastChildPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), childCount - 1));
+        TreePath lastChildPath = path.pathByAddingChild(
+            treeModel.getChild(path.getLastPathComponent(), childCount - 1));
         while (tree.isExpanded(lastChildPath)) {
             int count = treeModel.getChildCount(lastChildPath.getLastPathComponent());
             lastChildPath = lastChildPath.pathByAddingChild(treeModel.getChild(lastChildPath.getLastPathComponent(),
@@ -705,7 +715,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected void completeEditing() {
         /* If should invoke stopCellEditing, try that */
         if (tree.getInvokesStopCellEditing() &&
-                stopEditingInCompleteEditing && editingComponent != null) {
+            stopEditingInCompleteEditing && editingComponent != null) {
             cellEditor.stopCellEditing();
         }
         /* Invoke cancelCellEditing, this will do nothing if stopCellEditing
@@ -716,7 +726,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected boolean isToggleSelectionEvent(final MouseEvent e) {
         return SwingUtilities.isLeftMouseButton(e)
-                && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
+               && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
     }
 
     @Override

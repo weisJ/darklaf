@@ -286,11 +286,11 @@ public class OverlayScrollPane extends JLayeredPane {
         @Override
         public boolean contains(final int x, final int y) {
             if (scrollPane.horizontalScrollBar.isVisible()
-                    && scrollPane.horizontalScrollBar.getBounds().contains(x, y)) {
+                && scrollPane.horizontalScrollBar.getBounds().contains(x, y)) {
                 return true;
             }
             return scrollPane.verticalScrollBar.isVisible()
-                    && scrollPane.verticalScrollBar.getBounds().contains(x, y);
+                   && scrollPane.verticalScrollBar.getBounds().contains(x, y);
         }
 
 

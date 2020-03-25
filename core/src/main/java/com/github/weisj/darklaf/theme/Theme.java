@@ -48,12 +48,12 @@ import java.util.logging.Logger;
 public abstract class Theme {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
     private static final String[] UI_PROPERTIES = new String[]{
-            "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
-            "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "numberingPane", "optionPane", "panel",
-            "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator",
-            "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "taskPane", "text",
-            "toggleButton", "toolBar", "toolTip", "tree",
-    };
+        "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
+        "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "numberingPane", "optionPane", "panel",
+        "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator",
+        "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "taskPane", "text",
+        "toggleButton", "toolBar", "toolTip", "tree",
+        };
     private static final String[] ICON_PROPERTIES = new String[]{
         "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
     };
@@ -74,9 +74,9 @@ public abstract class Theme {
     /**
      * Load the theme defaults.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
-     * to return the class of the theme you are overwriting. In this case you should use
-     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
+     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
+     * #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -89,9 +89,9 @@ public abstract class Theme {
     /**
      * Load the global values.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
-     * to return the class of the theme you are overwriting. In this case you should use
-     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
+     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
+     * #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -104,9 +104,9 @@ public abstract class Theme {
     /**
      * Load the icon defaults.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
-     * to return the class of the theme you are overwriting. In this case you should use
-     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
+     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
+     * #load(String)}.
      *
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
@@ -122,9 +122,9 @@ public abstract class Theme {
     /**
      * Load the general properties file for the icon themes.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()}
-     * to return the class of the theme you are overwriting. In this case you should use
-     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
+     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
+     * #load(String)}.
      *
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
@@ -149,8 +149,8 @@ public abstract class Theme {
     /**
      * Load the platform defaults.
      * <p>
-     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
-     * instead of {@link #load(String)}.
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
+     * #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -167,8 +167,8 @@ public abstract class Theme {
     /**
      * Load the ui defaults.
      * <p>
-     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
-     * instead of {@link #load(String)}.
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
+     * #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -191,8 +191,8 @@ public abstract class Theme {
      * Load custom properties that are located under {@link #getResourcePath()}, with the name {@link
      * #getName()}_{propertySuffix}.properties
      * <p>
-     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
-     * instead of {@link #load(String)}.
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
+     * #load(String)}.
      *
      * @param propertySuffix  the property suffix.
      * @param properties      the properties to load into.
@@ -207,8 +207,7 @@ public abstract class Theme {
     /**
      * Load a .properties file using {@link #getLoaderClass()}} to resolve the file path.
      * <p>
-     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)}
-     * instead.
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead.
      *
      * @param name the properties file to load.
      * @return the properties.
@@ -251,9 +250,8 @@ public abstract class Theme {
     public abstract String getName();
 
     /**
-     * The class used to determine the runtime location of resources.
-     * It is advised to explicitly return the class instead of using {@link #getClass()} to protect
-     * against extending the theme.
+     * The class used to determine the runtime location of resources. It is advised to explicitly return the class
+     * instead of using {@link #getClass()} to protect against extending the theme.
      *
      * @return the loader class.
      */

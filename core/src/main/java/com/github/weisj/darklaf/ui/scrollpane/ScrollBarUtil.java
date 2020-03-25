@@ -144,10 +144,10 @@ public class ScrollBarUtil implements ScrollBarConstants {
         if (limitToBlock) {
             if (direction < 0) {
                 limit = scrollbar.getValue() -
-                    scrollbar.getBlockIncrement(direction);
+                        scrollbar.getBlockIncrement(direction);
             } else {
                 limit = scrollbar.getValue() +
-                    scrollbar.getBlockIncrement(direction);
+                        scrollbar.getBlockIncrement(direction);
             }
         }
 

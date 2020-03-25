@@ -141,7 +141,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     protected Color getBackgroundColor(final JComponent c) {
         AbstractButton b = (AbstractButton) c;
         boolean rollOver = (b.isRolloverEnabled() || ButtonConstants.doConvertToShadow(b))
-            && (((JButton) c).getModel().isRollover());
+                           && (((JButton) c).getModel().isRollover());
         boolean clicked = b.getModel().isArmed();
         boolean isSelected = c instanceof JToggleButton && ((JToggleButton) c).isSelected();
         if (c.isEnabled()) {

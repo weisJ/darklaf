@@ -121,7 +121,7 @@ public class TreeRendererComponent extends Container {
         int textY = iconHeight / 2 - textHeight / 2;
         int totalY = Math.min(0, textY);
         int totalHeight = Math.max(iconHeight, textY + textHeight) -
-                totalY;
+                          totalY;
         return getHeight() / 2 - (totalY + (totalHeight / 2));
     }
 }

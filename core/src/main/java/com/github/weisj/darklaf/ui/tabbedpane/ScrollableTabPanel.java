@@ -28,7 +28,7 @@ import javax.swing.plaf.UIResource;
 import java.awt.*;
 
 public class ScrollableTabPanel extends JPanel implements UIResource {
-    private DarkTabbedPaneUIBridge ui;
+    private final DarkTabbedPaneUIBridge ui;
 
     public ScrollableTabPanel(final DarkTabbedPaneUIBridge ui) {
         super(null);

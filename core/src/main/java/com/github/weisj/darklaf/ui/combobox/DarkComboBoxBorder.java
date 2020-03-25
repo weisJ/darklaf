@@ -39,14 +39,14 @@ public class DarkComboBoxBorder implements Border, UIResource {
     protected final DarkComboBoxUI ui;
     protected Insets boxPadding;
     protected Insets cellPadding;
-    protected int borderSize;
-    protected int arcSize;
-    protected Color focusBorderColor;
-    protected Color inactiveBackground;
-    protected Color arrowBackground;
-    protected Color background;
-    protected Color borderColor;
-    protected Color inactiveBorderColor;
+    protected final int borderSize;
+    protected final int arcSize;
+    protected final Color focusBorderColor;
+    protected final Color inactiveBackground;
+    protected final Color arrowBackground;
+    protected final Color background;
+    protected final Color borderColor;
+    protected final Color inactiveBorderColor;
 
     public DarkComboBoxBorder(final DarkComboBoxUI ui) {
         this.ui = ui;

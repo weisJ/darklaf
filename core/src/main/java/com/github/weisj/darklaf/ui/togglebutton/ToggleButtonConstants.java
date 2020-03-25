@@ -39,7 +39,7 @@ public interface ToggleButtonConstants {
 
     static boolean isSlider(final JComponent c) {
         return c instanceof JToggleButton
-            && VARIANT_SLIDER.equals(c.getClientProperty(ToggleButtonConstants.KEY_VARIANT));
+               && VARIANT_SLIDER.equals(c.getClientProperty(ToggleButtonConstants.KEY_VARIANT));
     }
 
     static boolean isInCell(final Component c) {
@@ -52,11 +52,11 @@ public interface ToggleButtonConstants {
 
     static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
     }
 
     static boolean isTableCellEditor(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR));
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR));
     }
 }

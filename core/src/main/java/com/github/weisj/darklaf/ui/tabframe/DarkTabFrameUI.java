@@ -67,7 +67,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     private TabFrameLayout layout;
     private int tabHeight;
     private Color dragBorderColor;
-    private Dimension dropSize = new Dimension();
+    private final Dimension dropSize = new Dimension();
     private Alignment sourceAlign;
     private int sourceIndex;
     private Alignment destAlign;

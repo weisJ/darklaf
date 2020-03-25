@@ -22,403 +22,403 @@ public final class UIDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(
-                () -> {
-                    LafManager.install();
-                    JFrame.setDefaultLookAndFeelDecorated(true);
+            () -> {
+                LafManager.install();
+                JFrame.setDefaultLookAndFeelDecorated(true);
 
-                    JXTaskPaneContainer taskpanecontainer = new JXTaskPaneContainer();
-                    JXTaskPane taskpane = new JXTaskPane();
-                    for (int i = 0; i < 3; i++) {
-                        taskpane.add(new AbstractAction("Test Task " + i) {
-                            @Override
-                            public void actionPerformed(final ActionEvent e) {
-                                Logger.getGlobal().info("hello from test task");
-                            }
-                        });
-                    }
-                    taskpane.setTitle("My Tasks");
-                    taskpanecontainer.add(taskpane);
+                JXTaskPaneContainer taskpanecontainer = new JXTaskPaneContainer();
+                JXTaskPane taskpane = new JXTaskPane();
+                for (int i = 0; i < 3; i++) {
+                    taskpane.add(new AbstractAction("Test Task " + i) {
+                        @Override
+                        public void actionPerformed(final ActionEvent e) {
+                            Logger.getGlobal().info("hello from test task");
+                        }
+                    });
+                }
+                taskpane.setTitle("My Tasks");
+                taskpanecontainer.add(taskpane);
 
-                    JFrame frame = new JFrame("UIDemo");
-                    frame.setIconImage(Toolkit.getDefaultToolkit().createImage(
-                            UIDemo.class.getClassLoader().getResource("mima.png")
-                    ));
+                JFrame frame = new JFrame("UIDemo");
+                frame.setIconImage(Toolkit.getDefaultToolkit().createImage(
+                    UIDemo.class.getClassLoader().getResource("mima.png")
+                                                                          ));
 
-                    Icon folderIcon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
+                Icon folderIcon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
 
-                    JPanel panel = new JPanel(new GridLayout(3, 4));
-                    JPanel content = new JPanel(new BorderLayout());
-                    content.add(panel, BorderLayout.CENTER);
-                    JXStatusBar statusBar = new JXStatusBar();
-                    statusBar.add(new JLabel("test1"));
-                    statusBar.add(new JLabel("test2"));
-                    statusBar.add(new JLabel("test3"));
-                    content.add(statusBar, BorderLayout.SOUTH);
+                JPanel panel = new JPanel(new GridLayout(3, 4));
+                JPanel content = new JPanel(new BorderLayout());
+                content.add(panel, BorderLayout.CENTER);
+                JXStatusBar statusBar = new JXStatusBar();
+                statusBar.add(new JLabel("test1"));
+                statusBar.add(new JLabel("test2"));
+                statusBar.add(new JLabel("test3"));
+                content.add(statusBar, BorderLayout.SOUTH);
 
-                    JButton defaultButton = new JButton("default") {{
-                        setDefaultCapable(true);
-                    }};
+                JButton defaultButton = new JButton("default") {{
+                    setDefaultCapable(true);
+                }};
 
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
-                            add(new JCheckBox("disabled selected") {{
-                                setSelected(true);
-                                setEnabled(false);
-                            }});
-                            add(new JCheckBox("enabled"));
-                        }});
-                        add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
-                            add(new JRadioButton("disabled") {{
-                                setSelected(true);
-                                setEnabled(false);
-                            }});
-                            add(new JRadioButton("enabled"));
-                        }});
-                        add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
-                            add(new TristateCheckBox("disabled") {{
-                                setIndeterminate();
-                                setEnabled(false);
-                            }});
-                            add(new TristateCheckBox("enabled"));
-                        }});
-                        add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
-                            add(new JButton("IconButton", folderIcon) {{
-                                setRolloverEnabled(true);
-                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
-                            }});
-                            add(new JButton(folderIcon) {{
-                                setRolloverEnabled(true);
-                                putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
-                            }});
-                            add(new JButton(folderIcon) {{
-                                setRolloverEnabled(true);
-                                putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-                                putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
-                                putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
-                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
-                            }});
-                            add(new JButton(folderIcon) {{
-                                putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
-                            }});
-                        }});
-                        add(new JToggleButton("toggle") {{
-                            putClientProperty("JToggleButton.variant", "slider");
-                            setEnabled(false);
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
+                        add(new JCheckBox("disabled selected") {{
                             setSelected(true);
+                            setEnabled(false);
                         }});
+                        add(new JCheckBox("enabled"));
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JComboBox<String>() {{
-                            addItem("Editable ComboBox");
-                            for (int i = 0; i < 20; i++) {
-                                addItem("item " + i);
-                            }
-                            setEditable(true);
-                        }});
-                        add(new JComboBox<String>() {{
-                            addItem("Uneditable ComboBox");
-                            for (int i = 0; i < 20; i++) {
-                                addItem("item " + i);
-                            }
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
-                        add(new JComboBox<String>() {{
-                            addItem("DisabledComboBox");
+                    add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
+                        add(new JRadioButton("disabled") {{
+                            setSelected(true);
                             setEnabled(false);
                         }});
-                        add(new JSpinner() {{
-                            putClientProperty("JSpinner.variant", "plusMinus");
-                        }});
-                        add(new JSpinner() {{
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
-                        add(new JSpinner() {{
-                            setEnabled(false);
-                        }});
+                        add(new JRadioButton("enabled"));
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JTextField("TextField"));
-                        add(new JTextField("TextField") {{
+                    add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
+                        add(new TristateCheckBox("disabled") {{
+                            setIndeterminate();
                             setEnabled(false);
                         }});
-                        add(new JTextField("TextField") {{
-                            putClientProperty("JTextField.alternativeArc", Boolean.TRUE);
-                        }});
-                        add(new SearchTextField("SearchField"));
-                        add(new SearchTextFieldWithHistory("SearchFieldWithHistory"));
-                        add(new JPasswordField("Password"));
-                        add(new JPasswordField("VeryStrongPassword") {{
-                            putClientProperty("JTextField.alternativeArc", Boolean.TRUE);
-                            putClientProperty("JPasswordField.showViewIcon", Boolean.TRUE);
-                        }});
+                        add(new TristateCheckBox("enabled"));
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JButton("enabled") {{
+                    add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
+                        add(new JButton("IconButton", folderIcon) {{
+                            setRolloverEnabled(true);
+                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
                         }});
-                        add(new JButton("disabled") {{
-                            setEnabled(false);
-                        }});
-                        add(defaultButton);
-                        add(new JToggleButton("toggle") {{
-                            putClientProperty("JToggleButton.variant", "slider");
-                        }});
-                        add(new JButton("square") {{
+                        add(new JButton(folderIcon) {{
+                            setRolloverEnabled(true);
                             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+                        }});
+                        add(new JButton(folderIcon) {{
+                            setRolloverEnabled(true);
+                            putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+                            putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
+                            putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
+                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+                        }});
+                        add(new JButton(folderIcon) {{
+                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
                         }});
                     }});
-                    panel.add(taskpanecontainer);
-                    panel.add(new JPanel() {{
-                        add(new JProgressBar() {{
-                            setValue(50);
-                        }});
-                        add(new JProgressBar() {{
-                            setValue(50);
-                            putClientProperty("JProgressBar.failed", true);
-                        }});
-                        add(new JProgressBar() {{
-                            setValue(50);
-                            putClientProperty("JProgressBar.passed", true);
-                        }});
-                        add(new JProgressBar() {{
-                            setIndeterminate(true);
-                        }});
-                        add(new JProgressBar() {{
-                            setIndeterminate(true);
-                            putClientProperty("JProgressBar.failed", true);
-                        }});
-                        add(new JProgressBar() {{
-                            setIndeterminate(true);
-                            putClientProperty("JProgressBar.passed", true);
-                        }});
+                    add(new JToggleButton("toggle") {{
+                        putClientProperty("JToggleButton.variant", "slider");
+                        setEnabled(false);
+                        setSelected(true);
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JSlider());
-                        add(new JSlider() {{
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
-                        add(new JSlider() {{
-                            setInverted(true);
-                        }});
-                        add(new JSlider() {{
-                            setInverted(true);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
-                        add(new JSlider() {{
-                            putClientProperty(DarkSliderUI.KEY_VARIANT, DarkSliderUI.VARIANT_VOLUME);
-                            putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    add(new JComboBox<String>() {{
+                        addItem("Editable ComboBox");
+                        for (int i = 0; i < 20; i++) {
+                            addItem("item " + i);
+                        }
+                        setEditable(true);
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JSlider() {{
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                        }});
-                        add(new JSlider() {{
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
-                        add(new JSlider() {{
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setInverted(true);
-                        }});
-                        add(new JSlider() {{
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setInverted(true);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
+                    add(new JComboBox<String>() {{
+                        addItem("Uneditable ComboBox");
+                        for (int i = 0; i < 20; i++) {
+                            addItem("item " + i);
+                        }
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-                        add(new JSlider() {{
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
+                    add(new JComboBox<String>() {{
+                        addItem("DisabledComboBox");
+                        setEnabled(false);
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setInverted(true);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
+                    add(new JSpinner() {{
+                        putClientProperty("JSpinner.variant", "plusMinus");
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setInverted(true);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setInverted(true);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                        }});
+                    add(new JSpinner() {{
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                     }});
-                    panel.add(new JPanel() {{
-                        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
-                        add(new JSlider() {{
-                            setOrientation(VERTICAL);
-                            setSnapToTicks(true);
-                            setPaintTicks(true);
-                            setMajorTickSpacing(20);
-                            setMinorTickSpacing(5);
-                            setPaintLabels(true);
-                            setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                            putClientProperty("Slider.variant", "volume");
-                            putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
-                            putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
-                        }});
+                    add(new JSpinner() {{
+                        setEnabled(false);
                     }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    add(new JTextField("TextField"));
+                    add(new JTextField("TextField") {{
+                        setEnabled(false);
+                    }});
+                    add(new JTextField("TextField") {{
+                        putClientProperty("JTextField.alternativeArc", Boolean.TRUE);
+                    }});
+                    add(new SearchTextField("SearchField"));
+                    add(new SearchTextFieldWithHistory("SearchFieldWithHistory"));
+                    add(new JPasswordField("Password"));
+                    add(new JPasswordField("VeryStrongPassword") {{
+                        putClientProperty("JTextField.alternativeArc", Boolean.TRUE);
+                        putClientProperty("JPasswordField.showViewIcon", Boolean.TRUE);
+                    }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    add(new JButton("enabled") {{
+                    }});
+                    add(new JButton("disabled") {{
+                        setEnabled(false);
+                    }});
+                    add(defaultButton);
+                    add(new JToggleButton("toggle") {{
+                        putClientProperty("JToggleButton.variant", "slider");
+                    }});
+                    add(new JButton("square") {{
+                        putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+                    }});
+                }});
+                panel.add(taskpanecontainer);
+                panel.add(new JPanel() {{
+                    add(new JProgressBar() {{
+                        setValue(50);
+                    }});
+                    add(new JProgressBar() {{
+                        setValue(50);
+                        putClientProperty("JProgressBar.failed", true);
+                    }});
+                    add(new JProgressBar() {{
+                        setValue(50);
+                        putClientProperty("JProgressBar.passed", true);
+                    }});
+                    add(new JProgressBar() {{
+                        setIndeterminate(true);
+                    }});
+                    add(new JProgressBar() {{
+                        setIndeterminate(true);
+                        putClientProperty("JProgressBar.failed", true);
+                    }});
+                    add(new JProgressBar() {{
+                        setIndeterminate(true);
+                        putClientProperty("JProgressBar.passed", true);
+                    }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    add(new JSlider());
+                    add(new JSlider() {{
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    }});
+                    add(new JSlider() {{
+                        setInverted(true);
+                    }});
+                    add(new JSlider() {{
+                        setInverted(true);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    }});
+                    add(new JSlider() {{
+                        putClientProperty(DarkSliderUI.KEY_VARIANT, DarkSliderUI.VARIANT_VOLUME);
+                        putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    add(new JSlider() {{
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                    }});
+                    add(new JSlider() {{
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    }});
+                    add(new JSlider() {{
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setInverted(true);
+                    }});
+                    add(new JSlider() {{
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setInverted(true);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+                    add(new JSlider() {{
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setInverted(true);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setInverted(true);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setInverted(true);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    }});
+                }});
+                panel.add(new JPanel() {{
+                    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                    add(new JSlider() {{
+                        setOrientation(VERTICAL);
+                        setSnapToTicks(true);
+                        setPaintTicks(true);
+                        setMajorTickSpacing(20);
+                        setMinorTickSpacing(5);
+                        setPaintLabels(true);
+                        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                        putClientProperty("Slider.variant", "volume");
+                        putClientProperty("Slider.instantScrollEnabled", Boolean.TRUE);
+                        putClientProperty(DarkSliderUI.KEY_SHOW_VOLUME_ICON, Boolean.TRUE);
+                    }});
+                }});
 
-                    frame.setContentPane(content);
+                frame.setContentPane(content);
 
-                    JMenuBar menuBar = new JMenuBar();
-                    JMenu menu = new JMenu("test");
-                    menu.add(new JMenu("submenu") {{
-                        add(new JMenuItem("item1"));
-                        add(new JMenuItem("item2"));
-                        add(new JMenuItem("item3"));
-                        add(new JMenuItem("item4"));
-                        add(new JMenuItem("item5"));
-                    }});
-                    menu.addSeparator();
-                    menu.add(new JRadioButtonMenuItem("radioButton"));
-                    menu.add(new JCheckBoxMenuItem("checkBox"));
-                    menuBar.add(menu);
-                    frame.setJMenuBar(menuBar);
+                JMenuBar menuBar = new JMenuBar();
+                JMenu menu = new JMenu("test");
+                menu.add(new JMenu("submenu") {{
+                    add(new JMenuItem("item1"));
+                    add(new JMenuItem("item2"));
+                    add(new JMenuItem("item3"));
+                    add(new JMenuItem("item4"));
+                    add(new JMenuItem("item5"));
+                }});
+                menu.addSeparator();
+                menu.add(new JRadioButtonMenuItem("radioButton"));
+                menu.add(new JCheckBoxMenuItem("checkBox"));
+                menuBar.add(menu);
+                frame.setJMenuBar(menuBar);
 
-                    frame.getRootPane().setDefaultButton(defaultButton);
-                    frame.setSize(1200, 800);
-                    frame.setLocationRelativeTo(null);
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frame.setVisible(true);
-                });
+                frame.getRootPane().setDefaultButton(defaultButton);
+                frame.setSize(1200, 800);
+                frame.setLocationRelativeTo(null);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+            });
     }
 }

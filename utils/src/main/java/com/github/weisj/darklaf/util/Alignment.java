@@ -90,7 +90,7 @@ public enum Alignment {
         }
         for (Alignment alignment : Alignment.values()) {
             if (alignment != CENTER && alignment != hint
-                    && alignment.canBeAligned(point, size, outerBounds)) {
+                && alignment.canBeAligned(point, size, outerBounds)) {
                 return alignment;
             }
         }
@@ -110,8 +110,8 @@ public enum Alignment {
                                 final Rectangle outerBounds) {
         Point p = relativePos(size, point);
         return p.x >= outerBounds.x && p.y >= outerBounds.y
-                && p.x + size.width < outerBounds.x + outerBounds.width
-                && p.y + size.height < outerBounds.x + outerBounds.height;
+               && p.x + size.width < outerBounds.x + outerBounds.width
+               && p.y + size.height < outerBounds.x + outerBounds.height;
     }
 
     /**

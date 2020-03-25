@@ -64,7 +64,9 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
             g.setColor(color);
             g.fillRect(0, r.y, c.getWidth(), r.height);
 
-            if (lastView == null) { lastView = r; }
+            if (lastView == null) {
+                lastView = r;
+            }
         } catch (BadLocationException ble) {
             ble.printStackTrace();
         }
@@ -99,7 +101,8 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
                     component.repaint(0, lastView.y, component.getWidth(), lastView.height);
                     lastView = currentView;
                 }
-            } catch (BadLocationException ignored) {}
+            } catch (BadLocationException ignored) {
+            }
         });
     }
 }

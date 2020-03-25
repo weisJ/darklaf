@@ -126,9 +126,9 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             }
         }
         if ((root.getWindowDecorationStyle() != JRootPane.NONE)
-                && (root.getUI() instanceof DarkRootPaneUI)) {
+            && (root.getUI() instanceof DarkRootPaneUI)) {
             JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                    .getTitlePane();
+                .getTitlePane();
             if (titlePane != null) {
                 tpd = titlePane.getMinimumSize();
                 if (tpd != null) {
@@ -139,8 +139,8 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         }
 
         return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth)
-                                 + i.left + i.right, cpHeight + mbHeight + tpHeight + i.top
-                                 + i.bottom);
+                             + i.left + i.right, cpHeight + mbHeight + tpHeight + i.top
+                                                 + i.bottom);
     }
 
     protected CustomTitlePane getTitlePane(final JRootPane root) {
@@ -212,9 +212,9 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         }
 
         if ((root.getWindowDecorationStyle() != JRootPane.NONE)
-                && (root.getUI() instanceof DarkRootPaneUI)) {
+            && (root.getUI() instanceof DarkRootPaneUI)) {
             JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                    .getTitlePane();
+                .getTitlePane();
             if (titlePane != null) {
                 tpd = titlePane.getMaximumSize();
                 if (tpd != null) {

@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class SearchTextFieldWithHistory extends SearchTextField {
 
-    protected TextFieldHistoryPopup history;
+    protected final TextFieldHistoryPopup history;
 
     /**
      * Constructs a new <code>TextField</code>.  A default model is created, the initial string is <code>null</code>,

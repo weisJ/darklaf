@@ -33,7 +33,7 @@ import java.beans.PropertyChangeListener;
 
 public class DarkComboBoxListener extends MouseAdapter implements PropertyChangeListener, ComboBoxConstants {
 
-    protected JComboBox<?> comboBox;
+    protected final JComboBox<?> comboBox;
 
     public DarkComboBoxListener(final JComboBox<?> comboBox) {
         this.comboBox = comboBox;

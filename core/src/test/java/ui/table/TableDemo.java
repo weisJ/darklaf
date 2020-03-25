@@ -50,11 +50,11 @@ public class TableDemo implements ComponentDemo {
             {1, "John", 40.0, false, "Item"},
             {2, "Rambo", 70.0, false, 10},
             {3, "Zorro", 60.0, true, "cell"},
-        };
+            };
         AtomicBoolean editable = new AtomicBoolean(true);
         JTable table = new JTable(data, columns) {
-            TableCellEditor comboEditor = new DarkTableCellEditor(new JComboBox<>());
-            TableCellEditor spinnerEditor = new DarkTableCellEditor(new JSpinner());
+            final TableCellEditor comboEditor = new DarkTableCellEditor(new JComboBox<>());
+            final TableCellEditor spinnerEditor = new DarkTableCellEditor(new JSpinner());
 
             @Override
             public boolean isCellEditable(final int row, final int column) {

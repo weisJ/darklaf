@@ -67,11 +67,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     }
 
     @Override
-    protected void installTitlePane() {
-        super.installTitlePane();
-    }
-
-    @Override
     protected void addSubComponents() {
         super.addSubComponents();
         label = new JLabel();

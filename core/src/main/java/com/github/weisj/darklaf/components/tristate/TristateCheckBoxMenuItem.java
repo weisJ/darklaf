@@ -60,8 +60,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
     }
 
     /**
-     * Creates a menu item whose properties are taken from the
-     * Action supplied.
+     * Creates a menu item whose properties are taken from the Action supplied.
      *
      * @param a the action of the {@code JCheckBoxMenuItem}
      * @since 1.3

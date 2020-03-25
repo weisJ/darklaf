@@ -38,10 +38,10 @@ import java.awt.*;
 public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements TreeRendererSupport {
 
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(false));
+        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(false));
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
-            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(false));
-    private TreeRendererComponent rendererComponent = new TreeRendererComponent();
+        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(false));
+    private final TreeRendererComponent rendererComponent = new TreeRendererComponent();
 
     @Override
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
@@ -83,7 +83,7 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
         return Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
     }
 
-    protected DarkCellRendererToggleButton getBooleanRenderer(final JTree table) {
+    protected DarkCellRendererToggleButton<?> getBooleanRenderer(final JTree table) {
         if (DarkTreeUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE))) {
             return radioRenderer;
         }

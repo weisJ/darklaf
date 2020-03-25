@@ -24,11 +24,7 @@
 package com.github.weisj.darklaf.ui.text;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.TextAction;
-import javax.swing.text.Utilities;
+import javax.swing.text.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -76,7 +72,7 @@ public class SelectWordAction extends TextAction {
         }
 
         public int getWordStart(final JTextComponent textArea, final int offs)
-                throws BadLocationException {
+            throws BadLocationException {
             return Utilities.getWordStart(textArea, offs);
         }
     }

@@ -63,8 +63,9 @@ public final class PropertyLoader {
 
     private static boolean addReferenceInfo;
 
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
-                                                                                                                   TextAttribute.KERNING_ON);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(
+        TextAttribute.KERNING,
+        TextAttribute.KERNING_ON);
 
     public static void setAddReferenceInfo(final boolean addReferenceInfo) {
         PropertyLoader.addReferenceInfo = addReferenceInfo;
@@ -128,9 +129,9 @@ public final class PropertyLoader {
         if (key.endsWith("Insets") || key.endsWith(".insets")) {
             returnVal = parseInsets(value);
         } else if (!skipObjects
-            && (key.endsWith("Border")
-            || key.endsWith(".border")
-            || key.endsWith("Renderer"))) {
+                   && (key.endsWith("Border")
+                       || key.endsWith(".border")
+                       || key.endsWith("Renderer"))) {
             return (UIDefaults.LazyValue) def -> parseObject(value);
         } else if (key.endsWith(".component") || key.endsWith("Component")) {
             return (UIDefaults.ActiveValue) (def) -> parseObject(value);
@@ -146,10 +147,10 @@ public final class PropertyLoader {
             String val = parseKey(value);
             String referenceFreeKey = val.substring(REFERENCE_PREFIX.length());
             boolean containsKey = accumulator.containsKey(val)
-                || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
+                                  || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
             if (!containsKey) {
                 LOGGER.warning("Could not reference value '" + val + "' while loading '" + key + "'. " +
-                                   "May be a forward reference");
+                               "May be a forward reference");
             }
             returnVal = accumulator.get(val);
             if (addReferenceInfo) {
@@ -317,7 +318,8 @@ public final class PropertyLoader {
     private static Object parseObject(final String value) {
         try {
             return Class.forName(value).getDeclaredConstructor().newInstance();
-        } catch (final Exception ignored) { }
+        } catch (final Exception ignored) {
+        }
         return null;
     }
 

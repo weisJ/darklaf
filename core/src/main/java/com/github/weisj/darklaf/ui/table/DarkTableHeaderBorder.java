@@ -77,10 +77,10 @@ public class DarkTableHeaderBorder extends MutableLineBorder implements UIResour
         JComponent comp = c;
         Component prev = child;
         while (comp instanceof JScrollPane
-            || (comp != null
-            && comp.getLayout() instanceof BorderLayout
-            && ((BorderLayout) comp.getLayout()).getConstraints(prev) == BorderLayout.CENTER)
-            && ((BorderLayout) comp.getLayout()).getLayoutComponent(BorderLayout.NORTH) == null) {
+               || (comp != null
+                   && comp.getLayout() instanceof BorderLayout
+                   && ((BorderLayout) comp.getLayout()).getConstraints(prev) == BorderLayout.CENTER)
+                  && ((BorderLayout) comp.getLayout()).getLayoutComponent(BorderLayout.NORTH) == null) {
             if (comp instanceof JTabbedPane) return true;
             prev = comp;
             comp = (JComponent) comp.getParent();

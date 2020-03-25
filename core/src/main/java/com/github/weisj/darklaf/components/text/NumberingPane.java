@@ -36,8 +36,8 @@ public class NumberingPane extends JComponent {
     public static final String KEY_ICONS = "icons";
     public static final String KEY_MIN_ICON_WIDTH = "minimumIconWidth";
     private JTextComponent textComponent;
-    private Map<Position, Icon> iconMap;
-    private Map<Position, List<IconListener>> listenerMap;
+    private final Map<Position, Icon> iconMap;
+    private final Map<Position, List<IconListener>> listenerMap;
     private int width;
 
     public NumberingPane() {
@@ -83,7 +83,8 @@ public class NumberingPane extends JComponent {
         return addIconAtLine(lineIndex, icon, true);
     }
 
-    public Position addIconAtLine(final int lineIndex, final Icon icon, final boolean atTextStart) throws BadLocationException {
+    public Position addIconAtLine(final int lineIndex, final Icon icon, final boolean atTextStart)
+        throws BadLocationException {
         int offset = textComponent.getDocument().getDefaultRootElement().getElement(lineIndex).getStartOffset();
         if (atTextStart) {
             Document doc = textComponent.getDocument();

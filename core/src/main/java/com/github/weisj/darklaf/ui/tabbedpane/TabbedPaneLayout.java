@@ -102,7 +102,7 @@ public class TabbedPaneLayout implements LayoutManager {
         //
         if (selectedComponent != null) {
             if (selectedComponent != visibleComponent &&
-                    visibleComponent != null) {
+                visibleComponent != null) {
                 if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
                     shouldChangeFocus = true;
                 }
@@ -139,11 +139,11 @@ public class TabbedPaneLayout implements LayoutManager {
             }
 
             cw = bounds.width - totalTabWidth -
-                    insets.left - insets.right -
-                    contentInsets.left - contentInsets.right;
+                 insets.left - insets.right -
+                 contentInsets.left - contentInsets.right;
             ch = bounds.height - totalTabHeight -
-                    insets.top - insets.bottom -
-                    contentInsets.top - contentInsets.bottom;
+                 insets.top - insets.bottom -
+                 contentInsets.top - contentInsets.bottom;
 
             for (int i = 0; i < numChildren; i++) {
                 Component child = ui.tabPane.getComponent(i);
@@ -151,10 +151,10 @@ public class TabbedPaneLayout implements LayoutManager {
 
                     int tabContainerWidth = totalTabWidth == 0 ? bounds.width :
                                             totalTabWidth + insets.left + insets.right +
-                                                    contentInsets.left + contentInsets.right;
+                                            contentInsets.left + contentInsets.right;
                     int tabContainerHeight = totalTabHeight == 0 ? bounds.height :
                                              totalTabHeight + insets.top + insets.bottom +
-                                                     contentInsets.top + contentInsets.bottom;
+                                             contentInsets.top + contentInsets.bottom;
 
                     int tabContainerX = 0;
                     int tabContainerY = 0;

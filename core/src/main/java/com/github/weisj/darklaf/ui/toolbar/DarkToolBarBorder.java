@@ -34,9 +34,9 @@ import java.awt.*;
  */
 public class DarkToolBarBorder extends AbstractBorder implements UIResource, SwingConstants {
 
-    protected Icon horizontalGrip;
-    protected Icon verticalGrip;
-    protected Color borderColor;
+    protected final Icon horizontalGrip;
+    protected final Icon verticalGrip;
+    protected final Color borderColor;
 
     public DarkToolBarBorder() {
         horizontalGrip = UIManager.getIcon("ToolBar.horizontalGrip.icon");

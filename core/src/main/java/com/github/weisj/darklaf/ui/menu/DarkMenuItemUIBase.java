@@ -23,11 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.menu;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.LazyActionMap;
-import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.util.*;
 import sun.swing.MenuItemLayoutHelper;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
@@ -79,7 +75,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         ButtonModel model = lh.getMenuItem().getModel();
         if (model.isEnabled()) {
             accRect.x = lh.getViewRect().x + lh.getViewRect().width
-                    - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
+                        - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
         }
     }
 
@@ -98,9 +94,11 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         DarkUIUtil.applyInsets(viewRect, mi.getInsets());
 
         MenuItemLayoutHelper lh = new MenuItemLayoutHelper(mi, checkIcon,
-                                                           arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
+                                                           arrowIcon, viewRect, defaultTextIconGap,
+                                                           acceleratorDelimiter,
                                                            mi.getComponentOrientation().isLeftToRight(), mi.getFont(),
-                                                           acceleratorFont, MenuItemLayoutHelper.useCheckAndArrow(menuItem),
+                                                           acceleratorFont,
+                                                           MenuItemLayoutHelper.useCheckAndArrow(menuItem),
                                                            getPropertyPrefix());
         MenuItemLayoutHelper.LayoutResult lr = lh.layoutMenuItem();
 
@@ -123,7 +121,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         if (lh.getCheckIcon() != null) {
             ButtonModel model = lh.getMenuItem().getModel();
             if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                    && model.isSelected())) {
+                                    && model.isSelected())) {
                 g.setColor(foreground);
             } else {
                 g.setColor(holdc);
@@ -163,7 +161,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
             } else {
                 // *** paint the accText normally
                 if (model.isArmed()
-                        || (lh.getMenuItem() instanceof JMenu
+                    || (lh.getMenuItem() instanceof JMenu
                         && model.isSelected())) {
                     g.setColor(acceleratorSelectionForeground);
                 } else {
@@ -171,7 +169,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
                 }
                 SwingUtilities2.drawString(lh.getMenuItem(), g, lh.getAccText(),
                                            lr.getAccRect().x, lr.getAccRect().y +
-                                                   lh.getAccFontMetrics().getAscent());
+                                                              lh.getAccFontMetrics().getAscent());
             }
         }
         config.restore();
@@ -222,7 +220,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         if (lh.getArrowIcon() != null) {
             ButtonModel model = lh.getMenuItem().getModel();
             if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                    && model.isSelected())) {
+                                    && model.isSelected())) {
                 g.setColor(foreground);
             }
             if (lh.useCheckAndArrow()) {
@@ -250,7 +248,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
             }
             g.setColor(oldColor);
         } else if (model.isArmed() || (menuItem instanceof JMenu &&
-                model.isSelected())) {
+                                       model.isSelected())) {
             g.setColor(bgColor);
             g.fillRect(0, 0, menuWidth, menuHeight);
             g.setColor(oldColor);

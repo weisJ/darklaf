@@ -37,9 +37,9 @@ import java.util.Arrays;
 public class TabFrameLayout implements LayoutManager {
 
     private final JTabFrame tabFrame;
-    private DarkTabFrameUI ui;
-    private int[] shift;
-    private boolean[] draggedOver;
+    private final DarkTabFrameUI ui;
+    private final int[] shift;
+    private final boolean[] draggedOver;
     private int topHeight;
     private int leftHeight;
     private int rightHeight;
@@ -66,9 +66,9 @@ public class TabFrameLayout implements LayoutManager {
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getPreferredSize();
         return new Dimension(tabFrame.getLeftTabContainer().getWidth()
-                                     + tabFrame.getRightTabContainer().getWidth() + b.width,
+                             + tabFrame.getRightTabContainer().getWidth() + b.width,
                              tabFrame.getTopTabContainer().getHeight()
-                                     + tabFrame.getBottomTabContainer().getHeight() + b.height);
+                             + tabFrame.getBottomTabContainer().getHeight() + b.height);
     }
 
 
@@ -76,9 +76,9 @@ public class TabFrameLayout implements LayoutManager {
     public Dimension minimumLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getMinimumSize();
         return new Dimension(tabFrame.getLeftTabContainer().getWidth()
-                                     + tabFrame.getRightTabContainer().getWidth() + b.width,
+                             + tabFrame.getRightTabContainer().getWidth() + b.width,
                              tabFrame.getTopTabContainer().getHeight()
-                                     + tabFrame.getBottomTabContainer().getHeight() + b.height);
+                             + tabFrame.getBottomTabContainer().getHeight() + b.height);
     }
 
     @Override
@@ -230,7 +230,8 @@ public class TabFrameLayout implements LayoutManager {
             int size = rightSize > 0 ? rightHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             rightPane.setBounds(dim.width - rightHeight, topPane.getHeight(), size, height + (height % 2));
-            tabFrame.getRightTabContainer().setPreferredSize(new Dimension(rightPane.getHeight(), rightPane.getWidth()));
+            tabFrame.getRightTabContainer().setPreferredSize(
+                new Dimension(rightPane.getHeight(), rightPane.getWidth()));
             tabFrame.getRightTabContainer().setSize(tabFrame.getRightTabContainer().getPreferredSize());
             if (rightSize > 0) {
                 Point start = new Point(0, 0);

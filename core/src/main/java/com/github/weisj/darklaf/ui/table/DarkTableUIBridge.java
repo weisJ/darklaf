@@ -60,9 +60,9 @@ public class DarkTableUIBridge extends TableUIBridge {
         bounds.x = bounds.y = 0;
 
         if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 ||
-                // this check prevents us from painting the entire table
-                // when the clip doesn't intersect our bounds at all
-                !bounds.intersects(clip)) {
+            // this check prevents us from painting the entire table
+            // when the clip doesn't intersect our bounds at all
+            !bounds.intersects(clip)) {
 
             paintDropLines(g);
             return;
@@ -127,7 +127,7 @@ public class DarkTableUIBridge extends TableUIBridge {
             // but not when rmax is already pointing to index of last row
             // and if there is any selected rows
             if (rMax != (table.getRowCount() - 1) &&
-                    (table.getSelectedRow() == -1)) {
+                (table.getSelectedRow() == -1)) {
                 // Do not decrement rMax if rMax becomes
                 // less than or equal to rMin
                 // else cells will not be painted
@@ -372,7 +372,7 @@ public class DarkTableUIBridge extends TableUIBridge {
 
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
         if (table.isEditing() && table.getEditingRow() == row &&
-                table.getEditingColumn() == column) {
+            table.getEditingColumn() == column) {
             Component component = table.getEditorComponent();
             component.setBounds(cellRect);
             component.validate();

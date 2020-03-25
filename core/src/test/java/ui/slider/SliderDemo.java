@@ -50,9 +50,8 @@ public class SliderDemo implements ComponentDemo {
             addItem("Horizontal");
             addItem("Vertical");
             setSelectedItem("Horizontal");
-            addItemListener(e -> {
-                slider.setOrientation(e.getItem() == "Vertical" ? JSlider.VERTICAL : JSlider.HORIZONTAL);
-            });
+            addItemListener(
+                e -> slider.setOrientation(e.getItem() == "Vertical" ? JSlider.VERTICAL : JSlider.HORIZONTAL));
         }});
         controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {{

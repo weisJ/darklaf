@@ -91,7 +91,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     private Action maximizeAction;
     private Action minimizeAction;
     private JLabel titleLabel;
-    private Window window;
+    private final Window window;
     private long windowHandle;
     private JMenuBar menuBar;
     private final ContainerListener rootPaneContainerListener = new ContainerListener() {
@@ -290,12 +290,12 @@ public class WindowsTitlePane extends CustomTitlePane {
             add(maximizeToggleButton);
             add(closeButton);
         } else if (decorationStyle == JRootPane.PLAIN_DIALOG ||
-                decorationStyle == JRootPane.INFORMATION_DIALOG ||
-                decorationStyle == JRootPane.ERROR_DIALOG ||
-                decorationStyle == JRootPane.COLOR_CHOOSER_DIALOG ||
-                decorationStyle == JRootPane.FILE_CHOOSER_DIALOG ||
-                decorationStyle == JRootPane.QUESTION_DIALOG ||
-                decorationStyle == JRootPane.WARNING_DIALOG) {
+                   decorationStyle == JRootPane.INFORMATION_DIALOG ||
+                   decorationStyle == JRootPane.ERROR_DIALOG ||
+                   decorationStyle == JRootPane.COLOR_CHOOSER_DIALOG ||
+                   decorationStyle == JRootPane.FILE_CHOOSER_DIALOG ||
+                   decorationStyle == JRootPane.QUESTION_DIALOG ||
+                   decorationStyle == JRootPane.WARNING_DIALOG) {
             add(closeButton);
         }
         menuBar = getRootPane().getJMenuBar();
@@ -341,10 +341,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         windowIconButton.setComponentPopupMenu(createMenu());
         windowIconButton.putClientProperty("JButton.variant", "onlyLabel");
         windowIconButton.addActionListener(e -> windowIconButton
-                .getComponentPopupMenu()
-                .show(windowIconButton,
-                      windowIconButton.getWidth() / 2,
-                      windowIconButton.getHeight() / 2));
+            .getComponentPopupMenu()
+            .show(windowIconButton,
+                  windowIconButton.getWidth() / 2,
+                  windowIconButton.getHeight() / 2));
         windowIconButton.setFocusable(false);
         windowIconButton.setBorderPainted(false);
         return windowIconButton;
@@ -503,9 +503,9 @@ public class WindowsTitlePane extends CustomTitlePane {
                 JRootPane rootPane = getRootPane();
 
                 if (((state & Frame.MAXIMIZED_BOTH) != 0)
-                        && (rootPane.getBorder() == null
+                    && (rootPane.getBorder() == null
                         || (rootPane.getBorder() instanceof UIResource))
-                        && frame.isShowing()) {
+                    && frame.isShowing()) {
                     rootPane.setBorder(null);
                 }
 
@@ -651,9 +651,9 @@ public class WindowsTitlePane extends CustomTitlePane {
         String title = titleLabel.getText();
         if (title == null) title = "";
         return windowHandle == 0
-            || (getWindowDecorationStyle() == JRootPane.NONE
-            && menuBar == null
-            && title.length() == 0);
+               || (getWindowDecorationStyle() == JRootPane.NONE
+                   && menuBar == null
+                   && title.length() == 0);
     }
 
     private class TitlePaneLayout implements LayoutManager {

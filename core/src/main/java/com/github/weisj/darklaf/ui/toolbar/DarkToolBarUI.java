@@ -46,7 +46,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     protected Color background;
     private Dimension verticalDim = new Dimension(0, 0);
     private Dimension horizontalDim = new Dimension(0, 0);
-    private Timer timer = new Timer(5, e -> dragTo());
+    private final Timer timer = new Timer(5, e -> dragTo());
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -82,11 +82,6 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         if ((name == null || name.isEmpty()) && floatingToolBar != null && floatingToolBar.getRootPane() != null) {
             floatingToolBar.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         }
-    }
-
-    @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
     }
 
     @Override
@@ -151,11 +146,6 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         background = UIManager.getColor("ToolBar.background");
     }
 
-    @Override
-    protected void installListeners() {
-        super.installListeners();
-    }
-
     protected void setBorderToNonRollover(final Component c) {
     }
 
@@ -171,7 +161,9 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
                 frame = (Window) p;
             }
         }
-        if (floatingToolBar instanceof Window) { frame = (Window) floatingToolBar; }
+        if (floatingToolBar instanceof Window) {
+            frame = (Window) floatingToolBar;
+        }
         return new DarkDragWindow(frame);
     }
 
@@ -249,7 +241,9 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     protected void updateDockingSource() {
         dockingSource.invalidate();
         Container dockingSourceParent = dockingSource.getParent();
-        if (dockingSourceParent != null) { dockingSourceParent.validate(); }
+        if (dockingSourceParent != null) {
+            dockingSourceParent.validate();
+        }
         dockingSource.repaint();
     }
 

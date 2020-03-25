@@ -31,7 +31,7 @@ import java.awt.*;
 
 public class DarkListCellFocusBorder extends DarkCellBorder {
 
-    protected Color borderColor;
+    protected final Color borderColor;
 
     public DarkListCellFocusBorder() {
         borderColor = UIManager.getColor("List.focusBorderColor");

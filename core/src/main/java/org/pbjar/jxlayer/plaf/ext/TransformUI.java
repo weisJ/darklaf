@@ -36,12 +36,7 @@ import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.jdesktop.swingx.ForwardingRepaintManager;
-import org.pbjar.jxlayer.plaf.ext.transform.DefaultTransformModel;
-import org.pbjar.jxlayer.plaf.ext.transform.TransformLayout;
-import org.pbjar.jxlayer.plaf.ext.transform.TransformModel;
-import org.pbjar.jxlayer.plaf.ext.transform.TransformRPMAnnotation;
-import org.pbjar.jxlayer.plaf.ext.transform.TransformRPMFallBack;
-import org.pbjar.jxlayer.plaf.ext.transform.TransformRPMSwingX;
+import org.pbjar.jxlayer.plaf.ext.transform.*;
 import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
 import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
@@ -56,11 +51,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
@@ -145,36 +136,36 @@ public class TransformUI extends MouseEventUI<JComponent> {
         }
         delegatePossible = value;
         LOGGER.info("Java " + System.getProperty("java.version") + " " + System.getProperty("java.vm.version")
-                            + (delegatePossible ? ": RepaintManager delegate facility for JavaFX will be used."
-                                                : ": RepaintManager.setCurrentManager() will be used."));
+                    + (delegatePossible ? ": RepaintManager delegate facility for JavaFX will be used."
+                                        : ": RepaintManager.setCurrentManager() will be used."));
     }
 
     private final ChangeListener changeListener = e -> revalidateLayer();
     private final RepaintManagerProvider rpmProvider =
-            new RepaintManagerProvider() {
+        new RepaintManagerProvider() {
 
 
-                @Override
-                public Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass() {
-                    return TransformRPMSwingX.class;
-                }
+            @Override
+            public Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass() {
+                return TransformRPMSwingX.class;
+            }
 
 
-                @Override
-                public Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass() {
-                    return TransformRPMFallBack.class;
-                }
+            @Override
+            public Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass() {
+                return TransformRPMFallBack.class;
+            }
 
-                @Override
-                public boolean isAdequate(final Class<? extends RepaintManager> manager) {
-                    return manager.isAnnotationPresent(TransformRPMAnnotation.class);
-                }
-            };
+            @Override
+            public boolean isAdequate(final Class<? extends RepaintManager> manager) {
+                return manager.isAnnotationPresent(TransformRPMAnnotation.class);
+            }
+        };
     private final Map<RenderingHints.Key, Object> renderingHints = new HashMap<>();
     private final Set<JComponent> originalDoubleBuffered = new HashSet<>();
     private JComponent view;
     private final PropertyChangeListener viewChangeListener =
-            evt -> setView((JComponent) evt.getNewValue());
+        evt -> setView((JComponent) evt.getNewValue());
 
     private TransformModel transformModel;
     private LayoutManager originalLayout;

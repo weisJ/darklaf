@@ -64,7 +64,7 @@ public class DarkSpinnerListener extends MouseAdapter implements PropertyChangeL
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        Component editorComponent= ui.getEditorComponent();
+        Component editorComponent = ui.getEditorComponent();
         JComponent editor = ui.getEditor();
         if (PropertyKey.OPAQUE.equals(key)) {
             boolean val = Boolean.TRUE.equals(evt.getNewValue());

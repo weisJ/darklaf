@@ -29,7 +29,7 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
 
     protected final Rectangle iconRect = new Rectangle();
     protected final Rectangle textRect = new Rectangle();
-    private DarkTabbedPaneUI ui;
+    private final DarkTabbedPaneUI ui;
 
     public DarkScrollableTabPanel(final DarkTabbedPaneUI ui) {
         super(ui);
@@ -79,7 +79,8 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
     public void paint(final Graphics g) {
         super.paint(g);
         if (ui.dragging && ui.tabPane.getTabCount() > 0) {
-            ui.paintTab(g, ui.tabPane.getTabPlacement(), ui.dragRect, ui.tabPane.getSelectedIndex(), iconRect, textRect);
+            ui.paintTab(g, ui.tabPane.getTabPlacement(), ui.dragRect, ui.tabPane.getSelectedIndex(), iconRect,
+                        textRect);
             Component comp = ui.tabPane.getTabComponentAt(ui.dropSourceIndex);
             if (comp != null) {
                 g.translate(comp.getX(), comp.getY());

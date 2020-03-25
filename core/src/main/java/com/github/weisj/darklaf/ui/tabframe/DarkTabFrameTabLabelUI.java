@@ -66,7 +66,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private Color selectedFontColor;
     private Color selectedColor;
     private Color hoverColor;
-    private RotatableIcon rotatableIcon = new RotatableIcon();
+    private final RotatableIcon rotatableIcon = new RotatableIcon();
     private boolean printing;
 
 

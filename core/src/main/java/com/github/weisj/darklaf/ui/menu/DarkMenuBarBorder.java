@@ -34,7 +34,7 @@ import java.awt.*;
  */
 public class DarkMenuBarBorder implements Border, UIResource {
 
-    protected Color borderColor;
+    protected final Color borderColor;
 
     public DarkMenuBarBorder() {
         borderColor = UIManager.getColor("MenuBar.borderColor");

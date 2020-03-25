@@ -30,7 +30,8 @@ import java.awt.*;
 
 public class ScaledIcon implements Icon {
 
-    private Image img;
+    private final Image img;
+
     public ScaledIcon(final Image img) {
         this.img = img;
     }

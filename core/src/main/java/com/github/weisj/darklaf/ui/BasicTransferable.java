@@ -28,7 +28,10 @@ import javax.swing.plaf.UIResource;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.*;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.util.logging.Logger;
 
 /**
@@ -77,7 +80,7 @@ public class BasicTransferable implements Transferable, UIResource {
      * Returns an array of DataFlavor objects indicating the flavors the data can be provided in.  The array should be
      * ordered according to preference for providing the data (from most richly descriptive to least descriptive).
      *
-     * @return an array of data flavors in which this data can be transferred
+     * @return an array of data flavors in which this data can be transferred.
      */
     public DataFlavor[] getTransferDataFlavors() {
         DataFlavor[] richerFlavors = getRicherFlavors();
@@ -110,15 +113,15 @@ public class BasicTransferable implements Transferable, UIResource {
     }
 
     /**
-     * Returns whether or not the specified data flavor is supported for this object.
+     * Returns whether the specified data flavor is supported for this object.
      *
      * @param flavor the requested flavor for the data
-     * @return boolean indicating whether or not the data flavor is supported
+     * @return boolean indicating whether the data flavor is supported.
      */
     public boolean isDataFlavorSupported(final DataFlavor flavor) {
         DataFlavor[] flavors = getTransferDataFlavors();
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(flavor)) {
+        for (DataFlavor dataFlavor : flavors) {
+            if (dataFlavor.equals(flavor)) {
                 return true;
             }
         }
@@ -130,12 +133,10 @@ public class BasicTransferable implements Transferable, UIResource {
      * the representation class of the flavor.
      *
      * @param flavor the requested flavor for the data
-     * @throws IOException                if the data is no longer available in the requested flavor.
      * @throws UnsupportedFlavorException if the requested data flavor is not supported.
      * @see DataFlavor#getRepresentationClass
      */
-    public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-        DataFlavor[] richerFlavors = getRicherFlavors();
+    public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
         if (isRicherFlavor(flavor)) {
             return getRicherData(flavor);
         } else if (isHTMLFlavor(flavor)) {
@@ -192,7 +193,7 @@ public class BasicTransferable implements Transferable, UIResource {
         return null;
     }
 
-    protected Object getRicherData(final DataFlavor flavor) throws UnsupportedFlavorException {
+    protected Object getRicherData(final DataFlavor flavor) {
         return null;
     }
 
@@ -206,8 +207,8 @@ public class BasicTransferable implements Transferable, UIResource {
      */
     protected boolean isHTMLFlavor(final DataFlavor flavor) {
         DataFlavor[] flavors = htmlFlavors;
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(flavor)) {
+        for (DataFlavor dataFlavor : flavors) {
+            if (dataFlavor.equals(flavor)) {
                 return true;
             }
         }
@@ -243,8 +244,8 @@ public class BasicTransferable implements Transferable, UIResource {
      */
     protected boolean isPlainFlavor(final DataFlavor flavor) {
         DataFlavor[] flavors = plainFlavors;
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(flavor)) {
+        for (DataFlavor dataFlavor : flavors) {
+            if (dataFlavor.equals(flavor)) {
                 return true;
             }
         }
@@ -280,8 +281,8 @@ public class BasicTransferable implements Transferable, UIResource {
      */
     protected boolean isStringFlavor(final DataFlavor flavor) {
         DataFlavor[] flavors = stringFlavors;
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(flavor)) {
+        for (DataFlavor dataFlavor : flavors) {
+            if (dataFlavor.equals(flavor)) {
                 return true;
             }
         }
