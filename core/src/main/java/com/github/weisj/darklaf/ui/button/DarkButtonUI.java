@@ -76,6 +76,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     @Override
+    public String getPropertyPrefix() {
+        return super.getPropertyPrefix();
+    }
+
+    @Override
     public void installUI(final JComponent c) {
         button = (AbstractButton) c;
         super.installUI(c);

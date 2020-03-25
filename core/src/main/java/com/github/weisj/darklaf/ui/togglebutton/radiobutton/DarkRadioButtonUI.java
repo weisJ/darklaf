@@ -24,9 +24,7 @@
 package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
-import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.ui.togglebutton.StateIconUI;
+import com.github.weisj.darklaf.ui.togglebutton.*;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -35,10 +33,12 @@ import sun.swing.SwingUtilities2;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.IconUIResource;
+import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 import javax.swing.text.View;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RectangularShape;
 import java.beans.PropertyChangeEvent;
@@ -65,6 +65,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     private Icon radioSelectedIcon;
     private Icon radioSelectedDisabledIcon;
     private Icon radioSelectedFocusedIcon;
+    protected BasicButtonListener buttonListener;
+    protected KeyListener keyListener;
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -98,8 +100,20 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
     @Override
     protected void installListeners(final AbstractButton button) {
-        super.installListeners(button);
+        buttonListener = createButtonListener(button);
+        button.addMouseListener(buttonListener);
+        button.addMouseMotionListener(buttonListener);
+        button.addFocusListener(buttonListener);
+        button.addPropertyChangeListener(buttonListener);
+        button.addChangeListener(buttonListener);
+        keyListener = createKeyListener(button);
+        button.addKeyListener(keyListener);
+        ToggleButtonFocusNavigationActions.installActions(radioButton);
         button.addPropertyChangeListener(this);
+    }
+
+    protected KeyListener createKeyListener(final AbstractButton button) {
+        return new DarkToggleButtonKeyHandler();
     }
 
     @Override
@@ -110,7 +124,15 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
     @Override
     protected void uninstallListeners(final AbstractButton button) {
-        super.uninstallListeners(button);
+        button.removeMouseListener(buttonListener);
+        button.removeMouseMotionListener(buttonListener);
+        button.removeFocusListener(buttonListener);
+        button.removeChangeListener(buttonListener);
+        button.removePropertyChangeListener(buttonListener);
+        buttonListener = null;
+        button.removeKeyListener(keyListener);
+        keyListener = null;
+        ToggleButtonFocusNavigationActions.uninstallActions(radioButton);
         button.removePropertyChangeListener(this);
     }
 
