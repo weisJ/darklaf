@@ -21,60 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.radiobutton;
+package com.github.weisj.darklaf.ui.togglebutton;
 
-
-import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
 
-/**
- * @author Konstantin Bulenkov
- * @author Jannis Weis
- */
-public class DarkRadioButtonBorder implements Border, UIResource {
+public interface ToggleButtonConstants {
+    String KEY_VARIANT = "JToggleButton.variant";
+    String KEY_IS_TREE_EDITOR = "JToggleButton.isTreeCellEditor";
+    String KEY_IS_TREE_RENDER = "JToggleButton.isTreeCellRenderer";
+    String KEY_IS_TABLE_EDITOR = "JToggleButton.isTableCellEditor";
+    String KEY_IS_TABLE_RENDERER = "JToggleButton.isTableCellRenderer";
+    String KEY_CLEAR_HIT_AREA = "JToggleButton.clearHitArea";
+    String VARIANT_SLIDER = "slider";
 
-    @Override
-    public void paintBorder(final Component c, final Graphics g, final int x, final int y,
-                            final int width, final int height) {
+    static boolean isSlider(final JComponent c) {
+        return c instanceof JToggleButton
+            && VARIANT_SLIDER.equals(c.getClientProperty(ToggleButtonConstants.KEY_VARIANT));
     }
 
-    private Insets insets;
-
-    public DarkRadioButtonBorder() {
-        insets = UIManager.getInsets("RadioButton.borderInsets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
+    static boolean isInCell(final Component c) {
+        return isTreeOrTableCellEditor(c) || DarkUIUtil.isInCell(c);
     }
 
-    @Override
-    public Insets getBorderInsets(final Component c) {
-        if (isInCell(c)) {
-            return new InsetsUIResource(0, 0, 0, 0);
-        }
-        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
+    static boolean isTreeOrTableCellEditor(final Component c) {
+        return isTreeCellEditor(c) || isTableCellEditor(c);
     }
 
-    protected static boolean isInCell(final Component c) {
-        return isTreeCellEditor(c) || isTableCellEditor(c) || DarkUIUtil.isInCell(c);
-    }
-
-    protected static boolean isTreeCellEditor(final Component c) {
+    static boolean isTreeCellEditor(final Component c) {
         return c instanceof JComponent
             && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
     }
 
-    protected static boolean isTableCellEditor(final Component c) {
+    static boolean isTableCellEditor(final Component c) {
         return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
-    }
-
-    @Override
-    public boolean isBorderOpaque() {
-        return false;
+            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR));
     }
 }

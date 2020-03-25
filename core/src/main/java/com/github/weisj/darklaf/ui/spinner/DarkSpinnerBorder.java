@@ -61,8 +61,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
     @Override
     public void paintBorder(final Component c, final Graphics g2,
                             final int x, final int y, final int width, final int height) {
-        boolean tableCellEditor = DarkSpinnerUI.isTableCellEditor(c);
-        boolean treeCellEditor = !tableCellEditor && DarkSpinnerUI.isTreeCellEditor(c);
+        boolean tableCellEditor = SpinnerConstants.isTableCellEditor(c);
+        boolean treeCellEditor = !tableCellEditor && SpinnerConstants.isTreeCellEditor(c);
 
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = new GraphicsContext(g);
@@ -120,7 +120,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        if (DarkSpinnerUI.isTableCellEditor(c) || DarkSpinnerUI.isTreeCellEditor(c)) {
+        if (SpinnerConstants.isTreeOrTableCellEditor(c)) {
             return new InsetsUIResource(cellInsets.top, cellInsets.left, cellInsets.bottom, cellInsets.right);
         }
         return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);

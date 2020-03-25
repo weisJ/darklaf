@@ -104,16 +104,16 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     protected int getArc(final Component c) {
-        if (DarkButtonUI.isNoArc(c)) return 0;
-        boolean square = DarkButtonUI.isSquare(c);
-        boolean alt = DarkButtonUI.chooseAlternativeArc(c);
+        if (ButtonConstants.isNoArc(c)) return 0;
+        boolean square = ButtonConstants.isSquare(c);
+        boolean alt = ButtonConstants.chooseAlternativeArc(c);
         return square ? alt ? arc : squareArc : alt ? squareArc : arc;
     }
 
     protected int getFocusArc(final Component c) {
-        if (DarkButtonUI.isNoArc(c)) return minimumArc;
-        boolean square = DarkButtonUI.isSquare(c);
-        boolean alt = DarkButtonUI.chooseAlternativeArc(c);
+        if (ButtonConstants.isNoArc(c)) return minimumArc;
+        boolean square = ButtonConstants.isSquare(c);
+        boolean alt = ButtonConstants.chooseAlternativeArc(c);
         return square ? alt ? focusArc : squareFocusArc : alt ? squareFocusArc : focusArc;
     }
 
@@ -140,7 +140,7 @@ public class DarkButtonBorder implements Border, UIResource {
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
-        if (DarkButtonUI.isShadowVariant(c) || DarkButtonUI.isLabelButton(c)) {
+        if (ButtonConstants.isShadowVariant(c) || ButtonConstants.isLabelButton(c)) {
             return;
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -192,7 +192,7 @@ public class DarkButtonBorder implements Border, UIResource {
 
     protected void paintNeighbourFocus(final Graphics2D g2, final Component c,
                                        final int width, final int height) {
-        JComponent left = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_LEFT_NEIGHBOUR, c);
+        JComponent left = ButtonConstants.getNeighbour(DarkButtonUI.KEY_LEFT_NEIGHBOUR, c);
         boolean paintLeft = DarkUIUtil.hasFocus(left);
         if (paintLeft) {
             g2.translate(-2 * borderSize, 0);
@@ -200,7 +200,7 @@ public class DarkButtonBorder implements Border, UIResource {
                                         getFocusArc(left), borderSize);
             g2.translate(2 * borderSize, 0);
         }
-        JComponent right = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
+        JComponent right = ButtonConstants.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
         boolean paintRight = DarkUIUtil.hasFocus(right);
         if (paintRight) {
             g2.translate(width - borderSize, 0);
@@ -208,7 +208,7 @@ public class DarkButtonBorder implements Border, UIResource {
                                         getFocusArc(right), borderSize);
             g2.translate(borderSize - width, 0);
         }
-        JComponent top = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
+        JComponent top = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
         boolean paintTop = DarkUIUtil.hasFocus(top);
         if (paintTop) {
             g2.translate(0, -2 * borderSize);
@@ -216,7 +216,7 @@ public class DarkButtonBorder implements Border, UIResource {
                                         getFocusArc(top), borderSize);
             g2.translate(0, 2 * borderSize);
         }
-        JComponent bottom = DarkButtonUI.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
+        JComponent bottom = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
         boolean paintBottom = DarkUIUtil.hasFocus(bottom);
         if (paintBottom) {
             g2.translate(0, height - borderSize);
@@ -263,18 +263,18 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
-        if (DarkButtonUI.isFullShadow(c)) {
+        if (ButtonConstants.isFullShadow(c)) {
             return new InsetsUIResource(shadowInsets.top, shadowInsets.left, shadowInsets.bottom, shadowInsets.right);
         }
-        if (DarkButtonUI.isLabelButton(c)) {
+        if (ButtonConstants.isLabelButton(c)) {
             return new InsetsUIResource(labelInsets.top, labelInsets.left, labelInsets.bottom, labelInsets.right);
         }
-        boolean shadowVariant = DarkButtonUI.isShadowVariant(c);
+        boolean shadowVariant = ButtonConstants.isShadowVariant(c);
         int shadow = shadowVariant ? 0 : getShadowSize();
-        boolean square = DarkButtonUI.isSquare(c);
-        Insets pad = DarkButtonUI.isThin(c) ? square ? squareThinInsets
-                                                     : thinInsets
-                                            : square ? squareInsets
+        boolean square = ButtonConstants.isSquare(c);
+        Insets pad = ButtonConstants.isThin(c) ? square ? squareThinInsets
+                                                        : thinInsets
+                                               : square ? squareInsets
                                                      : insets;
         return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
     }

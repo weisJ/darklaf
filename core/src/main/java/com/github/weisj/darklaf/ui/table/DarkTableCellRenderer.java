@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -63,13 +64,23 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         this.setVerticalAlignment(SwingConstants.CENTER);
         setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
-            && hasFocus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
+        boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table);
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && hasFocus && !isRowFocus;
+        boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
-        if (DarkTableCellFocusBorder.isRowFocusBorder(table)
-            && table.getSelectionModel().getLeadSelectionIndex() == row
-            && !table.isEditing()
-            && DarkUIUtil.hasFocus(table)) {
+        setupBorderStyle(table, row, column, component, isRowFocus);
+        CellUtil.setupForeground(component, table, paintSelected, "Table.selectionForegroundInactive");
+        CellUtil.setupBackground(component, table, paintSelected, row,
+                                 DarkTableUI.KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowBackground");
+        return component;
+    }
+
+    public void setupBorderStyle(final JTable table, final int row, final int column,
+                                 final JComponent component, final boolean isRowFocus) {
+        if (isRowFocus
+        && table.getSelectionModel().getLeadSelectionIndex() == row
+        && DarkUIUtil.hasFocus(table)
+        && !table.isEditing()) {
             component.setBorder(UIManager.getBorder("Table.focusSelectedCellHighlightBorder"));
             component.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, true);
             JTableHeader header = table.getTableHeader();
@@ -86,23 +97,6 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         } else {
             component.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, false);
         }
-
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
-        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
-        Color normalColor = table.getBackground();
-        Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-        if (!isSelected || isLeadSelectionCell || table.isEditing()) {
-            component.setBackground(background);
-            component.setForeground(table.getForeground());
-        } else {
-            if (DarkUIUtil.hasFocus(table)) {
-                component.setForeground(table.getSelectionForeground());
-            } else {
-                component.setForeground(UIManager.getColor("Table.selectionForegroundInactive"));
-            }
-            component.setBackground(table.getSelectionBackground());
-        }
-        return component;
     }
 
     protected TableCellRenderer getBooleanRenderer(final JTable table) {

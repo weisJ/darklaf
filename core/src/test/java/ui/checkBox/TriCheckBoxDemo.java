@@ -24,7 +24,7 @@
 package ui.checkBox;
 
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
-import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 

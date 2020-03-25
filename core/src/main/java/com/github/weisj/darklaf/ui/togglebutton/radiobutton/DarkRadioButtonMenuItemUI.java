@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.radiobutton;
+package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
 
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
+import com.github.weisj.darklaf.ui.togglebutton.StateIconUI;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
 import sun.swing.MenuItemLayoutHelper;
 
 import javax.swing.*;
@@ -34,14 +36,14 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
+public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements StateIconUI,
+                                                                             ToggleButtonMenuItemConstants {
 
-    protected static final String KEY_PREFIX = "RadioButtonMenuItem";
-    public static final String KEY_NO_NOT_CLOSE_ON_CLICK = KEY_PREFIX + ".doNotCloseOnMouseClick";
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
         if (menuItem != null) menuItem.setArmed(true);
     });
 
+    protected int iconBaselineOffset;
     private Icon radioIcon;
     private Icon radioDisabledIcon;
     private Icon radioFocusedIcon;
@@ -55,6 +57,11 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     }
 
     @Override
+    protected String getPropertyPrefix() {
+        return "RadioButtonMenuItem";
+    }
+
+    @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
         acceleratorFont = UIManager.getFont("MenuItem.font");
@@ -64,37 +71,19 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     }
 
     @Override
-    protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
-                                  final MenuItemLayoutHelper.LayoutResult lr,
-                                  final Color holdc, final Color foreground) {
-        Rectangle rect = lr.getCheckRect();
-        getRadioIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y);
-    }
-
-    protected Icon getRadioIcon(final AbstractButton b) {
-        boolean selected = b.isSelected();
-        boolean enabled = b.isEnabled();
-        boolean hasFocus = b.hasFocus();
-        return selected ? enabled ? hasFocus ? radioSelectedFocusedIcon
-                                             : radioSelectedIcon
-                                  : radioSelectedDisabledIcon
-                        : enabled ? hasFocus ? radioFocusedIcon
-                                             : radioIcon
-                                  : radioDisabledIcon;
-    }
-
     public void installDefaults() {
         super.installDefaults();
+        iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + ".iconBaselineOffset");
+        installIcons();
+    }
+
+    protected void installIcons() {
         radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
         radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
         radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
         radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
         radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
         radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
-    }
-
-    protected String getPropertyPrefix() {
-        return "RadioButtonMenuItem";
     }
 
     @Override
@@ -107,5 +96,41 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase {
     protected void uninstallListeners() {
         super.uninstallListeners();
         menuItem.removeMouseListener(clickListener);
+    }
+
+    @Override
+    protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
+                                  final MenuItemLayoutHelper.LayoutResult lr,
+                                  final Color holdc, final Color foreground) {
+        Rectangle rect = lr.getCheckRect();
+        getStateIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y + iconBaselineOffset);
+    }
+
+    protected Icon getStateIcon(final AbstractButton b) {
+        return StateIconUI.getStateIcon(this, b);
+    }
+
+    public Icon getSelectedFocusedIcon() {
+        return radioSelectedFocusedIcon;
+    }
+
+    public Icon getSelectedIcon() {
+        return radioSelectedIcon;
+    }
+
+    public Icon getSelectedDisabledIcon() {
+        return radioSelectedDisabledIcon;
+    }
+
+    public Icon getFocusedIcon() {
+        return radioFocusedIcon;
+    }
+
+    public Icon getIcon() {
+        return radioIcon;
+    }
+
+    public Icon getDisabledIcon() {
+        return radioDisabledIcon;
     }
 }

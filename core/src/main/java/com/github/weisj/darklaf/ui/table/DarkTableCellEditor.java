@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.combobox.DarkComboBoxUI;
 import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
@@ -209,7 +210,6 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         return super.stopCellEditing();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Component getTableCellEditorComponent(final JTable table, final Object value,
                                                  final boolean isSelected, final int row, final int column) {
@@ -224,7 +224,31 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         delegate.setValue(value);
 
         JComponent comp = editorComponent;
+        Component rendererComp = table.getCellRenderer(row, column)
+                                      .getTableCellRendererComponent(table, value, isSelected, false, row, column);
+        setupEditorComponent(value, rendererComp);
+        comp = applyRendererIcon(comp, rendererComp);
 
+        CellUtil.setupBackground(comp, table, isSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
+                                 "Table.alternateRowBackground");
+        return comp;
+    }
+
+    protected JComponent applyRendererIcon(JComponent comp, final Component rendererComp) {
+        if (rendererComp instanceof JLabel) {
+            Icon icon = ((JLabel) rendererComp).getIcon();
+            if (icon != null) {
+                comp = iconWrapper;
+                iconWrapper.init(editorComponent, icon, rendererComp.getComponentOrientation().isLeftToRight());
+                iconWrapper.setIconGap(((JLabel) rendererComp).getIconTextGap() - 1);
+            }
+        }
+        return comp;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void setupEditorComponent(final Object value,
+                                        final Component rendererComp) {
         if (editorComponent instanceof JComboBox) {
             ((JComboBox<?>) editorComponent).removeAllItems();
             if (value != null && value.getClass().isArray()) {
@@ -236,8 +260,6 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                 ((JComboBox<?>) editorComponent).setSelectedItem(value);
             }
         } else if (editorComponent instanceof JSpinner) {
-            Component rendererComp = table.getCellRenderer(row, column)
-                                          .getTableCellRendererComponent(table, value, isSelected, false, row, column);
             if (rendererComp instanceof JTextField) {
                 editorComponent.putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT,
                                                   ((JTextField) rendererComp).getHorizontalAlignment());
@@ -246,28 +268,6 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                                                   ((JLabel) rendererComp).getHorizontalAlignment());
             }
         }
-
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
-        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
-        Color normalColor = table.getBackground();
-        Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-
-        Component rendererComp = table.getCellRenderer(row, column)
-                                .getTableCellRendererComponent(table, value, isSelected, false, row, column);
-        if (rendererComp instanceof JLabel) {
-            Icon icon = ((JLabel) rendererComp).getIcon();
-            if (icon != null) {
-                comp = iconWrapper;
-                iconWrapper.setBackground(background);
-                iconWrapper.init(editorComponent, icon, rendererComp.getComponentOrientation().isLeftToRight());
-                iconWrapper.setIconGap(((JLabel) rendererComp).getIconTextGap() - 1);
-            }
-        }
-
-        if (!(isSelected)) {
-            comp.setBackground(background);
-        }
-        return comp;
     }
 
 

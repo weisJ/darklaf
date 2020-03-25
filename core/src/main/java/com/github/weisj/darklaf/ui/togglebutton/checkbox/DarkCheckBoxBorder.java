@@ -21,56 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.checkbox;
+package com.github.weisj.darklaf.ui.togglebutton.checkbox;
 
 
-import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
 /**
  * @author Jannis Weis
  */
-public class DarkCheckBoxBorder extends EmptyBorder implements UIResource {
-
-    @Override
-    public void paintBorder(final Component c, final Graphics g, final int x, final int y,
-                            final int width, final int height) {
-    }
+public class DarkCheckBoxBorder extends EmptyBorder implements UIResource, ToggleButtonConstants {
 
     public DarkCheckBoxBorder() {
         super(UIManager.getInsets("CheckBox.borderInsets"));
     }
 
     @Override
-    public Insets getBorderInsets(final Component c) {
-        if (isInCell(c)) {
-            return new InsetsUIResource(0, 0, 0, 0);
+    public Insets getBorderInsets(final Component c, final Insets insets) {
+        if (ToggleButtonConstants.isInCell(c)) {
+            insets.set(0,0,0,0);
+            return insets;
         }
-        return new InsetsUIResource(top, left, bottom, right);
-    }
-
-    protected static boolean isInCell(final Component c) {
-        return isTreeCellEditor(c) || isTableCellEditor(c) || DarkUIUtil.isInCell(c);
-    }
-
-    protected static boolean isTreeCellEditor(final Component c) {
-        return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
-    }
-
-    protected static boolean isTableCellEditor(final Component c) {
-        return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
-    }
-
-    @Override
-    public boolean isBorderOpaque() {
-        return false;
+        return super.getBorderInsets(c, insets);
     }
 }

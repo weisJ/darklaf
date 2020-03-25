@@ -25,12 +25,29 @@ package com.github.weisj.darklaf.ui.button;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonListener;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 
 public class DarkButtonListener extends BasicButtonListener {
 
-    public DarkButtonListener(final AbstractButton b) {
+    private final DarkButtonUI ui;
+
+    public DarkButtonListener(final AbstractButton b, final DarkButtonUI ui) {
         super(b);
+        this.ui = ui;
+    }
+
+    @Override
+    public void focusGained(final FocusEvent e) {
+        super.focusGained(e);
+        ui.repaintNeighbours();
+    }
+
+    @Override
+    public void focusLost(final FocusEvent e) {
+        super.focusLost(e);
+        ui.repaintNeighbours();
     }
 
     public void mouseEntered(final MouseEvent e) {
@@ -49,5 +66,15 @@ public class DarkButtonListener extends BasicButtonListener {
         ButtonModel model = b.getModel();
         model.setRollover(false);
         model.setArmed(false);
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent e) {
+        super.propertyChange(e);
+        AbstractButton b = (AbstractButton) e.getSource();
+        String key = e.getPropertyName();
+        if (key.startsWith("JButton.")) {
+            b.revalidate();
+        }
     }
 }

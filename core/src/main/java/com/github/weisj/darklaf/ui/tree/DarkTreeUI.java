@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 

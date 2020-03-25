@@ -44,7 +44,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         }
         JScrollBar scrollbar = scrollpane.getHorizontalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        DarkScrollBarUI.doScroll(scrollbar, scrollpane.getViewport(), e,
+        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
                                  scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
@@ -54,7 +54,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         }
         JScrollBar scrollbar = scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        DarkScrollBarUI.doScroll(scrollbar, scrollpane.getViewport(), e,
+        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
                                  scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
@@ -65,7 +65,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         JScrollBar scrollbar = e.isShiftDown() ? scrollpane.getHorizontalScrollBar()
                                                : scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        DarkScrollBarUI.doScroll(scrollbar, scrollpane.getViewport(), e,
+        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
                                  scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };

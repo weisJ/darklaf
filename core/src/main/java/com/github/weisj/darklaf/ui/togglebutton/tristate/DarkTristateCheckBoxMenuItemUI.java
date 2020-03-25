@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.tristate;
+package com.github.weisj.darklaf.ui.togglebutton.tristate;
 
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
-import com.github.weisj.darklaf.ui.checkbox.DarkCheckBoxMenuItemUI;
+import com.github.weisj.darklaf.ui.togglebutton.checkbox.DarkCheckBoxMenuItemUI;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -43,15 +43,14 @@ public class DarkTristateCheckBoxMenuItemUI extends DarkCheckBoxMenuItemUI {
     }
 
     @Override
-    public void installDefaults() {
-        super.installDefaults();
+    protected void installIcons() {
         checkBoxIndeterminateIcon = UIManager.getIcon("CheckBox.indeterminate.icon");
         checkBoxIndeterminateDisabledIcon = UIManager.getIcon("CheckBox.indeterminateDisabled.icon");
         checkBoxIndeterminateFocusedIcon = UIManager.getIcon("CheckBox.indeterminateFocused.icon");
     }
 
     @Override
-    protected Icon getCheckBoxIcon(final AbstractButton b) {
+    protected Icon getStateIcon(final AbstractButton b) {
         if (b instanceof TristateCheckBox) {
             TristateState state = ((TristateCheckBox) b).getState();
             if (state == TristateState.INDETERMINATE) {
@@ -62,6 +61,6 @@ public class DarkTristateCheckBoxMenuItemUI extends DarkCheckBoxMenuItemUI {
                 }
             }
         }
-        return super.getCheckBoxIcon(b);
+        return super.getStateIcon(b);
     }
 }

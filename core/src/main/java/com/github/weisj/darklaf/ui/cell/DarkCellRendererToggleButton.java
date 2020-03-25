@@ -25,7 +25,7 @@ package com.github.weisj.darklaf.ui.cell;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.decorators.CellRenderer;
-import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
@@ -63,22 +63,12 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
             && focus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
+        boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
-        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
-        Color normalColor = UIManager.getColor("Table.background");
-        Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-        if (!isSelected || isLeadSelectionCell || table.isEditing()) {
-            toggleButton.setBackground(background);
-            toggleButton.setForeground(table.getForeground());
-        } else {
-            if (DarkUIUtil.hasFocus(table)) {
-                toggleButton.setForeground(UIManager.getColor("Table.selectionForeground"));
-            } else {
-                toggleButton.setForeground(UIManager.getColor("Table.selectionForegroundInactive"));
-            }
-            toggleButton.setBackground(table.getSelectionBackground());
-        }
+        CellUtil.setupForeground(toggleButton, table, paintSelected,
+                                 "Table.selectionForeground","Table.selectionForegroundInactive");
+        CellUtil.setupBackground(toggleButton, table, paintSelected, row,DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
+                                 "Table.background","Table.alternateRowBackground");
         return toggleButton;
     }
 
@@ -95,17 +85,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
                 toggleButton.setText(((SelectableTreeNode) value).getLabel());
             }
         }
-        if (selected) {
-            if (DarkUIUtil.hasFocus(tree)) {
-                toggleButton.setForeground(UIManager.getColor("Tree.selectionForeground"));
-            } else {
-                toggleButton.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
-            }
-        } else {
-            toggleButton.setForeground(tree.getForeground());
-        }
         toggleButton.setHorizontalAlignment(tree.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(false);
+
+        CellUtil.setupForeground(toggleButton, tree, selected,
+                                 "Tree.selectionForeground","Tree.selectionForegroundInactive");
 
         return toggleButton;
     }

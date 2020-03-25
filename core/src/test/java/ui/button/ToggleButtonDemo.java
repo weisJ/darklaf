@@ -24,7 +24,7 @@
 package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.ui.button.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 

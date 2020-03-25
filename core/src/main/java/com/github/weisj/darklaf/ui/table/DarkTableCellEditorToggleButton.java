@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.decorators.CellRenderer;
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -55,26 +56,13 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         }
         toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
 
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
-            && table.getSelectionModel().getLeadSelectionIndex() == row
-            && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && isSelected
             && !DarkTableCellFocusBorder.isRowFocusBorder(table);
 
-        boolean alternativeRow = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
-        Color alternativeRowColor = UIManager.getColor("Table.alternateRowBackground");
-        Color normalColor = table.getBackground();
-        Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-        if (!isSelected || isLeadSelectionCell || table.isEditing()) {
-            toggleButton.setBackground(background);
-            toggleButton.setForeground(table.getForeground());
-        } else {
-            if (DarkUIUtil.hasFocus(table)) {
-                toggleButton.setForeground(table.getSelectionForeground());
-            } else {
-                toggleButton.setForeground(UIManager.getColor("Table.selectionForegroundInactive"));
-            }
-            toggleButton.setBackground(table.getSelectionBackground());
-        }
+        boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
+        CellUtil.setupForeground(toggleButton, table, paintSelected, "Table.selectionForegroundInactive");
+        CellUtil.setupBackground(toggleButton, table, paintSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
+                                 "Table.alternateRowBackground");
         return toggleButton;
     }
 

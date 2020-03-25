@@ -41,23 +41,12 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Jannis Weis
  */
-public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener {
+public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener,
+                                                             ToolTipConstants {
 
-    protected static final String KEY_PREFIX = "JToolTip.";
-    public static final String KEY_STYLE = KEY_PREFIX + "style";
-    public static final String KEY_INSETS = KEY_PREFIX + "insets";
-    public static final String KEY_POINTER_LOCATION = KEY_PREFIX + "pointerLocation";
-    public static final String KEY_POINTER_WIDTH = KEY_PREFIX + "pointerWidth";
-    public static final String KEY_POINTER_HEIGHT = KEY_PREFIX + "pointerHeight";
-    public static final String KEY_PLAIN_TOOLTIP = "JComponent.plainTooltip";
-    public static final String VARIANT_PLAIN = "plain";
-    public static final String VARIANT_BALLOON = "balloon";
-    public static final String VARIANT_PLAIN_BALLOON = "plainBalloon";
-    public static final String TIP_TEXT_PROPERTY = "tiptext";
-    public static final String KEY_CONTEXT = KEY_PREFIX + "toolTipContext";
-    static final float MAX_ALPHA = 1.0f;
-    private Animator fadeAnimator;
-    private float alpha = 0;
+    protected static final float MAX_ALPHA = 1.0f;
+    protected Animator fadeAnimator;
+    protected float alpha = 0;
 
     protected JToolTip toolTip;
     protected JRootPane lastRootPane;
@@ -117,39 +106,10 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     }
 
-    protected boolean isInside(final MouseEvent e) {
-        Point screenPos = e.getPoint();
-        SwingUtilities.convertPointToScreen(screenPos, e.getComponent());
-        Point toolTipPoint = new Point(screenPos.x, screenPos.y);
-        Point compPoint = new Point(screenPos.x, screenPos.y);
-        SwingUtilities.convertPointFromScreen(toolTipPoint, toolTip);
-        SwingUtilities.convertPointFromScreen(compPoint, toolTip.getComponent());
-        return toolTip.getComponent().contains(compPoint)
-            || contains(toolTip, toolTipPoint.x, toolTipPoint.y);
-    }
-
-    @Override
-    public boolean contains(final JComponent c, final int x, final int y) {
-        Border b = c.getBorder();
-        if (b instanceof DarkTooltipBorder) {
-            Area insideArea = ((DarkTooltipBorder) b).getBackgroundArea(toolTip,
-                                                                        toolTip.getWidth(), toolTip.getHeight());
-            return insideArea.contains(x, y);
-        } else {
-            return super.contains(c, x, y);
-        }
-    }
-
     @Override
     public void installUI(final JComponent c) {
         toolTip = (JToolTip) c;
         super.installUI(c);
-    }
-
-    @Override
-    public void uninstallUI(final JComponent c) {
-        super.uninstallUI(c);
-        toolTip = null;
     }
 
     @Override
@@ -177,6 +137,12 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     @Override
+    public void uninstallUI(final JComponent c) {
+        super.uninstallUI(c);
+        toolTip = null;
+    }
+
+    @Override
     protected void uninstallListeners(final JComponent c) {
         super.uninstallListeners(c);
         c.removePropertyChangeListener(this);
@@ -187,6 +153,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             comp.removeMouseListener(mouseListener);
         }
     }
+
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
@@ -256,6 +223,29 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             return !((Frame) w).isUndecorated();
         }
         return false;
+    }
+
+    protected boolean isInside(final MouseEvent e) {
+        Point screenPos = e.getPoint();
+        SwingUtilities.convertPointToScreen(screenPos, e.getComponent());
+        Point toolTipPoint = new Point(screenPos.x, screenPos.y);
+        Point compPoint = new Point(screenPos.x, screenPos.y);
+        SwingUtilities.convertPointFromScreen(toolTipPoint, toolTip);
+        SwingUtilities.convertPointFromScreen(compPoint, toolTip.getComponent());
+        return toolTip.getComponent().contains(compPoint)
+            || contains(toolTip, toolTipPoint.x, toolTipPoint.y);
+    }
+
+    @Override
+    public boolean contains(final JComponent c, final int x, final int y) {
+        Border b = c.getBorder();
+        if (b instanceof DarkTooltipBorder) {
+            Area insideArea = ((DarkTooltipBorder) b).getBackgroundArea(toolTip,
+                                                                        toolTip.getWidth(), toolTip.getHeight());
+            return insideArea.contains(x, y);
+        } else {
+            return super.contains(c, x, y);
+        }
     }
 
     @Override

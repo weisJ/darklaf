@@ -36,47 +36,19 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListener {
+public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
-    protected static final String KEY_PREFIX = "JSpinner.";
-    public static final String KEY_VARIANT = KEY_PREFIX + "variant";
-    public static final String KEY_IS_TREE_EDITOR = KEY_PREFIX + "isTreeCellEditor";
-    public static final String KEY_IS_TREE_RENDER = KEY_PREFIX + "isTreeCellRenderer";
-    public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
-    public static final String KEY_IS_TABLE_RENDERER = KEY_PREFIX + "isTableCellRenderer";
-    public static final String KEY_EDITOR_ALIGNMENT = KEY_PREFIX + "cellEditorAlignment";
-    public static final String VARIANT_PLUS_MINUS = "plusMinus";
-    private final FocusListener focusListener = new FocusAdapter() {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            spinner.repaint();
-        }
+    protected DarkSpinnerListener spinnerListener;
 
-        @Override
-        public void focusLost(final FocusEvent e) {
-            spinner.repaint();
-        }
-    };
-    private final MouseListener mouseListener = new MouseAdapter() {
-        @Override
-        public void mousePressed(final MouseEvent e) {
-            super.mousePressed(e);
-            spinner.getEditor().requestFocus();
-        }
-    };
     protected Color arrowBackground;
     protected Color background;
-    protected Color arrowBackgroundEnd;
     protected Icon arrowDownIcon;
     protected Color inactiveBackground;
     protected int arc;
@@ -98,30 +70,48 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         return new DarkSpinnerUI();
     }
 
-    protected static boolean usePlusMinusIcons(final JSpinner spinner) {
-        return VARIANT_PLUS_MINUS.equals(spinner.getClientProperty(KEY_VARIANT));
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        arc = UIManager.getInt("Spinner.arc");
+        borderSize = UIManager.getInt("Spinner.borderThickness");
+        background = UIManager.getColor("Spinner.activeBackground");
+        inactiveBackground = UIManager.getColor("Spinner.inactiveBackground");
+        arrowBackground = UIManager.getColor("Spinner.arrowBackground");
+
+        arrowDownIcon = UIManager.getIcon("Spinner.arrowDown.icon");
+        arrowUpIcon = UIManager.getIcon("Spinner.arrowUp.icon");
+        minusIcon = UIManager.getIcon("Spinner.minus.icon");
+        plusIcon = UIManager.getIcon("Spinner.plus.icon");
+
+        arrowDownInactiveIcon = UIManager.getIcon("Spinner.arrowDownInactive.icon");
+        arrowUpInactiveIcon = UIManager.getIcon("Spinner.arrowUpInactive.icon");
+        minusInactiveIcon = UIManager.getIcon("Spinner.minusInactive.icon");
+        plusInactiveIcon = UIManager.getIcon("Spinner.plusInactive.icon");
+        LookAndFeel.installProperty(spinner, PropertyKey.OPAQUE, false);
     }
 
     @Override
     protected void installListeners() {
         super.installListeners();
-        spinner.addMouseListener(mouseListener);
-        spinner.addPropertyChangeListener(this);
+        spinnerListener = createSpinnerListener();
+        spinner.addMouseListener(spinnerListener);
+        spinner.addPropertyChangeListener(spinnerListener);
+    }
+
+    protected DarkSpinnerListener createSpinnerListener() {
+        return new DarkSpinnerListener(spinner, this);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
         if (editor != null && editor.getComponents().length > 0) {
-            editor.getComponents()[0].removeFocusListener(focusListener);
+            editor.getComponents()[0].removeFocusListener(spinnerListener);
         }
-        spinner.removeMouseListener(mouseListener);
-        spinner.removePropertyChangeListener(this);
-    }
-
-    protected static boolean isTableCellEditor(final Component c) {
-        return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TABLE_EDITOR));
+        spinner.removeMouseListener(spinnerListener);
+        spinner.removePropertyChangeListener(spinnerListener);
+        spinnerListener = null;
     }
 
     protected LayoutManager createLayout() {
@@ -145,7 +135,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
             @Override
             public void layoutContainer(final Container parent) {
                 super.layoutContainer(parent);
-                if (isTableCellEditor(spinner) || isTreeCellEditor(spinner)) {
+                if (SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
                     int adj = borderSize / 2;
                     if (!spinner.getComponentOrientation().isLeftToRight()) adj *= -1;
                     adjustButton(prevButton, adj);
@@ -189,7 +179,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         } else {
             editorComponent = editor;
         }
-        editorComponent.addFocusListener(focusListener);
+        editorComponent.addFocusListener(spinnerListener);
         return editor;
     }
 
@@ -199,15 +189,11 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         super.replaceEditor(oldEditor, newEditor);
         editor = newEditor;
         if (oldEditor != null && oldEditor.getComponents().length > 0) {
-            oldEditor.getComponents()[0].removeFocusListener(focusListener);
-        }
-        editor = newEditor;
-        if (oldEditor != null && oldEditor.getComponents().length > 0) {
-            oldEditor.getComponents()[0].removeFocusListener(focusListener);
+            oldEditor.getComponents()[0].removeFocusListener(spinnerListener);
         }
         if (newEditor != null && newEditor.getComponents().length > 0) {
             Component comp = newEditor.getComponents()[0];
-            comp.addFocusListener(focusListener);
+            comp.addFocusListener(spinnerListener);
         }
     }
 
@@ -260,7 +246,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         } else {
             ((Graphics2D) g).setPaint(getBackground(c));
         }
-        if (!isTableCellEditor(c) && !isTreeCellEditor(c)) {
+        if (!SpinnerConstants.isTreeOrTableCellEditor(c)) {
             DarkUIUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
         } else {
             Rectangle bounds = prevButton.getBounds();
@@ -277,44 +263,14 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         }
     }
 
-    protected Color getBackground(final JComponent c) {
-        return c == null || !c.isEnabled() ? inactiveBackground : background;
-    }
 
-    protected static boolean isTreeCellEditor(final Component c) {
-        return c instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TREE_EDITOR));
-    }
-
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        arc = UIManager.getInt("Spinner.arc");
-        borderSize = UIManager.getInt("Spinner.borderThickness");
-        background = UIManager.getColor("Spinner.activeBackground");
-        inactiveBackground = UIManager.getColor("Spinner.inactiveBackground");
-        arrowBackground = UIManager.getColor("Spinner.arrowBackground");
-
-        arrowDownIcon = UIManager.getIcon("Spinner.arrowDown.icon");
-        arrowUpIcon = UIManager.getIcon("Spinner.arrowUp.icon");
-        minusIcon = UIManager.getIcon("Spinner.minus.icon");
-        plusIcon = UIManager.getIcon("Spinner.plus.icon");
-
-        arrowDownInactiveIcon = UIManager.getIcon("Spinner.arrowDownInactive.icon");
-        arrowUpInactiveIcon = UIManager.getIcon("Spinner.arrowUpInactive.icon");
-        minusInactiveIcon = UIManager.getIcon("Spinner.minusInactive.icon");
-        plusInactiveIcon = UIManager.getIcon("Spinner.plusInactive.icon");
-        LookAndFeel.installProperty(spinner, PropertyKey.OPAQUE, false);
-    }
-
-    private void paintSpinBackground(final Graphics2D g, final int width, final int height,
-                                     final int bSize, final int arc) {
+    protected void paintSpinBackground(final Graphics2D g, final int width, final int height,
+                                       final int bSize, final int arc) {
         Rectangle bounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
         int off = leftToRight ? bounds.x : bounds.x + bounds.width;
         Area rect;
-        if (!isTableCellEditor(spinner) && !isTreeCellEditor(spinner)) {
+        if (!SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
             rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
                                                         height - 2 * bSize + 1,
                                                         arc, arc));
@@ -331,73 +287,19 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements PropertyChangeListe
         g.fill(rect);
     }
 
-    protected Paint getArrowBackground(final JComponent c) {
+    protected Color getBackground(final JComponent c) {
+        return c == null || !c.isEnabled() ? inactiveBackground : background;
+    }
+
+    protected Color getArrowBackground(final JComponent c) {
         return c == null || !c.isEnabled() ? inactiveBackground : arrowBackground;
     }
 
-    @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
-        String key = evt.getPropertyName();
-        if (PropertyKey.OPAQUE.equals(key)) {
-            boolean val = Boolean.TRUE.equals(evt.getNewValue());
-            spinner.getEditor().setOpaque(val);
-            if (editorComponent instanceof JComponent) {
-                ((JComponent) editorComponent).setOpaque(val);
-            }
-        } else if (KEY_IS_TABLE_EDITOR.equals(key)) {
-            if (Boolean.FALSE.equals(evt.getNewValue())) {
-                if (editor instanceof JSpinner.DefaultEditor) {
-                    // if editor alignment isn't set in LAF, we get 0 (CENTER) here
-                    int alignment = UIManager.getInt("Spinner.editorAlignment");
-                    JTextField text = ((JSpinner.DefaultEditor) editor).getTextField();
-                    text.setHorizontalAlignment(alignment);
-                }
-            }
-            spinner.revalidate();
-            spinner.repaint();
-        } else if (KEY_EDITOR_ALIGNMENT.equals(key) && isTableCellEditor(spinner)) {
-            if (editorComponent instanceof JTextField && evt.getNewValue() instanceof Integer) {
-                ((JTextField) editorComponent).setHorizontalAlignment((Integer) evt.getNewValue());
-            }
-            spinner.revalidate();
-        } else if (KEY_VARIANT.equals(key)) {
-            spinner.repaint();
-        } else if (KEY_IS_TREE_EDITOR.equals(key)) {
-            spinner.revalidate();
-            spinner.repaint();
-        }
+    public Component getEditorComponent() {
+        return editorComponent;
     }
 
-    protected static class SpinnerIcon implements Icon {
-
-        private final JSpinner spinner;
-        private final Icon icon;
-        private final Icon mathIcon;
-
-
-        public SpinnerIcon(final JSpinner spinner, final Icon icon, final Icon mathIcon) {
-            this.spinner = spinner;
-            this.icon = icon;
-            this.mathIcon = mathIcon;
-        }
-
-        @Override
-        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-            getCurrent().paintIcon(c, g, x, y);
-        }
-
-        protected Icon getCurrent() {
-            return usePlusMinusIcons(spinner) ? mathIcon : icon;
-        }
-
-        @Override
-        public int getIconWidth() {
-            return getCurrent().getIconWidth();
-        }
-
-        @Override
-        public int getIconHeight() {
-            return getCurrent().getIconHeight();
-        }
+    public JComponent getEditor() {
+        return editor;
     }
 }
