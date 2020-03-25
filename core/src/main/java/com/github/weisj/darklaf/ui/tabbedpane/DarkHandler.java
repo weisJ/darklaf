@@ -29,6 +29,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ContainerEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -108,7 +109,8 @@ public class DarkHandler extends TabbedPaneHandler {
             ui.tabPane.doLayout();
         } else if (DarkTabbedPaneUI.KEY_DND.equals(key)) {
             ui.dndEnabled = Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_DND));
-            ui.tabPane.getDropTarget().setActive(ui.dndEnabled);
+            DropTarget dropTarget = ui.tabPane.getDropTarget();
+            if (dropTarget != null) dropTarget.setActive(ui.dndEnabled);
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             ui.tabPane.doLayout();
             ui.tabPane.repaint();

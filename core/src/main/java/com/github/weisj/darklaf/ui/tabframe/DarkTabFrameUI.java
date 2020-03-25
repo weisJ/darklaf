@@ -35,6 +35,7 @@ import org.pbjar.jxlayer.plaf.ext.transform.TransformUtils;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
+import java.awt.dnd.DropTarget;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -144,8 +145,11 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     protected void installDnD() {
         tabFrame.setTransferHandler(TRANSFER_HANDLER);
         try {
-            tabFrame.getDropTarget().addDropTargetListener(TRANSFER_HANDLER);
-            tabFrame.getDropTarget().setActive(tabFrame.isDndEnabled());
+            DropTarget dropTarget = tabFrame.getDropTarget();
+            if (dropTarget != null) {
+                dropTarget.addDropTargetListener(TRANSFER_HANDLER);
+                dropTarget.setActive(tabFrame.isDndEnabled());
+            }
         } catch (TooManyListenersException e) {
             e.printStackTrace();
         }

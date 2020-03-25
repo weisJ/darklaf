@@ -32,6 +32,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
+import java.awt.dnd.DropTarget;
 import java.awt.event.AWTEventListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -147,8 +148,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected void installDragSupport() {
         tabPane.setTransferHandler(TRANSFER_HANDLER);
         try {
-            tabPane.getDropTarget().addDropTargetListener(TRANSFER_HANDLER);
-            tabPane.getDropTarget().setActive(dndEnabled);
+            DropTarget target = tabPane.getDropTarget();
+            if (target != null) {
+                target.addDropTargetListener(TRANSFER_HANDLER);
+                target.setActive(dndEnabled);
+            }
         } catch (TooManyListenersException e) {
             e.printStackTrace();
         }
