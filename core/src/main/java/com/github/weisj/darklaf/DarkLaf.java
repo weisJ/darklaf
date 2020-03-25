@@ -207,6 +207,11 @@ public class DarkLaf extends BasicLookAndFeel {
             // (Alloy license problem)
             installCutCopyPasteShortcuts(tableInputMap, true);
         }
+        final InputMap buttonInputMap  = (InputMap) defaults.get("Button.focusInputMap");
+        if (buttonInputMap != null && !SystemInfo.isMac) {
+            buttonInputMap.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+            buttonInputMap.put(KeyStroke.getKeyStroke("released ENTER"), "released");
+        }
     }
 
     private void loadThemeDefaults(final UIDefaults defaults) {
