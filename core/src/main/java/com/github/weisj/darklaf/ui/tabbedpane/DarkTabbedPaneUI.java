@@ -389,7 +389,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int x = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
         switch (tabPlacement) {
             case TOP:
-                paintTabAreaBorder(g, tabPlacement, 0, 0, width, y);
+                paintTabAreaBorder(g, tabPlacement, 0, 0, width, y + 1);
                 break;
             case BOTTOM:
                 paintTabAreaBorder(g, tabPlacement, 0, height - y, width, y + 1);
