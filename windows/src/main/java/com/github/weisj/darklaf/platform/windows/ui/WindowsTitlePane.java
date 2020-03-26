@@ -371,7 +371,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 setDisabledIcon(maximizeIcon);
             }});
         }
-        menu.add(new JSeparator());
+        menu.addSeparator();
         menu.add(new JMenuItem(closeAction) {{
             setDisabledIcon(closeIcon);
         }});
