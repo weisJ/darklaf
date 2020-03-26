@@ -430,6 +430,9 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                 case KeyEvent.VK_NUM_LOCK:
                 case KeyEvent.VK_SCROLL_LOCK:
                 case KeyEvent.VK_CLEAR:
+                case KeyEvent.VK_HELP:
+                case KeyEvent.VK_INSERT:
+                case KeyEvent.VK_ESCAPE:
                     return true;
                 default:
                     break;
