@@ -155,7 +155,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
         @Override
         protected JButton createButton() {
             HeaderButton button = new HeaderButton(ui.getNewTabIcon(), DarkTabbedPopupUI.this);
-            button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+            button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
             button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
             button.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
             button.setRolloverEnabled(true);

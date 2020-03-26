@@ -72,7 +72,7 @@ public final class ArrowButton implements SwingConstants {
                                             final boolean applyInsetsOnSize, final Insets insets) {
         return new BasicArrowButton(orientation, null, null, null, null) {
             {
-                putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+                putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
             }
 
             @Override

@@ -79,7 +79,7 @@ public class DarkButtonBorder implements Border, UIResource {
         squareInsets = UIManager.getInsets("Button.squareBorderInsets");
         squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
         labelInsets = UIManager.getInsets("Button.onlyLabelInsets");
-        shadowInsets = UIManager.getInsets("Button.fullShadowInsets");
+        shadowInsets = UIManager.getInsets("Button.fullBorderlessInsets");
         if (insets == null) insets = new Insets(0, 0, 0, 0);
         if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
         if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
@@ -140,7 +140,7 @@ public class DarkButtonBorder implements Border, UIResource {
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
-        if (ButtonConstants.isShadowVariant(c) || ButtonConstants.isLabelButton(c)) {
+        if (ButtonConstants.isBorderlessVariant(c) || ButtonConstants.isLabelButton(c)) {
             return;
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -263,13 +263,13 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
-        if (ButtonConstants.isFullShadow(c)) {
+        if (ButtonConstants.isFullBorderless(c)) {
             return new InsetsUIResource(shadowInsets.top, shadowInsets.left, shadowInsets.bottom, shadowInsets.right);
         }
         if (ButtonConstants.isLabelButton(c)) {
             return new InsetsUIResource(labelInsets.top, labelInsets.left, labelInsets.bottom, labelInsets.right);
         }
-        boolean shadowVariant = ButtonConstants.isShadowVariant(c);
+        boolean shadowVariant = ButtonConstants.isBorderlessVariant(c);
         int shadow = shadowVariant ? 0 : getShadowSize();
         boolean square = ButtonConstants.isSquare(c);
         Insets pad = ButtonConstants.isThin(c) ? square ? squareThinInsets

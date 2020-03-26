@@ -76,12 +76,12 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         buttonPanel.setLayout(new DarkButtonAreaLayout());
 
         approveButton = new TooltipAwareButton(getApproveButtonText(fileChooser));
-        approveButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+        approveButton.putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
         approveButton.addActionListener(getApproveSelectionAction());
         approveButton.setToolTipText(getApproveButtonToolTipText(fileChooser));
 
         cancelButton = new TooltipAwareButton(cancelButtonText);
-        cancelButton.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+        cancelButton.putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
         cancelButton.setToolTipText(cancelButtonToolTipText);
         cancelButton.addActionListener(getCancelSelectionAction());
 
@@ -315,7 +315,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
     }
 
     protected void setupButton(final AbstractButton button, final String accessibleName, final String tipText) {
-        button.putClientProperty(DarkButtonUI.KEY_NO_SHADOW_OVERWRITE, true);
+        button.putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);

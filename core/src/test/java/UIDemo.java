@@ -85,19 +85,19 @@ public final class UIDemo {
                     add(new JPanel(new FlowLayout(FlowLayout.LEFT)) {{
                         add(new JButton("IconButton", folderIcon) {{
                             setRolloverEnabled(true);
-                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
                         }});
                         add(new JButton(folderIcon) {{
                             setRolloverEnabled(true);
                             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
                         }});
                         add(new JButton(folderIcon) {{
                             setRolloverEnabled(true);
                             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
                             putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
                             putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
-                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+                            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
                         }});
                         add(new JButton(folderIcon) {{
                             putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);

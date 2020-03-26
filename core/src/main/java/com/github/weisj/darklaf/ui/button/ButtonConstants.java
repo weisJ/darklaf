@@ -29,21 +29,21 @@ import java.awt.*;
 
 public interface ButtonConstants {
     String KEY_VARIANT = "JButton.variant";
-    String KEY_HOVER_COLOR = "JButton.shadow.hover";
-    String KEY_CLICK_COLOR = "JButton.shadow.click";
+    String KEY_HOVER_COLOR = "JButton.borderless.hover";
+    String KEY_CLICK_COLOR = "JButton.borderless.click";
     String KEY_ALT_ARC = "JButton.alternativeArc";
     String KEY_NO_ARC = "JButton.noArc";
     String KEY_SQUARE = "JButton.square";
     String KEY_THIN = "JButton.thin";
-    String KEY_NO_SHADOW_OVERWRITE = "JButton.noShadowOverwrite";
+    String KEY_NO_BORDERLESS_OVERWRITE = "JButton.noBorderlessOverwrite";
     String KEY_CORNER = "JButton.cornerFlag";
     String KEY_LEFT_NEIGHBOUR = "JButton.leftNeighbour";
     String KEY_RIGHT_NEIGHBOUR = "JButton.rightNeighbour";
     String KEY_TOP_NEIGHBOUR = "JButton.topNeighbour";
     String KEY_BOTTOM_NEIGHBOUR = "JButton.bottomNeighbour";
     String VARIANT_ONLY_LABEL = "onlyLabel";
-    String VARIANT_FULL_SHADOW = "fullShadow";
-    String VARIANT_SHADOW = "shadow";
+    String VARIANT_FULL_BORDERLESS = "fullBorderless";
+    String VARIANT_BORDERLESS = "borderless";
     String VARIANT_NONE = "none";
 
     static boolean chooseAlternativeArc(final Component c) {
@@ -68,33 +68,34 @@ public interface ButtonConstants {
     static boolean isThin(final Component c) {
         if (c instanceof AbstractButton) {
             boolean isThin = Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_THIN));
-            return isThin || ButtonConstants.doConvertToShadow((AbstractButton) c);
+            return isThin || ButtonConstants.doConvertToBorderless((AbstractButton) c);
         }
         return false;
     }
 
-    static boolean isShadowVariant(final Component c) {
-        if (isFullShadow(c)) return true;
+    static boolean isBorderlessVariant(final Component c) {
+        if (isFullBorderless(c)) return true;
         if (c instanceof JButton) {
             JButton b = (JButton) c;
-            return doConvertToShadow((AbstractButton) c) || VARIANT_SHADOW.equals(b.getClientProperty(KEY_VARIANT));
+            return doConvertToBorderless((AbstractButton) c) || VARIANT_BORDERLESS.equals(
+                b.getClientProperty(KEY_VARIANT));
         }
         return false;
     }
 
-    static boolean isFullShadow(final Component c) {
+    static boolean isFullBorderless(final Component c) {
         return c instanceof AbstractButton
-               && VARIANT_FULL_SHADOW.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
+               && VARIANT_FULL_BORDERLESS.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
     }
 
-    static boolean doConvertToShadow(final AbstractButton b) {
-        return isIconOnly(b) && !b.isFocusable() && convertIconButtonToShadow(b) && (b instanceof JButton);
+    static boolean doConvertToBorderless(final AbstractButton b) {
+        return isIconOnly(b) && !b.isFocusable() && convertIconButtonToBorderless(b) && (b instanceof JButton);
     }
 
-    static boolean convertIconButtonToShadow(final AbstractButton b) {
+    static boolean convertIconButtonToBorderless(final AbstractButton b) {
         return !(b instanceof UIResource)
-               && UIManager.getBoolean("Button.convertIconOnlyToShadow")
-               && !Boolean.TRUE.equals(b.getClientProperty(KEY_NO_SHADOW_OVERWRITE));
+               && UIManager.getBoolean("Button.convertIconOnlyToBorderless")
+               && !Boolean.TRUE.equals(b.getClientProperty(KEY_NO_BORDERLESS_OVERWRITE));
     }
 
     static boolean isIconOnly(final AbstractButton b) {

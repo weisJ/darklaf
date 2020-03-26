@@ -105,8 +105,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         hoverBackground = UIManager.getColor("Button.activeFillColorRollOver");
         clickBackground = UIManager.getColor("Button.activeFillColorClick");
         inactiveBackground = UIManager.getColor("Button.inactiveFillColor");
-        shadowHover = UIManager.getColor("Button.shadow.hover");
-        shadowClick = UIManager.getColor("Button.shadow.click");
+        shadowHover = UIManager.getColor("Button.borderless.hover");
+        shadowClick = UIManager.getColor("Button.borderless.click");
         arc = UIManager.getInt("Button.arc");
         squareArc = UIManager.getInt("Button.squareArc");
     }
@@ -175,7 +175,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             int height = c.getHeight();
             Insets margin = b.getMargin();
             if (margin instanceof UIResource) margin = new Insets(0, 0, 0, 0);
-            if (ButtonConstants.isShadowVariant(c)) {
+            if (ButtonConstants.isBorderlessVariant(c)) {
                 paintShadowBackground(g, c, g2, b, arc, width, height, margin);
             } else {
                 paintDefaultBackground((Graphics2D) g, b, g2, arc, width, height);
@@ -223,11 +223,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (b.isEnabled() && b.getModel().isRollover()) {
             GraphicsUtil.setupAAPainting(g2);
             g.setColor(getShadowColor(b));
-            if (ButtonConstants.isFullShadow(c)) {
+            if (ButtonConstants.isFullBorderless(c)) {
                 g.fillRect(margin.left, margin.top,
                            width - margin.left - margin.right,
                            height - margin.top - margin.bottom);
-            } else if (ButtonConstants.doConvertToShadow(b)) {
+            } else if (ButtonConstants.doConvertToBorderless(b)) {
                 int size = Math.min(width - margin.left - margin.right,
                                     height - margin.left - margin.right);
                 g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
@@ -304,7 +304,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         Color fg = button.getForeground();
         if (fg instanceof UIResource
             && ButtonConstants.isDefaultButton(button)
-            && !ButtonConstants.isShadowVariant(button)) {
+            && !ButtonConstants.isBorderlessVariant(button)) {
             fg = defaultForeground;
         }
         if (fg instanceof UIResource && !button.getModel().isEnabled()) {
@@ -316,7 +316,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color getBackgroundColor(final JComponent c) {
         boolean defaultButton = ButtonConstants.isDefaultButton(c);
         AbstractButton b = (AbstractButton) c;
-        boolean rollOver = (b.isRolloverEnabled() || ButtonConstants.doConvertToShadow(b))
+        boolean rollOver = (b.isRolloverEnabled() || ButtonConstants.doConvertToBorderless(b))
                            && (((JButton) c).getModel().isRollover());
         boolean clicked = b.getModel().isArmed();
         if (c.isEnabled()) {
@@ -352,7 +352,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected String layout(final AbstractButton b, final JComponent c, final FontMetrics fm,
                             final int width, final int height) {
         Insets i = b.getInsets();
-        if (!ButtonConstants.isShadowVariant(b)) {
+        if (!ButtonConstants.isBorderlessVariant(b)) {
             i = new Insets(i.top, borderSize, i.bottom, borderSize);
         }
 

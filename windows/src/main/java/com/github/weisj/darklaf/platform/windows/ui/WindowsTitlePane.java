@@ -144,16 +144,16 @@ public class WindowsTitlePane extends CustomTitlePane {
             }
         };
         if (close) {
-            button.putClientProperty("JButton.shadow.hover",
+            button.putClientProperty("JButton.borderless.hover",
                                      UIManager.getColor("Windows.TitlePane.close.rollOverColor"));
-            button.putClientProperty("JButton.shadow.click",
+            button.putClientProperty("JButton.borderless.click",
                                      UIManager.getColor("Windows.TitlePane.close.clickColor"));
         }
-        button.putClientProperty("JButton.noShadowOverwrite", true);
+        button.putClientProperty("JButton.noBorderlessOverwrite", true);
         button.setFocusable(false);
         button.setOpaque(true);
         button.setRolloverEnabled(true);
-        button.putClientProperty("JButton.variant", "fullShadow");
+        button.putClientProperty("JButton.variant", "fullBorderless");
         button.putClientProperty("paintActive", Boolean.TRUE);
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
         button.setAction(action);
@@ -423,7 +423,9 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private void createButtons() {
         closeButton = createButton("Close", closeIcon, closeAction, true);
-        closeButton.setRolloverIcon(UIManager.getIcon("Windows.TitlePane.closeHover.icon"));
+        Icon closePressed = UIManager.getIcon("Windows.TitlePane.closeHover.icon");
+        closeButton.setRolloverIcon(closePressed);
+        closeButton.setPressedIcon(closePressed);
 
         if (getWindowDecorationStyle() == JRootPane.FRAME) {
             minimizeButton = createButton("Iconify", minimizeIcon, minimizeAction);

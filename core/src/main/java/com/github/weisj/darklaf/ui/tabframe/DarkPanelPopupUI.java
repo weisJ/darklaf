@@ -375,7 +375,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             this.ui = ui;
             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
             putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
-            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_SHADOW);
+            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
             setRolloverEnabled(true);
             setMargin(UIManager.getInsets("TabFramePopup.headerButton.insets"));
             setFocus(false);
