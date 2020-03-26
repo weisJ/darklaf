@@ -55,7 +55,6 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         acceleratorFont = UIManager.getFont("MenuItem.font");
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
         acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
-        arrowIcon = null;
     }
 
     public void paint(final Graphics g, final JComponent c) {

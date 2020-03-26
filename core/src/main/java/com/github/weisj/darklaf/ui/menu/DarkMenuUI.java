@@ -108,10 +108,10 @@ public class DarkMenuUI extends BasicMenuUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        acceleratorFont = UIManager.getFont("MenuItem.font");
-        acceleratorForeground = UIManager.getColor("MenuItem.foreground");
-        acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
-        arrowIconHover = UIManager.getIcon("MenuItem.arrowHover.icon");
+        acceleratorFont = UIManager.getFont("Menu.font");
+        acceleratorForeground = UIManager.getColor("Menu.foreground");
+        acceleratorSelectionForeground = UIManager.getColor("Menu.selectionForeground");
+        arrowIconHover = UIManager.getIcon("Menu.arrowHover.icon");
     }
 
     public void paint(final Graphics g, final JComponent c) {

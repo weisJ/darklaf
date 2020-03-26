@@ -51,9 +51,11 @@ public class PopupMenuDemo implements ComponentDemo {
                         }});
                         add(new JMenuItem("Item 1"));
                         add(new JMenuItem("Item 2"));
+                        addSeparator();
                     }
                     add(new JMenuItem("Item 1"));
                     add(new JMenuItem("Item 2"));
+                    addSeparator();
                 }});
             }
         }});
