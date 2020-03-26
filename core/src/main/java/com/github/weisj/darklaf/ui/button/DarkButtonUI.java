@@ -61,8 +61,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color hoverBackground;
     protected Color clickBackground;
     protected Color inactiveBackground;
-    protected Color shadowHover;
-    protected Color shadowClick;
+    protected Color borderlessHover;
+    protected Color borderlessClick;
     protected AbstractButton button;
     protected int arc;
     protected int squareArc;
@@ -105,8 +105,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         hoverBackground = UIManager.getColor("Button.activeFillColorRollOver");
         clickBackground = UIManager.getColor("Button.activeFillColorClick");
         inactiveBackground = UIManager.getColor("Button.inactiveFillColor");
-        shadowHover = UIManager.getColor("Button.borderless.hover");
-        shadowClick = UIManager.getColor("Button.borderless.click");
+        borderlessHover = UIManager.getColor("Button.borderless.hover");
+        borderlessClick = UIManager.getColor("Button.borderless.click");
         arc = UIManager.getInt("Button.arc");
         squareArc = UIManager.getInt("Button.squareArc");
     }
@@ -223,7 +223,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (b.isEnabled() && b.getModel().isRollover()) {
             GraphicsUtil.setupAAPainting(g2);
             g.setColor(getShadowColor(b));
-            if (ButtonConstants.isFullBorderless(c)) {
+            if (ButtonConstants.isBorderlessRectangular(c)) {
                 g.fillRect(margin.left, margin.top,
                            width - margin.left - margin.right,
                            height - margin.top - margin.bottom);
@@ -345,8 +345,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color getShadowColor(final AbstractButton c) {
         Object colorHover = c.getClientProperty(KEY_HOVER_COLOR);
         Object colorClick = c.getClientProperty(KEY_CLICK_COLOR);
-        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick : shadowClick
-                                      : colorHover instanceof Color ? (Color) colorHover : shadowHover;
+        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick : borderlessClick
+                                      : colorHover instanceof Color ? (Color) colorHover : borderlessHover;
     }
 
     protected String layout(final AbstractButton b, final JComponent c, final FontMetrics fm,

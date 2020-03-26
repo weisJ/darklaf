@@ -214,7 +214,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         };
         button.setFocusable(false);
         button.setOpaque(true);
-        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_FULL_BORDERLESS);
+        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
         button.putClientProperty("paintActive", Boolean.TRUE);
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
         button.setText(null);

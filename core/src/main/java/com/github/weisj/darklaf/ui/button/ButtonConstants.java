@@ -42,7 +42,7 @@ public interface ButtonConstants {
     String KEY_TOP_NEIGHBOUR = "JButton.topNeighbour";
     String KEY_BOTTOM_NEIGHBOUR = "JButton.bottomNeighbour";
     String VARIANT_ONLY_LABEL = "onlyLabel";
-    String VARIANT_FULL_BORDERLESS = "fullBorderless";
+    String VARIANT_BORDERLESS_RECTANGULAR = "borderlessRectangular";
     String VARIANT_BORDERLESS = "borderless";
     String VARIANT_NONE = "none";
 
@@ -74,7 +74,7 @@ public interface ButtonConstants {
     }
 
     static boolean isBorderlessVariant(final Component c) {
-        if (isFullBorderless(c)) return true;
+        if (isBorderlessRectangular(c)) return true;
         if (c instanceof JButton) {
             JButton b = (JButton) c;
             return doConvertToBorderless((AbstractButton) c) || VARIANT_BORDERLESS.equals(
@@ -83,9 +83,9 @@ public interface ButtonConstants {
         return false;
     }
 
-    static boolean isFullBorderless(final Component c) {
+    static boolean isBorderlessRectangular(final Component c) {
         return c instanceof AbstractButton
-               && VARIANT_FULL_BORDERLESS.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
+               && VARIANT_BORDERLESS_RECTANGULAR.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
     }
 
     static boolean doConvertToBorderless(final AbstractButton b) {

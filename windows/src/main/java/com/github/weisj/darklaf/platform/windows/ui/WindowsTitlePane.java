@@ -153,7 +153,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         button.setFocusable(false);
         button.setOpaque(true);
         button.setRolloverEnabled(true);
-        button.putClientProperty("JButton.variant", "fullBorderless");
+        button.putClientProperty("JButton.variant", "borderlessRectangular");
         button.putClientProperty("paintActive", Boolean.TRUE);
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
         button.setAction(action);

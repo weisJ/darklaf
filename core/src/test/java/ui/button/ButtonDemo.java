@@ -93,7 +93,7 @@ public class ButtonDemo implements ComponentDemo {
         controlPanel.add(new JComboBox<String>() {{
             addItem(DarkButtonUI.VARIANT_NONE);
             addItem(DarkButtonUI.VARIANT_BORDERLESS);
-            addItem(DarkButtonUI.VARIANT_FULL_BORDERLESS);
+            addItem(DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
             addItem(DarkButtonUI.VARIANT_ONLY_LABEL);
             setSelectedItem(DarkButtonUI.VARIANT_NONE);
             addItemListener(e -> button.putClientProperty(DarkButtonUI.KEY_VARIANT, e.getItem()));

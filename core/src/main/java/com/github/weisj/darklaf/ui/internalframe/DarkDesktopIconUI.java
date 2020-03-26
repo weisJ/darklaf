@@ -56,7 +56,7 @@ public class DarkDesktopIconUI extends BasicDesktopIconUI {
         button = new JButtonUIResource(title, icon);
         button.setOpaque(false);
         button.setFocusable(false);
-        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_FULL_BORDERLESS);
+        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
         button.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, UIManager.getColor("DesktopIcon.hoverColor"));
         button.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, UIManager.getColor("DesktopIcon.hoverColor"));
         button.setRolloverEnabled(true);

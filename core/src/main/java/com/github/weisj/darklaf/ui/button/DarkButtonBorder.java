@@ -59,7 +59,7 @@ public class DarkButtonBorder implements Border, UIResource {
     private Insets squareInsets;
     private Insets squareThinInsets;
     private Insets labelInsets;
-    private Insets shadowInsets;
+    private Insets borderlessRectangularInsets;
 
     public DarkButtonBorder() {
         shadowColor = UIManager.getColor("Button.shadow");
@@ -79,12 +79,12 @@ public class DarkButtonBorder implements Border, UIResource {
         squareInsets = UIManager.getInsets("Button.squareBorderInsets");
         squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
         labelInsets = UIManager.getInsets("Button.onlyLabelInsets");
-        shadowInsets = UIManager.getInsets("Button.fullBorderlessInsets");
+        borderlessRectangularInsets = UIManager.getInsets("Button.borderlessRectangularInsets");
         if (insets == null) insets = new Insets(0, 0, 0, 0);
         if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
         if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
         if (squareInsets == null) squareInsets = new Insets(0, 0, 0, 0);
-        if (shadowInsets == null) shadowInsets = new Insets(0, 0, 0, 0);
+        if (borderlessRectangularInsets == null) borderlessRectangularInsets = new Insets(0, 0, 0, 0);
         if (labelInsets == null) labelInsets = new Insets(0, 0, 0, 0);
     }
 
@@ -263,8 +263,9 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
-        if (ButtonConstants.isFullBorderless(c)) {
-            return new InsetsUIResource(shadowInsets.top, shadowInsets.left, shadowInsets.bottom, shadowInsets.right);
+        if (ButtonConstants.isBorderlessRectangular(c)) {
+            return new InsetsUIResource(borderlessRectangularInsets.top, borderlessRectangularInsets.left,
+                                        borderlessRectangularInsets.bottom, borderlessRectangularInsets.right);
         }
         if (ButtonConstants.isLabelButton(c)) {
             return new InsetsUIResource(labelInsets.top, labelInsets.left, labelInsets.bottom, labelInsets.right);
