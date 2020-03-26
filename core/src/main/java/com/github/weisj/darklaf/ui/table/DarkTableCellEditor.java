@@ -229,7 +229,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         setupEditorComponent(value, rendererComp);
         comp = applyRendererIcon(comp, rendererComp);
 
-        CellUtil.setupBackground(comp, table, isSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
+        CellUtil.setupBackground(comp, table, false, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
                                  "Table.alternateRowBackground");
         return comp;
     }
