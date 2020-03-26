@@ -45,6 +45,7 @@ public class DarkListUI extends DarkListUIBridge {
     public static final String KEY_IS_EDITING = KEY_PREFIX + "isEditing";
     public static final String RENDER_TYPE_CHECKBOX = "checkBox";
     public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
+    public static final String KEY_IS_LIST_RENDERER = "JComponent.listCellEditor";
 
     static {
         UIManager.put("List.cellRenderer", new DarkListCellRenderer());

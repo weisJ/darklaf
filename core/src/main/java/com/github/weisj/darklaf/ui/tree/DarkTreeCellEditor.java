@@ -24,7 +24,10 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
+import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -52,6 +55,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         super(textField);
         textField.setBorder(UIManager.getBorder("Tree.editorBorder"));
         textField.addFocusListener(this);
+        textField.putClientProperty(DarkTextUI.KEY_IS_TREE_EDITOR, true);
     }
 
     public DarkTreeCellEditor(final JCheckBox checkBox) {
@@ -75,7 +79,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             }
         };
         toggleButton.setFocusPainted(false);
-        toggleButton.putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, Boolean.TRUE);
+        toggleButton.putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, Boolean.TRUE);
         toggleButton.addActionListener(delegate);
         toggleButton.setRequestFocusEnabled(false);
         toggleButton.addFocusListener(this);
@@ -100,6 +104,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
             }
         });
+        comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TREE_EDITOR, Boolean.TRUE);
         comboBox.addFocusListener(this);
         setClickCountToStart(2);
     }
@@ -107,8 +112,8 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
     public DarkTreeCellEditor(final JSpinner spinner) {
         super(dummyCheckBox);
         editorComponent = spinner;
+        editorComponent.putClientProperty(SpinnerConstants.KEY_IS_TREE_EDITOR, Boolean.TRUE);
         editorComponent.addFocusListener(this);
-        spinner.putClientProperty("JSpinner.isTreeCellEditor", Boolean.TRUE);
         setClickCountToStart(2);
         delegate = new EditorDelegate() {
             public Object getCellEditorValue() {
@@ -142,11 +147,6 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
     public boolean isBooleanEditor(final JTree tree) {
         return editorComponent instanceof JToggleButton && DarkTreeCellRenderer.isBooleanRenderingEnabled(tree);
-    }
-
-    @Override
-    public boolean isCellEditable(final EventObject anEvent) {
-        return super.isCellEditable(anEvent);
     }
 
     @SuppressWarnings("unchecked")

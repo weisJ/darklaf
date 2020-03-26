@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.togglebutton;
 
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -30,10 +32,10 @@ import java.awt.*;
 
 public interface ToggleButtonConstants {
     String KEY_VARIANT = "JToggleButton.variant";
-    String KEY_IS_TREE_EDITOR = "JToggleButton.isTreeCellEditor";
-    String KEY_IS_TREE_RENDER = "JToggleButton.isTreeCellRenderer";
-    String KEY_IS_TABLE_EDITOR = "JToggleButton.isTableCellEditor";
-    String KEY_IS_TABLE_RENDERER = "JToggleButton.isTableCellRenderer";
+    String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
+    String KEY_IS_TREE_RENDERER = DarkTreeUI.KEY_IS_TREE_RENDERER;
+    String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
+    String KEY_IS_TABLE_RENDERER = DarkTableUI.KEY_IS_TABLE_RENDERER;
     String KEY_CLEAR_HIT_AREA = "JToggleButton.clearHitArea";
     String VARIANT_SLIDER = "slider";
 

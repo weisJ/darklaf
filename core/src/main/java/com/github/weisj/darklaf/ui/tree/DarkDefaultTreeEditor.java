@@ -24,9 +24,12 @@
 package com.github.weisj.darklaf.ui.tree;
 
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -65,6 +68,17 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
                 return super.isCellEditable(anEvent);
             }
         };
+    }
+
+    @Override
+    protected TreeCellEditor createTreeCellEditor() {
+        Border border = UIManager.getBorder("Tree.editorBorder");
+        JTextField textField = new JTextField();
+        textField.setBorder(border);
+        textField.putClientProperty(DarkTextUI.KEY_IS_TREE_EDITOR, true);
+        DefaultCellEditor editor = new DefaultCellEditor(textField);
+        editor.setClickCountToStart(1);
+        return editor;
     }
 
     @Override

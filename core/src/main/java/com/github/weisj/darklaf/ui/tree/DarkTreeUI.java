@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -59,6 +58,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     public static final String STYLE_LINE = "line";
     public static final String STYLE_DASHED = "dashed";
     public static final String STYLE_NONE = "none";
+    public static final String KEY_IS_TREE_EDITOR = "JComponent.isTreeEditor";
+    public static final String KEY_IS_TREE_RENDERER = "JComponent.isTreeRenderer";
 
     private final MouseListener selectionListener = new MouseAdapter() {
         boolean handled = false;
@@ -308,21 +309,16 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected FocusListener createFocusListener() {
         return new FocusListener() {
 
-            boolean focused = false;
-
             @Override
             public void focusGained(final FocusEvent e) {
-                if (!focused) {
-                    tree.repaint();
-                }
-                focused = true;
+                tree.repaint();
             }
 
             @Override
             public void focusLost(final FocusEvent e) {
-                tree.stopEditing();
-                focused = hasFocus(e != null ? e.getOppositeComponent() : null);
+                boolean focused = hasFocus(e != null ? e.getOppositeComponent() : null);
                 if (!focused) {
+                    tree.stopEditing();
                     tree.repaint();
                 }
             }
@@ -341,10 +337,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             }
             boolean treeEditor = owner instanceof JComponent
                                  && Boolean.TRUE.equals(
-                ((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
-            boolean treeRenderer = owner instanceof JComponent
+                ((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_EDITOR));
+            boolean treeRenderer = !treeEditor && owner instanceof JComponent
                                    && Boolean.TRUE.equals(
-                ((JComponent) owner).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_RENDER));
+                ((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_RENDERER));
             return treeEditor || treeRenderer;
         }
         return true;
@@ -374,6 +370,13 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         super.uninstallListeners();
         tree.removeMouseListener(selectionListener);
         tree.removePropertyChangeListener(this);
+    }
+
+    @Override
+    protected boolean startEditing(final TreePath path, final MouseEvent event) {
+        boolean editing = super.startEditing(path, event);
+        if (editing) tree.repaint();
+        return editing;
     }
 
     @Override

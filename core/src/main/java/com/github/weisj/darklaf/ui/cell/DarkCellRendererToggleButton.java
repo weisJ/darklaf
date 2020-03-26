@@ -27,7 +27,7 @@ import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.decorators.CellRenderer;
 import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -104,8 +104,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellEditorCheckBox(final boolean opaque) {
             setOpaque(opaque);
-            putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, true);
-            putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
         }
 
         public void setHasFocus(final boolean hasFocus) {
@@ -129,8 +129,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellEditorRadioButton(final boolean opaque) {
             setOpaque(opaque);
-            putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, true);
-            putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
         }
 
         public void setHasFocus(final boolean hasFocus) {

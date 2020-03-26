@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
@@ -40,7 +39,6 @@ import java.awt.*;
  */
 public class DarkTextBorder implements Border, UIResource {
 
-    private static final Border editorBorder = new TextTableCellEditorBorder();
     protected final Color errorBorderColor;
     protected final Color focusErrorBorderColor;
     protected final Color focusBorderColor;
@@ -76,12 +74,6 @@ public class DarkTextBorder implements Border, UIResource {
                && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_HAS_ERROR));
     }
 
-
-    protected static boolean isCellEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_IS_CELL_EDITOR));
-    }
-
     protected int getArcSize(final Component c) {
         return DarkTextFieldUI.isSearchField(c) ? searchArc : arc;
     }
@@ -96,10 +88,6 @@ public class DarkTextBorder implements Border, UIResource {
 
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y,
                             final int width, final int height) {
-        if (isCellEditor(c)) {
-            editorBorder.paintBorder(c, g2, x, y, width, height);
-            return;
-        }
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
@@ -138,9 +126,6 @@ public class DarkTextBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        if (isCellEditor(c)) {
-            return editorBorder.getBorderInsets(c);
-        }
         Insets insets = new Insets(borderSize + padding.top, borderSize + padding.left,
                                    borderSize + padding.bottom, borderSize + padding.right);
         if (DarkTextFieldUI.isSearchField(c)) {

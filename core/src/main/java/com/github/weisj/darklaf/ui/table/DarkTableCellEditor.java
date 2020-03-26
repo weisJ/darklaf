@@ -24,9 +24,12 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.combobox.DarkComboBoxUI;
 import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
+import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.util.PropertyValue;
 
 import javax.swing.*;
@@ -67,7 +70,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     public DarkTableCellEditor(final JTextField textField) {
         super(textField);
         textField.setBorder(new TextTableCellEditorBorder());
-        textField.putClientProperty(DarkTextUI.KEY_IS_TABLE_EDITOR, Boolean.TRUE);
+        textField.putClientProperty(DarkTextUI.KEY_IS_TABLE_EDITOR, true);
         setClickCountToStart(2);
     }
 
@@ -89,13 +92,14 @@ public class DarkTableCellEditor extends DefaultCellEditor {
 
             }
         });
+        comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TABLE_EDITOR, true);
         setClickCountToStart(2);
     }
 
     public DarkTableCellEditor(final JSpinner spinner) {
         super(dummyCheckBox);
         editorComponent = spinner;
-        spinner.putClientProperty("JSpinner.isTableCellEditor", Boolean.TRUE);
+        spinner.putClientProperty(SpinnerConstants.KEY_IS_TABLE_EDITOR, Boolean.TRUE);
         setClickCountToStart(2);
         delegate = new EditorDelegate() {
             public Object getCellEditorValue() {
@@ -150,6 +154,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                 toggleButton.setSelected(selected);
             }
         };
+        toggleButton.putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
         toggleButton.addActionListener(delegate);
         toggleButton.setRequestFocusEnabled(false);
     }

@@ -23,7 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
@@ -53,9 +56,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected static final String KEY_PREFIX = "JTextComponent.";
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
     public static final String KEY_HAS_ERROR = KEY_PREFIX + "hasError";
-    public static final String KEY_IS_CELL_EDITOR = KEY_PREFIX + "cellEditor";
-    public static final String KEY_IS_TABLE_EDITOR = KEY_PREFIX + "isTableCellEditor";
-    public static final String KEY_IS_LIST_RENDER = KEY_PREFIX + "listCellEditor";
+    public static final String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
+    public static final String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
+    public static final String KEY_IS_LIST_RENDER = DarkListUI.KEY_IS_LIST_RENDERER;
 
     protected JTextComponent editor;
     private FocusListener focusListener = new FocusListener() {
@@ -151,7 +154,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             if (parent != null) {
                 g.setColor(parent.getBackground());
             }
-            if (DarkTextBorder.isCellEditor(editor) || DarkUIUtil.isInCell(editor)) {
+            if (DarkUIUtil.isInCell(editor)) {
                 g.setColor(getBackground(editor));
             }
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());

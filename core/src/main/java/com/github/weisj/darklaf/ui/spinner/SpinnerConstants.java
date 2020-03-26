@@ -23,15 +23,18 @@
  */
 package com.github.weisj.darklaf.ui.spinner;
 
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+
 import javax.swing.*;
 import java.awt.*;
 
 public interface SpinnerConstants {
     String KEY_VARIANT = "JSpinner.variant";
-    String KEY_IS_TREE_EDITOR = "JSpinner.isTreeCellEditor";
-    String KEY_IS_TREE_RENDER = "JSpinner.isTreeCellRenderer";
-    String KEY_IS_TABLE_EDITOR = "JSpinner.isTableCellEditor";
-    String KEY_IS_TABLE_RENDERER = "JSpinner.isTableCellRenderer";
+    String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
+    String KEY_IS_TREE_RENDER = DarkTreeUI.KEY_IS_TREE_RENDERER;
+    String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
+    String KEY_IS_TABLE_RENDERER = DarkTableUI.KEY_IS_TABLE_RENDERER;
     String KEY_EDITOR_ALIGNMENT = "JSpinner.cellEditorAlignment";
     String VARIANT_PLUS_MINUS = "plusMinus";
 

@@ -23,12 +23,15 @@
  */
 package com.github.weisj.darklaf.ui.combobox;
 
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+
 import javax.swing.*;
 import java.awt.*;
 
 public interface ComboBoxConstants {
-    String KEY_IS_TREE_EDITOR = "JComboBox.isTreeCellEditor";
-    String KEY_IS_TABLE_EDITOR = "JComboBox.isTableCellEditor";
+    String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
+    String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
 
     static boolean isTreeOrTableCellEditor(final Component c) {
         return isTreeCellEditor(c) || isTableCellEditor(c);
