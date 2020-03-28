@@ -101,7 +101,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             editor.getClass().getName())) {
             editor.setBorder(null);
         }
-        editor.putClientProperty(KEY_ROUNDED_SELECTION, UIManager.getBoolean("TextComponent.roundedSelection"));
+        if (editor != null) {
+            editor.putClientProperty(KEY_ROUNDED_SELECTION, UIManager.getBoolean("TextComponent.roundedSelection"));
+        }
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
     }
@@ -151,13 +153,13 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected void paintBackground(final Graphics g) {
         if (editor.isOpaque()) {
             Container parent = editor.getParent();
-            if (parent != null) {
-                g.setColor(parent.getBackground());
-            }
             if (DarkUIUtil.isInCell(editor)) {
                 g.setColor(getBackground(editor));
+                g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
+            } else if (parent != null && parent.isOpaque()) {
+                g.setColor(parent.getBackground());
+                g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
             }
-            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
 
         Border border = editor.getBorder();

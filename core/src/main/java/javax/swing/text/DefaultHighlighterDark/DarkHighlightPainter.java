@@ -195,9 +195,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Shape dirtyShape = null;
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = GraphicsUtil.setupAAPainting(g2d);
-        Insets ins = c.getInsets();
-        g2d.setClip(ins.left, ins.top, c.getWidth() - ins.left - ins.right,
-                    c.getHeight() - ins.top - ins.bottom);
+
         if (getAlpha() < 1.0f) {
             g2d.setComposite(getAlphaComposite());
         }
@@ -205,8 +203,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             dirtyShape = paintLayerImpl(g2d, offs0, offs1, c);
         } catch (BadLocationException ignored) {
         } finally {
-            context.restore();
+            context.restoreComposite();
         }
+
         /*
          * To make sure the correct part of the highlight is actually painted we manually repaint
          * after the selection has changed.
@@ -292,15 +291,14 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                               isSecondLastLine, isSecondLine, firstLineNotPainted, lastLineNotPainted);
         } else {
             // Should only render part of View.
-            //Start/End parts of selection
+            // Start/End parts of selection
             if (posEnd.y == posStart.y) {
                 Rectangle rect = alloc;
                 if (originalWidth < 2 * arcSize && isRounded(c)) {
                     suppressRounded = true;
                     rect = new Rectangle(originalX, alloc.y, originalWidth, alloc.height);
                 }
-                paintSelection(g2d, c, rect, selectionStart, selectionEnd);
-                dirtyShape = alloc;
+                dirtyShape = paintSelection(g2d, c, rect, selectionStart, selectionEnd);
                 suppressRounded = false;
             } else if (selectionStart) {
                 dirtyShape = paintSelectionStart(g2d, alloc, c, posStart, posOffs0, endBeforeStart, isSecondLastLine,
