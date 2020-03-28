@@ -33,6 +33,7 @@ import ui.DemoPanel;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
 public class TreeDemo implements ComponentDemo {
@@ -57,6 +58,17 @@ public class TreeDemo implements ComponentDemo {
         root.add(parent2);
 
         JTree tree = new JTree(root);
+        tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
+                                                          final boolean expanded,
+                                                          final boolean leaf, final int row, final boolean hasFocus) {
+                Component component = super.getTreeCellRendererComponent(
+                    tree, value, sel, expanded, leaf, row, hasFocus);
+                component.setEnabled(value != parent1 && value != child);
+                return component;
+            }
+        });
         DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));

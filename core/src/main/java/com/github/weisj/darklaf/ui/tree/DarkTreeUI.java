@@ -528,6 +528,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         }
     }
 
+    @Override
+    protected void updateRenderer() {
+        super.updateRenderer();
+        if (!(currentCellRenderer instanceof DarkTreeCellRenderer)) {
+            currentCellRenderer = new DarkTreeCellRenderer(currentCellRenderer);
+        }
+    }
+
     protected Color getRowBackground(final int row, final boolean selected) {
         if (selected) {
             boolean isTableTree = Boolean.TRUE.equals(tree.getClientProperty(KEY_TREE_TABLE_TREE));

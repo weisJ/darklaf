@@ -30,17 +30,19 @@ import java.awt.*;
 
 public class CellUtil {
 
-    public static void setupForeground(final JComponent comp, final JComponent parent, final boolean selected,
+    public static final String KEY_SELECTED_CELL_RENDERER = "JComponent.selectedCellRenderer";
+
+    public static void setupForeground(final Component comp, final JComponent parent, final boolean selected,
                                        final String activeKey, final String inactiveKey) {
         setupForeground(comp, parent, selected, UIManager.getColor(activeKey), inactiveKey);
     }
 
-    public static void setupForeground(final JComponent comp, final JTable parent, final boolean selected,
+    public static void setupForeground(final Component comp, final JTable parent, final boolean selected,
                                        final String inactiveKey) {
         setupForeground(comp, parent, selected, parent.getSelectionForeground(), inactiveKey);
     }
 
-    public static void setupForeground(final JComponent comp, final JComponent parent, final boolean selected,
+    public static void setupForeground(final Component comp, final JComponent parent, final boolean selected,
                                        final Color activeColor, final String inactiveKey) {
         if (selected) {
             if (DarkUIUtil.hasFocus(parent)) {
@@ -50,6 +52,13 @@ public class CellUtil {
             }
         } else {
             comp.setForeground(parent.getForeground());
+        }
+        setSelectedFlag(comp, selected);
+    }
+
+    public static void setSelectedFlag(final Component comp, final boolean selected) {
+        if (comp instanceof JComponent) {
+            ((JComponent) comp).putClientProperty(KEY_SELECTED_CELL_RENDERER, selected);
         }
     }
 

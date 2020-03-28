@@ -23,13 +23,14 @@
  */
 package com.github.weisj.darklaf.ui.tree;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyValue;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 
 /**
@@ -42,6 +43,15 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
         new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(false));
     private final TreeRendererComponent rendererComponent = new TreeRendererComponent();
+    private final TreeCellRenderer parent;
+
+    public DarkTreeCellRenderer() {
+        this(null);
+    }
+
+    public DarkTreeCellRenderer(final TreeCellRenderer parent) {
+        this.parent = parent;
+    }
 
     @Override
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
@@ -59,10 +69,13 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             rendererComponent.setRenderComponent(comp);
             return rendererComponent;
         }
-        Component comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-        if (sel && !(DarkUIUtil.hasFocus(tree) || DarkUIUtil.hasFocus(comp))) {
-            comp.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
+        Component comp;
+        if (parent != null) {
+            comp = parent.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        } else {
+            comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
         }
+        CellUtil.setupForeground(comp, tree, sel, getTextSelectionColor(), "Tree.selectionForegroundInactive");
         return comp;
     }
 

@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.label;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
@@ -47,6 +48,10 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
 
     private Color inactiveForeground;
     private Color cellForegroundNoFocus;
+    private Color cellInactiveForeground;
+    private Color cellInactiveForegroundSelectedNoFocus;
+    private Color cellInactiveForegroundSelected;
+
     protected final Rectangle paintIconR = new Rectangle();
     protected final Rectangle paintTextR = new Rectangle();
 
@@ -64,6 +69,9 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
         //Ensure colors are up to date.
         inactiveForeground = UIManager.getColor("Label.inactiveForeground");
         cellForegroundNoFocus = UIManager.getColor("Label.cellForegroundNoFocus");
+        cellInactiveForeground = UIManager.getColor("Label.cellInactiveForeground");
+        cellInactiveForegroundSelected = UIManager.getColor("Label.cellInactiveForegroundSelected");
+        cellInactiveForegroundSelectedNoFocus = UIManager.getColor("Label.cellInactiveForegroundSelectedNoFocus");
     }
 
     @Override
@@ -106,13 +114,10 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     protected void paintEnabledText(final JLabel l, final Graphics g, final String s,
                                     final int textX, final int textY) {
         int mnemIndex = l.getDisplayedMnemonicIndex();
-        boolean focus = DarkUIUtil.hasFocus(l)
-                        || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTree.class, l))
-                        || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTable.class, l))
-                        || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JList.class, l))
-                        || DarkUIUtil.getParentOfType(JPopupMenu.class, l) != null;
-        if (DarkUIUtil.isInCell(l) && !focus) {
-            g.setColor(cellForegroundNoFocus);
+        if (DarkUIUtil.isInCell(l)) {
+            if (!hasFocusInCell(l)) {
+                g.setColor(cellForegroundNoFocus);
+            }
         } else {
             g.setColor(l.getForeground());
         }
@@ -120,11 +125,37 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
                                                   textX, textY);
     }
 
+    protected boolean hasFocusInCell(final JLabel l) {
+        return (DarkUIUtil.hasFocus(l)
+                || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTree.class, l))
+                || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTable.class, l))
+                || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JList.class, l))
+                || DarkUIUtil.getParentOfType(JPopupMenu.class, l) != null);
+    }
+
     @Override
     protected void paintDisabledText(final JLabel l, final Graphics g, final String s,
                                      final int textX, final int textY) {
         int accChar = l.getDisplayedMnemonicIndex();
-        g.setColor(inactiveForeground);
+        if (DarkUIUtil.isInCell(l)) {
+            boolean selected = Boolean.TRUE.equals(l.getClientProperty(CellUtil.KEY_SELECTED_CELL_RENDERER));
+            boolean focused = hasFocusInCell(l);
+            if (focused) {
+                if (selected) {
+                    g.setColor(cellInactiveForegroundSelected);
+                } else {
+                    g.setColor(cellInactiveForeground);
+                }
+            } else {
+                if (selected) {
+                    g.setColor(cellInactiveForegroundSelectedNoFocus);
+                } else {
+                    g.setColor(inactiveForeground);
+                }
+            }
+        } else {
+            g.setColor(l.getForeground());
+        }
         SwingUtilities2.drawStringUnderlineCharAt(l, g, s, accChar,
                                                   textX, textY);
     }

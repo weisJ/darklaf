@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.table;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import sun.swing.SwingUtilities2;
@@ -576,6 +577,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         } else {
             TableCellRenderer renderer = table.getCellRenderer(row, column);
             Component component = table.prepareRenderer(renderer, row, column);
+            CellUtil.setSelectedFlag(component, table.isCellSelected(row, column));
             rendererPane.paintComponent(g, component, table, r.x, r.y, r.width, r.height, true);
         }
     }
