@@ -215,7 +215,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     @Override
     protected void paintTabArea(final Graphics g, final int tabPlacement, final int selectedIndex) {
-        paintTabAreaBackground(g, tabPlacement);
+        if (tabPane.isOpaque()) {
+            paintTabAreaBackground(g, tabPlacement);
+        }
         paintTabAreaBorder(g, tabPlacement);
         super.paintTabArea(g, tabPlacement, selectedIndex);
     }
@@ -385,20 +387,23 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     private void paintTabAreaBorder(final Graphics g, final int tabPlacement) {
         int width = tabPane.getWidth();
         int height = tabPane.getHeight();
-        int y = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
-        int x = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
+        Insets ins = tabPane.getInsets();
+        int h = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
+        int w = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
         switch (tabPlacement) {
             case TOP:
-                paintTabAreaBorder(g, tabPlacement, 0, 0, width, y + 1);
+                paintTabAreaBorder(g, tabPlacement, ins.left, 0, width - ins.left - ins.right, h + ins.top);
                 break;
             case BOTTOM:
-                paintTabAreaBorder(g, tabPlacement, 0, height - y, width, y + 1);
+                paintTabAreaBorder(g, tabPlacement, ins.left, height - h - ins.top, width - ins.left - ins.right,
+                                   h + ins.top + 1);
                 break;
             case LEFT:
-                paintTabAreaBorder(g, tabPlacement, 0, 0, x, height);
+                paintTabAreaBorder(g, tabPlacement, 0, ins.top, w + ins.left, height - ins.top - ins.bottom);
                 break;
             case RIGHT:
-                paintTabAreaBorder(g, tabPlacement, width - x, 0, x, height);
+                paintTabAreaBorder(g, tabPlacement, width - w - ins.right, ins.top, w + ins.right,
+                                   height - ins.top - ins.bottom);
                 break;
         }
     }
@@ -524,7 +529,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Color getTabAreaBackground() {
-        return tabAreaBackground;
+        return tabPane.isBackgroundSet() ? tabPane.getBackground() : tabAreaBackground;
     }
 
     protected void paintDrop(final Graphics g) {
