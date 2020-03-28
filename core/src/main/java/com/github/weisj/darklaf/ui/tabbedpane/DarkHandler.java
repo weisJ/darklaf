@@ -154,6 +154,9 @@ public class DarkHandler extends TabbedPaneHandler {
                 ui.westComp = null;
             }
             ui.tabPane.doLayout();
+        } else if (DarkTabbedPaneUI.KEY_CENTER_TABS.endsWith(key)) {
+            ui.tabPane.doLayout();
+            ui.tabPane.repaint();
         }
     }
 

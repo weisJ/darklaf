@@ -325,6 +325,12 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                 shiftBoundsToVisibleX(selectedBounds, leftMargin, returnAt, tabCount);
             }
             restoreHiddenTabsX(leftMargin, returnAt, tabCount);
+
+            if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
+                && Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS))) {
+                adjustForCenterX(leftMargin, returnAt, tabCount);
+            }
+
             if (tabsButton.isVisible() && ui.tabPane.getSelectedIndex() < ui.maxVisible) {
                 //Shift again. Hiding the the tab button might reveal the last tab.
                 //Only do this if the last visible tab is not currently selected.
@@ -339,6 +345,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             adjustForDropX(leftMargin, returnAt, tabCount);
 
             layoutMoreTabsButton(tabCount);
+
             commitShiftX(ui.currentShiftXTmp, tabCount);
             ui.currentShiftX = ui.currentShiftXTmp;
 
@@ -371,6 +378,12 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                 shiftBoundsToVisibleY(selectedBounds, topMargin, returnAt, tabCount);
             }
             restoreHiddenTabsY(topMargin, returnAt, tabCount);
+
+            if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
+                && Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS))) {
+                adjustForCenterY(topMargin, returnAt, tabCount);
+            }
+
             if (tabsButton.isVisible() && ui.tabPane.getSelectedIndex() < ui.maxVisible) {
                 shiftTabsY(0, topMargin, bottomMargin, tabCount, false);
                 if (ui.minVisible > 0 || ui.maxVisible < tabCount - 1) {
@@ -390,6 +403,20 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         ui.tabScroller.tabPanel.setPreferredSize(tabBounds.getSize());
     }
 
+    @Override
+    protected void centerTabs(final int tabPlacement, final int tabCount, final int returnAt) {
+        // Do nothing.
+    }
+
+    protected void adjustForCenterX(final int leftMargin, final int returnAt, final int tabCount) {
+        int shift = (returnAt - (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width)) / 2;
+        shiftTabsX(shift, 0, returnAt, tabCount - 1, true);
+    }
+
+    protected void adjustForCenterY(final int topMargin, final int returnAt, final int tabCount) {
+        int shift = (returnAt - (ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height)) / 2;
+        shiftTabsY(shift, 0, returnAt, tabCount - 1, true);
+    }
 
     @Override
     protected int preferredTabAreaWidth(final int tabPlacement, final int height) {

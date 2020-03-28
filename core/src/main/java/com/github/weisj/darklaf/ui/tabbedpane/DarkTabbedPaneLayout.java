@@ -35,6 +35,24 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
         this.ui = ui;
     }
 
+
+    @Override
+    protected void centerTabs(final int tabPlacement, final int tabCount, final int returnAt) {
+        if (ui.runCount == 1 && Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS))) {
+            if (ui.isHorizontalTabPlacement()) {
+                int shift = (returnAt - (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width)) / 2;
+                for (int i = 0; i < tabCount; i++) {
+                    ui.rects[i].x += shift;
+                }
+            } else {
+                int shift = (returnAt - (ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height)) / 2;
+                for (int i = 0; i < tabCount; i++) {
+                    ui.rects[i].y += shift;
+                }
+            }
+        }
+    }
+
     /*
      * Non scroll-layout
      */

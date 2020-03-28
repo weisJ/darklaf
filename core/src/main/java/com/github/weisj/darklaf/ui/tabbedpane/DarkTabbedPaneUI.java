@@ -46,6 +46,12 @@ import java.util.function.Consumer;
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     protected static final String KEY_PREFIX = "JTabbedPane.";
+    /*
+     * Centering tabs only applies if in
+     *  - WRAP_TAB_LAYOUT there is only one tab run.
+     *  - SCROLL_TAB_LAYOUT the viewport doesn't need to be scrolled.
+     */
+    public static final String KEY_CENTER_TABS = KEY_PREFIX + "centerTabs";
     public static final String KEY_DND = KEY_PREFIX + "dndEnabled";
     public static final String KEY_NORTH_COMP = KEY_PREFIX + "northComponent";
     public static final String KEY_WEST_COMP = KEY_PREFIX + "westComponent";

@@ -30,7 +30,7 @@ import java.awt.*;
  * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
  * BasicTabbedPaneUI.
  */
-public class TabbedPaneLayout implements LayoutManager {
+public abstract class TabbedPaneLayout implements LayoutManager {
 
     protected final DarkTabbedPaneUIBridge ui;
 
@@ -395,6 +395,7 @@ public class TabbedPaneLayout implements LayoutManager {
             }
         }
 
+        centerTabs(tabPlacement, tabCount, returnAt);
         // Pad the selected tab so that it appears raised in front
         padSelectedTab(tabPlacement, selectedIndex);
 
@@ -408,6 +409,8 @@ public class TabbedPaneLayout implements LayoutManager {
             }
         }
     }
+
+    protected abstract void centerTabs(final int tabPlacement, final int tabCount, int returnAt);
 
     /**
      * Normalizes the tab runs.
