@@ -68,7 +68,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         CellUtil.setupForeground(toggleButton, table, paintSelected,
                                  "Table.selectionForeground", "Table.selectionForegroundInactive");
         CellUtil.setupBackground(toggleButton, table, paintSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "Table.background", "Table.alternateRowBackground");
+                                 "Table.background", "Table.alternateRowBackground",
+                                 "Table.selectionNoFocusBackground");
         return toggleButton;
     }
 

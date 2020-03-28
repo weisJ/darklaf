@@ -23,10 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.list;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.ListUI;
 import java.awt.*;
 
 public class DarkListCellRenderer extends DefaultListCellRenderer {
@@ -52,24 +52,10 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
         if (comp == null) {
             comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }
-        boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR));
-        int layout = list.getLayoutOrientation();
-        if (layout == JList.VERTICAL) {
-            alternativeRow = alternativeRow && index % 2 == 1;
-        } else if (layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP) {
-            ListUI ui = list.getUI();
-            if (ui instanceof DarkListUI) {
-                int row = ((DarkListUI) ui).convertModelToRow(index);
-                alternativeRow = alternativeRow && row % 2 == 1;
-            } else {
-                alternativeRow = false;
-            }
-        }
-        Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
-        Color normalColor = list.getBackground();
-        Color background = alternativeRow ? alternativeRowColor : normalColor;
+        CellUtil.setupBackground(comp, list, isSelected, index, DarkListUI.KEY_ALTERNATE_ROW_COLOR,
+                                 "List.alternateRowBackground",
+                                 "List.selectionNoFocusBackground");
         if (!(isSelected)) {
-            comp.setBackground(background);
             comp.setForeground(list.getForeground());
         } else {
             if (DarkUIUtil.hasFocus(list) || DarkUIUtil.getParentOfType(JPopupMenu.class, list) != null) {

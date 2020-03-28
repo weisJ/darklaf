@@ -235,7 +235,8 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         comp = applyRendererIcon(comp, rendererComp);
 
         CellUtil.setupBackground(comp, table, false, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "Table.alternateRowBackground");
+                                 "Table.alternateRowBackground",
+                                 "Table.selectionNoFocusBackground");
         return comp;
     }
 

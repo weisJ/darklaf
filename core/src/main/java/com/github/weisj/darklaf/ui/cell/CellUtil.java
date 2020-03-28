@@ -23,9 +23,11 @@
  */
 package com.github.weisj.darklaf.ui.cell;
 
+import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
+import javax.swing.plaf.ListUI;
 import java.awt.*;
 
 public class CellUtil {
@@ -62,30 +64,55 @@ public class CellUtil {
         }
     }
 
-    public static void setupBackground(final JComponent comp, final JTable parent,
+    public static void setupBackground(final Component comp, final JTable parent,
                                        final boolean selected, final int row,
-                                       final String altBgKey, final String altColorKey) {
-        setupBackground(comp, parent, selected, row, altBgKey,
-                        parent.getBackground(), altColorKey, parent.getSelectionBackground());
+                                       final String altBgKey, final String altColorKey,
+                                       final String noFocusSelectionBgKey) {
+        setupBackground(comp, parent, selected, row, altBgKey, parent.getBackground(), altColorKey,
+                        parent.getSelectionBackground(), noFocusSelectionBgKey);
     }
 
-    public static void setupBackground(final JComponent comp, final JTable parent,
+    public static void setupBackground(final Component comp, final JTable parent,
                                        final boolean selected, final int row,
-                                       final String altBgKey, final String colorKey, final String altColorKey) {
+                                       final String altBgKey, final String colorKey, final String altColorKey,
+                                       final String noFocusSelectionBgKey) {
         setupBackground(comp, parent, selected, row, altBgKey, UIManager.getColor(colorKey),
-                        altColorKey, parent.getSelectionBackground());
+                        altColorKey, parent.getSelectionBackground(), noFocusSelectionBgKey);
     }
 
-    protected static void setupBackground(final JComponent comp, final JComponent parent,
+    public static void setupBackground(final Component comp, final JList<?> parent, final boolean selected,
+                                       final int index, final String altBgKey, final String altColorKey,
+                                       final String noFocusSelectionBgKey) {
+        int layout = parent.getLayoutOrientation();
+        boolean altRow = false;
+        if (layout == JList.VERTICAL) {
+            altRow = index % 2 == 1;
+        } else if (layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP) {
+            ListUI ui = parent.getUI();
+            if (ui instanceof DarkListUI) {
+                int row = ((DarkListUI) ui).convertModelToRow(index);
+                altRow = row % 2 == 1;
+            } else {
+                altRow = false;
+            }
+        }
+        setupBackground(comp, parent, selected, altRow ? 1 : 0, altBgKey, parent.getBackground(),
+                        altColorKey, parent.getSelectionBackground(), noFocusSelectionBgKey);
+    }
+
+    protected static void setupBackground(final Component comp, final JComponent parent,
                                           final boolean selected, final int row,
                                           final String altBgKey, final Color bgColor, final String altColorKey,
-                                          final Color selectionBackground) {
+                                          final Color selectionBackground, final String noFocusSelectionBgKey) {
         boolean alternativeRow = Boolean.TRUE.equals(parent.getClientProperty(altBgKey));
         Color alternativeRowColor = UIManager.getColor(altColorKey);
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : bgColor;
-
         if (selected) {
-            comp.setBackground(selectionBackground);
+            if (DarkUIUtil.hasFocus(parent)) {
+                comp.setBackground(selectionBackground);
+            } else {
+                comp.setBackground(UIManager.getColor(noFocusSelectionBgKey));
+            }
         } else {
             comp.setBackground(background);
         }

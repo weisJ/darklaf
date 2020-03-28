@@ -71,7 +71,8 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         setupBorderStyle(table, row, column, component, isRowFocus);
         CellUtil.setupForeground(component, table, paintSelected, "Table.selectionForegroundInactive");
         CellUtil.setupBackground(component, table, paintSelected, row,
-                                 DarkTableUI.KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowBackground");
+                                 DarkTableUI.KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowBackground",
+                                 "Table.selectionNoFocusBackground");
         return component;
     }
 

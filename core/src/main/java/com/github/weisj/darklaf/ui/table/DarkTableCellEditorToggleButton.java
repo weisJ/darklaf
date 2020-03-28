@@ -62,7 +62,7 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
         CellUtil.setupForeground(toggleButton, table, paintSelected, "Table.selectionForegroundInactive");
         CellUtil.setupBackground(toggleButton, table, paintSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "Table.alternateRowBackground");
+                                 "Table.alternateRowBackground", "Table.selectionNoFocusBackground");
         return toggleButton;
     }
 

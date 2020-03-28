@@ -114,10 +114,8 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     protected void paintEnabledText(final JLabel l, final Graphics g, final String s,
                                     final int textX, final int textY) {
         int mnemIndex = l.getDisplayedMnemonicIndex();
-        if (DarkUIUtil.isInCell(l)) {
-            if (!hasFocusInCell(l)) {
-                g.setColor(cellForegroundNoFocus);
-            }
+        if (DarkUIUtil.isInCell(l) && !hasFocusInCell(l)) {
+            g.setColor(cellForegroundNoFocus);
         } else {
             g.setColor(l.getForeground());
         }
