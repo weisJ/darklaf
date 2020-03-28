@@ -106,13 +106,18 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     }
 
 
-    static ColorValueFormatter init(final DarkColorModel model, final int index,
-                                    final boolean hex, final JFormattedTextField text) {
+    public static ColorValueFormatter init(final DarkColorModel model, final int index,
+                                           final boolean hex, final JFormattedTextField text) {
         ColorValueFormatter formatter = new ColorValueFormatter(model, index, hex);
+        formatter.setText(text);
         text.setFormatterFactory(new DefaultFormatterFactory(formatter));
         text.setMinimumSize(text.getPreferredSize());
         text.addFocusListener(formatter);
         return formatter;
+    }
+
+    public void setText(final JFormattedTextField text) {
+        this.text = text;
     }
 
     protected void error() {
@@ -213,7 +218,9 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 checkRange(g, 0, 255);
                 int b = Integer.valueOf(hexStr.substring(4, 6), 16);
                 checkRange(b, 0, 255);
-                int alpha = Integer.valueOf(hexStr.substring(6, 8), 16);
+                int alpha = hexStr.length() >= 8
+                            ? Integer.valueOf(hexStr.substring(6, 8), 16)
+                            : 255;
                 checkRange(alpha, 0, 255);
                 return new Color(r, g, b, alpha);
             } else {

@@ -28,16 +28,14 @@ import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.decorators.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.AncestorEvent;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -48,62 +46,63 @@ import java.awt.event.KeyEvent;
  */
 public class DarkColorChooserPanel extends AbstractColorChooserPanel implements ColorListener {
 
-    public static final String TRANSPARENCY_ENABLED_PROPERTY
-        = "TransparencyEnabled";
+    public static final String TRANSPARENCY_ENABLED_PROPERTY = "transparency";
+
+    private final Icon pipetteIcon;
+    private final Icon pipetteHoverIcon;
 
     private final ColorPipette pipette;
     private final ColorWheelPanel colorWheelPanel;
-    private final JFormattedTextField textHex;
-    private final ColorValueFormatter hexFormatter;
-    private final JFormattedTextField[] valueFields;
-    private final ColorValueFormatter[] formatters;
+    private final ColorPreviewComponent previewComponent;
+
+    private JFormattedTextField[] valueFields;
+    private ColorValueFormatter[] formatters;
+    private JLabel[] descriptors;
+    private JLabel[] descriptorsAfter;
+    private JFormattedTextField textHex;
+    private ColorValueFormatter hexFormatter;
 
     private final JComboBox<DarkColorModel> formatBox;
 
-    private final ColorPreviewComponent previewComponent;
-    private final JLabel[] descriptors;
-    private final JLabel[] descriptorsAfter;
-    private final boolean doneInit;
     private Color currentColor;
-    private boolean isChanging;
-    private Icon pipetteIcon;
-    private Icon pipetteHoverIcon;
 
+    protected boolean isChanging;
 
     public DarkColorChooserPanel(final DarkColorModel... colorModels) {
         if (colorModels == null || colorModels.length == 0) {
             throw new IllegalArgumentException("Must pass at least one valid colorModel");
         }
-
+        isChanging = true;
         previewComponent = new ColorPreviewComponent();
-        colorWheelPanel = new ColorWheelPanel(this, true, true);
+        colorWheelPanel = new ColorWheelPanel(true, true);
         pipette = new DefaultColorPipette(this, colorWheelPanel::setColor);
         pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
         pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
 
-        formatBox = new JComboBox<>(colorModels);
-        formatBox.addActionListener(e -> {
-            updateDescriptors();
-            updateValueFields();
-            updateFormatters();
-            applyColorToFields(getColorFromModel());
-            doLayout();
-        });
-        int record = 0;
-        DarkColorModel prototype = null;
-        for (DarkColorModel model : colorModels) {
-            record = Math.max(model.getValueCount(), record);
-            String name = model.toString();
-            if (prototype == null || prototype.toString().length() < name.length()) {
-                prototype = model;
-            }
-        }
+        formatBox = createColorFormatChooser(colorModels);
 
-        formatBox.setPrototypeDisplayValue(prototype);
-        descriptors = new JLabel[record];
-        descriptorsAfter = new JLabel[record];
+        initInputFields(colorModels);
 
-        textHex = createColorField(true);
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+        add(buildTopPanel(UIManager.getBoolean("ColorChooser.pipetteEnabled")), BorderLayout.NORTH);
+        add(colorWheelPanel, BorderLayout.CENTER);
+        add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
+
+        installListeners();
+        // Finalized by #buildChooser
+    }
+
+    @Override
+    protected void buildChooser() {
+        isChanging = false;
+        onModelChange();
+        colorChanged(getColorFromModel(), this);
+    }
+
+    protected void installListeners() {
+        formatBox.addActionListener(e -> onModelChange());
+        // Make sure the hex field is selected at start.
         textHex.addAncestorListener(new AncestorAdapter() {
             @Override
             public void ancestorAdded(final AncestorEvent event) {
@@ -111,6 +110,83 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
                 textHex.removeAncestorListener(this);
             }
         });
+        textHex.getDocument().addDocumentListener((UpdateDocumentListener) () -> {
+            colorChanged(getColorFromHex(), textHex);
+        });
+        for (JFormattedTextField inputField : valueFields) {
+            inputField.addPropertyChangeListener(e -> colorChanged(getColorFromFields(), inputField));
+        }
+        colorWheelPanel.addListener(this);
+    }
+
+    protected Color getColorFromHex() {
+        try {
+            String hexStr = String.format("%1$-" + 8 + "s", textHex.getText()).replaceAll(" ", "F");
+            int alpha = isColorTransparencySelectionEnabled()
+                        ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
+            return new Color(
+                Integer.valueOf(hexStr.substring(0, 2), 16),
+                Integer.valueOf(hexStr.substring(2, 4), 16),
+                Integer.valueOf(hexStr.substring(4, 6), 16),
+                alpha);
+        } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
+        }
+        return null;
+    }
+
+    protected Color getColorFromFields() {
+        DarkColorModel model = getDarkColorModel();
+        int[] values = new int[model.getCount()];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = (int) valueFields[i].getValue();
+        }
+        Color c = model.getColorFromValues(values);
+        if (isColorTransparencySelectionEnabled()) {
+            c = ColorUtil.toAlpha(c, getColorFromModel().getAlpha());
+        }
+        return c;
+    }
+
+    @Override
+    public void colorChanged(final Color color, final Object source) {
+        if (isChanging || color == null) return;
+        isChanging = true;
+        currentColor = color;
+        ColorSelectionModel model = getColorSelectionModel();
+        if (model != null) model.setSelectedColor(currentColor);
+        applyColorToFields(color);
+        if (source != textHex) textHex.setValue(color);
+        previewComponent.setColor(color);
+        colorWheelPanel.setColor(color, this);
+        isChanging = false;
+    }
+
+    protected void onModelChange() {
+        if (isChanging) return;
+        isChanging = true;
+        colorWheelPanel.setModel(getDarkColorModel());
+        updateDescriptors();
+        toggleValueFields();
+        updateFormatters();
+        applyColorToFields(getColorFromModel());
+        doLayout();
+        isChanging = false;
+    }
+
+    protected void applyColorToFields(final Color color) {
+        DarkColorModel model = getDarkColorModel();
+        int[] values = model.getValuesFromColor(color);
+        for (int i = 0; i < values.length; i++) {
+            valueFields[i].setValue(values[i]);
+        }
+    }
+
+    public void initInputFields(final DarkColorModel[] colorModels) {
+        int record = getMaxFieldCount(colorModels);
+        descriptors = new JLabel[record];
+        descriptorsAfter = new JLabel[record];
+
+        textHex = createColorField(true);
 
         hexFormatter = ColorValueFormatter.init(getDarkColorModel(), 0, true, textHex);
         hexFormatter.setTransparencyEnabled(isColorTransparencySelectionEnabled());
@@ -124,15 +200,34 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
             valueFields[i] = createColorField(false);
             formatters[i] = ColorValueFormatter.init(getDarkColorModel(), i, false, valueFields[i]);
         }
+    }
 
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-        add(buildTopPanel(UIManager.getBoolean("ColorChooser.pipetteEnabled")), BorderLayout.NORTH);
-        add(colorWheelPanel, BorderLayout.CENTER);
-        add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
-        updateValueFields();
-        updateDescriptors();
-        doneInit = true;
+    private JFormattedTextField createColorField(final boolean hex) {
+        JFormattedTextField field = new JFormattedTextField(0);
+        field.setColumns(hex ? 8 : 3);
+        field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
+        return field;
+    }
+
+    protected int getMaxFieldCount(final DarkColorModel[] colorModels) {
+        int record = 0;
+        for (DarkColorModel model : colorModels) {
+            record = Math.max(model.getCount(), record);
+        }
+        return record;
+    }
+
+    protected JComboBox<DarkColorModel> createColorFormatChooser(final DarkColorModel[] colorModels) {
+        JComboBox<DarkColorModel> comboBox = new JComboBox<>(colorModels);
+        DarkColorModel prototype = null;
+        for (DarkColorModel model : colorModels) {
+            String name = model.toString();
+            if (prototype == null || prototype.toString().length() < name.length()) {
+                prototype = model;
+            }
+        }
+        comboBox.setPrototypeDisplayValue(prototype);
+        return comboBox;
     }
 
     private void updateDescriptors() {
@@ -152,9 +247,9 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         }
     }
 
-    private void updateValueFields() {
+    private void toggleValueFields() {
         DarkColorModel model = getDarkColorModel();
-        int count = model.getValueCount();
+        int count = model.getCount();
         for (int i = 0; i < valueFields.length; i++) {
             valueFields[i].setEnabled(i < count);
             valueFields[i].setVisible(i < count);
@@ -167,21 +262,12 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         }
     }
 
-    private void applyColorToFields(final Color color) {
-        DarkColorModel model = getDarkColorModel();
-        isChanging = true;
-        int[] values = model.getValuesFromColor(color);
-        for (int i = 0; i < values.length; i++) {
-            valueFields[i].setValue(values[i]);
-        }
-        isChanging = false;
-    }
-
     @Override
     protected Color getColorFromModel() {
         Color c = super.getColorFromModel();
         return c == null ? currentColor : c;
     }
+
 
     protected DarkColorModel getDarkColorModel() {
         return (DarkColorModel) formatBox.getSelectedItem();
@@ -193,22 +279,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
         final JPanel previewPanel = new JPanel(new BorderLayout());
         if (enablePipette && pipette != null) {
-            JButton pipetteButton = new JButtonUIResource();
-            pipetteButton.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
-            pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
-            pipetteButton.setRolloverEnabled(true);
-            pipetteButton.setIcon(getPipetteIcon());
-            pipetteButton.setRolloverIcon(getPipetteRolloverIcon());
-            pipetteButton.setDisabledIcon(getPipetteRolloverIcon());
-            pipetteButton.setPressedIcon(getPipetteRolloverIcon());
-            pipetteButton.setFocusable(false);
-            pipetteButton.addActionListener(e -> {
-                pipetteButton.setEnabled(false);
-                pipette.setInitialColor(getColorFromModel());
-                pipette.show();
-            });
-            ((DefaultColorPipette) pipette).setCloseAction(() -> pipetteButton.setEnabled(true));
-            previewPanel.add(pipetteButton, BorderLayout.WEST);
+            previewPanel.add(createPipetteButton(), BorderLayout.WEST);
         }
         previewPanel.add(previewComponent, BorderLayout.CENTER);
         result.add(previewPanel, BorderLayout.NORTH);
@@ -242,51 +313,39 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return result;
     }
 
+    private JButton createPipetteButton() {
+        JButton pipetteButton = new JButtonUIResource();
+        pipetteButton.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
+        pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
+        pipetteButton.setRolloverEnabled(true);
+        pipetteButton.setIcon(getPipetteIcon());
+        pipetteButton.setRolloverIcon(getPipetteRolloverIcon());
+        pipetteButton.setDisabledIcon(getPipetteRolloverIcon());
+        pipetteButton.setPressedIcon(getPipetteRolloverIcon());
+        pipetteButton.setFocusable(false);
+        pipetteButton.addActionListener(e -> {
+            pipetteButton.setEnabled(false);
+            pipette.setInitialColor(getColorFromModel());
+            pipette.show();
+        });
+        ((DefaultColorPipette) pipette).setCloseAction(() -> pipetteButton.setEnabled(true));
+        return pipetteButton;
+    }
 
-    private JFormattedTextField createColorField(final boolean hex) {
-        JFormattedTextField field = new JFormattedTextField(0);
-        field.setColumns(hex ? 8 : 4);
-        if (!hex) {
-            field.addPropertyChangeListener(e -> {
-                if (PropertyKey.VALUE.equals(e.getPropertyName())) {
-                    updatePreviewFromTextFields();
-                }
-            });
-        } else {
-            field.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(final DocumentEvent e) {
-                    update();
-                }
+    public boolean isColorTransparencySelectionEnabled() {
+        return colorWheelPanel.isColorTransparencySelectionEnabled();
+    }
 
-                @Override
-                public void removeUpdate(final DocumentEvent e) {
-                    update();
-                }
-
-                @Override
-                public void changedUpdate(final DocumentEvent e) {
-                }
-
-                protected void update() {
-                    try {
-                        if (isChanging) return;
-                        String hexStr = String.format("%1$-" + 8 + "s", field.getText()).replaceAll(" ", "F");
-                        int alpha = isColorTransparencySelectionEnabled()
-                                    ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
-                        Color c = new Color(
-                            Integer.valueOf(hexStr.substring(0, 2), 16),
-                            Integer.valueOf(hexStr.substring(2, 4), 16),
-                            Integer.valueOf(hexStr.substring(4, 6), 16),
-                            alpha);
-                        colorWheelPanel.setColor(c, textHex);
-                    } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
-                    }
-                }
-            });
+    public void setColorTransparencySelectionEnabled(final boolean b) {
+        boolean oldValue = isColorTransparencySelectionEnabled();
+        if (b != oldValue) {
+            hexFormatter.setTransparencyEnabled(b);
+            colorWheelPanel.setColorTransparencySelectionEnabled(b);
+            if (b && getColorFromModel().getAlpha() < 255) {
+                colorChanged(ColorUtil.removeAlpha(getColorFromModel()), this);
+            }
+            firePropertyChange(TRANSPARENCY_ENABLED_PROPERTY, oldValue, b);
         }
-        field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
-        return field;
     }
 
     protected Icon getPipetteIcon() {
@@ -304,15 +363,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
     @Override
     public void updateChooser() {
-        if (isChanging) return;
-        Color color = getColorFromModel();
-        if (color != null) {
-            colorWheelPanel.setColor(color, this);
-        }
-    }
-
-    @Override
-    protected void buildChooser() {
     }
 
     @Override
@@ -335,83 +385,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return null;
     }
 
-    public boolean isColorTransparencySelectionEnabled() {
-        return colorWheelPanel.isColorTransparencySelectionEnabled();
-    }
-
     @Override
     public Icon getLargeDisplayIcon() {
         return null;
     }
-
-    private void updatePreviewFromTextFields() {
-        if (!doneInit || isChanging) return;
-        isChanging = true;
-        int[] values = new int[valueFields.length];
-        for (int i = 0; i < valueFields.length; i++) {
-            values[i] = (((Integer) valueFields[i].getValue()));
-        }
-        Color color = getDarkColorModel().getColorFromValues(values);
-
-        if (isColorTransparencySelectionEnabled()) {
-            color = ColorUtil.toAlpha(color, getColorFromModel().getAlpha());
-        }
-        colorWheelPanel.setColor(color, valueFields[0]);
-        isChanging = false;
-    }
-
-    public void setColorTransparencySelectionEnabled(final boolean b) {
-        boolean oldValue = isColorTransparencySelectionEnabled();
-        if (b != oldValue) {
-            Color color = getColorFromModel();
-            color = new Color(color.getRed(), color.getBlue(), color.getGreen());
-            ColorSelectionModel model = getColorSelectionModel();
-            if (model != null) {
-                model.setSelectedColor(color);
-            }
-            currentColor = color;
-            hexFormatter.setTransparencyEnabled(b);
-            colorWheelPanel.setColorTransparencySelectionEnabled(b);
-            applyColorToHEX(getColorFromModel());
-            firePropertyChange(TRANSPARENCY_ENABLED_PROPERTY,
-                               oldValue, b);
-        }
-    }
-
-    @Override
-    public void colorChanged(final Color color, final Object source) {
-        isChanging = true;
-        if (color != null && !color.equals(currentColor)) {
-            Color newColor = !isColorTransparencySelectionEnabled()
-                             ? new Color(color.getRed(), color.getGreen(), color.getBlue()) : color;
-            ColorSelectionModel model = getColorSelectionModel();
-            if (model != null) {
-                model.setSelectedColor(newColor);
-            }
-            currentColor = newColor;
-            previewComponent.setColor(newColor);
-            if (!(source instanceof JFormattedTextField)) {
-                applyColorToFields(newColor);
-            }
-            if (source != textHex) {
-                applyColorToHEX(newColor);
-            }
-        }
-        isChanging = false;
-    }
-
-
-    private void applyColorToHEX(final Color c) {
-        boolean changingOld = isChanging;
-        isChanging = true;
-        boolean transparencyEnabled = isColorTransparencySelectionEnabled();
-        if (transparencyEnabled) {
-            textHex.setValue(c);
-        } else {
-            textHex.setValue(ColorUtil.removeAlpha(c));
-        }
-        isChanging = changingOld;
-    }
-
-
 }

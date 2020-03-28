@@ -43,7 +43,7 @@ public class ToolTipUtil {
         JComponent target = toolTip.getComponent();
         if (target == null) return;
 
-        ToolTipContext context = getToolTipContext(target);
+        ToolTipContext context = getToolTipContext(toolTip);
         if (context == null) return;
 
         context.setTarget(target);
@@ -92,6 +92,7 @@ public class ToolTipUtil {
         if (pos == null) {
             context.setAlignment(Alignment.CENTER);
             context.setCenterAlignment(Alignment.CENTER);
+            pos = context.getFallBackPosition();
         }
         context.updateToolTip();
         context.setAlignment(original);
@@ -137,12 +138,16 @@ public class ToolTipUtil {
                && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
     }
 
-    protected static ToolTipContext getToolTipContext(final JComponent comp) {
-        Object context = comp.getClientProperty(DarkTooltipUI.KEY_CONTEXT);
+    protected static ToolTipContext getToolTipContext(final JToolTip tooltip) {
+        Object context = tooltip.getClientProperty(DarkTooltipUI.KEY_CONTEXT);
         if (context instanceof ToolTipContext) {
             return (ToolTipContext) context;
         }
-        Object style = comp.getClientProperty(DarkTooltipUI.KEY_STYLE);
+        context = tooltip.getComponent().getClientProperty(DarkTooltipUI.KEY_CONTEXT);
+        if (context instanceof ToolTipContext) {
+            return (ToolTipContext) context;
+        }
+        Object style = tooltip.getComponent().getClientProperty(DarkTooltipUI.KEY_STYLE);
         if (ToolTipStyle.BALLOON.equals(DarkTooltipUI.getStyle(style))) {
             return DEFAULT_CONTEXT;
         }
@@ -183,7 +188,6 @@ public class ToolTipUtil {
                 return config;
             }
         }
-
         return null;
     }
 }

@@ -33,8 +33,20 @@ public class DarkColorModelHSL extends DarkColorModel {
     private static final int[] hsl = new int[3];
     private static final int[] rgb = new int[3];
 
+    private static DarkColorModelHSL instance;
+
+    public static DarkColorModelHSL getInstance() {
+        if (instance == null) instance = new DarkColorModelHSL();
+        return instance;
+    }
+
     public DarkColorModelHSL() {
         super("hsl", "Hue", "Saturation", "Lightness");
+    }
+
+    @Override
+    public int getMinimum(final int index) {
+        return 0;
     }
 
     @Override
@@ -62,8 +74,12 @@ public class DarkColorModelHSL extends DarkColorModel {
         return RGBtoHSL(color.getRed(), color.getGreen(), color.getBlue());
     }
 
+    public static Color getColorFromHSLValues(final double h, final double s, final double l) {
+        int[] rgb = HSLtoRGB(h, s, l);
+        return new Color(rgb[0], rgb[1], rgb[2]);
+    }
 
-    private static int[] RGBtoHSL(final int r, final int g, final int b) {
+    public static double[] RGBtoHSLValues(final int r, final int g, final int b) {
         double max = max(r, g, b) / 255.0;
         double min = min(r, g, b) / 255.0;
 
@@ -74,12 +90,20 @@ public class DarkColorModelHSL extends DarkColorModel {
                           ? 2.0f - summa
                           : summa;
         }
-        hsl[0] = (int) Math.round(360 * getHue(r / 255.0, g / 255.0, b / 255.0, max, min));
-        hsl[1] = (int) Math.round(100 * saturation);
-        hsl[2] = (int) Math.round(100 * (summa / 2.0));
-        return hsl;
+        return new double[]{
+            getHue(r / 255.0, g / 255.0, b / 255.0, max, min),
+            saturation,
+            summa / 2.0
+        };
     }
 
+    private static int[] RGBtoHSL(final int r, final int g, final int b) {
+        double[] values = RGBtoHSLValues(r, g, b);
+        hsl[0] = (int) Math.round(360 * values[0]);
+        hsl[1] = (int) Math.round(100 * values[1]);
+        hsl[2] = (int) Math.round(100 * values[2]);
+        return hsl;
+    }
 
     protected static double max(final double red, final double green, final double blue) {
         double max = Math.max(red, green);
@@ -117,10 +141,10 @@ public class DarkColorModelHSL extends DarkColorModel {
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
 
-
     private static int[] HSLtoRGB(final double h, final double saturation, final double lightness) {
         double hue = h;
-
+        while (hue < 0) hue += 1;
+        hue = hue - Math.floor(hue);
         if (saturation > 0.0f) {
             hue = (hue < 1.0f) ? hue * 6.0f : 0.0f;
             double q = lightness + saturation * ((lightness > 0.5f) ? 1.0f - lightness : lightness);
@@ -135,7 +159,6 @@ public class DarkColorModelHSL extends DarkColorModel {
         }
         return rgb;
     }
-
 
     private static double normalize(final double q, final double p, final double color) {
         if (color < 1.0f) {

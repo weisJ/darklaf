@@ -24,8 +24,9 @@
 
 package com.github.weisj.darklaf.ui.colorchooser;
 
+import com.github.weisj.darklaf.color.DarkColorModel;
+
 import javax.swing.*;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
 import java.awt.*;
 
 /**
@@ -33,62 +34,42 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class ColorWheelPanel extends JPanel {
-    private final ColorWheel colorWheel;
-    private final SlideComponent brightnessSlider;
+    private final ColorTriangle colorWheel;
     private SlideComponent opacitySlider = null;
     private boolean enableOpacity;
 
-    public ColorWheelPanel(final ColorListener colorListener, final boolean enableOpacity,
-                           final boolean opacityInPercent) {
+    public ColorWheelPanel(final boolean enableOpacity, final boolean opacityInPercent) {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
         this.enableOpacity = enableOpacity;
 
-        colorWheel = new ColorWheel();
+        colorWheel = new ColorTriangle();
         add(colorWheel, BorderLayout.CENTER);
-
-        brightnessSlider = new SlideComponent("Brightness", true, false);
-        brightnessSlider.setToolTipText("Brightness");
-        brightnessSlider.addListener(value -> {
-            colorWheel.setBrightness(1 - (value / 255f));
-            colorWheel.repaint();
-        });
-
-        add(brightnessSlider, BorderLayout.EAST);
-        colorWheel.addListener(colorListener);
-        colorWheel.addListener(brightnessSlider);
-
 
         if (enableOpacity) {
             opacitySlider = new SlideComponent("Opacity", false, true);
             opacitySlider.setToolTipText("Opacity");
             opacitySlider.setUnits(opacityInPercent ? SlideComponent.Unit.PERCENT : SlideComponent.Unit.LEVEL);
             opacitySlider.addListener(integer -> {
-                colorWheel.setOpacity(integer);
-                colorWheel.repaint();
+                colorWheel.setOpacity(integer / 255.0);
+                ColorWheelPanel.this.repaint();
             });
-
             add(opacitySlider, BorderLayout.SOUTH);
             colorWheel.addListener(opacitySlider);
-
         }
     }
 
+    public void addListener(final ColorListener listener) {
+        colorWheel.addListener(listener);
+    }
+
     public void setColor(final Color color, final Object source) {
-        float[] hsb = new float[3];
-        Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsb);
-
-        brightnessSlider.setValue(255 - (int) (hsb[2] * 255));
-        brightnessSlider.repaint();
-
-        colorWheel.dropImage();
-        if (opacitySlider != null && source instanceof AbstractColorChooserPanel) {
+        if (opacitySlider != null) {
             opacitySlider.setValue(color.getAlpha());
             opacitySlider.repaint();
         }
-
-        colorWheel.setColor(color, source, hsb[0], hsb[1], hsb[2]);
+        colorWheel.setColor(source, color);
     }
 
     public boolean isColorTransparencySelectionEnabled() {
@@ -101,5 +82,9 @@ public class ColorWheelPanel extends JPanel {
             opacitySlider.setEnabled(b);
             opacitySlider.setVisible(b);
         }
+    }
+
+    public void setModel(final DarkColorModel darkColorModel) {
+        colorWheel.setColorModel(darkColorModel);
     }
 }

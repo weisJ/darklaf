@@ -25,74 +25,45 @@ package com.github.weisj.darklaf.color;
 
 import java.awt.*;
 
-/**
- * @author Jannis Weis
- */
-public class DarkColorModelHSB extends DarkColorModel {
+public class DarkColorModelRGB extends DarkColorModel {
 
-    private static final float[] hsvVals = new float[3];
-    private static final int[] hsb = new int[3];
+    private static DarkColorModelRGB instance;
 
-    private static DarkColorModelHSB instance;
-
-    public static DarkColorModelHSB getInstance() {
-        if (instance == null) instance = new DarkColorModelHSB();
+    public static DarkColorModelRGB getInstance() {
+        if (instance == null) instance = new DarkColorModelRGB();
         return instance;
     }
 
-    public DarkColorModelHSB() {
-        super("hsv", "Hue", "Saturation", "Brightness");
+    public DarkColorModelRGB() {
+        super("rgb", "Red", "Green", "Blue");
     }
 
-    @Override
     public int getMinimum(final int index) {
         return 0;
     }
 
-    @Override
     public int getMaximum(final int index) {
-        return (index == 0) ? 359 : 100;
+        return 255;
     }
 
     @Override
     public String toString() {
-        return "HSB";
+        return "RGB";
     }
 
-    @Override
     public char[] getLabelDescriptorsBefore() {
-        return new char[]{'H', 'S', 'B'};
+        return new char[]{'R', 'G', 'B'};
     }
 
-    @Override
     public char[] getLabelDescriptorsAfter() {
-        return new char[]{'\u00B0', '%', '%'};
+        return new char[]{Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE};
     }
 
-    @Override
     public int[] getValuesFromColor(final Color color) {
-        return RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue());
+        return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
     }
 
-    private static int[] RGBtoHSB(final int r, final int g, final int b) {
-        double[] values = RGBtoHSBValues(r, g, b);
-        hsb[0] = (int) Math.round(values[0] * 360);
-        hsb[1] = (int) Math.round(values[1] * 100);
-        hsb[1] = (int) Math.round(values[2] * 100);
-        return hsb;
-    }
-
-    public static double[] RGBtoHSBValues(final int r, final int g, final int b) {
-        float[] values = Color.RGBtoHSB(r, g, b, hsvVals);
-        return new double[]{values[0], values[1], values[2]};
-    }
-
-    public static Color getColorFromHSBValues(final double h, final double s, final double b) {
-        return Color.getHSBColor((float) h, (float) s, (float) b);
-    }
-
-    @Override
     public Color getColorFromValues(final int[] values) {
-        return getColorFromHSBValues(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0);
+        return new Color(values[0], values[1], values[2]);
     }
 }

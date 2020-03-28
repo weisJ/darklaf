@@ -80,6 +80,7 @@ public class ToolTipContext {
     private ToolTipStyle style;
     private boolean ignoreBorder;
     private boolean bestFit;
+    private Function<ToolTipContext, Point> fallBackPositionProvider;
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
@@ -115,6 +116,7 @@ public class ToolTipContext {
         setToolTipStyle(ToolTipStyle.BALLOON);
         setUpdatePosition(false);
         setHideOnExit(false);
+        setFallBackPositionProvider(null);
         setAlignInside(alignInside);
         setAlignment(alignment);
         setCenterAlignment(centerAlignment);
@@ -588,5 +590,15 @@ public class ToolTipContext {
         if (this.target != toolTip.getComponent()) {
             this.toolTip.setComponent(this.target);
         }
+    }
+
+    public Point getFallBackPosition() {
+        return fallBackPositionProvider.apply(this);
+    }
+
+    public ToolTipContext setFallBackPositionProvider(final Function<ToolTipContext, Point> fallBackPositionProvider) {
+        this.fallBackPositionProvider = fallBackPositionProvider;
+        if (fallBackPositionProvider == null) this.fallBackPositionProvider = c -> null;
+        return this;
     }
 }

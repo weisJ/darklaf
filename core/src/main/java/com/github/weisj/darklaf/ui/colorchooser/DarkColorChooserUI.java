@@ -23,9 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelCMYK;
+import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -80,10 +81,10 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     @Override
     protected AbstractColorChooserPanel[] createDefaultChoosers() {
         return new AbstractColorChooserPanel[]{
-            new DarkColorChooserPanel(new DarkColorModel(),
-                                      new DarkColorModelHSL(),
-//                                          new DarkColorModelHSB(),
-                                      new DarkColorModelCMYK()),
+            new DarkColorChooserPanel(DarkColorModelRGB.getInstance(),
+                                      DarkColorModelHSB.getInstance(),
+                                      DarkColorModelHSL.getInstance(),
+                                      DarkColorModelCMYK.getInstance()),
             new DarkSwatchesChooserPanel(),
             };
     }

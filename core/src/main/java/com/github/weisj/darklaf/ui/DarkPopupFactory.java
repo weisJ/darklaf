@@ -26,12 +26,16 @@ package com.github.weisj.darklaf.ui;
 import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DarkPopupFactory extends PopupFactory {
+
+    public static final String KEY_NO_DECORATION = "JPopupFactory.noDecorations";
+    public static final String KEY_FOCUSABLE_POPUP = "JPopupFactory.focusablePopup";
+    public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
+    public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
 
     @Override
     public Popup getPopup(final Component owner, final Component contents,
@@ -39,18 +43,20 @@ public class DarkPopupFactory extends PopupFactory {
         Popup popup = super.getPopup(owner, contents, x, y);
         boolean isMediumWeight = popup.getClass().getSimpleName().endsWith("MediumWeightPopup");
         boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
-        boolean isBalloonTooltip = contents instanceof JToolTip
-                                   && ((JToolTip) contents).getBorder() instanceof DarkTooltipBorder;
-        boolean isPopupMenu = contents instanceof JPopupMenu;
-        if (isMediumWeight || isLightWeight) {
-            if (isBalloonTooltip) {
-                // null owner forces a heavyweight popup.
-                popup = super.getPopup(null, contents, x, y);
-            } else if (isMediumWeight) {
-                JRootPane rootPane = SwingUtilities.getRootPane(contents);
-                // Prevents decorations from being reinstalled.
-                if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_MEDIUM_WEIGHT_POPUP_ROOT, true);
-            }
+        boolean forceHeavy = contents instanceof JComponent
+                             && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FORCE_HEAVYWEIGHT));
+        boolean isFocusable = contents instanceof JComponent
+                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
+        boolean startHidden = contents instanceof JComponent
+                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
+        if (forceHeavy && (isMediumWeight || isLightWeight)) {
+            // null owner forces a heavyweight popup.
+            popup = super.getPopup(null, contents, x, y);
+        }
+        if (isMediumWeight) {
+            JRootPane rootPane = SwingUtilities.getRootPane(contents);
+            // Prevents decorations from being reinstalled.
+            if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_MEDIUM_WEIGHT_POPUP_ROOT, true);
         }
         // Sometimes the background is java.awt.SystemColor[i=7]
         // It results in a flash of white background, that is repainted with
@@ -62,16 +68,20 @@ public class DarkPopupFactory extends PopupFactory {
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
                 rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_POPUP, true);
-                install = !Boolean.TRUE.equals(rootPane.getClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP));
+                install = !Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATION));
             }
             if (install) {
                 Decorations.installPopupWindow(window);
             } else {
                 Decorations.uninstallPopupWindow(window);
             }
-            if (isBalloonTooltip || isPopupMenu) {
-                if (isPopupMenu) ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);
+            if (startHidden) {
+                ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);
                 window.setOpacity(0.0f);
+            }
+            if (isFocusable && !window.getFocusableWindowState()) {
+                window.dispose();
+                window.setFocusableWindowState(true);
             }
         }
         return popup;

@@ -23,10 +23,13 @@
  */
 package ui;
 
+import com.github.weisj.darklaf.components.color.PopupColorChooser;
 import com.github.weisj.darklaf.decorators.MouseClickListener;
+import com.github.weisj.darklaf.icons.EmptyIcon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -42,21 +45,28 @@ public class QuickColorChooser extends JPanel {
     public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange,
                              final boolean showCheckBox) {
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        icon = new SolidColorIcon(color);
-        JLabel label = new JLabel(title, icon, JLabel.LEFT);
         checkBox = new JCheckBox();
         if (showCheckBox) {
             checkBox.addActionListener(e -> onStatusChange.accept(isSelected(), getColor()));
             add(checkBox);
         }
-        label.addMouseListener((MouseClickListener) e -> {
-            Color c = JColorChooser.showDialog(QuickColorChooser.this, title, icon.getColor());
-            if (c != null) {
-                onStatusChange.accept(isSelected(), c);
-                icon.setColor(c);
-            }
+
+        icon = new SolidColorIcon(color);
+        JLabel colorLabel = new JLabel(icon, JLabel.LEFT);
+        AtomicBoolean isShowing = new AtomicBoolean(false);
+        colorLabel.addMouseListener((MouseClickListener) e -> {
+            if (isShowing.get()) return;
+            isShowing.set(true);
+            PopupColorChooser.showColorChooser(colorLabel, icon.getColor(), c -> {
+                if (c != null) {
+                    onStatusChange.accept(isSelected(), c);
+                    icon.setColor(c);
+                    colorLabel.repaint();
+                }
+            }, () -> isShowing.set(false));
         });
-        add(label);
+        add(colorLabel);
+        add(new JLabel(title, EmptyIcon.create(2, 2), JLabel.LEFT));
     }
 
     public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange) {

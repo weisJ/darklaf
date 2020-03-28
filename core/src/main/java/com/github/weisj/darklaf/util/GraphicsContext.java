@@ -63,12 +63,40 @@ public class GraphicsContext {
     }
 
     public void restore() {
-        graphics2D.setRenderingHints(this.hintsMap);
+        restoreRenderingHints();
+        restoreComposite();
+        restoreStroke();
+        restoreColor();
+        restorePaint();
+        restoreFont();
+        restoreClip();
+    }
+
+    public void restoreComposite() {
         graphics2D.setComposite(composite);
-        graphics2D.setStroke(stroke);
-        graphics2D.setColor(color);
-        graphics2D.setPaint(paint);
+    }
+
+    public void restoreFont() {
         graphics2D.setFont(font);
+    }
+
+    public void restoreRenderingHints() {
+        graphics2D.setRenderingHints(this.hintsMap);
+    }
+
+    public void restoreStroke() {
+        graphics2D.setStroke(stroke);
+    }
+
+    public void restoreColor() {
+        graphics2D.setColor(color);
+    }
+
+    public void restorePaint() {
+        graphics2D.setPaint(paint);
+    }
+
+    public void restoreClip() {
         graphics2D.setClip(clip);
     }
 }

@@ -29,15 +29,10 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class DarkColorModel {
+public abstract class DarkColorModel {
 
     private final String prefix;
     private final String[] labels;
-
-
-    public DarkColorModel() {
-        this("rgb", "Red", "Green", "Blue");
-    }
 
 
     public DarkColorModel(final String name, final String... labels) {
@@ -49,16 +44,12 @@ public class DarkColorModel {
         return this.labels.length;
     }
 
-    public int getMinimum(final int index) {
-        return 0;
-    }
+    public abstract int getMinimum(final int index);
 
-    public int getMaximum(final int index) {
-        return 255;
-    }
+    public abstract int getMaximum(final int index);
 
     public int getDefault(final int index) {
-        return 0;
+        return getMinimum(index);
     }
 
     public final String getText(final Component component, final String suffix) {
@@ -66,16 +57,12 @@ public class DarkColorModel {
     }
 
     @Override
-    public String toString() {
-        return "RGB";
-    }
+    public abstract String toString();
 
-    public int getValueCount() {
-        return 3;
-    }
+    public abstract char[] getLabelDescriptorsBefore();
 
-    public char[] getLabelDescriptorsBefore() {
-        return new char[]{'R', 'G', 'B'};
+    public String[] getFullLabelDescriptorsBefore() {
+        return labels;
     }
 
     public char[] getLabelDescriptorsAfter() {

@@ -108,7 +108,6 @@ class SlideComponent extends JComponent implements ColorListener {
             @Override
             public void componentResized(final ComponentEvent e) {
                 setValue(getValue());
-                fireValueChanged();
                 repaint();
             }
         });
@@ -160,8 +159,9 @@ class SlideComponent extends JComponent implements ColorListener {
     }
 
     public void setValue(final int value) {
-        if (value < 0 || value > 255) {
-            throw new IllegalArgumentException("Value " + value + " not in range [0,255]");
+        if (value < Unit.LEVEL.getMin() || value > Unit.LEVEL.getMax()) {
+            throw new IllegalArgumentException(
+                "Value " + value + " not in range [" + Unit.LEVEL.getMin() + "," + Unit.LEVEL.getMax() + "]");
         }
         pointerValue = valueToPointerValue(value);
         this.value = value;
@@ -292,23 +292,45 @@ class SlideComponent extends JComponent implements ColorListener {
     }
 
     enum Unit {
-        PERCENT,
-        LEVEL;
+        LEVEL(0, 255f) {
+            @Override
+            public String formatValue(final int value) {
+                return String.format("%d", (int) (LEVEL.max - value));
+            }
+        },
+        PERCENT(0, 100f) {
+            @Override
+            public String formatValue(final int value) {
+                return String.format("%d%s", (int) (value * ((max - min) / (LEVEL.max - LEVEL.min))), "%");
 
-        private static final float PERCENT_MAX_VALUE = 100f;
-        private static final float LEVEL_MAX_VALUE = 255f;
+            }
+        };
+
+
+        protected final float max;
+        protected final float min;
+
+        Unit(final float min, final float max) {
+            this.max = max;
+            this.min = min;
+        }
 
         private static String formatValue(final int value, final Unit unit) {
             if (unit == PERCENT) {
-                return String.format("%d%s", (int) ((getMaxValue(unit) / LEVEL_MAX_VALUE * value)), "%");
+                return String.format("%d%s", (int) ((unit.getMax() / LEVEL.getMax() * value)), "%");
             } else {
-                return String.format("%d", (int) (LEVEL_MAX_VALUE - ((getMaxValue(unit) / LEVEL_MAX_VALUE * value))));
+                return String.format("%d", (int) (LEVEL.getMax() - ((unit.getMax() / LEVEL.getMax() * value))));
             }
         }
 
+        public abstract String formatValue(final int value);
 
-        private static float getMaxValue(final Unit unit) {
-            return LEVEL.equals(unit) ? LEVEL_MAX_VALUE : PERCENT_MAX_VALUE;
+        public float getMax() {
+            return max;
+        }
+
+        public float getMin() {
+            return min;
         }
     }
 }

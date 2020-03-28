@@ -33,8 +33,20 @@ public class DarkColorModelCMYK extends DarkColorModel {
     private static final int[] cmyk = new int[4];
     private static final int[] rgb = new int[3];
 
+    private static DarkColorModelCMYK instance;
+
+    public static DarkColorModelCMYK getInstance() {
+        if (instance == null) instance = new DarkColorModelCMYK();
+        return instance;
+    }
+
     public DarkColorModelCMYK() {
         super("cmyk", "Cyan", "Magenta", "Yellow", "Black");
+    }
+
+    @Override
+    public int getMinimum(final int index) {
+        return 0;
     }
 
     @Override
@@ -45,11 +57,6 @@ public class DarkColorModelCMYK extends DarkColorModel {
     @Override
     public String toString() {
         return "CMYK";
-    }
-
-    @Override
-    public int getValueCount() {
-        return 4;
     }
 
     @Override

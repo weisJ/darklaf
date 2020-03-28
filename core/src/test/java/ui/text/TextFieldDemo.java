@@ -38,7 +38,7 @@ public class TextFieldDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        JTextField textField = new JTextField("Demo TextField");
+        JTextField textField = createTextField();
         DemoPanel panel = new DemoPanel(textField);
 
         JPanel controlPanel = panel.addControls();
@@ -66,6 +66,10 @@ public class TextFieldDemo implements ComponentDemo {
             addActionListener(e -> textField.putClientProperty("JTextComponent.hasError", isSelected()));
         }});
         return panel;
+    }
+
+    protected JTextField createTextField() {
+        return new JTextField("Demo TextField");
     }
 
     @Override

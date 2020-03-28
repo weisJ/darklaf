@@ -167,7 +167,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     @Override
-    protected Dimension getThumbSize() {
+    public Dimension getThumbSize() {
         if (isPlainThumb()) {
             return new Dimension(plainThumbRadius + 6, plainThumbRadius + 6);
         }

@@ -29,17 +29,17 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-final class ColorPreviewComponent extends JComponent {
+public class ColorPreviewComponent extends JComponent {
     protected final Color borderColor;
-    private Color myColor;
+    private Color color;
 
-    ColorPreviewComponent() {
+    public ColorPreviewComponent() {
         setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         borderColor = UIManager.getColor("ColorChooser.previewBorderColor");
     }
 
     public void setColor(final Color c) {
-        myColor = c;
+        color = c;
         repaint();
     }
 
@@ -54,7 +54,7 @@ final class ColorPreviewComponent extends JComponent {
         g.setColor(Color.WHITE);
         g.fillRect(i.left, i.top, width, height);
 
-        g.setColor(myColor);
+        g.setColor(color);
         g.fillRect(i.left + 1, i.top + 1, width - 2, height - 2);
 
         g.setColor(borderColor);

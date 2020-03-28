@@ -47,6 +47,7 @@ public class DarkTooltipBorder implements Border {
     private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK, shadowSize, opacity, cornerSize,
                                                                        false, true, true, true);
     private final BubbleBorder bubbleBorder;
+    private boolean skipShadow;
 
     public DarkTooltipBorder() {
         bubbleBorder = new BubbleBorder(UIManager.getColor("ToolTip.borderColor"));
@@ -103,7 +104,7 @@ public class DarkTooltipBorder implements Border {
         Area bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,
                                                     width - ins.left - ins.right,
                                                     height - ins.top - ins.bottom);
-        if (UIManager.getBoolean("ToolTip.paintShadow")) {
+        if (!skipShadow && UIManager.getBoolean("ToolTip.paintShadow")) {
             paintShadow(c, g, x, y, width, height, bubbleArea);
         }
         bubbleBorder.paintBorder(g, bubbleArea);
@@ -184,5 +185,9 @@ public class DarkTooltipBorder implements Border {
     public int getShadowSize(final Component c) {
         if (isPlain(c)) return 0;
         return shadowBorder.getShadowSize();
+    }
+
+    public void setSkipShadow(final boolean skip) {
+        this.skipShadow = skip;
     }
 }

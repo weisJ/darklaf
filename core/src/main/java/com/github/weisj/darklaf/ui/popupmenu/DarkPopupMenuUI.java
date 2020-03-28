@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
+import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
@@ -84,6 +85,12 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     public static MouseGrabber getMouseGrabber() {
         return mouseGrabber;
+    }
+
+    @Override
+    public void installDefaults() {
+        super.installDefaults();
+        popupMenu.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
     }
 
     @Override

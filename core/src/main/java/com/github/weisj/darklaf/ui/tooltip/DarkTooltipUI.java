@@ -24,7 +24,7 @@
 package com.github.weisj.darklaf.ui.tooltip;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.*;
 
 import javax.swing.*;
@@ -115,6 +115,9 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     @Override
     protected void installDefaults(final JComponent c) {
         super.installDefaults(c);
+        toolTip.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, true);
+        toolTip.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
+        toolTip.putClientProperty(DarkPopupFactory.KEY_FORCE_HEAVYWEIGHT, true);
         fadeAnimator = new FadeInAnimator();
         c.setOpaque(false);
         DarkTooltipBorder border = new DarkTooltipBorder();
@@ -202,14 +205,14 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             ((JComponent) toolTip.getParent()).setOpaque(false);
         }
         if (lastRootPane != null) {
-            lastRootPane.putClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP, false);
+            lastRootPane.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, false);
         }
         if (w != null && !isDecorated(w) && (w.getClass().getEnclosingClass().equals(Popup.class))) {
             w.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
             if (w instanceof RootPaneContainer) {
                 lastRootPane = ((RootPaneContainer) w).getRootPane();
                 if (lastRootPane != null) {
-                    lastRootPane.putClientProperty(DarkRootPaneUI.KEY_IS_TOOLTIP, true);
+                    lastRootPane.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, true);
                 }
             }
         }
@@ -351,7 +354,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
 
 
         public FadeInAnimator() {
-            super("Tooltip fadein", FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * 20, false);
+            super("Tooltip fadein", FADEIN_FRAMES_COUNT,
+                  FADEIN_FRAMES_COUNT * 15, false);
         }
 
         @Override
@@ -359,13 +363,23 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             alpha = ((float) frame * MAX_ALPHA) / totalFrames;
             Window window = SwingUtilities.getWindowAncestor(toolTip);
             if (window != null) window.setOpacity(alpha);
+            Border border = toolTip.getBorder();
+            if (border instanceof DarkTooltipBorder) {
+                ((DarkTooltipBorder) border).setSkipShadow(false);
+            }
         }
 
         @Override
         protected void paintCycleEnd() {
             alpha = MAX_ALPHA;
             Window window = SwingUtilities.getWindowAncestor(toolTip);
-            if (window != null) window.setOpacity(alpha);
+            if (window != null) {
+                window.setOpacity(alpha);
+                Border border = toolTip.getBorder();
+                if (window.getFocusableWindowState() && border instanceof DarkTooltipBorder) {
+                    ((DarkTooltipBorder) border).setSkipShadow(true);
+                }
+            }
         }
     }
 }
