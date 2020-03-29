@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.components;
 
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPipette;
+import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -35,7 +36,6 @@ import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
 public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener {
     protected final JComponent parent;
@@ -145,6 +145,8 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
             pickerWindow = createPickerWindow(owner);
             pickerWindow.setName("DarkLafPickerDialog");
             JRootPane rootPane = pickerWindow.getRootPane();
+            rootPane.setOpaque(false);
+            rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS, true);
             rootPane.putClientProperty("Window.shadow", Boolean.FALSE);
         }
         return pickerWindow;
@@ -164,7 +166,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
     }
 
     protected JWindow createPickerWindow(final Window parent) {
-        return new PickerWindow(parent);
+        return new PickerWindow();
     }
 
 
@@ -239,13 +241,9 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
 
     protected static class PickerWindow extends JWindow {
 
-        protected PickerWindow(final Window parent) {
-            super(parent);
+        protected PickerWindow() {
             setBackground(DarkUIUtil.TRANSPARENT_COLOR);
-            BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-            Cursor blankCursor = Toolkit.getDefaultToolkit()
-                                        .createCustomCursor(cursorImg, new Point(), "BlankCursor");
-            setCursor(blankCursor);
+            setAlwaysOnTop(true);
         }
 
         @Override

@@ -48,8 +48,11 @@ public class DarkTooltipBorder implements Border {
                                                                        false, true, true, true);
     private final BubbleBorder bubbleBorder;
     private boolean skipShadow;
+    private Insets margin;
 
     public DarkTooltipBorder() {
+        margin = UIManager.getInsets("ToolTip.borderInsets");
+        if (margin == null) margin = new Insets(0, 0, 0, 0);
         bubbleBorder = new BubbleBorder(UIManager.getColor("ToolTip.borderColor"));
         bubbleBorder.setThickness(1);
         bubbleBorder.setPointerSize(8);
@@ -142,10 +145,10 @@ public class DarkTooltipBorder implements Border {
         ins.left = Math.max(bi.left, si.left);
         ins.right = Math.max(bi.right, si.right);
         ins.top = Math.max(bi.top, si.top);
-        ins.left += 5 + uIns.left;
-        ins.top += 5 + uIns.top;
-        ins.right += 5 + uIns.right;
-        ins.bottom += 5 + uIns.bottom;
+        ins.left += uIns.left;
+        ins.top += uIns.top;
+        ins.right += uIns.right;
+        ins.bottom += uIns.bottom;
         return ins;
     }
 
@@ -156,7 +159,7 @@ public class DarkTooltipBorder implements Border {
                 return (Insets) obj;
             }
         }
-        return new Insets(0, 0, 0, 0);
+        return margin;
     }
 
     @Override

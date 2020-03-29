@@ -47,8 +47,8 @@ import java.beans.PropertyChangeEvent;
 public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener {
 
     protected static final String KEY_PREFIX = "JRootPane.";
-    public static final String KEY_IS_MEDIUM_WEIGHT_POPUP_ROOT = "mediumWeightPopupRoot";
-    public static final String KEY_IS_POPUP = KEY_PREFIX + "isPopup";
+    public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
+    public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
     private Window window;
     private CustomTitlePane titlePane;
     private LayoutManager layoutManager;
@@ -210,14 +210,14 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         }
     }
 
-    protected boolean isPopup(final JRootPane rootPane) {
-        return Boolean.TRUE.equals(rootPane.getClientProperty(KEY_IS_POPUP));
+    protected boolean noDecorations(final JRootPane rootPane) {
+        return Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS));
     }
 
     protected void updateClientDecoration() {
-        if (!Boolean.TRUE.equals(rootPane.getClientProperty(KEY_IS_MEDIUM_WEIGHT_POPUP_ROOT))) {
+        if (!Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS_UPDATE))) {
             uninstallClientDecorations(rootPane);
-            if (Decorations.isCustomDecorationSupported() && !isPopup(rootPane)) {
+            if (Decorations.isCustomDecorationSupported() && !noDecorations(rootPane)) {
                 installClientDecorations(rootPane);
             }
         }

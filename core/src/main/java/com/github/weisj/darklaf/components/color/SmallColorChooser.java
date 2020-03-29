@@ -27,12 +27,15 @@ import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.color.DarkColorModelRGB;
+import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.decorators.UpdateDocumentListener;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPreviewComponent;
 import com.github.weisj.darklaf.ui.colorchooser.ColorTriangle;
 import com.github.weisj.darklaf.ui.colorchooser.ColorValueFormatter;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
+import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -146,6 +149,7 @@ public class SmallColorChooser extends JPanel {
 
     protected JComponent createCenterComponent() {
         colorModelTabbedPane = new JTabbedPane();
+        colorModelTabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS, true);
         colorModelTabbedPane.setOpaque(false);
         colorModelTabbedPane.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
         addColorModels(colorModelTabbedPane, COLOR_MODELS);
@@ -155,7 +159,7 @@ public class SmallColorChooser extends JPanel {
 
     protected JComponent createBottomComponent() {
         Box box = Box.createHorizontalBox();
-        box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        box.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         previewComponent = createPreviewComponent();
 
         JPanel hexFieldHolder = new JPanel(new GridBagLayout());
@@ -169,8 +173,35 @@ public class SmallColorChooser extends JPanel {
         box.add(Box.createGlue());
         box.add(hexFieldHolder);
         box.add(Box.createGlue());
-        box.add(Box.createHorizontalStrut(16));
+        box.add(createPipetteButton());
         return box;
+    }
+
+    private JButton createPipetteButton() {
+        Icon pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
+        Icon pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
+        JButton pipetteButton = new JButton();
+        DefaultColorPipette pipette = new DefaultColorPipette(this,
+                                                              (c, o) -> setColor(pipetteButton,
+                                                                                 DarkColorModelRGB.getInstance(),
+                                                                                 c.getRed(), c.getGreen(),
+                                                                                 c.getBlue()));
+        pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
+        pipetteButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
+        pipetteButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
+        pipetteButton.setRolloverEnabled(true);
+        pipetteButton.setFocusable(false);
+        pipetteButton.setIcon(pipetteIcon);
+        pipetteButton.setRolloverIcon(pipetteHoverIcon);
+        pipetteButton.setDisabledIcon(pipetteHoverIcon);
+        pipetteButton.setPressedIcon(pipetteHoverIcon);
+        pipetteButton.addActionListener(e -> {
+            pipetteButton.setEnabled(false);
+            pipette.setInitialColor(getColor());
+            pipette.show();
+        });
+        pipette.setCloseAction(() -> pipetteButton.setEnabled(true));
+        return pipetteButton;
     }
 
     protected JComponent createHexField() {

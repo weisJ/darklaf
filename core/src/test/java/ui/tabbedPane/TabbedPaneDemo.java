@@ -23,6 +23,7 @@
  */
 package ui.tabbedPane;
 
+import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.util.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -46,7 +47,7 @@ public class TabbedPaneDemo implements ComponentDemo {
     public JComponent createComponent() {
         JTabbedPane tabbedPane = createTabbedPane();
         tabbedPane.setName("DemoTabbedPane");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 4; i++) {
             JTextPane editor = new JTextPane();
             editor.setText(StringUtil.repeat("Demo Content" + "\n", i + 1));
             tabbedPane.addTab("Tab (" + i + ")", editor);
@@ -80,7 +81,6 @@ public class TabbedPaneDemo implements ComponentDemo {
             addItem("LEFT");
             addItem("RIGHT");
             setSelectedItem("TOP");
-            //noinspection MagicConstant
             addItemListener(e -> tabbedPane.setTabPlacement(mapping.get(e.getItem().toString())));
         }}, "sgx");
 
@@ -89,6 +89,10 @@ public class TabbedPaneDemo implements ComponentDemo {
             setSelected(tabbedPane.getComponentOrientation().isLeftToRight());
             addActionListener(e -> tabbedPane.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                                                                                    : ComponentOrientation.RIGHT_TO_LEFT));
+        }});
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_CENTER_TABS) {{
+            setSelected(false);
+            addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS, isSelected()));
         }});
         controlPanel.add(new JCheckBox("JTabbedPane.dndEnabled") {{
             setSelected(false);

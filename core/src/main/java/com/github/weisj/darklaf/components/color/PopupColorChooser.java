@@ -44,12 +44,14 @@ public class PopupColorChooser extends JToolTip {
 
     protected SmallColorChooser getChooser(final Color initial, final Consumer<Color> callback) {
         if (chooser == null) chooser = new SmallColorChooser(initial, callback);
+        SmallColorChooser smallColorChooser = chooser;
         if (chooser.getParent() != null) {
             // Already in use. Create new one.
-            return new SmallColorChooser(initial, callback);
+            smallColorChooser = new SmallColorChooser(initial, callback);
         }
-        chooser.reset(initial, callback);
-        return chooser;
+        smallColorChooser.reset(initial, callback);
+        smallColorChooser.setOpaque(false);
+        return smallColorChooser;
     }
 
     protected ToolTipContext getContext() {
@@ -62,8 +64,13 @@ public class PopupColorChooser extends JToolTip {
         setComponent(parent);
         setLayout(new BorderLayout());
         add(getChooser(initial, callback), BorderLayout.CENTER);
+    }
+
+    @Override
+    public void updateUI() {
         putClientProperty(DarkPopupFactory.KEY_FOCUSABLE_POPUP, true);
         putClientProperty(DarkTooltipUI.KEY_CONTEXT, getContext());
+        super.updateUI();
     }
 
     public static void showColorChooser(final JComponent parent, final Color initial,
@@ -107,6 +114,7 @@ public class PopupColorChooser extends JToolTip {
             .setAlignment(Alignment.CENTER)
             .setCenterAlignment(Alignment.SOUTH)
             .setUseBestFit(true)
+            .setToolTipInsets(new Insets(2, 2, 2, 1))
             .setFallBackPositionProvider(c -> {
                 Window window = DarkUIUtil.getWindow(c.getTarget());
                 Dimension size = c.getToolTip().getPreferredSize();

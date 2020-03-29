@@ -26,6 +26,7 @@ package ui;
 import com.github.weisj.darklaf.components.color.PopupColorChooser;
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.icons.SolidColorIcon;
 
 import javax.swing.*;
 import java.awt.*;

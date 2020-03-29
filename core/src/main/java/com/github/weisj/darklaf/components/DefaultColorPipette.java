@@ -113,7 +113,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
 
     @Override
     protected JWindow createPickerWindow(final Window parent) {
-        return new DefaultPickerWindow(parent, this);
+        return new DefaultPickerWindow(this);
     }
 
     @Override
@@ -186,8 +186,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
 
         private final DefaultColorPipette pipette;
 
-        protected DefaultPickerWindow(final Window parent, final DefaultColorPipette pipette) {
-            super(parent);
+        protected DefaultPickerWindow(final DefaultColorPipette pipette) {
             this.pipette = pipette;
         }
 

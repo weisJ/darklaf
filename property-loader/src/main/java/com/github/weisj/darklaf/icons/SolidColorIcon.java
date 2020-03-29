@@ -21,17 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ui;
+package com.github.weisj.darklaf.icons;
 
 import javax.swing.*;
 import java.awt.*;
 
-final class SolidColorIcon implements Icon {
+public class SolidColorIcon implements Icon {
     private final int width;
     private final int height;
     private Color color;
 
-    SolidColorIcon(final Color color) {
+    public SolidColorIcon(final Color color) {
         this(color, 16, 16);
     }
 

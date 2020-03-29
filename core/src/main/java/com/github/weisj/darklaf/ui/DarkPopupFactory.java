@@ -56,7 +56,7 @@ public class DarkPopupFactory extends PopupFactory {
         if (isMediumWeight) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
-            if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_MEDIUM_WEIGHT_POPUP_ROOT, true);
+            if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
         }
         // Sometimes the background is java.awt.SystemColor[i=7]
         // It results in a flash of white background, that is repainted with
@@ -67,7 +67,7 @@ public class DarkPopupFactory extends PopupFactory {
             boolean install = true;
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
-                rootPane.putClientProperty(DarkRootPaneUI.KEY_IS_POPUP, true);
+                rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS, true);
                 install = !Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATION));
             }
             if (install) {
