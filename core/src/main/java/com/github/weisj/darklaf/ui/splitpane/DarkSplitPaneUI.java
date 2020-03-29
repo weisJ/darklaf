@@ -68,6 +68,10 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
     @Override
     protected void installDefaults() {
+        Style oldStyle = Style.getNullableStyle(splitPane.getClientProperty(KEY_STYLE));
+        if (oldStyle != null) {
+            style = oldStyle;
+        }
         super.installDefaults();
         dividerLine = UIManager.getColor("SplitPane.dividerLineColor");
     }
@@ -166,11 +170,22 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
         }
 
         static Style get(final String style) {
+            Style s = getNullableStyle(style);
+            if (s == null) return GRIP;
+            return s;
+        }
+
+        static Style getNullableStyle(final Object obj) {
+            if (obj == null) return null;
+            if (obj instanceof Style) return (Style) obj;
             try {
-                return valueOf(style.toLowerCase());
-            } catch (IllegalArgumentException e) {
-                return GRIP;
+                return valueOf(obj.toString());
+            } catch (IllegalArgumentException ignored) {
             }
+            for (Style s : values()) {
+                if (s.name.equalsIgnoreCase(obj.toString())) return s;
+            }
+            return null;
         }
     }
 

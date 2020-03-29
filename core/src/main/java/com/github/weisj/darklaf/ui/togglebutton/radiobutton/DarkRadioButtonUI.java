@@ -24,7 +24,10 @@
 package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.ui.togglebutton.*;
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -48,8 +51,7 @@ import java.beans.PropertyChangeListener;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyChangeListener,
-                                                                     ToggleButtonConstants, StateIconUI {
+public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyChangeListener, ToggleButtonConstants {
 
     protected static final Rectangle viewRect = new Rectangle();
     protected static final Rectangle iconRect = new Rectangle();
@@ -59,12 +61,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     protected JToggleButton radioButton;
     protected int iconBaselineOffset;
 
-    private Icon radioIcon;
-    private Icon radioDisabledIcon;
-    private Icon radioFocusedIcon;
-    private Icon radioSelectedIcon;
-    private Icon radioSelectedDisabledIcon;
-    private Icon radioSelectedFocusedIcon;
+    private Icon stateIcon;
     protected BasicButtonListener buttonListener;
     protected KeyListener keyListener;
 
@@ -90,12 +87,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
 
     protected void installIcons() {
-        radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
-        radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
-        radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
-        radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
-        radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
-        radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
+        stateIcon = UIManager.getIcon("RadioButton.icon");
     }
 
     @Override
@@ -190,37 +182,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     }
 
     protected Icon getStateIcon(final AbstractButton b) {
-        return StateIconUI.getStateIcon(this, b);
-    }
-
-    @Override
-    public Icon getSelectedFocusedIcon() {
-        return radioSelectedFocusedIcon;
-    }
-
-    @Override
-    public Icon getSelectedIcon() {
-        return radioSelectedIcon;
-    }
-
-    @Override
-    public Icon getSelectedDisabledIcon() {
-        return radioSelectedDisabledIcon;
-    }
-
-    @Override
-    public Icon getFocusedIcon() {
-        return radioFocusedIcon;
-    }
-
-    @Override
-    public Icon getIcon() {
-        return radioIcon;
-    }
-
-    @Override
-    public Icon getDisabledIcon() {
-        return radioDisabledIcon;
+        return stateIcon;
     }
 
     public static Icon getIconBullet(final JComponent c, final Graphics2D g, final AbstractButton b) {

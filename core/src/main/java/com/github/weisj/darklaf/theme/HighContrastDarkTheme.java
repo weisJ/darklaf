@@ -26,26 +26,36 @@ package com.github.weisj.darklaf.theme;
 import javax.swing.*;
 import java.util.Properties;
 
-public class SolarizedLightTheme extends Theme {
+public class HighContrastDarkTheme extends Theme {
 
     @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
+    protected IconTheme getPresetIconTheme() {
+        return IconTheme.NONE;
     }
 
     @Override
     public String getPrefix() {
-        return "solarized_light";
+        return "high_contrast_dark";
+    }
+
+    @Override
+    protected String getResourcePath() {
+        return "high_contrast_dark/";
     }
 
     @Override
     public String getName() {
-        return "Solarized Light";
+        return "High Contrast Dark";
     }
 
     @Override
     protected Class<? extends Theme> getLoaderClass() {
-        return SolarizedLightTheme.class;
+        return HighContrastDarkTheme.class;
+    }
+
+    @Override
+    public boolean isDark() {
+        return true;
     }
 
     @Override
@@ -55,12 +65,8 @@ public class SolarizedLightTheme extends Theme {
     }
 
     @Override
-    public boolean isDark() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.loadPlatformProperties(properties, currentDefaults);
+        loadCustomProperties("platform", properties, currentDefaults);
     }
 }

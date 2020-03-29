@@ -55,7 +55,8 @@ public class DarkTristateCheckBoxMenuItemUI extends DarkCheckBoxMenuItemUI {
             TristateState state = ((TristateCheckBox) b).getState();
             if (state == TristateState.INDETERMINATE) {
                 if (b.isEnabled()) {
-                    return b.hasFocus() ? checkBoxIndeterminateFocusedIcon : checkBoxIndeterminateIcon;
+                    return b.hasFocus() ? checkBoxIndeterminateFocusedIcon
+                                        : checkBoxIndeterminateIcon;
                 } else {
                     return checkBoxIndeterminateDisabledIcon;
                 }

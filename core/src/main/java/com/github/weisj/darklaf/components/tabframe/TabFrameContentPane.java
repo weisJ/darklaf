@@ -372,7 +372,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      *
      * @return array of status of panels.
      */
-
+    @Override
     public boolean[] getStatus() {
         return enabled;
     }
@@ -417,7 +417,6 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @param a the position.
      * @return the popup component at position.
      */
-
     public Component getPopupComponent(final Alignment a) {
         return getContainer(a).getPopup();
     }

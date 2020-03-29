@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.components.tabframe;
 import com.github.weisj.darklaf.util.Alignment;
 
 import javax.swing.*;
+import javax.swing.plaf.PanelUI;
 import java.awt.*;
 
 /**
@@ -73,6 +74,18 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     }
 
     @Override
+    public void setUI(final PanelUI ui) {
+        if (!(ui instanceof TabFramePopupUI)) {
+            throw new IllegalArgumentException("Ui needs to be of type " + TabFramePopup.class);
+        }
+        super.setUI(ui);
+    }
+
+    public TabFramePopupUI getPopupUI() {
+        return (TabFramePopupUI) super.getUI();
+    }
+
+    @Override
     public Dimension getSize(final Dimension rv) {
         if (!isEnabled()) {
             return new Dimension(0, 0);
@@ -117,6 +130,13 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     @Override
     public Component getComponent() {
         return this;
+    }
+
+    @Override
+    public void updateContentUI() {
+        if (getParent() == null) {
+            SwingUtilities.updateComponentTreeUI(this);
+        }
     }
 
     @Override

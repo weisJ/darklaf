@@ -481,7 +481,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         Path2D thumb = getThumbShape();
         if (paintFocus()) {
             GraphicsContext config = new GraphicsContext(g);
-            g.setComposite(DarkUIUtil.GLOW_ALPHA);
+            g.setComposite(DarkUIUtil.getGlowComposite());
             g.setStroke(new BasicStroke(4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 8));
             DarkUIUtil.Outline.focus.setGraphicsColor(g, true);
             g.draw(thumb);

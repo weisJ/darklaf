@@ -92,10 +92,10 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         tabFrame.setLayout(layout);
         lineColor = UIManager.getColor("TabFrame.line");
         tabHeight = UIManager.getInt("TabFrame.tabHeight");
-        topBorder = new MutableLineBorder.UIResource(0, 0, 1, 0, lineColor);
-        bottomBorder = new MutableLineBorder.UIResource(1, 0, 0, 0, lineColor);
-        rightBorder = new MutableLineBorder.UIResource(0, 0, 1, 0, lineColor);
-        leftBorder = new MutableLineBorder.UIResource(0, 0, 1, 0, lineColor);
+        topBorder = new MutableLineBorder(0, 0, 1, 0, lineColor);
+        bottomBorder = new MutableLineBorder(1, 0, 0, 0, lineColor);
+        rightBorder = new MutableLineBorder(0, 0, 1, 0, lineColor);
+        leftBorder = new MutableLineBorder(0, 0, 1, 0, lineColor);
 
         dropComponentTop = new JPanelUIResource();
         dropComponentBottom = new JPanelUIResource();

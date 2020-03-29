@@ -72,7 +72,7 @@ public class CreateUITable {
     }
 
     public static void createThemeDefaultsPage(final Theme theme) throws IOException {
-        workingFolder = FOLDER + theme.getName() + "/";
+        workingFolder = FOLDER + theme.getPrefix() + "/";
         String os = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
         String htmlFile = workingFolder + "defaults_" + os + ".html";
         new File(workingFolder).mkdirs();

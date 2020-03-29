@@ -37,7 +37,8 @@ public class ToolTipUtil {
     private final static ToolTipContext DEFAULT_CONTEXT = new ToolTipContext().setAlignment(Alignment.SOUTH)
                                                                               .setCenterAlignment(Alignment.SOUTH)
                                                                               .setAlignInside(false)
-                                                                              .setIgnoreBorder(true);
+                                                                              .setIgnoreBorder(true)
+                                                                              .setUseBestFit(true);
 
     public static void applyContext(final JToolTip toolTip) {
         JComponent target = toolTip.getComponent();

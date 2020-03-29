@@ -148,8 +148,30 @@ public class OverlayScrollPane extends JLayeredPane {
         private JScrollBar verticalScrollBar;
         private JScrollBar horizontalScrollBar;
 
+
         protected OScrollPane(final JComponent view, final int vsbPolicy, final int hsbPolicy) {
             super(view, vsbPolicy, hsbPolicy);
+        }
+
+        /*
+         * Ensure the correct background and layout.
+         */
+        public void setUI(final ScrollPaneUI ui) {
+            if (verticalScrollBar == null) {
+                verticalScrollBar = new PopupScrollBar(JScrollBar.VERTICAL);
+                verticalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
+            }
+            if (horizontalScrollBar == null) {
+                horizontalScrollBar = new PopupScrollBar(JScrollBar.HORIZONTAL);
+                horizontalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
+            }
+            super.setUI(ui);
+            SwingUtilities.invokeLater(() -> {
+                Component component = getViewport().getView();
+                if (component != null) {
+                    getViewport().setBackground(component.getBackground());
+                }
+            });
             super.setLayout(new ScrollLayoutManagerDelegate((ScrollPaneLayout) getLayout()) {
                 @Override
                 public void removeLayoutComponent(final Component comp) {
@@ -205,27 +227,6 @@ public class OverlayScrollPane extends JLayeredPane {
                         }
                         viewport.setBounds(bounds);
                     }
-                }
-            });
-        }
-
-        /*
-         * Ensure the correct background.
-         */
-        public void setUI(final ScrollPaneUI ui) {
-            if (verticalScrollBar == null) {
-                verticalScrollBar = new PopupScrollBar(JScrollBar.VERTICAL);
-                verticalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
-            }
-            if (horizontalScrollBar == null) {
-                horizontalScrollBar = new PopupScrollBar(JScrollBar.HORIZONTAL);
-                horizontalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
-            }
-            super.setUI(ui);
-            SwingUtilities.invokeLater(() -> {
-                Component component = getViewport().getView();
-                if (component != null) {
-                    getViewport().setBackground(component.getBackground());
                 }
             });
         }

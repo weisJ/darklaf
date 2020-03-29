@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import com.github.weisj.darklaf.util.PropertyKey;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonListener;
 import java.awt.event.FocusEvent;
@@ -73,8 +75,12 @@ public class DarkButtonListener extends BasicButtonListener {
         super.propertyChange(e);
         AbstractButton b = (AbstractButton) e.getSource();
         String key = e.getPropertyName();
-        if (key.startsWith("JButton.")) {
+        if (key.startsWith("JButton.")
+            || PropertyKey.FOCUSABLE.equals(key)
+            || AbstractButton.TEXT_CHANGED_PROPERTY.equals(key)) {
             b.revalidate();
+            b.doLayout();
+            b.repaint();
         }
     }
 }

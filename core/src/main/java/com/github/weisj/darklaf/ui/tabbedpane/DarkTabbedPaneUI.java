@@ -542,7 +542,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         g.setColor(getDropColor());
         GraphicsContext context = new GraphicsContext(g);
         if (!scrollableTabLayoutEnabled()) {
-            ((Graphics2D) g).setComposite(DarkUIUtil.DROP_ALPHA);
+            ((Graphics2D) g).setComposite(DarkUIUtil.getDropComposite());
         }
         switch (tabPane.getTabPlacement()) {
             case TOP:
@@ -659,6 +659,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Icon getMoreTabsIcon() {
+        if (moreTabsIcon == null) moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
         return moreTabsIcon;
     }
 
@@ -805,6 +806,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     public Icon getNewTabIcon() {
+        if (newTabIcon == null) newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
         return newTabIcon;
     }
 

@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
@@ -106,6 +107,7 @@ public class DarkLaf extends BasicLookAndFeel {
         try {
             initInputMapDefaults(defaults);
             loadThemeDefaults(defaults);
+            setupUtils(defaults);
             initIdeaDefaults(defaults);
 
             patchComboBox(metalDefaults, defaults);
@@ -128,6 +130,12 @@ public class DarkLaf extends BasicLookAndFeel {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
         return defaults;
+    }
+
+    private void setupUtils(final UIDefaults defaults) {
+        DarkUIUtil.setDropOpacity(defaults.getInt("dropOpacity") / 100f);
+        DarkUIUtil.setGlowOpacity(defaults.getInt("glowOpacity") / 100f);
+        DarkUIUtil.setShadowOpacity(defaults.getInt("shadowOpacity") / 100f);
     }
 
     private void patchMacOSFonts(final UIDefaults defaults) {
@@ -226,8 +234,8 @@ public class DarkLaf extends BasicLookAndFeel {
         loadFontProperties(uiProps, defaults);
         currentTheme.loadUIProperties(uiProps, defaults);
         currentTheme.loadIconProperties(uiProps, defaults);
-        currentTheme.loadPlatformProperties(uiProps, defaults);
         Decorations.loadDecorationProperties(uiProps, defaults);
+        currentTheme.loadPlatformProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
         loadSystemOverwrites(uiProps, defaults);
         defaults.putAll(uiProps);

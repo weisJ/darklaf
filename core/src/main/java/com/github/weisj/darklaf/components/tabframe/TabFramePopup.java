@@ -62,6 +62,11 @@ public interface TabFramePopup {
     Component getComponent();
 
     /**
+     * Updates the ui of all components.
+     */
+    void updateContentUI();
+
+    /**
      * Close the popup.
      */
     default void close() {

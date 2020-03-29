@@ -72,6 +72,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
     public void installUI(final JComponent c) {
         numberingPane = (NumberingPane) c;
         super.installUI(c);
+        updateViewport(c);
         installDefaults(c);
         installListeners(c);
     }
@@ -84,6 +85,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         backgroundHighlight = UIManager.getColor("NumberingPane.currentLineBackground");
         LookAndFeel.installProperty(c, PropertyKey.OPAQUE, true);
         LookAndFeel.installBorder(c, "NumberingPane.border");
+        maxIconWidth = calculateMaxIconWidth();
     }
 
     protected void installListeners(final JComponent c) {
@@ -234,6 +236,15 @@ public class DarkNumberingPaneUI extends ComponentUI {
         return max;
     }
 
+    protected void updateViewport(final Component comp) {
+        JScrollPane parent = DarkUIUtil.getParentOfType(JScrollPane.class, comp);
+        if (parent != null) {
+            viewport = parent.getViewport();
+        } else {
+            viewport = null;
+        }
+    }
+
     protected class Handler extends MouseAdapter implements PropertyChangeListener, ChangeListener {
 
         protected int selectionLineStart;
@@ -373,12 +384,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 }
             } else if (PropertyKey.ANCESTOR.equals(key)) {
                 if (evt.getSource() == numberingPane) {
-                    JScrollPane parent = DarkUIUtil.getParentOfType(JScrollPane.class, (Component) evt.getNewValue());
-                    if (parent != null) {
-                        viewport = parent.getViewport();
-                    } else {
-                        viewport = null;
-                    }
+                    updateViewport((Component) evt.getNewValue());
                 }
             } else if (NumberingPane.KEY_MIN_ICON_WIDTH.equals(key)) {
                 maxIconWidth = calculateMaxIconWidth();

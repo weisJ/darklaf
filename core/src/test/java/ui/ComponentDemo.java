@@ -60,7 +60,8 @@ public interface ComponentDemo {
         for (Theme theme : new Theme[]{new DarculaTheme(),
                                        new IntelliJTheme(),
                                        new SolarizedLightTheme(),
-                                       new SolarizedDarkTheme()}) {
+                                       new SolarizedDarkTheme(),
+                                       new HighContrastDarkTheme()}) {
             createThemeItem(currentThemeName, menu, bg, theme);
         }
         return menu;

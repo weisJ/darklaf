@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.components.tabframe;
 
 import javax.swing.*;
+import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,7 +89,7 @@ public class TabbedPopup extends PanelPopup {
      * @return a tabbed pane.
      */
     protected JTabbedPane createTabbedPane() {
-        return new JTabbedPane();
+        return getPopupUI().createTabbedPane();
     }
 
     /**
@@ -106,6 +107,18 @@ public class TabbedPopup extends PanelPopup {
     @Override
     public String getUIClassID() {
         return "TabFrameTabbedPopupUI";
+    }
+
+    @Override
+    public void setUI(final PanelUI ui) {
+        if (!(ui instanceof TabFrameTabbedPopupUI)) {
+            throw new IllegalArgumentException("Ui needs to be of type " + TabFrameTabbedPopupUI.class);
+        }
+        super.setUI(ui);
+    }
+
+    public TabFrameTabbedPopupUI getPopupUI() {
+        return (TabFrameTabbedPopupUI) super.getPopupUI();
     }
 
     /**

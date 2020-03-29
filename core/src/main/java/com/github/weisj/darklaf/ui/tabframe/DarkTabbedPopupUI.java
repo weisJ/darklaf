@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.tabframe;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.components.tabframe.TabFrameTabbedPopupUI;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
@@ -34,10 +35,11 @@ import com.github.weisj.darklaf.ui.tabbedpane.NewTabButton;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
+import java.util.function.Supplier;
 
-public class DarkTabbedPopupUI extends DarkPanelPopupUI {
-
+public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbedPopupUI {
 
     protected Color headerHoverBackground;
     protected Color headerSelectedBackground;
@@ -79,7 +81,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     protected void installComponents() {
         closeButton = createCloseButton();
         label = createLabel();
-        tabbedPane = createTabbedPane();
+        tabbedPane = getTabbedPane();
         setupTabbedPane();
         border = createBorder();
         holder = new JPanel(new BorderLayout());
@@ -88,11 +90,20 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
         popupComponent.add(holder);
     }
 
-    protected JTabbedPane createTabbedPane() {
+    protected JTabbedPane getTabbedPane() {
         JTabbedPane tabbedPane = popupComponent.getTabbedPane();
-        tabbedPane.setUI(new DarkTabFrameTabbedPaneUI());
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        if (tabbedPane instanceof UIDelegateTabbedPane) {
+            ((UIDelegateTabbedPane) tabbedPane).setUiSupplier(DarkTabFrameTabbedPaneUI::new);
+            tabbedPane.updateUI();
+        } else {
+            tabbedPane.setUI(new DarkTabFrameTabbedPaneUI());
+        }
         return tabbedPane;
+    }
+
+    public JTabbedPane createTabbedPane() {
+        return new UIDelegateTabbedPane(null);
     }
 
     protected void setupTabbedPane() {
@@ -134,6 +145,28 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI {
     @Override
     protected void applyBorderInsets(final Insets insets) {
         border.setInsets(insets.top, insets.left, insets.bottom, insets.right);
+    }
+
+    protected static class UIDelegateTabbedPane extends JTabbedPane {
+
+        private Supplier<TabbedPaneUI> uiSupplier;
+
+        protected UIDelegateTabbedPane(final Supplier<TabbedPaneUI> uiSupplier) {
+            setUiSupplier(uiSupplier);
+        }
+
+        public void setUiSupplier(final Supplier<TabbedPaneUI> uiSupplier) {
+            this.uiSupplier = uiSupplier;
+        }
+
+        @Override
+        public void updateUI() {
+            if (uiSupplier != null) {
+                setUI(uiSupplier.get());
+            } else {
+                super.updateUI();
+            }
+        }
     }
 
     protected static class TabFrameMoreTabsButton extends MoreTabsButton {

@@ -21,46 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.components.tabframe;
 
-import javax.swing.*;
-import java.util.Properties;
-
-public class SolarizedLightTheme extends Theme {
-
-    @Override
-    protected String getResourcePath() {
-        return "solarized_light/";
-    }
-
-    @Override
-    public String getPrefix() {
-        return "solarized_light";
-    }
-
-    @Override
-    public String getName() {
-        return "Solarized Light";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return SolarizedLightTheme.class;
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public boolean isDark() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
-    }
+public interface TabFramePopupUI {
 }

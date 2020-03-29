@@ -59,7 +59,7 @@ public abstract class Theme {
     };
 
     public UIManager.LookAndFeelInfo createLookAndFeelInfo() {
-        return new UIManager.LookAndFeelInfo(getName(), DarkLaf.class.getCanonicalName());
+        return new UIManager.LookAndFeelInfo(getPrefix(), DarkLaf.class.getCanonicalName());
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class Theme {
      * @param currentDefaults the current ui defaults.
      */
     public void loadDefaults(final Properties properties, final UIDefaults currentDefaults) {
-        String name = getResourcePath() + getName() + "_defaults.properties";
+        String name = getResourcePath() + getPrefix() + "_defaults.properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 
@@ -141,7 +141,7 @@ public abstract class Theme {
                 break;
             case NONE:
             default:
-                props = load(getResourcePath() + getName() + "_icons.properties");
+                props = load(getResourcePath() + getPrefix() + "_icons.properties");
         }
         PropertyLoader.putProperties(props, properties, currentDefaults);
     }
@@ -189,7 +189,7 @@ public abstract class Theme {
 
     /**
      * Load custom properties that are located under {@link #getResourcePath()}, with the name {@link
-     * #getName()}_{propertySuffix}.properties
+     * #getPrefix()}_{propertySuffix}.properties
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
      * #load(String)}.
@@ -200,7 +200,7 @@ public abstract class Theme {
      */
     protected void loadCustomProperties(final String propertySuffix, final Properties properties,
                                         final UIDefaults currentDefaults) {
-        String name = getResourcePath() + getName() + "_" + propertySuffix + ".properties";
+        String name = getResourcePath() + getPrefix() + "_" + propertySuffix + ".properties";
         PropertyLoader.putProperties(load(name), properties, currentDefaults);
     }
 
@@ -233,29 +233,6 @@ public abstract class Theme {
         return properties;
     }
 
-    /**
-     * The path to the resource location relative to the classpath of {@link #getLoaderClass()}.
-     *
-     * @return the relative resource path
-     */
-    protected String getResourcePath() {
-        return "";
-    }
-
-    /**
-     * Get the name of this theme.
-     *
-     * @return the name of the theme.
-     */
-    public abstract String getName();
-
-    /**
-     * The class used to determine the runtime location of resources. It is advised to explicitly return the class
-     * instead of using {@link #getClass()} to protect against extending the theme.
-     *
-     * @return the loader class.
-     */
-    protected abstract Class<? extends Theme> getLoaderClass();
 
     /**
      * Load the css style sheet used for html display in text components with a {@link
@@ -276,7 +253,7 @@ public abstract class Theme {
      */
     public StyleSheet loadStyleSheetWithClass(final Class<?> loaderClass) {
         StyleSheet styleSheet = new StyleSheet();
-        try (InputStream in = loaderClass.getResourceAsStream(getResourcePath() + getName() + "_styleSheet.css");
+        try (InputStream in = loaderClass.getResourceAsStream(getResourcePath() + getPrefix() + "_styleSheet.css");
              InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
              BufferedReader r = new BufferedReader(inReader)) {
             styleSheet.loadRules(r, null);
@@ -285,6 +262,43 @@ public abstract class Theme {
         }
         return styleSheet;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    /**
+     * The path to the resource location relative to the classpath of {@link #getLoaderClass()}.
+     *
+     * @return the relative resource path
+     */
+    protected String getResourcePath() {
+        return "";
+    }
+
+    /**
+     * Get the prefix for resource loading.
+     *
+     * @return the prefix for loading resources.
+     */
+    public abstract String getPrefix();
+
+    /**
+     * Get the name of this theme.
+     *
+     * @return the name of the theme.
+     */
+    public abstract String getName();
+
+
+    /**
+     * The class used to determine the runtime location of resources. It is advised to explicitly return the class
+     * instead of using {@link #getClass()} to protect against extending the theme.
+     *
+     * @return the loader class.
+     */
+    protected abstract Class<? extends Theme> getLoaderClass();
 
     /**
      * Returns whether this theme should use custom decorations if available.
@@ -296,11 +310,20 @@ public abstract class Theme {
     }
 
     /**
-     * Returns whether this theme uses dark icons as the default for [aware] icon.
+     * Returns whether this theme is a dark theme. This is used to determine the default mode for [aware] icons.
      *
-     * @return true if dark icons are used.
+     * @return true if the theme is dark.
      */
-    public abstract boolean useDarkIcons();
+    public abstract boolean isDark();
+
+    /**
+     * Returns whether the theme is a high contrast theme.
+     *
+     * @return true if the theme is high contrast.
+     */
+    public boolean isHighContrast() {
+        return false;
+    }
 
     protected enum IconTheme {
         NONE,

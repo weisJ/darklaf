@@ -85,7 +85,20 @@ public class JTabFrame extends JComponent {
 
     @Override
     public void updateUI() {
+        updatePopupUIs();
         setUI(UIManager.getUI(this));
+    }
+
+    protected void updatePopupUIs() {
+        if (popupLists != null) {
+            for (List<TabFramePopup> list : popupLists) {
+                if (list == null) continue;
+                for (TabFramePopup popup : list) {
+                    if (popup == null) continue;
+                    popup.updateContentUI();
+                }
+            }
+        }
     }
 
     /**

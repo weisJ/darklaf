@@ -69,8 +69,9 @@ public final class IconColorMapper {
             if (child instanceof LinearGradient) {
                 String id = ((LinearGradient) child).getId();
                 String[] fallbacks = getFallbacks((LinearGradient) child);
+                float opacity = getOpacity((LinearGradient) child);
                 Color c = resolveColor(id, fallbacks, FALLBACK_COLOR);
-                Pair<LinearGradient, Runnable> result = createColor(c, id);
+                Pair<LinearGradient, Runnable> result = createColor(c, id, opacity);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
                 themedDefs.loaderAddChild(null, gradient);
@@ -103,7 +104,24 @@ public final class IconColorMapper {
         return attribute.getStringList();
     }
 
-    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name)
+    private static float getOpacity(final LinearGradient child) {
+        StyleAttribute attribute = new StyleAttribute();
+        attribute.setName("opacity");
+        try {
+            child.getStyle(attribute);
+        } catch (SVGException e) {
+            return 1;
+        }
+        // UIManager defaults to 0, if the values isn't an integer (or null).
+        Object obj = UIManager.get(attribute.getStringValue());
+        if (obj instanceof Integer) {
+            return ((Integer) obj) / 100.0f;
+        }
+        // In this case we default to 1.
+        return 1;
+    }
+
+    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name, final float opacity)
         throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
@@ -116,6 +134,10 @@ public final class IconColorMapper {
                 stop1.addAttribute("offset", AnimationElement.AT_XML, "0");
                 stop2.addAttribute("stop-color", AnimationElement.AT_XML, color);
                 stop2.addAttribute("offset", AnimationElement.AT_XML, "1");
+                if (opacity != 1) {
+                    stop1.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity));
+                    stop2.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity));
+                }
                 grad.loaderAddChild(null, stop1);
                 grad.loaderAddChild(null, stop2);
             } catch (SVGElementException e) {

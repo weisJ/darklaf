@@ -60,14 +60,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         @Override
         public void componentAdded(final ContainerEvent e) {
             if (e.getChild() instanceof JMenuBar) {
-                menuBar = getRootPane().getJMenuBar();
-                //Otherwise, a white bar will appear where the menuBar used to be.
-                menuBar.setPreferredSize(new Dimension(0, 0));
-                add(menuBar);
+                addMenuBar(getRootPane().getJMenuBar());
             }
             if (getRootPane().getJMenuBar() == null && menuBar != null) {
-                remove(menuBar);
-                menuBar = null;
+                removeMenuBar();
             }
         }
 
@@ -113,6 +109,8 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private Color inactiveBackground;
     private Color inactiveForeground;
+    private Color inactiveHover;
+    private Color inactiveClick;
     private Color activeBackground;
     private Color activeForeground;
     private Color border;
@@ -151,7 +149,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
         button.putClientProperty("JButton.noBorderlessOverwrite", true);
         button.setFocusable(false);
-        button.setOpaque(true);
+        button.setOpaque(false);
         button.setRolloverEnabled(true);
         button.putClientProperty("JButton.variant", "borderlessRectangular");
         button.putClientProperty("paintActive", Boolean.TRUE);
@@ -298,11 +296,23 @@ public class WindowsTitlePane extends CustomTitlePane {
                    decorationStyle == JRootPane.WARNING_DIALOG) {
             add(closeButton);
         }
-        menuBar = getRootPane().getJMenuBar();
+        addMenuBar(getRootPane().getJMenuBar());
+    }
+
+    protected void addMenuBar(final JMenuBar menuBar) {
         if (menuBar != null) {
+            this.menuBar = menuBar;
+            //Otherwise, a white bar will appear where the menuBar used to be.
             menuBar.setPreferredSize(new Dimension(0, 0));
+            menuBar.setOpaque(false);
             add(menuBar);
         }
+    }
+
+    protected void removeMenuBar() {
+        remove(menuBar);
+        menuBar.setOpaque(true);
+        menuBar = null;
     }
 
     private void determineColors() {
@@ -328,6 +338,8 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
         inactiveBackground = UIManager.getColor("Windows.TitlePane.inactiveBackground");
         inactiveForeground = UIManager.getColor("Windows.TitlePane.inactiveForeground");
+        inactiveHover = UIManager.getColor("Windows.TitlePane.inactiveBackgroundHover");
+        inactiveClick = UIManager.getColor("Windows.TitlePane.inactiveBackgroundClick");
         border = UIManager.getColor("Windows.TitlePane.borderColor");
     }
 
@@ -445,8 +457,20 @@ public class WindowsTitlePane extends CustomTitlePane {
             minimizeIcon.setActive(active);
             maximizeIcon.setActive(active);
             restoreIcon.setActive(active);
+            setButtonActive(minimizeButton, active);
+            setButtonActive(maximizeToggleButton, active);
         }
         getRootPane().repaint();
+    }
+
+    protected void setButtonActive(final JButton button, final boolean active) {
+        if (active) {
+            button.putClientProperty("JButton.borderless.hover", null);
+            button.putClientProperty("JButton.borderless.click", null);
+        } else {
+            button.putClientProperty("JButton.borderless.hover", inactiveHover);
+            button.putClientProperty("JButton.borderless.click", inactiveClick);
+        }
     }
 
     public void paintComponent(final Graphics g) {

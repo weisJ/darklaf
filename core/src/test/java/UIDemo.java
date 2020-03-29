@@ -3,6 +3,7 @@ import com.github.weisj.darklaf.components.text.SearchTextField;
 import com.github.weisj.darklaf.components.text.SearchTextFieldWithHistory;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.theme.HighContrastDarkTheme;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import org.jdesktop.swingx.JXStatusBar;
@@ -23,7 +24,7 @@ public final class UIDemo {
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(
             () -> {
-                LafManager.install();
+                LafManager.install(new HighContrastDarkTheme());
                 JFrame.setDefaultLookAndFeelDecorated(true);
 
                 JXTaskPaneContainer taskpanecontainer = new JXTaskPaneContainer();

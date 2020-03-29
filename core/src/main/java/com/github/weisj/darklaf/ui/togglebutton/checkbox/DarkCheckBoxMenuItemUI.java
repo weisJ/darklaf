@@ -29,18 +29,11 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkCheckBoxMenuItemUI extends DarkRadioButtonMenuItemUI {
 
-    private Icon checkBoxIcon;
-    private Icon checkBoxDisabledIcon;
-    private Icon checkBoxFocusedIcon;
-    private Icon checkBoxSelectedIcon;
-    private Icon checkBoxSelectedDisabledIcon;
-    private Icon checkBoxSelectedFocusedIcon;
-
+    private Icon stateIcon;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkCheckBoxMenuItemUI();
@@ -53,42 +46,11 @@ public class DarkCheckBoxMenuItemUI extends DarkRadioButtonMenuItemUI {
 
     @Override
     protected void installIcons() {
-        checkBoxIcon = UIManager.getIcon("CheckBox.unchecked.icon");
-        checkBoxDisabledIcon = UIManager.getIcon("CheckBox.uncheckedDisabled.icon");
-        checkBoxFocusedIcon = UIManager.getIcon("CheckBox.uncheckedFocused.icon");
-        checkBoxSelectedIcon = UIManager.getIcon("CheckBox.selected.icon");
-        checkBoxSelectedDisabledIcon = UIManager.getIcon("CheckBox.selectedDisabled.icon");
-        checkBoxSelectedFocusedIcon = UIManager.getIcon("CheckBox.selectedFocused.icon");
+        stateIcon = UIManager.getIcon("CheckBox.icon");
     }
 
     @Override
-    public Icon getSelectedFocusedIcon() {
-        return checkBoxSelectedFocusedIcon;
+    protected Icon getStateIcon(final AbstractButton b) {
+        return stateIcon;
     }
-
-    @Override
-    public Icon getSelectedIcon() {
-        return checkBoxSelectedIcon;
-    }
-
-    @Override
-    public Icon getSelectedDisabledIcon() {
-        return checkBoxSelectedDisabledIcon;
-    }
-
-    @Override
-    public Icon getFocusedIcon() {
-        return checkBoxFocusedIcon;
-    }
-
-    @Override
-    public Icon getIcon() {
-        return checkBoxIcon;
-    }
-
-    @Override
-    public Icon getDisabledIcon() {
-        return checkBoxDisabledIcon;
-    }
-
 }

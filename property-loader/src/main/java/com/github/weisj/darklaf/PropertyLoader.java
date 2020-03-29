@@ -26,6 +26,7 @@ package com.github.weisj.darklaf;
 import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.PropertyValue;
@@ -53,13 +54,26 @@ import java.util.logging.Logger;
 public final class PropertyLoader {
     private static final Logger LOGGER = Logger.getLogger(PropertyLoader.class.getName());
     private static final IconLoader ICON_LOADER = IconLoader.get();
-    private static final String DUAL_KEY = "[dual]";
-    private static final String AWARE_KEY = "[aware]";
-    private static final String THEMED_KEY = "[themed]";
-    private static final String REFERENCE_PREFIX = "%";
+    private static final char ICON_KEY_START = '[';
+    private static final char ICON_KEY_END = ']';
+    private static final String DUAL_KEY = ICON_KEY_START + "dual" + ICON_KEY_END;
+    private static final String AWARE_KEY = ICON_KEY_START + "aware" + ICON_KEY_END;
+    private static final String THEMED_KEY = ICON_KEY_START + "themed" + ICON_KEY_END;
+    private static final String ICON_EMPTY = "empty";
+
+    private static final char REFERENCE_PREFIX = '%';
+
     private static final String FONT_FROM = "from";
     private static final String FONT_SIZE = "withSize";
     private static final String FONT_STYLE = "withStyle";
+    private static final char FONT_DELIMITER = '-';
+
+    private static final char LIST_START = '{';
+    private static final char LIST_END = '}';
+    private static final char ARG_START = '(';
+    private static final char ARG_END = ')';
+    private static final char SEPARATOR = ',';
+    private static final char LIST_SEPARATOR = ';';
 
     private static boolean addReferenceInfo;
 
@@ -108,7 +122,7 @@ public final class PropertyLoader {
 
     private static String parseKey(final String key) {
         if (addReferenceInfo) return key;
-        return key.startsWith(REFERENCE_PREFIX) ? key.substring(REFERENCE_PREFIX.length()) : key;
+        return key.startsWith(String.valueOf(REFERENCE_PREFIX)) ? key.substring(1) : key;
     }
 
 
@@ -120,7 +134,7 @@ public final class PropertyLoader {
         }
         String key = propertyKey;
         boolean skipObjects = ignoreRequest;
-        if (key.startsWith(REFERENCE_PREFIX)) {
+        if (key.startsWith(String.valueOf(REFERENCE_PREFIX))) {
             key = parseKey(key);
             skipObjects = true;
         }
@@ -143,9 +157,9 @@ public final class PropertyLoader {
             returnVal = parseSize(value);
         } else if (PropertyValue.NULL.equalsIgnoreCase(value)) {
             returnVal = null;
-        } else if (value.startsWith(REFERENCE_PREFIX)) {
+        } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
             String val = parseKey(value);
-            String referenceFreeKey = val.substring(REFERENCE_PREFIX.length());
+            String referenceFreeKey = val.substring(1);
             boolean containsKey = accumulator.containsKey(val)
                                   || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
             if (!containsKey) {
@@ -179,7 +193,7 @@ public final class PropertyLoader {
 
 
     private static Object parseInsets(final String value) {
-        final List<String> numbers = StringUtil.split(value, ",");
+        final List<String> numbers = StringUtil.split(value, String.valueOf(SEPARATOR));
         return new InsetsUIResource(
             Integer.parseInt(numbers.get(0)),
             Integer.parseInt(numbers.get(1)),
@@ -222,7 +236,7 @@ public final class PropertyLoader {
 
     private static Font parseExplicitFont(final String value) {
         try {
-            final String[] decode = value.split("-");
+            final String[] decode = value.split(String.valueOf(FONT_DELIMITER));
             return new FontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
         } catch (final Exception e) {
             return null;
@@ -231,7 +245,7 @@ public final class PropertyLoader {
 
     private static Pair<Integer, String> parseFontAttribute(final String identifier, final String val) {
         String key = val.substring(identifier.length() + 1);
-        int lastIndex = key.indexOf(')');
+        int lastIndex = key.indexOf(ARG_END);
         String rest = key.substring(lastIndex + 1);
         key = key.substring(0, lastIndex);
         try {
@@ -245,7 +259,7 @@ public final class PropertyLoader {
                                                 final Map<Object, Object> accumulator,
                                                 final UIDefaults currentDefaults) {
         String key = val.substring(FONT_FROM.length() + 1);
-        int index = key.indexOf(')');
+        int index = key.indexOf(ARG_END);
         String rest = key.substring(index + 1);
         key = key.substring(0, index);
         Font font = null;
@@ -255,17 +269,21 @@ public final class PropertyLoader {
     }
 
     private static Icon parseIcon(final String value, final IconLoader iconLoader) {
+        if (value.startsWith(String.valueOf(LIST_START))) {
+            return parseStateIcon(value, iconLoader);
+        }
         String path = value;
         Dimension dim = new Dimension(16, 16);
-        if (value.charAt(value.length() - 1) == ')') {
-            int i = path.lastIndexOf('(');
+        if (value.charAt(value.length() - 1) == ARG_END) {
+            int i = path.lastIndexOf(ARG_START);
             String dimVal = path.substring(i + 1, path.length() - 1);
-            int[] values = Arrays.stream(dimVal.split(",", 2)).mapToInt(Integer::parseInt).toArray();
+            int[] values = Arrays.stream(dimVal.split(String.valueOf(SEPARATOR), 2)).mapToInt(Integer::parseInt)
+                                 .toArray();
             dim.width = values[0];
             dim.height = values[1];
             path = path.substring(0, i);
         }
-        if (path.charAt(path.length() - 1) == ']') {
+        if (path.charAt(path.length() - 1) == ICON_KEY_END) {
             String tag = null;
             if (path.endsWith(DUAL_KEY)) {
                 tag = DUAL_KEY;
@@ -289,16 +307,25 @@ public final class PropertyLoader {
                 }
             }
         }
-        if (path.equals("empty")) {
+        if (path.equals(ICON_EMPTY)) {
             return EmptyIcon.create(dim.width, dim.height);
         }
         return iconLoader.getIcon(path, dim.width, dim.height);
     }
 
+    private static Icon parseStateIcon(final String value, final IconLoader iconLoader) {
+        String[] keys = value.substring(1, value.length() - 1).split(String.valueOf(LIST_SEPARATOR));
+        Icon[] icons = new Icon[keys.length];
+        for (int i = 0; i < icons.length; i++) {
+            icons[i] = parseIcon(keys[i], iconLoader);
+        }
+        return new StateIcon(icons);
+    }
+
 
     private static Object parseSize(final String value) {
         try {
-            int[] dim = Arrays.stream(value.split(",", 2)).mapToInt(Integer::parseInt).toArray();
+            int[] dim = Arrays.stream(value.split(String.valueOf(SEPARATOR), 2)).mapToInt(Integer::parseInt).toArray();
             return new DimensionUIResource(dim[0], dim[1]);
         } catch (IndexOutOfBoundsException | NumberFormatException e) {
             return new LoadError();
@@ -309,6 +336,14 @@ public final class PropertyLoader {
     private static Integer getInteger(final String value) {
         try {
             return Integer.parseInt(value);
+        } catch (final NumberFormatException ignored) {
+            return null;
+        }
+    }
+
+    private static Double getDouble(final String value) {
+        try {
+            return Double.parseDouble(value);
         } catch (final NumberFormatException ignored) {
             return null;
         }

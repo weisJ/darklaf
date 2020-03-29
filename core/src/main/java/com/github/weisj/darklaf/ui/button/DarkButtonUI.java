@@ -52,6 +52,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected static final Rectangle iconRect = new Rectangle();
     protected int borderSize;
     protected int shadowHeight;
+    protected boolean drawOutline;
     protected Color inactiveForeground;
     protected Color defaultForeground;
     protected Color defaultBackground;
@@ -63,6 +64,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color inactiveBackground;
     protected Color borderlessHover;
     protected Color borderlessClick;
+    protected Color borderlessOutlineHover;
+    protected Color borderlessOutlineClick;
     protected AbstractButton button;
     protected int arc;
     protected int squareArc;
@@ -107,8 +110,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         inactiveBackground = UIManager.getColor("Button.inactiveFillColor");
         borderlessHover = UIManager.getColor("Button.borderless.hover");
         borderlessClick = UIManager.getColor("Button.borderless.click");
+        borderlessOutlineHover = UIManager.getColor("Button.borderless.outline.hover");
+        borderlessOutlineClick = UIManager.getColor("Button.borderless.outline.click");
         arc = UIManager.getInt("Button.arc");
         squareArc = UIManager.getInt("Button.squareArc");
+        drawOutline = UIManager.getBoolean("Button.borderless.drawOutline");
     }
 
     @Override
@@ -176,7 +182,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             Insets margin = b.getMargin();
             if (margin instanceof UIResource) margin = new Insets(0, 0, 0, 0);
             if (ButtonConstants.isBorderlessVariant(c)) {
-                paintShadowBackground(g, c, g2, b, arc, width, height, margin);
+                paintBorderlessBackground(g, c, g2, b, arc, width, height, margin);
             } else {
                 paintDefaultBackground((Graphics2D) g, b, g2, arc, width, height);
             }
@@ -217,25 +223,40 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return new Rectangle(bx, by, bw, bh);
     }
 
-    protected void paintShadowBackground(final Graphics g, final JComponent c, final Graphics2D g2,
-                                         final AbstractButton b, final int arc,
-                                         final int width, final int height, final Insets margin) {
+    protected void paintBorderlessBackground(final Graphics g, final JComponent c, final Graphics2D g2,
+                                             final AbstractButton b, final int arc,
+                                             final int width, final int height, final Insets margin) {
         if (b.isEnabled() && b.getModel().isRollover()) {
             GraphicsUtil.setupAAPainting(g2);
-            g.setColor(getShadowColor(b));
+            g.setColor(getBorderlessBackground(b));
             if (ButtonConstants.isBorderlessRectangular(c)) {
-                g.fillRect(margin.left, margin.top,
-                           width - margin.left - margin.right,
+                g.fillRect(margin.left, margin.top, width - margin.left - margin.right,
                            height - margin.top - margin.bottom);
+                DarkUIUtil.drawRect(g, margin.left, margin.top, width - margin.left - margin.right,
+                                    height - margin.top - margin.bottom, 1);
             } else if (ButtonConstants.doConvertToBorderless(b)) {
                 int size = Math.min(width - margin.left - margin.right,
                                     height - margin.left - margin.right);
-                g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
+                if (!drawOutline) {
+                    g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
+                } else {
+                    g.setColor(getBorderlessOutline(b));
+                    DarkUIUtil.paintLineBorder((Graphics2D) g, (width - size) / 2.0f + 1,
+                                               (height - size) / 2.0f + 1, size - 2, size - 2, arc);
+                }
             } else {
-                g.fillRoundRect(margin.left, margin.top,
-                                width - margin.left - margin.right,
-                                height - margin.top - margin.bottom,
-                                arc, arc);
+                if (!drawOutline) {
+                    g.fillRoundRect(margin.left, margin.top,
+                                    width - margin.left - margin.right,
+                                    height - margin.top - margin.bottom,
+                                    arc, arc);
+                } else {
+                    g.setColor(getBorderlessOutline(b));
+                    DarkUIUtil.paintLineBorder((Graphics2D) g, margin.left + 1, margin.top + 1,
+                                               width - margin.left - margin.right - 2,
+                                               height - margin.top - margin.bottom - 2, arc);
+                }
+
             }
         }
     }
@@ -342,11 +363,17 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    protected Color getShadowColor(final AbstractButton c) {
+    protected Color getBorderlessBackground(final AbstractButton c) {
         Object colorHover = c.getClientProperty(KEY_HOVER_COLOR);
         Object colorClick = c.getClientProperty(KEY_CLICK_COLOR);
-        return c.getModel().isArmed() ? colorClick instanceof Color ? (Color) colorClick : borderlessClick
-                                      : colorHover instanceof Color ? (Color) colorHover : borderlessHover;
+        boolean armed = c.getModel().isArmed();
+        return armed ? colorClick instanceof Color ? (Color) colorClick : borderlessClick
+                     : colorHover instanceof Color ? (Color) colorHover : borderlessHover;
+    }
+
+    protected Color getBorderlessOutline(final AbstractButton c) {
+        boolean armed = c.getModel().isArmed();
+        return armed ? borderlessOutlineClick : borderlessOutlineHover;
     }
 
     protected String layout(final AbstractButton b, final JComponent c, final FontMetrics fm,

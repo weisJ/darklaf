@@ -34,8 +34,13 @@ public class DarculaTheme extends Theme {
     }
 
     @Override
-    public String getName() {
+    public String getPrefix() {
         return "darcula";
+    }
+
+    @Override
+    public String getName() {
+        return "Darcula";
     }
 
     @Override
@@ -44,7 +49,7 @@ public class DarculaTheme extends Theme {
     }
 
     @Override
-    public boolean useDarkIcons() {
+    public boolean isDark() {
         return true;
     }
 

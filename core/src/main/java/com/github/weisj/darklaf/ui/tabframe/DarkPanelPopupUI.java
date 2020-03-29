@@ -27,10 +27,11 @@ import com.github.weisj.darklaf.components.border.MutableLineBorder;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.PanelPopup;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
-import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
+import com.github.weisj.darklaf.components.tabframe.TabFramePopupUI;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
+import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -43,12 +44,11 @@ import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener {
-
+public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener,
+                                                             TabFramePopupUI {
 
     protected HeaderButton closeButton;
     private final Action closeAction = new AbstractAction() {
@@ -84,6 +84,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         installDefaults();
         installComponents();
         installListeners();
+        updateBorder(false);
     }
 
     protected void installDefaults() {
@@ -175,7 +176,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected MutableLineBorder createBorder() {
         Color color = UIManager.getColor("TabFramePopup.borderColor");
-        return new MutableLineBorder.UIResource(0, 0, 0, 0, color);
+        return new MutableLineBorder(0, 0, 0, 0, color);
     }
 
     @Override
@@ -264,9 +265,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             }
         } else if (TabFramePopup.KEY_PEER_INSETS.equals(key)) {
             updateBorder(false);
-            updateTooltip();
-        } else if (TabFramePopup.KEY_ALIGNMENT.equals(key)) {
-            updateTooltip();
         }
     }
 
@@ -288,13 +286,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             }
         }
     }
-
-    protected void updateTooltip() {
-        JTabFrame tabFrame = popupComponent.getTabFrame();
-        closeButton.setAlignment(popupComponent.getAlignment(),
-                                 tabFrame.getContentPane().isEnabled(tabFrame.getPeer(popupComponent.getAlignment())));
-    }
-
 
     protected Insets getBorderSize(final Alignment a, final boolean[] info) {
         Insets insets = new Insets(0, 0, 0, 0);
@@ -367,26 +358,21 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected static final class HeaderButton extends JButton implements UIResource {
 
-        protected final ToolTipContext context = new ToolTipContext(this);
         protected final DarkPanelPopupUI ui;
 
         public HeaderButton(final Icon icon, final DarkPanelPopupUI ui) {
             super(icon);
             this.ui = ui;
             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-            putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
+            putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
+            putClientProperty(DarkButtonUI.KEY_THIN, true);
             putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
+            putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
             setRolloverEnabled(true);
             setMargin(UIManager.getInsets("TabFramePopup.headerButton.insets"));
             setFocus(false);
+            setFocusable(false);
             setOpaque(false);
-            context.setToolTipInsets(UIManager.getInsets("TabFramePopup.headerButton.tooltipInsets"));
-        }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            if (context != null) context.updateToolTipUI();
         }
 
         public void setFocus(final boolean focus) {
@@ -394,47 +380,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                                                                   : ui.headerButtonHoverBackground);
             putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, focus ? ui.headerButtonFocusClickBackground
                                                                   : ui.headerButtonClickBackground);
-        }
-
-        @Override
-        public Point getToolTipLocation(final MouseEvent event) {
-            return context.getToolTipLocation(event);
-        }
-
-        @Override
-        public JToolTip createToolTip() {
-            return context.getToolTip();
-        }
-
-        protected void setAlignment(final Alignment a, final boolean peerEnabled) {
-            switch (a) {
-                case NORTH:
-                    context.setCenterAlignment(peerEnabled ? Alignment.SOUTH : Alignment.SOUTH_WEST);
-                    break;
-                case NORTH_EAST:
-                    context.setCenterAlignment(Alignment.SOUTH_WEST);
-                    break;
-                case EAST:
-                    context.setCenterAlignment(Alignment.WEST);
-                    break;
-                case SOUTH_EAST:
-                    context.setCenterAlignment(Alignment.WEST);
-                    break;
-                case SOUTH:
-                    context.setCenterAlignment(Alignment.NORTH_WEST);
-                    break;
-                case SOUTH_WEST:
-                    context.setCenterAlignment(peerEnabled ? Alignment.NORTH : Alignment.NORTH_WEST);
-                    break;
-                case WEST:
-                    context.setCenterAlignment(peerEnabled ? Alignment.NORTH : Alignment.SOUTH);
-                    break;
-                case NORTH_WEST:
-                    context.setCenterAlignment(Alignment.SOUTH);
-                    break;
-                case CENTER:
-                    break;
-            }
         }
     }
 }

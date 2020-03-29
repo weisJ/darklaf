@@ -49,13 +49,37 @@ import java.awt.geom.RoundRectangle2D;
 public final class DarkUIUtil {
 
     public static final Color TRANSPARENT_COLOR = new Color(0, 0, 0, 0);
-    public final static AlphaComposite GLOW_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
-    public final static AlphaComposite DROP_ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
-    public final static AlphaComposite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
+    private static AlphaComposite glowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+    private static AlphaComposite dropComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
+    private static AlphaComposite shadowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
     public static final boolean USE_QUARTZ = PropertyValue.TRUE.equals(
         System.getProperty("apple.awt.graphics.UseQuartz"));
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
+
+    public static void setGlowOpacity(final float alpha) {
+        glowComposite = glowComposite.derive(alpha);
+    }
+
+    public static void setShadowOpacity(final float alpha) {
+        shadowComposite = shadowComposite.derive(alpha);
+    }
+
+    public static void setDropOpacity(final float alpha) {
+        dropComposite = dropComposite.derive(alpha);
+    }
+
+    public static AlphaComposite getDropComposite() {
+        return dropComposite;
+    }
+
+    public static AlphaComposite getShadowComposite() {
+        return shadowComposite;
+    }
+
+    public static AlphaComposite getGlowComposite() {
+        return glowComposite;
+    }
 
     private static Color getErrorGlow() {
         return UIManager.getColor("glowError");
@@ -95,7 +119,7 @@ public final class DarkUIUtil {
     public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
                                         final float bw) {
         GraphicsContext config = new GraphicsContext(g);
-        g.setComposite(DarkUIUtil.GLOW_ALPHA);
+        g.setComposite(DarkUIUtil.glowComposite);
         Outline.focus.setGraphicsColor(g, true);
         doPaint(g, width, height, arc, bw);
         config.restore();
@@ -103,7 +127,7 @@ public final class DarkUIUtil {
 
     public static void fillFocusRect(final Graphics2D g, final int x, final int y, final int width, final int height) {
         GraphicsContext config = new GraphicsContext(g);
-        g.setComposite(DarkUIUtil.GLOW_ALPHA);
+        g.setComposite(DarkUIUtil.glowComposite);
         Outline.focus.setGraphicsColor(g, true);
         g.fillRect(x, y, width, height);
         config.restore();
@@ -116,7 +140,7 @@ public final class DarkUIUtil {
     public static void paintFocusOval(final Graphics2D g, final float x, final float y,
                                       final float width, final float height) {
         GraphicsContext config = new GraphicsContext(g);
-        g.setComposite(DarkUIUtil.GLOW_ALPHA);
+        g.setComposite(DarkUIUtil.glowComposite);
         Outline.focus.setGraphicsColor(g, true);
 
         float blw = 3.0f;
@@ -129,10 +153,20 @@ public final class DarkUIUtil {
 
     public static void paintLineBorder(final Graphics2D g, final float x, final float y,
                                        final float width, final float height, final int arc) {
+        paintLineBorder(g, x, y, width, height, arc, true);
+    }
+
+    public static void paintLineBorder(final Graphics2D g, final float x, final float y,
+                                       final float width, final float height, final int arc,
+                                       final boolean growByStroke) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         Stroke stroke = g.getStroke();
         float lw = stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1;
-        g.draw(new RoundRectangle2D.Float(x - lw, y - lw, width + lw, height + lw, arc, arc));
+        if (growByStroke) {
+            g.draw(new RoundRectangle2D.Float(x - lw, y - lw, width + lw, height + lw, arc, arc));
+        } else {
+            g.draw(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
+        }
         config.restore();
     }
 

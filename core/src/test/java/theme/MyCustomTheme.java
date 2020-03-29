@@ -69,8 +69,13 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
-    public String getName() {
+    public String getPrefix() {
         return "my_custom_theme";
+    }
+
+    @Override
+    public String getName() {
+        return "My Custom Theme Name";
     }
 
     @Override
@@ -79,7 +84,7 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
-    public boolean useDarkIcons() {
+    public boolean isDark() {
         return false;
     }
 }

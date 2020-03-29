@@ -23,6 +23,8 @@
  */
 package com.github.weisj.darklaf.components.tabframe;
 
+import com.github.weisj.darklaf.ui.splitpane.DarkSplitPaneUI;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
@@ -35,7 +37,8 @@ public class ToggleSplitPane extends JSplitPane {
     private boolean resizable = true;
     private boolean lastEnabled = true;
     private double restorePercentage;
-
+    private boolean isInLayout = false;
+    private boolean enabled = true;
 
     public ToggleSplitPane() {
         this(null);
@@ -43,7 +46,7 @@ public class ToggleSplitPane extends JSplitPane {
 
     public ToggleSplitPane(final String name) {
         setName(name);
-        putClientProperty("JSplitPane.style", "invisible");
+        putClientProperty(DarkSplitPaneUI.KEY_STYLE, DarkSplitPaneUI.STYLE_INVISIBLE);
     }
 
 
@@ -78,7 +81,15 @@ public class ToggleSplitPane extends JSplitPane {
 
     @Override
     public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
         ((BasicSplitPaneUI) getUI()).getDivider().setEnabled(enabled);
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setEnabled(enabled);
+        setResizable(resizable);
     }
 
     public void savePosition() {
@@ -140,6 +151,8 @@ public class ToggleSplitPane extends JSplitPane {
 
     @Override
     public void setDividerLocation(final int location) {
+        if (isInLayout) return;
+        isInLayout = true;
         if (resizable) {
             super.setDividerLocation(location);
         } else if (disabledPos == disabledMax) {
@@ -149,6 +162,7 @@ public class ToggleSplitPane extends JSplitPane {
             super.setDividerLocation(0);
             doLayout();
         }
+        isInLayout = false;
     }
 
 

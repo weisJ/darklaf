@@ -49,6 +49,10 @@ public class ButtonDemo implements ComponentDemo {
             setSelected(button.isEnabled());
             addActionListener(e -> button.setEnabled(isSelected()));
         }});
+        controlPanel.add(new JCheckBox("focusable") {{
+            setSelected(button.isFocusable());
+            addActionListener(e -> button.setFocusable(isSelected()));
+        }});
         controlPanel.add(new JCheckBox("default") {{
             setSelected(button.isDefaultButton());
             addActionListener(e -> SwingUtilities.getRootPane(button).setDefaultButton(isSelected() ? button

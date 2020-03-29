@@ -41,12 +41,10 @@ import java.awt.geom.Rectangle2D;
  */
 public class DarkTooltipBorder implements Border {
 
-    private static final int shadowSize = 12;
-    private static final int cornerSize = 2 * shadowSize;
-    private static final float opacity = 0.1f;
-    private final DropShadowBorder shadowBorder = new DropShadowBorder(Color.BLACK, shadowSize, opacity, cornerSize,
-                                                                       false, true, true, true);
+    private final DropShadowBorder shadowBorder;
     private final BubbleBorder bubbleBorder;
+    private final int shadowSize;
+    private final float opacity;
     private boolean skipShadow;
     private Insets margin;
 
@@ -58,7 +56,11 @@ public class DarkTooltipBorder implements Border {
         bubbleBorder.setPointerSize(8);
         bubbleBorder.setPointerWidth(12);
         bubbleBorder.setPointerSide(Alignment.CENTER);
-        shadowBorder.setShadowColor(UIManager.getColor("ToolTip.borderShadowColor"));
+        shadowSize = UIManager.getInt("ToolTip.shadowSize");
+        opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
+        shadowBorder = new DropShadowBorder(UIManager.getColor("ToolTip.borderShadowColor"),
+                                            shadowSize, opacity, 2 * shadowSize,
+                                            false, true, true, true);
     }
 
 

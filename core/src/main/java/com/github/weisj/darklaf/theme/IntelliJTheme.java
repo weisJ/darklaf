@@ -37,7 +37,7 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
-    public boolean useDarkIcons() {
+    public boolean isDark() {
         return false;
     }
 
@@ -47,8 +47,13 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
-    public String getName() {
+    public String getPrefix() {
         return "intellij";
+    }
+
+    @Override
+    public String getName() {
+        return "IntelliJ";
     }
 
     @Override

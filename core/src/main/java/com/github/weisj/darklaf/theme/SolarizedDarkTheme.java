@@ -34,8 +34,13 @@ public class SolarizedDarkTheme extends Theme {
     }
 
     @Override
-    public String getName() {
+    public String getPrefix() {
         return "solarized_dark";
+    }
+
+    @Override
+    public String getName() {
+        return "Solarized Dark";
     }
 
     @Override
@@ -44,7 +49,7 @@ public class SolarizedDarkTheme extends Theme {
     }
 
     @Override
-    public boolean useDarkIcons() {
+    public boolean isDark() {
         return true;
     }
 

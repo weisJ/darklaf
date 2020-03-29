@@ -124,8 +124,8 @@ public final class LafManager {
      */
     public static void setTheme(final Theme theme) {
         LafManager.theme = theme;
-        IconLoader.updateAwareStyle(theme.useDarkIcons() ? AwareIconStyle.DARK
-                                                         : AwareIconStyle.LIGHT);
+        IconLoader.updateAwareStyle(theme.isDark() ? AwareIconStyle.DARK
+                                                   : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(theme);
     }
 

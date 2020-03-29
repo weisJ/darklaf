@@ -49,6 +49,10 @@ public class NumberingPane extends JComponent {
     @Override
     public void updateUI() {
         setUI(UIManager.getUI(this));
+        if (textComponent != null) {
+            firePropertyChange(KEY_EDITOR, textComponent, null);
+            firePropertyChange(KEY_EDITOR, null, textComponent);
+        }
     }
 
     @Override

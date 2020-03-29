@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
 
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
-import com.github.weisj.darklaf.ui.togglebutton.StateIconUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
 import sun.swing.MenuItemLayoutHelper;
 
@@ -36,20 +35,14 @@ import java.awt.*;
 /**
  * @author Jannis Weis
  */
-public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements StateIconUI,
-                                                                             ToggleButtonMenuItemConstants {
+public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements ToggleButtonMenuItemConstants {
 
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
         if (menuItem != null) menuItem.setArmed(true);
     });
 
     protected int iconBaselineOffset;
-    private Icon radioIcon;
-    private Icon radioDisabledIcon;
-    private Icon radioFocusedIcon;
-    private Icon radioSelectedIcon;
-    private Icon radioSelectedDisabledIcon;
-    private Icon radioSelectedFocusedIcon;
+    private Icon stateIcon;
 
 
     public static ComponentUI createUI(final JComponent c) {
@@ -78,12 +71,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Sta
     }
 
     protected void installIcons() {
-        radioIcon = UIManager.getIcon("RadioButton.unchecked.icon");
-        radioDisabledIcon = UIManager.getIcon("RadioButton.uncheckedDisabled.icon");
-        radioFocusedIcon = UIManager.getIcon("RadioButton.uncheckedFocused.icon");
-        radioSelectedIcon = UIManager.getIcon("RadioButton.selected.icon");
-        radioSelectedDisabledIcon = UIManager.getIcon("RadioButton.selectedDisabled.icon");
-        radioSelectedFocusedIcon = UIManager.getIcon("RadioButton.selectedFocused.icon");
+        stateIcon = UIManager.getIcon("RadioButton.icon");
     }
 
     @Override
@@ -107,30 +95,6 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Sta
     }
 
     protected Icon getStateIcon(final AbstractButton b) {
-        return StateIconUI.getStateIcon(this, b);
-    }
-
-    public Icon getSelectedFocusedIcon() {
-        return radioSelectedFocusedIcon;
-    }
-
-    public Icon getSelectedIcon() {
-        return radioSelectedIcon;
-    }
-
-    public Icon getSelectedDisabledIcon() {
-        return radioSelectedDisabledIcon;
-    }
-
-    public Icon getFocusedIcon() {
-        return radioFocusedIcon;
-    }
-
-    public Icon getIcon() {
-        return radioIcon;
-    }
-
-    public Icon getDisabledIcon() {
-        return radioDisabledIcon;
+        return stateIcon;
     }
 }

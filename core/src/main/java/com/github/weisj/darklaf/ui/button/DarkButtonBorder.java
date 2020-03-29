@@ -172,7 +172,7 @@ public class DarkButtonBorder implements Border, UIResource {
         int fw = width - focusIns.left - focusIns.right;
         int fh = height - focusIns.top - focusIns.bottom;
 
-        if (c.isEnabled() && paintShadow) {
+        if (c.isEnabled() && paintShadow && DarkUIUtil.getShadowComposite().getAlpha() != 0) {
             paintShadow((Graphics2D) g, bx, by, bw, bh, arc);
         }
 
@@ -240,7 +240,7 @@ public class DarkButtonBorder implements Border, UIResource {
         Area shadowShape = new Area(new RoundRectangle2D.Double(x, y, width, height, arc, arc));
         Area innerArea = new Area(new RoundRectangle2D.Double(x, y, width, height - shadowSize, arc, arc));
         shadowShape.subtract(innerArea);
-        g2.setComposite(DarkUIUtil.SHADOW_COMPOSITE);
+        g2.setComposite(DarkUIUtil.getShadowComposite());
         g2.setColor(shadowColor);
         g2.fill(shadowShape);
         context.restore();

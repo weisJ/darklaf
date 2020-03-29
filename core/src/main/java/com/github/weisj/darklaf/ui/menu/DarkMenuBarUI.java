@@ -24,16 +24,21 @@
 package com.github.weisj.darklaf.ui.menu;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.metal.MetalMenuBarUI;
 import java.awt.*;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkMenuBarUI extends MetalMenuBarUI {
 
     protected Color background;
+
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkMenuBarUI();
+    }
 
     @Override
     protected void installDefaults() {
@@ -42,8 +47,20 @@ public class DarkMenuBarUI extends MetalMenuBarUI {
     }
 
     @Override
+    protected ChangeListener createChangeListener() {
+        ChangeListener listener = super.createChangeListener();
+        return e -> {
+            listener.stateChanged(e);
+            // Fixes popup graphics creeping into the component when it is not opaque.
+            menuBar.repaint();
+        };
+    }
+
+    @Override
     public void paint(final Graphics g, final JComponent c) {
-        g.setColor(background);
-        g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        if (c.isOpaque()) {
+            g.setColor(background);
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        }
     }
 }
