@@ -288,7 +288,7 @@ public class SmallColorChooser extends JPanel {
     }
 
     protected ColorPreviewComponent createPreviewComponent() {
-        ColorPreviewComponent comp = new ColorPreviewComponent() {
+        return new ColorPreviewComponent() {
             @Override
             public Dimension getMaximumSize() {
                 return getPreferredSize();
@@ -303,8 +303,6 @@ public class SmallColorChooser extends JPanel {
                 return size;
             }
         };
-        comp.setBorder(null);
-        return comp;
     }
 
     protected static class Descriptor extends JLabel {

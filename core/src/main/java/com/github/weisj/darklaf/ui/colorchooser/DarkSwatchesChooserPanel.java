@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.ui.colorchooser;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
@@ -59,10 +58,8 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
     @Override
     protected void buildChooser() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         String recentStr = UIManager.getString("ColorChooser.swatchesRecentText", getLocale());
-
-        JPanel superHolder = new JPanel();
-        superHolder.setLayout(new BorderLayout());
 
         previewPanel = new ColorPreviewComponent();
         previewPanel.setColor(getColorFromModel());
@@ -83,13 +80,13 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         recentSwatchPanel.addMouseListener(recentSwatchListener);
         recentSwatchPanel.addKeyListener(recentSwatchKeyListener);
 
-        JPanel mainHolder = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel mainHolder = new JPanel(new GridBagLayout());
         Border border = new LineBorder(UIManager.getColor("ColorChooser.swatchBorderColor"));
         swatchPanel.setBorder(border);
         mainHolder.add(swatchPanel);
 
         recentSwatchPanel.setInheritsPopupMenu(true);
-        JPanel recentHolder = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel recentHolder = new JPanel(new GridBagLayout());
         recentSwatchPanel.setBorder(border);
         recentHolder.setInheritsPopupMenu(true);
         recentHolder.add(recentSwatchPanel);
@@ -100,8 +97,9 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         labelHolder.add(l);
 
         JPanel previewHolder = new JPanel(new BorderLayout());
-        previewHolder.setBorder(new EmptyBorder(0, 5, 10, 5));
+        previewHolder.add(Box.createVerticalStrut(25), BorderLayout.WEST);
         previewHolder.add(previewPanel, BorderLayout.CENTER);
+        previewHolder.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
         JPanel swatches = new JPanel();
         swatches.setInheritsPopupMenu(true);
@@ -110,11 +108,8 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         swatches.add(labelHolder);
         swatches.add(recentHolder);
 
-        superHolder.add(previewHolder, BorderLayout.NORTH);
-        superHolder.add(swatches, BorderLayout.CENTER);
-        superHolder.setInheritsPopupMenu(true);
-
-        add(superHolder);
+        add(previewHolder);
+        add(swatches);
     }
 
     public String getDisplayName() {

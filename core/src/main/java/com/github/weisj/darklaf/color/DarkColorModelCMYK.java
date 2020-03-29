@@ -98,9 +98,9 @@ public class DarkColorModelCMYK extends DarkColorModel {
 
 
     private static int[] CMYKtoRGB(final double c, final double m, final double y, final double k) {
-        rgb[0] = (int) Math.round(255 * (1.0f + c * k - k - c));
-        rgb[1] = (int) Math.round(255 * (1.0f + m * k - k - m));
-        rgb[2] = (int) Math.round(255 * (1.0f + y * k - k - y));
+        rgb[0] = (int) Math.round(255 * (1 - c) * (1 - k));
+        rgb[1] = (int) Math.round(255 * (1 - m) * (1 - k));
+        rgb[2] = (int) Math.round(255 * (1 - y) * (1 - k));
         return rgb;
     }
 

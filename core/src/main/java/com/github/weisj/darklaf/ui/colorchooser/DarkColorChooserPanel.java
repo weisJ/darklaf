@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.ui.colorchooser;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
-import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.decorators.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
@@ -84,7 +83,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         initInputFields(colorModels);
 
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 21));
         add(buildTopPanel(UIManager.getBoolean("ColorChooser.pipetteEnabled")), BorderLayout.NORTH);
         add(colorWheelPanel, BorderLayout.CENTER);
         add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
@@ -114,7 +113,11 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
             colorChanged(getColorFromHex(), textHex);
         });
         for (JFormattedTextField inputField : valueFields) {
-            inputField.addPropertyChangeListener(e -> colorChanged(getColorFromFields(), inputField));
+            inputField.addPropertyChangeListener(e -> {
+                if ("value".equals(e.getPropertyName())) {
+                    colorChanged(getColorFromFields(), inputField);
+                }
+            });
         }
         colorWheelPanel.addListener(this);
     }
@@ -268,7 +271,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return c == null ? currentColor : c;
     }
 
-
     protected DarkColorModel getDarkColorModel() {
         return (DarkColorModel) formatBox.getSelectedItem();
     }
@@ -281,8 +283,12 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         if (enablePipette && pipette != null) {
             previewPanel.add(createPipetteButton(), BorderLayout.WEST);
         }
+        previewComponent.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        previewComponent.setPreferredSize(new Dimension(100, 25));
+
         previewPanel.add(previewComponent, BorderLayout.CENTER);
         result.add(previewPanel, BorderLayout.NORTH);
+
 
         final JPanel valuePanel = new JPanel();
         valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.X_AXIS));
@@ -314,15 +320,17 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     private JButton createPipetteButton() {
-        JButton pipetteButton = new JButtonUIResource();
-        pipetteButton.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
+        JButton pipetteButton = new JButton();
         pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
+        pipetteButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
+        pipetteButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
         pipetteButton.setRolloverEnabled(true);
+        pipetteButton.setFocusable(false);
+
         pipetteButton.setIcon(getPipetteIcon());
         pipetteButton.setRolloverIcon(getPipetteRolloverIcon());
         pipetteButton.setDisabledIcon(getPipetteRolloverIcon());
         pipetteButton.setPressedIcon(getPipetteRolloverIcon());
-        pipetteButton.setFocusable(false);
         pipetteButton.addActionListener(e -> {
             pipetteButton.setEnabled(false);
             pipette.setInitialColor(getColorFromModel());

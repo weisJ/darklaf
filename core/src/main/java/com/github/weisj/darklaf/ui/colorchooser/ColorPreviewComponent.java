@@ -34,7 +34,6 @@ public class ColorPreviewComponent extends JComponent {
     private Color color;
 
     public ColorPreviewComponent() {
-        setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         borderColor = UIManager.getColor("ColorChooser.previewBorderColor");
     }
 
@@ -62,11 +61,5 @@ public class ColorPreviewComponent extends JComponent {
         g.fillRect(i.left, i.top, 1, height);
         g.fillRect(i.left + width - 1, i.top, 1, height);
         g.fillRect(i.left, i.top + height - 1, width, 1);
-    }
-
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(100, 32);
     }
 }
