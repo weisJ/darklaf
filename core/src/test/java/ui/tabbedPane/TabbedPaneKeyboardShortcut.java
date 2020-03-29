@@ -23,48 +23,41 @@
  */
 package ui.tabbedPane;
 
-import com.github.weisj.darklaf.LafManager;
+import ui.ComponentDemo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class TabbedPaneKeyboardShortcut extends JPanel {
-    public TabbedPaneKeyboardShortcut() {
-        initializeUI();
-    }
-
-    private void initializeUI() {
-        LafManager.install();
-        this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension(500, 200));
-
-        JTabbedPane pane = new JTabbedPane();
-        pane.addTab("A Tab", new JPanel());
-        pane.addTab("B Tab", new JPanel());
-        pane.addTab("C Tab", new JPanel());
-        pane.addTab("D Tab", new JPanel());
-
-        pane.setMnemonicAt(0, KeyEvent.VK_A);
-        pane.setMnemonicAt(1, KeyEvent.VK_B);
-        pane.setMnemonicAt(2, KeyEvent.VK_C);
-        pane.setMnemonicAt(3, KeyEvent.VK_D);
-
-        this.add(pane, BorderLayout.CENTER);
-    }
+public class TabbedPaneKeyboardShortcut implements ComponentDemo {
 
     public static void main(final String[] args) {
-        SwingUtilities.invokeLater(() -> TabbedPaneKeyboardShortcut.showFrame());
+        ComponentDemo.showDemo(new TabbedPaneKeyboardShortcut());
     }
 
-    public static void showFrame() {
-        JPanel panel = new TabbedPaneKeyboardShortcut();
-        panel.setOpaque(true);
+    @Override
+    public JComponent createComponent() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setPreferredSize(new Dimension(500, 200));
 
-        JFrame frame = new JFrame("JTabbedPane Demo");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setContentPane(panel);
-        frame.pack();
-        frame.setVisible(true);
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("A Tab", new JPanel());
+        tabbedPane.addTab("B Tab", new JPanel());
+        tabbedPane.addTab("C Tab", new JPanel());
+        tabbedPane.addTab("D Tab", new JPanel());
+
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_A);
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_B);
+        tabbedPane.setMnemonicAt(2, KeyEvent.VK_C);
+        tabbedPane.setMnemonicAt(3, KeyEvent.VK_D);
+
+        panel.add(tabbedPane, BorderLayout.CENTER);
+        return panel;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Tabbed Pane Keyboard Shortcut Demo";
     }
 }

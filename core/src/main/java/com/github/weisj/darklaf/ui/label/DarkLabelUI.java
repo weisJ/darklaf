@@ -152,7 +152,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
                 }
             }
         } else {
-            g.setColor(l.getForeground());
+            g.setColor(inactiveForeground);
         }
         SwingUtilities2.drawStringUnderlineCharAt(l, g, s, accChar,
                                                   textX, textY);

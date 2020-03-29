@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.util.Pair;
 import com.kitfox.svg.app.beans.SVGIcon;
+import ui.ComponentDemo;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
@@ -55,7 +56,7 @@ public class AllIcons {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install();
+            LafManager.install(ComponentDemo.getTheme());
             try {
                 JFrame frame = new JFrame("Icons");
                 JList<Pair<String, Icon>> list = new JList<>(new ListModel<Pair<String, Icon>>() {

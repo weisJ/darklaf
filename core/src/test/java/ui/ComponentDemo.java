@@ -32,6 +32,10 @@ import java.awt.event.ActionEvent;
 
 public interface ComponentDemo {
 
+    static Theme getTheme() {
+        return new IntelliJTheme();
+    }
+
     JComponent createComponent();
 
     static void showDemo(final ComponentDemo demo) {
@@ -40,7 +44,7 @@ public interface ComponentDemo {
 
     static void showDemo(final ComponentDemo demo, final Dimension dimension) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install();
+            LafManager.install(getTheme());
             JFrame frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setTitle(demo.getTitle());

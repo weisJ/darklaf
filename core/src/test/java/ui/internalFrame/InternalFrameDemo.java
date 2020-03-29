@@ -24,6 +24,7 @@
 package ui.internalFrame;
 
 import com.github.weisj.darklaf.LafManager;
+import ui.ComponentDemo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,7 +95,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
      * Create the GUI and show it.  For thread safety, this method should be invoked from the event-dispatching thread.
      */
     private static void createAndShowGUI() {
-        LafManager.install();
+        LafManager.install(ComponentDemo.getTheme());
 
         //Create and set up the window.
         InternalFrameDemo frame = new InternalFrameDemo();

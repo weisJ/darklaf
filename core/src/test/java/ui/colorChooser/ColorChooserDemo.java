@@ -24,6 +24,7 @@
 package ui.colorChooser;
 
 import com.github.weisj.darklaf.LafManager;
+import ui.ComponentDemo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +33,7 @@ public final class ColorChooserDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install();
+            LafManager.install(ComponentDemo.getTheme());
             /*
              * In newer versions of the JDK you can control whether the transparency slider is visible or not.
              */

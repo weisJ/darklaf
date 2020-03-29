@@ -25,7 +25,7 @@
 package ui.dialog;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.DarculaTheme;
+import ui.ComponentDemo;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -90,7 +90,7 @@ public class DialogDemo extends JPanel {
     public static void main(final String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        LafManager.install(new DarculaTheme());
+        LafManager.install(ComponentDemo.getTheme());
         javax.swing.SwingUtilities.invokeLater(DialogDemo::createAndShowGUI);
     }
 
