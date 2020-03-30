@@ -430,7 +430,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         restoreIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.restore.icon"),
                                      UIManager.getIcon("Windows.TitlePane.restoreInactive.icon"));
         closeIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.close.icon"),
-                                   UIManager.getIcon("Windows.TitlePane.close.icon"));
+                                   UIManager.getIcon("Windows.TitlePane.closeInactive.icon"));
     }
 
     private void createButtons() {
@@ -456,6 +456,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (getWindowDecorationStyle() == JRootPane.FRAME) {
             minimizeIcon.setActive(active);
             maximizeIcon.setActive(active);
+            closeIcon.setActive(active);
             restoreIcon.setActive(active);
             setButtonActive(minimizeButton, active);
             setButtonActive(maximizeToggleButton, active);
