@@ -59,6 +59,11 @@ public class HighContrastDarkTheme extends Theme {
     }
 
     @Override
+    public boolean isHighContrast() {
+        return true;
+    }
+
+    @Override
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);
