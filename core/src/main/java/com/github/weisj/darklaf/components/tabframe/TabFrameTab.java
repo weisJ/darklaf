@@ -80,9 +80,23 @@ public interface TabFrameTab {
     /**
      * Set the selected status of the tab.
      *
-     * @param selected true if selected
+     * @param selected true if selected.
      */
     void setSelected(boolean selected);
+
+    /**
+     * Returns whether the tab is enabled.
+     *
+     * @return true if enabled.
+     */
+    boolean isEnabled();
+
+    /**
+     * Sets the enabled status of the tab.
+     *
+     * @param enabled true if enabled.
+     */
+    void setEnabled(final boolean enabled);
 
     /**
      * Get the accelerator.

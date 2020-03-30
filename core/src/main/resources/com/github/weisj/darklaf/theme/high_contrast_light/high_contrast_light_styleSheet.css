@@ -19,7 +19,7 @@ body {
     font-weight: normal;
     margin-left: 0;
     margin-right: 0;
-    color: #000000;
+    color: #FFFFFF;
 }
 
 p {
@@ -193,12 +193,12 @@ ul li p {
 }
 
 a {
-    color: #1AEBFF;
+    color: #00D1E5;
     text-decoration: underline;
 }
 
 address {
-    color: #1AEBFF;
+    color: #00D1E5;
     font-style: italic;
 }
 
@@ -279,7 +279,7 @@ var {
 }
 
 table {
-    border-color: White;
+    border-color: Black;
     border-style: outset;
 }
 
@@ -288,7 +288,7 @@ tr {
 }
 
 td {
-    border-color: White;
+    border-color: Black;
     border-style: inset;
     padding: 3px;
 }
@@ -296,7 +296,7 @@ td {
 th {
     text-align: center;
     font-weight: bold;
-    border-color: White;
+    border-color: Black;
     border-style: inset;
     padding: 3px;
 }

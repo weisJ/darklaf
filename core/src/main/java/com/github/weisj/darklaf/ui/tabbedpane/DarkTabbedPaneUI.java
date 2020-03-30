@@ -35,7 +35,6 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.AWTEventListener;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.util.TooManyListenersException;
 import java.util.function.Consumer;
@@ -69,20 +68,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     public static final String KEY_ROTATE_TAB_RUNS = KEY_PREFIX + "rotateTabRuns";
 
     protected static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler.UIResource();
-    protected final FocusListener focusListener = new FocusListener() {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            repaintTab(tabPane.getSelectedIndex());
-        }
-
-        @Override
-        public void focusLost(final FocusEvent e) {
-            repaintTab(tabPane.getSelectedIndex());
-        }
-    };
     protected final AWTEventListener awtEventListener = e -> {
         if (e.getID() == FocusEvent.FOCUS_GAINED) {
-            tabPane.repaint();
+            repaintTab(tabPane.getSelectedIndex());
         }
     };
     protected final Rectangle tabAreaBounds = new Rectangle(0, 0, 0, 0);

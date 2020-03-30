@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.util;
 
 import com.github.weisj.darklaf.decorators.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.ui.table.DarkTableHeaderUI;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
@@ -93,6 +94,10 @@ public final class DarkUIUtil {
         return UIManager.getColor("glowFocus");
     }
 
+    private static Color getFocusInactiveGlow() {
+        return UIManager.getColor("glowFocusInactive");
+    }
+
     private static Color getWarningGlow() {
         return UIManager.getColor("glowWarning");
     }
@@ -118,30 +123,47 @@ public final class DarkUIUtil {
 
     public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
                                         final float bw) {
+        paintFocusBorder(g, width, height, arc, bw, true);
+    }
+
+    public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
+                                        final float bw, final boolean active) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(DarkUIUtil.glowComposite);
-        Outline.focus.setGraphicsColor(g, true);
+        Outline.focus.setGraphicsColor(g, active);
         doPaint(g, width, height, arc, bw);
         config.restore();
     }
 
-    public static void fillFocusRect(final Graphics2D g, final int x, final int y, final int width, final int height) {
+    public static void fillFocusRect(final Graphics2D g, final int x, final int y,
+                                     final int width, final int height) {
+        fillFocusRect(g, x, y, width, height, true);
+    }
+
+    public static void fillFocusRect(final Graphics2D g, final int x, final int y,
+                                     final int width, final int height, final boolean active) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(DarkUIUtil.glowComposite);
-        Outline.focus.setGraphicsColor(g, true);
+        Outline.focus.setGraphicsColor(g, active);
         g.fillRect(x, y, width, height);
         config.restore();
     }
 
-    public static void paintFocusOval(final Graphics2D g, final int x, final int y, final int width, final int height) {
+    public static void paintFocusOval(final Graphics2D g, final int x, final int y,
+                                      final int width, final int height) {
         paintFocusOval(g, (float) x, (float) y, (float) width, (float) height);
     }
 
     public static void paintFocusOval(final Graphics2D g, final float x, final float y,
                                       final float width, final float height) {
+        paintFocusOval(g, x, y, width, height, true);
+    }
+
+    public static void paintFocusOval(final Graphics2D g, final float x, final float y,
+                                      final float width, final float height, final boolean active) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(DarkUIUtil.glowComposite);
-        Outline.focus.setGraphicsColor(g, true);
+        Outline.focus.setGraphicsColor(g, active);
 
         float blw = 3.0f;
         Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
@@ -275,11 +297,14 @@ public final class DarkUIUtil {
     }
 
     public static boolean isInCell(final Component c) {
-        boolean inCellRenderer = getParentOfType(CellRendererPane.class, c) != null
-                                 || getParentOfType(TableCellRenderer.class, c) != null
-                                 || getParentOfType(TreeCellRenderer.class, c) != null
-                                 || getParentOfType(CellRenderer.class, c) != null
-                                 || getParentOfType(CellEditor.class, c) != null;
+        boolean tableHeaderCell = c instanceof JComponent && Boolean.TRUE.equals(
+            ((JComponent) c).getClientProperty(DarkTableHeaderUI.KEY_IS_HEADER_RENDERER));
+        boolean inCellRenderer = !tableHeaderCell
+                                 && (getParentOfType(CellRendererPane.class, c) != null
+                                     || getParentOfType(TableCellRenderer.class, c) != null
+                                     || getParentOfType(TreeCellRenderer.class, c) != null
+                                     || getParentOfType(CellRenderer.class, c) != null
+                                     || getParentOfType(CellEditor.class, c) != null);
         return inCellRenderer && getParentOfType(JComboBox.class, c) == null;
     }
 
@@ -469,9 +494,11 @@ public final class DarkUIUtil {
 
         focus {
             @Override
-            public void setGraphicsColor(final Graphics2D g, final boolean focused) {
-                if (focused) {
+            public void setGraphicsColor(final Graphics2D g, final boolean active) {
+                if (active) {
                     g.setColor(getFocusGlow());
+                } else {
+                    g.setColor(getFocusInactiveGlow());
                 }
             }
         };

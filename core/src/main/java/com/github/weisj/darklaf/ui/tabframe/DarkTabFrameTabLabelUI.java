@@ -54,6 +54,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(final MouseEvent e) {
+            if (!tabComponent.isEnabled()) return;
             if (SwingUtilities.isLeftMouseButton(e)) {
                 tabComponent.getTabFrame().toggleTab(tabComponent.getOrientation(), tabComponent.getIndex(),
                                                      !tabComponent.isSelected());
@@ -64,6 +65,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private HoverListener hoverListener;
     private Color defaultFontColor;
     private Color selectedFontColor;
+    private Color fontHoverColor;
     private Color selectedColor;
     private Color hoverColor;
     private final RotatableIcon rotatableIcon = new RotatableIcon();
@@ -112,6 +114,14 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     @Override
+    protected void paintEnabledText(final JLabel l, final Graphics g, final String s,
+                                    final int textX, final int textY) {
+        int mnemIndex = l.getDisplayedMnemonicIndex();
+        g.setColor(getForeground(tabComponent));
+        SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex, textX, textY);
+    }
+
+    @Override
     public void installUI(final JComponent c) {
         tabComponent = (TabFrameTabLabel) c;
         super.installUI(c);
@@ -137,6 +147,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         selectedColor = UIManager.getColor("TabFrameTab.selectedBackground");
         hoverColor = UIManager.getColor("TabFrameTab.hoverBackground");
         selectedFontColor = UIManager.getColor("TabFrameTab.selectedForeground");
+        fontHoverColor = UIManager.getColor("TabFrameTab.hoverForeground");
         LookAndFeel.installBorder(c, "TabFrameTab.border");
         tabComponent.setComponentPopupMenu(new DarkTabFrameComponentPopupMenu(tabComponent));
     }
@@ -244,10 +255,17 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     public Color getBackground(final TabFrameTabLabel tab) {
-        if (printing) return tab.getBackground();
+        if (printing || !tab.isEnabled()) return tab.getBackground();
         return tab.isSelected()
                ? selectedColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
                                  ? hoverColor : tab.getBackground();
+    }
+
+    public Color getForeground(final TabFrameTabLabel tab) {
+        if (printing) return tab.getForeground();
+        return tab.isSelected()
+               ? selectedFontColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                                     ? fontHoverColor : tab.getForeground();
     }
 
     protected Icon getIcon() {

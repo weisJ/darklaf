@@ -34,7 +34,6 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkTextBorder implements Border, UIResource {
@@ -44,6 +43,7 @@ public class DarkTextBorder implements Border, UIResource {
     protected final Color focusBorderColor;
     protected final Color borderColor;
     protected final Color inactiveBorderColor;
+    protected final Color inactiveFocusBorderColor;
 
     protected final int borderSize;
     protected final int arc;
@@ -59,6 +59,7 @@ public class DarkTextBorder implements Border, UIResource {
         errorBorderColor = UIManager.getColor("TextField.border.error");
         borderColor = UIManager.getColor("TextField.border.enabled");
         inactiveBorderColor = UIManager.getColor("TextField.border.disabled");
+        inactiveFocusBorderColor = UIManager.getColor("TextField.border.disabled.focus");
         borderSize = UIManager.getInt("TextField.borderThickness");
         arc = UIManager.getInt("TextField.arc");
         focusArc = UIManager.getInt("TextField.focusArc");
@@ -88,6 +89,10 @@ public class DarkTextBorder implements Border, UIResource {
 
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y,
                             final int width, final int height) {
+        boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();
+        boolean focus = DarkUIUtil.hasFocus(c);
+        boolean error = hasError(c);
+
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
@@ -97,26 +102,20 @@ public class DarkTextBorder implements Border, UIResource {
             DarkUIUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
                                           c.hasFocus(), DarkUIUtil.Outline.error);
         } else if (c.hasFocus()) {
-            DarkUIUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize);
+            DarkUIUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize, editable);
         }
-        g.setColor(getBorderColor(c));
+        g.setColor(getBorderColor(focus, error, editable, c.isEnabled()));
         DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
                                    height - 2 * borderSize, arcSize);
         g.translate(-x, -y);
         config.restore();
     }
 
-    protected Color getBorderColor(final Component c) {
-        boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();
-        boolean focus = DarkUIUtil.hasFocus(c);
-        boolean error = hasError(c);
-        return getBorderColor(focus, error, editable, c.isEnabled());
-    }
-
     protected Color getBorderColor(final boolean focus, final boolean error,
                                    final boolean editable, final boolean enabled) {
         if (focus) {
-            return error ? focusErrorBorderColor : focusBorderColor;
+            return error ? focusErrorBorderColor
+                         : enabled && editable ? focusBorderColor : inactiveFocusBorderColor;
         } else if (error) {
             return errorBorderColor;
         } else {

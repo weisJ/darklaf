@@ -91,6 +91,10 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             table.doLayout();
             table.repaint();
+        } else if (KEY_ALTERNATE_ROW_COLOR.equals(key)
+                   || KEY_RENDER_BOOLEAN_AS_CHECKBOX.equals(key)
+                   || KEY_BOOLEAN_RENDER_TYPE.equals(key)) {
+            table.repaint();
         }
     };
     protected Color selectionBackground;

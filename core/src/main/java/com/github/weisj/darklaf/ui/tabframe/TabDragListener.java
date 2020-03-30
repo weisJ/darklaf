@@ -55,6 +55,7 @@ public class TabDragListener extends MouseAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public void mouseDragged(final MouseEvent e) {
+        if (!tabComponent.isEnabled()) return;
         if (origin == null) origin = e.getPoint();
         if (distance(origin, e.getPoint()) < 100) return;
         TransferHandler th = tabComponent.getTabFrame().getTransferHandler();

@@ -66,6 +66,14 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
     }
 
     @Override
+    public void setEnabled(final boolean enabled) {
+        if (enabled != isEnabled() && !enabled) {
+            getTabFrame().toggleTab(getOrientation(), getIndex(), false);
+        }
+        super.setEnabled(enabled);
+    }
+
+    @Override
     public String getUIClassID() {
         return "TabFrameTabLabelUI";
     }

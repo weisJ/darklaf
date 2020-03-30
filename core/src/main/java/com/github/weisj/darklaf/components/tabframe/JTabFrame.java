@@ -465,6 +465,7 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
      * @param index the index.{@link TabFramePosition#getIndex()}
      * @return the tab component.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public TabFrameTab getTabComponentAt(final Alignment a, final int index) {
         List<TabFrameTab> tabs = tabsForAlignment(a);
@@ -488,6 +489,7 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
      * @param index the index. {@link TabFramePosition#getIndex()} ()}
      * @return the popup component specified by {@link TabFramePopup#getContentPane()}.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public Component getComponentAt(final Alignment a, final int index) {
         List<TabFramePopup> tabs = compsForAlignment(a);
@@ -529,6 +531,7 @@ public class JTabFrame extends JComponent {
      *
      * @param a     the alignment position of the popup.{@link TabFramePosition#getAlignment()}
      * @param index the index of the tab.{@link TabFramePosition#getIndex()}
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public void closeTab(final Alignment a, final int index) {
         toggleTab(a, index, false);
@@ -540,11 +543,13 @@ public class JTabFrame extends JComponent {
      * @param a       the alignment position.{@link TabFramePosition#getAlignment()}
      * @param index   the index.{@link TabFramePosition#getIndex()}
      * @param enabled true if visible.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public void toggleTab(final Alignment a, final int index, final boolean enabled) {
         int oldIndex = selectedIndices[a.getIndex()];
         if (content.isEnabled(a) == enabled && oldIndex == index) return;
         TabFrameTab compAtIndex = getTabComponentAt(a, index);
+        if (!compAtIndex.isEnabled()) return;
         compAtIndex.setSelected(enabled);
         notifySelectionChange(compAtIndex);
         setPopupVisibility(compAtIndex, enabled);
@@ -554,6 +559,19 @@ public class JTabFrame extends JComponent {
         }
         firePropertyChange(TabFramePopup.KEY_VISIBLE_TAB, new TabFramePosition(a, oldIndex),
                            new TabFramePosition(a, index));
+    }
+
+    /**
+     * Enable or disable a tab. A disabled tab cannot be opened. Enabling a tab does not open it. Disabling a tab closes
+     * it. After the tab has been disabled enabling it won't restore the open state,
+     *
+     * @param a       the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param index   the index.{@link TabFramePosition#getIndex()}
+     * @param enabled true if enabled.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
+     */
+    public void setTabEnabled(final Alignment a, final int index, final boolean enabled) {
+        getTabComponentAt(a, index).setEnabled(enabled);
     }
 
     /**

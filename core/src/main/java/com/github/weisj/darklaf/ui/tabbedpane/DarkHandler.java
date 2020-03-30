@@ -27,10 +27,8 @@ import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
-import java.awt.event.ContainerEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 
@@ -230,22 +228,6 @@ public class DarkHandler extends TabbedPaneHandler {
                 handler.exportAsDrag(ui.tabPane, e, TransferHandler.MOVE);
             }
         }
-    }
-
-    @Override
-    public void componentAdded(final ContainerEvent e) {
-        if (!(e.getChild() instanceof UIResource)) {
-            e.getChild().addFocusListener(ui.focusListener);
-        }
-        super.componentAdded(e);
-    }
-
-    @Override
-    public void componentRemoved(final ContainerEvent e) {
-        if (!(e.getChild() instanceof UIResource)) {
-            e.getChild().removeFocusListener(ui.focusListener);
-        }
-        super.componentRemoved(e);
     }
 
     protected Point getDragMousePos() {

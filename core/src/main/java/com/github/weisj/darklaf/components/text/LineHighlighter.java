@@ -98,7 +98,11 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
 
                 //  Remove the highlighting from the previously highlighted line
                 if (lastView != null && lastView.y != currentView.y) {
-                    component.repaint(0, lastView.y, component.getWidth(), lastView.height);
+                    if (lastView.isEmpty()) {
+                        component.repaint();
+                    } else {
+                        component.repaint(0, lastView.y, component.getWidth(), lastView.height);
+                    }
                     lastView = currentView;
                 }
             } catch (BadLocationException ignored) {

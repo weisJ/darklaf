@@ -96,24 +96,15 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     protected MouseListener getMouseListener() {
-        if (handler == null) {
-            handler = new Handler();
-        }
-        return handler;
+        return getHandler();
     }
 
     protected MouseMotionListener getMouseMotionListener() {
-        if (handler == null) {
-            handler = new Handler();
-        }
-        return handler;
+        return getHandler();
     }
 
     protected PropertyChangeListener getPropertyChangeListener() {
-        if (handler == null) {
-            handler = new Handler();
-        }
-        return handler;
+        return getHandler();
     }
 
     @Override
@@ -137,6 +128,10 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     protected ChangeListener getChangeListener() {
+        return getHandler();
+    }
+
+    protected Handler getHandler() {
         if (handler == null) {
             handler = new Handler();
         }

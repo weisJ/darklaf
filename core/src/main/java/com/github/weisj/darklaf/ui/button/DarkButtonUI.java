@@ -238,25 +238,26 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                 int size = Math.min(width - margin.left - margin.right,
                                     height - margin.left - margin.right);
                 if (!drawOutline) {
-                    g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
+                    g.fillRoundRect((width - size) / 2 + 2, (height - size) / 2 + 2,
+                                    size - 4, size - 4, arc, arc);
                 } else {
                     g.setColor(getBorderlessOutline(b));
-                    DarkUIUtil.paintLineBorder((Graphics2D) g, (width - size) / 2.0f + 1,
-                                               (height - size) / 2.0f + 1, size - 2, size - 2, arc);
+                    g.drawRoundRect((width - size) / 2 + 2, (height - size) / 2 + 2,
+                                    size - 4, size - 4, arc, arc);
                 }
             } else {
                 if (!drawOutline) {
-                    g.fillRoundRect(margin.left, margin.top,
-                                    width - margin.left - margin.right,
-                                    height - margin.top - margin.bottom,
+                    g.fillRoundRect(margin.left + 2, margin.top + 2,
+                                    width - margin.left - margin.right - 4,
+                                    height - margin.top - margin.bottom - 4,
                                     arc, arc);
                 } else {
                     g.setColor(getBorderlessOutline(b));
-                    DarkUIUtil.paintLineBorder((Graphics2D) g, margin.left + 1, margin.top + 1,
-                                               width - margin.left - margin.right - 2,
-                                               height - margin.top - margin.bottom - 2, arc);
+                    g.drawRoundRect(margin.left + 2, margin.top + 2,
+                                    width - margin.left - margin.right - 4,
+                                    height - margin.top - margin.bottom - 4,
+                                    arc, arc);
                 }
-
             }
         }
     }

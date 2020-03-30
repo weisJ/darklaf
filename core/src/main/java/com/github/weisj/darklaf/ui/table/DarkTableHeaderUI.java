@@ -40,6 +40,7 @@ import java.awt.*;
  */
 public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
 
+    public static final String KEY_IS_HEADER_RENDERER = "JComponent.isHeaderRenderer";
     private static final int HEADER_HEIGHT = 26;
     protected Color borderColor;
     protected Color background;
@@ -236,6 +237,14 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
         // Remove all components in the rendererPane.
         rendererPane.removeAll();
         config.restore();
+    }
+
+    @Override
+    protected void paintCell(final Graphics g, final Rectangle cellRect, final int columnIndex) {
+        Component component = getHeaderRenderer(columnIndex);
+        if (component instanceof JComponent) ((JComponent) component).putClientProperty(KEY_IS_HEADER_RENDERER, true);
+        rendererPane.paintComponent(g, component, header, cellRect.x, cellRect.y,
+                                    cellRect.width, cellRect.height, true);
     }
 
     protected Color getHeaderBackground() {
