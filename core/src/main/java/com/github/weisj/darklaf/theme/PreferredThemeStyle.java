@@ -26,17 +26,17 @@ package com.github.weisj.darklaf.theme;
 public class PreferredThemeStyle {
 
     private final ContrastRule contrastRule;
-    private final StyleRule styleRule;
+    private final ColorToneRule colorToneRule;
     private final FontSizeRule fontSizeRule;
 
     public PreferredThemeStyle(final ContrastRule contrastRule,
-                               final StyleRule styleRule,
+                               final ColorToneRule colorToneRule,
                                final FontSizeRule fontSizeRule) {
         if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
-        if (styleRule == null) throw new IllegalArgumentException("null is not a valid style rule");
+        if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
         if (fontSizeRule == null) throw new IllegalArgumentException("null is not a valid font size rule");
         this.contrastRule = contrastRule;
-        this.styleRule = styleRule;
+        this.colorToneRule = colorToneRule;
         this.fontSizeRule = fontSizeRule;
     }
 
@@ -44,8 +44,8 @@ public class PreferredThemeStyle {
         return contrastRule;
     }
 
-    public StyleRule getStyleRule() {
-        return styleRule;
+    public ColorToneRule getColorToneRule() {
+        return colorToneRule;
     }
 
     public FontSizeRule getFontSizeRule() {

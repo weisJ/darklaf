@@ -80,7 +80,7 @@ public class DefaultThemeProvider implements ThemeProvider {
     @Override
     public Theme getTheme(final PreferredThemeStyle themeStyle) {
         if (themeStyle == null) return lightTheme;
-        boolean dark = themeStyle.getStyleRule() == StyleRule.DARK;
+        boolean dark = themeStyle.getColorToneRule() == ColorToneRule.DARK;
         boolean highContrast = themeStyle.getContrastRule() == ContrastRule.HIGH_CONTRAST;
         Theme theme = dark ? highContrast ? darkHighContrastTheme : darkTheme
                            : highContrast ? lightHighContrastTheme : lightTheme;

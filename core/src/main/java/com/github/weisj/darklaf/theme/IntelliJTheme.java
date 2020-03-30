@@ -57,8 +57,8 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
-    public StyleRule getStyleRule() {
-        return StyleRule.LIGHT;
+    public ColorToneRule getColorToneRule() {
+        return ColorToneRule.LIGHT;
     }
 
     @Override

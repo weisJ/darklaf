@@ -49,8 +49,8 @@ public class DarculaTheme extends Theme {
     }
 
     @Override
-    public StyleRule getStyleRule() {
-        return StyleRule.DARK;
+    public ColorToneRule getColorToneRule() {
+        return ColorToneRule.DARK;
     }
 
     @Override

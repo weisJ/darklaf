@@ -23,8 +23,8 @@
  */
 package theme;
 
+import com.github.weisj.darklaf.theme.ColorToneRule;
 import com.github.weisj.darklaf.theme.PresetIconRule;
-import com.github.weisj.darklaf.theme.StyleRule;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -86,8 +86,8 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
-    public StyleRule getStyleRule() {
-        return StyleRule.LIGHT;
+    public ColorToneRule getColorToneRule() {
+        return ColorToneRule.LIGHT;
     }
 
 }

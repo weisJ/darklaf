@@ -68,7 +68,7 @@ public abstract class Theme {
      */
     public static boolean isDark(final Theme theme) {
         if (theme == null) return false;
-        return theme.getStyleRule() == StyleRule.DARK;
+        return theme.getColorToneRule() == ColorToneRule.DARK;
     }
 
     /**
@@ -338,7 +338,7 @@ public abstract class Theme {
      *
      * @return the style rule.
      */
-    public abstract StyleRule getStyleRule();
+    public abstract ColorToneRule getColorToneRule();
 
     /**
      * Returns contrast rule for the theme.

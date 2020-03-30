@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.theme;
 
-public enum StyleRule {
+public enum ColorToneRule {
     DARK,
     LIGHT
 }

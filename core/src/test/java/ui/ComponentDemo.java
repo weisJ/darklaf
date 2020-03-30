@@ -34,7 +34,7 @@ public interface ComponentDemo {
 
     static Theme getTheme() {
         return LafManager.themeForPreferredStyle(new PreferredThemeStyle(ContrastRule.STANDARD,
-                                                                         StyleRule.LIGHT,
+                                                                         ColorToneRule.LIGHT,
                                                                          FontSizeRule.DEFAULT));
     }
 
