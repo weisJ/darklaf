@@ -58,7 +58,11 @@ public class DemoPanel extends JPanel {
 
     public JPanel addControls(final int columns) {
         JPanel control = new JPanel();
-        control.setLayout(new MigLayout("fillx, wrap " + columns, "[][grow]"));
+        String constraints = "fillx";
+        if (columns > 0) {
+            constraints += ", wrap" + columns;
+        }
+        control.setLayout(new MigLayout(constraints, "[][grow]"));
         control.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
         controls.add(control);
         return control;

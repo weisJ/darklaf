@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.spinner;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 
@@ -98,14 +99,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
             DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc);
         } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
             JTable table = (JTable) c.getParent();
-            if (!table.getShowHorizontalLines()) {
-                g.fillRect(0, 0, width, 1);
-                g.fillRect(0, height - 1, width, 1);
-            }
-            if (!table.getShowVerticalLines()) {
-                g.fillRect(0, 0, 1, height);
-                g.fillRect(width - 1, 0, 1, height);
-            }
+            CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
             DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
         }
@@ -121,7 +115,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
     @Override
     public Insets getBorderInsets(final Component c) {
         if (SpinnerConstants.isTreeOrTableCellEditor(c)) {
-            return new InsetsUIResource(cellInsets.top, cellInsets.left, cellInsets.bottom, cellInsets.right);
+            return CellUtil.adjustEditorInsets(new InsetsUIResource(cellInsets.top, cellInsets.left,
+                                                                    cellInsets.bottom, cellInsets.right), c);
         }
         return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }

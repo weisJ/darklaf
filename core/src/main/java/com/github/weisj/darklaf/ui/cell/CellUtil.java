@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.cell;
 
 import com.github.weisj.darklaf.ui.list.DarkListUI;
+import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
@@ -116,5 +117,85 @@ public class CellUtil {
         } else {
             comp.setBackground(background);
         }
+    }
+
+    public static void paintTableEditorBorder(final Graphics g, final Component c, final JTable table,
+                                              final int width, final int height) {
+        int row = table.getEditingRow();
+        int col = table.getEditingColumn();
+        if (!table.getShowHorizontalLines()) {
+            if (row > CellUtil.getMinRowIndex(table)) g.fillRect(0, 0, width, 1);
+            g.fillRect(0, height - 1, width, 1);
+        }
+        if (!table.getShowVerticalLines()) {
+            if (col > CellUtil.getMinColumnIndex(table)) g.fillRect(0, 0, 1, height);
+            if (col < CellUtil.getMaxColumnIndex(table)) g.fillRect(width - 1, 0, 1, height);
+        } else if (isInWrapper(c)) {
+            if (table.getComponentOrientation().isLeftToRight()) {
+                g.fillRect(0, 0, 1, height);
+            } else {
+                g.fillRect(width - 1, 0, 1, height);
+            }
+        }
+    }
+
+    protected static boolean isInWrapper(final Component c) {
+        return c.getParent() instanceof DarkTableCellEditor.IconWrapper;
+    }
+
+    protected static boolean isListEditor(final Component c) {
+        return c instanceof JComponent
+               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkListUI.KEY_IS_LIST_RENDERER))
+               && c.getParent() instanceof JList;
+    }
+
+    public static Insets adjustEditorInsets(final Insets ins, final Component c) {
+        if (isInWrapper(c)) {
+            if (parentLTR(c)) {
+                ins.left -= ((DarkTableCellEditor.IconWrapper) c.getParent()).getIconCompGap();
+            } else {
+                ins.right -= ((DarkTableCellEditor.IconWrapper) c.getParent()).getIconCompGap();
+            }
+        } else if (isListEditor(c)) {
+            ListCellRenderer<?> renderer = ((JList<?>) c.getParent()).getCellRenderer();
+            if (renderer instanceof JLabel) {
+                if (parentLTR(c)) {
+                    ins.left -= ((JLabel) renderer).getIconTextGap() - 1;
+                } else {
+                    ins.right -= ((JLabel) renderer).getIconTextGap() - 1;
+                }
+            }
+        }
+        return adjustTableCellEditorInsets(ins, DarkUIUtil.getParentOfType(JTable.class, c));
+    }
+
+    public static Insets adjustTableCellEditorInsets(final Insets ins, final JTable table) {
+        if (table != null && !table.getShowVerticalLines()) {
+            int cMin = getMinColumnIndex(table);
+            int column = table.getEditingColumn();
+            if (column > cMin) ins.left++;
+        }
+        return ins;
+    }
+
+    protected static boolean parentLTR(final Component c) {
+        return c.getParent().getComponentOrientation().isLeftToRight();
+    }
+
+    public static int getMinColumnIndex(final JTable table) {
+        Rectangle rect = table.getVisibleRect();
+        return table.columnAtPoint(rect.getLocation());
+    }
+
+    public static int getMaxColumnIndex(final JTable table) {
+        Rectangle rect = table.getVisibleRect();
+        Point p = rect.getLocation();
+        p.x += rect.width - 1;
+        return table.columnAtPoint(p);
+    }
+
+    public static int getMinRowIndex(final JTable table) {
+        Rectangle rect = table.getVisibleRect();
+        return table.rowAtPoint(rect.getLocation());
     }
 }

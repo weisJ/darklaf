@@ -85,6 +85,16 @@ public class ButtonDemo implements ComponentDemo {
         }});
 
         controlPanel = panel.addControls();
+        controlPanel.add(new JCheckBox("Text enabled") {{
+            setSelected(true);
+            addActionListener(e -> button.setText(isSelected() ? "Test Button" : null));
+        }});
+        controlPanel.add(new JCheckBox("Icon enabled") {{
+            setSelected(true);
+            addActionListener(e -> button.setIcon(isSelected() ? icon : null));
+        }});
+
+        controlPanel = panel.addControls();
         controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
                                                (b, c) -> button
                                                    .putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
@@ -116,10 +126,6 @@ public class ButtonDemo implements ComponentDemo {
                     button.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.valueOf(e.getItem().toString()));
                 }
             });
-        }});
-        controlPanel.add(new JCheckBox("Icon Only") {{
-            setSelected(false);
-            addActionListener(e -> button.setText(isSelected() ? null : "Test Button"));
         }});
         return panel;
     }

@@ -46,11 +46,9 @@ public class TableDemo implements ComponentDemo {
             "Id", "Name", "Hourly Rate", "Part Time", "Components"
         };
 
-        Object[][] data = new Object[][]{
-            {1, "John", 40.0, false, "Item"},
-            {2, "Rambo", 70.0, false, 10},
-            {3, "Zorro", 60.0, true, "cell"},
-            };
+        Object[][] data = new Object[][]{{1, "John", 40.0, false, "Item"},
+                                         {2, "Rambo", 70.0, false, 10},
+                                         {3, "Zorro", 60.0, true, "cell"}};
         AtomicBoolean editable = new AtomicBoolean(true);
         JTable table = new JTable(data, columns) {
             final TableCellEditor comboEditor = new DarkTableCellEditor(new JComboBox<>());
@@ -76,7 +74,7 @@ public class TableDemo implements ComponentDemo {
         JTableHeader header = table.getTableHeader();
         DemoPanel panel = new DemoPanel(new JScrollPane(table));
 
-        JPanel controlPanel = panel.addControls();
+        JPanel controlPanel = panel.addControls(3);
         controlPanel.add(new JCheckBox("enabled") {{
             setSelected(table.isEnabled());
             addActionListener(e -> table.setEnabled(isSelected()));
@@ -115,6 +113,12 @@ public class TableDemo implements ComponentDemo {
             setSelected(table.getRowSelectionAllowed());
             addActionListener(e -> table.setRowSelectionAllowed(isSelected()));
             table.addPropertyChangeListener(e -> setSelected(table.getRowSelectionAllowed()));
+        }});
+        controlPanel = panel.addControls(3);
+        controlPanel.add(new JLabel("Row height:"));
+        controlPanel.add(new JSpinner() {{
+            setValue(table.getRowHeight());
+            addChangeListener(e -> table.setRowHeight(Integer.parseInt(getValue().toString())));
         }});
         return panel;
     }

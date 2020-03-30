@@ -188,6 +188,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         config.restore();
     }
 
+    @Override
+    protected Rectangle getVisibleEditorRect() {
+        Rectangle rect = super.getVisibleEditorRect();
+        return rect;
+    }
+
     protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
         g.setColor(getBackground(c));
         Rectangle r = getDrawingRect(c);

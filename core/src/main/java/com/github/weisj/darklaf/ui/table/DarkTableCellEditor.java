@@ -289,7 +289,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         return checkBoxEditor;
     }
 
-    protected static class IconWrapper extends JPanel {
+    public static class IconWrapper extends JPanel {
 
         private final JLabel label;
         private JComponent c;

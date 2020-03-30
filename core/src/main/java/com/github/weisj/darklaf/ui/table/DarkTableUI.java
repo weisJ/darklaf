@@ -535,6 +535,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
 
         boolean scrollLtR = !isScrollPaneRtl();
         boolean ltr = table.getComponentOrientation().isLeftToRight();
+        boolean isEditorCell = table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column;
 
         JTableHeader header = table.getTableHeader();
         int draggedIndex = header != null ? viewIndexForColumn(header.getDraggedColumn())
@@ -543,7 +544,13 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                                                    table.getCellRect(row, draggedIndex, true),
                                                    table) : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
+        Rectangle rectWithSpacing = table.getCellRect(row, cMin, true);
         Rectangle r = new Rectangle(cellRect);
+        r.y = rectWithSpacing.y;
+        r.height = rectWithSpacing.height;
+        if (table.getShowHorizontalLines()) {
+            r.height--;
+        }
         if (!scrollBarVisible()) {
             if (ltr) {
                 if (column == cMax && !isDragged) r.width += 1;
@@ -565,12 +572,13 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                 }
             }
         }
-        if (!table.getShowVerticalLines() && column > cMin && isFocusCell(row, column)) {
-            r.x -= 1;
-            if (column < cMax) r.width += 1;
+        if (isEditorCell) {
+            if (!table.getShowVerticalLines()) {
+                if (column > cMin) r.x -= 1;
+                if (column > cMin && column < cMax) r.width += 1;
+            }
         }
-        if (table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column) {
-
+        if (isEditorCell) {
             Component component = table.getEditorComponent();
             component.setBounds(r);
             component.validate();

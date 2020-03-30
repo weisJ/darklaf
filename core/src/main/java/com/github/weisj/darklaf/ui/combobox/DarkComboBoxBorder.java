@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.combobox;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 
@@ -140,14 +141,7 @@ public class DarkComboBoxBorder implements Border, UIResource {
         Component parent = c.getParent();
         if (isTableCellEditor && parent instanceof JTable) {
             JTable table = ((JTable) parent);
-            if (!table.getShowHorizontalLines()) {
-                g.fillRect(0, 0, width, 1);
-                g.fillRect(0, height - 1, width, 1);
-            }
-            if (!table.getShowVerticalLines()) {
-                g.fillRect(0, 0, 1, height);
-                g.fillRect(width - 1, 0, 1, height);
-            }
+            CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
             DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
         }
@@ -167,7 +161,8 @@ public class DarkComboBoxBorder implements Border, UIResource {
     @Override
     public Insets getBorderInsets(final Component c) {
         if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
-            return new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right);
+            return CellUtil.adjustEditorInsets(new InsetsUIResource(cellPadding.top, cellPadding.left,
+                                                                    cellPadding.bottom, cellPadding.right), c);
         }
         if (c.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);
