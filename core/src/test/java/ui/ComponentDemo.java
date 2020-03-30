@@ -33,7 +33,9 @@ import java.awt.event.ActionEvent;
 public interface ComponentDemo {
 
     static Theme getTheme() {
-        return new IntelliJTheme();
+        return LafManager.themeForPreferredStyle(new PreferredThemeStyle(ContrastRule.STANDARD,
+                                                                         StyleRule.LIGHT,
+                                                                         FontSizeRule.DEFAULT));
     }
 
     JComponent createComponent();

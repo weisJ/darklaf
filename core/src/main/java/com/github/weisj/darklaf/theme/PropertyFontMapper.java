@@ -46,7 +46,7 @@ public class PropertyFontMapper implements FontMapper {
         adjustment = getSize(defaults);
         // No need to create a new font.
         if (adjustment == 0) return font;
-        if (adjustment < font.getSize2D()) {
+        if (adjustment + font.getSize2D() <= 0) {
             if (adjustment != Integer.MIN_VALUE) {
                 LOGGER.warning("Font " + font + " would be invisible after applying "
                                + "an adjustment of " + adjustment + ". Aborting!");

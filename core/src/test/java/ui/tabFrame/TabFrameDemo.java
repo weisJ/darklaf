@@ -48,7 +48,7 @@ public class TabFrameDemo implements ComponentDemo {
     private static Component createTextArea() {
         NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {{
             setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));
-            setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
+            setFont(new Font(Font.MONOSPACED, Font.PLAIN, getFont().getSize()));
         }});
         NumberingPane numbering = numberPane.getNumberingPane();
         Icon icon = IconLoader.get().getIcon("navigation/arrowRight.svg");
