@@ -49,8 +49,8 @@ public class SolarizedDarkTheme extends Theme {
     }
 
     @Override
-    public boolean isDark() {
-        return true;
+    public StyleRule getStyleRule() {
+        return StyleRule.DARK;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class SolarizedDarkTheme extends Theme {
     }
 
     @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    protected PresetIconRule getPresetIconRule() {
+        return PresetIconRule.NONE;
     }
 }

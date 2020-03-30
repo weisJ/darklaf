@@ -25,6 +25,7 @@ package com.github.weisj.darklaf;
 
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.theme.FontSizeRule;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
@@ -104,9 +105,10 @@ public class DarkLaf extends BasicLookAndFeel {
     public UIDefaults getDefaults() {
         final UIDefaults metalDefaults = new MetalLookAndFeel().getDefaults();
         final UIDefaults defaults = base.getDefaults();
+        final Theme currentTheme = LafManager.getTheme();
         try {
             initInputMapDefaults(defaults);
-            loadThemeDefaults(defaults);
+            loadThemeDefaults(currentTheme, defaults);
             setupUtils(defaults);
             initIdeaDefaults(defaults);
 
@@ -114,6 +116,7 @@ public class DarkLaf extends BasicLookAndFeel {
             if (SystemInfo.isMac) {
                 patchMacOSFonts(defaults);
             }
+            applyFontRule(currentTheme, defaults);
             setupDecorations();
 
             String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
@@ -130,6 +133,26 @@ public class DarkLaf extends BasicLookAndFeel {
             LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
         }
         return defaults;
+    }
+
+    private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
+        FontSizeRule rule = currentTheme.getFontSizeRule();
+        if (rule == null || rule == FontSizeRule.DEFAULT) return;
+        for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
+            if (entry != null && entry.getValue() instanceof Font) {
+                entry.setValue(fontWithRule((Font) entry.getValue(), currentTheme, rule, defaults));
+            }
+        }
+    }
+
+    private Font fontWithRule(final Font font, final Theme currentTheme,
+                              final FontSizeRule rule, final UIDefaults defaults) {
+        Font withRule = currentTheme.getFontMapper(rule).map(font, defaults);
+        if (font instanceof UIResource
+            && !(withRule instanceof UIResource)) {
+            withRule = new FontUIResource(withRule);
+        }
+        return withRule;
     }
 
     private void setupUtils(final UIDefaults defaults) {
@@ -222,9 +245,8 @@ public class DarkLaf extends BasicLookAndFeel {
         }
     }
 
-    private void loadThemeDefaults(final UIDefaults defaults) {
+    private void loadThemeDefaults(final Theme currentTheme, final UIDefaults defaults) {
         Properties uiProps = new Properties();
-        final Theme currentTheme = LafManager.getTheme();
         currentTheme.loadDefaults(uiProps, defaults);
         //Load overwrites the user has set.
         PropertyLoader.putProperties(LafManager.getUserProperties(), uiProps, defaults);
@@ -245,6 +267,8 @@ public class DarkLaf extends BasicLookAndFeel {
     }
 
     private void loadFontProperties(final Properties uiProps, final UIDefaults defaults) {
+        Properties fontSizeProps = PropertyLoader.loadProperties(DarkLaf.class, "font_sizes", "properties/");
+        PropertyLoader.putProperties(fontSizeProps, uiProps, defaults);
         Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, "font", "properties/");
         PropertyLoader.putProperties(fontProps, uiProps, defaults);
     }

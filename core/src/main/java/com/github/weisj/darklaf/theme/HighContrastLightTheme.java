@@ -29,8 +29,8 @@ import java.util.Properties;
 public class HighContrastLightTheme extends Theme {
 
     @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.LIGHT;
+    protected PresetIconRule getPresetIconRule() {
+        return PresetIconRule.LIGHT;
     }
 
     @Override
@@ -54,13 +54,13 @@ public class HighContrastLightTheme extends Theme {
     }
 
     @Override
-    public boolean isDark() {
-        return false;
+    public StyleRule getStyleRule() {
+        return StyleRule.LIGHT;
     }
 
     @Override
-    public boolean isHighContrast() {
-        return true;
+    public ContrastRule getContrastRule() {
+        return ContrastRule.HIGH_CONTRAST;
     }
 
     @Override

@@ -25,9 +25,7 @@ package com.github.weisj.darklaf;
 
 import com.github.weisj.darklaf.icons.AwareIconStyle;
 import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.theme.DarculaTheme;
-import com.github.weisj.darklaf.theme.IntelliJTheme;
-import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,6 +44,7 @@ import java.util.logging.Logger;
  */
 public final class LafManager {
 
+    private static ThemeProvider themeProvider;
     private static Theme theme;
     private static boolean logEnabled = false;
     private static boolean decorationsOverwrite = true;
@@ -91,7 +90,7 @@ public final class LafManager {
     }
 
     /**
-     * Set globally whether decorations are enabled. By default this is true. Decorations are used if this value is set
+     * Set globally whether decorations are enabled. By default, this is true. Decorations are used if this value is set
      * to true and the current platform and theme support custom decorations.
      *
      * @param enabled true if decorations should be used if available.
@@ -105,6 +104,29 @@ public final class LafManager {
         }
     }
 
+    public static ThemeProvider getThemeProvider() {
+        if (themeProvider == null) themeProvider = createDefaultThemeProvider();
+        return themeProvider;
+    }
+
+    public static void setThemeProvider(final ThemeProvider themeProvider) {
+        LafManager.themeProvider = themeProvider;
+    }
+
+    private static ThemeProvider createDefaultThemeProvider() {
+        return new DefaultThemeProvider();
+    }
+
+    /**
+     * Get the associated theme for the given preferred style.
+     *
+     * @param style the preferred theme style.
+     * @return the associated Theme or best match if there is none associated.
+     */
+    public static Theme themeForPreferredStyle(final PreferredThemeStyle style) {
+        return getThemeProvider().getTheme(style);
+    }
+
     /**
      * Get the current theme. This method will never return null even if the LaF isn#t currently installed.
      *
@@ -112,7 +134,7 @@ public final class LafManager {
      */
     public static Theme getTheme() {
         if (theme == null) {
-            setTheme(new IntelliJTheme());
+            setTheme(themeForPreferredStyle(null));
         }
         return theme;
     }
@@ -124,9 +146,28 @@ public final class LafManager {
      */
     public static void setTheme(final Theme theme) {
         LafManager.theme = theme;
-        IconLoader.updateAwareStyle(theme.isDark() ? AwareIconStyle.DARK
-                                                   : AwareIconStyle.LIGHT);
+        IconLoader.updateAwareStyle(Theme.isDark(theme) ? AwareIconStyle.DARK
+                                                        : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(theme);
+    }
+
+    /**
+     * Install the theme suited for the given preferred theme style.
+     *
+     * @param preferredThemeStyle the preferred theme style.
+     */
+    public static void installTheme(final PreferredThemeStyle preferredThemeStyle) {
+        setTheme(preferredThemeStyle);
+        install();
+    }
+
+    /**
+     * Sets the theme suited for the given preferred theme style.
+     *
+     * @param preferredThemeStyle the preferred theme style.
+     */
+    public static void setTheme(final PreferredThemeStyle preferredThemeStyle) {
+        setTheme(themeForPreferredStyle(preferredThemeStyle));
     }
 
 

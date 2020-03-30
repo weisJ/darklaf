@@ -49,18 +49,18 @@ public class SolarizedLightTheme extends Theme {
     }
 
     @Override
+    public StyleRule getStyleRule() {
+        return StyleRule.LIGHT;
+    }
+
+    @Override
     public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.loadUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);
     }
 
     @Override
-    public boolean isDark() {
-        return false;
-    }
-
-    @Override
-    protected IconTheme getPresetIconTheme() {
-        return IconTheme.NONE;
+    protected PresetIconRule getPresetIconRule() {
+        return PresetIconRule.NONE;
     }
 }

@@ -23,47 +23,33 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import javax.swing.*;
-import java.util.Properties;
+public class PreferredThemeStyle {
 
-/**
- * @author Jannis Weis
- */
-public class IntelliJTheme extends Theme {
+    private final ContrastRule contrastRule;
+    private final StyleRule styleRule;
+    private final FontSizeRule fontSizeRule;
 
-    @Override
-    protected String getResourcePath() {
-        return "intellij/";
+    public PreferredThemeStyle(final ContrastRule contrastRule,
+                               final StyleRule styleRule,
+                               final FontSizeRule fontSizeRule) {
+        if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
+        if (styleRule == null) throw new IllegalArgumentException("null is not a valid style rule");
+        if (fontSizeRule == null) throw new IllegalArgumentException("null is not a valid font size rule");
+        this.contrastRule = contrastRule;
+        this.styleRule = styleRule;
+        this.fontSizeRule = fontSizeRule;
     }
 
-    @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.LIGHT;
+    public ContrastRule getContrastRule() {
+        return contrastRule;
     }
 
-    @Override
-    public String getPrefix() {
-        return "intellij";
-    }
-
-    @Override
-    public String getName() {
-        return "IntelliJ";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return IntelliJTheme.class;
-    }
-
-    @Override
     public StyleRule getStyleRule() {
-        return StyleRule.LIGHT;
+        return styleRule;
     }
 
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
+    public FontSizeRule getFontSizeRule() {
+        return fontSizeRule;
     }
+
 }

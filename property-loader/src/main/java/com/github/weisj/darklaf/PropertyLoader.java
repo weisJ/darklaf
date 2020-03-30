@@ -158,19 +158,7 @@ public final class PropertyLoader {
         } else if (PropertyValue.NULL.equalsIgnoreCase(value)) {
             returnVal = null;
         } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
-            String val = parseKey(value);
-            String referenceFreeKey = val.substring(1);
-            boolean containsKey = accumulator.containsKey(val)
-                                  || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
-            if (!containsKey) {
-                LOGGER.warning("Could not reference value '" + val + "' while loading '" + key + "'. " +
-                               "May be a forward reference");
-            }
-            returnVal = accumulator.get(val);
-            if (addReferenceInfo) {
-                if (returnVal == null) returnVal = accumulator.get(referenceFreeKey);
-                returnVal = new Pair<>(value, returnVal);
-            }
+            returnVal = parseReference(key, value, accumulator);
         }
         if (returnVal instanceof LoadError) {
             final Color color = ColorUtil.fromHex(value, null);
@@ -189,6 +177,24 @@ public final class PropertyLoader {
             return returnVal;
         }
         return value;
+    }
+
+    private static Object parseReference(final String key, final String value,
+                                         final Map<Object, Object> accumulator) {
+        String val = parseKey(value);
+        String referenceFreeKey = val.substring(1);
+        boolean containsKey = accumulator.containsKey(val)
+                              || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
+        if (!containsKey) {
+            LOGGER.warning("Could not reference value '" + val + "' while loading '" + key + "'. " +
+                           "Maybe is a forward reference");
+        }
+        Object returnVal = accumulator.get(val);
+        if (addReferenceInfo) {
+            if (returnVal == null) returnVal = accumulator.get(referenceFreeKey);
+            returnVal = new Pair<>(value, returnVal);
+        }
+        return returnVal;
     }
 
 
@@ -214,11 +220,11 @@ public final class PropertyLoader {
                 base = result.getFirst();
                 val = result.getSecond();
             } else if (val.startsWith(FONT_SIZE)) {
-                Pair<Integer, String> result = parseFontAttribute(FONT_SIZE, val);
+                Pair<Integer, String> result = parseFontAttribute(FONT_SIZE, val, accumulator);
                 size = result.getFirst();
                 val = result.getSecond();
             } else if (val.startsWith(FONT_STYLE)) {
-                Pair<Integer, String> result = parseFontAttribute(FONT_STYLE, val);
+                Pair<Integer, String> result = parseFontAttribute(FONT_STYLE, val, accumulator);
                 style = result.getFirst();
                 val = result.getSecond();
             } else {
@@ -243,16 +249,31 @@ public final class PropertyLoader {
         }
     }
 
-    private static Pair<Integer, String> parseFontAttribute(final String identifier, final String val) {
+    private static Pair<Integer, String> parseFontAttribute(final String identifier, final String val,
+                                                            final Map<Object, Object> accumulator) {
         String key = val.substring(identifier.length() + 1);
         int lastIndex = key.indexOf(ARG_END);
         String rest = key.substring(lastIndex + 1);
         key = key.substring(0, lastIndex);
-        try {
-            return new Pair<>(Integer.parseInt(key), rest);
-        } catch (NumberFormatException e) {
-            return new Pair<>(-1, rest);
+        String[] subKeys = key.split(String.valueOf(SEPARATOR));
+        int[] values = new int[subKeys.length];
+        for (int i = 0; i < values.length; i++) {
+            if (subKeys[i].startsWith(String.valueOf(REFERENCE_PREFIX))) {
+                Object ref = parseReference(identifier, subKeys[i], accumulator);
+                values[i] = ref instanceof Integer ? (Integer) ref : 0;
+            } else {
+                try {
+                    values[i] = Integer.parseInt(subKeys[i]);
+                } catch (NumberFormatException ignored) {
+                    // In this case the value will be 0.
+                }
+            }
         }
+        int result = 0;
+        for (int i : values) {
+            result += i;
+        }
+        return new Pair<>(result, rest);
     }
 
     private static Pair<Font, String> parseFrom(final String val,

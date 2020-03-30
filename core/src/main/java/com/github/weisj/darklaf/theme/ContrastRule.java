@@ -23,47 +23,7 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import javax.swing.*;
-import java.util.Properties;
-
-/**
- * @author Jannis Weis
- */
-public class IntelliJTheme extends Theme {
-
-    @Override
-    protected String getResourcePath() {
-        return "intellij/";
-    }
-
-    @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.LIGHT;
-    }
-
-    @Override
-    public String getPrefix() {
-        return "intellij";
-    }
-
-    @Override
-    public String getName() {
-        return "IntelliJ";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return IntelliJTheme.class;
-    }
-
-    @Override
-    public StyleRule getStyleRule() {
-        return StyleRule.LIGHT;
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
-    }
+public enum ContrastRule {
+    HIGH_CONTRAST,
+    STANDARD
 }

@@ -57,6 +57,30 @@ public abstract class Theme {
     private static final String[] ICON_PROPERTIES = new String[]{
         "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
     };
+    private FontSizeRule fontSizeRule;
+
+
+    /**
+     * Returns whether the theme is a dark theme. This is used to determine the default mode for [aware] icons.
+     *
+     * @param theme the theme.
+     * @return true if dark.
+     */
+    public static boolean isDark(final Theme theme) {
+        if (theme == null) return false;
+        return theme.getStyleRule() == StyleRule.DARK;
+    }
+
+    /**
+     * Returns whether the theme is a high contrast theme.
+     *
+     * @param theme the theme.
+     * @return true if the theme is a high contrast theme.
+     */
+    public static boolean isHighContrast(final Theme theme) {
+        if (theme == null) return false;
+        return theme.getContrastRule() == ContrastRule.HIGH_CONTRAST;
+    }
 
     public UIManager.LookAndFeelInfo createLookAndFeelInfo() {
         return new UIManager.LookAndFeelInfo(getPrefix(), DarkLaf.class.getCanonicalName());
@@ -130,7 +154,7 @@ public abstract class Theme {
      * @param currentDefaults the current ui defaults.
      */
     protected void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        IconTheme iconTheme = getPresetIconTheme();
+        PresetIconRule iconTheme = getPresetIconRule();
         Properties props;
         switch (iconTheme) {
             case DARK:
@@ -185,7 +209,7 @@ public abstract class Theme {
      *
      * @return the icon theme.
      */
-    protected abstract IconTheme getPresetIconTheme();
+    protected abstract PresetIconRule getPresetIconRule();
 
     /**
      * Load custom properties that are located under {@link #getResourcePath()}, with the name {@link
@@ -310,24 +334,50 @@ public abstract class Theme {
     }
 
     /**
-     * Returns whether this theme is a dark theme. This is used to determine the default mode for [aware] icons.
+     * Returns the style rule for this theme.
      *
-     * @return true if the theme is dark.
+     * @return the style rule.
      */
-    public abstract boolean isDark();
+    public abstract StyleRule getStyleRule();
 
     /**
-     * Returns whether the theme is a high contrast theme.
+     * Returns contrast rule for the theme.
      *
-     * @return true if the theme is high contrast.
+     * @return the contrast rule.
      */
-    public boolean isHighContrast() {
-        return false;
+    public ContrastRule getContrastRule() {
+        return ContrastRule.STANDARD;
     }
 
-    protected enum IconTheme {
-        NONE,
-        DARK,
-        LIGHT
+    /**
+     * Get the font size rule for this theme.
+     *
+     * @return the font size rule.
+     */
+    public FontSizeRule getFontSizeRule() {
+        if (fontSizeRule == null) fontSizeRule = FontSizeRule.DEFAULT;
+        return fontSizeRule;
     }
+
+    /**
+     * Set the font size rule.
+     *
+     * @param fontSizeRule the font size rule.
+     */
+    public void setFontSizeRule(final FontSizeRule fontSizeRule) {
+        this.fontSizeRule = fontSizeRule;
+    }
+
+    /**
+     * Get the font mapper for the specified size rule. By default, this delegated to the values specified by the
+     * `[rule].size` properties.
+     *
+     * @param rule the font size rule.
+     * @return the associated font mapper.
+     */
+    public FontMapper getFontMapper(final FontSizeRule rule) {
+        if (rule == null) return (font, defaults) -> font;
+        return rule.getFontMapper();
+    }
+
 }

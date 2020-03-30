@@ -23,6 +23,8 @@
  */
 package theme;
 
+import com.github.weisj.darklaf.theme.PresetIconRule;
+import com.github.weisj.darklaf.theme.StyleRule;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -60,12 +62,12 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
-    protected IconTheme getPresetIconTheme() {
+    protected PresetIconRule getPresetIconRule() {
         /*
          * Use a custom icon theme. Colors are defined in
          * my_custom_theme_icons.properties.
          */
-        return IconTheme.NONE;
+        return PresetIconRule.NONE;
     }
 
     @Override
@@ -84,7 +86,8 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
-    public boolean isDark() {
-        return false;
+    public StyleRule getStyleRule() {
+        return StyleRule.LIGHT;
     }
+
 }
