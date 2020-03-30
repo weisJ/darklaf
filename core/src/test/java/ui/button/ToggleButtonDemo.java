@@ -25,6 +25,7 @@ package ui.button;
 
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -67,18 +68,12 @@ public class ToggleButtonDemo implements ComponentDemo {
         }}, "span");
 
         controlPanel = panel.addControls();
-        controlPanel.add(new JLabel("JToggleButton.variant:"));
+        controlPanel.add(new JLabel(ToggleButtonConstants.KEY_VARIANT + ":"));
         controlPanel.add(new JComboBox<String>() {{
-            addItem("slider");
+            addItem(ToggleButtonConstants.VARIANT_SLIDER);
             addItem("none");
-            setSelectedItem("no JToggleButton.variant");
-            addItemListener(e -> {
-                if (e.getItem().equals("slider")) {
-                    button.putClientProperty("JToggleButton.variant", "slider");
-                } else {
-                    button.putClientProperty("JToggleButton.variant", null);
-                }
-            });
+            setSelectedItem("none");
+            addItemListener(e -> button.putClientProperty("JToggleButton.variant", e.getItem()));
         }});
         return panel;
     }

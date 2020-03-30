@@ -93,6 +93,7 @@ public class TabFrameDemo implements ComponentDemo {
             }}, Alignment.NORTH, 1);
              */
         tabFrame.setAcceleratorAt(1, Alignment.NORTH_WEST, 0);
+        tabFrame.setTabEnabled(Alignment.NORTH_EAST, 0, false);
 
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.add(tabFrame, BorderLayout.CENTER);

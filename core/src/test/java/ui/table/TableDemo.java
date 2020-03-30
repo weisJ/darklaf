@@ -24,6 +24,7 @@
 package ui.table;
 
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.util.PropertyKey;
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -96,6 +97,10 @@ public class TableDemo implements ComponentDemo {
             addActionListener(e -> table.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                                                                               : ComponentOrientation.RIGHT_TO_LEFT));
         }});
+        controlPanel.add(new JCheckBox(DarkTableUI.KEY_ALTERNATE_ROW_COLOR) {{
+            setSelected(Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR)));
+            addActionListener(e -> table.putClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
+        }});
         controlPanel.add(new JCheckBox("reordering") {{
             setSelected(header.getReorderingAllowed());
             addActionListener(e -> header.setReorderingAllowed(isSelected()));
@@ -114,6 +119,18 @@ public class TableDemo implements ComponentDemo {
             addActionListener(e -> table.setRowSelectionAllowed(isSelected()));
             table.addPropertyChangeListener(e -> setSelected(table.getRowSelectionAllowed()));
         }});
+        controlPanel.add(new JCheckBox(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX) {{
+            setSelected(Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX)));
+            addActionListener(e -> table.putClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected()));
+        }}, "span");
+        controlPanel.add(new JLabel(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE + ":", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<String>() {{
+            addItem(DarkTableUI.RENDER_TYPE_CHECKBOX);
+            addItem(DarkTableUI.RENDER_TYPE_RADIOBUTTON);
+            setSelectedItem(table.getClientProperty(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE));
+            addItemListener(e -> table.putClientProperty(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE, e.getItem()));
+        }});
+
         controlPanel = panel.addControls(3);
         controlPanel.add(new JLabel("Row height:"));
         controlPanel.add(new JSpinner() {{
