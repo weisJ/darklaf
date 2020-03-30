@@ -30,7 +30,7 @@ public class HighContrastLightTheme extends Theme {
 
     @Override
     protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.LIGHT;
+        return PresetIconRule.NONE;
     }
 
     @Override

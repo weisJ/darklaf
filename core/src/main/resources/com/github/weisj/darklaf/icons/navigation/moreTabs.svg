@@ -1,19 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.moreTabs.color">
-            <stop offset="0" stop-color="#AFB1B3"/>
-            <stop offset="1" stop-color="#AFB1B3"/>
+        <linearGradient id="Icons.moreTabs.color" opacity="Icons.moreTabs.opacity">
+            <stop offset="0" stop-color="#AFB1B3" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#AFB1B3" stop-opacity=".8"/>
         </linearGradient>
-        <linearGradient id="Icons.moreTabs.arrowColor">
-            <stop offset="0" stop-color="#AFB1B3"/>
-            <stop offset="1" stop-color="#AFB1B3"/>
+        <linearGradient id="Icons.moreTabs.arrowColor" opacity="Icons.moreTabs.opacity">
+            <stop offset="0" stop-color="#AFB1B3" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#AFB1B3" stop-opacity=".8"/>
         </linearGradient>
     </defs>
-    <g fill="none" fill-opacity=".8">
-        <rect width="8" height="1" x="8" y="4" fill="url(#Icons.moreTabs.color)"/>
-        <rect width="8" height="1" x="8" y="6" fill="url(#Icons.moreTabs.color)"/>
-        <rect width="8" height="1" x="8" y="8" fill="url(#Icons.moreTabs.color)"/>
-        <rect width="8" height="1" x="8" y="10" fill="url(#Icons.moreTabs.color)"/>
-        <polygon fill="url(#Icons.moreTabs.arrowColor)" points="3.5 7 6 10 1 10" transform="matrix(1 0 0 -1 0 17)"/>
-    </g>
+    <rect width="8" height="1" x="8" y="4" fill="url(#Icons.moreTabs.color)"/>
+    <rect width="8" height="1" x="8" y="6" fill="url(#Icons.moreTabs.color)"/>
+    <rect width="8" height="1" x="8" y="8" fill="url(#Icons.moreTabs.color)"/>
+    <rect width="8" height="1" x="8" y="10" fill="url(#Icons.moreTabs.color)"/>
+    <polygon fill="url(#Icons.moreTabs.arrowColor)" points="3.5 7 6 10 1 10" transform="matrix(1 0 0 -1 0 17)"/>
 </svg>

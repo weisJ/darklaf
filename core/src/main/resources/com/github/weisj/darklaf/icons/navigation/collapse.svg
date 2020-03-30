@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
     <defs id="colors">
-        <linearGradient id="Icons.collapse.color">
-            <stop offset="0" stop-color="#AFB1B3"/>
-            <stop offset="1" stop-color="#AFB1B3"/>
+        <linearGradient id="Icons.collapse.color" opacity="Icons.collapse.opacity">
+            <stop offset="0" stop-color="#AFB1B3" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#AFB1B3" stop-opacity=".8"/>
         </linearGradient>
     </defs>
-    <rect x="2" y="7" width="12" height="2" fill="url(#Icons.collapse.color)" fill-opacity=".8"/>
+    <rect x="2" y="7" width="12" height="2" fill="url(#Icons.collapse.color)"/>
 </svg>

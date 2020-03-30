@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.drive.color">
-            <stop offset="0" stop-color="#9AA7B0"/>
-            <stop offset="1" stop-color="#9AA7B0"/>
+        <linearGradient id="Icons.drive.color" opacity="Icons.drive.opacity">
+            <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
         </linearGradient>
         <linearGradient id="Icons.drive.dotColor">
             <stop offset="0" stop-color="#499C54"/>
@@ -10,10 +10,10 @@
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">
-        <rect x="2" y="9" width="12" height="4" fill="url(#Icons.drive.color)" fill-opacity=".8"/>
+        <rect x="2" y="9" width="12" height="4" fill="url(#Icons.drive.color)"/>
         <rect x="11" y="10" width="2" height="2" fill="url(#Icons.drive.dotColor)"/>
 
-        <rect x="2" y="4" width="12" height="4" fill="url(#Icons.drive.color)" fill-opacity=".8"/>
+        <rect x="2" y="4" width="12" height="4" fill="url(#Icons.drive.color)"/>
         <rect x="11" y="5" width="2" height="2" fill="url(#Icons.drive.dotColor)"/>
     </g>
 </svg>

@@ -39,9 +39,9 @@ public class ThemedSVGIcon extends DarkSVGIcon {
     }
 
     @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y, final double rotation) {
         ensureTheme();
-        super.paintIcon(c, g, x, y);
+        super.paintIcon(c, g, x, y, rotation);
     }
 
     private void ensureTheme() {
