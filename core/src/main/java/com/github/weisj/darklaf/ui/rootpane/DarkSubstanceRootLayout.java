@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.rootpane;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 
 import javax.swing.*;
 import java.awt.*;

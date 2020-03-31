@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.platform.macos.ui;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
 import com.github.weisj.darklaf.util.PropertyKey;
 

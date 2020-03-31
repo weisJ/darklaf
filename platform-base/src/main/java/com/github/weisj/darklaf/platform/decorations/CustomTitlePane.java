@@ -21,45 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
-
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+package com.github.weisj.darklaf.platform.decorations;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
-import java.util.Properties;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
-    @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
-        return new CustomTitlePane() {
-            @Override
-            public void install() {
-            }
+public abstract class CustomTitlePane extends JComponent {
 
-            @Override
-            public void uninstall() {
-            }
+    public abstract void uninstall();
 
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
-        };
-    }
+    /**
+     * Do not call directly.
+     */
+    protected abstract void install();
+
+    public abstract Insets getWindowSizeAdjustment();
 
     @Override
-    public boolean isCustomDecorationSupported() {
-        return false;
-    }
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
+    public void addNotify() {
+        super.addNotify();
+        install();
     }
 }

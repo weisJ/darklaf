@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorations;
+package com.github.weisj.darklaf.platform.decorations;
 
 import javax.swing.*;
 import java.awt.*;

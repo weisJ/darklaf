@@ -10,7 +10,7 @@ plugins {
 dependencies {
     implementation(project(":darklaf-native-utils"))
     implementation(project(":darklaf-utils"))
-    implementation(project(":darklaf-decorations-base"))
+    implementation(project(":darklaf-platform-base"))
     implementation(project(":darklaf-windows"))
     implementation(project(":darklaf-macos"))
     implementation(project(":darklaf-property-loader"))

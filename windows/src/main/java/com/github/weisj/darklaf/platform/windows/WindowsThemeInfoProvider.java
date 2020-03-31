@@ -21,25 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.decorations;
+package com.github.weisj.darklaf.platform.windows;
 
-import javax.swing.*;
-import java.awt.*;
-
-public abstract class CustomTitlePane extends JComponent {
-
-    public abstract void uninstall();
-
-    /**
-     * Do not call directly.
-     */
-    protected abstract void install();
-
-    public abstract Insets getWindowSizeAdjustment();
-
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        install();
-    }
+public class WindowsThemeInfoProvider {
 }

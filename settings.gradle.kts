@@ -20,7 +20,7 @@ include(
     "core",
     "property-loader",
     "utils",
-    "decorations-base",
+    "platform-base",
     "windows",
     "macos"
 )

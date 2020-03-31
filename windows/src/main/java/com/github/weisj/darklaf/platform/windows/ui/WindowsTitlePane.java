@@ -24,7 +24,7 @@
 
 package com.github.weisj.darklaf.platform.windows.ui;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.platform.PointerUtil;

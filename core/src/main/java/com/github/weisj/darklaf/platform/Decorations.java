@@ -25,8 +25,8 @@ package com.github.weisj.darklaf.platform;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
 import com.github.weisj.darklaf.util.PropertyValue;

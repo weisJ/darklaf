@@ -23,20 +23,10 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author Jannis Weis
  */
 public class JNIDecorationsWindows {
-
-    private static final Logger LOGGER = Logger.getLogger(JNIDecorationsWindows.class.getName());
-    private static boolean loaded;
-    private static boolean attemptedLoad;
 
     public static native void updateValues(final long hwnd, final int left, final int right, final int height);
 
@@ -55,45 +45,4 @@ public class JNIDecorationsWindows {
     public static native void uninstallDecorations(final long hwnd);
 
     public static native void installPopupMenuDecorations(final long hwnd);
-
-    /**
-     * Load the decorations-library if necessary.
-     */
-    public static void updateLibrary() {
-        if (!loaded && !attemptedLoad) {
-            loadLibrary();
-        }
-    }
-
-    private static void loadLibrary() {
-        attemptedLoad = true;
-        if (!SystemInfo.isWindows || loaded) {
-            return;
-        }
-        try {
-            if (SystemInfo.isX86) {
-                NativeUtil.loadLibraryFromJar(
-                    "/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86/darklaf-windows.dll");
-            } else if (SystemInfo.isX64) {
-                NativeUtil.loadLibraryFromJar(
-                    "/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86-64/darklaf-windows.dll");
-            } else {
-                LOGGER.warning("Could not determine jre model '"
-                               + SystemInfo.jreArchitecture
-                               + "'. Decorations will be disabled");
-                return;
-            }
-            loaded = true;
-            LOGGER.info("Loaded darklaf-windows.dll. Decorations are enabled.");
-        } catch (Throwable e) {
-            //Library not found, SecurityManager prevents library loading etc.
-            LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll." +
-                                     " Decorations will be disabled", e);
-        }
-    }
-
-
-    public static boolean isCustomDecorationSupported() {
-        return loaded;
-    }
 }
