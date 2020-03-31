@@ -8,6 +8,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":darklaf-theme"))
     implementation(project(":darklaf-native-utils"))
     implementation(project(":darklaf-utils"))
     implementation(project(":darklaf-platform-base"))

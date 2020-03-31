@@ -23,9 +23,7 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
@@ -39,22 +37,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Theme for {@link DarkLaf}.
- *
  * @author Jannis Weis
  */
 public abstract class Theme {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
-    private static final String[] UI_PROPERTIES = new String[]{
-        "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
-        "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "numberingPane", "optionPane", "panel",
-        "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator",
-        "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "taskPane", "text",
-        "toggleButton", "toolBar", "toolTip", "tree",
-        };
-    private static final String[] ICON_PROPERTIES = new String[]{
-        "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
-    };
     private FontSizeRule fontSizeRule;
 
 
@@ -96,7 +82,7 @@ public abstract class Theme {
     }
 
     /**
-     * Load the global values.
+     * Customize the global values.
      * <p>
      * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
      * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
@@ -105,13 +91,11 @@ public abstract class Theme {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void loadGlobals(final Properties properties, final UIDefaults currentDefaults) {
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"),
-                                     properties, currentDefaults);
+    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {
     }
 
     /**
-     * Load the icon defaults.
+     * Customize the icon defaults.
      * <p>
      * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
      * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
@@ -120,12 +104,7 @@ public abstract class Theme {
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
      */
-    public void loadIconProperties(final Properties properties, final UIDefaults currentDefaults) {
-        loadIconTheme(properties, currentDefaults);
-        for (String property : ICON_PROPERTIES) {
-            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/icons/"),
-                                         properties, currentDefaults);
-        }
+    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
     }
 
     /**
@@ -138,15 +117,15 @@ public abstract class Theme {
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
      */
-    protected void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
+    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
         PresetIconRule iconTheme = getPresetIconRule();
         Properties props;
         switch (iconTheme) {
             case DARK:
-                props = PropertyLoader.loadProperties(DarkLaf.class, "dark_icons", "properties/icons/presets/");
+                props = PropertyLoader.loadProperties(Theme.class, "dark_icons", "icon_presets/");
                 break;
             case LIGHT:
-                props = PropertyLoader.loadProperties(DarkLaf.class, "light_icons", "properties/icons/presets/");
+                props = PropertyLoader.loadProperties(Theme.class, "light_icons", "icon_presets/");
                 break;
             case NONE:
             default:
@@ -156,7 +135,7 @@ public abstract class Theme {
     }
 
     /**
-     * Load the platform defaults.
+     * Customize the platform defaults.
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
      * #load(String)}.
@@ -164,17 +143,11 @@ public abstract class Theme {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "properties/platform/"),
-                                     properties, currentDefaults);
-    }
-
-    private String getOsName() {
-        return SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
+    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
     }
 
     /**
-     * Load the ui defaults.
+     * Customize the ui defaults.
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
      * #load(String)}.
@@ -182,11 +155,7 @@ public abstract class Theme {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        for (String property : UI_PROPERTIES) {
-            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
-                                         properties, currentDefaults);
-        }
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
     }
 
     /**

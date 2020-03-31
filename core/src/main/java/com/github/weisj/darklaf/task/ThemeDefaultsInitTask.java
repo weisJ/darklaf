@@ -23,13 +23,14 @@
  */
 package com.github.weisj.darklaf.task;
 
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -38,6 +39,16 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private static final String GLOBAL_PREFIX = "global.";
     private static final String MAC_OS_MENU_BAR_KEY = "apple.laf.useScreenMenuBar";
+    private static final String[] UI_PROPERTIES = new String[]{
+        "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
+        "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "numberingPane", "optionPane", "panel",
+        "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator",
+        "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "taskPane", "text",
+        "toggleButton", "toolBar", "toolTip", "tree",
+        };
+    private static final String[] ICON_PROPERTIES = new String[]{
+        "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
+    };
     private final DefaultsInitTask userPreferenceInitTask = new UserPreferenceInitTask();
 
     @Override
@@ -56,17 +67,24 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
          */
         userPreferenceInitTask.run(currentTheme, uiProps);
 
-        currentTheme.loadGlobals(uiProps, defaults);
-        installGlobals(uiProps, defaults);
-        currentTheme.loadUIProperties(uiProps, defaults);
-        currentTheme.loadIconProperties(uiProps, defaults);
+        initGlobals(currentTheme, defaults, uiProps);
+        initUIProperties(currentTheme, defaults, uiProps);
+        initIconTheme(currentTheme, defaults, uiProps);
+        initPlatformProperties(currentTheme, defaults, uiProps);
+
         Decorations.loadDecorationProperties(uiProps, defaults);
-        currentTheme.loadPlatformProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
         defaults.putAll(uiProps);
 
-        StyleSheet styleSheet = currentTheme.loadStyleSheet();
-        new HTMLEditorKit().setStyleSheet(styleSheet);
+        new HTMLEditorKit().setStyleSheet(currentTheme.loadStyleSheet());
+    }
+
+    private void initGlobals(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
+        PropertyLoader.putProperties(
+            PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"), uiProps, defaults);
+
+        currentTheme.customizeGlobals(uiProps, defaults);
+        installGlobals(uiProps, defaults);
     }
 
     private void installGlobals(final Properties uiProps, final Map<Object, Object> defaults) {
@@ -88,12 +106,39 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         }
     }
 
-    protected void adjustPlatformSpecifics(final Properties uiProps) {
+    private void initUIProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
+        for (String property : UI_PROPERTIES) {
+            PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"), uiProps, defaults);
+        }
+        currentTheme.customizeUIProperties(uiProps, defaults);
+    }
+
+    private void initIconTheme(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
+        currentTheme.loadIconTheme(uiProps, defaults);
+        for (String property : ICON_PROPERTIES) {
+            PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(DarkLaf.class, property, "properties/icons/"), uiProps, defaults);
+        }
+        currentTheme.customizeIconTheme(uiProps, defaults);
+    }
+
+    private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
+        PropertyLoader.putProperties(
+            PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "properties/platform/"), uiProps, defaults);
+        currentTheme.customizePlatformProperties(uiProps, defaults);
+    }
+
+    private void adjustPlatformSpecifics(final Properties uiProps) {
         boolean useScreenMenuBar = Boolean.getBoolean(MAC_OS_MENU_BAR_KEY);
         // If user wants to use Apple menu bar, then we need to keep the default
         // component for MenuBarUI and MenuUI
         if (SystemInfo.isMac && useScreenMenuBar) {
             uiProps.remove("MenuBarUI");
         }
+    }
+
+    private String getOsName() {
+        return SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
     }
 }

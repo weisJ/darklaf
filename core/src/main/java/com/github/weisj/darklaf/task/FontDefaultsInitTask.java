@@ -47,6 +47,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
+    private final PropertyFontMapper fontMapper = new PropertyFontMapper();
 
     @Override
     public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
@@ -108,7 +109,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private FontMapper getFontMapper(final FontSizeRule rule) {
-        if (rule == null) return (font, defaults) -> font;
-        return rule.getFontMapper();
+        fontMapper.setPropertyKey(rule == null ? null : rule.getPropertyKey());
+        return fontMapper;
     }
 }

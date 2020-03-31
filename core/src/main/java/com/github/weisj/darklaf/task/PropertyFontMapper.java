@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.task;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.FontMapper;
+import com.github.weisj.darklaf.theme.Theme;
 
 import java.awt.*;
 import java.util.Map;
@@ -37,12 +39,21 @@ public class PropertyFontMapper implements FontMapper {
     private int adjustment;
     private String propertyKey;
 
+    public PropertyFontMapper() {
+        this(null);
+    }
+
     public PropertyFontMapper(final String propertyKey) {
+        this.propertyKey = propertyKey;
+    }
+
+    public void setPropertyKey(final String propertyKey) {
         this.propertyKey = propertyKey;
     }
 
     @Override
     public Font map(final Font font, final Map<Object, Object> defaults) {
+        if (propertyKey == null) return font;
         adjustment = getSize(defaults);
         // No need to create a new font.
         if (adjustment == 0) return font;

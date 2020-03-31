@@ -18,6 +18,7 @@ include(
     "dependencies-bom",
     "native-utils",
     "core",
+    "theme",
     "property-loader",
     "utils",
     "platform-base",

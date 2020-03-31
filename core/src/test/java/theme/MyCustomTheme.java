@@ -34,8 +34,8 @@ import java.util.Properties;
 public class MyCustomTheme extends Theme {
 
     @Override
-    public void loadGlobals(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadGlobals(properties, currentDefaults);
+    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeGlobals(properties, currentDefaults);
         /*
          * Properties in the globals file should have a 'globals.' to be applied globally.
          */
@@ -43,8 +43,8 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
-    public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadPlatformProperties(properties, currentDefaults);
+    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizePlatformProperties(properties, currentDefaults);
         /*
          * Loading this file (and having it present) is optional.
          */
@@ -53,8 +53,8 @@ public class MyCustomTheme extends Theme {
     }
 
     @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeUIProperties(properties, currentDefaults);
         /*
          * Loading this file (and having it present) is optional.
          */

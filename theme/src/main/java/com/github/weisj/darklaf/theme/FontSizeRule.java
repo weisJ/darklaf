@@ -23,47 +23,23 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import javax.swing.*;
-import java.util.Properties;
+public enum FontSizeRule {
+    DEFAULT("default"),
+    TINY("tiny"),
+    SMALLER("smaller"),
+    SMALL("small"),
+    MEDIUM("medium"),
+    LARGE("large"),
+    LARGER("larger"),
+    HUGE("huge");
 
-/**
- * @author Jannis Weis
- */
-public class IntelliJTheme extends Theme {
+    private final String propertyKey;
 
-    @Override
-    protected String getResourcePath() {
-        return "intellij/";
+    FontSizeRule(final String propertyKey) {
+        this.propertyKey = propertyKey;
     }
 
-    @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.LIGHT;
-    }
-
-    @Override
-    public String getPrefix() {
-        return "intellij";
-    }
-
-    @Override
-    public String getName() {
-        return "IntelliJ";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return IntelliJTheme.class;
-    }
-
-    @Override
-    public ColorToneRule getColorToneRule() {
-        return ColorToneRule.LIGHT;
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
+    public String getPropertyKey() {
+        return "fontSize." + propertyKey;
     }
 }

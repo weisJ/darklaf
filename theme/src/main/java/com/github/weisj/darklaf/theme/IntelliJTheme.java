@@ -26,31 +26,34 @@ package com.github.weisj.darklaf.theme;
 import javax.swing.*;
 import java.util.Properties;
 
-public class HighContrastLightTheme extends Theme {
+/**
+ * @author Jannis Weis
+ */
+public class IntelliJTheme extends Theme {
+
+    @Override
+    protected String getResourcePath() {
+        return "intellij/";
+    }
 
     @Override
     protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.NONE;
+        return PresetIconRule.LIGHT;
     }
 
     @Override
     public String getPrefix() {
-        return "high_contrast_light";
-    }
-
-    @Override
-    protected String getResourcePath() {
-        return "high_contrast_light/";
+        return "intellij";
     }
 
     @Override
     public String getName() {
-        return "High Contrast Light";
+        return "IntelliJ";
     }
 
     @Override
     protected Class<? extends Theme> getLoaderClass() {
-        return HighContrastLightTheme.class;
+        return IntelliJTheme.class;
     }
 
     @Override
@@ -59,19 +62,8 @@ public class HighContrastLightTheme extends Theme {
     }
 
     @Override
-    public ContrastRule getContrastRule() {
-        return ContrastRule.HIGH_CONTRAST;
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);
-    }
-
-    @Override
-    public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadPlatformProperties(properties, currentDefaults);
-        loadCustomProperties("platform", properties, currentDefaults);
     }
 }

@@ -26,52 +26,41 @@ package com.github.weisj.darklaf.theme;
 import javax.swing.*;
 import java.util.Properties;
 
-public class HighContrastDarkTheme extends Theme {
+public class SolarizedLightTheme extends Theme {
 
     @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.NONE;
+    protected String getResourcePath() {
+        return "solarized_light/";
     }
 
     @Override
     public String getPrefix() {
-        return "high_contrast_dark";
-    }
-
-    @Override
-    protected String getResourcePath() {
-        return "high_contrast_dark/";
+        return "solarized_light";
     }
 
     @Override
     public String getName() {
-        return "High Contrast Dark";
+        return "Solarized Light";
     }
 
     @Override
     protected Class<? extends Theme> getLoaderClass() {
-        return HighContrastDarkTheme.class;
+        return SolarizedLightTheme.class;
     }
 
     @Override
     public ColorToneRule getColorToneRule() {
-        return ColorToneRule.DARK;
+        return ColorToneRule.LIGHT;
     }
 
     @Override
-    public ContrastRule getContrastRule() {
-        return ContrastRule.HIGH_CONTRAST;
-    }
-
-    @Override
-    public void loadUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadUIProperties(properties, currentDefaults);
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);
     }
 
     @Override
-    public void loadPlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadPlatformProperties(properties, currentDefaults);
-        loadCustomProperties("platform", properties, currentDefaults);
+    protected PresetIconRule getPresetIconRule() {
+        return PresetIconRule.NONE;
     }
 }

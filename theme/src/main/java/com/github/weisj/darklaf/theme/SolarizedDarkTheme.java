@@ -23,29 +23,44 @@
  */
 package com.github.weisj.darklaf.theme;
 
-public enum FontSizeRule {
-    DEFAULT("default"),
-    TINY("tiny"),
-    SMALLER("smaller"),
-    SMALL("small"),
-    MEDIUM("medium"),
-    LARGE("large"),
-    LARGER("larger"),
-    HUGE("huge");
+import javax.swing.*;
+import java.util.Properties;
 
-    private final String propertyKey;
-    private final PropertyFontMapper fontMapper;
+public class SolarizedDarkTheme extends Theme {
 
-    FontSizeRule(final String propertyKey) {
-        this.propertyKey = propertyKey;
-        fontMapper = new PropertyFontMapper(getPropertyKey());
+    @Override
+    protected String getResourcePath() {
+        return "solarized_dark/";
     }
 
-    public String getPropertyKey() {
-        return "fontSize." + propertyKey;
+    @Override
+    public String getPrefix() {
+        return "solarized_dark";
     }
 
-    public FontMapper getFontMapper() {
-        return fontMapper;
+    @Override
+    public String getName() {
+        return "Solarized Dark";
+    }
+
+    @Override
+    protected Class<? extends Theme> getLoaderClass() {
+        return SolarizedDarkTheme.class;
+    }
+
+    @Override
+    public ColorToneRule getColorToneRule() {
+        return ColorToneRule.DARK;
+    }
+
+    @Override
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeUIProperties(properties, currentDefaults);
+        loadCustomProperties("ui", properties, currentDefaults);
+    }
+
+    @Override
+    protected PresetIconRule getPresetIconRule() {
+        return PresetIconRule.NONE;
     }
 }
