@@ -31,7 +31,7 @@ public class FontSizeRule {
     private final AdjustmentType type;
     private final FontSizePreset preset;
     private final float relativeAdjustment;
-    private final int absoluteAdjustment;
+    private final float absoluteAdjustment;
 
     protected FontSizeRule(final FontSizePreset preset) {
         this.preset = preset;
@@ -41,7 +41,7 @@ public class FontSizeRule {
     }
 
     protected FontSizeRule(final AdjustmentType type,
-                           final int absoluteAdjustment, final float relativeAdjustment) {
+                           final float absoluteAdjustment, final float relativeAdjustment) {
         this.type = type;
         this.absoluteAdjustment = absoluteAdjustment;
         this.relativeAdjustment = relativeAdjustment;
@@ -56,7 +56,7 @@ public class FontSizeRule {
         return new FontSizeRule(preset);
     }
 
-    public static FontSizeRule absoluteAdjustment(final int adjustment) {
+    public static FontSizeRule absoluteAdjustment(final float adjustment) {
         return new FontSizeRule(AdjustmentType.ABSOLUTE_ADJUSTMENT, adjustment, 1f);
     }
 
@@ -107,24 +107,24 @@ public class FontSizeRule {
     public enum AdjustmentType {
         NO_ADJUSTMENT {
             @Override
-            public float adjustSize(final float size, final int absolute, final float relative) {
+            public float adjustSize(final float size, final float absolute, final float relative) {
                 return size;
             }
         },
         ABSOLUTE_ADJUSTMENT {
             @Override
-            public float adjustSize(final float size, final int absolute, final float relative) {
+            public float adjustSize(final float size, final float absolute, final float relative) {
                 return size + absolute;
             }
         },
         RELATIVE_ADJUSTMENT {
             @Override
-            public float adjustSize(final float size, final int absolute, final float relative) {
+            public float adjustSize(final float size, final float absolute, final float relative) {
                 return size * relative;
             }
         };
 
-        abstract public float adjustSize(final float size, final int absolute, final float relative);
+        abstract public float adjustSize(final float size, final float absolute, final float relative);
     }
 
 }
