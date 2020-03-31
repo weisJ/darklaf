@@ -27,7 +27,8 @@
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
     if(@available(macOS 10.14, *)) {
-        return (jboolean)false;
+        NSString *osxMode = [[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"];
+        return (jboolean)[@"Dark" caseInsensitiveCompare:osxMode] == NSOrderedSame;
     } else {
         return (jboolean)false;
     }
@@ -35,7 +36,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnable
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isHighContrastEnabled(JNIEnv *env, jclass obj) {
-    return NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast;
+    return NSWorkspace.sharedWorkspace.accessibilityDisplayShouldIncreaseContrast;
 }
 
 JNIEXPORT jlong JNICALL
