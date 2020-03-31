@@ -23,10 +23,10 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public interface FontMapper {
 
-    Font map(final Font font, final UIDefaults defaults);
+    Font map(final Font font, final Map<Object, Object> defaults);
 }

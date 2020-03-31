@@ -368,16 +368,4 @@ public abstract class Theme {
         this.fontSizeRule = fontSizeRule;
     }
 
-    /**
-     * Get the font mapper for the specified size rule. By default, this delegated to the values specified by the
-     * `[rule].size` properties.
-     *
-     * @param rule the font size rule.
-     * @return the associated font mapper.
-     */
-    public FontMapper getFontMapper(final FontSizeRule rule) {
-        if (rule == null) return (font, defaults) -> font;
-        return rule.getFontMapper();
-    }
-
 }

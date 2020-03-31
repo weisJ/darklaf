@@ -21,45 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
+package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.theme.Theme;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Map;
 import java.util.Properties;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
+public class SystemDefaultsInitTask implements DefaultsInitTask {
+
+    private static final String OVERWRITES_PATH = "properties/";
+    private static final String OVERWRITES_NAME = "overwrites";
+
     @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
-        return new CustomTitlePane() {
-            @Override
-            public void install() {
-            }
-
-            @Override
-            public void uninstall() {
-            }
-
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
-        };
+    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+        loadSystemOverwrites(defaults);
     }
 
-    @Override
-    public boolean isCustomDecorationSupported() {
-        return false;
-    }
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
+    private void loadSystemOverwrites(final Map<Object, Object> defaults) {
+        Properties overwrites = PropertyLoader.loadProperties(DarkLaf.class, OVERWRITES_NAME, OVERWRITES_PATH);
+        overwrites.values().removeIf(v -> System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
+        overwrites.entrySet().forEach(
+            e -> e.setValue(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
+        PropertyLoader.putProperties(overwrites, defaults);
     }
 }

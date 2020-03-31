@@ -21,45 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
+package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.Theme;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Map;
-import java.util.Properties;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
-    @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
-        return new CustomTitlePane() {
-            @Override
-            public void install() {
-            }
-
-            @Override
-            public void uninstall() {
-            }
-
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
-        };
-    }
+public class UserPreferenceInitTask implements DefaultsInitTask {
 
     @Override
-    public boolean isCustomDecorationSupported() {
-        return false;
-    }
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
+    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+        for (DefaultsInitTask task : LafManager.getUserInitTasks()) {
+            if (task != null) task.run(currentTheme, defaults);
+        }
     }
 }

@@ -21,45 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
+package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Map;
-import java.util.Properties;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
+public class UtilityDefaultsInitTask implements DefaultsInitTask {
     @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
-        return new CustomTitlePane() {
-            @Override
-            public void install() {
-            }
-
-            @Override
-            public void uninstall() {
-            }
-
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
-        };
+    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+        setupUtils(defaults);
     }
 
-    @Override
-    public boolean isCustomDecorationSupported() {
-        return false;
+    private void setupUtils(final Map<Object, Object> defaults) {
+        DarkUIUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
+        DarkUIUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
+        DarkUIUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
+        DarkBorders.update(defaults);
     }
 
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
+    private float getOpacity(final Map<Object, Object> defaults, final String key) {
+        Object obj = defaults.get(key);
+        int val = (obj instanceof Integer) ? (int) obj : 100;
+        return val / 100f;
     }
 }

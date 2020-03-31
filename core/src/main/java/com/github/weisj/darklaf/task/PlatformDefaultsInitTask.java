@@ -21,45 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform;
+package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Map;
-import java.util.Properties;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
+public class PlatformDefaultsInitTask implements DefaultsInitTask {
     @Override
-    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
-        return new CustomTitlePane() {
-            @Override
-            public void install() {
-            }
-
-            @Override
-            public void uninstall() {
-            }
-
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
-        };
-    }
-
-    @Override
-    public boolean isCustomDecorationSupported() {
-        return false;
-    }
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
+    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+        String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
+        if (SystemInfo.isWindows10 && Decorations.isCustomDecorationSupported()) {
+            JPopupMenu.setDefaultLightWeightPopupEnabled(Boolean.TRUE.equals(defaults.get(key + ".windows")));
+        } else {
+            JPopupMenu.setDefaultLightWeightPopupEnabled(Boolean.TRUE.equals(defaults.get(key)));
+        }
     }
 }

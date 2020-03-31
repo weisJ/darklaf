@@ -25,8 +25,8 @@ package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.LafManager;
 
-import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class PropertyFontMapper implements FontMapper {
@@ -42,7 +42,7 @@ public class PropertyFontMapper implements FontMapper {
     }
 
     @Override
-    public Font map(final Font font, final UIDefaults defaults) {
+    public Font map(final Font font, final Map<Object, Object> defaults) {
         adjustment = getSize(defaults);
         // No need to create a new font.
         if (adjustment == 0) return font;
@@ -56,7 +56,7 @@ public class PropertyFontMapper implements FontMapper {
         return font.deriveFont(font.getSize2D() + adjustment);
     }
 
-    private int getSize(final UIDefaults defaults) {
+    private int getSize(final Map<Object, Object> defaults) {
         // Use cached value if already queried.
         if (lastTheme == LafManager.getTheme()) return adjustment;
         lastTheme = LafManager.getTheme();

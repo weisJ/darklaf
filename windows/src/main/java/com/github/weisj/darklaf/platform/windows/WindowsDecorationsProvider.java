@@ -34,6 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Map;
 import java.util.Properties;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
@@ -82,7 +83,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
         IconLoader iconLoader = IconLoader.get(WindowsDecorationsProvider.class);
         PropertyLoader.putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class,
                                                                    "windows_decorations", ""),

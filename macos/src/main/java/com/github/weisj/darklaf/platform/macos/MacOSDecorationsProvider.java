@@ -31,6 +31,7 @@ import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 import java.util.Properties;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
@@ -51,7 +52,7 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
+    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
         IconLoader iconLoader = IconLoader.get(MacOSDecorationsProvider.class);
         PropertyLoader.putProperties(PropertyLoader.loadProperties(MacOSDecorationsProvider.class,
                                                                    "macos_decorations", ""),

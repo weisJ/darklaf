@@ -25,6 +25,7 @@ package com.github.weisj.darklaf;
 
 import com.github.weisj.darklaf.icons.AwareIconStyle;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.task.DefaultsInitTask;
 import com.github.weisj.darklaf.theme.*;
 
 import javax.swing.*;
@@ -32,7 +33,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -48,7 +50,7 @@ public final class LafManager {
     private static Theme theme;
     private static boolean logEnabled = false;
     private static boolean decorationsOverwrite = true;
-    private static final Properties properties = new Properties();
+    private static final Collection<DefaultsInitTask> uiDefaultsTasks = new HashSet<>();
 
     static {
         enableLogging(true);
@@ -240,60 +242,30 @@ public final class LafManager {
     }
 
     /**
-     * Set a custom property.
-     * <p>
-     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
-     * used to overwrite the values specified in `[theme]_defaults.properties`.
+     * Register a task to modify the ui defaults.
      *
-     * @param key   the key.
-     * @param value the value.
+     * @param task the defaults init task.
      */
-    public static void setProperty(final String key, final String value) {
-        properties.setProperty(key, value);
+    public static void registerDefaultsInitTask(final DefaultsInitTask task) {
+        uiDefaultsTasks.add(task);
     }
 
     /**
-     * Remove a custom property.
-     * <p>
-     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
-     * used to overwrite the values specified in `[theme]_defaults.properties`.
+     * Remove a registered task to modify the ui defaults.
      *
-     * @param key the key.
+     * @param task the defaults init task.
      */
-    public static void removeProperty(final String key) {
-        properties.remove(key);
+    public static void removeDefaultsInitTask(final DefaultsInitTask task) {
+        uiDefaultsTasks.remove(task);
     }
 
     /**
-     * Remove all custom properties.
-     * <p>
-     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
-     * used to overwrite the values specified in `[theme]_defaults.properties`.
-     */
-    public static void clearProperties() {
-        properties.clear();
-    }
-
-    /**
-     * Get the custom properties.
-     * <p>
-     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
-     * used to overwrite the values specified in `[theme]_defaults.properties`.
-     */
-    public static Properties getUserProperties() {
-        return properties;
-    }
-
-    /**
-     * Remove a custom property.
-     * <p>
-     * Note: These properties are loaded after {@link Theme#loadDefaults(Properties, UIDefaults)} and should only be
-     * used to overwrite the values specified in `[theme]_defaults.properties`.
+     * Get a view of all currently registered init tasks. Modification will also mutate the collection itself.
      *
-     * @param key the key.
-     * @return the value associated with `key`.
+     * @return collection of init tasks.
      */
-    public String getProperty(final String key) {
-        return properties.getProperty(key);
+    public static Collection<DefaultsInitTask> getUserInitTasks() {
+        return uiDefaultsTasks;
     }
+
 }

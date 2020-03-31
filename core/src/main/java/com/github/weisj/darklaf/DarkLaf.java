@@ -23,32 +23,16 @@
  */
 package com.github.weisj.darklaf;
 
-import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.platform.Decorations;
-import com.github.weisj.darklaf.theme.FontSizeRule;
+import com.github.weisj.darklaf.task.*;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.font.TextAttribute;
-import java.text.AttributedCharacterIterator;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,7 +43,18 @@ public class DarkLaf extends BasicLookAndFeel {
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
-    private static final String NAME = "Darklaf";
+    /*
+     * All tasks for initializing the ui defaults in order of execution.
+     */
+    private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[]{
+        new ThemeDefaultsInitTask(),
+        new InputDefaultsInitTask(),
+        new IdeaDefaultsInitTask(),
+        new FontDefaultsInitTask(),
+        new UtilityDefaultsInitTask(),
+        new SystemDefaultsInitTask(),
+        new PlatformDefaultsInitTask()
+    };
     private final BasicLookAndFeel base;
 
     /**
@@ -100,301 +95,6 @@ public class DarkLaf extends BasicLookAndFeel {
         }
     }
 
-
-    @Override
-    public UIDefaults getDefaults() {
-        final UIDefaults metalDefaults = new MetalLookAndFeel().getDefaults();
-        final UIDefaults defaults = base.getDefaults();
-        final Theme currentTheme = LafManager.getTheme();
-        try {
-            initInputMapDefaults(defaults);
-            loadThemeDefaults(currentTheme, defaults);
-            setupUtils(defaults);
-            initIdeaDefaults(defaults);
-
-            patchComboBox(metalDefaults, defaults);
-            if (SystemInfo.isMac) {
-                patchMacOSFonts(defaults);
-            }
-            applyFontRule(currentTheme, defaults);
-            setupDecorations();
-
-            String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
-            if (SystemInfo.isWindows10 && Decorations.isCustomDecorationSupported()) {
-                JPopupMenu.setDefaultLightWeightPopupEnabled(defaults.getBoolean(key + ".windows"));
-            } else {
-                JPopupMenu.setDefaultLightWeightPopupEnabled(defaults.getBoolean(key));
-            }
-
-            // Update border colors.
-            DarkBorders.update(defaults);
-            return defaults;
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
-        return defaults;
-    }
-
-    private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
-        FontSizeRule rule = currentTheme.getFontSizeRule();
-        if (rule == null || rule == FontSizeRule.DEFAULT) return;
-        for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
-            if (entry != null && entry.getValue() instanceof Font) {
-                entry.setValue(fontWithRule((Font) entry.getValue(), currentTheme, rule, defaults));
-            }
-        }
-    }
-
-    private Font fontWithRule(final Font font, final Theme currentTheme,
-                              final FontSizeRule rule, final UIDefaults defaults) {
-        Font withRule = currentTheme.getFontMapper(rule).map(font, defaults);
-        if (font instanceof UIResource
-            && !(withRule instanceof UIResource)) {
-            withRule = new FontUIResource(withRule);
-        }
-        return withRule;
-    }
-
-    private void setupUtils(final UIDefaults defaults) {
-        DarkUIUtil.setDropOpacity(defaults.getInt("dropOpacity") / 100f);
-        DarkUIUtil.setGlowOpacity(defaults.getInt("glowOpacity") / 100f);
-        DarkUIUtil.setShadowOpacity(defaults.getInt("shadowOpacity") / 100f);
-    }
-
-    private void patchMacOSFonts(final UIDefaults defaults) {
-        for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
-            if (entry.getValue() instanceof Font) {
-                Font font = (Font) entry.getValue();
-                entry.setValue(macOSFontFromFont(font));
-            }
-        }
-    }
-
-    private Font macOSFontFromFont(final Font font) {
-        Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
-                                                                                                  TextAttribute.KERNING_ON);
-        String fontName = SystemInfo.isMacOSCatalina ? ".AppleSystemUIFont" : ".SF NS Text";
-        Font macFont = new Font(fontName, font.getStyle(), font.getSize()).deriveFont(attributes);
-        if (font instanceof UIResource) {
-            macFont = new FontUIResource(macFont);
-        }
-        return macFont == null ? font : macFont;
-    }
-
-    private void setupDecorations() {
-        Decorations.initialize();
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        JDialog.setDefaultLookAndFeelDecorated(true);
-    }
-
-    protected void adjustPlatformSpecifics(final Properties uiProps) {
-        boolean useScreenMenuBar = Boolean.getBoolean("apple.laf.useScreenMenuBar");
-        // If user wants to use Apple menu bar, then we need to keep the default
-        // component for MenuBarUI and MenuUI
-        if (SystemInfo.isMac && useScreenMenuBar) {
-            uiProps.remove("MenuBarUI");
-        }
-    }
-
-
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    private static void initInputMapDefaults(final UIDefaults defaults) {
-        // Make ENTER work in JTrees
-        final InputMap treeInputMap = (InputMap) defaults.get("Tree.focusInputMap");
-        if (treeInputMap != null) {
-            // it's really possible. For example,  GTK+ doesn't have such map
-            treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "toggle");
-        }
-        // Cut/Copy/Paste in JTextAreas
-        final InputMap textAreaInputMap = (InputMap) defaults.get("TextArea.focusInputMap");
-        if (textAreaInputMap != null) {
-            // It really can be null, for example when LAF isn't properly initialized
-            // (Alloy license problem)
-            installCutCopyPasteShortcuts(textAreaInputMap, false);
-        }
-        // Cut/Copy/Paste in JTextFields
-        final InputMap textFieldInputMap = (InputMap) defaults.get("TextField.focusInputMap");
-        if (textFieldInputMap != null) {
-            // It really can be null, for example when LAF isn't properly initialized
-            // (Alloy license problem)
-            installCutCopyPasteShortcuts(textFieldInputMap, false);
-        }
-        // Cut/Copy/Paste in JPasswordField
-        final InputMap passwordFieldInputMap = (InputMap) defaults.get("PasswordField.focusInputMap");
-        if (passwordFieldInputMap != null) {
-            // It really can be null, for example when LAF isn't properly initialized
-            // (Alloy license problem)
-            installCutCopyPasteShortcuts(passwordFieldInputMap, false);
-        }
-        // Cut/Copy/Paste in JTables
-        final InputMap tableInputMap = (InputMap) defaults.get("Table.ancestorInputMap");
-        if (tableInputMap != null) {
-            // It really can be null, for example when LAF isn't properly initialized
-            // (Alloy license problem)
-            installCutCopyPasteShortcuts(tableInputMap, true);
-        }
-        final InputMap buttonInputMap = (InputMap) defaults.get("Button.focusInputMap");
-        if (buttonInputMap != null && !SystemInfo.isMac) {
-            buttonInputMap.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
-            buttonInputMap.put(KeyStroke.getKeyStroke("released ENTER"), "released");
-        }
-    }
-
-    private void loadThemeDefaults(final Theme currentTheme, final UIDefaults defaults) {
-        Properties uiProps = new Properties();
-        currentTheme.loadDefaults(uiProps, defaults);
-        //Load overwrites the user has set.
-        PropertyLoader.putProperties(LafManager.getUserProperties(), uiProps, defaults);
-
-        currentTheme.loadGlobals(uiProps, defaults);
-        installGlobals(uiProps, defaults);
-        loadFontProperties(uiProps, defaults);
-        currentTheme.loadUIProperties(uiProps, defaults);
-        currentTheme.loadIconProperties(uiProps, defaults);
-        Decorations.loadDecorationProperties(uiProps, defaults);
-        currentTheme.loadPlatformProperties(uiProps, defaults);
-        adjustPlatformSpecifics(uiProps);
-        loadSystemOverwrites(uiProps, defaults);
-        defaults.putAll(uiProps);
-
-        StyleSheet styleSheet = currentTheme.loadStyleSheet();
-        new HTMLEditorKit().setStyleSheet(styleSheet);
-    }
-
-    private void loadFontProperties(final Properties uiProps, final UIDefaults defaults) {
-        Properties fontSizeProps = PropertyLoader.loadProperties(DarkLaf.class, "font_sizes", "properties/");
-        PropertyLoader.putProperties(fontSizeProps, uiProps, defaults);
-        Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, "font", "properties/");
-        PropertyLoader.putProperties(fontProps, uiProps, defaults);
-    }
-
-    private void loadSystemOverwrites(final Properties uiProps, final UIDefaults defaults) {
-        Properties overwrites = PropertyLoader.loadProperties(DarkLaf.class, "overwrites", "properties/");
-        overwrites.values().removeIf(v -> System.getProperty(SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
-        overwrites.entrySet().forEach(
-            e -> e.setValue(System.getProperty(SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
-        PropertyLoader.putProperties(overwrites, uiProps, defaults);
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    private void initIdeaDefaults(final UIDefaults defaults) {
-        defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
-            new Object[]{
-                "ctrl C", "copy",
-                "meta C", "copy",
-                "ctrl V", "paste",
-                "meta V", "paste",
-                "ctrl X", "cut",
-                "meta X", "cut",
-                "COPY", "copy",
-                "PASTE", "paste",
-                "CUT", "cut",
-                "control INSERT", "copy",
-                "shift INSERT", "paste",
-                "shift DELETE", "cut",
-                "RIGHT", "selectNextColumn",
-                "KP_RIGHT", "selectNextColumn",
-                "LEFT", "selectPreviousColumn",
-                "KP_LEFT", "selectPreviousColumn",
-                "DOWN", "selectNextRow",
-                "KP_DOWN", "selectNextRow",
-                "UP", "selectPreviousRow",
-                "KP_UP", "selectPreviousRow",
-                "shift RIGHT", "selectNextColumnExtendSelection",
-                "shift KP_RIGHT", "selectNextColumnExtendSelection",
-                "shift LEFT", "selectPreviousColumnExtendSelection",
-                "shift KP_LEFT", "selectPreviousColumnExtendSelection",
-                "shift DOWN", "selectNextRowExtendSelection",
-                "shift KP_DOWN", "selectNextRowExtendSelection",
-                "shift UP", "selectPreviousRowExtendSelection",
-                "shift KP_UP", "selectPreviousRowExtendSelection",
-                "PAGE_UP", "scrollUpChangeSelection",
-                "PAGE_DOWN", "scrollDownChangeSelection",
-                "HOME", "selectFirstColumn",
-                "END", "selectLastColumn",
-                "shift PAGE_UP", "scrollUpExtendSelection",
-                "shift PAGE_DOWN", "scrollDownExtendSelection",
-                "shift HOME", "selectFirstColumnExtendSelection",
-                "shift END", "selectLastColumnExtendSelection",
-                "ctrl PAGE_UP", "scrollLeftChangeSelection",
-                "ctrl PAGE_DOWN", "scrollRightChangeSelection",
-                "ctrl HOME", "selectFirstRow",
-                "ctrl END", "selectLastRow",
-                "ctrl shift PAGE_UP", "scrollRightExtendSelection",
-                "ctrl shift PAGE_DOWN", "scrollLeftExtendSelection",
-                "ctrl shift HOME", "selectFirstRowExtendSelection",
-                "ctrl shift END", "selectLastRowExtendSelection",
-                "TAB", "selectNextColumnCell",
-                "shift TAB", "selectPreviousColumnCell",
-                "ENTER", "selectNextRowCell",
-                "shift ENTER", "selectPreviousRowCell",
-                "ctrl A", "selectAll",
-                "meta A", "selectAll",
-                "ESCAPE", "cancel",
-                "F2", "startEditing"
-            }));
-    }
-
-
-    @Override
-    public String getID() {
-        return getName();
-    }
-
-    private static void patchComboBox(final UIDefaults metalDefaults, final UIDefaults defaults) {
-        defaults.remove("ComboBox.ancestorInputMap");
-        defaults.remove("ComboBox.actionMap");
-        defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));
-        defaults.put("ComboBox.actionMap", metalDefaults.get("ComboBox.actionMap"));
-    }
-
-    private static void installCutCopyPasteShortcuts(final InputMap inputMap,
-                                                     final boolean useSimpleActionKeys) {
-        final String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
-        final String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
-        final String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
-        final int mask = SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
-        // Ctrl+Ins, Shift+Ins, Shift+Del
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_DOWN_MASK), copyActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_DOWN_MASK), cutActionKey);
-        // Ctrl+C, Ctrl+V, Ctrl+X
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask), copyActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, mask), pasteActionKey);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask), DefaultEditorKit.cutAction);
-    }
-
-    private void installGlobals(final Properties uiProps, final UIDefaults defaults) {
-        final HashMap<String, Object> globalSettings = new HashMap<>();
-        final String prefix = "global.";
-        for (final Object key : uiProps.keySet()) {
-            if (key instanceof String && ((String) key).startsWith(prefix)) {
-                globalSettings.put(((String) key).substring(prefix.length()), uiProps.get(key));
-            }
-        }
-
-        for (final Object key : defaults.keySet()) {
-            if (key instanceof String && ((String) key).contains(".")) {
-                final String s = (String) key;
-                final String globalKey = s.substring(s.lastIndexOf('.') + 1);
-                if (globalSettings.containsKey(globalKey)) {
-                    defaults.put(key, globalSettings.get(globalKey));
-                }
-            }
-        }
-    }
-
-
-    @Override
-    public String getDescription() {
-        return "Dark Look and feel based on Darcula-LAF";
-    }
-
     @Override
     public void initialize() {
         /*
@@ -403,6 +103,13 @@ public class DarkLaf extends BasicLookAndFeel {
          */
         base.initialize();
         PopupFactory.setSharedInstance(new DarkPopupFactory());
+        setupDecorations();
+    }
+
+    private void setupDecorations() {
+        Decorations.initialize();
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        JDialog.setDefaultLookAndFeelDecorated(true);
     }
 
     @Override
@@ -412,6 +119,33 @@ public class DarkLaf extends BasicLookAndFeel {
         if (mouseGrabber != null) {
             mouseGrabber.uninstall();
         }
+    }
+
+    @Override
+    public UIDefaults getDefaults() {
+        final UIDefaults defaults = base.getDefaults();
+        final Theme currentTheme = LafManager.getTheme();
+        for (DefaultsInitTask task : INIT_TASKS) {
+            task.run(currentTheme, defaults);
+        }
+        return defaults;
+    }
+
+    @Override
+    public String getName() {
+        return "Darklaf";
+    }
+
+
+    @Override
+    public String getID() {
+        return getName();
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "Dark Look and feel based on Darcula-LAF";
     }
 
     @Override
@@ -428,5 +162,4 @@ public class DarkLaf extends BasicLookAndFeel {
     public boolean getSupportsWindowDecorations() {
         return Decorations.isCustomDecorationSupported();
     }
-
 }

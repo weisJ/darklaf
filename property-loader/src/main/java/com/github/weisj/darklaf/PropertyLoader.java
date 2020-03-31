@@ -98,14 +98,29 @@ public final class PropertyLoader {
     }
 
     public static void putProperties(final Properties properties, final Properties accumulator,
-                                     final UIDefaults currentDefaults) {
+                                     final Map<Object, Object> currentDefaults) {
         putProperties(properties, accumulator, currentDefaults, ICON_LOADER);
     }
 
     public static void putProperties(final Properties properties, final Properties accumulator,
-                                     final UIDefaults currentDefaults, final IconLoader iconLoader) {
-        for (final String key : properties.stringPropertyNames()) {
-            final String value = properties.getProperty(key);
+                                     final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
+        putProperties(properties, properties.stringPropertyNames(), accumulator, currentDefaults, iconLoader);
+    }
+
+    public static void putProperties(final Properties properties, final Map<Object, Object> defaults) {
+        putProperties(properties, defaults, ICON_LOADER);
+    }
+
+    public static void putProperties(final Properties properties, final Map<Object, Object> defaults,
+                                     final IconLoader iconLoader) {
+        putProperties(properties, properties.stringPropertyNames(), defaults, defaults, iconLoader);
+    }
+
+    public static void putProperties(final Map<Object, Object> properties, final Set<String> keys,
+                                     final Map<Object, Object> accumulator,
+                                     final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
+        for (final String key : keys) {
+            final String value = properties.get(key).toString();
             Object parsed = parseValue(key, value, accumulator, currentDefaults, iconLoader);
             if (parsed != null) {
                 accumulator.put(parseKey(key), parsed);
@@ -115,11 +130,6 @@ public final class PropertyLoader {
         }
     }
 
-    private static Object parseValue(final String key, final String value, final Properties accumulator,
-                                     final UIDefaults currentDefaults, final IconLoader iconLoader) {
-        return parseValue(key, value, false, accumulator, currentDefaults, iconLoader);
-    }
-
     private static String parseKey(final String key) {
         if (addReferenceInfo) return key;
         return key.startsWith(String.valueOf(REFERENCE_PREFIX)) ? key.substring(1) : key;
@@ -127,13 +137,13 @@ public final class PropertyLoader {
 
 
     private static Object parseValue(final String propertyKey, final String value,
-                                     final boolean ignoreRequest, final Map<Object, Object> accumulator,
-                                     final UIDefaults currentDefaults, final IconLoader iconLoader) {
+                                     final Map<Object, Object> accumulator,
+                                     final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
         if (PropertyValue.NULL.equals(value)) {
             return null;
         }
         String key = propertyKey;
-        boolean skipObjects = ignoreRequest;
+        boolean skipObjects = false;
         if (key.startsWith(String.valueOf(REFERENCE_PREFIX))) {
             key = parseKey(key);
             skipObjects = true;
@@ -209,7 +219,7 @@ public final class PropertyLoader {
 
     @SuppressWarnings("MagicConstant")
     private static Object parseFont(final String key, final String value, final Map<Object, Object> accumulator,
-                                    final UIDefaults currentDefaults) {
+                                    final Map<Object, Object> currentDefaults) {
         String val = value;
         Font base = null;
         int size = -1;
@@ -233,7 +243,7 @@ public final class PropertyLoader {
         }
         if (base == null) base = parseExplicitFont(value);
         if (base == null && accumulator.get(key) instanceof Font) base = (Font) accumulator.get(key);
-        if (base == null) base = currentDefaults.getFont(key);
+        if (base == null && currentDefaults.get(key) instanceof Font) base = (Font) currentDefaults.get(key);
         if (base == null) base = new Font("Dialog", Font.PLAIN, 12);
         if (size > 0) base = base.deriveFont((float) size);
         if (style >= 0) base = base.deriveFont(style);
@@ -278,14 +288,14 @@ public final class PropertyLoader {
 
     private static Pair<Font, String> parseFrom(final String val,
                                                 final Map<Object, Object> accumulator,
-                                                final UIDefaults currentDefaults) {
+                                                final Map<Object, Object> currentDefaults) {
         String key = val.substring(FONT_FROM.length() + 1);
         int index = key.indexOf(ARG_END);
         String rest = key.substring(index + 1);
         key = key.substring(0, index);
         Font font = null;
         if (accumulator.get(key) instanceof Font) font = (Font) accumulator.get(key);
-        if (font == null) font = currentDefaults.getFont(key);
+        if (font == null && currentDefaults.get(key) instanceof Font) font = (Font) currentDefaults.get(key);
         return new Pair<>(font, rest);
     }
 
