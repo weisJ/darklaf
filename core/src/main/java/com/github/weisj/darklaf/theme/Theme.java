@@ -24,12 +24,10 @@
 package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.DarkMetalTheme;
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.html.StyleSheet;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,19 +78,6 @@ public abstract class Theme {
     public static boolean isHighContrast(final Theme theme) {
         if (theme == null) return false;
         return theme.getContrastRule() == ContrastRule.HIGH_CONTRAST;
-    }
-
-    public UIManager.LookAndFeelInfo createLookAndFeelInfo() {
-        return new UIManager.LookAndFeelInfo(getPrefix(), DarkLaf.class.getCanonicalName());
-    }
-
-    /**
-     * Called in the constructor of the look and feel.
-     */
-    public void beforeInstall() {
-        if (SystemInfo.isWindows || SystemInfo.isLinux) {
-            MetalLookAndFeel.setCurrentTheme(new DarkMetalTheme());
-        }
     }
 
     /**

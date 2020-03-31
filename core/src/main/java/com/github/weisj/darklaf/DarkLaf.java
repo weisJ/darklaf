@@ -55,18 +55,20 @@ public class DarkLaf extends BasicLookAndFeel {
         new SystemDefaultsInitTask(),
         new PlatformDefaultsInitTask()
     };
-    private final BasicLookAndFeel base;
+    /*
+     * The base look and feel. This may vary to handle different platform support.
+     */
+    private final LookAndFeel base;
 
     /**
      * Create Custom Darcula LaF.
      */
     public DarkLaf() {
-        LafManager.getTheme().beforeInstall();
         base = getBase();
     }
 
-    private BasicLookAndFeel getBase() {
-        BasicLookAndFeel baseLaf;
+    private LookAndFeel getBase() {
+        LookAndFeel baseLaf;
         if (SystemInfo.isWindows || SystemInfo.isLinux) {
             baseLaf = new MetalLookAndFeel();
         } else {
@@ -87,9 +89,9 @@ public class DarkLaf extends BasicLookAndFeel {
         return baseLaf;
     }
 
-    private BasicLookAndFeel currentOrFallback(final LookAndFeel currentLaf) {
-        if (currentLaf instanceof BasicLookAndFeel) {
-            return (BasicLookAndFeel) currentLaf;
+    private LookAndFeel currentOrFallback(final LookAndFeel currentLaf) {
+        if (currentLaf != null) {
+            return currentLaf;
         } else {
             return new MetalLookAndFeel();
         }

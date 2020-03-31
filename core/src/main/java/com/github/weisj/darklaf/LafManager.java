@@ -23,8 +23,6 @@
  */
 package com.github.weisj.darklaf;
 
-import com.github.weisj.darklaf.icons.AwareIconStyle;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.task.DefaultsInitTask;
 import com.github.weisj.darklaf.theme.*;
 
@@ -148,9 +146,6 @@ public final class LafManager {
      */
     public static void setTheme(final Theme theme) {
         LafManager.theme = theme;
-        IconLoader.updateAwareStyle(Theme.isDark(theme) ? AwareIconStyle.DARK
-                                                        : AwareIconStyle.LIGHT);
-        IconLoader.updateThemeStatus(theme);
     }
 
     /**

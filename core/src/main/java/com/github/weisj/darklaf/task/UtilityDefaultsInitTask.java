@@ -24,6 +24,8 @@
 package com.github.weisj.darklaf.task;
 
 import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.icons.AwareIconStyle;
+import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -32,14 +34,16 @@ import java.util.Map;
 public class UtilityDefaultsInitTask implements DefaultsInitTask {
     @Override
     public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
-        setupUtils(defaults);
+        setupUtils(currentTheme, defaults);
     }
 
-    private void setupUtils(final Map<Object, Object> defaults) {
+    private void setupUtils(final Theme currentTheme, final Map<Object, Object> defaults) {
         DarkUIUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
         DarkUIUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
         DarkUIUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
         DarkBorders.update(defaults);
+        IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
+        IconLoader.updateThemeStatus(currentTheme);
     }
 
     private float getOpacity(final Map<Object, Object> defaults, final String key) {
