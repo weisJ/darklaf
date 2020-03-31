@@ -29,6 +29,10 @@ public class PreferredThemeStyle {
     private final ColorToneRule colorToneRule;
     private final FontSizeRule fontSizeRule;
 
+    public PreferredThemeStyle() {
+        this(ContrastRule.STANDARD, ColorToneRule.LIGHT);
+    }
+
     public PreferredThemeStyle(final ContrastRule contrastRule,
                                final ColorToneRule colorToneRule) {
         if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");

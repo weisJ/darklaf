@@ -23,27 +23,25 @@
  */
 package com.github.weisj.darklaf.platform.macos;
 
-import java.awt.*;
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.ContrastRule;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
+import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
 
-public class JNIDecorationsMacOS {
+public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
-    public static native long getComponentPointer(final Window window);
+    private final PreferredThemeStyle fallbackStyle = new PreferredThemeStyle(ContrastRule.STANDARD,
+                                                                              ColorToneRule.LIGHT);
 
-    public static native void retainWindow(final long hwnd);
+    @Override
+    public PreferredThemeStyle getPreference() {
+        if (!MacOSLibrary.isLoaded()) return fallbackStyle;
+        return new PreferredThemeStyle();
+    }
 
-    public static native void releaseWindow(final long hwnd);
+    @Override
+    public void initialize() {
+        MacOSLibrary.updateLibrary();
+    }
 
-    public static native double getTitleBarHeight(final long hwnd);
-
-    public static native void installDecorations(final long hwnd);
-
-    public static native void uninstallDecorations(final long hwnd);
-
-    public static native void setTitleEnabled(final long hwnd, final boolean enabled);
-
-    public static native void setDarkTheme(final long hwnd, final boolean darkEnabled);
-
-    public static native boolean isFullscreen(final long hwnd);
-
-    public static native double getTitleFontSize(final long hwnd);
 }

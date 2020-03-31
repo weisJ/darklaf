@@ -23,27 +23,11 @@
  */
 package com.github.weisj.darklaf.platform.macos;
 
-import java.awt.*;
+public class JNIThemeInfoMacOS {
 
-public class JNIDecorationsMacOS {
+    public static native boolean isDarkThemeEnabled();
 
-    public static native long getComponentPointer(final Window window);
+    public static native boolean isHighContrastEnabled();
 
-    public static native void retainWindow(final long hwnd);
-
-    public static native void releaseWindow(final long hwnd);
-
-    public static native double getTitleBarHeight(final long hwnd);
-
-    public static native void installDecorations(final long hwnd);
-
-    public static native void uninstallDecorations(final long hwnd);
-
-    public static native void setTitleEnabled(final long hwnd, final boolean enabled);
-
-    public static native void setDarkTheme(final long hwnd, final boolean darkEnabled);
-
-    public static native boolean isFullscreen(final long hwnd);
-
-    public static native double getTitleFontSize(final long hwnd);
+    public static native long getFontScaleFactor();
 }

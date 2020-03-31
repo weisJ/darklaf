@@ -21,29 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.macos;
+#import "com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS.h"
+#import <AppKit/AppKit.h>
 
-import java.awt.*;
+JNIEXPORT jboolean JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
+    if(@available(macOS 10.14, *)) {
+        return (jboolean)false;
+    } else {
+        return (jboolean)false;
+    }
+}
 
-public class JNIDecorationsMacOS {
+JNIEXPORT jboolean JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isHighContrastEnabled(JNIEnv *env, jclass obj) {
+    return NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast;
+}
 
-    public static native long getComponentPointer(final Window window);
-
-    public static native void retainWindow(final long hwnd);
-
-    public static native void releaseWindow(final long hwnd);
-
-    public static native double getTitleBarHeight(final long hwnd);
-
-    public static native void installDecorations(final long hwnd);
-
-    public static native void uninstallDecorations(final long hwnd);
-
-    public static native void setTitleEnabled(final long hwnd, final boolean enabled);
-
-    public static native void setDarkTheme(final long hwnd, final boolean darkEnabled);
-
-    public static native boolean isFullscreen(final long hwnd);
-
-    public static native double getTitleFontSize(final long hwnd);
+JNIEXPORT jlong JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_getFontScaleFactor(JNIEnv *env, jclass obj) {
+    return 100;
 }
