@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.decorators;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+@FunctionalInterface
 public interface UpdateDocumentListener extends DocumentListener {
     default void insertUpdate(final DocumentEvent e) {
         update();

@@ -37,6 +37,10 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         setupUtils(currentTheme, defaults);
     }
 
+    /*
+     * Update the values for all classes using theme defaults and notify them that the theme has
+     * changed.
+     */
     private void setupUtils(final Theme currentTheme, final Map<Object, Object> defaults) {
         DarkUIUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
         DarkUIUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
@@ -50,5 +54,10 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         Object obj = defaults.get(key);
         int val = (obj instanceof Integer) ? (int) obj : 100;
         return val / 100f;
+    }
+
+    @Override
+    public boolean onlyDuringInstallation() {
+        return true;
     }
 }

@@ -59,6 +59,11 @@ public class DarkLaf extends BasicLookAndFeel {
      * The base look and feel. This may vary to handle different platform support.
      */
     private final LookAndFeel base;
+    /*
+     * Indicated whether #initialize has been called. This prevents the theme to change for Borders/Icons etc.
+     * if #getDefaults is called outside of LaF installation.
+     */
+    private boolean isInitialized;
 
     /**
      * Create Custom Darcula LaF.
@@ -99,13 +104,10 @@ public class DarkLaf extends BasicLookAndFeel {
 
     @Override
     public void initialize() {
-        /*
-         * On macOS the default PopupFactory is overwritten with a custom one, which always uses heavyweight popups.
-         * This is disadvantageous for the behaviour of custom tooltips.
-         */
         base.initialize();
         PopupFactory.setSharedInstance(new DarkPopupFactory());
         setupDecorations();
+        isInitialized = true;
     }
 
     private void setupDecorations() {
@@ -121,6 +123,7 @@ public class DarkLaf extends BasicLookAndFeel {
         if (mouseGrabber != null) {
             mouseGrabber.uninstall();
         }
+        isInitialized = false;
     }
 
     @Override
@@ -128,6 +131,7 @@ public class DarkLaf extends BasicLookAndFeel {
         final UIDefaults defaults = base.getDefaults();
         final Theme currentTheme = LafManager.getTheme();
         for (DefaultsInitTask task : INIT_TASKS) {
+            if (task.onlyDuringInstallation() && !isInitialized) continue;
             task.run(currentTheme, defaults);
         }
         return defaults;

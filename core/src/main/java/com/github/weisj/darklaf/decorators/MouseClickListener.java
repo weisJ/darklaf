@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.decorators;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+@FunctionalInterface
 public interface MouseClickListener extends MouseListener {
 
     @Override
