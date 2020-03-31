@@ -27,7 +27,7 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
 
-import java.util.Map;
+import javax.swing.*;
 import java.util.Properties;
 
 public class SystemDefaultsInitTask implements DefaultsInitTask {
@@ -36,11 +36,11 @@ public class SystemDefaultsInitTask implements DefaultsInitTask {
     private static final String OVERWRITES_NAME = "overwrites";
 
     @Override
-    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+    public void run(final Theme currentTheme, final UIDefaults defaults) {
         loadSystemOverwrites(defaults);
     }
 
-    private void loadSystemOverwrites(final Map<Object, Object> defaults) {
+    private void loadSystemOverwrites(final UIDefaults defaults) {
         Properties overwrites = PropertyLoader.loadProperties(DarkLaf.class, OVERWRITES_NAME, OVERWRITES_PATH);
         overwrites.values().removeIf(v -> System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
         overwrites.entrySet().forEach(

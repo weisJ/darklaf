@@ -21,43 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.theme.info;
 
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
-import com.github.weisj.darklaf.theme.info.PresetIconRule;
-
-/**
- * @author Jannis Weis
- */
-public class DarculaTheme extends Theme {
-
-    @Override
-    protected String getResourcePath() {
-        return "darcula/";
-    }
-
-    @Override
-    public String getPrefix() {
-        return "darcula";
-    }
-
-    @Override
-    public String getName() {
-        return "Darcula";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return DarculaTheme.class;
-    }
-
-    @Override
-    public ColorToneRule getColorToneRule() {
-        return ColorToneRule.DARK;
-    }
-
-    @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.DARK;
-    }
+public enum ColorToneRule {
+    DARK,
+    LIGHT
 }

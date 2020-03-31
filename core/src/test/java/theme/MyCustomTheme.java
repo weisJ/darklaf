@@ -23,9 +23,9 @@
  */
 package theme;
 
-import com.github.weisj.darklaf.theme.ColorToneRule;
-import com.github.weisj.darklaf.theme.PresetIconRule;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;

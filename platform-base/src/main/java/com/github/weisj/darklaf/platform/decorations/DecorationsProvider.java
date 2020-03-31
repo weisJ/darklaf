@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.platform.decorations;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 import java.util.Properties;
 
 public interface DecorationsProvider {
@@ -59,7 +58,7 @@ public interface DecorationsProvider {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    void loadDecorationProperties(Properties properties, Map<Object, Object> currentDefaults);
+    void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults);
 
     /**
      * Initialize the window of a popup menu.

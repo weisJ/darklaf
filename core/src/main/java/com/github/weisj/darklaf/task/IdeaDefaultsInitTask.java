@@ -26,16 +26,15 @@ package com.github.weisj.darklaf.task;
 import com.github.weisj.darklaf.theme.Theme;
 
 import javax.swing.*;
-import java.util.Map;
 
 public class IdeaDefaultsInitTask implements DefaultsInitTask {
     @Override
-    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+    public void run(final Theme currentTheme, final UIDefaults defaults) {
         initIdeaDefaults(defaults);
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
-    private void initIdeaDefaults(final Map<Object, Object> defaults) {
+    private void initIdeaDefaults(final UIDefaults defaults) {
         defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
             new Object[]{
                 "ctrl C", "copy",

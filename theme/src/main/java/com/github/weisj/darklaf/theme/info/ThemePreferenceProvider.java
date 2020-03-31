@@ -21,10 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.theme.info;
 
-public enum PresetIconRule {
-    NONE,
-    DARK,
-    LIGHT
+public interface ThemePreferenceProvider {
+
+    /**
+     * Get the preferred theme style.
+     *
+     * @return the preferred theme style.
+     */
+    PreferredThemeStyle getPreference();
+
+    /**
+     * Initialize all necessary resources.
+     */
+    void initialize();
 }

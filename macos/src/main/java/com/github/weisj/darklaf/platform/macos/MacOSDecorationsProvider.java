@@ -24,14 +24,13 @@
 package com.github.weisj.darklaf.platform.macos;
 
 import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 import java.util.Properties;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
@@ -52,7 +51,7 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
         IconLoader iconLoader = IconLoader.get(MacOSDecorationsProvider.class);
         PropertyLoader.putProperties(PropertyLoader.loadProperties(MacOSDecorationsProvider.class,
                                                                    "macos_decorations", ""),

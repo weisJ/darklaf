@@ -21,12 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.task;
 
-import java.awt.*;
-import java.util.Map;
+import com.github.weisj.darklaf.theme.Theme;
 
-public interface FontMapper {
+import java.util.Properties;
 
-    Font map(final Font font, final Map<Object, Object> defaults);
+public interface DefaultsAdjustmentTask {
+
+    /**
+     * Execute the task.
+     *
+     * @param currentTheme the current theme.
+     * @param properties   the properties.
+     */
+    void run(final Theme currentTheme, final Properties properties);
 }

@@ -25,9 +25,8 @@ package com.github.weisj.darklaf.task;
 
 import com.github.weisj.darklaf.theme.Theme;
 
-import java.util.Map;
+import javax.swing.*;
 
-@FunctionalInterface
 public interface DefaultsInitTask {
 
     /**
@@ -36,7 +35,7 @@ public interface DefaultsInitTask {
      * @param currentTheme the current theme being initialized.
      * @param defaults     the current defaults to work with.
      */
-    void run(final Theme currentTheme, final Map<Object, Object> defaults);
+    void run(final Theme currentTheme, final UIDefaults defaults);
 
     /**
      * Indicated that this task should only be run if the laf is actually installed.

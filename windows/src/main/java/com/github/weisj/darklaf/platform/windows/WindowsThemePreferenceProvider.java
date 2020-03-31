@@ -23,5 +23,28 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-public class WindowsThemeInfoProvider {
+import com.github.weisj.darklaf.theme.info.*;
+
+public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
+
+    private final PreferredThemeStyle fallbackStyle = new PreferredThemeStyle(ContrastRule.STANDARD,
+                                                                              ColorToneRule.LIGHT);
+
+    @Override
+    public PreferredThemeStyle getPreference() {
+        if (!WindowsLibrary.isLoaded()) return fallbackStyle;
+        boolean darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
+        boolean highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
+        long fontScaling = JNIThemeInfoWindows.getFontScaleFactor();
+        ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
+        ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
+        FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
+        return new PreferredThemeStyle(contrastRule, toneRule, fontSizeRule);
+    }
+
+    @Override
+    public void initialize() {
+        WindowsLibrary.updateLibrary();
+    }
+
 }

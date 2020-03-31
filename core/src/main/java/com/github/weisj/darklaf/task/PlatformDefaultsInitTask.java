@@ -29,11 +29,10 @@ import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
-import java.util.Map;
 
 public class PlatformDefaultsInitTask implements DefaultsInitTask {
     @Override
-    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+    public void run(final Theme currentTheme, final UIDefaults defaults) {
         String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
         if (SystemInfo.isWindows10 && Decorations.isCustomDecorationSupported()) {
             JPopupMenu.setDefaultLightWeightPopupEnabled(Boolean.TRUE.equals(defaults.get(key + ".windows")));

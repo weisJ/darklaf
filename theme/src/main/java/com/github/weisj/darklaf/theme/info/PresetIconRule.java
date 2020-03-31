@@ -21,19 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.task;
+package com.github.weisj.darklaf.theme.info;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.Theme;
-
-import java.util.Map;
-
-public class UserPreferenceInitTask implements DefaultsInitTask {
-
-    @Override
-    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
-        for (DefaultsInitTask task : LafManager.getUserInitTasks()) {
-            if (task != null) task.run(currentTheme, defaults);
-        }
-    }
+public enum PresetIconRule {
+    NONE,
+    DARK,
+    LIGHT
 }

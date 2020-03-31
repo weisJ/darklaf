@@ -32,7 +32,6 @@ import com.github.weisj.darklaf.util.SystemInfo;
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public class ThemeDefaultsInitTask implements DefaultsInitTask {
@@ -49,12 +48,11 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private static final String[] ICON_PROPERTIES = new String[]{
         "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
     };
-    private final DefaultsInitTask userPreferenceInitTask = new UserPreferenceInitTask();
+    private final DefaultsAdjustmentTask userPreferenceInitTask = new UserPreferenceAdjustmentTask();
 
     @Override
-    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
-        if (!(defaults instanceof UIDefaults)) return;
-        loadThemeDefaults(currentTheme, (UIDefaults) defaults);
+    public void run(final Theme currentTheme, final UIDefaults defaults) {
+        loadThemeDefaults(currentTheme, defaults);
     }
 
     private void loadThemeDefaults(final Theme currentTheme, final UIDefaults defaults) {
@@ -87,7 +85,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         installGlobals(uiProps, defaults);
     }
 
-    private void installGlobals(final Properties uiProps, final Map<Object, Object> defaults) {
+    private void installGlobals(final Properties uiProps, final UIDefaults defaults) {
         final HashMap<String, Object> globalSettings = new HashMap<>();
         for (final Object key : uiProps.keySet()) {
             if (key instanceof String && ((String) key).startsWith(GLOBAL_PREFIX)) {

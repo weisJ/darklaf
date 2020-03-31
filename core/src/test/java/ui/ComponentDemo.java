@@ -25,6 +25,9 @@ package ui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.ContrastRule;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,8 +37,7 @@ public interface ComponentDemo {
 
     static Theme getTheme() {
         return LafManager.themeForPreferredStyle(new PreferredThemeStyle(ContrastRule.STANDARD,
-                                                                         ColorToneRule.LIGHT,
-                                                                         FontSizeRule.DEFAULT));
+                                                                         ColorToneRule.LIGHT));
     }
 
     JComponent createComponent();

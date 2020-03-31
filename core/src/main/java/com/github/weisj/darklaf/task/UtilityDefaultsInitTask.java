@@ -29,11 +29,11 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-import java.util.Map;
+import javax.swing.*;
 
 public class UtilityDefaultsInitTask implements DefaultsInitTask {
     @Override
-    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+    public void run(final Theme currentTheme, final UIDefaults defaults) {
         setupUtils(currentTheme, defaults);
     }
 
@@ -41,7 +41,7 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
      * Update the values for all classes using theme defaults and notify them that the theme has
      * changed.
      */
-    private void setupUtils(final Theme currentTheme, final Map<Object, Object> defaults) {
+    private void setupUtils(final Theme currentTheme, final UIDefaults defaults) {
         DarkUIUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
         DarkUIUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
         DarkUIUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
@@ -50,7 +50,7 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         IconLoader.updateThemeStatus(currentTheme);
     }
 
-    private float getOpacity(final Map<Object, Object> defaults, final String key) {
+    private float getOpacity(final UIDefaults defaults, final String key) {
         Object obj = defaults.get(key);
         int val = (obj instanceof Integer) ? (int) obj : 100;
         return val / 100f;

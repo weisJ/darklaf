@@ -63,21 +63,16 @@ public final class DarkBorders {
         return createBorder(top, left, bottom, right, lineWidgetBorderMap, "borderSecondary");
     }
 
-    public static void update(final Map<Object, Object> defaults) {
-        Color borderColor = getColor(defaults, "border");
+    public static void update(final UIDefaults defaults) {
+        Color borderColor = defaults.getColor("border");
         for (WeakReference<WeakLineBorder> border : lineBorderMap.values()) {
             WeakLineBorder b = border.get();
             if (b != null) b.setColor(borderColor);
         }
-        Color borderSecondaryColor = getColor(defaults, "borderSecondary");
+        Color borderSecondaryColor = defaults.getColor("borderSecondary");
         for (WeakReference<WeakLineBorder> border : lineWidgetBorderMap.values()) {
             WeakLineBorder b = border.get();
             if (b != null) b.setColor(borderSecondaryColor);
         }
-    }
-
-    private static Color getColor(final Map<Object, Object> defaults, final String key) {
-        Object color = defaults.get(key);
-        return color instanceof Color ? (Color) color : null;
     }
 }

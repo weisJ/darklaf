@@ -11,6 +11,7 @@ dependencies {
     javaImplementation(project(":darklaf-native-utils"))
     javaImplementation(project(":darklaf-utils"))
     javaImplementation(project(":darklaf-platform-base"))
+    javaImplementation(project(":darklaf-theme"))
     javaImplementation(project(":darklaf-property-loader"))
 }
 
@@ -27,8 +28,8 @@ library {
     binaries.whenElementFinalized(CppSharedLibrary::class) {
         linkTask.get().linkerArgs.addAll(
             when (toolChain) {
-                is Gcc, is Clang -> listOf("-ldwmapi", "-lGdi32", "-luser32")
-                is VisualCpp -> listOf("dwmapi.lib", "user32.lib", "Gdi32.lib")
+                is Gcc, is Clang -> listOf("-ldwmapi", "-lGdi32", "-luser32", "-ladvapi32")
+                is VisualCpp -> listOf("dwmapi.lib", "user32.lib", "Gdi32.lib", "Advapi32.lib")
                 else -> emptyList()
             }
         )

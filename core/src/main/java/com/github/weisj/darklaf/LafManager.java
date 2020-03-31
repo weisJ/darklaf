@@ -23,8 +23,12 @@
  */
 package com.github.weisj.darklaf;
 
-import com.github.weisj.darklaf.task.DefaultsInitTask;
-import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
+import com.github.weisj.darklaf.theme.DarculaTheme;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
+import com.github.weisj.darklaf.theme.info.ThemeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +52,7 @@ public final class LafManager {
     private static Theme theme;
     private static boolean logEnabled = false;
     private static boolean decorationsOverwrite = true;
-    private static final Collection<DefaultsInitTask> uiDefaultsTasks = new HashSet<>();
+    private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new HashSet<>();
 
     static {
         enableLogging(true);
@@ -241,7 +245,7 @@ public final class LafManager {
      *
      * @param task the defaults init task.
      */
-    public static void registerDefaultsInitTask(final DefaultsInitTask task) {
+    public static void registerDefaultsAdjustmentTask(final DefaultsAdjustmentTask task) {
         uiDefaultsTasks.add(task);
     }
 
@@ -250,7 +254,7 @@ public final class LafManager {
      *
      * @param task the defaults init task.
      */
-    public static void removeDefaultsInitTask(final DefaultsInitTask task) {
+    public static void removeDefaultsAdjustmentTask(final DefaultsAdjustmentTask task) {
         uiDefaultsTasks.remove(task);
     }
 
@@ -259,7 +263,7 @@ public final class LafManager {
      *
      * @return collection of init tasks.
      */
-    public static Collection<DefaultsInitTask> getUserInitTasks() {
+    public static Collection<DefaultsAdjustmentTask> getUserAdjustmentTasks() {
         return uiDefaultsTasks;
     }
 

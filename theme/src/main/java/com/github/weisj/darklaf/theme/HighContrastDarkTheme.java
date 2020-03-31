@@ -23,6 +23,10 @@
  */
 package com.github.weisj.darklaf.theme;
 
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.ContrastRule;
+import com.github.weisj.darklaf.theme.info.PresetIconRule;
+
 import javax.swing.*;
 import java.util.Properties;
 

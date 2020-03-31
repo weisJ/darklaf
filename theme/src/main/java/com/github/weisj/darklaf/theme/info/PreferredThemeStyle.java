@@ -21,13 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.theme.info;
 
 public class PreferredThemeStyle {
 
     private final ContrastRule contrastRule;
     private final ColorToneRule colorToneRule;
     private final FontSizeRule fontSizeRule;
+
+    public PreferredThemeStyle(final ContrastRule contrastRule,
+                               final ColorToneRule colorToneRule) {
+        if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
+        if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
+        this.contrastRule = contrastRule;
+        this.colorToneRule = colorToneRule;
+        this.fontSizeRule = FontSizeRule.getDefault();
+    }
 
     public PreferredThemeStyle(final ContrastRule contrastRule,
                                final ColorToneRule colorToneRule,
@@ -52,4 +61,12 @@ public class PreferredThemeStyle {
         return fontSizeRule;
     }
 
+    @Override
+    public String toString() {
+        return "PreferredThemeStyle{" +
+               "contrastRule=" + contrastRule +
+               ", colorToneRule=" + colorToneRule +
+               ", fontSizeRule=" + fontSizeRule +
+               '}';
+    }
 }

@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 import java.util.Properties;
 
 public class DefaultDecorationsProvider implements DecorationsProvider {
@@ -60,6 +59,6 @@ public class DefaultDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final Map<Object, Object> currentDefaults) {
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
     }
 }

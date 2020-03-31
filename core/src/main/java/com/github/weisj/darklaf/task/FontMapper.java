@@ -21,25 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.task;
 
-public enum FontSizeRule {
-    DEFAULT("default"),
-    TINY("tiny"),
-    SMALLER("smaller"),
-    SMALL("small"),
-    MEDIUM("medium"),
-    LARGE("large"),
-    LARGER("larger"),
-    HUGE("huge");
+import javax.swing.*;
+import java.awt.*;
 
-    private final String propertyKey;
+public interface FontMapper {
 
-    FontSizeRule(final String propertyKey) {
-        this.propertyKey = propertyKey;
-    }
-
-    public String getPropertyKey() {
-        return "fontSize." + propertyKey;
-    }
+    Font map(final Font font, final UIDefaults defaults);
 }

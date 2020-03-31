@@ -21,9 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.platform.windows;
 
-public enum ColorToneRule {
-    DARK,
-    LIGHT
+public class JNIThemeInfoWindows {
+
+    public static native boolean isDarkThemeEnabled();
+
+    public static native boolean isHighContrastEnabled();
+
+    public static native long getFontScaleFactor();
 }

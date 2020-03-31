@@ -31,21 +31,20 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Map;
 
 public class InputDefaultsInitTask implements DefaultsInitTask {
 
     @Override
-    public void run(final Theme currentTheme, final Map<Object, Object> defaults) {
+    public void run(final Theme currentTheme, final UIDefaults defaults) {
         initInputMapDefaults(defaults);
         patchComboBox(new MetalLookAndFeel().getDefaults(), defaults);
     }
 
-    private void initInputMapDefaults(final Map<Object, Object> defaults) {
+    private void initInputMapDefaults(final UIDefaults defaults) {
         // Make ENTER work in JTrees
         final InputMap treeInputMap = (InputMap) defaults.get("Tree.focusInputMap");
         if (treeInputMap != null) {
-            // it's really possible. For example,  GTK+ doesn't have such map
+            // it's really possible. For example,  GTK+ doesn't have such a map.
             treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "toggle");
         }
         // Cut/Copy/Paste in JTextAreas
@@ -99,7 +98,7 @@ public class InputDefaultsInitTask implements DefaultsInitTask {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask), DefaultEditorKit.cutAction);
     }
 
-    private static void patchComboBox(final UIDefaults metalDefaults, final Map<Object, Object> defaults) {
+    private static void patchComboBox(final UIDefaults metalDefaults, final UIDefaults defaults) {
         defaults.remove("ComboBox.ancestorInputMap");
         defaults.remove("ComboBox.actionMap");
         defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));

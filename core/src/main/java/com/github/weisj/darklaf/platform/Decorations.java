@@ -34,7 +34,6 @@ import com.github.weisj.darklaf.util.SystemInfo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 import java.util.Properties;
 
 public final class Decorations {
@@ -84,7 +83,7 @@ public final class Decorations {
         decorationsProvider.initialize();
     }
 
-    public static void loadDecorationProperties(final Properties uiProps, final Map<Object, Object> defaults) {
+    public static void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
         decorationsProvider.loadDecorationProperties(uiProps, defaults);
     }
 }

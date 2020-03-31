@@ -24,6 +24,10 @@
 package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.ContrastRule;
+import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.theme.info.PresetIconRule;
 
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
@@ -309,7 +313,7 @@ public abstract class Theme {
      * @return the font size rule.
      */
     public FontSizeRule getFontSizeRule() {
-        if (fontSizeRule == null) fontSizeRule = FontSizeRule.DEFAULT;
+        if (fontSizeRule == null) fontSizeRule = FontSizeRule.getDefault();
         return fontSizeRule;
     }
 
