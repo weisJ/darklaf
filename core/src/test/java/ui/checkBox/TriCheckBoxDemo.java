@@ -24,6 +24,7 @@
 package ui.checkBox;
 
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
+import com.github.weisj.darklaf.components.tristate.TristateCheckBoxMenuItem;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -77,7 +78,7 @@ public class TriCheckBoxDemo implements ComponentDemo {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(ComponentDemo.createThemeMenu());
         menuBar.add(new JMenu("Demo") {{
-            add(new TristateCheckBox("TristateCheckBox menu item"));
+            add(new TristateCheckBoxMenuItem("TristateCheckBox menu item"));
         }});
         return menuBar;
     }

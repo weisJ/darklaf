@@ -39,8 +39,6 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
 
     protected void displayState() {
         super.setSelected(state != TristateState.DESELECTED);
-        super.setArmed(state == TristateState.INDETERMINATE);
-        super.setPressed(state == TristateState.INDETERMINATE);
     }
 
     public void setIndeterminate() {
