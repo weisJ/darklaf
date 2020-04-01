@@ -141,10 +141,6 @@ public final class LafManager {
         ThemePreferencesHandler.getSharedInstance().addThemePreferenceChangeListener(listener);
     }
 
-    public static PreferredThemeStyle getPreferredThemeStyle() {
-        return ThemePreferencesHandler.getSharedInstance().getPreferredThemeStyle();
-    }
-
     /**
      * Removes a {@link ThemePreferenceListener}.
      *
@@ -155,6 +151,18 @@ public final class LafManager {
      */
     public static void removeThemePreferenceChangeListener(final ThemePreferenceListener listener) {
         ThemePreferencesHandler.getSharedInstance().removeThemePreferenceChangeListener(listener);
+    }
+
+    /**
+     * Gets the preferred theme style. If theme preference change reporting is enabled this may use native os settings
+     * to determine these values.
+     *
+     * @return the preferred theme style.
+     * @see #isPreferenceChangeReportingEnabled()
+     * @see #enabledPreferenceChangeReporting(boolean)
+     */
+    public static PreferredThemeStyle getPreferredThemeStyle() {
+        return ThemePreferencesHandler.getSharedInstance().getPreferredThemeStyle();
     }
 
     /**
