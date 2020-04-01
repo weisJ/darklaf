@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf;
 
-import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.task.*;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 public class DarkLaf extends BasicLookAndFeel {
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
+    public static final String ALLOW_NATIVE_CODE_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "allowNativeCode";
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     /*
      * All tasks for initializing the ui defaults in order of execution.
@@ -111,7 +112,7 @@ public class DarkLaf extends BasicLookAndFeel {
     }
 
     private void setupDecorations() {
-        Decorations.initialize();
+        DecorationsHandler.getSharedInstance().initialize();
         JFrame.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
     }
@@ -166,6 +167,6 @@ public class DarkLaf extends BasicLookAndFeel {
 
     @Override
     public boolean getSupportsWindowDecorations() {
-        return Decorations.isCustomDecorationSupported();
+        return DecorationsHandler.getSharedInstance().isCustomDecorationSupported();
     }
 }

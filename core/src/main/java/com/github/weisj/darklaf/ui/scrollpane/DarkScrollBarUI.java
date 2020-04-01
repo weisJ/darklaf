@@ -73,8 +73,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         thumbFadeStartColor = UIManager.getColor("ScrollBar.fadeStartColor");
         thumbFadeEndColor = UIManager.getColor("ScrollBar.fadeEndColor");
         trackBackground = UIManager.getColor("ScrollBar.trackColor");
-        smallSize = UIManager.getInt("ScrollBar.width");
-        size = UIManager.getInt("ScrollBar.smallWidth");
+        smallSize = UIManager.getInt("ScrollBar.smallWidth");
+        size = UIManager.getInt("ScrollBar.width");
     }
 
     @Override

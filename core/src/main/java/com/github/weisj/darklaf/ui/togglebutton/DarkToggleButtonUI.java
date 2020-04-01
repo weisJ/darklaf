@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.togglebutton;
 
-import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
@@ -140,10 +139,9 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     protected Color getBackgroundColor(final JComponent c) {
         AbstractButton b = (AbstractButton) c;
-        boolean rollOver = (b.isRolloverEnabled() || ButtonConstants.doConvertToBorderless(b))
-                           && (((JButton) c).getModel().isRollover());
+        boolean rollOver = b.isRolloverEnabled() && b.getModel().isRollover();
         boolean clicked = b.getModel().isArmed();
-        boolean isSelected = c instanceof JToggleButton && ((JToggleButton) c).isSelected();
+        boolean isSelected = b.isSelected();
         if (c.isEnabled()) {
             if (isSelected) return background;
             if (clicked) {

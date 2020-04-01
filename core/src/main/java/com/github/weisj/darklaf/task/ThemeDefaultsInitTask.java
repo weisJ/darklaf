@@ -25,7 +25,7 @@ package com.github.weisj.darklaf.task;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -70,7 +70,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         initIconTheme(currentTheme, defaults, uiProps);
         initPlatformProperties(currentTheme, defaults, uiProps);
 
-        Decorations.loadDecorationProperties(uiProps, defaults);
+        DecorationsHandler.getSharedInstance().loadDecorationProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
         defaults.putAll(uiProps);
 

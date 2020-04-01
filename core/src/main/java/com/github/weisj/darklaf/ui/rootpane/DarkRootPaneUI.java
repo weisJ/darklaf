@@ -24,8 +24,8 @@
 
 package com.github.weisj.darklaf.ui.rootpane;
 
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.platform.Decorations;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -136,7 +136,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private void installClientDecorations(final JRootPane root) {
         int style = windowDecorationsStyle < 0 ? root.getWindowDecorationStyle() : windowDecorationsStyle;
         updateWindow(root.getParent());
-        CustomTitlePane titlePane = Decorations.createTitlePane(root, style, window);
+        CustomTitlePane titlePane = DecorationsHandler.getSharedInstance().createTitlePane(root, style, window);
         setWindowDecorated();
         installLayout(root);
         setTitlePane(root, titlePane);
@@ -217,7 +217,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     protected void updateClientDecoration() {
         if (!Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS_UPDATE))) {
             uninstallClientDecorations(rootPane);
-            if (Decorations.isCustomDecorationSupported() && !noDecorations(rootPane)) {
+            if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()
+                && !noDecorations(rootPane)) {
                 installClientDecorations(rootPane);
             }
         }

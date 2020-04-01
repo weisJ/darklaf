@@ -60,15 +60,15 @@ public class WindowsLibrary {
             } else {
                 LOGGER.warning("Could not determine jre model '"
                                + SystemInfo.jreArchitecture
-                               + "'. Decorations will be disabled");
+                               + "'. Native features will be disabled");
                 return;
             }
             loaded = true;
-            LOGGER.info("Loaded darklaf-windows.dll. Decorations are enabled.");
+            LOGGER.info("Loaded darklaf-windows.dll. Native features are enabled.");
         } catch (Throwable e) {
             //Library not found, SecurityManager prevents library loading etc.
             LOGGER.log(Level.SEVERE, "Could not load decorations library darklaf-windows.dll." +
-                                     " Decorations will be disabled", e);
+                                     " Native features will be disabled", e);
         }
     }
 

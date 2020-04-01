@@ -21,43 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme.info;
+package com.github.weisj.darklaf.theme.event;
 
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public interface ThemePreferenceProvider {
+public class ThemePreferenceChangeSupport {
 
-    /**
-     * Get the preferred theme style.
-     *
-     * @return the preferred theme style.
-     */
-    PreferredThemeStyle getPreference();
+    private final List<ThemePreferenceListener> listenerList = Collections.synchronizedList(new ArrayList<>());
 
-    /**
-     * Initialize all necessary resources.
-     */
-    void initialize();
+    public void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {
+        listenerList.add(listener);
+    }
 
-    /**
-     * Set the callback for changes is the preferred theme style.
-     *
-     * @param callback the callback.
-     */
-    void setCallback(final Consumer<PreferredThemeStyle> callback);
+    public void removeThemePreferenceChangeListener(final ThemePreferenceListener listener) {
+        listenerList.remove(listener);
+    }
 
-    /**
-     * Sets whether changes in theme preference should be signaled to the callback.
-     *
-     * @see #setCallback(Consumer)
-     */
-    void setReporting(final boolean reporting);
-
-    /**
-     * Returns whether changes in theme preference are signaled to the callback.
-     *
-     * @return true if changes are reported.
-     * @see #setCallback(Consumer)
-     */
-    boolean isReporting();
+    public void notifyPreferenceChange(final ThemePreferenceChangeEvent event) {
+        for (ThemePreferenceListener consumer : listenerList) {
+            if (consumer != null) {
+                consumer.themePreferenceChanged(event);
+            }
+        }
+    }
 }

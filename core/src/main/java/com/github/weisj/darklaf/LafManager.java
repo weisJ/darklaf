@@ -23,9 +23,12 @@
  */
 package com.github.weisj.darklaf;
 
+import com.github.weisj.darklaf.platform.DecorationsHandler;
+import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemeProvider;
@@ -51,7 +54,6 @@ public final class LafManager {
     private static ThemeProvider themeProvider;
     private static Theme theme;
     private static boolean logEnabled = false;
-    private static boolean decorationsOverwrite = true;
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new HashSet<>();
 
     static {
@@ -84,13 +86,13 @@ public final class LafManager {
     }
 
     /**
-     * Returns whther custom decorations should be used. If this returns true decorations still might not be used if the
-     * theme or platform don't support them.
+     * Returns whether custom decorations should be used. If this returns true decorations still might not be used if
+     * the theme or platform don't support them.
      *
      * @return true if decorations should be used.
      */
     public static boolean isDecorationsEnabled() {
-        return decorationsOverwrite;
+        return DecorationsHandler.getSharedInstance().isCustomDecorationSupported();
     }
 
     /**
@@ -100,23 +102,95 @@ public final class LafManager {
      * @param enabled true if decorations should be used if available.
      */
     public static void setDecorationsEnabled(final boolean enabled) {
-        if (decorationsOverwrite != enabled) {
-            decorationsOverwrite = enabled;
-            if (!decorationsOverwrite) {
-                updateLaf();
-            }
+        boolean isEnabled = isDecorationsEnabled();
+        DecorationsHandler.getSharedInstance().setDecorationsEnabled(enabled);
+        if (isEnabled != enabled) {
+            updateLaf();
         }
     }
 
+    /**
+     * Enabled whether changes in the preferred theme style should be reported to {@link ThemePreferenceListener}s. On
+     * some platforms this setting may do nothing.
+     *
+     * @param enabled true if changes should be reported.
+     */
+    public static void enabledPreferenceChangeReporting(final boolean enabled) {
+        ThemePreferencesHandler.getSharedInstance().enablePreferenceChangeReporting(enabled);
+    }
+
+    /**
+     * Returns whether changes to the preferred theme style should be reported to {@link ThemePreferenceListener}s.
+     *
+     * @return true if enabled and currently reporting.
+     */
+    public static boolean isPreferenceChangeReportingEnabled() {
+        return ThemePreferencesHandler.getSharedInstance().isPreferenceChangeReportingEnabled();
+    }
+
+    /**
+     * Adds a {@link ThemePreferenceListener}. If preference change reporting is enabled the handler will receive events
+     * if preferences have changed.
+     *
+     * @param listener the listener to add.
+     * @see ThemePreferenceListener
+     * @see #enabledPreferenceChangeReporting(boolean)
+     * @see #isPreferenceChangeReportingEnabled()
+     */
+    public static void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {
+        ThemePreferencesHandler.getSharedInstance().addThemePreferenceChangeListener(listener);
+    }
+
+    /**
+     * Removes a {@link ThemePreferenceListener}.
+     *
+     * @param listener the listener to add.
+     * @see ThemePreferenceListener
+     * @see #enabledPreferenceChangeReporting(boolean)
+     * @see #isPreferenceChangeReportingEnabled()
+     */
+    public static void removeThemePreferenceChangeListener(final ThemePreferenceListener listener) {
+        ThemePreferencesHandler.getSharedInstance().removeThemePreferenceChangeListener(listener);
+    }
+
+    /**
+     * Gets the preferred theme style. If theme preference change reporting is enabled this may use native os settings
+     * to determine these values.
+     *
+     * @return the preferred theme style.
+     * @see #isPreferenceChangeReportingEnabled()
+     * @see #enabledPreferenceChangeReporting(boolean)
+     */
+    public static PreferredThemeStyle getPreferredThemeStyle() {
+        return ThemePreferencesHandler.getSharedInstance().getPreferredThemeStyle();
+    }
+
+    /**
+     * Get the current theme provider. The theme provider is responsible the produce available themes for a given
+     * preferred theme style.
+     *
+     * @return the theme provider.
+     * @see PreferredThemeStyle
+     */
     public static ThemeProvider getThemeProvider() {
         if (themeProvider == null) themeProvider = createDefaultThemeProvider();
         return themeProvider;
     }
 
+    /**
+     * Set the current theme provider. The theme provider is responsible the produce available themes for a given
+     * preferred theme style.
+     *
+     * @param themeProvider the theme provider.
+     * @see PreferredThemeStyle
+     */
     public static void setThemeProvider(final ThemeProvider themeProvider) {
         LafManager.themeProvider = themeProvider;
     }
 
+    /*
+     * Default theme provider. Defaults to IntelliJ/Darcula Light/Dark high contrast themes.
+     */
     private static ThemeProvider createDefaultThemeProvider() {
         return new DefaultThemeProvider();
     }
@@ -130,6 +204,7 @@ public final class LafManager {
     public static Theme themeForPreferredStyle(final PreferredThemeStyle style) {
         return getThemeProvider().getTheme(style);
     }
+
 
     /**
      * Get the current theme. This method will never return null even if the LaF isn#t currently installed.
