@@ -189,6 +189,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                 comboBox.setEnabled(comboBox.getItemCount() > 1);
             }
         });
+        comboBox.putClientProperty("JComboBox.isTableCellEditor", true);
         comboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY, filesOfTypeLabelText);
         comboBox.setRenderer(createFilterComboBoxRenderer());
         return comboBox;
@@ -219,6 +220,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                 return d;
             }
         };
+        comboBox.putClientProperty("JComboBox.isTableCellEditor", true);
         comboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY, lookInLabelText);
         comboBox.addActionListener(directoryComboBoxAction);
         comboBox.setRenderer(createDirectoryComboBoxRenderer(fileChooser));
@@ -318,7 +320,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         button.putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
-        button.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
+        button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         button.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         button.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         button.setToolTipText(tipText);

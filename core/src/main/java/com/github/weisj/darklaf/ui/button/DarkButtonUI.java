@@ -338,8 +338,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color getBackgroundColor(final JComponent c) {
         boolean defaultButton = ButtonConstants.isDefaultButton(c);
         AbstractButton b = (AbstractButton) c;
-        boolean rollOver = (b.isRolloverEnabled() || ButtonConstants.doConvertToBorderless(b))
-                           && (((JButton) c).getModel().isRollover());
+        boolean rollOver = b.isRolloverEnabled() && b.getModel().isRollover();
         boolean clicked = b.getModel().isArmed();
         if (c.isEnabled()) {
             if (defaultButton) {
