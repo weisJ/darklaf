@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -34,7 +34,7 @@ public class PlatformDefaultsInitTask implements DefaultsInitTask {
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
         String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
-        if (SystemInfo.isWindows10 && Decorations.isCustomDecorationSupported()) {
+        if (SystemInfo.isWindows10 && DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
             JPopupMenu.setDefaultLightWeightPopupEnabled(Boolean.TRUE.equals(defaults.get(key + ".windows")));
         } else {
             JPopupMenu.setDefaultLightWeightPopupEnabled(Boolean.TRUE.equals(defaults.get(key)));

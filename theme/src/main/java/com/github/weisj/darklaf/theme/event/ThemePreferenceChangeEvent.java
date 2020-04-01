@@ -21,43 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme.info;
+package com.github.weisj.darklaf.theme.event;
 
-import java.util.function.Consumer;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
-public interface ThemePreferenceProvider {
+public class ThemePreferenceChangeEvent {
 
-    /**
-     * Get the preferred theme style.
-     *
-     * @return the preferred theme style.
-     */
-    PreferredThemeStyle getPreference();
+    private final PreferredThemeStyle preferredThemeStyle;
 
-    /**
-     * Initialize all necessary resources.
-     */
-    void initialize();
+    public ThemePreferenceChangeEvent(final PreferredThemeStyle preferredThemeStyle) {
+        this.preferredThemeStyle = preferredThemeStyle;
+    }
 
-    /**
-     * Set the callback for changes is the preferred theme style.
-     *
-     * @param callback the callback.
-     */
-    void setCallback(final Consumer<PreferredThemeStyle> callback);
+    public PreferredThemeStyle getPreferredThemeStyle() {
+        return preferredThemeStyle;
+    }
 
-    /**
-     * Sets whether changes in theme preference should be signaled to the callback.
-     *
-     * @see #setCallback(Consumer)
-     */
-    void setReporting(final boolean reporting);
-
-    /**
-     * Returns whether changes in theme preference are signaled to the callback.
-     *
-     * @return true if changes are reported.
-     * @see #setCallback(Consumer)
-     */
-    boolean isReporting();
+    @Override
+    public String toString() {
+        return "ThemePreferenceChangeEvent{" +
+               "style=" + preferredThemeStyle +
+               '}';
+    }
 }

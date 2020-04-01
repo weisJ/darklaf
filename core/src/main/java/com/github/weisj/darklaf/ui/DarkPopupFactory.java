@@ -23,7 +23,7 @@
  */
 package com.github.weisj.darklaf.ui;
 
-import com.github.weisj.darklaf.platform.Decorations;
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 
@@ -71,9 +71,9 @@ public class DarkPopupFactory extends PopupFactory {
                 install = !Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATION));
             }
             if (install) {
-                Decorations.installPopupWindow(window);
+                DecorationsHandler.getSharedInstance().installPopupWindow(window);
             } else {
-                Decorations.uninstallPopupWindow(window);
+                DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
             }
             if (startHidden) {
                 ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);

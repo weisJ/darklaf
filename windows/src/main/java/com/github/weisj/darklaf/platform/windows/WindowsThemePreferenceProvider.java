@@ -25,10 +25,14 @@ package com.github.weisj.darklaf.platform.windows;
 
 import com.github.weisj.darklaf.theme.info.*;
 
+import java.util.function.Consumer;
+
 public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     private final PreferredThemeStyle fallbackStyle = new PreferredThemeStyle(ContrastRule.STANDARD,
                                                                               ColorToneRule.LIGHT);
+    private final WindowsPreferenceMonitor monitor = new WindowsPreferenceMonitor(this);
+    private Consumer<PreferredThemeStyle> callback;
 
     @Override
     public PreferredThemeStyle getPreference() {
@@ -36,6 +40,10 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         boolean darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         long fontScaling = JNIThemeInfoWindows.getFontScaleFactor();
+        return create(highContrast, darkMode, fontScaling);
+    }
+
+    private PreferredThemeStyle create(final boolean highContrast, final boolean darkMode, final long fontScaling) {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
         FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
@@ -43,8 +51,33 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
     }
 
     @Override
+    public void setReporting(final boolean reporting) {
+        if (reporting && !WindowsLibrary.isLoaded()) WindowsLibrary.updateLibrary();
+        synchronized (monitor) {
+            monitor.setRunning(reporting);
+        }
+    }
+
+    @Override
+    public boolean isReporting() {
+        return monitor.isRunning();
+    }
+
+    void reportPreferenceChange(final boolean highContrast, final boolean darkMode, final long fontScaleFactor) {
+        if (callback != null) {
+            PreferredThemeStyle style = create(highContrast, darkMode, fontScaleFactor);
+            callback.accept(style);
+        }
+    }
+
+    @Override
     public void initialize() {
         WindowsLibrary.updateLibrary();
+    }
+
+    @Override
+    public void setCallback(final Consumer<PreferredThemeStyle> callback) {
+        this.callback = callback;
     }
 
 }

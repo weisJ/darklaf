@@ -21,43 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme.info;
+package com.github.weisj.darklaf.platform;
+
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.ContrastRule;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
+import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
 
 import java.util.function.Consumer;
 
-public interface ThemePreferenceProvider {
+public class DefaultThemePreferenceProvider implements ThemePreferenceProvider {
+    @Override
+    public PreferredThemeStyle getPreference() {
+        return new PreferredThemeStyle(ContrastRule.STANDARD, ColorToneRule.LIGHT);
+    }
 
-    /**
-     * Get the preferred theme style.
-     *
-     * @return the preferred theme style.
-     */
-    PreferredThemeStyle getPreference();
+    @Override
+    public void initialize() {
+    }
 
-    /**
-     * Initialize all necessary resources.
-     */
-    void initialize();
+    @Override
+    public void setCallback(final Consumer<PreferredThemeStyle> callback) {
+    }
 
-    /**
-     * Set the callback for changes is the preferred theme style.
-     *
-     * @param callback the callback.
-     */
-    void setCallback(final Consumer<PreferredThemeStyle> callback);
+    @Override
+    public void setReporting(final boolean reporting) {
+    }
 
-    /**
-     * Sets whether changes in theme preference should be signaled to the callback.
-     *
-     * @see #setCallback(Consumer)
-     */
-    void setReporting(final boolean reporting);
-
-    /**
-     * Returns whether changes in theme preference are signaled to the callback.
-     *
-     * @return true if changes are reported.
-     * @see #setCallback(Consumer)
-     */
-    boolean isReporting();
+    @Override
+    public boolean isReporting() {
+        return false;
+    }
 }

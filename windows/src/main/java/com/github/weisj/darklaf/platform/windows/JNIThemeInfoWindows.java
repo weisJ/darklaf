@@ -25,9 +25,48 @@ package com.github.weisj.darklaf.platform.windows;
 
 public class JNIThemeInfoWindows {
 
+    /**
+     * Returns whether dark mode is enabled.
+     *
+     * @return true if enabled.
+     */
     public static native boolean isDarkThemeEnabled();
 
+    /**
+     * Returns whether high contrast mode is enabled.
+     *
+     * @return true if enabled.
+     */
     public static native boolean isHighContrastEnabled();
 
+    /**
+     * Returns the font scaling factor in percent i.e. 100 is original size and 200 is twice as big.
+     *
+     * @return the font scale factor.
+     */
     public static native long getFontScaleFactor();
+
+    /**
+     * Create a monitor event handle.
+     *
+     * @return the event handle.
+     */
+    public static native long createEventHandle();
+
+    /**
+     * Sets the event status to notify.
+     *
+     * @param handle the event handle.
+     */
+    public static native void notifyEventHandle(final long handle);
+
+    /**
+     * Wait for any possible changes to the preferences. This does not guarantee an actual change. This method will
+     * block until a change has occurred.
+     *
+     * @param eventHandle the handle to the monitor event.
+     * @return the success status. false means an error happened.
+     */
+    public static native boolean waitPreferenceChange(final long eventHandle);
+
 }

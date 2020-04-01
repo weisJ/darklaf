@@ -36,15 +36,27 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Properties;
 
-public final class Decorations {
+public class DecorationsHandler {
 
-    private static DecorationsProvider decorationsProvider;
+    public static final String DECORATIONS_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "decorations";
+    private static DecorationsHandler sharedInstance;
+    private DecorationsProvider decorationsProvider;
+    private boolean decorationsEnabled = true;
 
-    static {
+    public static DecorationsHandler getSharedInstance() {
+        if (sharedInstance == null) setSharedInstance(new DecorationsHandler());
+        return sharedInstance;
+    }
+
+    public static void setSharedInstance(final DecorationsHandler handler) {
+        DecorationsHandler.sharedInstance = handler;
+    }
+
+    protected DecorationsHandler() {
         try {
             //Extend for different platforms.
             boolean enableDecorations =
-                !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + "decorations"));
+                !PropertyValue.FALSE.equals(System.getProperty(DECORATIONS_FLAG));
             if (SystemInfo.isWindows10 && enableDecorations) {
                 //Decorations are in the Windows10 visuals. Disable for older version.
                 decorationsProvider = new WindowsDecorationsProvider();
@@ -60,30 +72,34 @@ public final class Decorations {
         }
     }
 
-    public static CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle,
-                                                  final Window window) {
+    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle,
+                                           final Window window) {
         return decorationsProvider.createTitlePane(rootPane, decorationStyle, window);
     }
 
-    public static void installPopupWindow(final Window window) {
+    public void installPopupWindow(final Window window) {
         decorationsProvider.installPopupMenu(window);
     }
 
-    public static void uninstallPopupWindow(final Window window) {
+    public void uninstallPopupWindow(final Window window) {
         decorationsProvider.uninstallPopupWindow(window);
     }
 
-    public static boolean isCustomDecorationSupported() {
+    public boolean isCustomDecorationSupported() {
         return decorationsProvider.isCustomDecorationSupported()
-               && LafManager.isDecorationsEnabled()
+               && decorationsEnabled
                && LafManager.getTheme().useCustomDecorations();
     }
 
-    public static void initialize() {
+    public void initialize() {
         decorationsProvider.initialize();
     }
 
-    public static void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
+    public void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
         decorationsProvider.loadDecorationProperties(uiProps, defaults);
+    }
+
+    public void setDecorationsEnabled(final boolean enabled) {
+        decorationsEnabled = enabled;
     }
 }
