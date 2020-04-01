@@ -23,7 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
@@ -54,6 +57,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         "doNotCancelPopup"));
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
     protected static MouseGrabber mouseGrabber;
+    private PopupMenuContainer popupMenuContainer;
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkPopupMenuUI();
@@ -89,6 +93,9 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     @Override
     public void installDefaults() {
+        if (!(popupMenu instanceof ScrollPopupMenu)) {
+            popupMenuContainer = new PopupMenuContainer();
+        }
         super.installDefaults();
         popupMenu.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
     }
@@ -102,6 +109,13 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         }
     }
 
+    @Override
+    public Popup getPopup(final JPopupMenu popup, final int x, final int y) {
+        if (popupMenuContainer == null) return super.getPopup(popup, x, y);
+        int maxHeight = DarkUIUtil.getScreenBounds(popup, x, y, false).height;
+        return popupMenuContainer.createPopup(popup, x, y, maxHeight);
+    }
+
     /**
      * This Method is responsible for removing the old MouseGrabber from the AppContext, to be able to add our own
      * implementation for it that is a bit more generous with closing the popup.
@@ -110,7 +124,12 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
         ChangeListener mouseGrabber = null;
         for (ChangeListener listener : menuSelectionManager.getChangeListeners()) {
-            if (listener.getClass().getEnclosingClass().getName().endsWith("BasicPopupMenuUI")) {
+            if (listener == null) continue;
+            Class<?> listenerClass = listener.getClass();
+            if (listenerClass == null) continue;
+            Class<?> enclosingClass = listenerClass.getEnclosingClass();
+            if (enclosingClass == null) continue;
+            if (enclosingClass.getName().endsWith("BasicPopupMenuUI")) {
                 mouseGrabber = listener;
                 break;
             }
@@ -211,6 +230,22 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             }
 
             lastPathSelected = p;
+            repaintIfNecessary(e);
+        }
+
+        protected void repaintIfNecessary(final ChangeEvent e) {
+            Object source = e.getSource();
+            if (source instanceof MenuSelectionManager) {
+                MenuSelectionManager manager = (MenuSelectionManager) source;
+                MenuElement[] path = manager.getSelectedPath();
+                if (path != null && path.length > 0) {
+                    Component comp = path[0].getComponent();
+                    if (comp.isVisible()) {
+                        OverlayScrollPane sp = DarkUIUtil.getParentOfType(OverlayScrollPane.class, comp);
+                        if (sp != null) sp.repaint(comp.getBounds());
+                    }
+                }
+            }
         }
 
         public void eventDispatched(final AWTEvent ev) {

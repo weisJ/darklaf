@@ -464,6 +464,47 @@ public final class DarkUIUtil {
         return p;
     }
 
+    public static Rectangle getScreenBounds(final JComponent target, final Point p) {
+        return getScreenBounds(target, p.x, p.y);
+    }
+
+    public static Rectangle getScreenBounds(final JComponent target, final int x, final int y) {
+        return getScreenBounds(target, x, y, true);
+    }
+
+    public static Rectangle getScreenBounds(final JComponent target, final int x, final int y,
+                                            final boolean subtractInsets) {
+        GraphicsConfiguration gc = getDrawingGC(x, y);
+        if (gc == null) {
+            gc = target.getGraphicsConfiguration();
+        }
+
+        Rectangle sBounds = gc.getBounds();
+        if (subtractInsets) {
+            // Take into account screen insets, decrease viewport
+            Insets screenInsets = Toolkit.getDefaultToolkit()
+                                         .getScreenInsets(gc);
+            sBounds.x += screenInsets.left;
+            sBounds.y += screenInsets.top;
+            sBounds.width -= (screenInsets.left + screenInsets.right);
+            sBounds.height -= (screenInsets.top + screenInsets.bottom);
+        }
+        return sBounds;
+    }
+
+    private static GraphicsConfiguration getDrawingGC(final int x, final int y) {
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = env.getScreenDevices();
+        for (GraphicsDevice device : devices) {
+            GraphicsConfiguration config = device.getDefaultConfiguration();
+            Rectangle rect = config.getBounds();
+            if (rect.contains(x, y)) {
+                return config;
+            }
+        }
+        return null;
+    }
+
     public enum Outline {
         error {
             @Override

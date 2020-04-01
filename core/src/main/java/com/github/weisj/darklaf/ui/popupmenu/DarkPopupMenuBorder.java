@@ -42,7 +42,6 @@ public class DarkPopupMenuBorder extends MutableLineBorder implements UIResource
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
                             final int height) {
-        setColor(UIManager.getDefaults().getColor("PopupMenu.borderColor"));
         super.paintBorder(c, g, x, y, width, height);
     }
 

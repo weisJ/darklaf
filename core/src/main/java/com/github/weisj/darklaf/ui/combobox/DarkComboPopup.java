@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.ui.combobox;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboPopup;
@@ -93,7 +94,7 @@ public class DarkComboPopup extends BasicComboPopup {
     protected JScrollPane createScroller() {
         overlayScrollPane = new OverlayScrollPane(list, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                                   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        overlayScrollPane.getVerticalScrollBar().putClientProperty("JScrollBar.thin", Boolean.TRUE);
+        overlayScrollPane.getVerticalScrollBar().putClientProperty(DarkScrollBarUI.KEY_SMALL, Boolean.TRUE);
         return overlayScrollPane.getScrollPane();
     }
 
@@ -110,7 +111,6 @@ public class DarkComboPopup extends BasicComboPopup {
         setBorderPainted(true);
         setOpaque(false);
         add(overlayScrollPane);
-        setDoubleBuffered(true);
         setFocusable(false);
     }
 

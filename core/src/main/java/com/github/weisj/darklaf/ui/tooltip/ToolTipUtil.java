@@ -62,7 +62,7 @@ public class ToolTipUtil {
         if (!context.isBestFit()) {
             return context.getToolTipLocation(p, null);
         }
-        Rectangle screenBounds = getScreenBounds(context.getTarget(), p);
+        Rectangle screenBounds = DarkUIUtil.getScreenBounds(context.getTarget(), p);
         Rectangle windowBounds = DarkUIUtil.getWindow(context.getTarget()).getBounds();
         Rectangle tooltipBounds = new Rectangle();
         tooltipBounds.setSize(context.getToolTip().getPreferredSize());
@@ -160,35 +160,5 @@ public class ToolTipUtil {
         if (window == null) return;
         Point targetPos = target.getLocationOnScreen();
         window.setLocation(targetPos.x + x, targetPos.y + y);
-    }
-
-    protected static Rectangle getScreenBounds(final JComponent target, final Point p) {
-        GraphicsConfiguration gc = getDrawingGC(p);
-        if (gc == null) {
-            gc = target.getGraphicsConfiguration();
-        }
-
-        Rectangle sBounds = gc.getBounds();
-        Insets screenInsets = Toolkit.getDefaultToolkit()
-                                     .getScreenInsets(gc);
-        // Take into account screen insets, decrease viewport
-        sBounds.x += screenInsets.left;
-        sBounds.y += screenInsets.top;
-        sBounds.width -= (screenInsets.left + screenInsets.right);
-        sBounds.height -= (screenInsets.top + screenInsets.bottom);
-        return sBounds;
-    }
-
-    private static GraphicsConfiguration getDrawingGC(final Point location) {
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] devices = env.getScreenDevices();
-        for (GraphicsDevice device : devices) {
-            GraphicsConfiguration config = device.getDefaultConfiguration();
-            Rectangle rect = config.getBounds();
-            if (rect.contains(location)) {
-                return config;
-            }
-        }
-        return null;
     }
 }
