@@ -23,6 +23,7 @@
  */
 package ui.comboBox;
 
+import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.util.PropertyKey;
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -58,13 +59,13 @@ public class ComboBoxDemo implements ComponentDemo {
             addActionListener(e -> comboBox.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                                                                                  : ComponentOrientation.RIGHT_TO_LEFT));
         }});
-        controlPanel.add(new JCheckBox("JComboBox.isTreeCellEditor") {{
+        controlPanel.add(new JCheckBox(ComboBoxConstants.KEY_IS_TREE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> comboBox.putClientProperty("JComboBox.isTreeCellEditor", isSelected()));
+            addActionListener(e -> comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TREE_EDITOR, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JComboBox.isTableCellEditor") {{
+        controlPanel.add(new JCheckBox(ComboBoxConstants.KEY_IS_TABLE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> comboBox.putClientProperty("JComboBox.isTableCellEditor", isSelected()));
+            addActionListener(e -> comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TABLE_EDITOR, isSelected()));
         }});
         return panel;
     }

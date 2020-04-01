@@ -64,6 +64,7 @@ public class DarkPopupFactory extends PopupFactory {
         // That is why we set window background explicitly.
         Window window = SwingUtilities.getWindowAncestor(contents);
         if (window != null) {
+            window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
             boolean install = true;
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();

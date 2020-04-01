@@ -69,6 +69,7 @@ public interface ComponentDemo {
                                        new IntelliJTheme(),
                                        new SolarizedLightTheme(),
                                        new SolarizedDarkTheme(),
+                                       new OneDarkTheme(),
                                        new HighContrastLightTheme(),
                                        new HighContrastDarkTheme()}) {
             createThemeItem(currentThemeName, menu, bg, theme);
