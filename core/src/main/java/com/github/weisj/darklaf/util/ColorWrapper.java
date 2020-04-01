@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.color;
+package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -75,12 +75,14 @@ public class ColorWrapper extends Color {
         return color.getRGB();
     }
 
-    public ColorWrapper brighter() {
-        return new ColorWrapper(color.brighter());
+    @Override
+    public Color brighter() {
+        return color.brighter();
     }
 
-    public ColorWrapper darker() {
-        return new ColorWrapper(color.darker());
+    @Override
+    public Color darker() {
+        return color.darker();
     }
 
     @Override

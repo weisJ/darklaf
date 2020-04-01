@@ -48,7 +48,8 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private static final String[] ICON_PROPERTIES = new String[]{
         "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
     };
-    private final DefaultsAdjustmentTask userPreferenceInitTask = new UserPreferenceAdjustmentTask();
+    private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserPreferenceAdjustmentTask();
+    private final DefaultsAdjustmentTask accentColorAdjustment = new AccentColorAdjustmentTask();
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
@@ -63,7 +64,12 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
          * User preferences need to be applied here so changes are applied to all
          * components that use the property.
          */
-        userPreferenceInitTask.run(currentTheme, uiProps);
+        userPreferenceAdjustment.run(currentTheme, uiProps);
+
+        /*
+         * Adjust the accent/selection colors.
+         */
+        accentColorAdjustment.run(currentTheme, uiProps);
 
         initGlobals(currentTheme, defaults, uiProps);
         initUIProperties(currentTheme, defaults, uiProps);

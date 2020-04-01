@@ -55,8 +55,7 @@ public class ButtonDemo implements ComponentDemo {
         }});
         controlPanel.add(new JCheckBox("default") {{
             setSelected(button.isDefaultButton());
-            addActionListener(e -> SwingUtilities.getRootPane(button).setDefaultButton(isSelected() ? button
-                                                                                                    : null));
+            addActionListener(e -> SwingUtilities.getRootPane(button).setDefaultButton(isSelected() ? button : null));
         }});
         controlPanel.add(new JCheckBox("LeftToRight") {{
             setSelected(button.getComponentOrientation().isLeftToRight());

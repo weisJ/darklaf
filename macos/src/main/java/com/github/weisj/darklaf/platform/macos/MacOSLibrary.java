@@ -54,16 +54,16 @@ public class MacOSLibrary {
                 NativeUtil.loadLibraryFromJar(
                     "/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/libdarklaf-macos.dylib");
                 loaded = true;
-                LOGGER.info("Loaded libdarklaf-macos.dylib. Decorations are enabled.");
+                LOGGER.info("Loaded libdarklaf-macos.dylib. Native features are enabled.");
             } else {
                 LOGGER.warning("JRE model '"
                                + SystemInfo.jreArchitecture
-                               + "' not supported. Decorations will be disabled");
+                               + "' not supported. Native features will be disabled");
             }
         } catch (Throwable e) {
             //Library not found, SecurityManager prevents library loading etc.
             LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-macos.dylib." +
-                                     " Decorations will be disabled", e);
+                                     " Native features will be disabled", e);
         }
     }
 

@@ -24,10 +24,7 @@
 package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
-import com.github.weisj.darklaf.theme.info.ContrastRule;
-import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.theme.info.PresetIconRule;
+import com.github.weisj.darklaf.theme.info.*;
 
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
@@ -46,7 +43,7 @@ import java.util.logging.Logger;
 public abstract class Theme {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
     private FontSizeRule fontSizeRule;
-
+    private AccentColorRule accentColorRule;
 
     /**
      * Returns whether the theme is a dark theme. This is used to determine the default mode for [aware] icons.
@@ -81,8 +78,7 @@ public abstract class Theme {
      * @param currentDefaults the current ui defaults.
      */
     public void loadDefaults(final Properties properties, final UIDefaults currentDefaults) {
-        String name = getResourcePath() + getPrefix() + "_defaults.properties";
-        PropertyLoader.putProperties(load(name), properties, currentDefaults);
+        PropertyLoader.putProperties(loadPropertyFile("defaults"), properties, currentDefaults);
     }
 
     /**
@@ -133,7 +129,7 @@ public abstract class Theme {
                 break;
             case NONE:
             default:
-                props = load(getResourcePath() + getPrefix() + "_icons.properties");
+                props = loadPropertyFile("icons");
         }
         PropertyLoader.putProperties(props, properties, currentDefaults);
     }
@@ -182,8 +178,7 @@ public abstract class Theme {
      */
     protected void loadCustomProperties(final String propertySuffix, final Properties properties,
                                         final UIDefaults currentDefaults) {
-        String name = getResourcePath() + getPrefix() + "_" + propertySuffix + ".properties";
-        PropertyLoader.putProperties(load(name), properties, currentDefaults);
+        PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults);
     }
 
     /**
@@ -283,6 +278,46 @@ public abstract class Theme {
     protected abstract Class<? extends Theme> getLoaderClass();
 
     /**
+     * Get the path for the file [prefix]_[name].properties in the themes resource location.
+     *
+     * @param name the of the file.
+     * @return the path relative to the location of {@link #getLoaderClass()}.
+     */
+    protected String getPropertyFilePath(final String name) {
+        return getResourcePath() + getPrefix() + "_" + name + ".properties";
+    }
+
+    /**
+     * Load the theme property file with the specified name. The name gets resolved to the resource location of the
+     * theme adds the theme property prefix and appends ".properties" e.g. "test" ->
+     * [resource_location]/[prefix_of_theme]_test.properties.
+     *
+     * @param name the properties name.
+     * @return the properties.
+     */
+    public Properties loadPropertyFile(final String name) {
+        return loadPropertyFile(name, false);
+    }
+
+    /**
+     * Load the theme property file with the specified name. The name gets resolved to the resource location of the
+     * theme adds the theme property prefix and appends ".properties" e.g. "test" ->
+     * [resource_location]/[prefix_of_theme]_test.properties.
+     *
+     * @param name   the properties name.
+     * @param silent if true no warnings are issues if the file is not present. Instead, an empty property instance is
+     *               returned.
+     * @return the properties.
+     */
+    public Properties loadPropertyFile(final String name, final boolean silent) {
+        Level level = LOGGER.getLevel();
+        if (silent) LOGGER.setLevel(Level.OFF);
+        Properties properties = load(getPropertyFilePath(name));
+        LOGGER.setLevel(level);
+        return properties;
+    }
+
+    /**
      * Returns whether this theme should use custom decorations if available.
      *
      * @return true if decoration should be used.
@@ -326,4 +361,17 @@ public abstract class Theme {
         this.fontSizeRule = fontSizeRule;
     }
 
+    public AccentColorRule getAccentColorRule() {
+        if (accentColorRule == null) accentColorRule = AccentColorRule.getDefault();
+        return accentColorRule;
+    }
+
+    /**
+     * Set the accent color rule.
+     *
+     * @param accentColorRule the accent color rule.
+     */
+    public void setAccentColorRule(final AccentColorRule accentColorRule) {
+        this.accentColorRule = accentColorRule;
+    }
 }

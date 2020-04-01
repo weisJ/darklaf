@@ -22,24 +22,134 @@
  * SOFTWARE.
  */
 #import "com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS.h"
+#import <JavaNativeFoundation/JavaNativeFoundation.h>
 #import <AppKit/AppKit.h>
+
+#define OBJC(jl) ((id)jlong_to_ptr(jl))
+
+#define KEY_APPLE_INTERFACE_STYLE @"AppleInterfaceStyle"
+#define KEY_SWITCHES_AUTOMATICALLY @"AppleInterfaceStyleSwitchesAutomatically"
+#define KEY_ACCENT_COLOR @"AppleAccentColor"
+
+#define EVENT_ACCENT_COLOR @"AppleColorPreferencesChangedNotification"
+#define EVENT_THEME_CHANGE @"AppleInterfaceThemeChangedNotification"
+#define EVENT_HIGH_CONTRAS @"AXInterfaceIncreaseContrastStatusDidChange"
+#define EVENT_COLOR_CHANGE NSSystemColorsDidChangeNotification
+
+#define VALUE_DARK @"Dark"
+#define VALUE_NO_ACCENT_COLOR (0)
+#define VALUE_NO_SELECTION_COLOR (-1)
+
+@interface PreferenceChangeListener:NSObject {
+}
+@end
+
+@implementation PreferenceChangeListener
+- (id)init {
+    NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
+    [self listenToKey:EVENT_ACCENT_COLOR onCenter:center];
+    [self listenToKey:EVENT_THEME_CHANGE onCenter:center];
+    [self listenToKey:EVENT_HIGH_CONTRAS onCenter:center];
+    [self listenToKey:EVENT_COLOR_CHANGE onCenter:center];
+    NSLog(@"Listener created");
+    return self;
+}
+
+- (void)dealloc {
+    NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
+    [center removeObserver:self]; // Removes all registered notifications.
+    NSLog(@"Listener destroyed");
+    [super dealloc];
+}
+
+-(void)listenToKey:(NSString *)key onCenter:(NSDistributedNotificationCenter *)center {
+     [center addObserver:self
+                selector:@selector(notificationEvent:)
+                    name:key
+                  object:nil];
+}
+
+-(void)notificationEvent:(NSNotification *)notification {
+    NSLog(@"Notification: %@", notification);
+}
+@end
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
+JNF_COCOA_ENTER(env);
     if(@available(macOS 10.14, *)) {
-        NSString *osxMode = [[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"];
-        return (jboolean)[@"Dark" caseInsensitiveCompare:osxMode] == NSOrderedSame;
+        NSString *interfaceStyle = [[NSUserDefaults standardUserDefaults] stringForKey:KEY_APPLE_INTERFACE_STYLE];
+        // interfaceStyle can be nil (light mode) or "Dark" (dark mode).
+        BOOL isDark = [VALUE_DARK caseInsensitiveCompare:interfaceStyle] == NSOrderedSame;
+        if (@available(macOS 10.15, *)) {
+            // Catalina
+            BOOL switchesAutomatically = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SWITCHES_AUTOMATICALLY];
+            if (switchesAutomatically) {
+                // If switchesAutomatically == true the roles of "Dark" and nil are changed.
+                return (jboolean) !isDark;
+            }
+        }
+        // Mojave or switchesAutomatically == false.
+        return (jboolean) isDark;
     } else {
-        return (jboolean)false;
+        return (jboolean) false;
     }
+JNF_COCOA_EXIT(env);
+    return false;
 }
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isHighContrastEnabled(JNIEnv *env, jclass obj) {
-    return NSWorkspace.sharedWorkspace.accessibilityDisplayShouldIncreaseContrast;
+JNF_COCOA_ENTER(env);
+    return (jboolean) NSWorkspace.sharedWorkspace.accessibilityDisplayShouldIncreaseContrast;
+JNF_COCOA_EXIT(env);
+    return (jboolean) false;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetAccentColor(JNIEnv *env, jclass obj) {
+JNF_COCOA_ENTER(env);
+    if (@available(macOS 10.14, *)) {
+        BOOL hasAccentSet = ([[NSUserDefaults standardUserDefaults] objectForKey:KEY_ACCENT_COLOR] != nil);
+        if (hasAccentSet) {
+            return (jint) ([[NSUserDefaults standardUserDefaults] integerForKey:KEY_ACCENT_COLOR]);
+        }
+    }
+    return (jint) VALUE_NO_ACCENT_COLOR;
+JNF_COCOA_EXIT(env);
+    return (jint) VALUE_NO_ACCENT_COLOR;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetSelectionColor(JNIEnv *env, jclass obj) {
+JNF_COCOA_ENTER(env);
+    NSColorSpace *rgbSpace = [NSColorSpace genericRGBColorSpace];
+    NSColor *accentColor = [[NSColor selectedControlColor] colorUsingColorSpace:rgbSpace];
+    NSInteger r = (NSInteger) (255 * [accentColor redComponent]);
+    NSInteger g = (NSInteger) (255 * [accentColor greenComponent]);
+    NSInteger b = (NSInteger) (255 * [accentColor blueComponent]);
+    return (jint) ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
+JNF_COCOA_EXIT(env);
+    return (jint) VALUE_NO_SELECTION_COLOR;
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_getFontScaleFactor(JNIEnv *env, jclass obj) {
-    return 100;
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_createPreferenceChangeListener(JNIEnv *env, jclass obj) {
+JNF_COCOA_DURING(env); // We dont want an auto release pool.
+    PreferenceChangeListener *listener = [[PreferenceChangeListener alloc] init];
+    [listener retain];
+    return (jlong) listener;
+JNF_COCOA_HANDLE(env);
+    return (jlong) 0;
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_deletePreferenceChangeListener(JNIEnv *env, jclass obj, jlong listenerPtr) {
+JNF_COCOA_ENTER(env);
+    PreferenceChangeListener *listener = OBJC(listenerPtr);
+    if (listener) {
+        [listener release];
+        [listener dealloc];
+    }
+JNF_COCOA_EXIT(env);
 }

@@ -23,9 +23,9 @@
  */
 package javax.swing.text.DefaultHighlighterDark;
 
-import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
+import com.github.weisj.darklaf.util.ColorWrapper;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import sun.swing.SwingUtilities2;

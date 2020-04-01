@@ -88,6 +88,8 @@ public class DefaultThemeProvider implements ThemeProvider {
                            : highContrast ? lightHighContrastTheme : lightTheme;
         // Apply the font size.
         theme.setFontSizeRule(themeStyle.getFontSizeRule());
+        // Apply accent color.
+        theme.setAccentColorRule(themeStyle.getAccentColorRule());
         return theme;
     }
 }

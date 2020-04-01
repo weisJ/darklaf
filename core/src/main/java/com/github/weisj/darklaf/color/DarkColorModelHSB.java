@@ -88,7 +88,9 @@ public class DarkColorModelHSB extends DarkColorModel {
     }
 
     public static Color getColorFromHSBValues(final double h, final double s, final double b) {
-        return Color.getHSBColor((float) h, (float) s, (float) b);
+        return Color.getHSBColor((float) Math.max(Math.min(h, 1), 0),
+                                 (float) Math.max(Math.min(s, 1), 0),
+                                 (float) Math.max(Math.min(b, 1), 0));
     }
 
     @Override
