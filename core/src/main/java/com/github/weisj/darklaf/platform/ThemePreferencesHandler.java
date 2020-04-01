@@ -35,7 +35,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
 
 public class ThemePreferencesHandler {
 
-    public static final String PREFERENCE_REPORTING_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "themePreferenceReporting";
+    public static final String PREFERENCE_REPORTING_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "enableNativePreferences";
 
     private static ThemePreferencesHandler sharedInstance;
     private final ThemePreferenceChangeSupport changeSupport = new ThemePreferenceChangeSupport();
@@ -54,9 +54,8 @@ public class ThemePreferencesHandler {
     protected ThemePreferencesHandler() {
         try {
             // Extend for different platforms.
-            boolean enableDecorations =
-                !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG));
-            if (SystemInfo.isWindows10 && enableDecorations) {
+            boolean enableNativePreferences = isNativePreferencesEnabled();
+            if (SystemInfo.isWindows10 && enableNativePreferences) {
                 // Decorations are in the Windows10 visuals. Disable for older version.
                 preferenceProvider = new WindowsThemePreferenceProvider();
             } else {
@@ -66,6 +65,7 @@ public class ThemePreferencesHandler {
             // If decorations modules are not available disable them.
             preferenceProvider = new DefaultThemePreferenceProvider();
         }
+        preferenceProvider.initialize();
         preferenceProvider.setCallback(this::onChange);
     }
 
@@ -82,11 +82,12 @@ public class ThemePreferencesHandler {
     }
 
     public void enablePreferenceChangeReporting(final boolean enabled) {
-        boolean oldEnabled = isPreferenceChangeReportingEnabled();
         preferenceProvider.setReporting(enabled);
-        if (isPreferenceChangeReportingEnabled() != oldEnabled && enabled) {
-            preferenceProvider.initialize();
-        }
+    }
+
+    private boolean isNativePreferencesEnabled() {
+        return !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG))
+               && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
     }
 
     public boolean isPreferenceChangeReportingEnabled() {

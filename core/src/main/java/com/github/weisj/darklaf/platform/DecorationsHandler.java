@@ -55,8 +55,7 @@ public class DecorationsHandler {
     protected DecorationsHandler() {
         try {
             //Extend for different platforms.
-            boolean enableDecorations =
-                !PropertyValue.FALSE.equals(System.getProperty(DECORATIONS_FLAG));
+            boolean enableDecorations = isNativeDecorationsEnabled();
             if (SystemInfo.isWindows10 && enableDecorations) {
                 //Decorations are in the Windows10 visuals. Disable for older version.
                 decorationsProvider = new WindowsDecorationsProvider();
@@ -89,6 +88,11 @@ public class DecorationsHandler {
         return decorationsProvider.isCustomDecorationSupported()
                && decorationsEnabled
                && LafManager.getTheme().useCustomDecorations();
+    }
+
+    private boolean isNativeDecorationsEnabled() {
+        return !PropertyValue.FALSE.equals(System.getProperty(DECORATIONS_FLAG))
+               && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
     }
 
     public void initialize() {

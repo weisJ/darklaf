@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 public class DarkLaf extends BasicLookAndFeel {
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
+    public static final String ALLOW_NATIVE_CODE_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "allowNativeCode";
     private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
     /*
      * All tasks for initializing the ui defaults in order of execution.
