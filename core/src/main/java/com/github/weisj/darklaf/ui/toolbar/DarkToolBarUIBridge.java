@@ -783,6 +783,11 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                 rootPane.setOpaque(true);
                 return rootPane;
             }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return super.getPreferredSize();
+            }
         }
 
         JDialog dialog;
@@ -797,7 +802,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
 
         dialog.getRootPane().setName("ToolBar.FloatingWindow");
         dialog.setTitle(toolbar.getName());
-        dialog.setResizable(false);
         WindowListener wl = createFrameListener();
         dialog.addWindowListener(wl);
         return dialog;

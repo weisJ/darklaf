@@ -65,7 +65,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 public class ToolBarDemo extends JPanel implements ActionListener, ComponentDemo {
     private static final String PREVIOUS = "previous";
@@ -83,38 +82,25 @@ public class ToolBarDemo extends JPanel implements ActionListener, ComponentDemo
 
     private void addButtons(final JToolBar toolBar) {
         JButton button;
-        button = makeNavigationButton("Back24", PREVIOUS,
-                                      "Back to previous something-or-other", "Previous");
+        button = makeNavigationButton(PREVIOUS, "Back to previous something-or-other", "Previous");
         toolBar.add(button);
         toolBar.addSeparator();
-        button = makeNavigationButton("Up24", UP,
-                                      "Up to something-or-other", "Up");
+        button = makeNavigationButton(UP, "Up to something-or-other", "Up");
         toolBar.add(button);
         toolBar.addSeparator();
-        button = makeNavigationButton("Forward24", NEXT,
-                                      "Forward to something-or-other", "Next");
+        button = makeNavigationButton(NEXT, "Forward to something-or-other", "Next");
         toolBar.add(button);
     }
 
-    private JButton makeNavigationButton(final String imageName,
-                                         final String actionCommand,
+    private JButton makeNavigationButton(final String actionCommand,
                                          final String toolTipText,
                                          final String altText) {
-        //Look for the image.
-        String imgLocation = "images/" + imageName + ".gif";
-        URL imageURL = ToolBarDemo.class.getResource(imgLocation);
-
         //Create and initialize the button.
         JButton button = new JButton();
         button.setActionCommand(actionCommand);
         button.setToolTipText(toolTipText);
         button.addActionListener(this);
-
-        if (imageURL != null) {
-            button.setIcon(new ImageIcon(imageURL, altText));
-        } else {
-            button.setText(altText);
-        }
+        button.setText(altText);
 
         return button;
     }
@@ -144,7 +130,7 @@ public class ToolBarDemo extends JPanel implements ActionListener, ComponentDemo
     @Override
     public JComponent createComponent() {
         //Create the toolbar.
-        JToolBar toolBar = new JToolBar();
+        JToolBar toolBar = new JToolBar("Demo ToolBar");
         addButtons(toolBar);
 
         //Create the text area used for output.  Request
