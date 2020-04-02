@@ -34,12 +34,6 @@ import java.util.function.BiConsumer;
 
 public class ToolTipUtil {
 
-    private final static ToolTipContext DEFAULT_CONTEXT = new ToolTipContext().setAlignment(Alignment.SOUTH)
-                                                                              .setCenterAlignment(Alignment.SOUTH)
-                                                                              .setAlignInside(false)
-                                                                              .setIgnoreBorder(true)
-                                                                              .setUseBestFit(true);
-
     public static void applyContext(final JToolTip toolTip) {
         JComponent target = toolTip.getComponent();
         if (target == null) return;
@@ -150,7 +144,7 @@ public class ToolTipUtil {
         }
         Object style = tooltip.getComponent().getClientProperty(DarkTooltipUI.KEY_STYLE);
         if (ToolTipStyle.BALLOON.equals(DarkTooltipUI.getStyle(style))) {
-            return DEFAULT_CONTEXT;
+            return ToolTipContext.getDefaultContext();
         }
         return null;
     }
