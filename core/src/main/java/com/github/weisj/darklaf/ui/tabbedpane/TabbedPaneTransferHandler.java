@@ -26,7 +26,7 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 import com.github.weisj.darklaf.util.ImageUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -34,7 +34,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Field;
 
 
 /**
@@ -161,8 +160,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             ui.setRolloverTab(-1);
             createDragImage(tabPane, ui);
             ui.setSourceIndicator(currentTransferable.transferData.tabIndex);
-        } else {
-            createDragImage(tabPane, null);
         }
         if ((ui != null && !ui.scrollableTabLayoutEnabled())
             || tabPane.getTabLayoutPolicy() == JTabbedPane.WRAP_TAB_LAYOUT) {
@@ -172,24 +169,11 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     protected void createDragImage(final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
-        Image tabImage = ImageUtil.scaledImageFromComponent(tabbedPane, currentTransferable.transferData.tabBounds);
+        Color color = ui != null ? ui.getDragBorderColor()
+                                 : tabbedPane.getBackgroundAt(currentTransferable.transferData.tabIndex);
+        Image tabImage = ImageUtil.createDragImage(tabbedPane, currentTransferable.transferData.tabBounds, 2, color);
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
-        Graphics g = tabImage.getGraphics();
-
-        if (ui != null) {
-            g.setColor(ui.getDragBorderColor());
-        } else {
-            g.setColor(tabbedPane.getBackgroundAt(currentTransferable.transferData.tabIndex).brighter());
-        }
-
-        int lw = 2;
-        g.fillRect(0, 0, w, lw);
-        g.fillRect(0, 0, lw, h);
-        g.fillRect(w - lw, 0, lw, h);
-        g.fillRect(0, h - lw, w, lw);
-        g.dispose();
-
         setDragImageOffset(new Point(w / 2, h / 2));
         setDragImage(tabImage);
     }
@@ -208,17 +192,11 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
 
 
     private DarkTabbedPaneUI supportsIndicator(final Component c) {
-        JComponent jc = (JComponent) c;
-        ComponentUI ui;
-        try {
-            Field field = JComponent.class.getDeclaredField("ui");
-            field.setAccessible(true);
-            ui = (ComponentUI) field.get(jc);
+        if (c instanceof JTabbedPane) {
+            TabbedPaneUI ui = ((JTabbedPane) c).getUI();
             if (ui instanceof DarkTabbedPaneUI) {
                 return ((DarkTabbedPaneUI) ui);
             }
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
         }
         return null;
     }
