@@ -64,19 +64,32 @@ public class WindowsPreferenceMonitor {
         }
     }
 
+    private void start() {
+        darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
+        highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
+        fontScaleFactor = JNIThemeInfoWindows.getFontScaleFactor();
+        eventHandle = JNIThemeInfoWindows.createEventHandle();
+        /*
+         * In theory this shouldn't be necessary, but
+         * it ensures that the registry listeners are actually unregistered.
+         */
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
+        this.running.set(true);
+        worker = new Thread(this::run);
+        worker.start();
+    }
+
+    private void stop() {
+        this.running.set(false);
+        JNIThemeInfoWindows.notifyEventHandle(eventHandle);
+    }
+
     public void setRunning(final boolean running) {
         if (running == this.running.get()) return;
         if (running) {
-            darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
-            highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
-            fontScaleFactor = JNIThemeInfoWindows.getFontScaleFactor();
-            eventHandle = JNIThemeInfoWindows.createEventHandle();
-            this.running.set(true);
-            worker = new Thread(this::run);
-            worker.start();
+            start();
         } else {
-            this.running.set(false);
-            JNIThemeInfoWindows.notifyEventHandle(eventHandle);
+            stop();
         }
     }
 
