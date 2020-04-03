@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.platform.windows;
 
 import com.github.weisj.darklaf.theme.info.*;
 
+import java.awt.*;
 import java.util.function.Consumer;
 
 public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
@@ -40,14 +41,21 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         boolean darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         long fontScaling = JNIThemeInfoWindows.getFontScaleFactor();
-        return create(highContrast, darkMode, fontScaling);
+        int accentColorRGB = JNIThemeInfoWindows.getAccentColor();
+        return create(highContrast, darkMode, fontScaling, accentColorRGB);
     }
 
-    private PreferredThemeStyle create(final boolean highContrast, final boolean darkMode, final long fontScaling) {
+    private PreferredThemeStyle create(final boolean highContrast, final boolean darkMode,
+                                       final long fontScaling, final int accentColorRGB) {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
         FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
         return new PreferredThemeStyle(contrastRule, toneRule, fontSizeRule);
+    }
+
+    private Color createColorFromRGB(final int rgb) {
+        if (rgb == 0) return null;
+        return new Color(rgb);
     }
 
     @Override
@@ -63,9 +71,10 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         return monitor.isRunning();
     }
 
-    void reportPreferenceChange(final boolean highContrast, final boolean darkMode, final long fontScaleFactor) {
+    void reportPreferenceChange(final boolean highContrast, final boolean darkMode,
+                                final long fontScaleFactor, final int accentColorRGB) {
         if (callback != null) {
-            PreferredThemeStyle style = create(highContrast, darkMode, fontScaleFactor);
+            PreferredThemeStyle style = create(highContrast, darkMode, fontScaleFactor, accentColorRGB);
             callback.accept(style);
         }
     }

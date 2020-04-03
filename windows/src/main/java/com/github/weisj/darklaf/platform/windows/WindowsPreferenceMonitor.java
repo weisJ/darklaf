@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
+import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -31,12 +32,12 @@ public class WindowsPreferenceMonitor {
     private static final Logger LOGGER = Logger.getLogger(WindowsThemePreferenceProvider.class.getName());
 
     private final WindowsThemePreferenceProvider preferenceProvider;
-    private Thread worker;
 
     private boolean darkMode;
     private boolean highContrast;
     private long fontScaleFactor;
     private long eventHandle;
+    private int color;
     private AtomicBoolean running = new AtomicBoolean(false);
 
     public WindowsPreferenceMonitor(final WindowsThemePreferenceProvider preferenceProvider) {
@@ -49,11 +50,19 @@ public class WindowsPreferenceMonitor {
             boolean newDark = JNIThemeInfoWindows.isDarkThemeEnabled();
             boolean newHighContrast = JNIThemeInfoWindows.isHighContrastEnabled();
             long newFotScale = JNIThemeInfoWindows.getFontScaleFactor();
-            if (darkMode != newDark || fontScaleFactor != newFotScale || highContrast != newHighContrast) {
+            int newColor = JNIThemeInfoWindows.getAccentColor();
+            if (darkMode != newDark
+                || color != newColor
+                || fontScaleFactor != newFotScale
+                || highContrast != newHighContrast) {
+                if (newColor != color) {
+                    System.out.println("Color changed to " + new Color(newColor));
+                }
                 darkMode = newDark;
                 fontScaleFactor = newFotScale;
                 highContrast = newHighContrast;
-                preferenceProvider.reportPreferenceChange(highContrast, darkMode, fontScaleFactor);
+                color = newColor;
+                preferenceProvider.reportPreferenceChange(highContrast, darkMode, fontScaleFactor, color);
             }
         }
         if (running.get()) {
@@ -69,14 +78,14 @@ public class WindowsPreferenceMonitor {
         highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         fontScaleFactor = JNIThemeInfoWindows.getFontScaleFactor();
         eventHandle = JNIThemeInfoWindows.createEventHandle();
+        color = JNIThemeInfoWindows.getAccentColor();
         /*
          * In theory this shouldn't be necessary, but
          * it ensures that the registry listeners are actually unregistered.
          */
         Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
         this.running.set(true);
-        worker = new Thread(this::run);
-        worker.start();
+        new Thread(this::run).start();
     }
 
     private void stop() {

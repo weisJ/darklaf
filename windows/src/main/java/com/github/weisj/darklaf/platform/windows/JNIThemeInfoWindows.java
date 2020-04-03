@@ -47,6 +47,13 @@ public class JNIThemeInfoWindows {
     public static native long getFontScaleFactor();
 
     /**
+     * Returns the currently used accent color.
+     *
+     * @return the accent color in the format 0xAARRGGBB.
+     */
+    public static native int getAccentColor();
+
+    /**
      * Create a monitor event handle.
      *
      * @return the event handle.
