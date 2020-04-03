@@ -90,43 +90,50 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapp
     }
 }
 
+bool Maximized(HWND hwnd)
+{
+    WINDOWPLACEMENT placement;
+    if (!GetWindowPlacement(hwnd, &placement)) return false;
+    return placement.showCmd == SW_MAXIMIZE;
+}
+
+void AdjustMaximizedClientArea(HWND window, RECT& rect)
+{
+    if (!Maximized(window)) return;
+
+    auto monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONULL);
+    if (!monitor) return;
+
+    MONITORINFO monitor_info{};
+    monitor_info.cbSize = sizeof(monitor_info);
+    if (!GetMonitorInfoW(monitor, &monitor_info)) return;
+
+    rect = monitor_info.rcWork;
+}
+
 LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrapper = wrapper_map[handle];
     if (uMsg == WM_NCCALCSIZE)
     {
-        if (wParam == TRUE)
-        {
-            SetWindowLong(hwnd, 0, 0);
+        if (wParam == TRUE) {
+            NCCALCSIZE_PARAMS& params = *reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
+            AdjustMaximizedClientArea(handle, params.rgrc[0]);
             return TRUE;
         }
-        return FALSE;
     }
     else if (uMsg == WM_NCHITTEST)
     {
         return HitTestNCA(hwnd, wParam, lParam, wrapper);
     }
-    else if (uMsg == WM_GETMINMAXINFO)
+    else if ((uMsg == WM_PAINT || uMsg == WM_ERASEBKGND) && wrapper->bgBrush)
     {
-        HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
-        HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-
-        MONITORINFO primaryMonitorInfo{sizeof(MONITORINFO)};
-        MONITORINFO targetMonitorInfo{sizeof(MONITORINFO)};
-
-        GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
-        GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
-
-        MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
-        RECT max_rect = primaryMonitorInfo.rcWork;
-        RECT target_rect = targetMonitorInfo.rcWork;
-        int indent = 2;
-        min_max_info->ptMaxSize.x = target_rect.right - target_rect.left - 2 * indent;
-        min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top - 2 + indent;
-        min_max_info->ptMaxPosition.x = max_rect.left + indent;
-        min_max_info->ptMaxPosition.y = max_rect.top + indent;
-        return 0;
+        HDC hdc = reinterpret_cast<HDC>(wParam);
+        RECT clientRect;
+        GetClientRect(hwnd, &clientRect);
+        FillRect(hdc, &clientRect, wrapper->bgBrush);
+        if (uMsg == WM_ERASEBKGND) return TRUE;
     }
 
     return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
@@ -164,47 +171,48 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackgrou
     auto wrap = wrapper_map[handle];
     if (wrap)
     {
-        wrap->background = RGB(r, g, b);
+        wrap->bgBrush = CreateSolidBrush(RGB(r, g, b));
     }
 }
 
-void extend_client_frame(HWND handle)
+void ExtendClientFrame(HWND handle)
 {
-    MARGINS margins = {0, 0, 0, 1};
+    MARGINS margins = {1, 1, 1, 1};
     DwmExtendFrameIntoClientArea(handle, &margins);
 }
 
-void setup_window_style(HWND handle)
+void SetupWindowStyle(HWND handle)
 {
     auto style = GetWindowLongPtr(handle, GWL_STYLE);
-    SetWindowLongPtr(handle, GWL_STYLE, style | WS_THICKFRAME);
+    SetWindowLongPtr(handle, GWL_STYLE, (style | WS_THICKFRAME));
 }
 
-void install_decorations(HWND handle, bool is_popup)
+bool InstallDecorations(HWND handle, bool is_popup)
 {
     //Prevent multiple installations overriding the real window procedure.
     auto it = wrapper_map.find(handle);
-    if (it != wrapper_map.end()) return;
+    if (it != wrapper_map.end()) return false;
 
-    extend_client_frame(handle);
-    setup_window_style(handle);
+    SetupWindowStyle(handle);
+    ExtendClientFrame(handle);
 
-    SetWindowPos(handle, NULL, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
     WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWL_WNDPROC));
 
     WindowWrapper *wrapper = new WindowWrapper();
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
     wrapper_map[handle] = wrapper;
-
     SetWindowLongPtr(handle, GWL_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
+    UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED;
+    SetWindowPos(handle, NULL, 0, 0, 0, 0, flags);
+    return true;
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
-    install_decorations(handle, false);
+    return (jboolean) InstallDecorations(handle, false);
 }
 
 JNIEXPORT void JNICALL
@@ -220,11 +228,11 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
     }
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv *env, jclass obj, jlong hwnd)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
-    install_decorations(handle, true);
+    return (jboolean) InstallDecorations(handle, true);
 }
 
 //Window functions.
