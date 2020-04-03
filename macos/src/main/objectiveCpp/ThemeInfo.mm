@@ -128,7 +128,7 @@ JNF_COCOA_ENTER(env);
     NSInteger r = (NSInteger) (255 * [accentColor redComponent]);
     NSInteger g = (NSInteger) (255 * [accentColor greenComponent]);
     NSInteger b = (NSInteger) (255 * [accentColor blueComponent]);
-    return (jint) ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
+    return (jint) (0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0));
 JNF_COCOA_EXIT(env);
     return (jint) VALUE_NO_SELECTION_COLOR;
 }
