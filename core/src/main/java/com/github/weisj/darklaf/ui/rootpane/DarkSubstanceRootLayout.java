@@ -68,12 +68,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         JRootPane root = (JRootPane) parent;
 
         if (root.getContentPane() != null) {
-            try {
-                cpd = root.getContentPane().getPreferredSize();
-            } catch (NullPointerException e) {
-                cpd = null;
-                System.out.println(Thread.currentThread());
-            }
+            cpd = root.getContentPane().getPreferredSize();
         } else {
             cpd = root.getSize();
         }
