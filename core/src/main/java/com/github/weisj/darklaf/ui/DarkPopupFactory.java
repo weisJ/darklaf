@@ -86,10 +86,12 @@ public class DarkPopupFactory extends PopupFactory {
                 window.setFocusableWindowState(true);
             }
 
-            if (install) {
-                DecorationsHandler.getSharedInstance().installPopupWindow(window);
-            } else {
-                DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
+            if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
+                if (install) {
+                    DecorationsHandler.getSharedInstance().installPopupWindow(window);
+                } else {
+                    DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
+                }
             }
             if (startHidden) {
                 ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);
