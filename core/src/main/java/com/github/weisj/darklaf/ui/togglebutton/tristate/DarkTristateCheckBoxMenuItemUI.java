@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.togglebutton.tristate;
 
+import com.github.weisj.darklaf.components.tristate.TristateButtonModel;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBoxMenuItem;
 import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.ui.togglebutton.checkbox.DarkCheckBoxMenuItemUI;
@@ -40,6 +41,12 @@ public class DarkTristateCheckBoxMenuItemUI extends DarkCheckBoxMenuItemUI {
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTristateCheckBoxMenuItemUI();
+    }
+
+    @Override
+    public void installDefaults() {
+        menuItem.setModel(new TristateButtonModel());
+        super.installDefaults();
     }
 
     @Override

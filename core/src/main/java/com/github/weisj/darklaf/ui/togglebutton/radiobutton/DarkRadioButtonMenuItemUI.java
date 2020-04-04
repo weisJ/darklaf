@@ -56,18 +56,13 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     }
 
     @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        acceleratorFont = UIManager.getFont("MenuItem.font");
-        acceleratorForeground = UIManager.getColor("MenuItem.foreground");
-        acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
-        c.putClientProperty(KEY_NO_NOT_CLOSE_ON_CLICK, UIManager.getBoolean(KEY_NO_NOT_CLOSE_ON_CLICK));
-    }
-
-    @Override
     public void installDefaults() {
         super.installDefaults();
         iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + ".iconBaselineOffset");
+        acceleratorFont = UIManager.getFont("MenuItem.font");
+        acceleratorForeground = UIManager.getColor("MenuItem.foreground");
+        acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
+        menuItem.putClientProperty(KEY_NO_NOT_CLOSE_ON_CLICK, UIManager.getBoolean(KEY_NO_NOT_CLOSE_ON_CLICK));
         installIcons();
         checkIcon = getStateIcon(menuItem);
     }
