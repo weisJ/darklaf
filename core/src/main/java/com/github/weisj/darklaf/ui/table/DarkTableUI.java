@@ -258,11 +258,11 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
             int tableHeight = getPreferredSize(table).height;
             int x;
             boolean ltr = table.getComponentOrientation().isLeftToRight();
+            x = damagedArea.x;
+            if (scrollPaneRtl && scrollBarVisible()) {
+                SwingUtilities2.drawVLine(g, x, 0, tableHeight - 1);
+            }
             if (ltr) {
-                x = damagedArea.x;
-                if (scrollPaneRtl && scrollBarVisible()) {
-                    SwingUtilities2.drawVLine(g, x, 0, tableHeight - 1);
-                }
                 for (int column = cMin; column <= cMax; column++) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
@@ -271,10 +271,6 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                     }
                 }
             } else {
-                x = damagedArea.x;
-                if (scrollPaneRtl && scrollBarVisible()) {
-                    SwingUtilities2.drawVLine(g, x, 0, tableHeight - 1);
-                }
                 for (int column = cMax; column >= cMin; column--) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
