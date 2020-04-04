@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
 
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
+import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
 import sun.swing.MenuItemLayoutHelper;
 
@@ -41,6 +42,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
         if (menuItem != null) menuItem.setArmed(true);
     });
 
+    protected MenuItemLayoutDelegate layoutDelegate = new ToggleButtonMenuItemLayoutDelegate(null);
     protected int iconBaselineOffset;
     private Icon stateIcon;
 
@@ -87,28 +89,43 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     }
 
     @Override
-    protected Dimension getPreferredMenuItemSize(final JComponent c, final Icon checkIcon, final Icon arrowIcon,
-                                                 final int defaultTextIconGap) {
-        if (c instanceof JMenuItem && ((JMenuItem) c).getIcon() == null) {
-            JMenuItem mi = (JMenuItem) c;
-            mi.setIcon(checkIcon);
-            Dimension dim = super.getPreferredMenuItemSize(c, null, arrowIcon, defaultTextIconGap);
-            mi.setIcon(null);
-            return dim;
+    protected MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
+                                                           final int defaultTextIconGap, final JMenuItem mi,
+                                                           final Rectangle viewRect) {
+        if (mi.getIcon() == null) {
+            layoutDelegate.setDelegate(mi);
+            return super.getMenuItemLayoutHelper(null, arrowIcon, defaultTextIconGap, layoutDelegate, viewRect);
         } else {
-            return super.getPreferredMenuItemSize(c, checkIcon, arrowIcon, defaultTextIconGap);
+            return super.getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
         }
     }
 
     @Override
-    protected void paintCheckIcon(final Graphics g2, final MenuItemLayoutHelper lh,
+    protected void paintCheckIcon(final Graphics g2, final JMenuItem mi,
+                                  final MenuItemLayoutHelper lh,
                                   final MenuItemLayoutHelper.LayoutResult lr,
                                   final Color holdc, final Color foreground) {
         Rectangle rect = lr.getCheckRect();
-        getStateIcon(lh.getMenuItem()).paintIcon(lh.getMenuItem(), g2, rect.x, rect.y + iconBaselineOffset);
+        if (mi.getIcon() == null) {
+            rect.y = lr.getIconRect().y;
+            rect.height = lr.getIconRect().height;
+        }
+        getStateIcon(mi).paintIcon(mi, g2, rect.x, rect.y + iconBaselineOffset);
     }
 
     protected Icon getStateIcon(final AbstractButton b) {
         return stateIcon;
+    }
+
+    protected class ToggleButtonMenuItemLayoutDelegate extends MenuItemLayoutDelegate {
+
+        public ToggleButtonMenuItemLayoutDelegate(final JMenuItem delegate) {
+            super(delegate);
+        }
+
+        @Override
+        public Icon getIcon() {
+            return checkIcon;
+        }
     }
 }

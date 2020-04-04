@@ -63,7 +63,7 @@ public class PopupMenuDemo implements ComponentDemo {
                 add(new JMenuItem("Item 1", icon) {{
                     setAccelerator(KeyStroke.getKeyStroke("alt A"));
                 }});
-                add(new JCheckBoxMenuItem("CheckBox", icon));
+                add(new JCheckBoxMenuItem("CheckBox"));
                 add(new JMenuItem("Item 2") {{
                     setAccelerator(KeyStroke.getKeyStroke("alt shift B"));
                 }});
