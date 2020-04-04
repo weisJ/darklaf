@@ -44,7 +44,6 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     protected int iconBaselineOffset;
     private Icon stateIcon;
 
-
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonMenuItemUI();
     }
@@ -68,6 +67,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
         super.installDefaults();
         iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + ".iconBaselineOffset");
         installIcons();
+        checkIcon = getStateIcon(menuItem);
     }
 
     protected void installIcons() {
@@ -84,6 +84,20 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     protected void uninstallListeners() {
         super.uninstallListeners();
         menuItem.removeMouseListener(clickListener);
+    }
+
+    @Override
+    protected Dimension getPreferredMenuItemSize(final JComponent c, final Icon checkIcon, final Icon arrowIcon,
+                                                 final int defaultTextIconGap) {
+        if (c instanceof JMenuItem && ((JMenuItem) c).getIcon() == null) {
+            JMenuItem mi = (JMenuItem) c;
+            mi.setIcon(checkIcon);
+            Dimension dim = super.getPreferredMenuItemSize(c, null, arrowIcon, defaultTextIconGap);
+            mi.setIcon(null);
+            return dim;
+        } else {
+            return super.getPreferredMenuItemSize(c, checkIcon, arrowIcon, defaultTextIconGap);
+        }
     }
 
     @Override

@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -55,9 +54,6 @@ public class WindowsPreferenceMonitor {
                 || color != newColor
                 || fontScaleFactor != newFotScale
                 || highContrast != newHighContrast) {
-                if (newColor != color) {
-                    System.out.println("Color changed to " + new Color(newColor));
-                }
                 darkMode = newDark;
                 fontScaleFactor = newFotScale;
                 highContrast = newHighContrast;

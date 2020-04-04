@@ -35,7 +35,7 @@ public class SolidColorIcon implements Icon {
         this(color, 16, 16);
     }
 
-    private SolidColorIcon(final Color color, final int width, final int height) {
+    public SolidColorIcon(final Color color, final int width, final int height) {
         this.color = color;
         this.width = width;
         this.height = height;
