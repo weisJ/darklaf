@@ -37,7 +37,6 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ToolBarUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicBorders;
-import javax.swing.plaf.basic.BasicToolBarUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -409,10 +408,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      */
     protected void installKeyboardActions() {
         InputMap km = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
         SwingUtilities.replaceUIInputMap(toolBar, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, km);
-
-        LazyActionMap.installLazyActionMap(toolBar, BasicToolBarUI.class, "ToolBar.actionMap");
+        LazyActionMap.installLazyActionMap(toolBar, DarkToolBarUIBridge.class, "ToolBar.actionMap");
     }
 
     /**
