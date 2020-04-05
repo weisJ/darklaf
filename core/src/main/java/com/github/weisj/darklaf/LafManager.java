@@ -23,6 +23,18 @@
  */
 package com.github.weisj.darklaf;
 
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
+import javax.swing.*;
+
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
@@ -33,17 +45,6 @@ import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemeProvider;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * Manager for the Look and Feel.
@@ -97,8 +98,8 @@ public final class LafManager {
     }
 
     /**
-     * Set globally whether decorations are enabled. By default, this is true. Decorations are used if this value is set
-     * to true and the current platform and theme support custom decorations.
+     * Set globally whether decorations are enabled. By default, this is true.
+     * Decorations are used if this value is set to true and the current platform and theme support custom decorations.
      *
      * @param enabled true if decorations should be used if available.
      */
@@ -113,6 +114,9 @@ public final class LafManager {
     /**
      * Enabled whether changes in the preferred theme style should be reported to {@link ThemePreferenceListener}s. On
      * some platforms this setting may do nothing.
+     * <p>
+     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the program.
+     * Not doing so can result in memory leaks and prevent the classloader from being garbage collected.
      *
      * @param enabled true if changes should be reported.
      */

@@ -76,13 +76,23 @@
 - (void)notificationEvent:(NSNotification *)notification {
     if (!jvm) return;
     JNIEnv *env;
-    jvm->AttachCurrentThread((void **)&env, NULL);
+    BOOL detach = false;
+    int getEnvStat = jvm->GetEnv((void **)&env, JNI_VERSION_1_6);
+    if (getEnvStat == JNI_EDETACHED) {
+        detach = true;
+        if (jvm->AttachCurrentThread((void **) &env, NULL) != 0) return;
+    } else if (getEnvStat == JNI_EVERSION) {
+        return;
+    }
     jclass runnableClass = env->GetObjectClass(callback);
     jmethodID runMethodId = env->GetMethodID(runnableClass, "run", "()V");
     if (runMethodId) {
         env->CallVoidMethod(callback, runMethodId);
     }
-    jvm->DetachCurrentThread();
+    if (env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+    }
+    if (detach) jvm->DetachCurrentThread();
 }
 
 @end

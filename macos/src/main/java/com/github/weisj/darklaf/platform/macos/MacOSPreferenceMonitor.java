@@ -42,10 +42,6 @@ public class MacOSPreferenceMonitor {
 
     public MacOSPreferenceMonitor(final MacOSThemePreferenceProvider preferenceProvider) {
         this.preferenceProvider = preferenceProvider;
-        /*
-         * Ensure the listeners are actually unregistered.
-         */
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
     }
 
     private void onNotification() {
@@ -82,8 +78,8 @@ public class MacOSPreferenceMonitor {
     private void stop() {
         if (!running) return;
         running = false;
+        LOGGER.info("Stopped preference monitoring.");
         JNIThemeInfoMacOS.deletePreferenceChangeListener(listenerHandle);
-        LOGGER.info("Started preference monitoring.");
     }
 
     public void setRunning(final boolean running) {

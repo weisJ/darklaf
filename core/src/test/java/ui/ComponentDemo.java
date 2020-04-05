@@ -32,6 +32,8 @@ import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowListener;
 
 public interface ComponentDemo {
 
@@ -50,7 +52,8 @@ public interface ComponentDemo {
         SwingUtilities.invokeLater(() -> {
             LafManager.install(demo.createTheme());
             JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.addWindowListener(demo.createWindowListener());
             frame.setTitle(demo.getTitle());
             frame.setContentPane(demo.createComponent());
             frame.setJMenuBar(demo.createMenuBar());
@@ -59,6 +62,11 @@ public interface ComponentDemo {
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
         });
+    }
+
+    default WindowListener createWindowListener() {
+        return new WindowAdapter() {
+        };
     }
 
     static JMenu createThemeMenu() {

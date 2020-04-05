@@ -40,11 +40,6 @@ public class WindowsPreferenceMonitor {
 
     public WindowsPreferenceMonitor(final WindowsThemePreferenceProvider preferenceProvider) {
         this.preferenceProvider = preferenceProvider;
-        /*
-         * In theory this shouldn't be necessary, but
-         * it ensures that the registry listeners are actually unregistered.
-         */
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
     }
 
     private void onNotification() {

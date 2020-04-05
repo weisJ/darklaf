@@ -185,6 +185,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColo
 
 struct EventHandler {
     JavaVM *jvm;
+    JNIEnv *env;
     jobject callback;
     HANDLE eventHandle;
     std::thread notificationLoop;
@@ -192,14 +193,11 @@ struct EventHandler {
 
     void runCallBack()
     {
-        JNIEnv *env;
-        jvm->AttachCurrentThread((void **)&env, NULL);
         jclass runnableClass = env->GetObjectClass(callback);
         jmethodID runMethodId = env->GetMethodID(runnableClass, "run", "()V");
         if (runMethodId) {
             env->CallVoidMethod(callback, runMethodId);
         }
-        jvm->DetachCurrentThread();
     }
 
     bool awaitPreferenceChange()
@@ -213,10 +211,35 @@ struct EventHandler {
 
     void run()
     {
+        int getEnvStat = jvm->GetEnv((void **)&env, JNI_VERSION_1_6);
+        if (getEnvStat == JNI_EDETACHED)
+        {
+            if (jvm->AttachCurrentThread((void **) &env, NULL) != 0) return;
+        }
+        else if (getEnvStat == JNI_EVERSION)
+        {
+            return;
+        }
         while(running && awaitPreferenceChange())
         {
-            runCallBack();
+            if (running)
+            {
+                runCallBack();
+                if (env->ExceptionCheck())
+                {
+                    env->ExceptionDescribe();
+                    break;
+                }
+            }
         }
+        jvm->DetachCurrentThread();
+    }
+
+    void stop()
+    {
+        running = FALSE;
+        SetEvent(eventHandle);
+        notificationLoop.join();
     }
 
     EventHandler(JavaVM *jvm_, jobject callback_, HANDLE eventHandle_)
@@ -226,13 +249,6 @@ struct EventHandler {
         eventHandle = eventHandle_;
         running = TRUE;
         notificationLoop = std::thread(&EventHandler::run, this);
-    }
-
-    ~EventHandler()
-    {
-        running = FALSE;
-        SetEvent(eventHandle);
-        notificationLoop.join();
     }
 };
 
@@ -254,6 +270,8 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_deleteEventHa
 {
     EventHandler *handler = reinterpret_cast<EventHandler *>(eventHandler);
     if (handler) {
+        env->DeleteGlobalRef(handler->callback);
+        handler->stop();
         delete handler;
     }
 }

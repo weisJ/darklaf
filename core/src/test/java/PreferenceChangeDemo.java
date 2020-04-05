@@ -4,6 +4,9 @@ import ui.ComponentDemo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 /*
  * MIT License
@@ -41,10 +44,19 @@ public class PreferenceChangeDemo implements ComponentDemo {
             add(new JToggleButton("Start") {{
                 addActionListener(e -> {
                     setText(isSelected() ? "Stop" : "Start");
-                    LafManager.enabledPreferenceChangeReporting(isSelected());
                 });
             }});
         }};
+    }
+
+    @Override
+    public WindowListener createWindowListener() {
+        return new WindowAdapter() {
+            @Override
+            public void windowClosed(final WindowEvent e) {
+                LafManager.enabledPreferenceChangeReporting(false);
+            }
+        };
     }
 
     @Override
