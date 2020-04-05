@@ -69,4 +69,6 @@ public class JNIThemeInfoMacOS {
     public static native long createPreferenceChangeListener();
 
     public static native void deletePreferenceChangeListener(final long listenerPtr);
+
+    public static native boolean awaitPreferenceChange(final long listenerPtr);
 }

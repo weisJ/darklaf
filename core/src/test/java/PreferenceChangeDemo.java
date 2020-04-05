@@ -36,7 +36,7 @@ public class PreferenceChangeDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        LafManager.addThemePreferenceChangeListener(e -> LafManager.installTheme(e.getPreferredThemeStyle()));
+        LafManager.addThemePreferenceChangeListener(LafManager::installTheme);
         return new JPanel(new GridBagLayout()) {{
             add(new JToggleButton("Start") {{
                 addActionListener(e -> {

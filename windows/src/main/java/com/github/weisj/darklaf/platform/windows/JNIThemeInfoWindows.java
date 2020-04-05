@@ -74,6 +74,6 @@ public class JNIThemeInfoWindows {
      * @param eventHandle the handle to the monitor event.
      * @return the success status. false means an error happened.
      */
-    public static native boolean waitPreferenceChange(final long eventHandle);
+    public static native boolean awaitPreferenceChange(final long eventHandle);
 
 }

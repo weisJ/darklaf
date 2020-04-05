@@ -40,37 +40,50 @@
 #define VALUE_NO_ACCENT_COLOR (0)
 #define VALUE_NO_SELECTION_COLOR (-1)
 
-@interface PreferenceChangeListener:NSObject {
-}
+@interface PreferenceChangeListener:NSObject
+
+@property NSCondition *condition;
+@property BOOL notified;
+
+- (void)notifyLock;
+
 @end
 
 @implementation PreferenceChangeListener
 - (id)init {
+    _condition = [[NSCondition alloc] init];
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     [self listenToKey:EVENT_ACCENT_COLOR onCenter:center];
     [self listenToKey:EVENT_THEME_CHANGE onCenter:center];
     [self listenToKey:EVENT_HIGH_CONTRAS onCenter:center];
     [self listenToKey:EVENT_COLOR_CHANGE onCenter:center];
-    NSLog(@"Listener created");
     return self;
 }
 
 - (void)dealloc {
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     [center removeObserver:self]; // Removes all registered notifications.
-    NSLog(@"Listener destroyed");
+    [self notifyLock];
+    [_condition release];
     [super dealloc];
 }
 
--(void)listenToKey:(NSString *)key onCenter:(NSDistributedNotificationCenter *)center {
+- (void)listenToKey:(NSString *)key onCenter:(NSDistributedNotificationCenter *)center {
      [center addObserver:self
                 selector:@selector(notificationEvent:)
                     name:key
                   object:nil];
 }
 
--(void)notificationEvent:(NSNotification *)notification {
-    NSLog(@"Notification: %@", notification);
+- (void)notificationEvent:(NSNotification *)notification {
+    [self notifyLock];
+}
+
+- (void)notifyLock {
+    [_condition lock];
+    self.notified = true;
+    [_condition signal];
+    [_condition unlock];
 }
 @end
 
@@ -141,6 +154,21 @@ JNF_COCOA_DURING(env); // We dont want an auto release pool.
     return (jlong) listener;
 JNF_COCOA_HANDLE(env);
     return (jlong) 0;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_awaitPreferenceChange(JNIEnv *env, jclass obj, jlong listenerPtr) {
+JNF_COCOA_ENTER(env);
+    PreferenceChangeListener *listener = OBJC(listenerPtr);
+    [listener.condition lock];
+    listener.notified = false;
+    while(!listener.notified) {
+        [listener.condition wait];
+    }
+    [listener.condition unlock];
+    return true;
+JNF_COCOA_EXIT(env);
+    return false;
 }
 
 JNIEXPORT void JNICALL

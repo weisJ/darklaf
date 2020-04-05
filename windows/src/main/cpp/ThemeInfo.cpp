@@ -193,7 +193,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_notifyEventHa
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_waitPreferenceChange(JNIEnv *env, jclass obj, jlong eventHandle)
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_awaitPreferenceChange(JNIEnv *env, jclass obj, jlong eventHandle)
 {
     HANDLE event = reinterpret_cast<HANDLE>(eventHandle);
     if (!RegisterRegistryEvent(FONT_SCALE_PATH, event)) return (jboolean) false;

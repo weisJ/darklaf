@@ -66,9 +66,10 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
 
     private void adjustList(final List<?> list, final double[] hsb,
                             final Properties properties) {
+        ColorInfo info = new ColorInfo();
         for (Object o : list) {
-            ColorInfo info = createColorInfo(o);
-            if (info == null) continue;
+            info = getColorInfo(o, info);
+            if (info.key == null) continue;
             Object c = mapColor(info, hsb, properties);
             if (c instanceof Color) {
                 properties.put(info.key, c);
@@ -79,8 +80,12 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
         }
     }
 
-    private ColorInfo createColorInfo(final Object o) {
-        if (o instanceof String) return new ColorInfo(o.toString(), 100, 100, 100);
+    private ColorInfo getColorInfo(final Object o, final ColorInfo info) {
+        info.set(null, 0, 0, 0);
+        if (o instanceof String) {
+            info.set(o.toString(), 100, 100, 100);
+            return info;
+        }
         if (o instanceof Pair<?, ?>) {
             Object first = ((Pair<?, ?>) o).getFirst();
             Object second = ((Pair<?, ?>) o).getSecond();
@@ -92,11 +97,12 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
                 || !(list.get(0) instanceof Integer)
                 || !(list.get(1) instanceof Integer)
                 || !(list.get(2) instanceof Integer)) {
-                return null;
+                return info;
             }
-            return new ColorInfo(key, (Integer) list.get(0), (Integer) list.get(1), (Integer) list.get(2));
+            info.set(key, (Integer) list.get(0), (Integer) list.get(1), (Integer) list.get(2));
+            return info;
         }
-        return null;
+        return info;
     }
 
     private Object mapColor(final ColorInfo info, final double[] hsbMatch, final Properties properties) {
@@ -110,12 +116,12 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
     }
 
     private static class ColorInfo {
-        private final String key;
-        private final int hAdj;
-        private final int sAdj;
-        private final int bAdj;
+        private String key;
+        private int hAdj;
+        private int sAdj;
+        private int bAdj;
 
-        private ColorInfo(final String key, final int hAdj, final int sAdj, final int bAdj) {
+        private void set(final String key, final int hAdj, final int sAdj, final int bAdj) {
             this.key = key;
             this.hAdj = hAdj;
             this.sAdj = sAdj;

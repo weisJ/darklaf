@@ -50,12 +50,21 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
         FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
+        AccentColorRule accentColorRule = AccentColorRule.fromColor(createColorFromRGB(accentColorRGB));
         return new PreferredThemeStyle(contrastRule, toneRule, fontSizeRule);
     }
 
     private Color createColorFromRGB(final int rgb) {
         if (rgb == 0) return null;
         return new Color(rgb);
+    }
+
+    void reportPreferenceChange(final boolean highContrast, final boolean darkMode,
+                                final long fontScaleFactor, final int accentColorRGB) {
+        if (callback != null) {
+            PreferredThemeStyle style = create(highContrast, darkMode, fontScaleFactor, accentColorRGB);
+            callback.accept(style);
+        }
     }
 
     @Override
@@ -69,14 +78,6 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
     @Override
     public boolean isReporting() {
         return monitor.isRunning();
-    }
-
-    void reportPreferenceChange(final boolean highContrast, final boolean darkMode,
-                                final long fontScaleFactor, final int accentColorRGB) {
-        if (callback != null) {
-            PreferredThemeStyle style = create(highContrast, darkMode, fontScaleFactor, accentColorRGB);
-            callback.accept(style);
-        }
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -225,6 +226,16 @@ public final class LafManager {
      */
     public static void setTheme(final Theme theme) {
         LafManager.theme = theme;
+    }
+
+    /**
+     * Install the theme reported by the {@link ThemePreferenceChangeEvent}.
+     *
+     * @param changeEvent the change event.
+     */
+    public static void installTheme(final ThemePreferenceChangeEvent changeEvent) {
+        setTheme(changeEvent.getPreferredThemeStyle());
+        install();
     }
 
     /**

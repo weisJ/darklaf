@@ -21,44 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.windows;
+package com.github.weisj.darklaf.platform.macos;
 
+import java.awt.*;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
-public class WindowsPreferenceMonitor {
+public class MacOSPreferenceMonitor {
 
-    private static final Logger LOGGER = Logger.getLogger(WindowsThemePreferenceProvider.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MacOSThemePreferenceProvider.class.getName());
 
-    private final WindowsThemePreferenceProvider preferenceProvider;
+    private final MacOSThemePreferenceProvider preferenceProvider;
 
     private boolean darkMode;
     private boolean highContrast;
-    private long fontScaleFactor;
-    private long eventHandle;
-    private int color;
+    private Color accentColor;
+    private Color selectionColor;
+    private long listenerHandle;
     private AtomicBoolean running = new AtomicBoolean(false);
 
-    public WindowsPreferenceMonitor(final WindowsThemePreferenceProvider preferenceProvider) {
+    public MacOSPreferenceMonitor(final MacOSThemePreferenceProvider preferenceProvider) {
         this.preferenceProvider = preferenceProvider;
     }
 
     public void run() {
         LOGGER.info("Started preference monitoring.");
-        while (running.get() && JNIThemeInfoWindows.awaitPreferenceChange(eventHandle)) {
-            boolean newDark = JNIThemeInfoWindows.isDarkThemeEnabled();
-            boolean newHighContrast = JNIThemeInfoWindows.isHighContrastEnabled();
-            long newFotScale = JNIThemeInfoWindows.getFontScaleFactor();
-            int newColor = JNIThemeInfoWindows.getAccentColor();
+        while (running.get() && JNIThemeInfoMacOS.awaitPreferenceChange(listenerHandle)) {
+            boolean newDark = JNIThemeInfoMacOS.isDarkThemeEnabled();
+            boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
+            Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
+            Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
             if (darkMode != newDark
-                || color != newColor
-                || fontScaleFactor != newFotScale
-                || highContrast != newHighContrast) {
+                || highContrast != newHighContrast
+                || !Objects.equals(accentColor, newAccentColor)
+                || !Objects.equals(selectionColor, newSelectionColor)) {
                 darkMode = newDark;
-                fontScaleFactor = newFotScale;
+                accentColor = newAccentColor;
+                selectionColor = newSelectionColor;
                 highContrast = newHighContrast;
-                color = newColor;
-                preferenceProvider.reportPreferenceChange(highContrast, darkMode, fontScaleFactor, color);
+                preferenceProvider.reportPreferenceChange(highContrast, darkMode, accentColor, selectionColor);
             }
         }
         if (running.get()) {
@@ -70,14 +72,13 @@ public class WindowsPreferenceMonitor {
     }
 
     private void start() {
-        darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
-        highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
-        fontScaleFactor = JNIThemeInfoWindows.getFontScaleFactor();
-        color = JNIThemeInfoWindows.getAccentColor();
-        eventHandle = JNIThemeInfoWindows.createEventHandle();
+        darkMode = JNIThemeInfoMacOS.isDarkThemeEnabled();
+        highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
+        accentColor = JNIThemeInfoMacOS.getAccentColor();
+        selectionColor = JNIThemeInfoMacOS.getSelectionColor();
+        listenerHandle = JNIThemeInfoMacOS.createPreferenceChangeListener();
         /*
-         * In theory this shouldn't be necessary, but
-         * it ensures that the registry listeners are actually unregistered.
+         * Ensure the listeners are actually unregistered.
          */
         Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
         this.running.set(true);
@@ -88,7 +89,7 @@ public class WindowsPreferenceMonitor {
 
     private void stop() {
         this.running.set(false);
-        JNIThemeInfoWindows.notifyEventHandle(eventHandle);
+        JNIThemeInfoMacOS.deletePreferenceChangeListener(listenerHandle);
     }
 
     public void setRunning(final boolean running) {
