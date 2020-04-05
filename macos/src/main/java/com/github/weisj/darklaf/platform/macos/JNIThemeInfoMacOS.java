@@ -29,12 +29,31 @@ import java.awt.*;
 
 public class JNIThemeInfoMacOS {
 
+    /**
+     * Returns whether dark mode is enabled.
+     *
+     * @return true if dark mode is enabled.
+     */
     public static native boolean isDarkThemeEnabled();
 
+    /**
+     * Returns whether high contrast mode is enabled.
+     *
+     * @return true if high contrast mode is enabled.
+     */
     public static native boolean isHighContrastEnabled();
 
+    /*
+     * Get the index of the accent color.
+     */
     private static native int nativeGetAccentColor();
 
+
+    /**
+     * Returns the current accent color.
+     *
+     * @return the accent color.
+     */
     public static Color getAccentColor() {
         int index = nativeGetAccentColor();
         switch (index) {
@@ -57,8 +76,17 @@ public class JNIThemeInfoMacOS {
         }
     }
 
-    public static native int nativeGetSelectionColor();
+    /*
+     * Returns the selection color as an AARRGGBB integer.
+     */
+    private static native int nativeGetSelectionColor();
 
+
+    /**
+     * Returns the current selection color.
+     *
+     * @return the current selection color.
+     */
     public static Color getSelectionColor() {
         int rgba = nativeGetSelectionColor();
         // If rgba == 0 then it has an alpha channel != 255, so it is invalid.
@@ -66,9 +94,18 @@ public class JNIThemeInfoMacOS {
         return new Color(rgba);
     }
 
-    public static native long createPreferenceChangeListener();
+    /**
+     * Create an preference change listener.
+     *
+     * @param callback the event callback.
+     * @return the pointer to the listener.
+     */
+    public static native long createPreferenceChangeListener(final Runnable callback);
 
+    /**
+     * Delete the preference change listener.
+     *
+     * @param listenerPtr pointer to the listener.
+     */
     public static native void deletePreferenceChangeListener(final long listenerPtr);
-
-    public static native boolean awaitPreferenceChange(final long listenerPtr);
 }

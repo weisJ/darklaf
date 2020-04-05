@@ -25,7 +25,6 @@ package com.github.weisj.darklaf.platform.macos;
 
 import java.awt.*;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 public class MacOSPreferenceMonitor {
@@ -39,35 +38,30 @@ public class MacOSPreferenceMonitor {
     private Color accentColor;
     private Color selectionColor;
     private long listenerHandle;
-    private AtomicBoolean running = new AtomicBoolean(false);
+    private boolean running;
 
     public MacOSPreferenceMonitor(final MacOSThemePreferenceProvider preferenceProvider) {
         this.preferenceProvider = preferenceProvider;
+        /*
+         * Ensure the listeners are actually unregistered.
+         */
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
     }
 
-    public void run() {
-        LOGGER.info("Started preference monitoring.");
-        while (running.get() && JNIThemeInfoMacOS.awaitPreferenceChange(listenerHandle)) {
-            boolean newDark = JNIThemeInfoMacOS.isDarkThemeEnabled();
-            boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
-            Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
-            Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
-            if (darkMode != newDark
-                || highContrast != newHighContrast
-                || !Objects.equals(accentColor, newAccentColor)
-                || !Objects.equals(selectionColor, newSelectionColor)) {
-                darkMode = newDark;
-                accentColor = newAccentColor;
-                selectionColor = newSelectionColor;
-                highContrast = newHighContrast;
-                preferenceProvider.reportPreferenceChange(highContrast, darkMode, accentColor, selectionColor);
-            }
-        }
-        if (running.get()) {
-            LOGGER.severe("Monitor encountered an error. Stopping preference monitoring.");
-            running.set(false);
-        } else {
-            LOGGER.info("Stopped preference monitoring.");
+    private void onNotification() {
+        boolean newDark = JNIThemeInfoMacOS.isDarkThemeEnabled();
+        boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
+        Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
+        Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
+        if (darkMode != newDark
+            || highContrast != newHighContrast
+            || !Objects.equals(accentColor, newAccentColor)
+            || !Objects.equals(selectionColor, newSelectionColor)) {
+            darkMode = newDark;
+            accentColor = newAccentColor;
+            selectionColor = newSelectionColor;
+            highContrast = newHighContrast;
+            preferenceProvider.reportPreferenceChange(highContrast, darkMode, accentColor, selectionColor);
         }
     }
 
@@ -76,20 +70,20 @@ public class MacOSPreferenceMonitor {
         highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         accentColor = JNIThemeInfoMacOS.getAccentColor();
         selectionColor = JNIThemeInfoMacOS.getSelectionColor();
-        listenerHandle = JNIThemeInfoMacOS.createPreferenceChangeListener();
-        /*
-         * Ensure the listeners are actually unregistered.
-         */
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-        this.running.set(true);
-        Thread notificationThread = new Thread(this::run);
-        notificationThread.setDaemon(true);
-        notificationThread.start();
+        listenerHandle = JNIThemeInfoMacOS.createPreferenceChangeListener(this::onNotification);
+        if (listenerHandle == 0) {
+            LOGGER.severe("Could not create notification listener. Monitoring will not be started");
+            return;
+        }
+        running = true;
+        LOGGER.info("Started preference monitoring.");
     }
 
     private void stop() {
-        this.running.set(false);
+        if (!running) return;
+        running = false;
         JNIThemeInfoMacOS.deletePreferenceChangeListener(listenerHandle);
+        LOGGER.info("Started preference monitoring.");
     }
 
     public void setRunning(final boolean running) {
@@ -102,6 +96,6 @@ public class MacOSPreferenceMonitor {
     }
 
     public boolean isRunning() {
-        return running.get();
+        return running;
     }
 }

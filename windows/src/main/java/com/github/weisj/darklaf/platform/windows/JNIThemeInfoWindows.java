@@ -54,26 +54,17 @@ public class JNIThemeInfoWindows {
     public static native int getAccentColor();
 
     /**
-     * Create a monitor event handle.
+     * Create a monitor event handler.
      *
-     * @return the event handle.
+     * @param callback the event callback.
+     * @return the event handler pointer.
      */
-    public static native long createEventHandle();
+    public static native long createEventHandler(final Runnable callback);
 
     /**
-     * Sets the event status to notify.
+     * Deletes the event handler.
      *
-     * @param handle the event handle.
+     * @param handle the event handler pointer.
      */
-    public static native void notifyEventHandle(final long handle);
-
-    /**
-     * Wait for any possible changes to the preferences. This does not guarantee an actual change. This method will
-     * block until a change has occurred.
-     *
-     * @param eventHandle the handle to the monitor event.
-     * @return the success status. false means an error happened.
-     */
-    public static native boolean awaitPreferenceChange(final long eventHandle);
-
+    public static native void deleteEventHandler(final long handle);
 }

@@ -34,6 +34,8 @@ import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
 import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
 
+import javax.swing.*;
+
 public class ThemePreferencesHandler {
 
     public static final String PREFERENCE_REPORTING_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "enableNativePreferences";
@@ -72,7 +74,9 @@ public class ThemePreferencesHandler {
     }
 
     private void onChange(final PreferredThemeStyle style) {
-        changeSupport.notifyPreferenceChange(new ThemePreferenceChangeEvent(style));
+        SwingUtilities.invokeLater(() -> {
+            changeSupport.notifyPreferenceChange(new ThemePreferenceChangeEvent(style));
+        });
     }
 
     public void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {

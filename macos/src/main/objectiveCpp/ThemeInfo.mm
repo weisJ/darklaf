@@ -40,18 +40,18 @@
 #define VALUE_NO_ACCENT_COLOR (0)
 #define VALUE_NO_SELECTION_COLOR (-1)
 
-@interface PreferenceChangeListener:NSObject
-
-@property NSCondition *condition;
-@property BOOL notified;
-
-- (void)notifyLock;
-
+@interface PreferenceChangeListener:NSObject {
+    @public JavaVM *jvm;
+    @public jobject callback;
+}
 @end
 
 @implementation PreferenceChangeListener
-- (id)init {
-    _condition = [[NSCondition alloc] init];
+- (id)initWithJVM:(JavaVM *)jvm_ andCallBack:(jobject)callback_ {
+    self = [super init];
+    self->jvm = jvm_;
+    self->callback = callback_;
+
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     [self listenToKey:EVENT_ACCENT_COLOR onCenter:center];
     [self listenToKey:EVENT_THEME_CHANGE onCenter:center];
@@ -63,8 +63,6 @@
 - (void)dealloc {
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     [center removeObserver:self]; // Removes all registered notifications.
-    [self notifyLock];
-    [_condition release];
     [super dealloc];
 }
 
@@ -76,15 +74,17 @@
 }
 
 - (void)notificationEvent:(NSNotification *)notification {
-    [self notifyLock];
+    if (!jvm) return;
+    JNIEnv *env;
+    jvm->AttachCurrentThread((void **)&env, NULL);
+    jclass runnableClass = env->GetObjectClass(callback);
+    jmethodID runMethodId = env->GetMethodID(runnableClass, "run", "()V");
+    if (runMethodId) {
+        env->CallVoidMethod(callback, runMethodId);
+    }
+    jvm->DetachCurrentThread();
 }
 
-- (void)notifyLock {
-    [_condition lock];
-    self.notified = true;
-    [_condition signal];
-    [_condition unlock];
-}
 @end
 
 JNIEXPORT jboolean JNICALL
@@ -147,28 +147,18 @@ JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_createPreferenceChangeListener(JNIEnv *env, jclass obj) {
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_createPreferenceChangeListener(JNIEnv *env, jclass obj, jobject callback) {
 JNF_COCOA_DURING(env); // We dont want an auto release pool.
-    PreferenceChangeListener *listener = [[PreferenceChangeListener alloc] init];
-    [listener retain];
-    return (jlong) listener;
+    JavaVM *jvm;
+    if (env->GetJavaVM(&jvm) == 0) {
+        jobject callbackRef = env->NewGlobalRef(callback);
+        PreferenceChangeListener *listener = [[PreferenceChangeListener alloc] initWithJVM:jvm andCallBack: callbackRef];
+        [listener retain];
+        return reinterpret_cast<jlong>(listener);
+    }
+    return (jlong) 0;
 JNF_COCOA_HANDLE(env);
     return (jlong) 0;
-}
-
-JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_awaitPreferenceChange(JNIEnv *env, jclass obj, jlong listenerPtr) {
-JNF_COCOA_ENTER(env);
-    PreferenceChangeListener *listener = OBJC(listenerPtr);
-    [listener.condition lock];
-    listener.notified = false;
-    while(!listener.notified) {
-        [listener.condition wait];
-    }
-    [listener.condition unlock];
-    return true;
-JNF_COCOA_EXIT(env);
-    return false;
 }
 
 JNIEXPORT void JNICALL
@@ -176,6 +166,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_deletePreferenceC
 JNF_COCOA_ENTER(env);
     PreferenceChangeListener *listener = OBJC(listenerPtr);
     if (listener) {
+        env->DeleteGlobalRef(listener->callback);
         [listener release];
         [listener dealloc];
     }

@@ -25,6 +25,8 @@
 
 #include <iostream>
 #include <string>
+#include <thread>
+#include <atomic>
 #include <windows.h>
 #include <winreg.h>
 #include <winuser.h>
@@ -180,25 +182,78 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColo
     return (jint) GetAccentColor();
 }
 
+
+struct EventHandler {
+    JavaVM *jvm;
+    jobject callback;
+    HANDLE eventHandle;
+    std::thread notificationLoop;
+    std::atomic<bool> running = FALSE;
+
+    void runCallBack()
+    {
+        JNIEnv *env;
+        jvm->AttachCurrentThread((void **)&env, NULL);
+        jclass runnableClass = env->GetObjectClass(callback);
+        jmethodID runMethodId = env->GetMethodID(runnableClass, "run", "()V");
+        if (runMethodId) {
+            env->CallVoidMethod(callback, runMethodId);
+        }
+        jvm->DetachCurrentThread();
+    }
+
+    bool awaitPreferenceChange()
+    {
+        if (!RegisterRegistryEvent(FONT_SCALE_PATH, eventHandle)) return FALSE;
+        if (!RegisterRegistryEvent(DARK_MODE_PATH, eventHandle)) return FALSE;
+        if (!RegisterRegistryEvent(HIGH_CONTRAST_PATH, eventHandle)) return FALSE;
+        if (!RegisterRegistryEvent(ACCENT_COLOR_PATH, eventHandle)) return FALSE;
+        return WaitForSingleObject(eventHandle, INFINITE) != WAIT_FAILED;
+    }
+
+    void run()
+    {
+        while(running && awaitPreferenceChange())
+        {
+            runCallBack();
+        }
+    }
+
+    EventHandler(JavaVM *jvm_, jobject callback_, HANDLE eventHandle_)
+    {
+        jvm = jvm_;
+        callback = callback_;
+        eventHandle = eventHandle_;
+        running = TRUE;
+        notificationLoop = std::thread(&EventHandler::run, this);
+    }
+
+    ~EventHandler()
+    {
+        running = FALSE;
+        SetEvent(eventHandle);
+        notificationLoop.join();
+    }
+};
+
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_createEventHandle(JNIEnv *env, jclass obj)
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_createEventHandler(JNIEnv *env, jclass obj, jobject callback)
 {
-    return (jlong) CreateEvent(NULL, FALSE, FALSE, NULL);
+    JavaVM *jvm;
+    if (env->GetJavaVM(&jvm) == 0) {
+        jobject callbackRef = env->NewGlobalRef(callback);
+        HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
+        EventHandler* eventHandler = new EventHandler(jvm, callbackRef, event);
+        return reinterpret_cast<jlong>(eventHandler);
+    }
+    return (jlong) 0;
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_notifyEventHandle(JNIEnv *env, jclass obj, jlong eventHandle)
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_deleteEventHandler(JNIEnv *env, jclass obj, jlong eventHandler)
 {
-    SetEvent(reinterpret_cast<HANDLE>(eventHandle));
-}
-
-JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_awaitPreferenceChange(JNIEnv *env, jclass obj, jlong eventHandle)
-{
-    HANDLE event = reinterpret_cast<HANDLE>(eventHandle);
-    if (!RegisterRegistryEvent(FONT_SCALE_PATH, event)) return (jboolean) false;
-    if (!RegisterRegistryEvent(DARK_MODE_PATH, event)) return (jboolean) false;
-    if (!RegisterRegistryEvent(HIGH_CONTRAST_PATH, event)) return (jboolean) false;
-    if (!RegisterRegistryEvent(ACCENT_COLOR_PATH, event)) return (jboolean) false;
-    return (jboolean) (WaitForSingleObject(event, INFINITE) != WAIT_FAILED);
+    EventHandler *handler = reinterpret_cast<EventHandler *>(eventHandler);
+    if (handler) {
+        delete handler;
+    }
 }

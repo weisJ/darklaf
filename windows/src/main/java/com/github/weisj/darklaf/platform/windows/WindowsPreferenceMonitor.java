@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 public class WindowsPreferenceMonitor {
@@ -35,37 +34,33 @@ public class WindowsPreferenceMonitor {
     private boolean darkMode;
     private boolean highContrast;
     private long fontScaleFactor;
-    private long eventHandle;
+    private long eventHandler;
     private int color;
-    private AtomicBoolean running = new AtomicBoolean(false);
+    private boolean running;
 
     public WindowsPreferenceMonitor(final WindowsThemePreferenceProvider preferenceProvider) {
         this.preferenceProvider = preferenceProvider;
+        /*
+         * In theory this shouldn't be necessary, but
+         * it ensures that the registry listeners are actually unregistered.
+         */
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
     }
 
-    public void run() {
-        LOGGER.info("Started preference monitoring.");
-        while (running.get() && JNIThemeInfoWindows.awaitPreferenceChange(eventHandle)) {
-            boolean newDark = JNIThemeInfoWindows.isDarkThemeEnabled();
-            boolean newHighContrast = JNIThemeInfoWindows.isHighContrastEnabled();
-            long newFotScale = JNIThemeInfoWindows.getFontScaleFactor();
-            int newColor = JNIThemeInfoWindows.getAccentColor();
-            if (darkMode != newDark
-                || color != newColor
-                || fontScaleFactor != newFotScale
-                || highContrast != newHighContrast) {
-                darkMode = newDark;
-                fontScaleFactor = newFotScale;
-                highContrast = newHighContrast;
-                color = newColor;
-                preferenceProvider.reportPreferenceChange(highContrast, darkMode, fontScaleFactor, color);
-            }
-        }
-        if (running.get()) {
-            LOGGER.severe("Monitor encountered an error. Stopping preference monitoring.");
-            running.set(false);
-        } else {
-            LOGGER.info("Stopped preference monitoring.");
+    private void onNotification() {
+        boolean newDark = JNIThemeInfoWindows.isDarkThemeEnabled();
+        boolean newHighContrast = JNIThemeInfoWindows.isHighContrastEnabled();
+        long newFotScale = JNIThemeInfoWindows.getFontScaleFactor();
+        int newColor = JNIThemeInfoWindows.getAccentColor();
+        if (darkMode != newDark
+            || color != newColor
+            || fontScaleFactor != newFotScale
+            || highContrast != newHighContrast) {
+            darkMode = newDark;
+            fontScaleFactor = newFotScale;
+            highContrast = newHighContrast;
+            color = newColor;
+            preferenceProvider.reportPreferenceChange(highContrast, darkMode, fontScaleFactor, color);
         }
     }
 
@@ -74,21 +69,20 @@ public class WindowsPreferenceMonitor {
         highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         fontScaleFactor = JNIThemeInfoWindows.getFontScaleFactor();
         color = JNIThemeInfoWindows.getAccentColor();
-        eventHandle = JNIThemeInfoWindows.createEventHandle();
-        /*
-         * In theory this shouldn't be necessary, but
-         * it ensures that the registry listeners are actually unregistered.
-         */
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-        this.running.set(true);
-        Thread notificationThread = new Thread(this::run);
-        notificationThread.setDaemon(true);
-        notificationThread.start();
+        eventHandler = JNIThemeInfoWindows.createEventHandler(this::onNotification);
+        if (eventHandler == 0) {
+            LOGGER.severe("Could not create notification listener. Monitoring will not be started");
+            return;
+        }
+        running = true;
+        LOGGER.info("Started preference monitoring.");
     }
 
     private void stop() {
-        this.running.set(false);
-        JNIThemeInfoWindows.notifyEventHandle(eventHandle);
+        if (!running) return;
+        LOGGER.info("Stopped preference monitoring.");
+        running = false;
+        JNIThemeInfoWindows.deleteEventHandler(eventHandler);
     }
 
     public void setRunning(final boolean running) {
@@ -101,6 +95,6 @@ public class WindowsPreferenceMonitor {
     }
 
     public boolean isRunning() {
-        return running.get();
+        return running;
     }
 }

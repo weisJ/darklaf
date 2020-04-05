@@ -51,7 +51,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
         FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
         AccentColorRule accentColorRule = AccentColorRule.fromColor(createColorFromRGB(accentColorRGB));
-        return new PreferredThemeStyle(contrastRule, toneRule, fontSizeRule);
+        return new PreferredThemeStyle(contrastRule, toneRule, accentColorRule, fontSizeRule);
     }
 
     private Color createColorFromRGB(final int rgb) {
