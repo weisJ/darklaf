@@ -47,6 +47,10 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";
 
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING
+        = Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING
+        = Collections.singletonMap(TextAttribute.KERNING, null);
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
 
@@ -80,10 +84,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private Font macOSFontFromFont(final Font font) {
-        Map<AttributedCharacterIterator.Attribute, Integer> attributes
-            = Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME : MAC_OS_FONT_NAME;
-        Font macFont = new Font(fontName, font.getStyle(), font.getSize()).deriveFont(attributes);
+        Font macFont = new Font(fontName, font.getStyle(), font.getSize()).deriveFont(ENABLE_KERNING);
         if (font instanceof UIResource) {
             macFont = new FontUIResource(macFont);
         }

@@ -39,9 +39,13 @@
 #define HIGH_CONTRAST_THEME_KEY ("High Contrast Scheme")
 #define HIGH_CONTRAST_LIGHT_THEME ("High Contrast White")
 
+#define ACCENT_COLOR_PATH "SOFTWARE\\Microsoft\\Windows\\DWM"
+#define ACCENT_COLOR_KEY "ColorizationColor"
+
 #define DARK_MODE_DEFAULT_VALUE false
 #define HIGH_CONTRAST_DEFAULT_VALUE false
 #define FONT_SCALE_DEFAULT_VALUE 100
+#define ACCENT_COLOR_DEFAULT_VALUE 0
 
 
 void ModifyFlags(DWORD &flags)
@@ -136,26 +140,44 @@ bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event)
     }
     else
     {
-        return false;
+        return FALSE;
+    }
+}
+
+int GetAccentColor()
+{
+    try
+    {
+        return RegGetDword(HKEY_CURRENT_USER, ACCENT_COLOR_PATH, ACCENT_COLOR_KEY);
+    }
+    catch (LONG e)
+    {
+        return ACCENT_COLOR_DEFAULT_VALUE;
     }
 }
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isDarkThemeEnabled(JNIEnv *env, jclass obj)
 {
-    return (jboolean)IsDarkMode();
+    return (jboolean) IsDarkMode();
 }
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isHighContrastEnabled(JNIEnv *env, jclass obj)
 {
-    return (jboolean)IsHighContrastMode();
+    return (jboolean) IsHighContrastMode();
 }
 
 JNIEXPORT jlong JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getFontScaleFactor(JNIEnv *env, jclass obj)
 {
-    return (jlong)GetTextScaleFactor();
+    return (jlong) GetTextScaleFactor();
+}
+
+JNIEXPORT jint JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColor(JNIEnv *env, jclass obj)
+{
+    return (jint) GetAccentColor();
 }
 
 JNIEXPORT jlong JNICALL
@@ -177,5 +199,6 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_waitPreferenc
     if (!RegisterRegistryEvent(FONT_SCALE_PATH, event)) return (jboolean) false;
     if (!RegisterRegistryEvent(DARK_MODE_PATH, event)) return (jboolean) false;
     if (!RegisterRegistryEvent(HIGH_CONTRAST_PATH, event)) return (jboolean) false;
+    if (!RegisterRegistryEvent(ACCENT_COLOR_PATH, event)) return (jboolean) false;
     return (jboolean) (WaitForSingleObject(event, INFINITE) != WAIT_FAILED);
 }

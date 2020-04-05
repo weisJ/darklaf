@@ -84,15 +84,15 @@ public class TabFrameLayout implements LayoutManager {
     @Override
     public void layoutContainer(final Container parent) {
         Dimension dim = parent.getSize();
-        int topSize = tabFrame.getTopTabCount();
-        int bottomSize = tabFrame.getBottomTabCount();
-        int leftSize = tabFrame.getLeftTabCount();
-        int rightSize = tabFrame.getRightTabCount();
+        int topCount = tabFrame.getTopTabCount();
+        int bottomCount = tabFrame.getBottomTabCount();
+        int leftCount = tabFrame.getLeftTabCount();
+        int rightCount = tabFrame.getRightTabCount();
 
-        if (isDraggedOver(Alignment.NORTH)) topSize++;
-        if (isDraggedOver(Alignment.SOUTH)) bottomSize++;
-        if (isDraggedOver(Alignment.EAST)) rightSize++;
-        if (isDraggedOver(Alignment.WEST)) leftSize++;
+        if (isDraggedOver(Alignment.NORTH)) topCount++;
+        if (isDraggedOver(Alignment.SOUTH)) bottomCount++;
+        if (isDraggedOver(Alignment.EAST)) rightCount++;
+        if (isDraggedOver(Alignment.WEST)) leftCount++;
 
         ui.getDropComponentBottom().setSize(0, 0);
         ui.getDropComponentLeft().setSize(0, 0);
@@ -104,10 +104,10 @@ public class TabFrameLayout implements LayoutManager {
         leftHeight = calculateMaxTabSize(Alignment.WEST);
         rightHeight = calculateMaxTabSize(Alignment.EAST);
 
-        layoutTopTab(dim, topSize, leftSize, rightSize);
-        layoutBottomTab(dim, bottomSize, leftSize, rightSize);
-        layoutLeftTab(dim, leftSize);
-        layoutRightTab(dim, rightSize);
+        layoutTopTab(dim, topCount, leftCount, rightCount);
+        layoutBottomTab(dim, bottomCount, leftCount, rightCount);
+        layoutLeftTab(dim, leftCount);
+        layoutRightTab(dim, rightCount);
 
         Component leftPane = ui.getLeftContainer();
         Component rightPane = ui.getRightContainer();
@@ -118,58 +118,57 @@ public class TabFrameLayout implements LayoutManager {
                                                            dim.height - topPane.getHeight() - bottomPane.getHeight());
     }
 
-    protected void layoutTopTab(final Dimension dim, final int topSize, final int leftSize, final int rightSize) {
+    protected void layoutTopTab(final Dimension dim, final int topCount, final int leftCount, final int rightCount) {
         Component topComp = tabFrame.getTopTabContainer();
-        if (topSize > 0) {
-            topComp.setBounds(0, 0, dim.width, tabFrame.getTabSize());
-            layoutHorizontal(dim, Alignment.NORTH, Alignment.NORTH_EAST, 0, leftSize, rightSize, topHeight);
+        if (topCount > 0) {
+            topComp.setBounds(0, 0, dim.width, topHeight);
+            layoutHorizontal(dim, Alignment.NORTH, Alignment.NORTH_EAST, 0, leftCount, rightCount, topHeight);
         } else if (draggedOver[getIndex(Alignment.NORTH)]) {
-            int size = tabFrame.getTabSize();
-            topComp.setBounds(0, 0, dim.width, size);
+            topComp.setBounds(0, 0, dim.width, topHeight);
             if (ui.getDestIndex() >= -1) {
-                layoutHorizontalDrop(Alignment.NORTH, leftSize, rightSize, size, 0);
+                layoutHorizontalDrop(Alignment.NORTH, leftCount, rightCount, topHeight, 0);
             }
         } else {
             topComp.setBounds(0, 0, 0, 0);
         }
     }
 
-    protected void layoutBottomTab(final Dimension dim, final int bottomSize, final int leftSize, final int rightSize) {
+    protected void layoutBottomTab(final Dimension dim, final int bottomCount, final int leftCount,
+                                   final int rightCount) {
         Component bottomComp = tabFrame.getBottomTabContainer();
-        if (bottomSize > 0) {
+        if (bottomCount > 0) {
             bottomComp.setBounds(0, dim.height - bottomHeight, dim.width, bottomHeight);
-            layoutHorizontal(dim, Alignment.SOUTH_WEST, Alignment.SOUTH, 1, leftSize, rightSize, bottomHeight);
+            layoutHorizontal(dim, Alignment.SOUTH_WEST, Alignment.SOUTH, 1, leftCount, rightCount, bottomHeight);
         } else if (draggedOver[getIndex(Alignment.SOUTH)]) {
-            int size = tabFrame.getTabSize();
-            bottomComp.setBounds(0, dim.height - size, dim.width, size);
+            bottomComp.setBounds(0, dim.height - bottomHeight, dim.width, bottomHeight);
             if (ui.getDestIndex() >= -1) {
-                layoutHorizontalDrop(Alignment.SOUTH_WEST, leftSize, rightSize, size, 1);
+                layoutHorizontalDrop(Alignment.SOUTH_WEST, leftCount, rightCount, bottomHeight, 1);
             }
         } else {
             bottomComp.setBounds(0, 0, 0, 0);
         }
     }
 
-    protected void layoutHorizontalDrop(final Alignment left, final int leftSize, final int rightSize,
+    protected void layoutHorizontalDrop(final Alignment left, final int leftCount, final int rightCount,
                                         final int size, final int yOff) {
         Alignment a = ui.getDestAlign();
         Dimension dropSize = ui.getDropSize();
         Component dropComp = ui.getDropComponent(left);
         Component tabComp = ui.getTabContainer(left);
         if (a == left) {
-            int x = leftSize > 0 ? leftHeight : 0;
+            int x = leftCount > 0 ? leftHeight : 0;
             dropComp.setBounds(x, yOff, dropSize.width, size);
         } else {
-            int x = rightSize > 0 ? tabComp.getWidth() - rightHeight : tabComp.getWidth();
+            int x = rightCount > 0 ? tabComp.getWidth() - rightHeight : tabComp.getWidth();
             dropComp.setBounds(x - dropSize.width, yOff, dropSize.width, size);
         }
     }
 
     protected void layoutHorizontal(final Dimension dim, final Alignment left, final Alignment right,
-                                    final int yOff, final int leftSize, final int rightSize, final int tabHeight) {
-        Point start = new Point(leftSize > 0 ? leftHeight : 0, yOff);
+                                    final int yOff, final int leftCount, final int rightCount, final int tabHeight) {
+        Point start = new Point(leftCount > 0 ? leftHeight : 0, yOff);
         int leftEnd = layoutTabArea(start, left, true, tabHeight - 1);
-        start.x = rightSize > 0 ? dim.width - rightHeight : dim.width;
+        start.x = rightCount > 0 ? dim.width - rightHeight : dim.width;
         int rightStart = layoutTabArea(start, right, false, tabHeight - 1);
         if (rightStart < leftEnd) {
             shift[getIndex(left)] = leftEnd - rightStart;
@@ -179,18 +178,18 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutLeftTab(final Dimension dim, final int leftSize) {
+    protected void layoutLeftTab(final Dimension dim, final int leftCount) {
         Component leftPane = ui.getLeftContainer();
         Component topPane = tabFrame.getTopTabContainer();
         Component bottomPane = tabFrame.getBottomTabContainer();
-        if (leftSize > 0 || draggedOver[getIndex(Alignment.WEST)]) {
-            int size = leftSize > 0 ? leftHeight : tabFrame.getTabSize();
+        if (leftCount > 0 || draggedOver[getIndex(Alignment.WEST)]) {
+            int size = leftCount > 0 ? leftHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             leftPane.setBounds(0, topPane.getHeight(), size, height + (height % 2));
             tabFrame.getLeftTabContainer().setPreferredSize(new Dimension(leftPane.getHeight(),
                                                                           leftPane.getWidth()));
             tabFrame.getLeftTabContainer().setSize(tabFrame.getLeftTabContainer().getPreferredSize());
-            if (leftSize > 0) {
+            if (leftCount > 0) {
                 Point start = new Point(leftPane.getHeight(), 0);
                 int topStart = layoutTabArea(start, Alignment.NORTH_WEST, false, size - 1);
                 start.x = 0;
@@ -222,18 +221,18 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutRightTab(final Dimension dim, final int rightSize) {
+    protected void layoutRightTab(final Dimension dim, final int rightCount) {
         Component rightPane = ui.getRightContainer();
         Component topPane = tabFrame.getTopTabContainer();
         Component bottomPane = tabFrame.getBottomTabContainer();
-        if (rightSize > 0 || draggedOver[getIndex(Alignment.EAST)]) {
-            int size = rightSize > 0 ? rightHeight : tabFrame.getTabSize();
+        if (rightCount > 0 || draggedOver[getIndex(Alignment.EAST)]) {
+            int size = rightCount > 0 ? rightHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             rightPane.setBounds(dim.width - rightHeight, topPane.getHeight(), size, height + (height % 2));
             tabFrame.getRightTabContainer().setPreferredSize(
                 new Dimension(rightPane.getHeight(), rightPane.getWidth()));
             tabFrame.getRightTabContainer().setSize(tabFrame.getRightTabContainer().getPreferredSize());
-            if (rightSize > 0) {
+            if (rightCount > 0) {
                 Point start = new Point(0, 0);
                 int topEnd = layoutTabArea(start, Alignment.EAST, true, size - 1);
                 start.x = tabFrame.getRightTabContainer().getWidth();
@@ -265,17 +264,6 @@ public class TabFrameLayout implements LayoutManager {
             pos.x += shift;
             dropComp.setLocation(pos);
         }
-    }
-
-    public int getShift(final Alignment a) {
-        switch (a) {
-            case NORTH:
-            case EAST:
-            case SOUTH_WEST:
-            case NORTH_WEST:
-                return 0;
-        }
-        return shift[getIndex(a)];
     }
 
     protected int getIndex(final Alignment a) {
@@ -367,10 +355,10 @@ public class TabFrameLayout implements LayoutManager {
     protected int calculateMaxTabSize(final Alignment a) {
         int max = tabFrame.getTabSize();
         for (TabFrameTab c : tabFrame.tabsForAlignment(a)) {
-            max = Math.max(max, c.getComponent().getMaximumSize().height + 1);
+            max = Math.max(max, c.getComponent().getPreferredSize().height + 1);
         }
         for (TabFrameTab c : tabFrame.tabsForAlignment(tabFrame.getPeer(a))) {
-            max = Math.max(max, c.getComponent().getMaximumSize().height + 1);
+            max = Math.max(max, c.getComponent().getPreferredSize().height + 1);
         }
         return max;
     }

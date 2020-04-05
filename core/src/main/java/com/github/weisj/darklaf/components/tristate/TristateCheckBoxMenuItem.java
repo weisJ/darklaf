@@ -142,7 +142,11 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
 
     @Override
     public void setSelected(final boolean b) {
-        setState(b ? TristateState.SELECTED : TristateState.DESELECTED);
+        if (getModel() instanceof TristateButtonModel) {
+            setState(b ? TristateState.SELECTED : TristateState.DESELECTED);
+        } else {
+            super.setSelected(b);
+        }
     }
 
     public void setIndeterminate() {
@@ -153,6 +157,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
         return getTristateModel().isIndeterminate();
     }
 
+    @Override
     public boolean getState() {
         return getTristateModel().getState() == TristateState.SELECTED;
     }

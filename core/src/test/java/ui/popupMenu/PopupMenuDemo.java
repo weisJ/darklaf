@@ -23,6 +23,7 @@
  */
 package ui.popupMenu;
 
+import com.github.weisj.darklaf.icons.IconLoader;
 import ui.ComponentDemo;
 
 import javax.swing.*;
@@ -38,6 +39,7 @@ public class PopupMenuDemo implements ComponentDemo {
     public JComponent createComponent() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
+        Icon icon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
         panel.add(new JLabel("Right click anywhere to open menu.") {{
             setInheritsPopupMenu(true);
         }});
@@ -45,21 +47,45 @@ public class PopupMenuDemo implements ComponentDemo {
         panel.setComponentPopupMenu(new JPopupMenu() {{
             for (int i = 0; i < 3; i++) {
                 add(new JMenu("Menu " + i) {{
+                    setIcon(icon);
                     for (int j = 0; j < 2; j++) {
                         add(new JMenu("SubMenu " + j) {{
-                            add(new JMenuItem("Item"));
+                            add(new JMenuItem("Item", icon));
                         }});
                         add(new JMenuItem("Item 1"));
-                        add(new JMenuItem("Item 2"));
+                        add(new JMenuItem("Item 2", icon));
                         addSeparator();
                     }
-                    add(new JMenuItem("Item 1"));
+                    add(new JMenuItem("Item 1", icon));
                     add(new JMenuItem("Item 2"));
                     addSeparator();
+                }});
+                add(new JMenuItem("Item 1", icon) {{
+                    setAccelerator(KeyStroke.getKeyStroke("alt A"));
+                }});
+                add(new JCheckBoxMenuItem("CheckBox"));
+                add(new JMenuItem("Item 2") {{
+                    setAccelerator(KeyStroke.getKeyStroke("alt shift B"));
+                }});
+                add(new JRadioButtonMenuItem("RadioButton"));
+                add(new JMenuItem("Item 3", icon) {{
+                    setAccelerator(KeyStroke.getKeyStroke("alt control shift C"));
                 }});
             }
         }});
         return panel;
+    }
+
+    @Override
+    public JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(ComponentDemo.createThemeMenu());
+        menuBar.add(new JMenu("CheckBoxes") {{
+            for (int i = 0; i < 10; i++) {
+                add(new JCheckBoxMenuItem("Item " + i));
+            }
+        }});
+        return menuBar;
     }
 
     @Override

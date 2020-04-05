@@ -40,6 +40,25 @@ import java.util.function.Function;
 
 public class ToolTipContext {
 
+    private static ToolTipContext defaultContext;
+
+    public static ToolTipContext getDefaultContext() {
+        if (defaultContext == null) defaultContext = createDefaultContext();
+        return defaultContext;
+    }
+
+    private static ToolTipContext createDefaultContext() {
+        return new ToolTipContext().setAlignment(Alignment.SOUTH)
+                                   .setCenterAlignment(Alignment.SOUTH)
+                                   .setAlignInside(false)
+                                   .setIgnoreBorder(true)
+                                   .setUseBestFit(true);
+    }
+
+    public static void setDefaultContext(final ToolTipContext defaultContext) {
+        ToolTipContext.defaultContext = defaultContext;
+    }
+
     private final Insets calcInsets = new Insets(0, 0, 0, 0);
     private JComponent target;
     private final MouseListener mouseListener = new MouseAdapter() {

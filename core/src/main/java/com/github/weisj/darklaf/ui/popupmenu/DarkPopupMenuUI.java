@@ -122,7 +122,6 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
      */
     private void removeOldMouseGrabber() {
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
-        ChangeListener mouseGrabber = null;
         for (ChangeListener listener : menuSelectionManager.getChangeListeners()) {
             if (listener == null) continue;
             Class<?> listenerClass = listener.getClass();
@@ -130,11 +129,10 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             Class<?> enclosingClass = listenerClass.getEnclosingClass();
             if (enclosingClass == null) continue;
             if (enclosingClass.getName().endsWith("BasicPopupMenuUI")) {
-                mouseGrabber = listener;
+                menuSelectionManager.removeChangeListener(listener);
                 break;
             }
         }
-        menuSelectionManager.removeChangeListener(mouseGrabber);
     }
 
     public static class MouseGrabber implements ChangeListener,

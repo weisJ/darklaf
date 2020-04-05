@@ -21,47 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.icons;
+package com.github.weisj.darklaf.theme;
+
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.PresetIconRule;
 
 import javax.swing.*;
-import java.awt.*;
+import java.util.Properties;
 
-public class SolidColorIcon implements Icon {
-    private final int width;
-    private final int height;
-    private Color color;
-
-    public SolidColorIcon(final Color color) {
-        this(color, 16, 16);
-    }
-
-    public SolidColorIcon(final Color color, final int width, final int height) {
-        this.color = color;
-        this.width = width;
-        this.height = height;
+public class OneDarkTheme extends Theme {
+    @Override
+    protected PresetIconRule getPresetIconRule() {
+        return PresetIconRule.NONE;
     }
 
     @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        g.setColor(color);
-        g.fillRect(x, y, getIconWidth(), getIconHeight());
+    public String getPrefix() {
+        return "one_dark";
     }
 
     @Override
-    public int getIconWidth() {
-        return width;
+    public String getName() {
+        return "One Dark";
     }
 
     @Override
-    public int getIconHeight() {
-        return height;
+    protected String getResourcePath() {
+        return "one_dark/";
     }
 
-    public Color getColor() {
-        return color;
+    @Override
+    protected Class<? extends Theme> getLoaderClass() {
+        return OneDarkTheme.class;
     }
 
-    public void setColor(final Color c) {
-        this.color = c;
+    @Override
+    public ColorToneRule getColorToneRule() {
+        return ColorToneRule.DARK;
+    }
+
+    @Override
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeUIProperties(properties, currentDefaults);
+        loadCustomProperties("ui", properties, currentDefaults);
+    }
+
+    @Override
+    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeIconTheme(properties, currentDefaults);
+        loadCustomProperties("icons_adjustments", properties, currentDefaults);
     }
 }

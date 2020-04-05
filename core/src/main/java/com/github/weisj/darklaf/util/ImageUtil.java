@@ -32,8 +32,28 @@ import java.awt.image.BufferedImage;
  */
 public final class ImageUtil {
 
-
     private ImageUtil() {
+    }
+
+    public static Image createDragImage(final Component c, final int lw, final Color borderColor) {
+        return createDragImage(c, new Rectangle(0, 0, c.getWidth(), c.getHeight()), lw, borderColor);
+    }
+
+    public static Image createDragImage(final Component c, final Rectangle bounds,
+                                        final int lw, final Color borderColor) {
+        Image tabImage = ImageUtil.scaledImageFromComponent(c, bounds);
+        int w = tabImage.getWidth(null);
+        int h = tabImage.getHeight(null);
+        Graphics g = tabImage.getGraphics();
+
+        g.setColor(borderColor);
+
+        g.fillRect(0, 0, w, lw);
+        g.fillRect(0, 0, lw, h);
+        g.fillRect(w - lw, 0, lw, h);
+        g.fillRect(0, h - lw, w, lw);
+        g.dispose();
+        return tabImage;
     }
 
     /**

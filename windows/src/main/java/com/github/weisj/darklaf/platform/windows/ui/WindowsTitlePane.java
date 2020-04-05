@@ -24,11 +24,11 @@
 
 package com.github.weisj.darklaf.platform.windows.ui;
 
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
-import com.github.weisj.darklaf.platform.PointerUtil;
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
+import com.github.weisj.darklaf.platform.windows.PointerUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.Scale;
 import sun.awt.SunToolkit;
@@ -230,30 +230,12 @@ public class WindowsTitlePane extends CustomTitlePane {
                 updateResizeBehaviour();
                 Color color = window.getBackground();
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
-                forceNativeResize();
             } else {
                 uninstall();
                 return false;
             }
         }
         return true;
-    }
-
-    private void forceNativeResize() {
-        Rectangle bounds = window.getBounds();
-        Dimension size = bounds.getSize();
-        Point p = bounds.getLocation();
-        if (window.isPreferredSizeSet()) {
-            size = window.getPreferredSize();
-        } else {
-            p.x += size.width / 2;
-            p.y += size.height / 2;
-        }
-        //Resizing triggers #reshapeNativePeer
-        window.setSize(size.width, size.height + 1);
-        window.setSize(size.width, size.height);
-        window.setLocation(p.x - size.width / 2,
-                           p.y - size.height / 2);
     }
 
     private void installListeners() {
@@ -683,6 +665,23 @@ public class WindowsTitlePane extends CustomTitlePane {
                    && title.length() == 0);
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        if (hideTitleBar()) return new Dimension(0, 0);
+        int size = computeHeight();
+        return new Dimension(size + 1, size + 1);
+    }
+
+    private int computeHeight() {
+        if (hideTitleBar()) return 0;
+        FontMetrics fm = rootPane.getFontMetrics(getFont());
+        int height = fm.getHeight() + 7;
+        if (menuBar != null) {
+            height = Math.max(height, menuBar.getMinimumSize().height);
+        }
+        return Math.max(BAR_HEIGHT, height);
+    }
+
     private class TitlePaneLayout implements LayoutManager {
         public void addLayoutComponent(final String name, final Component c) {
         }
@@ -690,24 +689,13 @@ public class WindowsTitlePane extends CustomTitlePane {
         public void removeLayoutComponent(final Component c) {
         }
 
-        public Dimension preferredLayoutSize(final Container c) {
-            if (hideTitleBar()) return new Dimension(0, 0);
-            int size = computeHeight();
-            return new Dimension(size + 1, size + 1);
+        @Override
+        public Dimension preferredLayoutSize(final Container parent) {
+            return getPreferredSize();
         }
 
         public Dimension minimumLayoutSize(final Container c) {
             return preferredLayoutSize(c);
-        }
-
-        private int computeHeight() {
-            if (hideTitleBar()) return 0;
-            FontMetrics fm = rootPane.getFontMetrics(getFont());
-            int height = fm.getHeight() + 7;
-            if (menuBar != null) {
-                height = Math.max(height, menuBar.getMinimumSize().height);
-            }
-            return Math.max(BAR_HEIGHT, height);
         }
 
         public void layoutContainer(final Container c) {

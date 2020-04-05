@@ -40,9 +40,9 @@ public class JNIDecorationsWindows {
 
     public static native void restore(final long hwnd);
 
-    public static native void installDecorations(final long hwnd);
+    public static native boolean installDecorations(final long hwnd);
 
     public static native void uninstallDecorations(final long hwnd);
 
-    public static native void installPopupMenuDecorations(final long hwnd);
+    public static native boolean installPopupMenuDecorations(final long hwnd);
 }

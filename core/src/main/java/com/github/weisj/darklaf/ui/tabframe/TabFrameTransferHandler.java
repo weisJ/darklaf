@@ -301,21 +301,9 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
     protected void createDragImage(final TabFrameUI ui) {
         Component comp = currentTransferable.transferData.tab.getComponent();
-        Image tabImage = ImageUtil.scaledImageFromComponent(comp, new Rectangle(0, 0, comp.getWidth(),
-                                                                                comp.getHeight()));
+        Image tabImage = ImageUtil.createDragImage(comp, 2, ui.getDragBorderColor());
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
-        Graphics g = tabImage.getGraphics();
-
-        g.setColor(ui.getDragBorderColor());
-
-        int lw = 2;
-        g.fillRect(0, 0, w, lw);
-        g.fillRect(0, 0, lw, h);
-        g.fillRect(w - lw, 0, lw, h);
-        g.fillRect(0, h - lw, w, lw);
-        g.dispose();
-
         setDragImageOffset(new Point(w / 2, h / 2));
         setDragImage(tabImage);
     }

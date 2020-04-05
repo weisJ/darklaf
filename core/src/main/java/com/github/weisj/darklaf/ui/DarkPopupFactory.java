@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +38,16 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
     public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
 
+    private HeavyWeightParent heavyWeightParent;
+
     @Override
     public Popup getPopup(final Component owner, final Component contents,
                           final int x, final int y) throws IllegalArgumentException {
+        if (heavyWeightParent == null) {
+            JComponent box = Box.createHorizontalBox();
+            super.getPopup(null, box, 0, 0);
+            heavyWeightParent = new HeavyWeightParent(DarkUIUtil.getWindow(box));
+        }
         Popup popup = super.getPopup(owner, contents, x, y);
         boolean isMediumWeight = popup.getClass().getSimpleName().endsWith("MediumWeightPopup");
         boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
@@ -51,7 +59,7 @@ public class DarkPopupFactory extends PopupFactory {
                               && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
         if (forceHeavy && (isMediumWeight || isLightWeight)) {
             // null owner forces a heavyweight popup.
-            popup = super.getPopup(null, contents, x, y);
+            popup = super.getPopup(heavyWeightParent, contents, x, y);
         }
         if (isMediumWeight) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
@@ -65,25 +73,49 @@ public class DarkPopupFactory extends PopupFactory {
         Window window = SwingUtilities.getWindowAncestor(contents);
         if (window != null) {
             boolean install = true;
+            window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
                 rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS, true);
+                window.setBackground(rootPane.getBackground());
                 install = !Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATION));
             }
-            if (install) {
-                DecorationsHandler.getSharedInstance().installPopupWindow(window);
-            } else {
-                DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
+
+            if (isFocusable && !window.getFocusableWindowState()) {
+                window.dispose();
+                window.setFocusableWindowState(true);
+            }
+
+            if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
+                if (install) {
+                    DecorationsHandler.getSharedInstance().installPopupWindow(window);
+                } else {
+                    DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
+                }
             }
             if (startHidden) {
                 ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);
                 window.setOpacity(0.0f);
             }
-            if (isFocusable && !window.getFocusableWindowState()) {
-                window.dispose();
-                window.setFocusableWindowState(true);
-            }
         }
         return popup;
+    }
+
+    private static class HeavyWeightParent extends JComponent {
+
+        private final Window window;
+
+        private HeavyWeightParent(final Window window) {
+            this.window = window;
+        }
+
+        @Override
+        public Container getParent() {
+            return window;
+        }
+
+        public Window getWindow() {
+            return window;
+        }
     }
 }

@@ -168,10 +168,12 @@ public class ColorTriangle extends JComponent {
 
     protected void setHSBHue(final double hue) {
         hueHSB = hue;
+        if (hueHSB < 0) hueHSB += 1.0;
     }
 
     protected void setHSLHue(final double hue) {
         hueHSL = hue;
+        if (hueHSL < 0) hueHSL += 1.0;
     }
 
     protected void setValue(final double value) {
@@ -232,7 +234,7 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setHSB(final double h, final double s, final double b) {
-        setHue(h);
+        setHSBHue(h);
         setHSBSaturation(s);
         setHSBValue(b);
     }
@@ -242,7 +244,7 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setHSL(final double h, final double s, final double l) {
-        setHue(h);
+        setHSLHue(h);
         setHSLSaturation(s);
         setHSLValue(l);
     }
@@ -317,6 +319,7 @@ public class ColorTriangle extends JComponent {
         setHSL(h, s, l);
         color = DarkColorModelHSL.getColorFromHSLValues(h, s, l);
         setHSB(DarkColorModelHSB.RGBtoHSBValues(color.getRed(), color.getGreen(), color.getBlue()));
+        setHSBHue(h);
         rotation = -(getHue() * 2 * Math.PI) + Math.PI / 2;
         invalidateWheel();
         fireColorChanged(source);
@@ -327,6 +330,7 @@ public class ColorTriangle extends JComponent {
         setHSB(h, s, b);
         color = DarkColorModelHSB.getColorFromHSBValues(h, s, b);
         setHSL(DarkColorModelHSL.RGBtoHSLValues(color.getRed(), color.getGreen(), color.getBlue()));
+        setHSLHue(h);
         rotation = -(getHue() * 2 * Math.PI) + Math.PI / 2;
         invalidateWheel();
         fireColorChanged(source);

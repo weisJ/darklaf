@@ -1,3 +1,10 @@
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.Theme;
+import ui.ComponentDemo;
+
+import javax.swing.*;
+import java.awt.*;
+
 /*
  * MIT License
  *
@@ -21,17 +28,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.menu;
+public class PreferenceChangeDemo implements ComponentDemo {
 
-import javax.swing.*;
-import javax.swing.plaf.BorderUIResource;
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new PreferenceChangeDemo());
+    }
 
-/**
- * @author Jannis Weis
- */
-public class DarkMenuItemBorder extends BorderUIResource.EmptyBorderUIResource {
+    @Override
+    public JComponent createComponent() {
+        LafManager.addThemePreferenceChangeListener(e -> LafManager.installTheme(e.getPreferredThemeStyle()));
+        return new JPanel(new GridBagLayout()) {{
+            add(new JToggleButton("Start") {{
+                addActionListener(e -> {
+                    setText(isSelected() ? "Stop" : "Start");
+                    LafManager.enabledPreferenceChangeReporting(isSelected());
+                });
+            }});
+        }};
+    }
 
-    public DarkMenuItemBorder() {
-        super(UIManager.getInsets("MenuItem.insets"));
+    @Override
+    public String getTitle() {
+        return "Preference Change Demo";
+    }
+
+    @Override
+    public Theme createTheme() {
+        return LafManager.themeForPreferredStyle(LafManager.getPreferredThemeStyle());
+    }
+
+    @Override
+    public JMenuBar createMenuBar() {
+        return null;
     }
 }

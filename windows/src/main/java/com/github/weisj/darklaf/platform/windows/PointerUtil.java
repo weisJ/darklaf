@@ -21,17 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.menu;
+package com.github.weisj.darklaf.platform.windows;
+
+import com.sun.jna.Native;
 
 import javax.swing.*;
-import javax.swing.plaf.BorderUIResource;
+import java.awt.*;
 
-/**
- * @author Jannis Weis
- */
-public class DarkMenuItemBorder extends BorderUIResource.EmptyBorderUIResource {
+public class PointerUtil {
 
-    public DarkMenuItemBorder() {
-        super(UIManager.getInsets("MenuItem.insets"));
+    /**
+     * Get the window handle for the window the given component descends from.
+     *
+     * @param component the component.
+     * @return the handle.
+     */
+    public static long getHWND(final Component component) {
+        Window window = component instanceof Window ? (Window) component
+                                                    : SwingUtilities.getWindowAncestor(component);
+        return Native.getComponentID(window);
     }
 }

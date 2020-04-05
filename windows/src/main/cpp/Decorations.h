@@ -31,7 +31,7 @@ public:
     bool resizable = true;
     bool popup_menu = false;
     WNDPROC prev_proc;
-    COLORREF background = RGB(255, 255, 255);
+    HBRUSH bgBrush;
 
     int left = 0;
     int right = 0;

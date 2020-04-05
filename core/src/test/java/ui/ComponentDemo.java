@@ -48,7 +48,7 @@ public interface ComponentDemo {
 
     static void showDemo(final ComponentDemo demo, final Dimension dimension) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install(getTheme());
+            LafManager.install(demo.createTheme());
             JFrame frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setTitle(demo.getTitle());
@@ -69,6 +69,7 @@ public interface ComponentDemo {
                                        new IntelliJTheme(),
                                        new SolarizedLightTheme(),
                                        new SolarizedDarkTheme(),
+                                       new OneDarkTheme(),
                                        new HighContrastLightTheme(),
                                        new HighContrastDarkTheme()}) {
             createThemeItem(currentThemeName, menu, bg, theme);
@@ -100,6 +101,10 @@ public interface ComponentDemo {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createThemeMenu());
         return menuBar;
+    }
+
+    default Theme createTheme() {
+        return getTheme();
     }
 
     String getTitle();

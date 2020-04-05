@@ -23,15 +23,12 @@
  */
 package com.github.weisj.darklaf.ui.menu;
 
-import com.github.weisj.darklaf.decorators.MouseDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.decorators.MouseInputDelegate;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.StringUtil;
-import sun.swing.MenuItemLayoutHelper;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 import java.awt.*;
@@ -55,48 +52,40 @@ public class DarkMenuUI extends BasicMenuUI {
     }
 
     @Override
-    protected void installListeners() {
-        super.installListeners();
-        for (MouseListener listener : menu.getMouseListeners()) {
-            if (listener.getClass().getEnclosingClass().equals(BasicMenuUI.class)) {
-                menu.removeMouseListener(listener);
-                mouseListener = new MouseDelegate(listener) {
-                    private boolean pressed = false;
-                    private boolean wasEnabled = false;
+    protected MouseInputListener createMouseInputListener(final JComponent c) {
+        return new MouseInputDelegate(super.createMouseInputListener(c)) {
+            private boolean pressed = false;
+            private boolean wasEnabled = false;
 
-                    @Override
-                    public void mouseEntered(final MouseEvent e) {
-                        MenuSelectionManager manager = MenuSelectionManager.defaultManager();
-                        MenuElement[] selectedPath = manager.getSelectedPath();
-                        for (MenuElement element : selectedPath) {
-                            if (element.equals(menu)) {
-                                return;
-                            }
-                        }
-                        super.mouseEntered(e);
+            @Override
+            public void mouseEntered(final MouseEvent e) {
+                MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+                MenuElement[] selectedPath = manager.getSelectedPath();
+                for (MenuElement element : selectedPath) {
+                    if (element.equals(menu)) {
+                        return;
                     }
-
-                    @Override
-                    public void mousePressed(final MouseEvent e) {
-                        pressed = true;
-                        wasEnabled = menu.isEnabled() && menu.isSelected() && menu.getPopupMenu().isShowing();
-                        super.mousePressed(e);
-                    }
-
-                    @Override
-                    public void mouseReleased(final MouseEvent e) {
-                        if (!menu.isEnabled()) return;
-                        if (pressed && wasEnabled) {
-                            pressed = false;
-                            return;
-                        }
-                        super.mouseReleased(e);
-                    }
-                };
-                menu.addMouseListener(mouseListener);
-                break;
+                }
+                super.mouseEntered(e);
             }
-        }
+
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                pressed = true;
+                wasEnabled = menu.isEnabled() && menu.isSelected() && menu.getPopupMenu().isShowing();
+                super.mousePressed(e);
+            }
+
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+                if (!menu.isEnabled()) return;
+                if (pressed && wasEnabled) {
+                    pressed = false;
+                    return;
+                }
+                super.mouseReleased(e);
+            }
+        };
     }
 
     @Override
@@ -115,9 +104,11 @@ public class DarkMenuUI extends BasicMenuUI {
     }
 
     public void paint(final Graphics g, final JComponent c) {
+        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         paintMenuItem(g, c, checkIcon, getArrowIcon(),
                       selectionBackground, isSelected(c) ? selectionForeground : c.getForeground(),
                       defaultTextIconGap);
+        config.restore();
     }
 
     protected Icon getArrowIcon() {
@@ -129,191 +120,5 @@ public class DarkMenuUI extends BasicMenuUI {
     protected boolean isSelected(final JComponent menuItem) {
         if (!(menuItem instanceof JMenuItem)) return false;
         return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
-    }
-
-    private static void rightAlignAccText(final MenuItemLayoutHelper lh,
-                                          final MenuItemLayoutHelper.LayoutResult lr) {
-        Rectangle accRect = lr.getAccRect();
-        ButtonModel model = lh.getMenuItem().getModel();
-        if (model.isEnabled()) {
-            accRect.x = lh.getViewRect().x + lh.getViewRect().width
-                        - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
-        }
-    }
-
-    protected void paintMenuItem(final Graphics g, final JComponent c,
-                                 final Icon checkIcon, final Icon arrowIcon,
-                                 final Color background, final Color foreground,
-                                 final int defaultTextIconGap) {
-        // Save original graphics font and color
-        Font holdf = g.getFont();
-        Color holdc = g.getColor();
-
-        JMenuItem mi = (JMenuItem) c;
-        g.setFont(mi.getFont());
-
-        Rectangle viewRect = new Rectangle(0, 0, mi.getWidth(), mi.getHeight());
-        DarkUIUtil.applyInsets(viewRect, mi.getInsets());
-
-        MenuItemLayoutHelper lh = new MenuItemLayoutHelper(mi, checkIcon,
-                                                           arrowIcon, viewRect, defaultTextIconGap,
-                                                           acceleratorDelimiter,
-                                                           mi.getComponentOrientation().isLeftToRight(), mi.getFont(),
-                                                           acceleratorFont,
-                                                           MenuItemLayoutHelper.useCheckAndArrow(menuItem),
-                                                           getPropertyPrefix());
-        MenuItemLayoutHelper.LayoutResult lr = lh.layoutMenuItem();
-
-        paintBackground(g, mi, background);
-        paintCheckIcon(g, lh, lr, holdc, foreground);
-        paintIcon(g, lh, lr, holdc);
-        g.setColor(foreground);
-        paintText(g, lh, lr);
-        paintAccText(g, lh, lr);
-        paintArrowIcon(g, lh, lr, foreground);
-
-        // Restore original graphics font and color
-        g.setColor(holdc);
-        g.setFont(holdf);
-    }
-
-    protected void paintCheckIcon(final Graphics g, final MenuItemLayoutHelper lh,
-                                  final MenuItemLayoutHelper.LayoutResult lr,
-                                  final Color holdc, final Color foreground) {
-        if (lh.getCheckIcon() != null) {
-            ButtonModel model = lh.getMenuItem().getModel();
-            if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                                    && model.isSelected())) {
-                g.setColor(foreground);
-            } else {
-                g.setColor(holdc);
-            }
-            if (lh.useCheckAndArrow()) {
-                lh.getCheckIcon().paintIcon(lh.getMenuItem(), g,
-                                            lr.getCheckRect().x, lr.getCheckRect().y);
-            }
-            g.setColor(holdc);
-        }
-    }
-
-    protected void paintAccText(final Graphics g, final MenuItemLayoutHelper lh,
-                                final MenuItemLayoutHelper.LayoutResult lr) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        rightAlignAccText(lh, lr);
-        if (!StringUtil.isBlank(lh.getAccText())) {
-            ButtonModel model = lh.getMenuItem().getModel();
-            g.setFont(lh.getAccFontMetrics().getFont());
-            if (!model.isEnabled()) {
-                // *** paint the accText disabled
-                if (disabledForeground != null) {
-                    g.setColor(disabledForeground);
-                    SwingUtilities2.drawString(lh.getMenuItem(), g,
-                                               lh.getAccText(), lr.getAccRect().x,
-                                               lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
-                } else {
-                    g.setColor(lh.getMenuItem().getBackground().brighter());
-                    SwingUtilities2.drawString(lh.getMenuItem(), g,
-                                               lh.getAccText(), lr.getAccRect().x,
-                                               lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
-                    g.setColor(lh.getMenuItem().getBackground().darker());
-                    SwingUtilities2.drawString(lh.getMenuItem(), g,
-                                               lh.getAccText(), lr.getAccRect().x - 1,
-                                               lr.getAccRect().y + lh.getFontMetrics().getAscent() - 1);
-                }
-            } else {
-                // *** paint the accText normally
-                if (model.isArmed()
-                    || (lh.getMenuItem() instanceof JMenu
-                        && model.isSelected())) {
-                    g.setColor(acceleratorSelectionForeground);
-                } else {
-                    g.setColor(acceleratorForeground);
-                }
-                SwingUtilities2.drawString(lh.getMenuItem(), g, lh.getAccText(),
-                                           lr.getAccRect().x, lr.getAccRect().y +
-                                                              lh.getAccFontMetrics().getAscent());
-            }
-        }
-        config.restore();
-    }
-
-    protected void paintIcon(final Graphics g, final MenuItemLayoutHelper lh,
-                             final MenuItemLayoutHelper.LayoutResult lr, final Color holdc) {
-        if (lh.getIcon() != null) {
-            Icon icon;
-            ButtonModel model = lh.getMenuItem().getModel();
-            if (!model.isEnabled()) {
-                icon = lh.getMenuItem().getDisabledIcon();
-            } else if (model.isPressed() && model.isArmed()) {
-                icon = lh.getMenuItem().getPressedIcon();
-                if (icon == null) {
-                    // Use default icon
-                    icon = lh.getMenuItem().getIcon();
-                }
-            } else {
-                icon = lh.getMenuItem().getIcon();
-            }
-
-            if (icon != null) {
-                icon.paintIcon(lh.getMenuItem(), g, lr.getIconRect().x, lr.getIconRect().y);
-                g.setColor(holdc);
-            }
-        }
-    }
-
-    protected void paintText(final Graphics g, final MenuItemLayoutHelper lh,
-                             final MenuItemLayoutHelper.LayoutResult lr) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        if (!StringUtil.isBlank(lh.getText())) {
-            if (lh.getHtmlView() != null) {
-                // Text is HTML
-                lh.getHtmlView().paint(g, lr.getTextRect());
-            } else {
-                // Text isn't HTML
-                paintText(g, lh.getMenuItem(), lr.getTextRect(), lh.getText());
-            }
-        }
-        config.restore();
-    }
-
-    protected void paintArrowIcon(final Graphics g, final MenuItemLayoutHelper lh,
-                                  final MenuItemLayoutHelper.LayoutResult lr,
-                                  final Color foreground) {
-        if (lh.getArrowIcon() != null) {
-            ButtonModel model = lh.getMenuItem().getModel();
-            if (model.isArmed() || (lh.getMenuItem() instanceof JMenu
-                                    && model.isSelected())) {
-                g.setColor(foreground);
-            }
-            if (lh.useCheckAndArrow()) {
-                lh.getArrowIcon().paintIcon(lh.getMenuItem(), g,
-                                            lr.getArrowRect().x, lr.getArrowRect().y);
-            }
-        }
-    }
-
-    @Override
-    protected void paintBackground(final Graphics g, final JMenuItem menuItem, final Color bgColor) {
-        ButtonModel model = menuItem.getModel();
-        Color oldColor = g.getColor();
-        int menuWidth = menuItem.getWidth();
-        int menuHeight = menuItem.getHeight() + 1;
-
-        boolean parentOpaque = menuItem.getParent().isOpaque();
-        if (menuItem.isOpaque() && parentOpaque) {
-            if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
-                g.setColor(bgColor);
-                g.fillRect(0, 0, menuWidth, menuHeight);
-            } else {
-                g.setColor(menuItem.getBackground());
-                g.fillRect(0, 0, menuWidth, menuHeight);
-            }
-            g.setColor(oldColor);
-        } else if (model.isArmed() || (menuItem instanceof JMenu &&
-                                       model.isSelected())) {
-            g.setColor(bgColor);
-            g.fillRect(0, 0, menuWidth, menuHeight);
-            g.setColor(oldColor);
-        }
     }
 }

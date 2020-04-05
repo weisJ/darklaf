@@ -67,21 +67,19 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         toolBar.setLayout(new DarkToolBarLayout(toolBar));
         previewPanel.setToolBar(toolBar);
         dragWindow = createDragWindow(toolBar);
-        floatingToolBar = createFloatingWindow(toolBar);
+    }
+
+    public RootPaneContainer getFloatingToolBar() {
+        if (floatingToolBar == null) floatingToolBar = createFloatingWindow(toolBar);
+        return floatingToolBar;
     }
 
     @Override
-    protected RootPaneContainer createFloatingWindow(final JToolBar toolbar) {
-        RootPaneContainer floatingToolbar = super.createFloatingWindow(toolbar);
-        updateFloatingWindowDecorations();
-        return floatingToolbar;
+    protected void setBorderToRollover(final Component c) {
     }
 
-    protected void updateFloatingWindowDecorations() {
-        String name = toolBar.getName();
-        if ((name == null || name.isEmpty()) && floatingToolBar != null && floatingToolBar.getRootPane() != null) {
-            floatingToolBar.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-        }
+    @Override
+    protected void setBorderToNormal(final Component c) {
     }
 
     @Override
@@ -106,8 +104,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
                     UIManager.addPropertyChangeListener(propertyListener);
                 }
 
-                floatingToolBar.getContentPane().add(toolBar, BorderLayout.CENTER);
-                updateFloatingWindowDecorations();
+                getFloatingToolBar().getContentPane().add(toolBar, BorderLayout.CENTER);
                 if (floatingToolBar instanceof Window) {
                     ((Window) floatingToolBar).pack();
                     ((Window) floatingToolBar).setLocation(floatingX, floatingY);
@@ -118,6 +115,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
                             ancestor.addWindowListener(new WindowAdapter() {
                                 public void windowOpened(final WindowEvent e) {
                                     ((Window) floatingToolBar).setVisible(true);
+                                    ancestor.removeWindowListener(this);
                                 }
                             });
                         }
@@ -248,7 +246,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     protected void startDrag() {
-        DarkUIUtil.getWindow(floatingToolBar.getRootPane()).setVisible(false);
+        DarkUIUtil.getWindow(getFloatingToolBar().getRootPane()).setVisible(false);
         if (!dragWindow.isVisible()) {
             dragWindow.getContentPane().add(toolBar);
             updateDockingSource();
