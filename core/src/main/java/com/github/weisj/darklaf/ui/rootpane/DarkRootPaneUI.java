@@ -68,6 +68,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public void installUI(final JComponent c) {
         super.installUI(c);
         rootPane = (JRootPane) c;
+        windowDecorationsStyle = rootPane.getWindowDecorationStyle();
         updateClientDecoration();
     }
 
@@ -85,8 +86,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         String propertyName = e.getPropertyName();
         if (PropertyKey.WINDOW_DECORATIONS_STYLE.equals(propertyName)) {
             if (!decorationStyleLock) {
-                windowDecorationsStyle = rootPane.getWindowDecorationStyle();
-                updateClientDecoration();
+                windowDecorationsStyle = decorationsStyleFromWindow(window, rootPane.getWindowDecorationStyle());
+                if (window instanceof JDialog) updateClientDecoration();
+                if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
                 if (windowDecorationsStyle == JRootPane.PLAIN_DIALOG) {
                     /*
                      * Otherwise, the property change doesn't get fired when the dialog is a plain dialog.
@@ -100,6 +102,13 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         } else if (PropertyKey.ANCESTOR.equals(propertyName)) {
             updateWindow(rootPane.getParent());
         }
+    }
+
+    protected int decorationsStyleFromWindow(final Window window, final int windowDecorationsStyle) {
+        if (windowDecorationsStyle != JRootPane.NONE) return windowDecorationsStyle;
+        if (window instanceof JFrame) return JRootPane.FRAME;
+        if (window instanceof JDialog) return JRootPane.PLAIN_DIALOG;
+        return windowDecorationsStyle;
     }
 
     private void uninstallClientDecorations(final JRootPane root) {
@@ -169,6 +178,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private void updateWindow(final Component parent) {
         if (window != null) window.removeWindowListener(disposeListener);
         window = DarkUIUtil.getWindow(parent);
+        windowDecorationsStyle = decorationsStyleFromWindow(window, windowDecorationsStyle);
+        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
         if (window != null) window.addWindowListener(disposeListener);
     }
 
