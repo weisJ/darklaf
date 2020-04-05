@@ -13,6 +13,7 @@ dependencies {
     javaImplementation(project(":darklaf-platform-base"))
     javaImplementation(project(":darklaf-theme"))
     javaImplementation(project(":darklaf-property-loader"))
+    javaImplementation("net.java.dev.jna:jna")
 }
 
 library {
