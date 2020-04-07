@@ -1,6 +1,8 @@
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.properties.dsl.props
+import com.github.vlsi.gradle.publishing.dsl.simplifyXml
+import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
 
 plugins {
     id("com.github.vlsi.crlf")
@@ -187,37 +189,9 @@ allprojects {
                     // Use the resolved versions in pom.xml
                     // Gradle might have different resolution rules, so we set the versions
                     // that were used in Gradle build/test.
-                    versionMapping {
-                        usage(Usage.JAVA_RUNTIME) {
-                            fromResolutionResult()
-                        }
-                        usage(Usage.JAVA_API) {
-                            fromResolutionOf("runtimeClasspath")
-                        }
-                    }
+                    versionFromResolution()
                     pom {
-                        withXml {
-                            val sb = asString()
-                            var s = sb.toString()
-                            // <scope>compile</scope> is Maven default, so delete it
-                            s = s.replace("<scope>compile</scope>", "")
-                            // Cut <dependencyManagement> because all dependencies have the resolved versions
-                            s = s.replace(
-                                Regex(
-                                    "<dependencyManagement>.*?</dependencyManagement>",
-                                    RegexOption.DOT_MATCHES_ALL
-                                ),
-                                ""
-                            )
-                            sb.setLength(0)
-                            sb.append(s)
-                            if (generatePomFile && !version.endsWith("SNAPSHOT")) {
-                                file("$projectDir/pom.xml").writeText(sb.toString())
-                            }
-                            // Re-format the XML
-                            asNode()
-                        }
-
+                        simplifyXml()
 
                         description.set(
                             project.description
