@@ -23,16 +23,12 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.ui.list.DarkListUI;
-import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
-import com.github.weisj.darklaf.util.DarkSwingUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.awt.SunToolkit;
-import sun.swing.DefaultLookup;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,12 +37,18 @@ import javax.swing.plaf.ComponentInputMapUIResource;
 import javax.swing.plaf.InputMapUIResource;
 import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.HashSet;
-import java.util.Set;
+
+import com.github.weisj.darklaf.ui.list.DarkListUI;
+import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
+
+import sun.awt.SunToolkit;
+import sun.swing.DefaultLookup;
 
 /**
  * @author Jannis Weis
@@ -151,8 +153,14 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     @Override
     protected void paintBackground(final Graphics g) {
+        final Container parent = getRelevantParent(editor);
+        if (parent != null && parent.isOpaque() && !editor.isEnabled()) {
+            g.setColor(parent.getBackground());
+            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
+            return;
+        }
+
         if (editor.isOpaque()) {
-            Container parent = editor.getParent();
             if (DarkUIUtil.isInCell(editor)) {
                 g.setColor(getBackground(editor));
                 g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
@@ -179,6 +187,17 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             g.setColor(getBackground(editor));
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
+    }
+
+    protected Container getRelevantParent(final Component c) {
+        Container parent = editor.getParent();
+        if (parent instanceof JSpinner.DefaultEditor) {
+            JSpinner spinner = DarkUIUtil.getParentOfType(JSpinner.class, c);
+            if (spinner != null) parent = spinner.getParent();
+        } else if (parent instanceof JComboBox) {
+            parent = parent.getParent();
+        }
+        return parent;
     }
 
     @Override

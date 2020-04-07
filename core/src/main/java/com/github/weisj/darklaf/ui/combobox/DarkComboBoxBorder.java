@@ -23,17 +23,16 @@
  */
 package com.github.weisj.darklaf.ui.combobox;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
+
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 public class DarkComboBoxBorder implements Border, UIResource {
 
@@ -43,9 +42,6 @@ public class DarkComboBoxBorder implements Border, UIResource {
     protected final int borderSize;
     protected final int arcSize;
     protected final Color focusBorderColor;
-    protected final Color inactiveBackground;
-    protected final Color arrowBackground;
-    protected final Color background;
     protected final Color borderColor;
     protected final Color inactiveBorderColor;
 
@@ -54,12 +50,9 @@ public class DarkComboBoxBorder implements Border, UIResource {
         arcSize = UIManager.getInt("ComboBox.arc");
         boxPadding = UIManager.getInsets("ComboBox.insets");
         borderSize = UIManager.getInt("ComboBox.borderThickness");
-        background = UIManager.getColor("ComboBox.activeBackground");
-        inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
         focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
         borderColor = UIManager.getColor("ComboBox.activeBorderColor");
         inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
-        arrowBackground = UIManager.getColor("ComboBox.arrowBackground");
         cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
         if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
         if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
@@ -86,11 +79,6 @@ public class DarkComboBoxBorder implements Border, UIResource {
 
         Color borderColor = getBorderColor(c);
 
-        if (comboBox.isEditable()) {
-            paintArrowBackground(width, height, comboBox, arrowButton, isCellEditor,
-                                 bSize, arcSize, g, borderColor);
-        }
-
         if (!isCellEditor) {
             if (ui.getHasFocus()) {
                 DarkUIUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
@@ -104,35 +92,16 @@ public class DarkComboBoxBorder implements Border, UIResource {
             paintCellBorder(c, width, height, isTableCellEditor, g, borderColor);
         }
 
+        if (comboBox.isEditable()) {
+            Rectangle arrowBounds = arrowButton.getBounds();
+            boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
+            int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
+            g.setColor(borderColor);
+            g.fillRect(off, bSize - 1, 1, height - 2 * bSize + 1);
+        }
+
         g.translate(-x, -y);
         config.restore();
-    }
-
-    public void paintArrowBackground(final int width, final int height, final JComboBox<?> comboBox,
-                                     final AbstractButton arrowButton, final boolean isCellEditor,
-                                     final int bSize, final int arc,
-                                     final Graphics2D g, final Color borderColor) {
-        Rectangle arrowBounds = arrowButton.getBounds();
-        boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
-        int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
-        Area rect;
-        Area iconRect = new Area(new Rectangle(off, 0, width, height));
-        if (!isCellEditor) {
-            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
-                                                        height - 2 * bSize + 1, arc, arc));
-        } else {
-            rect = new Area(new Rectangle(0, 0, width, height));
-        }
-        if (leftToRight) {
-            rect.intersect(iconRect);
-        } else {
-            rect.subtract(iconRect);
-        }
-        g.setPaint(getArrowBackground(comboBox));
-        g.fill(rect);
-
-        g.setColor(borderColor);
-        g.fillRect(off, bSize - 1, 1, height - 2 * bSize + 1);
     }
 
     protected void paintCellBorder(final Component c, final int width, final int height,
@@ -147,22 +116,16 @@ public class DarkComboBoxBorder implements Border, UIResource {
         }
     }
 
-    protected Color getArrowBackground(final JComboBox<?> c) {
-        if (!c.isEnabled()) return inactiveBackground;
-        if (c.isEditable()) return arrowBackground;
-        return background;
-    }
-
     protected Color getBorderColor(final Component c) {
         return c.isEnabled() ? borderColor : inactiveBorderColor;
     }
-
 
     @Override
     public Insets getBorderInsets(final Component c) {
         if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
             return CellUtil.adjustEditorInsets(new InsetsUIResource(cellPadding.top, cellPadding.left,
-                                                                    cellPadding.bottom, cellPadding.right), c);
+                                                                    cellPadding.bottom, cellPadding.right),
+                                               c);
         }
         if (c.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);

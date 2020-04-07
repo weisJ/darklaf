@@ -135,6 +135,27 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
         FillRect(hdc, &clientRect, wrapper->bgBrush);
         if (uMsg == WM_ERASEBKGND) return TRUE;
     }
+    else if (uMsg == WM_GETMINMAXINFO)
+    {
+        HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
+        HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+
+        MONITORINFO primaryMonitorInfo{sizeof(MONITORINFO)};
+        MONITORINFO targetMonitorInfo{sizeof(MONITORINFO)};
+
+        GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
+        GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
+
+        MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
+        RECT max_rect = primaryMonitorInfo.rcWork;
+        RECT target_rect = targetMonitorInfo.rcWork;
+        int indent = 2;
+        min_max_info->ptMaxSize.x = target_rect.right - target_rect.left - 2 * indent;
+        min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top - 2 + indent;
+        min_max_info->ptMaxPosition.x = max_rect.left + indent;
+        min_max_info->ptMaxPosition.y = max_rect.top + indent;
+        return FALSE;
+    }
 
     return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
 }

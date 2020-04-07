@@ -23,10 +23,9 @@
  */
 package com.github.weisj.darklaf.ui.spinner;
 
-import com.github.weisj.darklaf.components.ArrowButton;
-import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,9 +34,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSpinnerUI;
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
+
+import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Konstantin Bulenkov
@@ -235,6 +236,13 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
+        final Container parent = c.getParent();
+        if (parent != null && parent.isOpaque() && !c.isEnabled()) {
+            g.setColor(parent.getBackground());
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            return;
+        }
+
         int size = borderSize;
         int width = c.getWidth();
         int height = c.getHeight();
@@ -244,7 +252,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
             editorComponent.setBackground(getBackground(c));
             g.setColor(editorComponent.getBackground());
         } else {
-            ((Graphics2D) g).setPaint(getBackground(c));
+            g.setColor(getBackground(c));
         }
         if (!SpinnerConstants.isTreeOrTableCellEditor(c)) {
             DarkUIUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);

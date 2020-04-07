@@ -23,8 +23,7 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -33,7 +32,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Jannis Weis
@@ -113,8 +114,8 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
             cMax = cm.getColumnCount() - 1;
         }
 
-        Color borderColor = c.getBorder() instanceof DarkTableBorder
-                            ? ((DarkTableBorder) c.getBorder()).getBorderColor()
+        Color borderColor = c.getBorder() instanceof DarkTableScrollPaneBorder
+                                                                               ? ((DarkTableScrollPaneBorder) c.getBorder()).getBorderColor()
                             : getBorderColor();
         g.setColor(borderColor);
 

@@ -23,11 +23,13 @@
  */
 package com.github.weisj.darklaf.ui.combobox;
 
-import com.github.weisj.darklaf.components.ArrowButton;
-import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Area;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,11 +37,12 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.ComboPopup;
-import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+
+import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Konstantin Bulenkov
@@ -55,9 +58,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     protected Color editBackground;
     protected Color inactiveBackground;
     protected Color inactiveForeground;
-    protected Color focusBorderColor;
-    protected Color borderColor;
-    protected Color inactiveBorderColor;
     protected Color arrowBackground;
     private Insets boxPadding;
 
@@ -77,9 +77,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         editBackground = UIManager.getColor("ComboBox.editBackground");
         inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
         inactiveForeground = UIManager.getColor("ComboBox.disabledForeground");
-        focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
-        borderColor = UIManager.getColor("ComboBox.activeBorderColor");
-        inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
         arrowBackground = UIManager.getColor("ComboBox.arrowBackground");
         if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
     }
@@ -142,6 +139,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         final ComboBoxEditor comboBoxEditor = super.createEditor();
         Component comp = comboBoxEditor.getEditorComponent();
         comp.addKeyListener(new KeyAdapter() {
+
             @Override
             public void keyPressed(final KeyEvent e) {
                 process(e);
@@ -160,6 +158,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             }
         });
         comp.addFocusListener(new FocusAdapter() {
+
             @Override
             public void focusGained(final FocusEvent e) {
                 comboBox.revalidate();
@@ -198,10 +197,14 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     private void paintBackground(final Graphics g, final JComponent c, final int width, final int height) {
         final Container parent = c.getParent();
-        if (parent != null && parent.isOpaque()) {
+        if (parent != null && parent.isOpaque() && !c.isEnabled()) {
             g.setColor(parent.getBackground());
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            return;
         }
+
+        boolean isCellEditor = ComboBoxConstants.isTreeOrTableCellEditor(c);
+
         if (comboBox.isEditable() && comboBox.getEditor() != null) {
             Component editorComp = comboBox.getEditor().getEditorComponent();
             if (comboBox.isEnabled()) {
@@ -212,13 +215,42 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         } else {
             g.setColor(getBackground(comboBox));
         }
-        if (!ComboBoxConstants.isTreeOrTableCellEditor(c)) {
+        if (!isCellEditor) {
             DarkUIUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize,
                                      width - 2 * borderSize, height - 2 * borderSize,
                                      arcSize);
         } else {
             g.fillRect(0, 0, width, height);
         }
+        if (comboBox.isEditable()) {
+            int bSize = !isCellEditor ? borderSize : 0;
+            paintArrowBackground(width, height, comboBox, arrowButton, isCellEditor,
+                                 bSize, arcSize, (Graphics2D) g);
+        }
+    }
+
+    public void paintArrowBackground(final int width, final int height, final JComboBox<?> comboBox,
+                                     final AbstractButton arrowButton, final boolean isCellEditor,
+                                     final int bSize, final int arc,
+                                     final Graphics2D g) {
+        Rectangle arrowBounds = arrowButton.getBounds();
+        boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
+        int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
+        Area rect;
+        Area iconRect = new Area(new Rectangle(off, 0, width, height));
+        if (!isCellEditor) {
+            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
+                                                        height - 2 * bSize + 1, arc, arc));
+        } else {
+            rect = new Area(new Rectangle(0, 0, width, height));
+        }
+        if (leftToRight) {
+            rect.intersect(iconRect);
+        } else {
+            rect.subtract(iconRect);
+        }
+        g.setPaint(getArrowBackground(comboBox));
+        g.fill(rect);
     }
 
     protected Color getBackground(final JComboBox<?> c) {
@@ -227,9 +259,16 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         return background;
     }
 
+    protected Color getArrowBackground(final JComboBox<?> c) {
+        if (!c.isEnabled()) return inactiveBackground;
+        if (c.isEditable()) return arrowBackground;
+        return background;
+    }
+
     @Override
     protected LayoutManager createLayoutManager() {
         return new LayoutManagerDelegate(super.createLayoutManager()) {
+
             @Override
             public void layoutContainer(final Container parent) {
                 super.layoutContainer(parent);
@@ -260,13 +299,13 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         }
         Dimension size = getDisplaySize();
         Insets insets = getInsets();
-        //calculate the width and height of the button
+        // calculate the width and height of the button
         int buttonHeight = size.height;
         int buttonWidth = squareButton
-                          ? buttonHeight
-                          : arrowButton.getPreferredSize().width
-                            + arrowButton.getInsets().left + arrowButton.getInsets().right;
-        //adjust the size based on the button width
+                                       ? buttonHeight
+                                       : arrowButton.getPreferredSize().width
+                                         + arrowButton.getInsets().left + arrowButton.getInsets().right;
+        // adjust the size based on the button width
         size.height += insets.top + insets.bottom;
         size.width += insets.left + insets.right + buttonWidth;
 
@@ -299,13 +338,14 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         if (hasFocus && !isPopupVisible(comboBox)) {
             c.setForeground(listBox.getForeground());
             c.setBackground(listBox.getBackground());
-        } else {
+        } else if (comboBox.isEnabled()) {
             c.setForeground(getForeground());
             c.setBackground(getBackground(comboBox));
         }
 
         // paint selection in table-cell-editor mode correctly
-        boolean changeOpaque = c.isOpaque() && ComboBoxConstants.isTreeOrTableCellEditor(comboBox);
+        boolean changeOpaque = c.isOpaque() && (!comboBox.isEnabled()
+                                                || ComboBoxConstants.isTreeOrTableCellEditor(comboBox));
         if (changeOpaque) {
             ((JComponent) c).setOpaque(false);
         }

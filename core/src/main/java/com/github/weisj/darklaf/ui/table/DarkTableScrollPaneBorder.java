@@ -23,20 +23,20 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
+
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTableBorder extends MutableLineBorder implements UIResource {
+public class DarkTableScrollPaneBorder extends MutableLineBorder implements UIResource {
 
-    public DarkTableBorder() {
-        super(1, 1, 1, 1, null);
-        setColor(UIManager.getColor("TableHeader.borderColor"));
+    public DarkTableScrollPaneBorder() {
+        super(1, 1, 1, 1, UIManager.getColor("TableHeader.borderColor"));
     }
 
     public Color getBorderColor() {
