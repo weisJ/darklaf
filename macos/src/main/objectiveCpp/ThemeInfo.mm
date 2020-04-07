@@ -30,14 +30,18 @@
 #define KEY_APPLE_INTERFACE_STYLE @"AppleInterfaceStyle"
 #define KEY_SWITCHES_AUTOMATICALLY @"AppleInterfaceStyleSwitchesAutomatically"
 #define KEY_ACCENT_COLOR @"AppleAccentColor"
+#define KEY_SELECTION_COLOR @"selectedTextBackgroundColor"
+#define KEY_SYSTEM_COLOR_LIST @"System"
 
 #define EVENT_ACCENT_COLOR @"AppleColorPreferencesChangedNotification"
+#define EVENT_AQUA_CHANGE @"AppleAquaColorVariantChanged"
 #define EVENT_THEME_CHANGE @"AppleInterfaceThemeChangedNotification"
 #define EVENT_HIGH_CONTRAS @"AXInterfaceIncreaseContrastStatusDidChange"
 #define EVENT_COLOR_CHANGE NSSystemColorsDidChangeNotification
 
 #define VALUE_DARK @"Dark"
-#define VALUE_NO_ACCENT_COLOR (0)
+#define VALUE_DEFAULT_ACCENT_COLOR (-2)
+#define VALUE_NO_ACCENT_COLOR (-100)
 #define VALUE_NO_SELECTION_COLOR (-1)
 
 @interface PreferenceChangeListener:NSObject {
@@ -54,6 +58,7 @@
 
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     [self listenToKey:EVENT_ACCENT_COLOR onCenter:center];
+    [self listenToKey:EVENT_AQUA_CHANGE onCenter:center];
     [self listenToKey:EVENT_THEME_CHANGE onCenter:center];
     [self listenToKey:EVENT_HIGH_CONTRAS onCenter:center];
     [self listenToKey:EVENT_COLOR_CHANGE onCenter:center];
@@ -73,13 +78,13 @@
                   object:nil];
 }
 
-- (void)notificationEvent:(NSNotification *)notification {
+- (void)runCallback {
     if (!jvm) return;
     JNIEnv *env;
-    BOOL detach = false;
+    BOOL detach = NO;
     int getEnvStat = jvm->GetEnv((void **)&env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED) {
-        detach = true;
+        detach = YES;
         if (jvm->AttachCurrentThread((void **) &env, NULL) != 0) return;
     } else if (getEnvStat == JNI_EVERSION) {
         return;
@@ -95,6 +100,10 @@
     if (detach) jvm->DetachCurrentThread();
 }
 
+- (void)notificationEvent:(NSNotification *)notification {
+    [self runCallback];
+}
+
 @end
 
 JNIEXPORT jboolean JNICALL
@@ -108,17 +117,17 @@ JNF_COCOA_ENTER(env);
             // Catalina
             BOOL switchesAutomatically = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SWITCHES_AUTOMATICALLY];
             if (switchesAutomatically) {
-                // If switchesAutomatically == true the roles of "Dark" and nil are changed.
+                // If switchesAutomatically == YES the roles of "Dark" and nil are changed.
                 return (jboolean) !isDark;
             }
         }
-        // Mojave or switchesAutomatically == false.
+        // Mojave or switchesAutomatically == NO.
         return (jboolean) isDark;
     } else {
-        return (jboolean) false;
+        return (jboolean) NO;
     }
 JNF_COCOA_EXIT(env);
-    return false;
+    return NO;
 }
 
 JNIEXPORT jboolean JNICALL
@@ -126,7 +135,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isHighContrastEna
 JNF_COCOA_ENTER(env);
     return (jboolean) NSWorkspace.sharedWorkspace.accessibilityDisplayShouldIncreaseContrast;
 JNF_COCOA_EXIT(env);
-    return (jboolean) false;
+    return (jboolean) NO;
 }
 
 JNIEXPORT jint JNICALL
@@ -138,7 +147,7 @@ JNF_COCOA_ENTER(env);
             return (jint) ([[NSUserDefaults standardUserDefaults] integerForKey:KEY_ACCENT_COLOR]);
         }
     }
-    return (jint) VALUE_NO_ACCENT_COLOR;
+    return (jint) VALUE_DEFAULT_ACCENT_COLOR;
 JNF_COCOA_EXIT(env);
     return (jint) VALUE_NO_ACCENT_COLOR;
 }
@@ -147,7 +156,7 @@ JNIEXPORT jint JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetSelectionColor(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
     NSColorSpace *rgbSpace = [NSColorSpace genericRGBColorSpace];
-    NSColor *accentColor = [[NSColor selectedControlColor] colorUsingColorSpace:rgbSpace];
+    NSColor *accentColor = [[[NSColorList colorListNamed: KEY_SYSTEM_COLOR_LIST] colorWithKey:KEY_SELECTION_COLOR] colorUsingColorSpace:rgbSpace];
     NSInteger r = (NSInteger) (255 * [accentColor redComponent]);
     NSInteger g = (NSInteger) (255 * [accentColor greenComponent]);
     NSInteger b = (NSInteger) (255 * [accentColor blueComponent]);

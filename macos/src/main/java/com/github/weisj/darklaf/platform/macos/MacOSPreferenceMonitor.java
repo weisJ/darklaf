@@ -49,6 +49,11 @@ public class MacOSPreferenceMonitor {
         boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
         Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
+        LOGGER.info("Event received:");
+        LOGGER.info("     Dark Mode:       [old: " + darkMode + " new: " + newDark + "]");
+        LOGGER.info("     High Contrast:   [old: " + highContrast + " new: " + newHighContrast + "]");
+        LOGGER.info("     Accent Color:    [old: " + accentColor + " new: " + newAccentColor + "]");
+        LOGGER.info("     Selection Color: [old: " + selectionColor + " new: " + newSelectionColor + "]");
         if (darkMode != newDark
             || highContrast != newHighContrast
             || !Objects.equals(accentColor, newAccentColor)

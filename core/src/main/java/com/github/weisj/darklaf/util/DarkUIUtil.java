@@ -111,7 +111,6 @@ public final class DarkUIUtil {
     private static void doPaint(final Graphics2D g, final int width, final int height, final float arc,
                                 final float bw) {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
-
         Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, arc + bw, arc + bw);
         Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, arc - bw, arc - bw);
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
@@ -183,11 +182,12 @@ public final class DarkUIUtil {
                                        final boolean growByStroke) {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         Stroke stroke = g.getStroke();
-        float lw = stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1;
+        float lw = stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1f;
+        lw /= 2;
         if (growByStroke) {
             g.draw(new RoundRectangle2D.Float(x - lw, y - lw, width + lw, height + lw, arc, arc));
         } else {
-            g.draw(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
+            g.draw(new RoundRectangle2D.Float(x, y, width - lw, height - lw, arc - 3, arc - 3));
         }
         config.restore();
     }

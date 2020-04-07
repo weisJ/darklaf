@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.util;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -63,10 +62,32 @@ public final class ImageUtil {
      * @param bounds the bounds inside the component to capture.
      * @return image containing the captured area.
      */
-
-    public static Image scaledImageFromComponent(final Component c, final Rectangle bounds) {
-        return scaledImageFromComponent(c, bounds, Scale.SCALE_X, Scale.SCALE_Y);
+    public static BufferedImage imageFromComponent(final Component c, final Rectangle bounds) {
+        return scaledImageFromComponent(c, bounds, 1.0, 1.0, true);
     }
+
+    /**
+     * Create image from component.
+     *
+     * @param c      the component.
+     * @param bounds the bounds inside the component to capture.
+     * @return image containing the captured area.
+     */
+    public static BufferedImage imageFromComponent(final Component c, final Rectangle bounds, final boolean print) {
+        return scaledImageFromComponent(c, bounds, 1.0, 1.0, print);
+    }
+
+    /**
+     * Create image from component.
+     *
+     * @param c      the component.
+     * @param bounds the bounds inside the component to capture.
+     * @return image containing the captured area.
+     */
+    public static BufferedImage scaledImageFromComponent(final Component c, final Rectangle bounds) {
+        return scaledImageFromComponent(c, bounds, Scale.SCALE_X, Scale.SCALE_Y, true);
+    }
+
 
     /**
      * Create image from component.
@@ -77,9 +98,9 @@ public final class ImageUtil {
      * @param scaley the y scale
      * @return image containing the captured area.
      */
-
-    public static Image scaledImageFromComponent(final Component c, final Rectangle bounds,
-                                                 final double scalex, final double scaley) {
+    public static BufferedImage scaledImageFromComponent(final Component c, final Rectangle bounds,
+                                                         final double scalex, final double scaley,
+                                                         final boolean print) {
         BufferedImage image;
         boolean scale = scalex != 1.0 || scaley != 1.0;
         if (scale) {
@@ -93,86 +114,15 @@ public final class ImageUtil {
             g2d.scale(scalex, scaley);
         }
         g2d.translate(-bounds.x, -bounds.y);
-        c.printAll(g2d);
+        if (print) {
+            c.printAll(g2d);
+        } else {
+            c.paintAll(g2d);
+        }
 
         g2d.dispose();
         return image;
     }
-
-    /**
-     * Create image from component.
-     *
-     * @param c      the component.
-     * @param bounds the bounds inside the component to capture.
-     * @return image containing the captured area.
-     */
-
-    public static Image imageFromComponent(final Component c, final Rectangle bounds) {
-        return scaledImageFromComponent(c, bounds, 1.0, 1.0);
-    }
-
-
-    public static Icon cropIcon(final Icon icon, int maxWidth, int maxHeight) {
-        if (icon.getIconHeight() <= maxHeight && icon.getIconWidth() <= maxWidth) {
-            return icon;
-        }
-
-        Image image = toImage(icon);
-        if (image == null) return icon;
-
-        double scale = 1f;
-        BufferedImage bi = ImageUtil.toBufferedImage(image);
-        final Graphics2D g = bi.createGraphics();
-
-        int imageWidth = image.getWidth(null);
-        int imageHeight = image.getHeight(null);
-
-        maxWidth = maxWidth == Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) Math.round(maxWidth * scale);
-        maxHeight = maxHeight == Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) Math.round(maxHeight * scale);
-        final int w = Math.min(imageWidth, maxWidth);
-        final int h = Math.min(imageHeight, maxHeight);
-
-        final BufferedImage img = new BufferedImage(w, h, Transparency.TRANSLUCENT);
-        final int offX = imageWidth > maxWidth ? (imageWidth - maxWidth) / 2 : 0;
-        final int offY = imageHeight > maxHeight ? (imageHeight - maxHeight) / 2 : 0;
-        for (int col = 0; col < w; col++) {
-            for (int row = 0; row < h; row++) {
-                img.setRGB(col, row, bi.getRGB(col + offX, row + offY));
-            }
-        }
-        g.dispose();
-        return new ImageIcon(img);
-    }
-
-    public static Image toImage(final Icon icon) {
-        if (icon instanceof ImageIcon) {
-            return ((ImageIcon) icon).getImage();
-        } else {
-            BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(),
-                                                    BufferedImage.TYPE_INT_RGB);
-            icon.paintIcon(null, image.getGraphics(), 0, 0);
-            return image;
-        }
-    }
-
-
-    public static BufferedImage toBufferedImage(final Image image) {
-        if (image == null) {
-            throw new NullPointerException("Can't covert null image");
-        }
-        if (image instanceof BufferedImage) {
-            return (BufferedImage) image;
-        } else {
-            BufferedImage bufferedImage = new BufferedImage(image.getWidth(null),
-                                                            image.getHeight(null),
-                                                            BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = bufferedImage.createGraphics();
-            g.drawImage(image, 0, 0, null);
-            g.dispose();
-            return bufferedImage;
-        }
-    }
-
 
     public static BufferedImage createCompatibleTranslucentImage(final int width,
                                                                  final int height) {

@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.Pair;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.util.List;
 import java.util.Properties;
@@ -108,9 +109,10 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
     private Object mapColor(final ColorInfo info, final double[] hsbMatch, final Properties properties) {
         Object obj = properties.get(info.key);
         if (obj instanceof Color) {
-            return DarkColorModelHSB.getColorFromHSBValues(hsbMatch[0] * (info.hAdj / 100.0),
-                                                           hsbMatch[1] * (info.sAdj / 100.0),
-                                                           hsbMatch[2] * (info.bAdj / 100.0));
+            Color color = DarkColorModelHSB.getColorFromHSBValues(hsbMatch[0] * (info.hAdj / 100.0),
+                                                                  hsbMatch[1] * (info.sAdj / 100.0),
+                                                                  hsbMatch[2] * (info.bAdj / 100.0));
+            return new ColorUIResource(color);
         }
         return obj;
     }

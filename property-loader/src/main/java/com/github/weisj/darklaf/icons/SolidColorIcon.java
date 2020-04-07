@@ -31,6 +31,10 @@ public class SolidColorIcon implements Icon {
     private final int height;
     private Color color;
 
+    public SolidColorIcon() {
+        this(null);
+    }
+
     public SolidColorIcon(final Color color) {
         this(color, 16, 16);
     }
@@ -43,8 +47,11 @@ public class SolidColorIcon implements Icon {
 
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        g.setColor(color);
-        g.fillRect(x, y, getIconWidth(), getIconHeight());
+        Color col = getColor();
+        if (col != null) {
+            g.setColor(col);
+            g.fillRect(x, y, getIconWidth(), getIconHeight());
+        }
     }
 
     @Override

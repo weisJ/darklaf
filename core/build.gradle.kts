@@ -35,6 +35,22 @@ tasks.jar {
     }
 }
 
+project.properties
+    .filter { it.key.startsWith("demoClass") }
+    .forEach {
+        val name = it.key.split(".")[1]
+        rootProject.tasks.register(name, JavaExec::class) {
+            group = "Demo"
+            description = "Run the demo '$name'."
+            dependsOn(tasks.testClasses)
+
+            workingDir = File(project.rootDir, "build")
+            workingDir.mkdirs()
+            main = it.value?.toString() ?: throw GradleException("Main class for demo ``$name` not specified.")
+            classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
+        }
+    }
+
 val makeDocumentation by tasks.registering(JavaExec::class) {
     group = "Development"
     description = "Builds the documentation"
