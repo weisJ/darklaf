@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.icons.AwareIconStyle;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
@@ -45,7 +44,6 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         DarkUIUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
         DarkUIUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
         DarkUIUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
-        DarkBorders.update(defaults);
         IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(currentTheme);
     }

@@ -24,7 +24,6 @@
 
 package com.github.weisj.darklaf.ui.rootpane;
 
-import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -76,10 +75,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
-        LookAndFeel current = UIManager.getLookAndFeel();
-        if (!(current instanceof DarkLaf && current.getSupportsWindowDecorations())) {
-            uninstallClientDecorations(rootPane);
-        }
+        uninstallClientDecorations(rootPane);
         layoutManager = null;
         rootPane = null;
     }
