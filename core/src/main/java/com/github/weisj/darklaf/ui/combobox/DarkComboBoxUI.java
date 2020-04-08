@@ -23,13 +23,11 @@
  */
 package com.github.weisj.darklaf.ui.combobox;
 
-import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
+import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -37,12 +35,13 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.ComboPopup;
-
-import com.github.weisj.darklaf.components.ArrowButton;
-import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Area;
+import java.awt.geom.RoundRectangle2D;
 
 /**
  * @author Konstantin Bulenkov
@@ -239,8 +238,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         Area rect;
         Area iconRect = new Area(new Rectangle(off, 0, width, height));
         if (!isCellEditor) {
-            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
-                                                        height - 2 * bSize + 1, arc, arc));
+            rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
+                                                        height - 2 * bSize, arc, arc));
         } else {
             rect = new Area(new Rectangle(0, 0, width, height));
         }

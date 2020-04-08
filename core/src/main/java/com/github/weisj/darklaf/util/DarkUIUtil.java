@@ -105,15 +105,16 @@ public final class DarkUIUtil {
     public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
                                           final float bw, final boolean hasFocus, final Outline type) {
         type.setGraphicsColor(g, hasFocus);
-        doPaint(g, width, height, arc, bw);
+        doPaint(g, width, height, arc, bw, true);
     }
 
-    private static void doPaint(final Graphics2D g, final int width, final int height, final float arc,
-                                final float bw) {
+    private static void doPaint(final Graphics2D g, final float width, final float height, final float arc,
+                                final float bw, final boolean inside) {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
-
-        Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, arc + bw, arc + bw);
-        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, arc - bw, arc - bw);
+        float outerArc = inside ? arc : arc + bw;
+        float innerArc = inside ? arc - bw : arc;
+        Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, outerArc, outerArc);
+        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, innerArc, innerArc);
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         path.append(outerRect, false);
         path.append(innerRect, false);
@@ -131,7 +132,7 @@ public final class DarkUIUtil {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(DarkUIUtil.glowComposite);
         Outline.focus.setGraphicsColor(g, active);
-        doPaint(g, width, height, arc, bw);
+        doPaint(g, width, height, arc, bw, false);
         config.restore();
     }
 
@@ -173,30 +174,30 @@ public final class DarkUIUtil {
         config.restore();
     }
 
-    public static void paintLineBorder(final Graphics2D g, final float x, final float y,
-                                       final float width, final float height, final int arc) {
-        paintLineBorder(g, x, y, width, height, arc, true);
+    public static float getStrokeWidth(final Graphics2D g) {
+        Stroke stroke = g.getStroke();
+        return stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1f;
     }
 
     public static void paintLineBorder(final Graphics2D g, final float x, final float y,
-                                       final float width, final float height, final int arc,
-                                       final boolean growByStroke) {
-        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-        Stroke stroke = g.getStroke();
-        float lw = stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1;
-        if (growByStroke) {
-            g.draw(new RoundRectangle2D.Float(x - lw, y - lw, width + lw, height + lw, arc, arc));
-        } else {
-            g.draw(new RoundRectangle2D.Float(x, y, width, height, arc, arc));
-        }
-        config.restore();
+                                       final float width, final float height, final int arc) {
+        float lw = getStrokeWidth(g);
+        g.translate(x, y);
+        doPaint(g, width, height, arc, lw, true);
+        g.translate(-x, -y);
     }
 
     public static void fillRoundRect(final Graphics2D g, final float x, final float y,
                                      final float width, final float height, final int arc) {
-        Stroke stroke = g.getStroke();
-        float lw = stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1;
-        g.fill(new RoundRectangle2D.Float(x - lw, y - lw, width + lw, height + lw, arc, arc));
+        fillRoundRect(g, x, y, width, height, arc, true);
+    }
+
+    public static void fillRoundRect(final Graphics2D g, final float x, final float y,
+                                     final float width, final float height, final int arc,
+                                     final boolean adjustForBorder) {
+        float lw = adjustForBorder ? getStrokeWidth(g) / 2f : 0;
+        float arcSze = arc - lw;
+        g.fill(new RoundRectangle2D.Float(x + lw, y + lw, width - 2 * lw, height - 2 * lw, arcSze, arcSze));
     }
 
 

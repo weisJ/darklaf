@@ -64,20 +64,21 @@ public class DarkTooltipBorder implements Border {
     }
 
 
-    public Area getBackgroundArea(final Component c, final int width, final int height) {
+    public Area getBackgroundArea(final Component c, final int width, final int height, final boolean forPaint) {
         if (isPlain(c)) {
             return new Area(new Rectangle(0, 0, width, height));
         }
         Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
-        return bubbleBorder.getInnerArea(ins.left, ins.top,
-                                         width - ins.left - ins.right,
-                                         height - ins.top - ins.bottom);
+        float adj = forPaint ? 0.5f : 0;
+        return bubbleBorder.getBubbleArea(ins.left + adj, ins.top + adj,
+                                          width - ins.left - ins.right - 2 * adj,
+                                          height - ins.top - ins.bottom - 2 * adj);
     }
 
     public int getPointerOffset(final Component c, final Dimension dimension) {
         if (isPlain(c)) return 0;
-        return bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
+        return (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
                + shadowBorder.getShadowSize();
     }
 
@@ -106,9 +107,9 @@ public class DarkTooltipBorder implements Border {
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         Insets ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
-        Area bubbleArea = bubbleBorder.getInnerArea(x + ins.left, y + ins.top,
-                                                    width - ins.left - ins.right,
-                                                    height - ins.top - ins.bottom);
+        Area bubbleArea = bubbleBorder.getBorderArea(x + ins.left, y + ins.top,
+                                                     width - ins.left - ins.right,
+                                                     height - ins.top - ins.bottom);
         if (!skipShadow && UIManager.getBoolean("ToolTip.paintShadow")) {
             paintShadow(c, g, x, y, width, height, bubbleArea);
         }
@@ -122,7 +123,7 @@ public class DarkTooltipBorder implements Border {
         Area clip = new Area(new Rectangle2D.Double(x, y, width, height));
         clip.subtract(bubbleArea);
         g.setClip(clip);
-        int bw = bubbleBorder.getThickness();
+        int bw = 1 + bubbleBorder.getThickness();
         int off = 0;
         Alignment pointerSide = bubbleBorder.getPointerSide();
         if (pointerSide == Alignment.NORTH

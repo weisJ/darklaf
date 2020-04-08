@@ -110,15 +110,15 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
             int h = height + arc;
             g.setClip(clip.x, clip.y, width, h / 2 + 1);
             g.setColor(color);
-            DarkUIUtil.drawRect(g, x, y - 1, width, h, 1);
+            DarkUIUtil.drawRect(g, x, y, width, h, 1);
             if (c.isOpaque()) {
                 g.setColor(c.getBackground());
                 g.setClip(clip.x, clip.x + h - arc, width, arc);
-                DarkUIUtil.fillRoundRect((Graphics2D) g, x - 1, y, width - 2, h - 1, arc);
+                DarkUIUtil.fillRoundRect((Graphics2D) g, x, y, width, h, arc);
             }
-            g.setClip(clip.x, clip.y + h / 2 - 1, width, h / 2 + 2);
+            g.setClip(clip.x, clip.y + h / 2, width, h / 2);
             g.setColor(color);
-            DarkUIUtil.paintLineBorder((Graphics2D) g, x + 1, y, width - 2, h - 1, arc);
+            DarkUIUtil.paintLineBorder((Graphics2D) g, x, y, width, h, arc);
             g.setClip(clip);
         }
 
@@ -137,27 +137,29 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         protected void paintTitleBackground(final JXTaskPane group, final Graphics g2) {
             Graphics2D g = (Graphics2D) g2;
             int w = group.getWidth();
-            int h = getTitleHeight(group);
+            int h = group.getHeight();
             if (group.isSpecial()) {
                 g.setColor(specialTitleBackground);
             } else {
                 g.setColor(titleBackgroundGradientStart);
             }
             if (isCollapsed()) {
-                DarkUIUtil.fillRoundRect(g, 1, 1, w - 2, h - 2, getRoundHeight());
+                DarkUIUtil.fillRoundRect(g, 0, 0, w, h, getRoundHeight());
                 g.setColor(borderColor);
-                DarkUIUtil.paintLineBorder(g, 1, 1, w - 2, h - 2, getRoundHeight());
+                DarkUIUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight());
             } else {
                 Rectangle clip = g.getClip().getBounds();
                 g.setClip(0, 0, w, h / 2 + 1);
 
-                DarkUIUtil.fillRoundRect(g, 1, 1, w - 2, h - 2, getRoundHeight());
-                g.setClip(0, h / 2 - 1, w, h / 2 + 2);
+                DarkUIUtil.fillRoundRect(g, 0, 0, w, h, getRoundHeight());
+                g.setClip(0, h / 2, w, h / 2);
                 g.fillRect(0, 0, w, h);
+
                 g.setColor(borderColor);
-                g.setClip(0, 0, w, h / 2 + 1);
-                DarkUIUtil.paintLineBorder(g, 1, 1, w - 2, h - 2, getRoundHeight());
-                g.setClip(0, h / 2 - 1, w, h / 2 + 2);
+                g.setClip(0, 0, w, h / 2);
+                DarkUIUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight());
+
+                g.setClip(0, h / 2, w, h / 2);
                 DarkUIUtil.drawRect(g, 0, 0, w, h, 1);
                 g.setClip(clip);
             }

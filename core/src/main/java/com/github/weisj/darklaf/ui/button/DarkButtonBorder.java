@@ -156,7 +156,7 @@ public class DarkButtonBorder implements Border, UIResource {
         int shadowHeight = paintShadow ? getShadowSize() : 0;
         int borderSize = getBorderSize();
 
-        Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
+        Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadowHeight), borderSize);
         Insets focusIns = new Insets(0, 0, 0, 0);
         if (corner != null) {
             focusIns = corner.maskInsets(focusIns, -borderSize - focusArc);
@@ -170,7 +170,7 @@ public class DarkButtonBorder implements Border, UIResource {
         int fx = focusIns.left;
         int fy = focusIns.top;
         int fw = width - focusIns.left - focusIns.right;
-        int fh = height - focusIns.top - focusIns.bottom;
+        int fh = (by + bh + borderSize - fy) - focusIns.top - focusIns.bottom;
 
         if (c.isEnabled() && paintShadow && DarkUIUtil.getShadowComposite().getAlpha() != 0) {
             paintShadow((Graphics2D) g, bx, by, bw, bh, arc);
@@ -178,12 +178,12 @@ public class DarkButtonBorder implements Border, UIResource {
 
         if (paintFocus(c)) {
             g.translate(fx, fy);
-            DarkUIUtil.paintFocusBorder(g2, fw, fh - shadowHeight, focusArc, borderSize);
+            DarkUIUtil.paintFocusBorder(g2, fw, fh, focusArc, borderSize);
             g.translate(-fx, -fy);
         }
 
         g2.setColor(getBorderColor(c, focus));
-        DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh - shadowHeight, arc);
+        DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh, arc);
         if (corner != null) {
             paintNeighbourFocus(g2, c, width, height);
         }
@@ -195,17 +195,20 @@ public class DarkButtonBorder implements Border, UIResource {
         JComponent left = ButtonConstants.getNeighbour(DarkButtonUI.KEY_LEFT_NEIGHBOUR, c);
         boolean paintLeft = DarkUIUtil.hasFocus(left);
         if (paintLeft) {
+            int h = height - Math.max(0, getShadowSize(left) - borderSize);
+            int arc = getFocusArc(left);
             g2.translate(-2 * borderSize, 0);
-            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, height - getShadowSize(left),
-                                        getFocusArc(left), borderSize);
+            DarkUIUtil.paintLineBorder(g2, -borderSize, borderSize, 3 * borderSize, h, arc);
+            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, h, arc, borderSize);
             g2.translate(2 * borderSize, 0);
         }
         JComponent right = ButtonConstants.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
         boolean paintRight = DarkUIUtil.hasFocus(right);
+        g2.setColor(focusBorderColor);
         if (paintRight) {
+            int h = height - Math.max(0, getShadowSize(right) - borderSize);
             g2.translate(width - borderSize, 0);
-            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, height - getShadowSize(right),
-                                        getFocusArc(right), borderSize);
+            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, h, getFocusArc(right), borderSize);
             g2.translate(borderSize - width, 0);
         }
         JComponent top = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
@@ -237,8 +240,8 @@ public class DarkButtonBorder implements Border, UIResource {
                              final int width, final int height, final int arc) {
         GraphicsContext context = new GraphicsContext(g2);
         int shadowSize = getShadowSize();
-        Area shadowShape = new Area(new RoundRectangle2D.Double(x, y, width, height, arc, arc));
-        Area innerArea = new Area(new RoundRectangle2D.Double(x, y, width, height - shadowSize, arc, arc));
+        Area shadowShape = new Area(new RoundRectangle2D.Double(x, y, width, height + shadowSize, arc, arc));
+        Area innerArea = new Area(new RoundRectangle2D.Double(x, y, width, height, arc, arc));
         shadowShape.subtract(innerArea);
         g2.setComposite(DarkUIUtil.getShadowComposite());
         g2.setColor(shadowColor);
@@ -281,10 +284,9 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     protected Insets maskInsets(final Insets ins, final Component c, final int shadow) {
-        ins.bottom += shadow;
         AlignmentExt alignment = getCornerFlag(c);
         if (alignment == null) return ins;
-        Insets insetMask = new Insets(borderSize, borderSize, borderSize + shadow, borderSize);
+        Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadow), borderSize);
         insetMask = alignment.maskInsetsInverted(insetMask);
         ins.top -= insetMask.top;
         ins.bottom -= insetMask.bottom;

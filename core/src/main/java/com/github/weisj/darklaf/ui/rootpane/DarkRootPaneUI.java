@@ -24,6 +24,7 @@
 
 package com.github.weisj.darklaf.ui.rootpane;
 
+import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -75,7 +76,10 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
-        uninstallClientDecorations(rootPane);
+        LookAndFeel current = UIManager.getLookAndFeel();
+        if (!(current instanceof DarkLaf && current.getSupportsWindowDecorations())) {
+            uninstallClientDecorations(rootPane);
+        }
         layoutManager = null;
         rootPane = null;
     }
@@ -112,17 +116,19 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     private void uninstallClientDecorations(final JRootPane root) {
-        uninstallBorder(root);
-        root.removeHierarchyListener(this);
-        if (titlePane != null) {
-            titlePane.uninstall();
-            setTitlePane(root, null);
-        }
-        uninstallLayout(root);
-        int style = root.getWindowDecorationStyle();
-        if (style == JRootPane.NONE) {
-            root.repaint();
-            root.revalidate();
+        if (root != null) {
+            uninstallBorder(root);
+            root.removeHierarchyListener(this);
+            if (titlePane != null) {
+                titlePane.uninstall();
+                setTitlePane(root, null);
+            }
+            uninstallLayout(root);
+            int style = root.getWindowDecorationStyle();
+            if (style == JRootPane.NONE) {
+                root.repaint();
+                root.revalidate();
+            }
         }
         if (window != null) {
             window.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

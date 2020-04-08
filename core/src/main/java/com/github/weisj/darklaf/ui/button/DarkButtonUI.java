@@ -204,15 +204,15 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     private void paintBackgroundRect(final Graphics2D g, final Graphics2D g2,
                                      final int shadow, final int effectiveArc, final Rectangle bgRect) {
         if (effectiveArc == 0) {
-            g2.fillRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height - shadow);
+            g2.fillRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height);
         } else {
-            DarkUIUtil.fillRoundRect(g, bgRect.x, bgRect.y, bgRect.width, bgRect.height - shadow, effectiveArc);
+            DarkUIUtil.fillRoundRect(g, bgRect.x, bgRect.y, bgRect.width, bgRect.height, effectiveArc);
         }
     }
 
     protected Rectangle getEffectiveRect(final int width, final int height, final AbstractButton c,
                                          final int adjustment, final AlignmentExt corner, final boolean focus) {
-        Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
+        Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadowHeight), borderSize);
         if (corner != null) {
             insetMask = corner.maskInsets(insetMask, adjustment);
         }

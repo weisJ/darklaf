@@ -47,11 +47,7 @@ public final class ImageUtil {
         Graphics g = tabImage.getGraphics();
 
         g.setColor(borderColor);
-
-        g.fillRect(0, 0, w, lw);
-        g.fillRect(0, 0, lw, h);
-        g.fillRect(w - lw, 0, lw, h);
-        g.fillRect(0, h - lw, w, lw);
+        DarkUIUtil.drawRect(g, 0, 0, w, h, lw);
         g.dispose();
         return tabImage;
     }

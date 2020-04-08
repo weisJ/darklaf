@@ -23,16 +23,15 @@
  */
 package com.github.weisj.darklaf.ui.combobox;
 
-import java.awt.*;
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
-
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
 
 public class DarkComboBoxBorder implements Border, UIResource {
 
@@ -97,7 +96,7 @@ public class DarkComboBoxBorder implements Border, UIResource {
             boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
             int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
             g.setColor(borderColor);
-            g.fillRect(off, bSize - 1, 1, height - 2 * bSize + 1);
+            g.fillRect(off, bSize, 1, height - 2 * bSize);
         }
 
         g.translate(-x, -y);
