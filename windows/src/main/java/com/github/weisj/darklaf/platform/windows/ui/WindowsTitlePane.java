@@ -228,7 +228,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             if (windowHandle != 0) {
                 JNIDecorationsWindows.installDecorations(windowHandle);
                 updateResizeBehaviour();
-                Color color = window.getBackground();
+                Color color = rootPane.getBackground();
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             } else {
                 uninstall();
@@ -794,6 +794,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 repaint();
             } else if (PropertyKey.BACKGROUND.equals(name) && pce.getNewValue() instanceof Color) {
                 Color color = (Color) pce.getNewValue();
+                System.out.println(color);
                 if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }

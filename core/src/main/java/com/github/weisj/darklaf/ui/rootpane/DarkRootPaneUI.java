@@ -49,6 +49,14 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     protected static final String KEY_PREFIX = "JRootPane.";
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
+    protected static final String[] borderKeys = new String[]{
+        "RootPane.border", "RootPane.frameBorder", "RootPane.plainDialogBorder",
+        "RootPane.informationDialogBorder",
+        "RootPane.errorDialogBorder", "RootPane.colorChooserDialogBorder",
+        "RootPane.fileChooserDialogBorder", "RootPane.questionDialogBorder",
+        "RootPane.warningDialogBorder"
+    };
+
     private Window window;
     private CustomTitlePane titlePane;
     private LayoutManager layoutManager;
@@ -69,15 +77,26 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         super.installUI(c);
         rootPane = (JRootPane) c;
         windowDecorationsStyle = rootPane.getWindowDecorationStyle();
+        LookAndFeel.installColors(rootPane, "RootPane.background", "RootPane.foreground");
         updateClientDecoration();
+        installBorder(rootPane);
+    }
+
+    protected void installBorder(final JRootPane root) {
+        LookAndFeel.installBorder(root, borderKeys[windowDecorationsStyle]);
     }
 
     @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
         uninstallClientDecorations(rootPane);
+        uninstallBorder(rootPane);
         layoutManager = null;
         rootPane = null;
+    }
+
+    private static void uninstallBorder(final JRootPane root) {
+        LookAndFeel.uninstallBorder(root);
     }
 
     @Override
@@ -89,6 +108,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
                 windowDecorationsStyle = decorationsStyleFromWindow(window, rootPane.getWindowDecorationStyle());
                 if (window instanceof JDialog) updateClientDecoration();
                 if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
+                installBorder(rootPane);
                 if (windowDecorationsStyle == JRootPane.PLAIN_DIALOG) {
                     /*
                      * Otherwise, the property change doesn't get fired when the dialog is a plain dialog.
@@ -131,10 +151,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
             window.removeWindowListener(disposeListener);
         }
         window = null;
-    }
-
-    private static void uninstallBorder(final JRootPane root) {
-        LookAndFeel.uninstallBorder(root);
     }
 
     private void uninstallLayout(final JRootPane root) {
