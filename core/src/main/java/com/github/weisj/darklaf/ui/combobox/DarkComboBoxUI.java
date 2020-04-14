@@ -191,7 +191,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     public void paint(final Graphics g, final JComponent c) {
         paintBackground(g, c, c.getWidth(), c.getHeight());
         Rectangle r = rectangleForCurrentValue();
-        paintCurrentValue(g, r, hasFocus);
+        if (!comboBox.isEditable()) {
+            paintCurrentValue(g, r, hasFocus);
+        }
     }
 
     private void paintBackground(final Graphics g, final JComponent c, final int width, final int height) {

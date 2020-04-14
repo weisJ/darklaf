@@ -123,8 +123,7 @@ public class DarkComboBoxBorder implements Border, UIResource {
     public Insets getBorderInsets(final Component c) {
         if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
             return CellUtil.adjustEditorInsets(new InsetsUIResource(cellPadding.top, cellPadding.left,
-                                                                    cellPadding.bottom, cellPadding.right),
-                                               c);
+                                                                    cellPadding.bottom, cellPadding.right), c);
         }
         if (c.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);
