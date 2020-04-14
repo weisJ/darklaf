@@ -282,8 +282,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         };
     }
 
-    private Color getForeground() {
-        return comboBox.isEnabled() ? comboBox.getForeground() : inactiveForeground;
+    private Color getForeground(final Component c) {
+        return c.isEnabled() ? c.getForeground() : inactiveForeground;
     }
 
     @Override
@@ -301,9 +301,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         // calculate the width and height of the button
         int buttonHeight = size.height;
         int buttonWidth = squareButton
-                                       ? buttonHeight
-                                       : arrowButton.getPreferredSize().width
-                                         + arrowButton.getInsets().left + arrowButton.getInsets().right;
+                          ? buttonHeight
+                          : arrowButton.getPreferredSize().width
+                            + arrowButton.getInsets().left + arrowButton.getInsets().right;
         // adjust the size based on the button width
         size.height += insets.top + insets.bottom;
         size.width += insets.left + insets.right + buttonWidth;
@@ -337,8 +337,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         if (hasFocus && !isPopupVisible(comboBox)) {
             c.setForeground(listBox.getForeground());
             c.setBackground(listBox.getBackground());
-        } else if (comboBox.isEnabled()) {
-            c.setForeground(getForeground());
+        } else {
+            c.setForeground(getForeground(comboBox));
             c.setBackground(getBackground(comboBox));
         }
 
