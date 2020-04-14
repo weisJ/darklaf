@@ -23,9 +23,10 @@
  */
 package com.github.weisj.darklaf.ui.spinner;
 
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
+import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -34,11 +35,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSpinnerUI;
-
-import com.github.weisj.darklaf.components.ArrowButton;
-import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.RoundRectangle2D;
 
 /**
  * @author Konstantin Bulenkov
@@ -279,8 +278,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         int off = leftToRight ? bounds.x : bounds.x + bounds.width;
         Area rect;
         if (!SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
-            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
-                                                        height - 2 * bSize + 1,
+            rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
+                                                        height - 2 * bSize,
                                                         arc, arc));
         } else {
             rect = new Area(new Rectangle(0, 0, width, height));
