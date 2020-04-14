@@ -28,8 +28,6 @@
 #include <iostream>
 #include <winuser.h>
 
-#define GWL_WNDPROC -4
-
 std::map<HWND, WindowWrapper *> wrapper_map = std::map<HWND, WindowWrapper *>();
 
 LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapper)
@@ -244,13 +242,13 @@ bool InstallDecorations(HWND handle, bool is_popup)
     SetupWindowStyle(handle);
     ExtendClientFrame(handle);
 
-    WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWL_WNDPROC));
+    WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWLP_WNDPROC));
 
     WindowWrapper *wrapper = new WindowWrapper();
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
     wrapper_map[handle] = wrapper;
-    SetWindowLongPtr(handle, GWL_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
+    SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
     UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED;
     SetWindowPos(handle, NULL, 0, 0, 0, 0, flags);
     return true;
@@ -270,7 +268,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
     auto wrap = wrapper_map[handle];
     if (wrap)
     {
-        SetWindowLongPtr(handle, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
+        SetWindowLongPtr(handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
         wrapper_map.erase(handle);
         delete (wrap);
     }

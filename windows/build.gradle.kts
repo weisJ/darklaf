@@ -21,7 +21,8 @@ library {
     binaries.configureEach {
         compileTask.get().compilerArgs.addAll(
             when (toolChain) {
-                is Gcc, is Clang, is VisualCpp -> listOf("--std=c++11")
+                is Gcc, is Clang -> listOf("--std=c++11")
+                is VisualCpp -> listOf("/EHsc")
                 else -> emptyList()
             }
         )
