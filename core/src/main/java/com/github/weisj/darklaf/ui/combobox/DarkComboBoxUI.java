@@ -125,7 +125,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     @Override
     protected ComboPopup createPopup() {
-        return new DarkComboPopup(comboBox);
+        return new DarkComboPopup(comboBox, borderSize);
     }
 
     @Override
