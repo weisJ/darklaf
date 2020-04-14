@@ -80,7 +80,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
                           : editor.getBounds().x - 1 - borderSize;
                 g.setColor(getBorderColor(spinner));
                 if (!treeCellEditor) {
-                    g.fillRect(off, size - 1, 1, height - 2 * size + 1);
+                    g.fillRect(off, size, 1, height - 2 * size);
                 } else {
                     g.fillRect(off, 0, 1, height);
                 }

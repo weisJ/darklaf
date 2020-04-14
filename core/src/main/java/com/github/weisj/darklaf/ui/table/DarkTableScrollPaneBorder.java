@@ -21,42 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.components.border;
+package com.github.weisj.darklaf.ui.table;
 
-class WeakLineBorder extends MutableLineBorder {
+import java.awt.*;
 
-    private final int left;
-    private final int top;
-    private final int bottom;
-    private final int right;
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
-    public WeakLineBorder(final int top, final int left, final int bottom, final int right) {
-        super(top, left, bottom, right, null);
-        this.top = top;
-        this.left = left;
-        this.bottom = bottom;
-        this.right = right;
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
+
+/**
+ * @author Jannis Weis
+ */
+public class DarkTableScrollPaneBorder extends MutableLineBorder implements UIResource {
+
+    public DarkTableScrollPaneBorder() {
+        super(1, 1, 1, 1, UIManager.getColor("TableHeader.borderColor"));
     }
 
-    @Override
-    public int hashCode() {
-        int result = left;
-        result = 31 * result + top;
-        result = 31 * result + bottom;
-        result = 31 * result + right;
-        return result;
-    }
-
-
-    @Override
-    public boolean equals(final Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-
-        WeakLineBorder that = (WeakLineBorder) o;
-
-        if (left != that.left) return false;
-        if (top != that.top) return false;
-        if (bottom != that.bottom) return false;
-        return right == that.right;
+    public Color getBorderColor() {
+        return getColor();
     }
 }

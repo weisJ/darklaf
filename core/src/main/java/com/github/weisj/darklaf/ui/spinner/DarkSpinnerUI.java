@@ -235,6 +235,13 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
+        final Container parent = c.getParent();
+        if (parent != null && parent.isOpaque() && !c.isEnabled()) {
+            g.setColor(parent.getBackground());
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            return;
+        }
+
         int size = borderSize;
         int width = c.getWidth();
         int height = c.getHeight();
@@ -244,7 +251,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
             editorComponent.setBackground(getBackground(c));
             g.setColor(editorComponent.getBackground());
         } else {
-            ((Graphics2D) g).setPaint(getBackground(c));
+            g.setColor(getBackground(c));
         }
         if (!SpinnerConstants.isTreeOrTableCellEditor(c)) {
             DarkUIUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
@@ -271,8 +278,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         int off = leftToRight ? bounds.x : bounds.x + bounds.width;
         Area rect;
         if (!SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
-            rect = new Area(new RoundRectangle2D.Double(bSize - 1, bSize - 1, width - 2 * bSize + 1,
-                                                        height - 2 * bSize + 1,
+            rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
+                                                        height - 2 * bSize,
                                                         arc, arc));
         } else {
             rect = new Area(new Rectangle(0, 0, width, height));

@@ -23,17 +23,19 @@
  */
 package ui.table;
 
-import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.util.PropertyKey;
-import ui.ComponentDemo;
-import ui.DemoPanel;
+import java.awt.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
-import java.awt.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.util.PropertyKey;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 public class TableDemo implements ComponentDemo {
 
@@ -73,7 +75,7 @@ public class TableDemo implements ComponentDemo {
         };
 
         JTableHeader header = table.getTableHeader();
-        DemoPanel panel = new DemoPanel(new JScrollPane(table));
+        DemoPanel panel = new DemoPanel(new JScrollPane(table), new BorderLayout(), 10);
 
         JPanel controlPanel = panel.addControls(3);
         controlPanel.add(new JCheckBox("enabled") {{

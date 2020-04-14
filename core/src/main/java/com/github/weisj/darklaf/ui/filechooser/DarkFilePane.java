@@ -28,7 +28,6 @@ import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import sun.awt.AWTAccessor;
 import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
@@ -431,9 +430,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                                                          evt.getYOnScreen(),
                                                          evt.getClickCount(), evt.isPopupTrigger(),
                                                          evt.getButton());
-                    AWTAccessor.MouseEventAccessor meAccessor = AWTAccessor.getMouseEventAccessor();
-                    meAccessor.setCausedByTouchEvent(newEvent,
-                                                     meAccessor.isCausedByTouchEvent(evt));
+                    SwingUtilities.convertMouseEvent(list, newEvent, list);
                     evt = newEvent;
                 }
             } else {

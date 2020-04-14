@@ -28,6 +28,8 @@ import java.awt.*;
 
 public abstract class CustomTitlePane extends JComponent {
 
+    protected int decorationStyle;
+
     public abstract void uninstall();
 
     /**
@@ -41,5 +43,13 @@ public abstract class CustomTitlePane extends JComponent {
     public void addNotify() {
         super.addNotify();
         install();
+    }
+
+    public void setDecorationsStyle(final int style) {
+        this.decorationStyle = style;
+    }
+
+    public int getDecorationStyle() {
+        return decorationStyle;
     }
 }

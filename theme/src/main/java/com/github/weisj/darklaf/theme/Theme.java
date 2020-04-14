@@ -24,7 +24,11 @@
 package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.theme.info.*;
+import com.github.weisj.darklaf.theme.info.AccentColorRule;
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.ContrastRule;
+import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.theme.info.PresetIconRule;
 
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
@@ -33,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +45,7 @@ import java.util.logging.Logger;
 /**
  * @author Jannis Weis
  */
-public abstract class Theme {
+public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
     private FontSizeRule fontSizeRule;
     private AccentColorRule accentColorRule;
@@ -373,5 +378,21 @@ public abstract class Theme {
      */
     public void setAccentColorRule(final AccentColorRule accentColorRule) {
         this.accentColorRule = accentColorRule;
+    }
+    @Override
+    public int compareTo(final Theme o) {
+        if (o == null) return 1;
+        int stringComp = getName().compareTo(o.getName());
+        int contrastCompare = Boolean.compare(isHighContrast(this), isHighContrast(o));
+        int toneCompare = Boolean.compare(isDark(this), isDark(o));
+        if (contrastCompare != 0) return contrastCompare;
+        if (toneCompare != 0) return toneCompare;
+        return stringComp;
+    }
+
+    @Override
+    public int compare(final Theme o1, final Theme o2) {
+        if (o1 == null) return -1;
+        return o1.compareTo(o2);
     }
 }

@@ -23,6 +23,7 @@
  */
 package ui.scrollPane;
 
+import com.github.weisj.darklaf.util.StringUtil;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
@@ -43,19 +44,15 @@ public final class ScrollPaneDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(new JPanel() {{
-            add(new JTextArea() {{
-                setText(DemoResources.LOREM_IPSUM);
-            }});
+        JScrollPane scrollPane = new JScrollPane(new JTextArea() {{
+            setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));
         }});
         JPanel upperLeft = new SolidColorComponent(Color.RED, 20, 20);
         JPanel upperRight = new SolidColorComponent(Color.RED, 20, 20);
         JPanel lowerLeft = new SolidColorComponent(Color.RED, 20, 20);
         JPanel lowerRight = new SolidColorComponent(Color.RED, 20, 20);
 
-        DemoPanel panel = new DemoPanel(scrollPane);
-
+        DemoPanel panel = new DemoPanel(scrollPane, new BorderLayout(), 10);
 
         JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("LeftToRight") {{

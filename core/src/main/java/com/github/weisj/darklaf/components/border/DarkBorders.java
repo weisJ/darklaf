@@ -23,56 +23,52 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public final class DarkBorders {
 
-    private static final Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineBorderMap =
-        Collections.synchronizedMap(new WeakHashMap<>());
-    private static final Map<WeakLineBorder, WeakReference<WeakLineBorder>> lineWidgetBorderMap =
-        Collections.synchronizedMap(new WeakHashMap<>());
-
+    private static DarkLineBorder sharedBorderEmpty;
+    private static DarkLineBorder sharedBorderT;
+    private static DarkLineBorder sharedBorderL;
+    private static DarkLineBorder sharedBorderB;
+    private static DarkLineBorder sharedBorderR;
+    private static DarkLineBorder sharedBorderTLBR;
 
     public static Border createLineBorder(final int top, final int left, final int bottom, final int right) {
-        return createBorder(top, left, bottom, right, lineBorderMap, "border");
+        if (top == 0 && left == 0 && bottom == 0 && right == 0) {
+            if (sharedBorderEmpty == null) sharedBorderEmpty = createDarkLineBorder(0, 0, 0, 0);
+            return sharedBorderEmpty;
+        }
+        if (top == 1 && left == 0 && bottom == 0 && right == 0) {
+            if (sharedBorderT == null) sharedBorderT = createDarkLineBorder(1, 0, 0, 0);
+            return sharedBorderT;
+        }
+        if (top == 0 && left == 1 && bottom == 0 && right == 0) {
+            if (sharedBorderL == null) sharedBorderL = createDarkLineBorder(0, 1, 0, 0);
+            return sharedBorderL;
+        }
+        if (top == 0 && left == 0 && bottom == 1 && right == 0) {
+            if (sharedBorderB == null) sharedBorderB = createDarkLineBorder(0, 0, 1, 0);
+            return sharedBorderB;
+        }
+        if (top == 0 && left == 0 && bottom == 0 && right == 1) {
+            if (sharedBorderR == null) sharedBorderR = createDarkLineBorder(0, 0, 0, 1);
+            return sharedBorderR;
+        }
+        if (top == 1 && left == 1 && bottom == 1 && right == 1) {
+            if (sharedBorderTLBR == null) sharedBorderTLBR = createDarkLineBorder(1, 1, 1, 1);
+            return sharedBorderTLBR;
+        }
+        return createDarkLineBorder(top, left, bottom, right);
     }
 
-
-    private static Border createBorder(final int top, final int left, final int bottom, final int right,
-                                       final Map<WeakLineBorder, WeakReference<WeakLineBorder>> map, final String key) {
-        WeakLineBorder border = new WeakLineBorder(top, left, bottom, right);
-        if (map.containsKey(border)) {
-            WeakReference<WeakLineBorder> ref = map.get(border);
-            if (ref != null) {
-                WeakLineBorder b = ref.get();
-                if (b != null) return b;
-            }
-        }
-        border.setColor(UIManager.getColor(key));
-        map.put(border, new WeakReference<>(border));
-        return border;
+    protected static DarkLineBorder createDarkLineBorder(final int top, final int left,
+                                                         final int bottom, final int right) {
+        return new DarkLineBorder(top, left, bottom, right, "border", Color::darker);
     }
 
     public static Border createWidgetLineBorder(final int top, final int left, final int bottom, final int right) {
-        return createBorder(top, left, bottom, right, lineWidgetBorderMap, "borderSecondary");
-    }
-
-    public static void update(final UIDefaults defaults) {
-        Color borderColor = defaults.getColor("border");
-        for (WeakReference<WeakLineBorder> border : lineBorderMap.values()) {
-            WeakLineBorder b = border.get();
-            if (b != null) b.setColor(borderColor);
-        }
-        Color borderSecondaryColor = defaults.getColor("borderSecondary");
-        for (WeakReference<WeakLineBorder> border : lineWidgetBorderMap.values()) {
-            WeakLineBorder b = border.get();
-            if (b != null) b.setColor(borderSecondaryColor);
-        }
+        return new DarkLineBorder(top, left, bottom, right, "borderSecondary", Color::brighter);
     }
 }

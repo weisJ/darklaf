@@ -170,7 +170,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         GraphicsContext config = new GraphicsContext(g);
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
-            Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
+            Area area = ((DarkTooltipBorder) c.getBorder())
+                .getBackgroundArea(c, c.getWidth(), c.getHeight(), true);
             ((Graphics2D) g).fill(area);
         }
         super.paint(g, c);
@@ -243,8 +244,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public boolean contains(final JComponent c, final int x, final int y) {
         Border b = c.getBorder();
         if (b instanceof DarkTooltipBorder) {
-            Area insideArea = ((DarkTooltipBorder) b).getBackgroundArea(toolTip,
-                                                                        toolTip.getWidth(), toolTip.getHeight());
+            Area insideArea = ((DarkTooltipBorder) b)
+                .getBackgroundArea(toolTip, toolTip.getWidth(), toolTip.getHeight(), false);
             return insideArea.contains(x, y);
         } else {
             return super.contains(c, x, y);

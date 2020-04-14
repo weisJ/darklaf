@@ -113,9 +113,8 @@ public class DarkLaf extends BasicLookAndFeel {
 
     private void setupDecorations() {
         DecorationsHandler.getSharedInstance().initialize();
-        boolean decorated = getSupportsWindowDecorations();
-        JFrame.setDefaultLookAndFeelDecorated(decorated);
-        JDialog.setDefaultLookAndFeelDecorated(decorated);
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        JDialog.setDefaultLookAndFeelDecorated(true);
     }
 
     @Override

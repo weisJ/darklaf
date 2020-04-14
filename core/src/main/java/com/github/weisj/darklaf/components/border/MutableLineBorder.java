@@ -37,6 +37,9 @@ public class MutableLineBorder extends AbstractBorder {
     protected int right;
     protected int bottom;
 
+    public MutableLineBorder(final Insets insets, final Color color) {
+        this(insets.top, insets.left, insets.bottom, insets.right, color);
+    }
 
     public MutableLineBorder(
         final int top, final int left, final int bottom, final int right, final Color color) {
@@ -51,10 +54,10 @@ public class MutableLineBorder extends AbstractBorder {
     public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                             final int width, final int height) {
         g.setColor(getColor());
-        g.fillRect(x, y, width - right, top);
-        g.fillRect(x, y + top, left, height - top);
-        g.fillRect(x + left, y + height - bottom, width - left, bottom);
-        g.fillRect(x + width - right, y, right, height - bottom);
+        g.fillRect(x, y, width - getRight(), getTop());
+        g.fillRect(x, y + getTop(), getLeft(), height - getTop());
+        g.fillRect(x + getLeft(), y + height - getBottom(), width - getLeft(), getBottom());
+        g.fillRect(x + width - getRight(), y, getRight(), height - getBottom());
     }
 
     @Override
@@ -79,17 +82,32 @@ public class MutableLineBorder extends AbstractBorder {
 
     @Override
     public Insets getBorderInsets(final Component c, final Insets insets) {
-        insets.left = left;
-        insets.top = top;
-        insets.right = right;
-        insets.bottom = bottom;
+        insets.left = getRight();
+        insets.top = getTop();
+        insets.right = getRight();
+        insets.bottom = getBottom();
         return insets;
     }
 
     public Insets getBorderInsets() {
-        return new Insets(top, left, bottom, right);
+        return getBorderInsets(null, new Insets(0, 0, 0, 0));
     }
 
+    public int getTop() {
+        return top;
+    }
+
+    public int getBottom() {
+        return bottom;
+    }
+
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
+    }
 
     public void setTop(final int top) {
         this.top = top;

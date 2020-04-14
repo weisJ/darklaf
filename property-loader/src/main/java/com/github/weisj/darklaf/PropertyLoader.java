@@ -43,6 +43,8 @@ import java.io.InputStream;
 import java.text.AttributedCharacterIterator;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -127,6 +129,35 @@ public final class PropertyLoader {
                 accumulator.put(parseKey(key), parsed);
             } else {
                 currentDefaults.remove(parseKey(key));
+            }
+        }
+    }
+
+    public static void replaceProperties(final Map<Object, Object> properties,
+                                         final Predicate<Map.Entry<Object, Object>> predicate,
+                                         final Function<Map.Entry<Object, Object>, Object> mapper) {
+        replacePropertiesOfType(Object.class, properties, predicate, mapper);
+    }
+
+    public static <T> void replacePropertiesOfType(final Class<T> type,
+                                                   final Map<Object, Object> properties,
+                                                   final Function<T, T> mapper) {
+        replacePropertiesOfType(type, properties, e -> true, e -> mapper.apply(e.getValue()));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> void replacePropertiesOfType(final Class<T> type,
+                                                   final Map<Object, Object> properties,
+                                                   final Predicate<Map.Entry<Object, T>> predicate,
+                                                   final Function<Map.Entry<Object, T>, T> mapper) {
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            if (type == Object.class || type.isAssignableFrom(entry.getValue().getClass())) {
+                if (predicate.test((Map.Entry<Object, T>) entry)) {
+                    T newValue = mapper.apply((Map.Entry<Object, T>) entry);
+                    if (newValue != null) {
+                        entry.setValue(newValue);
+                    }
+                }
             }
         }
     }

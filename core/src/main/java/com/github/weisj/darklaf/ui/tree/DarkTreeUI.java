@@ -690,6 +690,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             treeModel.getChild(path.getLastPathComponent(), childCount - 1));
         while (tree.isExpanded(lastChildPath)) {
             int count = treeModel.getChildCount(lastChildPath.getLastPathComponent());
+            if (count == 0) break;
             lastChildPath = lastChildPath.pathByAddingChild(treeModel.getChild(lastChildPath.getLastPathComponent(),
                                                                                count - 1));
         }

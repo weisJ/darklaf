@@ -23,21 +23,23 @@
  */
 package com.github.weisj.darklaf.ui.label;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.basic.BasicLabelUI;
 import javax.swing.text.View;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
+
+import sun.swing.SwingUtilities2;
 
 /**
  * @author Jannis Weis
@@ -66,7 +68,12 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     @Override
     public void installUI(final JComponent c) {
         if (c != null) super.installUI(c);
-        //Ensure colors are up to date.
+    }
+
+    @Override
+    protected void installDefaults(final JLabel c) {
+        super.installDefaults(c);
+        LookAndFeel.installProperty(c, PropertyKey.OPAQUE, false);
         inactiveForeground = UIManager.getColor("Label.inactiveForeground");
         cellForegroundNoFocus = UIManager.getColor("Label.cellForegroundNoFocus");
         cellInactiveForeground = UIManager.getColor("Label.cellInactiveForeground");

@@ -24,11 +24,9 @@
 #include "Decorations.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
 #include <dwmapi.h>
-#include <iostream>
 #include <map>
+#include <iostream>
 #include <winuser.h>
-
-#define GWL_WNDPROC -4
 
 std::map<HWND, WindowWrapper *> wrapper_map = std::map<HWND, WindowWrapper *>();
 
@@ -111,11 +109,44 @@ void AdjustMaximizedClientArea(HWND window, RECT& rect)
     rect = monitor_info.rcWork;
 }
 
+void AdjustMinMaxInfo(HWND hwnd, LPARAM lParam)
+{
+    HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
+    HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+
+    MONITORINFO primaryMonitorInfo{sizeof(MONITORINFO)};
+    MONITORINFO targetMonitorInfo{sizeof(MONITORINFO)};
+
+    GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
+    GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
+
+    MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
+    RECT max_rect = primaryMonitorInfo.rcWork;
+    RECT target_rect = targetMonitorInfo.rcWork;
+    min_max_info->ptMaxSize.x = target_rect.right - target_rect.left;
+    min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top;
+    min_max_info->ptMaxPosition.x = max_rect.left;
+    min_max_info->ptMaxPosition.y = max_rect.top;
+}
+
+void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper)
+{
+    HDC hdc = reinterpret_cast<HDC>(wParam);
+    RECT clientRect;
+    GetClientRect(hwnd, &clientRect);
+    FillRect(hdc, &clientRect, wrapper->bgBrush);
+}
+
 LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrapper = wrapper_map[handle];
-    if (uMsg == WM_NCCALCSIZE)
+
+    if (uMsg == WM_NCACTIVATE)
+    {
+        return TRUE;
+    }
+    else if (uMsg == WM_NCCALCSIZE)
     {
         if (wParam == TRUE) {
             NCCALCSIZE_PARAMS& params = *reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
@@ -123,16 +154,31 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
             return TRUE;
         }
     }
+    else if (uMsg == WM_GETMINMAXINFO)
+    {
+        AdjustMinMaxInfo(hwnd, lParam);
+        return FALSE;
+    }
     else if (uMsg == WM_NCHITTEST)
     {
         return HitTestNCA(hwnd, wParam, lParam, wrapper);
     }
+    else if (uMsg == WM_MOVE)
+    {
+        wrapper->moving = wrapper->move_mode;
+    }
+    else if (uMsg == WM_ENTERSIZEMOVE)
+    {
+        wrapper->move_mode = TRUE;
+    }
+    else if (uMsg == WM_EXITSIZEMOVE)
+    {
+        wrapper->moving = FALSE;
+        wrapper->move_mode = FALSE;
+    }
     else if ((uMsg == WM_PAINT || uMsg == WM_ERASEBKGND) && wrapper->bgBrush)
     {
-        HDC hdc = reinterpret_cast<HDC>(wParam);
-        RECT clientRect;
-        GetClientRect(hwnd, &clientRect);
-        FillRect(hdc, &clientRect, wrapper->bgBrush);
+        if (!wrapper->moving) PaintBackground(hwnd, wParam, wrapper);
         if (uMsg == WM_ERASEBKGND) return TRUE;
     }
 
@@ -196,13 +242,13 @@ bool InstallDecorations(HWND handle, bool is_popup)
     SetupWindowStyle(handle);
     ExtendClientFrame(handle);
 
-    WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWL_WNDPROC));
+    WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWLP_WNDPROC));
 
     WindowWrapper *wrapper = new WindowWrapper();
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
     wrapper_map[handle] = wrapper;
-    SetWindowLongPtr(handle, GWL_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
+    SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
     UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED;
     SetWindowPos(handle, NULL, 0, 0, 0, 0, flags);
     return true;
@@ -222,7 +268,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
     auto wrap = wrapper_map[handle];
     if (wrap)
     {
-        SetWindowLongPtr(handle, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
+        SetWindowLongPtr(handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
         wrapper_map.erase(handle);
         delete (wrap);
     }

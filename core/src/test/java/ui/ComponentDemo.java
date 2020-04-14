@@ -24,7 +24,7 @@
 package ui;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -58,7 +58,17 @@ public interface ComponentDemo {
             frame.setContentPane(demo.createComponent());
             frame.setJMenuBar(demo.createMenuBar());
             frame.pack();
-            if (dimension != null) frame.setSize(dimension);
+            if (dimension == null) {
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                Dimension dim = new Dimension(screenSize.width / 2,
+                                              screenSize.height / 2);
+                Dimension targetSize = frame.getSize();
+                targetSize.width = Math.min(targetSize.width, dim.width);
+                targetSize.height = Math.min(targetSize.height, dim.height);
+                frame.setSize(targetSize);
+            } else {
+                frame.setSize(dimension);
+            }
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
         });
@@ -73,13 +83,7 @@ public interface ComponentDemo {
         String currentThemeName = LafManager.getTheme().getClass().getSimpleName();
         JMenu menu = new JMenu("Theme");
         ButtonGroup bg = new ButtonGroup();
-        for (Theme theme : new Theme[]{new DarculaTheme(),
-                                       new IntelliJTheme(),
-                                       new SolarizedLightTheme(),
-                                       new SolarizedDarkTheme(),
-                                       new OneDarkTheme(),
-                                       new HighContrastLightTheme(),
-                                       new HighContrastDarkTheme()}) {
+        for (Theme theme : LafManager.getRegisteredThemes()) {
             createThemeItem(currentThemeName, menu, bg, theme);
         }
         return menu;

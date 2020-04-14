@@ -23,14 +23,15 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
+
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -53,12 +54,6 @@ public class DarkTableHeaderBorder extends MutableLineBorder implements UIResour
     public Insets getBorderInsets(final Component c, final Insets insets) {
         adjustTop(c);
         return super.getBorderInsets(c, insets);
-    }
-
-    @Override
-    public Insets getBorderInsets(final Component c) {
-        adjustTop(c);
-        return super.getBorderInsets(c);
     }
 
     protected void adjustTop(final Component c) {

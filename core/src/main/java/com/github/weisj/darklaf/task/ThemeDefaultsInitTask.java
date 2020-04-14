@@ -98,16 +98,14 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
                 globalSettings.put(((String) key).substring(GLOBAL_PREFIX.length()), uiProps.get(key));
             }
         }
-
-        for (final Object key : defaults.keySet()) {
-            if (key instanceof String && ((String) key).contains(".")) {
-                final String s = (String) key;
+        PropertyLoader.replaceProperties(
+            defaults,
+            e -> e.getKey() instanceof String && ((String) e.getKey()).contains("."),
+            e -> {
+                final String s = (String) e.getKey();
                 final String globalKey = s.substring(s.lastIndexOf('.') + 1);
-                if (globalSettings.containsKey(globalKey)) {
-                    defaults.put(key, globalSettings.get(globalKey));
-                }
-            }
-        }
+                return globalSettings.get(globalKey);
+            });
     }
 
     private void initUIProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {

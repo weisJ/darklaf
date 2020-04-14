@@ -21,25 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.table;
+package com.github.weisj.darklaf.ui.rootpane;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
-/**
- * @author Jannis Weis
- */
-public class DarkTableBorder extends MutableLineBorder implements UIResource {
+public class DarkRootPaneBorder extends MutableLineBorder implements UIResource {
 
-    public DarkTableBorder() {
-        super(1, 1, 1, 1, null);
-        setColor(UIManager.getColor("TableHeader.borderColor"));
+    public DarkRootPaneBorder() {
+        super(UIManager.getInsets("RootPane.borderInsets"), UIManager.getColor("RootPane.borderColor"));
     }
 
-    public Color getBorderColor() {
-        return getColor();
+    @Override
+    public int getTop() {
+        return DecorationsHandler.getSharedInstance().isCustomDecorationSupported()
+               ? super.getTop() : 0;
     }
 }

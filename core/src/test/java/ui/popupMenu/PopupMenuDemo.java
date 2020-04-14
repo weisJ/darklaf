@@ -23,8 +23,8 @@
  */
 package ui.popupMenu;
 
-import com.github.weisj.darklaf.icons.IconLoader;
 import ui.ComponentDemo;
+import ui.DemoResources;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class PopupMenuDemo implements ComponentDemo {
     public JComponent createComponent() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        Icon icon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
+        Icon icon = DemoResources.FOLDER_ICON;
         panel.add(new JLabel("Right click anywhere to open menu.") {{
             setInheritsPopupMenu(true);
         }});

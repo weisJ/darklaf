@@ -340,12 +340,11 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if (KEY_FAILED.equals(key)) {
+        if (KEY_FAILED.equals(key) || KEY_PASSED.equals(key)) {
             progressBar.repaint();
-        } else if (KEY_PASSED.equals(key)) {
-            progressBar.repaint();
-        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
-            progressBar.repaint();
+        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)
+                   || "stringPainted".equals(key)) {
+            progressBar.revalidate();
         }
     }
 }

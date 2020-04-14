@@ -23,11 +23,11 @@
  */
 package ui.button;
 
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import ui.ComponentDemo;
 import ui.DemoPanel;
+import ui.DemoResources;
 import ui.QuickColorChooser;
 
 import javax.swing.*;
@@ -41,7 +41,7 @@ public class ButtonDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        Icon icon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
+        Icon icon = DemoResources.FOLDER_ICON;
         JButton button = new JButton("Test Button", icon);
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.addControls();

@@ -23,10 +23,10 @@
  */
 package icon;
 
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import ui.ComponentDemo;
 import ui.DemoPanel;
+import ui.DemoResources;
 
 import javax.swing.*;
 
@@ -38,8 +38,7 @@ public class RotatableIconDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        RotatableIcon folderIcon = new RotatableIcon(
-            IconLoader.get().getIcon("files/folder.svg", 19, 19, true));
+        RotatableIcon folderIcon = new RotatableIcon(DemoResources.FOLDER_ICON);
         JLabel label = new JLabel(folderIcon);
         SwingUtilities.invokeLater(() -> {
             Timer timer = new Timer(1000, e -> {

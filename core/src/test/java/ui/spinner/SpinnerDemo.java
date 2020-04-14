@@ -23,6 +23,7 @@
  */
 package ui.spinner;
 
+import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
@@ -50,16 +51,18 @@ public class SpinnerDemo implements ComponentDemo {
             addActionListener(e -> spinner.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                                                                                 : ComponentOrientation.RIGHT_TO_LEFT));
         }});
-        controlPanel.add(new JCheckBox("JSpinner.variant = plusMinus") {{
-            addActionListener(e -> spinner.putClientProperty("JSpinner.variant", isSelected() ? "plusMinus" : null));
+        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_VARIANT + " = " + SpinnerConstants.VARIANT_PLUS_MINUS) {{
+            addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_VARIANT,
+                                                             isSelected() ? SpinnerConstants.VARIANT_PLUS_MINUS
+                                                                          : null));
         }});
-        controlPanel.add(new JCheckBox("JSpinner.isTreeCellEditor") {{
+        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_IS_TREE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> spinner.putClientProperty("JSpinner.isTreeCellEditor", isSelected()));
+            addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_IS_TREE_EDITOR, isSelected()));
         }});
-        controlPanel.add(new JCheckBox("JSpinner.isTableCellEditor") {{
+        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_IS_TABLE_EDITOR) {{
             setSelected(false);
-            addActionListener(e -> spinner.putClientProperty("JSpinner.isTableCellEditor", isSelected()));
+            addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_IS_TABLE_EDITOR, isSelected()));
         }});
         return panel;
     }

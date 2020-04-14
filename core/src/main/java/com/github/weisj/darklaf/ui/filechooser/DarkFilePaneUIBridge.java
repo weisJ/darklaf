@@ -28,11 +28,9 @@ import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.DarkTableCellRenderer;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.util.PropertyKey;
-import sun.awt.AWTAccessor;
 import sun.awt.shell.ShellFolder;
 import sun.awt.shell.ShellFolderColumnInfo;
 import sun.swing.FilePane;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -1018,12 +1016,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
     protected abstract void updateViewMenu();
 
-    protected Handler getMouseHandler() {
-        if (handler == null) {
-            handler = new Handler();
-        }
-        return handler;
-    }
+    protected abstract Handler getMouseHandler();
 
     /**
      * Property to remember whether a directory is currently selected in the UI.
@@ -1604,77 +1597,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         }
     }
 
-    protected class Handler implements MouseListener {
+    protected abstract class Handler implements MouseListener {
         protected MouseListener doubleClickListener;
-
-        @SuppressWarnings("deprecation")
-        public void mouseClicked(MouseEvent evt) {
-            JComponent source = (JComponent) evt.getSource();
-
-            int index;
-            if (source instanceof JList) {
-                index = SwingUtilities2.loc2IndexFileList(list, evt.getPoint());
-            } else if (source instanceof JTable) {
-                JTable table = (JTable) source;
-                Point p = evt.getPoint();
-                index = table.rowAtPoint(p);
-
-                boolean pointOutsidePrefSize =
-                    SwingUtilities2.pointOutsidePrefSize(
-                        table, index, table.columnAtPoint(p), p);
-
-                if (pointOutsidePrefSize && !fullRowSelection) {
-                    return;
-                }
-
-                // Translate point from table to list
-                if (index >= 0 && list != null &&
-                    listSelectionModel.isSelectedIndex(index)) {
-
-                    // Make a new event with the list as source, placing the
-                    // click in the corresponding list cell.
-                    Rectangle r = list.getCellBounds(index, index);
-                    MouseEvent newEvent = new MouseEvent(list, evt.getID(),
-                                                         evt.getWhen(), evt.getModifiers(),
-                                                         r.x + 1, r.y + r.height / 2,
-                                                         evt.getXOnScreen(),
-                                                         evt.getYOnScreen(),
-                                                         evt.getClickCount(), evt.isPopupTrigger(),
-                                                         evt.getButton());
-                    AWTAccessor.MouseEventAccessor meAccessor = AWTAccessor.getMouseEventAccessor();
-                    meAccessor.setCausedByTouchEvent(newEvent,
-                                                     meAccessor.isCausedByTouchEvent(evt));
-                    evt = newEvent;
-                }
-            } else {
-                return;
-            }
-
-            if (index >= 0 && SwingUtilities.isLeftMouseButton(evt)) {
-                JFileChooser fc = getFileChooser();
-
-                // For single click, we handle editing file name
-                if (evt.getClickCount() == 1 && source instanceof JList) {
-                    if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
-                        && listSelectionModel.isSelectedIndex(index)
-                        && getEditIndex() == index && editFile == null) {
-
-                        editFileName(index);
-                    } else {
-                        setEditIndex(index);
-                    }
-                } else if (evt.getClickCount() == 2) {
-                    // on double click (open or drill down one directory) be
-                    // sure to clear the edit index
-                    resetEditIndex();
-                }
-            }
-
-            // Forward event to Basic
-            if (getDoubleClickListener() != null) {
-                getDoubleClickListener().mouseClicked(evt);
-            }
-        }
 
         public void mousePressed(final MouseEvent evt) {
             if (evt.getSource() instanceof JList) {
