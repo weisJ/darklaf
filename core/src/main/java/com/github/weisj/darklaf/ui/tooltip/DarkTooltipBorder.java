@@ -71,9 +71,9 @@ public class DarkTooltipBorder implements Border {
         Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
         float adj = forPaint ? 0.5f : 0;
-        return bubbleBorder.getBubbleArea(ins.left + adj, ins.top + adj,
-                                          width - ins.left - ins.right - 2 * adj,
-                                          height - ins.top - ins.bottom - 2 * adj);
+        return bubbleBorder.getBubbleArea(ins.left - adj, ins.top - adj,
+                                          width - ins.left - ins.right + 2 * adj,
+                                          height - ins.top - ins.bottom + 2 * adj, true);
     }
 
     public int getPointerOffset(final Component c, final Dimension dimension) {
@@ -84,12 +84,13 @@ public class DarkTooltipBorder implements Border {
 
     private void adjustInsets(final Insets si) {
         Alignment align = bubbleBorder.getPointerSide();
+        int pointerSize = bubbleBorder.getPointerSize();
         if (align == Alignment.SOUTH || align == Alignment.SOUTH_EAST || align == Alignment.SOUTH_WEST) {
-            si.bottom = 0;
+            si.bottom -= pointerSize;
         } else if (align == Alignment.EAST) {
-            si.right = 0;
+            si.right -= pointerSize;
         } else if (align == Alignment.WEST) {
-            si.left = 0;
+            si.left -= pointerSize;
         } else if (align == Alignment.NORTH_EAST || align == Alignment.NORTH || align == Alignment.NORTH_WEST) {
             si.top = 0;
         }
@@ -107,13 +108,17 @@ public class DarkTooltipBorder implements Border {
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         Insets ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
-        Area bubbleArea = bubbleBorder.getBorderArea(x + ins.left, y + ins.top,
-                                                     width - ins.left - ins.right,
-                                                     height - ins.top - ins.bottom);
+        Area innerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
+                                                    width - ins.left - ins.right,
+                                                    height - ins.top - ins.bottom, true);
         if (!skipShadow && UIManager.getBoolean("ToolTip.paintShadow")) {
-            paintShadow(c, g, x, y, width, height, bubbleArea);
+            paintShadow(c, g, x, y, width, height, innerArea);
         }
-        bubbleBorder.paintBorder(g, bubbleArea);
+        Area outerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
+                                                    width - ins.left - ins.right,
+                                                    height - ins.top - ins.bottom, false);
+        outerArea.subtract(innerArea);
+        bubbleBorder.paintBorder(g, outerArea);
         context.restore();
     }
 
@@ -124,14 +129,7 @@ public class DarkTooltipBorder implements Border {
         clip.subtract(bubbleArea);
         g.setClip(clip);
         int bw = 1 + bubbleBorder.getThickness();
-        int off = 0;
-        Alignment pointerSide = bubbleBorder.getPointerSide();
-        if (pointerSide == Alignment.NORTH
-            || pointerSide == Alignment.NORTH_EAST
-            || pointerSide == Alignment.NORTH_WEST) {
-            off = bubbleBorder.getPointerSize();
-        }
-        shadowBorder.paintBorder(c, g, x + bw, y + bw + off, width - 2 * bw, height - 2 * bw - off);
+        shadowBorder.paintBorder(c, g, x + bw, y + bw, width - 2 * bw, height - 2 * bw);
         g.setClip(oldClip);
     }
 

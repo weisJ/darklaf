@@ -114,7 +114,7 @@ public class PopupColorChooser extends JToolTip {
             .setAlignment(Alignment.CENTER)
             .setCenterAlignment(Alignment.SOUTH)
             .setUseBestFit(true)
-            .setToolTipInsets(new Insets(2, 2, 2, 1))
+            .setToolTipInsets(new Insets(2, 2, 2, 2))
             .setFallBackPositionProvider(c -> {
                 Window window = DarkUIUtil.getWindow(c.getTarget());
                 Dimension size = c.getToolTip().getPreferredSize();

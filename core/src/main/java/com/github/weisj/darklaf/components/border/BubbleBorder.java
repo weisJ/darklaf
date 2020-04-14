@@ -46,8 +46,6 @@ public class BubbleBorder extends AbstractBorder {
     private int radius;
     private int pointerSize;
     private int pointerWidth;
-    private BasicStroke stroke;
-
 
     /**
      * Create new TextBubbleBorder with given colour.
@@ -139,7 +137,6 @@ public class BubbleBorder extends AbstractBorder {
 
     public BubbleBorder setThickness(final int n) {
         thickness = Math.max(n, 0);
-        stroke = new BasicStroke(thickness);
         return setPointerSize(pointerSize);
     }
 
@@ -285,10 +282,6 @@ public class BubbleBorder extends AbstractBorder {
         return getBorderInsets(c);
     }
 
-    public Area getBubbleArea(final float x, final float y, final float width, final float height) {
-        return getBubbleArea(x, y, width, height, true);
-    }
-
     public Area getBubbleArea(final float x, final float y, final float width, final float height,
                               final boolean inner) {
         int adj = inner ? getThickness() : 0;
@@ -313,12 +306,11 @@ public class BubbleBorder extends AbstractBorder {
         return outer;
     }
 
-    public void paintBorder(final Graphics g, final Area innerArea) {
+    public void paintBorder(final Graphics g, final Area strokeArea) {
         final Graphics2D g2 = (Graphics2D) g;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         g2.setColor(color);
-        g2.setStroke(stroke);
-        g2.fill(innerArea);
+        g2.fill(strokeArea);
         config.restore();
     }
 

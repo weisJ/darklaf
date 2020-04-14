@@ -25,6 +25,7 @@
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
 #include <dwmapi.h>
 #include <map>
+#include <iostream>
 #include <winuser.h>
 
 #define GWL_WNDPROC -4
@@ -110,17 +111,55 @@ void AdjustMaximizedClientArea(HWND window, RECT& rect)
     rect = monitor_info.rcWork;
 }
 
+void AdjustMinMaxInfo(HWND hwnd, LPARAM lParam)
+{
+    HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
+    HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+
+    MONITORINFO primaryMonitorInfo{sizeof(MONITORINFO)};
+    MONITORINFO targetMonitorInfo{sizeof(MONITORINFO)};
+
+    GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
+    GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
+
+    MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
+    RECT max_rect = primaryMonitorInfo.rcWork;
+    RECT target_rect = targetMonitorInfo.rcWork;
+    min_max_info->ptMaxSize.x = target_rect.right - target_rect.left;
+    min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top;
+    min_max_info->ptMaxPosition.x = max_rect.left;
+    min_max_info->ptMaxPosition.y = max_rect.top;
+}
+
+void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper)
+{
+    HDC hdc = reinterpret_cast<HDC>(wParam);
+    RECT clientRect;
+    GetClientRect(hwnd, &clientRect);
+    FillRect(hdc, &clientRect, wrapper->bgBrush);
+}
+
 LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrapper = wrapper_map[handle];
-    if (uMsg == WM_NCCALCSIZE)
+
+    if (uMsg == WM_NCACTIVATE)
+    {
+        return TRUE;
+    }
+    else if (uMsg == WM_NCCALCSIZE)
     {
         if (wParam == TRUE) {
             NCCALCSIZE_PARAMS& params = *reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
             AdjustMaximizedClientArea(handle, params.rgrc[0]);
             return TRUE;
         }
+    }
+    else if (uMsg == WM_GETMINMAXINFO)
+    {
+        AdjustMinMaxInfo(hwnd, lParam);
+        return FALSE;
     }
     else if (uMsg == WM_NCHITTEST)
     {
@@ -141,34 +180,8 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     }
     else if ((uMsg == WM_PAINT || uMsg == WM_ERASEBKGND) && wrapper->bgBrush)
     {
-        if (!wrapper->moving)
-        {
-            HDC hdc = reinterpret_cast<HDC>(wParam);
-            RECT clientRect;
-            GetClientRect(hwnd, &clientRect);
-            FillRect(hdc, &clientRect, wrapper->bgBrush);
-        }
+        if (!wrapper->moving) PaintBackground(hwnd, wParam, wrapper);
         if (uMsg == WM_ERASEBKGND) return TRUE;
-    }
-    else if (uMsg == WM_GETMINMAXINFO)
-    {
-        HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
-        HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-
-        MONITORINFO primaryMonitorInfo{sizeof(MONITORINFO)};
-        MONITORINFO targetMonitorInfo{sizeof(MONITORINFO)};
-
-        GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
-        GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
-
-        MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
-        RECT max_rect = primaryMonitorInfo.rcWork;
-        RECT target_rect = targetMonitorInfo.rcWork;
-        min_max_info->ptMaxSize.x = target_rect.right - target_rect.left;
-        min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top;
-        min_max_info->ptMaxPosition.x = max_rect.left;
-        min_max_info->ptMaxPosition.y = max_rect.top;
-        return FALSE;
     }
 
     return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
