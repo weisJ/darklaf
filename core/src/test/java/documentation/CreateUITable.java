@@ -29,7 +29,7 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.*;
 import com.kitfox.svg.app.beans.SVGIcon;
 import defaults.SampleRenderer;
@@ -61,12 +61,7 @@ public class CreateUITable {
     private UIDefaults currentDefaults;
 
     public static void main(final String[] args) throws IOException {
-        for (Theme theme : new Theme[]{
-            new IntelliJTheme(),
-            new DarculaTheme(),
-            new SolarizedLightTheme(),
-            new SolarizedDarkTheme()
-        }) {
+        for (Theme theme : LafManager.getRegisteredThemes()) {
             createThemeDefaultsPage(theme);
         }
     }

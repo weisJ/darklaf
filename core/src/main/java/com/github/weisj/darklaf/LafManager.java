@@ -26,8 +26,7 @@ package com.github.weisj.darklaf;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
-import com.github.weisj.darklaf.theme.DarculaTheme;
-import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.*;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -38,8 +37,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -54,10 +53,18 @@ public final class LafManager {
     private static ThemeProvider themeProvider;
     private static Theme theme;
     private static boolean logEnabled = false;
+    private static final List<Theme> registeredThemes = new ArrayList<>();
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new HashSet<>();
 
     static {
         enableLogging(true);
+        registerTheme(new IntelliJTheme(),
+                      new DarculaTheme(),
+                      new SolarizedLightTheme(),
+                      new SolarizedDarkTheme(),
+                      new OneDarkTheme(),
+                      new HighContrastLightTheme(),
+                      new HighContrastDarkTheme());
     }
 
     /**
@@ -205,6 +212,50 @@ public final class LafManager {
         return getThemeProvider().getTheme(style);
     }
 
+    /**
+     * Register all themes in array. Registered themes are returned in {@link #getRegisteredThemes()}.
+     *
+     * @param themes the themes to register.
+     */
+    public static void registerTheme(final Theme... themes) {
+        if (themes == null) return;
+        for (Theme theme : themes) {
+            registerTheme(theme);
+        }
+    }
+
+    /**
+     * Register a theme. Registered themes are returned in {@link #getRegisteredThemes()}.
+     *
+     * @param theme the theme to register.
+     */
+    public static void registerTheme(final Theme theme) {
+        registeredThemes.add(theme);
+    }
+
+    /**
+     * Remove a register a theme. Registered themes are returned in {@link #getRegisteredThemes()}.
+     *
+     * @param theme the theme to register.
+     */
+    public static void unregisterTheme(final Theme theme) {
+        registeredThemes.remove(theme);
+    }
+
+    /**
+     * Get all currently registered themes.
+     *
+     * @return all themes currently registered as array.
+     */
+    public static Theme[] getRegisteredThemes() {
+        Theme[] themes = registeredThemes.toArray(new Theme[0]);
+        Arrays.sort(themes);
+        return themes;
+    }
+
+    public static ComboBoxModel<Theme> getThemeComboBoxModel() {
+        return new DefaultComboBoxModel<>(getRegisteredThemes());
+    }
 
     /**
      * Get the current theme. This method will never return null even if the LaF isn#t currently installed.
@@ -259,9 +310,9 @@ public final class LafManager {
     }
 
     /**
-     * Reloads the icon theme. Forces icons to update their colors.
+     * Reloads the theme. Forces all properties to be reloaded.
      */
-    public static void reloadIconTheme() {
+    public static void reloadTheme() {
         try {
             setTheme(getTheme().getClass().getDeclaredConstructor().newInstance());
         } catch (InstantiationException

@@ -24,7 +24,7 @@
 package ui;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -75,13 +75,7 @@ public interface ComponentDemo {
         String currentThemeName = LafManager.getTheme().getClass().getSimpleName();
         JMenu menu = new JMenu("Theme");
         ButtonGroup bg = new ButtonGroup();
-        for (Theme theme : new Theme[]{new DarculaTheme(),
-                                       new IntelliJTheme(),
-                                       new SolarizedLightTheme(),
-                                       new SolarizedDarkTheme(),
-                                       new OneDarkTheme(),
-                                       new HighContrastLightTheme(),
-                                       new HighContrastDarkTheme()}) {
+        for (Theme theme : LafManager.getRegisteredThemes()) {
             createThemeItem(currentThemeName, menu, bg, theme);
         }
         return menu;

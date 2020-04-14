@@ -80,7 +80,7 @@ public class IconDemo implements ComponentDemo {
 
     private static void updateThemedIconColor(final Color c) {
         UIManager.put("TestIcon.color", c);
-        LafManager.reloadIconTheme();
+        LafManager.reloadTheme();
     }
 
     @Override
