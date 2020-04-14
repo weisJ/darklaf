@@ -35,7 +35,7 @@ import java.awt.*;
 public class OverlayScrollPaneDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new OverlayScrollPaneDemo(), new Dimension(500, 1000));
+        ComponentDemo.showDemo(new OverlayScrollPaneDemo());
     }
 
     @Override

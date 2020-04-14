@@ -44,10 +44,14 @@ public class DemoPanel extends JPanel {
     public DemoPanel(final JComponent component, final LayoutManager layoutManager, final int hGap) {
         super(new BorderLayout());
         JPanel contentHolder = new JPanel(new BorderLayout());
-        contentHolder.add(Box.createVerticalStrut(hGap), BorderLayout.NORTH);
-        contentHolder.add(Box.createVerticalStrut(hGap), BorderLayout.SOUTH);
         JPanel content = new JPanel(layoutManager);
-        content.add(component);
+        if (layoutManager instanceof BorderLayout) {
+            content.add(component, BorderLayout.CENTER);
+        } else {
+            contentHolder.add(Box.createVerticalStrut(hGap), BorderLayout.NORTH);
+            contentHolder.add(Box.createVerticalStrut(hGap), BorderLayout.SOUTH);
+            content.add(component);
+        }
 
         contentHolder.add(content, BorderLayout.CENTER);
         add(contentHolder, BorderLayout.CENTER);

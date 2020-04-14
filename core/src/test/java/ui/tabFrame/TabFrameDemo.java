@@ -64,7 +64,7 @@ public class TabFrameDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        Icon folderIcon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
+        Icon folderIcon = DemoResources.FOLDER_ICON;
         JTabFrame tabFrame = new JTabFrame();
         for (Alignment o : Alignment.values()) {
             if (o != Alignment.CENTER) {

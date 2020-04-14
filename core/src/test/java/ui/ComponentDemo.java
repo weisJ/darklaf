@@ -55,7 +55,17 @@ public interface ComponentDemo {
             frame.setContentPane(demo.createComponent());
             frame.setJMenuBar(demo.createMenuBar());
             frame.pack();
-            if (dimension != null) frame.setSize(dimension);
+            if (dimension == null) {
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                Dimension dim = new Dimension(screenSize.width / 2,
+                                              screenSize.height / 2);
+                Dimension targetSize = frame.getSize();
+                targetSize.width = Math.min(targetSize.width, dim.width);
+                targetSize.height = Math.min(targetSize.height, dim.height);
+                frame.setSize(targetSize);
+            } else {
+                frame.setSize(dimension);
+            }
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
         });

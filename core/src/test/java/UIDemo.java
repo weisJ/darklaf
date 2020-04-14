@@ -2,13 +2,13 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.text.SearchTextField;
 import com.github.weisj.darklaf.components.text.SearchTextFieldWithHistory;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.HighContrastDarkTheme;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
+import ui.DemoResources;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,7 @@ public final class UIDemo {
                     UIDemo.class.getClassLoader().getResource("mima.png")
                                                                           ));
 
-                Icon folderIcon = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
+                Icon folderIcon = DemoResources.FOLDER_ICON;
 
                 JPanel panel = new JPanel(new GridLayout(3, 4));
                 JPanel content = new JPanel(new BorderLayout());
