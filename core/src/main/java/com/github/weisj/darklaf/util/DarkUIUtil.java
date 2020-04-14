@@ -53,8 +53,11 @@ public final class DarkUIUtil {
     private static AlphaComposite glowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
     private static AlphaComposite dropComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     private static AlphaComposite shadowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
-    public static final boolean USE_QUARTZ = PropertyValue.TRUE.equals(
-        System.getProperty("apple.awt.graphics.UseQuartz"));
+    private static Color errorGlow;
+    private static Color errorFocusGlow;
+    private static Color focusGlow;
+    private static Color focusInactiveGlow;
+    private static Color warningGlow;
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
 
@@ -82,30 +85,44 @@ public final class DarkUIUtil {
         return glowComposite;
     }
 
-    private static Color getErrorGlow() {
-        return UIManager.getColor("glowError");
+    public static void setErrorGlow(final Color errorGlow) {
+        DarkUIUtil.errorGlow = errorGlow;
     }
 
-    private static Color getErrorFocusGlow() {
-        return UIManager.getColor("glowFocusError");
+    public static void setErrorFocusGlow(final Color errorFocusGlow) {
+        DarkUIUtil.errorFocusGlow = errorFocusGlow;
     }
 
-    private static Color getFocusGlow() {
-        return UIManager.getColor("glowFocus");
+    public static void setFocusGlow(final Color focusGlow) {
+        DarkUIUtil.focusGlow = focusGlow;
     }
 
-    private static Color getFocusInactiveGlow() {
-        return UIManager.getColor("glowFocusInactive");
+    public static void setFocusInactiveGlow(final Color focusInactiveGlow) {
+        DarkUIUtil.focusInactiveGlow = focusInactiveGlow;
     }
 
-    private static Color getWarningGlow() {
-        return UIManager.getColor("glowWarning");
+    public static void setWarningGlow(final Color warningGlow) {
+        DarkUIUtil.warningGlow = warningGlow;
     }
 
-    public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
-                                          final float bw, final boolean hasFocus, final Outline type) {
-        type.setGraphicsColor(g, hasFocus);
-        doPaint(g, width, height, arc, bw, true);
+    public static Color getErrorGlow() {
+        return errorGlow;
+    }
+
+    public static Color getErrorFocusGlow() {
+        return errorFocusGlow;
+    }
+
+    public static Color getFocusGlow() {
+        return focusGlow;
+    }
+
+    public static Color getFocusInactiveGlow() {
+        return focusInactiveGlow;
+    }
+
+    public static Color getWarningGlow() {
+        return warningGlow;
     }
 
     private static void doPaint(final Graphics2D g, final float width, final float height, final float arc,
@@ -131,9 +148,20 @@ public final class DarkUIUtil {
                                         final float bw, final boolean active) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(DarkUIUtil.glowComposite);
-        Outline.focus.setGraphicsColor(g, active);
-        doPaint(g, width, height, arc, bw, false);
+        paintOutlineBorder(g, width, height, arc, bw, active, Outline.focus);
         config.restore();
+    }
+
+    public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
+                                          final float bw, final boolean hasFocus, final Outline type) {
+        paintOutlineBorder(g, width, height, arc, bw, hasFocus, type, true);
+    }
+
+    public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
+                                          final float bw, final boolean hasFocus, final Outline type,
+                                          final boolean withLineBorder) {
+        type.setGraphicsColor(g, hasFocus);
+        doPaint(g, width, height, arc, withLineBorder ? bw + getStrokeWidth(g) : bw, false);
     }
 
     public static void fillFocusRect(final Graphics2D g, final int x, final int y,

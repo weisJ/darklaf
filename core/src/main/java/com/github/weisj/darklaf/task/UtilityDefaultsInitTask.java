@@ -44,6 +44,13 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         DarkUIUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
         DarkUIUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
         DarkUIUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
+
+        DarkUIUtil.setErrorGlow(defaults.getColor("glowError"));
+        DarkUIUtil.setErrorFocusGlow(defaults.getColor("glowFocusError"));
+        DarkUIUtil.setFocusGlow(defaults.getColor("glowFocus"));
+        DarkUIUtil.setFocusInactiveGlow(defaults.getColor("glowFocusInactive"));
+        DarkUIUtil.setWarningGlow(defaults.getColor("glowWarning"));
+
         IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(currentTheme);
     }

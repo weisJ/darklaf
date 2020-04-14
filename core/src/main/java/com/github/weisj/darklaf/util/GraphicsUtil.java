@@ -32,10 +32,8 @@ import java.util.Map;
  */
 public final class GraphicsUtil {
 
-
     private GraphicsUtil() {
     }
-
 
     public static GraphicsContext setupAntialiasing(final Graphics g2) {
         return setupAntialiasing(g2, true, false);
@@ -86,12 +84,16 @@ public final class GraphicsUtil {
         GraphicsContext context = new GraphicsContext(g2);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
-                            DarkUIUtil.USE_QUARTZ ? RenderingHints.VALUE_STROKE_PURE
-                                                  : RenderingHints.VALUE_STROKE_NORMALIZE);
+                            useQuartz() ? RenderingHints.VALUE_STROKE_PURE
+                                        : RenderingHints.VALUE_STROKE_NORMALIZE);
         return context;
     }
 
     public static boolean isHighDpiEnabled() {
         return PropertyValue.TRUE.equalsIgnoreCase(System.getProperty("hidpi"));
+    }
+
+    public static boolean useQuartz() {
+        return SystemInfo.isMac && PropertyValue.TRUE.equals(System.getProperty("apple.awt.graphics.UseQuartz"));
     }
 }
