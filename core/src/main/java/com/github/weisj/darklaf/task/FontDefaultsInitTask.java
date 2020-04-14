@@ -75,12 +75,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void patchMacOSFonts(final UIDefaults defaults) {
-        for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
-            if (entry.getValue() instanceof Font) {
-                Font font = (Font) entry.getValue();
-                entry.setValue(macOSFontFromFont(font));
-            }
-        }
+        PropertyLoader.replacePropertiesOfType(Font.class, defaults, this::macOSFontFromFont);
     }
 
     private Font macOSFontFromFont(final Font font) {
@@ -95,11 +90,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
         FontSizeRule rule = currentTheme.getFontSizeRule();
         if (rule == null || rule.getType() == FontSizeRule.AdjustmentType.NO_ADJUSTMENT) return;
-        for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
-            if (entry != null && entry.getValue() instanceof Font) {
-                entry.setValue(fontWithRule((Font) entry.getValue(), rule, defaults));
-            }
-        }
+        PropertyLoader.replacePropertiesOfType(Font.class, defaults, f -> fontWithRule(f, rule, defaults));
     }
 
     private Font fontWithRule(final Font font, final FontSizeRule rule, final UIDefaults defaults) {
