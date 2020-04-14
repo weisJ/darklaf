@@ -37,7 +37,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
 import java.util.logging.Level;
@@ -104,8 +103,8 @@ public final class LafManager {
     }
 
     /**
-     * Set globally whether decorations are enabled. By default, this is true.
-     * Decorations are used if this value is set to true and the current platform and theme support custom decorations.
+     * Set globally whether decorations are enabled. By default, this is true. Decorations are used if this value is set
+     * to true and the current platform and theme support custom decorations.
      *
      * @param enabled true if decorations should be used if available.
      */
@@ -121,8 +120,8 @@ public final class LafManager {
      * Enabled whether changes in the preferred theme style should be reported to {@link ThemePreferenceListener}s. On
      * some platforms this setting may do nothing.
      * <p>
-     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the program.
-     * Not doing so can result in memory leaks and prevent the classloader from being garbage collected.
+     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the program. Not doing
+     * so can result in memory leaks and prevent the classloader from being garbage collected.
      *
      * @param enabled true if changes should be reported.
      */
@@ -327,14 +326,7 @@ public final class LafManager {
      * Reloads the theme. Forces all properties to be reloaded.
      */
     public static void reloadTheme() {
-        try {
-            setTheme(getTheme().getClass().getDeclaredConstructor().newInstance());
-        } catch (InstantiationException
-            | IllegalAccessException
-            | NoSuchMethodException
-            | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        setTheme(getTheme().copy());
     }
 
     /**

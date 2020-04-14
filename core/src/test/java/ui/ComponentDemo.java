@@ -96,9 +96,7 @@ public interface ComponentDemo {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 Theme current = LafManager.getTheme();
-                theme.setFontSizeRule(current.getFontSizeRule());
-                theme.setAccentColorRule(current.getAccentColorRule());
-                LafManager.install(theme);
+                LafManager.install(theme.derive(current.getFontSizeRule(), current.getAccentColorRule()));
             }
         };
         final JRadioButtonMenuItem mi = new JRadioButtonMenuItem(action);

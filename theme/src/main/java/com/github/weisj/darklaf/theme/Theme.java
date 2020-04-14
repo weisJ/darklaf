@@ -24,11 +24,7 @@
 package com.github.weisj.darklaf.theme;
 
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.theme.info.AccentColorRule;
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
-import com.github.weisj.darklaf.theme.info.ContrastRule;
-import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.theme.info.PresetIconRule;
+import com.github.weisj.darklaf.theme.info.*;
 
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
@@ -47,8 +43,40 @@ import java.util.logging.Logger;
  */
 public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
-    private FontSizeRule fontSizeRule;
-    private AccentColorRule accentColorRule;
+
+    private final FontSizeRule fontSizeRule;
+    private final AccentColorRule accentColorRule;
+
+    public Theme() {
+        this(null, null);
+    }
+
+    public Theme(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
+        this.fontSizeRule = fontSizeRule != null ? fontSizeRule : FontSizeRule.getDefault();
+        this.accentColorRule = accentColorRule != null ? accentColorRule : AccentColorRule.getDefault();
+    }
+
+    /**
+     * Create a derived theme with the given {@link FontSizeRule} and {@link AccentColorRule}.
+     *
+     * @param fontSizeRule    the font size rule.
+     * @param accentColorRule the accent color rule.
+     * @return the derived theme.
+     */
+    public Theme derive(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
+        return new ThemeDelegate(this, fontSizeRule, accentColorRule);
+    }
+
+    /**
+     * Creates a copy of this theme. This is not equivalent to {@link #clone()} in the sense that
+     * <code>clone().getClass() == this.getClass()</code> and <code>copy().getClass() != this.getClass()</code>.
+     * Nonetheless the copy theme behaves exactly the same as the original.
+     *
+     * @return a copy of the theme.
+     */
+    public Theme copy() {
+        return new ThemeDelegate(this);
+    }
 
     /**
      * Returns whether the theme is a dark theme. This is used to determine the default mode for [aware] icons.
@@ -181,8 +209,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param properties      the properties to load into.
      * @param currentDefaults the current ui defaults.
      */
-    protected void loadCustomProperties(final String propertySuffix, final Properties properties,
-                                        final UIDefaults currentDefaults) {
+    protected final void loadCustomProperties(final String propertySuffix, final Properties properties,
+                                              final UIDefaults currentDefaults) {
         PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults);
     }
 
@@ -194,7 +222,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param name the properties file to load.
      * @return the properties.
      */
-    protected Properties load(final String name) {
+    protected final Properties load(final String name) {
         return loadWithClass(name, getLoaderClass());
     }
 
@@ -205,7 +233,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param loaderClass the class to resolve the file location from.
      * @return the properties.
      */
-    protected Properties loadWithClass(final String name, final Class<?> loaderClass) {
+    protected final Properties loadWithClass(final String name, final Class<?> loaderClass) {
         final Properties properties = new Properties();
         try (InputStream stream = loaderClass.getResourceAsStream(name)) {
             properties.load(stream);
@@ -222,7 +250,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      *
      * @return the {@link StyleSheet}.
      */
-    public StyleSheet loadStyleSheet() {
+    public final StyleSheet loadStyleSheet() {
         return loadStyleSheetWithClass(getLoaderClass());
     }
 
@@ -233,7 +261,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param loaderClass the class to resolve the location of the style sheet.
      * @return the {@link StyleSheet}.
      */
-    public StyleSheet loadStyleSheetWithClass(final Class<?> loaderClass) {
+    public final StyleSheet loadStyleSheetWithClass(final Class<?> loaderClass) {
         StyleSheet styleSheet = new StyleSheet();
         try (InputStream in = loaderClass.getResourceAsStream(getResourcePath() + getPrefix() + "_styleSheet.css");
              InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
@@ -300,7 +328,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param name the properties name.
      * @return the properties.
      */
-    public Properties loadPropertyFile(final String name) {
+    public final Properties loadPropertyFile(final String name) {
         return loadPropertyFile(name, false);
     }
 
@@ -314,7 +342,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      *               returned.
      * @return the properties.
      */
-    public Properties loadPropertyFile(final String name, final boolean silent) {
+    public final Properties loadPropertyFile(final String name, final boolean silent) {
         Level level = LOGGER.getLevel();
         if (silent) LOGGER.setLevel(Level.OFF);
         Properties properties = load(getPropertyFilePath(name));
@@ -353,32 +381,18 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @return the font size rule.
      */
     public FontSizeRule getFontSizeRule() {
-        if (fontSizeRule == null) fontSizeRule = FontSizeRule.getDefault();
         return fontSizeRule;
     }
 
     /**
-     * Set the font size rule.
+     * Get the accent color rule.
      *
-     * @param fontSizeRule the font size rule.
+     * @return the accent color rule.
      */
-    public void setFontSizeRule(final FontSizeRule fontSizeRule) {
-        this.fontSizeRule = fontSizeRule;
-    }
-
     public AccentColorRule getAccentColorRule() {
-        if (accentColorRule == null) accentColorRule = AccentColorRule.getDefault();
         return accentColorRule;
     }
 
-    /**
-     * Set the accent color rule.
-     *
-     * @param accentColorRule the accent color rule.
-     */
-    public void setAccentColorRule(final AccentColorRule accentColorRule) {
-        this.accentColorRule = accentColorRule;
-    }
     @Override
     public int compareTo(final Theme o) {
         if (o == null) return 1;
