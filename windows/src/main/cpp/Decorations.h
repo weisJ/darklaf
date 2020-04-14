@@ -30,6 +30,8 @@ class WindowWrapper
 public:
     bool resizable = true;
     bool popup_menu = false;
+    bool moving = false;
+    bool move_mode = false;
     WNDPROC prev_proc;
     HBRUSH bgBrush;
 

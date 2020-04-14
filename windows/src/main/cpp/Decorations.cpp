@@ -24,7 +24,6 @@
 #include "Decorations.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
 #include <dwmapi.h>
-#include <iostream>
 #include <map>
 #include <winuser.h>
 
@@ -127,12 +126,28 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     {
         return HitTestNCA(hwnd, wParam, lParam, wrapper);
     }
+    else if (uMsg == WM_MOVE)
+    {
+        wrapper->moving = wrapper->move_mode;
+    }
+    else if (uMsg == WM_ENTERSIZEMOVE)
+    {
+        wrapper->move_mode = TRUE;
+    }
+    else if (uMsg == WM_EXITSIZEMOVE)
+    {
+        wrapper->moving = FALSE;
+        wrapper->move_mode = FALSE;
+    }
     else if ((uMsg == WM_PAINT || uMsg == WM_ERASEBKGND) && wrapper->bgBrush)
     {
-        HDC hdc = reinterpret_cast<HDC>(wParam);
-        RECT clientRect;
-        GetClientRect(hwnd, &clientRect);
-        FillRect(hdc, &clientRect, wrapper->bgBrush);
+        if (!wrapper->moving)
+        {
+            HDC hdc = reinterpret_cast<HDC>(wParam);
+            RECT clientRect;
+            GetClientRect(hwnd, &clientRect);
+            FillRect(hdc, &clientRect, wrapper->bgBrush);
+        }
         if (uMsg == WM_ERASEBKGND) return TRUE;
     }
     else if (uMsg == WM_GETMINMAXINFO)
@@ -149,11 +164,10 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
         MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
         RECT max_rect = primaryMonitorInfo.rcWork;
         RECT target_rect = targetMonitorInfo.rcWork;
-        int indent = 2;
-        min_max_info->ptMaxSize.x = target_rect.right - target_rect.left - 2 * indent;
-        min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top - 2 + indent;
-        min_max_info->ptMaxPosition.x = max_rect.left + indent;
-        min_max_info->ptMaxPosition.y = max_rect.top + indent;
+        min_max_info->ptMaxSize.x = target_rect.right - target_rect.left;
+        min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top;
+        min_max_info->ptMaxPosition.x = max_rect.left;
+        min_max_info->ptMaxPosition.y = max_rect.top;
         return FALSE;
     }
 
