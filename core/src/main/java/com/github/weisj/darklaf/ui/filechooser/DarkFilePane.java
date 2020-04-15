@@ -47,7 +47,6 @@ import java.util.function.Supplier;
 
 public class DarkFilePane extends DarkFilePaneUIBridge {
 
-
     public DarkFilePane(final FileChooserUIAccessor fileChooserUIAccessor) {
         super(fileChooserUIAccessor);
     }

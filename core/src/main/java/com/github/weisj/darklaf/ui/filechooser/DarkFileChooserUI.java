@@ -34,23 +34,47 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.filechooser.FileView;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
     public static final String KEY_VIEW_TYPE = "viewType";
+    private static final String MIME_TEXT = "text/";
+    private static final String MIME_IMAGE = "image/";
 
     public DarkFileChooserUI(final JFileChooser b) {
         super(b);
     }
 
     protected AlignedLabel filesOfTypeLabel;
+    protected BasicFileView fileView;
+    protected Icon textFileIcon;
+    protected Icon imageFileIcon;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkFileChooserUI((JFileChooser) c);
+    }
+
+    @Override
+    protected void installIcons(final JFileChooser fc) {
+        super.installIcons(fc);
+        textFileIcon = UIManager.getIcon("FileView.textFileIcon");
+        imageFileIcon = UIManager.getIcon("FileView.imageFileIcon");
+    }
+
+    @Override
+    protected void uninstallIcons(final JFileChooser fc) {
+        super.uninstallIcons(fc);
+        textFileIcon = null;
+        imageFileIcon = null;
     }
 
     @Override
@@ -336,6 +360,62 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
         protected DarkButtonAreaLayout() {
             topMargin = 5;
+        }
+    }
+
+    public void clearIconCache() {
+        getFileView().clearIconCache();
+    }
+
+    public BasicFileView getFileView() {
+        if (fileView == null) fileView = createFileView();
+        return fileView;
+    }
+
+    @Override
+    public FileView getFileView(final JFileChooser fc) {
+        return getFileView();
+    }
+
+    protected BasicFileView createFileView() {
+        return new DarkFileView();
+    }
+
+    protected class DarkFileView extends BasicFileView {
+
+        public Icon getIcon(final File f) {
+            Icon icon = getCachedIcon(f);
+            if (icon != null) {
+                return icon;
+            }
+            icon = fileIcon;
+            if (f != null) {
+                FileSystemView fsv = getFileChooser().getFileSystemView();
+
+                if (fsv.isFloppyDrive(f)) {
+                    icon = floppyDriveIcon;
+                } else if (fsv.isDrive(f)) {
+                    icon = hardDriveIcon;
+                } else if (fsv.isComputerNode(f)) {
+                    icon = computerIcon;
+                } else if (f.isDirectory()) {
+                    icon = directoryIcon;
+                } else {
+                    try {
+                        String mimeType = Files.probeContentType(f.toPath());
+                        if (mimeType == null) mimeType = "";
+                        if (mimeType.startsWith(MIME_IMAGE)) {
+                            icon = imageFileIcon;
+                        } else if (mimeType.startsWith(MIME_TEXT)) {
+                            icon = textFileIcon;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            cacheIcon(f, icon);
+            return icon;
         }
     }
 }
