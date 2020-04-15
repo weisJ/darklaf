@@ -433,7 +433,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         closeIcon.setActive(active);
         titleLabel.setForeground(active ? activeForeground : inactiveForeground);
         minimizeIcon.setActive(active);
-        maximizeIcon.setActive(isResizable());
+        maximizeIcon.setActive(isResizable() && active);
         closeIcon.setActive(active);
         restoreIcon.setActive(isResizable());
         setButtonActive(minimizeButton, active);
