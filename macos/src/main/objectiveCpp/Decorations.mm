@@ -87,7 +87,7 @@ JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     return (jboolean)(([nsWindow styleMask] & NSWindowStyleMaskFullScreen) != 0);
 JNF_COCOA_EXIT(env);
-    return false;
+    return NO;
 }
 
 JNIEXPORT jdouble JNICALL
@@ -109,7 +109,7 @@ JNF_COCOA_ENTER(env);
         } else {
             nsWindow.titleVisibility = NSWindowTitleHidden;
         }
-        [nsWindow contentView].needsDisplay = true;
+        [nsWindow contentView].needsDisplay = TRUE;
     }];
 JNF_COCOA_EXIT(env);
 }
@@ -126,7 +126,7 @@ JNF_COCOA_ENTER(env);
             } else {
                 nsWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
             }
-            [nsWindow contentView].needsDisplay = true;
+            [nsWindow contentView].needsDisplay = YES;
         }];
     }
 JNF_COCOA_EXIT(env);
@@ -138,8 +138,8 @@ JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
         nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
-        nsWindow.titlebarAppearsTransparent = true;
-        [nsWindow contentView].needsDisplay = true;
+        nsWindow.titlebarAppearsTransparent = YES;
+        [nsWindow contentView].needsDisplay = YES;
     }];
 JNF_COCOA_EXIT(env);
 }
@@ -150,8 +150,8 @@ JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
         nsWindow.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
-        nsWindow.titlebarAppearsTransparent = false;
-        [nsWindow contentView].needsDisplay = true;
+        nsWindow.titlebarAppearsTransparent = NO;
+        [nsWindow contentView].needsDisplay = YES;
     }];
 JNF_COCOA_EXIT(env);
 }

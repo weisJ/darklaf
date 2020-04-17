@@ -25,6 +25,7 @@ package com.github.weisj.darklaf.icons;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * Icon that should be used with JCheckBox or JRadioButton. All icons should have the same size.
@@ -37,6 +38,10 @@ public class StateIcon implements Icon {
     private final Icon selectedIcon;
     private final Icon selectedDisabledIcon;
     private final Icon selectedFocusedIcon;
+
+    public StateIcon(final List<Icon> icons) {
+        this(icons.toArray(new Icon[0]));
+    }
 
     public StateIcon(final Icon[] icons) {
         if (icons == null || icons.length < 6) {

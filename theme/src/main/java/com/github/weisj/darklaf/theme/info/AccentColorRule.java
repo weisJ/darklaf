@@ -21,54 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.icons;
+package com.github.weisj.darklaf.theme.info;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class SolidColorIcon implements Icon {
-    private final int width;
-    private final int height;
-    private Color color;
+public class AccentColorRule {
 
-    public SolidColorIcon() {
-        this(null);
+    private static final AccentColorRule DEFAULT = new AccentColorRule(null, null);
+    private final Color accentColor;
+    private final Color selectionColor;
+
+    public AccentColorRule(final Color accentColor) {
+        this(accentColor, null);
     }
 
-    public SolidColorIcon(final Color color) {
-        this(color, 16, 16);
+    protected AccentColorRule(final Color accentColor, final Color selectionColor) {
+        this.accentColor = accentColor;
+        this.selectionColor = selectionColor;
     }
 
-    public SolidColorIcon(final Color color, final int width, final int height) {
-        this.color = color;
-        this.width = width;
-        this.height = height;
+    public static AccentColorRule getDefault() {
+        return DEFAULT;
+    }
+
+    public static AccentColorRule fromColor(final Color accentColor, final Color selectionColor) {
+        return new AccentColorRule(accentColor, selectionColor);
+    }
+
+    public static AccentColorRule fromColor(final Color accentColor) {
+        return fromColor(accentColor, null);
+    }
+
+    public Color getAccentColor() {
+        return accentColor;
+    }
+
+    public Color getSelectionColor() {
+        return selectionColor;
     }
 
     @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        Color col = getColor();
-        if (col != null) {
-            g.setColor(col);
-            g.fillRect(x, y, getIconWidth(), getIconHeight());
-        }
-    }
-
-    @Override
-    public int getIconWidth() {
-        return width;
-    }
-
-    @Override
-    public int getIconHeight() {
-        return height;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(final Color c) {
-        this.color = c;
+    public String toString() {
+        return "AccentColorRule{" +
+               "accentColor=" + accentColor +
+               ", selectionColor=" + selectionColor +
+               '}';
     }
 }

@@ -30,7 +30,6 @@ import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.PropertyValue;
-import com.github.weisj.darklaf.util.StringUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
@@ -48,6 +47,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Konstantin Bulenkov
@@ -56,11 +56,11 @@ import java.util.logging.Logger;
 public final class PropertyLoader {
     private static final Logger LOGGER = Logger.getLogger(PropertyLoader.class.getName());
     private static final IconLoader ICON_LOADER = IconLoader.get();
-    private static final char ICON_KEY_START = '[';
-    private static final char ICON_KEY_END = ']';
-    private static final String DUAL_KEY = ICON_KEY_START + "dual" + ICON_KEY_END;
-    private static final String AWARE_KEY = ICON_KEY_START + "aware" + ICON_KEY_END;
-    private static final String THEMED_KEY = ICON_KEY_START + "themed" + ICON_KEY_END;
+    private static final char INT_LIST_START = '[';
+    private static final char INT_LIST_END = ']';
+    private static final String DUAL_KEY = "[dual]";
+    private static final String AWARE_KEY = "[aware]";
+    private static final String THEMED_KEY = "[themed]";
     private static final String ICON_EMPTY = "empty";
 
     private static final char REFERENCE_PREFIX = '%';
@@ -76,6 +76,7 @@ public final class PropertyLoader {
     private static final char ARG_END = ')';
     private static final char SEPARATOR = ',';
     private static final char LIST_SEPARATOR = ';';
+    private static final char PAIR_SEPARATOR = ':';
 
     private static boolean addReferenceInfo;
 
@@ -167,10 +168,10 @@ public final class PropertyLoader {
     }
 
 
-    private static Object parseValue(final String propertyKey, final String value,
-                                     final Map<Object, Object> accumulator,
-                                     final UIDefaults currentDefaults, final IconLoader iconLoader) {
-        if (PropertyValue.NULL.equals(value)) {
+    public static Object parseValue(final String propertyKey, final String value,
+                                    final Map<Object, Object> accumulator,
+                                    final UIDefaults currentDefaults, final IconLoader iconLoader) {
+        if (value == null || PropertyValue.NULL.equals(value)) {
             return null;
         }
         String key = propertyKey;
@@ -182,7 +183,7 @@ public final class PropertyLoader {
 
         Object returnVal = new LoadError();
         if (key.endsWith("Insets") || key.endsWith(".insets")) {
-            returnVal = parseInsets(value);
+            returnVal = parseInsets(value, accumulator, currentDefaults, iconLoader);
         } else if (!skipObjects
                    && (key.endsWith("Border")
                        || key.endsWith(".border")
@@ -193,9 +194,20 @@ public final class PropertyLoader {
         } else if (key.toLowerCase().endsWith("font")) {
             returnVal = parseFont(key, value, accumulator, currentDefaults);
         } else if (key.endsWith(".icon") || key.endsWith("Icon")) {
-            returnVal = parseIcon(value, iconLoader);
+            returnVal = parseIcon(value, accumulator, currentDefaults, iconLoader);
         } else if (key.endsWith("Size") || key.endsWith(".size")) {
             returnVal = parseSize(value);
+        } else if (value.startsWith(String.valueOf(LIST_START))) {
+            returnVal = parseList(
+                (v, acc, defs, iconL) -> PropertyLoader.parseValue("", v, acc, defs, iconL),
+                value, accumulator, currentDefaults, iconLoader);
+        } else if (value.startsWith(String.valueOf(INT_LIST_START))) {
+            returnVal = parseList((SimpleValueMapper<Integer>) Integer::parseInt, value, accumulator, currentDefaults,
+                                  iconLoader, INT_LIST_START, INT_LIST_END, SEPARATOR);
+        } else if (value.contains(String.valueOf(PAIR_SEPARATOR))) {
+            returnVal = parsePair(
+                (v, acc, defs, iconL) -> PropertyLoader.parseValue("", v, acc, defs, iconL),
+                value, accumulator, currentDefaults, iconLoader);
         } else if (PropertyValue.NULL.equalsIgnoreCase(value)) {
             returnVal = null;
         } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
@@ -220,6 +232,20 @@ public final class PropertyLoader {
         return value;
     }
 
+    private static <T> Pair<T, T> parsePair(final ParseFunction<T> mapper,
+                                            final String value, final Map<Object, Object> accumulator,
+                                            final UIDefaults currentDefaults, final IconLoader iconLoader) {
+        return parsePair(mapper, mapper, value, accumulator, currentDefaults, iconLoader);
+    }
+
+    private static <T, K> Pair<T, K> parsePair(final ParseFunction<T> firstMapper, final ParseFunction<K> secondMapper,
+                                               final String value, final Map<Object, Object> accumulator,
+                                               final UIDefaults currentDefaults, final IconLoader iconLoader) {
+        String[] pairVals = value.split(String.valueOf(PAIR_SEPARATOR), 2);
+        return new Pair<>(firstMapper.parseValue(pairVals[0], accumulator, currentDefaults, iconLoader),
+                          secondMapper.parseValue(pairVals[1], accumulator, currentDefaults, iconLoader));
+    }
+
     private static Object parseReference(final String key, final String value,
                                          final Map<Object, Object> accumulator) {
         String val = parseKey(value);
@@ -239,13 +265,13 @@ public final class PropertyLoader {
     }
 
 
-    private static Object parseInsets(final String value) {
-        final List<String> numbers = StringUtil.split(value, String.valueOf(SEPARATOR));
-        return new InsetsUIResource(
-            Integer.parseInt(numbers.get(0)),
-            Integer.parseInt(numbers.get(1)),
-            Integer.parseInt(numbers.get(2)),
-            Integer.parseInt(numbers.get(3)));
+    private static Object parseInsets(final String value,
+                                      final Map<Object, Object> accumulator,
+                                      final UIDefaults currentDefaults, final IconLoader iconLoader) {
+        List<Integer> insets = parseList((SimpleValueMapper<Integer>) Integer::parseInt, value, accumulator,
+                                         currentDefaults, iconLoader, Character.MIN_VALUE, Character.MIN_VALUE,
+                                         SEPARATOR);
+        return new InsetsUIResource(insets.get(0), insets.get(1), insets.get(2), insets.get(3));
     }
 
     @SuppressWarnings("MagicConstant")
@@ -331,9 +357,37 @@ public final class PropertyLoader {
         return new Pair<>(font, rest);
     }
 
-    private static Icon parseIcon(final String value, final IconLoader iconLoader) {
+    private static <T> List<T> parseList(final ParseFunction<T> mapper,
+                                         final String value,
+                                         final Map<Object, Object> accumulator,
+                                         final UIDefaults currentDefaults, final IconLoader iconLoader) {
+        return parseList(mapper, value, accumulator, currentDefaults, iconLoader, LIST_START, LIST_END,
+                         LIST_SEPARATOR);
+    }
+
+    private static <T> List<T> parseList(final ParseFunction<T> mapper,
+                                         final String value,
+                                         final Map<Object, Object> accumulator,
+                                         final UIDefaults currentDefaults, final IconLoader iconLoader,
+                                         final char start, final char end,
+                                         final char delimiter) {
+        if (value == null || value.isEmpty()) return new ArrayList<>();
+        String val = value;
+        if (val.charAt(0) == start) {
+            val = value.substring(1, value.length() - 1);
+        }
+        String[] values = val.split(String.valueOf(delimiter));
+        return Arrays.stream(values)
+                     .map(k -> mapper.parseValue(k, accumulator, currentDefaults, iconLoader))
+                     .collect(Collectors.toList());
+    }
+
+    private static Icon parseIcon(final String value,
+                                  final Map<Object, Object> accumulator,
+                                  final UIDefaults currentDefaults,
+                                  final IconLoader iconLoader) {
         if (value.startsWith(String.valueOf(LIST_START))) {
-            return parseStateIcon(value, iconLoader);
+            return parseStateIcon(value, accumulator, currentDefaults, iconLoader);
         }
         String path = value;
         Dimension dim = new Dimension(16, 16);
@@ -346,7 +400,7 @@ public final class PropertyLoader {
             dim.height = values[1];
             path = path.substring(0, i);
         }
-        if (path.charAt(path.length() - 1) == ICON_KEY_END) {
+        if (path.charAt(path.length() - 1) == INT_LIST_END) {
             String tag = null;
             if (path.endsWith(DUAL_KEY)) {
                 tag = DUAL_KEY;
@@ -376,15 +430,12 @@ public final class PropertyLoader {
         return iconLoader.getIcon(path, dim.width, dim.height);
     }
 
-    private static Icon parseStateIcon(final String value, final IconLoader iconLoader) {
-        String[] keys = value.substring(1, value.length() - 1).split(String.valueOf(LIST_SEPARATOR));
-        Icon[] icons = new Icon[keys.length];
-        for (int i = 0; i < icons.length; i++) {
-            icons[i] = parseIcon(keys[i], iconLoader);
-        }
-        return new StateIcon(icons);
+    private static Icon parseStateIcon(final String value,
+                                       final Map<Object, Object> accumulator,
+                                       final UIDefaults currentDefaults,
+                                       final IconLoader iconLoader) {
+        return new StateIcon(parseList(PropertyLoader::parseIcon, value, accumulator, currentDefaults, iconLoader));
     }
-
 
     private static Object parseSize(final String value) {
         try {
@@ -424,4 +475,22 @@ public final class PropertyLoader {
     private static final class LoadError {
     }
 
+    private interface ParseFunction<T> {
+
+        T parseValue(final String value,
+                     final Map<Object, Object> accumulator,
+                     final UIDefaults currentDefaults, final IconLoader iconLoader);
+    }
+
+    private interface SimpleValueMapper<T> extends ParseFunction<T> {
+
+        T map(final String value);
+
+        @Override
+        default T parseValue(final String value,
+                             final Map<Object, Object> accumulator,
+                             final UIDefaults currentDefaults, final IconLoader iconLoader) {
+            return map(value);
+        }
+    }
 }

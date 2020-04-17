@@ -60,16 +60,20 @@ public class DemoPanel extends JPanel {
         add(controls, BorderLayout.SOUTH);
     }
 
-    public JPanel addControls(final int columns) {
+    public JPanel addControls(final LayoutManager layoutManager) {
         JPanel control = new JPanel();
+        control.setLayout(layoutManager);
+        control.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
+        controls.add(control);
+        return control;
+    }
+
+    public JPanel addControls(final int columns) {
         String constraints = "fillx";
         if (columns > 0) {
             constraints += ", wrap" + columns;
         }
-        control.setLayout(new MigLayout(constraints, "[][grow]"));
-        control.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
-        controls.add(control);
-        return control;
+        return addControls(new MigLayout(constraints, "[][grow]"));
     }
 
     public JPanel addControls() {

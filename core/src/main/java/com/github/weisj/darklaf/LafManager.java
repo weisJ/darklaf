@@ -27,6 +27,7 @@ import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -36,7 +37,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
 import java.util.logging.Level;
@@ -119,6 +119,9 @@ public final class LafManager {
     /**
      * Enabled whether changes in the preferred theme style should be reported to {@link ThemePreferenceListener}s. On
      * some platforms this setting may do nothing.
+     * <p>
+     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the program. Not doing
+     * so can result in memory leaks and prevent the classloader from being garbage collected.
      *
      * @param enabled true if changes should be reported.
      */
@@ -279,6 +282,16 @@ public final class LafManager {
     }
 
     /**
+     * Install the theme reported by the {@link ThemePreferenceChangeEvent}.
+     *
+     * @param changeEvent the change event.
+     */
+    public static void installTheme(final ThemePreferenceChangeEvent changeEvent) {
+        setTheme(changeEvent.getPreferredThemeStyle());
+        install();
+    }
+
+    /**
      * Install the theme suited for the given preferred theme style.
      *
      * @param preferredThemeStyle the preferred theme style.
@@ -313,14 +326,7 @@ public final class LafManager {
      * Reloads the theme. Forces all properties to be reloaded.
      */
     public static void reloadTheme() {
-        try {
-            setTheme(getTheme().getClass().getDeclaredConstructor().newInstance());
-        } catch (InstantiationException
-            | IllegalAccessException
-            | NoSuchMethodException
-            | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        setTheme(getTheme().copy());
     }
 
     /**

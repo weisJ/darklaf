@@ -1,9 +1,14 @@
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.icons.SolidColorIcon;
 import com.github.weisj.darklaf.theme.Theme;
 import ui.ComponentDemo;
+import ui.DemoPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 /*
  * MIT License
@@ -36,15 +41,53 @@ public class PreferenceChangeDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        LafManager.addThemePreferenceChangeListener(e -> LafManager.installTheme(e.getPreferredThemeStyle()));
-        return new JPanel(new GridBagLayout()) {{
-            add(new JToggleButton("Start") {{
-                addActionListener(e -> {
-                    setText(isSelected() ? "Stop" : "Start");
-                    LafManager.enabledPreferenceChangeReporting(isSelected());
-                });
-            }});
-        }};
+        LafManager.addThemePreferenceChangeListener(LafManager::installTheme);
+        DemoPanel panel = new DemoPanel(new JToggleButton("Start") {{
+            addActionListener(e -> {
+                setText(isSelected() ? "Stop" : "Start");
+                LafManager.enabledPreferenceChangeReporting(isSelected());
+            });
+        }});
+        Icon accentColorIcon = new SolidColorIcon() {
+            @Override
+            public Color getColor() {
+                return LafManager.getTheme().getAccentColorRule().getAccentColor();
+            }
+        };
+        Icon selectionColorIcon = new SolidColorIcon() {
+            @Override
+            public Color getColor() {
+                return LafManager.getTheme().getAccentColorRule().getSelectionColor();
+            }
+        };
+        JPanel controlPanel = panel.addControls();
+        controlPanel.add(new JLabel("Accent Color", accentColorIcon, JLabel.LEFT));
+        controlPanel.add(new JLabel("Selection Color", selectionColorIcon, JLabel.LEFT));
+
+        controlPanel = panel.addControls();
+        controlPanel.add(new JTextArea() {{
+            setMargin(new Insets(5, 5, 5, 5));
+            setEditable(false);
+            setText("Press start/stop to enable/disable preference monitoring.\n"
+                    + "Then do one of the following\n"
+                    + " - switch between dark/light theme (Windows/macOS)\n"
+                    + " - toggle high contrast mode (Windows/macOS)\n"
+                    + " - change accent color (Windows/macOS)\n"
+                    + " - change selection color (macOS)\n"
+                    + " - change font scaling (Windows)\n"
+                    + "The theme should then adjust automatically (if monitoring is started).\n");
+        }});
+        return panel;
+    }
+
+    @Override
+    public WindowListener createWindowListener() {
+        return new WindowAdapter() {
+            @Override
+            public void windowClosing(final WindowEvent e) {
+                LafManager.enabledPreferenceChangeReporting(false);
+            }
+        };
     }
 
     @Override

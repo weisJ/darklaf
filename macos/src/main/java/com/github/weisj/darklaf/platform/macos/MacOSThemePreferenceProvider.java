@@ -21,55 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.windows;
+package com.github.weisj.darklaf.platform.macos;
 
 import com.github.weisj.darklaf.theme.info.*;
 
 import java.awt.*;
 import java.util.function.Consumer;
 
-public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
+public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     private final PreferredThemeStyle fallbackStyle = new PreferredThemeStyle(ContrastRule.STANDARD,
                                                                               ColorToneRule.LIGHT);
-    private final WindowsPreferenceMonitor monitor = new WindowsPreferenceMonitor(this);
+    private final MacOSPreferenceMonitor monitor = new MacOSPreferenceMonitor(this);
     private Consumer<PreferredThemeStyle> callback;
 
     @Override
     public PreferredThemeStyle getPreference() {
-        if (!WindowsLibrary.isLoaded()) return fallbackStyle;
-        boolean darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
-        boolean highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
-        long fontScaling = JNIThemeInfoWindows.getFontScaleFactor();
-        int accentColorRGB = JNIThemeInfoWindows.getAccentColor();
-        return create(highContrast, darkMode, fontScaling, accentColorRGB);
+        if (!MacOSLibrary.isLoaded()) return fallbackStyle;
+        boolean darkMode = JNIThemeInfoMacOS.isDarkThemeEnabled();
+        boolean highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
+        Color accentColor = JNIThemeInfoMacOS.getAccentColor();
+        Color selectionColor = JNIThemeInfoMacOS.getSelectionColor();
+        return create(highContrast, darkMode, accentColor, selectionColor);
     }
 
     private PreferredThemeStyle create(final boolean highContrast, final boolean darkMode,
-                                       final long fontScaling, final int accentColorRGB) {
+                                       final Color accentColor, final Color selectionColor) {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
-        FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
-        AccentColorRule accentColorRule = AccentColorRule.fromColor(createColorFromRGB(accentColorRGB));
-        return new PreferredThemeStyle(contrastRule, toneRule, accentColorRule, fontSizeRule);
+        AccentColorRule accentColorRule = AccentColorRule.fromColor(accentColor, selectionColor);
+        return new PreferredThemeStyle(contrastRule, toneRule, accentColorRule);
     }
 
-    private Color createColorFromRGB(final int rgb) {
-        if (rgb == 0) return null;
-        return new Color(rgb);
-    }
-
-    void reportPreferenceChange(final boolean highContrast, final boolean darkMode,
-                                final long fontScaleFactor, final int accentColorRGB) {
+    void reportPreferenceChange(final boolean dark, final boolean highContrast,
+                                final Color accentColor, final Color selectionColor) {
         if (callback != null) {
-            PreferredThemeStyle style = create(highContrast, darkMode, fontScaleFactor, accentColorRGB);
+            PreferredThemeStyle style = create(dark, highContrast, accentColor, selectionColor);
             callback.accept(style);
         }
     }
 
     @Override
     public void setReporting(final boolean reporting) {
-        if (reporting && !WindowsLibrary.isLoaded()) WindowsLibrary.updateLibrary();
+        if (reporting && !MacOSLibrary.isLoaded()) MacOSLibrary.updateLibrary();
         synchronized (monitor) {
             monitor.setRunning(reporting);
         }
@@ -82,7 +76,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void initialize() {
-        WindowsLibrary.updateLibrary();
+        MacOSLibrary.updateLibrary();
     }
 
     @Override

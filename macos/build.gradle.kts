@@ -8,6 +8,7 @@ fun DependencyHandlerScope.javaImplementation(dep: Any) {
 }
 
 dependencies {
+    javaImplementation(project(":darklaf-theme"))
     javaImplementation(project(":darklaf-native-utils"))
     javaImplementation(project(":darklaf-utils"))
     javaImplementation(project(":darklaf-platform-base"))
@@ -34,7 +35,10 @@ library {
             compilerArgs.addAll("-x", "objective-c++")
             compilerArgs.addAll("-mmacosx-version-min=10.10")
             compilerArgs.addJavaFrameworks()
-            source.from(file("src/main/objectiveCpp/JNIDecorations.mm"))
+            source.from(
+                file("src/main/objectiveCpp/Decorations.mm"),
+                file("src/main/objectiveCpp/ThemeInfo.mm")
+            )
         }
     }
     binaries.whenElementFinalized(CppSharedLibrary::class) {

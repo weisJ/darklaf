@@ -21,29 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.macos;
+package com.github.weisj.darklaf.platform.macos.theme;
 
 import java.awt.*;
 
-public class JNIDecorationsMacOS {
+public class MacOSColors {
 
-    public static native long getComponentPointer(final Window window);
-
-    public static native void retainWindow(final long hwnd);
-
-    public static native void releaseWindow(final long hwnd);
-
-    public static native double getTitleBarHeight(final long hwnd);
-
-    public static native void installDecorations(final long hwnd);
-
-    public static native void uninstallDecorations(final long hwnd);
-
-    public static native void setTitleEnabled(final long hwnd, final boolean enabled);
-
-    public static native void setDarkTheme(final long hwnd, final boolean darkEnabled);
-
-    public static native boolean isFullscreen(final long hwnd);
-
-    public static native double getTitleFontSize(final long hwnd);
+    // 0.000000 0.478431 1.000000
+    public static final Color BLUE = new Color(0, 122, 255);
+    // 0.584314 0.239216 0.588235
+    public static final Color LILAC = new Color(149, 61, 149);
+    // 0.968627 0.309804 0.619608
+    public static final Color ROSE = new Color(247, 79, 158);
+    // 0.878431 0.219608 0.243137
+    public static final Color RED = new Color(224, 56, 62);
+    // 0.968627 0.509804 0.105882
+    public static final Color ORANGE = new Color(247, 130, 27);
+    // 0.988235 0.721569 0.152941
+    public static final Color YELLOW = new Color(252, 184, 39);
+    // 0.384314 0.729412 0.27451
+    public static final Color GREEN = new Color(98, 186, 70);
+    // 0.596078 0.596078 0.596078
+    public static final Color GRAY = new Color(152, 152, 152);
 }

@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.platform;
 
 import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.platform.macos.MacOSThemePreferenceProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsThemePreferenceProvider;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeSupport;
@@ -32,6 +33,8 @@ import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
 import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
+
+import javax.swing.*;
 
 public class ThemePreferencesHandler {
 
@@ -56,13 +59,14 @@ public class ThemePreferencesHandler {
             // Extend for different platforms.
             boolean enableNativePreferences = isNativePreferencesEnabled();
             if (SystemInfo.isWindows10 && enableNativePreferences) {
-                // Decorations are in the Windows10 visuals. Disable for older version.
                 preferenceProvider = new WindowsThemePreferenceProvider();
+            } else if (SystemInfo.isMac && enableNativePreferences) {
+                preferenceProvider = new MacOSThemePreferenceProvider();
             } else {
                 preferenceProvider = new DefaultThemePreferenceProvider();
             }
         } catch (Throwable e) {
-            // If decorations modules are not available disable them.
+            // If native modules are not available disable them.
             preferenceProvider = new DefaultThemePreferenceProvider();
         }
         preferenceProvider.initialize();
@@ -70,7 +74,9 @@ public class ThemePreferencesHandler {
     }
 
     private void onChange(final PreferredThemeStyle style) {
-        changeSupport.notifyPreferenceChange(new ThemePreferenceChangeEvent(style));
+        SwingUtilities.invokeLater(() -> {
+            changeSupport.notifyPreferenceChange(new ThemePreferenceChangeEvent(style));
+        });
     }
 
     public void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {
