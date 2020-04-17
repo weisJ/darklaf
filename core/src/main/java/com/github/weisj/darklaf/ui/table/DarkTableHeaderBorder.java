@@ -23,15 +23,11 @@
  */
 package com.github.weisj.darklaf.ui.table;
 
-import java.awt.*;
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
-
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 /**
  * @author Jannis Weis
@@ -46,40 +42,11 @@ public class DarkTableHeaderBorder extends MutableLineBorder implements UIResour
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                             final int width, final int height) {
-        adjustTop(c);
         super.paintBorder(c, g, x, y, width, height);
     }
 
     @Override
     public Insets getBorderInsets(final Component c, final Insets insets) {
-        adjustTop(c);
         return super.getBorderInsets(c, insets);
-    }
-
-    protected void adjustTop(final Component c) {
-        Component parent = DarkUIUtil.getUnwrappedParent(c.getParent());
-        top = 0;
-        if (parent instanceof JComponent) {
-            if (hasBorderAbove((JComponent) parent, c)) return;
-            Border border = ((JComponent) parent).getBorder();
-            if (border instanceof EmptyBorder || border == null) {
-                top = 1;
-            }
-        }
-    }
-
-    protected boolean hasBorderAbove(final JComponent c, final Component child) {
-        JComponent comp = c;
-        Component prev = child;
-        while (comp instanceof JScrollPane
-               || (comp != null
-                   && comp.getLayout() instanceof BorderLayout
-                   && ((BorderLayout) comp.getLayout()).getConstraints(prev) == BorderLayout.CENTER)
-                  && ((BorderLayout) comp.getLayout()).getLayoutComponent(BorderLayout.NORTH) == null) {
-            if (comp instanceof JTabbedPane) return true;
-            prev = comp;
-            comp = (JComponent) comp.getParent();
-        }
-        return comp instanceof JTabbedPane;
     }
 }
