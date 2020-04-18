@@ -65,91 +65,101 @@ public class ThemeDelegate extends Theme {
 
     @Override
     public FontSizeRule getFontSizeRule() {
-        return overwriteFontSize ? super.getFontSizeRule() : delegate.getFontSizeRule();
+        return overwriteFontSize ? super.getFontSizeRule() : getDelegate().getFontSizeRule();
     }
 
     @Override
     public AccentColorRule getAccentColorRule() {
-        return overWriteAccentColor ? super.getAccentColorRule() : delegate.getAccentColorRule();
+        return overWriteAccentColor ? super.getAccentColorRule() : getDelegate().getAccentColorRule();
     }
 
     @Override
     public ColorToneRule getColorToneRule() {
-        return delegate.getColorToneRule();
+        return getDelegate().getColorToneRule();
     }
 
     @Override
     public ContrastRule getContrastRule() {
-        return delegate.getContrastRule();
+        return getDelegate().getContrastRule();
     }
 
     @Override
     protected PresetIconRule getPresetIconRule() {
-        return delegate.getPresetIconRule();
+        return getDelegate().getPresetIconRule();
     }
 
     @Override
     public void loadDefaults(final Properties properties, final UIDefaults currentDefaults) {
-        delegate.loadDefaults(properties, currentDefaults);
+        getDelegate().loadDefaults(properties, currentDefaults);
     }
 
     @Override
     public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {
-        delegate.customizeGlobals(properties, currentDefaults);
+        getDelegate().customizeGlobals(properties, currentDefaults);
     }
 
     @Override
     public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        delegate.customizeIconTheme(properties, currentDefaults);
+        getDelegate().customizeIconTheme(properties, currentDefaults);
     }
 
     @Override
     public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        delegate.loadIconTheme(properties, currentDefaults);
+        getDelegate().loadIconTheme(properties, currentDefaults);
     }
 
     @Override
     public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        delegate.customizePlatformProperties(properties, currentDefaults);
+        getDelegate().customizePlatformProperties(properties, currentDefaults);
     }
 
     @Override
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        delegate.customizeUIProperties(properties, currentDefaults);
+        getDelegate().customizeUIProperties(properties, currentDefaults);
     }
 
     @Override
     public String toString() {
-        return delegate.getName();
+        return getDelegate().getName();
     }
 
     @Override
     protected String getResourcePath() {
-        return delegate.getResourcePath();
+        return getDelegate().getResourcePath();
     }
 
     @Override
     public String getPrefix() {
-        return delegate.getPrefix();
+        return getDelegate().getPrefix();
     }
 
     @Override
     public String getName() {
-        return delegate.getName();
+        return getDelegate().getName();
     }
 
     @Override
     protected Class<? extends Theme> getLoaderClass() {
-        return delegate.getClass();
+        return getDelegate().getClass();
     }
 
     @Override
     protected String getPropertyFilePath(final String name) {
-        return delegate.getPropertyFilePath(name);
+        return getDelegate().getPropertyFilePath(name);
     }
 
     @Override
     public boolean useCustomDecorations() {
-        return delegate.useCustomDecorations();
+        return getDelegate().useCustomDecorations();
+    }
+
+    @Override
+    public boolean supportsCustomSelectionColor() {
+        return getDelegate().supportsCustomSelectionColor();
+    }
+
+    @Override
+    public boolean supportsCustomAccentColor() {
+        return getDelegate().supportsCustomAccentColor();
     }
 }

@@ -90,4 +90,23 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         this.callback = callback;
     }
 
+    @Override
+    public boolean canReport() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsNativeAccentColor() {
+        return WindowsLibrary.isLoaded();
+    }
+
+    @Override
+    public boolean supportsNativeFontSize() {
+        return WindowsLibrary.isLoaded();
+    }
+
+    @Override
+    public boolean supportsNativeTheme() {
+        return WindowsLibrary.isLoaded();
+    }
 }

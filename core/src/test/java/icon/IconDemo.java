@@ -24,13 +24,13 @@
 package icon;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.UIAwareIcon;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import ui.ComponentDemo;
 import ui.DemoPanel;
-import ui.QuickColorChooser;
 
 import javax.swing.*;
 import java.awt.*;

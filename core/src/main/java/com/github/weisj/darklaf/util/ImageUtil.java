@@ -23,6 +23,7 @@
  */
 package com.github.weisj.darklaf.util;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -32,6 +33,27 @@ import java.awt.image.BufferedImage;
 public final class ImageUtil {
 
     private ImageUtil() {
+    }
+
+    private static final int FRAME_ICON_SIZE = 32;
+
+    public static Image createFrameIcon(final Icon icon) {
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        double scaleX = Scale.SCALE_X * (((double) FRAME_ICON_SIZE) / w);
+        double scaleY = Scale.SCALE_Y * (((double) FRAME_ICON_SIZE) / h);
+        return createScaledImage(icon, scaleX, scaleY);
+    }
+
+    public static Image createScaledImage(final Icon icon, final double scalex, final double scaley) {
+        int w = (int) (scalex * icon.getIconWidth());
+        int h = (int) (scaley * icon.getIconHeight());
+        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D) image.getGraphics();
+        g.scale(scalex, scaley);
+        icon.paintIcon(null, g, 0, 0);
+        g.dispose();
+        return image;
     }
 
     public static Image createDragImage(final Component c, final int lw, final Color borderColor) {

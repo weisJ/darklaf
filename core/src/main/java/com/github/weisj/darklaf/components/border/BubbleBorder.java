@@ -293,6 +293,18 @@ public class BubbleBorder extends AbstractBorder {
         final Area area = new Area(bubble);
         if (pointerSide != Alignment.CENTER) {
             double pointerPad = calculatePointerPad(w, h, pointerSide);
+            switch (pointerSide) {
+                case SOUTH_EAST:
+                case NORTH_EAST:
+                    if (inner) pointerPad += adj;
+                    break;
+                case NORTH_WEST:
+                case SOUTH_WEST:
+                    if (inner) pointerPad -= adj;
+                    break;
+                default:
+                    break;
+            }
             Path2D pointer = creatPointerShape(pointerPad, pSize, pWidth, bubble);
             area.add(new Area(pointer));
         }

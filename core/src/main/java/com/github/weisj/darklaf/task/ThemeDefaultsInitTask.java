@@ -43,10 +43,10 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "numberingPane", "optionPane", "panel",
         "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator",
         "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "taskPane", "text",
-        "toggleButton", "toolBar", "toolTip", "tree",
-        };
+        "toggleButton", "toolBar", "toolTip", "tree", "misc"
+    };
     private static final String[] ICON_PROPERTIES = new String[]{
-        "control", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
+        "checkBox", "radioButton", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
     };
     private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserPreferenceAdjustmentTask();
     private final DefaultsAdjustmentTask accentColorAdjustment = new AccentColorAdjustmentTask();

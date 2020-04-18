@@ -21,53 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
-import com.github.weisj.darklaf.theme.info.PresetIconRule;
+import com.kitfox.svg.SVGUniverse;
+import com.kitfox.svg.app.beans.SVGIcon;
 
-/**
- * @author Jannis Weis
- */
-public class DarculaTheme extends Theme {
+import javax.swing.*;
+import java.net.URI;
+import java.util.Map;
 
-    @Override
-    protected String getResourcePath() {
-        return "darcula/";
+public class CustomThemedIcon extends ThemedSVGIcon {
+
+    private final UIDefaults defaults;
+
+    public CustomThemedIcon(final URI uri, final int displayWidth, final int displayHeight,
+                            final Map<Object, Object> colors) {
+        super(uri, displayWidth, displayHeight);
+        defaults = new UIDefaults(colors.size(), 1f);
+        for (Map.Entry<Object, Object> entry : colors.entrySet()) {
+            defaults.put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
-    public String getPrefix() {
-        return "darcula";
+    protected SVGIcon createSVGIcon() {
+        SVGIcon icon = new SVGIcon();
+        icon.setSvgUniverse(new SVGUniverse());
+        return icon;
     }
 
     @Override
-    public String getName() {
-        return "Darcula";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return DarculaTheme.class;
-    }
-
-    @Override
-    public ColorToneRule getColorToneRule() {
-        return ColorToneRule.DARK;
-    }
-
-    @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.DARK;
-    }
-
-    @Override
-    public boolean supportsCustomAccentColor() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsCustomSelectionColor() {
-        return true;
+    protected void patchColors() {
+        IconColorMapper.patchColors(getSVGIcon(), defaults);
     }
 }

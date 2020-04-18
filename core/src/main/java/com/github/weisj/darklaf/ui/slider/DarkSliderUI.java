@@ -38,6 +38,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Dictionary;
 
 /**
  * @author Jannis Weis
@@ -50,6 +51,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_INSTANT_SCROLL = KEY_PREFIX + "instantScrollEnabled";
     public static final String KEY_SHOW_FOCUS_GLOW = KEY_PREFIX + "paintFocusGlow";
+    public static final String KEY_MANUAL_LABEL_ALIGN = KEY_PREFIX + "manualLabelAlign";
     public static final String VARIANT_VOLUME = "volume";
 
     private static final int ICON_BAR_EXT = 5;
@@ -63,11 +65,11 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         public void mouseClicked(final MouseEvent e) {
             if (slider.isEnabled() && showVolumeIcon(slider) && iconRect.contains(e.getPoint())) {
                 if (muted && slider.getValue() == slider.getMinimum()) {
-                    slider.setValue(oldValue);
+                    setValue(oldValue);
                     muted = false;
                 } else {
                     oldValue = slider.getValue();
-                    slider.setValue(slider.getMinimum());
+                    setValue(slider.getMinimum());
                     muted = true;
                 }
             }
@@ -167,6 +169,172 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     @Override
+    protected void calculateTrackBuffer() {
+        super.calculateTrackBuffer();
+        if (slider.getOrientation() == JSlider.HORIZONTAL) {
+            trackBuffer = 0;
+        }
+    }
+
+    @Override
+    protected void calculateTrackRect() {
+        super.calculateTrackRect();
+        adjustRect(trackRect);
+    }
+
+    @Override
+    protected void calculateLabelRect() {
+        super.calculateLabelRect();
+    }
+
+    protected void calculateThumbLocation() {
+        if (slider.getOrientation() == JSlider.HORIZONTAL) {
+            int valuePosition = xPositionForValue(slider.getValue());
+
+            thumbRect.x = valuePosition - (thumbRect.width / 2);
+            thumbRect.y = trackRect.y;
+        } else {
+            int valuePosition = yPositionForValue(slider.getValue());
+
+            thumbRect.x = trackRect.x;
+            thumbRect.y = valuePosition - (thumbRect.height / 2);
+        }
+    }
+
+    @Override
+    public int xPositionForValue(final int value) {
+        return super.xPositionForValue(value);
+    }
+
+    @Override
+    public int yPositionForValue(final int value) {
+        return super.yPositionForValue(value);
+    }
+
+    /**
+     * Scrolls by block.
+     *
+     * @param direction the direction
+     */
+    public void scrollByBlock(final int direction) {
+        synchronized (slider) {
+            int blockIncrement =
+                (slider.getMaximum() - slider.getMinimum()) / 10;
+            if (blockIncrement == 0) {
+                blockIncrement = 1;
+            }
+
+            int tickSpacing = getTickSpacing();
+            if (slider.getSnapToTicks()) {
+
+                if (blockIncrement < tickSpacing) {
+                    blockIncrement = tickSpacing;
+                }
+            } else {
+                if (tickSpacing > 0) {
+                    blockIncrement = tickSpacing;
+                }
+            }
+
+            int delta = blockIncrement * ((direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL);
+            applyDelta(delta);
+        }
+    }
+
+    /**
+     * Scrolls by unit.
+     *
+     * @param direction the direction
+     */
+    public void scrollByUnit(final int direction) {
+        synchronized (slider) {
+            int delta = ((direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL);
+
+            if (slider.getSnapToTicks()) {
+                delta *= getTickSpacing();
+            }
+
+            applyDelta(delta);
+        }
+    }
+
+    protected void applyDelta(final int delta) {
+        setValue(slider.getValue() + delta);
+    }
+
+    protected void setValue(final int value) {
+        if (slider.getSnapToTicks()) {
+            slider.setValue(getSnappedValue(value));
+        } else {
+            slider.setValue(value);
+        }
+    }
+
+    protected int getTickSpacing() {
+        int majorTickSpacing = slider.getMajorTickSpacing();
+        int minorTickSpacing = slider.getMinorTickSpacing();
+
+        int result;
+        if (minorTickSpacing > 0) {
+            result = minorTickSpacing;
+        } else {
+            result = Math.max(majorTickSpacing, 0);
+        }
+        return result;
+    }
+
+    protected void adjustRect(final Rectangle rectangle) {
+        adjustRect(rectangle, false);
+    }
+
+    protected void adjustRect(final Rectangle rectangle, final boolean outwards) {
+        boolean horizontal = slider.getOrientation() == JSlider.HORIZONTAL;
+        if (!horizontal) return;
+        Dictionary<?, ?> dict = slider.getLabelTable();
+        if (!slider.getPaintLabels() || dict == null || dict.isEmpty()) return;
+
+        int extra = getLowerHorizontalExtend();
+        int extend = getUpperHorizontalExtend();
+        int thumbWidth = getThumbWidth() / 2;
+        int factor = outwards ? 1 : -1;
+        extra -= thumbWidth;
+        extend -= thumbWidth;
+        rectangle.x -= factor * extra;
+        rectangle.width += factor * (extra + extend);
+    }
+
+    protected int getLowerHorizontalExtend() {
+        boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
+                      || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
+        Component minLabel = ltr ? getLowestValueLabel() : getHighestValueLabel();
+        boolean adjustMin = minLabel instanceof JComponent
+                            && Boolean.TRUE.equals(((JComponent) minLabel).getClientProperty(KEY_MANUAL_LABEL_ALIGN));
+        int minPrefWidth = minLabel.getPreferredSize().width;
+        float adj = (adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
+        return (int) (minPrefWidth * adj) + 2 * (ltr ? focusInsets.left : focusInsets.right);
+    }
+
+    protected int getUpperHorizontalExtend() {
+        boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
+                      || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
+        Component maxLabel = ltr ? getHighestValueLabel() : getLowestValueLabel();
+        boolean adjustMax = maxLabel instanceof JComponent
+                            && Boolean.TRUE.equals(((JComponent) maxLabel).getClientProperty(KEY_MANUAL_LABEL_ALIGN));
+        int maxPrefWidth = maxLabel.getPreferredSize().width;
+        float adj = (adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
+        return (int) (maxPrefWidth * (1f - adj)) + 2 * (ltr ? focusInsets.right : focusInsets.left);
+    }
+
+    @Override
+    public Dimension getPreferredHorizontalSize() {
+        Dimension dim = super.getPreferredHorizontalSize();
+        Rectangle rect = new Rectangle(0, 0, 0, 0);
+        rect.setSize(dim);
+        adjustRect(rect, true);
+        return rect.getSize();
+    }
+
+    @Override
     public Dimension getThumbSize() {
         if (isPlainThumb()) {
             return new Dimension(plainThumbRadius + 6, plainThumbRadius + 6);
@@ -250,7 +418,16 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     @Override
     protected void paintHorizontalLabel(final Graphics g, final int value, final Component label) {
         checkDisabled(g);
-        super.paintHorizontalLabel(g, value, label);
+        int labelCenter = xPositionForValue(value);
+        float align = Component.CENTER_ALIGNMENT;
+        if (label instanceof JComponent
+            && Boolean.TRUE.equals(((JComponent) label).getClientProperty(KEY_MANUAL_LABEL_ALIGN))) {
+            align = label.getAlignmentX();
+        }
+        int labelLeft = labelCenter - (int) (label.getPreferredSize().width * align);
+        g.translate(labelLeft, 0);
+        label.paint(g);
+        g.translate(-labelLeft, 0);
     }
 
     @Override
@@ -286,7 +463,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
         if (instantScrollEnabled(slider)) {
             int value = isHorizontal() ? valueForXPosition(p.x) : valueForYPosition(p.y);
-            slider.setValue(value);
+            setValue(value);
         } else {
             super.scrollDueToClickInTrack(dir);
         }
@@ -497,6 +674,14 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return slider.hasFocus() && Boolean.TRUE.equals(slider.getClientProperty(KEY_SHOW_FOCUS_GLOW));
     }
 
+    protected int getThumbWidth() {
+        return thumbRect.width;
+    }
+
+    protected int getThumbHeight() {
+        return thumbRect.height;
+    }
+
     private Path2D getThumbShape() {
         if (isHorizontal()) {
             return getHorizontalThumbShape();
@@ -584,6 +769,10 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return Boolean.TRUE.equals(c.getClientProperty(KEY_INSTANT_SCROLL));
     }
 
+    public Rectangle getThumbRect() {
+        return new Rectangle(thumbRect);
+    }
+
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
@@ -593,6 +782,22 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             calculateGeometry();
             slider.repaint();
         }
+    }
+
+    private int getSnappedValue(final int value) {
+        // Now calculate if we should adjust the value
+        int snappedValue = value;
+        int tickSpacing = getTickSpacing();
+        // If it's not on a tick, change the value
+        if (tickSpacing != 0) {
+            if ((value - slider.getMinimum()) % tickSpacing != 0) {
+                float temp = (float) (value - slider.getMinimum())
+                             / (float) tickSpacing;
+                snappedValue = slider.getMinimum() +
+                               (Math.round(temp) * tickSpacing);
+            }
+        }
+        return snappedValue;
     }
 
     public class SnapTrackListener extends TrackListener {
@@ -627,26 +832,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         private int getSnappedValue(final MouseEvent e) {
             int value = isHorizontal() ? valueForXPosition(e.getX())
                                        : valueForYPosition(e.getY());
-            // Now calculate if we should adjust the value
-            int snappedValue = value;
-            int tickSpacing = 0;
-            int majorTickSpacing = slider.getMajorTickSpacing();
-            int minorTickSpacing = slider.getMinorTickSpacing();
-            if (minorTickSpacing > 0) {
-                tickSpacing = minorTickSpacing;
-            } else if (majorTickSpacing > 0) {
-                tickSpacing = majorTickSpacing;
-            }
-            // If it's not on a tick, change the value
-            if (tickSpacing != 0) {
-                if ((value - slider.getMinimum()) % tickSpacing != 0) {
-                    float temp = (float) (value - slider.getMinimum())
-                                 / (float) tickSpacing;
-                    snappedValue = slider.getMinimum() +
-                                   (Math.round(temp) * tickSpacing);
-                }
-            }
-            return snappedValue;
+            return DarkSliderUI.this.getSnappedValue(value);
         }
     }
 }

@@ -32,6 +32,7 @@ import java.awt.*;
 public interface ComboBoxConstants {
     String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
     String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
+    String KEY_DO_NOT_UPDATE_WHEN_SCROLLED = "JComboBox.isTableCellEditor";
 
     static boolean isTreeOrTableCellEditor(final Component c) {
         return isTreeCellEditor(c) || isTableCellEditor(c);

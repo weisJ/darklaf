@@ -23,7 +23,6 @@
  */
 package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
 
-import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
@@ -35,7 +34,6 @@ import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
@@ -221,7 +219,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
     @Override
     public Icon getDefaultIcon() {
-        return new IconUIResource(EmptyIcon.create(20));
+        return getStateIcon(radioButton);
     }
 
     protected String layout(final AbstractButton b, final FontMetrics fm) {

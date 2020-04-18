@@ -413,6 +413,10 @@ public final class DarkUIUtil {
         return null;
     }
 
+    public static void drawRect(final Graphics g, final Rectangle rect, final int thickness) {
+        drawRect(g, rect.x, rect.y, rect.width, rect.height, thickness);
+    }
+
     public static void drawRect(final Graphics g, final int x, final int y,
                                 final int width, final int height, final int thickness) {
         g.fillRect(x, y, width, thickness);

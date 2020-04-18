@@ -24,7 +24,6 @@
 package com.github.weisj.darklaf.ui.togglebutton.tristate;
 
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
-import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.ui.togglebutton.checkbox.DarkCheckBoxUI;
 
 import javax.swing.*;
@@ -54,8 +53,7 @@ public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
     @Override
     protected Icon getStateIcon(final AbstractButton b) {
         if (b instanceof TristateCheckBox) {
-            TristateState state = ((TristateCheckBox) b).getState();
-            if (state == TristateState.INDETERMINATE) {
+            if (((TristateCheckBox) b).getTristateModel().isIndeterminate()) {
                 if (b.isEnabled()) {
                     return b.hasFocus() ? checkBoxIndeterminateFocusedIcon
                                         : checkBoxIndeterminateIcon;

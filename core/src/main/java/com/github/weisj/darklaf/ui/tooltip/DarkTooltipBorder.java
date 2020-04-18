@@ -76,10 +76,14 @@ public class DarkTooltipBorder implements Border {
                                           height - ins.top - ins.bottom + 2 * adj, true);
     }
 
-    public int getPointerOffset(final Component c, final Dimension dimension) {
+    public int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
         if (isPlain(c)) return 0;
-        return (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
-               + shadowBorder.getShadowSize();
+        int offset = (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
+                     + shadowBorder.getShadowSize();
+        int thickness = bubbleBorder.getThickness();
+        Alignment align = bubbleBorder.getPointerSide();
+        if (align.isWest(false)) offset += thicknessFactor * thickness;
+        return offset;
     }
 
     private void adjustInsets(final Insets si) {
@@ -193,5 +197,23 @@ public class DarkTooltipBorder implements Border {
 
     public void setSkipShadow(final boolean skip) {
         this.skipShadow = skip;
+    }
+
+    public int getDistanceToPointer() {
+        switch (bubbleBorder.getPointerSide()) {
+            case WEST:
+            case SOUTH:
+            case SOUTH_EAST:
+            case SOUTH_WEST:
+            case EAST:
+                return Math.max(0, shadowBorder.getShadowSize() - bubbleBorder.getPointerSize())
+                       + bubbleBorder.getThickness();
+            case NORTH:
+            case NORTH_EAST:
+            case NORTH_WEST:
+            case CENTER:
+            default:
+                return bubbleBorder.getThickness();
+        }
     }
 }

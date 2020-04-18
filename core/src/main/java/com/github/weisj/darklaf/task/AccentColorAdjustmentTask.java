@@ -45,9 +45,15 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
 
     @Override
     public void run(final Theme currentTheme, final Properties properties) {
-        Properties props = currentTheme.loadPropertyFile("accents", true);
         Color accentColor = currentTheme.getAccentColorRule().getAccentColor();
         Color selectionColor = currentTheme.getAccentColorRule().getSelectionColor();
+        applyColors(currentTheme, properties, accentColor, selectionColor);
+    }
+
+    public void applyColors(final Theme currentTheme, final Properties properties,
+                            final Color accentColor, final Color selectionColor) {
+        Properties props = currentTheme.loadPropertyFile("accents", true);
+        if (props.isEmpty()) return;
         adjust(MAIN_ACCENT_LIST_KEY, accentColor, props, properties);
         adjust(SELECTION_ACCENT_LIST_KEY, selectionColor, props, properties);
     }

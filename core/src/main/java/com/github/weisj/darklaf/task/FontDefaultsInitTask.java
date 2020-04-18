@@ -90,13 +90,13 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
         FontSizeRule rule = currentTheme.getFontSizeRule();
         if (rule == null || rule.getType() == FontSizeRule.AdjustmentType.NO_ADJUSTMENT) return;
-        PropertyLoader.replacePropertiesOfType(Font.class, defaults, f -> fontWithRule(f, rule, defaults));
+        PropertyLoader.replacePropertiesOfType(Font.class, defaults, f -> fontWithRule(f, rule));
     }
 
-    private Font fontWithRule(final Font font, final FontSizeRule rule, final UIDefaults defaults) {
-        if (font == null || defaults == null) return font;
+    private Font fontWithRule(final Font font, final FontSizeRule rule) {
+        if (font == null) return null;
         float size = font.getSize2D();
-        float newSize = rule.adjustFontSize(size, defaults);
+        float newSize = rule.adjustFontSize(size);
         if (newSize == size) return font;
         if (newSize <= 0) {
             LOGGER.warning("Font " + font + " would be invisible after applying " + rule + ". Font won't be changed!");

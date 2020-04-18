@@ -318,6 +318,7 @@ public final class LafManager {
      * @param theme the theme to install.
      */
     public static void installTheme(final Theme theme) {
+        if (theme == getTheme()) return;
         setTheme(theme);
         install();
     }
@@ -399,4 +400,11 @@ public final class LafManager {
         return uiDefaultsTasks;
     }
 
+    public static Theme getClosestMatchForTheme(final Theme theme) {
+        if (theme == null) return themeForPreferredStyle(null);
+        for (Theme registered : getRegisteredThemes()) {
+            if (registered.getClass().equals(theme.getClass())) return registered;
+        }
+        return themeForPreferredStyle(null);
+    }
 }

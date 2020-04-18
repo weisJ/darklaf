@@ -23,52 +23,32 @@
  */
 package com.github.weisj.darklaf.theme.info;
 
-import javax.swing.*;
-import java.util.logging.Logger;
-
 public enum FontSizePreset {
-    TINY("tiny"),
-    SMALLER("smaller"),
-    SMALL("small"),
-    MEDIUM("medium"),
-    LARGE("large"),
-    LARGER("larger"),
-    HUGE("huge");
+    TINY(25),
+    Small(50),
+    SMALL(75),
+    NORMAL(100),
+    Large(125),
+    LARGE(150),
+    Huge(175),
+    HUGE(200);
 
-    private static final Logger LOGGER = Logger.getLogger(FontSizePreset.class.getName());
-    private final String propertyName;
-    private final FontSizeRule.AdjustmentType type;
+    private final int percentage;
 
-    FontSizePreset(final String propertyName) {
-        this(propertyName, FontSizeRule.AdjustmentType.ABSOLUTE_ADJUSTMENT);
+    FontSizePreset(final int percentage) {
+        this.percentage = percentage;
     }
 
-    FontSizePreset(final String propertyName, final FontSizeRule.AdjustmentType type) {
-        this.propertyName = propertyName;
-        this.type = type;
+    public int getPercentage() {
+        return percentage;
     }
 
-    public float adjustFontSize(final float size, final UIDefaults defaults) {
-        int adjustment = getSize(defaults);
-        return type.adjustSize(size, adjustment, adjustment / 100f);
-    }
-
-    private String getPropertyName() {
-        return "fontSize." + propertyName;
+    public float adjustFontSize(final float size) {
+        if (percentage <= 0) return size;
+        return getType().adjustSize(size, percentage / 100f);
     }
 
     public FontSizeRule.AdjustmentType getType() {
-        return type;
-    }
-
-    private int getSize(final UIDefaults defaults) {
-        String key = getPropertyName();
-        Object obj = defaults.get(getPropertyName());
-        if (!(obj instanceof Integer)) {
-            LOGGER.warning("Font size property '" + key + "' not specified. Font will not be changed");
-            return Integer.MAX_VALUE;
-        } else {
-            return (int) obj;
-        }
+        return FontSizeRule.AdjustmentType.RELATIVE_ADJUSTMENT;
     }
 }

@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.filechooser;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
 import com.github.weisj.darklaf.components.tooltip.TooltipAwareToggleButton;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import sun.swing.FilePane;
 
@@ -213,7 +214,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                 comboBox.setEnabled(comboBox.getItemCount() > 1);
             }
         });
-        comboBox.putClientProperty("JComboBox.isTableCellEditor", true);
+        comboBox.putClientProperty(ComboBoxConstants.KEY_DO_NOT_UPDATE_WHEN_SCROLLED, true);
         comboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY, filesOfTypeLabelText);
         comboBox.setRenderer(createFilterComboBoxRenderer());
         return comboBox;
@@ -244,7 +245,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                 return d;
             }
         };
-        comboBox.putClientProperty("JComboBox.isTableCellEditor", true);
+        comboBox.putClientProperty(ComboBoxConstants.KEY_DO_NOT_UPDATE_WHEN_SCROLLED, true);
         comboBox.putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY, lookInLabelText);
         comboBox.addActionListener(directoryComboBoxAction);
         comboBox.setRenderer(createDirectoryComboBoxRenderer(fileChooser));

@@ -84,4 +84,23 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
         this.callback = callback;
     }
 
+    @Override
+    public boolean canReport() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsNativeAccentColor() {
+        return MacOSLibrary.isLoaded();
+    }
+
+    @Override
+    public boolean supportsNativeSelectionColor() {
+        return MacOSLibrary.isLoaded();
+    }
+
+    @Override
+    public boolean supportsNativeTheme() {
+        return MacOSLibrary.isLoaded();
+    }
 }

@@ -23,29 +23,27 @@
  */
 package com.github.weisj.darklaf.theme.info;
 
-import javax.swing.*;
-
 public class FontSizeRule {
-    private static final FontSizeRule DEFAULT = new FontSizeRule(AdjustmentType.NO_ADJUSTMENT, 0, 1f);
+    private static final FontSizeRule DEFAULT = new FontSizeRule(AdjustmentType.NO_ADJUSTMENT, 1f);
 
     private final AdjustmentType type;
     private final FontSizePreset preset;
     private final float relativeAdjustment;
-    private final float absoluteAdjustment;
 
     protected FontSizeRule(final FontSizePreset preset) {
         this.preset = preset;
         type = preset.getType();
         relativeAdjustment = 1f;
-        absoluteAdjustment = 0;
     }
 
-    protected FontSizeRule(final AdjustmentType type,
-                           final float absoluteAdjustment, final float relativeAdjustment) {
+    protected FontSizeRule(final AdjustmentType type, final float relativeAdjustment) {
         this.type = type;
-        this.absoluteAdjustment = absoluteAdjustment;
         this.relativeAdjustment = relativeAdjustment;
         preset = null;
+    }
+
+    public FontSizePreset getPreset() {
+        return preset;
     }
 
     public static FontSizeRule getDefault() {
@@ -56,25 +54,22 @@ public class FontSizeRule {
         return new FontSizeRule(preset);
     }
 
-    public static FontSizeRule absoluteAdjustment(final float adjustment) {
-        return new FontSizeRule(AdjustmentType.ABSOLUTE_ADJUSTMENT, adjustment, 1f);
-    }
-
     public static FontSizeRule relativeAdjustment(final float percent) {
-        return new FontSizeRule(AdjustmentType.RELATIVE_ADJUSTMENT, 0, percent);
+        return new FontSizeRule(AdjustmentType.RELATIVE_ADJUSTMENT, percent);
     }
 
-    public float adjustFontSize(final float size, final UIDefaults defaults) {
-        if (preset != null) return preset.adjustFontSize(size, defaults);
-        return type.adjustSize(size, absoluteAdjustment, relativeAdjustment);
+    public static FontSizeRule relativeAdjustment(final int percent) {
+        return new FontSizeRule(AdjustmentType.RELATIVE_ADJUSTMENT, percent / 100f);
+    }
+
+    public float adjustFontSize(final float size) {
+        if (preset != null) return preset.adjustFontSize(size);
+        return type.adjustSize(size, relativeAdjustment);
     }
 
     public AdjustmentType getType() {
         if (preset == null) {
             // Prevent unnecessary mapping of font.
-            if (type == AdjustmentType.ABSOLUTE_ADJUSTMENT && absoluteAdjustment == 0) {
-                return AdjustmentType.NO_ADJUSTMENT;
-            }
             if (type == AdjustmentType.RELATIVE_ADJUSTMENT && relativeAdjustment == 1f) {
                 return AdjustmentType.NO_ADJUSTMENT;
             }
@@ -89,9 +84,6 @@ public class FontSizeRule {
             builder.append(", preset=").append(preset);
         } else {
             switch (type) {
-                case ABSOLUTE_ADJUSTMENT:
-                    builder.append(", absoluteAdjustment=").append(absoluteAdjustment);
-                    break;
                 case RELATIVE_ADJUSTMENT:
                     builder.append(", relativeAdjustment=").append(relativeAdjustment);
                     break;
@@ -104,27 +96,26 @@ public class FontSizeRule {
         return builder.toString();
     }
 
+    public int getPercentage() {
+        if (preset != null) return preset.getPercentage();
+        return Math.round(relativeAdjustment * 100);
+    }
+
     public enum AdjustmentType {
         NO_ADJUSTMENT {
             @Override
-            public float adjustSize(final float size, final float absolute, final float relative) {
+            public float adjustSize(final float size, final float relative) {
                 return size;
-            }
-        },
-        ABSOLUTE_ADJUSTMENT {
-            @Override
-            public float adjustSize(final float size, final float absolute, final float relative) {
-                return size + absolute;
             }
         },
         RELATIVE_ADJUSTMENT {
             @Override
-            public float adjustSize(final float size, final float absolute, final float relative) {
+            public float adjustSize(final float size, final float relative) {
                 return size * relative;
             }
         };
 
-        abstract public float adjustSize(final float size, final float absolute, final float relative);
+        abstract public float adjustSize(final float size, final float relative);
     }
 
 }

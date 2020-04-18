@@ -60,4 +60,49 @@ public interface ThemePreferenceProvider {
      * @see #setCallback(Consumer)
      */
     boolean isReporting();
+
+    /**
+     * Returns whether the provider can report changes in system preferences.
+     *
+     * @return true if reporting is supported.
+     */
+    default boolean canReport() {
+        return false;
+    }
+
+    /**
+     * Returns whether this provider can provide the native accent color value.
+     *
+     * @return true if supported.
+     */
+    default boolean supportsNativeAccentColor() {
+        return false;
+    }
+
+    /**
+     * Returns whether this provider can provide the native selection color value.
+     *
+     * @return true if supported.
+     */
+    default boolean supportsNativeSelectionColor() {
+        return false;
+    }
+
+    /**
+     * Returns whether this provider can provide the native font size.
+     *
+     * @return true if supported.
+     */
+    default boolean supportsNativeFontSize() {
+        return false;
+    }
+
+    /**
+     * Returns whether this provider can provide the native theme preferences.
+     *
+     * @return true if supported.
+     */
+    default boolean supportsNativeTheme() {
+        return false;
+    }
 }

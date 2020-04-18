@@ -24,6 +24,7 @@
 package com.github.weisj.darklaf.icons;
 
 import javax.swing.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -156,9 +157,19 @@ public final class IconLoader {
     }
 
     public Icon loadSVGIcon(final String name, final int w, final int h, final boolean themed) {
+        return loadSVGIcon(name, w, h, themed, null);
+    }
+
+    public Icon loadSVGIcon(final String name, final int w, final int h, final boolean themed,
+                            final Map<Object, Object> propertyMap) {
         try {
             if (themed) {
-                return new ThemedSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
+                final URI uri = Objects.requireNonNull(parentClass.getResource(name).toURI());
+                if (propertyMap != null) {
+                    return new CustomThemedIcon(uri, w, h, propertyMap);
+                } else {
+                    return new ThemedSVGIcon(uri, w, h);
+                }
             } else {
                 return new DarkSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
             }
@@ -168,7 +179,6 @@ public final class IconLoader {
         }
         return EmptyIcon.create(0);
     }
-
 
     public ImageIcon createImageIcon(final String path,
                                      final String description) {

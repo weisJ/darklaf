@@ -297,4 +297,28 @@ public enum Alignment {
                              final Rectangle outerBounds) {
         return this.alignInside.apply(toAlign, outerBounds);
     }
+
+    public boolean isNorth() {
+        return this == Alignment.NORTH || this == Alignment.NORTH_EAST || this == Alignment.NORTH_WEST;
+    }
+
+    public boolean isSouth() {
+        return this == Alignment.SOUTH || this == Alignment.SOUTH_EAST || this == Alignment.SOUTH_WEST;
+    }
+
+    public boolean isEast() {
+        return isEast(true);
+    }
+
+    public boolean isWest() {
+        return isWest(true);
+    }
+
+    public boolean isEast(final boolean includePure) {
+        return (this == Alignment.EAST && includePure) || this == Alignment.NORTH_EAST || this == Alignment.SOUTH_EAST;
+    }
+
+    public boolean isWest(final boolean includePure) {
+        return (this == Alignment.WEST && includePure) || this == Alignment.NORTH_WEST || this == Alignment.SOUTH_WEST;
+    }
 }

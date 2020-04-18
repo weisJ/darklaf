@@ -45,16 +45,20 @@ public final class IconColorMapper {
     private static final Color FALLBACK_COLOR = Color.RED;
 
     public static void patchColors(final SVGIcon svgIcon) {
+        patchColors(svgIcon, UIManager.getDefaults());
+    }
+
+    public static void patchColors(final SVGIcon svgIcon, final UIDefaults defaults) {
         SVGUniverse universe = svgIcon.getSvgUniverse();
         SVGDiagram diagram = universe.getDiagram(svgIcon.getSvgURI());
         try {
-            loadColors(diagram);
+            loadColors(diagram, defaults);
         } catch (SVGElementException e) {
             LOGGER.log(Level.SEVERE, "Failed patching colors. " + e.getMessage(), e.getStackTrace());
         }
     }
 
-    private static void loadColors(final SVGDiagram diagram) throws SVGElementException {
+    private static void loadColors(final SVGDiagram diagram, final UIDefaults defaults) throws SVGElementException {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
         if (defs == null) return;
@@ -70,7 +74,7 @@ public final class IconColorMapper {
                 String id = ((LinearGradient) child).getId();
                 String[] fallbacks = getFallbacks((LinearGradient) child);
                 float opacity = getOpacity((LinearGradient) child);
-                Color c = resolveColor(id, fallbacks, FALLBACK_COLOR);
+                Color c = resolveColor(id, fallbacks, FALLBACK_COLOR, defaults);
                 Pair<LinearGradient, Runnable> result = createColor(c, id, opacity);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
@@ -80,10 +84,11 @@ public final class IconColorMapper {
         }
     }
 
-    private static Color resolveColor(final String key, final String[] fallbacks, final Color fallbackColor) {
-        Color color = UIManager.getColor(key);
+    private static Color resolveColor(final String key, final String[] fallbacks, final Color fallbackColor,
+                                      final UIDefaults defaults) {
+        Color color = defaults.getColor(key);
         for (int i = 0; i < fallbacks.length && color == null; i++) {
-            color = UIManager.getColor(fallbacks[i]);
+            color = defaults.getColor(fallbacks[i]);
         }
         if (color == null) {
             color = fallbackColor;

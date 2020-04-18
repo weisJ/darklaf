@@ -21,53 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf.components;
 
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
-import com.github.weisj.darklaf.theme.info.PresetIconRule;
+import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
-public class DarculaTheme extends Theme {
+public class DefaultButton extends JButton {
 
-    @Override
-    protected String getResourcePath() {
-        return "darcula/";
+    private final boolean requestFocusOnDisplay;
+
+    public DefaultButton(final String text) {
+        this(text, true);
+    }
+
+    public DefaultButton(final String text, final boolean requestFocusOnDisplay) {
+        super(text);
+        this.requestFocusOnDisplay = requestFocusOnDisplay;
+        setDefaultCapable(true);
     }
 
     @Override
-    public String getPrefix() {
-        return "darcula";
-    }
-
-    @Override
-    public String getName() {
-        return "Darcula";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return DarculaTheme.class;
-    }
-
-    @Override
-    public ColorToneRule getColorToneRule() {
-        return ColorToneRule.DARK;
-    }
-
-    @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.DARK;
-    }
-
-    @Override
-    public boolean supportsCustomAccentColor() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsCustomSelectionColor() {
-        return true;
+    public void addNotify() {
+        super.addNotify();
+        if (requestFocusOnDisplay) requestFocus();
+        SwingUtilities.getRootPane(this).setDefaultButton(this);
     }
 }

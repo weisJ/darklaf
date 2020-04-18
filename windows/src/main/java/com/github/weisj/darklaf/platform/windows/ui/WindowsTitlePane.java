@@ -570,6 +570,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private void updateSystemIcon() {
+        boolean frame = getDecorationStyle() == JRootPane.FRAME;
         Window window = getWindow();
         if (window == null) {
             windowIconButton.setIcon(null);
@@ -579,7 +580,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         List<Image> icons = window.getIconImages();
         assert icons != null;
         Icon systemIcon;
-        if (icons.size() == 0) {
+        if (icons.size() == 0 && frame) {
             systemIcon = UIManager.getIcon("Windows.TitlePane.icon");
         } else if (icons.size() == 1) {
             systemIcon = new ScaledIcon(icons.get(0).getScaledInstance(Scale.scaleWidth(ICON_SIZE),
@@ -698,7 +699,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             int left = 0;
             int right = 0;
 
-            if (frame) {
+            if (windowIconButton.getIcon() != null) {
                 int windowButtonWidth = windowIconButton.getIcon() != null ?
                                         Math.max(windowIconButton.getIcon().getIconHeight(),
                                                  windowIconButton.getIcon().getIconWidth()) : ICON_WIDTH;
@@ -794,7 +795,6 @@ public class WindowsTitlePane extends CustomTitlePane {
                 repaint();
             } else if (PropertyKey.BACKGROUND.equals(name) && pce.getNewValue() instanceof Color) {
                 Color color = (Color) pce.getNewValue();
-                System.out.println(color);
                 if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }

@@ -75,37 +75,54 @@ public class PopupColorChooser extends JToolTip {
 
     public static void showColorChooser(final JComponent parent, final Color initial,
                                         final Consumer<Color> callback,
-                                        final Runnable onClose) {
+                                        final Consumer<AWTEvent> onClose) {
         JToolTip toolTip = new PopupColorChooser(parent, initial, callback);
         final Popup popup = PopupFactory.getSharedInstance().getPopup(parent, toolTip, 0, 0);
         popup.show();
         Window window = DarkUIUtil.getWindow(parent);
-        AtomicReference<Runnable> close = new AtomicReference<>();
+        AtomicReference<Consumer<AWTEvent>> close = new AtomicReference<>();
         ComponentListener windowListener = new ComponentAdapter() {
             @Override
             public void componentMoved(final ComponentEvent e) {
-                close.get().run();
+                close.get().accept(e);
             }
 
             @Override
             public void componentResized(final ComponentEvent e) {
-                close.get().run();
+                close.get().accept(e);
             }
         };
         AWTEventListener listener = event -> {
-            if (!(DarkUIUtil.hasFocus(toolTip, (FocusEvent) event) || DarkUIUtil.hasFocus(toolTip))) {
-                close.get().run();
+            if (event instanceof MouseEvent) {
+                int id = event.getID();
+                if (id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_PRESSED) return;
+            }
+            boolean doClose = event instanceof FocusEvent
+                              && (!(DarkUIUtil.hasFocus(toolTip, (FocusEvent) event)
+                                    || DarkUIUtil.hasFocus(toolTip)
+                                    || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
+            if (!doClose) {
+                Point p = MouseInfo.getPointerInfo().getLocation();
+                Point p2 = new Point(p);
+                Point p3 = new Point(p);
+                SwingUtilities.convertPointFromScreen(p2, parent);
+                SwingUtilities.convertPointFromScreen(p3, toolTip);
+                doClose = !(parent.contains(p2) || toolTip.contains(p3));
+            }
+            if (doClose) {
+                close.get().accept(event);
             }
         };
-        close.set(() -> {
+        close.set(e -> {
             popup.hide();
             Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
             if (window != null) window.removeComponentListener(windowListener);
-            if (onClose != null) onClose.run();
+            if (onClose != null) onClose.accept(e);
         });
         SwingUtilities.invokeLater(() -> {
             window.addComponentListener(windowListener);
-            Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.FOCUS_EVENT_MASK);
+            Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.FOCUS_EVENT_MASK
+                                                                      | AWTEvent.MOUSE_EVENT_MASK);
         });
     }
 

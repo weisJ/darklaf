@@ -97,11 +97,33 @@ public class ThemePreferencesHandler {
     }
 
     public boolean isPreferenceChangeReportingEnabled() {
-        return preferenceProvider.isReporting()
+        return preferenceProvider.canReport()
+               && preferenceProvider.isReporting()
                && !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG));
     }
 
+    public boolean supportsNativeAccentColor() {
+        return preferenceProvider.supportsNativeAccentColor();
+    }
+
+    public boolean supportsNativeSelectionColor() {
+        return preferenceProvider.supportsNativeSelectionColor();
+    }
+
+    public boolean supportsNativeFontSize() {
+        return preferenceProvider.supportsNativeFontSize();
+    }
+
+    public boolean supportsNativeTheme() {
+        return preferenceProvider.supportsNativeTheme();
+    }
+
+
     public PreferredThemeStyle getPreferredThemeStyle() {
         return preferenceProvider.getPreference();
+    }
+
+    public boolean canReport() {
+        return preferenceProvider.canReport();
     }
 }

@@ -69,4 +69,14 @@ public class IntelliJTheme extends Theme {
         super.customizeUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);
     }
+
+    @Override
+    public boolean supportsCustomAccentColor() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsCustomSelectionColor() {
+        return true;
+    }
 }

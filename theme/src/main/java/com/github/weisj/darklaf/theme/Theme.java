@@ -360,6 +360,24 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     }
 
     /**
+     * Returns whether this theme supports custom accent colors.
+     *
+     * @return true if supported.
+     */
+    public boolean supportsCustomAccentColor() {
+        return false;
+    }
+
+    /**
+     * Returns whether this theme supports custom selection colors.
+     *
+     * @return true if supported.
+     */
+    public boolean supportsCustomSelectionColor() {
+        return false;
+    }
+
+    /**
      * Returns the style rule for this theme.
      *
      * @return the style rule.

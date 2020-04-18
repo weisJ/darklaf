@@ -558,8 +558,7 @@ public class ToolTipContext {
         rect.width = 1;
         rect.height = 1;
         Point p = centerAlignment.alignOutside(dim, rect);
-        adjustPoint(p, centerAlignment, dim, true);
-        return p;
+        return adjustPoint(p, centerAlignment, dim, true);
     }
 
     private Point alignInside(final Dimension dim, final Rectangle rect) {
@@ -572,13 +571,22 @@ public class ToolTipContext {
         return adjustPoint(p, alignment, dim, true);
     }
 
-
     private Point adjustPoint(final Point p, final Alignment align, final Dimension dim, final boolean outside) {
         int factor = outside ? 1 : -1;
+        DarkTooltipBorder border = ((DarkTooltipBorder) toolTip.getBorder());
+        if (align == Alignment.EAST) {
+            p.x -= factor * border.getDistanceToPointer();
+        } else if (align == Alignment.WEST) {
+            p.x += factor * border.getDistanceToPointer();
+        } else if (align.isNorth()) {
+            p.y += factor * border.getDistanceToPointer();
+        } else if (align.isSouth()) {
+            p.y -= factor * border.getDistanceToPointer();
+        }
         if (align == Alignment.NORTH_EAST || align == Alignment.SOUTH_EAST) {
-            p.x -= factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim) + 2;
+            p.x -= factor * border.getPointerOffset(toolTip, dim, factor);
         } else if (align == Alignment.NORTH_WEST || align == Alignment.SOUTH_WEST) {
-            p.x += factor * ((DarkTooltipBorder) toolTip.getBorder()).getPointerOffset(toolTip, dim) - 1;
+            p.x += factor * border.getPointerOffset(toolTip, dim, factor);
         }
         return p;
     }

@@ -23,12 +23,12 @@
  */
 package ui.button;
 
+import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
-import ui.QuickColorChooser;
 
 import javax.swing.*;
 import java.awt.*;

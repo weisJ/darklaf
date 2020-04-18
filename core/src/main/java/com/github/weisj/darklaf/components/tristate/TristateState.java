@@ -26,17 +26,22 @@ package com.github.weisj.darklaf.components.tristate;
 public enum TristateState {
     SELECTED {
         public TristateState next() {
-            return INDETERMINATE;
+            return DESELECTED;
         }
     },
-    INDETERMINATE {
+    INDETERMINATE_SEL {
+        public TristateState next() {
+            return SELECTED;
+        }
+    },
+    INDETERMINATE_DES {
         public TristateState next() {
             return DESELECTED;
         }
     },
     DESELECTED {
         public TristateState next() {
-            return SELECTED;
+            return INDETERMINATE_SEL;
         }
     };
 

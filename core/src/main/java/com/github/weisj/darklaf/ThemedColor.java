@@ -21,53 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf.theme;
+package com.github.weisj.darklaf;
 
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
-import com.github.weisj.darklaf.theme.info.PresetIconRule;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.ColorWrapper;
 
-/**
- * @author Jannis Weis
- */
-public class DarculaTheme extends Theme {
+import javax.swing.*;
+import java.awt.*;
 
-    @Override
-    protected String getResourcePath() {
-        return "darcula/";
+public class ThemedColor extends ColorWrapper {
+
+    protected Theme currentTheme;
+    private final String key;
+
+    public ThemedColor() {
+        this(null);
+    }
+
+    public ThemedColor(final String key) {
+        super(null);
+        this.key = key;
     }
 
     @Override
-    public String getPrefix() {
-        return "darcula";
+    public Color getColor() {
+        if (super.getColor() == null || currentTheme != LafManager.getTheme()) {
+            setColor(getUpdatedColor());
+        }
+        return super.getColor();
     }
 
-    @Override
-    public String getName() {
-        return "Darcula";
-    }
-
-    @Override
-    protected Class<? extends Theme> getLoaderClass() {
-        return DarculaTheme.class;
-    }
-
-    @Override
-    public ColorToneRule getColorToneRule() {
-        return ColorToneRule.DARK;
-    }
-
-    @Override
-    protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.DARK;
-    }
-
-    @Override
-    public boolean supportsCustomAccentColor() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsCustomSelectionColor() {
-        return true;
+    protected Color getUpdatedColor() {
+        return UIManager.getColor(key);
     }
 }

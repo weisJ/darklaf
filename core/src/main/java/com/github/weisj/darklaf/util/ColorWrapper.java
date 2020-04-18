@@ -52,84 +52,84 @@ public class ColorWrapper extends Color {
 
     @Override
     public int getRed() {
-        return color.getRed();
+        return getColor().getRed();
     }
 
     @Override
     public int getGreen() {
-        return color.getGreen();
+        return getColor().getGreen();
     }
 
     @Override
     public int getBlue() {
-        return color.getBlue();
+        return getColor().getBlue();
     }
 
     @Override
     public int getAlpha() {
-        return color.getAlpha();
+        return getColor().getAlpha();
     }
 
     @Override
     public int getRGB() {
-        return color.getRGB();
+        return getColor().getRGB();
     }
 
     @Override
     public Color brighter() {
-        return color.brighter();
+        return getColor().brighter();
     }
 
     @Override
     public Color darker() {
-        return color.darker();
+        return getColor().darker();
     }
 
     @Override
     public float[] getRGBComponents(final float[] compArray) {
-        return color.getRGBComponents(compArray);
+        return getColor().getRGBComponents(compArray);
     }
 
     @Override
     public float[] getRGBColorComponents(final float[] compArray) {
-        return color.getRGBColorComponents(compArray);
+        return getColor().getRGBColorComponents(compArray);
     }
 
     @Override
     public float[] getComponents(final float[] compArray) {
-        return color.getComponents(compArray);
+        return getColor().getComponents(compArray);
     }
 
     @Override
     public float[] getColorComponents(final float[] compArray) {
-        return color.getColorComponents(compArray);
+        return getColor().getColorComponents(compArray);
     }
 
     @Override
     public float[] getComponents(final ColorSpace cspace, final float[] compArray) {
-        return color.getComponents(cspace, compArray);
+        return getColor().getComponents(cspace, compArray);
     }
 
     @Override
     public float[] getColorComponents(final ColorSpace cspace, final float[] compArray) {
-        return color.getColorComponents(cspace, compArray);
+        return getColor().getColorComponents(cspace, compArray);
     }
 
     @Override
     public ColorSpace getColorSpace() {
-        return color.getColorSpace();
+        return getColor().getColorSpace();
     }
 
     @Override
     public synchronized PaintContext createContext(final ColorModel cm, final Rectangle r,
                                                    final Rectangle2D r2d, final AffineTransform xform,
                                                    final RenderingHints hints) {
-        return color.createContext(cm, r, r2d, xform, hints);
+        return getColor().createContext(cm, r, r2d, xform, hints);
     }
 
     @Override
     public int getTransparency() {
-        return color.getTransparency();
+        return getColor().getTransparency();
     }
 
 

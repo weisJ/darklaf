@@ -24,16 +24,22 @@
 package ui;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.ThemeSettings;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowListener;
+import java.util.Enumeration;
+import java.util.Objects;
+import java.util.Optional;
 
 public interface ComponentDemo {
 
@@ -57,6 +63,9 @@ public interface ComponentDemo {
             frame.setTitle(demo.getTitle());
             frame.setContentPane(demo.createComponent());
             frame.setJMenuBar(demo.createMenuBar());
+            Image image = demo.getIconImage();
+            if (image != null) frame.setIconImage(image);
+
             frame.pack();
             if (dimension == null) {
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -74,42 +83,69 @@ public interface ComponentDemo {
         });
     }
 
+    default Image getIconImage() {
+        return null;
+    }
+
     default WindowListener createWindowListener() {
         return new WindowAdapter() {
         };
     }
 
     static JMenu createThemeMenu() {
-        String currentThemeName = LafManager.getTheme().getClass().getSimpleName();
         JMenu menu = new JMenu("Theme");
         ButtonGroup bg = new ButtonGroup();
         for (Theme theme : LafManager.getRegisteredThemes()) {
-            createThemeItem(currentThemeName, menu, bg, theme);
+            createThemeItem(menu, bg, theme);
         }
+        menu.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(final MenuEvent e) {
+                bg.setSelected(Optional.ofNullable(getSelectedThemeButton(bg))
+                                       .map(AbstractButton::getModel).orElse(null), true);
+            }
+
+            @Override
+            public void menuDeselected(final MenuEvent e) {
+
+            }
+
+            @Override
+            public void menuCanceled(final MenuEvent e) {
+
+            }
+        });
         return menu;
     }
 
-    static void createThemeItem(final String currentThemeName, final JMenu menu,
-                                final ButtonGroup bg, final Theme theme) {
-        final String name = theme.getClass().getSimpleName();
-        final Action action = new AbstractAction(name) {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                Theme current = LafManager.getTheme();
-                LafManager.install(theme.derive(current.getFontSizeRule(), current.getAccentColorRule()));
-            }
-        };
-        final JRadioButtonMenuItem mi = new JRadioButtonMenuItem(action);
+    static AbstractButton getSelectedThemeButton(final ButtonGroup bg) {
+        String currentThemeName = LafManager.getTheme().getName();
+        Enumeration<AbstractButton> enumeration = bg.getElements();
+        while (enumeration.hasMoreElements()) {
+            ThemeMenuItem mi = (ThemeMenuItem) enumeration.nextElement();
+            if (Objects.equals(currentThemeName, mi.getName())) return mi;
+        }
+        return null;
+    }
+
+    static JMenuItem createSettingsMenu() {
+        JMenu menu = new JMenu("Settings");
+        JMenuItem mi = new JMenuItem("Theme Options");
+        mi.addActionListener(e -> ThemeSettings.showSettingsDialog(menu));
+        menu.add(mi);
+        return menu;
+    }
+
+    static void createThemeItem(final JMenu menu, final ButtonGroup bg, final Theme theme) {
+        final ThemeMenuItem mi = new ThemeMenuItem(theme);
         menu.add(mi);
         bg.add(mi);
-        if (name.equals(currentThemeName)) {
-            mi.setSelected(true);
-        }
     }
 
     default JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createThemeMenu());
+        menuBar.add(createSettingsMenu());
         return menuBar;
     }
 
@@ -118,4 +154,26 @@ public interface ComponentDemo {
     }
 
     String getTitle();
+
+    class ThemeMenuItem extends JRadioButtonMenuItem {
+
+        private final String name;
+
+        public ThemeMenuItem(final Theme theme) {
+            name = theme.getName();
+            final Action action = new AbstractAction(name) {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    Theme current = LafManager.getTheme();
+                    LafManager.install(theme.derive(current.getFontSizeRule(), current.getAccentColorRule()));
+                }
+            };
+            setAction(action);
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+    }
 }
