@@ -24,25 +24,6 @@
  */
 package com.github.weisj.darklaf;
 
-import java.awt.*;
-import java.awt.font.TextAttribute;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.AttributedCharacterIterator;
-import java.util.*;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
-import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.DimensionUIResource;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.InsetsUIResource;
-
 import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
@@ -50,6 +31,24 @@ import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.PropertyValue;
+
+import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.DimensionUIResource;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.InsetsUIResource;
+import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.AttributedCharacterIterator;
+import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Konstantin Bulenkov
@@ -192,7 +191,7 @@ public final class PropertyLoader {
             return (UIDefaults.ActiveValue) (def) -> parseObject(value);
         } else if (key.toLowerCase().endsWith("font")) {
             returnVal = parseFont(key, value, accumulator, currentDefaults);
-        } else if (key.endsWith(".icon") || key.endsWith("Icon")) {
+        } else if (key.endsWith(".icon") || key.endsWith("Icon") || key.endsWith("Image")) {
             returnVal = parseIcon(value, accumulator, currentDefaults, iconLoader);
         } else if (key.endsWith("Size") || key.endsWith(".size")) {
             returnVal = parseSize(value);
