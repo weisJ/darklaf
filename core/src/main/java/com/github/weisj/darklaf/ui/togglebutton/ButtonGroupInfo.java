@@ -122,7 +122,7 @@ public class ButtonGroupInfo {
     /**
      * Find the new radio button that focus needs to be moved to in the group, select the button
      *
-     * @param next, indicate if it's arrow up/left or down/right
+     * @param next indicate if it's arrow up/left or down/right
      */
     protected void selectNewButton(final boolean next) {
         if (!getButtonGroupInfo()) {
@@ -151,7 +151,7 @@ public class ButtonGroupInfo {
      * Find the button group the passed in AbstractButton belongs to, and move focus to next component of the last
      * button in the group or previous component of first button
      *
-     * @param next, indicate if jump to next component or previous
+     * @param next indicate if jump to next component or previous
      */
     protected void jumpToNextComponent(final boolean next) {
         if (!getButtonGroupInfo()) {
