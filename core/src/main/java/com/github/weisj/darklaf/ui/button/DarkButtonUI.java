@@ -24,10 +24,9 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
-import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
-import com.github.weisj.darklaf.util.*;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -38,9 +37,12 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
-import java.awt.*;
-import java.awt.event.KeyListener;
-import java.awt.geom.RoundRectangle2D;
+
+import sun.swing.SwingUtilities2;
+
+import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
+import com.github.weisj.darklaf.util.*;
 
 /**
  * @author Konstantin Bulenkov
