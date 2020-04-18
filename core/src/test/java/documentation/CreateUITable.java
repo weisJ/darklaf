@@ -24,21 +24,6 @@
  */
 package documentation;
 
-import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.components.border.DropShadowBorder;
-import com.github.weisj.darklaf.icons.DarkSVGIcon;
-import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.*;
-import com.kitfox.svg.app.beans.SVGIcon;
-import defaults.SampleRenderer;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -49,6 +34,22 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.components.border.DropShadowBorder;
+import com.github.weisj.darklaf.icons.DarkSVGIcon;
+import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.*;
+import com.kitfox.svg.app.beans.SVGIcon;
+import defaults.SampleRenderer;
 
 public class CreateUITable {
 
