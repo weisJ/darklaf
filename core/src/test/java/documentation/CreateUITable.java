@@ -24,22 +24,6 @@
  */
 package documentation;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.PropertyLoader;
@@ -50,6 +34,21 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.*;
 import com.kitfox.svg.app.beans.SVGIcon;
 import defaults.SampleRenderer;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CreateUITable {
 
@@ -119,18 +118,17 @@ public class CreateUITable {
 
     private UIDefaults setupThemeDefaults(final Theme theme) {
         PropertyLoader.setAddReferenceInfo(true);
-        currentDefaults = UIManager.getLookAndFeelDefaults();
         UIDefaults defaults = new DarkLaf().getDefaults();
         PropertyLoader.setAddReferenceInfo(false);
         LafManager.installTheme(theme);
+        currentDefaults = UIManager.getLookAndFeelDefaults();
         return defaults;
     }
 
     private void appendGroup(final int ident, final UIDefaults defaults, final StringBuilder builder,
                              final String group, final String heading) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append(heading).append("</h3>\n");
-        Set<Map.Entry<Object, Object>> values = defaults
-                                                        .entrySet().stream()
+        Set<Map.Entry<Object, Object>> values = defaults.entrySet().stream()
                                                         .filter(entry -> {
                                                             String key = entry.getKey().toString();
                                                             if (key.startsWith("%")) return true;
