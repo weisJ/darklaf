@@ -31,7 +31,6 @@ import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
-import com.github.weisj.darklaf.util.StringUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -74,25 +73,25 @@ public class ColoredRadioButton extends JRadioButton {
     protected static class ColoredRadioButtonUI extends DarkRadioButtonUI {
 
         private static final String[] PROPERTIES = {
-            "Icons.RadioButton.activeFillColor", "Icons.RadioButtonSelected.selectedFillColor",
-            "Icons.RadioButton.activeBorderColor", "Icons.RadioButtonSelected.selectedBorderColor",
-            "Icons.RadioButtonDisabled.inactiveFillColor", "",
-            "Icons.RadioButtonDisabled.inactiveBorderColor", "",
-            "Icons.RadioButtonFocused.activeFillColor", "Icons.RadioButtonSelectedFocused.selectedFillColor",
-            "Icons.RadioButtonFocused.focusBorderColor", "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor",
-            "Icons.RadioButtonFocused.glowFocus", "",
-            "Icons.RadioButtonFocused.glowOpacity", "",
-            "Icons.RadioButtonSelected.selectedFillColor", "",
-            "Icons.RadioButtonSelected.selectedBorderColor", "",
-            "Icons.RadioButtonSelected.selectionSelectedColor", "",
-            "Icons.RadioButtonSelectedDisabled.inactiveFillColor", "",
-            "Icons.RadioButtonSelectedDisabled.inactiveBorderColor", "",
-            "Icons.RadioButtonSelectedDisabled.selectionDisabledColor", "",
-            "Icons.RadioButtonSelectedFocused.selectedFillColor", "",
-            "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor", "",
-            "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor", "",
-            "Icons.RadioButtonSelectedFocused.glowFocus", "",
-            "Icons.RadioButtonSelectedFocused.glowOpacity", ""
+            "Icons.RadioButton.activeFillColor",
+            "Icons.RadioButton.activeBorderColor",
+            "Icons.RadioButtonDisabled.inactiveFillColor",
+            "Icons.RadioButtonDisabled.inactiveBorderColor",
+            "Icons.RadioButtonFocused.activeFillColor",
+            "Icons.RadioButtonFocused.focusBorderColor",
+            "Icons.RadioButtonFocused.glowFocus",
+            "Icons.RadioButtonFocused.glowOpacity",
+            "Icons.RadioButtonSelected.selectedFillColor",
+            "Icons.RadioButtonSelected.selectedBorderColor",
+            "Icons.RadioButtonSelected.selectionSelectedColor",
+            "Icons.RadioButtonSelectedDisabled.inactiveFillColor",
+            "Icons.RadioButtonSelectedDisabled.inactiveBorderColor",
+            "Icons.RadioButtonSelectedDisabled.selectionDisabledColor",
+            "Icons.RadioButtonSelectedFocused.selectedFillColor",
+            "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor",
+            "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor",
+            "Icons.RadioButtonSelectedFocused.glowFocus",
+            "Icons.RadioButtonSelectedFocused.glowOpacity"
         };
         private static final String[] COLOR_PROPERTIES = {
             "Icons.RadioButton.activeFillColor",
@@ -100,7 +99,9 @@ public class ColoredRadioButton extends JRadioButton {
             "Icons.RadioButtonFocused.activeFillColor",
             "Icons.RadioButtonFocused.focusBorderColor",
             "Icons.RadioButtonSelected.selectedFillColor",
-            "Icons.RadioButtonSelected.selectedBorderColor"
+            "Icons.RadioButtonSelected.selectedBorderColor",
+            "Icons.RadioButtonSelectedFocused.selectedFillColor",
+            "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor"
         };
         private Properties propertyMap;
 
@@ -127,7 +128,7 @@ public class ColoredRadioButton extends JRadioButton {
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             theme.loadDefaults(props, defaults);
             Color c = color == DEFAULT_FILLED ? (Color) props.get("widgetFillDefault") : color;
-            adjustment.applyColors(LafManager.getTheme(), props, color, null);
+            adjustment.applyColors(LafManager.getTheme(), props, c, null);
             PropertyLoader.putProperties(
                 PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/ui/"),
                 props, defaults);
@@ -135,11 +136,8 @@ public class ColoredRadioButton extends JRadioButton {
                 PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/icons/"),
                 props, defaults);
             propertyMap = new Properties();
-            for (int i = 0; i < PROPERTIES.length; i += 2) {
-                String prop = PROPERTIES[i];
-                String key = PROPERTIES[i + 1];
-                Object value = props.get(StringUtil.isBlank(key) ? prop : key);
-                propertyMap.put(prop, value);
+            for (String prop : PROPERTIES) {
+                propertyMap.put(prop, props.get(prop));
             }
             for (String prop : COLOR_PROPERTIES) {
                 propertyMap.put(prop, c);

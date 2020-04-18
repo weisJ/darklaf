@@ -24,7 +24,7 @@
 package ui;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.ThemeSettings;
+import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;

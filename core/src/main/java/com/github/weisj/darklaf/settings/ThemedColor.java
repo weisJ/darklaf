@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.weisj.darklaf;
+package com.github.weisj.darklaf.settings;
 
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.ColorWrapper;
 
