@@ -1,4 +1,4 @@
-import com.github.vlsi.gradle.properties.dsl.props
+
 
 plugins {
     `jni-library`
@@ -37,20 +37,5 @@ library {
                 else -> emptyList()
             }
         )
-    }
-}
-
-val skipAutostyle by props()
-
-if (!skipAutostyle) {
-    autostyle {
-        cpp {
-            licenseHeader(File("${project.rootDir}/LICENSE").readText())
-            trimTrailingWhitespace()
-            endWithNewline()
-            eclipse {
-                configFile("darklaf_cpp.eclipseformat.xml")
-            }
-        }
     }
 }

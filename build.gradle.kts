@@ -21,8 +21,8 @@ val skipAutostyle by props()
 val String.v: String get() = rootProject.extra["$this.version"] as String
 
 val buildVersion = "darklaf".v + releaseParams.snapshotSuffix
-println("Building Darklaf $buildVersion")
-println("            JDK: " + System.getProperty("java.home"))
+println("Building: Darklaf $buildVersion")
+println("     JDK: " + System.getProperty("java.home"))
 
 releaseParams {
     tlp.set("darklaf")
@@ -133,6 +133,18 @@ allprojects {
                         enabled = false
                     }
             }
+        if (!skipAutostyle) {
+            autostyle {
+                cpp {
+                    licenseHeader(File("${project.rootDir}/LICENSE").readText())
+                    trimTrailingWhitespace()
+                    endWithNewline()
+                    eclipse {
+                        configFile("${project.rootDir}/darklaf_cpp.eclipseformat.xml")
+                    }
+                }
+            }
+        }
     }
 
     if (!enableGradleMetadata) {

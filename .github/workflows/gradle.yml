@@ -44,7 +44,7 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build -PskipAutostyle
 
   linux:
     name: Linux (Java 8)
@@ -58,7 +58,7 @@ jobs:
         with:
           java-version: 8
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build -PskipAutostyle
 
   macos:
     name: macOS (Java 11)
@@ -72,4 +72,4 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build -PskipAutostyle

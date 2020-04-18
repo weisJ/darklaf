@@ -51,7 +51,7 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew :darklaf-windows:build
+        run: ./gradlew :darklaf-windows:build -PskipAutostyle
       - name: Upload x86 artifact
         uses: actions/upload-artifact@v1
         with:
@@ -75,7 +75,7 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew :darklaf-macos:build
+        run: ./gradlew :darklaf-macos:build -PskipAutostyle
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
