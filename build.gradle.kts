@@ -177,7 +177,6 @@ allprojects {
         }
 
         apply(plugin = "maven-publish")
-        val generatePomFile by props()
 
         tasks {
             withType<JavaCompile>().configureEach {
