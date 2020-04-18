@@ -20,21 +20,24 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton;
 
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
-import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
+
+import sun.swing.SwingUtilities2;
+
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -175,7 +178,6 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         return b.isEnabled() ? sliderBorderColor : inactiveSliderBorderColor;
     }
 
-
     protected Rectangle getSliderBounds(final JComponent c) {
         int x = borderSize;
         int y = (c.getHeight() - sliderSize.height) / 2;
@@ -216,12 +218,11 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
 
         // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(
-            b, fm, b.getText(), b.getIcon(),
-            b.getVerticalAlignment(), b.getHorizontalAlignment(),
-            b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-            viewRect, iconRect, textRect,
-            b.getText() == null ? 0 : b.getIconTextGap());
+        return SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), b.getIcon(),
+                                                  b.getVerticalAlignment(), b.getHorizontalAlignment(),
+                                                  b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+                                                  viewRect, iconRect, textRect,
+                                                  b.getText() == null ? 0 : b.getIconTextGap());
     }
 
     public Dimension getPreferredSize(final JComponent c) {

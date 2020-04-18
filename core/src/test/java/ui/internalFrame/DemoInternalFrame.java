@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.internalFrame;
 
@@ -33,10 +34,14 @@ public class DemoInternalFrame extends JInternalFrame {
         super("Document #" + (++openFrameCount), true, true, true, true);
         setSize(300, 300);
         setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
-        setJMenuBar(new JMenuBar() {{
-            add(new JMenu("Test") {{
-                add(new JMenuItem("Test Item"));
-            }});
-        }});
+        setJMenuBar(new JMenuBar() {
+            {
+                add(new JMenu("Test") {
+                    {
+                        add(new JMenuItem("Test Item"));
+                    }
+                });
+            }
+        });
     }
 }

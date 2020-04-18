@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import javax.swing.*;
-import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.swing.*;
+import javax.swing.plaf.PanelUI;
 
 /**
  * Tabbed Popup Component for {@link JTabFrame}.
@@ -125,7 +127,7 @@ public class TabbedPopup extends PanelPopup {
      * Gets the currently selected component from the TabbedPane.
      *
      * @return the selected component.
-     * @see #getTabbedPane()
+     * @see    #getTabbedPane()
      */
     public Component getContentPane() {
         return tabbedPane.getSelectedComponent();
@@ -150,7 +152,7 @@ public class TabbedPopup extends PanelPopup {
      * TabbedPane.
      *
      * @return a collection of components.
-     * @see #getTabbedPane()
+     * @see    #getTabbedPane()
      */
     public Collection<Component> getContentPanes() {
         int size = getTabbedPane().getTabCount();

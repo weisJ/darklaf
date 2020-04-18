@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
 
@@ -116,7 +117,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
 
         Color borderColor = c.getBorder() instanceof DarkTableScrollPaneBorder
                                                                                ? ((DarkTableScrollPaneBorder) c.getBorder()).getBorderColor()
-                            : getBorderColor();
+                                                                               : getBorderColor();
         g.setColor(borderColor);
 
         TableColumn draggedColumn = header.getDraggedColumn();
@@ -224,11 +225,11 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
 
             boolean onLeftEdge = ltr ? draggedColumnIndex == cMin : draggedColumnIndex == cMax;
             boolean onRightEdge = ltr ? draggedColumnIndex == cMax : draggedColumnIndex == cMin;
-            //left
+            // left
             if (dist != 0 || !onLeftEdge) {
                 g.fillRect(draggedCellRect.x - 1, draggedCellRect.y, 1, draggedCellRect.height);
             }
-            //right
+            // right
             if (dist != 0 || !onRightEdge) {
                 g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
                            1, draggedCellRect.height);

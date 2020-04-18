@@ -20,19 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.settings.ThemeSettings;
-import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
-import com.github.weisj.darklaf.theme.info.ContrastRule;
-import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
-
-import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -40,6 +31,17 @@ import java.awt.event.WindowListener;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Optional;
+
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.settings.ThemeSettings;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.info.ColorToneRule;
+import com.github.weisj.darklaf.theme.info.ContrastRule;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
 public interface ComponentDemo {
 
@@ -88,8 +90,7 @@ public interface ComponentDemo {
     }
 
     default WindowListener createWindowListener() {
-        return new WindowAdapter() {
-        };
+        return new WindowAdapter() {};
     }
 
     static JMenu createThemeMenu() {
@@ -102,7 +103,8 @@ public interface ComponentDemo {
             @Override
             public void menuSelected(final MenuEvent e) {
                 bg.setSelected(Optional.ofNullable(getSelectedThemeButton(bg))
-                                       .map(AbstractButton::getModel).orElse(null), true);
+                                       .map(AbstractButton::getModel).orElse(null),
+                               true);
             }
 
             @Override

@@ -20,17 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.SystemInfo;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.DefaultEditorKit;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public class InputDefaultsInitTask implements DefaultsInitTask {
 
@@ -44,7 +46,7 @@ public class InputDefaultsInitTask implements DefaultsInitTask {
         // Make ENTER work in JTrees
         final InputMap treeInputMap = (InputMap) defaults.get("Tree.focusInputMap");
         if (treeInputMap != null) {
-            // it's really possible. For example,  GTK+ doesn't have such a map.
+            // it's really possible. For example, GTK+ doesn't have such a map.
             treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "toggle");
         }
         // Cut/Copy/Paste in JTextAreas

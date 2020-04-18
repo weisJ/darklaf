@@ -20,26 +20,29 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.components.ScrollPopupMenu;
-import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import sun.awt.SunToolkit;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicPopupMenuUI;
+
+import sun.awt.SunToolkit;
+
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.components.ScrollPopupMenu;
+import com.github.weisj.darklaf.ui.DarkPopupFactory;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * This implementation for PopupMenuUI is almost identical to the one of BasicPopupMenuUI. The key difference is that it
@@ -53,8 +56,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public static final String KEY_DO_NOT_CANCEL_POPUP = "doNotCancelPopup";
     public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
     public static final String KEY_MAKE_VISIBLE = "PopupFactory.makeVisible";
-    public static final StringBufferWrapper HIDE_POPUP_VALUE = new StringBufferWrapper(new StringBuffer(
-        "doNotCancelPopup"));
+    public static final StringBufferWrapper HIDE_POPUP_VALUE = new StringBufferWrapper(new StringBuffer("doNotCancelPopup"));
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
     protected static MouseGrabber mouseGrabber;
     private PopupMenuContainer popupMenuContainer;
@@ -136,7 +138,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     }
 
     public static class MouseGrabber implements ChangeListener,
-                                                AWTEventListener, ComponentListener, WindowListener {
+                                     AWTEventListener, ComponentListener, WindowListener {
 
         Window grabbedWindow;
         MenuElement[] lastPathSelected;
@@ -153,27 +155,25 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         protected void grabWindow(final MenuElement[] newPath) {
             // A grab needs to be added
             final Toolkit tk = Toolkit.getDefaultToolkit();
-            java.security.AccessController.doPrivileged(
-                (PrivilegedAction<Object>) () -> {
-                    tk.addAWTEventListener(MouseGrabber.this,
-                                           AWTEvent.MOUSE_EVENT_MASK
-                                           | AWTEvent.MOUSE_MOTION_EVENT_MASK
-                                           | AWTEvent.MOUSE_WHEEL_EVENT_MASK
-                                           | AWTEvent.WINDOW_EVENT_MASK
-                                           | SunToolkit.GRAB_EVENT_MASK);
-                    return null;
-                }
-                                                       );
+            java.security.AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                tk.addAWTEventListener(MouseGrabber.this,
+                                       AWTEvent.MOUSE_EVENT_MASK
+                                                          | AWTEvent.MOUSE_MOTION_EVENT_MASK
+                                                          | AWTEvent.MOUSE_WHEEL_EVENT_MASK
+                                                          | AWTEvent.WINDOW_EVENT_MASK
+                                                          | SunToolkit.GRAB_EVENT_MASK);
+                return null;
+            });
 
             Component invoker = newPath[0].getComponent();
             if (invoker instanceof JPopupMenu) {
                 invoker = ((JPopupMenu) invoker).getInvoker();
             }
             grabbedWindow = (invoker == null)
-                            ? null
-                            : ((invoker instanceof Window)
-                               ? (Window) invoker
-                               : SwingUtilities.getWindowAncestor(invoker));
+                                              ? null
+                                              : ((invoker instanceof Window)
+                                                                             ? (Window) invoker
+                                                                             : SwingUtilities.getWindowAncestor(invoker));
             if (grabbedWindow != null) {
                 if (tk instanceof sun.awt.SunToolkit) {
                     ((sun.awt.SunToolkit) tk).grab(grabbedWindow);
@@ -193,12 +193,10 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         protected void ungrabWindow() {
             final Toolkit tk = Toolkit.getDefaultToolkit();
             // The grab should be removed
-            java.security.AccessController.doPrivileged(
-                (PrivilegedAction<Object>) () -> {
-                    tk.removeAWTEventListener(MouseGrabber.this);
-                    return null;
-                }
-                                                       );
+            java.security.AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                tk.removeAWTEventListener(MouseGrabber.this);
+                return null;
+            });
             realUngrabWindow();
         }
 
@@ -262,10 +260,10 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             // or inside a Popup#HeavyWeightWindow or inside a frame
             // popup should not close which is the standard behaviour
             switch (me.getID()) {/*
-             * Changed here: Make doNotCancelPopup accessible to all component.
-             *               Allows for more versatile PopupMenus.
-             */
-                case MouseEvent.MOUSE_PRESSED:
+                                  * Changed here: Make doNotCancelPopup accessible to all component.
+                                  * Allows for more versatile PopupMenus.
+                                  */
+                case MouseEvent.MOUSE_PRESSED :
                     if (isInPopup(src) ||
                         (src instanceof JMenu && ((JMenu) src).isSelected())) {
                         return;
@@ -285,7 +283,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                         }
                     }
                     break;
-                case MouseEvent.MOUSE_RELEASED:
+                case MouseEvent.MOUSE_RELEASED :
                     if (!(src instanceof MenuElement)) {
                         // Do not forward event to MSM, let component handle it
                         if (isInPopup(src)) {
@@ -296,7 +294,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                         MenuSelectionManager.defaultManager().processMouseEvent(me);
                     }
                     break;
-                case MouseEvent.MOUSE_DRAGGED:
+                case MouseEvent.MOUSE_DRAGGED :
                     if (!(src instanceof MenuElement)) {
                         // For the MOUSE_DRAGGED event the src is
                         // the Component in which mouse button was pressed.
@@ -308,7 +306,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                     }
                     MenuSelectionManager.defaultManager().processMouseEvent(me);
                     break;
-                case MouseEvent.MOUSE_WHEEL:
+                case MouseEvent.MOUSE_WHEEL :
                     if (isInPopup(src)
                         || ((src instanceof JComboBox) && ((JComboBox<?>) src).isPopupVisible())
                         || ((src instanceof JWindow) && src.isVisible())
@@ -374,8 +372,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             cancelPopupMenu();
         }
 
-        public void windowOpened(final WindowEvent e) {
-        }
+        public void windowOpened(final WindowEvent e) {}
 
         public void windowClosing(final WindowEvent e) {
             cancelPopupMenu();
@@ -389,11 +386,9 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             cancelPopupMenu();
         }
 
-        public void windowDeiconified(final WindowEvent e) {
-        }
+        public void windowDeiconified(final WindowEvent e) {}
 
-        public void windowActivated(final WindowEvent e) {
-        }
+        public void windowActivated(final WindowEvent e) {}
 
         public void windowDeactivated(final WindowEvent e) {
             cancelPopupMenu();

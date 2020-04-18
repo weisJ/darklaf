@@ -20,8 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tooltip;
+
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
+
+import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.components.border.BubbleBorder;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
@@ -29,12 +37,6 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.Rectangle2D;
 
 /**
  * @author Jannis Weis
@@ -62,7 +64,6 @@ public class DarkTooltipBorder implements Border {
                                             shadowSize, opacity, 2 * shadowSize,
                                             false, true, true, true);
     }
-
 
     public Area getBackgroundArea(final Component c, final int width, final int height, final boolean forPaint) {
         if (isPlain(c)) {
@@ -201,18 +202,18 @@ public class DarkTooltipBorder implements Border {
 
     public int getDistanceToPointer() {
         switch (bubbleBorder.getPointerSide()) {
-            case WEST:
-            case SOUTH:
-            case SOUTH_EAST:
-            case SOUTH_WEST:
-            case EAST:
+            case WEST :
+            case SOUTH :
+            case SOUTH_EAST :
+            case SOUTH_WEST :
+            case EAST :
                 return Math.max(0, shadowBorder.getShadowSize() - bubbleBorder.getPointerSize())
                        + bubbleBorder.getThickness();
-            case NORTH:
-            case NORTH_EAST:
-            case NORTH_WEST:
-            case CENTER:
-            default:
+            case NORTH :
+            case NORTH_EAST :
+            case NORTH_WEST :
+            case CENTER :
+            default :
                 return bubbleBorder.getThickness();
         }
     }

@@ -20,20 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
+import javax.swing.*;
 
 /**
  * @author Jannis Weis
  */
 public final class ImageUtil {
 
-    private ImageUtil() {
-    }
+    private ImageUtil() {}
 
     private static final int FRAME_ICON_SIZE = 32;
 
@@ -76,9 +77,9 @@ public final class ImageUtil {
     /**
      * Create image from component.
      *
-     * @param c      the component.
-     * @param bounds the bounds inside the component to capture.
-     * @return image containing the captured area.
+     * @param  c      the component.
+     * @param  bounds the bounds inside the component to capture.
+     * @return        image containing the captured area.
      */
     public static BufferedImage imageFromComponent(final Component c, final Rectangle bounds) {
         return scaledImageFromComponent(c, bounds, 1.0, 1.0, true);
@@ -87,9 +88,9 @@ public final class ImageUtil {
     /**
      * Create image from component.
      *
-     * @param c      the component.
-     * @param bounds the bounds inside the component to capture.
-     * @return image containing the captured area.
+     * @param  c      the component.
+     * @param  bounds the bounds inside the component to capture.
+     * @return        image containing the captured area.
      */
     public static BufferedImage imageFromComponent(final Component c, final Rectangle bounds, final boolean print) {
         return scaledImageFromComponent(c, bounds, 1.0, 1.0, print);
@@ -98,23 +99,22 @@ public final class ImageUtil {
     /**
      * Create image from component.
      *
-     * @param c      the component.
-     * @param bounds the bounds inside the component to capture.
-     * @return image containing the captured area.
+     * @param  c      the component.
+     * @param  bounds the bounds inside the component to capture.
+     * @return        image containing the captured area.
      */
     public static BufferedImage scaledImageFromComponent(final Component c, final Rectangle bounds) {
         return scaledImageFromComponent(c, bounds, Scale.SCALE_X, Scale.SCALE_Y, true);
     }
 
-
     /**
      * Create image from component.
      *
-     * @param c      the component.
-     * @param bounds the bounds inside the component to capture.
-     * @param scalex the x scale
-     * @param scaley the y scale
-     * @return image containing the captured area.
+     * @param  c      the component.
+     * @param  bounds the bounds inside the component to capture.
+     * @param  scalex the x scale
+     * @param  scaley the y scale
+     * @return        image containing the captured area.
      */
     public static BufferedImage scaledImageFromComponent(final Component c, final Rectangle bounds,
                                                          final double scalex, final double scaley,
@@ -144,10 +144,9 @@ public final class ImageUtil {
 
     public static BufferedImage createCompatibleTranslucentImage(final int width,
                                                                  final int height) {
-        return isHeadless() ?
-               new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB) :
-               getGraphicsConfiguration().createCompatibleImage(width, height,
-                                                                Transparency.TRANSLUCENT);
+        return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+                            : getGraphicsConfiguration().createCompatibleImage(width, height,
+                                                                               Transparency.TRANSLUCENT);
     }
 
     private static boolean isHeadless() {
@@ -155,7 +154,6 @@ public final class ImageUtil {
     }
 
     private static GraphicsConfiguration getGraphicsConfiguration() {
-        return GraphicsEnvironment.getLocalGraphicsEnvironment().
-            getDefaultScreenDevice().getDefaultConfiguration();
+        return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
     }
 }

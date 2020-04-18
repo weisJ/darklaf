@@ -20,17 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
-import javax.swing.*;
 import java.awt.event.ActionListener;
+
+import javax.swing.*;
 
 /**
  * @author Jannis Weis
  */
 public final class TimerUtil {
-
 
     public static Timer createNamedTimer(final String name, final int delay,
                                          final ActionListener listener) {
@@ -41,7 +42,6 @@ public final class TimerUtil {
             }
         };
     }
-
 
     public static Timer createNamedTimer(final String name, final int delay) {
         return new Timer(delay, null) {

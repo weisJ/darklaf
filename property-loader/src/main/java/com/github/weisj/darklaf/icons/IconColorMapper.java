@@ -20,8 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
+
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
@@ -29,13 +38,6 @@ import com.kitfox.svg.*;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 import com.kitfox.svg.xml.StyleAttribute;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Jannis Weis
@@ -127,7 +129,7 @@ public final class IconColorMapper {
     }
 
     private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name, final float opacity)
-        throws SVGElementException {
+                                                                                                                     throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
         return new Pair<>(grad, () -> {

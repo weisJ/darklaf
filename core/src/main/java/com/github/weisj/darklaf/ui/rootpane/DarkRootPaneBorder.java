@@ -20,14 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.rootpane;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.platform.DecorationsHandler;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
+
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 
 public class DarkRootPaneBorder extends MutableLineBorder implements UIResource {
 
@@ -38,6 +39,6 @@ public class DarkRootPaneBorder extends MutableLineBorder implements UIResource 
     @Override
     public int getTop() {
         return DecorationsHandler.getSharedInstance().isCustomDecorationSupported()
-               ? super.getTop() : 0;
+                                                                                    ? super.getTop() : 0;
     }
 }

@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.decorators;
 
@@ -30,21 +31,18 @@ import java.awt.event.ComponentListener;
  * Wrapper interface for resize listener.
  *
  * @author Jannis Weis
- * @since 2019
+ * @since  2019
  */
 public interface ComponentResizeListener extends ComponentListener {
     @Override
     void componentResized(ComponentEvent e);
 
     @Override
-    default void componentMoved(final ComponentEvent e) {
-    }
+    default void componentMoved(final ComponentEvent e) {}
 
     @Override
-    default void componentShown(final ComponentEvent e) {
-    }
+    default void componentShown(final ComponentEvent e) {}
 
     @Override
-    default void componentHidden(final ComponentEvent e) {
-    }
+    default void componentHidden(final ComponentEvent e) {}
 }

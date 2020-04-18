@@ -20,11 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -34,11 +38,9 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Enumeration;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
  * @author Konstantin Bulenkov
@@ -119,7 +121,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected Icon collapsedFocus;
     protected Icon collapsed;
     private boolean myOldRepaintAllRowValue;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTreeUI();
@@ -237,8 +238,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                     TreePath selectionPath = tree.getPathForRow(selectionRow);
                     if (selectionPath == null) return;
 
-                    if (tree.getModel().isLeaf(selectionPath.getLastPathComponent()) || tree.isCollapsed(
-                        selectionRow)) {
+                    if (tree.getModel().isLeaf(selectionPath.getLastPathComponent())
+                        || tree.isCollapsed(selectionRow)) {
                         final TreePath parentPath = tree.getPathForRow(selectionRow).getParentPath();
                         if (parentPath != null) {
                             if (parentPath.getParentPath() != null || tree.isRootVisible()) {
@@ -336,11 +337,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                 owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             }
             boolean treeEditor = owner instanceof JComponent
-                                 && Boolean.TRUE.equals(
-                ((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_EDITOR));
+                                 && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_EDITOR));
             boolean treeRenderer = !treeEditor && owner instanceof JComponent
-                                   && Boolean.TRUE.equals(
-                ((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_RENDERER));
+                                   && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_RENDERER));
             return treeEditor || treeRenderer;
         }
         return true;
@@ -413,7 +412,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             TreePath path;
             boolean rootVisible = isRootVisible();
 
-            //Paint row backgrounds
+            // Paint row backgrounds
             Enumeration<?> backgroundEnumerator = treeState.getVisiblePathsFrom(initialPath);
             while (backgroundEnumerator != null && backgroundEnumerator.hasMoreElements()) {
                 path = (TreePath) backgroundEnumerator.nextElement();
@@ -511,9 +510,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                                       final int row, final boolean isExpanded,
                                       final boolean hasBeenExpanded, final boolean isLeaf) {
         final int containerWidth = tree.getParent() instanceof JViewport
-                                   ? tree.getParent().getWidth() : tree.getWidth();
+                                                                         ? tree.getParent().getWidth()
+                                                                         : tree.getWidth();
         final int xOffset = tree.getParent() instanceof JViewport
-                            ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
+                                                                  ? ((JViewport) tree.getParent()).getViewPosition().x
+                                                                  : 0;
 
         if (path != null) {
             boolean selected = tree.isPathSelected(path);
@@ -685,9 +686,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             }
         }
 
-        //Descend to deepest last child.
-        TreePath lastChildPath = path.pathByAddingChild(
-            treeModel.getChild(path.getLastPathComponent(), childCount - 1));
+        // Descend to deepest last child.
+        TreePath lastChildPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(),
+                                                                           childCount - 1));
         while (tree.isExpanded(lastChildPath)) {
             int count = treeModel.getChildCount(lastChildPath.getLastPathComponent());
             if (count == 0) break;
@@ -730,8 +731,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             stopEditingInCompleteEditing && editingComponent != null) {
             cellEditor.stopCellEditing();
         }
-        /* Invoke cancelCellEditing, this will do nothing if stopCellEditing
-           was successful. */
+        /*
+         * Invoke cancelCellEditing, this will do nothing if stopCellEditing
+         * was successful.
+         */
         completeEditing(false, true, true);
     }
 
@@ -755,6 +758,5 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         }
     }
 
-    private abstract static class TreeUIAction extends AbstractAction implements UIResource {
-    }
+    private abstract static class TreeUIAction extends AbstractAction implements UIResource {}
 }

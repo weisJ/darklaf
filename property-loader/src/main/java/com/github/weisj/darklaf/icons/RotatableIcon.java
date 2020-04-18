@@ -20,20 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.util.Alignment;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.util.Alignment;
 
 public class RotatableIcon implements Icon {
 
     private Icon icon;
     private Alignment alignment;
-
 
     public RotatableIcon() {
         this(null);
@@ -61,33 +62,32 @@ public class RotatableIcon implements Icon {
         }
     }
 
-
     private double getAngle() {
         double angle = 0.0;
         switch (alignment) {
-            case NORTH:
-            case CENTER:
+            case NORTH :
+            case CENTER :
                 angle = 0.0;
                 break;
-            case SOUTH:
+            case SOUTH :
                 angle = 180.0;
                 break;
-            case EAST:
+            case EAST :
                 angle = 90.0;
                 break;
-            case WEST:
+            case WEST :
                 angle = 270.0;
                 break;
-            case NORTH_EAST:
+            case NORTH_EAST :
                 angle = 45.0;
                 break;
-            case NORTH_WEST:
+            case NORTH_WEST :
                 angle = 315.0;
                 break;
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 angle = 135.0;
                 break;
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 angle = 225.0;
                 break;
         }

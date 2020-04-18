@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.color;
 
@@ -87,13 +88,13 @@ public class DarkColorModelHSL extends DarkColorModel {
         double saturation = (max - min);
         if (saturation > 0.0f) {
             saturation /= (summa > 1.0f)
-                          ? 2.0f - summa
-                          : summa;
+                                         ? 2.0f - summa
+                                         : summa;
         }
         return new double[]{
-            getHue(r / 255.0, g / 255.0, b / 255.0, max, min),
-            saturation,
-            summa / 2.0
+                            getHue(r / 255.0, g / 255.0, b / 255.0, max, min),
+                            saturation,
+                            summa / 2.0
         };
     }
 
@@ -115,7 +116,6 @@ public class DarkColorModelHSL extends DarkColorModel {
         return Math.min(min, blue);
     }
 
-
     private static double getHue(final double red, final double green, final double blue,
                                  final double max, final double min) {
         double hue = max - min;
@@ -127,7 +127,7 @@ public class DarkColorModelHSL extends DarkColorModel {
                 }
             } else if (max == green) {
                 hue = 2.0f + (blue - red) / hue;
-            } else /*max == blue*/ {
+            } else /* max == blue */ {
                 hue = 4.0f + (red - green) / hue;
             }
             hue /= 6.0f;
@@ -143,7 +143,8 @@ public class DarkColorModelHSL extends DarkColorModel {
 
     private static int[] HSLtoRGB(final double h, final double saturation, final double lightness) {
         double hue = h;
-        while (hue < 0) hue += 1;
+        while (hue < 0)
+            hue += 1;
         hue = hue - Math.floor(hue);
         if (saturation > 0.0f) {
             hue = (hue < 1.0f) ? hue * 6.0f : 0.0f;

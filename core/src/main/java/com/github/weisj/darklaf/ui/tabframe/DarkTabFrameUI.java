@@ -20,20 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.components.tabframe.*;
-import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.Pair;
-import org.jdesktop.jxlayer.JXLayer;
-import org.pbjar.jxlayer.plaf.ext.transform.DefaultTransformModel;
-import org.pbjar.jxlayer.plaf.ext.transform.TransformUtils;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.AWTEventListener;
@@ -41,11 +31,24 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.TooManyListenersException;
 
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+
+import org.jdesktop.jxlayer.JXLayer;
+import org.pbjar.jxlayer.plaf.ext.transform.DefaultTransformModel;
+import org.pbjar.jxlayer.plaf.ext.transform.TransformUtils;
+
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.components.tabframe.*;
+import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
+import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.Pair;
+
 /**
  * UI class for {@link JTabFrame}.
  *
  * @author Jannis Weis
- * @since 2018
+ * @since  2018
  */
 public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
@@ -72,7 +75,6 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     private int sourceIndex;
     private Alignment destAlign;
     private int destIndex;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabFrameUI();
@@ -191,7 +193,6 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         return tabHeight;
     }
 
-
     @Override
     public void clearTargetIndicator() {
         destIndex = -10;
@@ -261,26 +262,26 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     public Rectangle getTabContainerBounds(final JTabFrame tabFrame, final Alignment a) {
         switch (a) {
-            case NORTH:
-            case NORTH_EAST:
+            case NORTH :
+            case NORTH_EAST :
                 Rectangle rect = getTopContainer().getBounds();
                 rect.x = 0;
                 rect.width = tabFrame.getWidth();
                 return rect;
-            case EAST:
-            case SOUTH_EAST:
+            case EAST :
+            case SOUTH_EAST :
                 return getRightContainer().getBounds();
-            case SOUTH:
-            case SOUTH_WEST:
+            case SOUTH :
+            case SOUTH_WEST :
                 Rectangle rect2 = getTopContainer().getBounds();
                 rect2.x = 0;
                 rect2.width = tabFrame.getWidth();
                 return rect2;
-            case WEST:
-            case NORTH_WEST:
+            case WEST :
+            case NORTH_WEST :
                 return getLeftContainer().getBounds();
-            default:
-            case CENTER:
+            default :
+            case CENTER :
                 return tabFrame.getContentPane().getComponent().getBounds();
         }
     }
@@ -336,7 +337,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
                     a = Alignment.SOUTH_EAST;
                 }
                 int tmp = pos.x;
-                //noinspection SuspiciousNameCombination
+                // noinspection SuspiciousNameCombination
                 pos.x = pos.y;
                 pos.y = tmp;
             }
@@ -454,16 +455,16 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     protected boolean isForward(final Alignment a) {
         switch (a) {
-            case NORTH:
-            case EAST:
-            case WEST:
-            case SOUTH_WEST:
+            case NORTH :
+            case EAST :
+            case WEST :
+            case SOUTH_WEST :
                 return true;
-            case NORTH_WEST:
-            case SOUTH:
-            case NORTH_EAST:
-            case SOUTH_EAST:
-            default:
+            case NORTH_WEST :
+            case SOUTH :
+            case NORTH_EAST :
+            case SOUTH_EAST :
+            default :
                 return false;
         }
     }
@@ -482,26 +483,26 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
             int w = a == destAlign && destIndex == -1 ? dropSize.width : 0;
             Component comp = getTabContainer(a);
             switch (a) {
-                case NORTH:
-                case SOUTH_WEST:
+                case NORTH :
+                case SOUTH_WEST :
                     if (p.x > getLeftContainer().getWidth() + w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
-                case NORTH_EAST:
-                case SOUTH:
+                case NORTH_EAST :
+                case SOUTH :
                     if (p.x < comp.getWidth() - getRightContainer().getWidth() - w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
-                case EAST:
-                case WEST:
+                case EAST :
+                case WEST :
                     if (p.x > w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
-                case SOUTH_EAST:
-                case NORTH_WEST:
+                case SOUTH_EAST :
+                case NORTH_WEST :
                     if (p.x < comp.getHeight() - w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
@@ -513,17 +514,17 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     protected Component getTabContainer(final Alignment a) {
         switch (a) {
-            case NORTH:
-            case NORTH_EAST:
+            case NORTH :
+            case NORTH_EAST :
                 return getTopContainer();
-            case EAST:
-            case SOUTH_EAST:
+            case EAST :
+            case SOUTH_EAST :
                 return getRightContainer();
-            case SOUTH:
-            case SOUTH_WEST:
+            case SOUTH :
+            case SOUTH_WEST :
                 return getBottomContainer();
-            case WEST:
-            case NORTH_WEST:
+            case WEST :
+            case NORTH_WEST :
                 return getLeftContainer();
         }
         return null;
@@ -562,19 +563,19 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     public JComponent getDropComponent(final Alignment a) {
         switch (a) {
-            default:
-            case CENTER:
-            case NORTH:
-            case NORTH_EAST:
+            default :
+            case CENTER :
+            case NORTH :
+            case NORTH_EAST :
                 return getDropComponentTop();
-            case EAST:
-            case SOUTH_EAST:
+            case EAST :
+            case SOUTH_EAST :
                 return getDropComponentRight();
-            case SOUTH:
-            case SOUTH_WEST:
+            case SOUTH :
+            case SOUTH_WEST :
                 return getDropComponentBottom();
-            case WEST:
-            case NORTH_WEST:
+            case WEST :
+            case NORTH_WEST :
                 return getDropComponentLeft();
         }
     }

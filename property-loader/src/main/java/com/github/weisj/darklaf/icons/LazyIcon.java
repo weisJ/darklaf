@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.util.logging.Logger;
+
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
 /**
  * @author Jannis Weis
@@ -39,7 +41,6 @@ public abstract class LazyIcon implements Icon, UIResource {
     protected final Class<?> parentClass;
     private boolean loaded;
     private Icon icon;
-
 
     public LazyIcon(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
         this.path = path;

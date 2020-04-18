@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package icon;
 
-import com.github.weisj.darklaf.icons.RotatableIcon;
+import javax.swing.*;
+
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
 
-import javax.swing.*;
+import com.github.weisj.darklaf.icons.RotatableIcon;
 
 public class RotatableIconDemo implements ComponentDemo {
 

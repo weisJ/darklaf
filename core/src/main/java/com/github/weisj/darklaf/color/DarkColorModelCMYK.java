@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.color;
 
@@ -74,7 +75,6 @@ public class DarkColorModelCMYK extends DarkColorModel {
         return RGBtoCMYK(color.getRed(), color.getGreen(), color.getBlue());
     }
 
-
     private static int[] RGBtoCMYK(final int r, final int g, final int b) {
         double max = DarkColorModelHSL.max(r / 255.0, g / 255.0, b / 255.0);
         if (max > 0.0f) {
@@ -96,12 +96,10 @@ public class DarkColorModelCMYK extends DarkColorModel {
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
 
-
     private static int[] CMYKtoRGB(final double c, final double m, final double y, final double k) {
         rgb[0] = (int) Math.round(255 * (1 - c) * (1 - k));
         rgb[1] = (int) Math.round(255 * (1 - m) * (1 - k));
         rgb[2] = (int) Math.round(255 * (1 - y) * (1 - k));
         return rgb;
     }
-
 }

@@ -20,21 +20,24 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.taskpane;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import org.jdesktop.swingx.JXCollapsiblePane;
-import org.jdesktop.swingx.JXHyperlink;
-import org.jdesktop.swingx.JXTaskPane;
-import org.jdesktop.swingx.plaf.metal.MetalTaskPaneUI;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
+
+import org.jdesktop.swingx.JXCollapsiblePane;
+import org.jdesktop.swingx.JXHyperlink;
+import org.jdesktop.swingx.JXTaskPane;
+import org.jdesktop.swingx.plaf.metal.MetalTaskPaneUI;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
@@ -45,7 +48,6 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     protected Icon collapsedIcon;
     protected Icon openIcon;
     protected int arc;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTaskPaneUI();
@@ -97,7 +99,6 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     protected static class DarkContentPaneBorder implements Border, UIResource {
         protected final Color color;
         protected final int arc;
-
 
         public DarkContentPaneBorder(final Color color, final int arc) {
             this.arc = arc;

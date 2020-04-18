@@ -20,17 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.ui.BasicTransferable;
-import com.github.weisj.darklaf.ui.DragRecognitionSupport;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.LazyActionMap;
-import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
+import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
+import java.util.Objects;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -42,13 +42,16 @@ import javax.swing.plaf.TableUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTableUI;
 import javax.swing.table.*;
-import java.awt.*;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Enumeration;
-import java.util.Objects;
+
+import sun.swing.DefaultLookup;
+import sun.swing.SwingUtilities2;
+import sun.swing.UIAction;
+
+import com.github.weisj.darklaf.ui.BasicTransferable;
+import com.github.weisj.darklaf.ui.DragRecognitionSupport;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * The type Table ui bridge.
@@ -58,17 +61,16 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * The constant BASELINE_COMPONENT_KEY.
      */
-    protected static final StringBuilder BASELINE_COMPONENT_KEY =
-        new StringBuilder("Table.baselineComponent");
+    protected static final StringBuilder BASELINE_COMPONENT_KEY = new StringBuilder("Table.baselineComponent");
 
-//
-// Instance Variables
-//
+    //
+    // Instance Variables
+    //
 
     /**
      * The constant defaultTransferHandler.
      */
-// The JTable that is delegating the painting to this UI.
+    // The JTable that is delegating the painting to this UI.
     protected static final TransferHandler defaultTransferHandler = new TableTransferHandler();
     /**
      * The instance of {@code JTable}.
@@ -95,32 +97,31 @@ public abstract class TableUIBridge extends TableUI {
      */
     protected Handler handler;
 
-//
-//  Helper class for keyboard actions
-//
+    //
+    // Helper class for keyboard actions
+    //
     /**
      * Local cache of Table's client property DarkTableUI.KEY_IS_FILE_LIST
      */
     protected boolean isFileList = false;
 
-
-//
-//  The Table's Key listener
-//
+    //
+    // The Table's Key listener
+    //
 
     /**
      * Returns a new instance of {@code BasicTableUI}.
      *
-     * @param c a component
-     * @return a new instance of {@code BasicTableUI}
+     * @param  c a component
+     * @return   a new instance of {@code BasicTableUI}
      */
     public static ComponentUI createUI(final JComponent c) {
         return new BasicTableUI();
     }
 
-//
-//  The Table's focus listener
-//
+    //
+    // The Table's focus listener
+    //
 
     /**
      * Load action map.
@@ -132,7 +133,7 @@ public abstract class TableUIBridge extends TableUI {
         // passed to the Actions constructor. Only certain parameter
         // combinations are supported. For example, the following Action would
         // not work as expected:
-        //     new Actions(Actions.NEXT_ROW_CELL, 1, 4, false, true)
+        // new Actions(Actions.NEXT_ROW_CELL, 1, 4, false, true)
         // Actions which move within the selection only (having a true
         // inSelection parameter) require that one of dx or dy be
         // zero and the other be -1 or 1. The point of this warning is
@@ -226,16 +227,16 @@ public abstract class TableUIBridge extends TableUI {
         map.put(new Actions(Actions.FOCUS_HEADER));
     }
 
-//
-//  The Table's mouse and mouse motion listeners
-//
+    //
+    // The Table's mouse and mouse motion listeners
+    //
 
     /**
      * Gets adjusted lead.
      *
-     * @param table the table
-     * @param row   the row
-     * @return the adjusted lead
+     * @param  table the table
+     * @param  row   the row
+     * @return       the adjusted lead
      */
     protected static int getAdjustedLead(final JTable table, final boolean row) {
         return row ? getAdjustedLead(table, row, table.getSelectionModel())
@@ -245,10 +246,10 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * Gets adjusted lead.
      *
-     * @param table the table
-     * @param row   the row
-     * @param model the model
-     * @return the adjusted lead
+     * @param  table the table
+     * @param  row   the row
+     * @param  model the model
+     * @return       the adjusted lead
      */
     protected static int getAdjustedLead(final JTable table,
                                          final boolean row,
@@ -262,14 +263,14 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * Point outside pref size boolean.
      *
-     * @param row    the row
-     * @param column the column
-     * @param p      the p
-     * @return the boolean
+     * @param  row    the row
+     * @param  column the column
+     * @param  p      the p
+     * @return        the boolean
      */
     /*
      * Returns true if the given point is outside the preferredSize of the
-     * item at the given row of the table.  (Column must be 0).
+     * item at the given row of the table. (Column must be 0).
      * Returns false if the DarkTableUI.KEY_IS_FILE_LIST client property is not set.
      */
     protected boolean pointOutsidePrefSize(final int row, final int column, final Point p) {
@@ -280,9 +281,9 @@ public abstract class TableUIBridge extends TableUI {
         return SwingUtilities2.pointOutsidePrefSize(table, row, column, p);
     }
 
-//
-//  Factory methods for the Listeners
-//
+    //
+    // Factory methods for the Listeners
+    //
 
     public void installUI(final JComponent c) {
         table = (JTable) c;
@@ -305,11 +306,11 @@ public abstract class TableUIBridge extends TableUI {
     protected void installDefaults() {
         LookAndFeel.installColorsAndFont(table, "Table.background",
                                          "Table.foreground", "Table.font");
-        // JTable's original row height is 16.  To correctly display the
+        // JTable's original row height is 16. To correctly display the
         // contents on Linux we should have set it to 18, Windows 19 and
-        // Solaris 20.  As these values vary so much it's too hard to
+        // Solaris 20. As these values vary so much it's too hard to
         // be backward compatable and try to update the row height, we're
-        // therefor NOT going to adjust the row height based on font.  If the
+        // therefor NOT going to adjust the row height based on font. If the
         // developer changes the font, it's there responsability to update
         // the row height.
 
@@ -334,9 +335,9 @@ public abstract class TableUIBridge extends TableUI {
         }
 
         // install the scrollpane border
-        Container parent = DarkUIUtil.getUnwrappedParent(table);  // should be viewport
+        Container parent = DarkUIUtil.getUnwrappedParent(table); // should be viewport
         if (parent != null) {
-            parent = parent.getParent();  // should be the scrollpane
+            parent = parent.getParent(); // should be the scrollpane
             if (parent != null && parent instanceof JScrollPane) {
                 LookAndFeel.installBorder((JScrollPane) parent, "Table.scrollPaneBorder");
             }
@@ -378,23 +379,23 @@ public abstract class TableUIBridge extends TableUI {
         }
     }
 
-//
-//  The installation/uninstall procedures and support
-//
+    //
+    // The installation/uninstall procedures and support
+    //
 
     /**
      * Register all keyboard actions on the JTable.
      */
     protected void installKeyboardActions() {
         LazyActionMap.installLazyActionMap(table, TableUIBridge.class, "Table.actionMap");
-//        var map = new LazyActionMap(null);
-//        loadActionMap(map);
-//        SwingUtilities.replaceUIActionMap(table, map);
+        // var map = new LazyActionMap(null);
+        // loadActionMap(map);
+        // SwingUtilities.replaceUIActionMap(table, map);
         InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         SwingUtilities.replaceUIInputMap(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, inputMap);
     }
 
-//  Installation
+    // Installation
 
     /**
      * Creates the focus listener for handling keyboard navigation in the {@code JTable}.
@@ -438,14 +439,13 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * Gets input map.
      *
-     * @param condition the condition
-     * @return the input map
+     * @param  condition the condition
+     * @return           the input map
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            InputMap keyMap =
-                (InputMap) DefaultLookup.get(table, this,
-                                             "Table.ancestorInputMap");
+            InputMap keyMap = (InputMap) DefaultLookup.get(table, this,
+                                                           "Table.ancestorInputMap");
             InputMap rtlKeyMap;
 
             if (table.getComponentOrientation().isLeftToRight() ||
@@ -479,7 +479,7 @@ public abstract class TableUIBridge extends TableUI {
         }
     }
 
-//  Uninstallation
+    // Uninstallation
 
     /**
      * Unregisters listeners.
@@ -504,8 +504,7 @@ public abstract class TableUIBridge extends TableUI {
      * Unregisters keyboard actions.
      */
     protected void uninstallKeyboardActions() {
-        SwingUtilities.replaceUIInputMap(table, JComponent.
-            WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
+        SwingUtilities.replaceUIInputMap(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
         SwingUtilities.replaceUIActionMap(table, null);
     }
 
@@ -521,8 +520,8 @@ public abstract class TableUIBridge extends TableUI {
         bounds.x = bounds.y = 0;
 
         if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 ||
-            // this check prevents us from painting the entire table
-            // when the clip doesn't intersect our bounds at all
+        // this check prevents us from painting the entire table
+        // when the clip doesn't intersect our bounds at all
             !bounds.intersects(clip)) {
 
             paintDropLines(g);
@@ -649,44 +648,42 @@ public abstract class TableUIBridge extends TableUI {
         return createTableSize(width);
     }
 
-//
-// Size Methods
-//
+    //
+    // Size Methods
+    //
 
     /**
      * Returns the baseline.
      *
      * @throws NullPointerException     {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @see                             javax.swing.JComponent#getBaseline(int, int)
+     * @since                           1.6
      */
     public int getBaseline(final JComponent c, final int width, final int height) {
         super.getBaseline(c, width, height);
         UIDefaults lafDefaults = UIManager.getLookAndFeelDefaults();
-        Component renderer = (Component) lafDefaults.get(
-            BASELINE_COMPONENT_KEY);
+        Component renderer = (Component) lafDefaults.get(BASELINE_COMPONENT_KEY);
         if (renderer == null) {
             DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
-            renderer = tcr.getTableCellRendererComponent(
-                table, "a", false, false, -1, -1);
+            renderer = tcr.getTableCellRendererComponent(table, "a", false, false, -1, -1);
             lafDefaults.put(BASELINE_COMPONENT_KEY, renderer);
         }
         renderer.setFont(table.getFont());
         int rowMargin = table.getRowMargin();
         return renderer.getBaseline(Integer.MAX_VALUE, table.getRowHeight() -
-                                                       rowMargin) + rowMargin / 2;
+                                                       rowMargin)
+               + rowMargin / 2;
     }
 
     /**
      * Returns an enum indicating how the baseline of the component changes as the size changes.
      *
      * @throws NullPointerException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @see                         javax.swing.JComponent#getBaseline(int, int)
+     * @since                       1.6
      */
-    public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-        final JComponent c) {
+    public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
     }
@@ -694,8 +691,8 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * Create table size dimension.
      *
-     * @param width the width
-     * @return the dimension
+     * @param  width the width
+     * @return       the dimension
      */
     protected Dimension createTableSize(final long width) {
         int height = 0;
@@ -763,15 +760,15 @@ public abstract class TableUIBridge extends TableUI {
         }
     }
 
-//
-//  Paint methods and support
-//
+    //
+    // Paint methods and support
+    //
 
     /**
      * Gets h drop line rect.
      *
-     * @param loc the loc
-     * @return the h drop line rect
+     * @param  loc the loc
+     * @return     the h drop line rect
      */
     protected Rectangle getHDropLineRect(final JTable.DropLocation loc) {
         if (!loc.isInsertRow()) {
@@ -806,9 +803,9 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * Extend rect rectangle.
      *
-     * @param rect       the rect
-     * @param horizontal the horizontal
-     * @return the rectangle
+     * @param  rect       the rect
+     * @param  horizontal the horizontal
+     * @return            the rectangle
      */
     protected Rectangle extendRect(final Rectangle rect, final boolean horizontal) {
         if (rect == null) {
@@ -835,8 +832,8 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * Gets v drop line rect.
      *
-     * @param loc the loc
-     * @return the v drop line rect
+     * @param  loc the loc
+     * @return     the v drop line rect
      */
     protected Rectangle getVDropLineRect(final JTable.DropLocation loc) {
         if (!loc.isInsertColumn()) {
@@ -1072,8 +1069,8 @@ public abstract class TableUIBridge extends TableUI {
     /**
      * View index for column int.
      *
-     * @param aColumn the a column
-     * @return the int
+     * @param  aColumn the a column
+     * @return         the int
      */
     protected int viewIndexForColumn(final TableColumn aColumn) {
         TableColumnModel cm = table.getColumnModel();
@@ -1117,13 +1114,11 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * The constant NEXT_ROW_EXTEND_SELECTION.
          */
-        protected static final String NEXT_ROW_EXTEND_SELECTION =
-            "selectNextRowExtendSelection";
+        protected static final String NEXT_ROW_EXTEND_SELECTION = "selectNextRowExtendSelection";
         /**
          * The constant NEXT_ROW_CHANGE_LEAD.
          */
-        protected static final String NEXT_ROW_CHANGE_LEAD =
-            "selectNextRowChangeLead";
+        protected static final String NEXT_ROW_CHANGE_LEAD = "selectNextRowChangeLead";
         /**
          * The constant PREVIOUS_ROW.
          */
@@ -1135,13 +1130,11 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * The constant PREVIOUS_ROW_EXTEND_SELECTION.
          */
-        protected static final String PREVIOUS_ROW_EXTEND_SELECTION =
-            "selectPreviousRowExtendSelection";
+        protected static final String PREVIOUS_ROW_EXTEND_SELECTION = "selectPreviousRowExtendSelection";
         /**
          * The constant PREVIOUS_ROW_CHANGE_LEAD.
          */
-        protected static final String PREVIOUS_ROW_CHANGE_LEAD =
-            "selectPreviousRowChangeLead";
+        protected static final String PREVIOUS_ROW_CHANGE_LEAD = "selectPreviousRowChangeLead";
 
         /**
          * The constant NEXT_COLUMN.
@@ -1154,13 +1147,11 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * The constant NEXT_COLUMN_EXTEND_SELECTION.
          */
-        protected static final String NEXT_COLUMN_EXTEND_SELECTION =
-            "selectNextColumnExtendSelection";
+        protected static final String NEXT_COLUMN_EXTEND_SELECTION = "selectNextColumnExtendSelection";
         /**
          * The constant NEXT_COLUMN_CHANGE_LEAD.
          */
-        protected static final String NEXT_COLUMN_CHANGE_LEAD =
-            "selectNextColumnChangeLead";
+        protected static final String NEXT_COLUMN_CHANGE_LEAD = "selectNextColumnChangeLead";
         /**
          * The constant PREVIOUS_COLUMN.
          */
@@ -1168,131 +1159,112 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * The constant PREVIOUS_COLUMN_CELL.
          */
-        protected static final String PREVIOUS_COLUMN_CELL =
-            "selectPreviousColumnCell";
+        protected static final String PREVIOUS_COLUMN_CELL = "selectPreviousColumnCell";
         /**
          * The constant PREVIOUS_COLUMN_EXTEND_SELECTION.
          */
-        protected static final String PREVIOUS_COLUMN_EXTEND_SELECTION =
-            "selectPreviousColumnExtendSelection";
+        protected static final String PREVIOUS_COLUMN_EXTEND_SELECTION = "selectPreviousColumnExtendSelection";
         /**
          * The constant PREVIOUS_COLUMN_CHANGE_LEAD.
          */
-        protected static final String PREVIOUS_COLUMN_CHANGE_LEAD =
-            "selectPreviousColumnChangeLead";
+        protected static final String PREVIOUS_COLUMN_CHANGE_LEAD = "selectPreviousColumnChangeLead";
 
         /**
          * The constant SCROLL_LEFT_CHANGE_SELECTION.
          */
-        protected static final String SCROLL_LEFT_CHANGE_SELECTION =
-            "scrollLeftChangeSelection";
+        protected static final String SCROLL_LEFT_CHANGE_SELECTION = "scrollLeftChangeSelection";
         /**
          * The constant SCROLL_LEFT_EXTEND_SELECTION.
          */
-        protected static final String SCROLL_LEFT_EXTEND_SELECTION =
-            "scrollLeftExtendSelection";
+        protected static final String SCROLL_LEFT_EXTEND_SELECTION = "scrollLeftExtendSelection";
         /**
          * The constant SCROLL_RIGHT_CHANGE_SELECTION.
          */
-        protected static final String SCROLL_RIGHT_CHANGE_SELECTION =
-            "scrollRightChangeSelection";
+        protected static final String SCROLL_RIGHT_CHANGE_SELECTION = "scrollRightChangeSelection";
         /**
          * The constant SCROLL_RIGHT_EXTEND_SELECTION.
          */
-        protected static final String SCROLL_RIGHT_EXTEND_SELECTION =
-            "scrollRightExtendSelection";
+        protected static final String SCROLL_RIGHT_EXTEND_SELECTION = "scrollRightExtendSelection";
 
         /**
          * The constant SCROLL_UP_CHANGE_SELECTION.
          */
-        protected static final String SCROLL_UP_CHANGE_SELECTION =
-            "scrollUpChangeSelection";
+        protected static final String SCROLL_UP_CHANGE_SELECTION = "scrollUpChangeSelection";
         /**
          * The constant SCROLL_UP_EXTEND_SELECTION.
          */
-        protected static final String SCROLL_UP_EXTEND_SELECTION =
-            "scrollUpExtendSelection";
+        protected static final String SCROLL_UP_EXTEND_SELECTION = "scrollUpExtendSelection";
         /**
          * The constant SCROLL_DOWN_CHANGE_SELECTION.
          */
-        protected static final String SCROLL_DOWN_CHANGE_SELECTION =
-            "scrollDownChangeSelection";
+        protected static final String SCROLL_DOWN_CHANGE_SELECTION = "scrollDownChangeSelection";
         /**
          * The constant SCROLL_DOWN_EXTEND_SELECTION.
          */
-        protected static final String SCROLL_DOWN_EXTEND_SELECTION =
-            "scrollDownExtendSelection";
+        protected static final String SCROLL_DOWN_EXTEND_SELECTION = "scrollDownExtendSelection";
 
         /**
          * The constant FIRST_COLUMN.
          */
-        protected static final String FIRST_COLUMN =
-            "selectFirstColumn";
+        protected static final String FIRST_COLUMN = "selectFirstColumn";
         /**
          * The constant FIRST_COLUMN_EXTEND_SELECTION.
          */
-        protected static final String FIRST_COLUMN_EXTEND_SELECTION =
-            "selectFirstColumnExtendSelection";
+        protected static final String FIRST_COLUMN_EXTEND_SELECTION = "selectFirstColumnExtendSelection";
         /**
          * The constant LAST_COLUMN.
          */
-        protected static final String LAST_COLUMN =
-            "selectLastColumn";
+        protected static final String LAST_COLUMN = "selectLastColumn";
         /**
          * The constant LAST_COLUMN_EXTEND_SELECTION.
          */
-        protected static final String LAST_COLUMN_EXTEND_SELECTION =
-            "selectLastColumnExtendSelection";
+        protected static final String LAST_COLUMN_EXTEND_SELECTION = "selectLastColumnExtendSelection";
 
         /**
          * The constant FIRST_ROW.
          */
-        protected static final String FIRST_ROW =
-            "selectFirstRow";
+        protected static final String FIRST_ROW = "selectFirstRow";
         /**
          * The constant FIRST_ROW_EXTEND_SELECTION.
          */
-        protected static final String FIRST_ROW_EXTEND_SELECTION =
-            "selectFirstRowExtendSelection";
+        protected static final String FIRST_ROW_EXTEND_SELECTION = "selectFirstRowExtendSelection";
         /**
          * The constant LAST_ROW.
          */
-        protected static final String LAST_ROW =
-            "selectLastRow";
+        protected static final String LAST_ROW = "selectLastRow";
         /**
          * The constant LAST_ROW_EXTEND_SELECTION.
          */
-        protected static final String LAST_ROW_EXTEND_SELECTION =
-            "selectLastRowExtendSelection";
+        protected static final String LAST_ROW_EXTEND_SELECTION = "selectLastRowExtendSelection";
 
         /**
          * The constant ADD_TO_SELECTION.
          */
-// add the lead item to the selection without changing lead or anchor
+        // add the lead item to the selection without changing lead or anchor
         protected static final String ADD_TO_SELECTION = "addToSelection";
 
         /**
          * The constant TOGGLE_AND_ANCHOR.
          */
-// toggle the selected state of the lead item and move the anchor to it
+        // toggle the selected state of the lead item and move the anchor to it
         protected static final String TOGGLE_AND_ANCHOR = "toggleAndAnchor";
 
         /**
          * The constant EXTEND_TO.
          */
-// extend the selection to the lead item
+        // extend the selection to the lead item
         protected static final String EXTEND_TO = "extendTo";
 
         /**
          * The constant MOVE_SELECTION_TO.
          */
-// move the anchor to the lead and ensure only that item is selected
+        // move the anchor to the lead and ensure only that item is selected
         protected static final String MOVE_SELECTION_TO = "moveSelectionTo";
 
         /**
          * The constant FOCUS_HEADER.
          */
-// give focus to the JTableHeader, if one exists
+        // give focus to the JTableHeader, if one exists
         protected static final String FOCUS_HEADER = "focusHeader";
 
         /**
@@ -1315,7 +1287,7 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * The Forwards.
          */
-// horizontally, forwards always means right,
+        // horizontally, forwards always means right,
         // regardless of component orientation
         protected boolean forwards;
         /**
@@ -1400,8 +1372,8 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * Sign int.
          *
-         * @param num the num
-         * @return the int
+         * @param  num the num
+         * @return     the int
          */
         protected static int sign(final int num) {
             return Integer.compare(num, 0);
@@ -1417,7 +1389,7 @@ public abstract class TableUIBridge extends TableUI {
             ListSelectionModel csm = table.getColumnModel().getSelectionModel();
             leadColumn = getAdjustedLead(table, false, csm);
 
-            if (Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) ||        // Paging Actions
+            if (Objects.equals(key, SCROLL_LEFT_CHANGE_SELECTION) || // Paging Actions
                 Objects.equals(key, SCROLL_LEFT_EXTEND_SELECTION) ||
                 Objects.equals(key, SCROLL_RIGHT_CHANGE_SELECTION) ||
                 Objects.equals(key, SCROLL_RIGHT_EXTEND_SELECTION) ||
@@ -1444,8 +1416,7 @@ public abstract class TableUIBridge extends TableUI {
                         this.dy = 0;
                     }
                 } else {
-                    if (!(DarkUIUtil.getUnwrappedParent(table).getParent() instanceof
-                        JScrollPane)) {
+                    if (!(DarkUIUtil.getUnwrappedParent(table).getParent() instanceof JScrollPane)) {
                         return;
                     }
 
@@ -1489,7 +1460,7 @@ public abstract class TableUIBridge extends TableUI {
                     }
                 }
             }
-            if (Objects.equals(key, NEXT_ROW) ||  // Navigate Actions
+            if (Objects.equals(key, NEXT_ROW) || // Navigate Actions
                 Objects.equals(key, NEXT_ROW_CELL) ||
                 Objects.equals(key, NEXT_ROW_EXTEND_SELECTION) ||
                 Objects.equals(key, NEXT_ROW_CHANGE_LEAD) ||
@@ -1545,12 +1516,10 @@ public abstract class TableUIBridge extends TableUI {
 
                 boolean changeLead = false;
                 if (Objects.equals(key, NEXT_ROW_CHANGE_LEAD) || Objects.equals(key, PREVIOUS_ROW_CHANGE_LEAD)) {
-                    changeLead = (rsm.getSelectionMode()
-                                  == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                    changeLead = (rsm.getSelectionMode() == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                 } else if (Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) || Objects.equals(key,
                                                                                           PREVIOUS_COLUMN_CHANGE_LEAD)) {
-                    changeLead = (csm.getSelectionMode()
-                                  == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                    changeLead = (csm.getSelectionMode() == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                 }
 
                 if (changeLead) {
@@ -1614,18 +1583,18 @@ public abstract class TableUIBridge extends TableUI {
                 }
 
                 /*
-                if (wasEditingWithFocus) {
-                    table.editCellAt(leadRow, leadColumn);
-                    final Component editorComp = table.getEditorComponent();
-                    if (editorComp != null) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                editorComp.requestFocus();
-                            }
-                        });
-                    }
-                }
-                */
+                 * if (wasEditingWithFocus) {
+                 * table.editCellAt(leadRow, leadColumn);
+                 * final Component editorComp = table.getEditorComponent();
+                 * if (editorComp != null) {
+                 * SwingUtilities.invokeLater(new Runnable() {
+                 * public void run() {
+                 * editorComp.requestFocus();
+                 * }
+                 * });
+                 * }
+                 * }
+                 */
             } else if (Objects.equals(key, CANCEL_EDITING)) {
                 table.removeEditor();
             } else if (Objects.equals(key, SELECT_ALL)) {
@@ -1667,7 +1636,7 @@ public abstract class TableUIBridge extends TableUI {
             } else if (Objects.equals(key, FOCUS_HEADER)) {
                 JTableHeader th = table.getTableHeader();
                 if (th != null) {
-                    //Set the header's selected column to match the table.
+                    // Set the header's selected column to match the table.
                     int col = table.getSelectedColumn();
                     if (col >= 0) {
                         TableHeaderUI thUI = th.getUI();
@@ -1676,7 +1645,7 @@ public abstract class TableUIBridge extends TableUI {
                         }
                     }
 
-                    //Then give the header the focus.
+                    // Then give the header the focus.
                     th.requestFocusInWindow();
                 }
             }
@@ -1697,10 +1666,10 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * Clip to range int.
          *
-         * @param i the
-         * @param a the a
-         * @param b the b
-         * @return the int
+         * @param  i the
+         * @param  a the a
+         * @param  b the b
+         * @return   the int
          */
         protected static int clipToRange(final int i, final int a, final int b) {
             return Math.min(Math.max(i, a), b - 1);
@@ -1714,12 +1683,12 @@ public abstract class TableUIBridge extends TableUI {
          * performing modifications, it is recommended that caution be taken in order to preserve the intent of this
          * method, especially when deciding whether to query the selection models or interact with JTable directly.
          *
-         * @param table the table
-         * @param dx    the dx
-         * @param dy    the dy
-         * @param rsm   the rsm
-         * @param csm   the csm
-         * @return the boolean
+         * @param  table the table
+         * @param  dx    the dx
+         * @param  dy    the dy
+         * @param  rsm   the rsm
+         * @param  csm   the csm
+         * @return       the boolean
          */
         protected boolean moveWithinSelectedRange(final JTable table, final int dx, final int dy,
                                                   final ListSelectionModel rsm, final ListSelectionModel csm) {
@@ -1772,7 +1741,7 @@ public abstract class TableUIBridge extends TableUI {
 
             // - nothing selected
             if (totalCount == 0 ||
-                // - one item selected, and the lead is already selected
+            // - one item selected, and the lead is already selected
                 (totalCount == 1 && table.isCellSelected(leadRow, leadColumn))) {
 
                 stayInSelection = false;
@@ -1866,8 +1835,8 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * Accept boolean.
          *
-         * @param sender the sender
-         * @return the boolean
+         * @param  sender the sender
+         * @return        the boolean
          */
         public boolean accept(final Object sender) {
             String key = getName();
@@ -1904,15 +1873,13 @@ public abstract class TableUIBridge extends TableUI {
                 // discontinuous selection actions are only enabled for
                 // DefaultListSelectionModel
                 return sender != null &&
-                       ((JTable) sender).getSelectionModel()
-                           instanceof DefaultListSelectionModel;
+                       ((JTable) sender).getSelectionModel() instanceof DefaultListSelectionModel;
             } else if (Objects.equals(key, NEXT_COLUMN_CHANGE_LEAD) ||
                        Objects.equals(key, PREVIOUS_COLUMN_CHANGE_LEAD)) {
                 // discontinuous selection actions are only enabled for
                 // DefaultListSelectionModel
                 return sender != null &&
-                       ((JTable) sender).getColumnModel().getSelectionModel()
-                           instanceof DefaultListSelectionModel;
+                       ((JTable) sender).getColumnModel().getSelectionModel() instanceof DefaultListSelectionModel;
             } else if (Objects.equals(key, ADD_TO_SELECTION) && sender instanceof JTable) {
                 // This action is typically bound to SPACE.
                 // If the table is already in an editing mode, SPACE should
@@ -1947,9 +1914,9 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * Create a Transferable to use as the source for a data transfer.
          *
-         * @param c The component holding the data to be transfered.  This argument is provided to enable sharing of
-         *          TransferHandlers by multiple components.
-         * @return The representation of the data to be transfered.
+         * @param  c The component holding the data to be transfered. This argument is provided to enable sharing of
+         *           TransferHandlers by multiple components.
+         * @return   The representation of the data to be transfered.
          */
         protected Transferable createTransferable(final JComponent c) {
             if (c instanceof JTable) {
@@ -2014,13 +1981,13 @@ public abstract class TableUIBridge extends TableUI {
 
             return null;
         }
-
     }
 
     /**
      * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
      * {@code BasicTableUI}.
-     * <p>As of Java 2 platform v1.3 this class is no longer used.
+     * <p>
+     * As of Java 2 platform v1.3 this class is no longer used.
      * Instead <code>JTable</code> overrides <code>processKeyBinding</code> to dispatch the event to the current
      * <code>TableCellEditor</code>.
      */
@@ -2102,19 +2069,19 @@ public abstract class TableUIBridge extends TableUI {
      * The type Handler.
      */
     protected class Handler implements FocusListener, MouseInputListener,
-                                       PropertyChangeListener, ListSelectionListener, ActionListener,
-                                       DragRecognitionSupport.BeforeDrag {
+                            PropertyChangeListener, ListSelectionListener, ActionListener,
+                            DragRecognitionSupport.BeforeDrag {
 
         /**
          * The Dispatch component.
          */
-// Component receiving mouse events during editing.
+        // Component receiving mouse events during editing.
         // May not be editorComponent.
         protected Component dispatchComponent;
         /**
          * The Pressed row.
          */
-// The row and column where the press occurred and the
+        // The row and column where the press occurred and the
         // press event itself
         protected int pressedRow;
         /**
@@ -2128,35 +2095,34 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * The Drag press did selection.
          */
-// Whether or not the mouse press (which is being considered as part
+        // Whether or not the mouse press (which is being considered as part
         // of a drag sequence) also caused the selection change to be fully
         // processed.
         protected boolean dragPressDidSelection;
         /**
          * The Drag started.
          */
-// Set to true when a drag gesture has been fully recognized and DnD
+        // Set to true when a drag gesture has been fully recognized and DnD
         // begins. Use this to ignore further mouse events which could be
         // delivered if DnD is cancelled (via ESCAPE for example)
         protected boolean dragStarted;
 
-
         /**
          * The Should start timer.
          */
-// MouseInputListener
+        // MouseInputListener
         // Whether or not we should start the editing timer on release
         protected boolean shouldStartTimer;
         /**
          * The Outside pref size.
          */
-// To cache the return value of pointOutsidePrefSize since we use
+        // To cache the return value of pointOutsidePrefSize since we use
         // it multiple times.
         protected boolean outsidePrefSize;
         /**
          * The Timer.
          */
-// Used to delay the start of editing.
+        // Used to delay the start of editing.
         protected Timer timer = null;
 
         public void focusGained(final FocusEvent e) {
@@ -2166,7 +2132,7 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * Repaint lead cell.
          */
-// FocusListener
+        // FocusListener
         protected void repaintLeadCell() {
             int lr = getAdjustedLead(table, true);
             int lc = getAdjustedLead(table, false);
@@ -2188,17 +2154,15 @@ public abstract class TableUIBridge extends TableUI {
          *
          * @param e the e
          */
-// KeyListener
-        public void keyPressed(final KeyEvent e) {
-        }
+        // KeyListener
+        public void keyPressed(final KeyEvent e) {}
 
         /**
          * Key released.
          *
          * @param e the e
          */
-        public void keyReleased(final KeyEvent e) {
-        }
+        public void keyReleased(final KeyEvent e) {}
 
         /**
          * Key typed.
@@ -2255,8 +2219,7 @@ public abstract class TableUIBridge extends TableUI {
                     map = component.getInputMap(JComponent.WHEN_FOCUSED);
                     Object binding = (map != null) ? map.get(keyStroke) : null;
                     if (binding == null) {
-                        map = component.getInputMap(JComponent.
-                                                        WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+                        map = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
                         binding = (map != null) ? map.get(keyStroke) : null;
                     }
                     if (binding != null) {
@@ -2271,8 +2234,7 @@ public abstract class TableUIBridge extends TableUI {
             }
         }
 
-        public void mouseClicked(final MouseEvent e) {
-        }
+        public void mouseClicked(final MouseEvent e) {}
 
         public void mousePressed(final MouseEvent e) {
             if (SwingUtilities2.shouldIgnore(e, table)) {
@@ -2293,11 +2255,10 @@ public abstract class TableUIBridge extends TableUI {
             outsidePrefSize = pointOutsidePrefSize(pressedRow, pressedCol, p);
 
             if (isFileList) {
-                shouldStartTimer =
-                    table.isCellSelected(pressedRow, pressedCol) &&
-                    !e.isShiftDown() &&
-                    !DarkUIUtil.isMenuShortcutKeyDown(e) &&
-                    !outsidePrefSize;
+                shouldStartTimer = table.isCellSelected(pressedRow, pressedCol) &&
+                                   !e.isShiftDown() &&
+                                   !DarkUIUtil.isMenuShortcutKeyDown(e) &&
+                                   !outsidePrefSize;
             }
 
             if (table.getDragEnabled()) {
@@ -2383,8 +2344,7 @@ public abstract class TableUIBridge extends TableUI {
                 // For single select or non-shift-click, clear the selection
                 if (e.getID() == MouseEvent.MOUSE_PRESSED &&
                     (!e.isShiftDown() ||
-                     table.getSelectionModel().getSelectionMode() ==
-                     ListSelectionModel.SINGLE_SELECTION)) {
+                     table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
                     table.clearSelection();
                     TableCellEditor tce = table.getCellEditor();
                     if (tce != null) {
@@ -2446,8 +2406,8 @@ public abstract class TableUIBridge extends TableUI {
         /**
          * Repost event boolean.
          *
-         * @param e the e
-         * @return the boolean
+         * @param  e the e
+         * @return   the boolean
          */
         protected boolean repostEvent(final MouseEvent e) {
             // Check for isEditing() in case another event has
@@ -2504,11 +2464,9 @@ public abstract class TableUIBridge extends TableUI {
             adjustSelection(e);
         }
 
-        public void mouseEntered(final MouseEvent e) {
-        }
+        public void mouseEntered(final MouseEvent e) {}
 
-        public void mouseExited(final MouseEvent e) {
-        }
+        public void mouseExited(final MouseEvent e) {}
 
         /**
          * Can start drag boolean.
@@ -2525,10 +2483,9 @@ public abstract class TableUIBridge extends TableUI {
             }
 
             // if this is a single selection table
-            if ((table.getSelectionModel().getSelectionMode() ==
-                 ListSelectionModel.SINGLE_SELECTION) &&
-                (table.getColumnModel().getSelectionModel().getSelectionMode() ==
-                 ListSelectionModel.SINGLE_SELECTION)) {
+            if ((table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) &&
+                (table.getColumnModel().getSelectionModel()
+                      .getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
 
                 return true;
             }
@@ -2543,8 +2500,7 @@ public abstract class TableUIBridge extends TableUI {
          */
         protected void setValueIsAdjusting(final boolean flag) {
             table.getSelectionModel().setValueIsAdjusting(flag);
-            table.getColumnModel().getSelectionModel().
-                setValueIsAdjusting(flag);
+            table.getColumnModel().getSelectionModel().setValueIsAdjusting(flag);
         }
 
         public void valueChanged(final ListSelectionEvent e) {
@@ -2568,8 +2524,7 @@ public abstract class TableUIBridge extends TableUI {
             if (DarkUIUtil.isMenuShortcutKeyDown(me) && isFileList) {
                 table.getSelectionModel().addSelectionInterval(pressedRow,
                                                                pressedRow);
-                table.getColumnModel().getSelectionModel().
-                    addSelectionInterval(pressedCol, pressedCol);
+                table.getColumnModel().getSelectionModel().addSelectionInterval(pressedCol, pressedCol);
             }
 
             pressedEvent = null;
@@ -2605,16 +2560,14 @@ public abstract class TableUIBridge extends TableUI {
             table.changeSelection(row, column, DarkUIUtil.isMenuShortcutKeyDown(e), true);
         }
 
-        public void mouseMoved(final MouseEvent e) {
-        }
+        public void mouseMoved(final MouseEvent e) {}
 
         // PropertyChangeListener
         public void propertyChange(final PropertyChangeEvent event) {
             String changeName = event.getPropertyName();
 
             if (PropertyKey.COMPONENT_ORIENTATION.equals(changeName)) {
-                InputMap inputMap = getInputMap(
-                    JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+                InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
                 SwingUtilities.replaceUIInputMap(table,
                                                  JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
@@ -2622,8 +2575,7 @@ public abstract class TableUIBridge extends TableUI {
 
                 JTableHeader header = table.getTableHeader();
                 if (header != null) {
-                    header.setComponentOrientation(
-                        (ComponentOrientation) event.getNewValue());
+                    header.setComponentOrientation((ComponentOrientation) event.getNewValue());
                 }
             } else if ("dropLocation".equals(changeName)) {
                 JTable.DropLocation oldValue = (JTable.DropLocation) event.getOldValue();

@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.scrollpane;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
 public class EmptyButton extends JButton implements UIResource {
     public EmptyButton() {
@@ -38,12 +40,10 @@ public class EmptyButton extends JButton implements UIResource {
         return getMaximumSize();
     }
 
-
     @Override
     public Dimension getMaximumSize() {
         return new Dimension(0, 0);
     }
-
 
     @Override
     public Dimension getMinimumSize() {

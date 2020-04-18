@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.splitPane;
 
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.*;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 public final class SplitPaneDemo implements ComponentDemo {
 
@@ -40,51 +42,67 @@ public final class SplitPaneDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         JSplitPane splitPane = new JSplitPane();
-        JPanel leftPanel = new JPanel() {{
-            setBackground(UIManager.getColor("glowError"));
-        }};
-        JPanel rightPanel = new JPanel() {{
-            setBackground(UIManager.getColor("glowFocus"));
-        }};
+        JPanel leftPanel = new JPanel() {
+            {
+                setBackground(UIManager.getColor("glowError"));
+            }
+        };
+        JPanel rightPanel = new JPanel() {
+            {
+                setBackground(UIManager.getColor("glowFocus"));
+            }
+        };
         splitPane.setLeftComponent(leftPanel);
         splitPane.setRightComponent(rightPanel);
 
         DemoPanel panel = new DemoPanel(splitPane, new BorderLayout(), 0);
 
         JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("ContinuousLayout") {{
-            setSelected(splitPane.isContinuousLayout());
-            addActionListener(e -> splitPane.setContinuousLayout(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("OneTouchExpandable") {{
-            setSelected(splitPane.isOneTouchExpandable());
-            addActionListener(e -> splitPane.setOneTouchExpandable(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(splitPane.isEnabled());
-            addActionListener(e -> splitPane.setEnabled(isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("ContinuousLayout") {
+            {
+                setSelected(splitPane.isContinuousLayout());
+                addActionListener(e -> splitPane.setContinuousLayout(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("OneTouchExpandable") {
+            {
+                setSelected(splitPane.isOneTouchExpandable());
+                addActionListener(e -> splitPane.setOneTouchExpandable(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(splitPane.isEnabled());
+                addActionListener(e -> splitPane.setEnabled(isSelected()));
+            }
+        });
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Orientation:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {{
-            Map<String, Integer> mapping = new HashMap<String, Integer>() {{
-                put("VERTICAL_SPLIT", JSplitPane.VERTICAL_SPLIT);
-                put("HORIZONTAL_SPLIT", JSplitPane.HORIZONTAL_SPLIT);
-            }};
-            addItem("VERTICAL_SPLIT");
-            addItem("HORIZONTAL_SPLIT");
-            setSelectedItem("HORIZONTAL_SPLIT");
-            addItemListener(e -> splitPane.setOrientation(mapping.get(e.getItem().toString())));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<String>() {
+            {
+                Map<String, Integer> mapping = new HashMap<String, Integer>() {
+                    {
+                        put("VERTICAL_SPLIT", JSplitPane.VERTICAL_SPLIT);
+                        put("HORIZONTAL_SPLIT", JSplitPane.HORIZONTAL_SPLIT);
+                    }
+                };
+                addItem("VERTICAL_SPLIT");
+                addItem("HORIZONTAL_SPLIT");
+                setSelectedItem("HORIZONTAL_SPLIT");
+                addItemListener(e -> splitPane.setOrientation(mapping.get(e.getItem().toString())));
+            }
+        }, "sgx");
         controlPanel.add(new JLabel("JSplitPane.style:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {{
-            addItem("grip");
-            addItem("line");
-            addItem("invisible");
-            setSelectedItem(UIManager.get("SplitPane.defaultDividerStyle"));
-            addItemListener(e -> splitPane.putClientProperty("JSplitPane.style", e.getItem()));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<String>() {
+            {
+                addItem("grip");
+                addItem("line");
+                addItem("invisible");
+                setSelectedItem(UIManager.get("SplitPane.defaultDividerStyle"));
+                addItemListener(e -> splitPane.putClientProperty("JSplitPane.style", e.getItem()));
+            }
+        }, "sgx");
         return panel;
     }
 

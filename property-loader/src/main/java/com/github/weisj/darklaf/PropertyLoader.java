@@ -20,8 +20,28 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf;
+
+import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.AttributedCharacterIterator;
+import java.util.*;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.DimensionUIResource;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.InsetsUIResource;
 
 import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
@@ -30,24 +50,6 @@ import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.PropertyValue;
-
-import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.DimensionUIResource;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.InsetsUIResource;
-import java.awt.*;
-import java.awt.font.TextAttribute;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.AttributedCharacterIterator;
-import java.util.List;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * @author Konstantin Bulenkov
@@ -80,14 +82,12 @@ public final class PropertyLoader {
 
     private static boolean addReferenceInfo;
 
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(
-        TextAttribute.KERNING,
-        TextAttribute.KERNING_ON);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
+                                                                                                                   TextAttribute.KERNING_ON);
 
     public static void setAddReferenceInfo(final boolean addReferenceInfo) {
         PropertyLoader.addReferenceInfo = addReferenceInfo;
     }
-
 
     public static Properties loadProperties(final Class<?> clazz, final String name, final String path) {
         final Properties properties = new Properties();
@@ -167,7 +167,6 @@ public final class PropertyLoader {
         return key.startsWith(String.valueOf(REFERENCE_PREFIX)) ? key.substring(1) : key;
     }
 
-
     public static Object parseValue(final String propertyKey, final String value,
                                     final Map<Object, Object> accumulator,
                                     final UIDefaults currentDefaults, final IconLoader iconLoader) {
@@ -198,16 +197,14 @@ public final class PropertyLoader {
         } else if (key.endsWith("Size") || key.endsWith(".size")) {
             returnVal = parseSize(value);
         } else if (value.startsWith(String.valueOf(LIST_START))) {
-            returnVal = parseList(
-                (v, acc, defs, iconL) -> PropertyLoader.parseValue("", v, acc, defs, iconL),
-                value, accumulator, currentDefaults, iconLoader);
+            returnVal = parseList((v, acc, defs, iconL) -> PropertyLoader.parseValue("", v, acc, defs, iconL),
+                                  value, accumulator, currentDefaults, iconLoader);
         } else if (value.startsWith(String.valueOf(INT_LIST_START))) {
             returnVal = parseList((SimpleValueMapper<Integer>) Integer::parseInt, value, accumulator, currentDefaults,
                                   iconLoader, INT_LIST_START, INT_LIST_END, SEPARATOR);
         } else if (value.contains(String.valueOf(PAIR_SEPARATOR))) {
-            returnVal = parsePair(
-                (v, acc, defs, iconL) -> PropertyLoader.parseValue("", v, acc, defs, iconL),
-                value, accumulator, currentDefaults, iconLoader);
+            returnVal = parsePair((v, acc, defs, iconL) -> PropertyLoader.parseValue("", v, acc, defs, iconL),
+                                  value, accumulator, currentDefaults, iconLoader);
         } else if (PropertyValue.NULL.equalsIgnoreCase(value)) {
             returnVal = null;
         } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
@@ -217,8 +214,8 @@ public final class PropertyLoader {
             final Color color = ColorUtil.fromHex(value, null);
             final Integer invVal = getInteger(value);
             final Boolean boolVal = PropertyValue.TRUE.equalsIgnoreCase(value)
-                                    ? Boolean.TRUE
-                                    : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
+                                                 ? Boolean.TRUE
+                                                 : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
             if (color != null && (value.length() == 6 || value.length() == 8)) {
                 return new ColorUIResource(color);
             } else if (invVal != null) {
@@ -263,7 +260,6 @@ public final class PropertyLoader {
         }
         return returnVal;
     }
-
 
     private static Object parseInsets(final String value,
                                       final Map<Object, Object> accumulator,
@@ -446,7 +442,6 @@ public final class PropertyLoader {
         }
     }
 
-
     private static Integer getInteger(final String value) {
         try {
             return Integer.parseInt(value);
@@ -463,17 +458,14 @@ public final class PropertyLoader {
         }
     }
 
-
     private static Object parseObject(final String value) {
         try {
             return Class.forName(value).getDeclaredConstructor().newInstance();
-        } catch (final Exception ignored) {
-        }
+        } catch (final Exception ignored) {}
         return null;
     }
 
-    private static final class LoadError {
-    }
+    private static final class LoadError {}
 
     private interface ParseFunction<T> {
 

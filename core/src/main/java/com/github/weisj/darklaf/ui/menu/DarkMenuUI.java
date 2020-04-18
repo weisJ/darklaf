@@ -20,20 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.menu;
 
-import com.github.weisj.darklaf.decorators.MouseInputDelegate;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuUI;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
+import com.github.weisj.darklaf.decorators.MouseInputDelegate;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 
 public class DarkMenuUI extends BasicMenuUI {
 

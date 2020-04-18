@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.Document;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.ParseException;
+
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -40,7 +42,6 @@ import java.text.ParseException;
 public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements PropertyChangeListener, DocumentListener {
 
     private JFormattedTextField textField;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkFormattedTextFieldUI();
@@ -94,8 +95,7 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
     }
 
     @Override
-    public void changedUpdate(final DocumentEvent e) {
-    }
+    public void changedUpdate(final DocumentEvent e) {}
 
     protected void update() {
         if (textField == null) return;

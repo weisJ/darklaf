@@ -20,17 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tooltip;
+
+import java.awt.*;
+import java.util.function.BiConsumer;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.function.BiConsumer;
 
 public class ToolTipUtil {
 
@@ -74,7 +76,7 @@ public class ToolTipUtil {
             if (pos != null) break;
         }
         if (pos == null) {
-            //Try again with screen bounds instead.
+            // Try again with screen bounds instead.
             for (Alignment a : alignments) {
                 pos = tryPosition(a, context, p, tooltipBounds, screenBounds, screenBounds, setter);
                 if (pos != null) break;
@@ -96,16 +98,16 @@ public class ToolTipUtil {
     }
 
     protected static Alignment[] getAlignments(final Alignment start) {
-        //Example with NORTH:
+        // Example with NORTH:
         return new Alignment[]{
-            start, //NORTH
-            start.opposite(), //SOUTH
-            start.clockwise().clockwise(),//EAST
-            start.anticlockwise().anticlockwise(), //WEST
-            start.clockwise(), //NORTH_EAST
-            start.clockwise().opposite(), //SOUTH_WEST
-            start.anticlockwise(), //NORTH_WEST
-            start.anticlockwise().opposite() //SOUTH_EAST
+                               start, // NORTH
+                               start.opposite(), // SOUTH
+                               start.clockwise().clockwise(), // EAST
+                               start.anticlockwise().anticlockwise(), // WEST
+                               start.clockwise(), // NORTH_EAST
+                               start.clockwise().opposite(), // SOUTH_WEST
+                               start.anticlockwise(), // NORTH_WEST
+                               start.anticlockwise().opposite() // SOUTH_EAST
         };
     }
 

@@ -20,8 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform;
+
+import java.awt.*;
+import java.util.Properties;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
@@ -31,10 +37,6 @@ import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
 import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Properties;
 
 public class DecorationsHandler {
 
@@ -54,19 +56,19 @@ public class DecorationsHandler {
 
     protected DecorationsHandler() {
         try {
-            //Extend for different platforms.
+            // Extend for different platforms.
             boolean enableDecorations = isNativeDecorationsEnabled();
             if (SystemInfo.isWindows10 && enableDecorations) {
-                //Decorations are in the Windows10 visuals. Disable for older version.
+                // Decorations are in the Windows10 visuals. Disable for older version.
                 decorationsProvider = new WindowsDecorationsProvider();
             } else if (SystemInfo.isMacOSYosemite && enableDecorations) {
-                //Compiled binary needs at least macOS 10.10 (Yosemite).
+                // Compiled binary needs at least macOS 10.10 (Yosemite).
                 decorationsProvider = new MacOSDecorationsProvider();
             } else {
                 decorationsProvider = new DefaultDecorationsProvider();
             }
         } catch (Throwable e) {
-            //If decorations modules are not available disable them.
+            // If decorations modules are not available disable them.
             decorationsProvider = new DefaultDecorationsProvider();
         }
     }

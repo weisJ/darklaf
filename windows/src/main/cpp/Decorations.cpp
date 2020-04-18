@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 #include "Decorations.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
@@ -28,13 +29,15 @@
 #include <iostream>
 #include <winuser.h>
 
-std::map<HWND, WindowWrapper *> wrapper_map = std::map<HWND, WindowWrapper *>();
+std::map<HWND, WindowWrapper*> wrapper_map = std::map<HWND, WindowWrapper*>();
 
 LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapper)
 {
-    if (wrapper->popup_menu) return HTCLIENT;
+    if (wrapper->popup_menu)
+        return HTCLIENT;
     // Get the point coordinates for the hit test.
-    POINT ptMouse = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+    POINT ptMouse = { GET_X_LPARAM(lParam),
+                      GET_Y_LPARAM(lParam) };
 
     // Get the window rectangle.
     RECT rcWindow;
@@ -65,17 +68,20 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapp
     }
 
     // Hit test (HTTOPLEFT, ... HTBOTTOMRIGHT)
-    LRESULT hitTests[3][3] = {
-        {HTTOPLEFT, HTTOP, HTTOPRIGHT},
-        {HTLEFT, HTNOWHERE, HTRIGHT},
-        {HTBOTTOMLEFT, HTBOTTOM, HTBOTTOMRIGHT},
-    };
+    LRESULT hitTests[3][3] = { { HTTOPLEFT,
+                                 HTTOP,
+                                 HTTOPRIGHT },
+                               { HTLEFT,
+                                 HTNOWHERE,
+                                 HTRIGHT },
+                               { HTBOTTOMLEFT,
+                                 HTBOTTOM,
+                                 HTBOTTOMRIGHT }, };
     LRESULT hit = hitTests[uRow][uCol];
     if (hit == HTNOWHERE || !wrapper->resizable)
     {
         //Handle window drag.
-        if (ptMouse.y < rcWindow.top + wrapper->height
-            && ptMouse.x >= rcWindow.left + wrapper->left
+        if (ptMouse.y < rcWindow.top + wrapper->height && ptMouse.x >= rcWindow.left + wrapper->left
             && ptMouse.x <= rcWindow.right - wrapper->right)
         {
             return HTCAPTION;
@@ -91,20 +97,24 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapp
 bool Maximized(HWND hwnd)
 {
     WINDOWPLACEMENT placement;
-    if (!GetWindowPlacement(hwnd, &placement)) return false;
+    if (!GetWindowPlacement(hwnd, &placement))
+        return false;
     return placement.showCmd == SW_MAXIMIZE;
 }
 
-void AdjustMaximizedClientArea(HWND window, RECT& rect)
+void AdjustMaximizedClientArea(HWND window, RECT &rect)
 {
-    if (!Maximized(window)) return;
+    if (!Maximized(window))
+        return;
 
     auto monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONULL);
-    if (!monitor) return;
+    if (!monitor)
+        return;
 
-    MONITORINFO monitor_info{};
+    MONITORINFO monitor_info {};
     monitor_info.cbSize = sizeof(monitor_info);
-    if (!GetMonitorInfoW(monitor, &monitor_info)) return;
+    if (!GetMonitorInfoW(monitor, &monitor_info))
+        return;
 
     rect = monitor_info.rcWork;
 }
@@ -114,13 +124,13 @@ void AdjustMinMaxInfo(HWND hwnd, LPARAM lParam)
     HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
     HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
 
-    MONITORINFO primaryMonitorInfo{sizeof(MONITORINFO)};
-    MONITORINFO targetMonitorInfo{sizeof(MONITORINFO)};
+    MONITORINFO primaryMonitorInfo { sizeof(MONITORINFO) };
+    MONITORINFO targetMonitorInfo { sizeof(MONITORINFO) };
 
     GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
     GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
 
-    MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO *>(lParam);
+    MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO*>(lParam);
     RECT max_rect = primaryMonitorInfo.rcWork;
     RECT target_rect = targetMonitorInfo.rcWork;
     min_max_info->ptMaxSize.x = target_rect.right - target_rect.left;
@@ -148,7 +158,8 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     }
     else if (uMsg == WM_NCCALCSIZE)
     {
-        if (wParam == TRUE) {
+        if (wParam == TRUE)
+        {
             NCCALCSIZE_PARAMS& params = *reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
             AdjustMaximizedClientArea(handle, params.rgrc[0]);
             return TRUE;
@@ -198,7 +209,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizabl
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv *env, jclass obj, jlong hwnd,
-                                                                                  jint l, jint r, jint h)
+        jint l, jint r, jint h)
 {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
@@ -223,7 +234,10 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackgrou
 
 void ExtendClientFrame(HWND handle)
 {
-    MARGINS margins = {1, 1, 1, 1};
+    MARGINS margins = { 1,
+                        1,
+                        1,
+                        1 };
     DwmExtendFrameIntoClientArea(handle, &margins);
 }
 
@@ -237,7 +251,8 @@ bool InstallDecorations(HWND handle, bool is_popup)
 {
     //Prevent multiple installations overriding the real window procedure.
     auto it = wrapper_map.find(handle);
-    if (it != wrapper_map.end()) return false;
+    if (it != wrapper_map.end())
+        return false;
 
     SetupWindowStyle(handle);
     ExtendClientFrame(handle);
@@ -248,7 +263,7 @@ bool InstallDecorations(HWND handle, bool is_popup)
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
     wrapper_map[handle] = wrapper;
-    SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR)WindowWrapper::WindowProc);
+    SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR) WindowWrapper::WindowProc);
     UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED;
     SetWindowPos(handle, NULL, 0, 0, 0, 0, flags);
     return true;

@@ -20,14 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
-
 package com.github.weisj.darklaf.ui.colorchooser;
-
-import com.github.weisj.darklaf.components.Disposable;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
+
+import com.github.weisj.darklaf.components.Disposable;
 
 /**
  * @author pegov
@@ -35,7 +35,6 @@ import java.awt.image.ImageObserver;
  */
 public interface ColorPipette extends ImageObserver, Disposable {
     void setInitialColor(Color initialColor);
-
 
     Color getColor();
 

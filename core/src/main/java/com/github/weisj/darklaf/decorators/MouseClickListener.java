@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.decorators;
 
@@ -33,18 +34,14 @@ public interface MouseClickListener extends MouseListener {
     void mouseClicked(MouseEvent e);
 
     @Override
-    default void mousePressed(final MouseEvent e) {
-    }
+    default void mousePressed(final MouseEvent e) {}
 
     @Override
-    default void mouseReleased(final MouseEvent e) {
-    }
+    default void mouseReleased(final MouseEvent e) {}
 
     @Override
-    default void mouseEntered(final MouseEvent e) {
-    }
+    default void mouseEntered(final MouseEvent e) {}
 
     @Override
-    default void mouseExited(final MouseEvent e) {
-    }
+    default void mouseExited(final MouseEvent e) {}
 }

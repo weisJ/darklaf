@@ -20,21 +20,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.decorators.MouseMovementListener;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.util.Arrays;
+
+import com.github.weisj.darklaf.decorators.MouseMovementListener;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -89,7 +91,6 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
             }
         }
     };
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkPasswordFieldUI();
@@ -183,7 +184,6 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         return c instanceof JPasswordField
                && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_SHOW_VIEW_BUTTON));
     }
-
 
     private Point getShowIconCoord() {
         Rectangle r = getDrawingRect(getComponent());

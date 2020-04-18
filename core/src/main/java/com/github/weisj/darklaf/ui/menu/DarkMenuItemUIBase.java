@@ -20,26 +20,28 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.menu;
 
-import com.github.weisj.darklaf.util.*;
-import sun.swing.MenuItemLayoutHelper;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
-import java.awt.*;
-import java.awt.event.ActionEvent;
+
+import sun.swing.MenuItemLayoutHelper;
+import sun.swing.SwingUtilities2;
+import sun.swing.UIAction;
+
+import com.github.weisj.darklaf.util.*;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkMenuItemUIBase extends BasicMenuItemUI {
-
 
     protected int acceleratorTextOffset;
     protected boolean useEvenHeight;

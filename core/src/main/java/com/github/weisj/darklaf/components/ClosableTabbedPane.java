@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components;
 
-import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
+
+import javax.swing.*;
 
 /**
  * @author Jannis Weis
@@ -86,12 +88,12 @@ public class ClosableTabbedPane extends JTabbedPane {
     private void notifyTabListeners(final TabEvent event) {
         TabListener[] listeners = listenerList.getListeners(TabListener.class);
         switch (event.getID()) {
-            case TabEvent.TAB_CLOSED:
+            case TabEvent.TAB_CLOSED :
                 for (TabListener l : listeners) {
                     l.tabClosed(event);
                 }
                 break;
-            case TabEvent.TAB_OPENED:
+            case TabEvent.TAB_OPENED :
                 for (TabListener l : listeners) {
                     l.tabOpened(event);
                 }

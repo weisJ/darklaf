@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.fileChooser;
 
-import com.github.weisj.darklaf.LafManager;
-import ui.ComponentDemo;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import ui.ComponentDemo;
+
+import com.github.weisj.darklaf.LafManager;
 
 public final class FileChooserDemo {
 

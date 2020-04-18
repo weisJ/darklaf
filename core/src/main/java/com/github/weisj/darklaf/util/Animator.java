@@ -20,16 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
-import javax.swing.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -73,7 +74,6 @@ public abstract class Animator {
         currentFrame = 0;
         startTime = -1;
     }
-
 
     private static ScheduledExecutorService createScheduler() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, r -> {
@@ -185,7 +185,6 @@ public abstract class Animator {
     public boolean isRunning() {
         return ticker != null;
     }
-
 
     public final boolean isForward() {
         return forward;

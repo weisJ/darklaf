@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.uiresource;
 
-import javax.swing.border.Border;
 import java.awt.*;
+
+import javax.swing.border.Border;
 
 public class UIResourceWrapper extends JPanelUIResource {
 
@@ -41,8 +43,7 @@ public class UIResourceWrapper extends JPanelUIResource {
     }
 
     @Override
-    public void setOpaque(final boolean isOpaque) {
-    }
+    public void setOpaque(final boolean isOpaque) {}
 
     @Override
     public boolean isOpaque() {

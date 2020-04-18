@@ -20,13 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.internalFrame;
 
-import com.github.weisj.darklaf.LafManager;
-import ui.ComponentDemo;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,9 +31,15 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 
+import javax.swing.*;
+
+import ui.ComponentDemo;
+
+import com.github.weisj.darklaf.LafManager;
+
 /*
  * internalFrame.InternalFrameDemo.java requires:
- *   internalFrame.MyInternalFrame.java
+ * internalFrame.MyInternalFrame.java
  */
 public class InternalFrameDemo extends JFrame implements ActionListener {
     private final JDesktopPane desktop;
@@ -44,8 +47,8 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
     private InternalFrameDemo() {
         super("InternalFrameDemo");
 
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
+        // Make the big window be indented 50 pixels from each edge
+        // of the screen.
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
@@ -55,7 +58,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         setContentPane(desktop);
         setJMenuBar(createMenuBar());
 
-        //Make dragging a little faster but perhaps uglier.
+        // Make dragging a little faster but perhaps uglier.
         desktop.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
     }
 
@@ -63,16 +66,15 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(InternalFrameDemo::createAndShowGUI);
     }
 
-
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        //Set up the lone menu.
+        // Set up the lone menu.
         JMenu menu = new JMenu("Document");
         menu.setMnemonic(KeyEvent.VK_D);
         menuBar.add(menu);
 
-        //Set up the first menu item.
+        // Set up the first menu item.
         JMenuItem menuItem = new JMenuItem("New");
         menuItem.setMnemonic(KeyEvent.VK_N);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK));
@@ -80,7 +82,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
-        //Set up the second menu item.
+        // Set up the second menu item.
         menuItem = new JMenuItem("Quit");
         menuItem.setMnemonic(KeyEvent.VK_Q);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.ALT_DOWN_MASK));
@@ -92,31 +94,30 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
     }
 
     /**
-     * Create the GUI and show it.  For thread safety, this method should be invoked from the event-dispatching thread.
+     * Create the GUI and show it. For thread safety, this method should be invoked from the event-dispatching thread.
      */
     private static void createAndShowGUI() {
         LafManager.install(ComponentDemo.getTheme());
 
-        //Create and set up the window.
+        // Create and set up the window.
         InternalFrameDemo frame = new InternalFrameDemo();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //Display the window.
+        // Display the window.
         frame.setVisible(true);
     }
 
-    //Create a new internal frame.
+    // Create a new internal frame.
     private void createFrame() {
         DemoInternalFrame frame = new DemoInternalFrame();
         frame.setVisible(true);
         desktop.add(frame);
         try {
             frame.setSelected(true);
-        } catch (PropertyVetoException ignored) {
-        }
+        } catch (PropertyVetoException ignored) {}
     }
 
-    //React to menu selections.
+    // React to menu selections.
     public void actionPerformed(final ActionEvent e) {
         if ("new".equals(e.getActionCommand())) {
             createFrame();
@@ -125,7 +126,7 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         }
     }
 
-    //Quit the application.
+    // Quit the application.
 
     private void quit() {
         System.exit(0);

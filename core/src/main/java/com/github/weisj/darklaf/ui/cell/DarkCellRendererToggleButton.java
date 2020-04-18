@@ -20,8 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.cell;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.decorators.CellRenderer;
@@ -31,21 +38,15 @@ import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
-import java.awt.*;
-
 /**
  * @author vincencopalazzo
  * @author atarw
  * @author Jannis Weis
  */
 public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorToggleButton>
-    implements TableCellRenderer, TreeCellRenderer, SwingConstants {
+                                         implements TableCellRenderer, TreeCellRenderer, SwingConstants {
 
     private final T toggleButton;
-
 
     public DarkCellRendererToggleButton(final T toggleButton) {
         this.toggleButton = toggleButton;
@@ -148,5 +149,4 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
             return super.hasFocus();
         }
     }
-
 }

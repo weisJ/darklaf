@@ -20,18 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton;
+
+import java.beans.PropertyChangeEvent;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.button.DarkButtonListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-
 public class DarkToggleButtonListener extends DarkButtonListener implements ToggleButtonConstants {
-
 
     public DarkToggleButtonListener(final AbstractButton b, final DarkButtonUI ui) {
         super(b, ui);
@@ -48,11 +49,7 @@ public class DarkToggleButtonListener extends DarkButtonListener implements Togg
             if (oldVal != null && oldVal.equals(newVal)) {
                 return;
             }
-            if (VARIANT_SLIDER.equals(newVal)) {
-                b.setBorderPainted(false);
-            } else {
-                b.setBorderPainted(true);
-            }
+            b.setBorderPainted(!VARIANT_SLIDER.equals(newVal));
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             b.doLayout();
             b.repaint();

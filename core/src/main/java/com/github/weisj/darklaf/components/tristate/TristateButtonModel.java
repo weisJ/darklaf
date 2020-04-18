@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tristate;
 
-import javax.swing.*;
 import java.awt.event.ItemEvent;
+
+import javax.swing.*;
 
 public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     private TristateState state = TristateState.DESELECTED;
@@ -80,7 +82,7 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
         displayState();
         fireStateChanged();
         int indeterminate = 3;
-        //noinspection MagicConstant
+        // noinspection MagicConstant
         fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this, indeterminate));
     }
 }

@@ -123,4 +123,3 @@ Here is a list of things that currently are not finished or need refinement. Thi
 
 # License
 This project is licensed under the [MIT license](https://github.com/weisJ/darklaf/blob/master/LICENSE).
-

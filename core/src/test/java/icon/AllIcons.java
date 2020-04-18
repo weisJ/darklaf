@@ -20,19 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package icon;
 
-import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.icons.ThemedSVGIcon;
-import com.github.weisj.darklaf.util.Pair;
-import com.kitfox.svg.app.beans.SVGIcon;
-import ui.ComponentDemo;
-
-import javax.swing.*;
-import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -42,15 +33,29 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Stream;
+
+import javax.swing.*;
+import javax.swing.event.ListDataListener;
+
+import ui.ComponentDemo;
+
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.icons.ThemedSVGIcon;
+import com.github.weisj.darklaf.util.Pair;
+import com.kitfox.svg.app.beans.SVGIcon;
 
 public class AllIcons implements ComponentDemo {
 
     private static final String[] FOLDERS = new String[]{
-        "icons/control", "icons/dialog", "icons/files", "icons/indicator", "icons/menu", "icons/misc",
-        "icons/navigation", "platform/windows/icons/window", "platform/windows/icons"
+                                                         "icons/control", "icons/dialog", "icons/files",
+                                                         "icons/indicator", "icons/menu", "icons/misc",
+                                                         "icons/navigation", "platform/windows/icons/window",
+                                                         "platform/windows/icons"
     };
 
     public static void main(final String[] args) {
@@ -73,18 +78,15 @@ public class AllIcons implements ComponentDemo {
             }
 
             @Override
-            public void addListDataListener(final ListDataListener l) {
-            }
+            public void addListDataListener(final ListDataListener l) {}
 
             @Override
-            public void removeListDataListener(final ListDataListener l) {
-            }
+            public void removeListDataListener(final ListDataListener l) {}
         });
         list.setLayoutOrientation(JList.VERTICAL);
         list.setCellRenderer(new IconListRenderer());
         return new OverlayScrollPane(list);
     }
-
 
     private List<Pair<String, Icon>> loadIcons() {
         List<Pair<String, Icon>> list = new ArrayList<>();
@@ -117,7 +119,8 @@ public class AllIcons implements ComponentDemo {
     }
 
     public Pair<Stream<Path>, Optional<FileSystem>> walk(final String path, final Class<?> clazz)
-        throws URISyntaxException, IOException {
+                                                                                                  throws URISyntaxException,
+                                                                                                  IOException {
         URI uri = clazz.getResource(path).toURI();
         if ("jar".equals(uri.getScheme())) {
             FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
@@ -126,7 +129,9 @@ public class AllIcons implements ComponentDemo {
             return new Pair<>(Files.walk(resourcePath, 1), Optional.of(fileSystem));
         } else {
             return new Pair<>(Arrays.stream(Optional.ofNullable(new File(uri).listFiles())
-                                                    .orElse(new File[0])).map(File::toPath), Optional.empty());
+                                                    .orElse(new File[0]))
+                                    .map(File::toPath),
+                              Optional.empty());
         }
     }
 

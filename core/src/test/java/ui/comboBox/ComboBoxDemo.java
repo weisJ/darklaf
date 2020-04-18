@@ -20,16 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.comboBox;
 
-import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+
+import javax.swing.*;
+
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 public class ComboBoxDemo implements ComponentDemo {
 
@@ -46,27 +49,37 @@ public class ComboBoxDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(comboBox);
 
         JPanel controlPanel = panel.addControls(1);
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(comboBox.isEnabled());
-            addActionListener(e -> comboBox.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
-            setSelected(comboBox.isEditable());
-            addActionListener(e -> comboBox.setEditable(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(comboBox.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> comboBox.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                 : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JCheckBox(ComboBoxConstants.KEY_IS_TREE_EDITOR) {{
-            setSelected(false);
-            addActionListener(e -> comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TREE_EDITOR, isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(ComboBoxConstants.KEY_IS_TABLE_EDITOR) {{
-            setSelected(false);
-            addActionListener(e -> comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TABLE_EDITOR, isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(comboBox.isEnabled());
+                addActionListener(e -> comboBox.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {
+            {
+                setSelected(comboBox.isEditable());
+                addActionListener(e -> comboBox.setEditable(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(comboBox.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> comboBox.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                     : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        controlPanel.add(new JCheckBox(ComboBoxConstants.KEY_IS_TREE_EDITOR) {
+            {
+                setSelected(false);
+                addActionListener(e -> comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TREE_EDITOR, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(ComboBoxConstants.KEY_IS_TABLE_EDITOR) {
+            {
+                setSelected(false);
+                addActionListener(e -> comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TABLE_EDITOR, isSelected()));
+            }
+        });
         return panel;
     }
 

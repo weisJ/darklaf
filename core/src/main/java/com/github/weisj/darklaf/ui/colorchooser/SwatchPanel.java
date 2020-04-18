@@ -20,17 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
 /**
  * @author Jannis Weis
@@ -42,9 +44,9 @@ abstract class SwatchPanel extends JPanel {
     protected Dimension numSwatches;
     protected Dimension gap;
     private final ToolTipContext toolTipContext = new ToolTipContext(this)
-        .setAlignment(Alignment.CENTER)
-        .setToolTipRectSupplier(this::getSwatchBounds)
-        .setHideOnExit(true);
+                                                                          .setAlignment(Alignment.CENTER)
+                                                                          .setToolTipRectSupplier(this::getSwatchBounds)
+                                                                          .setHideOnExit(true);
     private int selRow;
     private int selCol;
 
@@ -69,19 +71,19 @@ abstract class SwatchPanel extends JPanel {
             public void keyPressed(final KeyEvent e) {
                 int typed = e.getKeyCode();
                 switch (typed) {
-                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_UP :
                         if (selRow > 0) {
                             selRow--;
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_DOWN :
                         if (selRow < numSwatches.height - 1) {
                             selRow++;
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_LEFT :
                         if (selCol > 0 && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol--;
                             repaint();
@@ -91,7 +93,7 @@ abstract class SwatchPanel extends JPanel {
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_RIGHT:
+                    case KeyEvent.VK_RIGHT :
                         if (selCol < numSwatches.width - 1
                             && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol++;
@@ -101,12 +103,12 @@ abstract class SwatchPanel extends JPanel {
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_HOME:
+                    case KeyEvent.VK_HOME :
                         selCol = 0;
                         selRow = 0;
                         repaint();
                         break;
-                    case KeyEvent.VK_END:
+                    case KeyEvent.VK_END :
                         selCol = numSwatches.width - 1;
                         selRow = numSwatches.height - 1;
                         repaint();
@@ -126,13 +128,11 @@ abstract class SwatchPanel extends JPanel {
 
     }
 
-    protected void initColors() {
-    }
+    protected void initColors() {}
 
     public Color getSelectedColor() {
         return getColorForCell(selCol, selRow);
     }
-
 
     private Color getColorForCell(final int column, final int row) {
         int index = (row * numSwatches.width) + column;
@@ -164,7 +164,6 @@ abstract class SwatchPanel extends JPanel {
             }
         }
     }
-
 
     private int getYForRow(final int row) {
         return row * (swatchSize.height + gap.height);
@@ -215,7 +214,6 @@ abstract class SwatchPanel extends JPanel {
         int row = y / (swatchSize.height + gap.height);
         return new Point(column, row);
     }
-
 
     protected Rectangle getSwatchBounds(final MouseEvent e) {
         Point p = getCoordinatesForLocation(e.getX(), e.getY());

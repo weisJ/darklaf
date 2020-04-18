@@ -20,14 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.theme;
 
-import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.theme.info.*;
-
-import javax.swing.*;
-import javax.swing.text.html.StyleSheet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +33,12 @@ import java.util.Comparator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.*;
+import javax.swing.text.html.StyleSheet;
+
+import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.theme.info.*;
 
 /**
  * @author Jannis Weis
@@ -59,9 +61,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Create a derived theme with the given {@link FontSizeRule} and {@link AccentColorRule}.
      *
-     * @param fontSizeRule    the font size rule.
-     * @param accentColorRule the accent color rule.
-     * @return the derived theme.
+     * @param  fontSizeRule    the font size rule.
+     * @param  accentColorRule the accent color rule.
+     * @return                 the derived theme.
      */
     public Theme derive(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
         return new ThemeDelegate(this, fontSizeRule, accentColorRule);
@@ -81,8 +83,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Returns whether the theme is a dark theme. This is used to determine the default mode for [aware] icons.
      *
-     * @param theme the theme.
-     * @return true if dark.
+     * @param  theme the theme.
+     * @return       true if dark.
      */
     public static boolean isDark(final Theme theme) {
         if (theme == null) return false;
@@ -92,8 +94,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Returns whether the theme is a high contrast theme.
      *
-     * @param theme the theme.
-     * @return true if the theme is a high contrast theme.
+     * @param  theme the theme.
+     * @return       true if the theme is a high contrast theme.
      */
     public static boolean isHighContrast(final Theme theme) {
         if (theme == null) return false;
@@ -124,8 +126,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {
-    }
+    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {}
 
     /**
      * Customize the icon defaults.
@@ -137,8 +138,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-    }
+    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {}
 
     /**
      * Load the general properties file for the icon themes.
@@ -154,14 +154,14 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
         PresetIconRule iconTheme = getPresetIconRule();
         Properties props;
         switch (iconTheme) {
-            case DARK:
+            case DARK :
                 props = PropertyLoader.loadProperties(Theme.class, "dark_icons", "icon_presets/");
                 break;
-            case LIGHT:
+            case LIGHT :
                 props = PropertyLoader.loadProperties(Theme.class, "light_icons", "icon_presets/");
                 break;
-            case NONE:
-            default:
+            case NONE :
+            default :
                 props = loadPropertyFile("icons");
         }
         PropertyLoader.putProperties(props, properties, currentDefaults);
@@ -176,8 +176,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-    }
+    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {}
 
     /**
      * Customize the ui defaults.
@@ -188,8 +187,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-    }
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {}
 
     /**
      * The preset icon theme.
@@ -219,8 +217,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead.
      *
-     * @param name the properties file to load.
-     * @return the properties.
+     * @param  name the properties file to load.
+     * @return      the properties.
      */
     protected final Properties load(final String name) {
         return loadWithClass(name, getLoaderClass());
@@ -229,9 +227,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Load a .properties file.
      *
-     * @param name        the properties file to load.
-     * @param loaderClass the class to resolve the file location from.
-     * @return the properties.
+     * @param  name        the properties file to load.
+     * @param  loaderClass the class to resolve the file location from.
+     * @return             the properties.
      */
     protected final Properties loadWithClass(final String name, final Class<?> loaderClass) {
         final Properties properties = new Properties();
@@ -242,7 +240,6 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
         }
         return properties;
     }
-
 
     /**
      * Load the css style sheet used for html display in text components with a {@link
@@ -258,8 +255,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * Load the css style sheet used for html display in text components with a {@link
      * javax.swing.text.html.HTMLEditorKit}.
      *
-     * @param loaderClass the class to resolve the location of the style sheet.
-     * @return the {@link StyleSheet}.
+     * @param  loaderClass the class to resolve the location of the style sheet.
+     * @return             the {@link StyleSheet}.
      */
     public final StyleSheet loadStyleSheetWithClass(final Class<?> loaderClass) {
         StyleSheet styleSheet = new StyleSheet();
@@ -301,7 +298,6 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      */
     public abstract String getName();
 
-
     /**
      * The class used to determine the runtime location of resources. It is advised to explicitly return the class
      * instead of using {@link #getClass()} to protect against extending the theme.
@@ -313,8 +309,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Get the path for the file [prefix]_[name].properties in the themes resource location.
      *
-     * @param name the of the file.
-     * @return the path relative to the location of {@link #getLoaderClass()}.
+     * @param  name the of the file.
+     * @return      the path relative to the location of {@link #getLoaderClass()}.
      */
     protected String getPropertyFilePath(final String name) {
         return getResourcePath() + getPrefix() + "_" + name + ".properties";
@@ -325,8 +321,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * theme adds the theme property prefix and appends ".properties" e.g. "test" ->
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
-     * @param name the properties name.
-     * @return the properties.
+     * @param  name the properties name.
+     * @return      the properties.
      */
     public final Properties loadPropertyFile(final String name) {
         return loadPropertyFile(name, false);
@@ -337,10 +333,10 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * theme adds the theme property prefix and appends ".properties" e.g. "test" ->
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
-     * @param name   the properties name.
-     * @param silent if true no warnings are issues if the file is not present. Instead, an empty property instance is
-     *               returned.
-     * @return the properties.
+     * @param  name   the properties name.
+     * @param  silent if true no warnings are issues if the file is not present. Instead, an empty property instance is
+     *                returned.
+     * @return        the properties.
      */
     public final Properties loadPropertyFile(final String name, final boolean silent) {
         Level level = LOGGER.getLevel();

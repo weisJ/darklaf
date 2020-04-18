@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
@@ -27,6 +28,4 @@ import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 // Extra class is for lazy initialization
-class MetalUIDefaults {
-    static final UIDefaults DEFAULTS = new MetalLookAndFeel().getDefaults();
-}
+class MetalUIDefaults { static final UIDefaults DEFAULTS = new MetalLookAndFeel().getDefaults(); }

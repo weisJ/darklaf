@@ -20,18 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.task;
 
-import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.util.SystemInfo;
-
-import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.text.AttributedCharacterIterator;
@@ -40,6 +32,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.UIResource;
+
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.util.SystemInfo;
+
 public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private static final Logger LOGGER = Logger.getLogger(FontDefaultsInitTask.class.getName());
@@ -47,10 +49,10 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";
 
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING
-        = Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING
-        = Collections.singletonMap(TextAttribute.KERNING, null);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING = Collections.singletonMap(TextAttribute.KERNING,
+                                                                                                                       TextAttribute.KERNING_ON);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING = Collections.singletonMap(TextAttribute.KERNING,
+                                                                                                                        null);
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
 

@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package theme;
+
+import java.util.Properties;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import com.github.weisj.darklaf.util.SystemInfo;
-
-import javax.swing.*;
-import java.util.Properties;
 
 public class MyCustomTheme extends Theme {
 
@@ -89,5 +91,4 @@ public class MyCustomTheme extends Theme {
     public ColorToneRule getColorToneRule() {
         return ColorToneRule.LIGHT;
     }
-
 }

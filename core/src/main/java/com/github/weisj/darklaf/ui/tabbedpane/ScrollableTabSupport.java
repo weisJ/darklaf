@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
@@ -41,8 +42,7 @@ class ScrollableTabSupport {
     /**
      * Recreates the scroll buttons and adds them to the TabbedPane.
      */
-    void createButtons(final DarkTabbedPaneUIBridge ui) {
-    }
+    void createButtons(final DarkTabbedPaneUIBridge ui) {}
 
     public String toString() {
         return "viewport.viewSize=" + viewport.getViewSize() + "\n" +
@@ -50,5 +50,4 @@ class ScrollableTabSupport {
                "leadingTabIndex=" + leadingTabIndex + "\n" +
                "tabViewPosition=" + tabViewPosition;
     }
-
 }

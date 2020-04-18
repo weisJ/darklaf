@@ -20,8 +20,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.EventObject;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.table.TableCellEditor;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
@@ -31,19 +46,6 @@ import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.util.PropertyValue;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.table.TableCellEditor;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.EventObject;
 
 /**
  * @author vincencopalazzo
@@ -55,10 +57,10 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     private static final JCheckBox dummyCheckBox = new JCheckBox();
     private static final IconWrapper iconWrapper = new IconWrapper();
 
-    private final DarkTableCellEditorToggleButton checkBoxEditor =
-        new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellCheckBox());
-    private final DarkTableCellEditorToggleButton radioButtonEditor =
-        new DarkTableCellEditorToggleButton(this, new DarkTableCellEditorToggleButton.CellRadioButton());
+    private final DarkTableCellEditorToggleButton checkBoxEditor = new DarkTableCellEditorToggleButton(this,
+                                                                                                       new DarkTableCellEditorToggleButton.CellCheckBox());
+    private final DarkTableCellEditorToggleButton radioButtonEditor = new DarkTableCellEditorToggleButton(this,
+                                                                                                          new DarkTableCellEditorToggleButton.CellRadioButton());
     private boolean value;
     private boolean isBooleanEditor;
     private JTable table;
@@ -275,7 +277,6 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             }
         }
     }
-
 
     private boolean useBooleanEditor(final Object value, final JTable table) {
         return value instanceof Boolean && DarkTableCellRenderer.isBooleanRenderingEnabled(table)

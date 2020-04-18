@@ -20,13 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tooltip;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
+
+import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
 public class DarkDefaultToolTipBorder extends MutableLineBorder implements UIResource {
 

@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
+import java.awt.event.ActionEvent;
+
 import javax.swing.*;
 import javax.swing.text.*;
-import java.awt.event.ActionEvent;
 
 /**
  * @author Jannis Weis
@@ -72,7 +74,7 @@ public class SelectWordAction extends TextAction {
         }
 
         public int getWordStart(final JTextComponent textArea, final int offs)
-            throws BadLocationException {
+                                                                               throws BadLocationException {
             return Utilities.getWordStart(textArea, offs);
         }
     }

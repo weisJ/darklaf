@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform.windows;
+
+import java.awt.*;
+import java.util.Properties;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Properties;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
 
@@ -79,10 +81,16 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
         IconLoader iconLoader = IconLoader.get(WindowsDecorationsProvider.class);
         PropertyLoader.putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class,
-                                                                   "windows_decorations", ""),
-                                     properties, currentDefaults, iconLoader);
+                                                                   "windows_decorations",
+                                                                   ""),
+                                     properties,
+                                     currentDefaults,
+                                     iconLoader);
         PropertyLoader.putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class,
-                                                                   "windows_icons", ""),
-                                     properties, currentDefaults, iconLoader);
+                                                                   "windows_icons",
+                                                                   ""),
+                                     properties,
+                                     currentDefaults,
+                                     iconLoader);
     }
 }

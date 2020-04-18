@@ -20,14 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeListener;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -36,11 +37,13 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeListener;
-import java.util.Objects;
-import java.util.function.Supplier;
+
+import sun.swing.SwingUtilities2;
+
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -300,7 +303,8 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         JTableHeader header = table.getTableHeader();
         int dist = header != null ? adjustDistance(header.getDraggedDistance(),
                                                    table.getCellRect(0, draggedIndex, true),
-                                                   table) : 0;
+                                                   table)
+                                  : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
         if (!scrollVisible) {
             if (ltr) {
@@ -358,7 +362,6 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         g.setColor(parent.getBackground());
         g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width - 1, tableHeight);
 
-
         // Move to the where the cell has been dragged.
         vacatedColumnRect.x += dist;
 
@@ -367,7 +370,6 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         // Fill the background.
         g.setColor(table.getBackground());
         g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width, tableHeight);
-
 
         // Paint the vertical grid lines if necessary.
         if (table.getShowVerticalLines()) {
@@ -421,27 +423,27 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         if (event != null) {
             int keyCode = event.getKeyCode();
             switch (keyCode) {
-                case KeyEvent.VK_ALT_GRAPH:
-                case KeyEvent.VK_META:
-                case KeyEvent.VK_CAPS_LOCK:
-                case KeyEvent.VK_HOME:
-                case KeyEvent.VK_WINDOWS:
-                case KeyEvent.VK_CONTEXT_MENU:
-                case KeyEvent.VK_PRINTSCREEN:
-                case KeyEvent.VK_NUM_LOCK:
-                case KeyEvent.VK_SCROLL_LOCK:
-                case KeyEvent.VK_CLEAR:
-                case KeyEvent.VK_HELP:
-                case KeyEvent.VK_INSERT:
-                case KeyEvent.VK_ESCAPE:
+                case KeyEvent.VK_ALT_GRAPH :
+                case KeyEvent.VK_META :
+                case KeyEvent.VK_CAPS_LOCK :
+                case KeyEvent.VK_HOME :
+                case KeyEvent.VK_WINDOWS :
+                case KeyEvent.VK_CONTEXT_MENU :
+                case KeyEvent.VK_PRINTSCREEN :
+                case KeyEvent.VK_NUM_LOCK :
+                case KeyEvent.VK_SCROLL_LOCK :
+                case KeyEvent.VK_CLEAR :
+                case KeyEvent.VK_HELP :
+                case KeyEvent.VK_INSERT :
+                case KeyEvent.VK_ESCAPE :
                     return true;
-                default:
+                default :
                     break;
             }
             if (table == null) return false;
             KeyStroke stroke = KeyStroke.getKeyStroke(event.getExtendedKeyCode(), event.getModifiersEx());
-            String actionName = String.valueOf(
-                table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
+            String actionName = String.valueOf(table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                                                    .get(stroke));
             if ("null".equals(actionName)) actionName = null;
             String cutActionName = String.valueOf(TransferHandler.getCutAction().getValue(Action.NAME));
             String copyActionName = String.valueOf(TransferHandler.getCopyAction().getValue(Action.NAME));
@@ -505,12 +507,10 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         }
 
         @Override
-        protected void maybeStartTimer() {
-        }
+        protected void maybeStartTimer() {}
 
         @Override
-        public void actionPerformed(final ActionEvent ae) {
-        }
+        public void actionPerformed(final ActionEvent ae) {}
 
         @Override
         public void keyTyped(final KeyEvent e) {
@@ -542,7 +542,8 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                                           : -1;
         int dist = header != null ? adjustDistance(header.getDraggedDistance(),
                                                    table.getCellRect(row, draggedIndex, true),
-                                                   table) : 0;
+                                                   table)
+                                  : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
         Rectangle rectWithSpacing = table.getCellRect(row, cMin, true);
         Rectangle r = new Rectangle(cellRect);
@@ -603,6 +604,4 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         }
         return dist;
     }
-
-
 }

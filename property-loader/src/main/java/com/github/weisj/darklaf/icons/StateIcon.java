@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+
+import javax.swing.*;
 
 /**
  * Icon that should be used with JCheckBox or JRadioButton. All icons should have the same size.
@@ -81,7 +83,7 @@ public class StateIcon implements Icon {
         Icon icn = selected ? enabled ? hasFocus ? selectedFocusedIcon : selectedIcon
                                       : selectedDisabledIcon
                             : enabled ? hasFocus ? focusedIcon : icon
-                                      : disabledIcon;
+                            : disabledIcon;
         return icn != null ? icn : EmptyIcon.create(0);
     }
 

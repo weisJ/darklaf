@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.combobox;
 
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 
 public interface ComboBoxConstants {
     String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;

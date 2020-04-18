@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.theme.info;
 
@@ -77,7 +78,6 @@ public class DefaultThemeProvider implements ThemeProvider {
         this.lightHighContrastTheme = lightHighContrastTheme;
         this.darkHighContrastTheme = darkHighContrastTheme;
     }
-
 
     @Override
     public Theme getTheme(final PreferredThemeStyle themeStyle) {

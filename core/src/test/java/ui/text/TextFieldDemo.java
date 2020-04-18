@@ -20,15 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.text;
 
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+
+import javax.swing.*;
+
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 public class TextFieldDemo implements ComponentDemo {
 
@@ -42,29 +45,41 @@ public class TextFieldDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(textField);
 
         JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(textField.isEnabled());
-            addActionListener(e -> textField.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
-            setSelected(textField.isEditable());
-            addActionListener(e -> textField.setEditable(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setEnabled(true);
-            addActionListener(e -> textField.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                  : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {{
-            setSelected(true);
-            addActionListener(e -> textField.putClientProperty("JTextComponent.roundedSelection", isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("JTextField.variant = search") {{
-            addActionListener(e -> textField.putClientProperty("JTextField.variant", isSelected() ? "search" : ""));
-        }});
-        controlPanel.add(new JCheckBox("JTextComponent.hasError") {{
-            addActionListener(e -> textField.putClientProperty("JTextComponent.hasError", isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(textField.isEnabled());
+                addActionListener(e -> textField.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {
+            {
+                setSelected(textField.isEditable());
+                addActionListener(e -> textField.setEditable(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setEnabled(true);
+                addActionListener(e -> textField.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                      : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {
+            {
+                setSelected(true);
+                addActionListener(e -> textField.putClientProperty("JTextComponent.roundedSelection", isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("JTextField.variant = search") {
+            {
+                addActionListener(e -> textField.putClientProperty("JTextField.variant", isSelected() ? "search" : ""));
+            }
+        });
+        controlPanel.add(new JCheckBox("JTextComponent.hasError") {
+            {
+                addActionListener(e -> textField.putClientProperty("JTextComponent.hasError", isSelected()));
+            }
+        });
         return panel;
     }
 

@@ -20,8 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components;
+
+import java.awt.*;
+import java.util.Properties;
+
+import javax.swing.*;
+import javax.swing.plaf.ButtonUI;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
@@ -31,11 +38,6 @@ import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
-
-import javax.swing.*;
-import javax.swing.plaf.ButtonUI;
-import java.awt.*;
-import java.util.Properties;
 
 public class ColoredRadioButton extends JRadioButton {
 
@@ -73,35 +75,35 @@ public class ColoredRadioButton extends JRadioButton {
     protected static class ColoredRadioButtonUI extends DarkRadioButtonUI {
 
         private static final String[] PROPERTIES = {
-            "Icons.RadioButton.activeFillColor",
-            "Icons.RadioButton.activeBorderColor",
-            "Icons.RadioButtonDisabled.inactiveFillColor",
-            "Icons.RadioButtonDisabled.inactiveBorderColor",
-            "Icons.RadioButtonFocused.activeFillColor",
-            "Icons.RadioButtonFocused.focusBorderColor",
-            "Icons.RadioButtonFocused.glowFocus",
-            "Icons.RadioButtonFocused.glowOpacity",
-            "Icons.RadioButtonSelected.selectedFillColor",
-            "Icons.RadioButtonSelected.selectedBorderColor",
-            "Icons.RadioButtonSelected.selectionSelectedColor",
-            "Icons.RadioButtonSelectedDisabled.inactiveFillColor",
-            "Icons.RadioButtonSelectedDisabled.inactiveBorderColor",
-            "Icons.RadioButtonSelectedDisabled.selectionDisabledColor",
-            "Icons.RadioButtonSelectedFocused.selectedFillColor",
-            "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor",
-            "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor",
-            "Icons.RadioButtonSelectedFocused.glowFocus",
-            "Icons.RadioButtonSelectedFocused.glowOpacity"
+                                                    "Icons.RadioButton.activeFillColor",
+                                                    "Icons.RadioButton.activeBorderColor",
+                                                    "Icons.RadioButtonDisabled.inactiveFillColor",
+                                                    "Icons.RadioButtonDisabled.inactiveBorderColor",
+                                                    "Icons.RadioButtonFocused.activeFillColor",
+                                                    "Icons.RadioButtonFocused.focusBorderColor",
+                                                    "Icons.RadioButtonFocused.glowFocus",
+                                                    "Icons.RadioButtonFocused.glowOpacity",
+                                                    "Icons.RadioButtonSelected.selectedFillColor",
+                                                    "Icons.RadioButtonSelected.selectedBorderColor",
+                                                    "Icons.RadioButtonSelected.selectionSelectedColor",
+                                                    "Icons.RadioButtonSelectedDisabled.inactiveFillColor",
+                                                    "Icons.RadioButtonSelectedDisabled.inactiveBorderColor",
+                                                    "Icons.RadioButtonSelectedDisabled.selectionDisabledColor",
+                                                    "Icons.RadioButtonSelectedFocused.selectedFillColor",
+                                                    "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor",
+                                                    "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor",
+                                                    "Icons.RadioButtonSelectedFocused.glowFocus",
+                                                    "Icons.RadioButtonSelectedFocused.glowOpacity"
         };
         private static final String[] COLOR_PROPERTIES = {
-            "Icons.RadioButton.activeFillColor",
-            "Icons.RadioButton.activeBorderColor",
-            "Icons.RadioButtonFocused.activeFillColor",
-            "Icons.RadioButtonFocused.focusBorderColor",
-            "Icons.RadioButtonSelected.selectedFillColor",
-            "Icons.RadioButtonSelected.selectedBorderColor",
-            "Icons.RadioButtonSelectedFocused.selectedFillColor",
-            "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor"
+                                                          "Icons.RadioButton.activeFillColor",
+                                                          "Icons.RadioButton.activeBorderColor",
+                                                          "Icons.RadioButtonFocused.activeFillColor",
+                                                          "Icons.RadioButtonFocused.focusBorderColor",
+                                                          "Icons.RadioButtonSelected.selectedFillColor",
+                                                          "Icons.RadioButtonSelected.selectedBorderColor",
+                                                          "Icons.RadioButtonSelectedFocused.selectedFillColor",
+                                                          "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor"
         };
         private Properties propertyMap;
 
@@ -129,12 +131,11 @@ public class ColoredRadioButton extends JRadioButton {
             theme.loadDefaults(props, defaults);
             Color c = color == DEFAULT_FILLED ? (Color) props.get("widgetFillDefault") : color;
             adjustment.applyColors(LafManager.getTheme(), props, c, null);
-            PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/ui/"),
-                props, defaults);
-            PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/icons/"),
-                props, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/ui/"),
+                                         props, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton",
+                                                                       "properties/icons/"),
+                                         props, defaults);
             propertyMap = new Properties();
             for (String prop : PROPERTIES) {
                 propertyMap.put(prop, props.get(prop));
@@ -144,12 +145,12 @@ public class ColoredRadioButton extends JRadioButton {
             }
 
             stateIcon = new StateIcon(new Icon[]{
-                load(loader, "control/radio.svg"),
-                load(loader, "control/radioDisabled.svg"),
-                load(loader, "control/radioFocused.svg"),
-                load(loader, "control/radioSelected.svg"),
-                load(loader, "control/radioSelectedDisabled.svg"),
-                load(loader, "control/radioSelectedFocused.svg")
+                                                 load(loader, "control/radio.svg"),
+                                                 load(loader, "control/radioDisabled.svg"),
+                                                 load(loader, "control/radioFocused.svg"),
+                                                 load(loader, "control/radioSelected.svg"),
+                                                 load(loader, "control/radioSelectedDisabled.svg"),
+                                                 load(loader, "control/radioSelectedFocused.svg")
             });
         }
 

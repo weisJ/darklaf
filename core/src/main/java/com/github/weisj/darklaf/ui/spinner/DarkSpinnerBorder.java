@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.spinner;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -76,8 +78,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
             JComponent editor = spinner.getEditor();
             if (editor != null) {
                 int off = spinner.getComponentOrientation().isLeftToRight()
-                          ? editor.getBounds().x + editor.getWidth()
-                          : editor.getBounds().x - 1 - borderSize;
+                                                                            ? editor.getBounds().x + editor.getWidth()
+                                                                            : editor.getBounds().x - 1 - borderSize;
                 g.setColor(getBorderColor(spinner));
                 if (!treeCellEditor) {
                     g.fillRect(off, size, 1, height - 2 * size);
@@ -116,7 +118,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
     public Insets getBorderInsets(final Component c) {
         if (SpinnerConstants.isTreeOrTableCellEditor(c)) {
             return CellUtil.adjustEditorInsets(new InsetsUIResource(cellInsets.top, cellInsets.left,
-                                                                    cellInsets.bottom, cellInsets.right), c);
+                                                                    cellInsets.bottom, cellInsets.right),
+                                               c);
         }
         return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }

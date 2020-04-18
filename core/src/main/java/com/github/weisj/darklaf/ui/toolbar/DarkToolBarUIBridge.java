@@ -20,14 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.toolbar;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.LazyActionMap;
-import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.DefaultLookup;
-import sun.swing.UIAction;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Objects;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -37,16 +40,16 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ToolBarUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicBorders;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Objects;
+
+import sun.swing.DefaultLookup;
+import sun.swing.UIAction;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
- * A Basic L&amp;F implementation of ToolBarUI.  This implementation is a "combined" view/controller.
+ * A Basic L&amp;F implementation of ToolBarUI. This implementation is a "combined" view/controller.
  *
  * @author Georges Saab
  * @author Jeff Shapiro
@@ -219,8 +222,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     /**
      * Unregisters components.
      */
-    protected void uninstallComponents() {
-    }
+    protected void uninstallComponents() {}
 
     /**
      * Unregisters listeners.
@@ -235,7 +237,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
 
         if (propertyListener != null) {
             toolBar.removePropertyChangeListener(propertyListener);
-            propertyListener = null;  // removed in setFloating
+            propertyListener = null; // removed in setFloating
         }
 
         if (toolBarContListener != null) {
@@ -282,8 +284,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * This is a convenience method to call <code>setBorderNormal</code> for each child component.
      *
      * @param c container which holds the child components (usually a JToolBar)
-     * @see #setBorderToNonRollover
-     * @since 1.4
+     * @see     #setBorderToNonRollover
+     * @since   1.4
      */
     protected void installNormalBorders(final JComponent c) {
         // Put back the normal borders on buttons
@@ -299,8 +301,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * installed on the child component before it was added to the toolbar.
      *
      * @param c component which will have a normal border re-installed
-     * @see #createNonRolloverBorder
-     * @since 1.4
+     * @see     #createNonRolloverBorder
+     * @since   1.4
      */
     protected void setBorderToNormal(final Component c) {
         if (c instanceof AbstractButton) {
@@ -360,15 +362,13 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             nonRolloverToggleBorder = createNonRolloverToggleBorder();
         }
 
-
         setRolloverBorders(isRolloverBorders());
     }
 
     /**
      * Registers components.
      */
-    protected void installComponents() {
-    }
+    protected void installComponents() {}
 
     /**
      * Registers listeners.
@@ -381,7 +381,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             toolBar.addMouseListener(dockingListener);
         }
 
-        propertyListener = createPropertyListener();  // added in setFloating
+        propertyListener = createPropertyListener(); // added in setFloating
         if (propertyListener != null) {
             toolBar.addPropertyChangeListener(propertyListener);
         }
@@ -432,7 +432,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * Override this method to provide an alternate rollover border.
      *
      * @return a rollover border for toolbar components
-     * @since 1.4
+     * @since  1.4
      */
     protected Border createRolloverBorder() {
         Object border = UIManager.get("ToolBar.rolloverBorder");
@@ -440,11 +440,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             return (Border) border;
         }
         UIDefaults table = UIManager.getLookAndFeelDefaults();
-        return new CompoundBorder(new BasicBorders.RolloverButtonBorder(
-            table.getColor("controlShadow"),
-            table.getColor("controlDkShadow"),
-            table.getColor("controlHighlight"),
-            table.getColor("controlLtHighlight")),
+        return new CompoundBorder(new BasicBorders.RolloverButtonBorder(table.getColor("controlShadow"),
+                                                                        table.getColor("controlDkShadow"),
+                                                                        table.getColor("controlHighlight"),
+                                                                        table.getColor("controlLtHighlight")),
                                   new EmptyBorder(0, 0, 0, 0));
     }
 
@@ -455,7 +454,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * Override this method to provide an alternate rollover border.
      *
      * @return the non rollover border for toolbar components
-     * @since 1.4
+     * @since  1.4
      */
     protected Border createNonRolloverBorder() {
         Object border = UIManager.get("ToolBar.nonrolloverBorder");
@@ -463,11 +462,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             return (Border) border;
         }
         UIDefaults table = UIManager.getLookAndFeelDefaults();
-        return new CompoundBorder(new BasicBorders.ButtonBorder(
-            table.getColor("Button.shadow"),
-            table.getColor("Button.darkShadow"),
-            table.getColor("Button.light"),
-            table.getColor("Button.highlight")),
+        return new CompoundBorder(new BasicBorders.ButtonBorder(table.getColor("Button.shadow"),
+                                                                table.getColor("Button.darkShadow"),
+                                                                table.getColor("Button.light"),
+                                                                table.getColor("Button.highlight")),
                                   new EmptyBorder(0, 0, 0, 0));
     }
 
@@ -478,11 +476,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      */
     protected Border createNonRolloverToggleBorder() {
         UIDefaults table = UIManager.getLookAndFeelDefaults();
-        return new CompoundBorder(new BasicBorders.RadioButtonBorder(
-            table.getColor("ToggleButton.shadow"),
-            table.getColor("ToggleButton.darkShadow"),
-            table.getColor("ToggleButton.light"),
-            table.getColor("ToggleButton.highlight")),
+        return new CompoundBorder(new BasicBorders.RadioButtonBorder(table.getColor("ToggleButton.shadow"),
+                                                                     table.getColor("ToggleButton.darkShadow"),
+                                                                     table.getColor("ToggleButton.light"),
+                                                                     table.getColor("ToggleButton.highlight")),
                                   new EmptyBorder(0, 0, 0, 0));
     }
 
@@ -490,8 +487,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * Returns a flag to determine whether rollover button borders are enabled.
      *
      * @return true if rollover borders are enabled; false otherwise
-     * @see #setRolloverBorders
-     * @since 1.4
+     * @see    #setRolloverBorders
+     * @since  1.4
      */
     public boolean isRolloverBorders() {
         return rolloverBorders;
@@ -502,8 +499,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * depending on the state of the flag.
      *
      * @param rollover if true, rollover borders are installed. Otherwise non-rollover borders are installed
-     * @see #isRolloverBorders
-     * @since 1.4
+     * @see            #isRolloverBorders
+     * @since          1.4
      */
     public void setRolloverBorders(final boolean rollover) {
         rolloverBorders = rollover;
@@ -565,8 +562,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * This is a convenience method to call <code>setBorderToRollover</code> for each child component.
      *
      * @param c container which holds the child components (usually a JToolBar)
-     * @see #setBorderToRollover
-     * @since 1.4
+     * @see     #setBorderToRollover
+     * @since   1.4
      */
     protected void installRolloverBorders(final JComponent c) {
         // Put rollover borders on buttons
@@ -587,8 +584,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * This is a convenience method to call <code>setBorderToNonRollover</code> for each child component.
      *
      * @param c container which holds the child components (usually a JToolBar)
-     * @see #setBorderToNonRollover
-     * @since 1.4
+     * @see     #setBorderToNonRollover
+     * @since   1.4
      */
     protected void installNonRolloverBorders(final JComponent c) {
         // Put non-rollover borders on buttons. These borders reduce the margin.
@@ -614,8 +611,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * method.
      *
      * @param c component which will have a rollover border installed
-     * @see #createRolloverBorder
-     * @since 1.4
+     * @see     #createRolloverBorder
+     * @since   1.4
      */
     protected void setBorderToRollover(final Component c) {
         if (c instanceof AbstractButton) {
@@ -631,8 +628,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                 b.setBorder(getRolloverBorder(b));
             }
 
-            rolloverTable.put(b, b.isRolloverEnabled() ?
-                                 Boolean.TRUE : Boolean.FALSE);
+            rolloverTable.put(b, b.isRolloverEnabled() ? Boolean.TRUE : Boolean.FALSE);
             b.setRolloverEnabled(true);
         }
     }
@@ -642,8 +638,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
      * #createNonRolloverBorder} method.
      *
      * @param c component which will have a non-rollover border installed
-     * @see #createNonRolloverBorder
-     * @since 1.4
+     * @see     #createNonRolloverBorder
+     * @since   1.4
      */
     protected void setBorderToNonRollover(final Component c) {
         if (c instanceof AbstractButton) {
@@ -658,8 +654,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             if (b.getBorder() instanceof UIResource) {
                 b.setBorder(getNonRolloverBorder(b));
             }
-            rolloverTable.put(b, b.isRolloverEnabled() ?
-                                 Boolean.TRUE : Boolean.FALSE);
+            rolloverTable.put(b, b.isRolloverEnabled() ? Boolean.TRUE : Boolean.FALSE);
             b.setRolloverEnabled(false);
         }
     }
@@ -667,10 +662,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     /**
      * Returns a rollover border for the button.
      *
-     * @param b the button to calculate the rollover border for
-     * @return the rollover border
-     * @see #setBorderToRollover
-     * @since 1.6
+     * @param  b the button to calculate the rollover border for
+     * @return   the rollover border
+     * @see      #setBorderToRollover
+     * @since    1.6
      */
     protected Border getRolloverBorder(final AbstractButton b) {
         return rolloverBorder;
@@ -679,10 +674,10 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     /**
      * Returns a non-rollover border for the button.
      *
-     * @param b the button to calculate the non-rollover border for
-     * @return the non-rollover border
-     * @see #setBorderToNonRollover
-     * @since 1.6
+     * @param  b the button to calculate the non-rollover border for
+     * @return   the non-rollover border
+     * @see      #setBorderToNonRollover
+     * @since    1.6
      */
     protected Border getNonRolloverBorder(final AbstractButton b) {
         if (b instanceof JToggleButton) {
@@ -702,8 +697,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         int nComp = toolBar.getComponentCount();
         int j;
         switch (direction) {
-            case EAST:
-            case SOUTH:
+            case EAST :
+            case SOUTH :
                 if (focusedCompIndex < 0 || focusedCompIndex >= nComp) {
                     break;
                 }
@@ -719,8 +714,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                     }
                 }
                 break;
-            case WEST:
-            case NORTH:
+            case WEST :
+            case NORTH :
                 if (focusedCompIndex < 0 || focusedCompIndex >= nComp) {
                     break;
                 }
@@ -737,7 +732,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                     }
                 }
                 break;
-            default:
+            default :
                 break;
         }
     }
@@ -745,13 +740,13 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     /**
      * Creates a window which contains the toolbar after it has been dragged out from its container
      *
-     * @param toolbar an instance of {@code JToolBar}
-     * @return a {@code RootPaneContainer} object, containing the toolbar
-     * @since 1.4
+     * @param  toolbar an instance of {@code JToolBar}
+     * @return         a {@code RootPaneContainer} object, containing the toolbar
+     * @since          1.4
      */
     protected RootPaneContainer createFloatingWindow(final JToolBar toolbar) {
         @SuppressWarnings("serial")
-            // Superclass is not serializable across versions
+        // Superclass is not serializable across versions
         class ToolBarDialog extends JDialog {
             public ToolBarDialog(final Frame owner, final String title, final boolean modal) {
                 super(owner, title, modal);
@@ -765,7 +760,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             // the frame when contents change
             protected JRootPane createRootPane() {
                 @SuppressWarnings("serial") // anonymous class
-                    JRootPane rootPane = new JRootPane() {
+                JRootPane rootPane = new JRootPane() {
                     protected boolean packing = false;
 
                     public void validate() {
@@ -881,9 +876,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     /**
      * Returns {@code true} if the {@code JToolBar} can dock at the given position.
      *
-     * @param c a component
-     * @param p a position
-     * @return {@code true} if the {@code JToolBar} can dock at the given position
+     * @param  c a component
+     * @param  p a position
+     * @return   {@code true} if the {@code JToolBar} can dock at the given position
      */
     public boolean canDock(final Component c, final Point p) {
         return (p != null && getDockingConstraint(c, p) != null);
@@ -914,9 +909,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
     /**
      * Paints the contents of the window used for dragging.
      *
-     * @param g Graphics to paint to.
+     * @param  g                    Graphics to paint to.
      * @throws NullPointerException is <code>g</code> is null
-     * @since 1.5
+     * @since                       1.5
      */
     protected void paintDragWindow(final Graphics g) {
         g.setColor(dragWindow.getBackground());
@@ -926,7 +921,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         g.setColor(dragWindow.getBorderColor());
         g.drawRect(0, 0, w - 1, h - 1);
     }
-
 
     protected static class Actions extends UIAction {
         protected static final String NAVIGATE_RIGHT = "navigateRight";
@@ -957,9 +951,8 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         }
     }
 
-
     protected class Handler implements ContainerListener,
-                                       FocusListener, MouseInputListener, PropertyChangeListener {
+                            FocusListener, MouseInputListener, PropertyChangeListener {
 
         //
         // MouseInputListener (DockingListener)
@@ -1003,8 +996,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             focusedCompIndex = toolBar.getComponentIndex(c);
         }
 
-        public void focusLost(final FocusEvent evt) {
-        }
+        public void focusLost(final FocusEvent evt) {}
 
         public void mouseDragged(final MouseEvent evt) {
             if (!tb.isEnabled()) {
@@ -1014,11 +1006,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             dragTo();
         }
 
-        public void mouseMoved(final MouseEvent evt) {
-        }
+        public void mouseMoved(final MouseEvent evt) {}
 
-        public void mouseClicked(final MouseEvent evt) {
-        }
+        public void mouseClicked(final MouseEvent evt) {}
 
         public void mousePressed(final MouseEvent evt) {
             if (!tb.isEnabled()) {
@@ -1037,11 +1027,9 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
             isDragging = false;
         }
 
-        public void mouseEntered(final MouseEvent evt) {
-        }
+        public void mouseEntered(final MouseEvent evt) {}
 
-        public void mouseExited(final MouseEvent evt) {
-        }
+        public void mouseExited(final MouseEvent evt) {}
 
         //
         // PropertyChangeListener
@@ -1122,7 +1110,6 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
                 dockingSource.repaint();
             }
         }
-
     }
 
     /**

@@ -20,12 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.spinner;
 
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -34,8 +32,12 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.*;
+
+import com.github.weisj.darklaf.util.PropertyKey;
+
 public class DarkSpinnerListener extends MouseAdapter implements PropertyChangeListener, FocusListener,
-                                                                 SpinnerConstants {
+                                 SpinnerConstants {
 
     protected final JSpinner spinner;
     protected final DarkSpinnerUI ui;

@@ -20,26 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components;
 
-import com.github.weisj.darklaf.icons.UIAwareIcon;
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.basic.BasicArrowButton;
-import java.awt.*;
+
+import com.github.weisj.darklaf.icons.UIAwareIcon;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 /**
  * @author Jannis Weis
  */
 public final class ArrowButton implements SwingConstants {
 
-
-    private ArrowButton() {
-    }
-
+    private ArrowButton() {}
 
     public static JButton createUpDownArrow(final JComponent parent, final int orientation,
                                             final boolean center) {
@@ -47,24 +46,22 @@ public final class ArrowButton implements SwingConstants {
                                  new Insets(0, 0, 0, 0));
     }
 
-
     public static JButton createUpDownArrow(final JComponent parent, final int orientation,
                                             final boolean center, final boolean applyInsetsOnSize,
                                             final Insets insets) {
         UIAwareIcon icon;
         switch (orientation) {
-            case NORTH:
+            case NORTH :
                 icon = (UIAwareIcon) UIManager.getIcon("ArrowButton.up.icon");
                 break;
-            case SOUTH:
+            case SOUTH :
                 icon = (UIAwareIcon) UIManager.getIcon("ArrowButton.down.icon");
                 break;
-            default:
+            default :
                 throw new IllegalStateException("Invalid button orientation: " + orientation);
         }
         return createUpDownArrow(parent, icon, icon.getDual(), orientation, center, applyInsetsOnSize, insets);
     }
-
 
     public static JButton createUpDownArrow(final JComponent parent,
                                             final Icon activeIcon, final Icon inactiveIcon,
@@ -105,12 +102,10 @@ public final class ArrowButton implements SwingConstants {
                 getIcon().paintIcon(this, g, x, y);
             }
 
-
             @Override
             public Insets getInsets() {
                 return getInsets(new Insets(0, 0, 0, 0));
             }
-
 
             @Override
             public Insets getInsets(final Insets i) {
@@ -120,7 +115,6 @@ public final class ArrowButton implements SwingConstants {
                 i.bottom = insets.bottom;
                 return i;
             }
-
 
             @Override
             public boolean isOpaque() {

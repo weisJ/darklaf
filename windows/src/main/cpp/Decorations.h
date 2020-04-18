@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 #include <stdio.h>
 #include <windows.h>
@@ -27,17 +28,17 @@
 
 class WindowWrapper
 {
-public:
-    bool resizable = true;
-    bool popup_menu = false;
-    bool moving = false;
-    bool move_mode = false;
-    WNDPROC prev_proc;
-    HBRUSH bgBrush;
+    public:
+        bool resizable = true;
+        bool popup_menu = false;
+        bool moving = false;
+        bool move_mode = false;
+        WNDPROC prev_proc;
+        HBRUSH bgBrush;
 
-    int left = 0;
-    int right = 0;
-    int height = 0;
+        int left = 0;
+        int right = 0;
+        int height = 0;
 
-    static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
+        static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 };

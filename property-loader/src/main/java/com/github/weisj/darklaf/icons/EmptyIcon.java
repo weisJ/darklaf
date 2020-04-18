@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
 /**
  * @author Konstantin Bulenkov
@@ -38,22 +40,18 @@ public final class EmptyIcon implements Icon, UIResource {
     private final int width;
     private final int height;
 
-
     private EmptyIcon(final int width, final int height) {
         this.width = width;
         this.height = height;
     }
 
-
     public static Icon create(final Icon base) {
         return create(base.getIconWidth(), base.getIconHeight());
     }
 
-
     public static Icon create(final int width, final int height) {
         return width == height ? create(width) : new EmptyIcon(width, height);
     }
-
 
     public static Icon create(final int size) {
         Icon icon = cache.get(size);
@@ -63,25 +61,20 @@ public final class EmptyIcon implements Icon, UIResource {
         return icon == null ? new EmptyIcon(size, size) : icon;
     }
 
-    public void paintIcon(final Component component, final Graphics g, final int i, final int j) {
-    }
-
+    public void paintIcon(final Component component, final Graphics g, final int i, final int j) {}
 
     public int getIconWidth() {
         return this.width;
     }
 
-
     public int getIconHeight() {
         return this.height;
     }
-
 
     public int hashCode() {
         int sum = this.width + this.height;
         return sum * (sum + 1) / 2 + this.width;
     }
-
 
     public boolean equals(final Object o) {
         if (this == o) {

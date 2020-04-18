@@ -20,8 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.settings;
+
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.plaf.SliderUI;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.ColoredRadioButton;
@@ -40,13 +49,6 @@ import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Alignment;
-
-import javax.swing.*;
-import javax.swing.plaf.SliderUI;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.util.*;
 
 public class ThemeSettingsPanel extends JPanel {
 
@@ -115,10 +117,10 @@ public class ThemeSettingsPanel extends JPanel {
         fontSizeFollowsSystem.setEnabled(enabled);
         if (enabledSystemPreferences.isSelected()) {
             themeFollowsSystem.setSelected(themeFollowsSystem.isSelected() && themeFollowsSystem.isEnabled());
-            accentColorFollowsSystem.setSelected(
-                accentColorFollowsSystem.isSelected() && accentColorFollowsSystem.isEnabled());
-            selectionColorFollowsSystem.setSelected(
-                selectionColorFollowsSystem.isSelected() && selectionColorFollowsSystem.isEnabled());
+            accentColorFollowsSystem.setSelected(accentColorFollowsSystem.isSelected()
+                                                 && accentColorFollowsSystem.isEnabled());
+            selectionColorFollowsSystem.setSelected(selectionColorFollowsSystem.isSelected()
+                                                    && selectionColorFollowsSystem.isEnabled());
             fontSizeFollowsSystem.setSelected(fontSizeFollowsSystem.isSelected() && fontSizeFollowsSystem.isEnabled());
         }
         if (!skipPreferences) {
@@ -216,9 +218,9 @@ public class ThemeSettingsPanel extends JPanel {
 
     private Component createGeneralSettings() {
         JLabel themeLabel = new JLabel(resourceBundle.getString("label_theme"));
-        themeComboBox = new JComboBox<Theme>(LafManager.getThemeComboBoxModel()) {{
-            setSelectedItem(LafManager.getTheme());
-        }};
+        themeComboBox = new JComboBox<Theme>(LafManager.getThemeComboBoxModel());
+        themeComboBox.setSelectedItem(LafManager.getTheme());
+
         themeComboBox.putClientProperty(ComboBoxConstants.KEY_DO_NOT_UPDATE_WHEN_SCROLLED, true);
         themeComboBox.addItemListener(e -> update(false));
         themeLabel.setLabelFor(themeComboBox);
@@ -335,8 +337,8 @@ public class ThemeSettingsPanel extends JPanel {
 
     protected Theme getTheme(final PreferredThemeStyle preferredThemeStyle) {
         return isThemeFollowsSystem()
-               ? LafManager.themeForPreferredStyle(preferredThemeStyle)
-               : (Theme) themeComboBox.getSelectedItem();
+                                      ? LafManager.themeForPreferredStyle(preferredThemeStyle)
+                                      : (Theme) themeComboBox.getSelectedItem();
     }
 
     public FontSizeRule getFontSizeRule() {
@@ -347,8 +349,8 @@ public class ThemeSettingsPanel extends JPanel {
     protected FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
         if (theme == null) return FontSizeRule.getDefault();
         return isFontSizeFollowsSystem()
-               ? preferredThemeStyle.getFontSizeRule()
-               : FontSizeRule.relativeAdjustment(fontSlider.getValue());
+                                         ? preferredThemeStyle.getFontSizeRule()
+                                         : FontSizeRule.relativeAdjustment(fontSlider.getValue());
     }
 
     public AccentColorRule getAccentColorRule() {
@@ -365,16 +367,16 @@ public class ThemeSettingsPanel extends JPanel {
 
     protected Color getAccentColor(final Theme theme, final boolean useThemeColor) {
         return theme.supportsCustomAccentColor()
-               ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
-                               : getSelectedColor(bgAccent)
-               : null;
+                                                 ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
+                                                                 : getSelectedColor(bgAccent)
+                                                 : null;
     }
 
     protected Color getSelectionColor(final Theme theme, final boolean useThemeColor) {
         return theme.supportsCustomSelectionColor()
-               ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
-                               : getSelectedColor(bgSelection)
-               : null;
+                                                    ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
+                                                                    : getSelectedColor(bgSelection)
+                                                    : null;
     }
 
     public void setEnabledSystemPreferences(final boolean enabled) {
@@ -458,19 +460,19 @@ public class ThemeSettingsPanel extends JPanel {
             }
         };
         ToolTipContext context = new ToolTipContext()
-            .setAlignment(Alignment.CENTER)
-            .setCenterAlignment(Alignment.NORTH)
-            .setUseBestFit(true)
-            .setToolTipRectSupplier(e -> {
-                SliderUI ui = fontSlider.getUI();
-                if (ui instanceof DarkSliderUI) {
-                    Rectangle r = ((DarkSliderUI) ui).getThumbRect();
-                    r.x -= 1;
-                    return r;
-                }
-                return new Rectangle(0, 0, fontSlider.getWidth(),
-                                     fontSlider.getHeight());
-            });
+                                                     .setAlignment(Alignment.CENTER)
+                                                     .setCenterAlignment(Alignment.NORTH)
+                                                     .setUseBestFit(true)
+                                                     .setToolTipRectSupplier(e -> {
+                                                         SliderUI ui = fontSlider.getUI();
+                                                         if (ui instanceof DarkSliderUI) {
+                                                             Rectangle r = ((DarkSliderUI) ui).getThumbRect();
+                                                             r.x -= 1;
+                                                             return r;
+                                                         }
+                                                         return new Rectangle(0, 0, fontSlider.getWidth(),
+                                                                              fontSlider.getHeight());
+                                                     });
         fontSlider.putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, true);
         fontSlider.putClientProperty(ToolTipConstants.KEY_CONTEXT, context);
         fontSlider.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
@@ -627,8 +629,8 @@ public class ThemeSettingsPanel extends JPanel {
             verticalComponentGroup.addComponent(field, p, p, p);
         }
         for (int i = 0; i < left.length; i++) {
-            verticalGroup.addGroup(layout.createParallelGroup(
-                GroupLayout.Alignment.CENTER).addComponent(left[i]).addComponent(right[i], p, p, p));
+            verticalGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                         .addComponent(left[i]).addComponent(right[i], p, p, p));
         }
         return panel;
     }

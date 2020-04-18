@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -56,5 +58,4 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
     public Insets getBorderInsets(final Component c) {
         return CellUtil.adjustEditorInsets(super.getBorderInsets(), c);
     }
-
 }

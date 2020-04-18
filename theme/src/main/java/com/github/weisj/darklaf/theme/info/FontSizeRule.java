@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.theme.info;
 
@@ -84,11 +85,11 @@ public class FontSizeRule {
             builder.append(", preset=").append(preset);
         } else {
             switch (type) {
-                case RELATIVE_ADJUSTMENT:
+                case RELATIVE_ADJUSTMENT :
                     builder.append(", relativeAdjustment=").append(relativeAdjustment);
                     break;
-                case NO_ADJUSTMENT:
-                default:
+                case NO_ADJUSTMENT :
+                default :
                     break;
             }
         }
@@ -117,5 +118,4 @@ public class FontSizeRule {
 
         abstract public float adjustSize(final float size, final float relative);
     }
-
 }

@@ -20,8 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
+
+import java.awt.*;
+import java.awt.event.AWTEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.FocusManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
@@ -35,20 +49,8 @@ import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-import javax.swing.FocusManager;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.UIResource;
-import java.awt.*;
-import java.awt.event.AWTEventListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener,
-                                                             TabFramePopupUI {
+                              TabFramePopupUI {
 
     protected HeaderButton closeButton;
     private final Action closeAction = new AbstractAction() {
@@ -71,7 +73,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     private MutableLineBorder headerBorder;
     private MutableLineBorder contentBorder;
     private boolean oldFocus;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkPanelPopupUI();
@@ -282,7 +283,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 try {
                     Component peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
                     peer.firePropertyChange(TabFramePopup.KEY_PEER_INSETS, 0, 1);
-                } catch (IndexOutOfBoundsException ignored) {/*may happen during transfer*/}
+                } catch (IndexOutOfBoundsException ignored) {/* may happen during transfer */}
             }
         }
     }
@@ -290,8 +291,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     protected Insets getBorderSize(final Alignment a, final boolean[] info) {
         Insets insets = new Insets(0, 0, 0, 0);
         switch (a) {
-            case NORTH:
-            case NORTH_EAST:
+            case NORTH :
+            case NORTH_EAST :
                 if (info[Alignment.NORTH.getIndex()] || info[Alignment.NORTH_EAST.getIndex()]) {
                     insets.bottom = 1;
                 }
@@ -299,8 +300,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.left = 1;
                 }
                 return insets;
-            case SOUTH:
-            case SOUTH_WEST:
+            case SOUTH :
+            case SOUTH_WEST :
                 if (info[Alignment.SOUTH_WEST.getIndex()] || info[Alignment.SOUTH.getIndex()]) {
                     insets.top = 1;
                 }
@@ -308,8 +309,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.left = 1;
                 }
                 return insets;
-            case EAST:
-            case SOUTH_EAST:
+            case EAST :
+            case SOUTH_EAST :
                 if (info[Alignment.EAST.getIndex()] || info[Alignment.SOUTH_EAST.getIndex()]) {
                     insets.left = 1;
                 }
@@ -317,8 +318,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.top = 1;
                 }
                 return insets;
-            case WEST:
-            case NORTH_WEST:
+            case WEST :
+            case NORTH_WEST :
                 if (info[Alignment.NORTH_WEST.getIndex()] || info[Alignment.WEST.getIndex()]) {
                     insets.right = 1;
                 }
@@ -326,7 +327,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.top = 1;
                 }
                 return insets;
-            default:
+            default :
                 return insets;
         }
     }
@@ -348,8 +349,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             if (focusOwner instanceof JRootPane) return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
             if (popupComponent.getTabFrame() != null) {
-                Container container = popupComponent.getTabFrame().getContentPane().getContainer(
-                    popupComponent.getAlignment());
+                Container container = popupComponent.getTabFrame().getContentPane()
+                                                    .getContainer(popupComponent.getAlignment());
                 focus = focus || DarkUIUtil.hasFocus(container);
             }
             setHeaderBackground(focus);

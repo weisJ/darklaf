@@ -20,8 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package documentation;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
@@ -33,21 +50,6 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.*;
 import com.kitfox.svg.app.beans.SVGIcon;
 import defaults.SampleRenderer;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class CreateUITable {
 
@@ -73,8 +75,8 @@ public class CreateUITable {
         new File(workingFolder).mkdirs();
         new File(htmlFile).createNewFile();
 
-        try (OutputStreamWriter writer =
-                 new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(htmlFile),
+                                                                StandardCharsets.UTF_8)) {
             CreateUITable tableCreator = new CreateUITable();
             writer.append("<html>\n");
             writer.append("<a href=\"../index.html\">back</a>\n");
@@ -109,7 +111,8 @@ public class CreateUITable {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append("Miscellaneous").append("</h3>\n");
         appendTable(builder, defaults.entrySet().stream()
                                      .filter(entry -> miscKeys.contains(entry.getKey().toString()))
-                                     .collect(Collectors.toSet()), ident);
+                                     .collect(Collectors.toSet()),
+                    ident);
 
         return builder.toString();
     }
@@ -127,15 +130,17 @@ public class CreateUITable {
                              final String group, final String heading) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append(heading).append("</h3>\n");
         Set<Map.Entry<Object, Object>> values = defaults
-            .entrySet().stream()
-            .filter(entry -> {
-                String key = entry.getKey().toString();
-                if (key.startsWith("%")) return true;
-                if (key.endsWith("UI")) return key.substring(0, key.length() - 2).equals(group);
-                if (key.contains(".")) return key.split("\\.")[0].equals(group);
-                return key.equals(group);
-            })
-            .collect(Collectors.toSet());
+                                                        .entrySet().stream()
+                                                        .filter(entry -> {
+                                                            String key = entry.getKey().toString();
+                                                            if (key.startsWith("%")) return true;
+                                                            if (key.endsWith("UI"))
+                                                                return key.substring(0, key.length() - 2).equals(group);
+                                                            if (key.contains("."))
+                                                                return key.split("\\.")[0].equals(group);
+                                                            return key.equals(group);
+                                                        })
+                                                        .collect(Collectors.toSet());
         appendTable(builder, values, ident);
         values.forEach(entry -> defaults.remove(entry.getKey()));
         builder.append('\n');
@@ -193,12 +198,12 @@ public class CreateUITable {
         appendData(builder, key, ident + 1);
         Object value = entry.getValue();
         if (value instanceof Pair) {
-            appendData(builder, parseValue(((Pair<?, ?>) value).getSecond()), ident + 1); //Value
-            appendData(builder, ((Pair<?, ?>) value).getFirst(), ident + 1); //Reference
+            appendData(builder, parseValue(((Pair<?, ?>) value).getSecond()), ident + 1); // Value
+            appendData(builder, ((Pair<?, ?>) value).getFirst(), ident + 1); // Reference
             builder.append(parsePreview(key, ((Pair<?, ?>) value).getSecond(), ident + 1));
         } else {
-            appendData(builder, parseValue(value), ident + 1); //Value
-            appendData(builder, "", ident + 1); //Reference
+            appendData(builder, parseValue(value), ident + 1); // Value
+            appendData(builder, "", ident + 1); // Reference
             builder.append(parsePreview(key, value, ident + 1));
         }
         builder.append(StringUtil.repeat(IDENT, ident)).append("</tr>\n");
@@ -310,7 +315,7 @@ public class CreateUITable {
     private void readFile(final URL url, final StringBuilder builder, final int ident) throws IOException {
         InputStream inputStream = url.openStream();
         InputStreamReader isReader = new InputStreamReader(inputStream);
-        //Creating a BufferedReader object
+        // Creating a BufferedReader object
         BufferedReader reader = new BufferedReader(isReader);
         String str;
         while ((str = reader.readLine()) != null) {

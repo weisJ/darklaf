@@ -20,20 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.io.Serializable;
+
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
 /**
  * Icon that is aware of the current ui theme and adjusts the icon accordingly. Icons are loaded lazily at their point
  * of usage.
  *
  * @author Jannis Weis
- * @since 2019
+ * @since  2019
  */
 public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
@@ -47,7 +49,6 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
     private transient Icon icon;
     private AwareIconStyle currentStyle;
 
-
     /**
      * Create new ui aware icon.
      *
@@ -57,7 +58,6 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
      * @param h           height of icon.
      * @param parentClass the class to resolve the path while lazy loading.
      */
-
     public DarkUIAwareIcon(final String darkKey, final String lightKey, final int w, final int h,
                            final Class<?> parentClass) {
         this.darkKey = darkKey;
@@ -67,7 +67,6 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
         this.parentClass = parentClass;
         this.dual = new DarkUIAwareIcon(this);
     }
-
 
     private DarkUIAwareIcon(final DarkUIAwareIcon dual) {
         this.darkKey = dual.lightKey;
@@ -93,7 +92,6 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
             loadIcon();
         }
     }
-
 
     private boolean isLoaded() {
         return loaded && (currentStyle == IconLoader.getAwareStyle());

@@ -20,19 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-
-import com.github.weisj.darklaf.color.DarkColorModel;
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
-import com.github.weisj.darklaf.color.DarkColorModelRGB;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -41,6 +32,16 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.color.DarkColorModel;
+import com.github.weisj.darklaf.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.color.DarkColorModelRGB;
+import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 
 public class ColorTriangle extends JComponent {
 
@@ -82,7 +83,6 @@ public class ColorTriangle extends JComponent {
     protected boolean isMessaging;
     protected boolean invalid;
     private boolean isHSB = true;
-
 
     public ColorTriangle() {
         setOpaque(true);
@@ -517,7 +517,6 @@ public class ColorTriangle extends JComponent {
 
     }
 
-
     @Override
     public Dimension getPreferredSize() {
         return getMinimumSize();
@@ -597,8 +596,7 @@ public class ColorTriangle extends JComponent {
         }
 
         @Override
-        public void dispose() {
-        }
+        public void dispose() {}
 
         @Override
         public ColorModel getColorModel() {
@@ -635,8 +633,7 @@ public class ColorTriangle extends JComponent {
 
     protected class InnerPaintContext extends ColorWheelPaintContext {
 
-        public InnerPaintContext() {
-        }
+        public InnerPaintContext() {}
 
         @Override
         public Raster getRaster(final int x, final int y, final int w, final int h) {
@@ -649,8 +646,7 @@ public class ColorTriangle extends JComponent {
                         triangleInverse.transform(dummy, dummy);
                         Point2D sv = getSaturationAndValue(dummy.getX(), dummy.getY());
                         setPixel(raster, i, j, getColorRGB(getHue(), sv.getX(), sv.getY()));
-                    } catch (NoninvertibleTransformException ignored) {
-                    }
+                    } catch (NoninvertibleTransformException ignored) {}
                 }
             }
             return raster;

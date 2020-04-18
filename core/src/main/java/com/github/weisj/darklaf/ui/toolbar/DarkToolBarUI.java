@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.toolbar;
 
-import com.github.weisj.darklaf.decorators.MouseResponder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+
+import com.github.weisj.darklaf.decorators.MouseResponder;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -47,7 +49,6 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     private Dimension verticalDim = new Dimension(0, 0);
     private Dimension horizontalDim = new Dimension(0, 0);
     private final Timer timer = new Timer(5, e -> dragTo());
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkToolBarUI();
@@ -75,12 +76,10 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     }
 
     @Override
-    protected void setBorderToRollover(final Component c) {
-    }
+    protected void setBorderToRollover(final Component c) {}
 
     @Override
-    protected void setBorderToNormal(final Component c) {
-    }
+    protected void setBorderToNormal(final Component c) {}
 
     @Override
     public void setFloating(final boolean b, final Point p) {
@@ -144,8 +143,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
         background = UIManager.getColor("ToolBar.background");
     }
 
-    protected void setBorderToNonRollover(final Component c) {
-    }
+    protected void setBorderToNonRollover(final Component c) {}
 
     @Override
     protected DragWindow createDragWindow(final JToolBar toolbar) {
@@ -182,11 +180,11 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     protected String getDockingConstraint(final Component c, final Point p) {
         if (p == null) return constraintBeforeFloating;
         if (c.contains(p)) {
-            //North
+            // North
             if (p.y < horizontalDim.height && !isBlocked(c, BorderLayout.NORTH)) {
                 return BorderLayout.NORTH;
             }
-            //South
+            // South
             if (p.y >= c.getHeight() - horizontalDim.height && !isBlocked(c, BorderLayout.SOUTH)) {
                 return BorderLayout.SOUTH;
             }
@@ -251,7 +249,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
             dragWindow.getContentPane().add(toolBar);
             updateDockingSource();
             dragWindow.setVisible(true);
-            //Is needed to intercept ongoing drag.
+            // Is needed to intercept ongoing drag.
             SwingUtilities.invokeLater(() -> robot.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK));
 
             int oldOrientation = toolBar.getOrientation();
@@ -285,8 +283,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
                     setFloating(true, null);
                 }
                 dockingSource.remove(previewPanel);
-            } catch (IllegalComponentStateException ignored) {
-            }
+            } catch (IllegalComponentStateException ignored) {}
         }
     }
 

@@ -20,15 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
-import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
-import com.github.weisj.darklaf.components.tooltip.TooltipAwareToggleButton;
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
-import com.github.weisj.darklaf.util.AlignmentExt;
-import sun.swing.FilePane;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -38,12 +39,14 @@ import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import javax.swing.plaf.ComponentUI;
-import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+
+import sun.swing.FilePane;
+
+import com.github.weisj.darklaf.components.tooltip.TooltipAwareButton;
+import com.github.weisj.darklaf.components.tooltip.TooltipAwareToggleButton;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
+import com.github.weisj.darklaf.util.AlignmentExt;
 
 public class DarkFileChooserUI extends DarkFileChooserUIBridge {
 
@@ -130,11 +133,11 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
             if (KEY_VIEW_TYPE.equals(e.getPropertyName())) {
                 int viewType = filePane.getViewType();
                 switch (viewType) {
-                    case FilePane.VIEWTYPE_LIST:
+                    case FilePane.VIEWTYPE_LIST :
                         listViewButton.setSelected(true);
                         break;
 
-                    case FilePane.VIEWTYPE_DETAILS:
+                    case FilePane.VIEWTYPE_DETAILS :
                         detailsViewButton.setSelected(true);
                         break;
                 }
@@ -162,15 +165,13 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
         fileNameTextField = new FileTextField();
         fileNamePanel.add(fileNameTextField);
         fileNameLabel.setLabelFor(fileNameTextField);
-        fileNameTextField.addFocusListener(
-            new FocusAdapter() {
-                public void focusGained(final FocusEvent e) {
-                    if (!getFileChooser().isMultiSelectionEnabled()) {
-                        filePane.clearSelection();
-                    }
+        fileNameTextField.addFocusListener(new FocusAdapter() {
+            public void focusGained(final FocusEvent e) {
+                if (!getFileChooser().isMultiSelectionEnabled()) {
+                    filePane.clearSelection();
                 }
             }
-                                          );
+        });
         if (fileChooser.isMultiSelectionEnabled()) {
             setFileName(fileNameString(fileChooser.getSelectedFiles()));
         } else {

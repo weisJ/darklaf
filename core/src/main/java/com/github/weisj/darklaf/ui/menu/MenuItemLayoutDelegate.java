@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.menu;
 
-import com.github.weisj.darklaf.ui.html.DarkHTML;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.ui.html.DarkHTML;
 
 public class MenuItemLayoutDelegate extends JMenuItem {
 
@@ -122,6 +124,4 @@ public class MenuItemLayoutDelegate extends JMenuItem {
         if (delegate != null) return delegate.getText();
         return super.getText();
     }
-
 }
-

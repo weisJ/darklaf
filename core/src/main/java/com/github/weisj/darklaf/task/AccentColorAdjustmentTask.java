@@ -20,21 +20,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.task;
+
+import java.awt.*;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.Pair;
-
-import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
-import java.awt.*;
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.Logger;
 
 public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
 

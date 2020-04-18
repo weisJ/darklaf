@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
-import javax.swing.*;
-import javax.swing.plaf.ActionMapUIResource;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import javax.swing.*;
+import javax.swing.plaf.ActionMapUIResource;
 
 /**
  * An ActionMap that populates its contents as necessary. The contents are populated by invoking the
@@ -73,12 +75,11 @@ public class LazyActionMap extends ActionMapUIResource {
      * <p>
      * This should be used if the ActionMap can be shared.
      *
-     * @param loaderClass Class object that gets loadActionMap invoked on.
-     * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map will be
-     *                    registered on.
-     * @return the action map
+     * @param  loaderClass Class object that gets loadActionMap invoked on.
+     * @param  defaultsKey Key to use to defaults table to check for existing map and what resulting Map will be
+     *                     registered on.
+     * @return             the action map
      */
-
     public static ActionMap getActionMap(final Class<?> loaderClass,
                                          final String defaultsKey) {
         ActionMap map = (ActionMap) UIManager.get(defaultsKey);
@@ -106,8 +107,8 @@ public class LazyActionMap extends ActionMapUIResource {
                 assert false : "LazyActionMap unable to load actions " +
                                klass;
             } catch (IllegalAccessException
-                | InvocationTargetException
-                | IllegalArgumentException iae) {
+                     | InvocationTargetException
+                     | IllegalArgumentException iae) {
                 assert false : "LazyActionMap unable to load actions " +
                                iae;
             }

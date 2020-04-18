@@ -20,23 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import com.kitfox.svg.app.beans.SVGIcon;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+
+import com.kitfox.svg.app.beans.SVGIcon;
+
 /**
  * Icon from SVG image.
  *
  * @author Jannis Weis
- * @since 2019
+ * @since  2019
  */
 public class DarkSVGIcon implements Icon, Serializable {
 
@@ -61,7 +63,6 @@ public class DarkSVGIcon implements Icon, Serializable {
         icon.setAntiAlias(true);
         loaded = new AtomicBoolean(false);
     }
-
 
     private DarkSVGIcon(final int width, final int height, final DarkSVGIcon icon) {
         this.size = new Dimension(width, height);

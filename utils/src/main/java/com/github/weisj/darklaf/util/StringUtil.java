@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
@@ -33,15 +34,11 @@ import java.util.List;
  */
 public final class StringUtil {
 
-
-    private StringUtil() {
-    }
-
+    private StringUtil() {}
 
     public static String toUpperCase(final String a) {
         return a == null ? null : toUpperCase((CharSequence) a).toString();
     }
-
 
     public static CharSequence toUpperCase(final CharSequence s) {
         if (s == null) {
@@ -60,7 +57,6 @@ public final class StringUtil {
         }
         return answer;
     }
-
 
     public static char toUpperCase(final char a) {
         if (a < 'a') {
@@ -130,7 +126,6 @@ public final class StringUtil {
         return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
     }
 
-
     public static char toLowerCase(final char a) {
         if (a >= 'A' && (a < 'a' || a > 'z')) {
             return a <= 'Z' ? (char) (a + 32) : Character.toLowerCase(a);
@@ -188,7 +183,6 @@ public final class StringUtil {
     public static boolean isBlank(final String s) {
         return s.trim().length() == 0;
     }
-
 
     public static String repeat(final String s, final int count) {
         if (count <= 0) return "";

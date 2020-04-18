@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.decorators;
 
-import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import javax.swing.*;
 
 /**
  * @author Jannis Weis
@@ -35,7 +37,6 @@ public class HoverListener implements MouseListener {
     private final JComponent component;
     private boolean hover = false;
     private boolean scheduled = false;
-
 
     public HoverListener(final JComponent component) {
         this.component = component;

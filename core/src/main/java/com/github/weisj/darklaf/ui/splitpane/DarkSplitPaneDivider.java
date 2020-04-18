@@ -20,17 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.splitpane;
 
-import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
-import java.awt.*;
+
+import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 /**
  * @author Jannis Weis
@@ -55,7 +57,6 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         horizontalSplit = UIManager.getIcon("SplitPane.horizontalGlue.icon");
         borderColor = UIManager.getColor("SplitPane.dividerLineColor");
     }
-
 
     @Override
     public void paint(final Graphics g) {
@@ -121,7 +122,6 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
             setFocusPainted(false);
         }
 
-
         @SuppressWarnings("deprecation")
         public boolean isFocusTraversable() {
             return false;
@@ -143,7 +143,8 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         public Icon getIcon() {
             if (splitPane != null) {
                 return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT
-                       ? getRightOneTouchIcon() : getBottomOneTouchIcon();
+                                                                                 ? getRightOneTouchIcon()
+                                                                                 : getBottomOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }
@@ -154,7 +155,8 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         public Icon getIcon() {
             if (splitPane != null) {
                 return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT
-                       ? getLeftOneTouchIcon() : getTopOneTouchIcon();
+                                                                                 ? getLeftOneTouchIcon()
+                                                                                 : getTopOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }

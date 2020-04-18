@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.button;
 
@@ -406,8 +407,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                                                   b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
                                                   viewRect, iconRect, textRect,
                                                   b.getText() == null || ButtonConstants.isIconOnly(b)
-                                                  ? 0
-                                                  : b.getIconTextGap());
+                                                                                                       ? 0
+                                                                                                       : b.getIconTextGap());
     }
 
     @Override

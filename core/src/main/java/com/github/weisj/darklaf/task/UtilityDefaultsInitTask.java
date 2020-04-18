@@ -20,15 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.task;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.icons.AwareIconStyle;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
 
 public class UtilityDefaultsInitTask implements DefaultsInitTask {
     @Override

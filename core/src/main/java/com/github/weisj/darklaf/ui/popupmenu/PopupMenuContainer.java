@@ -20,27 +20,29 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
-import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.event.MenuKeyEvent;
 import javax.swing.event.MenuKeyListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import java.awt.*;
+
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
+import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class PopupMenuContainer extends JPanel {
 
     private final JScrollPane scrollPane;
     private final MenuKeyListener menuKeyListener;
     private final PopupMenuListener menuListener;
-    private JPanel view;
+    private final JPanel view;
     private JPopupMenu popupMenu;
 
     public PopupMenuContainer() {
@@ -51,8 +53,7 @@ public class PopupMenuContainer extends JPanel {
         add(overlayScrollPane, BorderLayout.CENTER);
         menuKeyListener = new MenuKeyListener() {
             @Override
-            public void menuKeyTyped(final MenuKeyEvent e) {
-            }
+            public void menuKeyTyped(final MenuKeyEvent e) {}
 
             @Override
             public void menuKeyPressed(final MenuKeyEvent e) {
@@ -69,8 +70,7 @@ public class PopupMenuContainer extends JPanel {
             }
 
             @Override
-            public void menuKeyReleased(final MenuKeyEvent e) {
-            }
+            public void menuKeyReleased(final MenuKeyEvent e) {}
         };
         menuListener = new PopupMenuAdapter() {
             @Override
@@ -108,8 +108,11 @@ public class PopupMenuContainer extends JPanel {
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), popupMenu, posX, posY);
         } else {
             int increment = popupMenu.getComponentCount() > 0
-                            ? Math.max(1, popupMenu.getComponent(0).getPreferredSize().height / 2)
-                            : 1;
+                                                              ? Math.max(1,
+                                                                         popupMenu.getComponent(0)
+                                                                                  .getPreferredSize().height
+                                                                            / 2)
+                                                              : 1;
             JScrollBar bar = scrollPane.getVerticalScrollBar();
             bar.setValue(bar.getMinimum());
             bar.setUnitIncrement(increment);
@@ -123,9 +126,8 @@ public class PopupMenuContainer extends JPanel {
     }
 
     private OverlayScrollPane createScrollPane(final JComponent content) {
-        OverlayScrollPane overlayScrollPane =
-            new OverlayScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        OverlayScrollPane overlayScrollPane = new OverlayScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                                                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         JScrollBar bar = overlayScrollPane.getVerticalScrollBar();
         bar.putClientProperty(DarkScrollBarUI.KEY_SMALL, Boolean.TRUE);
         DarkUIUtil.doNotCancelPopupSetup(bar);

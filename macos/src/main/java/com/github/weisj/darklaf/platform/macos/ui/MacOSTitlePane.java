@@ -20,20 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform.macos.ui;
 
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 public class MacOSTitlePane extends CustomTitlePane {
 
@@ -58,21 +60,21 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     protected void determineColors() {
         switch (getWindowDecorationStyle()) {
-            case JRootPane.ERROR_DIALOG:
+            case JRootPane.ERROR_DIALOG :
                 activeBackground = UIManager.getColor("MacOS.OptionPane.errorDialog.titlePane.background");
                 activeForeground = UIManager.getColor("MacOS.OptionPane.errorDialog.titlePane.foreground");
                 break;
-            case JRootPane.QUESTION_DIALOG:
-            case JRootPane.COLOR_CHOOSER_DIALOG:
-            case JRootPane.FILE_CHOOSER_DIALOG:
+            case JRootPane.QUESTION_DIALOG :
+            case JRootPane.COLOR_CHOOSER_DIALOG :
+            case JRootPane.FILE_CHOOSER_DIALOG :
                 activeBackground = UIManager.getColor("MacOS.OptionPane.questionDialog.titlePane.background");
                 activeForeground = UIManager.getColor("MacOS.OptionPane.questionDialog.titlePane.foreground");
                 break;
-            case JRootPane.WARNING_DIALOG:
+            case JRootPane.WARNING_DIALOG :
                 activeBackground = UIManager.getColor("MacOS.OptionPane.warningDialog.titlePane.background");
                 activeForeground = UIManager.getColor("MacOS.OptionPane.warningDialog.titlePane.foreground");
                 break;
-            default: //JRootPane.Frame
+            default : // JRootPane.Frame
                 activeBackground = UIManager.getColor("MacOS.TitlePane.background");
                 activeForeground = UIManager.getColor("MacOS.TitlePane.foreground");
                 break;
@@ -134,7 +136,6 @@ public class MacOSTitlePane extends CustomTitlePane {
         }
         return "";
     }
-
 
     @Override
     public void uninstall() {

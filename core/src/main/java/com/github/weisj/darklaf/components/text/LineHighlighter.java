@@ -20,8 +20,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.text;
+
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,7 +32,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
-import java.awt.*;
 
 public class LineHighlighter implements Highlighter.HighlightPainter, ChangeListener {
     private JTextComponent component;
@@ -49,9 +51,9 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
     }
 
     /*
-     *	You can reset the line color at any time
+     * You can reset the line color at any time
      *
-     *  @param color  the color of the background line
+     * @param color the color of the background line
      */
     public void setColor(final Color color) {
         this.color = color;
@@ -82,11 +84,11 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
     }
 
     /*
-     *   Caret position has changed, remove the highlight
+     * Caret position has changed, remove the highlight
      */
     private void resetHighlight() {
-        //  Use invokeLater to make sure updates to the Document are completed,
-        //  otherwise Undo processing causes the modelToView method to loop.
+        // Use invokeLater to make sure updates to the Document are completed,
+        // otherwise Undo processing causes the modelToView method to loop.
         if (component == null) return;
         SwingUtilities.invokeLater(() -> {
             try {
@@ -96,7 +98,7 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
                 if (view == null) return;
                 Rectangle currentView = view.getBounds();
 
-                //  Remove the highlighting from the previously highlighted line
+                // Remove the highlighting from the previously highlighted line
                 if (lastView != null && lastView.y != currentView.y) {
                     if (lastView.isEmpty()) {
                         component.repaint();
@@ -105,8 +107,7 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
                     }
                     lastView = currentView;
                 }
-            } catch (BadLocationException ignored) {
-            }
+            } catch (BadLocationException ignored) {}
         });
     }
 }

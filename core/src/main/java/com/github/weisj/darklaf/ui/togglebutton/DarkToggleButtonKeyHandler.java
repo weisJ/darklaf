@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Set;
+
+import javax.swing.*;
 
 public class DarkToggleButtonKeyHandler implements KeyListener {
 
@@ -56,9 +58,7 @@ public class DarkToggleButtonKeyHandler implements KeyListener {
         return keys != null && keys.contains(stroke);
     }
 
-    public void keyReleased(final KeyEvent e) {
-    }
+    public void keyReleased(final KeyEvent e) {}
 
-    public void keyTyped(final KeyEvent e) {
-    }
+    public void keyTyped(final KeyEvent e) {}
 }

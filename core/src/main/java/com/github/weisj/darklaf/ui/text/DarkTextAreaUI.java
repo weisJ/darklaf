@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.ui.html.DarkHTML;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.*;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
+
+import com.github.weisj.darklaf.ui.html.DarkHTML;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -45,9 +47,8 @@ public class DarkTextAreaUI extends DarkTextUI {
     /*
      * Implementation of BasicTextAreaUI
      */
-
     /**
-     * This method gets called when a bound property is changed on the associated JTextComponent.  This is a hook which
+     * This method gets called when a bound property is changed on the associated JTextComponent. This is a hook which
      * UI implementations may change to reflect how the UI displays bound properties of JTextComponent subclasses. This
      * is implemented to rebuild the View when the
      * <em>WrapLine</em> or the <em>WrapStyleWord</em> property changes.
@@ -67,7 +68,7 @@ public class DarkTextAreaUI extends DarkTextUI {
     }
 
     /**
-     * Fetches the name used as a key to look up properties through the UIManager.  This is used as a prefix to all the
+     * Fetches the name used as a key to look up properties through the UIManager. This is used as a prefix to all the
      * standard text properties.
      *
      * @return the name ("TextArea")
@@ -79,38 +80,38 @@ public class DarkTextAreaUI extends DarkTextUI {
     /**
      * The method is overridden to take into account caret width.
      *
-     * @param c the editor component
-     * @return the preferred size
+     * @param  c                        the editor component
+     * @return                          the preferred size
      * @throws IllegalArgumentException if invalid value is passed
-     * @since 1.5
+     * @since                           1.5
      */
     public Dimension getPreferredSize(final JComponent c) {
         return super.getPreferredSize(c);
-        //the fix for 4785160 is undone
+        // the fix for 4785160 is undone
     }
 
     /**
      * The method is overridden to take into account caret width.
      *
-     * @param c the editor component
-     * @return the minimum size
+     * @param  c                        the editor component
+     * @return                          the minimum size
      * @throws IllegalArgumentException if invalid value is passed
-     * @since 1.5
+     * @since                           1.5
      */
     public Dimension getMinimumSize(final JComponent c) {
         return super.getMinimumSize(c);
-        //the fix for 4785160 is undone
+        // the fix for 4785160 is undone
     }
 
     /**
-     * Creates the view for an element.  Returns a WrappedPlainView or PlainView.
+     * Creates the view for an element. Returns a WrappedPlainView or PlainView.
      *
-     * @param elem the element
-     * @return the view
+     * @param  elem the element
+     * @return      the view
      */
     public View create(final Element elem) {
         Document doc = elem.getDocument();
-        Object i18nFlag = doc.getProperty("i18n"/*AbstractDocument.I18NProperty*/);
+        Object i18nFlag = doc.getProperty("i18n"/* AbstractDocument.I18NProperty */);
         if ((i18nFlag != null) && i18nFlag.equals(Boolean.TRUE)) {
             // build a view that support bidi
             return createI18N(elem);
@@ -147,8 +148,8 @@ public class DarkTextAreaUI extends DarkTextUI {
      *
      * @throws NullPointerException     {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @see                             javax.swing.JComponent#getBaseline(int, int)
+     * @since                           1.6
      */
     public int getBaseline(final JComponent c, final int width, int height) {
         super.getBaseline(c, width, height);
@@ -176,11 +177,10 @@ public class DarkTextAreaUI extends DarkTextUI {
      * Returns an enum indicating how the baseline of the component changes as the size changes.
      *
      * @throws NullPointerException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @see                         javax.swing.JComponent#getBaseline(int, int)
+     * @since                       1.6
      */
-    public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-        final JComponent c) {
+    public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
     }
@@ -189,7 +189,6 @@ public class DarkTextAreaUI extends DarkTextUI {
     protected DarkCaret.CaretStyle getDefaultCaretStyle() {
         return DarkCaret.CaretStyle.VERTICAL_LINE_STYLE;
     }
-
 
     /**
      * Paragraph for representing plain-text lines that support bidirectional text.
@@ -256,7 +255,7 @@ public class DarkTextAreaUI extends DarkTextUI {
         }
 
         /**
-         * Sets the size of the view.  If the size has changed, layout is redone.  The size is the full size of the view
+         * Sets the size of the view. If the size has changed, layout is redone. The size is the full size of the view
          * including the inset areas.
          *
          * @param width  the width (non negative)
@@ -270,9 +269,9 @@ public class DarkTextAreaUI extends DarkTextUI {
         }
 
         /**
-         * This class can be used to represent a logical view for a flow.  It keeps the children updated to reflect the
+         * This class can be used to represent a logical view for a flow. It keeps the children updated to reflect the
          * state of the model, gives the logical child views access to the view hierarchy, and calculates a preferred
-         * span.  It doesn't do any rendering, layout, or model/view translation.
+         * span. It doesn't do any rendering, layout, or model/view translation.
          */
         protected static class LogicalView extends CompositeView {
 
@@ -302,8 +301,7 @@ public class DarkTextAreaUI extends DarkTextUI {
                 return null;
             }
 
-            protected void childAllocation(final int index, final Rectangle a) {
-            }
+            protected void childAllocation(final int index, final Rectangle a) {}
 
             // The following methods don't do anything useful, they
             // simply keep the class from being abstract.
@@ -325,8 +323,7 @@ public class DarkTextAreaUI extends DarkTextUI {
                 return v.getPreferredSpan(axis);
             }
 
-            public void paint(final Graphics g, final Shape allocation) {
-            }
+            public void paint(final Graphics g, final Shape allocation) {}
 
             protected boolean updateChildren(final DocumentEvent.ElementChange ec,
                                              final DocumentEvent e, final ViewFactory f) {
@@ -334,7 +331,7 @@ public class DarkTextAreaUI extends DarkTextUI {
             }
 
             /**
-             * Forward the DocumentEvent to the given child view.  This is implemented to reparent the child to the
+             * Forward the DocumentEvent to the given child view. This is implemented to reparent the child to the
              * logical view (the children may have been parented by a row in the flow if they fit without breaking) and
              * then execute the superclass behavior.
              *
@@ -342,8 +339,8 @@ public class DarkTextAreaUI extends DarkTextUI {
              * @param e the change information from the associated document
              * @param a the current allocation of the view
              * @param f the factory to use to rebuild if the view has children
-             * @see #forwardUpdate
-             * @since 1.3
+             * @see     #forwardUpdate
+             * @since   1.3
              */
             protected void forwardUpdateToView(final View v, final DocumentEvent e,
                                                final Shape a, final ViewFactory f) {

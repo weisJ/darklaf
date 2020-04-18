@@ -20,21 +20,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform.windows;
 
-import com.sun.jna.Native;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
+import com.sun.jna.Native;
 
 public class PointerUtil {
 
     /**
      * Get the window handle for the window the given component descends from.
      *
-     * @param component the component.
-     * @return the handle.
+     * @param  component the component.
+     * @return           the handle.
      */
     public static long getHWND(final Component component) {
         Window window = component instanceof Window ? (Window) component

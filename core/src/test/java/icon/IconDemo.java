@@ -20,8 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package icon;
+
+import java.awt.*;
+
+import javax.swing.*;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
@@ -29,11 +37,6 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.UIAwareIcon;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class IconDemo implements ComponentDemo {
 
@@ -67,11 +70,13 @@ public class IconDemo implements ComponentDemo {
         JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new FlowLayout());
 
-        controlPanel.add(new JToggleButton("Light/Dark") {{
-            putClientProperty("JToggleButton.variant", "slider");
-            addActionListener(e -> LafManager.installTheme(isSelected() ? new DarculaTheme()
-                                                                        : new IntelliJTheme()));
-        }});
+        controlPanel.add(new JToggleButton("Light/Dark") {
+            {
+                putClientProperty("JToggleButton.variant", "slider");
+                addActionListener(e -> LafManager.installTheme(isSelected() ? new DarculaTheme()
+                                                                            : new IntelliJTheme()));
+            }
+        });
         controlPanel.add(new QuickColorChooser("Themed icon color", UIManager.getColor("TestIcon.color"),
                                                IconDemo::updateThemedIconColor));
 

@@ -20,15 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform;
+
+import java.util.function.Consumer;
 
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
-
-import java.util.function.Consumer;
 
 public class DefaultThemePreferenceProvider implements ThemePreferenceProvider {
     @Override
@@ -37,16 +38,13 @@ public class DefaultThemePreferenceProvider implements ThemePreferenceProvider {
     }
 
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     @Override
-    public void setCallback(final Consumer<PreferredThemeStyle> callback) {
-    }
+    public void setCallback(final Consumer<PreferredThemeStyle> callback) {}
 
     @Override
-    public void setReporting(final boolean reporting) {
-    }
+    public void setReporting(final boolean reporting) {}
 
     @Override
     public boolean isReporting() {

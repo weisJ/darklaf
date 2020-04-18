@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import com.github.weisj.darklaf.util.Alignment;
+import java.awt.*;
+import java.util.function.BiConsumer;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
-import java.awt.*;
-import java.util.function.BiConsumer;
+
+import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.util.Alignment;
 
 /**
  * Content pane for {@link JTabFrame}.
@@ -87,7 +89,6 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         bottomSplitter.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         bottomSplitter.setLeftComponent(bottomLeftPanel);
         bottomSplitter.setRightComponent(bottomRightPanel);
-
 
         topSplit = createSplitPane("topSplit");
         bottomSplit = createSplitPane("bottomSplit");
@@ -187,63 +188,55 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     public void setEnabled(final Alignment a, final boolean enabled, final boolean force) {
         if (enabled == isEnabled(a) && !force) return;
         switch (a) {
-            case NORTH:
-                changeStatus(
-                    enabled, Alignment.NORTH_EAST,
-                    topSplit, topSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
-                    new LayoutWeights(0.0, 0.0, 0.0, 1.0));
+            case NORTH :
+                changeStatus(enabled, Alignment.NORTH_EAST,
+                             topSplit, topSplitter,
+                             new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
+                             new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
-            case NORTH_EAST:
-                changeStatus(
-                    enabled, Alignment.NORTH,
-                    topSplit, topSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
-                    new LayoutWeights(0.0, 0.0, 1.0, 0.0));
+            case NORTH_EAST :
+                changeStatus(enabled, Alignment.NORTH,
+                             topSplit, topSplitter,
+                             new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
+                             new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
-            case EAST:
-                changeStatus(
-                    enabled, Alignment.SOUTH_EAST,
-                    rightSplit, rightSplitter,
-                    new LayoutProportions(HORIZONTAL_PROP_RIGHT, 1.0, 1.0, 0.0),
-                    new LayoutWeights(1.0, 1.0, 0.0, 1.0));
+            case EAST :
+                changeStatus(enabled, Alignment.SOUTH_EAST,
+                             rightSplit, rightSplitter,
+                             new LayoutProportions(HORIZONTAL_PROP_RIGHT, 1.0, 1.0, 0.0),
+                             new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
-            case SOUTH_EAST:
-                changeStatus(
-                    enabled, Alignment.EAST,
-                    rightSplit, rightSplitter,
-                    new LayoutProportions(HORIZONTAL_PROP_RIGHT, 0.0, 1.0, 1.0),
-                    new LayoutWeights(1.0, 1.0, 1.0, 0.0));
+            case SOUTH_EAST :
+                changeStatus(enabled, Alignment.EAST,
+                             rightSplit, rightSplitter,
+                             new LayoutProportions(HORIZONTAL_PROP_RIGHT, 0.0, 1.0, 1.0),
+                             new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
-            case NORTH_WEST:
-                changeStatus(
-                    enabled, Alignment.WEST,
-                    leftSplit, leftSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
-                    new LayoutWeights(0.0, 0.0, 0.0, 1.0));
+            case NORTH_WEST :
+                changeStatus(enabled, Alignment.WEST,
+                             leftSplit, leftSplitter,
+                             new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0),
+                             new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
-            case WEST:
-                changeStatus(
-                    enabled, Alignment.NORTH_WEST,
-                    leftSplit, leftSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
-                    new LayoutWeights(0.0, 0.0, 1.0, 0.0));
+            case WEST :
+                changeStatus(enabled, Alignment.NORTH_WEST,
+                             leftSplit, leftSplitter,
+                             new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0),
+                             new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
-            case SOUTH_WEST:
-                changeStatus(
-                    enabled, Alignment.SOUTH,
-                    bottomSplit, bottomSplitter,
-                    new LayoutProportions(VERTICAL_PROP_BOTTOM, 1.0, 1.0, 0.0),
-                    new LayoutWeights(1.0, 1.0, 0.0, 1.0));
+            case SOUTH_WEST :
+                changeStatus(enabled, Alignment.SOUTH,
+                             bottomSplit, bottomSplitter,
+                             new LayoutProportions(VERTICAL_PROP_BOTTOM, 1.0, 1.0, 0.0),
+                             new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
-            case SOUTH:
-                changeStatus(
-                    enabled, Alignment.SOUTH_WEST,
-                    bottomSplit, bottomSplitter,
-                    new LayoutProportions(VERTICAL_PROP_BOTTOM, 0.0, 1.0, 1.0),
-                    new LayoutWeights(1.0, 1.0, 1.0, 0.0));
+            case SOUTH :
+                changeStatus(enabled, Alignment.SOUTH_WEST,
+                             bottomSplit, bottomSplitter,
+                             new LayoutProportions(VERTICAL_PROP_BOTTOM, 0.0, 1.0, 1.0),
+                             new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
-            case CENTER:
+            case CENTER :
                 break;
         }
         setEnabledFlag(a, enabled);
@@ -320,8 +313,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /**
      * Returns whether the corresponding panel is currently enabled/visible.
      *
-     * @param a the position of the panel.
-     * @return true if enabled.
+     * @param  a the position of the panel.
+     * @return   true if enabled.
      */
     public boolean isEnabled(final Alignment a) {
         if (a == Alignment.CENTER) {
@@ -333,31 +326,31 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
 
     public void setComponentAt(final Alignment a, final Component c) {
         switch (a) {
-            case NORTH:
+            case NORTH :
                 ((PopupContainer) topSplitter.getLeftComponent()).setPopup(c);
                 break;
-            case NORTH_EAST:
+            case NORTH_EAST :
                 ((PopupContainer) topSplitter.getRightComponent()).setPopup(c);
                 break;
-            case EAST:
+            case EAST :
                 ((PopupContainer) rightSplitter.getTopComponent()).setPopup(c);
                 break;
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 ((PopupContainer) rightSplitter.getBottomComponent()).setPopup(c);
                 break;
-            case SOUTH:
+            case SOUTH :
                 ((PopupContainer) bottomSplitter.getRightComponent()).setPopup(c);
                 break;
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 ((PopupContainer) bottomSplitter.getLeftComponent()).setPopup(c);
                 break;
-            case WEST:
+            case WEST :
                 ((PopupContainer) leftSplitter.getBottomComponent()).setPopup(c);
                 break;
-            case NORTH_WEST:
+            case NORTH_WEST :
                 ((PopupContainer) leftSplitter.getTopComponent()).setPopup(c);
                 break;
-            case CENTER:
+            case CENTER :
                 break;
         }
     }
@@ -381,31 +374,31 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     public PopupContainer getContainer(final Alignment alignment) {
         PopupContainer popupComponent;
         switch (alignment) {
-            case NORTH:
+            case NORTH :
                 popupComponent = ((PopupContainer) topSplitter.getLeftComponent());
                 break;
-            case NORTH_EAST:
+            case NORTH_EAST :
                 popupComponent = ((PopupContainer) topSplitter.getRightComponent());
                 break;
-            case EAST:
+            case EAST :
                 popupComponent = ((PopupContainer) rightSplitter.getTopComponent());
                 break;
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 popupComponent = ((PopupContainer) rightSplitter.getBottomComponent());
                 break;
-            case SOUTH:
+            case SOUTH :
                 popupComponent = ((PopupContainer) bottomSplitter.getRightComponent());
                 break;
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 popupComponent = ((PopupContainer) bottomSplitter.getLeftComponent());
                 break;
-            case WEST:
+            case WEST :
                 popupComponent = ((PopupContainer) leftSplitter.getBottomComponent());
                 break;
-            case NORTH_WEST:
+            case NORTH_WEST :
                 popupComponent = ((PopupContainer) leftSplitter.getTopComponent());
                 break;
-            default:
+            default :
                 throw new IllegalArgumentException("CENTER is not supported");
         }
         return popupComponent;
@@ -414,8 +407,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /**
      * Get the popup component at the position.
      *
-     * @param a the position.
-     * @return the popup component at position.
+     * @param  a the position.
+     * @return   the popup component at position.
      */
     public Component getPopupComponent(final Alignment a) {
         return getContainer(a).getPopup();
@@ -426,7 +419,6 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         protected final double splitterPeerDisable;
         protected final double splitDisable;
         protected final double splitterDisable;
-
 
         public LayoutProportions(final double splitRestore, final double splitterPeerDisable,
                                  final double splitDisable, final double splitterDisable) {
@@ -442,7 +434,6 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         protected final double splitterDisable;
         protected final double splitDisable;
         protected final double splitterPeerDisable;
-
 
         public LayoutWeights(final double splitEnable, final double splitterDisable,
                              final double splitDisable, final double splitterPeerDisable) {

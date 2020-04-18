@@ -20,23 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
-import com.github.weisj.darklaf.util.PropertyKey;
-import sun.awt.shell.ShellFolder;
-import sun.swing.FilePane;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileSystemView;
-import javax.swing.plaf.ActionMapUIResource;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicDirectoryModel;
-import javax.swing.plaf.basic.BasicFileChooserUI;
-import javax.swing.plaf.metal.MetalFileChooserUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -51,6 +38,21 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Vector;
 
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.plaf.ActionMapUIResource;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicDirectoryModel;
+import javax.swing.plaf.basic.BasicFileChooserUI;
+import javax.swing.plaf.metal.MetalFileChooserUI;
+
+import sun.awt.shell.ShellFolder;
+import sun.swing.FilePane;
+
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * Metal L&amp;F implementation of a FileChooser.
@@ -124,8 +126,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a new instance of {@code MetalFileChooserUI}.
      *
-     * @param c a component
-     * @return a new instance of {@code MetalFileChooserUI}
+     * @param  c a component
+     * @return   a new instance of {@code MetalFileChooserUI}
      */
     public static ComponentUI createUI(final JComponent c) {
         return new MetalFileChooserUI((JFileChooser) c);
@@ -219,46 +221,46 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         return e -> {
             String s = e.getPropertyName();
             switch (s) {
-                case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY:
+                case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY :
                     doSelectedFileChanged(e);
                     break;
-                case JFileChooser.SELECTED_FILES_CHANGED_PROPERTY:
+                case JFileChooser.SELECTED_FILES_CHANGED_PROPERTY :
                     doSelectedFilesChanged(e);
                     break;
-                case JFileChooser.DIRECTORY_CHANGED_PROPERTY:
-                case "FileChooser.useShellFolder":
+                case JFileChooser.DIRECTORY_CHANGED_PROPERTY :
+                case "FileChooser.useShellFolder" :
                     doDirectoryChanged(e);
                     break;
-                case JFileChooser.FILE_FILTER_CHANGED_PROPERTY:
+                case JFileChooser.FILE_FILTER_CHANGED_PROPERTY :
                     doFilterChanged(e);
                     break;
-                case JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY:
+                case JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY :
                     doFileSelectionModeChanged(e);
                     break;
-                case JFileChooser.ACCESSORY_CHANGED_PROPERTY:
+                case JFileChooser.ACCESSORY_CHANGED_PROPERTY :
                     doAccessoryChanged(e);
                     break;
-                case JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY:
-                case JFileChooser.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY:
+                case JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY :
+                case JFileChooser.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY :
                     doApproveButtonTextChanged(e);
                     break;
-                case JFileChooser.DIALOG_TYPE_CHANGED_PROPERTY:
+                case JFileChooser.DIALOG_TYPE_CHANGED_PROPERTY :
                     doDialogTypeChanged(e);
                     break;
-                case JFileChooser.APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY:
+                case JFileChooser.APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY :
                     doApproveButtonMnemonicChanged(e);
                     break;
-                case JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY:
+                case JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY :
                     doControlButtonsChanged(e);
                     break;
-                case PropertyKey.COMPONENT_ORIENTATION:
+                case PropertyKey.COMPONENT_ORIENTATION :
                     ComponentOrientation o = (ComponentOrientation) e.getNewValue();
                     JFileChooser cc = (JFileChooser) e.getSource();
                     if (o != e.getOldValue()) {
                         cc.applyComponentOrientation(o);
                     }
                     break;
-                case PropertyKey.ANCESTOR:
+                case PropertyKey.ANCESTOR :
                     if (e.getOldValue() == null && e.getNewValue() != null) {
                         // Ancestor was added, set initial focus
                         fileNameTextField.selectAll();
@@ -405,7 +407,6 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     /* The following methods are used by the PropertyChange Listener */
-
     /**
      * Sets the directory name.
      *
@@ -430,8 +431,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Creates a selection listener for the list of files and directories.
      *
-     * @param fc a <code>JFileChooser</code>
-     * @return a <code>ListSelectionListener</code>
+     * @param  fc a <code>JFileChooser</code>
+     * @return    a <code>ListSelectionListener</code>
      */
     public ListSelectionListener createListSelectionListener(final JFileChooser fc) {
         return super.createListSelectionListener(fc);
@@ -442,7 +443,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * selection event.
      *
      * @param directorySelected if a directory is currently selected.
-     * @since 1.4
+     * @since                   1.4
      */
     protected void setDirectorySelected(final boolean directorySelected) {
         super.setDirectorySelected(directorySelected);
@@ -483,8 +484,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a new instance of {@code DataModel} for {@code DirectoryComboBox}.
      *
-     * @param fc a {@code JFileChooser}
-     * @return a new instance of {@code DataModel} for {@code DirectoryComboBox}
+     * @param  fc a {@code JFileChooser}
+     * @return    a new instance of {@code DataModel} for {@code DirectoryComboBox}
      */
     protected DirectoryComboBoxModel createDirectoryComboBoxModel(final JFileChooser fc) {
         return new DirectoryComboBoxModel();
@@ -493,8 +494,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a new instance of {@code DirectoryComboBoxRenderer}.
      *
-     * @param fc a {@code JFileChooser}
-     * @return a new instance of {@code DirectoryComboBoxRenderer}
+     * @param  fc a {@code JFileChooser}
+     * @return    a new instance of {@code DirectoryComboBoxRenderer}
      */
     protected DefaultListCellRenderer createDirectoryComboBoxRenderer(final JFileChooser fc) {
         return new DirectoryComboBoxRenderer();
@@ -600,8 +601,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a details view.
      *
-     * @param fc a {@code JFileChooser}
-     * @return the list
+     * @param  fc a {@code JFileChooser}
+     * @return    the list
      */
     protected JPanel createList(final JFileChooser fc) {
         return filePane.createList();
@@ -610,8 +611,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a details view.
      *
-     * @param fc a {@code JFileChooser}
-     * @return the details view
+     * @param  fc a {@code JFileChooser}
+     * @return    the details view
      */
     protected JPanel createDetailsView(final JFileChooser fc) {
         return filePane.createDetailsView();
@@ -623,8 +624,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * The preferred size is at least as large, in both height and width, as the preferred size recommended by the file
      * chooser's layout manager.
      *
-     * @param c a <code>JFileChooser</code>
-     * @return a <code>Dimension</code> specifying the preferred width and height of the file chooser
+     * @param  c a <code>JFileChooser</code>
+     * @return   a <code>Dimension</code> specifying the preferred width and height of the file chooser
      */
     @Override
     public Dimension getPreferredSize(final JComponent c) {
@@ -641,8 +642,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Returns the minimum size of the <code>JFileChooser</code>.
      *
-     * @param c a <code>JFileChooser</code>
-     * @return a <code>Dimension</code> specifying the minimum width and height of the file chooser
+     * @param  c a <code>JFileChooser</code>
+     * @return   a <code>Dimension</code> specifying the minimum width and height of the file chooser
      */
     @Override
     public Dimension getMinimumSize(final JComponent c) {
@@ -652,8 +653,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Returns the maximum size of the <code>JFileChooser</code>.
      *
-     * @param c a <code>JFileChooser</code>
-     * @return a <code>Dimension</code> specifying the maximum width and height of the file chooser
+     * @param  c a <code>JFileChooser</code>
+     * @return   a <code>Dimension</code> specifying the maximum width and height of the file chooser
      */
     @Override
     public Dimension getMaximumSize(final JComponent c) {
@@ -702,11 +703,9 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         protected final int hGap = 5;
         protected int topMargin = 17;
 
-        public void addLayoutComponent(final String string, final Component comp) {
-        }
+        public void addLayoutComponent(final String string, final Component comp) {}
 
-        public void removeLayoutComponent(final Component c) {
-        }
+        public void removeLayoutComponent(final Component c) {}
 
         public Dimension preferredLayoutSize(final Container c) {
             return minimumLayoutSize(c);
@@ -826,8 +825,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
          *
          * @param list an instance of {@code JList}
          */
-        public SingleClickListener(final JList<?> list) {
-        }
+        public SingleClickListener(final JList<?> list) {}
     }
 
     /**
@@ -836,14 +834,13 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * @deprecated As of JDK version 9. Obsolete class.
      */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected static class FileRenderer extends DefaultListCellRenderer {
-    }
+    protected static class FileRenderer extends DefaultListCellRenderer {}
 
     //
     // Renderer for DirectoryComboBox
     //
     @SuppressWarnings("serial")
-        // Superclass is not serializable across versions
+    // Superclass is not serializable across versions
     class DirectoryComboBoxRenderer extends DefaultListCellRenderer {
         final IndentIcon ii = new IndentIcon();
 
@@ -887,7 +884,6 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         public int getIconHeight() {
             return icon.getIconHeight();
         }
-
     }
 
     /**
@@ -930,8 +926,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             directories.clear();
 
             File[] baseFolders = (useShellFolder)
-                                 ? (File[]) ShellFolder.get("fileChooserComboBoxFolders")
-                                 : fsv.getRoots();
+                                                  ? (File[]) ShellFolder.get("fileChooserComboBoxFolders")
+                                                  : fsv.getRoots();
             directories.addAll(Arrays.asList(baseFolders));
 
             // Get the canonical (full) path. This has the side
@@ -994,8 +990,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         /**
          * Returns the depth of {@code i}-th file.
          *
-         * @param i an index
-         * @return the depth of {@code i}-th file
+         * @param  i an index
+         * @return   the depth of {@code i}-th file
          */
         public int getDepth(final int i) {
             return (depths != null && i >= 0 && i < depths.length) ? depths[i] : 0;
@@ -1014,12 +1010,9 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             fireContentsChanged(this, -1, -1);
         }
 
-
         public Object getSelectedItem() {
             return selectedDirectory;
         }
-
-
     }
 
     /**
@@ -1027,7 +1020,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      */
     @SuppressWarnings("serial") // Same-version serialization only
     protected class FilterComboBoxModel extends AbstractListModel<Object>
-        implements ComboBoxModel<Object>, PropertyChangeListener {
+                                        implements ComboBoxModel<Object>, PropertyChangeListener {
 
         /**
          * An array of file filters.
@@ -1133,7 +1126,6 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             super();
             setAlignmentX(JComponent.LEFT_ALIGNMENT);
         }
-
 
         AlignedLabel(final String text) {
             super(text);

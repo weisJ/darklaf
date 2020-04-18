@@ -20,12 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform.macos;
 
-import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
-
 import java.awt.*;
+
+import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
 
 public class JNIThemeInfoMacOS {
 
@@ -48,7 +49,6 @@ public class JNIThemeInfoMacOS {
      */
     private static native int nativeGetAccentColor();
 
-
     /**
      * Returns the current accent color.
      *
@@ -57,23 +57,23 @@ public class JNIThemeInfoMacOS {
     public static Color getAccentColor() {
         int index = nativeGetAccentColor();
         switch (index) {
-            case -2:
+            case -2 :
                 return MacOSColors.BLUE;
-            case -1:
+            case -1 :
                 return MacOSColors.GRAY;
-            case 0:
+            case 0 :
                 return MacOSColors.RED;
-            case 1:
+            case 1 :
                 return MacOSColors.ORANGE;
-            case 2:
+            case 2 :
                 return MacOSColors.YELLOW;
-            case 3:
+            case 3 :
                 return MacOSColors.GREEN;
-            case 5:
+            case 5 :
                 return MacOSColors.LILAC;
-            case 6:
+            case 6 :
                 return MacOSColors.ROSE;
-            default:
+            default :
                 return null;
         }
     }
@@ -82,7 +82,6 @@ public class JNIThemeInfoMacOS {
      * Returns the selection color as an AARRGGBB integer.
      */
     private static native int nativeGetSelectionColor();
-
 
     /**
      * Returns the current selection color.
@@ -99,8 +98,8 @@ public class JNIThemeInfoMacOS {
     /**
      * Create an preference change listener.
      *
-     * @param callback the event callback.
-     * @return the pointer to the listener.
+     * @param  callback the event callback.
+     * @return          the pointer to the listener.
      */
     public static native long createPreferenceChangeListener(final Runnable callback);
 

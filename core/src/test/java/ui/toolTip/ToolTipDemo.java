@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.toolTip;
+
+import javax.swing.*;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
 import com.github.weisj.darklaf.util.Alignment;
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
-import javax.swing.*;
 
 public class ToolTipDemo implements ComponentDemo {
 
@@ -51,40 +53,54 @@ public class ToolTipDemo implements ComponentDemo {
 
         JPanel controlPanel = panel.addControls(3);
 
-        controlPanel.add(new JCheckBox("Align inside") {{
-            setSelected(context.isAlignInside());
-            addActionListener(e -> context.setAlignInside(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("Ignore Border") {{
-            setSelected(context.isIgnoreBorder());
-            addActionListener(e -> context.setIgnoreBorder(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("Use best fit") {{
-            setSelected(context.isBestFit());
-            addActionListener(e -> context.setUseBestFit(isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("Align inside") {
+            {
+                setSelected(context.isAlignInside());
+                addActionListener(e -> context.setAlignInside(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("Ignore Border") {
+            {
+                setSelected(context.isIgnoreBorder());
+                addActionListener(e -> context.setIgnoreBorder(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("Use best fit") {
+            {
+                setSelected(context.isBestFit());
+                addActionListener(e -> context.setUseBestFit(isSelected()));
+            }
+        });
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Tooltip Style:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {{
-            setSelectedItem(ToolTipStyle.BALLOON);
-            addItemListener(e -> context.setToolTipStyle((ToolTipStyle) e.getItem()));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {
+            {
+                setSelectedItem(ToolTipStyle.BALLOON);
+                addItemListener(e -> context.setToolTipStyle((ToolTipStyle) e.getItem()));
+            }
+        }, "sgx");
         controlPanel.add(new JLabel("Alignment:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {{
-            setSelectedItem(context.getAlignment());
-            addItemListener(e -> context.setAlignment((Alignment) e.getItem()));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {
+            {
+                setSelectedItem(context.getAlignment());
+                addItemListener(e -> context.setAlignment((Alignment) e.getItem()));
+            }
+        }, "sgx");
         controlPanel.add(new JLabel("Center Alignment:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {{
-            setSelectedItem(context.getCenterAlignment());
-            addItemListener(e -> context.setCenterAlignment((Alignment) e.getItem()));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {
+            {
+                setSelectedItem(context.getCenterAlignment());
+                addItemListener(e -> context.setCenterAlignment((Alignment) e.getItem()));
+            }
+        }, "sgx");
         controlPanel.add(new JLabel("Alignment Strategy:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<AlignmentStrategy>(AlignmentStrategy.values()) {{
-            setSelectedItem(context.getAlignmentStrategy());
-            addItemListener(e -> context.setAlignmentStrategy((AlignmentStrategy) e.getItem()));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<AlignmentStrategy>(AlignmentStrategy.values()) {
+            {
+                setSelectedItem(context.getAlignmentStrategy());
+                addItemListener(e -> context.setAlignmentStrategy((AlignmentStrategy) e.getItem()));
+            }
+        }, "sgx");
         return panel;
     }
 

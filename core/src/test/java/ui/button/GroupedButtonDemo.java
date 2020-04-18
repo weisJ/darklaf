@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.button;
+
+import javax.swing.*;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.AlignmentExt;
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
-import javax.swing.*;
 
 public class GroupedButtonDemo implements ComponentDemo {
 
@@ -63,15 +65,17 @@ public class GroupedButtonDemo implements ComponentDemo {
     protected AbstractButton createButton(final Icon icon, final Icon selected,
                                           final ButtonGroup bg, final AlignmentExt a,
                                           final boolean isSelected, final AbstractButton prev) {
-        return new JToggleButton(icon) {{
-            setSelectedIcon(selected);
-            putClientProperty(DarkButtonUI.KEY_THIN, true);
-            putClientProperty(DarkButtonUI.KEY_CORNER, a);
-            if (prev != null) prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
-            putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, prev);
-            setSelected(isSelected);
-            bg.add(this);
-        }};
+        return new JToggleButton(icon) {
+            {
+                setSelectedIcon(selected);
+                putClientProperty(DarkButtonUI.KEY_THIN, true);
+                putClientProperty(DarkButtonUI.KEY_CORNER, a);
+                if (prev != null) prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
+                putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, prev);
+                setSelected(isSelected);
+                bg.add(this);
+            }
+        };
     }
 
     @Override

@@ -20,22 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
-
 package com.github.weisj.darklaf.components;
 
+import java.awt.*;
+import java.awt.event.AWTEventListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicRootPaneUI;
 
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPipette;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicRootPaneUI;
-import java.awt.*;
-import java.awt.event.AWTEventListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener {
     protected final JComponent parent;
@@ -54,7 +54,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         this.colorListener = colorListener;
         robot = createRobot();
     }
-
 
     private static Robot createRobot() {
         try {
@@ -80,7 +79,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         return robot.getPixelColor(location.x, location.y);
     }
 
-
     protected Color getInitialColor() {
         return initialColor;
     }
@@ -90,7 +88,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         this.initialColor = initialColor;
         setColor(initialColor);
     }
-
 
     @Override
     public Color getColor() {
@@ -106,8 +103,8 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         Window picker = getOrCreatePickerWindow();
         Toolkit.getDefaultToolkit().addAWTEventListener(this,
                                                         AWTEvent.MOUSE_MOTION_EVENT_MASK
-                                                        | AWTEvent.MOUSE_EVENT_MASK
-                                                        | AWTEvent.KEY_EVENT_MASK);
+                                                              | AWTEvent.MOUSE_EVENT_MASK
+                                                              | AWTEvent.KEY_EVENT_MASK);
         updateLocation();
         picker.setVisible(true);
         return picker;
@@ -138,7 +135,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         Toolkit.getDefaultToolkit().removeAWTEventListener(this);
     }
 
-
     protected Window getOrCreatePickerWindow() {
         if (pickerWindow == null) {
             Window owner = SwingUtilities.getWindowAncestor(parent);
@@ -151,7 +147,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         }
         return pickerWindow;
     }
-
 
     protected Point updateLocation() {
         PointerInfo pointerInfo = MouseInfo.getPointerInfo();
@@ -169,7 +164,6 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
         return new PickerWindow();
     }
 
-
     protected Window getPickerWindow() {
         return pickerWindow;
     }
@@ -183,23 +177,23 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
     public void eventDispatched(final AWTEvent event) {
         if (pickerWindow == null || !pickerWindow.isVisible()) return;
         switch (event.getID()) {
-            case MouseEvent.MOUSE_PRESSED:
+            case MouseEvent.MOUSE_PRESSED :
                 ((MouseEvent) event).consume();
                 pickAndClose();
                 break;
-            case MouseEvent.MOUSE_CLICKED:
+            case MouseEvent.MOUSE_CLICKED :
                 ((MouseEvent) event).consume();
                 break;
-            case KeyEvent.KEY_PRESSED:
+            case KeyEvent.KEY_PRESSED :
                 downKeyCode = ((KeyEvent) event).getKeyCode();
                 switch (downKeyCode) {
-                    case KeyEvent.VK_ESCAPE:
+                    case KeyEvent.VK_ESCAPE :
                         cancelPipette();
                         break;
-                    case KeyEvent.VK_ENTER:
+                    case KeyEvent.VK_ENTER :
                         pickAndClose();
                         break;
-                    default:
+                    default :
                         break;
                 }
                 if (!keyDown) {
@@ -207,14 +201,14 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
                     updatePipette(true);
                 }
                 break;
-            case KeyEvent.KEY_RELEASED:
+            case KeyEvent.KEY_RELEASED :
                 keyDown = false;
                 Window picker = getPickerWindow();
                 if (picker != null) {
                     picker.repaint();
                 }
                 break;
-            default:
+            default :
                 break;
         }
     }

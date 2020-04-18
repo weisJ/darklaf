@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.decorators;
 
@@ -29,8 +30,7 @@ import java.awt.event.MouseMotionListener;
 public interface MouseMovementListener extends MouseMotionListener {
 
     @Override
-    default void mouseDragged(final MouseEvent e) {
-    }
+    default void mouseDragged(final MouseEvent e) {}
 
     @Override
     void mouseMoved(MouseEvent e);

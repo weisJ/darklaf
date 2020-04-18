@@ -20,19 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.optionpane;
 
-import sun.swing.DefaultLookup;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicOptionPaneUI;
-import java.awt.*;
+
+import sun.swing.DefaultLookup;
 
 public class DarkOptionPaneUI extends BasicOptionPaneUI {
-
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkOptionPaneUI();
@@ -46,11 +47,13 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
         if (border != null) {
             bottom.setBorder(border);
         }
-        bottom.setLayout(new DarkButtonAreaLayout(
-            DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false),
-            DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
-            DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER),
-            DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false)));
+        bottom.setLayout(new DarkButtonAreaLayout(DefaultLookup.getBoolean(optionPane, this,
+                                                                           "OptionPane.sameSizeButtons", false),
+                                                  DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
+                                                  DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation",
+                                                                       SwingConstants.CENTER),
+                                                  DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast",
+                                                                           false)));
         addButtonComponents(bottom, getButtons(), getInitialValueIndex());
         return bottom;
     }
@@ -163,18 +166,17 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                 return orientation;
             }
             switch (orientation) {
-                case SwingConstants.LEFT:
+                case SwingConstants.LEFT :
                     return SwingConstants.RIGHT;
-                case SwingConstants.RIGHT:
+                case SwingConstants.RIGHT :
                     return SwingConstants.LEFT;
-                case SwingConstants.CENTER:
+                case SwingConstants.CENTER :
                     return SwingConstants.CENTER;
             }
             return SwingConstants.LEFT;
         }
 
-        public void addLayoutComponent(final String string, final Component comp) {
-        }
+        public void addLayoutComponent(final String string, final Component comp) {}
 
         public void layoutContainer(final Container container) {
             Component[] children = container.getComponents();
@@ -208,26 +210,27 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                     totalButtonWidth += (numChildren - 1) * padding;
                 }
 
-
                 switch (getOrientation(container)) {
-                    case SwingConstants.LEFT:
+                    case SwingConstants.LEFT :
                         x = insets.left;
                         break;
-                    case SwingConstants.RIGHT:
+                    case SwingConstants.RIGHT :
                         x = container.getWidth() - insets.right - totalButtonWidth;
                         break;
-                    case SwingConstants.CENTER:
+                    case SwingConstants.CENTER :
                         if (getCentersChildren() || numChildren < 2) {
                             x = (container.getWidth() - totalButtonWidth) / 2;
                         } else {
                             x = insets.left;
                             if (getSyncAllWidths()) {
                                 xOffset = (container.getWidth() - insets.left -
-                                           insets.right - totalButtonWidth) /
+                                           insets.right - totalButtonWidth)
+                                          /
                                           (numChildren - 1) + maxWidth;
                             } else {
                                 xOffset = (container.getWidth() - insets.left -
-                                           insets.right - totalButtonWidth) /
+                                           insets.right - totalButtonWidth)
+                                          /
                                           (numChildren - 1);
                             }
                         }
@@ -235,8 +238,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                 }
 
                 for (int counter = 0; counter < numChildren; counter++) {
-                    int index = (reverse) ? numChildren - counter - 1 :
-                                counter;
+                    int index = (reverse) ? numChildren - counter - 1 : counter;
                     Dimension pref = children[index].getPreferredSize();
 
                     if (getSyncAllWidths()) {
@@ -297,7 +299,6 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
             return minimumLayoutSize(c);
         }
 
-        public void removeLayoutComponent(final Component c) {
-        }
+        public void removeLayoutComponent(final Component c) {}
     }
 }

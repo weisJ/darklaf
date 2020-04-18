@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import javax.swing.*;
 import java.awt.*;
+
+import javax.swing.*;
 
 /**
  * @author Jannis Weis
@@ -34,7 +36,6 @@ public class ToggleIcon implements Icon {
     private final Icon activeIcon;
     private final Icon inactiveIcon;
     private boolean active = true;
-
 
     public ToggleIcon(final Icon active, final Icon inactive) {
         this.activeIcon = active;
@@ -49,7 +50,6 @@ public class ToggleIcon implements Icon {
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         currentIcon().paintIcon(c, g, x, y);
     }
-
 
     private Icon currentIcon() {
         return active ? activeIcon : inactiveIcon;

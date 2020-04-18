@@ -20,13 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.spinner;
 
-import com.github.weisj.darklaf.components.ArrowButton;
-import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,9 +35,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSpinnerUI;
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
+
+import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Konstantin Bulenkov
@@ -64,7 +66,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     private JButton prevButton;
     private Component editorComponent;
     private JButton nextButton;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSpinnerUI();
@@ -197,7 +198,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         }
     }
 
-
     private JButton createArrow(final int direction) {
         int buttonPad = UIManager.getInt("Spinner.buttonPad");
         Insets insets = new Insets(0, buttonPad, 0, buttonPad);
@@ -269,7 +269,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
             paintSpinBackground((Graphics2D) g, width, height, size, arc);
         }
     }
-
 
     protected void paintSpinBackground(final Graphics2D g, final int width, final int height,
                                        final int bSize, final int arc) {

@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
@@ -51,12 +52,10 @@ final class AlignmentHelper {
     /**
      * Create mapper from component mapper.
      *
-     * @param mapperX x component mapper.
-     * @param mapperY y component mapper.
-     * @return mapper that aligns a rectangle relative to other rectangle.
+     * @param  mapperX x component mapper.
+     * @param  mapperY y component mapper.
+     * @return         mapper that aligns a rectangle relative to other rectangle.
      */
-
-
     static BiFunction<Dimension, Rectangle, Point> align(final Mapper mapperX,
                                                          final Mapper mapperY) {
         return (d, p) -> new Point(mapperX.apply(d, p), mapperY.apply(d, p));
@@ -65,6 +64,5 @@ final class AlignmentHelper {
     /**
      * Helper interface to avoid long type names.
      */
-    private interface Mapper extends BiFunction<Dimension, Rectangle, Integer> {
-    }
+    private interface Mapper extends BiFunction<Dimension, Rectangle, Integer> {}
 }

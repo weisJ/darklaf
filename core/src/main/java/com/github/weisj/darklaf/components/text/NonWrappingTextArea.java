@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.text;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import java.awt.*;
 
 /**
  * JTextPane that keeps the original width of text.
  *
  * @author Jannis Weis
- * @since 2018
+ * @since  2018
  */
 public class NonWrappingTextArea extends JTextArea {
 

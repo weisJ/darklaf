@@ -20,9 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
-
 package com.github.weisj.darklaf.platform.windows.ui;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
+
+import javax.accessibility.AccessibleContext;
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
+
+import sun.awt.SunToolkit;
 
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
@@ -31,16 +43,6 @@ import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.platform.windows.PointerUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.Scale;
-import sun.awt.SunToolkit;
-
-import javax.accessibility.AccessibleContext;
-import javax.swing.*;
-import javax.swing.plaf.UIResource;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
@@ -68,8 +70,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         @Override
-        public void componentRemoved(final ContainerEvent e) {
-        }
+        public void componentRemoved(final ContainerEvent e) {}
     };
     private boolean oldResizable;
     private PropertyChangeListener propertyChangeListener;
@@ -132,7 +133,6 @@ public class WindowsTitlePane extends CustomTitlePane {
         return createButton(accessibleName, icon, action, false);
     }
 
-
     private static JButton createButton(final String accessibleName, final Icon icon, final Action action,
                                         final boolean close) {
         JButton button = new JButton() {
@@ -171,10 +171,10 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     @Override
     public Insets getWindowSizeAdjustment() {
-        //Compensate for the insets of the native window peer that include the decorations.
+        // Compensate for the insets of the native window peer that include the decorations.
         Insets insets = window != null && windowHandle != 0
-                        ? window.getInsets()
-                        : new Insets(0, 0, 0, 0);
+                                                            ? window.getInsets()
+                                                            : new Insets(0, 0, 0, 0);
         insets.set(-insets.top, -insets.left, -insets.bottom, -insets.right);
         return insets;
     }
@@ -284,7 +284,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     protected void addMenuBar(final JMenuBar menuBar) {
         if (menuBar != null) {
             this.menuBar = menuBar;
-            //Otherwise, a white bar will appear where the menuBar used to be.
+            // Otherwise, a white bar will appear where the menuBar used to be.
             menuBar.setPreferredSize(new Dimension(0, 0));
             menuBar.setOpaque(false);
             add(menuBar);
@@ -299,21 +299,21 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private void determineColors() {
         switch (getDecorationStyle()) {
-            case JRootPane.ERROR_DIALOG:
+            case JRootPane.ERROR_DIALOG :
                 activeBackground = UIManager.getColor("Windows.OptionPane.errorDialog.titlePane.background");
                 activeForeground = UIManager.getColor("Windows.OptionPane.errorDialog.titlePane.foreground");
                 break;
-            case JRootPane.QUESTION_DIALOG:
-            case JRootPane.COLOR_CHOOSER_DIALOG:
-            case JRootPane.FILE_CHOOSER_DIALOG:
+            case JRootPane.QUESTION_DIALOG :
+            case JRootPane.COLOR_CHOOSER_DIALOG :
+            case JRootPane.FILE_CHOOSER_DIALOG :
                 activeBackground = UIManager.getColor("Windows.OptionPane.questionDialog.titlePane.background");
                 activeForeground = UIManager.getColor("Windows.OptionPane.questionDialog.titlePane.foreground");
                 break;
-            case JRootPane.WARNING_DIALOG:
+            case JRootPane.WARNING_DIALOG :
                 activeBackground = UIManager.getColor("Windows.OptionPane.warningDialog.titlePane.background");
                 activeForeground = UIManager.getColor("Windows.OptionPane.warningDialog.titlePane.foreground");
                 break;
-            default: //JRootPane.Frame
+            default : // JRootPane.Frame
                 activeBackground = UIManager.getColor("Windows.TitlePane.background");
                 activeForeground = UIManager.getColor("Windows.TitlePane.foreground");
                 break;
@@ -335,15 +335,14 @@ public class WindowsTitlePane extends CustomTitlePane {
         windowIconButton.setComponentPopupMenu(createMenu());
         windowIconButton.putClientProperty("JButton.variant", "onlyLabel");
         windowIconButton.addActionListener(e -> windowIconButton
-            .getComponentPopupMenu()
-            .show(windowIconButton,
-                  windowIconButton.getWidth() / 2,
-                  windowIconButton.getHeight() / 2));
+                                                                .getComponentPopupMenu()
+                                                                .show(windowIconButton,
+                                                                      windowIconButton.getWidth() / 2,
+                                                                      windowIconButton.getHeight() / 2));
         windowIconButton.setFocusable(false);
         windowIconButton.setBorderPainted(false);
         return windowIconButton;
     }
-
 
     private JPopupMenu createMenu() {
         JPopupMenu menu = new JPopupMenu();
@@ -354,21 +353,29 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private void addMenuItems(final JPopupMenu menu) {
-        menu.add(new JMenuItem(restoreAction) {{
-            setDisabledIcon(restoreIcon);
-        }});
-        menu.add(new JMenuItem(minimizeAction) {{
-            setDisabledIcon(minimizeIcon);
-        }});
+        menu.add(new JMenuItem(restoreAction) {
+            {
+                setDisabledIcon(restoreIcon);
+            }
+        });
+        menu.add(new JMenuItem(minimizeAction) {
+            {
+                setDisabledIcon(minimizeIcon);
+            }
+        });
         if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
-            menu.add(new JMenuItem(maximizeAction) {{
-                setDisabledIcon(maximizeIcon);
-            }});
+            menu.add(new JMenuItem(maximizeAction) {
+                {
+                    setDisabledIcon(maximizeIcon);
+                }
+            });
         }
         menu.addSeparator();
-        menu.add(new JMenuItem(closeAction) {{
-            setDisabledIcon(closeIcon);
-        }});
+        menu.add(new JMenuItem(closeAction) {
+            {
+                setDisabledIcon(closeIcon);
+            }
+        });
     }
 
     private void close() {
@@ -377,7 +384,6 @@ public class WindowsTitlePane extends CustomTitlePane {
             window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
         }
     }
-
 
     private Window getWindow() {
         return window;
@@ -423,7 +429,6 @@ public class WindowsTitlePane extends CustomTitlePane {
         maximizeToggleButton = createButton("Maximize", maximizeIcon, restoreAction);
         windowIconButton = createWindowIcon();
     }
-
 
     private LayoutManager createLayout() {
         return new TitlePaneLayout();
@@ -564,9 +569,8 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     protected boolean isLeftToRight(final Window window) {
-        return (window == null) ?
-               getRootPane().getComponentOrientation().isLeftToRight() :
-               window.getComponentOrientation().isLeftToRight();
+        return (window == null) ? getRootPane().getComponentOrientation().isLeftToRight()
+                                : window.getComponentOrientation().isLeftToRight();
     }
 
     private void updateSystemIcon() {
@@ -587,7 +591,8 @@ public class WindowsTitlePane extends CustomTitlePane {
                                                                        Scale.scaleHeight(ICON_SIZE),
                                                                        Image.SCALE_AREA_AVERAGING));
         } else {
-            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, Scale.scaleWidth(ICON_SIZE),
+            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons,
+                                                                      Scale.scaleWidth(ICON_SIZE),
                                                                       Scale.scaleHeight(ICON_SIZE)));
         }
         if (windowIconButton != null) {
@@ -608,7 +613,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class MinimizeAction extends AbstractAction {
         public MinimizeAction() {
-            //UIManager.getString("Minimize", getLocale())
+            // UIManager.getString("Minimize", getLocale())
             super("Minimize", minimizeIcon);
         }
 
@@ -664,11 +669,9 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private class TitlePaneLayout implements LayoutManager {
-        public void addLayoutComponent(final String name, final Component c) {
-        }
+        public void addLayoutComponent(final String name, final Component c) {}
 
-        public void removeLayoutComponent(final Component c) {
-        }
+        public void removeLayoutComponent(final Component c) {}
 
         @Override
         public Dimension preferredLayoutSize(final Container parent) {
@@ -690,7 +693,6 @@ public class WindowsTitlePane extends CustomTitlePane {
             minimizeButton.setBounds(Integer.MIN_VALUE, Integer.MIN_VALUE, 0, 0);
             maximizeToggleButton.setBounds(Integer.MIN_VALUE, Integer.MIN_VALUE, 0, 0);
 
-
             int w = getWidth();
             int x;
             int start = 0;
@@ -700,9 +702,11 @@ public class WindowsTitlePane extends CustomTitlePane {
             int right = 0;
 
             if (windowIconButton.getIcon() != null) {
-                int windowButtonWidth = windowIconButton.getIcon() != null ?
-                                        Math.max(windowIconButton.getIcon().getIconHeight(),
-                                                 windowIconButton.getIcon().getIconWidth()) : ICON_WIDTH;
+                int windowButtonWidth = windowIconButton.getIcon() != null ? Math.max(windowIconButton.getIcon()
+                                                                                                      .getIconHeight(),
+                                                                                      windowIconButton.getIcon()
+                                                                                                      .getIconWidth())
+                                                                           : ICON_WIDTH;
                 windowButtonWidth = Math.min(ICON_WIDTH, windowButtonWidth);
                 windowIconButton.setBounds(start + PAD / 2, y, windowButtonWidth, height);
                 start += windowButtonWidth + PAD;
@@ -811,5 +815,4 @@ public class WindowsTitlePane extends CustomTitlePane {
             setActive(false);
         }
     }
-
 }

@@ -20,13 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.util.Enumeration;
+import java.util.Objects;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -36,13 +40,12 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.util.Enumeration;
-import java.util.Objects;
+
+import sun.swing.SwingUtilities2;
+import sun.swing.UIAction;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * The type Dark table header ui bridge.
@@ -59,9 +62,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     /**
      * The constant focusListener.
      */
-//
-// Instance Variables
-//
+    //
+    // Instance Variables
+    //
     protected static final FocusListener focusListener = new FocusListener() {
         public void focusGained(final FocusEvent e) {
             repaintHeader(e.getSource());
@@ -74,8 +77,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         protected void repaintHeader(final Object source) {
             if (source instanceof JTableHeader) {
                 JTableHeader th = (JTableHeader) source;
-                DarkTableHeaderUIBridge ui =
-                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+                DarkTableHeaderUIBridge ui = (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(),
+                                                                                              DarkTableHeaderUIBridge.class);
                 if (ui == null) {
                     return;
                 }
@@ -86,34 +89,34 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     /**
      * The Rollover column.
      */
-// The column header over which the mouse currently is.
+    // The column header over which the mouse currently is.
     protected int rolloverColumn = -1;
     /**
      * The Selected column index.
      */
-// The column that should be highlighted when the table header has the focus.
+    // The column that should be highlighted when the table header has the focus.
     protected int selectedColumnIndex = 0; // Read ONLY via getSelectedColumnIndex!
 
     /**
      * Returns a new instance of {@code DarkTableHeaderUIBridge}.
      *
-     * @param h a component.
-     * @return a new instance of {@code DarkTableHeaderUIBridge}
+     * @param  h a component.
+     * @return   a new instance of {@code DarkTableHeaderUIBridge}
      */
     public static ComponentUI createUI(final JComponent h) {
         return new DarkTableHeaderUIBridge();
     }
 
-//
-//  Factory methods for the Listeners
-//
+    //
+    // Factory methods for the Listeners
+    //
 
     /**
      * Can resize boolean.
      *
-     * @param column the column
-     * @param header the header
-     * @return the boolean
+     * @param  column the column
+     * @param  header the header
+     * @return        the boolean
      */
     protected static boolean canResize(final TableColumn column,
                                        final JTableHeader header) {
@@ -121,9 +124,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                && column.getResizable();
     }
 
-//
-//  The installation/uninstall procedures and support
-//
+    //
+    // The installation/uninstall procedures and support
+    //
 
     /**
      * Update rollover column.
@@ -146,12 +149,12 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     /**
      * Select next column int.
      *
-     * @param doIt the do it
-     * @return the int
+     * @param  doIt the do it
+     * @return      the int
      */
-//
-// Support for keyboard and mouse access
-//
+    //
+    // Support for keyboard and mouse access
+    //
     protected int selectNextColumn(final boolean doIt) {
         int newIndex = getSelectedColumnIndex();
         if (newIndex < header.getColumnModel().getColumnCount() - 1) {
@@ -212,7 +215,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         return new DarkTableHeaderUIBridge.MouseInputHandler();
     }
 
-//  Installation
+    // Installation
 
     /**
      * Used by selectColumn to scroll horizontally, if necessary, to ensure that the newly selected column is visible.
@@ -223,7 +226,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         Container container;
         JTable table;
 
-        //Test whether the header is in a scroll pane and has a table.
+        // Test whether the header is in a scroll pane and has a table.
         if ((header.getParent() == null) ||
             ((container = header.getParent().getParent()) == null) ||
             !(container instanceof JScrollPane) ||
@@ -231,7 +234,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             return;
         }
 
-        //Now scroll, if necessary.
+        // Now scroll, if necessary.
         Rectangle vis = table.getVisibleRect();
         Rectangle cellBounds = table.getCellRect(0, col, true);
         vis.x = cellBounds.x;
@@ -242,8 +245,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     /**
      * Select previous column int.
      *
-     * @param doIt the do it
-     * @return the int
+     * @param  doIt the do it
+     * @return      the int
      */
     protected int selectPreviousColumn(final boolean doIt) {
         int newIndex = getSelectedColumnIndex();
@@ -259,11 +262,11 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     /**
      * Change column width int.
      *
-     * @param resizingColumn the resizing column
-     * @param th             the th
-     * @param oldWidth       the old width
-     * @param newWidth       the new width
-     * @return the int
+     * @param  resizingColumn the resizing column
+     * @param  th             the th
+     * @param  oldWidth       the old width
+     * @param  newWidth       the new width
+     * @return                the int
      */
     protected int changeColumnWidth(final TableColumn resizingColumn,
                                     final JTableHeader th,
@@ -292,7 +295,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             tableSize.width += diff;
             table.setSize(tableSize);
 
-            /* If this table is in AUTO_RESIZE_OFF mode and
+            /*
+             * If this table is in AUTO_RESIZE_OFF mode and
              * has a horizontal scrollbar, we need to update
              * a view's position.
              */
@@ -324,8 +328,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     /**
      * Gets header renderer.
      *
-     * @param columnIndex the column index
-     * @return the header renderer
+     * @param  columnIndex the column index
+     * @return             the header renderer
      */
     protected Component getHeaderRenderer(final int columnIndex) {
         TableColumn aColumn = header.getColumnModel().getColumn(columnIndex);
@@ -347,7 +351,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         super.installUI(c);
     }
 
-
     /**
      * Initializes JTableHeader properties such as font, foreground, and background. The font, foreground, and
      * background properties are only set if their current value is either null or a UIResource, other properties are
@@ -361,7 +364,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         LookAndFeel.installProperty(header, PropertyKey.OPAQUE, Boolean.TRUE);
     }
 
-
     /**
      * Attaches listeners to the JTableHeader.
      */
@@ -373,8 +375,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         header.addFocusListener(focusListener);
     }
 
-// Uninstall methods
-
+    // Uninstall methods
 
     public void uninstallUI(final JComponent c) {
         uninstallDefaults();
@@ -386,13 +387,10 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         header = null;
     }
 
-
     /**
      * Uninstalls default properties
      */
-    protected void uninstallDefaults() {
-    }
-
+    protected void uninstallDefaults() {}
 
     /**
      * Unregisters listeners.
@@ -405,7 +403,6 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         mouseInputListener = null;
     }
 
-
     /**
      * Unregisters default key actions.
      */
@@ -414,23 +411,21 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         SwingUtilities.replaceUIActionMap(header, null);
     }
 
-//
-// Support for mouse rollover
-//
-
+    //
+    // Support for mouse rollover
+    //
 
     /**
      * Returns the index of the column header over which the mouse currently is. When the mouse is not over the table
      * header, -1 is returned.
      *
      * @return the index of the current rollover column
-     * @see #rolloverColumnUpdated(int, int)
-     * @since 1.6
+     * @see    #rolloverColumnUpdated(int, int)
+     * @since  1.6
      */
     protected int getRolloverColumn() {
         return rolloverColumn;
     }
-
 
     /**
      * This method gets called every time when a rollover column in the table header is updated. Every look and feel
@@ -438,21 +433,19 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
      *
      * @param oldColumn the index of the previous rollover column or -1 if the mouse was not over a column
      * @param newColumn the index of the new rollover column or -1 if the mouse is not over a column
-     * @see #getRolloverColumn()
-     * @see JTableHeader#getHeaderRect(int)
-     * @since 1.6
+     * @see             #getRolloverColumn()
+     * @see             JTableHeader#getHeaderRect(int)
+     * @since           1.6
      */
-    protected void rolloverColumnUpdated(final int oldColumn, final int newColumn) {
-    }
-
+    protected void rolloverColumnUpdated(final int oldColumn, final int newColumn) {}
 
     /**
      * Returns the baseline.
      *
      * @throws NullPointerException     {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @see                             javax.swing.JComponent#getBaseline(int, int)
+     * @since                           1.6
      */
     public int getBaseline(final JComponent c, final int width, final int height) {
         super.getBaseline(c, width, height);
@@ -476,9 +469,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         return baseline;
     }
 
-//
-// Baseline
-//
+    //
+    // Baseline
+    //
 
     public void paint(final Graphics g, final JComponent c) {
         if (header.getColumnModel().getColumnCount() <= 0) {
@@ -552,15 +545,15 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         rendererPane.removeAll();
     }
 
-//
-// Paint Methods and support
-//
+    //
+    // Paint Methods and support
+    //
 
     /**
      * View index for column int.
      *
-     * @param aColumn the a column
-     * @return the int
+     * @param  aColumn the a column
+     * @return         the int
      */
     protected int viewIndexForColumn(final TableColumn aColumn) {
         TableColumnModel cm = header.getColumnModel();
@@ -575,8 +568,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
     /**
      * Create header size dimension.
      *
-     * @param width the width
-     * @return the dimension
+     * @param  width the width
+     * @return       the dimension
      */
     protected Dimension createHeaderSize(long width) {
         // None of the callers include the intercell spacing, do it here.
@@ -630,43 +623,35 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         /**
          * The constant TOGGLE_SORT_ORDER.
          */
-        public static final String TOGGLE_SORT_ORDER =
-            "toggleSortOrder";
+        public static final String TOGGLE_SORT_ORDER = "toggleSortOrder";
         /**
          * The constant SELECT_COLUMN_TO_LEFT.
          */
-        public static final String SELECT_COLUMN_TO_LEFT =
-            "selectColumnToLeft";
+        public static final String SELECT_COLUMN_TO_LEFT = "selectColumnToLeft";
         /**
          * The constant SELECT_COLUMN_TO_RIGHT.
          */
-        public static final String SELECT_COLUMN_TO_RIGHT =
-            "selectColumnToRight";
+        public static final String SELECT_COLUMN_TO_RIGHT = "selectColumnToRight";
         /**
          * The constant MOVE_COLUMN_LEFT.
          */
-        public static final String MOVE_COLUMN_LEFT =
-            "moveColumnLeft";
+        public static final String MOVE_COLUMN_LEFT = "moveColumnLeft";
         /**
          * The constant MOVE_COLUMN_RIGHT.
          */
-        public static final String MOVE_COLUMN_RIGHT =
-            "moveColumnRight";
+        public static final String MOVE_COLUMN_RIGHT = "moveColumnRight";
         /**
          * The constant RESIZE_LEFT.
          */
-        public static final String RESIZE_LEFT =
-            "resizeLeft";
+        public static final String RESIZE_LEFT = "resizeLeft";
         /**
          * The constant RESIZE_RIGHT.
          */
-        public static final String RESIZE_RIGHT =
-            "resizeRight";
+        public static final String RESIZE_RIGHT = "resizeRight";
         /**
          * The constant FOCUS_TABLE.
          */
-        public static final String FOCUS_TABLE =
-            "focusTable";
+        public static final String FOCUS_TABLE = "focusTable";
 
         /**
          * Instantiates a new Actions.
@@ -680,8 +665,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         /**
          * Accept boolean.
          *
-         * @param sender the sender
-         * @return the boolean
+         * @param  sender the sender
+         * @return        the boolean
          */
         public boolean accept(final Object sender) {
             if (sender instanceof JTableHeader) {
@@ -692,8 +677,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 }
 
                 String key = getName();
-                DarkTableHeaderUIBridge ui =
-                    (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+                DarkTableHeaderUIBridge ui = (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(),
+                                                                                              DarkTableHeaderUIBridge.class);
                 if (ui != null) {
                     if (Objects.equals(key, MOVE_COLUMN_LEFT)) {
                         return th.getReorderingAllowed()
@@ -715,11 +700,11 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         /**
          * Maybe move column boolean.
          *
-         * @param leftArrow the left arrow
-         * @param th        the th
-         * @param ui        the ui
-         * @param doIt      the do it
-         * @return the boolean
+         * @param  leftArrow the left arrow
+         * @param  th        the th
+         * @param  ui        the ui
+         * @param  doIt      the do it
+         * @return           the boolean
          */
         protected boolean maybeMoveColumn(final boolean leftArrow, final JTableHeader th,
                                           final DarkTableHeaderUIBridge ui, final boolean doIt) {
@@ -747,8 +732,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
         public void actionPerformed(final ActionEvent e) {
             JTableHeader th = (JTableHeader) e.getSource();
-            DarkTableHeaderUIBridge ui =
-                (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(), DarkTableHeaderUIBridge.class);
+            DarkTableHeaderUIBridge ui = (DarkTableHeaderUIBridge) DarkUIUtil.getUIOfType(th.getUI(),
+                                                                                          DarkTableHeaderUIBridge.class);
             if (ui == null) {
                 return;
             }
@@ -759,8 +744,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 RowSorter<?> sorter = table == null ? null : table.getRowSorter();
                 if (sorter != null) {
                     int columnIndex = ui.getSelectedColumnIndex();
-                    columnIndex = table.convertColumnIndexToModel(
-                        columnIndex);
+                    columnIndex = table.convertColumnIndexToModel(columnIndex);
                     sorter.toggleSortOrder(columnIndex);
                 }
             } else if (Objects.equals(SELECT_COLUMN_TO_LEFT, name)) {
@@ -813,8 +797,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         protected void resize(final boolean leftArrow, final JTableHeader th,
                               final DarkTableHeaderUIBridge ui) {
             int columnIndex = ui.getSelectedColumnIndex();
-            TableColumn resizingColumn =
-                th.getColumnModel().getColumn(columnIndex);
+            TableColumn resizingColumn = th.getColumnModel().getColumn(columnIndex);
 
             th.setResizingColumn(resizingColumn);
             int oldWidth = resizingColumn.getWidth();
@@ -830,9 +813,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         }
     }
 
-//
-// Size Methods
-//
+    //
+    // Size Methods
+    //
 
     /**
      * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
@@ -860,8 +843,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                 if (table != null && (sorter = table.getRowSorter()) != null) {
                     int columnIndex = header.columnAtPoint(e.getPoint());
                     if (columnIndex != -1) {
-                        columnIndex = table.convertColumnIndexToModel(
-                            columnIndex);
+                        columnIndex = table.convertColumnIndexToModel(columnIndex);
                         sorter.toggleSortOrder(columnIndex);
                     }
                 }
@@ -950,8 +932,8 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         /**
          * Gets resizing column.
          *
-         * @param p the p
-         * @return the resizing column
+         * @param  p the p
+         * @return   the resizing column
          */
         protected TableColumn getResizingColumn(final Point p) {
             return getResizingColumn(p, header.columnAtPoint(p));
@@ -991,14 +973,14 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
                         mouseXOffset = mouseXOffset + direction * width;
                         header.setDraggedDistance(draggedDistance - direction * width);
 
-                        //Cache the selected column.
+                        // Cache the selected column.
                         int selectedIndex = SwingUtilities2.convertColumnIndexToModel(header.getColumnModel(),
                                                                                       getSelectedColumnIndex());
 
-                        //Now do the move.
+                        // Now do the move.
                         cm.moveColumn(columnIndex, newColumnIndex);
 
-                        //Update the selected index.
+                        // Update the selected index.
                         selectColumn(SwingUtilities2.convertColumnIndexToView(header.getColumnModel(), selectedIndex),
                                      false);
 
@@ -1015,8 +997,7 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             if (!header.isEnabled()) {
                 return;
             }
-            if (canResize(getResizingColumn(e.getPoint()), header) !=
-                (header.getCursor() == resizeCursor)) {
+            if (canResize(getResizingColumn(e.getPoint()), header) != (header.getCursor() == resizeCursor)) {
                 swapCursor();
             }
             updateRolloverColumn(e);
@@ -1025,9 +1006,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         /**
          * Gets resizing column.
          *
-         * @param p      the p
-         * @param column the column
-         * @return the resizing column
+         * @param  p      the p
+         * @param  column the column
+         * @return        the resizing column
          */
         protected TableColumn getResizingColumn(final Point p, final int column) {
             if (column == -1) {
@@ -1050,9 +1031,9 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
             }
             return header.getColumnModel().getColumn(columnIndex);
         }
-//
-// Protected & protected Methods
-//
+        //
+        // Protected & protected Methods
+        //
 
         /**
          * Swap cursor.
@@ -1106,6 +1087,4 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
         }
         return createHeaderSize(width);
     }
-
-
 }

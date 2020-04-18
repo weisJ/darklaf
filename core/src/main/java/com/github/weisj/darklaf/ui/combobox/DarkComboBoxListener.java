@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.combobox;
 
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkComboBoxListener extends MouseAdapter implements PropertyChangeListener, ComboBoxConstants {
 

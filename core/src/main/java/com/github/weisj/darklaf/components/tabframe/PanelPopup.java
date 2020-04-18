@@ -20,20 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import com.github.weisj.darklaf.util.Alignment;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
-import java.awt.*;
+
+import com.github.weisj.darklaf.util.Alignment;
 
 /**
  * Popup Component for {@link JTabFrame}.
  *
  * @author Jannis Weis
- * @since 2019
+ * @since  2019
  */
 public class PanelPopup extends JPanel implements TabFramePopup {
     private Component content;
@@ -150,7 +152,6 @@ public class PanelPopup extends JPanel implements TabFramePopup {
         }
     }
 
-
     private boolean isOpen() {
         return open;
     }
@@ -176,7 +177,8 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void setAlignment(final Alignment alignment) {
         if (alignment == null || this.alignment == Alignment.CENTER) {
             throw new IllegalArgumentException("Illegal alignment: " + (alignment != null
-                                                                        ? alignment.toString() : "null"));
+                                                                                          ? alignment.toString()
+                                                                                          : "null"));
         }
         Alignment old = this.alignment;
         this.alignment = alignment;

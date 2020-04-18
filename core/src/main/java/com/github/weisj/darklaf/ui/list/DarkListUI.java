@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.list;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -51,7 +53,6 @@ public class DarkListUI extends DarkListUIBridge {
         UIManager.put("List.cellRenderer", new DarkListCellRenderer());
     }
 
-
     public static ComponentUI createUI(final JComponent list) {
         return new DarkListUI();
     }
@@ -72,19 +73,19 @@ public class DarkListUI extends DarkListUIBridge {
 
     protected void paintImpl(final Graphics g, final JComponent c) {
         switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP:
+            case JList.VERTICAL_WRAP :
                 if (list.getHeight() != listHeight) {
                     updateLayoutStateNeeded |= heightChanged;
                     redrawList();
                 }
                 break;
-            case JList.HORIZONTAL_WRAP:
+            case JList.HORIZONTAL_WRAP :
                 if (list.getWidth() != listWidth) {
                     updateLayoutStateNeeded |= widthChanged;
                     redrawList();
                 }
                 break;
-            default:
+            default :
                 break;
         }
         maybeUpdateLayoutState();
@@ -112,7 +113,6 @@ public class DarkListUI extends DarkListUIBridge {
         int maxX = paintBounds.x + paintBounds.width;
         int leadIndex = adjustIndex(list.getLeadSelectionIndex(), list);
         int rowIncrement = (layoutOrientation == JList.HORIZONTAL_WRAP) ? columnCount : 1;
-
 
         Rectangle rowBounds;
         for (int colCounter = startColumn; colCounter <= endColumn; colCounter++) {
@@ -166,8 +166,8 @@ public class DarkListUI extends DarkListUIBridge {
             g.setColor(c);
         }
         if (!empty) {
-            Component rendererComponent =
-                cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, index, isSelected,
+                                                                                    cellHasFocus);
             if (Boolean.TRUE.equals(list.getClientProperty(KEY_SHRINK_WRAP))) {
                 // Shrink renderer to preferred size. This is mostly used on Windows
                 // where selection is only shown around the file name, instead of

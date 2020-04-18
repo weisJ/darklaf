@@ -20,20 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import com.github.weisj.darklaf.components.ScrollPopupMenu;
-import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
-
-import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+
+import com.github.weisj.darklaf.components.ScrollPopupMenu;
+import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
 
 public class DarkScrollableTabSupport extends ScrollableTabSupport implements MouseWheelListener, ActionListener {
 
@@ -59,8 +61,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         moreTabsButton.addActionListener(this);
 
         newTabButton = ui.createNewTabButton();
-        newTabButton.setVisible(
-            Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON)));
+        newTabButton.setVisible(Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON)));
 
         scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt(DarkTabbedPaneUI.KEY_MAX_POPUP_HEIGHT));
         PopupMenuListener popupMenuListener = new PopupMenuAdapter() {
@@ -102,15 +103,15 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
                 Dimension pref = scrollPopupMenu.getPreferredSize();
                 boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
                 switch (ui.tabPane.getTabPlacement()) {
-                    case SwingConstants.LEFT:
+                    case SwingConstants.LEFT :
                         scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth(),
                                              moreTabsButton.getHeight() - pref.height);
                         break;
-                    case SwingConstants.RIGHT:
+                    case SwingConstants.RIGHT :
                         scrollPopupMenu.show(moreTabsButton, -pref.width,
                                              moreTabsButton.getHeight() - pref.height);
                         break;
-                    case SwingConstants.TOP:
+                    case SwingConstants.TOP :
                         if (leftToRight) {
                             scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
                                                  moreTabsButton.getHeight());
@@ -118,7 +119,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
                             scrollPopupMenu.show(moreTabsButton, 0, moreTabsButton.getHeight());
                         }
                         break;
-                    case SwingConstants.BOTTOM:
+                    case SwingConstants.BOTTOM :
                         if (leftToRight) {
                             scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
                                                  -pref.height);
@@ -219,7 +220,6 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         moreTabsButton.repaint();
     }
 
-
     protected JMenuItem createMenuItem(final int i) {
         Icon icon = ui.tabPane.getIconAt(i);
         if (icon != null && !ui.tabPane.getComponentAt(i).isEnabled()) {
@@ -230,8 +230,8 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (i >= 0 && i <= ui.tabPane.getTabCount()) {
-                    //Use component instead of index as index may have changed in between creation
-                    //and invocation of action.
+                    // Use component instead of index as index may have changed in between creation
+                    // and invocation of action.
                     ui.tabPane.setSelectedComponent(comp);
                     ui.tabPane.doLayout();
                     comp.requestFocus();

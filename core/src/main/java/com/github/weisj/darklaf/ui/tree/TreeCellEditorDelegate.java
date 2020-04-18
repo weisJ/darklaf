@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tree;
+
+import java.awt.*;
+import java.util.EventObject;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.tree.TreeCellEditor;
-import java.awt.*;
-import java.util.EventObject;
 
 /**
  * @author Jannis Weis
@@ -35,7 +37,6 @@ import java.util.EventObject;
 public class TreeCellEditorDelegate implements TreeCellEditor {
 
     private final TreeCellEditor editor;
-
 
     public TreeCellEditorDelegate(final TreeCellEditor editor) {
         this.editor = editor;

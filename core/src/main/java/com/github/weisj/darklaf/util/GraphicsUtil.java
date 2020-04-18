@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
@@ -32,13 +33,11 @@ import java.util.Map;
  */
 public final class GraphicsUtil {
 
-    private GraphicsUtil() {
-    }
+    private GraphicsUtil() {}
 
     public static GraphicsContext setupAntialiasing(final Graphics g2) {
         return setupAntialiasing(g2, true, false);
     }
-
 
     public static GraphicsContext setupAntialiasing(final Graphics g2, final boolean enableAA,
                                                     final boolean ignoreSystemSettings) {
@@ -52,13 +51,12 @@ public final class GraphicsUtil {
             } else {
                 g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                                    enableAA
-                                   ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR
-                                   : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+                                            ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR
+                                            : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
             }
         }
         return config;
     }
-
 
     public static GraphicsContext setupAAPainting(final Graphics g) {
         GraphicsContext config = new GraphicsContext(g);
@@ -68,7 +66,6 @@ public final class GraphicsUtil {
         return config;
     }
 
-
     public static GraphicsContext paintWithAlpha(final Graphics g, final float alpha) {
         assert 0.0F <= alpha && alpha <= 1.0F : "alpha should be in range 0.0f .. 1.0f";
 
@@ -77,7 +74,6 @@ public final class GraphicsUtil {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         return config;
     }
-
 
     public static GraphicsContext setupStrokePainting(final Graphics g) {
         Graphics2D g2 = (Graphics2D) g;

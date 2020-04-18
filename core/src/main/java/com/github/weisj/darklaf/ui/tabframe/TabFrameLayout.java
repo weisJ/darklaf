@@ -20,19 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
+
+import java.awt.*;
+import java.util.Arrays;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.util.Alignment;
 
-import java.awt.*;
-import java.util.Arrays;
-
 /**
  * @author Jannis Weis
- * @since 2019
+ * @since  2019
  */
 public class TabFrameLayout implements LayoutManager {
 
@@ -45,7 +46,6 @@ public class TabFrameLayout implements LayoutManager {
     private int rightHeight;
     private int bottomHeight;
 
-
     public TabFrameLayout(final JTabFrame tabFrame, final DarkTabFrameUI ui) {
         this.tabFrame = tabFrame;
         this.ui = ui;
@@ -54,13 +54,10 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     @Override
-    public void addLayoutComponent(final String name, final Component comp) {
-    }
+    public void addLayoutComponent(final String name, final Component comp) {}
 
     @Override
-    public void removeLayoutComponent(final Component comp) {
-    }
-
+    public void removeLayoutComponent(final Component comp) {}
 
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
@@ -68,9 +65,10 @@ public class TabFrameLayout implements LayoutManager {
         return new Dimension(tabFrame.getLeftTabContainer().getWidth()
                              + tabFrame.getRightTabContainer().getWidth() + b.width,
                              tabFrame.getTopTabContainer().getHeight()
-                             + tabFrame.getBottomTabContainer().getHeight() + b.height);
+                                                                                     + tabFrame.getBottomTabContainer()
+                                                                                               .getHeight()
+                                                                                     + b.height);
     }
-
 
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
@@ -78,7 +76,9 @@ public class TabFrameLayout implements LayoutManager {
         return new Dimension(tabFrame.getLeftTabContainer().getWidth()
                              + tabFrame.getRightTabContainer().getWidth() + b.width,
                              tabFrame.getTopTabContainer().getHeight()
-                             + tabFrame.getBottomTabContainer().getHeight() + b.height);
+                                                                                     + tabFrame.getBottomTabContainer()
+                                                                                               .getHeight()
+                                                                                     + b.height);
     }
 
     @Override
@@ -229,8 +229,8 @@ public class TabFrameLayout implements LayoutManager {
             int size = rightCount > 0 ? rightHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             rightPane.setBounds(dim.width - rightHeight, topPane.getHeight(), size, height + (height % 2));
-            tabFrame.getRightTabContainer().setPreferredSize(
-                new Dimension(rightPane.getHeight(), rightPane.getWidth()));
+            tabFrame.getRightTabContainer().setPreferredSize(new Dimension(rightPane.getHeight(),
+                                                                           rightPane.getWidth()));
             tabFrame.getRightTabContainer().setSize(tabFrame.getRightTabContainer().getPreferredSize());
             if (rightCount > 0) {
                 Point start = new Point(0, 0);
@@ -268,17 +268,17 @@ public class TabFrameLayout implements LayoutManager {
 
     protected int getIndex(final Alignment a) {
         switch (a) {
-            case NORTH:
-            case NORTH_EAST:
+            case NORTH :
+            case NORTH_EAST :
                 return 0;
-            case EAST:
-            case SOUTH_EAST:
+            case EAST :
+            case SOUTH_EAST :
                 return 1;
-            case SOUTH:
-            case SOUTH_WEST:
+            case SOUTH :
+            case SOUTH_WEST :
                 return 2;
-            case WEST:
-            case NORTH_WEST:
+            case WEST :
+            case NORTH_WEST :
                 return 3;
         }
         return 0;

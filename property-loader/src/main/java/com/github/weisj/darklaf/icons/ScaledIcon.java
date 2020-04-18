@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import com.github.weisj.darklaf.util.Scale;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
+import com.github.weisj.darklaf.util.Scale;
 
 public class ScaledIcon implements Icon {
 

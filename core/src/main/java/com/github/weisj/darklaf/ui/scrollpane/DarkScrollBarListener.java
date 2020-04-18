@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.scrollpane;
 
-import com.github.weisj.darklaf.util.Animator;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.util.Animator;
 
 public class DarkScrollBarListener extends MouseAdapter implements AdjustmentListener, ScrollBarConstants {
 
@@ -204,16 +206,13 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         return new TrackFadeOutAnimator();
     }
 
-
     protected Animator createThumbFadeoutAnimator() {
         return new ThumbFadeOutAnimator();
     }
 
-
     protected Animator createTrackFadeinAnimator() {
         return new TrackFadeInAnimator();
     }
-
 
     protected Animator createThumbFadeinAnimator() {
         return new ThumbFadeInAnimator();

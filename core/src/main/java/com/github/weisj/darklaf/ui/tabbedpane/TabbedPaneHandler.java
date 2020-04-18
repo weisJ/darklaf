@@ -20,11 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import com.github.weisj.darklaf.util.DarkSwingUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -32,14 +36,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Objects;
+
+import com.github.weisj.darklaf.util.DarkSwingUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 public class TabbedPaneHandler implements ChangeListener, ContainerListener, FocusListener,
-                                          MouseListener, MouseMotionListener, PropertyChangeListener {
+                               MouseListener, MouseMotionListener, PropertyChangeListener {
     private final DarkTabbedPaneUIBridge ui;
 
     //
@@ -49,7 +51,6 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     protected TabbedPaneHandler(final DarkTabbedPaneUIBridge ui) {
         this.ui = ui;
     }
-
 
     public void propertyChange(final PropertyChangeEvent e) {
         JTabbedPane pane = (JTabbedPane) e.getSource();
@@ -85,8 +86,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
             if (ui.tabContainer != null) {
                 ui.tabContainer.removeUnusedTabComponents();
             }
-            Component c = ui.tabPane.getTabComponentAt(
-                (Integer) e.getNewValue());
+            Component c = ui.tabPane.getTabComponentAt((Integer) e.getNewValue());
             if (c != null) {
                 if (ui.tabContainer == null) {
                     ui.installTabContainer();
@@ -109,16 +109,16 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         String title = ui.tabPane.getTitleAt(index);
         boolean isHTML = BasicHTML.isHTMLString(title);
         if (isHTML) {
-            if (ui.htmlViews == null) {    // Initialize vector
+            if (ui.htmlViews == null) { // Initialize vector
                 ui.htmlViews = ui.createHTMLVector();
-            } else {                  // Vector already exists
+            } else { // Vector already exists
                 View v = BasicHTML.createHTMLView(ui.tabPane, title);
                 setHtmlView(v, inserted, index);
             }
-        } else {                             // Not HTML
-            if (ui.htmlViews != null) {           // Add placeholder
+        } else { // Not HTML
+            if (ui.htmlViews != null) { // Add placeholder
                 setHtmlView(null, inserted, index);
-            }                                // else nada!
+            } // else nada!
         }
         ui.updateMnemonics();
     }
@@ -145,8 +145,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
             ui.ensureCurrentLayout();
             int index = tabPane.getSelectedIndex();
             if (index < ui.rects.length && index != -1) {
-                ui.tabScroller.tabPanel.scrollRectToVisible(
-                    (Rectangle) ui.rects[index].clone());
+                ui.tabScroller.tabPanel.scrollRectToVisible((Rectangle) ui.rects[index].clone());
             }
         }
     }
@@ -154,8 +153,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     //
     // MouseListener
     //
-    public void mouseClicked(final MouseEvent e) {
-    }
+    public void mouseClicked(final MouseEvent e) {}
 
     public void mousePressed(final MouseEvent e) {
         if (!ui.tabPane.isEnabled()) {
@@ -171,14 +169,13 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
                 ui.tabPane.setSelectedIndex(tabIndex);
             } else if (ui.tabPane.isRequestFocusEnabled()) {
                 // Clicking on selected tab, try and give the tabbedpane
-                // focus.  Repaint will occur in focusGained.
+                // focus. Repaint will occur in focusGained.
                 ui.tabPane.requestFocus();
             }
         }
     }
 
-    public void mouseReleased(final MouseEvent e) {
-    }
+    public void mouseReleased(final MouseEvent e) {}
 
     public void mouseEntered(final MouseEvent e) {
         ui.setRolloverTab(e.getX(), e.getY());
@@ -191,8 +188,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     //
     // MouseMotionListener
     //
-    public void mouseDragged(final MouseEvent e) {
-    }
+    public void mouseDragged(final MouseEvent e) {}
 
     public void mouseMoved(final MouseEvent e) {
         ui.setRolloverTab(e.getX(), e.getY());
@@ -209,40 +205,40 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         ui.repaintTab(ui.focusIndex);
     }
 
-
     //
     // ContainerListener
     //
-/* GES 2/3/99:
-   The container listener code was added to support HTML
-   rendering of tab titles.
-
-   Ideally, we would be able to listen for property changes
-   when a tab is added or its text modified.  At the moment
-   there are no such events because the Beans spec doesn't
-   allow 'indexed' property changes (i.e. tab 2's text changed
-   from A to B).
-
-   In order to get around this, we listen for tabs to be added
-   or removed by listening for the container events.  we then
-   queue up a runnable (so the component has a chance to complete
-   the add) which checks the tab title of the new component to see
-   if it requires HTML rendering.
-
-   The Views (one per tab title requiring HTML rendering) are
-   stored in the htmlViews Vector, which is only allocated after
-   the first time we run into an HTML tab.  Note that this vector
-   is kept in step with the number of pages, and nulls are added
-   for those pages whose tab title do not require HTML rendering.
-
-   This makes it easy for the paint and layout code to tell
-   whether to invoke the HTML engine without having to check
-   the string during time-sensitive operations.
-
-   When we have added a way to listen for tab additions and
-   changes to tab text, this code should be removed and
-   replaced by something which uses that.  */
-
+    /*
+     * GES 2/3/99:
+     * The container listener code was added to support HTML
+     * rendering of tab titles.
+     *
+     * Ideally, we would be able to listen for property changes
+     * when a tab is added or its text modified. At the moment
+     * there are no such events because the Beans spec doesn't
+     * allow 'indexed' property changes (i.e. tab 2's text changed
+     * from A to B).
+     *
+     * In order to get around this, we listen for tabs to be added
+     * or removed by listening for the container events. we then
+     * queue up a runnable (so the component has a chance to complete
+     * the add) which checks the tab title of the new component to see
+     * if it requires HTML rendering.
+     *
+     * The Views (one per tab title requiring HTML rendering) are
+     * stored in the htmlViews Vector, which is only allocated after
+     * the first time we run into an HTML tab. Note that this vector
+     * is kept in step with the number of pages, and nulls are added
+     * for those pages whose tab title do not require HTML rendering.
+     *
+     * This makes it easy for the paint and layout code to tell
+     * whether to invoke the HTML engine without having to check
+     * the string during time-sensitive operations.
+     *
+     * When we have added a way to listen for tab additions and
+     * changes to tab text, this code should be removed and
+     * replaced by something which uses that.
+     */
     public void componentAdded(final ContainerEvent e) {
         JTabbedPane tp = (JTabbedPane) e.getContainer();
         Component child = e.getChild();
@@ -262,7 +258,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
 
         // NOTE 4/15/2002 (joutwate):
         // This fix is implemented using client properties since there is
-        // currently no IndexPropertyChangeEvent.  Once
+        // currently no IndexPropertyChangeEvent. Once
         // IndexPropertyChangeEvents have been added this code should be
         // modified to use it.
         Integer indexObj = (Integer) tp.getClientProperty("__index_to_remove__");

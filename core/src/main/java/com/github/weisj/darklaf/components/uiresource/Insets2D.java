@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.uiresource;
 
@@ -38,7 +39,6 @@ public final class Insets2D implements Cloneable {
      * @param bottom the inset from the bottom.
      * @param right  the inset from the right.
      */
-
     public Insets2D(final double top, final double left, final double bottom, final double right) {
         this.top = top;
         this.left = left;
@@ -53,7 +53,7 @@ public final class Insets2D implements Cloneable {
      * @param left   the inset from the left.
      * @param bottom the inset from the bottom.
      * @param right  the inset from the right.
-     * @since 1.5
+     * @since        1.5
      */
     public void set(final double top, final double left, final double bottom, final double right) {
         this.top = top;
@@ -61,7 +61,6 @@ public final class Insets2D implements Cloneable {
         this.bottom = bottom;
         this.right = right;
     }
-
 
     @Override
     public int hashCode() {
@@ -73,7 +72,6 @@ public final class Insets2D implements Cloneable {
         return (int) (sum3 * (sum3 + 1) / 2 + val2);
     }
 
-
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof Insets2D) {
@@ -84,16 +82,12 @@ public final class Insets2D implements Cloneable {
         return false;
     }
 
-
     @Override
     public Insets2D clone() {
         return new Insets2D(top, left, bottom, right);
     }
 
-
     public String toString() {
         return getClass().getName() + "[top=" + top + ",left=" + left + ",bottom=" + bottom + ",right=" + right + "]";
     }
-
-
 }

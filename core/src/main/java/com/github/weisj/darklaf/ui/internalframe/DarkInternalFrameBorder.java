@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
-import com.github.weisj.darklaf.components.border.DropShadowBorder;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
+
+import com.github.weisj.darklaf.components.border.DropShadowBorder;
 
 /**
  * @author Jannis Weis

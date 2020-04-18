@@ -20,28 +20,28 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
-import com.github.weisj.darklaf.util.PropertyValue;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.util.PropertyValue;
 
 /**
  * @author Jannis Weis
  */
 public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements TreeRendererSupport {
 
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer =
-        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(false));
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
-        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(false));
+    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(false));
+    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(false));
     private final TreeRendererComponent rendererComponent = new TreeRendererComponent();
     private final TreeCellRenderer parent;
 

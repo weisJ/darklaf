@@ -20,14 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.rootpane;
 
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-
-import javax.swing.*;
 import java.awt.*;
 
+import javax.swing.*;
+
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,15 +37,12 @@ import java.awt.*;
 class DarkSubstanceRootLayout implements LayoutManager2 {
 
     @Override
-    public void addLayoutComponent(final String name, final Component comp) {
-    }
+    public void addLayoutComponent(final String name, final Component comp) {}
 
     @Override
-    public void removeLayoutComponent(final Component comp) {
-    }
+    public void removeLayoutComponent(final Component comp) {}
 
-    public void addLayoutComponent(final Component comp, final Object constraints) {
-    }
+    public void addLayoutComponent(final Component comp, final Object constraints) {}
 
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension cpd, mbd, tpd;
@@ -128,7 +126,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         if ((root.getWindowDecorationStyle() != JRootPane.NONE)
             && (root.getUI() instanceof DarkRootPaneUI)) {
             JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                .getTitlePane();
+                                                                  .getTitlePane();
             if (titlePane != null) {
                 tpd = titlePane.getMinimumSize();
                 if (tpd != null) {
@@ -139,7 +137,8 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         }
 
         return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth)
-                             + i.left + i.right, cpHeight + mbHeight + tpHeight + i.top
+                             + i.left + i.right,
+                             cpHeight + mbHeight + tpHeight + i.top
                                                  + i.bottom);
     }
 
@@ -214,7 +213,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         if ((root.getWindowDecorationStyle() != JRootPane.NONE)
             && (root.getUI() instanceof DarkRootPaneUI)) {
             JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                .getTitlePane();
+                                                                  .getTitlePane();
             if (titlePane != null) {
                 tpd = titlePane.getMaximumSize();
                 if (tpd != null) {
@@ -246,6 +245,5 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         return 0.0f;
     }
 
-    public void invalidateLayout(final Container target) {
-    }
+    public void invalidateLayout(final Container target) {}
 }

@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.html;
+
+import java.awt.*;
 
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 import javax.swing.text.html.HTML;
-import java.awt.*;
 
 public class DarkHTML extends BasicHTML {
 

@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
@@ -54,7 +55,7 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
     }
 
     /**
-     * Fetches the name used as a key to look up properties through the UIManager.  This is used as a prefix to all the
+     * Fetches the name used as a key to look up properties through the UIManager. This is used as a prefix to all the
      * standard text properties.
      *
      * @return the name ("PasswordField")
@@ -66,18 +67,17 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
     /**
      * Creates a view (PasswordView) for an element.
      *
-     * @param elem the element
-     * @return the view
+     * @param  elem the element
+     * @return      the view
      */
     public View create(final Element elem) {
         return new PasswordView(elem);
     }
 
     /**
-     * Create the action map for Password Field.  This map provides same actions for double mouse click and and for
+     * Create the action map for Password Field. This map provides same actions for double mouse click and and for
      * triple mouse click (see bug 4231444).
      */
-
     public ActionMap createActionMap() {
         ActionMap map = super.createActionMap();
         if (map.get(DefaultEditorKit.selectWordAction) != null) {
@@ -89,5 +89,4 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
         }
         return map;
     }
-
 }

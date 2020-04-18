@@ -20,8 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
@@ -31,16 +43,6 @@ import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyChangeListener {
 
@@ -60,7 +62,6 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     private Color selectedColor;
     private Color hoverColor;
     private boolean printing;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabFrameTabContainerUI();
@@ -208,7 +209,9 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     public Color getBackground(final TabFrameTabContainer tab) {
         if (printing) return tab.getBackground();
         return tab.isSelected()
-               ? selectedColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                                 ? hoverColor : tab.getBackground();
+                  ? selectedColor
+                  : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                                 ? hoverColor
+                  : tab.getBackground();
     }
 }

@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.scrollpane;
+
+import java.awt.*;
+import java.awt.event.MouseWheelListener;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollPaneUI;
-import java.awt.*;
-import java.awt.event.MouseWheelListener;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Jannis Weis
@@ -94,7 +96,6 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         }
     };
     private ScrollPaneLayout oldLayout;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkScrollPaneUI();

@@ -20,23 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform.decorations;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Properties;
+
+import javax.swing.*;
 
 public interface DecorationsProvider {
 
     /**
      * Create the custom title pane.
      *
-     * @param rootPane        The root pane to create the title pane for.
-     * @param decorationStyle The style of the decorations.
-     * @param window          The target window.
-     * @return the custom title pane.
-     * @see JRootPane#getWindowDecorationStyle()
+     * @param  rootPane        The root pane to create the title pane for.
+     * @param  decorationStyle The style of the decorations.
+     * @param  window          The target window.
+     * @return                 the custom title pane.
+     * @see                    JRootPane#getWindowDecorationStyle()
      */
     CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window);
 
@@ -53,7 +55,7 @@ public interface DecorationsProvider {
     void initialize();
 
     /**
-     * Load the necessary properties into the  defaults.
+     * Load the necessary properties into the defaults.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -63,12 +65,10 @@ public interface DecorationsProvider {
     /**
      * Initialize the window of a popup menu.
      */
-    default void installPopupMenu(final Window window) {
-    }
+    default void installPopupMenu(final Window window) {}
 
     /**
      * Uninstall the window of a popup menu.
      */
-    default void uninstallPopupWindow(final Window window) {
-    }
+    default void uninstallPopupWindow(final Window window) {}
 }

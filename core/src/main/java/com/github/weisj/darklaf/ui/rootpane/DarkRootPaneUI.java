@@ -20,18 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
-
 package com.github.weisj.darklaf.ui.rootpane;
 
-import com.github.weisj.darklaf.platform.DecorationsHandler;
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicRootPaneUI;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -39,6 +31,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicRootPaneUI;
+
+import com.github.weisj.darklaf.platform.DecorationsHandler;
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Konstantin Bulenkov
@@ -50,11 +50,14 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
     protected static final String[] borderKeys = new String[]{
-        "RootPane.border", "RootPane.frameBorder", "RootPane.plainDialogBorder",
-        "RootPane.informationDialogBorder",
-        "RootPane.errorDialogBorder", "RootPane.colorChooserDialogBorder",
-        "RootPane.fileChooserDialogBorder", "RootPane.questionDialogBorder",
-        "RootPane.warningDialogBorder"
+                                                              "RootPane.border", "RootPane.frameBorder",
+                                                              "RootPane.plainDialogBorder",
+                                                              "RootPane.informationDialogBorder",
+                                                              "RootPane.errorDialogBorder",
+                                                              "RootPane.colorChooserDialogBorder",
+                                                              "RootPane.fileChooserDialogBorder",
+                                                              "RootPane.questionDialogBorder",
+                                                              "RootPane.warningDialogBorder"
     };
 
     private Window window;
@@ -66,7 +69,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     private boolean decorationStyleLock = false;
     private int windowDecorationsStyle = -1;
-
 
     public static ComponentUI createUI(final JComponent comp) {
         return new DarkRootPaneUI();
@@ -177,7 +179,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
             ((Dialog) window).setUndecorated(false);
         }
     }
-
 
     private void setTitlePane(final JRootPane root, final CustomTitlePane titlePane) {
         JLayeredPane layeredPane = root.getLayeredPane();

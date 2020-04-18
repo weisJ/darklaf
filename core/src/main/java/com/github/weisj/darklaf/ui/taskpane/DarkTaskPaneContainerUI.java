@@ -20,16 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.taskpane;
-
-import org.jdesktop.swingx.plaf.basic.BasicTaskPaneContainerUI;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-public class DarkTaskPaneContainerUI extends BasicTaskPaneContainerUI {
+import org.jdesktop.swingx.plaf.basic.BasicTaskPaneContainerUI;
 
+public class DarkTaskPaneContainerUI extends BasicTaskPaneContainerUI {
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTaskPaneContainerUI();
@@ -41,5 +41,4 @@ public class DarkTaskPaneContainerUI extends BasicTaskPaneContainerUI {
         taskPane.setOpaque(false);
         taskPane.setBackgroundPainter(null);
     }
-
 }

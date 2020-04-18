@@ -20,8 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.color;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
@@ -29,12 +37,6 @@ import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 public class PopupColorChooser extends JToolTip {
 
@@ -128,17 +130,17 @@ public class PopupColorChooser extends JToolTip {
 
     protected ToolTipContext createToolTipContext() {
         return new ToolTipContext()
-            .setAlignment(Alignment.CENTER)
-            .setCenterAlignment(Alignment.SOUTH)
-            .setUseBestFit(true)
-            .setToolTipInsets(new Insets(2, 2, 2, 2))
-            .setFallBackPositionProvider(c -> {
-                Window window = DarkUIUtil.getWindow(c.getTarget());
-                Dimension size = c.getToolTip().getPreferredSize();
-                Rectangle bounds = window.getBounds();
-                return new Point(bounds.x + (bounds.width - size.width) / 2,
-                                 bounds.y + (bounds.height - size.height) / 2);
-            });
+                                   .setAlignment(Alignment.CENTER)
+                                   .setCenterAlignment(Alignment.SOUTH)
+                                   .setUseBestFit(true)
+                                   .setToolTipInsets(new Insets(2, 2, 2, 2))
+                                   .setFallBackPositionProvider(c -> {
+                                       Window window = DarkUIUtil.getWindow(c.getTarget());
+                                       Dimension size = c.getToolTip().getPreferredSize();
+                                       Rectangle bounds = window.getBounds();
+                                       return new Point(bounds.x + (bounds.width - size.width) / 2,
+                                                        bounds.y + (bounds.height - size.height) / 2);
+                                   });
     }
 
     @Override

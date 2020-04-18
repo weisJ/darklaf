@@ -1,4 +1,5 @@
 package org.pbjar.jxlayer.plaf.ext.transform;
+
 /*
  * Copyright (c) 2009, Piet Blok
  * All rights reserved.
@@ -30,10 +31,10 @@ package org.pbjar.jxlayer.plaf.ext.transform;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.jdesktop.jxlayer.JXLayer;
-
 import java.awt.*;
 import java.io.Serializable;
+
+import org.jdesktop.jxlayer.JXLayer;
 
 /**
  * A copy of the private static inner class in JXLayer.
@@ -44,19 +45,16 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
     /**
      * {@inheritDoc}
      */
-    public void addLayoutComponent(final String name, final Component comp) {
-    }
+    public void addLayoutComponent(final String name, final Component comp) {}
 
     /**
      * {@inheritDoc}
      */
-    public void removeLayoutComponent(final Component comp) {
-    }
+    public void removeLayoutComponent(final Component comp) {}
 
     /**
      * {@inheritDoc}
      */
-
     public Dimension preferredLayoutSize(final Container parent) {
         JXLayer<?> layer = (JXLayer<?>) parent;
         Insets insets = layer.getInsets();
@@ -75,7 +73,6 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
     /**
      * {@inheritDoc}
      */
-
     public Dimension minimumLayoutSize(final Container parent) {
         JXLayer<?> layer = (JXLayer<?>) parent;
         Insets insets = layer.getInsets();
@@ -103,9 +100,8 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
         if (view != null) {
             Insets insets = layer.getInsets();
             view.setLocation(insets.left, insets.top);
-            view.setSize(
-                layer.getWidth() - insets.left - insets.right,
-                layer.getHeight() - insets.top - insets.bottom);
+            view.setSize(layer.getWidth() - insets.left - insets.right,
+                         layer.getHeight() - insets.top - insets.bottom);
         }
         if (glassPane != null) {
             glassPane.setLocation(0, 0);

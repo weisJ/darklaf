@@ -20,8 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.task;
+
+import java.util.HashMap;
+import java.util.Properties;
+
+import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
@@ -29,24 +36,24 @@ import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
-import java.util.HashMap;
-import java.util.Properties;
-
 public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private static final String GLOBAL_PREFIX = "global.";
     private static final String MAC_OS_MENU_BAR_KEY = "apple.laf.useScreenMenuBar";
     private static final String[] UI_PROPERTIES = new String[]{
-        "borders", "button", "checkBox", "colorChooser", "comboBox", "fileChooser", "tristate",
-        "internalFrame", "label", "list", "menu", "menuBar", "menuItem", "numberingPane", "optionPane", "panel",
-        "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar", "scrollPane", "separator",
-        "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table", "taskPane", "text",
-        "toggleButton", "toolBar", "toolTip", "tree", "misc"
+                                                               "borders", "button", "checkBox", "colorChooser",
+                                                               "comboBox", "fileChooser", "tristate",
+                                                               "internalFrame", "label", "list", "menu", "menuBar",
+                                                               "menuItem", "numberingPane", "optionPane", "panel",
+                                                               "popupMenu", "progressBar", "radioButton", "rootPane",
+                                                               "scrollBar", "scrollPane", "separator",
+                                                               "slider", "spinner", "splitPane", "statusBar",
+                                                               "tabbedPane", "tabFrame", "table", "taskPane", "text",
+                                                               "toggleButton", "toolBar", "toolTip", "tree", "misc"
     };
     private static final String[] ICON_PROPERTIES = new String[]{
-        "checkBox", "radioButton", "dialog", "files", "frame", "indicator", "menu", "misc", "navigation"
+                                                                 "checkBox", "radioButton", "dialog", "files", "frame",
+                                                                 "indicator", "menu", "misc", "navigation"
     };
     private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserPreferenceAdjustmentTask();
     private final DefaultsAdjustmentTask accentColorAdjustment = new AccentColorAdjustmentTask();
@@ -84,8 +91,8 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void initGlobals(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
-        PropertyLoader.putProperties(
-            PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"), uiProps, defaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"), uiProps,
+                                     defaults);
 
         currentTheme.customizeGlobals(uiProps, defaults);
         installGlobals(uiProps, defaults);
@@ -98,20 +105,19 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
                 globalSettings.put(((String) key).substring(GLOBAL_PREFIX.length()), uiProps.get(key));
             }
         }
-        PropertyLoader.replaceProperties(
-            defaults,
-            e -> e.getKey() instanceof String && ((String) e.getKey()).contains("."),
-            e -> {
-                final String s = (String) e.getKey();
-                final String globalKey = s.substring(s.lastIndexOf('.') + 1);
-                return globalSettings.get(globalKey);
-            });
+        PropertyLoader.replaceProperties(defaults,
+                                         e -> e.getKey() instanceof String && ((String) e.getKey()).contains("."),
+                                         e -> {
+                                             final String s = (String) e.getKey();
+                                             final String globalKey = s.substring(s.lastIndexOf('.') + 1);
+                                             return globalSettings.get(globalKey);
+                                         });
     }
 
     private void initUIProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         for (String property : UI_PROPERTIES) {
-            PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"), uiProps, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
+                                         uiProps, defaults);
         }
         currentTheme.customizeUIProperties(uiProps, defaults);
     }
@@ -119,15 +125,15 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private void initIconTheme(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         currentTheme.loadIconTheme(uiProps, defaults);
         for (String property : ICON_PROPERTIES) {
-            PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, property, "properties/icons/"), uiProps, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/icons/"),
+                                         uiProps, defaults);
         }
         currentTheme.customizeIconTheme(uiProps, defaults);
     }
 
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
-        PropertyLoader.putProperties(
-            PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "properties/platform/"), uiProps, defaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "properties/platform/"),
+                                     uiProps, defaults);
         currentTheme.customizePlatformProperties(uiProps, defaults);
     }
 

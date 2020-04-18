@@ -20,18 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
+
+import sun.swing.SwingUtilities2;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -60,8 +63,8 @@ public class DarkTableUIBridge extends TableUIBridge {
         bounds.x = bounds.y = 0;
 
         if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 ||
-            // this check prevents us from painting the entire table
-            // when the clip doesn't intersect our bounds at all
+        // this check prevents us from painting the entire table
+        // when the clip doesn't intersect our bounds at all
             !bounds.intersects(clip)) {
 
             paintDropLines(g);

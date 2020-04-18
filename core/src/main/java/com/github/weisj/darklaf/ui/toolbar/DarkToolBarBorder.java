@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.toolbar;
+
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -43,7 +45,6 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
         verticalGrip = UIManager.getIcon("ToolBar.verticalGrip.icon");
         borderColor = UIManager.getColor("ToolBar.borderColor");
     }
-
 
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int w, final int h) {

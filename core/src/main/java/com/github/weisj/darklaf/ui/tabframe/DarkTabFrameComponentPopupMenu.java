@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.JXPopupMenu;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
-import javax.swing.plaf.UIResource;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements PropertyChangeListener, UIResource {
 
@@ -87,24 +89,24 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
 
     protected String getDescription(final Alignment a) {
         switch (a) {
-            case NORTH:
+            case NORTH :
                 return "Top Left";
-            case SOUTH:
+            case SOUTH :
                 return "Bottom Right";
-            case EAST:
+            case EAST :
                 return "Right Top";
-            case WEST:
+            case WEST :
                 return "Left Bottom";
-            case NORTH_EAST:
+            case NORTH_EAST :
                 return "Top Right";
-            case NORTH_WEST:
+            case NORTH_WEST :
                 return "Left Top";
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 return "Right Bottom";
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 return "Bottom Left";
-            case CENTER:
-            default:
+            case CENTER :
+            default :
                 return "";
         }
     }
@@ -112,24 +114,24 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
     protected Icon createIcon(final Alignment a, final boolean enabled) {
         String suffix = enabled ? "" : "Disabled";
         switch (a) {
-            case NORTH:
+            case NORTH :
                 return UIManager.getIcon("TabFrame.moveToTopLeft" + suffix + ".icon");
-            case SOUTH:
+            case SOUTH :
                 return UIManager.getIcon("TabFrame.moveToBottomRight" + suffix + ".icon");
-            case EAST:
+            case EAST :
                 return UIManager.getIcon("TabFrame.moveToRightTop" + suffix + ".icon");
-            case WEST:
+            case WEST :
                 return UIManager.getIcon("TabFrame.moveToLeftBottom" + suffix + ".icon");
-            case NORTH_EAST:
+            case NORTH_EAST :
                 return UIManager.getIcon("TabFrame.moveToTopRight" + suffix + ".icon");
-            case NORTH_WEST:
+            case NORTH_WEST :
                 return UIManager.getIcon("TabFrame.moveToLeftTop" + suffix + ".icon");
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 return UIManager.getIcon("TabFrame.moveToRightBottom" + suffix + ".icon");
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 return UIManager.getIcon("TabFrame.moveToBottomLeft" + suffix + ".icon");
-            case CENTER:
-            default:
+            case CENTER :
+            default :
                 return EmptyIcon.create(0);
         }
     }

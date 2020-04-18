@@ -20,10 +20,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
 import javax.swing.plaf.ActionMapUIResource;
@@ -32,8 +34,8 @@ import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
+
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -46,7 +48,6 @@ public class DarkEditorPaneUI extends DarkTextUI {
      */
     private static final String FONT_ATTRIBUTE_KEY = "FONT_ATTRIBUTE_KEY";
 
-
     /**
      * Creates a new BasicEditorPaneUI.
      */
@@ -57,8 +58,6 @@ public class DarkEditorPaneUI extends DarkTextUI {
     /*
      * Implementation of DarkEditorPaneUI
      */
-
-
     public static ComponentUI createUI(final JComponent c) {
         return new DarkEditorPaneUI();
     }
@@ -82,8 +81,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
         JComponent c = getComponent();
         Object honorDisplayPropertiesObject = c.getClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
         boolean honorDisplayProperties = false;
-        Object w3cLengthUnitsObject = c.getClientProperty(JEditorPane.
-                                                              W3C_LENGTH_UNITS);
+        Object w3cLengthUnitsObject = c.getClientProperty(JEditorPane.W3C_LENGTH_UNITS);
         boolean w3cLengthUnits = false;
         if (honorDisplayPropertiesObject instanceof Boolean) {
             honorDisplayProperties = (Boolean) honorDisplayPropertiesObject;
@@ -92,7 +90,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
             w3cLengthUnits = (Boolean) w3cLengthUnitsObject;
         }
         if (this instanceof DarkTextPaneUI || honorDisplayProperties) {
-            //using equals because can not use UIResource for Boolean
+            // using equals because can not use UIResource for Boolean
             Document doc = getComponent().getDocument();
             if (doc instanceof StyledDocument) {
                 if (doc instanceof HTMLDocument && honorDisplayProperties) {
@@ -125,8 +123,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
         Document document = component.getDocument();
         if (document instanceof HTMLDocument) {
             StyleSheet styleSheet = new StyleSheetUIResource();
-            StyleSheet documentStyleSheet =
-                ((HTMLDocument) document).getStyleSheet();
+            StyleSheet documentStyleSheet = ((HTMLDocument) document).getStyleSheet();
             StyleSheet[] styleSheets = documentStyleSheet.getStyleSheets();
             if (styleSheets != null) {
                 for (StyleSheet s : styleSheets) {
@@ -250,9 +247,8 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     /**
-     * Fetch an action map to use.  The map for a JEditorPane is not shared because it changes with the EditorKit.
+     * Fetch an action map to use. The map for a JEditorPane is not shared because it changes with the EditorKit.
      */
-
     public ActionMap getActionMap() {
         ActionMap am = new ActionMapUIResource();
         am.put("requestFocus", new FocusAction());
@@ -280,7 +276,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     /**
-     * This method gets called when a bound property is changed on the associated JTextComponent.  This is a hook which
+     * This method gets called when a bound property is changed on the associated JTextComponent. This is a hook which
      * UI implementations may change to reflect how the UI displays bound properties of JTextComponent subclasses. This
      * is implemented to rebuild the ActionMap based upon an EditorKit change.
      *
@@ -314,8 +310,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
                    || PropertyKey.FONT.equals(name)
                    || PropertyKey.DOCUMENT.equals(name)
                    || JEditorPane.W3C_LENGTH_UNITS.equals(name)
-                   || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
-        ) {
+                   || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
             JComponent c = getComponent();
             updateDisplayProperties(c.getFont(), c.getForeground());
             if (JEditorPane.W3C_LENGTH_UNITS.equals(name)
@@ -333,12 +328,11 @@ public class DarkEditorPaneUI extends DarkTextUI {
                 }
             }
 
-
         }
     }
 
     /**
-     * Fetches the name used as a key to lookup properties through the UIManager.  This is used as a prefix to all the
+     * Fetches the name used as a key to lookup properties through the UIManager. This is used as a prefix to all the
      * standard text properties.
      *
      * @return the name ("EditorPane")
@@ -358,7 +352,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
     }
 
     /**
-     * Fetches the EditorKit for the UI.  This is whatever is currently set in the associated JEditorPane.
+     * Fetches the EditorKit for the UI. This is whatever is currently set in the associated JEditorPane.
      *
      * @return the editor capabilities
      */
@@ -373,6 +367,5 @@ public class DarkEditorPaneUI extends DarkTextUI {
         }
     }
 
-    protected static class StyleSheetUIResource extends StyleSheet implements UIResource {
-    }
+    protected static class StyleSheetUIResource extends StyleSheet implements UIResource {}
 }

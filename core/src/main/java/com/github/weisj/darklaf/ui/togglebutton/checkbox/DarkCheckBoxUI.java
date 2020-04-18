@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton.checkbox;
 
-import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
+import java.awt.geom.RectangularShape;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import java.awt.geom.RectangularShape;
-import java.awt.geom.RoundRectangle2D;
+
+import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
 
 /**
  * @author Konstantin Bulenkov
@@ -70,5 +72,4 @@ public class DarkCheckBoxUI extends DarkRadioButtonUI {
         return new RoundRectangle2D.Float(Math.max(iconRect.x, 0), Math.max(iconRect.y, 0),
                                           iconRect.width, iconRect.height, arcSize, arcSize);
     }
-
 }

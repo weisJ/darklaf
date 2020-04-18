@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.border;
 
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-
-import javax.swing.border.AbstractBorder;
-import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.border.AbstractBorder;
+import javax.swing.plaf.InsetsUIResource;
+
+import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -89,10 +91,9 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the border colour.
      *
-     * @param color border colour
-     * @return this
+     * @param  color border colour
+     * @return       this
      */
-
     public BubbleBorder setColor(final Color color) {
         this.color = color;
         return this;
@@ -110,14 +111,13 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the with of the pointer base.
      *
-     * @param pointerWidth the width of the pointer base.
-     * @return this
+     * @param  pointerWidth the width of the pointer base.
+     * @return              this
      */
     public BubbleBorder setPointerWidth(final int pointerWidth) {
         this.pointerWidth = pointerWidth;
         return this;
     }
-
 
     /**
      * Get the border thickness.
@@ -131,10 +131,9 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the border thickness.
      *
-     * @param n new thickness
-     * @return this
+     * @param  n new thickness
+     * @return   this
      */
-
     public BubbleBorder setThickness(final int n) {
         thickness = Math.max(n, 0);
         return setPointerSize(pointerSize);
@@ -152,10 +151,9 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the pointer size Clips at 0.
      *
-     * @param size size of pointer.
-     * @return this
+     * @param  size size of pointer.
+     * @return      this
      */
-
     public BubbleBorder setPointerSize(final int size) {
         pointerSize = Math.max(size, 0);
         float left = thickness;
@@ -164,23 +162,23 @@ public class BubbleBorder extends AbstractBorder {
         float top = thickness;
 
         switch (pointerSide) {
-            case NORTH:
-            case NORTH_WEST:
-            case NORTH_EAST:
+            case NORTH :
+            case NORTH_WEST :
+            case NORTH_EAST :
                 top += pointerSize;
                 break;
-            case SOUTH:
-            case SOUTH_WEST:
-            case SOUTH_EAST:
+            case SOUTH :
+            case SOUTH_WEST :
+            case SOUTH_EAST :
                 bottom += pointerSize;
                 break;
-            case WEST:
+            case WEST :
                 left += pointerSize;
                 break;
-            case EAST:
+            case EAST :
                 right += pointerSize;
                 break;
-            default:
+            default :
                 break;
         }
         insets.set((int) top, (int) left, (int) bottom, (int) right);
@@ -199,10 +197,9 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the corner radius.
      *
-     * @param radius radius of corner.
-     * @return this
+     * @param  radius radius of corner.
+     * @return        this
      */
-
     public BubbleBorder setRadius(final int radius) {
         this.radius = radius;
         return setPointerSize(pointerSize);
@@ -222,10 +219,9 @@ public class BubbleBorder extends AbstractBorder {
      * Alignment#NORTH_EAST} and {@link Alignment#NORTH_WEST} as well as {@link Alignment#SOUTH}, {@link
      * Alignment#SOUTH_EAST} and {@link Alignment#SOUTH_WEST} {@link Alignment#CENTER} results in no pointer.
      *
-     * @param side direction in which the pointer should point.
-     * @return this.
+     * @param  side direction in which the pointer should point.
+     * @return      this.
      */
-
     public BubbleBorder setPointerSide(final Alignment side) {
         this.pointerSide = side;
         setPointerSize(pointerSize);
@@ -236,27 +232,26 @@ public class BubbleBorder extends AbstractBorder {
         return (float) calculatePointerPad(w, h, Alignment.NORTH_WEST);
     }
 
-
     private double calculatePointerPad(final float width, final float height, final Alignment side) {
         double pointerPad;
         switch (side) {
-            case WEST:
-            case EAST:
+            case WEST :
+            case EAST :
                 pointerPad = radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
                 break;
-            case NORTH_WEST:
-            case SOUTH_WEST:
+            case NORTH_WEST :
+            case SOUTH_WEST :
                 pointerPad = radius + insets.left + pointerWidth;
                 break;
-            case NORTH_EAST:
-            case SOUTH_EAST:
+            case NORTH_EAST :
+            case SOUTH_EAST :
                 pointerPad = width - radius - insets.right - pointerWidth;
                 break;
-            case SOUTH:
-            case NORTH:
+            case SOUTH :
+            case NORTH :
                 pointerPad = radius + (0.5 * (width - insets.left - insets.right - 2 * radius));
                 break;
-            default:
+            default :
                 pointerPad = 0;
                 break;
         }
@@ -270,12 +265,10 @@ public class BubbleBorder extends AbstractBorder {
         paintBorder(g, area);
     }
 
-
     @Override
     public Insets getBorderInsets(final Component c) {
         return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }
-
 
     @Override
     public Insets getBorderInsets(final Component c, final Insets insets) {
@@ -294,15 +287,15 @@ public class BubbleBorder extends AbstractBorder {
         if (pointerSide != Alignment.CENTER) {
             double pointerPad = calculatePointerPad(w, h, pointerSide);
             switch (pointerSide) {
-                case SOUTH_EAST:
-                case NORTH_EAST:
+                case SOUTH_EAST :
+                case NORTH_EAST :
                     if (inner) pointerPad += adj;
                     break;
-                case NORTH_WEST:
-                case SOUTH_WEST:
+                case NORTH_WEST :
+                case SOUTH_WEST :
                     if (inner) pointerPad -= adj;
                     break;
-                default:
+                default :
                     break;
             }
             Path2D pointer = creatPointerShape(pointerPad, pSize, pWidth, bubble);
@@ -326,13 +319,11 @@ public class BubbleBorder extends AbstractBorder {
         config.restore();
     }
 
-
     public RoundRectangle2D.Float calculateBubbleRect(final float x, final float y,
                                                       final float width, final float height) {
         return new RoundRectangle2D.Float(x + insets.left, y + insets.top, width - insets.left - insets.right,
                                           height - insets.top - insets.bottom, radius, radius);
     }
-
 
     private Path2D creatPointerShape(final double pointerPad, final double pSize, final double pWidth,
                                      final RoundRectangle2D.Float bubble) {
@@ -341,31 +332,31 @@ public class BubbleBorder extends AbstractBorder {
         double x = bubble.x;
         double y = bubble.y;
         switch (pointerSide) {
-            case WEST:
-                pointer.moveTo(x, y + pointerPad - w); //Top
+            case WEST :
+                pointer.moveTo(x, y + pointerPad - w); // Top
                 pointer.lineTo(x - pSize, y + pointerPad);
                 pointer.lineTo(x, y + pointerPad + w);// bottom
                 break;
-            case EAST:
+            case EAST :
                 pointer.moveTo(x + bubble.width, y + pointerPad - w);// top
                 pointer.lineTo(x + bubble.width + pSize, y + pointerPad);
                 pointer.lineTo(x + bubble.width, y + pointerPad + w);// bottom
                 break;
-            case NORTH:
-            case NORTH_WEST:
-            case NORTH_EAST:
+            case NORTH :
+            case NORTH_WEST :
+            case NORTH_EAST :
                 pointer.moveTo(x + pointerPad - w, y);// left
                 pointer.lineTo(x + pointerPad, y - pSize);
                 pointer.lineTo(x + pointerPad + w, y);// right
                 break;
-            case SOUTH:
-            case SOUTH_WEST:
-            case SOUTH_EAST:
+            case SOUTH :
+            case SOUTH_WEST :
+            case SOUTH_EAST :
                 pointer.moveTo(x + pointerPad - w, y + bubble.height);// left
                 pointer.lineTo(x + pointerPad, y + bubble.height + pSize);
                 pointer.lineTo(x + pointerPad + w, y + bubble.height);// right
                 break;
-            default:
+            default :
                 break;
         }
         pointer.closePath();

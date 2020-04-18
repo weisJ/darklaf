@@ -20,8 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
+
+import java.awt.*;
+import java.util.function.Supplier;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.TabbedPaneUI;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabbedPopupUI;
@@ -31,13 +40,6 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.tabbedpane.MoreTabsButton;
 import com.github.weisj.darklaf.ui.tabbedpane.NewTabButton;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.TabbedPaneUI;
-import java.awt.*;
-import java.util.function.Supplier;
 
 public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbedPopupUI {
 
@@ -53,7 +55,6 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
     private MutableLineBorder border;
     private JPanel holder;
     private JButton newTabButton;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabbedPopupUI();

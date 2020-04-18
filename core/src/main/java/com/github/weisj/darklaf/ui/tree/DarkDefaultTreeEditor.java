@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
-import com.github.weisj.darklaf.ui.text.DarkTextUI;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,9 +34,9 @@ import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.EventObject;
+
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 
 /**
  * @author Jannis Weis

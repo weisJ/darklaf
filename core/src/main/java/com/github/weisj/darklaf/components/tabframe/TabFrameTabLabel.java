@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
+
+import java.awt.*;
+import java.util.Objects;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.tabframe.DarkTabFrameTabLabelUI;
 import com.github.weisj.darklaf.util.Alignment;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Objects;
 
 /**
  * Tab Component for {@link JTabFrame}.

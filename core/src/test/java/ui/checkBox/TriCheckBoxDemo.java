@@ -20,17 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.checkBox;
+
+import java.awt.*;
+
+import javax.swing.*;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBoxMenuItem;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class TriCheckBoxDemo implements ComponentDemo {
 
@@ -44,27 +47,37 @@ public class TriCheckBoxDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(button);
 
         JPanel controlPanel = panel.addControls(1);
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(button.isEnabled());
-            addActionListener(e -> button.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(button.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                               : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JCheckBox("Rollover") {{
-            setSelected(button.isRolloverEnabled());
-            addActionListener(e -> button.setRolloverEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TREE_EDITOR) {{
-            setSelected(false);
-            addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR) {{
-            setSelected(false);
-            addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(button.isEnabled());
+                addActionListener(e -> button.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(button.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                   : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        controlPanel.add(new JCheckBox("Rollover") {
+            {
+                setSelected(button.isRolloverEnabled());
+                addActionListener(e -> button.setRolloverEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TREE_EDITOR) {
+            {
+                setSelected(false);
+                addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR) {
+            {
+                setSelected(false);
+                addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, isSelected()));
+            }
+        });
         return panel;
     }
 
@@ -77,9 +90,11 @@ public class TriCheckBoxDemo implements ComponentDemo {
     public JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(ComponentDemo.createThemeMenu());
-        menuBar.add(new JMenu("Demo") {{
-            add(new TristateCheckBoxMenuItem("TristateCheckBox menu item"));
-        }});
+        menuBar.add(new JMenu("Demo") {
+            {
+                add(new TristateCheckBoxMenuItem("TristateCheckBox menu item"));
+            }
+        });
         return menuBar;
     }
 }

@@ -20,25 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.statusbar;
 
-import org.jdesktop.swingx.JXStatusBar;
-import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import java.awt.*;
+
+import org.jdesktop.swingx.JXStatusBar;
+import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI;
 
 /**
  * @author Jannis Weis
  */
 public class DarkStatusBarUI extends BasicStatusBarUI {
 
-
     protected Color background;
     protected Color borderColor;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkStatusBarUI();

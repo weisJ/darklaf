@@ -20,8 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.tabFrame;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+
+import ui.ComponentDemo;
+import ui.DemoResources;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
@@ -31,12 +40,6 @@ import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.StringUtil;
-import ui.ComponentDemo;
-import ui.DemoResources;
-
-import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import java.awt.*;
 
 public class TabFrameDemo implements ComponentDemo {
 
@@ -44,12 +47,13 @@ public class TabFrameDemo implements ComponentDemo {
         ComponentDemo.showDemo(new TabFrameDemo(), new Dimension(1000, 500));
     }
 
-
     private static Component createTextArea() {
-        NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {{
-            setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));
-            setFont(new Font(Font.MONOSPACED, Font.PLAIN, getFont().getSize()));
-        }});
+        NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {
+            {
+                setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));
+                setFont(new Font(Font.MONOSPACED, Font.PLAIN, getFont().getSize()));
+            }
+        });
         NumberingPane numbering = numberPane.getNumberingPane();
         Icon icon = IconLoader.get().getIcon("navigation/arrowRight.svg");
         try {
@@ -84,14 +88,15 @@ public class TabFrameDemo implements ComponentDemo {
             panel.add(label);
             tabbedPopup.getTabbedPane().addTab("Tab " + i, panel);
         }
-            /* Activate for a custom tab.
-            tabFrame.setUserTabComponentAt(new JLabel("NORTH (custom tab)") {{
-                setBorder(new EmptyBorder(0, 5, 0, 5));
-                setOpaque(false);
-                setForeground(Color.RED);
-                setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-            }}, Alignment.NORTH, 1);
-             */
+        /*
+         * Activate for a custom tab.
+         * tabFrame.setUserTabComponentAt(new JLabel("NORTH (custom tab)") {{
+         * setBorder(new EmptyBorder(0, 5, 0, 5));
+         * setOpaque(false);
+         * setForeground(Color.RED);
+         * setFont(new Font(Font.SERIF, Font.ITALIC, 12));
+         * }}, Alignment.NORTH, 1);
+         */
         tabFrame.setAcceleratorAt(1, Alignment.NORTH_WEST, 0);
         tabFrame.setTabEnabled(Alignment.NORTH_EAST, 0, false);
 

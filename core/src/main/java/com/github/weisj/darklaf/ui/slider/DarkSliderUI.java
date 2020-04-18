@@ -20,18 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.slider;
 
-import com.github.weisj.darklaf.decorators.MouseClickListener;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -39,6 +31,16 @@ import java.awt.geom.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Dictionary;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicSliderUI;
+
+import com.github.weisj.darklaf.decorators.MouseClickListener;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -106,7 +108,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     public DarkSliderUI(final JSlider b) {
         super(b);
     }
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSliderUI((JSlider) c);
@@ -218,8 +219,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
      */
     public void scrollByBlock(final int direction) {
         synchronized (slider) {
-            int blockIncrement =
-                (slider.getMaximum() - slider.getMinimum()) / 10;
+            int blockIncrement = (slider.getMaximum() - slider.getMinimum()) / 10;
             if (blockIncrement == 0) {
                 blockIncrement = 1;
             }
@@ -340,8 +340,8 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             return new Dimension(plainThumbRadius + 6, plainThumbRadius + 6);
         }
         return isHorizontal()
-               ? new Dimension(thumbSize.width, thumbSize.height)
-               : new Dimension(thumbSize.height, thumbSize.width);
+                              ? new Dimension(thumbSize.width, thumbSize.height)
+                              : new Dimension(thumbSize.height, thumbSize.width);
     }
 
     @Override
@@ -354,7 +354,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     @Override
     public void paintFocus(final Graphics g2) {
-        //Do nothing
+        // Do nothing
     }
 
     @Override
@@ -436,7 +436,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         super.paintVerticalLabel(g, value, label);
     }
 
-
     @Override
     public void paintThumb(final Graphics g2) {
         Graphics2D g = (Graphics2D) g2;
@@ -474,7 +473,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             g.setColor(getDisabledTickColor());
         }
     }
-
 
     protected Color getDisabledTickColor() {
         return inactiveTickForeground;
@@ -583,17 +581,15 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return slider.getOrientation() == JSlider.HORIZONTAL;
     }
 
-
     private Area getHorizontalTrackShape() {
         int arc = arcSize;
         int yOff = (trackRect.height / 2) - trackSize / 2;
         int w = showVolumeIcon(slider) ? trackRect.width + getIconBarExt() : trackRect.width;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            return new Area(new RoundRectangle2D.Double(
-                trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc));
+            return new Area(new RoundRectangle2D.Double(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc));
         } else {
-            return new Area(new RoundRectangle2D.Double(
-                trackRect.x - getIconBarExt(), trackRect.y + yOff, w, trackSize, arc, arc));
+            return new Area(new RoundRectangle2D.Double(trackRect.x - getIconBarExt(), trackRect.y + yOff, w, trackSize,
+                                                        arc, arc));
         }
     }
 
@@ -607,17 +603,15 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return track;
     }
 
-
     private Area getVerticalTrackShape() {
         int arc = arcSize;
         int xOff = (trackRect.width / 2) - trackSize / 2;
         int h = showVolumeIcon(slider) ? trackRect.height + getIconBarExt() : trackRect.height;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            return new Area(new RoundRectangle2D.Double(
-                trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc));
+            return new Area(new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc));
         } else {
-            return new Area(new RoundRectangle2D.Double(
-                trackRect.x + xOff, trackRect.y - getIconBarExt(), trackSize, h, arc, arc));
+            return new Area(new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y - getIconBarExt(), trackSize, h,
+                                                        arc, arc));
 
         }
     }
@@ -692,7 +686,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-
     private Path2D getHorizontalThumbShape() {
         int w = thumbRect.width;
         int h = thumbRect.height;
@@ -706,7 +699,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         shape.closePath();
         return shape;
     }
-
 
     private Path2D getVerticalThumbShapeLR() {
         int w = thumbRect.width;
@@ -722,7 +714,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return shape;
     }
 
-
     private Path2D getVerticalThumbShapeRL() {
         int w = thumbRect.width;
         int h = thumbRect.height;
@@ -737,7 +728,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return shape;
     }
 
-
     protected Color getThumbColor() {
         if (isVolumeSlider(slider)) {
             return slider.isEnabled() ? volumeThumbBackground : volumeThumbInactiveBackground;
@@ -746,16 +736,13 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-
     protected Color getThumbBorderColor() {
         return slider.isEnabled() ? thumbBorderColor : thumbInactiveBorderColor;
     }
 
-
     protected Color getTrackBackground() {
         return trackBackground;
     }
-
 
     protected Color getSelectedTrackColor() {
         if (isVolumeSlider(slider)) {

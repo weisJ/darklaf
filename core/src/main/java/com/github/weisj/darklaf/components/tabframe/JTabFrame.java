@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import com.github.weisj.darklaf.ui.tabframe.TabFrameTransferHandler;
-import com.github.weisj.darklaf.util.Alignment;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+
+import com.github.weisj.darklaf.ui.tabframe.TabFrameTransferHandler;
+import com.github.weisj.darklaf.util.Alignment;
 
 /**
  * Frame that supports popup components.
@@ -71,9 +73,9 @@ public class JTabFrame extends JComponent {
         add(content.getComponent());
 
         int count = Alignment.values().length;
-        //noinspection unchecked
+        // noinspection unchecked
         tabLists = (ArrayList<TabFrameTab>[]) new ArrayList[count];
-        //noinspection unchecked
+        // noinspection unchecked
         popupLists = (ArrayList<TabFramePopup>[]) new ArrayList[count];
         for (int i = 0; i < count; i++) {
             tabLists[i] = new ArrayList<>();
@@ -175,8 +177,8 @@ public class JTabFrame extends JComponent {
     /**
      * Get the number of tabs at the given alignment position.
      *
-     * @param a the alignment position.
-     * @return number of tabs.
+     * @param  a the alignment position.
+     * @return   number of tabs.
      */
     public int getTabCountAt(final Alignment a) {
         return tabsForAlignment(a).size();
@@ -328,7 +330,7 @@ public class JTabFrame extends JComponent {
         tabComp.setOrientation(a);
         getTabContainer(a).add(tabComp.getComponent());
         List<TabFrameTab> tabs = tabsForAlignment(a);
-        //Adjust indices for tabs.
+        // Adjust indices for tabs.
         Iterator<TabFrameTab> iterator = tabs.listIterator(index);
         while (iterator.hasNext()) {
             TabFrameTab tab = iterator.next();
@@ -346,8 +348,8 @@ public class JTabFrame extends JComponent {
     /**
      * Get a list of components at the given alignment position.
      *
-     * @param a the alignment position.
-     * @return list of components at position.
+     * @param  a the alignment position.
+     * @return   list of components at position.
      */
     public List<TabFramePopup> compsForAlignment(final Alignment a) {
         return popupLists[a.ordinal()];
@@ -356,27 +358,26 @@ public class JTabFrame extends JComponent {
     /**
      * Get the tab container for the given alignment position.
      *
-     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
-     * @return the tab container.
+     * @param  a the alignment position.{@link TabFramePosition#getAlignment()}
+     * @return   the tab container.
      */
-
     public JComponent getTabContainer(final Alignment a) {
         switch (a) {
-            case NORTH:
-            case NORTH_EAST:
+            case NORTH :
+            case NORTH_EAST :
                 return getTopTabContainer();
-            case SOUTH:
-            case SOUTH_WEST:
+            case SOUTH :
+            case SOUTH_WEST :
                 return getBottomTabContainer();
-            case EAST:
-            case SOUTH_EAST:
+            case EAST :
+            case SOUTH_EAST :
                 return getRightTabContainer();
-            case WEST:
-            case NORTH_WEST:
+            case WEST :
+            case NORTH_WEST :
                 return getLeftTabContainer();
-            case CENTER:
+            case CENTER :
                 throw new IllegalArgumentException("invalid alignment: " + a);
-            default:
+            default :
                 throw new IllegalArgumentException();
         }
     }
@@ -384,8 +385,8 @@ public class JTabFrame extends JComponent {
     /**
      * Get a list of tab components at the given alignment position.
      *
-     * @param a the alignment position.
-     * @return list of tab components at position.
+     * @param  a the alignment position.
+     * @return   list of tab components at position.
      */
     public List<TabFrameTab> tabsForAlignment(final Alignment a) {
         return tabLists[a.ordinal()];
@@ -462,9 +463,9 @@ public class JTabFrame extends JComponent {
     /**
      * Get the tab component at the given position.
      *
-     * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index the index.{@link TabFramePosition#getIndex()}
-     * @return the tab component.
+     * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param  index                     the index.{@link TabFramePosition#getIndex()}
+     * @return                           the tab component.
      * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public TabFrameTab getTabComponentAt(final Alignment a, final int index) {
@@ -486,9 +487,9 @@ public class JTabFrame extends JComponent {
     /**
      * Get the component at the given position.
      *
-     * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index the index. {@link TabFramePosition#getIndex()} ()}
-     * @return the popup component specified by {@link TabFramePopup#getContentPane()}.
+     * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param  index                     the index. {@link TabFramePosition#getIndex()} ()}
+     * @return                           the popup component specified by {@link TabFramePopup#getContentPane()}.
      * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public Component getComponentAt(final Alignment a, final int index) {
@@ -511,8 +512,8 @@ public class JTabFrame extends JComponent {
     /**
      * Gets the position of the given component or null if it isn't currently added.
      *
-     * @param c the component to find.
-     * @return the position in the tabFrame.{@link TabFramePosition}
+     * @param  c the component to find.
+     * @return   the position in the tabFrame.{@link TabFramePosition}
      */
     public TabFramePosition findComponent(final Component c) {
         for (Alignment a : Alignment.values()) {
@@ -529,8 +530,8 @@ public class JTabFrame extends JComponent {
     /**
      * Close a popup.
      *
-     * @param a     the alignment position of the popup.{@link TabFramePosition#getAlignment()}
-     * @param index the index of the tab.{@link TabFramePosition#getIndex()}
+     * @param  a                         the alignment position of the popup.{@link TabFramePosition#getAlignment()}
+     * @param  index                     the index of the tab.{@link TabFramePosition#getIndex()}
      * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public void closeTab(final Alignment a, final int index) {
@@ -540,9 +541,9 @@ public class JTabFrame extends JComponent {
     /**
      * Toggles the visibility of a tab.
      *
-     * @param a       the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index   the index.{@link TabFramePosition#getIndex()}
-     * @param enabled true if visible.
+     * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param  index                     the index.{@link TabFramePosition#getIndex()}
+     * @param  enabled                   true if visible.
      * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public void toggleTab(final Alignment a, final int index, final boolean enabled) {
@@ -565,9 +566,9 @@ public class JTabFrame extends JComponent {
      * Enable or disable a tab. A disabled tab cannot be opened. Enabling a tab does not open it. Disabling a tab closes
      * it. After the tab has been disabled enabling it won't restore the open state,
      *
-     * @param a       the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index   the index.{@link TabFramePosition#getIndex()}
-     * @param enabled true if enabled.
+     * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param  index                     the index.{@link TabFramePosition#getIndex()}
+     * @param  enabled                   true if enabled.
      * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
      */
     public void setTabEnabled(final Alignment a, final int index, final boolean enabled) {
@@ -610,8 +611,8 @@ public class JTabFrame extends JComponent {
     /**
      * Get the popup component at the given position that is currently active.
      *
-     * @param a the alignment position. {@link TabFramePosition#getAlignment()}
-     * @return the popup component specified by {@link TabFramePopup#getComponent()}.
+     * @param  a the alignment position. {@link TabFramePosition#getAlignment()}
+     * @return   the popup component specified by {@link TabFramePopup#getComponent()}.
      */
     public Component getPopupComponentAt(final Alignment a) {
         List<TabFramePopup> tabs = compsForAlignment(a);
@@ -756,7 +757,7 @@ public class JTabFrame extends JComponent {
      */
     private void removeTabComp(final Alignment a, final int index) {
         List<TabFrameTab> tabs = tabsForAlignment(a);
-        //Adjust indices for tabs.
+        // Adjust indices for tabs.
         Iterator<TabFrameTab> iterator = tabs.listIterator(index);
         while (iterator.hasNext()) {
             TabFrameTab tab = iterator.next();
@@ -769,9 +770,9 @@ public class JTabFrame extends JComponent {
     /**
      * Get the popup component at the given position.
      *
-     * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index the index.{@link TabFramePosition#getIndex()}
-     * @return the popup component specified by {@link TabFramePopup#getComponent()}.
+     * @param  a     the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param  index the index.{@link TabFramePosition#getIndex()}
+     * @return       the popup component specified by {@link TabFramePopup#getComponent()}.
      */
     public Component getPopupComponentAt(final Alignment a, final int index) {
         List<TabFramePopup> tabs = compsForAlignment(a);
@@ -781,8 +782,8 @@ public class JTabFrame extends JComponent {
     /**
      * Get the component at the given position.
      *
-     * @param a the alignment position. {@link TabFramePosition#getAlignment()}
-     * @return the component specified by {@link TabFramePopup#getContentPane()}.
+     * @param  a the alignment position. {@link TabFramePosition#getAlignment()}
+     * @return   the component specified by {@link TabFramePopup#getContentPane()}.
      */
     public Component getComponentAt(final Alignment a) {
         List<TabFramePopup> tabs = compsForAlignment(a);
@@ -792,9 +793,9 @@ public class JTabFrame extends JComponent {
     /**
      * Get the custom tab component at the given position.
      *
-     * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index the index.{@link TabFramePosition#getIndex()}
-     * @return the user tab component or null if none is installed.
+     * @param  a     the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param  index the index.{@link TabFramePosition#getIndex()}
+     * @return       the user tab component or null if none is installed.
      */
     public Component getUserTabComponentAt(final Alignment a, final int index) {
         TabFrameTab tab = getTabComponentAt(a, index);
@@ -844,28 +845,31 @@ public class JTabFrame extends JComponent {
      * Get the position of the alignment peer. That being the other position that occupies the same tab container given
      * by {@link #getTabContainer(Alignment)}.
      * <p>
-     * NORTH  = NORTH_EAST
-     * </p><p>
-     * EAST   = SOUTH_EAST
-     * </p><p>
-     * SOUTH  = SOUTH_WEST
-     * </p><p>
-     * WEST   = NORTH_WEST
+     * NORTH = NORTH_EAST
+     * </p>
+     * <p>
+     * EAST = SOUTH_EAST
+     * </p>
+     * <p>
+     * SOUTH = SOUTH_WEST
+     * </p>
+     * <p>
+     * WEST = NORTH_WEST
      *
-     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
-     * @return the peer position.{@link TabFramePosition#getAlignment()}
+     * @param  a the alignment position.{@link TabFramePosition#getAlignment()}
+     * @return   the peer position.{@link TabFramePosition#getAlignment()}
      */
     public Alignment getPeer(final Alignment a) {
         switch (a) {
-            case NORTH:
-            case SOUTH:
-            case WEST:
-            case EAST:
+            case NORTH :
+            case SOUTH :
+            case WEST :
+            case EAST :
                 return a.clockwise();
-            case NORTH_EAST:
-            case NORTH_WEST:
-            case SOUTH_EAST:
-            case SOUTH_WEST:
+            case NORTH_EAST :
+            case NORTH_WEST :
+            case SOUTH_EAST :
+            case SOUTH_WEST :
                 return a.anticlockwise();
         }
         return a;
@@ -906,9 +910,9 @@ public class JTabFrame extends JComponent {
     /**
      * Returns whether the given tab is selected.
      *
-     * @param a     the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index the index.{@link TabFramePosition#getIndex()}
-     * @return true if selected.
+     * @param  a     the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param  index the index.{@link TabFramePosition#getIndex()}
+     * @return       true if selected.
      */
     public boolean isSelected(final Alignment a, final int index) {
         if (a == null) return false;
@@ -918,8 +922,8 @@ public class JTabFrame extends JComponent {
     /**
      * Get the index that is currently selected at the given location or -1 if none is selected.
      *
-     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
-     * @return the current selected index at the alignment position.
+     * @param  a the alignment position.{@link TabFramePosition#getAlignment()}
+     * @return   the current selected index at the alignment position.
      */
     public int getSelectedIndex(final Alignment a) {
         return selectedIndices[a.ordinal()];
@@ -985,7 +989,6 @@ public class JTabFrame extends JComponent {
     public static class TabFramePosition {
         private Alignment a;
         private int index;
-
 
         public TabFramePosition(final Alignment a, final int index) {
             this.a = a;

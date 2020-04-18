@@ -20,13 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.border;
 
-
-import com.github.weisj.darklaf.util.ImageUtil;
-
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -37,17 +34,24 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.border.Border;
+
+import com.github.weisj.darklaf.util.ImageUtil;
+
 /**
  * Implements a DropShadow for components. In general, the DropShadowBorder will work with any rectangular components
  * that do not have a default border installed as part of the look and feel, or otherwise. For example, DropShadowBorder
  * works wonderfully with JPanel, but horribly with JComboBox.
  * <p>
  * Note: {@code DropShadowBorder} should usually be added to non-opaque components, otherwise the background is likely
- * to bleed through.</p>
- * <p>Note: Since generating drop shadows is relatively expensive operation,
+ * to bleed through.
+ * </p>
+ * <p>
+ * Note: Since generating drop shadows is relatively expensive operation,
  * {@code DropShadowBorder} keeps internal static cache that allows sharing same border for multiple re-rendering and
  * between different instances of the class. Since this cache is shared at class level and never reset, it might bleed
- * your app memory in case you tend to create many different borders rapidly.</p>
+ * your app memory in case you tend to create many different borders rapidly.
+ * </p>
  *
  * @author rbair Adaptions made by
  * @author Jannis Weis
@@ -63,17 +67,14 @@ public class DropShadowBorder implements Border, Serializable {
     private boolean showBottomShadow;
     private boolean showRightShadow;
 
-
     public DropShadowBorder() {
         this(Color.BLACK, 5);
     }
-
 
     public DropShadowBorder(final Color shadowColor, final int shadowSize) {
         this(shadowColor, shadowSize, .5f, 12, false, true,
              true, true);
     }
-
 
     public DropShadowBorder(final Color shadowColor, final int shadowSize,
                             final float shadowOpacity, final int cornerSize, final boolean showTopShadow,
@@ -89,7 +90,6 @@ public class DropShadowBorder implements Border, Serializable {
         setShowRightShadow(showRightShadow);
     }
 
-
     @Override
     public void paintBorder(final Component c, final Graphics graphics,
                             final int x, final int y, final int width, final int height) {
@@ -102,14 +102,14 @@ public class DropShadowBorder implements Border, Serializable {
         Graphics2D g2 = (Graphics2D) graphics.create();
 
         try {
-            //The location and size of the shadows depends on which shadows are being
-            //drawn. For instance, if the left & bottom shadows are being drawn, then
-            //the left shadow extends all the way down to the corner, a corner is drawn,
-            //and then the bottom shadow begins at the corner. If, however, only the
-            //bottom shadow is drawn, then the bottom-left corner is drawn to the
-            //right of the corner, and the bottom shadow is somewhat shorter than before.
+            // The location and size of the shadows depends on which shadows are being
+            // drawn. For instance, if the left & bottom shadows are being drawn, then
+            // the left shadow extends all the way down to the corner, a corner is drawn,
+            // and then the bottom shadow begins at the corner. If, however, only the
+            // bottom shadow is drawn, then the bottom-left corner is drawn to the
+            // right of the corner, and the bottom shadow is somewhat shorter than before.
 
-            int shadowOffset = 2; //the distance between the shadow and the edge
+            int shadowOffset = 2; // the distance between the shadow and the edge
 
             Point topLeftShadowPoint = null;
             if (showLeftShadow || showTopShadow) {
@@ -166,9 +166,8 @@ public class DropShadowBorder implements Border, Serializable {
 
             if (showLeftShadow) {
                 assert topLeftShadowPoint != null && bottomLeftShadowPoint != null;
-                Rectangle leftShadowRect =
-                    new Rectangle(x, topLeftShadowPoint.y + shadowSize, shadowSize,
-                                  bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
+                Rectangle leftShadowRect = new Rectangle(x, topLeftShadowPoint.y + shadowSize, shadowSize,
+                                                         bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
                 g2.drawImage(images[Position.LEFT.ordinal()],
                              leftShadowRect.x, leftShadowRect.y,
                              leftShadowRect.width, leftShadowRect.height, null);
@@ -176,10 +175,11 @@ public class DropShadowBorder implements Border, Serializable {
 
             if (showBottomShadow) {
                 assert bottomLeftShadowPoint != null && bottomRightShadowPoint != null;
-                Rectangle bottomShadowRect =
-                    new Rectangle(bottomLeftShadowPoint.x + shadowSize, y + height - shadowSize,
-                                  bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize,
-                                  shadowSize);
+                Rectangle bottomShadowRect = new Rectangle(bottomLeftShadowPoint.x + shadowSize,
+                                                           y + height - shadowSize,
+                                                           bottomRightShadowPoint.x - bottomLeftShadowPoint.x
+                                                                                    - shadowSize,
+                                                           shadowSize);
                 g2.drawImage(images[Position.BOTTOM.ordinal()],
                              bottomShadowRect.x, bottomShadowRect.y,
                              bottomShadowRect.width, bottomShadowRect.height, null);
@@ -187,9 +187,10 @@ public class DropShadowBorder implements Border, Serializable {
 
             if (showRightShadow) {
                 assert topRightShadowPoint != null && bottomRightShadowPoint != null;
-                Rectangle rightShadowRect =
-                    new Rectangle(x + width - shadowSize, topRightShadowPoint.y + shadowSize, shadowSize,
-                                  bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize);
+                Rectangle rightShadowRect = new Rectangle(x + width - shadowSize, topRightShadowPoint.y + shadowSize,
+                                                          shadowSize,
+                                                          bottomRightShadowPoint.y - topRightShadowPoint.y
+                                                                      - shadowSize);
                 g2.drawImage(images[Position.RIGHT.ordinal()],
                              rightShadowRect.x, rightShadowRect.y,
                              rightShadowRect.width, rightShadowRect.height, null);
@@ -197,9 +198,9 @@ public class DropShadowBorder implements Border, Serializable {
 
             if (showTopShadow) {
                 assert topLeftShadowPoint != null && topRightShadowPoint != null;
-                Rectangle topShadowRect =
-                    new Rectangle(topLeftShadowPoint.x + shadowSize, y,
-                                  topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize);
+                Rectangle topShadowRect = new Rectangle(topLeftShadowPoint.x + shadowSize, y,
+                                                        topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize,
+                                                        shadowSize);
                 g2.drawImage(images[Position.TOP.ordinal()],
                              topShadowRect.x, topShadowRect.y,
                              topShadowRect.width, topShadowRect.height, null);
@@ -231,25 +232,25 @@ public class DropShadowBorder implements Border, Serializable {
     @SuppressWarnings("SuspiciousNameCombination")
 
     private BufferedImage[] getImages(final Graphics2D g2) {
-        //first, check to see if an image for this size has already been rendered
-        //if so, use the cache. Else, draw and save
+        // first, check to see if an image for this size has already been rendered
+        // if so, use the cache. Else, draw and save
         BufferedImage[] images = CACHE.get(getBorderHash(shadowSize, shadowOpacity, shadowColor));
         if (images == null) {
             images = new BufferedImage[Position.count()];
 
             /*
              * To draw a drop shadow, I have to:
-             *  1) Create a rounded rectangle
-             *  2) Create a BufferedImage to draw the rounded rect in
-             *  3) Translate the graphics for the image, so that the rectangle
-             *     is centered in the drawn space. The border around the rectangle
-             *     needs to be shadowWidth wide, so that there is space for the
-             *     shadow to be drawn.
-             *  4) Draw the rounded rect as shadowColor, with an opacity of shadowOpacity
-             *  5) Create the BLUR_KERNEL
-             *  6) Blur the image
-             *  7) copy off the corners, sides, etc into images to be used for
-             *     drawing the Border
+             * 1) Create a rounded rectangle
+             * 2) Create a BufferedImage to draw the rounded rect in
+             * 3) Translate the graphics for the image, so that the rectangle
+             * is centered in the drawn space. The border around the rectangle
+             * needs to be shadowWidth wide, so that there is space for the
+             * shadow to be drawn.
+             * 4) Draw the rounded rect as shadowColor, with an opacity of shadowOpacity
+             * 5) Create the BLUR_KERNEL
+             * 6) Blur the image
+             * 7) copy off the corners, sides, etc into images to be used for
+             * drawing the Border
              */
             int rectWidth = cornerSize + 1;
             RoundRectangle2D rect = new RoundRectangle2D.Double(0, 0, rectWidth, rectWidth, cornerSize, cornerSize);
@@ -328,10 +329,9 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     /**
-     * Returns a new BufferedImage that represents a subregion of the given BufferedImage.  (Note that this method does
+     * Returns a new BufferedImage that represents a subregion of the given BufferedImage. (Note that this method does
      * not use BufferedImage.getSubimage(), which will defeat image acceleration strategies on later JDKs.)
      */
-
     private BufferedImage getSubImage(final BufferedImage img, final int x, final int y, final int w, final int h) {
         BufferedImage ret = ImageUtil.createCompatibleTranslucentImage(w, h);
         Graphics2D g2 = ret.createGraphics();
@@ -437,12 +437,17 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     private enum Position {
-        TOP, TOP_LEFT, LEFT, BOTTOM_LEFT,
-        BOTTOM, BOTTOM_RIGHT, RIGHT, TOP_RIGHT;
+        TOP,
+        TOP_LEFT,
+        LEFT,
+        BOTTOM_LEFT,
+        BOTTOM,
+        BOTTOM_RIGHT,
+        RIGHT,
+        TOP_RIGHT;
 
         static int count() {
             return 8;
         }
     }
-
 }

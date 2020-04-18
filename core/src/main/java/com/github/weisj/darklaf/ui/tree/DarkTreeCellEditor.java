@@ -20,20 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import com.github.weisj.darklaf.components.SelectableTreeNode;
-import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
-import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
-import com.github.weisj.darklaf.ui.text.DarkTextUI;
-import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.tree.TreeCellEditor;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -42,6 +32,18 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.EventObject;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.tree.TreeCellEditor;
+
+import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
+import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
+import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -173,7 +175,6 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         }
         return editorComponent;
     }
-
 
     protected void updateFocus(final FocusEvent e) {
         if (DarkUIUtil.hasFocus(editorComponent, e)) {

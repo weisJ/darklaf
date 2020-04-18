@@ -20,17 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.text;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.decorators.PlainAction;
 import com.github.weisj.darklaf.util.StringUtil;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-import java.util.*;
 
 /**
  * @author Jannis Weis
@@ -73,7 +75,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * Get the capacity of the history.
      *
      * @return the capacity.
-     * @see #setCapacity(int) setCapacity()
+     * @see    #setCapacity(int) setCapacity()
      */
     public int getCapacity() {
         return capacity;
@@ -82,7 +84,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
     /**
      * Set the capacity of the history. If the size grows larger than the capacity the oldest entry will be deleted.
      *
-     * @param capacity the capacity.
+     * @param  capacity                 the capacity.
      * @throws IllegalArgumentException if capacity is negative
      */
     public void setCapacity(final int capacity) throws IllegalArgumentException {
@@ -111,9 +113,9 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * Add entry to the history. If the size is greater than the capacity the oldest entry will be deleted.
      *
      * @param entry the entry to add.
-     * @see #getLength() getLength
-     * @see #setCapacity(int) setCapacity
-     * @see #getCapacity() getCapacity
+     * @see         #getLength() getLength
+     * @see         #setCapacity(int) setCapacity
+     * @see         #getCapacity() getCapacity
      */
     public void addEntry(final String entry) {
         history.remove(entry);

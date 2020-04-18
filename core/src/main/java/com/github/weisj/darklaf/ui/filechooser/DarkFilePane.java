@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.function.Supplier;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -37,13 +39,14 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.Position;
-import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.util.function.Supplier;
+
+import sun.swing.SwingUtilities2;
+
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DarkFilePane extends DarkFilePaneUIBridge {
 
@@ -187,12 +190,11 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         detailsTable.putClientProperty("JTable.fileChooserParent", (Supplier<JFileChooser>) this::getFileChooser);
         detailsTable.putClientProperty("JTable.fileNameColumnIndex", COLUMN_FILENAME);
 
-
         Font font = list.getFont();
         detailsTable.setFont(font);
 
-        TableCellRenderer headerRenderer =
-            new AlignableTableHeaderRenderer(detailsTable.getTableHeader().getDefaultRenderer());
+        TableCellRenderer headerRenderer = new AlignableTableHeaderRenderer(detailsTable.getTableHeader()
+                                                                                        .getDefaultRenderer());
         detailsTable.getTableHeader().setDefaultRenderer(headerRenderer);
         TableCellRenderer cellRenderer = new DetailsTableCellRenderer(chooser);
         detailsTable.setDefaultRenderer(Object.class, cellRenderer);
@@ -278,7 +280,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
 
         ensureIndexIsVisible(index);
         switch (viewType) {
-            case VIEWTYPE_LIST:
+            case VIEWTYPE_LIST :
                 editFile = (File) getModel().getElementAt(getRowSorter().convertRowIndexToModel(index));
                 Rectangle r = list.getCellBounds(index, index);
                 if (editCell == null) {
@@ -313,7 +315,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 editCell.selectAll();
                 break;
 
-            case VIEWTYPE_DETAILS:
+            case VIEWTYPE_DETAILS :
                 detailsTable.editCellAt(index, COLUMN_FILENAME);
                 break;
         }

@@ -20,9 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
-
 package com.github.weisj.darklaf.ui.colorchooser;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+
+import javax.swing.*;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.AncestorEvent;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
@@ -30,13 +38,6 @@ import com.github.weisj.darklaf.decorators.AncestorAdapter;
 import com.github.weisj.darklaf.decorators.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.ColorUtil;
-
-import javax.swing.*;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
-import javax.swing.colorchooser.ColorSelectionModel;
-import javax.swing.event.AncestorEvent;
-import java.awt.*;
-import java.awt.event.KeyEvent;
 
 /**
  * @author pegov
@@ -126,14 +127,12 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         try {
             String hexStr = String.format("%1$-" + 8 + "s", textHex.getText()).replaceAll(" ", "F");
             int alpha = isColorTransparencySelectionEnabled()
-                        ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
-            return new Color(
-                Integer.valueOf(hexStr.substring(0, 2), 16),
-                Integer.valueOf(hexStr.substring(2, 4), 16),
-                Integer.valueOf(hexStr.substring(4, 6), 16),
-                alpha);
-        } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
-        }
+                                                              ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
+            return new Color(Integer.valueOf(hexStr.substring(0, 2), 16),
+                             Integer.valueOf(hexStr.substring(2, 4), 16),
+                             Integer.valueOf(hexStr.substring(4, 6), 16),
+                             alpha);
+        } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
         return null;
     }
 
@@ -275,7 +274,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return (DarkColorModel) formatBox.getSelectedItem();
     }
 
-
     private JComponent buildTopPanel(final boolean enablePipette) {
         final JPanel result = new JPanel(new BorderLayout());
 
@@ -288,7 +286,6 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
         previewPanel.add(previewComponent, BorderLayout.CENTER);
         result.add(previewPanel, BorderLayout.NORTH);
-
 
         final JPanel valuePanel = new JPanel();
         valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.X_AXIS));
@@ -370,8 +367,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
     }
 
     @Override
-    public void updateChooser() {
-    }
+    public void updateChooser() {}
 
     @Override
     public String getDisplayName() {

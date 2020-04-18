@@ -20,8 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.Serializable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -29,15 +34,11 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.Serializable;
 
 /**
  * @author Jannis Weis
  */
 public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
-
 
     private SwatchPanel swatchPanel;
     private RecentSwatchPanel recentSwatchPanel;
@@ -144,7 +145,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         recentSwatchListener = null;
         recentSwatchKeyListener = null;
 
-        removeAll();  // strip out all the sub-components
+        removeAll(); // strip out all the sub-components
     }
 
     protected void setSelectedColor(final Color color) {
@@ -196,5 +197,4 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
             }
         }
     }
-
 }

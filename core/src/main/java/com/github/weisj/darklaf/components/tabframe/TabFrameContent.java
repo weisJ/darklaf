@@ -20,12 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import com.github.weisj.darklaf.util.Alignment;
-
 import java.awt.*;
+
+import com.github.weisj.darklaf.util.Alignment;
 
 public interface TabFrameContent {
 
@@ -54,8 +55,8 @@ public interface TabFrameContent {
     /**
      * Returns whether the given popup is enabled.
      *
-     * @param a the alignment of the popup.
-     * @return true if enabled.
+     * @param  a the alignment of the popup.
+     * @return   true if enabled.
      */
     boolean isEnabled(Alignment a);
 
@@ -84,8 +85,8 @@ public interface TabFrameContent {
     /**
      * Get the popup container at the given location.
      *
-     * @param alignment the alignment position.
-     * @return the popup container.
+     * @param  alignment the alignment position.
+     * @return           the popup container.
      */
     PopupContainer getContainer(Alignment alignment);
 }

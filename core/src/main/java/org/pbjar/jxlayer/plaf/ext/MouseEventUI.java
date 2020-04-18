@@ -1,47 +1,48 @@
 /*
-  Copyright (c) 2009, Piet Blok
-  All rights reserved.
-  <p>
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-  <p>
-  * Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above
-  copyright notice, this list of conditions and the following
-  disclaimer in the documentation and/or other materials provided
-  with the distribution.
-  * Neither the name of the copyright holder nor the names of the
-  contributors may be used to endorse or promote products derived
-  from this software without specific prior written permission.
-  <p>
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2009, Piet Blok
+ * All rights reserved.
+ * <p>
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * <p>
+ * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution.
+ * Neither the name of the copyright holder nor the names of the
+ * contributors may be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * <p>
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.pbjar.jxlayer.plaf.ext;
 
-import org.jdesktop.jxlayer.JXLayer;
-import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
-import org.jdesktop.jxlayer.plaf.LayerUI;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
+import org.jdesktop.jxlayer.plaf.LayerUI;
 
 /**
  * This class provides for {@link MouseEvent} re-dispatching. It may be used to set a tool tip on {@link JXLayer}'s
@@ -66,7 +67,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         new JInternalFrame();
     }
 
-
     private Component lastEnteredTarget, lastPressedTarget;
     private boolean dispatchingMode = false;
 
@@ -88,7 +88,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      * component} as the installed {@link JXLayer}.
      *
      * @throws IllegalStateException when this {@link LayerUI} has been installed already
-     * @see #getInstalledLayer()
+     * @see                          #getInstalledLayer()
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -192,7 +192,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-
     private Point calculateTargetPoint(final JXLayer<? extends V> layer,
                                        final MouseEvent mouseEvent) {
         Point point = mouseEvent.getPoint();
@@ -218,9 +217,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         // }
     }
 
-
-    private MouseWheelEvent createMouseWheelEvent(
-        final MouseWheelEvent mouseWheelEvent, final Point point, final Component target) {
+    private MouseWheelEvent createMouseWheelEvent(final MouseWheelEvent mouseWheelEvent, final Point point,
+                                                  final Component target) {
         return new MouseWheelEvent(target, //
                                    mouseWheelEvent.getID(), //
                                    mouseWheelEvent.getWhen(), //
@@ -241,7 +239,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
             target.dispatchEvent(mouseEvent);
         }
     }
-
 
     private Component findWheelListenerComponent(final Component target) {
         if (target == null) {
@@ -270,26 +267,25 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     private Component getListeningComponent(final MouseEvent event, final Component component) {
         Component comp;
         switch (event.getID()) {
-            case MouseEvent.MOUSE_CLICKED:
-            case MouseEvent.MOUSE_ENTERED:
-            case MouseEvent.MOUSE_EXITED:
-            case MouseEvent.MOUSE_PRESSED:
-            case MouseEvent.MOUSE_RELEASED:
+            case MouseEvent.MOUSE_CLICKED :
+            case MouseEvent.MOUSE_ENTERED :
+            case MouseEvent.MOUSE_EXITED :
+            case MouseEvent.MOUSE_PRESSED :
+            case MouseEvent.MOUSE_RELEASED :
                 comp = getMouseListeningComponent(component);
                 break;
-            case MouseEvent.MOUSE_DRAGGED:
-            case MouseEvent.MOUSE_MOVED:
+            case MouseEvent.MOUSE_DRAGGED :
+            case MouseEvent.MOUSE_MOVED :
                 comp = getMouseMotionListeningComponent(component);
                 break;
-            case MouseEvent.MOUSE_WHEEL:
+            case MouseEvent.MOUSE_WHEEL :
                 comp = getMouseWheelListeningComponent(component);
                 break;
-            default:
+            default :
                 comp = null;
         }
         return comp;
     }
-
 
     private Component getMouseListeningComponent(final Component component) {
         if (component.getMouseListeners().length > 0) {
@@ -326,7 +322,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-
     private Component getMouseWheelListeningComponent(final Component component) {
         if (component.getMouseWheelListeners().length > 0) {
             return component;
@@ -339,7 +334,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
             }
         }
     }
-
 
     private Component getTarget(final JXLayer<? extends V> layer, final Point targetPoint) {
         Component view = layer.getView();
@@ -369,34 +363,32 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
             }
 
             switch (originalEvent.getID()) {
-                case MouseEvent.MOUSE_PRESSED:
+                case MouseEvent.MOUSE_PRESSED :
                     newEvent = transformMouseEvent(layer, originalEvent, realTarget, realPoint);
                     if (newEvent != null) {
                         lastPressedTarget = newEvent.getComponent();
                     }
                     break;
-                case MouseEvent.MOUSE_RELEASED:
-                    newEvent =
-                        transformMouseEvent(layer, originalEvent, lastPressedTarget, realPoint);
+                case MouseEvent.MOUSE_RELEASED :
+                    newEvent = transformMouseEvent(layer, originalEvent, lastPressedTarget, realPoint);
                     lastPressedTarget = null;
                     break;
-                case MouseEvent.MOUSE_ENTERED:
-                case MouseEvent.MOUSE_EXITED:
+                case MouseEvent.MOUSE_ENTERED :
+                case MouseEvent.MOUSE_EXITED :
                     generateEnterExitEvents(layer, originalEvent, realTarget, realPoint);
                     break;
-                case MouseEvent.MOUSE_MOVED:
+                case MouseEvent.MOUSE_MOVED :
                     newEvent = transformMouseEvent(layer, originalEvent, realTarget, realPoint);
                     generateEnterExitEvents(layer, originalEvent, realTarget, realPoint);
                     break;
-                case MouseEvent.MOUSE_DRAGGED:
-                    newEvent =
-                        transformMouseEvent(layer, originalEvent, lastPressedTarget, realPoint);
+                case MouseEvent.MOUSE_DRAGGED :
+                    newEvent = transformMouseEvent(layer, originalEvent, lastPressedTarget, realPoint);
                     generateEnterExitEvents(layer, originalEvent, realTarget, realPoint);
                     break;
-                case MouseEvent.MOUSE_CLICKED:
+                case MouseEvent.MOUSE_CLICKED :
                     newEvent = transformMouseEvent(layer, originalEvent, realTarget, realPoint);
                     break;
-                case (MouseEvent.MOUSE_WHEEL):
+                case (MouseEvent.MOUSE_WHEEL) :
                     redispatchMouseWheelEvent((MouseWheelEvent) originalEvent, realTarget, layer);
                     break;
             }
@@ -406,18 +398,15 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
 
     private void redispatchMouseWheelEvent(final MouseWheelEvent mouseWheelEvent,
                                            final Component target, final JXLayer<? extends V> layer) {
-        MouseWheelEvent newEvent = this.transformMouseWheelEvent(
-            mouseWheelEvent, target, layer);
+        MouseWheelEvent newEvent = this.transformMouseWheelEvent(mouseWheelEvent, target, layer);
         processMouseWheelEvent(newEvent, layer);
     }
-
 
     private MouseEvent transformMouseEvent(final JXLayer<? extends V> layer,
                                            final MouseEvent mouseEvent, final Component target, final Point realPoint) {
         return transformMouseEvent(layer, mouseEvent, target, realPoint,
                                    mouseEvent.getID());
     }
-
 
     private MouseEvent transformMouseEvent(final JXLayer<? extends V> layer,
                                            final MouseEvent mouseEvent, final Component target, final Point targetPoint,
@@ -440,10 +429,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-
-    private MouseWheelEvent transformMouseWheelEvent(
-        final MouseWheelEvent mouseWheelEvent, final Component t,
-        final JXLayer<? extends V> layer) {
+    private MouseWheelEvent transformMouseWheelEvent(final MouseWheelEvent mouseWheelEvent, final Component t,
+                                                     final JXLayer<? extends V> layer) {
         Component target = t;
         if (target == null) {
             target = layer;
@@ -453,7 +440,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         return createMouseWheelEvent(mouseWheelEvent,
                                      point, target);
     }
-
 
     private Point transformPoint(final JXLayer<? extends V> layer, final Point point) {
         AffineTransform transform = this.getTransform(layer);
@@ -467,9 +453,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         return point;
     }
 
-
     protected JXLayer<? extends V> getInstalledLayer() {
         return installedLayer;
     }
-
 }

@@ -20,25 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.list;
 
-import com.github.weisj.darklaf.ui.BasicTransferable;
-import com.github.weisj.darklaf.ui.DragRecognitionSupport;
-import com.github.weisj.darklaf.util.DarkSwingUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.LazyActionMap;
-import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
-import sun.swing.UIAction;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.UIResource;
-import javax.swing.plaf.basic.BasicListUI;
-import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
@@ -46,6 +31,24 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
+import javax.swing.plaf.basic.BasicListUI;
+import javax.swing.text.Position;
+
+import sun.swing.DefaultLookup;
+import sun.swing.SwingUtilities2;
+import sun.swing.UIAction;
+
+import com.github.weisj.darklaf.ui.BasicTransferable;
+import com.github.weisj.darklaf.ui.DragRecognitionSupport;
+import com.github.weisj.darklaf.util.DarkSwingUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * An extensible implementation of {@code ListUI}.
@@ -61,8 +64,7 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * The constant BASELINE_COMPONENT_KEY.
      */
-    protected static final StringBuilder BASELINE_COMPONENT_KEY =
-        new StringBuilder("List.baselineComponent");
+    protected static final StringBuilder BASELINE_COMPONENT_KEY = new StringBuilder("List.baselineComponent");
     /**
      * The bit relates to model changed property.
      */
@@ -130,7 +132,7 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * The constant defaultTransferHandler.
      */
-// Following ivars are used if the list is laying out horizontally
+    // Following ivars are used if the list is laying out horizontally
     protected static final TransferHandler defaultTransferHandler = new ListTransferHandler();
     /**
      * The instance of {@code JList}.
@@ -153,10 +155,11 @@ public class DarkListUIBridge extends BasicListUI {
      */
     protected ListSelectionListener listSelectionListener;
 
-    /* The bits below define JList property changes that affect layout.
+    /*
+     * The bits below define JList property changes that affect layout.
      * When one of these properties changes we set a bit in
-     * updateLayoutStateNeeded.  The change is dealt with lazily, see
-     * maybeUpdateLayoutState.  Changes to the JLists model, e.g. the
+     * updateLayoutStateNeeded. The change is dealt with lazily, see
+     * maybeUpdateLayoutState. Changes to the JLists model, e.g. the
      * models length changed, are handled similarly, see DataListener.
      */
     /**
@@ -230,8 +233,8 @@ public class DarkListUIBridge extends BasicListUI {
      * Returns a new instance of {@code BasicListUI}. {@code BasicListUI} delegates are allocated one per {@code
      * JList}*.
      *
-     * @param list a component
-     * @return a new {@code ListUI} implementation for the Windows look and feel.
+     * @param  list a component
+     * @return      a new {@code ListUI} implementation for the Windows look and feel.
      */
     public static ComponentUI createUI(final JComponent list) {
         return new BasicListUI();
@@ -293,7 +296,7 @@ public class DarkListUIBridge extends BasicListUI {
      * @param dataModel    a list model
      * @param selModel     a selection model
      * @param leadIndex    a lead index
-     * @see #paint
+     * @see                #paint
      */
     protected void paintCell(final Graphics g,
                              final int row,
@@ -306,8 +309,8 @@ public class DarkListUIBridge extends BasicListUI {
         boolean cellHasFocus = list.hasFocus() && (row == leadIndex);
         boolean isSelected = selModel.isSelectedIndex(row);
 
-        Component rendererComponent =
-            cellRenderer.getListCellRendererComponent(list, value, row, isSelected, cellHasFocus);
+        Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, row, isSelected,
+                                                                                cellHasFocus);
 
         int cx = rowBounds.x;
         int cy = rowBounds.y;
@@ -329,7 +332,7 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Paint the rows that intersect the Graphics objects clipRect.  This method calls paintCell as necessary.
+     * Paint the rows that intersect the Graphics objects clipRect. This method calls paintCell as necessary.
      * Subclasses may want to override these methods.
      *
      * @see #paintCell
@@ -347,15 +350,14 @@ public class DarkListUIBridge extends BasicListUI {
      *
      * @throws NullPointerException     {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @see                             javax.swing.JComponent#getBaseline(int, int)
+     * @since                           1.6
      */
     public int getBaseline(final JComponent c, final int width, final int height) {
         super.getBaseline(c, width, height);
         int rowHeight = list.getFixedCellHeight();
         UIDefaults lafDefaults = UIManager.getLookAndFeelDefaults();
-        Component renderer = (Component) lafDefaults.get(
-            BASELINE_COMPONENT_KEY);
+        Component renderer = (Component) lafDefaults.get(BASELINE_COMPONENT_KEY);
         if (renderer == null) {
             @SuppressWarnings("unchecked")
             ListCellRenderer<Object> lcr = (ListCellRenderer<Object>) UIManager.get("List.cellRenderer");
@@ -365,15 +367,14 @@ public class DarkListUIBridge extends BasicListUI {
             if (lcr == null) {
                 lcr = new DefaultListCellRenderer();
             }
-            renderer = lcr.getListCellRendererComponent(
-                list, "a", -1, false, false);
+            renderer = lcr.getListCellRendererComponent(list, "a", -1, false, false);
             lafDefaults.put(BASELINE_COMPONENT_KEY, renderer);
         }
         renderer.setFont(list.getFont());
         // JList actually has much more complex behavior here.
         // If rowHeight != -1 the rowHeight is either the max of all cell
         // heights (layout orientation != VERTICAL), or is variable depending
-        // upon the cell.  We assume a default size.
+        // upon the cell. We assume a default size.
         // We could theoretically query the real renderer, but that would
         // not work for an empty model and the results may vary with
         // the content.
@@ -388,66 +389,64 @@ public class DarkListUIBridge extends BasicListUI {
      * Returns an enum indicating how the baseline of the component changes as the size changes.
      *
      * @throws NullPointerException {@inheritDoc}
-     * @see javax.swing.JComponent#getBaseline(int, int)
-     * @since 1.6
+     * @see                         javax.swing.JComponent#getBaseline(int, int)
+     * @since                       1.6
      */
-    public Component.BaselineResizeBehavior getBaselineResizeBehavior(
-        final JComponent c) {
+    public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
     }
 
     /**
      * The preferredSize of the list depends upon the layout orientation.
-     *
      * <table class="striped">
      * <caption>Describes the preferred size for each layout orientation
      * </caption>
      * <thead>
-     *   <tr>
-     *     <th scope="col">Layout Orientation
-     *     <th scope="col">Preferred Size
+     * <tr>
+     * <th scope="col">Layout Orientation
+     * <th scope="col">Preferred Size
      * </thead>
      * <tbody>
-     *   <tr>
-     *     <th scope="row">JList.VERTICAL
-     *     <td>The preferredSize of the list is total height of the rows
-     *     and the maximum width of the cells. If JList.fixedCellHeight
-     *     is specified then the total height of the rows is just
-     *     (cellVerticalMargins + fixedCellHeight) * model.getSize() where
-     *     rowVerticalMargins is the space we allocate for drawing
-     *     the yellow focus outline. Similarly if fixedCellWidth is
-     *     specified then we just use that.
-     *   <tr>
-     *     <th scope="row">JList.VERTICAL_WRAP
-     *     <td>If the visible row count is greater than zero, the preferredHeight
-     *     is the maximum cell height * visibleRowCount. If the visible row
-     *     count is &lt;= 0, the preferred height is either the current height
-     *     of the list, or the maximum cell height, whichever is
-     *     bigger. The preferred width is than the maximum cell width *
-     *     number of columns needed. Where the number of columns needs is
-     *     list.height / max cell height. Max cell height is either the fixed
-     *     cell height, or is determined by iterating through all the cells
-     *     to find the maximum height from the ListCellRenderer.
-     *   <tr>
-     *     <th scope="row">JList.HORIZONTAL_WRAP
-     *     <td>If the visible row count is greater than zero, the preferredHeight
-     *     is the maximum cell height * adjustedRowCount. Where
-     *     visibleRowCount is used to determine the number of columns.
-     *     Because this lays out horizontally the number of rows is
-     *     then determined from the column count. For example, lets say
-     *     you have a model with 10 items and the visible row count is 8.
-     *     The number of columns needed to display this is 2, but you no
-     *     longer need 8 rows to display this, you only need 5, thus
-     *     the adjustedRowCount is 5.
+     * <tr>
+     * <th scope="row">JList.VERTICAL
+     * <td>The preferredSize of the list is total height of the rows
+     * and the maximum width of the cells. If JList.fixedCellHeight
+     * is specified then the total height of the rows is just
+     * (cellVerticalMargins + fixedCellHeight) * model.getSize() where
+     * rowVerticalMargins is the space we allocate for drawing
+     * the yellow focus outline. Similarly if fixedCellWidth is
+     * specified then we just use that.
+     * <tr>
+     * <th scope="row">JList.VERTICAL_WRAP
+     * <td>If the visible row count is greater than zero, the preferredHeight
+     * is the maximum cell height * visibleRowCount. If the visible row
+     * count is &lt;= 0, the preferred height is either the current height
+     * of the list, or the maximum cell height, whichever is
+     * bigger. The preferred width is than the maximum cell width *
+     * number of columns needed. Where the number of columns needs is
+     * list.height / max cell height. Max cell height is either the fixed
+     * cell height, or is determined by iterating through all the cells
+     * to find the maximum height from the ListCellRenderer.
+     * <tr>
+     * <th scope="row">JList.HORIZONTAL_WRAP
+     * <td>If the visible row count is greater than zero, the preferredHeight
+     * is the maximum cell height * adjustedRowCount. Where
+     * visibleRowCount is used to determine the number of columns.
+     * Because this lays out horizontally the number of rows is
+     * then determined from the column count. For example, lets say
+     * you have a model with 10 items and the visible row count is 8.
+     * The number of columns needed to display this is 2, but you no
+     * longer need 8 rows to display this, you only need 5, thus
+     * the adjustedRowCount is 5.
      * <p>
-     *     If the visible row count is &lt;= 0, the preferred height is dictated
-     *     by the number of columns, which will be as many as can fit in the
-     *     width of the {@code JList} (width / max cell width), with at least
-     *     one column. The preferred height then becomes the model size / number
-     *     of columns * maximum cell height. Max cell height is either the fixed
-     *     cell height, or is determined by iterating through all the cells to
-     *     find the maximum height from the ListCellRenderer.
+     * If the visible row count is &lt;= 0, the preferred height is dictated
+     * by the number of columns, which will be as many as can fit in the
+     * width of the {@code JList} (width / max cell width), with at least
+     * one column. The preferred height then becomes the model size / number
+     * of columns * maximum cell height. Max cell height is either the fixed
+     * cell height, or is determined by iterating through all the cells to
+     * find the maximum height from the ListCellRenderer.
      * </tbody>
      * </table>
      * <p>
@@ -457,8 +456,8 @@ public class DarkListUIBridge extends BasicListUI {
      * insets.bottom. Where the <code>Insets</code> are determined from
      * <code>list.getInsets()</code>.
      *
-     * @param c The JList component.
-     * @return The total size of the list.
+     * @param  c The JList component.
+     * @return   The total size of the list.
      */
     public Dimension getPreferredSize(final JComponent c) {
         maybeUpdateLayoutState();
@@ -558,7 +557,7 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Creates and installs the listeners for the JList, its model, and its selectionModel.  This method is called at
+     * Creates and installs the listeners for the JList, its model, and its selectionModel. This method is called at
      * installUI() time.
      *
      * @see #installUI
@@ -599,8 +598,8 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Removes the listeners from the JList, its model, and its selectionModel.  All of the listener fields, are reset
-     * to null here.  This method is called at uninstallUI() time, it should be kept in sync with installListeners.
+     * Removes the listeners from the JList, its model, and its selectionModel. All of the listener fields, are reset
+     * to null here. This method is called at uninstallUI() time, it should be kept in sync with installListeners.
      *
      * @see #uninstallUI
      * @see #installListeners
@@ -747,13 +746,12 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Gets input map.
      *
-     * @param condition the condition
-     * @return the input map
+     * @param  condition the condition
+     * @return           the input map
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_FOCUSED) {
-            InputMap keyMap = (InputMap) DefaultLookup.get(
-                list, this, "List.focusInputMap");
+            InputMap keyMap = (InputMap) DefaultLookup.get(list, this, "List.focusInputMap");
             InputMap rtlKeyMap;
 
             if (isLeftToRight ||
@@ -771,9 +769,9 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the closest location to the model index of the passed in location.
      *
-     * @param x the x
-     * @param y the y
-     * @return the int
+     * @param  x the x
+     * @param  y the y
+     * @return   the int
      */
     protected int convertLocationToModel(final int x, final int y) {
         int row = convertLocationToRow(x, y, true);
@@ -788,7 +786,7 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Uninitializes <code>this.list</code> by calling <code>uninstallListeners()</code>,
      * <code>uninstallKeyboardActions()</code>, and <code>uninstallDefaults()</code>
-     * in order.  Sets this.list to null.
+     * in order. Sets this.list to null.
      *
      * @see #uninstallListeners
      * @see #uninstallKeyboardActions
@@ -877,11 +875,11 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the height of the specified row based on the current layout.
      *
-     * @param row a row
-     * @return the specified row height or -1 if row isn't valid
-     * @see #convertYToRow
-     * @see #convertRowToY
-     * @see #updateLayoutState
+     * @param  row a row
+     * @return     the specified row height or -1 if row isn't valid
+     * @see        #convertYToRow
+     * @see        #convertRowToY
+     * @see        #updateLayoutState
      */
     protected int getRowHeight(final int row) {
         return getHeight(0, row);
@@ -891,10 +889,10 @@ public class DarkListUIBridge extends BasicListUI {
      * Convert the {@code JList} relative coordinate to the row that contains it, based on the current layout. If {@code
      * y0} doesn't fall within any row, return -1.
      *
-     * @param y0 a relative Y coordinate
-     * @return the row that contains y0, or -1
-     * @see #getRowHeight
-     * @see #updateLayoutState
+     * @param  y0 a relative Y coordinate
+     * @return    the row that contains y0, or -1
+     * @see       #getRowHeight
+     * @see       #updateLayoutState
      */
     protected int convertYToRow(final int y0) {
         return convertLocationToRow(0, y0, false);
@@ -903,10 +901,10 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Return the {@code JList} relative Y coordinate of the origin of the specified row or -1 if row isn't valid.
      *
-     * @param row a row
-     * @return the Y coordinate of the origin of row, or -1
-     * @see #getRowHeight
-     * @see #updateLayoutState
+     * @param  row a row
+     * @return     the Y coordinate of the origin of row, or -1
+     * @see        #getRowHeight
+     * @see        #updateLayoutState
      */
     protected int convertRowToY(final int row) {
         if (row >= getRowCount(0) || row < 0) {
@@ -917,7 +915,7 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * If updateLayoutStateNeeded is non zero, call updateLayoutState() and reset updateLayoutStateNeeded.  This method
+     * If updateLayoutStateNeeded is non zero, call updateLayoutState() and reset updateLayoutStateNeeded. This method
      * should be called by methods before doing any computation based on the geometry of the list. For example it's the
      * first call in paint() and getPreferredSize().
      *
@@ -937,11 +935,11 @@ public class DarkListUIBridge extends BasicListUI {
      * @see #maybeUpdateLayoutState
      */
     protected void updateLayoutState() {
-        /* If both JList fixedCellWidth and fixedCellHeight have been
+        /*
+         * If both JList fixedCellWidth and fixedCellHeight have been
          * set, then initialize cellWidth and cellHeight, and set
          * cellHeights to null.
          */
-
         int fixedCellHeight = list.getFixedCellHeight();
         int fixedCellWidth = list.getFixedCellWidth();
 
@@ -955,13 +953,13 @@ public class DarkListUIBridge extends BasicListUI {
             cellHeights = new int[list.getModel().getSize()];
         }
 
-        /* If either of  JList fixedCellWidth and fixedCellHeight haven't
+        /*
+         * If either of JList fixedCellWidth and fixedCellHeight haven't
          * been set, then initialize cellWidth and cellHeights by
-         * scanning through the entire model.  Note: if the renderer is
+         * scanning through the entire model. Note: if the renderer is
          * null, we just set cellWidth and cellHeights[*] to zero,
          * if they're not set already.
          */
-
         if ((fixedCellWidth == -1) || (fixedCellHeight == -1)) {
 
             ListModel<Object> dataModel = list.getModel();
@@ -1004,6 +1002,7 @@ public class DarkListUIBridge extends BasicListUI {
      * Creates a delegate that implements {@code MouseInputListener}. The delegate is added to the corresponding {@code
      * java.awt.Component} listener lists at {@code installUI()} time. Subclasses can override this method to return a
      * custom {@code MouseInputListener}, e.g.
+     *
      * <pre>
      * class MyListUI extends BasicListUI {
      *    protected MouseInputListener <b>createMouseInputListener</b>() {
@@ -1019,8 +1018,8 @@ public class DarkListUIBridge extends BasicListUI {
      * </pre>
      *
      * @return an instance of {@code MouseInputListener}
-     * @see MouseInputHandler
-     * @see #installUI
+     * @see    MouseInputHandler
+     * @see    #installUI
      */
     protected MouseInputListener createMouseInputListener() {
         return getHandler();
@@ -1037,7 +1036,8 @@ public class DarkListUIBridge extends BasicListUI {
 
     /**
      * Creates an instance of {@code ListSelectionHandler} that's added to the {@code JLists} by selectionModel as
-     * needed.  Subclasses can override this method to return a custom {@code ListSelectionListener}, e.g.
+     * needed. Subclasses can override this method to return a custom {@code ListSelectionListener}, e.g.
+     *
      * <pre>
      * class MyListUI extends BasicListUI {
      *    protected ListSelectionListener <b>createListSelectionListener</b>() {
@@ -1053,8 +1053,8 @@ public class DarkListUIBridge extends BasicListUI {
      * </pre>
      *
      * @return an instance of {@code ListSelectionHandler}
-     * @see ListSelectionHandler
-     * @see #installUI
+     * @see    ListSelectionHandler
+     * @see    #installUI
      */
     protected ListSelectionListener createListSelectionListener() {
         return getHandler();
@@ -1063,6 +1063,7 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Creates an instance of {@code ListDataListener} that's added to the {@code JLists} by model as needed. Subclasses
      * can override this method to return a custom {@code ListDataListener}, e.g.
+     *
      * <pre>
      * class MyListUI extends BasicListUI {
      *    protected ListDataListener <b>createListDataListener</b>() {
@@ -1078,9 +1079,9 @@ public class DarkListUIBridge extends BasicListUI {
      * </pre>
      *
      * @return an instance of {@code ListDataListener}
-     * @see ListDataListener
-     * @see JList#getModel
-     * @see #installUI
+     * @see    ListDataListener
+     * @see    JList#getModel
+     * @see    #installUI
      */
     protected ListDataListener createListDataListener() {
         return getHandler();
@@ -1089,6 +1090,7 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Creates an instance of {@code PropertyChangeHandler} that's added to the {@code JList} by {@code installUI()}.
      * Subclasses can override this method to return a custom {@code PropertyChangeListener}, e.g.
+     *
      * <pre>
      * class MyListUI extends BasicListUI {
      *    protected PropertyChangeListener <b>createPropertyChangeListener</b>() {
@@ -1106,8 +1108,8 @@ public class DarkListUIBridge extends BasicListUI {
      * </pre>
      *
      * @return an instance of {@code PropertyChangeHandler}
-     * @see PropertyChangeListener
-     * @see #installUI
+     * @see    PropertyChangeListener
+     * @see    #installUI
      */
     protected PropertyChangeListener createPropertyChangeListener() {
         return getHandler();
@@ -1116,11 +1118,12 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the row at location x/y.
      *
-     * @param x       the x
-     * @param y0      the y 0
-     * @param closest If true and the location doesn't exactly match a particular location, this will return the closest
-     *                row.
-     * @return the int
+     * @param  x       the x
+     * @param  y0      the y 0
+     * @param  closest If true and the location doesn't exactly match a particular location, this will return the
+     *                 closest
+     *                 row.
+     * @return         the int
      */
     public int convertLocationToRow(final int x, final int y0, final boolean closest) {
         int size = list.getModel().getSize();
@@ -1130,8 +1133,7 @@ public class DarkListUIBridge extends BasicListUI {
         }
         Insets insets = list.getInsets();
         if (cellHeights == null) {
-            int row = (cellHeight == 0) ? 0 :
-                      ((y0 - insets.top) / cellHeight);
+            int row = (cellHeight == 0) ? 0 : ((y0 - insets.top) / cellHeight);
             if (closest) {
                 if (row < 0) {
                     row = 0;
@@ -1164,9 +1166,9 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the closest column to the passed in location.
      *
-     * @param x the x
-     * @param y the y
-     * @return the int
+     * @param  x the x
+     * @param  y the y
+     * @return   the int
      */
     protected int convertLocationToColumn(final int x, final int y) {
         if (cellWidth > 0) {
@@ -1194,19 +1196,19 @@ public class DarkListUIBridge extends BasicListUI {
      * Returns the model index for the specified display location. If <code>column</code>x<code>row</code> is beyond the
      * length of the model, this will return the model size - 1.
      *
-     * @param column the column
-     * @param row    the row
-     * @return the model index
+     * @param  column the column
+     * @param  row    the row
+     * @return        the model index
      */
     protected int getModelIndex(final int column, final int row) {
         switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP:
+            case JList.VERTICAL_WRAP :
                 return Math.min(list.getModel().getSize() - 1, rowsPerColumn *
                                                                column + Math.min(row, rowsPerColumn - 1));
-            case JList.HORIZONTAL_WRAP:
+            case JList.HORIZONTAL_WRAP :
                 return Math.min(list.getModel().getSize() - 1, row * columnCount +
                                                                column);
-            default:
+            default :
                 return row;
         }
     }
@@ -1273,7 +1275,8 @@ public class DarkListUIBridge extends BasicListUI {
             }
         } else if (layoutOrientation == JList.VERTICAL_WRAP && height != 0) {
             rowsPerColumn = Math.max(1, (listHeight - insets.top -
-                                         insets.bottom) / height);
+                                         insets.bottom)
+                                        / height);
             columnCount = Math.max(1, dataModelSize / rowsPerColumn);
             if (dataModelSize > 0 && dataModelSize > rowsPerColumn &&
                 dataModelSize % rowsPerColumn != 0) {
@@ -1282,7 +1285,8 @@ public class DarkListUIBridge extends BasicListUI {
         } else if (layoutOrientation == JList.HORIZONTAL_WRAP && cellWidth > 0 &&
                    listWidth > 0) {
             columnCount = Math.max(1, (listWidth - insets.left -
-                                       insets.right) / cellWidth);
+                                       insets.right)
+                                      / cellWidth);
             rowsPerColumn = dataModelSize / columnCount;
             if (dataModelSize % columnCount > 0) {
                 rowsPerColumn++;
@@ -1300,19 +1304,19 @@ public class DarkListUIBridge extends BasicListUI {
      */
     protected void paintImpl(final Graphics g, final JComponent c) {
         switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP:
+            case JList.VERTICAL_WRAP :
                 if (list.getHeight() != listHeight) {
                     updateLayoutStateNeeded |= heightChanged;
                     redrawList();
                 }
                 break;
-            case JList.HORIZONTAL_WRAP:
+            case JList.HORIZONTAL_WRAP :
                 if (list.getWidth() != listWidth) {
                     updateLayoutStateNeeded |= widthChanged;
                     redrawList();
                 }
                 break;
-            default:
+            default :
                 break;
         }
         maybeUpdateLayoutState();
@@ -1345,9 +1349,7 @@ public class DarkListUIBridge extends BasicListUI {
         }
         int maxY = paintBounds.y + paintBounds.height;
         int leadIndex = adjustIndex(list.getLeadSelectionIndex(), list);
-        int rowIncrement = (layoutOrientation == JList.HORIZONTAL_WRAP) ?
-                           columnCount : 1;
-
+        int rowIncrement = (layoutOrientation == JList.HORIZONTAL_WRAP) ? columnCount : 1;
 
         for (int colCounter = startColumn; colCounter <= endColumn;
              colCounter++) {
@@ -1390,9 +1392,9 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Adjust index int.
      *
-     * @param index the index
-     * @param list  the list
-     * @return the int
+     * @param  index the index
+     * @param  list  the list
+     * @return       the int
      */
     protected static int adjustIndex(final int index, final JList<?> list) {
         return index < list.getModel().getSize() ? index : -1;
@@ -1401,9 +1403,9 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the closest row that starts at the specified y-location in the passed in column.
      *
-     * @param y      the y
-     * @param column the column
-     * @return the int
+     * @param  y      the y
+     * @param  column the column
+     * @return        the int
      */
     protected int convertLocationToRowInColumn(final int y, final int column) {
         int x = 0;
@@ -1421,8 +1423,8 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the number of rows in the given column.
      *
-     * @param column the column
-     * @return the row count
+     * @param  column the column
+     * @return        the row count
      */
     protected int getRowCount(final int column) {
         if (column < 0 || column >= columnCount) {
@@ -1452,9 +1454,9 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the height of the cell at the passed in location.
      *
-     * @param column the column
-     * @param row    the row
-     * @return the height
+     * @param  column the column
+     * @param  row    the row
+     * @return        the height
      */
     protected int getHeight(final int column, final int row) {
         if (column < 0 || column > columnCount || row < 0) {
@@ -1466,8 +1468,7 @@ public class DarkListUIBridge extends BasicListUI {
         if (row >= list.getModel().getSize()) {
             return -1;
         }
-        return (cellHeights == null) ? cellHeight :
-               ((row < cellHeights.length) ? cellHeights[row] : -1);
+        return (cellHeights == null) ? cellHeight : ((row < cellHeights.length) ? cellHeights[row] : -1);
     }
 
     /**
@@ -1492,8 +1493,8 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Gets drop line rect.
      *
-     * @param loc the loc
-     * @return the drop line rect
+     * @param  loc the loc
+     * @return     the drop line rect
      */
     protected Rectangle getDropLineRect(final JList.DropLocation loc) {
         int size = list.getModel().getSize();
@@ -1521,8 +1522,7 @@ public class DarkListUIBridge extends BasicListUI {
         if (layoutOrientation == JList.HORIZONTAL_WRAP) {
             if (index == size) {
                 decr = true;
-            } else if (index != 0 && convertModelToRow(index)
-                                     != convertModelToRow(index - 1)) {
+            } else if (index != 0 && convertModelToRow(index) != convertModelToRow(index - 1)) {
 
                 Rectangle prev = getCellBounds(list, index - 1);
                 Rectangle me = getCellBounds(list, index);
@@ -1531,17 +1531,15 @@ public class DarkListUIBridge extends BasicListUI {
                 if (isLeftToRight) {
                     decr = Point2D.distance(prev.x + prev.width,
                                             prev.y + (int) (prev.height / 2.0),
-                                            p.x, p.y)
-                           < Point2D.distance(me.x,
-                                              me.y + (int) (me.height / 2.0),
-                                              p.x, p.y);
+                                            p.x, p.y) < Point2D.distance(me.x,
+                                                                         me.y + (int) (me.height / 2.0),
+                                                                         p.x, p.y);
                 } else {
                     decr = Point2D.distance(prev.x,
                                             prev.y + (int) (prev.height / 2.0),
-                                            p.x, p.y)
-                           < Point2D.distance(me.x + me.width,
-                                              me.y + (int) (prev.height / 2.0),
-                                              p.x, p.y);
+                                            p.x, p.y) < Point2D.distance(me.x + me.width,
+                                                                         me.y + (int) (prev.height / 2.0),
+                                                                         p.x, p.y);
                 }
             }
 
@@ -1572,18 +1570,16 @@ public class DarkListUIBridge extends BasicListUI {
                 index--;
                 rect = getCellBounds(list, index);
                 rect.y += rect.height;
-            } else if (index != 0 && convertModelToColumn(index)
-                                     != convertModelToColumn(index - 1)) {
+            } else if (index != 0 && convertModelToColumn(index) != convertModelToColumn(index - 1)) {
 
                 Rectangle prev = getCellBounds(list, index - 1);
                 Rectangle me = getCellBounds(list, index);
                 Point p = loc.getDropPoint();
                 if (Point2D.distance(prev.x + (int) (prev.width / 2.0),
                                      prev.y + prev.height,
-                                     p.x, p.y)
-                    < Point2D.distance(me.x + (int) (me.width / 2.0),
-                                       me.y,
-                                       p.x, p.y)) {
+                                     p.x, p.y) < Point2D.distance(me.x + (int) (me.width / 2.0),
+                                                                  me.y,
+                                                                  p.x, p.y)) {
 
                     index--;
                     rect = getCellBounds(list, index);
@@ -1622,8 +1618,8 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the row that the model index <code>index</code> will be displayed in..
      *
-     * @param index the index
-     * @return the int
+     * @param  index the index
+     * @return       the int
      */
     public int convertModelToRow(final int index) {
         int size = list.getModel().getSize();
@@ -1646,9 +1642,9 @@ public class DarkListUIBridge extends BasicListUI {
      * Gets the bounds of the specified model index, returning the resulting bounds, or null if <code>index</code> is
      * not valid.
      *
-     * @param list  the list
-     * @param index the index
-     * @return the cell bounds
+     * @param  list  the list
+     * @param  index the index
+     * @return       the cell bounds
      */
     protected Rectangle getCellBounds(final JList<?> list, final int index) {
         maybeUpdateLayoutState();
@@ -1666,8 +1662,8 @@ public class DarkListUIBridge extends BasicListUI {
         int y = insets.top;
         int h;
         switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP:
-            case JList.HORIZONTAL_WRAP:
+            case JList.VERTICAL_WRAP :
+            case JList.HORIZONTAL_WRAP :
                 if (isLeftToRight) {
                     x = insets.left + column * cellWidth;
                 } else {
@@ -1676,7 +1672,7 @@ public class DarkListUIBridge extends BasicListUI {
                 y += cellHeight * row;
                 h = cellHeight;
                 break;
-            default:
+            default :
                 x = insets.left;
                 if (cellHeights == null) {
                     y += (cellHeight * row);
@@ -1697,8 +1693,8 @@ public class DarkListUIBridge extends BasicListUI {
     /**
      * Returns the column that the model index <code>index</code> will be displayed in.
      *
-     * @param index the index
-     * @return the int
+     * @param  index the index
+     * @return       the int
      */
     protected int convertModelToColumn(final int index) {
         int size = list.getModel().getSize();
@@ -1730,9 +1726,9 @@ public class DarkListUIBridge extends BasicListUI {
         /**
          * Create a Transferable to use as the source for a data transfer.
          *
-         * @param c The component holding the data to be transfered.  This argument is provided to enable sharing of
-         *          TransferHandlers by multiple components.
-         * @return The representation of the data to be transfered.
+         * @param  c The component holding the data to be transfered. This argument is provided to enable sharing of
+         *           TransferHandlers by multiple components.
+         * @return   The representation of the data to be transfered.
          */
         @SuppressWarnings("deprecation")
         protected Transferable createTransferable(final JComponent c) {
@@ -1764,51 +1760,33 @@ public class DarkListUIBridge extends BasicListUI {
 
             return null;
         }
-
     }
 
     private static class Actions extends UIAction {
-        private static final String SELECT_PREVIOUS_COLUMN =
-            "selectPreviousColumn";
-        private static final String SELECT_PREVIOUS_COLUMN_EXTEND =
-            "selectPreviousColumnExtendSelection";
-        private static final String SELECT_PREVIOUS_COLUMN_CHANGE_LEAD =
-            "selectPreviousColumnChangeLead";
+        private static final String SELECT_PREVIOUS_COLUMN = "selectPreviousColumn";
+        private static final String SELECT_PREVIOUS_COLUMN_EXTEND = "selectPreviousColumnExtendSelection";
+        private static final String SELECT_PREVIOUS_COLUMN_CHANGE_LEAD = "selectPreviousColumnChangeLead";
         private static final String SELECT_NEXT_COLUMN = "selectNextColumn";
-        private static final String SELECT_NEXT_COLUMN_EXTEND =
-            "selectNextColumnExtendSelection";
-        private static final String SELECT_NEXT_COLUMN_CHANGE_LEAD =
-            "selectNextColumnChangeLead";
+        private static final String SELECT_NEXT_COLUMN_EXTEND = "selectNextColumnExtendSelection";
+        private static final String SELECT_NEXT_COLUMN_CHANGE_LEAD = "selectNextColumnChangeLead";
         private static final String SELECT_PREVIOUS_ROW = "selectPreviousRow";
-        private static final String SELECT_PREVIOUS_ROW_EXTEND =
-            "selectPreviousRowExtendSelection";
-        private static final String SELECT_PREVIOUS_ROW_CHANGE_LEAD =
-            "selectPreviousRowChangeLead";
+        private static final String SELECT_PREVIOUS_ROW_EXTEND = "selectPreviousRowExtendSelection";
+        private static final String SELECT_PREVIOUS_ROW_CHANGE_LEAD = "selectPreviousRowChangeLead";
         private static final String SELECT_NEXT_ROW = "selectNextRow";
-        private static final String SELECT_NEXT_ROW_EXTEND =
-            "selectNextRowExtendSelection";
-        private static final String SELECT_NEXT_ROW_CHANGE_LEAD =
-            "selectNextRowChangeLead";
+        private static final String SELECT_NEXT_ROW_EXTEND = "selectNextRowExtendSelection";
+        private static final String SELECT_NEXT_ROW_CHANGE_LEAD = "selectNextRowChangeLead";
         private static final String SELECT_FIRST_ROW = "selectFirstRow";
-        private static final String SELECT_FIRST_ROW_EXTEND =
-            "selectFirstRowExtendSelection";
-        private static final String SELECT_FIRST_ROW_CHANGE_LEAD =
-            "selectFirstRowChangeLead";
+        private static final String SELECT_FIRST_ROW_EXTEND = "selectFirstRowExtendSelection";
+        private static final String SELECT_FIRST_ROW_CHANGE_LEAD = "selectFirstRowChangeLead";
         private static final String SELECT_LAST_ROW = "selectLastRow";
-        private static final String SELECT_LAST_ROW_EXTEND =
-            "selectLastRowExtendSelection";
-        private static final String SELECT_LAST_ROW_CHANGE_LEAD =
-            "selectLastRowChangeLead";
+        private static final String SELECT_LAST_ROW_EXTEND = "selectLastRowExtendSelection";
+        private static final String SELECT_LAST_ROW_CHANGE_LEAD = "selectLastRowChangeLead";
         private static final String SCROLL_UP = "scrollUp";
-        private static final String SCROLL_UP_EXTEND =
-            "scrollUpExtendSelection";
-        private static final String SCROLL_UP_CHANGE_LEAD =
-            "scrollUpChangeLead";
+        private static final String SCROLL_UP_EXTEND = "scrollUpExtendSelection";
+        private static final String SCROLL_UP_CHANGE_LEAD = "scrollUpChangeLead";
         private static final String SCROLL_DOWN = "scrollDown";
-        private static final String SCROLL_DOWN_EXTEND =
-            "scrollDownExtendSelection";
-        private static final String SCROLL_DOWN_CHANGE_LEAD =
-            "scrollDownChangeLead";
+        private static final String SCROLL_DOWN_EXTEND = "scrollDownExtendSelection";
+        private static final String SCROLL_DOWN_CHANGE_LEAD = "scrollDownChangeLead";
         private static final String SELECT_ALL = "selectAll";
         private static final String CLEAR_SELECTION = "clearSelection";
 
@@ -1913,8 +1891,7 @@ public class DarkListUIBridge extends BasicListUI {
             } else if (Objects.equals(name, CLEAR_SELECTION)) {
                 clearSelection(list);
             } else if (Objects.equals(name, ADD_TO_SELECTION)) {
-                int index = adjustIndex(
-                    list.getSelectionModel().getLeadSelectionIndex(), list);
+                int index = adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list);
 
                 if (!list.isSelectedIndex(index)) {
                     int oldAnchor = list.getSelectionModel().getAnchorSelectionIndex();
@@ -1924,8 +1901,7 @@ public class DarkListUIBridge extends BasicListUI {
                     list.setValueIsAdjusting(false);
                 }
             } else if (Objects.equals(name, TOGGLE_AND_ANCHOR)) {
-                int index = adjustIndex(
-                    list.getSelectionModel().getLeadSelectionIndex(), list);
+                int index = adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list);
 
                 if (list.isSelectedIndex(index)) {
                     list.removeSelectionInterval(index, index);
@@ -1933,15 +1909,13 @@ public class DarkListUIBridge extends BasicListUI {
                     list.addSelectionInterval(index, index);
                 }
             } else if (Objects.equals(name, EXTEND_TO)) {
-                changeSelection(
-                    list, EXTEND_SELECTION,
-                    adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list),
-                    0);
+                changeSelection(list, EXTEND_SELECTION,
+                                adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list),
+                                0);
             } else if (Objects.equals(name, MOVE_SELECTION_TO)) {
-                changeSelection(
-                    list, CHANGE_SELECTION,
-                    adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list),
-                    0);
+                changeSelection(list, CHANGE_SELECTION,
+                                adjustIndex(list.getSelectionModel().getLeadSelectionIndex(), list),
+                                0);
             }
         }
 
@@ -1952,8 +1926,7 @@ public class DarkListUIBridge extends BasicListUI {
 
                 // CHANGE_LEAD is only valid with multiple interval selection
                 if (type == CHANGE_LEAD &&
-                    list.getSelectionMode()
-                    != ListSelectionModel.MULTIPLE_INTERVAL_SELECTION) {
+                    list.getSelectionMode() != ListSelectionModel.MULTIPLE_INTERVAL_SELECTION) {
 
                     type = CHANGE_SELECTION;
                 }
@@ -2049,8 +2022,7 @@ public class DarkListUIBridge extends BasicListUI {
             Rectangle visRect = list.getVisibleRect();
             ListSelectionModel lsm = list.getSelectionModel();
             int lead = adjustIndex(lsm.getLeadSelectionIndex(), list);
-            Rectangle leadRect =
-                (lead == -1) ? new Rectangle() : list.getCellBounds(lead, lead);
+            Rectangle leadRect = (lead == -1) ? new Rectangle() : list.getCellBounds(lead, lead);
 
             if (leadRect == null) {
                 return index;
@@ -2152,8 +2124,7 @@ public class DarkListUIBridge extends BasicListUI {
                     // go up one cell if last visible cell doesn't fit
                     // into visible rectangle
                     if (cellBounds != null &&
-                        cellBounds.y + cellBounds.height >
-                        visRect.y + visRect.height) {
+                        cellBounds.y + cellBounds.height > visRect.y + visRect.height) {
                         p.y = cellBounds.y - 1;
                         index = list.locationToIndex(p);
                         if (index == -1) {
@@ -2176,8 +2147,7 @@ public class DarkListUIBridge extends BasicListUI {
                         // go one cell up if last visible cell doesn't fit
                         // into adjasted visible rectangle
                         if (cellBounds != null &&
-                            cellBounds.y + cellBounds.height >
-                            visRect.y + visRect.height) {
+                            cellBounds.y + cellBounds.height > visRect.y + visRect.height) {
                             p.y = cellBounds.y - 1;
                             index = list.locationToIndex(p);
                             if (index == -1) {
@@ -2251,8 +2221,7 @@ public class DarkListUIBridge extends BasicListUI {
                             // right for left-to-right
                             int x = Math.max(0,
                                              cellBounds.x + cellBounds.width - visRect.width);
-                            int startIndex =
-                                list.locationToIndex(new Point(x, cellBounds.y));
+                            int startIndex = list.locationToIndex(new Point(x, cellBounds.y));
                             if (startIndex == -1) {
                                 return;
                             }
@@ -2261,8 +2230,7 @@ public class DarkListUIBridge extends BasicListUI {
                             if (startRect != null &&
                                 startRect.x < x && startRect.x < cellBounds.x) {
                                 startRect.x += startRect.width;
-                                startIndex =
-                                    list.locationToIndex(startRect.getLocation());
+                                startIndex = list.locationToIndex(startRect.getLocation());
                                 if (startIndex == -1) {
                                     return;
                                 }
@@ -2278,8 +2246,7 @@ public class DarkListUIBridge extends BasicListUI {
                         if (direction > 0) {
                             // left for right-to-left
                             int x = cellBounds.x + visRect.width;
-                            int rightIndex =
-                                list.locationToIndex(new Point(x, cellBounds.y));
+                            int rightIndex = list.locationToIndex(new Point(x, cellBounds.y));
                             if (rightIndex == -1) {
                                 return;
                             }
@@ -2306,13 +2273,11 @@ public class DarkListUIBridge extends BasicListUI {
                     // vertical
                     if (direction > 0 &&
                         (cellBounds.y < visRect.y ||
-                         cellBounds.y + cellBounds.height
-                         > visRect.y + visRect.height)) {
-                        //down
+                         cellBounds.y + cellBounds.height > visRect.y + visRect.height)) {
+                        // down
                         int y = Math.max(0,
                                          cellBounds.y + cellBounds.height - visRect.height);
-                        int startIndex =
-                            list.locationToIndex(new Point(cellBounds.x, y));
+                        int startIndex = list.locationToIndex(new Point(cellBounds.x, y));
                         if (startIndex == -1) {
                             return;
                         }
@@ -2321,13 +2286,11 @@ public class DarkListUIBridge extends BasicListUI {
                         if (startRect != null &&
                             startRect.y < y && startRect.y < cellBounds.y) {
                             startRect.y += startRect.height;
-                            startIndex =
-                                list.locationToIndex(startRect.getLocation());
+                            startIndex = list.locationToIndex(startRect.getLocation());
                             if (startIndex == -1) {
                                 return;
                             }
-                            startRect =
-                                list.getCellBounds(startIndex, startIndex);
+                            startRect = list.getCellBounds(startIndex, startIndex);
                         }
                         cellBounds = startRect;
                         if (cellBounds != null) {
@@ -2347,8 +2310,8 @@ public class DarkListUIBridge extends BasicListUI {
         /**
          * Accept boolean.
          *
-         * @param c the c
-         * @return the boolean
+         * @param  c the c
+         * @return   the boolean
          */
         public boolean accept(final Object c) {
             Object name = getName();
@@ -2363,8 +2326,7 @@ public class DarkListUIBridge extends BasicListUI {
 
                 // discontinuous selection actions are only enabled for
                 // DefaultListSelectionModel
-                return c != null && ((JList<Object>) c).getSelectionModel()
-                    instanceof DefaultListSelectionModel;
+                return c != null && ((JList<Object>) c).getSelectionModel() instanceof DefaultListSelectionModel;
             }
 
             return true;
@@ -2383,10 +2345,10 @@ public class DarkListUIBridge extends BasicListUI {
             getHandler().repaintCellFocus();
         }
 
-        /* The focusGained() focusLost() methods run when the JList
+        /*
+         * The focusGained() focusLost() methods run when the JList
          * focus changes.
          */
-
         public void focusGained(final FocusEvent e) {
             getHandler().focusGained(e);
         }
@@ -2397,13 +2359,13 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Mouse input, and focus handling for JList.  An instance of this class is added to the appropriate
-     * java.awt.Component lists at installUI() time.  Note keyboard input is handled with JComponent KeyboardActions,
+     * Mouse input, and focus handling for JList. An instance of this class is added to the appropriate
+     * java.awt.Component lists at installUI() time. Note keyboard input is handled with JComponent KeyboardActions,
      * see installKeyboardActions().
      * <p>
      * <strong>Warning:</strong>
      * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing. As
      * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
      * package. Please see {@link java.beans.XMLEncoder}.
      *
@@ -2444,11 +2406,11 @@ public class DarkListUIBridge extends BasicListUI {
 
     /**
      * The ListSelectionListener that's added to the JLists selection model at installUI time, and whenever the
-     * JList.selectionModel property changes.  When the selection changes we repaint the affected rows.
+     * JList.selectionModel property changes. When the selection changes we repaint the affected rows.
      * <p>
      * <strong>Warning:</strong>
      * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing. As
      * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
      * package. Please see {@link java.beans.XMLEncoder}.
      *
@@ -2468,7 +2430,7 @@ public class DarkListUIBridge extends BasicListUI {
      * <p>
      * <strong>Warning:</strong>
      * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing. As
      * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
      * package. Please see {@link java.beans.XMLEncoder}.
      *
@@ -2483,11 +2445,9 @@ public class DarkListUIBridge extends BasicListUI {
             getHandler().intervalAdded(e);
         }
 
-
         public void intervalRemoved(final ListDataEvent e) {
             getHandler().intervalRemoved(e);
         }
-
 
         public void contentsChanged(final ListDataEvent e) {
             getHandler().contentsChanged(e);
@@ -2495,13 +2455,13 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * The PropertyChangeListener that's added to the JList at installUI time.  When the value of a JList property that
+     * The PropertyChangeListener that's added to the JList at installUI time. When the value of a JList property that
      * affects layout changes, we set a bit in updateLayoutStateNeeded. If the JLists model changes we additionally
-     * remove our listeners from the old model.  Likewise for the JList selectionModel.
+     * remove our listeners from the old model. Likewise for the JList selectionModel.
      * <p>
      * <strong>Warning:</strong>
      * Serialized objects of this class will not be compatible with future Swing releases. The current serialization
-     * support is appropriate for short term storage or RMI between applications running the same version of Swing.  As
+     * support is appropriate for short term storage or RMI between applications running the same version of Swing. As
      * of 1.4, support for long term storage of all JavaBeans&trade; has been added to the <code>java.beans</code>
      * package. Please see {@link java.beans.XMLEncoder}.
      *
@@ -2520,13 +2480,13 @@ public class DarkListUIBridge extends BasicListUI {
      * The type Handler.
      */
     protected class Handler implements FocusListener, KeyListener,
-                                       ListDataListener, ListSelectionListener,
-                                       MouseInputListener, PropertyChangeListener,
-                                       DragRecognitionSupport.BeforeDrag {
+                            ListDataListener, ListSelectionListener,
+                            MouseInputListener, PropertyChangeListener,
+                            DragRecognitionSupport.BeforeDrag {
         /**
          * The Prefix.
          */
-//
+        //
         // KeyListener
         //
         protected String prefix = "";
@@ -2541,7 +2501,7 @@ public class DarkListUIBridge extends BasicListUI {
         /**
          * The Drag press did selection.
          */
-// Whether or not the mouse press (which is being considered as part
+        // Whether or not the mouse press (which is being considered as part
         // of a drag sequence) also caused the selection change to be fully
         // processed.
         protected boolean dragPressDidSelection;
@@ -2624,15 +2584,14 @@ public class DarkListUIBridge extends BasicListUI {
          * Invoked when a key has been released. See the class description for {@link KeyEvent} for a definition of a
          * key released event.
          */
-        public void keyReleased(final KeyEvent e) {
-        }
+        public void keyReleased(final KeyEvent e) {}
 
         /**
-         * Returns whether or not the supplied key event maps to a key that is used for navigation.  This is used for
+         * Returns whether or not the supplied key event maps to a key that is used for navigation. This is used for
          * optimizing key input by only passing non- navigation keys to the first letter navigation mechanism.
          *
-         * @param event the event
-         * @return the boolean
+         * @param  event the event
+         * @return       the boolean
          */
         protected boolean isNavigationKey(final KeyEvent event) {
             InputMap inputMap = list.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -2647,7 +2606,8 @@ public class DarkListUIBridge extends BasicListUI {
         public void propertyChange(final PropertyChangeEvent e) {
             String propertyName = e.getPropertyName();
 
-            /* If the JList.model property changes, remove our listener,
+            /*
+             * If the JList.model property changes, remove our listener,
              * listDataListener from the old model and add it to the new one.
              */
             if (Objects.equals(propertyName, "model")) {
@@ -2663,7 +2623,8 @@ public class DarkListUIBridge extends BasicListUI {
                 redrawList();
             }
 
-            /* If the JList.selectionModel property changes, remove our listener,
+            /*
+             * If the JList.selectionModel property changes, remove our listener,
              * listSelectionListener from the old selectionModel and add it to the new one.
              */
             else if (Objects.equals(propertyName, "selectionModel")) {
@@ -2756,15 +2717,16 @@ public class DarkListUIBridge extends BasicListUI {
             int minIndex = Math.min(e.getIndex0(), e.getIndex1());
             int maxIndex = Math.max(e.getIndex0(), e.getIndex1());
 
-            /* Sync the SelectionModel with the DataModel.
+            /*
+             * Sync the SelectionModel with the DataModel.
              */
-
             ListSelectionModel sm = list.getSelectionModel();
             if (sm != null) {
                 sm.insertIndexInterval(minIndex, maxIndex - minIndex + 1, true);
             }
 
-            /* Repaint the entire list, from the origin of
+            /*
+             * Repaint the entire list, from the origin of
              * the first added cell, to the bottom of the
              * component.
              */
@@ -2774,19 +2736,19 @@ public class DarkListUIBridge extends BasicListUI {
         public void intervalRemoved(final ListDataEvent e) {
             updateLayoutStateNeeded = modelChanged;
 
-            /* Sync the SelectionModel with the DataModel.
+            /*
+             * Sync the SelectionModel with the DataModel.
              */
-
             ListSelectionModel sm = list.getSelectionModel();
             if (sm != null) {
                 sm.removeIndexInterval(e.getIndex0(), e.getIndex1());
             }
 
-            /* Repaint the entire list, from the origin of
+            /*
+             * Repaint the entire list, from the origin of
              * the first removed cell, to the bottom of the
              * component.
              */
-
             redrawList();
         }
 
@@ -2815,8 +2777,7 @@ public class DarkListUIBridge extends BasicListUI {
         //
         // MouseListener
         //
-        public void mouseClicked(final MouseEvent e) {
-        }
+        public void mouseClicked(final MouseEvent e) {}
 
         public void mousePressed(final MouseEvent e) {
             if (SwingUtilities2.shouldIgnore(e, list)) {
@@ -2930,11 +2891,9 @@ public class DarkListUIBridge extends BasicListUI {
             }
         }
 
-        public void mouseEntered(final MouseEvent e) {
-        }
+        public void mouseEntered(final MouseEvent e) {}
 
-        public void mouseExited(final MouseEvent e) {
-        }
+        public void mouseExited(final MouseEvent e) {}
 
         public void dragStarting(final MouseEvent me) {
             if (DarkUIUtil.isMenuShortcutKeyDown(me)) {
@@ -2959,7 +2918,7 @@ public class DarkListUIBridge extends BasicListUI {
 
             int row = locationToIndex(list, e.getPoint());
             if (row != -1) {
-                // 4835633.  Dragging onto a File should not select it.
+                // 4835633. Dragging onto a File should not select it.
                 if (isFileList) {
                     return;
                 }
@@ -2971,21 +2930,20 @@ public class DarkListUIBridge extends BasicListUI {
             }
         }
 
-        public void mouseMoved(final MouseEvent e) {
-        }
+        public void mouseMoved(final MouseEvent e) {}
 
         public void focusGained(final FocusEvent e) {
             repaintCellFocus();
         }
 
-        /* The focusGained() focusLost() methods run when the JList
+        /*
+         * The focusGained() focusLost() methods run when the JList
          * focus changes.
          */
-
         /**
          * Repaint cell focus.
          */
-//
+        //
         // FocusListener
         //
         protected void repaintCellFocus() {
@@ -3002,5 +2960,4 @@ public class DarkListUIBridge extends BasicListUI {
             repaintCellFocus();
         }
     }
-
 }

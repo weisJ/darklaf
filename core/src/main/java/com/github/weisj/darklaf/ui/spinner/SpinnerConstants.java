@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.spinner;
 
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 
 public interface SpinnerConstants {
     String KEY_VARIANT = "JSpinner.variant";

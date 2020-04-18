@@ -20,8 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf;
+
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
@@ -32,16 +44,6 @@ import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemeProvider;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * Manager for the Look and Feel.
@@ -78,8 +80,7 @@ public final class LafManager {
             LogManager.getLogManager().reset();
         } else {
             try (InputStream inputStream = DarkLaf.class.getClassLoader()
-                                                        .getResourceAsStream(
-                                                            "com/github/weisj/darklaf/log/logging.properties")) {
+                                                        .getResourceAsStream("com/github/weisj/darklaf/log/logging.properties")) {
                 if (inputStream != null) {
                     Logger.getGlobal().fine("Loading logging configuration.");
                     LogManager.getLogManager().readConfiguration(inputStream);
@@ -143,9 +144,9 @@ public final class LafManager {
      * if preferences have changed.
      *
      * @param listener the listener to add.
-     * @see ThemePreferenceListener
-     * @see #enabledPreferenceChangeReporting(boolean)
-     * @see #isPreferenceChangeReportingEnabled()
+     * @see            ThemePreferenceListener
+     * @see            #enabledPreferenceChangeReporting(boolean)
+     * @see            #isPreferenceChangeReportingEnabled()
      */
     public static void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {
         ThemePreferencesHandler.getSharedInstance().addThemePreferenceChangeListener(listener);
@@ -155,9 +156,9 @@ public final class LafManager {
      * Removes a {@link ThemePreferenceListener}.
      *
      * @param listener the listener to add.
-     * @see ThemePreferenceListener
-     * @see #enabledPreferenceChangeReporting(boolean)
-     * @see #isPreferenceChangeReportingEnabled()
+     * @see            ThemePreferenceListener
+     * @see            #enabledPreferenceChangeReporting(boolean)
+     * @see            #isPreferenceChangeReportingEnabled()
      */
     public static void removeThemePreferenceChangeListener(final ThemePreferenceListener listener) {
         ThemePreferencesHandler.getSharedInstance().removeThemePreferenceChangeListener(listener);
@@ -168,8 +169,8 @@ public final class LafManager {
      * to determine these values.
      *
      * @return the preferred theme style.
-     * @see #isPreferenceChangeReportingEnabled()
-     * @see #enabledPreferenceChangeReporting(boolean)
+     * @see    #isPreferenceChangeReportingEnabled()
+     * @see    #enabledPreferenceChangeReporting(boolean)
      */
     public static PreferredThemeStyle getPreferredThemeStyle() {
         return ThemePreferencesHandler.getSharedInstance().getPreferredThemeStyle();
@@ -180,7 +181,7 @@ public final class LafManager {
      * preferred theme style.
      *
      * @return the theme provider.
-     * @see PreferredThemeStyle
+     * @see    PreferredThemeStyle
      */
     public static ThemeProvider getThemeProvider() {
         if (themeProvider == null) themeProvider = createDefaultThemeProvider();
@@ -192,7 +193,7 @@ public final class LafManager {
      * preferred theme style.
      *
      * @param themeProvider the theme provider.
-     * @see PreferredThemeStyle
+     * @see                 PreferredThemeStyle
      */
     public static void setThemeProvider(final ThemeProvider themeProvider) {
         LafManager.themeProvider = themeProvider;
@@ -208,8 +209,8 @@ public final class LafManager {
     /**
      * Get the associated theme for the given preferred style.
      *
-     * @param style the preferred theme style.
-     * @return the associated Theme or best match if there is none associated.
+     * @param  style the preferred theme style.
+     * @return       the associated Theme or best match if there is none associated.
      */
     public static Theme themeForPreferredStyle(final PreferredThemeStyle style) {
         return getThemeProvider().getTheme(style);
@@ -310,7 +311,6 @@ public final class LafManager {
         setTheme(themeForPreferredStyle(preferredThemeStyle));
     }
 
-
     /**
      * Sets the current theme and installs the LaF. If the LaF is already installed the theme is switched. This behaves
      * exactly like {@link #setTheme(Theme)} followed by {@link #install()}
@@ -334,7 +334,7 @@ public final class LafManager {
      * Overload for {@link #installTheme(Theme)}.
      *
      * @param theme the theme to install.
-     * @see #installTheme(Theme) installTheme().
+     * @see         #installTheme(Theme) installTheme().
      */
     public static void install(final Theme theme) {
         installTheme(theme);
@@ -350,9 +350,9 @@ public final class LafManager {
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
         } catch (final ClassNotFoundException
-            | InstantiationException
-            | IllegalAccessException
-            | UnsupportedLookAndFeelException e) {
+                       | InstantiationException
+                       | IllegalAccessException
+                       | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
     }

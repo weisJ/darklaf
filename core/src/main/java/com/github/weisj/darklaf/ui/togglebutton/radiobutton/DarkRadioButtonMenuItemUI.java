@@ -20,18 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+
+import sun.swing.MenuItemLayoutHelper;
 
 import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
-import sun.swing.MenuItemLayoutHelper;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import java.awt.*;
 
 /**
  * @author Jannis Weis

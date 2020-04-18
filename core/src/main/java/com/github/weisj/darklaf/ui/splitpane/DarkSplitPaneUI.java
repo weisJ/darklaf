@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.splitpane;
 
-import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
+import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -53,7 +55,6 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     protected DarkSplitPaneUI(final Style style) {
         this.style = style;
     }
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSplitPaneUI(Style.get(UIManager.getString("SplitPane.defaultDividerStyle")));
@@ -164,7 +165,6 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
         final private String name;
 
-
         Style(final String name) {
             this.name = name;
         }
@@ -180,8 +180,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             if (obj instanceof Style) return (Style) obj;
             try {
                 return valueOf(obj.toString());
-            } catch (IllegalArgumentException ignored) {
-            }
+            } catch (IllegalArgumentException ignored) {}
             for (Style s : values()) {
                 if (s.name.equalsIgnoreCase(obj.toString())) return s;
             }
@@ -194,7 +193,6 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
         private ThinDivider(final BasicSplitPaneUI ui) {
             super(ui);
         }
-
 
         @Override
         public int getDividerSize() {

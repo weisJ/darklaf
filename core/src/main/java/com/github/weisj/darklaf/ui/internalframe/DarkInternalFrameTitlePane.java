@@ -20,20 +20,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.internalframe;
+
+import java.awt.*;
+import java.beans.PropertyChangeListener;
+
+import javax.accessibility.AccessibleContext;
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+
+import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import sun.swing.SwingUtilities2;
-
-import javax.accessibility.AccessibleContext;
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
-import java.awt.*;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Jannis Weis
@@ -60,7 +63,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     private ToggleIcon iconifyIcon;
 
     private PropertyChangeListener propertyChangeListener2;
-
 
     public DarkInternalFrameTitlePane(final JInternalFrame f) {
         super(f);
@@ -204,7 +206,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
     }
 
-
     private static JButton createButton(final String accessibleName) {
         JButton button = new JButtonUIResource() {
             @Override
@@ -244,15 +245,12 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     }
 
     @Override
-    protected void paintBorder(final Graphics g) {
-    }
+    protected void paintBorder(final Graphics g) {}
 
     protected class DarkTitlePaneLayout implements LayoutManager {
-        public void addLayoutComponent(final String name, final Component c) {
-        }
+        public void addLayoutComponent(final String name, final Component c) {}
 
-        public void removeLayoutComponent(final Component c) {
-        }
+        public void removeLayoutComponent(final Component c) {}
 
         public Dimension preferredLayoutSize(final Container c) {
             return minimumLayoutSize(c);

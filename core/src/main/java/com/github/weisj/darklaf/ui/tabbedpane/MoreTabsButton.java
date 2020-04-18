@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
+
+import java.awt.*;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class MoreTabsButton extends DarkTabAreaButton {
 
@@ -63,7 +65,6 @@ public class MoreTabsButton extends DarkTabAreaButton {
         int x = (getWidth() - (icon.getIconWidth() + labelWidth + pad)) / 2;
         int y = (getHeight() - icon.getIconHeight()) / 2;
 
-
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         /*
          * These offsets are due to the nature of the used icon. They are applied to match the baseline of
@@ -84,7 +85,6 @@ public class MoreTabsButton extends DarkTabAreaButton {
         g.drawString(label, x + icon.getIconWidth() + pad, y + icon.getIconHeight() - off);
         config.restore();
     }
-
 
     protected String getLabelString() {
         int invisible = Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible,

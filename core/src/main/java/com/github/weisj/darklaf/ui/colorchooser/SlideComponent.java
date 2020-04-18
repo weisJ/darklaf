@@ -20,16 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
-
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -38,6 +32,13 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
+import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Alexey Pegov
@@ -87,7 +88,6 @@ class SlideComponent extends JComponent implements ColorListener {
                 processMouse(e);
             }
         });
-
 
         addMouseWheelListener(event -> {
             int units = event.getUnitsToScroll();
@@ -160,8 +160,8 @@ class SlideComponent extends JComponent implements ColorListener {
 
     public void setValue(final int value) {
         if (value < Unit.LEVEL.getMin() || value > Unit.LEVEL.getMax()) {
-            throw new IllegalArgumentException(
-                "Value " + value + " not in range [" + Unit.LEVEL.getMin() + "," + Unit.LEVEL.getMax() + "]");
+            throw new IllegalArgumentException("Value " + value + " not in range [" + Unit.LEVEL.getMin() + ","
+                                               + Unit.LEVEL.getMax() + "]");
         }
         pointerValue = valueToPointerValue(value);
         this.value = value;
@@ -305,7 +305,6 @@ class SlideComponent extends JComponent implements ColorListener {
 
             }
         };
-
 
         protected final float max;
         protected final float min;

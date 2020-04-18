@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tree;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -61,5 +63,4 @@ public class DarkTreeCellBorder implements Border, UIResource {
     public boolean isBorderOpaque() {
         return true;
     }
-
 }

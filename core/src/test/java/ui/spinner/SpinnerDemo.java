@@ -20,15 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.spinner;
 
-import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
+import java.awt.*;
+
+import javax.swing.*;
+
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
 
 public class SpinnerDemo implements ComponentDemo {
 
@@ -42,28 +45,38 @@ public class SpinnerDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(spinner);
 
         JPanel controlPanel = panel.addControls(1);
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(spinner.isEnabled());
-            addActionListener(e -> spinner.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(spinner.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> spinner.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_VARIANT + " = " + SpinnerConstants.VARIANT_PLUS_MINUS) {{
-            addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_VARIANT,
-                                                             isSelected() ? SpinnerConstants.VARIANT_PLUS_MINUS
-                                                                          : null));
-        }});
-        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_IS_TREE_EDITOR) {{
-            setSelected(false);
-            addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_IS_TREE_EDITOR, isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_IS_TABLE_EDITOR) {{
-            setSelected(false);
-            addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_IS_TABLE_EDITOR, isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(spinner.isEnabled());
+                addActionListener(e -> spinner.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(spinner.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> spinner.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                    : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_VARIANT + " = " + SpinnerConstants.VARIANT_PLUS_MINUS) {
+            {
+                addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_VARIANT,
+                                                                 isSelected() ? SpinnerConstants.VARIANT_PLUS_MINUS
+                                                                              : null));
+            }
+        });
+        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_IS_TREE_EDITOR) {
+            {
+                setSelected(false);
+                addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_IS_TREE_EDITOR, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(SpinnerConstants.KEY_IS_TABLE_EDITOR) {
+            {
+                setSelected(false);
+                addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_IS_TABLE_EDITOR, isSelected()));
+            }
+        });
         return panel;
     }
 

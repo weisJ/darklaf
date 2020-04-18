@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
@@ -38,6 +39,9 @@ import javax.swing.plaf.InputMapUIResource;
 import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.*;
 
+import sun.awt.SunToolkit;
+import sun.swing.DefaultLookup;
+
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
@@ -46,9 +50,6 @@ import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
-
-import sun.awt.SunToolkit;
-import sun.swing.DefaultLookup;
 
 /**
  * @author Jannis Weis
@@ -99,8 +100,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         // OpenJDK BorderlessTextField has a bug with its setBorder implementation
         // so we reset the border
         // See https://mail.openjdk.java.net/pipermail/swing-dev/2020-March/010226.html
-        if (editor != null && "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(
-            editor.getClass().getName())) {
+        if (editor != null && "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(editor.getClass()
+                                                                                                            .getName())) {
             editor.setBorder(null);
         }
         if (editor != null) {
@@ -272,7 +273,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     /*
      * Implementation of BasicTextUI.
      */
-
     /**
      * Get the InputMap to use for the UI.
      *
@@ -334,13 +334,11 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         char accelerator = editor.getFocusAccelerator();
 
         if (changed || accelerator != '\0') {
-            InputMap km = SwingUtilities.getUIInputMap
-                (editor, JComponent.WHEN_IN_FOCUSED_WINDOW);
+            InputMap km = SwingUtilities.getUIInputMap(editor, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
             if (km == null && accelerator != '\0') {
                 km = new ComponentInputMapUIResource(editor);
-                SwingUtilities.replaceUIInputMap(editor, JComponent.
-                    WHEN_IN_FOCUSED_WINDOW, km);
+                SwingUtilities.replaceUIInputMap(editor, JComponent.WHEN_IN_FOCUSED_WINDOW, km);
                 ActionMap am = getActionMap();
                 SwingUtilities.replaceUIActionMap(editor, am);
             }
@@ -349,7 +347,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 if (accelerator != '\0') {
                     km.put(KeyStroke.getKeyStroke(accelerator, getFocusAcceleratorKeyMask()), "requestFocus");
                     km.put(KeyStroke
-                               .getKeyStroke(accelerator, DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
+                                    .getKeyStroke(accelerator,
+                                                  DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
                            "requestFocus");
                 }
             }
@@ -357,7 +356,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     /**
-     * Create a default action map.  This is basically the set of actions found exported by the component.
+     * Create a default action map. This is basically the set of actions found exported by the component.
      *
      * @return the action map
      */
@@ -395,10 +394,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
          */
         EditorKit editorKit = getEditorKit(editor);
         if (editorKit instanceof DefaultEditorKit) {
-            Set<AWTKeyStroke> storedForwardTraversalKeys = editor.getFocusTraversalKeys(
-                KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> storedBackwardTraversalKeys = editor.getFocusTraversalKeys(
-                KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> storedForwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+            Set<AWTKeyStroke> storedBackwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
             Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<>(storedForwardTraversalKeys);
             Set<AWTKeyStroke> backwardTraversalKeys = new HashSet<>(storedBackwardTraversalKeys);
             if (editor.isEditable()) {

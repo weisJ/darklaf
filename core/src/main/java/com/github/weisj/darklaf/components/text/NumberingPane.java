@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.text;
 
-import com.github.weisj.darklaf.util.StringUtil;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import com.github.weisj.darklaf.util.StringUtil;
 
 public class NumberingPane extends JComponent {
 
@@ -88,7 +90,7 @@ public class NumberingPane extends JComponent {
     }
 
     public Position addIconAtLine(final int lineIndex, final Icon icon, final boolean atTextStart)
-        throws BadLocationException {
+                                                                                                   throws BadLocationException {
         int offset = textComponent.getDocument().getDefaultRootElement().getElement(lineIndex).getStartOffset();
         if (atTextStart) {
             Document doc = textComponent.getDocument();

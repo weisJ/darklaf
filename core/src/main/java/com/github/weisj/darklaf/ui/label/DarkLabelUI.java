@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.label;
 
@@ -33,13 +34,13 @@ import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.basic.BasicLabelUI;
 import javax.swing.text.View;
 
+import sun.swing.SwingUtilities2;
+
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-
-import sun.swing.SwingUtilities2;
 
 /**
  * @author Jannis Weis

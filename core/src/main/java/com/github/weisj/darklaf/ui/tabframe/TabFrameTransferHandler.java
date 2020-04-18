@@ -20,17 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
 
-import com.github.weisj.darklaf.components.tabframe.JTabFrame;
-import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
-import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
-import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.ImageUtil;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -39,6 +32,14 @@ import java.awt.dnd.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
+import javax.swing.*;
+
+import com.github.weisj.darklaf.components.tabframe.JTabFrame;
+import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
+import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
+import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
+import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.ImageUtil;
 
 /**
  * @author Jannis Weis
@@ -60,12 +61,10 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     private TabTransferable currentTransferable;
     private JTabFrame lastTabFrame;
 
-
     public TabFrameTransferHandler() {
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
-        } catch (ClassNotFoundException ignored) {
-        }
+        } catch (ClassNotFoundException ignored) {}
         timer = new Timer(100, e -> {
             if (lastTabFrame != null) {
                 Point p = MouseInfo.getPointerInfo().getLocation();
@@ -86,7 +85,6 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         });
         startTimer.setRepeats(false);
     }
-
 
     private TabFrameUI getUI(final Component c) {
         if (c instanceof JTabFrame) return ((JTabFrame) c).getUI();
@@ -166,8 +164,8 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     /**
      * We can only move tabs, we cannot copy them.
      *
-     * @param c This parameter is ignored.
-     * @return <code>TransferHandler.MOVE</code>, as we can only move tabs.
+     * @param  c This parameter is ignored.
+     * @return   <code>TransferHandler.MOVE</code>, as we can only move tabs.
      */
     @Override
     public int getSourceActions(final JComponent c) {
@@ -219,13 +217,13 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     }
 
     /**
-     * Called when the drag-and-drop operation has just completed.  This creates a new tab identical to the one
+     * Called when the drag-and-drop operation has just completed. This creates a new tab identical to the one
      * "dragged" and places it in the destination <code>JTabbedPane</code>.
      *
-     * @param c The component receiving the "drop" (the instance of
-     *          <code>JTabbedPane</code>).
-     * @param t The data being transfered (information about the tab and the component contained by the tab).
-     * @return Whether or not the import was successful.
+     * @param  c The component receiving the "drop" (the instance of
+     *           <code>JTabbedPane</code>).
+     * @param  t The data being transfered (information about the tab and the component contained by the tab).
+     * @return   Whether or not the import was successful.
      */
     @Override
     public boolean importData(final JComponent c, final Transferable t) {
@@ -246,7 +244,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                 index++;
 
                 if (tabFrame == td.sourceTabFrame && a == td.tabAlignment && index == td.tabIndex) {
-                    //Nothing to do. Just select the tab to be sure.
+                    // Nothing to do. Just select the tab to be sure.
                     if (td.wasSelected) {
                         selectTab(td.sourceTabFrame, a, index);
                     }
@@ -277,8 +275,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     }
 
     @Override
-    public void dropActionChanged(final DropTargetDragEvent e) {
-    }
+    public void dropActionChanged(final DropTargetDragEvent e) {}
 
     protected Transferable createTransferable(final JComponent c, final DragGestureEvent dge) {
         JTabFrame tabFrame = (JTabFrame) c;
@@ -324,16 +321,14 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         /**
          * register this DragGestureRecognizer's Listeners with the Component
          */
-        protected void registerListeners() {
-        }
+        protected void registerListeners() {}
 
         /**
          * unregister this DragGestureRecognizer's Listeners with the Component
          * <p>
          * subclasses must override this method
          */
-        protected void unregisterListeners() {
-        }
+        protected void unregisterListeners() {}
     }
 
     public static class UIResource extends TabFrameTransferHandler {
@@ -366,7 +361,6 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             return tabFlavor.equals(flavor);
         }
 
-
         @Override
         public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
             if (!isDataFlavorSupported(flavor)) {
@@ -386,7 +380,6 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             private final TabFrameTab tab;
             private final boolean wasSelected;
 
-
             public TabTransferData(final JTabFrame tabbedPane, final Alignment tabAlignment,
                                    final int tabIndex) {
                 this.sourceTabFrame = tabbedPane;
@@ -395,9 +388,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                 this.tab = tabbedPane.getTabComponentAt(tabAlignment, tabIndex);
                 this.wasSelected = tab.isSelected();
             }
-
         }
-
     }
 
     protected class TabbedPaneDragHandler implements DragGestureListener, DragSourceListener {
@@ -437,23 +428,19 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         /**
          * as the hotspot enters a platform dependent drop site
          */
-        public void dragEnter(final DragSourceDragEvent dsde) {
-        }
+        public void dragEnter(final DragSourceDragEvent dsde) {}
 
         /**
          * as the hotspot moves over a platform dependent drop site
          */
-        public void dragOver(final DragSourceDragEvent dsde) {
-        }
+        public void dragOver(final DragSourceDragEvent dsde) {}
 
-        public void dropActionChanged(final DragSourceDragEvent dsde) {
-        }
+        public void dropActionChanged(final DragSourceDragEvent dsde) {}
 
         /**
          * as the hotspot exits a platform dependent drop site
          */
-        public void dragExit(final DragSourceEvent dsde) {
-        }
+        public void dragExit(final DragSourceEvent dsde) {}
 
         /**
          * as the operation completes

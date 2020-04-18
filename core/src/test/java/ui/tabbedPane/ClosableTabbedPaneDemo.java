@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.tabbedPane;
 
-import com.github.weisj.darklaf.components.ClosableTabbedPane;
+import javax.swing.*;
+
 import ui.ComponentDemo;
 
-import javax.swing.*;
+import com.github.weisj.darklaf.components.ClosableTabbedPane;
 
 public class ClosableTabbedPaneDemo extends TabbedPaneDemo {
 
@@ -43,4 +45,3 @@ public class ClosableTabbedPaneDemo extends TabbedPaneDemo {
         return "ClosableTabbPane Demo";
     }
 }
-

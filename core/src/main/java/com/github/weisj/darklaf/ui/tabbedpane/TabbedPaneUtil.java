@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -84,8 +86,8 @@ public class TabbedPaneUtil implements SwingConstants {
 
                     Rectangle sb = (ui.scrollableTabLayoutEnabled()) ? tabBounds : EMPTY_RECT;
                     switch (tabbedPane.getTabPlacement()) {
-                        case TOP:
-                        case BOTTOM:
+                        case TOP :
+                        case BOTTOM :
                             if (tabbedPane.getComponentOrientation().isLeftToRight()) {
                                 if (p.x >= b.x + sb.width + (b.width - sb.width) / 2) {
                                     tab += 1;
@@ -96,8 +98,8 @@ public class TabbedPaneUtil implements SwingConstants {
                                 }
                             }
                             break;
-                        case LEFT:
-                        case RIGHT:
+                        case LEFT :
+                        case RIGHT :
                             if (p.y >= b.y + sb.height + (b.height - sb.height) / 2) {
                                 tab += 1;
                             }
@@ -110,7 +112,6 @@ public class TabbedPaneUtil implements SwingConstants {
         }
         return tab;
     }
-
 
     public static Rectangle getDropRect(final DarkTabbedPaneUI ui,
                                         final JTabbedPane destTabbedPane, final JTabbedPane source,
@@ -143,8 +144,8 @@ public class TabbedPaneUtil implements SwingConstants {
         }
 
         switch (tabPlacement) {
-            case TOP:
-            case BOTTOM:
+            case TOP :
+            case BOTTOM :
                 if (destTabbedPane.getComponentOrientation().isLeftToRight()) {
                     if (tab >= destTabbedPane.getTabCount() && !lastInSource) {
                         destRect.x += destRect.width;
@@ -167,8 +168,8 @@ public class TabbedPaneUtil implements SwingConstants {
                 }
                 tabBounds.y = destRect.y + destRect.height - tabBounds.height;
                 break;
-            case LEFT:
-            case RIGHT:
+            case LEFT :
+            case RIGHT :
                 if (tab >= destTabbedPane.getTabCount()) {
                     destRect.y += destRect.height;
                 }
@@ -240,7 +241,7 @@ public class TabbedPaneUtil implements SwingConstants {
                                    final int sourceIndex, final int tab) {
 
         if (tabbedPane == sourcePane && sourceIndex == tab) {
-            //Nothing to do. Just select the tab to be sure.
+            // Nothing to do. Just select the tab to be sure.
             Component comp = sourcePane.getTabComponentAt(tab);
             if (comp != null) comp.setVisible(true);
             selectTab(sourcePane, sourceIndex);
@@ -280,7 +281,7 @@ public class TabbedPaneUtil implements SwingConstants {
     }
 
     /**
-     * Selects the specified tab in the specified tabbed pane.  This method can be overridden by subclasses to do more
+     * Selects the specified tab in the specified tabbed pane. This method can be overridden by subclasses to do more
      * stuff than simply select the tab.
      *
      * @param tabbedPane The tabbed pane.

@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
-import javax.swing.*;
 import java.awt.*;
+
+import javax.swing.*;
 
 public class FileTextField extends JTextField {
 
@@ -35,5 +37,4 @@ public class FileTextField extends JTextField {
     public Dimension getMaximumSize() {
         return new Dimension(Short.MAX_VALUE, super.getPreferredSize().height);
     }
-
 }

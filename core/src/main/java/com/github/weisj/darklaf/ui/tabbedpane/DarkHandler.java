@@ -20,17 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+
+import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkHandler extends TabbedPaneHandler {
 

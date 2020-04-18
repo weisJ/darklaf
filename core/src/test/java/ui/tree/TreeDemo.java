@@ -20,21 +20,24 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.tree;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
+import net.miginfocom.swing.MigLayout;
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.PropertyKey;
-import net.miginfocom.swing.MigLayout;
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import java.awt.*;
 
 public class TreeDemo implements ComponentDemo {
 
@@ -63,8 +66,8 @@ public class TreeDemo implements ComponentDemo {
             public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
                                                           final boolean expanded,
                                                           final boolean leaf, final int row, final boolean hasFocus) {
-                Component component = super.getTreeCellRendererComponent(
-                    tree, value, sel, expanded, leaf, row, hasFocus);
+                Component component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
+                                                                         hasFocus);
                 component.setEnabled(value != parent1 && value != child);
                 return component;
             }
@@ -72,42 +75,56 @@ public class TreeDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
-        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
-            setSelected(tree.isEditable());
-            addActionListener(e -> tree.setEditable(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(tree.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> tree.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                             : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JCheckBox("show root handles") {{
-            setSelected(tree.getShowsRootHandles());
-            addActionListener(e -> tree.setShowsRootHandles(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR) {{
-            setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR)));
-            addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX) {{
-            setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX)));
-            addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected()));
-        }}, "span");
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {
+            {
+                setSelected(tree.isEditable());
+                addActionListener(e -> tree.setEditable(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(tree.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> tree.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                 : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        controlPanel.add(new JCheckBox("show root handles") {
+            {
+                setSelected(tree.getShowsRootHandles());
+                addActionListener(e -> tree.setShowsRootHandles(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR) {
+            {
+                setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR)));
+                addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX) {
+            {
+                setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX)));
+                addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected()));
+            }
+        }, "span");
         controlPanel.add(new JLabel(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE + ":", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {{
-            addItem(DarkTreeUI.RENDER_TYPE_CHECKBOX);
-            addItem(DarkTreeUI.RENDER_TYPE_RADIOBUTTON);
-            setSelectedItem(tree.getClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE));
-            addItemListener(e -> tree.putClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, e.getItem()));
-        }});
+        controlPanel.add(new JComboBox<String>() {
+            {
+                addItem(DarkTreeUI.RENDER_TYPE_CHECKBOX);
+                addItem(DarkTreeUI.RENDER_TYPE_RADIOBUTTON);
+                setSelectedItem(tree.getClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE));
+                addItemListener(e -> tree.putClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, e.getItem()));
+            }
+        });
         controlPanel.add(new JLabel("JTree.lineStyle:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {{
-            addItem("Dashed");
-            addItem("None");
-            addItem("Line");
-            setSelectedItem("Line");
-            addItemListener(e -> tree.putClientProperty("JTree.lineStyle", e.getItem()));
-        }});
+        controlPanel.add(new JComboBox<String>() {
+            {
+                addItem("Dashed");
+                addItem("None");
+                addItem("Line");
+                setSelectedItem("Line");
+                addItemListener(e -> tree.putClientProperty("JTree.lineStyle", e.getItem()));
+            }
+        });
         tree.setLargeModel(true);
         return panel;
     }

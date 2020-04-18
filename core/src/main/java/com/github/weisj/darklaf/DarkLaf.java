@@ -20,8 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicLookAndFeel;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.task.*;
@@ -29,12 +37,6 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.SystemInfo;
-
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicLookAndFeel;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Jannis Weis
@@ -48,13 +50,13 @@ public class DarkLaf extends BasicLookAndFeel {
      * All tasks for initializing the ui defaults in order of execution.
      */
     private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[]{
-        new ThemeDefaultsInitTask(),
-        new InputDefaultsInitTask(),
-        new IdeaDefaultsInitTask(),
-        new FontDefaultsInitTask(),
-        new UtilityDefaultsInitTask(),
-        new SystemDefaultsInitTask(),
-        new PlatformDefaultsInitTask()
+                                                                                new ThemeDefaultsInitTask(),
+                                                                                new InputDefaultsInitTask(),
+                                                                                new IdeaDefaultsInitTask(),
+                                                                                new FontDefaultsInitTask(),
+                                                                                new UtilityDefaultsInitTask(),
+                                                                                new SystemDefaultsInitTask(),
+                                                                                new PlatformDefaultsInitTask()
     };
     /*
      * The base look and feel. This may vary to handle different platform support.
@@ -143,12 +145,10 @@ public class DarkLaf extends BasicLookAndFeel {
         return "Darklaf";
     }
 
-
     @Override
     public String getID() {
         return getName();
     }
-
 
     @Override
     public String getDescription() {

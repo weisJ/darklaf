@@ -20,17 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.list;
 
-import com.github.weisj.darklaf.ui.list.DarkListUI;
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.*;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
+
+import com.github.weisj.darklaf.ui.list.DarkListUI;
 
 public final class ListDemo implements ComponentDemo {
 
@@ -47,41 +50,51 @@ public final class ListDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(list, new BorderLayout(), 0);
 
         JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox(DarkListUI.KEY_ALTERNATE_ROW_COLOR) {{
-            setSelected(Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR)));
-            addActionListener(e -> list.putClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
-        }}, "span");
+        controlPanel.add(new JCheckBox(DarkListUI.KEY_ALTERNATE_ROW_COLOR) {
+            {
+                setSelected(Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR)));
+                addActionListener(e -> list.putClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
+            }
+        }, "span");
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Layout orientation:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {{
-            Map<String, Integer> mapping = new HashMap<String, Integer>() {{
-                put("VERTICAL", JList.VERTICAL);
-                put("VERTICAL_WRAP", JList.VERTICAL_WRAP);
-                put("HORIZONTAL_WRAP", JList.HORIZONTAL_WRAP);
-            }};
-            addItem("VERTICAL");
-            addItem("VERTICAL_WRAP");
-            addItem("HORIZONTAL_WRAP");
-            setSelectedItem("VERTICAL");
-            //noinspection MagicConstant
-            addItemListener(e -> list.setLayoutOrientation(mapping.get(e.getItem().toString())));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<String>() {
+            {
+                Map<String, Integer> mapping = new HashMap<String, Integer>() {
+                    {
+                        put("VERTICAL", JList.VERTICAL);
+                        put("VERTICAL_WRAP", JList.VERTICAL_WRAP);
+                        put("HORIZONTAL_WRAP", JList.HORIZONTAL_WRAP);
+                    }
+                };
+                addItem("VERTICAL");
+                addItem("VERTICAL_WRAP");
+                addItem("HORIZONTAL_WRAP");
+                setSelectedItem("VERTICAL");
+                // noinspection MagicConstant
+                addItemListener(e -> list.setLayoutOrientation(mapping.get(e.getItem().toString())));
+            }
+        }, "sgx");
         controlPanel.add(new JLabel("Selection mode:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {{
-            Map<String, Integer> mapping = new HashMap<String, Integer>() {{
-                put("SINGLE_SELECTION", ListSelectionModel.SINGLE_SELECTION);
-                put("MULTIPLE_INTERVAL_SELECTION", ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-                put("SINGLE_INTERVAL_SELECTION", ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-            }};
-            addItem("SINGLE_SELECTION");
-            addItem("MULTIPLE_INTERVAL_SELECTION");
-            addItem("SINGLE_INTERVAL_SELECTION");
-            setSelectedItem("SINGLE_SELECTION");
-            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            //noinspection MagicConstant
-            addItemListener(e -> list.setSelectionMode(mapping.get(e.getItem().toString())));
-        }}, "sgx");
+        controlPanel.add(new JComboBox<String>() {
+            {
+                Map<String, Integer> mapping = new HashMap<String, Integer>() {
+                    {
+                        put("SINGLE_SELECTION", ListSelectionModel.SINGLE_SELECTION);
+                        put("MULTIPLE_INTERVAL_SELECTION", ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                        put("SINGLE_INTERVAL_SELECTION", ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+                    }
+                };
+                addItem("SINGLE_SELECTION");
+                addItem("MULTIPLE_INTERVAL_SELECTION");
+                addItem("SINGLE_INTERVAL_SELECTION");
+                setSelectedItem("SINGLE_SELECTION");
+                list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                // noinspection MagicConstant
+                addItemListener(e -> list.setSelectionMode(mapping.get(e.getItem().toString())));
+            }
+        }, "sgx");
         return panel;
     }
 

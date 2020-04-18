@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
+
+import javax.swing.*;
 
 public class ToggleButtonFocusNavigationActions {
 
@@ -33,14 +35,11 @@ public class ToggleButtonFocusNavigationActions {
         button.getActionMap().put("Previous", new SelectPreviousBtn());
         button.getActionMap().put("Next", new SelectNextBtn());
 
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-            put(KeyStroke.getKeyStroke("UP"), "Previous");
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-            put(KeyStroke.getKeyStroke("DOWN"), "Next");
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-            put(KeyStroke.getKeyStroke("LEFT"), "Previous");
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-            put(KeyStroke.getKeyStroke("RIGHT"), "Next");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("UP"), "Previous");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("DOWN"), "Next");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("LEFT"),
+                                                                              "Previous");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("RIGHT"), "Next");
     }
 
     public static void uninstallActions(final AbstractButton button) {

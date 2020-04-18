@@ -1,6 +1,3 @@
-import com.github.vlsi.gradle.crlf.CrLfSpec
-import com.github.vlsi.gradle.crlf.LineEndings
-
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow")
@@ -21,18 +18,6 @@ dependencies {
     testImplementation("com.miglayout:miglayout-core")
     testImplementation("com.miglayout:miglayout-swing")
     testImplementation("org.swinglabs:swingx")
-}
-
-tasks.jar {
-    CrLfSpec(LineEndings.LF).run {
-        into("META-INF") {
-            filteringCharset = "UTF-8"
-            textFrom("licenses/NOTICE.txt")
-            textFrom("licenses/DARCULA_LICENSE.txt")
-            textFrom("licenses/PBJAR_LICENSE.txt")
-            textFrom("licenses/INTELLIJ_LICENSE.txt")
-        }
-    }
 }
 
 val makeDocumentation by tasks.registering(JavaExec::class) {
@@ -66,10 +51,13 @@ tasks.shadowJar {
 
 abstract class DemoTask : JavaExec() {
     init {
-        setMain("UIDemo")
+        main = "UIDemo"
     }
 
-    @Option(option = "class", description = "Specifies the main class to run (e.g. UIDemo, ui.table.TableDemo, ui.button.ButtonDemo, ...)")
+    @Option(
+        option = "class",
+        description = "Specifies the main class to run (e.g. UIDemo, ui.table.TableDemo, ui.button.ButtonDemo, ...)"
+    )
     override fun setMain(mainClassName: String?) = super.setMain(mainClassName)
 }
 
@@ -86,6 +74,7 @@ val runDemo by tasks.registering(DemoTask::class) {
         val value = System.getProperty(name) ?: default
         value?.let { systemProperty(name, it) }
     }
+
     val props = System.getProperties()
     @Suppress("UNCHECKED_CAST")
     for (e in props.propertyNames() as `java.util`.Enumeration<String>) {

@@ -20,20 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.button;
 
-import com.github.weisj.darklaf.util.AlignmentExt;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
+
+import com.github.weisj.darklaf.util.AlignmentExt;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -278,8 +280,8 @@ public class DarkButtonBorder implements Border, UIResource {
         boolean square = ButtonConstants.isSquare(c);
         Insets pad = ButtonConstants.isThin(c) ? square ? squareThinInsets
                                                         : thinInsets
-                                               : square ? squareInsets
-                                                        : insets;
+                                    : square ? squareInsets
+                                    : insets;
         return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
     }
 

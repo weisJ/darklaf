@@ -20,8 +20,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.platform.macos.MacOSThemePreferenceProvider;
@@ -34,8 +37,6 @@ import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
 import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-import javax.swing.*;
-
 public class ThemePreferencesHandler {
 
     public static final String PREFERENCE_REPORTING_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "enableNativePreferences";
@@ -43,7 +44,6 @@ public class ThemePreferencesHandler {
     private static ThemePreferencesHandler sharedInstance;
     private final ThemePreferenceChangeSupport changeSupport = new ThemePreferenceChangeSupport();
     private ThemePreferenceProvider preferenceProvider;
-
 
     public static ThemePreferencesHandler getSharedInstance() {
         if (sharedInstance == null) setSharedInstance(new ThemePreferencesHandler());
@@ -117,7 +117,6 @@ public class ThemePreferencesHandler {
     public boolean supportsNativeTheme() {
         return preferenceProvider.supportsNativeTheme();
     }
-
 
     public PreferredThemeStyle getPreferredThemeStyle() {
         return preferenceProvider.getPreference();

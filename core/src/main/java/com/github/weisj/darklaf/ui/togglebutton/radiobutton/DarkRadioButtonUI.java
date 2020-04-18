@@ -20,8 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
+
+import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RectangularShape;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicButtonListener;
+import javax.swing.plaf.basic.BasicHTML;
+import javax.swing.plaf.metal.MetalRadioButtonUI;
+import javax.swing.text.View;
+
+import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
@@ -30,20 +47,6 @@ import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActio
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.SwingUtilities2;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicButtonListener;
-import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.plaf.metal.MetalRadioButtonUI;
-import javax.swing.text.View;
-import java.awt.*;
-import java.awt.event.KeyListener;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.RectangularShape;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
@@ -63,7 +66,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     protected BasicButtonListener buttonListener;
     protected KeyListener keyListener;
 
-
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonUI();
     }
@@ -82,7 +84,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         hitArea = new Rectangle();
         installIcons();
     }
-
 
     protected void installIcons() {
         stateIcon = UIManager.getIcon("RadioButton.icon");

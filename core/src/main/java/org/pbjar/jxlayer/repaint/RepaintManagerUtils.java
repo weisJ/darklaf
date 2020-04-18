@@ -1,46 +1,47 @@
 /*
- Copyright (c) 2009, Piet Blok
- All rights reserved.
- <p>
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions
- are met:
- <p>
+ * Copyright (c) 2009, Piet Blok
+ * All rights reserved.
+ * <p>
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * <p>
  * Redistributions of source code must retain the above copyright
- notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above
- copyright notice, this list of conditions and the following
- disclaimer in the documentation and/or other materials provided
- with the distribution.
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution.
  * Neither the name of the copyright holder nor the names of the
- contributors may be used to endorse or promote products derived
- from this software without specific prior written permission.
- <p>
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
+ * contributors may be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * <p>
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.pbjar.jxlayer.repaint;
 
-import com.github.weisj.darklaf.log.LogFormatter;
-import org.jdesktop.swingx.ForwardingRepaintManager;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
+
+import javax.swing.*;
+
+import org.jdesktop.swingx.ForwardingRepaintManager;
+
+import com.github.weisj.darklaf.log.LogFormatter;
 
 /**
  * Utility class that ensures that a correct {@link RepaintManager} is set.
@@ -62,9 +63,7 @@ public final class RepaintManagerUtils {
         LOGGER.addHandler(handler);
     }
 
-
-    private RepaintManagerUtils() {
-    }
+    private RepaintManagerUtils() {}
 
     /**
      * Create and return an {@link Action} that will display the delegate structure of the current {@link
@@ -72,8 +71,6 @@ public final class RepaintManagerUtils {
      *
      * @return an {@link Action} object
      */
-
-
     public static Action createRPDisplayAction() {
         return new DisplayAction();
     }
@@ -85,8 +82,7 @@ public final class RepaintManagerUtils {
      * @param c        a component from which the current repaint manager can be obtained.
      * @param provider the provider
      */
-    public static void ensureRepaintManagerSet(
-        final Component c, final RepaintManagerProvider provider) {
+    public static void ensureRepaintManagerSet(final Component c, final RepaintManagerProvider provider) {
         ensureImpl(RepaintManager.currentManager(c), provider);
     }
 
@@ -96,8 +92,7 @@ public final class RepaintManagerUtils {
      * @param delegate a delegate RepaintManager
      * @param provider the provider that provides for the type and implementation of a delegated RepaintManager
      */
-    private static void ensureImpl(
-        final RepaintManager delegate, final RepaintManagerProvider provider) {
+    private static void ensureImpl(final RepaintManager delegate, final RepaintManagerProvider provider) {
         /*
          * Setup a traversal variable.
          */
@@ -108,25 +103,23 @@ public final class RepaintManagerUtils {
                 if (manager instanceof ForwardingRepaintManager) {
                     manager = ((ForwardingRepaintManager) manager).getDelegateManager();
                 } else {
-                    RepaintManager.setCurrentManager(
-                        createManager(provider.getForwardingRepaintManagerClass(), delegate));
+                    RepaintManager.setCurrentManager(createManager(provider.getForwardingRepaintManagerClass(),
+                                                                   delegate));
                     break;
                 }
             } else {
                 if (manager instanceof WrappedRepaintManager) {
                     manager = ((WrappedRepaintManager) manager).getDelegateManager();
                 } else {
-                    RepaintManager.setCurrentManager(
-                        createManager(provider.getWrappedRepaintManagerClass(), delegate));
+                    RepaintManager.setCurrentManager(createManager(provider.getWrappedRepaintManagerClass(), delegate));
                     break;
                 }
             }
         }
     }
 
-
-    private static RepaintManager createManager(
-        final Class<? extends RepaintManager> clazz, final RepaintManager delegate) {
+    private static RepaintManager createManager(final Class<? extends RepaintManager> clazz,
+                                                final RepaintManager delegate) {
         try {
             return clazz.getConstructor(RepaintManager.class).newInstance(delegate);
         } catch (Throwable t) {
@@ -141,8 +134,7 @@ public final class RepaintManagerUtils {
      * @param c        a component from which the current repaint manager can be obtained.
      * @param provider the provider
      */
-    public static void ensureRepaintManagerSet(
-        final JComponent c, final RepaintManagerProvider provider) {
+    public static void ensureRepaintManagerSet(final JComponent c, final RepaintManagerProvider provider) {
         ensureImpl(RepaintManager.currentManager(c), provider);
     }
 
@@ -186,8 +178,7 @@ public final class RepaintManagerUtils {
             message.setContentType("text/plain");
             message.setText(text);
             message.setEditable(false);
-            JOptionPane.showMessageDialog(
-                c, message, "The RepaintManager tree", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(c, message, "The RepaintManager tree", JOptionPane.INFORMATION_MESSAGE);
         }
 
         private void appendClass(final PrintWriter writer, final Object obj) {

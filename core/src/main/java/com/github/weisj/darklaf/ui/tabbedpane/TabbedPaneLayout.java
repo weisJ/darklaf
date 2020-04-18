@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import javax.swing.*;
 import java.awt.*;
+
+import javax.swing.*;
 
 /**
  * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
@@ -38,11 +40,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         this.ui = ui;
     }
 
-    public void addLayoutComponent(final String name, final Component comp) {
-    }
+    public void addLayoutComponent(final String name, final Component comp) {}
 
-    public void removeLayoutComponent(final Component comp) {
-    }
+    public void removeLayoutComponent(final Component comp) {}
 
     public Dimension preferredLayoutSize(final Container parent) {
         return calculateSize(false);
@@ -57,7 +57,8 @@ public abstract class TabbedPaneLayout implements LayoutManager {
      */
     @SuppressWarnings("deprecation")
     public void layoutContainer(final Container parent) {
-        /* Some of the code in this method deals with changing the
+        /*
+         * Some of the code in this method deals with changing the
          * visibility of components to hide and show the contents for the
          * selected tab. This is older code that has since been duplicated
          * in JTabbedPane.fireStateChanged(), so as to allow visibility
@@ -67,7 +68,6 @@ public abstract class TabbedPaneLayout implements LayoutManager {
          * Any changes here need to be kept in synch with
          * JTabbedPane.fireStateChanged().
          */
-
         ui.setRolloverTab(-1);
 
         int tabPlacement = ui.tabPane.getTabPlacement();
@@ -96,7 +96,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         // In order to allow programs to use a single component
         // as the display for multiple tabs, we will not change
         // the visible compnent if the currently selected tab
-        // has a null component.  This is a bit dicey, as we don't
+        // has a null component. This is a bit dicey, as we don't
         // explicitly state we support this in the spec, but since
         // programs are now depending on this, we're making it work.
         //
@@ -116,23 +116,23 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         if (numChildren > 0) {
 
             switch (tabPlacement) {
-                case SwingConstants.LEFT:
+                case SwingConstants.LEFT :
                     totalTabWidth = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     cx = insets.left + totalTabWidth + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     break;
-                case SwingConstants.RIGHT:
+                case SwingConstants.RIGHT :
                     totalTabWidth = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     break;
-                case SwingConstants.BOTTOM:
+                case SwingConstants.BOTTOM :
                     totalTabHeight = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     break;
-                case SwingConstants.TOP:
-                default:
+                case SwingConstants.TOP :
+                default :
                     totalTabHeight = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + totalTabHeight + contentInsets.top;
@@ -149,12 +149,12 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 Component child = ui.tabPane.getComponent(i);
                 if (child == ui.tabContainer) {
 
-                    int tabContainerWidth = totalTabWidth == 0 ? bounds.width :
-                                            totalTabWidth + insets.left + insets.right +
-                                            contentInsets.left + contentInsets.right;
-                    int tabContainerHeight = totalTabHeight == 0 ? bounds.height :
-                                             totalTabHeight + insets.top + insets.bottom +
-                                             contentInsets.top + contentInsets.bottom;
+                    int tabContainerWidth = totalTabWidth == 0 ? bounds.width
+                                                               : totalTabWidth + insets.left + insets.right +
+                                                                 contentInsets.left + contentInsets.right;
+                    int tabContainerHeight = totalTabHeight == 0 ? bounds.height
+                                                                 : totalTabHeight + insets.top + insets.bottom +
+                                                                   contentInsets.top + contentInsets.bottom;
 
                     int tabContainerX = 0;
                     int tabContainerY = 0;
@@ -208,7 +208,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
             int outerY = rect.y + insets.top + delta.y;
             int outerWidth = rect.width - insets.left - insets.right;
             int outerHeight = rect.height - insets.top - insets.bottom;
-            //centralize component
+            // centralize component
             int x = outerX + (outerWidth - preferredSize.width) / 2;
             int y = outerY + (outerHeight - preferredSize.height) / 2;
             int tabPlacement = ui.tabPane.getTabPlacement();
@@ -243,26 +243,26 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         // Calculate bounds within which a tab run must fit
         //
         switch (tabPlacement) {
-            case SwingConstants.LEFT:
+            case SwingConstants.LEFT :
                 ui.maxTabWidth = ui.calculateMaxTabWidth(tabPlacement);
                 x = insets.left + tabAreaInsets.left;
                 y = insets.top + tabAreaInsets.top;
                 returnAt = size.height - (insets.bottom + tabAreaInsets.bottom);
                 break;
-            case SwingConstants.RIGHT:
+            case SwingConstants.RIGHT :
                 ui.maxTabWidth = ui.calculateMaxTabWidth(tabPlacement);
                 x = size.width - insets.right - tabAreaInsets.right - ui.maxTabWidth;
                 y = insets.top + tabAreaInsets.top;
                 returnAt = size.height - (insets.bottom + tabAreaInsets.bottom);
                 break;
-            case SwingConstants.BOTTOM:
+            case SwingConstants.BOTTOM :
                 ui.maxTabHeight = ui.calculateMaxTabHeight(tabPlacement);
                 x = insets.left + tabAreaInsets.left;
                 y = size.height - insets.bottom - tabAreaInsets.bottom - ui.maxTabHeight;
                 returnAt = size.width - (insets.right + tabAreaInsets.right);
                 break;
-            case SwingConstants.TOP:
-            default:
+            case SwingConstants.TOP :
+            default :
                 ui.maxTabHeight = ui.calculateMaxTabHeight(tabPlacement);
                 x = insets.left + tabAreaInsets.left;
                 y = insets.top + tabAreaInsets.top;
@@ -310,7 +310,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 }
                 // Initialize y position in case there's just one run
                 rect.y = y;
-                rect.height = ui.maxTabHeight/* - 2*/;
+                rect.height = ui.maxTabHeight/* - 2 */;
 
             } else {
                 // Tabs on LEFT or RIGHT...
@@ -338,7 +338,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 }
                 // Initialize x position in case there's just one column
                 rect.x = x;
-                rect.width = ui.maxTabWidth/* - 2*/;
+                rect.width = ui.maxTabWidth/* - 2 */;
 
             }
             if (i == selectedIndex) {
@@ -435,7 +435,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         //
         // Starting with the last run, determine whether the last tab in
         // the previous run would fit (generously) in this run; if so,
-        // move tab to current run and shift tabs accordingly.  Cycle
+        // move tab to current run and shift tabs accordingly. Cycle
         // through remaining runs using the same algorithm.
         //
         while (keepAdjusting) {
@@ -590,8 +590,8 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     /**
      * Returns the calculated size.
      *
-     * @param minimum use the minimum size or preferred size
-     * @return the calculated size
+     * @param  minimum use the minimum size or preferred size
+     * @return         the calculated size
      */
     protected Dimension calculateSize(final boolean minimum) {
         int tabPlacement = ui.tabPane.getTabPlacement();
@@ -611,8 +611,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         for (int i = 0; i < ui.tabPane.getTabCount(); i++) {
             Component component = ui.tabPane.getComponentAt(i);
             if (component != null) {
-                Dimension size = minimum ? component.getMinimumSize() :
-                                 component.getPreferredSize();
+                Dimension size = minimum ? component.getMinimumSize() : component.getPreferredSize();
 
                 if (size != null) {
                     cHeight = Math.max(size.height, cHeight);
@@ -629,15 +628,15 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         // minimum size required to display largest child + content border
         //
         switch (tabPlacement) {
-            case SwingConstants.LEFT:
-            case SwingConstants.RIGHT:
+            case SwingConstants.LEFT :
+            case SwingConstants.RIGHT :
                 height = Math.max(height, ui.calculateMaxTabHeight(tabPlacement));
                 tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
                 width += tabExtent;
                 break;
-            case SwingConstants.TOP:
-            case SwingConstants.BOTTOM:
-            default:
+            case SwingConstants.TOP :
+            case SwingConstants.BOTTOM :
+            default :
                 width = Math.max(width, ui.calculateMaxTabWidth(tabPlacement));
                 tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
                 height += tabExtent;
@@ -650,9 +649,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     /**
      * Returns the preferred tab area width.
      *
-     * @param tabPlacement the tab placement
-     * @param height       the height
-     * @return the preferred tab area widty
+     * @param  tabPlacement the tab placement
+     * @param  height       the height
+     * @return              the preferred tab area widty
      */
     protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
         FontMetrics metrics = ui.getFontMetrics();
@@ -682,9 +681,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     /**
      * Returns the preferred tab area height.
      *
-     * @param tabPlacement the tab placement
-     * @param width        the width
-     * @return the preferred tab area height
+     * @param  tabPlacement the tab placement
+     * @param  width        the width
+     * @return              the preferred tab area height
      */
     protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
         FontMetrics metrics = ui.getFontMetrics();

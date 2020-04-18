@@ -20,20 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
-import com.github.weisj.darklaf.decorators.CellRenderer;
-import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import com.github.weisj.darklaf.ui.table.DarkTableHeaderUI;
-import sun.awt.SunToolkit;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.InsetsUIResource;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -42,6 +32,19 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.InsetsUIResource;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
+
+import sun.awt.SunToolkit;
+
+import com.github.weisj.darklaf.decorators.CellRenderer;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.ui.table.DarkTableHeaderUI;
 
 /**
  * @author Konstantin Bulenkov
@@ -228,7 +231,6 @@ public final class DarkUIUtil {
         g.fill(new RoundRectangle2D.Float(x + lw, y + lw, width - 2 * lw, height - 2 * lw, arcSze, arcSze));
     }
 
-
     public static Color blendColors(final Color color1, final Color color2, final double percent) {
         if (percent == 1) return color1;
         if (percent == 0) return color2;
@@ -268,9 +270,9 @@ public final class DarkUIUtil {
     /**
      * Returns whether the component has the focus, or one of the subcomponents has it.
      *
-     * @param c the component.
-     * @param e an event associated with focusLost. optional (i.e. can be null).
-     * @return true if the component or one of its subcomponents has the focus.
+     * @param  c the component.
+     * @param  e an event associated with focusLost. optional (i.e. can be null).
+     * @return   true if the component or one of its subcomponents has the focus.
      */
     public static boolean hasFocus(final Component c, final FocusEvent e) {
         if (c == null) return false;
@@ -312,7 +314,6 @@ public final class DarkUIUtil {
         return ActionEvent.ALT_MASK;
     }
 
-
     public static Object getUIOfType(final ComponentUI ui, final Class<?> klass) {
         if (klass.isInstance(ui)) {
             return ui;
@@ -326,8 +327,8 @@ public final class DarkUIUtil {
     }
 
     public static boolean isInCell(final Component c) {
-        boolean tableHeaderCell = c instanceof JComponent && Boolean.TRUE.equals(
-            ((JComponent) c).getClientProperty(DarkTableHeaderUI.KEY_IS_HEADER_RENDERER));
+        boolean tableHeaderCell = c instanceof JComponent
+                                  && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableHeaderUI.KEY_IS_HEADER_RENDERER));
         boolean inCellRenderer = !tableHeaderCell
                                  && (getParentOfType(CellRendererPane.class, c) != null
                                      || getParentOfType(TableCellRenderer.class, c) != null
@@ -348,7 +349,6 @@ public final class DarkUIUtil {
         return null;
     }
 
-
     public static Window getWindow(final Component component) {
         if (component == null) {
             return null;
@@ -360,7 +360,6 @@ public final class DarkUIUtil {
         AbstractAction hideTipAction = (AbstractAction) component.getActionMap().get("hideTip");
         return hideTipAction.isEnabled();
     }
-
 
     public static MenuElement findEnabledChild(final MenuElement[] e, final MenuElement elem, final boolean forward) {
         for (int i = 0; i < e.length; i++) {
@@ -383,7 +382,6 @@ public final class DarkUIUtil {
         return result;
     }
 
-
     private static MenuElement nextEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
         for (int i = fromIndex; i <= toIndex; i++) {
             if (e[i] != null) {
@@ -397,7 +395,6 @@ public final class DarkUIUtil {
         }
         return null;
     }
-
 
     private static MenuElement previousEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
         for (int i = fromIndex; i >= toIndex; i--) {
@@ -428,10 +425,14 @@ public final class DarkUIUtil {
     public static boolean isOverText(final MouseEvent e, final int index, final JList<?> list) {
         Rectangle bounds = list.getCellBounds(index, index);
         if (!bounds.contains(e.getPoint())) return false;
-        //noinspection unchecked
+        // noinspection unchecked
         Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer())
-            .getListCellRendererComponent(list, list.getModel().getElementAt(index),
-                                          index, false, false);
+                                                                                    .getListCellRendererComponent(list,
+                                                                                                                  list.getModel()
+                                                                                                                      .getElementAt(index),
+                                                                                                                  index,
+                                                                                                                  false,
+                                                                                                                  false);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {
@@ -454,8 +455,11 @@ public final class DarkUIUtil {
                                      final JTable table) {
         Rectangle bounds = table.getCellRect(row, column, false);
         if (!bounds.contains(e.getPoint())) return false;
-        Component cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(
-            table, table.getValueAt(row, column), false, false, row, column);
+        Component cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(table,
+                                                                                                  table.getValueAt(row,
+                                                                                                                   column),
+                                                                                                  false, false, row,
+                                                                                                  column);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {

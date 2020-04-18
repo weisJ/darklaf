@@ -20,15 +20,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import com.github.weisj.darklaf.color.DarkColorModelCMYK;
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
-import com.github.weisj.darklaf.color.DarkColorModelRGB;
-import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -36,8 +33,13 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicColorChooserUI;
-import java.awt.*;
-import java.beans.PropertyChangeListener;
+
+import com.github.weisj.darklaf.color.DarkColorModelCMYK;
+import com.github.weisj.darklaf.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.color.DarkColorModelRGB;
+import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -73,7 +75,6 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
         }
     };
 
-
     public static ComponentUI createUI(final JComponent c) {
         return new DarkColorChooserUI();
     }
@@ -81,12 +82,12 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     @Override
     protected AbstractColorChooserPanel[] createDefaultChoosers() {
         return new AbstractColorChooserPanel[]{
-            new DarkColorChooserPanel(DarkColorModelRGB.getInstance(),
-                                      DarkColorModelHSB.getInstance(),
-                                      DarkColorModelHSL.getInstance(),
-                                      DarkColorModelCMYK.getInstance()),
-            new DarkSwatchesChooserPanel(),
-            };
+                                               new DarkColorChooserPanel(DarkColorModelRGB.getInstance(),
+                                                                         DarkColorModelHSB.getInstance(),
+                                                                         DarkColorModelHSL.getInstance(),
+                                                                         DarkColorModelCMYK.getInstance()),
+                                               new DarkSwatchesChooserPanel(),
+        };
     }
 
     @Override

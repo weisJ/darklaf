@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.filechooser;
 
-import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 
 public class DarkFilterComboBoxRenderer extends DarkListCellRenderer {
 

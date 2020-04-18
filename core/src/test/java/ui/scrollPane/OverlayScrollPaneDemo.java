@@ -20,17 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.scrollPane;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.util.StringUtil;
+import java.awt.*;
+
+import javax.swing.*;
+
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
 
-import javax.swing.*;
-import java.awt.*;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.util.StringUtil;
 
 public class OverlayScrollPaneDemo implements ComponentDemo {
 
@@ -40,8 +43,8 @@ public class OverlayScrollPaneDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        OverlayScrollPane scrollPane = new OverlayScrollPane(
-            new JTextArea(StringUtil.repeat(DemoResources.LOREM_IPSUM, 5)));
+        OverlayScrollPane scrollPane = new OverlayScrollPane(new JTextArea(StringUtil.repeat(DemoResources.LOREM_IPSUM,
+                                                                                             5)));
         return new DemoPanel(scrollPane, new BorderLayout(), 0);
     }
 

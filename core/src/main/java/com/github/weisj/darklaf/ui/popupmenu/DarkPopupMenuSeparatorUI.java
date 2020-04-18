@@ -20,25 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
-import com.github.weisj.darklaf.ui.separator.DarkSeparatorUI;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.separator.DarkSeparatorUI;
 
 /**
  * @author Jannis Weis
  */
 public class DarkPopupMenuSeparatorUI extends DarkSeparatorUI {
 
-
     public static ComponentUI createUI(final JComponent c) {
         return new DarkPopupMenuSeparatorUI();
     }
-
 
     @Override
     public void paint(final Graphics g, final JComponent c) {

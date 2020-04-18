@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.border;
 
-import javax.swing.border.AbstractBorder;
 import java.awt.*;
+
+import javax.swing.border.AbstractBorder;
 
 /**
  * @author Jannis Weis
@@ -41,8 +43,7 @@ public class MutableLineBorder extends AbstractBorder {
         this(insets.top, insets.left, insets.bottom, insets.right, color);
     }
 
-    public MutableLineBorder(
-        final int top, final int left, final int bottom, final int right, final Color color) {
+    public MutableLineBorder(final int top, final int left, final int bottom, final int right, final Color color) {
         this.top = top;
         this.left = left;
         this.bottom = bottom;

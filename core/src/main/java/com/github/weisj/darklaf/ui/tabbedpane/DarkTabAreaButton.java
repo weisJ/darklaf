@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
 public class DarkTabAreaButton extends JButton implements UIResource {
 
@@ -42,6 +44,5 @@ public class DarkTabAreaButton extends JButton implements UIResource {
         ui.paintTabAreaBorder(g, ui.tabPane.getTabPlacement(), 0, 0, getWidth(), getHeight());
     }
 
-    protected void paintButton(final Graphics g) {
-    }
+    protected void paintButton(final Graphics g) {}
 }

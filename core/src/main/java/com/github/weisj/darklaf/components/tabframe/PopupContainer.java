@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.*;
 
 /**
  * Holder component.
@@ -58,7 +60,6 @@ public class PopupContainer extends JPanel {
     public void setBorder(final Border border) {
         super.setBorder(null);
     }
-
 
     @Override
     public Border getBorder() {

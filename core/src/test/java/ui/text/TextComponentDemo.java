@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.text;
-
-import com.github.weisj.darklaf.ui.text.DarkTextBorder;
-import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.StringUtil;
-import ui.ComponentDemo;
-import ui.DemoPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
+
+import com.github.weisj.darklaf.ui.text.DarkTextBorder;
+import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.StringUtil;
 
 public abstract class TextComponentDemo<T extends JTextComponent> implements ComponentDemo {
 
@@ -44,25 +46,35 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
         Border border = text.getBorder();
 
         JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(text.isEnabled());
-            addActionListener(e -> text.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {{
-            setSelected(text.isEditable());
-            addActionListener(e -> text.setEditable(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("text border") {{
-            setSelected(false);
-            addActionListener(e -> text.setBorder(isSelected() ? textBorder : border));
-        }});
-        controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {{
-            setSelected(true);
-            addActionListener(e -> text.putClientProperty("JTextComponent.roundedSelection", isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("JTextComponent.hasError") {{
-            addActionListener(e -> text.putClientProperty("JTextComponent.hasError", isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(text.isEnabled());
+                addActionListener(e -> text.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {
+            {
+                setSelected(text.isEditable());
+                addActionListener(e -> text.setEditable(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("text border") {
+            {
+                setSelected(false);
+                addActionListener(e -> text.setBorder(isSelected() ? textBorder : border));
+            }
+        });
+        controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {
+            {
+                setSelected(true);
+                addActionListener(e -> text.putClientProperty("JTextComponent.roundedSelection", isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("JTextComponent.hasError") {
+            {
+                addActionListener(e -> text.putClientProperty("JTextComponent.hasError", isSelected()));
+            }
+        });
         return panel;
     }
 

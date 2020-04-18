@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
-import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicDesktopIconUI;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
+import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 /**
  * @author Jannis Weis

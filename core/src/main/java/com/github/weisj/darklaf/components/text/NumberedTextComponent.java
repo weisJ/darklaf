@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.text;
 
-import com.github.weisj.darklaf.components.OverlayScrollPane;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
-import java.awt.*;
+
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 
 public class NumberedTextComponent extends JPanel {
 

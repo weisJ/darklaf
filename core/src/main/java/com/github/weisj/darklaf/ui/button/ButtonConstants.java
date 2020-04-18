@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.button;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
 public interface ButtonConstants {
     String KEY_VARIANT = "JButton.variant";
@@ -77,8 +79,8 @@ public interface ButtonConstants {
         if (isBorderlessRectangular(c)) return true;
         if (c instanceof JButton) {
             JButton b = (JButton) c;
-            return doConvertToBorderless((AbstractButton) c) || VARIANT_BORDERLESS.equals(
-                b.getClientProperty(KEY_VARIANT));
+            return doConvertToBorderless((AbstractButton) c)
+                   || VARIANT_BORDERLESS.equals(b.getClientProperty(KEY_VARIANT));
         }
         return false;
     }

@@ -20,18 +20,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.combobox;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 public class DarkComboBoxBorder implements Border, UIResource {
 
@@ -123,7 +125,8 @@ public class DarkComboBoxBorder implements Border, UIResource {
     public Insets getBorderInsets(final Component c) {
         if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
             return CellUtil.adjustEditorInsets(new InsetsUIResource(cellPadding.top, cellPadding.left,
-                                                                    cellPadding.bottom, cellPadding.right), c);
+                                                                    cellPadding.bottom, cellPadding.right),
+                                               c);
         }
         if (c.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);

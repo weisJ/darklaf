@@ -20,24 +20,26 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.decorators.MouseClickListener;
-import com.github.weisj.darklaf.decorators.MouseMovementListener;
-import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
+import com.github.weisj.darklaf.decorators.MouseClickListener;
+import com.github.weisj.darklaf.decorators.MouseMovementListener;
+import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -87,16 +89,13 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         }
     };
 
-
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTextFieldUI();
     }
 
-
     protected static Icon getClearIcon(final boolean clearHovered) {
         return clearHovered ? clearHover : clear;
     }
-
 
     public static Rectangle getTextRect(final JComponent c) {
         Insets i = c.getInsets();
@@ -119,15 +118,15 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         Rectangle drawRect = getDrawingRect(getComponent());
         Rectangle textRect = getTextRect(getComponent());
         int rightBoundary = getComponent().getText().isEmpty()
-                            ? drawRect.x + drawRect.width
-                            : getClearIconCoord().x;
+                                                               ? drawRect.x + drawRect.width
+                                                               : getClearIconCoord().x;
         boolean insideTextArea = drawRect.contains(p) && p.x >= textRect.x && p.x < rightBoundary;
         if (insideTextArea) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
             Cursor cursor = action == ClickAction.NONE
-                            ? Cursor.getDefaultCursor()
-                            : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                                                       ? Cursor.getDefaultCursor()
+                                                       : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
             getComponent().setCursor(cursor);
         }
     }
@@ -144,7 +143,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         }
         return ClickAction.NONE;
     }
-
 
     private static JPopupMenu getSearchPopup(final JComponent c) {
         Object value = c.getClientProperty(KEY_FIND_POPUP);
@@ -165,7 +163,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     public static boolean isSearchFieldWithHistoryPopup(final Component c) {
         return isSearchField(c) && getSearchPopup((JComponent) c) != null;
     }
-
 
     public static boolean isSearchField(final Component c) {
         return c instanceof JTextField && VARIANT_SEARCH.equals(((JTextField) c).getClientProperty(KEY_VARIANT));
@@ -216,7 +213,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - borderSize, r.y + (r.height - w) / 2),
                                                w, editor);
     }
-
 
     protected void showSearchPopup() {
         if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {

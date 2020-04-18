@@ -20,15 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
+import sun.swing.SwingUtilities2;
+
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -39,7 +42,6 @@ public class DarkPreviewPanel extends JPanel {
     private static final int SQUARE_GAP = 4;
     private static final int INNER_GAP = 4;
     private static final int SWATCH_WIDTH = 75;
-
 
     private static final int TEXT_GAP = 5;
     private String sampleText;
@@ -118,7 +120,6 @@ public class DarkPreviewPanel extends JPanel {
                    SQUARE_SIZE - (INNER_GAP * 2));
         g.translate(-(SQUARE_SIZE + SQUARE_GAP), -(SQUARE_SIZE + SQUARE_GAP));
 
-
         g.translate((SQUARE_SIZE + SQUARE_GAP) * 2, 0);
         g.setColor(Color.white);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
@@ -168,7 +169,6 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.black);
         SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
                                    height + ascent + TEXT_GAP + 2);
-
 
         g.setColor(Color.white);
 

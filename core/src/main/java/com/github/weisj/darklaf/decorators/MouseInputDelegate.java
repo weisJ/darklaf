@@ -20,14 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.decorators;
 
-import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
+import javax.swing.event.MouseInputListener;
 
 public class MouseInputDelegate implements MouseInputListener {
 
@@ -62,16 +64,14 @@ public class MouseInputDelegate implements MouseInputListener {
     public void setMotionDelegate(final MouseMotionListener motionDelegate) {
         this.motionDelegate = motionDelegate;
         if (motionDelegate == null) {
-            this.motionDelegate = new MouseAdapter() {
-            };
+            this.motionDelegate = new MouseAdapter() {};
         }
     }
 
     public void setMouseDelegate(final MouseListener delegate) {
         this.mouseDelegate = delegate;
         if (delegate == null) {
-            this.mouseDelegate = new MouseAdapter() {
-            };
+            this.mouseDelegate = new MouseAdapter() {};
         }
     }
 

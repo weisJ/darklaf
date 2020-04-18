@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
@@ -33,7 +34,6 @@ import javax.swing.text.View;
  */
 public class DarkTextPaneUI extends DarkEditorPaneUI {
 
-
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTextPaneUI();
     }
@@ -41,7 +41,6 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     /*
      * Implementation of BasicEditorPaneUI
      */
-
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);

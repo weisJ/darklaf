@@ -20,23 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.progressbar;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicProgressBarUI;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.GraphicsContext;
+import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Konstantin Bulenkov
@@ -61,7 +63,6 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     private Color passedColor;
     private Color passedEndColor;
     private int stripeWidth;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkProgressBarUI();
@@ -204,7 +205,6 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         return indeterminateEndColor;
     }
 
-
     private Shape getShapedRect(final float x, final float y, final float w, final float h, final float ar) {
         return new RoundRectangle2D.Float(x, y, w, h, ar, ar);
     }
@@ -331,7 +331,6 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     private int getStripeWidth() {
         return stripeWidth;
     }
-
 
     private static boolean isSimplified() {
         return UIManager.getBoolean("ProgressBar.isSimplified");

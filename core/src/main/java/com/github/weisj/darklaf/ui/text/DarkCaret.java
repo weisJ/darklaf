@@ -20,21 +20,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.text;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
 import javax.swing.text.DefaultHighlighterDark.DarkHighlightPainter;
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -101,7 +103,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
      * contextual purposes while they are displayed.
      *
      * @param alwaysVisible Whether this caret should always be visible.
-     * @see #isAlwaysVisible()
+     * @see                 #isAlwaysVisible()
      */
     public void setAlwaysVisible(final boolean alwaysVisible) {
         if (alwaysVisible != this.alwaysVisible) {
@@ -123,7 +125,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     /**
-     * Called when the mouse is clicked.  If the click was generated from button1, a double click selects a word, and a
+     * Called when the mouse is clicked. If the click was generated from button1, a double click selects a word, and a
      * triple click the current line.
      *
      * @param e the mouse event
@@ -138,11 +140,11 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 if (clickCount > 2) {
                     clickCount %= 2; // Alternate selecting word/line.
                     switch (clickCount) {
-                        case 0:
+                        case 0 :
                             selectWord(e);
                             selectedWordEvent = null;
                             break;
-                        case 1:
+                        case 1 :
                             selectLine.actionPerformed(new ActionEvent(textArea,
                                                                        ActionEvent.ACTION_PERFORMED,
                                                                        null, e.getWhen(), e.getModifiersEx()));
@@ -154,7 +156,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 if (clickCount == 1 && textArea.isEditable() && textArea.isEnabled()) {
                     // Paste the system selection, if it exists (e.g., on UNIX
                     // platforms, the user can select text, the middle-mouse click
-                    // to paste it; this doesn't work on Windows).  If the system
+                    // to paste it; this doesn't work on Windows). If the system
                     // doesn't support system selection, just do a normal paste.
                     JTextComponent c = (JTextComponent) e.getSource();
                     if (c != null) {
@@ -179,8 +181,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                             else {
                                 textArea.paste();
                             }
-                        } catch (HeadlessException ignored) {
-                        }
+                        } catch (HeadlessException ignored) {}
                     }
                 }
             }
@@ -194,7 +195,6 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             positionCaret(e);
         }
     }
-
 
     private void adjustFocus(final boolean inWindow) {
         JTextComponent textArea = getComponent();
@@ -238,7 +238,6 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         return pasteOnMiddleMouseClick;
     }
 
-
     @Override
     public void mousePressed(final MouseEvent e) {
         super.mousePressed(e);
@@ -281,17 +280,17 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
             Color textAreaBg = textArea.getBackground();
             switch (style) {
-                case BLOCK_STYLE:
+                case BLOCK_STYLE :
                     if (textAreaBg == null) {
                         textAreaBg = Color.white;
                     }
                     g.setXORMode(textAreaBg);
                     g.fillRect(r.x, r.y, r.width, r.height);
                     break;
-                case BLOCK_BORDER_STYLE:
+                case BLOCK_BORDER_STYLE :
                     DarkUIUtil.drawRect(g, r.x, r.y, r.width - 1, r.height, 1);
                     break;
-                case UNDERLINE_STYLE:
+                case UNDERLINE_STYLE :
                     if (textAreaBg == null) {
                         textAreaBg = Color.white;
                     }
@@ -299,16 +298,15 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                     int y = r.y + r.height;
                     g.fillRect(r.x, y - 1, r.width, 1);
                     break;
-                case THICK_VERTICAL_LINE_STYLE:
+                case THICK_VERTICAL_LINE_STYLE :
                     g.fillRect(r.x, r.y, 2, r.height);
                     break;
-                case VERTICAL_LINE_STYLE:
+                case VERTICAL_LINE_STYLE :
                     g.fillRect(r.x, r.y, 1, r.height);
                     break;
             }
         }
     }
-
 
     /**
      * Selects word based on a mouse event.
@@ -326,17 +324,14 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         selectedWordEvent = e;
     }
 
-
     public void setPasteOnMiddleMouseClick(final boolean paste) {
         pasteOnMiddleMouseClick = paste;
     }
-
 
     @Override
     public void setSelectionVisible(final boolean visible) {
         super.setSelectionVisible(true);
     }
-
 
     private void validateWidth(final Rectangle rect) {
         if (rect != null && rect.width <= 1) {

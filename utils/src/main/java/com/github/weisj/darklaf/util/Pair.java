@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
@@ -27,7 +28,6 @@ public class Pair<T, H> {
 
     private T first;
     private H second;
-
 
     public Pair(final T first, final H second) {
         this.first = first;

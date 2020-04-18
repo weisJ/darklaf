@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.scrollpane;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
-import java.awt.*;
+
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -169,7 +171,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         return true;
     }
 
-
     protected Color getTrackColor() {
         return trackBackground;
     }
@@ -214,7 +215,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         try {
             super.layoutContainer(scrollbarContainer);
         } catch (NullPointerException ignore) {
-            //installUI is not performed yet or uninstallUI has set almost every field to null.
+            // installUI is not performed yet or uninstallUI has set almost every field to null.
         }
     }
 }

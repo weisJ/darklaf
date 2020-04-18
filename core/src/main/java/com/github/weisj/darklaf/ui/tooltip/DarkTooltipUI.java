@@ -20,29 +20,31 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tooltip;
 
-import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.util.*;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicToolTipUI;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicToolTipUI;
+import javax.swing.text.View;
+
+import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
+import com.github.weisj.darklaf.ui.DarkPopupFactory;
+import com.github.weisj.darklaf.util.*;
+
 /**
  * @author Jannis Weis
  */
 public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener,
-                                                             ToolTipConstants {
+                           ToolTipConstants {
 
     protected static final float MAX_ALPHA = 1.0f;
     protected Animator fadeAnimator;
@@ -57,10 +59,11 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         public void mouseExited(final MouseEvent e) {
             boolean inside = isInside(e);
             if (!inside) {
-                ToolTipManager.sharedInstance().mouseExited(
-                    new MouseEvent(toolTip.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
-                                   Integer.MIN_VALUE, Integer.MIN_VALUE, e.getClickCount(), e.isPopupTrigger(),
-                                   e.getButton()));
+                ToolTipManager.sharedInstance().mouseExited(new MouseEvent(toolTip.getComponent(), e.getID(),
+                                                                           e.getWhen(), e.getModifiersEx(),
+                                                                           Integer.MIN_VALUE, Integer.MIN_VALUE,
+                                                                           e.getClickCount(), e.isPopupTrigger(),
+                                                                           e.getButton()));
             }
         }
     };
@@ -71,7 +74,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             /*
              * We redispatch the event to the ToolTipManager with a corrected location.
              * Because the ToolTipManager check for outside using >= width/height instead of > width/height and due to
-             * the nature of mouseEntered events most of the times having width/height as their coordinated ToolTips would
+             * the nature of mouseEntered events most of the times having width/height as their coordinated ToolTips
+             * would
              * not show up when the component is entered through the bottom/right side of the component.
              */
             Point p = e.getPoint();
@@ -96,7 +100,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     };
     private boolean added;
-
 
     public static ComponentUI createUI(final JComponent c) {
         if (Boolean.TRUE.equals(c.getClientProperty(KEY_PLAIN_TOOLTIP))) {
@@ -157,7 +160,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         }
     }
 
-
     @Override
     public void paint(final Graphics g, final JComponent c) {
         if (((JToolTip) c).getTipText() == null) return;
@@ -171,7 +173,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
             Area area = ((DarkTooltipBorder) c.getBorder())
-                .getBackgroundArea(c, c.getWidth(), c.getHeight(), true);
+                                                           .getBackgroundArea(c, c.getWidth(), c.getHeight(), true);
             ((Graphics2D) g).fill(area);
         }
         super.paint(g, c);
@@ -202,7 +204,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     public void hierarchyChanged(final HierarchyEvent e) {
         Window w = SwingUtilities.getWindowAncestor(toolTip);
         if (toolTip.getParent() instanceof JComponent) {
-            //For MediumWeightPopup still need to make parent non opaque.
+            // For MediumWeightPopup still need to make parent non opaque.
             ((JComponent) toolTip.getParent()).setOpaque(false);
         }
         if (lastRootPane != null) {
@@ -245,7 +247,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         Border b = c.getBorder();
         if (b instanceof DarkTooltipBorder) {
             Area insideArea = ((DarkTooltipBorder) b)
-                .getBackgroundArea(toolTip, toolTip.getWidth(), toolTip.getHeight(), false);
+                                                     .getBackgroundArea(toolTip, toolTip.getWidth(),
+                                                                        toolTip.getHeight(), false);
             return insideArea.contains(x, y);
         } else {
             return super.contains(c, x, y);
@@ -309,7 +312,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                     }
                 } else if (PropertyKey.ANCESTOR.equals(key)) {
                     if (evt.getOldValue() == null) {
-                        //Added to hierarchy. Schedule animation start.
+                        // Added to hierarchy. Schedule animation start.
                         added = true;
                         ToolTipUtil.applyContext(toolTip);
                     }
@@ -329,9 +332,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         if (comp != null) {
             ToolTipStyle style = getStyle(comp.getClientProperty(KEY_STYLE));
             ToolTipStyle tooltipStyle = getStyle(toolTip.getClientProperty(KEY_STYLE));
-            toolTip.putClientProperty(KEY_STYLE, style != null ? style :
-                                                 tooltipStyle != null ? tooltipStyle
-                                                                      : ToolTipStyle.PLAIN_BALLOON);
+            toolTip.putClientProperty(KEY_STYLE, style != null ? style : tooltipStyle != null ? tooltipStyle
+                                                       : ToolTipStyle.PLAIN_BALLOON);
         }
     }
 
@@ -352,7 +354,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     protected class FadeInAnimator extends Animator {
         private static final int DELAY_FRAMES = 6;
         private static final int FADEIN_FRAMES_COUNT = DELAY_FRAMES + 10;
-
 
         public FadeInAnimator() {
             super("Tooltip fadein", FADEIN_FRAMES_COUNT,

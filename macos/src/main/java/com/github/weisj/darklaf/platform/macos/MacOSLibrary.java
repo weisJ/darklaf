@@ -20,14 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform.macos;
 
-import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.github.weisj.darklaf.platform.NativeUtil;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSLibrary {
 
@@ -51,8 +52,7 @@ public class MacOSLibrary {
         }
         try {
             if (SystemInfo.isX64) {
-                NativeUtil.loadLibraryFromJar(
-                    "/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/libdarklaf-macos.dylib");
+                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/libdarklaf-macos.dylib");
                 loaded = true;
                 LOGGER.info("Loaded libdarklaf-macos.dylib. Native features are enabled.");
             } else {
@@ -61,9 +61,10 @@ public class MacOSLibrary {
                                + "' not supported. Native features will be disabled");
             }
         } catch (Throwable e) {
-            //Library not found, SecurityManager prevents library loading etc.
+            // Library not found, SecurityManager prevents library loading etc.
             LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-macos.dylib." +
-                                     " Native features will be disabled", e);
+                                     " Native features will be disabled",
+                       e);
         }
     }
 

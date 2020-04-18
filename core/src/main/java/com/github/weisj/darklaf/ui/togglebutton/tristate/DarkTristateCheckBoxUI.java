@@ -20,14 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.togglebutton.tristate;
 
-import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
-import com.github.weisj.darklaf.ui.togglebutton.checkbox.DarkCheckBoxUI;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+
+import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
+import com.github.weisj.darklaf.ui.togglebutton.checkbox.DarkCheckBoxUI;
 
 /**
  * @author Jannis Weis

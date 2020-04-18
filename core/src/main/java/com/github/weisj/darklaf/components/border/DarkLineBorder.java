@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.border;
+
+import java.awt.*;
+import java.util.function.Function;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.Theme;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.function.Function;
 
 public class DarkLineBorder extends MutableLineBorder {
 

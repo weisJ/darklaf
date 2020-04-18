@@ -20,17 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tristate;
 
-import com.github.weisj.darklaf.DarkLaf;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.DarkLaf;
 
 public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
 
@@ -63,7 +65,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
      * Creates a menu item whose properties are taken from the Action supplied.
      *
      * @param a the action of the {@code JCheckBoxMenuItem}
-     * @since 1.3
+     * @since   1.3
      */
     public TristateCheckBoxMenuItem(final Action a) {
         this();

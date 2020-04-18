@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
@@ -38,46 +39,37 @@ public class Scale {
         SCALE = SCALE_X;
     }
 
-
     public static int scale(final int i) {
         return (int) (SCALE * i);
     }
-
 
     public static float scale(final float f) {
         return (float) (SCALE * f);
     }
 
-
     public static double scale(final double d) {
         return SCALE * d;
     }
-
 
     public static int scaleWidth(final int i) {
         return (int) (SCALE_X * i);
     }
 
-
     public static float scaleWidth(final float f) {
         return (float) (SCALE_X * f);
     }
-
 
     public static double scaleWidth(final double d) {
         return SCALE_X * d;
     }
 
-
     public static int scaleHeight(final int i) {
         return (int) (SCALE_Y * i);
     }
 
-
     public static float scaleHeight(final float f) {
         return (float) (SCALE_Y * f);
     }
-
 
     public static double scaleHeight(final double d) {
         return SCALE_Y * d;

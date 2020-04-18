@@ -20,13 +20,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
+
+import javax.swing.*;
 
 /**
  * @author Jannis Weis
@@ -39,7 +41,6 @@ class RecentSwatchPanel extends SwatchPanel {
         numSwatches = new Dimension(30, 5);
         gap = new Dimension(1, 1);
     }
-
 
     protected void initColors() {
         defaultRecentColor = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor");

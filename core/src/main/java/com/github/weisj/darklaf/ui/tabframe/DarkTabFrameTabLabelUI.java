@@ -20,8 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabframe;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
+import javax.swing.plaf.basic.BasicHTML;
+import javax.swing.text.View;
+
+import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
@@ -32,20 +49,6 @@ import com.github.weisj.darklaf.ui.label.DarkLabelUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-import sun.swing.SwingUtilities2;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.UIResource;
-import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.text.View;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChangeListener {
 
@@ -70,7 +73,6 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private Color hoverColor;
     private final RotatableIcon rotatableIcon = new RotatableIcon();
     private boolean printing;
-
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTabFrameTabLabelUI();
@@ -181,7 +183,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         String key = e.getPropertyName();
         if (TabFrameTab.KEY_SELECTED.equals(key)) {
             tabComponent.setForeground(Boolean.TRUE.equals(e.getNewValue())
-                                       ? selectedFontColor : defaultFontColor);
+                                                                            ? selectedFontColor : defaultFontColor);
             tabComponent.repaint();
         } else if (TabFrameTab.KEY_TITLE.equals(key)) {
             updateText();
@@ -257,15 +259,19 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     public Color getBackground(final TabFrameTabLabel tab) {
         if (printing || !tab.isEnabled()) return tab.getBackground();
         return tab.isSelected()
-               ? selectedColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                                 ? hoverColor : tab.getBackground();
+                  ? selectedColor
+                  : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                                 ? hoverColor
+                  : tab.getBackground();
     }
 
     public Color getForeground(final TabFrameTabLabel tab) {
         if (printing) return tab.getForeground();
         return tab.isSelected()
-               ? selectedFontColor : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                                     ? fontHoverColor : tab.getForeground();
+                  ? selectedFontColor
+                  : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                                 ? fontHoverColor
+                  : tab.getForeground();
     }
 
     protected Icon getIcon() {
@@ -279,17 +285,17 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
     protected Alignment mapOrientation(final Alignment newValue) {
         switch (newValue) {
-            case CENTER:
-            case NORTH:
-            case NORTH_EAST:
-            case SOUTH:
-            case SOUTH_WEST:
+            case CENTER :
+            case NORTH :
+            case NORTH_EAST :
+            case SOUTH :
+            case SOUTH_WEST :
                 return Alignment.NORTH;
-            case EAST:
-            case SOUTH_EAST:
+            case EAST :
+            case SOUTH_EAST :
                 return Alignment.WEST;
-            case WEST:
-            case NORTH_WEST:
+            case WEST :
+            case NORTH_WEST :
                 return Alignment.EAST;
         }
         return Alignment.NORTH;

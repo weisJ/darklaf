@@ -20,8 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.color;
+
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
@@ -39,12 +47,6 @@ import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class SmallColorChooser extends JPanel {
 
@@ -106,13 +108,13 @@ public class SmallColorChooser extends JPanel {
         hexField.getDocument().addDocumentListener((UpdateDocumentListener) () -> {
             try {
                 String hexStr = String.format("%1$-" + 8 + "s",
-                                              hexField.getText()).replaceAll(" ", "F");
+                                              hexField.getText())
+                                      .replaceAll(" ", "F");
                 int[] rgb = new int[]{Integer.valueOf(hexStr.substring(0, 2), 16),
                                       Integer.valueOf(hexStr.substring(2, 4), 16),
                                       Integer.valueOf(hexStr.substring(4, 6), 16)};
                 setColor(hexField, DarkColorModelRGB.getInstance(), rgb);
-            } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
-            }
+            } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
         });
     }
 

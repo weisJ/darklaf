@@ -20,18 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.button;
 
-import com.github.weisj.darklaf.components.color.QuickColorChooser;
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.util.AlignmentExt;
+import java.awt.*;
+
+import javax.swing.*;
+
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
 
-import javax.swing.*;
-import java.awt.*;
+import com.github.weisj.darklaf.components.color.QuickColorChooser;
+import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.AlignmentExt;
 
 public class ButtonDemo implements ComponentDemo {
 
@@ -45,87 +48,116 @@ public class ButtonDemo implements ComponentDemo {
         JButton button = new JButton("Test Button", icon);
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(button.isEnabled());
-            addActionListener(e -> button.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("focusable") {{
-            setSelected(button.isFocusable());
-            addActionListener(e -> button.setFocusable(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("default") {{
-            setSelected(button.isDefaultButton());
-            addActionListener(e -> SwingUtilities.getRootPane(button).setDefaultButton(isSelected() ? button : null));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(button.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                               : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
-        controlPanel.add(new JCheckBox("Rollover") {{
-            setSelected(button.isRolloverEnabled());
-            addActionListener(e -> button.setRolloverEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_SQUARE) {{
-            setSelected(false);
-            addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_SQUARE, isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_THIN) {{
-            setSelected(false);
-            addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_THIN, isSelected()));
-        }});
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_ALT_ARC) {{
-            setSelected(false);
-            addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {{
-            setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
-            addActionListener(e -> UIManager.put("Button.defaultButtonFollowsFocus", isSelected()));
-        }});
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(button.isEnabled());
+                addActionListener(e -> button.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("focusable") {
+            {
+                setSelected(button.isFocusable());
+                addActionListener(e -> button.setFocusable(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("default") {
+            {
+                setSelected(button.isDefaultButton());
+                addActionListener(e -> SwingUtilities.getRootPane(button)
+                                                     .setDefaultButton(isSelected() ? button : null));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(button.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                   : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        controlPanel.add(new JCheckBox("Rollover") {
+            {
+                setSelected(button.isRolloverEnabled());
+                addActionListener(e -> button.setRolloverEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_SQUARE) {
+            {
+                setSelected(false);
+                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_SQUARE, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_THIN) {
+            {
+                setSelected(false);
+                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_THIN, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_ALT_ARC) {
+            {
+                setSelected(false);
+                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {
+            {
+                setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
+                addActionListener(e -> UIManager.put("Button.defaultButtonFollowsFocus", isSelected()));
+            }
+        });
 
         controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("Text enabled") {{
-            setSelected(true);
-            addActionListener(e -> button.setText(isSelected() ? "Test Button" : null));
-        }});
-        controlPanel.add(new JCheckBox("Icon enabled") {{
-            setSelected(true);
-            addActionListener(e -> button.setIcon(isSelected() ? icon : null));
-        }});
+        controlPanel.add(new JCheckBox("Text enabled") {
+            {
+                setSelected(true);
+                addActionListener(e -> button.setText(isSelected() ? "Test Button" : null));
+            }
+        });
+        controlPanel.add(new JCheckBox("Icon enabled") {
+            {
+                setSelected(true);
+                addActionListener(e -> button.setIcon(isSelected() ? icon : null));
+            }
+        });
 
         controlPanel = panel.addControls();
         controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
                                                (b, c) -> button
-                                                   .putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
+                                                               .putClientProperty(DarkButtonUI.KEY_HOVER_COLOR,
+                                                                                  b ? c : null)));
         controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
                                                (b, c) -> button
-                                                   .putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)));
+                                                               .putClientProperty(DarkButtonUI.KEY_CLICK_COLOR,
+                                                                                  b ? c : null)));
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel(DarkButtonUI.KEY_VARIANT + ":"));
-        controlPanel.add(new JComboBox<String>() {{
-            addItem(DarkButtonUI.VARIANT_NONE);
-            addItem(DarkButtonUI.VARIANT_BORDERLESS);
-            addItem(DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
-            addItem(DarkButtonUI.VARIANT_ONLY_LABEL);
-            setSelectedItem(DarkButtonUI.VARIANT_NONE);
-            addItemListener(e -> button.putClientProperty(DarkButtonUI.KEY_VARIANT, e.getItem()));
-        }});
-        controlPanel.add(new JLabel(DarkButtonUI.KEY_CORNER + ":"));
-        controlPanel.add(new JComboBox<String>() {{
-            addItem("None");
-            for (AlignmentExt a : AlignmentExt.values()) {
-                addItem(a.name());
+        controlPanel.add(new JComboBox<String>() {
+            {
+                addItem(DarkButtonUI.VARIANT_NONE);
+                addItem(DarkButtonUI.VARIANT_BORDERLESS);
+                addItem(DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
+                addItem(DarkButtonUI.VARIANT_ONLY_LABEL);
+                setSelectedItem(DarkButtonUI.VARIANT_NONE);
+                addItemListener(e -> button.putClientProperty(DarkButtonUI.KEY_VARIANT, e.getItem()));
             }
-            setSelectedItem("None");
-            addItemListener(e -> {
-                if ("None".equals(e.getItem())) {
-                    button.putClientProperty(DarkButtonUI.KEY_CORNER, null);
-                } else {
-                    button.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.valueOf(e.getItem().toString()));
+        });
+        controlPanel.add(new JLabel(DarkButtonUI.KEY_CORNER + ":"));
+        controlPanel.add(new JComboBox<String>() {
+            {
+                addItem("None");
+                for (AlignmentExt a : AlignmentExt.values()) {
+                    addItem(a.name());
                 }
-            });
-        }});
+                setSelectedItem("None");
+                addItemListener(e -> {
+                    if ("None".equals(e.getItem())) {
+                        button.putClientProperty(DarkButtonUI.KEY_CORNER, null);
+                    } else {
+                        button.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.valueOf(e.getItem().toString()));
+                    }
+                });
+            }
+        });
         return panel;
     }
 
@@ -133,5 +165,4 @@ public class ButtonDemo implements ComponentDemo {
     public String getTitle() {
         return "Button Demo";
     }
-
 }

@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.internalframe;
 
-import com.github.weisj.darklaf.util.PropertyKey;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import java.awt.*;
+
+import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
  * @author Jannis Weis
@@ -38,7 +40,6 @@ public class DarkInternalFrameUI extends BasicInternalFrameUI {
     public DarkInternalFrameUI(final JInternalFrame b) {
         super(b);
     }
-
 
     public static ComponentUI createUI(final JComponent b) {
         return new DarkInternalFrameUI((JInternalFrame) b);

@@ -20,12 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.splitpane;
 
+import java.awt.*;
+
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
-import java.awt.*;
 
 /**
  * @author Jannis Weis
@@ -34,8 +36,7 @@ public class DarkSplitPaneDividerBorder implements Border, UIResource {
 
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y,
-                            final int width, final int height) {
-    }
+                            final int width, final int height) {}
 
     @Override
     public Insets getBorderInsets(final Component c) {

@@ -20,13 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import com.github.weisj.darklaf.util.ImageUtil;
-
-import javax.swing.*;
-import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -35,6 +32,10 @@ import java.awt.dnd.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
+import javax.swing.*;
+import javax.swing.plaf.TabbedPaneUI;
+
+import com.github.weisj.darklaf.util.ImageUtil;
 
 /**
  * @author Robert Futrell
@@ -54,12 +55,10 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     private DataFlavor tabFlavor;
     private TabTransferable currentTransferable;
 
-
     public TabbedPaneTransferHandler() {
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
-        } catch (ClassNotFoundException ignored) {
-        }
+        } catch (ClassNotFoundException ignored) {}
     }
 
     public void exportAsDrag(final JComponent comp, final InputEvent e, final int a) {
@@ -87,13 +86,13 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     /**
-     * Called when the drag-and-drop operation has just completed.  This creates a new tab identical to the one
+     * Called when the drag-and-drop operation has just completed. This creates a new tab identical to the one
      * "dragged" and places it in the destination <code>JTabbedPane</code>.
      *
-     * @param c The component receiving the "drop" (the instance of
-     *          <code>JTabbedPane</code>).
-     * @param t The data being transfered (information about the tab and the component contained by the tab).
-     * @return Whether or not the import was successful.
+     * @param  c The component receiving the "drop" (the instance of
+     *           <code>JTabbedPane</code>).
+     * @param  t The data being transfered (information about the tab and the component contained by the tab).
+     * @return   Whether or not the import was successful.
      */
     @Override
     public boolean importData(final JComponent c, final Transferable t) {
@@ -132,8 +131,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     /**
      * We can only move tabs, we cannot copy them.
      *
-     * @param c This parameter is ignored.
-     * @return <code>TransferHandler.MOVE</code>, as we can only move tabs.
+     * @param  c This parameter is ignored.
+     * @return   <code>TransferHandler.MOVE</code>, as we can only move tabs.
      */
     @Override
     public int getSourceActions(final JComponent c) {
@@ -190,7 +189,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         return false;
     }
 
-
     private DarkTabbedPaneUI supportsIndicator(final Component c) {
         if (c instanceof JTabbedPane) {
             TabbedPaneUI ui = ((JTabbedPane) c).getUI();
@@ -202,8 +200,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     @Override
-    public void dragEnter(final DropTargetDragEvent e) {
-    }
+    public void dragEnter(final DropTargetDragEvent e) {}
 
     @Override
     public void dragOver(final DropTargetDragEvent e) {
@@ -236,8 +233,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     @Override
-    public void dropActionChanged(final DropTargetDragEvent e) {
-    }
+    public void dropActionChanged(final DropTargetDragEvent e) {}
 
     @Override
     public void dragExit(final DropTargetEvent e) {
@@ -258,7 +254,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         }
     }
 
-
     protected static class TabbedPaneDragGestureRecognizer extends DragGestureRecognizer {
 
         protected TabbedPaneDragGestureRecognizer(final DragGestureListener dgl) {
@@ -275,16 +270,14 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         /**
          * register this DragGestureRecognizer's Listeners with the Component
          */
-        protected void registerListeners() {
-        }
+        protected void registerListeners() {}
 
         /**
          * unregister this DragGestureRecognizer's Listeners with the Component
          * <p>
          * subclasses must override this method
          */
-        protected void unregisterListeners() {
-        }
+        protected void unregisterListeners() {}
     }
 
     public static class UIResource extends TabbedPaneTransferHandler {
@@ -318,7 +311,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             return tabFlavor.equals(flavor);
         }
 
-
         @Override
         public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
             if (!isDataFlavorSupported(flavor)) {
@@ -336,15 +328,12 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             private final int tabIndex;
             private final Rectangle tabBounds;
 
-
             public TabTransferData(final JTabbedPane tabbedPane, final int tabIndex) {
                 this.sourceTabbedPane = tabbedPane;
                 this.tabIndex = tabIndex;
                 this.tabBounds = tabbedPane.getBoundsAt(tabIndex);
             }
-
         }
-
     }
 
     protected class TabbedPaneDragHandler implements DragGestureListener, DragSourceListener {
@@ -384,23 +373,19 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         /**
          * as the hotspot enters a platform dependent drop site
          */
-        public void dragEnter(final DragSourceDragEvent dsde) {
-        }
+        public void dragEnter(final DragSourceDragEvent dsde) {}
 
         /**
          * as the hotspot moves over a platform dependent drop site
          */
-        public void dragOver(final DragSourceDragEvent dsde) {
-        }
+        public void dragOver(final DragSourceDragEvent dsde) {}
 
-        public void dropActionChanged(final DragSourceDragEvent dsde) {
-        }
+        public void dropActionChanged(final DragSourceDragEvent dsde) {}
 
         /**
          * as the hotspot exits a platform dependent drop site
          */
-        public void dragExit(final DragSourceEvent dsde) {
-        }
+        public void dragExit(final DragSourceEvent dsde) {}
 
         /**
          * as the operation completes

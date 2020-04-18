@@ -20,10 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.icons;
 
-import javax.swing.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -32,6 +32,8 @@ import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.*;
 
 /**
  * @author Jannis Weis
@@ -56,7 +58,6 @@ public final class IconLoader {
         this.parentClass = parentClass;
         iconLoaderMap.put(parentClass, this);
     }
-
 
     public static IconLoader get() {
         return instance;
@@ -106,8 +107,6 @@ public final class IconLoader {
     /*
      * Helper method to create the icons.
      */
-
-
     public DarkUIAwareIcon create(final String name, final int w, final int h) {
         return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, parentClass);
     }
@@ -127,19 +126,19 @@ public final class IconLoader {
         } else if (awareIconMap.containsKey(key)) {
             return awareIconMap.get(key);
         } else {
-            key.w = -1; //Enable wild card search. Find any icon that matches path.
+            key.w = -1; // Enable wild card search. Find any icon that matches path.
             if (iconMap.containsKey(key)) {
                 Icon icon = iconMap.get(key);
                 if (icon instanceof DarkSVGIcon) {
-                    //If the desired icon is an DarkSVGIcon we can create a view that shares the underlying svg with
-                    //the existing icon.
+                    // If the desired icon is an DarkSVGIcon we can create a view that shares the underlying svg with
+                    // the existing icon.
                     Icon derived = ((DarkSVGIcon) icon).derive(w, h);
                     key.w = w;
                     iconMap.put(key, derived);
                     return derived;
                 }
             }
-            key.w = w; //Restore key.
+            key.w = w; // Restore key.
             if (path.endsWith(".svg")) {
                 Icon icon = loadSVGIcon(path, w, h, themed);
                 iconMap.put(key, icon);
@@ -196,7 +195,6 @@ public final class IconLoader {
         int w;
         int h;
 
-
         private IconKey(final String path, final int w, final int h) {
             this.path = path;
             this.w = w;
@@ -208,7 +206,6 @@ public final class IconLoader {
             return Objects.hash(path, w, h);
         }
 
-
         @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
@@ -217,14 +214,13 @@ public final class IconLoader {
             IconKey iconKey = (IconKey) o;
 
             if (iconKey.w == -1 || iconKey.h == -1) {
-                //Math any size.
+                // Math any size.
                 return Objects.equals(path, iconKey.path);
             }
             if (w != iconKey.w) return false;
             if (h != iconKey.h) return false;
             return Objects.equals(path, iconKey.path);
         }
-
 
         @Override
         public String toString() {

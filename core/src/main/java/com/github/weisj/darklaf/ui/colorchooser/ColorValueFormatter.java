@@ -20,16 +20,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
+import static java.util.Locale.ENGLISH;
 
-import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,13 +33,19 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.ParseException;
 
-import static java.util.Locale.ENGLISH;
+import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.DocumentFilter;
+
+import com.github.weisj.darklaf.color.DarkColorModel;
 
 /**
  * @author Jannis Weis
  */
 public final class ColorValueFormatter extends JFormattedTextField.AbstractFormatter implements FocusListener,
-                                                                                                ActionListener {
+                                       ActionListener {
 
     private final int fieldIndex;
     private final int radix;
@@ -104,7 +106,6 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         this.errorTimer = new Timer(UIManager.getInt("ColorChooser.errorDelay"), this);
         errorTimer.setRepeats(false);
     }
-
 
     public static ColorValueFormatter init(final DarkColorModel model, final int index,
                                            final boolean hex, final JFormattedTextField text) {
@@ -170,7 +171,6 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         SwingUtilities.invokeLater(() -> text.select(0, 0));
     }
 
-
     private boolean isValid(final int length) {
         return (0 <= length) && (length <= getLength());
     }
@@ -178,7 +178,6 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     private int getLength() {
         return hex ? getHexLength() : String.valueOf(model.getMaximum(fieldIndex)).length();
     }
-
 
     private int getHexLength() {
         return transparencyEnabled ? 8 : 6;
@@ -219,8 +218,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 int b = Integer.valueOf(hexStr.substring(4, 6), 16);
                 checkRange(b, 0, 255);
                 int alpha = hexStr.length() >= 8
-                            ? Integer.valueOf(hexStr.substring(6, 8), 16)
-                            : 255;
+                                                 ? Integer.valueOf(hexStr.substring(6, 8), 16)
+                                                 : 255;
                 checkRange(alpha, 0, 255);
                 return new Color(r, g, b, alpha);
             } else {
@@ -243,7 +242,6 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
     }
 
-
     @Override
     public String valueToString(final Object object) throws ParseException {
         if (object instanceof Integer && !hex) {
@@ -262,7 +260,6 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
         throw new ParseException("illegal object", 0);
     }
-
 
     @Override
     protected DocumentFilter getDocumentFilter() {

@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.text;
 
@@ -31,7 +32,7 @@ public class SearchTextField extends JTextField {
     public static final int SEARCH = 0;
 
     /**
-     * Constructs a new <code>TextField</code>.  A default model is created, the initial string is <code>null</code>,
+     * Constructs a new <code>TextField</code>. A default model is created, the initial string is <code>null</code>,
      * and the number of columns is set to 0.
      */
     public SearchTextField() {
@@ -43,12 +44,15 @@ public class SearchTextField extends JTextField {
      * This is the constructor through which the other constructors feed. If the document is <code>null</code>, a
      * default model is created.
      *
-     * @param doc     the text storage to use; if this is <code>null</code>, a default will be provided by calling the
-     *                <code>createDefaultModel</code> method
-     * @param text    the initial string to display, or <code>null</code>
-     * @param columns the number of columns to use to calculate the preferred width &gt;= 0; if <code>columns</code> is
-     *                set to zero, the preferred width will be whatever naturally results from the component
-     *                implementation
+     * @param  doc                      the text storage to use; if this is <code>null</code>, a default will be
+     *                                  provided by calling the
+     *                                  <code>createDefaultModel</code> method
+     * @param  text                     the initial string to display, or <code>null</code>
+     * @param  columns                  the number of columns to use to calculate the preferred width &gt;= 0; if
+     *                                  <code>columns</code> is
+     *                                  set to zero, the preferred width will be whatever naturally results from the
+     *                                  component
+     *                                  implementation
      * @throws IllegalArgumentException if <code>columns</code> &lt; 0
      */
     public SearchTextField(final Document doc, final String text, final int columns) {
@@ -88,7 +92,7 @@ public class SearchTextField extends JTextField {
     }
 
     /**
-     * Constructs a new <code>TextField</code> initialized with the specified text and columns.  A default model is
+     * Constructs a new <code>TextField</code> initialized with the specified text and columns. A default model is
      * created.
      *
      * @param text    the text to be displayed, or <code>null</code>

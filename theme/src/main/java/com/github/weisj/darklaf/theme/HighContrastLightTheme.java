@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.theme;
+
+import java.util.Properties;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
-
-import javax.swing.*;
-import java.util.Properties;
 
 public class HighContrastLightTheme extends Theme {
 

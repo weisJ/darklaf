@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package ui.label;
+
+import java.awt.*;
+
+import javax.swing.*;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class LabelDemo implements ComponentDemo {
 
@@ -43,15 +45,19 @@ public class LabelDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(label);
 
         JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {{
-            setSelected(label.isEnabled());
-            addActionListener(e -> label.setEnabled(isSelected()));
-        }});
-        controlPanel.add(new JCheckBox("LeftToRight") {{
-            setSelected(label.getComponentOrientation().isLeftToRight());
-            addActionListener(e -> label.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                              : ComponentOrientation.RIGHT_TO_LEFT));
-        }});
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(label.isEnabled());
+                addActionListener(e -> label.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(label.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> label.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                                                                                  : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
         return panel;
     }
 

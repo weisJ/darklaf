@@ -1,4 +1,5 @@
 package org.pbjar.jxlayer.plaf.ext;
+
 /*
  * Copyright (c) 2009, Piet Blok
  * All rights reserved.
@@ -30,22 +31,6 @@ package org.pbjar.jxlayer.plaf.ext;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.github.weisj.darklaf.log.LogFormatter;
-import com.sun.java.swing.SwingUtilities3;
-import org.jdesktop.jxlayer.JXLayer;
-import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
-import org.jdesktop.jxlayer.plaf.LayerUI;
-import org.jdesktop.swingx.ForwardingRepaintManager;
-import org.pbjar.jxlayer.plaf.ext.transform.*;
-import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
-import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
-import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.GlyphView.GlyphPainter;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -55,11 +40,28 @@ import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.GlyphView.GlyphPainter;
+import javax.swing.text.JTextComponent;
+
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
+import org.jdesktop.jxlayer.plaf.LayerUI;
+import org.jdesktop.swingx.ForwardingRepaintManager;
+import org.pbjar.jxlayer.plaf.ext.transform.*;
+import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
+import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
+import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
+
+import com.github.weisj.darklaf.log.LogFormatter;
+import com.sun.java.swing.SwingUtilities3;
+
 /**
  * This class provides for all necessary functionality when using transformations in a {@link LayerUI}.
- *
- * <p>Some implementation details:
- *
+ * <p>
+ * Some implementation details:
  * <ul>
  * <li>It extends {@link MouseEventUI} because, when applying transformations, the whereabouts of
  * child components on screen (device space) do not necessarily match the location according
@@ -88,16 +90,16 @@ import java.util.logging.Logger;
  * <li>Rendering hints may be set with {@link #setRenderingHints(Map)}, {@link
  * #addRenderingHint(RenderingHints.Key, Object)} and {@link #addRenderingHints(Map)}.
  * </ul>
- *
- * <p>Known limitations:
- *
+ * <p>
+ * Known limitations:
  * <ol>
  * <li>In Java versions <b>before Java 6u10</b>, this implementation employs a custom {@link
  * RepaintManager} in order to have descendant's repaint requests propagated up to the {@link
  * JXLayer} ancestor. This {@link RepaintManager} will work well with and without other {@link
  * RepaintManager} that are either subclasses of the {@link WrappedRepaintManager} or SwingX's
  * {@link ForwardingRepaintManager}. Other {@link RepaintManager}s may cause conflicts.
- * <p>In Java versions <b>6u10 or higher</b>, an attempt will be made to use the new
+ * <p>
+ * In Java versions <b>6u10 or higher</b>, an attempt will be made to use the new
  * RepaintManager delegate facility that has been designed for JavaFX.
  * <li>Transformations will be applied on the whole of the content of the {@link JXLayer}. The
  * result is that {@link Border}s and other content within {@link JXLayer}'s insets will
@@ -106,14 +108,12 @@ import java.util.logging.Logger;
  * be set on the view instead. On the other hand, if you want the {@link Border} not to be
  * transformed, that border must be set on {@link JXLayer}'s parent.
  * </ol>
- *
  * <b>Note:</b> A {@link TransformUI} instance cannot be shared and can be set to a single {@link
  * JXLayer} instance only.
  *
  * @author Piet Blok
  */
 public class TransformUI extends MouseEventUI<JComponent> {
-
 
     private static final LayoutManager transformLayout = new TransformLayout();
     private static final String KEY_VIEW = "view";
@@ -141,31 +141,27 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     private final ChangeListener changeListener = e -> revalidateLayer();
-    private final RepaintManagerProvider rpmProvider =
-        new RepaintManagerProvider() {
+    private final RepaintManagerProvider rpmProvider = new RepaintManagerProvider() {
 
+        @Override
+        public Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass() {
+            return TransformRPMSwingX.class;
+        }
 
-            @Override
-            public Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass() {
-                return TransformRPMSwingX.class;
-            }
+        @Override
+        public Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass() {
+            return TransformRPMFallBack.class;
+        }
 
-
-            @Override
-            public Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass() {
-                return TransformRPMFallBack.class;
-            }
-
-            @Override
-            public boolean isAdequate(final Class<? extends RepaintManager> manager) {
-                return manager.isAnnotationPresent(TransformRPMAnnotation.class);
-            }
-        };
+        @Override
+        public boolean isAdequate(final Class<? extends RepaintManager> manager) {
+            return manager.isAnnotationPresent(TransformRPMAnnotation.class);
+        }
+    };
     private final Map<RenderingHints.Key, Object> renderingHints = new HashMap<>();
     private final Set<JComponent> originalDoubleBuffered = new HashSet<>();
     private JComponent view;
-    private final PropertyChangeListener viewChangeListener =
-        evt -> setView((JComponent) evt.getNewValue());
+    private final PropertyChangeListener viewChangeListener = evt -> setView((JComponent) evt.getNewValue());
 
     private TransformModel transformModel;
     private LayoutManager originalLayout;
@@ -199,14 +195,14 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * {@link JTextComponent} and its descendants have some caret position problems when used inside a transformed
      * {@link JXLayer}. When you plan to use {@link JTextComponent}(s) inside the hierarchy of a transformed {@link
      * JXLayer}, call this method in an early stage, before instantiating any {@link JTextComponent}.
-     *
-     * <p>It executes the following method:
+     * <p>
+     * It executes the following method:
      *
      * <pre>
      * System.setProperty(&quot;i18n&quot;, Boolean.TRUE.toString());
      * </pre>
-     *
-     * <p>As a result, a {@link GlyphPainter} will be selected that uses floating point instead of
+     * <p>
+     * As a result, a {@link GlyphPainter} will be selected that uses floating point instead of
      * fixed point calculations.
      */
     public static void prepareForJTextComponent() {
@@ -236,10 +232,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * Get the {@link TransformModel}.
      *
      * @return the {@link TransformModel}
-     * @see #setModel(TransformModel)
+     * @see    #setModel(TransformModel)
      */
-
-
     public final TransformModel getModel() {
         return transformModel;
     }
@@ -247,11 +241,10 @@ public class TransformUI extends MouseEventUI<JComponent> {
     /**
      * Set a new {@link TransformModel}. The new model may not be {@code null}.
      *
-     * @param transformModel the new model
+     * @param  transformModel       the new model
      * @throws NullPointerException if transformModel is {@code null}
-     * @see #getModel()
+     * @see                         #getModel()
      */
-
     public final void setModel(final TransformModel transformModel) throws NullPointerException {
         if (transformModel == null) {
             throw new NullPointerException("The TransformModel may not be null");
@@ -267,71 +260,73 @@ public class TransformUI extends MouseEventUI<JComponent> {
     /**
      * Get a preferred {@link AffineTransform}. This method will typically be invoked by programs that calculate a
      * preferred size.
-     *
-     * <p>The {@code size} argument will be used to compute anchor values for some types of
+     * <p>
+     * The {@code size} argument will be used to compute anchor values for some types of
      * transformations. If the {@code size} argument is {@code null} a value of (0,0) is used for the anchor.
-     *
-     * <p>In {@code enabled} state this method is delegated to the {@link TransformModel} that has
+     * <p>
+     * In {@code enabled} state this method is delegated to the {@link TransformModel} that has
      * been set. Otherwise {@code null} will be returned.
      *
-     * @param size  a {@link Dimension} instance to be used for an anchor or {@code null}
-     * @param layer the {@link JXLayer}.
-     * @return a {@link AffineTransform} instance or {@code null}
+     * @param  size  a {@link Dimension} instance to be used for an anchor or {@code null}
+     * @param  layer the {@link JXLayer}.
+     * @return       a {@link AffineTransform} instance or {@code null}
      */
-
     public AffineTransform getPreferredTransform(final Dimension size, final JXLayer<? extends JComponent> layer) {
         return this.transformModel != null ? this.transformModel.getPreferredTransform(size, layer)
                                            : new AffineTransform();
     }
 
-  /*
-   {@inheritDoc}
-   <p>
-   This implementation does the following:
-   <ol>
-   <li>
-   A {@link BufferedImage} is created the size of the clip bounds of the
-   argument graphics object.</li>
-   <li>
-   A Graphics object is obtained from the image.</li>
-   <li>
-   The image is filled with a background color.</li>
-   <li>
-   The image graphics is translated according to x and y of the clip bounds.
-   </li>
-   <li>
-   The clip from the argument graphics object is set to the image graphics.</li>
-   <li>
-   {@link #configureGraphics(Graphics2D, JXLayer)} is invoked with the image
-   graphics as an argument.</li>
-   <li>
-   {@link #paintLayer(Graphics2D, JXLayer)} is invoked with the image
-   graphics as an argument.</li>
-   <li>
-   The image graphics is disposed.</li>
-   <li>
-   The image is drawn on the argument graphics object.</li>
-   </ol>
-  */
-  /* @SuppressWarnings("unchecked")
-  @Override
-  public final void paint(Graphics g, JComponent component) {
-  Graphics2D g2 = (Graphics2D) g;
-  JXLayer<? extends JComponent> layer = (JXLayer<? extends JComponent>) component;
-  Shape clip = g2.getClip();
-  Rectangle clipBounds = g2.getClipBounds();
-  BufferedImage buffer = layer.getGraphicsConfiguration()
-  .createCompatibleImage(clipBounds.width, clipBounds.height,
-  Transparency.OPAQUE);//
-  Graphics2D g3 = buffer.createGraphics();
-  try {
-  g3.setColor(this.getBackgroundColor(layer));
-  g3.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
-  g3.translate(-clipBounds.x, -clipBounds.y);
-  g3.setClip(clip);
-  configureGraphics(g3, layer);
-  paintLayer(g3, layer);
-  } catch (Throwable t) {*/
+    /*
+     * {@inheritDoc}
+     * <p>
+     * This implementation does the following:
+     * <ol>
+     * <li>
+     * A {@link BufferedImage} is created the size of the clip bounds of the
+     * argument graphics object.</li>
+     * <li>
+     * A Graphics object is obtained from the image.</li>
+     * <li>
+     * The image is filled with a background color.</li>
+     * <li>
+     * The image graphics is translated according to x and y of the clip bounds.
+     * </li>
+     * <li>
+     * The clip from the argument graphics object is set to the image graphics.</li>
+     * <li>
+     * {@link #configureGraphics(Graphics2D, JXLayer)} is invoked with the image
+     * graphics as an argument.</li>
+     * <li>
+     * {@link #paintLayer(Graphics2D, JXLayer)} is invoked with the image
+     * graphics as an argument.</li>
+     * <li>
+     * The image graphics is disposed.</li>
+     * <li>
+     * The image is drawn on the argument graphics object.</li>
+     * </ol>
+     */
+    /*
+     * @SuppressWarnings("unchecked")
+     *
+     * @Override
+     * public final void paint(Graphics g, JComponent component) {
+     * Graphics2D g2 = (Graphics2D) g;
+     * JXLayer<? extends JComponent> layer = (JXLayer<? extends JComponent>) component;
+     * Shape clip = g2.getClip();
+     * Rectangle clipBounds = g2.getClipBounds();
+     * BufferedImage buffer = layer.getGraphicsConfiguration()
+     * .createCompatibleImage(clipBounds.width, clipBounds.height,
+     * Transparency.OPAQUE);//
+     * Graphics2D g3 = buffer.createGraphics();
+     * try {
+     * g3.setColor(this.getBackgroundColor(layer));
+     * g3.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+     * g3.translate(-clipBounds.x, -clipBounds.y);
+     * g3.setClip(clip);
+     * configureGraphics(g3, layer);
+     * paintLayer(g3, layer);
+     * } catch (Throwable t) {
+     */
     /*
      * Under some rare circumstances, the graphics engine may throw a
      * transformation exception like this:
@@ -364,13 +359,14 @@ public class TransformUI extends MouseEventUI<JComponent> {
     // System.err.println("scaleX = " + at.getScaleX() + " scaleY = "
     // + at.getScaleY() + " shearX = " + at.getShearX()
     // + " shearY = " + at.getShearY());
-  /*} finally {
-  g3.dispose();
-  }
-  g2.drawImage(buffer, clipBounds.x, clipBounds.y, null);
-  setDirty(false);
-  }*/
-
+    /*
+     * } finally {
+     * g3.dispose();
+     * }
+     * g2.drawImage(buffer, clipBounds.x, clipBounds.y, null);
+     * setDirty(false);
+     * }
+     */
     /**
      * Overridden to replace the {@link LayoutManager}, to add some listeners and to ensure that an appropriate {@link
      * RepaintManager} is installed.
@@ -435,9 +431,9 @@ public class TransformUI extends MouseEventUI<JComponent> {
     /**
      * Primarily intended for use by {@link RepaintManager}.
      *
-     * @param rect  a rectangle
-     * @param layer the layer
-     * @return the argument rectangle if no {@link AffineTransform} is available, else a new rectangle
+     * @param  rect  a rectangle
+     * @param  layer the layer
+     * @return       the argument rectangle if no {@link AffineTransform} is available, else a new rectangle
      */
     public final Rectangle transform(final Rectangle rect, final JXLayer<? extends JComponent> layer) {
         AffineTransform at = getTransform(layer);
@@ -496,17 +492,16 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * If the view of the {@link JXLayer} is (partly) obscured by its parent (this is the case when the size of the view
      * (in component space) is larger than the size of the {@link JXLayer}), the obscured parts will not be painted by
      * the super implementation. Therefore, only under this condition, a special painting technique is executed:
-     *
      * <ol>
      * <li>All descendants of the {@link JXLayer} are temporarily set to non double buffered.
      * <li>The graphics object is translated for the X and Y coordinates of the view.
      * <li>The view is painted.
      * <li>The original double buffered property is restored for all descendants.
      * </ol>
-     *
-     * <p>In all other cases, the super method is invoked.
-     *
-     * <p>The {@code g2} argument is a graphics object obtained from a {@link BufferedImage}.
+     * <p>
+     * In all other cases, the super method is invoked.
+     * <p>
+     * The {@code g2} argument is a graphics object obtained from a {@link BufferedImage}.
      *
      * @see #paint(Graphics, JComponent)
      */
@@ -530,11 +525,10 @@ public class TransformUI extends MouseEventUI<JComponent> {
 
     /**
      * Get the {@link AffineTransform} customized for the {@code layer} argument.
-     *
-     * <p>In {@code enabled} state this method is delegated to the {@link TransformModel} that has
+     * <p>
+     * In {@code enabled} state this method is delegated to the {@link TransformModel} that has
      * been set. Otherwise {@code null} will be returned.
      */
-
     @Override
     protected final AffineTransform getTransform(final JXLayer<? extends JComponent> layer) {
         return transformModel != null ? transformModel.getTransform(layer)
@@ -545,11 +539,10 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * Get the rendering hints.
      *
      * @return the rendering hints
-     * @see #setRenderingHints(Map)
-     * @see #addRenderingHints(Map)
-     * @see #addRenderingHint(RenderingHints.Key, Object)
+     * @see    #setRenderingHints(Map)
+     * @see    #addRenderingHints(Map)
+     * @see    #addRenderingHint(RenderingHints.Key, Object)
      */
-
     @Override
     protected Map<RenderingHints.Key, Object> getRenderingHints(final JXLayer<? extends JComponent> layer) {
         return renderingHints;
@@ -558,14 +551,13 @@ public class TransformUI extends MouseEventUI<JComponent> {
     /**
      * A delegate {@link RepaintManager} that can be set on the view of a {@link JXLayer} in Java versions starting with
      * Java 6u10.
-     *
-     * <p>For older Java versions, {@link RepaintManager#setCurrentManager(RepaintManager)} will be
+     * <p>
+     * For older Java versions, {@link RepaintManager#setCurrentManager(RepaintManager)} will be
      * used with either {@link TransformRPMFallBack} or {@link TransformRPMSwingX}.
      */
     protected static final class TransformRepaintManager extends RepaintManager {
 
-        private TransformRepaintManager() {
-        }
+        private TransformRepaintManager() {}
 
         /**
          * Finds the JXLayer ancestor and have ancestor marked invalid via the current {@link RepaintManager}.
@@ -600,10 +592,9 @@ public class TransformUI extends MouseEventUI<JComponent> {
         /**
          * Find the ancestor {@link JXLayer} instance.
          *
-         * @param c a component
-         * @return the ancestor {@link JXLayer} instance
+         * @param  c a component
+         * @return   the ancestor {@link JXLayer} instance
          */
-
         @SuppressWarnings("unchecked")
         private JXLayer<? extends JComponent> findJXLayer(final JComponent c) {
             JXLayer<?> layer = (JXLayer<?>) SwingUtilities.getAncestorOfClass(JXLayer.class, c);

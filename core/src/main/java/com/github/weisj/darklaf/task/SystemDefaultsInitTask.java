@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.task;
+
+import java.util.Properties;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
-
-import javax.swing.*;
-import java.util.Properties;
 
 public class SystemDefaultsInitTask implements DefaultsInitTask {
 
@@ -43,8 +45,8 @@ public class SystemDefaultsInitTask implements DefaultsInitTask {
     private void loadSystemOverwrites(final UIDefaults defaults) {
         Properties overwrites = PropertyLoader.loadProperties(DarkLaf.class, OVERWRITES_NAME, OVERWRITES_PATH);
         overwrites.values().removeIf(v -> System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
-        overwrites.entrySet().forEach(
-            e -> e.setValue(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
+        overwrites.entrySet().forEach(e -> e.setValue(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX
+                                                                         + e.getValue().toString())));
         PropertyLoader.putProperties(overwrites, defaults);
     }
 }

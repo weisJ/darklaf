@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
 
@@ -52,36 +53,35 @@ public enum AlignmentExt {
         return maskInsets(insets, 0);
     }
 
-
     public Insets maskInsets(final Insets insets, final int maskValue) {
         return maskInsets(insets.top, insets.left, insets.bottom, insets.right, maskValue);
     }
 
     public Insets maskInsets(final int top, final int left, final int bottom, final int right, final int mask) {
         switch (this) {
-            case NORTH:
-            case NORTH_EAST:
-            case EAST:
-            case SOUTH_EAST:
-            case SOUTH:
-            case SOUTH_WEST:
-            case WEST:
-            case NORTH_WEST:
-            case CENTER:
+            case NORTH :
+            case NORTH_EAST :
+            case EAST :
+            case SOUTH_EAST :
+            case SOUTH :
+            case SOUTH_WEST :
+            case WEST :
+            case NORTH_WEST :
+            case CENTER :
                 return parent.maskInsets(top, left, bottom, right, mask);
-            case LEFT:
+            case LEFT :
                 return new Insets(top, left, bottom, mask);
-            case MIDDLE_HORIZONTAL:
+            case MIDDLE_HORIZONTAL :
                 return new Insets(top, mask, bottom, mask);
-            case RIGHT:
+            case RIGHT :
                 return new Insets(top, mask, bottom, right);
-            case TOP:
+            case TOP :
                 return new Insets(top, left, mask, right);
-            case MIDDLE_VERTICAL:
+            case MIDDLE_VERTICAL :
                 return new Insets(mask, left, mask, right);
-            case BOTTOM:
+            case BOTTOM :
                 return new Insets(mask, left, bottom, right);
-            default:
+            default :
                 throw new IllegalArgumentException();
         }
     }

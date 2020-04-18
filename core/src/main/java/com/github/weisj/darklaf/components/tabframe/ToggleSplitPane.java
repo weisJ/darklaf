@@ -20,15 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components.tabframe;
 
-import com.github.weisj.darklaf.ui.splitpane.DarkSplitPaneUI;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.splitpane.DarkSplitPaneUI;
 
 public class ToggleSplitPane extends JSplitPane {
 
@@ -48,7 +50,6 @@ public class ToggleSplitPane extends JSplitPane {
         setName(name);
         putClientProperty(DarkSplitPaneUI.KEY_STYLE, DarkSplitPaneUI.STYLE_INVISIBLE);
     }
-
 
     public boolean isResizable() {
         return resizable;
@@ -148,7 +149,6 @@ public class ToggleSplitPane extends JSplitPane {
         }
     }
 
-
     @Override
     public void setDividerLocation(final int location) {
         if (isInLayout) return;
@@ -165,7 +165,6 @@ public class ToggleSplitPane extends JSplitPane {
         isInLayout = false;
     }
 
-
     @Override
     public int getMaximumDividerLocation() {
         int max = getOrientation() == HORIZONTAL_SPLIT ? getWidth() : getHeight();
@@ -176,8 +175,7 @@ public class ToggleSplitPane extends JSplitPane {
     public int getMinimumDividerLocation() {
         Component comp = getRightComponent();
         return comp == null ? 0 : getOrientation() == HORIZONTAL_SPLIT
-                                  ? comp.getMinimumSize().width
-                                  : comp.getMinimumSize().height;
+                                                ? comp.getMinimumSize().width
+                    : comp.getMinimumSize().height;
     }
-
 }

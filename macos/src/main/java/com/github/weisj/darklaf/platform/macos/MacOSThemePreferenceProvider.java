@@ -20,13 +20,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform.macos;
 
-import com.github.weisj.darklaf.theme.info.*;
-
 import java.awt.*;
 import java.util.function.Consumer;
+
+import com.github.weisj.darklaf.theme.info.*;
 
 public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 

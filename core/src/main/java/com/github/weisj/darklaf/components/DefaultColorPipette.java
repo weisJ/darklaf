@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.components;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
 import com.github.weisj.darklaf.util.GraphicsContext;
 import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.TimerUtil;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
 
 public class DefaultColorPipette extends ColorPipetteBase {
     private static final int SIZE = 36;
@@ -196,7 +198,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
             GraphicsUtil.setupStrokePainting(g2);
             Graphics2D g = (Graphics2D) g2;
 
-            //Draw region to be recognised as inside the window.
+            // Draw region to be recognised as inside the window.
             g.setColor(Color.WHITE);
             GraphicsContext config = GraphicsUtil.paintWithAlpha(g, 0.005f);
             Point p = MouseInfo.getPointerInfo().getLocation();

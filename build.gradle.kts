@@ -1,3 +1,5 @@
+import com.github.autostyle.generic.DefaultCopyrightStyle
+import com.github.autostyle.gradle.BaseFormatExtension
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.properties.dsl.props
@@ -5,6 +7,7 @@ import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
 
 plugins {
+    id("com.github.autostyle")
     id("com.github.vlsi.crlf")
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
@@ -13,6 +16,7 @@ plugins {
 val skipJavadoc by props()
 val enableMavenLocal by props()
 val enableGradleMetadata by props()
+val skipAutostyle by props()
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 
@@ -40,6 +44,18 @@ releaseParams {
     }
 }
 
+fun BaseFormatExtension.license() {
+    licenseHeader(File("${project.rootDir}/LICENSE").readText()) {
+        filter {
+            exclude("**/org/pbjar/jxlayer/*")
+        }
+        copyrightStyle("bat", DefaultCopyrightStyle.REM)
+        copyrightStyle("cmd", DefaultCopyrightStyle.REM)
+    }
+    trimTrailingWhitespace()
+    endWithNewline()
+}
+
 allprojects {
     group = "com.github.weisj"
     version = buildVersion
@@ -49,6 +65,34 @@ allprojects {
             mavenLocal()
         }
         mavenCentral()
+    }
+
+    if (!skipAutostyle) {
+        apply(plugin = "com.github.autostyle")
+        autostyle {
+            kotlinGradle {
+                ktlint()
+            }
+            format("configs") {
+                filter {
+                    include("**/*.sh", "**/*.bsh", "**/*.cmd", "**/*.bat")
+                    include("**/*.properties", "**/*.yml")
+                    include("**/*.xsd", "**/*.xsl", "**/*.xml")
+                    // Autostyle does not support gitignore yet https://github.com/autostyle/autostyle/issues/13
+                    exclude("out/**")
+                    if (project == rootProject) {
+                        exclude("gradlew*")
+                    } else {
+                        exclude("bin/**")
+                    }
+                }
+                license()
+            }
+            format("markdown") {
+                filter.include("**/*.md")
+                endWithNewline()
+            }
+        }
     }
 
     tasks.withType<AbstractArchiveTask>().configureEach {
@@ -104,6 +148,19 @@ allprojects {
             withSourcesJar()
             if (!skipJavadoc) {
                 withJavadocJar()
+            }
+        }
+
+        if (!skipAutostyle) {
+            autostyle {
+                java {
+                    importOrder("java", "javax", "org", "com")
+                    removeUnusedImports()
+                    license()
+                    eclipse {
+                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
+                    }
+                }
             }
         }
 
@@ -173,7 +230,7 @@ allprojects {
 
         configure<PublishingExtension> {
             if (project.path.startsWith(":darklaf-dependencies-bom") ||
-                    project.path == ":") {
+                project.path == ":") {
                 // We don't it to Central for now
                 return@configure
             }

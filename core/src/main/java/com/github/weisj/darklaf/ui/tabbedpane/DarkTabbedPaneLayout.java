@@ -20,11 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
 
-import javax.swing.*;
 import java.awt.*;
+
+import javax.swing.*;
 
 public class DarkTabbedPaneLayout extends TabbedPaneLayout {
 
@@ -34,7 +36,6 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
         super(ui);
         this.ui = ui;
     }
-
 
     @Override
     protected void centerTabs(final int tabPlacement, final int tabCount, final int returnAt) {
@@ -84,7 +85,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
         // In order to allow programs to use a single component
         // as the display for multiple tabs, we will not change
         // the visible component if the currently selected tab
-        // has a null component.  This is a bit dicey, as we don't
+        // has a null component. This is a bit dicey, as we don't
         // explicitly state we support this in the spec, but since
         // programs are now depending on this, we're making it work.
         //
@@ -104,7 +105,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
 
         if (numChildren > 0) {
             switch (tabPlacement) {
-                case SwingConstants.LEFT:
+                case SwingConstants.LEFT :
                     tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     tx = insets.left + tabAreaInsets.left;
                     ty = insets.top + tabAreaInsets.top;
@@ -115,7 +116,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                          - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
-                case SwingConstants.RIGHT:
+                case SwingConstants.RIGHT :
                     tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     tx = bounds.width - insets.left - tw - tabAreaInsets.right - tabAreaInsets.left;
                     ty = insets.top + tabAreaInsets.top;
@@ -126,7 +127,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                          - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
-                case SwingConstants.BOTTOM:
+                case SwingConstants.BOTTOM :
                     th = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     ty = bounds.height - insets.bottom - th;
                     tx = insets.left + tabAreaInsets.left;
@@ -136,7 +137,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                     ch = bounds.height - th - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
-                default:
+                default :
                     ty = insets.top + tabAreaInsets.top;
                     tx = insets.left + tabAreaInsets.left;
                     tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;

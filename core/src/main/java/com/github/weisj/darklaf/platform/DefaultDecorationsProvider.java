@@ -20,27 +20,27 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.platform;
 
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.Properties;
+
+import javax.swing.*;
+
+import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 
 public class DefaultDecorationsProvider implements DecorationsProvider {
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
         return new CustomTitlePane() {
             @Override
-            public void install() {
-            }
+            public void install() {}
 
             @Override
-            public void uninstall() {
-            }
+            public void uninstall() {}
 
             @Override
             public Insets getWindowSizeAdjustment() {
@@ -55,10 +55,8 @@ public class DefaultDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
-    }
+    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {}
 }

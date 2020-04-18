@@ -20,19 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import java.awt.*;
+
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author vincencopalazzo
@@ -41,10 +43,8 @@ import java.awt.*;
  */
 public class DarkTableCellRenderer extends DefaultTableCellRenderer {
 
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer =
-        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer =
-        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(true));
+    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
+    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(true));
 
     protected static boolean isBooleanRenderingEnabled(final JTable table) {
         return Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));

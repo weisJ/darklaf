@@ -20,16 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.log;
-
-import com.github.weisj.darklaf.util.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
+import com.github.weisj.darklaf.util.StringUtil;
 
 /**
  * @author Jannis Weis
@@ -97,7 +98,6 @@ public class LogFormatter extends Formatter {
         builder.append("\n");
         return builder.toString();
     }
-
 
     private String calculateDateString(final long milliseconds) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

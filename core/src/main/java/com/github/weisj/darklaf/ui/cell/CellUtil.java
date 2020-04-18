@@ -20,16 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.cell;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.plaf.ListUI;
 
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-
-import javax.swing.*;
-import javax.swing.plaf.ListUI;
-import java.awt.*;
 
 public class CellUtil {
 

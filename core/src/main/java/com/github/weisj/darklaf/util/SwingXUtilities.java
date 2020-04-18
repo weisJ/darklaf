@@ -20,18 +20,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.util;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.*;
 
 import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-
 public class SwingXUtilities {
-
 
     @SuppressWarnings("unchecked")
     public static Point convertPointToParent(final Component source, final Point p) {
