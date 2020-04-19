@@ -117,12 +117,20 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
     private Object mapColor(final ColorInfo info, final double[] hsbMatch, final Properties properties) {
         Object obj = properties.get(info.key);
         if (obj instanceof Color) {
-            Color color = DarkColorModelHSB.getColorFromHSBValues(hsbMatch[0] * (info.hAdj / 100.0),
-                                                                  hsbMatch[1] * (info.sAdj / 100.0),
-                                                                  hsbMatch[2] * (info.bAdj / 100.0));
+            Color color = DarkColorModelHSB.getColorFromHSBValues(mapValue(hsbMatch[0],info.hAdj),
+                                                                  mapValue(hsbMatch[1] ,info.sAdj),
+                                                                  mapValue(hsbMatch[2] ,info.bAdj));
             return new ColorUIResource(color);
         }
         return obj;
+    }
+
+    private double mapValue(final double value, final int adjustment) {
+        if (adjustment >= 0) {
+            return value * (adjustment / 100.0);
+        } else {
+            return 1 - (value * (Math.abs(adjustment) / 100.0));
+        }
     }
 
     private static class ColorInfo {

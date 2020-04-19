@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.theme.info;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class AccentColorRule {
 
@@ -59,6 +60,22 @@ public class AccentColorRule {
 
     public Color getSelectionColor() {
         return selectionColor;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccentColorRule that = (AccentColorRule) o;
+        if (!Objects.equals(accentColor, that.accentColor)) return false;
+        return Objects.equals(selectionColor, that.selectionColor);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accentColor != null ? accentColor.hashCode() : 0;
+        result = 31 * result + (selectionColor != null ? selectionColor.hashCode() : 0);
+        return result;
     }
 
     @Override

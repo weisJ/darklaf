@@ -49,8 +49,7 @@ public class DarkLaf extends BasicLookAndFeel {
     /*
      * All tasks for initializing the ui defaults in order of execution.
      */
-    private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[]{
-                                                                                new ThemeDefaultsInitTask(),
+    private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[]{new ThemeDefaultsInitTask(),
                                                                                 new InputDefaultsInitTask(),
                                                                                 new IdeaDefaultsInitTask(),
                                                                                 new FontDefaultsInitTask(),

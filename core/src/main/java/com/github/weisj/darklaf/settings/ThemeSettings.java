@@ -104,7 +104,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      */
     public void showDialog(final Component parent, final Dialog.ModalityType modal) {
         Window parentWindow = DarkUIUtil.getWindow(getSettingsPanel());
-        if (parentWindow != null && parent != DarkUIUtil.getWindow(dialog)) {
+        if (parentWindow != null && parentWindow != DarkUIUtil.getWindow(dialog)) {
             throw new IllegalStateException("Can't show dialog while settings panel is used elsewhere");
         }
         refresh();
@@ -315,8 +315,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         });
         JButton apply = new JButton(resourceBundle.getString("dialog_apply"));
         apply.addActionListener(e -> {
-            save();
-            updateLaf();
+            apply();
         });
 
         Box box = Box.createHorizontalBox();
@@ -369,15 +368,11 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected void applyTheme(final Theme theme) {
         if (theme == null) return;
+        if (LafManager.getTheme().appearsEqualTo(theme)) return;
         SwingUtilities.invokeLater(() -> {
             LafManager.installTheme(theme);
             settingsPanel.fetch(true);
         });
-    }
-
-    protected void updateLaf() {
-        refresh();
-        peek();
     }
 
     /**

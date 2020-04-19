@@ -35,6 +35,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicRootPaneUI;
 
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -164,11 +165,11 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     private void installClientDecorations(final JRootPane root) {
         int style = windowDecorationsStyle < 0 ? root.getWindowDecorationStyle() : windowDecorationsStyle;
-        updateWindow(root.getParent());
         CustomTitlePane titlePane = DecorationsHandler.getSharedInstance().createTitlePane(root, style, window);
-        setWindowDecorated();
         installLayout(root);
         setTitlePane(root, titlePane);
+        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
+        if (window != null) window.addWindowListener(disposeListener);
         root.addHierarchyListener(this);
     }
 
@@ -198,8 +199,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         if (window != null) window.removeWindowListener(disposeListener);
         window = DarkUIUtil.getWindow(parent);
         windowDecorationsStyle = decorationsStyleFromWindow(window, windowDecorationsStyle);
-        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
-        if (window != null) window.addWindowListener(disposeListener);
     }
 
     private void installLayout(final JRootPane root) {
@@ -247,6 +246,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     protected void updateClientDecoration() {
         if (!Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS_UPDATE))) {
             uninstallClientDecorations(rootPane);
+            updateWindow(rootPane.getParent());
+            setWindowDecorated();
             if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()
                 && !noDecorations(rootPane)) {
                 installClientDecorations(rootPane);

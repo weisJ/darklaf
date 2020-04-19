@@ -102,6 +102,22 @@ public class FontSizeRule {
         return Math.round(relativeAdjustment * 100);
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FontSizeRule that = (FontSizeRule) o;
+        return Float.compare(that.getPercentage(), getPercentage()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (preset != null ? preset.hashCode() : 0);
+        result = 31 * result + (relativeAdjustment != +0.0f ? Float.floatToIntBits(relativeAdjustment) : 0);
+        return result;
+    }
+
     public enum AdjustmentType {
         NO_ADJUSTMENT {
             @Override

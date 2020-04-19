@@ -55,6 +55,20 @@ public class ThemeDelegate extends Theme {
     }
 
     @Override
+    public Class<? extends Theme> getThemeClass() {
+        return delegate.getThemeClass();
+    }
+
+    @Override
+    public boolean appearsEqualTo(final Theme theme) {
+        if (overwriteFontSize || overWriteAccentColor) {
+            return super.appearsEqualTo(theme);
+        } else {
+            return getDelegate().appearsEqualTo(theme);
+        }
+    }
+
+    @Override
     public Theme derive(final FontSizeRule fontSizeRule,
                         final AccentColorRule accentColorRule) {
         return getDelegate().derive(fontSizeRule, accentColorRule);

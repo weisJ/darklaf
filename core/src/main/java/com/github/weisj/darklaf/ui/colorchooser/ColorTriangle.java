@@ -295,7 +295,8 @@ public class ColorTriangle extends JComponent {
     }
 
     public void setColor(final Object source, final Color color) {
-        setColorFromRGB(source, color.getRed(), color.getBlue(), color.getGreen());
+        Color c = color != null ? color : Color.BLACK;
+        setColorFromRGB(source, c.getRed(), c.getGreen(), c.getBlue());
     }
 
     protected void setColorFromRGB(final Object source, final int r, final int g, final int b) {

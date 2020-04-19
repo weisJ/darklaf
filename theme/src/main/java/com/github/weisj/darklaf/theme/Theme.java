@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -422,5 +423,24 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     public int compare(final Theme o1, final Theme o2) {
         if (o1 == null) return -1;
         return o1.compareTo(o2);
+    }
+
+    public Class<? extends Theme> getThemeClass() {
+        return getClass();
+    }
+
+    /**
+     * Returns whether the appearance of the given theme is equal to the appearance if [this].
+     *
+     * @param  theme the other theme.
+     * @return       true if they appear equal.
+     */
+    public boolean appearsEqualTo(final Theme theme) {
+        if (theme == null) return false;
+        if (!Objects.equals(getThemeClass(), theme.getThemeClass())) return false;
+        return Objects.equals(getAccentColorRule(), theme.getAccentColorRule())
+            && Objects.equals(getColorToneRule(), theme.getColorToneRule())
+            && Objects.equals(getContrastRule(), theme.getContrastRule())
+            && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
     }
 }

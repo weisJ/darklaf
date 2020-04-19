@@ -71,6 +71,8 @@ public class ThemeSettingsPanel extends JPanel {
     private boolean followSelectionColor;
     private boolean followTheme;
     private boolean systemPreferences;
+    private Color defaultAccentColor;
+    private Color defaultSelectionColor;
     private ColoredRadioButton customAccent;
     private ColoredRadioButton defaultAccent;
     private ColoredRadioButton customSelection;
@@ -179,12 +181,13 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     private boolean updateButtonGroup(final ButtonGroup bg, final Color currentColor,
-                                      final ColoredRadioButton defaultButton) {
+                                      final AbstractButton defaultButton,
+                                      final Color defaultColor) {
         Enumeration<AbstractButton> buttons = bg.getElements();
         while (buttons.hasMoreElements()) {
             ColoredRadioButton radioButton = ((ColoredRadioButton) buttons.nextElement());
-            boolean selected = (currentColor == null && radioButton == defaultButton)
-                               || Objects.equals(radioButton.getColor(), currentColor);
+            boolean selected = Objects.equals(radioButton.getColor(), currentColor)
+                               || (radioButton == defaultButton && Objects.equals(defaultColor, currentColor));
             bg.setSelected(radioButton.getModel(), selected);
             if (selected) return true;
         }
@@ -203,14 +206,13 @@ public class ThemeSettingsPanel extends JPanel {
         return getEffectiveTheme(LafManager.getPreferredThemeStyle());
     }
 
-    protected Color getSelectedColor(final ButtonGroup bg) {
-        Enumeration<?> enumeration = bg.getElements();
-        ButtonModel model = bg.getSelection();
+    protected Color getSelectedColor(final ButtonGroup bg, final AbstractButton defaultButton) {
+        Enumeration<AbstractButton> enumeration = bg.getElements();
         while (enumeration.hasMoreElements()) {
             ColoredRadioButton button = (ColoredRadioButton) enumeration.nextElement();
-            if (button.getModel() == model) {
+            if (button.isSelected()) {
                 Color c = button.getColor();
-                return c != ColoredRadioButton.DEFAULT_FILLED ? c : null;
+                return button != defaultButton ? c : null;
             }
         }
         return null;
@@ -218,7 +220,7 @@ public class ThemeSettingsPanel extends JPanel {
 
     private Component createGeneralSettings() {
         JLabel themeLabel = new JLabel(resourceBundle.getString("label_theme"));
-        themeComboBox = new JComboBox<Theme>(LafManager.getThemeComboBoxModel());
+        themeComboBox = new JComboBox<>(LafManager.getThemeComboBoxModel());
         themeComboBox.setSelectedItem(LafManager.getTheme());
 
         themeComboBox.putClientProperty(ComboBoxConstants.KEY_DO_NOT_UPDATE_WHEN_SCROLLED, true);
@@ -238,6 +240,7 @@ public class ThemeSettingsPanel extends JPanel {
         JLabel accentColorLabel = new JLabel(resourceBundle.getString("label_accent_color"));
         accentColorLabel.setLabelFor(accentBox);
 
+        defaultAccentColor = createDefaultColor("widgetFillDefault");
         bgAccent = new ButtonGroup();
         defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_FILLED, currentAccentColor,
                                          resourceBundle.getString("color_default"));
@@ -261,7 +264,8 @@ public class ThemeSettingsPanel extends JPanel {
                                         resourceBundle.getString("color_custom"));
         QuickColorChooser.attachToComponent(customAccent, customAccent::setColor,
                                             () -> Optional.ofNullable(customAccent.getColor())
-                                                          .orElse(currentAccentColor),
+                                                          .orElse(Optional.ofNullable(currentAccentColor)
+                                                                          .orElse(defaultAccentColor)),
                                             customAccent::isSelected);
 
         JComponent selectionBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -269,28 +273,16 @@ public class ThemeSettingsPanel extends JPanel {
         selectionColorLabel.setLabelFor(selectionBox);
 
         bgSelection = new ButtonGroup();
-        Color defaultColor = new ThemedColor() {
-
-            private final Properties props = new Properties();
-            private final UIDefaults defaults = new UIDefaults();
-
-            @Override
-            protected Color getUpdatedColor() {
-                LafManager.getTheme().loadDefaults(props, defaults);
-                Object obj = props.get("textSelectionBackground");
-                props.clear();
-                defaults.clear();
-                return obj instanceof Color ? (Color) obj : null;
-            }
-        };
-        defaultSelection = addColoredButton(bgSelection, selectionBox, defaultColor, currentSelectionColor,
+        defaultSelectionColor = createDefaultColor("textCompSelectionBackground");
+        defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor, currentSelectionColor,
                                             resourceBundle.getString("color_default"));
 
         customSelection = addColoredButton(bgSelection, selectionBox, null, currentSelectionColor,
                                            resourceBundle.getString("color_custom"));
         QuickColorChooser.attachToComponent(customSelection, customSelection::setColor,
                                             () -> Optional.ofNullable(customSelection.getColor())
-                                                          .orElse(currentSelectionColor),
+                                                          .orElse(Optional.ofNullable(currentSelectionColor)
+                                                                          .orElse(defaultSelectionColor)),
                                             customSelection::isSelected);
         selectionBox.add(customSelection);
 
@@ -309,6 +301,23 @@ public class ThemeSettingsPanel extends JPanel {
                                                       selectionBox,
                                                       fontSlider}));
         return panel;
+    }
+
+    protected Color createDefaultColor(final String key) {
+        return new ThemedColor() {
+
+            private final Properties props = new Properties();
+            private final UIDefaults defaults = new UIDefaults();
+
+            @Override
+            protected Color getUpdatedColor() {
+                LafManager.getTheme().loadDefaults(props, defaults);
+                Object obj = props.get(key);
+                props.clear();
+                defaults.clear();
+                return obj instanceof Color ? (Color) obj : null;
+            }
+        };
     }
 
     public boolean isSystemPreferencesEnabled() {
@@ -366,16 +375,14 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     protected Color getAccentColor(final Theme theme, final boolean useThemeColor) {
-        return theme.supportsCustomAccentColor()
-                                                 ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
-                                                                 : getSelectedColor(bgAccent)
+        return theme.supportsCustomAccentColor() ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
+                                                                 : getSelectedColor(bgAccent, defaultAccent)
                                                  : null;
     }
 
     protected Color getSelectionColor(final Theme theme, final boolean useThemeColor) {
-        return theme.supportsCustomSelectionColor()
-                                                    ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
-                                                                    : getSelectedColor(bgSelection)
+        return theme.supportsCustomSelectionColor() ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
+                                                                    : getSelectedColor(bgSelection, defaultSelection)
                                                     : null;
     }
 
@@ -424,21 +431,22 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     protected void setAccentColor(final Color accentColor) {
-        setXColor(accentColor, bgAccent, customAccent, defaultAccent);
+        setXColor(accentColor, bgAccent, customAccent, defaultAccent, defaultAccentColor);
     }
 
     protected void setSelectionColor(final Color selectionColor) {
-        setXColor(selectionColor, bgSelection, customSelection, defaultSelection);
+        setXColor(selectionColor, bgSelection, customSelection, defaultSelection, defaultSelectionColor);
     }
 
     protected void setXColor(final Color color, final ButtonGroup bg,
                              final ColoredRadioButton customButton,
-                             final ColoredRadioButton defaultButton) {
+                             final ColoredRadioButton defaultButton,
+                             final Color defaultColor) {
         if (color == null) {
             defaultButton.setSelected(true);
             return;
         }
-        if (!updateButtonGroup(bg, color, defaultButton)) {
+        if (!updateButtonGroup(bg, color, defaultButton, defaultColor)) {
             customButton.setSelected(true);
             if (customButton.getColor() == null) customButton.setColor(color);
         }
@@ -459,8 +467,7 @@ public class ThemeSettingsPanel extends JPanel {
                 return getValue() + "%";
             }
         };
-        ToolTipContext context = new ToolTipContext()
-                                                     .setAlignment(Alignment.CENTER)
+        ToolTipContext context = new ToolTipContext().setAlignment(Alignment.CENTER)
                                                      .setCenterAlignment(Alignment.NORTH)
                                                      .setUseBestFit(true)
                                                      .setToolTipRectSupplier(e -> {
