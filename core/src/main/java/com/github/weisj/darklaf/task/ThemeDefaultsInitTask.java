@@ -57,6 +57,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     };
     private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserPreferenceAdjustmentTask();
     private final DefaultsAdjustmentTask accentColorAdjustment = new AccentColorAdjustmentTask();
+    private final DefaultsAdjustmentTask foregroundGeneration = new ForegroundColorGenerationTask();
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
@@ -77,6 +78,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
          * Adjust the accent/selection colors.
          */
         accentColorAdjustment.run(currentTheme, uiProps);
+        foregroundGeneration.run(currentTheme, uiProps);
 
         initGlobals(currentTheme, defaults, uiProps);
         initUIProperties(currentTheme, defaults, uiProps);

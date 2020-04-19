@@ -208,7 +208,7 @@ public final class PropertyLoader {
         } else if (PropertyValue.NULL.equalsIgnoreCase(value)) {
             returnVal = null;
         } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
-            returnVal = parseReference(key, value, accumulator);
+            returnVal = parseReference(key, value, accumulator, currentDefaults);
         }
         if (returnVal instanceof LoadError) {
             final Color color = ColorUtil.fromHex(value, null);
@@ -244,18 +244,25 @@ public final class PropertyLoader {
     }
 
     private static Object parseReference(final String key, final String value,
-                                         final Map<Object, Object> accumulator) {
+                                         final Map<Object, Object> accumulator,
+                                         final UIDefaults currentDefault) {
         String val = parseKey(value);
         String referenceFreeKey = val.substring(1);
-        boolean containsKey = accumulator.containsKey(val)
-                              || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
-        if (!containsKey) {
+        boolean accumulatorContainsKey = accumulator.containsKey(val)
+                                         || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
+        boolean defaultsContainKey = currentDefault.containsKey(val)
+                                     || (addReferenceInfo && currentDefault.containsKey(referenceFreeKey));
+        if (!defaultsContainKey && !accumulatorContainsKey) {
             LOGGER.warning("Could not reference value '" + val + "' while loading '" + key + "'. " +
                            "Maybe is a forward reference");
         }
-        Object returnVal = accumulator.get(val);
+        Object returnVal = accumulatorContainsKey ? accumulator.get(val)
+                                                  : currentDefault.get(val);
         if (addReferenceInfo) {
-            if (returnVal == null) returnVal = accumulator.get(referenceFreeKey);
+            if (returnVal == null) {
+                returnVal = accumulatorContainsKey ? accumulator.get(referenceFreeKey)
+                                                   : currentDefault.get(val);
+            }
             returnVal = new Pair<>(value, returnVal);
         }
         return returnVal;
@@ -284,11 +291,11 @@ public final class PropertyLoader {
                 base = result.getFirst();
                 val = result.getSecond();
             } else if (val.startsWith(FONT_SIZE)) {
-                Pair<Integer, String> result = parseFontAttribute(FONT_SIZE, val, accumulator);
+                Pair<Integer, String> result = parseFontAttribute(FONT_SIZE, val, accumulator, currentDefaults);
                 size = result.getFirst();
                 val = result.getSecond();
             } else if (val.startsWith(FONT_STYLE)) {
-                Pair<Integer, String> result = parseFontAttribute(FONT_STYLE, val, accumulator);
+                Pair<Integer, String> result = parseFontAttribute(FONT_STYLE, val, accumulator, currentDefaults);
                 style = result.getFirst();
                 val = result.getSecond();
             } else {
@@ -314,7 +321,8 @@ public final class PropertyLoader {
     }
 
     private static Pair<Integer, String> parseFontAttribute(final String identifier, final String val,
-                                                            final Map<Object, Object> accumulator) {
+                                                            final Map<Object, Object> accumulator,
+                                                            final UIDefaults currrentDefault) {
         String key = val.substring(identifier.length() + 1);
         int lastIndex = key.indexOf(ARG_END);
         String rest = key.substring(lastIndex + 1);
@@ -323,7 +331,7 @@ public final class PropertyLoader {
         int[] values = new int[subKeys.length];
         for (int i = 0; i < values.length; i++) {
             if (subKeys[i].startsWith(String.valueOf(REFERENCE_PREFIX))) {
-                Object ref = parseReference(identifier, subKeys[i], accumulator);
+                Object ref = parseReference(identifier, subKeys[i], accumulator, currrentDefault);
                 values[i] = ref instanceof Integer ? (Integer) ref : 0;
             } else {
                 try {

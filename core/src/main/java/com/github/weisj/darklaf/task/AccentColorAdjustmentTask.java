@@ -32,21 +32,18 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 
-import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.Pair;
 
-public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
+public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
 
     private static final Logger LOGGER = Logger.getLogger(AccentColorAdjustmentTask.class.getName());
-    private static final String MAIN_ACCENT_LIST_KEY = "mainAccent.propertyList";
-    private static final String SELECTION_ACCENT_LIST_KEY = "selectionAccent.propertyList";
-    private static final UIDefaults DEFAULTS = new UIDefaults();
+    private static final String MAIN_ACCENT_LIST_KEY = "accent.propertyList";
+    private static final String SELECTION_ACCENT_LIST_KEY = "selection.propertyList";
 
     @Override
-    public void run(final Theme currentTheme, final Properties properties) {
+    protected void runTask(final Theme currentTheme, final Properties properties) {
         Color accentColor = currentTheme.getAccentColorRule().getAccentColor();
         Color selectionColor = currentTheme.getAccentColorRule().getSelectionColor();
         applyColors(currentTheme, properties, accentColor, selectionColor);
@@ -56,28 +53,27 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
                             final Color accentColor, final Color selectionColor) {
         Properties props = currentTheme.loadPropertyFile("accents", true);
         if (props.isEmpty()) return;
-        adjust(MAIN_ACCENT_LIST_KEY, accentColor, props, properties);
-        adjust(SELECTION_ACCENT_LIST_KEY, selectionColor, props, properties);
-    }
-
-    private void adjust(final String listKey, final Color c,
-                        final Properties listProperties, final Properties properties) {
-        if (c == null) return;
-        Object obj = PropertyLoader.parseValue(listKey,
-                                               listProperties.getProperty(listKey),
-                                               listProperties, DEFAULTS, IconLoader.get());
-        DEFAULTS.clear();
-        if (obj instanceof List<?>) {
-            double[] hsb = DarkColorModelHSB.RGBtoHSBValues(c.getRed(), c.getGreen(), c.getBlue());
-            adjustList((List<?>) obj, hsb, properties);
+        if (accentColor != null) {
+            adjustColors(MAIN_ACCENT_LIST_KEY, accentColor, props, properties);
+        }
+        if (selectionColor != null) {
+            adjustColors(SELECTION_ACCENT_LIST_KEY, selectionColor, props, properties);
         }
     }
 
-    private void adjustList(final List<?> list, final double[] hsb,
-                            final Properties properties) {
+    private void adjustColors(final String listKey, final Color c,
+                              final Properties listProperties, final Properties properties) {
+        adjust(listKey, listProperties, list -> {
+            double[] hsb = DarkColorModelHSB.RGBtoHSBValues(c.getRed(), c.getGreen(), c.getBlue());
+            adjustColorList(list, hsb, properties);
+        });
+    }
+
+    private void adjustColorList(final List<?> list, final double[] hsb,
+                                 final Properties properties) {
         ColorInfo info = new ColorInfo();
         for (Object o : list) {
-            info = getColorInfo(o, info);
+            setColorInfo(o, info);
             if (info.key == null) continue;
             Object c = mapColor(info, hsb, properties);
             if (c instanceof Color) {
@@ -89,29 +85,27 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
         }
     }
 
-    private ColorInfo getColorInfo(final Object o, final ColorInfo info) {
+    private void setColorInfo(final Object o, final ColorInfo info) {
         info.set(null, 0, 0, 0);
         if (o instanceof String) {
             info.set(o.toString(), 100, 100, 100);
-            return info;
+            return;
         }
         if (o instanceof Pair<?, ?>) {
             Object first = ((Pair<?, ?>) o).getFirst();
             Object second = ((Pair<?, ?>) o).getSecond();
-            if (!(first instanceof String)) return null;
-            if (!(second instanceof List<?>)) return null;
+            if (!(first instanceof String)) return;
+            if (!(second instanceof List<?>)) return;
             String key = first.toString();
             List<?> list = (List<?>) second;
             if (list.size() != 3
                 || !(list.get(0) instanceof Integer)
                 || !(list.get(1) instanceof Integer)
                 || !(list.get(2) instanceof Integer)) {
-                return info;
+                return;
             }
             info.set(key, (Integer) list.get(0), (Integer) list.get(1), (Integer) list.get(2));
-            return info;
         }
-        return info;
     }
 
     private Object mapColor(final ColorInfo info, final double[] hsbMatch, final Properties properties) {
@@ -126,11 +120,7 @@ public class AccentColorAdjustmentTask implements DefaultsAdjustmentTask {
     }
 
     private double mapValue(final double value, final int adjustment) {
-        if (adjustment >= 0) {
-            return value * (adjustment / 100.0);
-        } else {
-            return 1 - (value * (Math.abs(adjustment) / 100.0));
-        }
+        return value * (adjustment / 100.0);
     }
 
     private static class ColorInfo {
