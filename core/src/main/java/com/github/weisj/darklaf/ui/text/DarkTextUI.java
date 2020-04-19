@@ -177,7 +177,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         } else if (border instanceof DarkTableCellBorder) {
             g.setColor(editor.getBackground());
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
-        } else if (border != null) {
+        } else if (border != null && !(border instanceof DarkPlainTextBorder)) {
             Insets ins = border.getBorderInsets(editor);
             if (ins != null) {
                 g.setColor(getBackground(editor));
@@ -206,12 +206,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         super.paintSafely(g);
         config.restore();
-    }
-
-    @Override
-    protected Rectangle getVisibleEditorRect() {
-        Rectangle rect = super.getVisibleEditorRect();
-        return rect;
     }
 
     protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
