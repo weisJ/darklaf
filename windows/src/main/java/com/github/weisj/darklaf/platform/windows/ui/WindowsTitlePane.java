@@ -709,8 +709,8 @@ public class WindowsTitlePane extends CustomTitlePane {
                                                                                                       .getIconWidth())
                                                                            : ICON_WIDTH;
                 windowButtonWidth = Math.min(ICON_WIDTH, windowButtonWidth);
-                windowIconButton.setBounds(start + PAD / 2, y, windowButtonWidth, height);
-                start += windowButtonWidth + PAD;
+                windowIconButton.setBounds(start + PAD, y, windowButtonWidth, height);
+                start += windowButtonWidth + 2 * PAD;
                 left = start;
             }
 
