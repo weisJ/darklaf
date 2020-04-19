@@ -59,7 +59,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     protected void determineColors() {
-        switch (getWindowDecorationStyle()) {
+        switch (getDecorationStyle()) {
             case JRootPane.ERROR_DIALOG :
                 activeBackground = UIManager.getColor("MacOS.OptionPane.errorDialog.titlePane.background");
                 activeForeground = UIManager.getColor("MacOS.OptionPane.errorDialog.titlePane.foreground");
@@ -108,10 +108,6 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     public Window getWindow() {
         return window;
-    }
-
-    private int getWindowDecorationStyle() {
-        return getRootPane().getWindowDecorationStyle();
     }
 
     public void install() {
@@ -194,10 +190,9 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
-        boolean isFullscreen = JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle);
-        return (decorationInformation != null && decorationInformation.windowHandle == 0)
-               || isFullscreen
-               || getWindowDecorationStyle() == JRootPane.NONE;
+        return (decorationInformation.windowHandle == 0)
+               || JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle)
+               || getDecorationStyle() == JRootPane.NONE;
     }
 
     private boolean useCustomTitle() {
