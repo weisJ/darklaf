@@ -28,6 +28,7 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 import com.github.weisj.darklaf.theme.info.*;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
@@ -92,12 +93,12 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public boolean supportsNativeAccentColor() {
-        return MacOSLibrary.isLoaded();
+        return SystemInfo.isMacOSMojave && MacOSLibrary.isLoaded();
     }
 
     @Override
     public boolean supportsNativeSelectionColor() {
-        return MacOSLibrary.isLoaded();
+        return SystemInfo.isMacOSMojave && MacOSLibrary.isLoaded();
     }
 
     @Override

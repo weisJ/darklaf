@@ -47,7 +47,7 @@ public class MacOSLibrary {
 
     private static void loadLibrary() {
         attemptedLoad = true;
-        if (!SystemInfo.isMac || loaded) {
+        if (!SystemInfo.isMacOSYosemite || loaded) {
             return;
         }
         try {
