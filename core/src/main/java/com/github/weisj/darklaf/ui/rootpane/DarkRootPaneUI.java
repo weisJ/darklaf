@@ -35,7 +35,6 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicRootPaneUI;
 
-import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -50,16 +49,15 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     protected static final String KEY_PREFIX = "JRootPane.";
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
-    protected static final String[] borderKeys = new String[]{
-                                                              "RootPane.border", "RootPane.frameBorder",
+    protected static final String[] borderKeys = new String[]{"RootPane.border",
+                                                              "RootPane.frameBorder",
                                                               "RootPane.plainDialogBorder",
                                                               "RootPane.informationDialogBorder",
                                                               "RootPane.errorDialogBorder",
                                                               "RootPane.colorChooserDialogBorder",
                                                               "RootPane.fileChooserDialogBorder",
                                                               "RootPane.questionDialogBorder",
-                                                              "RootPane.warningDialogBorder"
-    };
+                                                              "RootPane.warningDialogBorder"};
 
     private Window window;
     private CustomTitlePane titlePane;
@@ -68,7 +66,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private JRootPane rootPane;
     private final DisposeListener disposeListener = new DisposeListener();
 
-    private boolean decorationStyleLock = false;
     private int windowDecorationsStyle = -1;
 
     public static ComponentUI createUI(final JComponent comp) {
@@ -106,23 +103,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String propertyName = e.getPropertyName();
-        if (PropertyKey.WINDOW_DECORATIONS_STYLE.equals(propertyName)) {
-            if (!decorationStyleLock) {
-                windowDecorationsStyle = decorationsStyleFromWindow(window, rootPane.getWindowDecorationStyle());
-                if (window instanceof JDialog) updateClientDecoration();
-                if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
-                installBorder(rootPane);
-                if (windowDecorationsStyle == JRootPane.PLAIN_DIALOG) {
-                    /*
-                     * Otherwise, the property change doesn't get fired when the dialog is a plain dialog.
-                     * In this case JOptionPane#initDialog sets the window to be undecorated which should be avoided.
-                     */
-                    decorationStyleLock = true;
-                    rootPane.setWindowDecorationStyle(JRootPane.FILE_CHOOSER_DIALOG);
-                    decorationStyleLock = false;
-                }
-            }
-        } else if (PropertyKey.ANCESTOR.equals(propertyName)) {
+        if (PropertyKey.ANCESTOR.equals(propertyName)) {
             updateWindow(rootPane.getParent());
         }
     }
@@ -164,21 +145,15 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     private void installClientDecorations(final JRootPane root) {
-        int style = windowDecorationsStyle < 0 ? root.getWindowDecorationStyle() : windowDecorationsStyle;
+        updateWindow(rootPane.getParent());
+        int style = decorationsStyleFromWindow(window, windowDecorationsStyle < 0 ? root.getWindowDecorationStyle()
+                                                                                  : windowDecorationsStyle);
         CustomTitlePane titlePane = DecorationsHandler.getSharedInstance().createTitlePane(root, style, window);
         installLayout(root);
         setTitlePane(root, titlePane);
         if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
         if (window != null) window.addWindowListener(disposeListener);
         root.addHierarchyListener(this);
-    }
-
-    private void setWindowDecorated() {
-        if (window instanceof Frame && !window.isDisplayable()) {
-            ((Frame) window).setUndecorated(false);
-        } else if (window instanceof Dialog && !window.isDisplayable()) {
-            ((Dialog) window).setUndecorated(false);
-        }
     }
 
     private void setTitlePane(final JRootPane root, final CustomTitlePane titlePane) {
@@ -246,8 +221,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     protected void updateClientDecoration() {
         if (!Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS_UPDATE))) {
             uninstallClientDecorations(rootPane);
-            updateWindow(rootPane.getParent());
-            setWindowDecorated();
             if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()
                 && !noDecorations(rootPane)) {
                 installClientDecorations(rootPane);

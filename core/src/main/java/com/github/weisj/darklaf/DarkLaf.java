@@ -114,8 +114,6 @@ public class DarkLaf extends BasicLookAndFeel {
 
     private void setupDecorations() {
         DecorationsHandler.getSharedInstance().initialize();
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        JDialog.setDefaultLookAndFeelDecorated(true);
     }
 
     @Override
@@ -166,6 +164,10 @@ public class DarkLaf extends BasicLookAndFeel {
 
     @Override
     public boolean getSupportsWindowDecorations() {
-        return DecorationsHandler.getSharedInstance().isCustomDecorationSupported();
+        /*
+         * Return false to avoid setting the windows to undecorated. This results in rootpane-styles not being set.
+         * However darklaf only distinguished between Frames and Dialogs.
+         */
+        return false;
     }
 }
