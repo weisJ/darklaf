@@ -439,8 +439,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
         if (theme == null) return false;
         if (!Objects.equals(getThemeClass(), theme.getThemeClass())) return false;
         return Objects.equals(getAccentColorRule(), theme.getAccentColorRule())
-            && Objects.equals(getColorToneRule(), theme.getColorToneRule())
-            && Objects.equals(getContrastRule(), theme.getContrastRule())
-            && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
+               && Objects.equals(getColorToneRule(), theme.getColorToneRule())
+               && Objects.equals(getContrastRule(), theme.getContrastRule())
+               && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
     }
 }
