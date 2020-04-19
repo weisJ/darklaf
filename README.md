@@ -8,13 +8,11 @@
 This project is based on the [darcula](https://github.com/bulenkov/Darcula) look and feel for Swing.
 
 # Screenshots
-![Darcula Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_darcula.png) | ![IntelliJ Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_intellij.png)
-:-------------------------:|:-------------------------:
-Darcula Theme | IntelliJ Theme
-
-![Solarized Dark Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_solarized_dark.png) | ![Solarized Light Theme](https://github.com/weisJ/darklaf/blob/master/img/file_chooser_solarized_light.png)
-:-------------------------:|:-------------------------:
-Solarized Dark Theme | Solarized Light Theme
+|   |   |
+|:-:|:-:|
+|![IntelliJ](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/intellij.png)|![Darcula](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/darcula.png)|
+|![Solarized Light](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/solatized_light.png)|![Solarized Dark](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/solarized_dark.png)|
+|![High Contrast Light](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/high_constrast_light.png)|![High Contrast Dark](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/high_constrast_dark.png)|
 
 # Usage & [Features](https://github.com/weisJ/darklaf/wiki/Features)
 A list of all features can be found [here](https://github.com/weisJ/darklaf/wiki/Features).
@@ -89,6 +87,8 @@ This LookAndFeel supports custom window decorations (only on Windows at this poi
     ./gradlew build
 
 When building on Windows, you need a C++ toolchain installed to build native extension.
+
+When building on macOS you need to have XCode (or the command line tools) installed to build the native extension.
 
 If you want to build for platforms different from your machine you can download the respective native libraries
 from the latest successful run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+branch%3Amaster) and place it in the corresponding `<variant>/libraries` folder.
