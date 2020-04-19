@@ -28,6 +28,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.function.Supplier;
 
 import javax.swing.*;
 import javax.swing.plaf.SliderUI;
@@ -198,7 +199,7 @@ public class ThemeSettingsPanel extends JPanel {
         Theme theme = getTheme(preferredThemeStyle);
         if (theme == null) return null;
         FontSizeRule fontSizeRule = getFontSizeRule(theme, preferredThemeStyle);
-        AccentColorRule accentColorRule = getAccentColorRule(theme, preferredThemeStyle);
+        AccentColorRule accentColorRule = getAccentColorRule(theme);
         return theme.derive(fontSizeRule, accentColorRule);
     }
 
@@ -242,31 +243,26 @@ public class ThemeSettingsPanel extends JPanel {
 
         defaultAccentColor = createDefaultColor("widgetFillDefault");
         bgAccent = new ButtonGroup();
-        defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_FILLED, currentAccentColor,
+        defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_FILLED,
                                          resourceBundle.getString("color_default"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.BLUE, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.BLUE,
                          resourceBundle.getString("color_Blue"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.LILAC, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.LILAC,
                          resourceBundle.getString("color_lilac"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ROSE, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.ROSE,
                          resourceBundle.getString("color_rose"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.RED, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.RED,
                          resourceBundle.getString("color_red"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ORANGE, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.ORANGE,
                          resourceBundle.getString("color_orange"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.YELLOW, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.YELLOW,
                          resourceBundle.getString("color_yellow"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.GREEN, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.GREEN,
                          resourceBundle.getString("color_green"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.GRAY, currentAccentColor,
+        addColoredButton(bgAccent, accentBox, MacOSColors.GRAY,
                          resourceBundle.getString("color_gray"));
-        customAccent = addColoredButton(bgAccent, accentBox, null, currentAccentColor,
-                                        resourceBundle.getString("color_custom"));
-        QuickColorChooser.attachToComponent(customAccent, customAccent::setColor,
-                                            () -> Optional.ofNullable(customAccent.getColor())
-                                                          .orElse(Optional.ofNullable(currentAccentColor)
-                                                                          .orElse(defaultAccentColor)),
-                                            customAccent::isSelected);
+        customAccent = addCustomButton(bgAccent, accentBox, currentAccentColor, defaultAccentColor,
+                                       resourceBundle.getString("color_custom"));
 
         JComponent selectionBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JLabel selectionColorLabel = new JLabel(resourceBundle.getString("label_selection_color"));
@@ -274,17 +270,10 @@ public class ThemeSettingsPanel extends JPanel {
 
         bgSelection = new ButtonGroup();
         defaultSelectionColor = createDefaultColor("textCompSelectionBackground");
-        defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor, currentSelectionColor,
+        defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor,
                                             resourceBundle.getString("color_default"));
-
-        customSelection = addColoredButton(bgSelection, selectionBox, null, currentSelectionColor,
-                                           resourceBundle.getString("color_custom"));
-        QuickColorChooser.attachToComponent(customSelection, customSelection::setColor,
-                                            () -> Optional.ofNullable(customSelection.getColor())
-                                                          .orElse(Optional.ofNullable(currentSelectionColor)
-                                                                          .orElse(defaultSelectionColor)),
-                                            customSelection::isSelected);
-        selectionBox.add(customSelection);
+        customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
+                                          resourceBundle.getString("color_custom"));
 
         fontSlider = createFontSlider();
         JLabel fontSizeLabel = new JLabel(resourceBundle.getString("label_font_size"));
@@ -301,6 +290,19 @@ public class ThemeSettingsPanel extends JPanel {
                                                       selectionBox,
                                                       fontSlider}));
         return panel;
+    }
+
+    protected ColoredRadioButton addCustomButton(final ButtonGroup bg, final JComponent parent,
+                                                 final Color currentColor, final Color defaultColor,
+                                                 final String tipText) {
+        Supplier<Color> supplier = () -> Optional.ofNullable(currentColor)
+                                                 .orElse(defaultColor);
+        ColoredRadioButton button = addColoredButton(bg, parent, supplier, tipText);
+        QuickColorChooser.attachToComponent(button, button::setColor,
+                                            () -> Optional.ofNullable(button.getColor())
+                                                          .orElse(supplier.get()),
+                                            button::isSelected);
+        return button;
     }
 
     protected Color createDefaultColor(final String key) {
@@ -364,10 +366,10 @@ public class ThemeSettingsPanel extends JPanel {
 
     public AccentColorRule getAccentColorRule() {
         PreferredThemeStyle preferredThemeStyle = LafManager.getPreferredThemeStyle();
-        return getAccentColorRule(getTheme(preferredThemeStyle), preferredThemeStyle);
+        return getAccentColorRule(getTheme(preferredThemeStyle));
     }
 
-    protected AccentColorRule getAccentColorRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
+    protected AccentColorRule getAccentColorRule(final Theme theme) {
         if (theme == null) return AccentColorRule.getDefault();
         Color accentColor = getAccentColor(theme, isAccentColorFollowsSystem());
         Color selectionColor = getSelectionColor(theme, isSelectionColorFollowsSystem());
@@ -649,26 +651,38 @@ public class ThemeSettingsPanel extends JPanel {
         }
     }
 
-    private AbstractButton getSelectedButton(final ButtonGroup bg) {
-        Enumeration<AbstractButton> enumeration = bg.getElements();
-        ButtonModel selected = bg.getSelection();
-        while (enumeration.hasMoreElements()) {
-            AbstractButton button = enumeration.nextElement();
-            if (selected == button.getModel()) return button;
-        }
-        return null;
-    }
-
-    public ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent, final Color color,
-                                               final Color selectedColor, final String tipText) {
-        ColoredRadioButton button = new ColoredRadioButton(null, color);
-        setupButton(button, bg, selectedColor, tipText);
+    public ColoredRadioButton addColoredButton(final ColoredRadioButton button,
+                                               final ButtonGroup bg, final JComponent parent,
+                                               final String tipText) {
+        setupButton(button, bg, tipText);
         parent.add(button);
         return button;
     }
 
-    private void setupButton(final ColoredRadioButton button, final ButtonGroup bg, final Color selectedColor,
-                             final String tipText) {
+    public ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                               final Color color, final String tipText) {
+        return addColoredButton(new ColoredRadioButton(null, color), bg, parent, tipText);
+    }
+
+    public ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                               final Supplier<Color> colorSupplier, final String tipText) {
+        return addColoredButton(new ColoredRadioButton(null, null) {
+            {
+                addActionListener(e -> getColor());
+            }
+
+            @Override
+            public Color getColor() {
+                Color c = super.getColor();
+                if (c == null) {
+                    setColor(colorSupplier.get());
+                }
+                return super.getColor();
+            }
+        }, bg, parent, tipText);
+    }
+
+    private void setupButton(final ColoredRadioButton button, final ButtonGroup bg, final String tipText) {
         bg.add(button);
         button.setName(tipText);
         ToolTipContext context = new ToolTipContext().setAlignment(Alignment.CENTER)
