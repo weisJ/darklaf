@@ -65,7 +65,6 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-        toolBar.setLayout(new DarkToolBarLayout(toolBar));
         previewPanel.setToolBar(toolBar);
         dragWindow = createDragWindow(toolBar);
     }
@@ -84,6 +83,7 @@ public class DarkToolBarUI extends DarkToolBarUIBridge {
     @Override
     public void setFloating(final boolean b, final Point p) {
         if (toolBar.isFloatable()) {
+            toolBar.doLayout();
             boolean visible = false;
 
             Window ancestor = SwingUtilities.getWindowAncestor(toolBar);

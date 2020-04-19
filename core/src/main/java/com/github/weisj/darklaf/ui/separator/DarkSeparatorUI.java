@@ -35,8 +35,10 @@ import javax.swing.plaf.basic.BasicSeparatorUI;
  */
 public class DarkSeparatorUI extends BasicSeparatorUI {
 
+    protected boolean resizeLock;
     protected Color color;
     protected Dimension size;
+    protected Insets insets;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSeparatorUI();
@@ -45,24 +47,42 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
     @Override
     protected void installDefaults(final JSeparator s) {
         super.installDefaults(s);
-        s.setAlignmentX(Component.LEFT_ALIGNMENT);
+        s.setAlignmentX(Component.CENTER_ALIGNMENT);
         color = UIManager.getColor("Separator.foreground");
         size = UIManager.getDimension("Separator.size");
+        insets = UIManager.getInsets("Separator.insets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
     public void paint(final Graphics g, final JComponent c) {
         if (!(c instanceof JSeparator)) return;
+        checkSize(c);
         g.setColor(color);
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
-            g.fillRect(size.width / 2, 0, 1, size.height);
+            g.fillRect(c.getWidth() / 2, insets.top, 1, c.getHeight() - insets.bottom - insets.top);
         } else {
-            g.fillRect(0, size.width / 2, size.height, 1);
+            g.fillRect(insets.left, c.getHeight() / 2, c.getWidth() - insets.left - insets.right, 1);
         }
+    }
+
+    private void checkSize(final JComponent c) {
+        if (resizeLock) return;
+        Container parent = c.getParent();
+        if (parent == null) return;
+        resizeLock = true;
+        Dimension dim = parent.getSize();
+        Rectangle bounds = c.getBounds();
+        if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
+            if (bounds.height != dim.height) c.setBounds(bounds.x, 0, bounds.width, dim.height);
+        } else {
+            if (bounds.width != dim.width) c.setBounds(0, bounds.y, dim.width, bounds.height);
+        }
+        resizeLock = false;
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
     public Dimension getPreferredSize(final JComponent c) {
+        if (c == null) return new Dimension(size);
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
             return new Dimension(size.width, size.height);
         } else {
