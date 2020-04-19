@@ -29,7 +29,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
@@ -46,9 +45,11 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     protected final Icon verticalSplit;
     protected final Icon horizontalSplit;
     protected final Color borderColor;
+    private final DarkSplitPaneUI ui;
 
-    public DarkSplitPaneDivider(final BasicSplitPaneUI ui) {
+    public DarkSplitPaneDivider(final DarkSplitPaneUI ui) {
         super(ui);
+        this.ui = ui;
         leftOneTouch = UIManager.getIcon("SplitPaneDivider.leftOneTouch.icon");
         rightOneTouch = UIManager.getIcon("SplitPaneDivider.rightOneTouch.icon");
         topOneTouch = UIManager.getIcon("SplitPaneDivider.topOneTouch.icon");
@@ -61,20 +62,25 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     @Override
     public void paint(final Graphics g) {
         super.paint(g);
+        boolean paintBorder = ui.getStyle().isPaintBorder();
         if (splitPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
             Icon icon = getVerticalSplitIcon();
             icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2,
                            (getHeight() - icon.getIconHeight()) / 2);
-            g.setColor(borderColor);
-            g.fillRect(0, 0, getWidth(), 1);
-            g.fillRect(0, getHeight() - 1, getWidth(), 1);
+            if (paintBorder) {
+                g.setColor(borderColor);
+                g.fillRect(0, 0, getWidth(), 1);
+                g.fillRect(0, getHeight() - 1, getWidth(), 1);
+            }
         } else {
             Icon icon = getHorizontalSplitIcon();
             icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2,
                            (getHeight() - icon.getIconHeight()) / 2);
-            g.setColor(borderColor);
-            g.fillRect(0, 0, 1, getHeight());
-            g.fillRect(getWidth() - 1, 0, 1, getHeight());
+            if (paintBorder) {
+                g.setColor(borderColor);
+                g.fillRect(0, 0, 1, getHeight());
+                g.fillRect(getWidth() - 1, 0, 1, getHeight());
+            }
         }
     }
 

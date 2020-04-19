@@ -34,6 +34,7 @@ import javax.swing.*;
 import javax.swing.plaf.SliderUI;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.color.ThemedColor;
 import com.github.weisj.darklaf.components.ColoredRadioButton;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;

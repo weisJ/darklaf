@@ -39,25 +39,19 @@ import com.github.weisj.darklaf.util.PropertyKey;
 /**
  * @author Jannis Weis
  */
-public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeListener {
-
-    protected static final String KEY_PREFIX = "JSplitPane.";
-    public static final String KEY_STYLE = KEY_PREFIX + "style";
-    public static final String STYLE_GRIP = "grip";
-    public static final String STYLE_LINE = "line";
-    public static final String STYLE_INVISIBLE = "invisible";
+public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeListener, SplitPaneConstants {
 
     private static final int DIVIDER_DRAG_SIZE = 10;
     private static final int DIVIDER_DRAG_OFFSET = 5;
-    private Style style;
+    private DividerStyle style;
     private Color dividerLine;
 
-    protected DarkSplitPaneUI(final Style style) {
+    protected DarkSplitPaneUI(final DividerStyle style) {
         this.style = style;
     }
 
     public static ComponentUI createUI(final JComponent c) {
-        return new DarkSplitPaneUI(Style.get(UIManager.getString("SplitPane.defaultDividerStyle")));
+        return new DarkSplitPaneUI(DividerStyle.get(UIManager.getString("SplitPane.defaultDividerStyle")));
     }
 
     @Override
@@ -69,7 +63,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
     @Override
     protected void installDefaults() {
-        Style oldStyle = Style.getNullableStyle(splitPane.getClientProperty(KEY_STYLE));
+        DividerStyle oldStyle = DividerStyle.getNullableStyle(splitPane.getClientProperty(KEY_STYLE));
         if (oldStyle != null) {
             style = oldStyle;
         }
@@ -100,10 +94,10 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
 
     @Override
     public BasicSplitPaneDivider createDefaultDivider() {
-        if (style == Style.GRIP) {
+        if (!style.isThin()) {
             return new DarkSplitPaneDivider(this);
         } else {
-            return new ThinDivider(this);
+            return new ThinSplitPaneDivider(this);
         }
     }
 
@@ -114,7 +108,7 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
             @Override
             public void layoutContainer(final Container parent) {
                 super.layoutContainer(parent);
-                if (style != Style.GRIP) {
+                if (style.isThin()) {
                     Rectangle bounds = getDivider().getBounds();
                     if (getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
                         bounds.x -= DIVIDER_DRAG_OFFSET;
@@ -134,97 +128,35 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
         String key = evt.getPropertyName();
         if (KEY_STYLE.equals(key)) {
             Object val = evt.getNewValue();
-            Style oldStyle = style;
-            if (Style.INVISIBLE.name.equals(val)) {
-                style = Style.INVISIBLE;
-            } else if (Style.LINE.name.equals(val)) {
-                style = Style.LINE;
-            } else {
-                style = Style.GRIP;
-            }
+            DividerStyle oldStyle = style;
+            style = DividerStyle.get(val);
             if (oldStyle != style) {
-                if (style == Style.GRIP || oldStyle == Style.GRIP) {
+                if (oldStyle.isThin() != style.isThin()) {
                     splitPane.setUI(new DarkSplitPaneUI(style));
+                    return;
                 } else {
                     splitPane.doLayout();
                 }
             }
+            splitPane.repaint();
         } else if (PropertyKey.ORIENTATION.equals(key)) {
-            splitPane.doLayout();
+            splitPane.revalidate();
         }
     }
 
-    protected Color getDividerLineColor() {
+    public Color getDividerLineColor() {
         return dividerLine;
     }
 
-    private enum Style {
-        GRIP(STYLE_GRIP),
-        LINE(STYLE_LINE),
-        INVISIBLE(STYLE_INVISIBLE);
-
-        final private String name;
-
-        Style(final String name) {
-            this.name = name;
-        }
-
-        static Style get(final String style) {
-            Style s = getNullableStyle(style);
-            if (s == null) return GRIP;
-            return s;
-        }
-
-        static Style getNullableStyle(final Object obj) {
-            if (obj == null) return null;
-            if (obj instanceof Style) return (Style) obj;
-            try {
-                return valueOf(obj.toString());
-            } catch (IllegalArgumentException ignored) {}
-            for (Style s : values()) {
-                if (s.name.equalsIgnoreCase(obj.toString())) return s;
-            }
-            return null;
-        }
+    public int getDividerDragOffset() {
+        return DIVIDER_DRAG_OFFSET;
     }
 
-    private final class ThinDivider extends BasicSplitPaneDivider {
+    public int getDividerDragSize() {
+        return DIVIDER_DRAG_SIZE;
+    }
 
-        private ThinDivider(final BasicSplitPaneUI ui) {
-            super(ui);
-        }
-
-        @Override
-        public int getDividerSize() {
-            return style == Style.LINE ? 1 : 0;
-        }
-
-        @Override
-        public void paint(final Graphics g) {
-            if (style == Style.LINE) {
-                g.setColor(getDividerLineColor());
-                if (orientation == JSplitPane.HORIZONTAL_SPLIT) {
-                    g.drawLine(DIVIDER_DRAG_OFFSET, 0, DIVIDER_DRAG_OFFSET, getHeight());
-                } else {
-                    g.drawLine(0, DIVIDER_DRAG_OFFSET, getWidth(), DIVIDER_DRAG_OFFSET);
-                }
-            }
-        }
-
-        @Override
-        public boolean contains(final Point p) {
-            if (!isEnabled()) return false;
-            return super.contains(p);
-        }
-
-        @Override
-        protected void dragDividerTo(final int location) {
-            super.dragDividerTo(location + DIVIDER_DRAG_OFFSET);
-        }
-
-        @Override
-        protected void finishDraggingTo(final int location) {
-            super.finishDraggingTo(location + DIVIDER_DRAG_OFFSET);
-        }
+    public DividerStyle getStyle() {
+        return style;
     }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.settings;
+package com.github.weisj.darklaf.color;
 
 import java.awt.*;
 

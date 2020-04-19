@@ -33,6 +33,10 @@ import javax.swing.*;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
+import com.github.weisj.darklaf.color.ThemedColor;
+import com.github.weisj.darklaf.ui.splitpane.DividerStyle;
+import com.github.weisj.darklaf.ui.splitpane.SplitPaneConstants;
+
 public final class SplitPaneDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
@@ -44,12 +48,12 @@ public final class SplitPaneDemo implements ComponentDemo {
         JSplitPane splitPane = new JSplitPane();
         JPanel leftPanel = new JPanel() {
             {
-                setBackground(UIManager.getColor("glowError"));
+                setBackground(new ThemedColor("glowError"));
             }
         };
         JPanel rightPanel = new JPanel() {
             {
-                setBackground(UIManager.getColor("glowFocus"));
+                setBackground(new ThemedColor("glowFocus"));
             }
         };
         splitPane.setLeftComponent(leftPanel);
@@ -93,14 +97,14 @@ public final class SplitPaneDemo implements ComponentDemo {
                 addItemListener(e -> splitPane.setOrientation(mapping.get(e.getItem().toString())));
             }
         }, "sgx");
-        controlPanel.add(new JLabel("JSplitPane.style:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {
+        controlPanel.add(new JLabel(SplitPaneConstants.KEY_STYLE + ":", JLabel.RIGHT));
+        controlPanel.add(new JComboBox<DividerStyle>() {
             {
-                addItem("grip");
-                addItem("line");
-                addItem("invisible");
-                setSelectedItem(UIManager.get("SplitPane.defaultDividerStyle"));
-                addItemListener(e -> splitPane.putClientProperty("JSplitPane.style", e.getItem()));
+                for (DividerStyle style : DividerStyle.values()) {
+                    addItem(style);
+                }
+                setSelectedItem(DividerStyle.get(UIManager.get("SplitPane.defaultDividerStyle")));
+                addItemListener(e -> splitPane.putClientProperty(SplitPaneConstants.KEY_STYLE, e.getItem()));
             }
         }, "sgx");
         return panel;
