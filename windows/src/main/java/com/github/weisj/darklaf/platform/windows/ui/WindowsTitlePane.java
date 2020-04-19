@@ -582,10 +582,11 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         List<Image> icons = window.getIconImages();
-        assert icons != null;
-        Icon systemIcon;
-        if (icons.size() == 0 && frame) {
-            systemIcon = UIManager.getIcon("Windows.TitlePane.icon");
+        Icon systemIcon = null;
+        if (icons == null || icons.size() == 0) {
+            if (frame) {
+                systemIcon = UIManager.getIcon("Windows.TitlePane.icon");
+            }
         } else if (icons.size() == 1) {
             systemIcon = new ScaledIcon(icons.get(0).getScaledInstance(Scale.scaleWidth(ICON_SIZE),
                                                                        Scale.scaleHeight(ICON_SIZE),
