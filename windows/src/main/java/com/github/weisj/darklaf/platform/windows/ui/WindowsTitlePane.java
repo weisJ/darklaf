@@ -268,17 +268,12 @@ public class WindowsTitlePane extends CustomTitlePane {
         add(minimizeButton);
         add(maximizeToggleButton);
         add(closeButton);
+        setComponentZOrder(closeButton, 0);
+        setComponentZOrder(maximizeToggleButton, 1);
+        setComponentZOrder(minimizeButton, 2);
+        setComponentZOrder(windowIconButton, 3);
+        setComponentZOrder(titleLabel, 4);
         addMenuBar(getRootPane().getJMenuBar());
-    }
-
-    protected boolean isDialog(final int decorationStyle) {
-        return decorationStyle == JRootPane.PLAIN_DIALOG ||
-               decorationStyle == JRootPane.INFORMATION_DIALOG ||
-               decorationStyle == JRootPane.ERROR_DIALOG ||
-               decorationStyle == JRootPane.COLOR_CHOOSER_DIALOG ||
-               decorationStyle == JRootPane.FILE_CHOOSER_DIALOG ||
-               decorationStyle == JRootPane.QUESTION_DIALOG ||
-               decorationStyle == JRootPane.WARNING_DIALOG;
     }
 
     protected void addMenuBar(final JMenuBar menuBar) {
@@ -288,6 +283,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             menuBar.setPreferredSize(new Dimension(0, 0));
             menuBar.setOpaque(false);
             add(menuBar);
+            setComponentZOrder(menuBar, 5);
         }
     }
 
