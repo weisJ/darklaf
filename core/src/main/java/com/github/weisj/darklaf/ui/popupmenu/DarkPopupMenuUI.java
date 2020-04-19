@@ -55,7 +55,6 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     public static final String KEY_DO_NOT_CANCEL_POPUP = "doNotCancelPopup";
     public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
-    public static final String KEY_MAKE_VISIBLE = "PopupFactory.makeVisible";
     public static final StringBufferWrapper HIDE_POPUP_VALUE = new StringBufferWrapper(new StringBuffer("doNotCancelPopup"));
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
     protected static MouseGrabber mouseGrabber;
@@ -69,8 +68,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public void paint(final Graphics g, final JComponent c) {
         Window window = SwingUtilities.getWindowAncestor(c);
         if (window != null
-            && Boolean.TRUE.equals(popupMenu.getClientProperty(KEY_MAKE_VISIBLE))) {
-            popupMenu.putClientProperty(KEY_MAKE_VISIBLE, false);
+            && Boolean.TRUE.equals(popupMenu.getClientProperty(DarkPopupFactory.KEY_MAKE_VISIBLE))) {
+            popupMenu.putClientProperty(DarkPopupFactory.KEY_MAKE_VISIBLE, false);
             window.setOpacity(1);
         }
         super.paint(g, c);
@@ -137,8 +136,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         }
     }
 
-    public static class MouseGrabber implements ChangeListener,
-                                     AWTEventListener, ComponentListener, WindowListener {
+    public static class MouseGrabber implements ChangeListener, AWTEventListener, ComponentListener, WindowListener {
 
         Window grabbedWindow;
         MenuElement[] lastPathSelected;
@@ -169,11 +167,8 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
             if (invoker instanceof JPopupMenu) {
                 invoker = ((JPopupMenu) invoker).getInvoker();
             }
-            grabbedWindow = (invoker == null)
-                                              ? null
-                                              : ((invoker instanceof Window)
-                                                                             ? (Window) invoker
-                                                                             : SwingUtilities.getWindowAncestor(invoker));
+            grabbedWindow = (invoker == null) ? null : ((invoker instanceof Window) ? (Window) invoker
+                                                                                    : SwingUtilities.getWindowAncestor(invoker));
             if (grabbedWindow != null) {
                 if (tk instanceof sun.awt.SunToolkit) {
                     ((sun.awt.SunToolkit) tk).grab(grabbedWindow);

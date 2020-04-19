@@ -83,6 +83,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     protected void installBorder(final JRootPane root) {
+        if (root == null) return;
         LookAndFeel.installBorder(root, borderKeys[windowDecorationsStyle]);
     }
 
@@ -174,6 +175,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         if (window != null) window.removeWindowListener(disposeListener);
         window = DarkUIUtil.getWindow(parent);
         windowDecorationsStyle = decorationsStyleFromWindow(window, windowDecorationsStyle);
+        installBorder(rootPane);
     }
 
     private void installLayout(final JRootPane root) {

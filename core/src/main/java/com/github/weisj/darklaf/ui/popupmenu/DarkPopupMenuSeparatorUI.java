@@ -41,14 +41,20 @@ public class DarkPopupMenuSeparatorUI extends DarkSeparatorUI {
     }
 
     @Override
+    protected void installDefaults(final JSeparator s) {
+        super.installDefaults(s);
+        size = UIManager.getDimension("PopupMenuDivider.size");
+    }
+
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         Dimension s = c.getSize();
         g.setColor(UIManager.getDefaults().getColor("PopupMenu.borderColor"));
-        g.fillRect(0, 0, s.width, 1);
+        g.fillRect(0, size.height / 2, s.width, 1);
     }
 
     @Override
     public Dimension getPreferredSize(final JComponent c) {
-        return new Dimension(0, 1);
+        return new Dimension(0, size.height);
     }
 }

@@ -22,21 +22,15 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.popupmenu;
-
-import java.awt.*;
+package com.github.weisj.darklaf.ui.rootpane;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
+public class PlainRootPaneBorder extends EmptyBorder implements UIResource {
 
-/**
- * @author Jannis Weis
- */
-public class DarkPopupMenuBorder extends MutableLineBorder implements UIResource {
-
-    public DarkPopupMenuBorder() {
-        super(UIManager.getInsets("PopupMenu.borderInsets"), UIManager.getColor("PopupMenu.borderColor"));
+    public PlainRootPaneBorder() {
+        super(0, 0, 0, 0);
     }
 }

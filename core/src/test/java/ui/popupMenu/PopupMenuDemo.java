@@ -69,6 +69,7 @@ public class PopupMenuDemo implements ComponentDemo {
                             addSeparator();
                         }
                     });
+                    addSeparator();
                     add(new JMenuItem("Item 1", icon) {
                         {
                             setAccelerator(KeyStroke.getKeyStroke("alt A"));

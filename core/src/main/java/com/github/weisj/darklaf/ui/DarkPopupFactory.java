@@ -29,7 +29,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
-import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -39,6 +38,7 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_FOCUSABLE_POPUP = "JPopupFactory.focusablePopup";
     public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
     public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
+    public static final String KEY_MAKE_VISIBLE = "JPopupFactory.makeVisible";
 
     private HeavyWeightParent heavyWeightParent;
 
@@ -96,8 +96,10 @@ public class DarkPopupFactory extends PopupFactory {
                 }
             }
             if (startHidden) {
-                ((JComponent) contents).putClientProperty(DarkPopupMenuUI.KEY_MAKE_VISIBLE, true);
-                window.setOpacity(0.0f);
+                try {
+                    ((JComponent) contents).putClientProperty(KEY_MAKE_VISIBLE, true);
+                    window.setOpacity(0);
+                } catch (Exception ignored) {}
             }
         }
         return popup;

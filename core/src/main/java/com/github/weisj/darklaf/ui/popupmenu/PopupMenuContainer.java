@@ -107,12 +107,10 @@ public class PopupMenuContainer extends JPanel {
             popupMenu.setBorderPainted(true);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), popupMenu, posX, posY);
         } else {
-            int increment = popupMenu.getComponentCount() > 0
-                                                              ? Math.max(1,
-                                                                         popupMenu.getComponent(0)
-                                                                                  .getPreferredSize().height
-                                                                            / 2)
-                                                              : 1;
+            int increment = 1;
+            if (popupMenu.getComponentCount() > 0) {
+                increment = Math.max(1, popupMenu.getComponent(0).getPreferredSize().height / 2);
+            }
             JScrollBar bar = scrollPane.getVerticalScrollBar();
             bar.setValue(bar.getMinimum());
             bar.setUnitIncrement(increment);

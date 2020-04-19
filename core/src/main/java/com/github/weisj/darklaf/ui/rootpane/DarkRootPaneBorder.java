@@ -38,7 +38,6 @@ public class DarkRootPaneBorder extends MutableLineBorder implements UIResource 
 
     @Override
     public int getTop() {
-        return DecorationsHandler.getSharedInstance().isCustomDecorationSupported()
-                                                                                    ? super.getTop() : 0;
+        return DecorationsHandler.getSharedInstance().isCustomDecorationSupported() ? super.getTop() : 0;
     }
 }
