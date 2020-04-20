@@ -117,7 +117,7 @@ public class DarkTextBorder implements Border, UIResource {
                                    final boolean editable, final boolean enabled) {
         if (focus) {
             return error ? focusErrorBorderColor
-                         : enabled && editable ? focusBorderColor : inactiveFocusBorderColor;
+                    : enabled && editable ? focusBorderColor : inactiveFocusBorderColor;
         } else if (error) {
             return errorBorderColor;
         } else {

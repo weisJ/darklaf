@@ -146,12 +146,12 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     int vw = tw;
                     int vh = th;
                     Dimension butSize = moreTabs.isVisible()
-                                                             ? moreTabs.getPreferredSize()
-                                                             : new Dimension(0, 0);
+                            ? moreTabs.getPreferredSize()
+                            : new Dimension(0, 0);
                     boolean showNewTabButton = newTab.isVisible() && newTab.getParent() == ui.tabPane;
                     Dimension butSize2 = showNewTabButton
-                                                          ? newTab.getPreferredSize()
-                                                          : new Dimension(0, 0);
+                            ? newTab.getPreferredSize()
+                            : new Dimension(0, 0);
                     boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
                     if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
                         vh = th - butSize.height - butSize2.height;
@@ -311,8 +311,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
         JButton tabsButton = ui.scrollableTabSupport.moreTabsButton;
         Rectangle selectedBounds = ui.tabPane.getSelectedIndex() > 0
-                                                                     ? new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()])
-                                                                     : new Rectangle(0, 0, 0, 0);
+                ? new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()])
+                : new Rectangle(0, 0, 0, 0);
         if (!verticalTabRuns) {
             int rightMargin = size.width - (insets.right + tabAreaInsets.right
                                             + insets.left + tabAreaInsets.left);
@@ -663,7 +663,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         int maxStart = ui.maxVisible < 0 || ui.maxVisible >= tabCount ? tabCount - 1 : ui.maxVisible;
         int currShift = isX ? ui.currentShiftXTmp + shift : ui.currentShiftYTmp + shift;
         Function<Integer, Boolean> isVisible = isX ? (i -> isVisibleX(i, currShift, minVal, returnAt))
-                                                   : (i -> isVisibleY(i, currShift, minVal, returnAt));
+                : (i -> isVisibleY(i, currShift, minVal, returnAt));
         if (isVisible.apply(minStart)) {
             // Descent to find minimum.
             min = minStart;

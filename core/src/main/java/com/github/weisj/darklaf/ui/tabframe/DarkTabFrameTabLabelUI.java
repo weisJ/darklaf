@@ -183,7 +183,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         String key = e.getPropertyName();
         if (TabFrameTab.KEY_SELECTED.equals(key)) {
             tabComponent.setForeground(Boolean.TRUE.equals(e.getNewValue())
-                                                                            ? selectedFontColor : defaultFontColor);
+                    ? selectedFontColor : defaultFontColor);
             tabComponent.repaint();
         } else if (TabFrameTab.KEY_TITLE.equals(key)) {
             updateText();
@@ -259,19 +259,19 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     public Color getBackground(final TabFrameTabLabel tab) {
         if (printing || !tab.isEnabled()) return tab.getBackground();
         return tab.isSelected()
-                  ? selectedColor
-                  : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                                 ? hoverColor
-                  : tab.getBackground();
+                ? selectedColor
+                : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                        ? hoverColor
+                : tab.getBackground();
     }
 
     public Color getForeground(final TabFrameTabLabel tab) {
         if (printing) return tab.getForeground();
         return tab.isSelected()
-                  ? selectedFontColor
-                  : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                                 ? fontHoverColor
-                  : tab.getForeground();
+                ? selectedFontColor
+                : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                        ? fontHoverColor
+                : tab.getForeground();
     }
 
     protected Icon getIcon() {

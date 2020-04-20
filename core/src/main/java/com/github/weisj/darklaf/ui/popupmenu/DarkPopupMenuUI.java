@@ -168,7 +168,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
                 invoker = ((JPopupMenu) invoker).getInvoker();
             }
             grabbedWindow = (invoker == null) ? null : ((invoker instanceof Window) ? (Window) invoker
-                                                                                    : SwingUtilities.getWindowAncestor(invoker));
+                    : SwingUtilities.getWindowAncestor(invoker));
             if (grabbedWindow != null) {
                 if (tk instanceof sun.awt.SunToolkit) {
                     ((sun.awt.SunToolkit) tk).grab(grabbedWindow);

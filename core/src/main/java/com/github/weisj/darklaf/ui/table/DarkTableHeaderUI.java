@@ -116,8 +116,8 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
         }
 
         Color borderColor = c.getBorder() instanceof DarkTableScrollPaneBorder
-                                                                               ? ((DarkTableScrollPaneBorder) c.getBorder()).getBorderColor()
-                                                                               : getBorderColor();
+                ? ((DarkTableScrollPaneBorder) c.getBorder()).getBorderColor()
+                : getBorderColor();
         g.setColor(borderColor);
 
         TableColumn draggedColumn = header.getDraggedColumn();

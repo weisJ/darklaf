@@ -209,9 +209,9 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     public Color getBackground(final TabFrameTabContainer tab) {
         if (printing) return tab.getBackground();
         return tab.isSelected()
-                  ? selectedColor
-                  : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                                 ? hoverColor
-                  : tab.getBackground();
+                ? selectedColor
+                : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
+                        ? hoverColor
+                : tab.getBackground();
     }
 }

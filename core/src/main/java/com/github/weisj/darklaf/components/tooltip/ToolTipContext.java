@@ -371,8 +371,8 @@ public class ToolTipContext {
         if (toolTip != null) {
             toolTip.putClientProperty(DarkTooltipUI.KEY_POINTER_LOCATION,
                                       alignment == Alignment.CENTER
-                                                ? centerAlignment.opposite()
-                                                : alignInside ? alignment : alignment.opposite());
+                                              ? centerAlignment.opposite()
+                                              : alignInside ? alignment : alignment.opposite());
             toolTip.putClientProperty(DarkTooltipUI.KEY_INSETS, insets);
             toolTip.putClientProperty(DarkTooltipUI.KEY_STYLE, style);
             toolTip.doLayout();
@@ -482,9 +482,9 @@ public class ToolTipContext {
             mousePoint = alignCenter(dim, mRect);
         } else {
             compPoint = alignInside ? alignInside(dim, rect)
-                                    : alignOutside(dim, rect);
+                    : alignOutside(dim, rect);
             mousePoint = alignInside ? alignInside(dim, mRect)
-                                     : alignOutside(dim, mRect);
+                    : alignOutside(dim, mRect);
         }
 
         return alignmentStrategy.align(compPoint, mousePoint);

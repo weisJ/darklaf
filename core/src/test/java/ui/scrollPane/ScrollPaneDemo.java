@@ -63,8 +63,9 @@ public final class ScrollPaneDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(scrollPane.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> scrollPane.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                       : ComponentOrientation.RIGHT_TO_LEFT));
+                addActionListener(e -> scrollPane.setComponentOrientation(isSelected()
+                        ? ComponentOrientation.LEFT_TO_RIGHT
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         }, "span");
 

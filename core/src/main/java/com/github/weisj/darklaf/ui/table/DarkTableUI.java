@@ -304,7 +304,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         int dist = header != null ? adjustDistance(header.getDraggedDistance(),
                                                    table.getCellRect(0, draggedIndex, true),
                                                    table)
-                                  : 0;
+                : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
         if (!scrollVisible) {
             if (ltr) {
@@ -539,11 +539,11 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
 
         JTableHeader header = table.getTableHeader();
         int draggedIndex = header != null ? viewIndexForColumn(header.getDraggedColumn())
-                                          : -1;
+                : -1;
         int dist = header != null ? adjustDistance(header.getDraggedDistance(),
                                                    table.getCellRect(row, draggedIndex, true),
                                                    table)
-                                  : 0;
+                : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
         Rectangle rectWithSpacing = table.getCellRect(row, cMin, true);
         Rectangle r = new Rectangle(cellRect);

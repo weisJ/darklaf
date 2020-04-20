@@ -175,7 +175,7 @@ public class ToggleSplitPane extends JSplitPane {
     public int getMinimumDividerLocation() {
         Component comp = getRightComponent();
         return comp == null ? 0 : getOrientation() == HORIZONTAL_SPLIT
-                                                ? comp.getMinimumSize().width
-                    : comp.getMinimumSize().height;
+                ? comp.getMinimumSize().width
+                : comp.getMinimumSize().height;
     }
 }

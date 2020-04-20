@@ -60,8 +60,9 @@ public class TextFieldDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setEnabled(true);
-                addActionListener(e -> textField.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                      : ComponentOrientation.RIGHT_TO_LEFT));
+                addActionListener(e -> textField.setComponentOrientation(isSelected()
+                        ? ComponentOrientation.LEFT_TO_RIGHT
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {

@@ -69,7 +69,7 @@ public class ToolTipUtil {
         Alignment[] alignments = getAlignments(isCenter ? originalCenter : original);
         Point pos = null;
         BiConsumer<ToolTipContext, Alignment> setter = isCenter ? ToolTipContext::setCenterAlignment
-                                                                : ToolTipContext::setAlignment;
+                : ToolTipContext::setAlignment;
         // Check if a position keeps the tooltip inside the window.
         for (Alignment a : alignments) {
             pos = tryPosition(a, context, p, tooltipBounds, windowBounds, screenBounds, setter);

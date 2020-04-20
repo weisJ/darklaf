@@ -149,8 +149,8 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         public Icon getIcon() {
             if (splitPane != null) {
                 return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT
-                                                                                 ? getRightOneTouchIcon()
-                                                                                 : getBottomOneTouchIcon();
+                        ? getRightOneTouchIcon()
+                        : getBottomOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }
@@ -161,8 +161,8 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         public Icon getIcon() {
             if (splitPane != null) {
                 return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT
-                                                                                 ? getLeftOneTouchIcon()
-                                                                                 : getTopOneTouchIcon();
+                        ? getLeftOneTouchIcon()
+                        : getTopOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }

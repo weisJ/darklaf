@@ -44,8 +44,8 @@ public interface StateIconUI {
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();
         return selected ? enabled ? hasFocus ? ui.getSelectedFocusedIcon() : ui.getSelectedIcon()
-                                  : ui.getSelectedDisabledIcon()
-                        : enabled ? hasFocus ? ui.getFocusedIcon() : ui.getIcon()
-                        : ui.getDisabledIcon();
+                : ui.getSelectedDisabledIcon()
+                : enabled ? hasFocus ? ui.getFocusedIcon() : ui.getIcon()
+                : ui.getDisabledIcon();
     }
 }

@@ -639,7 +639,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected Icon getIconForTab(final int tabIndex) {
         return (!tabPane.isEnabled() || !tabPane.isEnabledAt(tabIndex)) ? tabPane.getDisabledIconAt(tabIndex)
-                                                                        : tabPane.getIconAt(tabIndex);
+                : tabPane.getIconAt(tabIndex);
     }
 
     /**
@@ -840,7 +840,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
         int nudge = (isSelected ? DefaultLookup.getInt(tabPane, this, "TabbedPane.selectedLabelShift", -1)
-                                : DefaultLookup.getInt(tabPane, this, "TabbedPane.labelShift", 1));
+                : DefaultLookup.getInt(tabPane, this, "TabbedPane.labelShift", 1));
 
         switch (tabPlacement) {
             case BOTTOM :
@@ -1621,7 +1621,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
         return (horizRunCount > 0 ? horizRunCount * (maxTabHeight - tabRunOverlay) + tabRunOverlay +
                                     tabAreaInsets.top + tabAreaInsets.bottom
-                                  : 0);
+                : 0);
     }
 
     /**
@@ -1637,7 +1637,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
         return (vertRunCount > 0 ? vertRunCount * (maxTabWidth - tabRunOverlay) + tabRunOverlay +
                                    tabAreaInsets.left + tabAreaInsets.right
-                                 : 0);
+                : 0);
     }
 
     /**
@@ -1719,7 +1719,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int tabPlacement = tabPane.getTabPlacement();
         int current = DefaultLookup.getBoolean(tabPane, this,
                                                "TabbedPane.selectionFollowsFocus", true) ? tabPane.getSelectedIndex()
-                                                                                         : getFocusIndex();
+                                                       : getFocusIndex();
         int tabCount = tabPane.getTabCount();
         boolean leftToRight = tabPane.getComponentOrientation().isLeftToRight();
 
@@ -2046,11 +2046,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             case LEFT : {
                 if (run == 0) {
                     offset = (forward ? -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth)
-                                      : -maxTabWidth);
+                            : -maxTabWidth);
 
                 } else if (run == runCount - 1) {
                     offset = (forward ? maxTabWidth
-                                      : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
+                            : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
                 } else {
                     offset = (forward ? maxTabWidth : -maxTabWidth);
                 }
@@ -2059,10 +2059,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             case RIGHT : {
                 if (run == 0) {
                     offset = (forward ? maxTabWidth
-                                      : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
+                            : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
                 } else if (run == runCount - 1) {
                     offset = (forward ? -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth)
-                                      : -maxTabWidth);
+                            : -maxTabWidth);
                 } else {
                     offset = (forward ? maxTabWidth : -maxTabWidth);
                 }
@@ -2071,10 +2071,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             case BOTTOM : {
                 if (run == 0) {
                     offset = (forward ? maxTabHeight
-                                      : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
+                            : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
                 } else if (run == runCount - 1) {
                     offset = (forward ? -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight)
-                                      : -maxTabHeight);
+                            : -maxTabHeight);
                 } else {
                     offset = (forward ? maxTabHeight : -maxTabHeight);
                 }
@@ -2084,10 +2084,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             default : {
                 if (run == 0) {
                     offset = (forward ? -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight)
-                                      : -maxTabHeight);
+                            : -maxTabHeight);
                 } else if (run == runCount - 1) {
                     offset = (forward ? maxTabHeight
-                                      : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
+                            : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
                 } else {
                     offset = (forward ? maxTabHeight : -maxTabHeight);
                 }

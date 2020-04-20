@@ -57,7 +57,7 @@ public class TriCheckBoxDemo implements ComponentDemo {
             {
                 setSelected(button.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                   : ComponentOrientation.RIGHT_TO_LEFT));
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox("Rollover") {

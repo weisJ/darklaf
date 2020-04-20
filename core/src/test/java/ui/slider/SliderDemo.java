@@ -55,7 +55,7 @@ public class SliderDemo implements ComponentDemo {
                 addItem("Vertical");
                 setSelectedItem("Horizontal");
                 addItemListener(e -> slider.setOrientation(e.getItem() == "Vertical" ? JSlider.VERTICAL
-                                                                                     : JSlider.HORIZONTAL));
+                        : JSlider.HORIZONTAL));
             }
         });
         controlPanel = panel.addControls();
@@ -69,7 +69,7 @@ public class SliderDemo implements ComponentDemo {
             {
                 setSelected(slider.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> slider.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                   : ComponentOrientation.RIGHT_TO_LEFT));
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox("inverted") {
@@ -105,8 +105,8 @@ public class SliderDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox(DarkSliderUI.KEY_VARIANT + " = " + DarkSliderUI.VARIANT_VOLUME) {
             {
                 addActionListener(e -> slider.putClientProperty(DarkSliderUI.KEY_VARIANT, isSelected()
-                                                                                                       ? DarkSliderUI.VARIANT_VOLUME
-                                                                                                       : null));
+                        ? DarkSliderUI.VARIANT_VOLUME
+                        : null));
             }
         });
         controlPanel.add(new JCheckBox(DarkSliderUI.KEY_INSTANT_SCROLL) {

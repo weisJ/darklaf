@@ -55,7 +55,7 @@ public class LabelDemo implements ComponentDemo {
             {
                 setSelected(label.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> label.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                  : ComponentOrientation.RIGHT_TO_LEFT));
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         return panel;

@@ -510,11 +510,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                                       final int row, final boolean isExpanded,
                                       final boolean hasBeenExpanded, final boolean isLeaf) {
         final int containerWidth = tree.getParent() instanceof JViewport
-                                                                         ? tree.getParent().getWidth()
-                                                                         : tree.getWidth();
+                ? tree.getParent().getWidth()
+                : tree.getWidth();
         final int xOffset = tree.getParent() instanceof JViewport
-                                                                  ? ((JViewport) tree.getParent()).getViewPosition().x
-                                                                  : 0;
+                ? ((JViewport) tree.getParent()).getViewPosition().x
+                : 0;
 
         if (path != null) {
             boolean selected = tree.isPathSelected(path);

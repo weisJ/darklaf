@@ -64,8 +64,9 @@ public class ProgressBarDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(progressBar.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> progressBar.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                        : ComponentOrientation.RIGHT_TO_LEFT));
+                addActionListener(e -> progressBar.setComponentOrientation(isSelected()
+                        ? ComponentOrientation.LEFT_TO_RIGHT
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox("String painted") {

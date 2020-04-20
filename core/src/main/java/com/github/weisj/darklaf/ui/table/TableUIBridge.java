@@ -240,7 +240,7 @@ public abstract class TableUIBridge extends TableUI {
      */
     protected static int getAdjustedLead(final JTable table, final boolean row) {
         return row ? getAdjustedLead(table, row, table.getSelectionModel())
-                   : getAdjustedLead(table, row, table.getColumnModel().getSelectionModel());
+                : getAdjustedLead(table, row, table.getColumnModel().getSelectionModel());
     }
 
     /**
@@ -1452,7 +1452,7 @@ public abstract class TableUIBridge extends TableUI {
                             boolean ltr = table.getComponentOrientation().isLeftToRight();
 
                             newColumn = forwards ? (ltr ? table.getColumnCount() : 0)
-                                                 : (ltr ? 0 : table.getColumnCount());
+                                    : (ltr ? 0 : table.getColumnCount());
 
                         }
                         this.dx = newColumn - leadColumn;

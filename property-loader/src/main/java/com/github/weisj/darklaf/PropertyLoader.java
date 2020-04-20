@@ -214,8 +214,8 @@ public final class PropertyLoader {
             final Color color = ColorUtil.fromHex(value, null);
             final Integer invVal = getInteger(value);
             final Boolean boolVal = PropertyValue.TRUE.equalsIgnoreCase(value)
-                                                 ? Boolean.TRUE
-                                                 : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
+                    ? Boolean.TRUE
+                    : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
             if (color != null && (value.length() == 6 || value.length() == 8)) {
                 return new ColorUIResource(color);
             } else if (invVal != null) {
@@ -257,11 +257,11 @@ public final class PropertyLoader {
                            "Maybe is a forward reference");
         }
         Object returnVal = accumulatorContainsKey ? accumulator.get(val)
-                                                  : currentDefault.get(val);
+                : currentDefault.get(val);
         if (addReferenceInfo) {
             if (returnVal == null) {
                 returnVal = accumulatorContainsKey ? accumulator.get(referenceFreeKey)
-                                                   : currentDefault.get(val);
+                        : currentDefault.get(val);
             }
             returnVal = new Pair<>(value, returnVal);
         }

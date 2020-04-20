@@ -85,7 +85,7 @@ public class DefaultThemeProvider implements ThemeProvider {
         boolean dark = themeStyle.getColorToneRule() == ColorToneRule.DARK;
         boolean highContrast = themeStyle.getContrastRule() == ContrastRule.HIGH_CONTRAST;
         Theme theme = dark ? highContrast ? darkHighContrastTheme : darkTheme
-                           : highContrast ? lightHighContrastTheme : lightTheme;
+                : highContrast ? lightHighContrastTheme : lightTheme;
 
         return theme.derive(themeStyle.getFontSizeRule(), themeStyle.getAccentColorRule());
     }

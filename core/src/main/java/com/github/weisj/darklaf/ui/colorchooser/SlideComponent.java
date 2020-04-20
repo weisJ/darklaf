@@ -261,13 +261,13 @@ class SlideComponent extends JComponent implements ColorListener {
     @Override
     public Dimension getPreferredSize() {
         return vertical ? new Dimension(22, 100)
-                        : new Dimension(100, 22);
+                : new Dimension(100, 22);
     }
 
     @Override
     public Dimension getMinimumSize() {
         return vertical ? new Dimension(22, 50)
-                        : new Dimension(50, 22);
+                : new Dimension(50, 22);
     }
 
     @Override

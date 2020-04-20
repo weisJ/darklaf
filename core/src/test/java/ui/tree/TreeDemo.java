@@ -85,7 +85,7 @@ public class TreeDemo implements ComponentDemo {
             {
                 setSelected(tree.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> tree.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                 : ComponentOrientation.RIGHT_TO_LEFT));
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox("show root handles") {

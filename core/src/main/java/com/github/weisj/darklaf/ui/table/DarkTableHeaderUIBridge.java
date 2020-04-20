@@ -713,10 +713,10 @@ public class DarkTableHeaderUIBridge extends BasicTableHeaderUI {
 
             if (th.getComponentOrientation().isLeftToRight()) {
                 newIndex = leftArrow ? ui.selectPreviousColumn(doIt)
-                                     : ui.selectNextColumn(doIt);
+                        : ui.selectNextColumn(doIt);
             } else {
                 newIndex = leftArrow ? ui.selectNextColumn(doIt)
-                                     : ui.selectPreviousColumn(doIt);
+                        : ui.selectPreviousColumn(doIt);
             }
 
             if (newIndex != oldIndex) {

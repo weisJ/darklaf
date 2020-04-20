@@ -65,7 +65,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
             return;
         }
         JScrollBar scrollbar = e.isShiftDown() ? scrollpane.getHorizontalScrollBar()
-                                               : scrollpane.getVerticalScrollBar();
+                : scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
         ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
                                scrollpane.getComponentOrientation().isLeftToRight());

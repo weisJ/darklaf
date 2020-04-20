@@ -173,8 +173,8 @@ public class WindowsTitlePane extends CustomTitlePane {
     public Insets getWindowSizeAdjustment() {
         // Compensate for the insets of the native window peer that include the decorations.
         Insets insets = window != null && windowHandle != 0
-                                                            ? window.getInsets()
-                                                            : new Insets(0, 0, 0, 0);
+                ? window.getInsets()
+                : new Insets(0, 0, 0, 0);
         insets.set(-insets.top, -insets.left, -insets.bottom, -insets.right);
         return insets;
     }
@@ -566,7 +566,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     protected boolean isLeftToRight(final Window window) {
         return (window == null) ? getRootPane().getComponentOrientation().isLeftToRight()
-                                : window.getComponentOrientation().isLeftToRight();
+                : window.getComponentOrientation().isLeftToRight();
     }
 
     private void updateSystemIcon() {
@@ -703,7 +703,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                                                                                                       .getIconHeight(),
                                                                                       windowIconButton.getIcon()
                                                                                                       .getIconWidth())
-                                                                           : ICON_WIDTH;
+                        : ICON_WIDTH;
                 windowButtonWidth = Math.min(ICON_WIDTH, windowButtonWidth);
                 windowIconButton.setBounds(start + PAD, y, windowButtonWidth, height);
                 start += windowButtonWidth + 2 * PAD;

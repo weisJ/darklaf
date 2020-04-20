@@ -127,7 +127,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         try {
             String hexStr = String.format("%1$-" + 8 + "s", textHex.getText()).replaceAll(" ", "F");
             int alpha = isColorTransparencySelectionEnabled()
-                                                              ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
+                    ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
             return new Color(Integer.valueOf(hexStr.substring(0, 2), 16),
                              Integer.valueOf(hexStr.substring(2, 4), 16),
                              Integer.valueOf(hexStr.substring(4, 6), 16),

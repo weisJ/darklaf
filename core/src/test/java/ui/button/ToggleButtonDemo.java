@@ -58,7 +58,7 @@ public class ToggleButtonDemo implements ComponentDemo {
             {
                 setSelected(button.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                   : ComponentOrientation.RIGHT_TO_LEFT));
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TREE_EDITOR) {

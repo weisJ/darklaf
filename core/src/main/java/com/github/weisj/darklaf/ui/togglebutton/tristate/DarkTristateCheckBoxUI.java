@@ -57,7 +57,7 @@ public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
             if (((TristateCheckBox) b).getTristateModel().isIndeterminate()) {
                 if (b.isEnabled()) {
                     return b.hasFocus() ? checkBoxIndeterminateFocusedIcon
-                                        : checkBoxIndeterminateIcon;
+                            : checkBoxIndeterminateIcon;
                 } else {
                     return checkBoxIndeterminateDisabledIcon;
                 }

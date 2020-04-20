@@ -350,7 +350,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         Boolean prop = (Boolean) chooser.getClientProperty("FileChooser.useShellFolder");
 
         return prop == null ? chooser.getFileSystemView().equals(FileSystemView.getFileSystemView())
-                            : prop;
+                : prop;
     }
 
     public void uninstallUI() {
@@ -1275,8 +1275,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 return f.isDirectory() ? null : f.length();
             }
             return (col == COLUMN_FILENAME)
-                                            ? f // always return the file itself for the 1st column
-                                            : ShellFolder.getFolderColumnValue(f, columnMap[col]);
+                    ? f // always return the file itself for the 1st column
+                    : ShellFolder.getFolderColumnValue(f, columnMap[col]);
         }
 
         public void intervalAdded(final ListDataEvent e) {
@@ -1453,8 +1453,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             Integer alignment = columnInfo.getAlignment();
             if (alignment == null) {
                 alignment = (value instanceof Number)
-                                                      ? SwingConstants.RIGHT
-                                                      : SwingConstants.LEADING;
+                        ? SwingConstants.RIGHT
+                        : SwingConstants.LEADING;
             }
 
             setHorizontalAlignment(alignment);

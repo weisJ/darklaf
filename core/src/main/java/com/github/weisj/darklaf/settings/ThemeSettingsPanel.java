@@ -156,7 +156,7 @@ public class ThemeSettingsPanel extends JPanel {
         }
         if (ignoreSettings || isFontSizeFollowsSystem()) {
             setFontSizeRule(isFontSizeFollowsSystem() ? theme.getFontSizeRule()
-                                                      : currentTheme.getFontSizeRule());
+                    : currentTheme.getFontSizeRule());
         }
         if (ignoreSettings || isAccentColorFollowsSystem()) {
             setAccentColor(getAccentColor(isAccentColorFollowsSystem() ? theme : currentTheme, true));
@@ -349,8 +349,8 @@ public class ThemeSettingsPanel extends JPanel {
 
     protected Theme getTheme(final PreferredThemeStyle preferredThemeStyle) {
         return isThemeFollowsSystem()
-                                      ? LafManager.themeForPreferredStyle(preferredThemeStyle)
-                                      : (Theme) themeComboBox.getSelectedItem();
+                ? LafManager.themeForPreferredStyle(preferredThemeStyle)
+                : (Theme) themeComboBox.getSelectedItem();
     }
 
     public FontSizeRule getFontSizeRule() {
@@ -361,8 +361,8 @@ public class ThemeSettingsPanel extends JPanel {
     protected FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
         if (theme == null) return FontSizeRule.getDefault();
         return isFontSizeFollowsSystem()
-                                         ? preferredThemeStyle.getFontSizeRule()
-                                         : FontSizeRule.relativeAdjustment(fontSlider.getValue());
+                ? preferredThemeStyle.getFontSizeRule()
+                : FontSizeRule.relativeAdjustment(fontSlider.getValue());
     }
 
     public AccentColorRule getAccentColorRule() {
@@ -379,14 +379,14 @@ public class ThemeSettingsPanel extends JPanel {
 
     protected Color getAccentColor(final Theme theme, final boolean useThemeColor) {
         return theme.supportsCustomAccentColor() ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
-                                                                 : getSelectedColor(bgAccent, defaultAccent)
-                                                 : null;
+                : getSelectedColor(bgAccent, defaultAccent)
+                : null;
     }
 
     protected Color getSelectionColor(final Theme theme, final boolean useThemeColor) {
         return theme.supportsCustomSelectionColor() ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
-                                                                    : getSelectedColor(bgSelection, defaultSelection)
-                                                    : null;
+                : getSelectedColor(bgSelection, defaultSelection)
+                : null;
     }
 
     public void setEnabledSystemPreferences(final boolean enabled) {

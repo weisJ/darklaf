@@ -177,8 +177,8 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void setAlignment(final Alignment alignment) {
         if (alignment == null || this.alignment == Alignment.CENTER) {
             throw new IllegalArgumentException("Illegal alignment: " + (alignment != null
-                                                                                          ? alignment.toString()
-                                                                                          : "null"));
+                    ? alignment.toString()
+                    : "null"));
         }
         Alignment old = this.alignment;
         this.alignment = alignment;

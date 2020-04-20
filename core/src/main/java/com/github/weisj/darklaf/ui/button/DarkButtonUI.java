@@ -371,7 +371,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         Object colorClick = c.getClientProperty(KEY_CLICK_COLOR);
         boolean armed = c.getModel().isArmed();
         return armed ? colorClick instanceof Color ? (Color) colorClick : borderlessClick
-                     : colorHover instanceof Color ? (Color) colorHover : borderlessHover;
+                : colorHover instanceof Color ? (Color) colorHover : borderlessHover;
     }
 
     protected Color getBorderlessOutline(final AbstractButton c) {
@@ -409,8 +409,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                                                   b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
                                                   viewRect, iconRect, textRect,
                                                   b.getText() == null || ButtonConstants.isIconOnly(b)
-                                                                                                       ? 0
-                                                                                                       : b.getIconTextGap());
+                                                          ? 0
+                                                          : b.getIconTextGap());
     }
 
     @Override

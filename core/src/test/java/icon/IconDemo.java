@@ -74,7 +74,7 @@ public class IconDemo implements ComponentDemo {
             {
                 putClientProperty("JToggleButton.variant", "slider");
                 addActionListener(e -> LafManager.installTheme(isSelected() ? new DarculaTheme()
-                                                                            : new IntelliJTheme()));
+                        : new IntelliJTheme()));
             }
         });
         controlPanel.add(new QuickColorChooser("Themed icon color", UIManager.getColor("TestIcon.color"),

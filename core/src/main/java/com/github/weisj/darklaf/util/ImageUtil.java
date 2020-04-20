@@ -145,8 +145,8 @@ public final class ImageUtil {
     public static BufferedImage createCompatibleTranslucentImage(final int width,
                                                                  final int height) {
         return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-                            : getGraphicsConfiguration().createCompatibleImage(width, height,
-                                                                               Transparency.TRANSLUCENT);
+                : getGraphicsConfiguration().createCompatibleImage(width, height,
+                                                                   Transparency.TRANSLUCENT);
     }
 
     private static boolean isHeadless() {

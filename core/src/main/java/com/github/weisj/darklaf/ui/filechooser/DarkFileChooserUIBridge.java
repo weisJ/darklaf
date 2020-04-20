@@ -926,8 +926,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             directories.clear();
 
             File[] baseFolders = (useShellFolder)
-                                                  ? (File[]) ShellFolder.get("fileChooserComboBoxFolders")
-                                                  : fsv.getRoots();
+                    ? (File[]) ShellFolder.get("fileChooserComboBoxFolders")
+                    : fsv.getRoots();
             directories.addAll(Arrays.asList(baseFolders));
 
             // Get the canonical (full) path. This has the side
@@ -944,7 +944,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             // create File instances of each directory leading up to the top
             try {
                 File sf = useShellFolder ? ShellFolder.getShellFolder(canonical)
-                                         : canonical;
+                        : canonical;
                 File f = sf;
                 Vector<File> path = new Vector<>(10);
                 do {

@@ -340,8 +340,8 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             return new Dimension(plainThumbRadius + 6, plainThumbRadius + 6);
         }
         return isHorizontal()
-                              ? new Dimension(thumbSize.width, thumbSize.height)
-                              : new Dimension(thumbSize.height, thumbSize.width);
+                ? new Dimension(thumbSize.width, thumbSize.height)
+                : new Dimension(thumbSize.height, thumbSize.width);
     }
 
     @Override
@@ -818,7 +818,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
         private int getSnappedValue(final MouseEvent e) {
             int value = isHorizontal() ? valueForXPosition(e.getX())
-                                       : valueForYPosition(e.getY());
+                    : valueForYPosition(e.getY());
             return DarkSliderUI.this.getSnappedValue(value);
         }
     }

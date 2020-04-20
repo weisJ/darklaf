@@ -218,8 +218,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 int b = Integer.valueOf(hexStr.substring(4, 6), 16);
                 checkRange(b, 0, 255);
                 int alpha = hexStr.length() >= 8
-                                                 ? Integer.valueOf(hexStr.substring(6, 8), 16)
-                                                 : 255;
+                        ? Integer.valueOf(hexStr.substring(6, 8), 16)
+                        : 255;
                 checkRange(alpha, 0, 255);
                 return new Color(r, g, b, alpha);
             } else {

@@ -378,9 +378,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
         public void setFocus(final boolean focus) {
             putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, focus ? ui.headerButtonFocusHoverBackground
-                                                                  : ui.headerButtonHoverBackground);
+                    : ui.headerButtonHoverBackground);
             putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, focus ? ui.headerButtonFocusClickBackground
-                                                                  : ui.headerButtonClickBackground);
+                    : ui.headerButtonClickBackground);
         }
     }
 }

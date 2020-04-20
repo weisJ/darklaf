@@ -150,11 +150,11 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 if (child == ui.tabContainer) {
 
                     int tabContainerWidth = totalTabWidth == 0 ? bounds.width
-                                                               : totalTabWidth + insets.left + insets.right +
-                                                                 contentInsets.left + contentInsets.right;
+                            : totalTabWidth + insets.left + insets.right +
+                              contentInsets.left + contentInsets.right;
                     int tabContainerHeight = totalTabHeight == 0 ? bounds.height
-                                                                 : totalTabHeight + insets.top + insets.bottom +
-                                                                   contentInsets.top + contentInsets.bottom;
+                            : totalTabHeight + insets.top + insets.bottom +
+                              contentInsets.top + contentInsets.bottom;
 
                     int tabContainerX = 0;
                     int tabContainerY = 0;

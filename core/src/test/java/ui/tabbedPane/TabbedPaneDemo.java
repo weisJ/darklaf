@@ -99,8 +99,9 @@ public class TabbedPaneDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(tabbedPane.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> tabbedPane.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                       : ComponentOrientation.RIGHT_TO_LEFT));
+                addActionListener(e -> tabbedPane.setComponentOrientation(isSelected()
+                        ? ComponentOrientation.LEFT_TO_RIGHT
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_CENTER_TABS) {

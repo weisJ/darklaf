@@ -118,15 +118,15 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         Rectangle drawRect = getDrawingRect(getComponent());
         Rectangle textRect = getTextRect(getComponent());
         int rightBoundary = getComponent().getText().isEmpty()
-                                                               ? drawRect.x + drawRect.width
-                                                               : getClearIconCoord().x;
+                ? drawRect.x + drawRect.width
+                : getClearIconCoord().x;
         boolean insideTextArea = drawRect.contains(p) && p.x >= textRect.x && p.x < rightBoundary;
         if (insideTextArea) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
             Cursor cursor = action == ClickAction.NONE
-                                                       ? Cursor.getDefaultCursor()
-                                                       : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                    ? Cursor.getDefaultCursor()
+                    : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
             getComponent().setCursor(cursor);
         }
     }

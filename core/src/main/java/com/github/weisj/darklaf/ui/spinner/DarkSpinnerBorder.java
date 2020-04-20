@@ -78,8 +78,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
             JComponent editor = spinner.getEditor();
             if (editor != null) {
                 int off = spinner.getComponentOrientation().isLeftToRight()
-                                                                            ? editor.getBounds().x + editor.getWidth()
-                                                                            : editor.getBounds().x - 1 - borderSize;
+                        ? editor.getBounds().x + editor.getWidth()
+                        : editor.getBounds().x - 1 - borderSize;
                 g.setColor(getBorderColor(spinner));
                 if (!treeCellEditor) {
                     g.fillRect(off, size, 1, height - 2 * size);

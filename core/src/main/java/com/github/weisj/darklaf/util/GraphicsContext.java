@@ -55,7 +55,7 @@ public class GraphicsContext {
     public GraphicsContext setAntialiasing(final boolean on) {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     on ? RenderingHints.VALUE_ANTIALIAS_ON
-                                       : RenderingHints.VALUE_ANTIALIAS_OFF);
+                                            : RenderingHints.VALUE_ANTIALIAS_OFF);
         return this;
     }
 

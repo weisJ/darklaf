@@ -309,7 +309,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             ToolTipStyle style = getStyle(comp.getClientProperty(KEY_STYLE));
             ToolTipStyle tooltipStyle = getStyle(toolTip.getClientProperty(KEY_STYLE));
             toolTip.putClientProperty(KEY_STYLE, style != null ? style : tooltipStyle != null ? tooltipStyle
-                                                       : ToolTipStyle.PLAIN_BALLOON);
+                    : ToolTipStyle.PLAIN_BALLOON);
         }
     }
 

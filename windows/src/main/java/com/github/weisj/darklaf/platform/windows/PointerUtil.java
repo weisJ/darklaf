@@ -40,7 +40,7 @@ public class PointerUtil {
      */
     public static long getHWND(final Component component) {
         Window window = component instanceof Window ? (Window) component
-                                                    : SwingUtilities.getWindowAncestor(component);
+                : SwingUtilities.getWindowAncestor(component);
         return Native.getComponentID(window);
     }
 }

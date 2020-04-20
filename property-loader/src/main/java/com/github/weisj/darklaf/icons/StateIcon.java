@@ -81,9 +81,9 @@ public class StateIcon implements Icon {
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.hasFocus();
         Icon icn = selected ? enabled ? hasFocus ? selectedFocusedIcon : selectedIcon
-                                      : selectedDisabledIcon
-                            : enabled ? hasFocus ? focusedIcon : icon
-                            : disabledIcon;
+                : selectedDisabledIcon
+                : enabled ? hasFocus ? focusedIcon : icon
+                : disabledIcon;
         return icn != null ? icn : EmptyIcon.create(0);
     }
 

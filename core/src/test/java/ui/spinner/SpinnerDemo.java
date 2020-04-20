@@ -55,14 +55,14 @@ public class SpinnerDemo implements ComponentDemo {
             {
                 setSelected(spinner.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> spinner.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                                                                                    : ComponentOrientation.RIGHT_TO_LEFT));
+                        : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox(SpinnerConstants.KEY_VARIANT + " = " + SpinnerConstants.VARIANT_PLUS_MINUS) {
             {
                 addActionListener(e -> spinner.putClientProperty(SpinnerConstants.KEY_VARIANT,
                                                                  isSelected() ? SpinnerConstants.VARIANT_PLUS_MINUS
-                                                                              : null));
+                                                                         : null));
             }
         });
         controlPanel.add(new JCheckBox(SpinnerConstants.KEY_IS_TREE_EDITOR) {
