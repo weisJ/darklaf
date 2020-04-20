@@ -20,35 +20,40 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.graphics;
 
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.geom.AffineTransform;
-import java.beans.PropertyChangeEvent;
-import java.util.Objects;
 
-public class DarkSwingUtil {
+import javax.swing.*;
 
-    public static int setAltGraphMask(final int modifier) {
-        return (modifier | InputEvent.ALT_GRAPH_DOWN_MASK);
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.graphics.ColorWrapper;
+
+public class ThemedColor extends ColorWrapper {
+
+    protected Theme currentTheme;
+    private final String key;
+
+    public ThemedColor() {
+        this(null);
     }
 
-    public static boolean isScaleChanged(final PropertyChangeEvent ev) {
-        return isScaleChanged(ev.getPropertyName(), ev.getOldValue(), ev.getNewValue());
+    public ThemedColor(final String key) {
+        super(null);
+        this.key = key;
     }
 
-    public static boolean isScaleChanged(final String name, final Object oldValue, final Object newValue) {
-        if (oldValue != newValue && "graphicsConfiguration".equals(name)) {
-            GraphicsConfiguration newGC = (GraphicsConfiguration) oldValue;
-            GraphicsConfiguration oldGC = (GraphicsConfiguration) newValue;
-            AffineTransform newTx = newGC != null ? newGC.getDefaultTransform() : null;
-            AffineTransform oldTx = oldGC != null ? oldGC.getDefaultTransform() : null;
-            return !Objects.equals(newTx, oldTx);
-        } else {
-            return false;
+    @Override
+    public Color getColor() {
+        if (super.getColor() == null || currentTheme != LafManager.getTheme()) {
+            setColor(getUpdatedColor());
         }
+        return super.getColor();
+    }
+
+    protected Color getUpdatedColor() {
+        return UIManager.getColor(key);
     }
 }

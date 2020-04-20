@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.decorators.UpdateDocumentListener;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPreviewComponent;
 import com.github.weisj.darklaf.ui.colorchooser.ColorTriangle;
@@ -46,7 +47,6 @@ import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class SmallColorChooser extends JPanel {
 
@@ -153,7 +153,7 @@ public class SmallColorChooser extends JPanel {
         colorModelTabbedPane = new JTabbedPane();
         colorModelTabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS, true);
         colorModelTabbedPane.setOpaque(false);
-        colorModelTabbedPane.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
+        colorModelTabbedPane.setBackground(PaintUtil.TRANSPARENT_COLOR);
         addColorModels(colorModelTabbedPane, COLOR_MODELS);
         colorModelTabbedPane.setBorder(DarkBorders.createLineBorder(1, 0, 1, 0));
         return colorModelTabbedPane;

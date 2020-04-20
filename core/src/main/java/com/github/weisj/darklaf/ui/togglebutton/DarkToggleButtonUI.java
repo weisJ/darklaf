@@ -34,10 +34,10 @@ import javax.swing.plaf.basic.BasicButtonListener;
 
 import sun.swing.SwingUtilities2;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -103,29 +103,29 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
         if (c.hasFocus()) {
             g.translate(-borderSize, -borderSize);
-            DarkUIUtil.paintFocusBorder(g, bounds.width + 2 * borderSize,
-                                        bounds.height + 2 * borderSize,
-                                        bounds.height, borderSize);
+            PaintUtil.paintFocusBorder(g, bounds.width + 2 * borderSize,
+                                       bounds.height + 2 * borderSize,
+                                       bounds.height, borderSize);
             g.translate(borderSize, borderSize);
         }
 
         g.setColor(getBackgroundColor(c));
-        DarkUIUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
+        PaintUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
         g.setColor(getToggleBorderColor(c));
-        DarkUIUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height);
+        PaintUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height);
 
         int size = bounds.height - 2;
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         if (c.isSelected()) {
             g.setColor(getSliderColor(c));
-            DarkUIUtil.fillRoundRect(g, bounds.width - size - 1, 1, size, size, size);
+            PaintUtil.fillRoundRect(g, bounds.width - size - 1, 1, size, size, size);
             g.setColor(getSliderBorderColor(c));
-            DarkUIUtil.paintLineBorder(g, bounds.width - size - 1, 1, size, size, size);
+            PaintUtil.paintLineBorder(g, bounds.width - size - 1, 1, size, size, size);
         } else {
             g.setColor(getSliderColor(c));
-            DarkUIUtil.fillRoundRect(g, 1, 1, size, size, size);
+            PaintUtil.fillRoundRect(g, 1, 1, size, size, size);
             g.setColor(getSliderBorderColor(c));
-            DarkUIUtil.paintLineBorder(g, 1, 1, size, size, size);
+            PaintUtil.paintLineBorder(g, 1, 1, size, size, size);
         }
         g.translate(-bounds.x, -bounds.y);
         config.restore();

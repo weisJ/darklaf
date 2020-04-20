@@ -33,9 +33,10 @@ import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -174,18 +175,18 @@ public class DarkButtonBorder implements Border, UIResource {
         int fw = width - focusIns.left - focusIns.right;
         int fh = (by + bh + borderSize - fy) - focusIns.top - focusIns.bottom;
 
-        if (c.isEnabled() && paintShadow && DarkUIUtil.getShadowComposite().getAlpha() != 0) {
+        if (c.isEnabled() && paintShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
             paintShadow((Graphics2D) g, bx, by, bw, bh, arc);
         }
 
         if (paintFocus(c)) {
             g.translate(fx, fy);
-            DarkUIUtil.paintFocusBorder(g2, fw, fh, focusArc, borderSize);
+            PaintUtil.paintFocusBorder(g2, fw, fh, focusArc, borderSize);
             g.translate(-fx, -fy);
         }
 
         g2.setColor(getBorderColor(c, focus));
-        DarkUIUtil.paintLineBorder(g2, bx, by, bw, bh, arc);
+        PaintUtil.paintLineBorder(g2, bx, by, bw, bh, arc);
         if (corner != null) {
             paintNeighbourFocus(g2, c, width, height);
         }
@@ -200,8 +201,8 @@ public class DarkButtonBorder implements Border, UIResource {
             int h = height - Math.max(0, getShadowSize(left) - borderSize);
             int arc = getFocusArc(left);
             g2.translate(-2 * borderSize, 0);
-            DarkUIUtil.paintLineBorder(g2, -borderSize, borderSize, 3 * borderSize, h, arc);
-            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, h, arc, borderSize);
+            PaintUtil.paintLineBorder(g2, -borderSize, borderSize, 3 * borderSize, h, arc);
+            PaintUtil.paintFocusBorder(g2, 3 * borderSize, h, arc, borderSize);
             g2.translate(2 * borderSize, 0);
         }
         JComponent right = ButtonConstants.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
@@ -210,23 +211,23 @@ public class DarkButtonBorder implements Border, UIResource {
         if (paintRight) {
             int h = height - Math.max(0, getShadowSize(right) - borderSize);
             g2.translate(width - borderSize, 0);
-            DarkUIUtil.paintFocusBorder(g2, 3 * borderSize, h, getFocusArc(right), borderSize);
+            PaintUtil.paintFocusBorder(g2, 3 * borderSize, h, getFocusArc(right), borderSize);
             g2.translate(borderSize - width, 0);
         }
         JComponent top = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
         boolean paintTop = DarkUIUtil.hasFocus(top);
         if (paintTop) {
             g2.translate(0, -2 * borderSize);
-            DarkUIUtil.paintFocusBorder(g2, width, 3 * borderSize,
-                                        getFocusArc(top), borderSize);
+            PaintUtil.paintFocusBorder(g2, width, 3 * borderSize,
+                                       getFocusArc(top), borderSize);
             g2.translate(0, 2 * borderSize);
         }
         JComponent bottom = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
         boolean paintBottom = DarkUIUtil.hasFocus(bottom);
         if (paintBottom) {
             g2.translate(0, height - borderSize);
-            DarkUIUtil.paintFocusBorder(g2, width, 3 * borderSize,
-                                        getFocusArc(bottom), borderSize);
+            PaintUtil.paintFocusBorder(g2, width, 3 * borderSize,
+                                       getFocusArc(bottom), borderSize);
             g2.translate(0, borderSize - height);
         }
     }
@@ -245,7 +246,7 @@ public class DarkButtonBorder implements Border, UIResource {
         Area shadowShape = new Area(new RoundRectangle2D.Double(x, y, width, height + shadowSize, arc, arc));
         Area innerArea = new Area(new RoundRectangle2D.Double(x, y, width, height, arc, arc));
         shadowShape.subtract(innerArea);
-        g2.setComposite(DarkUIUtil.getShadowComposite());
+        g2.setComposite(PaintUtil.getShadowComposite());
         g2.setColor(shadowColor);
         g2.fill(shadowShape);
         context.restore();

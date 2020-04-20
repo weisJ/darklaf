@@ -34,12 +34,12 @@ import javax.swing.*;
 import javax.swing.plaf.SliderUI;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.color.ThemedColor;
 import com.github.weisj.darklaf.components.ColoredRadioButton;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
+import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
 import com.github.weisj.darklaf.theme.Theme;

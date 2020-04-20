@@ -42,14 +42,14 @@ import javax.swing.text.*;
 import sun.awt.SunToolkit;
 import sun.swing.DefaultLookup;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
-import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -212,7 +212,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         g.setColor(getBackground(c));
         Rectangle r = getDrawingRect(c);
         int arc = getArcSize(c);
-        DarkUIUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
+        PaintUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
     }
 
     public Rectangle getDrawingRect(final JTextComponent c) {
@@ -340,9 +340,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 km.clear();
                 if (accelerator != '\0') {
                     km.put(KeyStroke.getKeyStroke(accelerator, getFocusAcceleratorKeyMask()), "requestFocus");
-                    km.put(KeyStroke
-                                    .getKeyStroke(accelerator,
-                                                  DarkSwingUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
+                    km.put(KeyStroke.getKeyStroke(accelerator,
+                                                  DarkUIUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
                            "requestFocus");
                 }
             }

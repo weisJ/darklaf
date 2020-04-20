@@ -57,7 +57,7 @@ import com.github.weisj.darklaf.util.PropertyValue;
  */
 public final class PropertyLoader {
     private static final Logger LOGGER = Logger.getLogger(PropertyLoader.class.getName());
-    private static final IconLoader ICON_LOADER = IconLoader.get();
+    private static final IconLoader ICON_LOADER = IconLoader.get(IconLoader.class);
     private static final char INT_LIST_START = '[';
     private static final char INT_LIST_END = ']';
     private static final String DUAL_KEY = "[dual]";

@@ -26,10 +26,10 @@ package com.github.weisj.darklaf.icons;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,10 +41,8 @@ import javax.swing.*;
 public final class IconLoader {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
-    private static final IconLoader instance = new IconLoader(IconLoader.class);
+    private static IconLoader instance;
 
-    private static final Map<UIAwareIcon, AwareIconStyle> uiAwareIconStatus = new WeakHashMap<>();
-    private static final Map<ThemedSVGIcon, Object> themedIconStatus = new WeakHashMap<>();
     private static Object currentThemeKey;
     private static AwareIconStyle currentAwareStyle;
 
@@ -59,10 +57,21 @@ public final class IconLoader {
         iconLoaderMap.put(parentClass, this);
     }
 
+    /**
+     * Get the default icon loader which resolves resources from the root directory of the jar.
+     *
+     * @return the default icon loader.
+     */
     public static IconLoader get() {
+        if (instance == null) instance = get(null);
         return instance;
     }
 
+    /**
+     * Get an icon loader which resolves resources from the class directory of the parent class.
+     *
+     * @return the default icon loader.
+     */
     public static IconLoader get(final Class<?> parentClass) {
         if (iconLoaderMap.containsKey(parentClass)) {
             return iconLoaderMap.get(parentClass);
@@ -73,32 +82,73 @@ public final class IconLoader {
         }
     }
 
+    /**
+     * Updates the style of aware icons.
+     * Changing it will force aware icons to change their appearance accordingly.
+     *
+     * @param style the new style.
+     */
     public static void updateAwareStyle(final AwareIconStyle style) {
         currentAwareStyle = style;
     }
 
+    /**
+     * Updates the object associated with the current theme.
+     * Changing it will force themed icons to refresh their colors.
+     * This doesn't need to be any specific type as it is simply a marker object.
+     *
+     * @param theme the new theme object.
+     */
     public static void updateThemeStatus(final Object theme) {
         currentThemeKey = theme;
     }
 
+    /**
+     * Get the current aware icon style.
+     *
+     * @return the aware icon style.
+     */
     public static AwareIconStyle getAwareStyle() {
         return currentAwareStyle;
     }
 
+    /**
+     * Get the object associated to the current theme.
+     * This may not be any specific type as it is simply a marker object.
+     *
+     * @return the current theme object.
+     */
     public static Object getThemeStatus() {
         return currentThemeKey;
     }
 
+    /**
+     * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource will be
+     * resolved to [path]/dark/[icon_path] and [path]/light/[icon_path]
+     * Uses 16x16 icons by default.
+     *
+     * @param  path the path to the icon resource described as above.
+     * @return      the icon.
+     */
     public DarkUIAwareIcon getUIAwareIcon(final String path) {
         return getUIAwareIcon(path, DEFAULT_W, DEFAULT_H);
     }
 
+    /**
+     * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource will be
+     * resolved to [path]/dark/[icon_path] and [path]/light/[icon_path]
+     *
+     * @param  path the path to the icon resource described as above.
+     * @param  w    the icon width.
+     * @param  h    the icon height.
+     * @return      the icon.
+     */
     public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
         if (awareIconMap.containsKey(key)) {
             return awareIconMap.get(key);
         } else {
-            DarkUIAwareIcon icon = create(path, w, h);
+            DarkUIAwareIcon icon = createUIAwareIcon(path, w, h);
             awareIconMap.put(key, icon);
             return icon;
         }
@@ -107,18 +157,51 @@ public final class IconLoader {
     /*
      * Helper method to create the icons.
      */
-    public DarkUIAwareIcon create(final String name, final int w, final int h) {
+    protected DarkUIAwareIcon createUIAwareIcon(final String name, final int w, final int h) {
         return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, parentClass);
     }
 
+    /**
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
+     * will be loaded as an svg.icon.
+     * Uses 16x16 icons by default.
+     *
+     * @see         #get(Class)
+     * @see         #get
+     * @param  path the path to the icon with respect to the IconLoader resource root.
+     * @return      the icon.
+     */
     public Icon getIcon(final String path) {
         return getIcon(path, DEFAULT_W, DEFAULT_H);
     }
 
+    /**
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
+     * will be loaded as an svg.icon.
+     *
+     * @see         #get(Class)
+     * @see         #get
+     * @param  path the path to the icon with respect to the IconLoader resource root.
+     * @param  w    the icon width.
+     * @param  h    the icon height.
+     * @return      the icon.
+     */
     public Icon getIcon(final String path, final int w, final int h) {
         return getIcon(path, w, h, false);
     }
 
+    /**
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
+     * will be loaded as an svg.icon.
+     *
+     * @see           #get(Class)
+     * @see           #get
+     * @param  path   the path to the icon with respect to the IconLoader resource root.
+     * @param  w      the icon width.
+     * @param  h      the icon height.
+     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return        the icon.
+     */
     public Icon getIcon(final String path, final int w, final int h, final boolean themed) {
         IconKey key = new IconKey(path, w, h);
         if (iconMap.containsKey(key)) {
@@ -151,37 +234,80 @@ public final class IconLoader {
         }
     }
 
-    public Icon loadSVGIcon(final String name, final boolean themed) {
-        return loadSVGIcon(name, DEFAULT_W, DEFAULT_H, themed);
+    /**
+     * Get an svg icon at the specified location.
+     * will be loaded as an svg.icon.
+     * Uses 16x16 icons by default.
+     *
+     * @see           #get(Class)
+     * @see           #get
+     * @param  path   the path to the icon with respect to the IconLoader resource root.
+     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return        the icon.
+     */
+    public Icon loadSVGIcon(final String path, final boolean themed) {
+        return loadSVGIcon(path, DEFAULT_W, DEFAULT_H, themed);
     }
 
-    public Icon loadSVGIcon(final String name, final int w, final int h, final boolean themed) {
-        return loadSVGIcon(name, w, h, themed, null);
+    /**
+     * Get an svg icon at the specified location.
+     * will be loaded as an svg.icon.
+     *
+     * @see           #get(Class)
+     * @see           #get
+     * @param  path   the path to the icon with respect to the IconLoader resource root.
+     * @param  w      the icon width.
+     * @param  h      the icon height.
+     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return        the icon.
+     */
+    public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed) {
+        return loadSVGIcon(path, w, h, themed, null);
     }
 
-    public Icon loadSVGIcon(final String name, final int w, final int h, final boolean themed,
+    /**
+     * Get an svg icon at the specified location.
+     * will be loaded as an svg.icon.
+     *
+     * @see                #get(Class)
+     * @see                #get
+     * @param  path        the path to the icon with respect to the IconLoader resource root.
+     * @param  w           the icon width.
+     * @param  h           the icon height.
+     * @param  themed      determines whether the icon is themed. This only has an effect on svg icons.
+     * @param  propertyMap the property map for resolving themed icon properties. If null the UIDefaults will be used.
+     * @return             the icon.
+     */
+    public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
                             final Map<Object, Object> propertyMap) {
         try {
             if (themed) {
-                final URI uri = Objects.requireNonNull(parentClass.getResource(name).toURI());
+                final URI uri = Objects.requireNonNull(getResource(path).toURI());
                 if (propertyMap != null) {
                     return new CustomThemedIcon(uri, w, h, propertyMap);
                 } else {
                     return new ThemedSVGIcon(uri, w, h);
                 }
             } else {
-                return new DarkSVGIcon(Objects.requireNonNull(parentClass.getResource(name).toURI()), w, h);
+                return new DarkSVGIcon(Objects.requireNonNull(getResource(path).toURI()), w, h);
             }
         } catch (NullPointerException | URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, "Exception while loading '" + name + "'" + ". Resolving from " + parentClass,
+            LOGGER.log(Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
                        e.getStackTrace());
         }
         return EmptyIcon.create(0);
     }
 
+    /**
+     * Create an image icon.
+     *
+     * @param  path        the path to the icon with respect to the IconLoader resource root.
+     * @param  description description of the icon as described in {@link ImageIcon#setDescription(String)}
+     * @return             the ImageIcon.
+     */
     public ImageIcon createImageIcon(final String path,
                                      final String description) {
-        java.net.URL imgURL = parentClass.getResource(path);
+        java.net.URL imgURL = getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
         } else {
@@ -190,7 +316,15 @@ public final class IconLoader {
         }
     }
 
-    public static final class IconKey {
+    protected URL getResource(final String name) {
+        if (parentClass != null) {
+            return parentClass.getResource(name);
+        } else {
+            return getClass().getClassLoader().getResource(name);
+        }
+    }
+
+    protected static final class IconKey {
         final String path;
         int w;
         int h;

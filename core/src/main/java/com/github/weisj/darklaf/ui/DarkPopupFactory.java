@@ -28,6 +28,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -80,13 +81,13 @@ public class DarkPopupFactory extends PopupFactory {
                                      && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_NO_DECORATION)));
             boolean opaque = isJComponent
                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_OPAQUE));
-            window.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
+            window.setBackground(PaintUtil.TRANSPARENT_COLOR);
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
                 if (opaque) {
                     window.setBackground(rootPane.getBackground());
                 } else {
-                    rootPane.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
+                    rootPane.setBackground(PaintUtil.TRANSPARENT_COLOR);
                     rootPane.setOpaque(false);
                 }
             }

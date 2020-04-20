@@ -26,7 +26,7 @@ package ui;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DemoResources {
     public static final String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam\n"
@@ -52,5 +52,5 @@ public class DemoResources {
                                              + "elementum ligula at, porta turpis. Praesent feugiat dolor diam, at facilisis metus gravida\n"
                                              + " non. Aliquam quis pellentesque nibh. Sed vestibulum porttitor nisi. In vitae malesuada\n "
                                              + "sapien.";
-    public static Icon FOLDER_ICON = IconLoader.get().getIcon("files/folder.svg", 19, 19, true);
+    public static Icon FOLDER_ICON = DarkUIUtil.ICON_LOADER.getIcon("files/folder.svg", 19, 19, true);
 }

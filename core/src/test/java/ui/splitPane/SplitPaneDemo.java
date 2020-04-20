@@ -33,7 +33,7 @@ import javax.swing.*;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
-import com.github.weisj.darklaf.color.ThemedColor;
+import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.ui.splitpane.DividerStyle;
 import com.github.weisj.darklaf.ui.splitpane.SplitPaneConstants;
 

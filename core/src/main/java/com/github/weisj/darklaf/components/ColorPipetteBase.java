@@ -32,10 +32,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicRootPaneUI;
 
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPipette;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener {
     protected final JComponent parent;
@@ -236,7 +236,7 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
     protected static class PickerWindow extends JWindow {
 
         protected PickerWindow() {
-            setBackground(DarkUIUtil.TRANSPARENT_COLOR);
+            setBackground(PaintUtil.TRANSPARENT_COLOR);
             setAlwaysOnTop(true);
         }
 

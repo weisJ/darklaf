@@ -32,9 +32,9 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.InsetsUIResource;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis

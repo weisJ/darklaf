@@ -20,9 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.graphics;
+
+import com.github.weisj.darklaf.util.Scale;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -69,7 +70,7 @@ public final class ImageUtil {
         Graphics g = tabImage.getGraphics();
 
         g.setColor(borderColor);
-        DarkUIUtil.drawRect(g, 0, 0, w, h, lw);
+        PaintUtil.drawRect(g, 0, 0, w, h, lw);
         g.dispose();
         return tabImage;
     }

@@ -28,8 +28,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DarkListCellFocusBorder extends DarkCellBorder {
 
@@ -44,6 +44,6 @@ public class DarkListCellFocusBorder extends DarkCellBorder {
                             final int width, final int height) {
         super.paintBorder(c, g, x, y, width, height);
         g.setColor(borderColor);
-        DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
+        PaintUtil.drawRect(g, 0, 0, width, height, 1);
     }
 }

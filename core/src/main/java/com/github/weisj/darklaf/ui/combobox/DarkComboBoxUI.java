@@ -41,6 +41,7 @@ import javax.swing.plaf.basic.ComboPopup;
 
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -219,9 +220,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             g.setColor(getBackground(comboBox));
         }
         if (!isCellEditor) {
-            DarkUIUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize,
-                                     width - 2 * borderSize, height - 2 * borderSize,
-                                     arcSize);
+            PaintUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize,
+                                    width - 2 * borderSize, height - 2 * borderSize,
+                                    arcSize);
         } else {
             g.fillRect(0, 0, width, height);
         }

@@ -29,8 +29,8 @@ import javax.swing.*;
 import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.components.DefaultButton;
+import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.settings.ThemeSettings;
-import com.github.weisj.darklaf.util.ImageUtil;
 
 /*
  * MIT License

@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class ColoredRadioButton extends JRadioButton {
 
@@ -124,7 +125,7 @@ public class ColoredRadioButton extends JRadioButton {
 
         public void setColor(final Color color) {
             if (color == null) return;
-            IconLoader loader = IconLoader.get();
+            IconLoader loader = DarkUIUtil.ICON_LOADER;
             Theme theme = LafManager.getTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
@@ -144,14 +145,12 @@ public class ColoredRadioButton extends JRadioButton {
                 propertyMap.put(prop, c);
             }
 
-            stateIcon = new StateIcon(new Icon[]{
-                                                 load(loader, "control/radio.svg"),
+            stateIcon = new StateIcon(new Icon[]{load(loader, "control/radio.svg"),
                                                  load(loader, "control/radioDisabled.svg"),
                                                  load(loader, "control/radioFocused.svg"),
                                                  load(loader, "control/radioSelected.svg"),
                                                  load(loader, "control/radioSelectedDisabled.svg"),
-                                                 load(loader, "control/radioSelectedFocused.svg")
-            });
+                                                 load(loader, "control/radioSelectedFocused.svg")});
         }
 
         private Icon load(final IconLoader loader, final String name) {

@@ -36,7 +36,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
 import javax.swing.text.DefaultHighlighterDark.DarkHighlightPainter;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 
 /**
  * @author Jannis Weis
@@ -288,7 +288,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                     g.fillRect(r.x, r.y, r.width, r.height);
                     break;
                 case BLOCK_BORDER_STYLE :
-                    DarkUIUtil.drawRect(g, r.x, r.y, r.width - 1, r.height, 1);
+                    PaintUtil.drawRect(g, r.x, r.y, r.width - 1, r.height, 1);
                     break;
                 case UNDERLINE_STYLE :
                     if (textAreaBg == null) {

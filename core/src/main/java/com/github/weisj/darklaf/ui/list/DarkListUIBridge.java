@@ -45,7 +45,6 @@ import sun.swing.UIAction;
 
 import com.github.weisj.darklaf.ui.BasicTransferable;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
-import com.github.weisj.darklaf.util.DarkSwingUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -2642,7 +2641,7 @@ public class DarkListUIBridge extends BasicListUI {
                 updateLayoutStateNeeded |= cellRendererChanged;
                 redrawList();
             } else if (Objects.equals(propertyName, PropertyKey.FONT)
-                       || DarkSwingUtil.isScaleChanged(e)) {
+                       || DarkUIUtil.isScaleChanged(e)) {
                 updateLayoutStateNeeded |= fontChanged;
                 redrawList();
             } else if (Objects.equals(propertyName, "prototypeCellValue")) {

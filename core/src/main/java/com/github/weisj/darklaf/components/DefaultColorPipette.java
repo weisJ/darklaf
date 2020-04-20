@@ -31,9 +31,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 import com.github.weisj.darklaf.util.TimerUtil;
 
 public class DefaultColorPipette extends ColorPipetteBase {

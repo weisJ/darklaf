@@ -34,8 +34,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Jannis Weis

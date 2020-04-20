@@ -37,10 +37,10 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 import com.github.weisj.darklaf.decorators.MouseClickListener;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.util.*;
 
 /**
  * @author Jannis Weis
@@ -628,7 +628,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         Ellipse2D.Double thumb = new Ellipse2D.Double(0, 0, r, r);
         Ellipse2D.Double innerThumb = new Ellipse2D.Double(1, 1, r - 2, r - 2);
         if (paintFocus()) {
-            DarkUIUtil.paintFocusOval(g, 1, 1, r - 2, r - 2);
+            PaintUtil.paintFocusOval(g, 1, 1, r - 2, r - 2);
         }
         if (isVolumeSlider(slider)) {
             g.setColor(getThumbColor());
@@ -652,9 +652,9 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         Path2D thumb = getThumbShape();
         if (paintFocus()) {
             GraphicsContext config = new GraphicsContext(g);
-            g.setComposite(DarkUIUtil.getGlowComposite());
+            g.setComposite(PaintUtil.getGlowComposite());
             g.setStroke(new BasicStroke(4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 8));
-            DarkUIUtil.Outline.focus.setGraphicsColor(g, true);
+            PaintUtil.Outline.focus.setGraphicsColor(g, true);
             g.draw(thumb);
             config.restore();
         }

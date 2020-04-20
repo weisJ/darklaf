@@ -29,9 +29,9 @@ import javax.swing.*;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.AlignmentExt;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class GroupedButtonDemo implements ComponentDemo {
 
@@ -42,8 +42,8 @@ public class GroupedButtonDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         Box box = Box.createHorizontalBox();
-        Icon icon = IconLoader.get().getIcon("menu/listFiles.svg", 19, 19, true);
-        Icon iconSelected = IconLoader.get().getIcon("menu/listFilesSelected.svg", 19, 19, true);
+        Icon icon = DarkUIUtil.ICON_LOADER.getIcon("menu/listFiles.svg", 19, 19, true);
+        Icon iconSelected = DarkUIUtil.ICON_LOADER.getIcon("menu/listFilesSelected.svg", 19, 19, true);
         ButtonGroup bg = new ButtonGroup();
         AbstractButton b = createButton(icon, iconSelected, bg, AlignmentExt.LEFT, null);
         box.add(b);

@@ -28,10 +28,10 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 public class MoreTabsButton extends DarkTabAreaButton {
 

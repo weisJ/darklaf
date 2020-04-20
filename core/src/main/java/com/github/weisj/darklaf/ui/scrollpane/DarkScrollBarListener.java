@@ -29,7 +29,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.Animator;
+import com.github.weisj.darklaf.graphics.Animator;
 
 public class DarkScrollBarListener extends MouseAdapter implements AdjustmentListener, ScrollBarConstants {
 

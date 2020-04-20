@@ -32,8 +32,8 @@ import java.util.function.Consumer;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
 
@@ -57,7 +57,7 @@ public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
     protected void adjust(final String listKey, final Properties listProperties, final Consumer<List<?>> action) {
         Object obj = PropertyLoader.parseValue(listKey,
                                                listProperties.getProperty(listKey),
-                                               listProperties, DEFAULTS, IconLoader.get());
+                                               listProperties, DEFAULTS, DarkUIUtil.ICON_LOADER);
         if (obj instanceof List<?>) {
             action.accept((List<?>) obj);
         }

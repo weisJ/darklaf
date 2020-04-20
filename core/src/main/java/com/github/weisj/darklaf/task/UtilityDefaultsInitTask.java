@@ -26,10 +26,10 @@ package com.github.weisj.darklaf.task;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.AwareIconStyle;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class UtilityDefaultsInitTask implements DefaultsInitTask {
     @Override
@@ -42,15 +42,15 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
      * changed.
      */
     private void setupUtils(final Theme currentTheme, final UIDefaults defaults) {
-        DarkUIUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
-        DarkUIUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
-        DarkUIUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
+        PaintUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
+        PaintUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
+        PaintUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
 
-        DarkUIUtil.setErrorGlow(defaults.getColor("glowError"));
-        DarkUIUtil.setErrorFocusGlow(defaults.getColor("glowFocusError"));
-        DarkUIUtil.setFocusGlow(defaults.getColor("glowFocus"));
-        DarkUIUtil.setFocusInactiveGlow(defaults.getColor("glowFocusInactive"));
-        DarkUIUtil.setWarningGlow(defaults.getColor("glowWarning"));
+        PaintUtil.setErrorGlow(defaults.getColor("glowError"));
+        PaintUtil.setErrorFocusGlow(defaults.getColor("glowFocusError"));
+        PaintUtil.setFocusGlow(defaults.getColor("glowFocus"));
+        PaintUtil.setFocusInactiveGlow(defaults.getColor("glowFocusInactive"));
+        PaintUtil.setWarningGlow(defaults.getColor("glowWarning"));
 
         IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(currentTheme);

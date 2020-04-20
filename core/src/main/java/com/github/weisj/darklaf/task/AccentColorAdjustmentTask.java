@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 
 import com.github.weisj.darklaf.color.DarkColorModelHSB;

@@ -35,7 +35,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.plaf.TabbedPaneUI;
 
-import com.github.weisj.darklaf.util.ImageUtil;
+import com.github.weisj.darklaf.graphics.ImageUtil;
 
 /**
  * @author Robert Futrell

@@ -31,9 +31,9 @@ import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
 
 public class DarkComboBoxBorder implements Border, UIResource {
 
@@ -82,13 +82,13 @@ public class DarkComboBoxBorder implements Border, UIResource {
 
         if (!isCellEditor) {
             if (ui.getHasFocus()) {
-                DarkUIUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
+                PaintUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
                 g.setColor(focusBorderColor);
             } else {
                 g.setColor(borderColor);
             }
-            DarkUIUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize,
-                                       height - 2 * bSize, arcSize);
+            PaintUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize,
+                                      height - 2 * bSize, arcSize);
         } else {
             paintCellBorder(c, width, height, isTableCellEditor, g, borderColor);
         }
@@ -113,7 +113,7 @@ public class DarkComboBoxBorder implements Border, UIResource {
             JTable table = ((JTable) parent);
             CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
-            DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
+            PaintUtil.drawRect(g, 0, 0, width, height, 1);
         }
     }
 

@@ -44,6 +44,7 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
+import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.theme.Theme;

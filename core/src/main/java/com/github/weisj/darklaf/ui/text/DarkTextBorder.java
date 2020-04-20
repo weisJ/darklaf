@@ -31,9 +31,10 @@ import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.JTextComponent;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -101,14 +102,14 @@ public class DarkTextBorder implements Border, UIResource {
         int arcSize = getArcSize(c);
         int focusArcSize = getFocusArcSize(c);
         if (hasError(c)) {
-            DarkUIUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
-                                          c.hasFocus(), DarkUIUtil.Outline.error);
+            PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
+                                         c.hasFocus(), PaintUtil.Outline.error);
         } else if (c.hasFocus()) {
-            DarkUIUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize, editable);
+            PaintUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize, editable);
         }
         g.setColor(getBorderColor(focus, error, editable, c.isEnabled()));
-        DarkUIUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
-                                   height - 2 * borderSize, arcSize);
+        PaintUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
+                                  height - 2 * borderSize, arcSize);
         g.translate(-x, -y);
         config.restore();
     }

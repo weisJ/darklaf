@@ -35,8 +35,9 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.decorators.MouseMovementListener;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -157,7 +158,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
             int width = c.getWidth();
             int height = c.getHeight();
             int w = borderSize;
-            DarkUIUtil.fillRoundRect(g, w, w, width - 2 * w, height - 2 * w, arc);
+            PaintUtil.fillRoundRect(g, w, w, width - 2 * w, height - 2 * w, arc);
             if (hasShowIcon(c) && showShowIcon()) {
                 paintShowIcon(g);
             }

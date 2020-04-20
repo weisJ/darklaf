@@ -38,7 +38,7 @@ import javax.swing.plaf.basic.BasicSpinnerUI;
 
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
@@ -254,7 +254,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
             g.setColor(getBackground(c));
         }
         if (!SpinnerConstants.isTreeOrTableCellEditor(c)) {
-            DarkUIUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
+            PaintUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
         } else {
             Rectangle bounds = prevButton.getBounds();
             boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();

@@ -22,39 +22,28 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.color;
+package com.github.weisj.darklaf.util;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.ColorWrapper;
+import org.jdesktop.jxlayer.JXLayer;
+import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
-public class ThemedColor extends ColorWrapper {
+public class SwingXUtil {
 
-    protected Theme currentTheme;
-    private final String key;
-
-    public ThemedColor() {
-        this(null);
-    }
-
-    public ThemedColor(final String key) {
-        super(null);
-        this.key = key;
-    }
-
-    @Override
-    public Color getColor() {
-        if (super.getColor() == null || currentTheme != LafManager.getTheme()) {
-            setColor(getUpdatedColor());
+    @SuppressWarnings("unchecked")
+    public static Point convertPointToParent(final Component source, final Point p) {
+        JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class, source);
+        if (layer != null && layer.getUI() instanceof TransformUI) {
+            TransformUI ui = (TransformUI) layer.getUI();
+            Point pos = SwingUtilities.convertPoint(source, p, layer);
+            AffineTransform transform = ui.getPreferredTransform(layer.getSize(), layer);
+            transform.transform(pos, pos);
+            return pos;
         }
-        return super.getColor();
-    }
-
-    protected Color getUpdatedColor() {
-        return UIManager.getColor(key);
+        return SwingUtilities.convertPoint(source, p, source.getParent());
     }
 }

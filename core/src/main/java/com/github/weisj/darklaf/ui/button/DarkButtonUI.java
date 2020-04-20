@@ -40,6 +40,9 @@ import javax.swing.text.View;
 
 import sun.swing.SwingUtilities2;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.util.*;
@@ -209,7 +212,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (effectiveArc == 0) {
             g2.fillRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height);
         } else {
-            DarkUIUtil.fillRoundRect(g, bgRect.x, bgRect.y, bgRect.width, bgRect.height, effectiveArc);
+            PaintUtil.fillRoundRect(g, bgRect.x, bgRect.y, bgRect.width, bgRect.height, effectiveArc);
         }
     }
 
@@ -235,8 +238,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             if (ButtonConstants.isBorderlessRectangular(c)) {
                 g.fillRect(margin.left, margin.top, width - margin.left - margin.right,
                            height - margin.top - margin.bottom);
-                DarkUIUtil.drawRect(g, margin.left, margin.top, width - margin.left - margin.right,
-                                    height - margin.top - margin.bottom, 1);
+                PaintUtil.drawRect(g, margin.left, margin.top, width - margin.left - margin.right,
+                                   height - margin.top - margin.bottom, 1);
             } else if (ButtonConstants.doConvertToBorderless(b)) {
                 int size = Math.min(width - margin.left - margin.right,
                                     height - margin.left - margin.right);

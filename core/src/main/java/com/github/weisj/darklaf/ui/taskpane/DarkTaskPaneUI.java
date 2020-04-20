@@ -37,7 +37,7 @@ import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.plaf.metal.MetalTaskPaneUI;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 
 public class DarkTaskPaneUI extends MetalTaskPaneUI {
 
@@ -111,15 +111,15 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
             int h = height + arc;
             g.setClip(clip.x, clip.y, width, h / 2 + 1);
             g.setColor(color);
-            DarkUIUtil.drawRect(g, x, y, width, h, 1);
+            PaintUtil.drawRect(g, x, y, width, h, 1);
             if (c.isOpaque()) {
                 g.setColor(c.getBackground());
                 g.setClip(clip.x, clip.x + h - arc, width, arc);
-                DarkUIUtil.fillRoundRect((Graphics2D) g, x, y, width, h, arc);
+                PaintUtil.fillRoundRect((Graphics2D) g, x, y, width, h, arc);
             }
             g.setClip(clip.x, clip.y + h / 2, width, h / 2);
             g.setColor(color);
-            DarkUIUtil.paintLineBorder((Graphics2D) g, x, y, width, h, arc);
+            PaintUtil.paintLineBorder((Graphics2D) g, x, y, width, h, arc);
             g.setClip(clip);
         }
 
@@ -145,23 +145,23 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
                 g.setColor(titleBackgroundGradientStart);
             }
             if (isCollapsed()) {
-                DarkUIUtil.fillRoundRect(g, 0, 0, w, h, getRoundHeight());
+                PaintUtil.fillRoundRect(g, 0, 0, w, h, getRoundHeight());
                 g.setColor(borderColor);
-                DarkUIUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight());
+                PaintUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight());
             } else {
                 Rectangle clip = g.getClip().getBounds();
                 g.setClip(0, 0, w, h / 2 + 1);
 
-                DarkUIUtil.fillRoundRect(g, 0, 0, w, h, getRoundHeight());
+                PaintUtil.fillRoundRect(g, 0, 0, w, h, getRoundHeight());
                 g.setClip(0, h / 2, w, h / 2);
                 g.fillRect(0, 0, w, h);
 
                 g.setColor(borderColor);
                 g.setClip(0, 0, w, h / 2);
-                DarkUIUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight());
+                PaintUtil.paintLineBorder(g, 0, 0, w, h, getRoundHeight());
 
                 g.setClip(0, h / 2, w, h / 2);
-                DarkUIUtil.drawRect(g, 0, 0, w, h, 1);
+                PaintUtil.drawRect(g, 0, 0, w, h, 1);
                 g.setClip(clip);
             }
         }

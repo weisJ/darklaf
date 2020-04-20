@@ -28,8 +28,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -60,7 +60,7 @@ public class DarkTableCellFocusBorder extends DarkCellBorder {
             }
         } else {
             g.setColor(borderColor);
-            DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
+            PaintUtil.drawRect(g, 0, 0, width, height, 1);
         }
     }
 

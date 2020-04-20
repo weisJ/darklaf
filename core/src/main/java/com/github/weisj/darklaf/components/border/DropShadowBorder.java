@@ -36,7 +36,7 @@ import java.util.Map;
 
 import javax.swing.border.Border;
 
-import com.github.weisj.darklaf.util.ImageUtil;
+import com.github.weisj.darklaf.graphics.ImageUtil;
 
 /**
  * Implements a DropShadow for components. In general, the DropShadowBorder will work with any rectangular components

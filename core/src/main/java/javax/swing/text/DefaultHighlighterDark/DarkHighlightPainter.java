@@ -35,11 +35,11 @@ import javax.swing.text.*;
 
 import sun.swing.SwingUtilities2;
 
+import com.github.weisj.darklaf.graphics.ColorWrapper;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
-import com.github.weisj.darklaf.util.ColorWrapper;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * Note this class only sits inside this weird package because of a hack used in {@link

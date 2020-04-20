@@ -34,9 +34,9 @@ import javax.swing.border.Border;
 import com.github.weisj.darklaf.components.border.BubbleBorder;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Jannis Weis
@@ -107,7 +107,7 @@ public class DarkTooltipBorder implements Border {
         GraphicsContext context = new GraphicsContext(g);
         if (isPlain(c)) {
             g.setColor(bubbleBorder.getColor());
-            DarkUIUtil.drawRect(g, x, y, width, height, 1);
+            PaintUtil.drawRect(g, x, y, width, height, 1);
             return;
         }
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;

@@ -37,9 +37,10 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -528,7 +529,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         g.setColor(getDropColor());
         GraphicsContext context = new GraphicsContext(g);
         if (!scrollableTabLayoutEnabled()) {
-            ((Graphics2D) g).setComposite(DarkUIUtil.getDropComposite());
+            ((Graphics2D) g).setComposite(PaintUtil.getDropComposite());
         }
         switch (tabPane.getTabPlacement()) {
             case TOP :

@@ -37,6 +37,8 @@ import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.View;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
+import com.github.weisj.darklaf.graphics.Animator;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.*;
 

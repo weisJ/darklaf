@@ -30,8 +30,8 @@ import javax.swing.*;
 
 import sun.swing.SwingUtilities2;
 
-import com.github.weisj.darklaf.util.GraphicsContext;
-import com.github.weisj.darklaf.util.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 
 /**
  * @author Jannis Weis

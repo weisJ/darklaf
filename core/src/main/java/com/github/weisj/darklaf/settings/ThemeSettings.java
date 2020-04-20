@@ -32,13 +32,13 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.DefaultButton;
+import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.ImageUtil;
 
 public class ThemeSettings implements ThemePreferenceListener {
 

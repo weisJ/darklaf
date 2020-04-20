@@ -36,9 +36,9 @@ import java.util.function.Consumer;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Alexey Pegov
@@ -193,7 +193,7 @@ class SlideComponent extends JComponent implements ColorListener {
     @Override
     protected void paintComponent(final Graphics g) {
         final Graphics2D g2d = (Graphics2D) g;
-        Color endColor = isOpacity ? DarkUIUtil.TRANSPARENT_COLOR : Color.BLACK;
+        Color endColor = isOpacity ? PaintUtil.TRANSPARENT_COLOR : Color.BLACK;
         Color beginColor = color;
         if (vertical) {
             g2d.setPaint(new GradientPaint(0f, 0f, beginColor, 0f, getHeight(), endColor));

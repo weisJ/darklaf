@@ -38,8 +38,8 @@ import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
+import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.ImageUtil;
 
 /**
  * @author Jannis Weis

@@ -31,9 +31,10 @@ import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -90,7 +91,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
         }
 
         if (!tableCellEditor && !treeCellEditor && DarkUIUtil.hasFocus(c)) {
-            DarkUIUtil.paintFocusBorder(g, width, height, arc, borderSize);
+            PaintUtil.paintFocusBorder(g, width, height, arc, borderSize);
         }
 
         g.setColor(getBorderColor(c));
@@ -98,12 +99,12 @@ public class DarkSpinnerBorder implements Border, UIResource {
             if (DarkUIUtil.hasFocus(c)) {
                 g.setColor(focusBorderColor);
             }
-            DarkUIUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc);
+            PaintUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc);
         } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
             JTable table = (JTable) c.getParent();
             CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
-            DarkUIUtil.drawRect(g, 0, 0, width, height, 1);
+            PaintUtil.drawRect(g, 0, 0, width, height, 1);
         }
 
         g.translate(-x, -y);

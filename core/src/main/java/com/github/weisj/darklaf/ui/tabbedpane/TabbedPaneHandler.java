@@ -37,7 +37,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
-import com.github.weisj.darklaf.util.DarkSwingUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 public class TabbedPaneHandler implements ChangeListener, ContainerListener, FocusListener,
@@ -100,7 +100,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         } else if (Objects.equals(name, "indexForNullComponent")) {
             ui.isRunsDirty = true;
             updateHtmlViews((Integer) e.getNewValue(), true);
-        } else if (Objects.equals(name, PropertyKey.FONT) || DarkSwingUtil.isScaleChanged(e)) {
+        } else if (Objects.equals(name, PropertyKey.FONT) || DarkUIUtil.isScaleChanged(e)) {
             ui.calculatedBaseline = false;
         }
     }

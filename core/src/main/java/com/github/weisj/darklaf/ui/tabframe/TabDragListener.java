@@ -34,7 +34,7 @@ import org.jdesktop.jxlayer.JXLayer;
 
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.SwingXUtilities;
+import com.github.weisj.darklaf.util.SwingXUtil;
 
 public class TabDragListener extends MouseAdapter {
 
@@ -64,7 +64,7 @@ public class TabDragListener extends MouseAdapter {
         TransferHandler th = tabComponent.getTabFrame().getTransferHandler();
         if (th != null && tabComponent.getTabFrame().isDndEnabled()) {
             Point p = e.getPoint();
-            p = SwingXUtilities.convertPointToParent(tabComponent.getComponent(), p);
+            p = SwingXUtil.convertPointToParent(tabComponent.getComponent(), p);
             JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class,
                                                                              tabComponent.getComponent());
             p = SwingUtilities.convertPoint(layer != null ? layer : tabComponent.getComponent().getParent(),

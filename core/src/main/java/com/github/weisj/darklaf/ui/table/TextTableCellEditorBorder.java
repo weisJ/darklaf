@@ -28,6 +28,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -50,7 +51,7 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
         if (table != null) {
             CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
-            DarkUIUtil.drawRect(g, x, y, width, height, 1);
+            PaintUtil.drawRect(g, x, y, width, height, 1);
         }
     }
 

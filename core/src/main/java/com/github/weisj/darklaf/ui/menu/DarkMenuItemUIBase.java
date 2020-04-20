@@ -35,6 +35,8 @@ import sun.swing.MenuItemLayoutHelper;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.*;
 
 /**

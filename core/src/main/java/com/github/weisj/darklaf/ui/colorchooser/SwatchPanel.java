@@ -30,9 +30,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.GraphicsUtil;
 
 /**
  * @author Jannis Weis
@@ -155,7 +155,7 @@ abstract class SwatchPanel extends JPanel {
                 if (selRow == row && selCol == column && this.isFocusOwner() && c != null) {
                     Color c2 = new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
                     g.setColor(c2);
-                    DarkUIUtil.drawRect(g, x, y, swatchSize.width, swatchSize.height, 1);
+                    PaintUtil.drawRect(g, x, y, swatchSize.width, swatchSize.height, 1);
 
                     GraphicsUtil.setupStrokePainting(g);
                     g.drawLine(x + 1, y + 1, x + swatchSize.width - 1, y + swatchSize.height - 1);
