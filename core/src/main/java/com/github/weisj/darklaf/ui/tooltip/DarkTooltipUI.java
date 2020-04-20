@@ -51,7 +51,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     protected float alpha = 0;
 
     protected JToolTip toolTip;
-    protected JRootPane lastRootPane;
     protected ToolTipStyle style;
     protected boolean isTipTextChanging;
     protected final MouseListener exitListener = new MouseAdapter() {
@@ -172,8 +171,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         GraphicsContext config = new GraphicsContext(g);
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
-            Area area = ((DarkTooltipBorder) c.getBorder())
-                                                           .getBackgroundArea(c, c.getWidth(), c.getHeight(), true);
+            Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight(), true);
             ((Graphics2D) g).fill(area);
         }
         super.paint(g, c);
@@ -207,28 +205,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             // For MediumWeightPopup still need to make parent non opaque.
             ((JComponent) toolTip.getParent()).setOpaque(false);
         }
-        if (lastRootPane != null) {
-            lastRootPane.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, false);
-        }
-        if (w != null && !isDecorated(w) && (w.getClass().getEnclosingClass().equals(Popup.class))) {
-            w.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
-            if (w instanceof RootPaneContainer) {
-                lastRootPane = ((RootPaneContainer) w).getRootPane();
-                if (lastRootPane != null) {
-                    lastRootPane.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, true);
-                }
-            }
-        }
-    }
-
-    protected boolean isDecorated(final Window w) {
-        if (w instanceof Dialog) {
-            return !((Dialog) w).isUndecorated();
-        }
-        if (w instanceof Frame) {
-            return !((Frame) w).isUndecorated();
-        }
-        return false;
     }
 
     protected boolean isInside(final MouseEvent e) {

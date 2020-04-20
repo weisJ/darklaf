@@ -52,7 +52,7 @@ import com.github.weisj.darklaf.ui.table.DarkTableHeaderUI;
  */
 public final class DarkUIUtil {
 
-    public static final Color TRANSPARENT_COLOR = new Color(0, 0, 0, 0);
+    public static final Color TRANSPARENT_COLOR = new Color(0x0, true);
     private static AlphaComposite glowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
     private static AlphaComposite dropComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     private static AlphaComposite shadowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);

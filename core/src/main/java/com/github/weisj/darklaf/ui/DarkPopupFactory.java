@@ -39,6 +39,7 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
     public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
     public static final String KEY_MAKE_VISIBLE = "JPopupFactory.makeVisible";
+    public static final String KEY_OPAQUE = "JPopupFactory.opaque";
 
     private HeavyWeightParent heavyWeightParent;
 
@@ -50,14 +51,15 @@ public class DarkPopupFactory extends PopupFactory {
             super.getPopup(null, box, 0, 0);
             heavyWeightParent = new HeavyWeightParent(DarkUIUtil.getWindow(box));
         }
+        boolean isJComponent = contents instanceof JComponent;
         Popup popup = super.getPopup(owner, contents, x, y);
         boolean isMediumWeight = popup.getClass().getSimpleName().endsWith("MediumWeightPopup");
         boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
-        boolean forceHeavy = contents instanceof JComponent
+        boolean forceHeavy = isJComponent
                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FORCE_HEAVYWEIGHT));
-        boolean isFocusable = contents instanceof JComponent
+        boolean isFocusable = isJComponent
                               && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
-        boolean startHidden = contents instanceof JComponent
+        boolean startHidden = isJComponent
                               && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
         if (forceHeavy && (isMediumWeight || isLightWeight)) {
             // null owner forces a heavyweight popup.
@@ -74,13 +76,19 @@ public class DarkPopupFactory extends PopupFactory {
         // That is why we set window background explicitly.
         Window window = SwingUtilities.getWindowAncestor(contents);
         if (window != null) {
-            boolean install = true;
-            window.setBackground(UIManager.getColor("PopupMenu.translucentBackground"));
+            boolean noDecorations = (isJComponent
+                                     && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_NO_DECORATION)));
+            boolean opaque = isJComponent
+                             && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_OPAQUE));
+            window.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
-                rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS, true);
-                window.setBackground(rootPane.getBackground());
-                install = !Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATION));
+                if (opaque) {
+                    window.setBackground(rootPane.getBackground());
+                } else {
+                    rootPane.setBackground(DarkUIUtil.TRANSPARENT_COLOR);
+                    rootPane.setOpaque(false);
+                }
             }
 
             if (isFocusable && !window.getFocusableWindowState()) {
@@ -89,10 +97,10 @@ public class DarkPopupFactory extends PopupFactory {
             }
 
             if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
-                if (install) {
-                    DecorationsHandler.getSharedInstance().installPopupWindow(window);
-                } else {
+                if (noDecorations) {
                     DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
+                } else {
+                    DecorationsHandler.getSharedInstance().installPopupWindow(window);
                 }
             }
             if (startHidden) {

@@ -210,15 +210,10 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         }
     }
 
-    protected boolean noDecorations(final JRootPane rootPane) {
-        return Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS));
-    }
-
     protected void updateClientDecoration() {
         if (!Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS_UPDATE))) {
             uninstallClientDecorations(rootPane);
-            if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()
-                && !noDecorations(rootPane)) {
+            if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
                 installClientDecorations(rootPane);
             }
         }
