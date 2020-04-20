@@ -27,8 +27,6 @@
 
 #define OBJC(jl) ((id)jlong_to_ptr(jl))
 
-#define KEY_APPLE_INTERFACE_STYLE @"AppleInterfaceStyle"
-#define KEY_SWITCHES_AUTOMATICALLY @"AppleInterfaceStyleSwitchesAutomatically"
 #define KEY_ACCENT_COLOR @"AppleAccentColor"
 #define KEY_SELECTION_COLOR @"selectedTextBackgroundColor"
 #define KEY_SYSTEM_COLOR_LIST @"System"
@@ -39,7 +37,6 @@
 #define EVENT_HIGH_CONTRAST @"AXInterfaceIncreaseContrastStatusDidChange"
 #define EVENT_COLOR_CHANGE NSSystemColorsDidChangeNotification
 
-#define VALUE_DARK @"Dark"
 #define VALUE_DEFAULT_ACCENT_COLOR (-2)
 #define VALUE_NO_ACCENT_COLOR (-100)
 #define VALUE_NO_SELECTION_COLOR (-1)
@@ -57,11 +54,13 @@
     self->callback = callback_;
 
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
-    [self listenToKey:EVENT_ACCENT_COLOR onCenter:center];
-    [self listenToKey:EVENT_AQUA_CHANGE onCenter:center];
-    [self listenToKey:EVENT_THEME_CHANGE onCenter:center];
+    if (@available(macOS 10.14, *)) {
+        [self listenToKey:EVENT_ACCENT_COLOR onCenter:center];
+        [self listenToKey:EVENT_AQUA_CHANGE onCenter:center];
+        [self listenToKey:EVENT_THEME_CHANGE onCenter:center];
+        [self listenToKey:EVENT_COLOR_CHANGE onCenter:center];
+    }
     [self listenToKey:EVENT_HIGH_CONTRAST onCenter:center];
-    [self listenToKey:EVENT_COLOR_CHANGE onCenter:center];
     return self;
 }
 
@@ -107,21 +106,6 @@
 @end
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
-JNF_COCOA_ENTER(env);
-    if(@available(macOS 10.14, *)) {
-        NSString *interfaceStyle = [[NSUserDefaults standardUserDefaults] stringForKey:KEY_APPLE_INTERFACE_STYLE];
-        // interfaceStyle can be nil (light mode) or "Dark" (dark mode).
-        BOOL isDark = [VALUE_DARK caseInsensitiveCompare:interfaceStyle] == NSOrderedSame;
-        return (jboolean) isDark;
-    } else {
-        return (jboolean) NO;
-    }
-JNF_COCOA_EXIT(env);
-    return NO;
-}
-
-JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isHighContrastEnabled(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
     return (jboolean) NSWorkspace.sharedWorkspace.accessibilityDisplayShouldIncreaseContrast;
@@ -137,8 +121,9 @@ JNF_COCOA_ENTER(env);
         if (hasAccentSet) {
             return (jint) ([[NSUserDefaults standardUserDefaults] integerForKey:KEY_ACCENT_COLOR]);
         }
+        return (jint) VALUE_DEFAULT_ACCENT_COLOR;
     }
-    return (jint) VALUE_DEFAULT_ACCENT_COLOR;
+    return (jint) VALUE_NO_ACCENT_COLOR;
 JNF_COCOA_EXIT(env);
     return (jint) VALUE_NO_ACCENT_COLOR;
 }
@@ -146,12 +131,17 @@ JNF_COCOA_EXIT(env);
 JNIEXPORT jint JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetSelectionColor(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
-    NSColorSpace *rgbSpace = [NSColorSpace genericRGBColorSpace];
-    NSColor *accentColor = [[[NSColorList colorListNamed: KEY_SYSTEM_COLOR_LIST] colorWithKey:KEY_SELECTION_COLOR] colorUsingColorSpace:rgbSpace];
-    NSInteger r = (NSInteger) (255 * [accentColor redComponent]);
-    NSInteger g = (NSInteger) (255 * [accentColor greenComponent]);
-    NSInteger b = (NSInteger) (255 * [accentColor blueComponent]);
-    return (jint) (0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0));
+    if (@available(macOS 10.14, *)) {
+        NSColorSpace *rgbSpace = [NSColorSpace genericRGBColorSpace];
+        NSColor *accentColor = [[[NSColorList colorListNamed:KEY_SYSTEM_COLOR_LIST]
+                                                colorWithKey:KEY_SELECTION_COLOR]
+                                        colorUsingColorSpace:rgbSpace];
+        NSInteger r = (NSInteger) (255 * [accentColor redComponent]);
+        NSInteger g = (NSInteger) (255 * [accentColor greenComponent]);
+        NSInteger b = (NSInteger) (255 * [accentColor blueComponent]);
+        return (jint) (0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0));
+    }
+    return (jint) VALUE_NO_SELECTION_COLOR;
 JNF_COCOA_EXIT(env);
     return (jint) VALUE_NO_SELECTION_COLOR;
 }

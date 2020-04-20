@@ -33,7 +33,9 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.macos.darkmode.MacOSDarkMode;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
 
@@ -44,12 +46,15 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
 
     @Override
     public boolean isCustomDecorationSupported() {
-        return MacOSLibrary.isLoaded();
+        return MacOSLibrary.get().isLoaded();
     }
 
     @Override
     public void initialize() {
-        MacOSLibrary.updateLibrary();
+        MacOSLibrary.get().updateLibrary();
+        if (SystemInfo.isMacOSMojave) {
+            MacOSDarkMode.get().updateLibrary();
+        }
     }
 
     @Override

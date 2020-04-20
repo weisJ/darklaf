@@ -20,40 +20,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-package com.github.weisj.darklaf.platform.macos;
+#import "com_github_weisj_darklaf_platform_macos_darkmode_MacOSDarkMode.h"
+#import <JavaNativeFoundation/JavaNativeFoundation.h>
+#import <AppKit/AppKit.h>
 
-import com.github.weisj.darklaf.platform.AbstractLibrary;
-import com.github.weisj.darklaf.util.SystemInfo;
-
-public class MacOSLibrary extends AbstractLibrary {
-
-    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/";
-    private static final String DLL_NAME = "libdarklaf-macos.dylib";
-    private static final MacOSLibrary instance = new MacOSLibrary();
-
-    public static MacOSLibrary get() {
-        return instance;
+JNIEXPORT jboolean JNICALL
+Java_com_github_weisj_darklaf_platform_macos_darkmode_MacOSDarkMode_nativeIsDarkThemeEnabled(JNIEnv *env, jclass obj) {
+JNF_COCOA_ENTER(env);
+    if(@available(macOS 10.14, *)) {
+        NSAppearanceName appearanceName = [[[NSApplication sharedApplication] effectiveAppearance]
+                                           bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]];
+        return (jboolean) [appearanceName isEqualToString:NSAppearanceNameDarkAqua];
+    } else {
+        return (jboolean) NO;
     }
-
-    protected MacOSLibrary() {
-        super(PATH, DLL_NAME);
-    }
-
-    @Override
-    protected String getLibraryPath() {
-        if (!SystemInfo.isX64) {
-            logger.warning("JRE model '"
-                           + SystemInfo.jreArchitecture
-                           + "' not supported. Native features will be disabled");
-            return null;
-        }
-        return super.getLibraryPath();
-    }
-
-    @Override
-    protected boolean canLoad() {
-        return SystemInfo.isMacOSYosemite;
-    }
+JNF_COCOA_EXIT(env);
+    return NO;
 }

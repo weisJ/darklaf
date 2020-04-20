@@ -38,7 +38,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public PreferredThemeStyle getPreference() {
-        if (!WindowsLibrary.isLoaded()) return fallbackStyle;
+        if (!WindowsLibrary.get().isLoaded()) return fallbackStyle;
         boolean darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         long fontScaling = JNIThemeInfoWindows.getFontScaleFactor();
@@ -70,7 +70,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void setReporting(final boolean reporting) {
-        if (reporting && !WindowsLibrary.isLoaded()) WindowsLibrary.updateLibrary();
+        if (reporting && !WindowsLibrary.get().isLoaded()) WindowsLibrary.get().updateLibrary();
         synchronized (monitor) {
             monitor.setRunning(reporting);
         }
@@ -83,7 +83,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void initialize() {
-        WindowsLibrary.updateLibrary();
+        WindowsLibrary.get().updateLibrary();
     }
 
     @Override
@@ -98,16 +98,16 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public boolean supportsNativeAccentColor() {
-        return WindowsLibrary.isLoaded();
+        return WindowsLibrary.get().isLoaded();
     }
 
     @Override
     public boolean supportsNativeFontSize() {
-        return WindowsLibrary.isLoaded();
+        return WindowsLibrary.get().isLoaded();
     }
 
     @Override
     public boolean supportsNativeTheme() {
-        return WindowsLibrary.isLoaded();
+        return WindowsLibrary.get().isLoaded();
     }
 }

@@ -28,6 +28,8 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+import com.github.weisj.darklaf.platform.macos.darkmode.MacOSDarkMode;
+
 public class MacOSPreferenceMonitor {
 
     private static final Logger LOGGER = Logger.getLogger(MacOSThemePreferenceProvider.class.getName());
@@ -46,7 +48,7 @@ public class MacOSPreferenceMonitor {
     }
 
     private void onNotification() {
-        boolean newDark = JNIThemeInfoMacOS.isDarkThemeEnabled();
+        boolean newDark = MacOSDarkMode.isDarkThemeEnabled();
         boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
         Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
@@ -63,7 +65,7 @@ public class MacOSPreferenceMonitor {
     }
 
     private void start() {
-        darkMode = JNIThemeInfoMacOS.isDarkThemeEnabled();
+        darkMode = MacOSDarkMode.isDarkThemeEnabled();
         highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         accentColor = JNIThemeInfoMacOS.getAccentColor();
         selectionColor = JNIThemeInfoMacOS.getSelectionColor();

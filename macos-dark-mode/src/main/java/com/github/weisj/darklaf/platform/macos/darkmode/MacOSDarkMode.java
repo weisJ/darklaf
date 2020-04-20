@@ -22,51 +22,49 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.platform.windows;
+package com.github.weisj.darklaf.platform.macos.darkmode;
 
 import com.github.weisj.darklaf.platform.AbstractLibrary;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-public class WindowsLibrary extends AbstractLibrary {
+public class MacOSDarkMode extends AbstractLibrary {
 
-    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-windows/";
-    private static final String DLL_NAME = "libdarklaf-macos.dylib";
-    private static final String x86_PATH = "windows-x86/";
-    private static final String x86_64_PATH = "windows-x86-64/";
-    private static final WindowsLibrary library = new WindowsLibrary();
+    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos-dark-mode/macos-x86-64/";
+    private static final String DLL_NAME = "libdarklaf-macos-dark-mode.dylib";
+    private static final MacOSDarkMode instance = new MacOSDarkMode();
 
-    public static WindowsLibrary get() {
-        return library;
+    public static MacOSDarkMode get() {
+        return instance;
     }
 
-    protected WindowsLibrary() {
+    private static native boolean nativeIsDarkThemeEnabled();
+
+    /**
+     * Returns whether dark mode is enabled.
+     *
+     * @return true if dark mode is enabled.
+     */
+    public static boolean isDarkThemeEnabled() {
+        return get().isLoaded() && nativeIsDarkThemeEnabled();
+    }
+
+    protected MacOSDarkMode() {
         super(PATH, DLL_NAME);
     }
 
     @Override
     protected String getLibraryPath() {
-        if (!(SystemInfo.isX64 || SystemInfo.isX86)) {
-            logger.warning("Could not determine jre model '"
+        if (!SystemInfo.isX64) {
+            logger.warning("JRE model '"
                            + SystemInfo.jreArchitecture
-                           + "'. Native features will be disabled");
+                           + "' not supported. Native features will be disabled");
             return null;
         }
         return super.getLibraryPath();
     }
 
     @Override
-    protected String getPath() {
-        if (SystemInfo.isX86) {
-            return super.getPath() + x86_PATH;
-        } else if (SystemInfo.isX64) {
-            return super.getPath() + x86_64_PATH;
-        } else {
-            return super.getPath();
-        }
-    }
-
-    @Override
     protected boolean canLoad() {
-        return SystemInfo.isWindows10;
+        return SystemInfo.isMacOSMojave;
     }
 }

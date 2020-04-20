@@ -31,13 +31,6 @@ import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
 public class JNIThemeInfoMacOS {
 
     /**
-     * Returns whether dark mode is enabled.
-     *
-     * @return true if dark mode is enabled.
-     */
-    public static native boolean isDarkThemeEnabled();
-
-    /**
      * Returns whether high contrast mode is enabled.
      *
      * @return true if high contrast mode is enabled.

@@ -23,7 +23,8 @@ include(
     "utils",
     "platform-base",
     "windows",
-    "macos"
+    "macos",
+    "macos-dark-mode"
 )
 
 for (p in rootProject.children) {

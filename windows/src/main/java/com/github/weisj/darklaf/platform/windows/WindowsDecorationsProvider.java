@@ -44,12 +44,12 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
 
     @Override
     public boolean isCustomDecorationSupported() {
-        return WindowsLibrary.isLoaded();
+        return WindowsLibrary.get().isLoaded();
     }
 
     @Override
     public void initialize() {
-        WindowsLibrary.updateLibrary();
+        WindowsLibrary.get().updateLibrary();
     }
 
     @Override

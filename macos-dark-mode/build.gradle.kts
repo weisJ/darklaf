@@ -8,12 +8,8 @@ fun DependencyHandlerScope.javaImplementation(dep: Any) {
 }
 
 dependencies {
-    javaImplementation(project(":darklaf-theme"))
     javaImplementation(project(":darklaf-native-utils"))
     javaImplementation(project(":darklaf-utils"))
-    javaImplementation(project(":darklaf-platform-base"))
-    javaImplementation(project(":darklaf-property-loader"))
-    javaImplementation(project(":darklaf-macos-dark-mode"))
 }
 
 val macPath by tasks.registering(MacOSSdkPathTask::class)
@@ -34,18 +30,19 @@ library {
         compileTask.get().apply {
             dependsOn(macPath)
             compilerArgs.addAll("-x", "objective-c++")
-            compilerArgs.addAll("-mmacosx-version-min=10.10")
+            compilerArgs.addAll("-mmacosx-version-min=10.14")
+            compilerArgs.addAll("-isysroot")
+            compilerArgs.add(sdkRoot)
             compilerArgs.addJavaFrameworks()
             source.from(
-                file("src/main/objectiveCpp/Decorations.mm"),
-                file("src/main/objectiveCpp/ThemeInfo.mm")
+                file("src/main/objectiveCpp/DarkMode.mm")
             )
         }
     }
     binaries.whenElementFinalized(CppSharedLibrary::class) {
         linkTask.get().apply {
             dependsOn(macPath)
-            linkerArgs.addAll("-lobjc", "-framework", "AppKit")
+            linkerArgs.addAll("-ObjC", "-framework", "AppKit","-mmacosx-version-min=10.14")
             linkerArgs.addJavaFrameworks()
         }
     }
