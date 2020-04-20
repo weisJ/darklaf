@@ -183,6 +183,15 @@ allprojects {
                 options.encoding = "UTF-8"
             }
 
+            withType<ProcessResources>().configureEach {
+                from(source) {
+                    include("**/*.properties")
+                    filteringCharset = "UTF-8"
+                    // apply native2ascii conversion since Java 8 expects properties to have ascii symbols only
+                    filter(org.apache.tools.ant.filters.EscapeUnicode::class)
+                }
+            }
+
             withType<Jar>().configureEach {
                 manifest {
                     attributes["Bundle-License"] = "MIT"
