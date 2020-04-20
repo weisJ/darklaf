@@ -39,11 +39,13 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
     protected final Icon horizontalGrip;
     protected final Icon verticalGrip;
     protected final Color borderColor;
+    protected final Insets gripInsets;
 
     public DarkToolBarBorder() {
         horizontalGrip = UIManager.getIcon("ToolBar.horizontalGrip.icon");
         verticalGrip = UIManager.getIcon("ToolBar.verticalGrip.icon");
         borderColor = UIManager.getColor("ToolBar.borderColor");
+        gripInsets = UIManager.getInsets("ToolBar.gripInsets");
     }
 
     public void paintBorder(final Component c, final Graphics g,
@@ -54,14 +56,14 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
                 Icon icon = getHorizontalGrip();
                 int yIcon = h / 2 - icon.getIconHeight() / 2;
                 if (c.getComponentOrientation().isLeftToRight()) {
-                    icon.paintIcon(c, g, 0, yIcon);
+                    icon.paintIcon(c, g, gripInsets.left, yIcon);
                 } else {
-                    icon.paintIcon(c, g, w - icon.getIconWidth(), yIcon);
+                    icon.paintIcon(c, g, w - icon.getIconWidth() - gripInsets.right, yIcon);
                 }
             } else {
                 Icon icon = getVerticalGrip();
                 int xIcon = w / 2 - icon.getIconWidth() / 2;
-                icon.paintIcon(c, g, xIcon, 0);
+                icon.paintIcon(c, g, xIcon, gripInsets.top);
             }
         }
         if (isDocked(c)) {
@@ -121,12 +123,12 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
             if (((JToolBar) c).getOrientation() == HORIZONTAL) {
                 Icon icon = getHorizontalGrip();
                 if (c.getComponentOrientation().isLeftToRight()) {
-                    newInsets.left = icon.getIconWidth();
+                    newInsets.left = icon.getIconWidth() + gripInsets.left + gripInsets.right;
                 } else {
-                    newInsets.right = icon.getIconWidth();
+                    newInsets.right = icon.getIconWidth() + gripInsets.left + gripInsets.right;
                 }
             } else {
-                newInsets.top = getVerticalGrip().getIconHeight();
+                newInsets.top = getVerticalGrip().getIconHeight() + gripInsets.top + gripInsets.bottom;
             }
         }
 

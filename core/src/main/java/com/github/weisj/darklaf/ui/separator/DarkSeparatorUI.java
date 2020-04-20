@@ -59,9 +59,23 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
         checkSize(c);
         g.setColor(color);
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
-            g.fillRect(c.getWidth() / 2, insets.top, 1, c.getHeight() - insets.bottom - insets.top);
+            int height = c.getHeight() - insets.bottom - insets.top;
+            int y = insets.top;
+            if (height < size.height) {
+                int newHeight = Math.min(size.height, c.getHeight());
+                y = insets.top - (newHeight - height) / 2;
+                height = newHeight;
+            }
+            g.fillRect(c.getWidth() / 2, y, 1, height);
         } else {
-            g.fillRect(insets.left, c.getHeight() / 2, c.getWidth() - insets.left - insets.right, 1);
+            int width = c.getWidth() - insets.left - insets.right;
+            int x = insets.left;
+            if (width < size.height) {
+                int newWidth = Math.min(size.height, c.getWidth());
+                x = insets.left - (newWidth - width) / 2;
+                width = newWidth;
+            }
+            g.fillRect(x, c.getHeight() / 2, width, 1);
         }
     }
 
@@ -69,6 +83,8 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
         if (resizeLock) return;
         Container parent = c.getParent();
         if (parent == null) return;
+        LayoutManager lm = parent.getLayout();
+        if (!(lm instanceof BoxLayout || parent instanceof JToolBar)) return;
         resizeLock = true;
         Dimension dim = parent.getSize();
         Rectangle bounds = c.getBounds();
