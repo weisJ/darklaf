@@ -64,11 +64,12 @@ public class LogFormatter extends Formatter {
         builder.append(record.getLevel().getName());
         builder.append("]");
 
+        builder.append(ANSI_RESET);
         builder.append(getMessageColor(record));
         builder.append(" ");
         builder.append(record.getMessage());
 
-        builder.append(ANSI_WHITE);
+        builder.append(ANSI_RESET);
         builder.append(ANSI_BOLD_ON);
         builder.append(" [at ");
         builder.append(record.getSourceClassName());
@@ -111,7 +112,7 @@ public class LogFormatter extends Formatter {
         } else if (record.getLevel() == Level.WARNING) {
             return ANSI_YELLOW;
         } else {
-            return ANSI_WHITE;
+            return ANSI_BLACK;
         }
     }
 }
