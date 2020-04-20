@@ -25,18 +25,13 @@
 package com.github.weisj.darklaf.task;
 
 import java.util.Collection;
-import java.util.Properties;
 
-import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.LafManager;
 
-public abstract class UserPreferenceAdjustmentTask implements DefaultsAdjustmentTask {
+public class UserDefaultsAdjustmentTask extends UserPreferenceAdjustmentTask {
 
     @Override
-    public void run(final Theme currentTheme, final Properties properties) {
-        for (DefaultsAdjustmentTask task : getTasks()) {
-            if (task != null) task.run(currentTheme, properties);
-        }
+    protected Collection<DefaultsAdjustmentTask> getTasks() {
+        return LafManager.getUserDefaultsAdjustmentTasks();
     }
-
-    protected abstract Collection<DefaultsAdjustmentTask> getTasks();
 }

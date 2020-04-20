@@ -40,8 +40,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private static final String GLOBAL_PREFIX = "global.";
     private static final String MAC_OS_MENU_BAR_KEY = "apple.laf.useScreenMenuBar";
-    private static final String[] UI_PROPERTIES = new String[]{
-                                                               "borders", "button", "checkBox", "colorChooser",
+    private static final String[] UI_PROPERTIES = new String[]{"borders", "button", "checkBox", "colorChooser",
                                                                "comboBox", "fileChooser", "tristate",
                                                                "internalFrame", "label", "list", "menu", "menuBar",
                                                                "menuItem", "numberingPane", "optionPane", "panel",
@@ -49,13 +48,10 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
                                                                "scrollBar", "scrollPane", "separator",
                                                                "slider", "spinner", "splitPane", "statusBar",
                                                                "tabbedPane", "tabFrame", "table", "taskPane", "text",
-                                                               "toggleButton", "toolBar", "toolTip", "tree", "misc"
-    };
-    private static final String[] ICON_PROPERTIES = new String[]{
-                                                                 "checkBox", "radioButton", "dialog", "files", "frame",
-                                                                 "indicator", "menu", "misc", "navigation"
-    };
-    private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserPreferenceAdjustmentTask();
+                                                               "toggleButton", "toolBar", "toolTip", "tree", "misc"};
+    private static final String[] ICON_PROPERTIES = new String[]{"checkBox", "radioButton", "dialog", "files", "frame",
+                                                                 "indicator", "menu", "misc", "navigation"};
+    private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserDefaultsAdjustmentTask();
     private final DefaultsAdjustmentTask accentColorAdjustment = new AccentColorAdjustmentTask();
     private final DefaultsAdjustmentTask foregroundGeneration = new ForegroundColorGenerationTask();
 

@@ -27,7 +27,9 @@ package com.github.weisj.darklaf;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -38,6 +40,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
+import com.github.weisj.darklaf.task.DefaultsInitTask;
 import com.github.weisj.darklaf.theme.*;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
@@ -56,7 +59,8 @@ public final class LafManager {
     private static Theme theme;
     private static boolean logEnabled = false;
     private static final List<Theme> registeredThemes = new ArrayList<>();
-    private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new HashSet<>();
+    private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new ArrayList<>();
+    private static final Collection<DefaultsInitTask> uiInitTasks = new ArrayList<>();
 
     static {
         enableLogging(true);
@@ -392,14 +396,47 @@ public final class LafManager {
     }
 
     /**
-     * Get a view of all currently registered init tasks. Modification will also mutate the collection itself.
+     * Get a view of all currently registered defaults init tasks. Modification will also mutate the collection itself.
      *
      * @return collection of init tasks.
      */
-    public static Collection<DefaultsAdjustmentTask> getUserAdjustmentTasks() {
+    public static Collection<DefaultsAdjustmentTask> getUserDefaultsAdjustmentTasks() {
         return uiDefaultsTasks;
     }
 
+    /**
+     * Register a task to modify the laf defaults.
+     *
+     * @param task the defaults init task.
+     */
+    public static void registerInitTask(final DefaultsInitTask task) {
+        uiInitTasks.add(task);
+    }
+
+    /**
+     * Remove a registered task to modify the laf defaults.
+     *
+     * @param task the defaults init task.
+     */
+    public static void removeInitTask(final DefaultsInitTask task) {
+        uiInitTasks.remove(task);
+    }
+
+    /**
+     * Get a view of all currently registered ui init tasks. Modification will also mutate the collection itself.
+     *
+     * @return collection of init tasks.
+     */
+    public static Collection<DefaultsInitTask> getUserInitTasks() {
+        return uiInitTasks;
+    }
+
+    /**
+     * Get the closest match of a registered theme for the given theme.
+     *
+     * @param  theme the theme to match to.
+     * @return       the closes match. NonNull.
+     */
     public static Theme getClosestMatchForTheme(final Theme theme) {
         if (theme == null) return themeForPreferredStyle(null);
         for (Theme registered : getRegisteredThemes()) {

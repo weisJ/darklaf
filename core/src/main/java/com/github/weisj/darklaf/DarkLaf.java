@@ -55,7 +55,8 @@ public class DarkLaf extends BasicLookAndFeel {
                                                                                 new FontDefaultsInitTask(),
                                                                                 new UtilityDefaultsInitTask(),
                                                                                 new SystemDefaultsInitTask(),
-                                                                                new PlatformDefaultsInitTask()
+                                                                                new PlatformDefaultsInitTask(),
+                                                                                new UserInitTask(),
     };
     /*
      * The base look and feel. This may vary to handle different platform support.
