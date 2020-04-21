@@ -101,7 +101,7 @@ public class DarkTextBorder implements Border, UIResource {
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         int arcSize = getArcSize(c);
         int focusArcSize = getFocusArcSize(c);
-        if (hasError(c)) {
+        if (error) {
             PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
                                          c.hasFocus(), PaintUtil.Outline.error);
         } else if (c.hasFocus()) {
