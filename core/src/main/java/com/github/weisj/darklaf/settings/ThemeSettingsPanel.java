@@ -90,6 +90,7 @@ public class ThemeSettingsPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(createGeneralSettings(), BorderLayout.CENTER);
         add(createMonitorSettings(), BorderLayout.SOUTH);
+        fetch(true);
         update(true);
     }
 
@@ -146,16 +147,17 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     protected void fetch(final Theme theme, final boolean ignoreSettings) {
-        Theme currentTheme = LafManager.getTheme();
         Theme selectedTheme = (Theme) themeComboBox.getSelectedItem();
+        Theme currentTheme = LafManager.getTheme();
         themeComboBox.setModel(LafManager.getThemeComboBoxModel());
         if (ignoreSettings || isThemeFollowsSystem()) {
-            setTheme(isThemeFollowsSystem() ? theme : selectedTheme);
+            setTheme(isThemeFollowsSystem() ? theme : currentTheme);
         } else {
             themeComboBox.setSelectedItem(selectedTheme);
         }
         if (ignoreSettings || isFontSizeFollowsSystem()) {
-            setFontSizeRule(isFontSizeFollowsSystem() ? theme.getFontSizeRule()
+            setFontSizeRule(isFontSizeFollowsSystem()
+                    ? theme.getFontSizeRule()
                     : currentTheme.getFontSizeRule());
         }
         if (ignoreSettings || isAccentColorFollowsSystem()) {
@@ -422,6 +424,8 @@ public class ThemeSettingsPanel extends JPanel {
 
     public void setTheme(final Theme theme) {
         themeComboBox.setSelectedItem(LafManager.getClosestMatchForTheme(theme));
+        System.out.println(theme);
+        System.out.println(themeComboBox.getSelectedItem());
     }
 
     public void setAccentColorRule(final AccentColorRule accentColorRule) {

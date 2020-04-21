@@ -41,6 +41,7 @@ public final class ImageUtil {
     private static final int FRAME_ICON_SIZE = 32;
 
     public static Image createFrameIcon(final Icon icon) {
+        if (icon == null) return null;
         int w = icon.getIconWidth();
         int h = icon.getIconHeight();
         double scaleX = Scale.SCALE_X * (((double) FRAME_ICON_SIZE) / w);
@@ -49,6 +50,7 @@ public final class ImageUtil {
     }
 
     public static Image createScaledImage(final Icon icon, final double scalex, final double scaley) {
+        if (icon == null) return null;
         int w = (int) (scalex * icon.getIconWidth());
         int h = (int) (scaley * icon.getIconHeight());
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);

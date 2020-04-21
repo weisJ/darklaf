@@ -39,6 +39,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
+import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.task.DefaultsInitTask;
 import com.github.weisj.darklaf.theme.*;
@@ -132,6 +133,7 @@ public final class LafManager {
      */
     public static void enabledPreferenceChangeReporting(final boolean enabled) {
         ThemePreferencesHandler.getSharedInstance().enablePreferenceChangeReporting(enabled);
+        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().setEnabledSystemPreferences(enabled);
     }
 
     /**
@@ -284,6 +286,7 @@ public final class LafManager {
      */
     public static void setTheme(final Theme theme) {
         LafManager.theme = theme;
+        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().refresh();
     }
 
     /**
@@ -440,7 +443,10 @@ public final class LafManager {
     public static Theme getClosestMatchForTheme(final Theme theme) {
         if (theme == null) return themeForPreferredStyle(null);
         for (Theme registered : getRegisteredThemes()) {
-            if (registered.getClass().equals(theme.getClass())) return registered;
+            if (registered.equals(theme)) return registered;
+        }
+        for (Theme registered : getRegisteredThemes()) {
+            if (registered.getThemeClass().equals(theme.getThemeClass())) return registered;
         }
         return themeForPreferredStyle(null);
     }

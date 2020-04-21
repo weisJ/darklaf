@@ -49,8 +49,12 @@ public class ThemeSettings implements ThemePreferenceListener {
     private JDialog dialog;
 
     public static ThemeSettings getInstance() {
-        if (instance == null) instance = new ThemeSettings();
+        if (!isInitialized()) instance = new ThemeSettings();
         return instance;
+    }
+
+    public static boolean isInitialized() {
+        return instance != null;
     }
 
     /**
