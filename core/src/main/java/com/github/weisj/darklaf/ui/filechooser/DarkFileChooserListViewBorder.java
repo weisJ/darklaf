@@ -28,9 +28,8 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
-public class DarkFileChooserListViewBorder extends MutableLineBorder.UIResource {
+public class DarkFileChooserListViewBorder extends MutableLineBorder {
     public DarkFileChooserListViewBorder() {
-        super(1, 1, 1, 1, null);
-        setColor(UIManager.getColor("FileChooser.borderColor"));
+        super(1, 1, 1, 1, UIManager.getColor("FileChooser.borderColor"));
     }
 }

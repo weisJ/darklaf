@@ -196,10 +196,12 @@ public final class PropertyLoader {
             returnVal = parseIcon(value, accumulator, currentDefaults, iconLoader);
         } else if (key.endsWith("Size") || key.endsWith(".size")) {
             returnVal = parseSize(value);
-        } else if (value.startsWith(String.valueOf(LIST_START))) {
+        } else if (value.startsWith(String.valueOf(LIST_START))
+                   && value.endsWith(String.valueOf(LIST_END))) {
             returnVal = parseList((v, acc, defs, iconL) -> PropertyLoader.parseValue("", v, acc, defs, iconL),
                                   value, accumulator, currentDefaults, iconLoader);
-        } else if (value.startsWith(String.valueOf(INT_LIST_START))) {
+        } else if (value.startsWith(String.valueOf(INT_LIST_START))
+                   && value.endsWith(String.valueOf(INT_LIST_END))) {
             returnVal = parseList((SimpleValueMapper<Integer>) Integer::parseInt, value, accumulator, currentDefaults,
                                   iconLoader, INT_LIST_START, INT_LIST_END, SEPARATOR);
         } else if (value.contains(String.valueOf(PAIR_SEPARATOR))) {

@@ -46,9 +46,7 @@ public class TableDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        String[] columns = new String[]{
-                                        "Id", "Name", "Hourly Rate", "Part Time", "Components"
-        };
+        String[] columns = new String[]{"Id", "Name", "Hourly Rate", "Part Time", "Components"};
 
         Object[][] data = new Object[][]{{1, "John", 40.0, false, "Item"},
                                          {2, "Rambo", 70.0, false, 10},
@@ -76,7 +74,7 @@ public class TableDemo implements ComponentDemo {
         };
 
         JTableHeader header = table.getTableHeader();
-        DemoPanel panel = new DemoPanel(new JScrollPane(table), new BorderLayout(), 10);
+        DemoPanel panel = new DemoPanel(new JScrollPane(table));
 
         JPanel controlPanel = panel.addControls(3);
         controlPanel.add(new JCheckBox("enabled") {
