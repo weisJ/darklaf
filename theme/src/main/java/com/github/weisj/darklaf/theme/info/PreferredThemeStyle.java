@@ -24,6 +24,8 @@
  */
 package com.github.weisj.darklaf.theme.info;
 
+import java.util.Objects;
+
 public class PreferredThemeStyle {
 
     private final ContrastRule contrastRule;
@@ -107,5 +109,25 @@ public class PreferredThemeStyle {
                ", accentColorRule=" + accentColorRule +
                ", fontSizeRule=" + fontSizeRule +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PreferredThemeStyle that = (PreferredThemeStyle) o;
+        return contrastRule == that.contrastRule
+               && colorToneRule == that.colorToneRule
+               && Objects.equals(fontSizeRule, that.fontSizeRule)
+               && Objects.equals(accentColorRule, that.accentColorRule);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = contrastRule != null ? contrastRule.hashCode() : 0;
+        result = 31 * result + (colorToneRule != null ? colorToneRule.hashCode() : 0);
+        result = 31 * result + (fontSizeRule != null ? fontSizeRule.hashCode() : 0);
+        result = 31 * result + (accentColorRule != null ? accentColorRule.hashCode() : 0);
+        return result;
     }
 }
