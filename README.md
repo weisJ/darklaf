@@ -31,14 +31,14 @@ This project is available on Maven Central:
 <dependency>
   <!-- For the themes-->
   <groupId>com.github.weisj</groupId>
-  <artifactId>darklaf-core</artifactId>
+  <artifactId>darklaf-theme</artifactId>
   <version>[2.0.2,)</version>
 </dependency>
 ````
 ### Gradle
 ````
 implementation("com.github.weisj:darklaf-core:[2.0.2,)")
-implementation("com.github.weisj:darklaf-core:[2.0.2,)") // For the themes
+implementation("com.github.weisj:darklaf-theme:[2.0.2,)") // For the themes
 ````
 
 ## Installation
