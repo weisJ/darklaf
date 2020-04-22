@@ -424,8 +424,6 @@ public class ThemeSettingsPanel extends JPanel {
 
     public void setTheme(final Theme theme) {
         themeComboBox.setSelectedItem(LafManager.getClosestMatchForTheme(theme));
-        System.out.println(theme);
-        System.out.println(themeComboBox.getSelectedItem());
     }
 
     public void setAccentColorRule(final AccentColorRule accentColorRule) {
