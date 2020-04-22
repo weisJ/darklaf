@@ -111,10 +111,11 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [Native window decorations on Linux.](https://github.com/weisJ/darklaf/issues/2)
   * See [/windows](https://github.com/weisJ/darklaf/tree/master/windows) for the Windows implementation.
   * See [/macos(https://github.com/weisJ/darklaf/tree/master/macos) for the macOS implementation.
-- [Adjustment of platform specific properties](https://github.com/weisJ/darklaf/issues/2)
-  * See the [properties folder](https://github.com/weisJ/darklaf/tree/master/src/main/resources/com/github/weisj/darklaf/properties) especially the platform folder.
-- Create missing demo classes. (See Todo's in test/ui/)
-
+- Localization:
+  * Theme preferences panel. [here](https://github.com/weisJ/darklaf/blob/master/core/src/main/resources/theme_settings.properties)
+  * Other properties:
+      * [Windows title pane](https://github.com/weisJ/darklaf/blob/master/windows/src/main/java/com/github/weisj/darklaf/platform/windows/ui/WindowsTitlePane.java)
+        This also needs to have a bundle created in the first place.
 # Artifacts
 - Group ID: `com.github.weisj`
 - Version: `2.0.3`
