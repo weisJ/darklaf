@@ -29,8 +29,8 @@ import javax.swing.*;
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.platform.macos.MacOSThemePreferenceProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsThemePreferenceProvider;
+import com.github.weisj.darklaf.theme.event.ThemeEventSupport;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
-import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeSupport;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
@@ -42,7 +42,7 @@ public class ThemePreferencesHandler {
     public static final String PREFERENCE_REPORTING_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "enableNativePreferences";
 
     private static ThemePreferencesHandler sharedInstance;
-    private final ThemePreferenceChangeSupport changeSupport = new ThemePreferenceChangeSupport();
+    private final ThemeEventSupport<ThemePreferenceChangeEvent, ThemePreferenceListener> changeSupport = new ThemeEventSupport<>();
     private ThemePreferenceProvider preferenceProvider;
 
     public static ThemePreferencesHandler getSharedInstance() {
@@ -75,16 +75,16 @@ public class ThemePreferencesHandler {
 
     private void onChange(final PreferredThemeStyle style) {
         SwingUtilities.invokeLater(() -> {
-            changeSupport.notifyPreferenceChange(new ThemePreferenceChangeEvent(style));
+            changeSupport.dispatchEvent(new ThemePreferenceChangeEvent(style));
         });
     }
 
     public void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {
-        changeSupport.addThemePreferenceChangeListener(listener);
+        changeSupport.addListener(listener);
     }
 
     public void removeThemePreferenceChangeListener(final ThemePreferenceListener listener) {
-        changeSupport.removeThemePreferenceChangeListener(listener);
+        changeSupport.removeListener(listener);
     }
 
     public void enablePreferenceChangeReporting(final boolean enabled) {

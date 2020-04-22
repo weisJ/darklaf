@@ -24,11 +24,23 @@
  */
 package com.github.weisj.darklaf.theme.event;
 
-public interface ThemePreferenceListener extends ThemeEventListener<ThemePreferenceChangeEvent> {
+public interface ThemeChangeListener extends ThemeEventListener<ThemeChangeEvent> {
 
-    default void onEvent(final ThemePreferenceChangeEvent event) {
-        themePreferenceChanged(event);
+    default void onEvent(final ThemeChangeEvent event) {
+        themeChanged(event);
     }
 
-    void themePreferenceChanged(final ThemePreferenceChangeEvent e);
+    /**
+     * Called if the theme is changed.
+     *
+     * @param e the event.
+     */
+    void themeChanged(final ThemeChangeEvent e);
+
+    /**
+     * Called if the theme is installed.
+     *
+     * @param e the event.
+     */
+    void themeInstalled(final ThemeChangeEvent e);
 }

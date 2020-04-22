@@ -43,8 +43,7 @@ import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.task.DefaultsInitTask;
 import com.github.weisj.darklaf.theme.*;
-import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
-import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
+import com.github.weisj.darklaf.theme.event.*;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemeProvider;
@@ -62,6 +61,7 @@ public final class LafManager {
     private static final List<Theme> registeredThemes = new ArrayList<>();
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new ArrayList<>();
     private static final Collection<DefaultsInitTask> uiInitTasks = new ArrayList<>();
+    private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport = new ThemeEventSupport<>();
 
     static {
         enableLogging(true);
@@ -161,13 +161,31 @@ public final class LafManager {
     /**
      * Removes a {@link ThemePreferenceListener}.
      *
-     * @param listener the listener to add.
+     * @param listener the listener to remove.
      * @see            ThemePreferenceListener
      * @see            #enabledPreferenceChangeReporting(boolean)
      * @see            #isPreferenceChangeReportingEnabled()
      */
     public static void removeThemePreferenceChangeListener(final ThemePreferenceListener listener) {
         ThemePreferencesHandler.getSharedInstance().removeThemePreferenceChangeListener(listener);
+    }
+
+    /**
+     * Adds a {@link ThemeChangeListener}. The listener will receive events if the theme is changed.
+     *
+     * @param listener the listener to add.
+     */
+    public static void addThemeChangeListener(final ThemeChangeListener listener) {
+        eventSupport.addListener(listener);
+    }
+
+    /**
+     * Removes a {@link ThemeChangeListener}.
+     *
+     * @param listener the listener to add.
+     */
+    public static void removeThemeChangeListener(final ThemeChangeListener listener) {
+        eventSupport.removeListener(listener);
     }
 
     /**
@@ -285,7 +303,11 @@ public final class LafManager {
      * @param theme The theme to use.
      */
     public static void setTheme(final Theme theme) {
+        Theme old = LafManager.theme;
         LafManager.theme = theme;
+        if (old != theme) {
+            eventSupport.dispatchEvent(new ThemeChangeEvent(old, theme), ThemeChangeListener::themeChanged);
+        }
         if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().refresh();
     }
 
@@ -356,6 +378,8 @@ public final class LafManager {
             getTheme();
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
+            eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
+                                       ThemeChangeListener::themeInstalled);
         } catch (final ClassNotFoundException
                        | InstantiationException
                        | IllegalAccessException

@@ -26,7 +26,7 @@ package com.github.weisj.darklaf.theme.event;
 
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
-public class ThemePreferenceChangeEvent {
+public class ThemePreferenceChangeEvent implements ThemeEvent {
 
     private final PreferredThemeStyle preferredThemeStyle;
 

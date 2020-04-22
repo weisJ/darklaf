@@ -24,11 +24,32 @@
  */
 package com.github.weisj.darklaf.theme.event;
 
-public interface ThemePreferenceListener extends ThemeEventListener<ThemePreferenceChangeEvent> {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiConsumer;
 
-    default void onEvent(final ThemePreferenceChangeEvent event) {
-        themePreferenceChanged(event);
+public class ThemeEventSupport<E extends ThemeEvent, T extends ThemeEventListener<E>> {
+
+    private final List<T> listenerList = Collections.synchronizedList(new ArrayList<>());
+
+    public void addListener(final T listener) {
+        listenerList.add(listener);
     }
 
-    void themePreferenceChanged(final ThemePreferenceChangeEvent e);
+    public void removeListener(final T listener) {
+        listenerList.remove(listener);
+    }
+
+    public void dispatchEvent(final E event) {
+        dispatchEvent(event, ThemeEventListener::onEvent);
+    }
+
+    public void dispatchEvent(final E event, final BiConsumer<T, E> consumer) {
+        for (T listener : listenerList) {
+            if (listener != null) {
+                consumer.accept(listener, event);
+            }
+        }
+    }
 }

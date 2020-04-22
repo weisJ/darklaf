@@ -3,5 +3,6 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":darklaf-utils"))
     implementation(project(":darklaf-property-loader"))
 }

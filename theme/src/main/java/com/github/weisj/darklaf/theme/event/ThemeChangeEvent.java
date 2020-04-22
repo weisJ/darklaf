@@ -24,11 +24,41 @@
  */
 package com.github.weisj.darklaf.theme.event;
 
-public interface ThemePreferenceListener extends ThemeEventListener<ThemePreferenceChangeEvent> {
+import com.github.weisj.darklaf.theme.Theme;
 
-    default void onEvent(final ThemePreferenceChangeEvent event) {
-        themePreferenceChanged(event);
+public class ThemeChangeEvent implements ThemeEvent {
+
+    private final Theme oldTheme;
+    private final Theme newTheme;
+
+    public ThemeChangeEvent(final Theme oldTheme, final Theme newTheme) {
+        this.oldTheme = oldTheme;
+        this.newTheme = newTheme;
     }
 
-    void themePreferenceChanged(final ThemePreferenceChangeEvent e);
+    /**
+     * Gets the old theme.
+     *
+     * @return the old theme.
+     */
+    public Theme getOldTheme() {
+        return oldTheme;
+    }
+
+    /**
+     * Gets the new theme.
+     *
+     * @return the new theme.
+     */
+    public Theme getNewTheme() {
+        return newTheme;
+    }
+
+    @Override
+    public String toString() {
+        return "ThemeChangeEvent{" +
+               "oldTheme=" + oldTheme +
+               ", newTheme=" + newTheme +
+               '}';
+    }
 }
