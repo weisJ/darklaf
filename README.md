@@ -26,20 +26,27 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>[2.0.3,)</version>
+  <version>[2.0.2,)</version>
+</dependency>
+<dependency>
+  <!-- For the themes-->
+  <groupId>com.github.weisj</groupId>
+  <artifactId>darklaf-core</artifactId>
+  <version>[2.0.2,)</version>
 </dependency>
 ````
 ### Gradle
 ````
-implementation 'com.github.weisj:darklaf-core:[2.0.3,)'
+implementation("com.github.weisj:darklaf-core:[2.0.2,)")
+implementation("com.github.weisj:darklaf-core:[2.0.2,)") // For the themes
 ````
 
 ## Installation
 The LookAndFeel can be easily installed using the 'LafManager'
 ````java
-LafManager.install(); //For default theme (IntelliJ)
-//or
-LafManager.install(new DarculaTheme()); //Specify the used theme.
+LafManager.install(); // For default theme (IntelliJ)
+// or
+LafManager.install(new DarculaTheme()); // Specify the used theme.
 ````
 or by using the UIManager
 ````java
@@ -110,7 +117,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
 
 # Artifacts
 - Group ID: `com.github.weisj`
-- Version: `2.0.3`
+- Version: `2.0.2`
 - Artifact IDs:
   - `darklaf-core` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
   - `darklaf-theme` The themes to use with the LaF.
