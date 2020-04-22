@@ -53,13 +53,6 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     }
 
     @Override
-    public void setEnabled(final boolean enabled) {
-        super.setEnabled(enabled);
-        // Restore state display
-        displayState();
-    }
-
-    @Override
     public boolean isSelected() {
         return state == TristateState.SELECTED;
     }

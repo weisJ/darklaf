@@ -91,7 +91,7 @@ public class ThemeSettingsPanel extends JPanel {
         add(createGeneralSettings(), BorderLayout.CENTER);
         add(createMonitorSettings(), BorderLayout.SOUTH);
         fetch(true);
-        update(true);
+        update();
     }
 
     public void saveSettings() {
@@ -111,7 +111,7 @@ public class ThemeSettingsPanel extends JPanel {
         setEnabledSystemPreferences(systemPreferences);
     }
 
-    private void update(final boolean skipPreferences) {
+    private void update() {
         Theme selectedTheme = (Theme) themeComboBox.getSelectedItem();
         if (selectedTheme == null) selectedTheme = LafManager.getTheme();
 
@@ -128,10 +128,9 @@ public class ThemeSettingsPanel extends JPanel {
                                                     && selectionColorFollowsSystem.isEnabled());
             fontSizeFollowsSystem.setSelected(fontSizeFollowsSystem.isSelected() && fontSizeFollowsSystem.isEnabled());
         }
-        if (!skipPreferences) {
-            enabledSystemPreferences.setEnabled(ThemePreferencesHandler.getSharedInstance().canReport());
-        }
+        enabledSystemPreferences.setEnabled(ThemePreferencesHandler.getSharedInstance().canReport());
         themeComboBox.setEnabled(!(isThemeFollowsSystem() && isSystemPreferencesEnabled()));
+        setEnabledSystemPreferences(isSystemPreferencesEnabled());
 
         enableButtonGroup(bgAccent, selectedTheme.supportsCustomAccentColor()
                                     && !accentColorFollowsSystem.isSelected());
@@ -169,15 +168,11 @@ public class ThemeSettingsPanel extends JPanel {
         if (!ignoreSettings) {
             setEnabledSystemPreferences(LafManager.isPreferenceChangeReportingEnabled());
         }
-        update(false);
+        update();
     }
 
     public void fetch(final PreferredThemeStyle themeStyle) {
         fetch(themeStyle, false);
-    }
-
-    public void fetch() {
-        fetch(false);
     }
 
     public void fetch(final boolean ignoreSettings) {
@@ -228,7 +223,7 @@ public class ThemeSettingsPanel extends JPanel {
         themeComboBox.setSelectedItem(LafManager.getTheme());
 
         themeComboBox.putClientProperty(ComboBoxConstants.KEY_DO_NOT_UPDATE_WHEN_SCROLLED, true);
-        themeComboBox.addItemListener(e -> update(false));
+        themeComboBox.addItemListener(e -> update());
         themeLabel.setLabelFor(themeComboBox);
 
         JComponent themeBox = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -570,7 +565,7 @@ public class ThemeSettingsPanel extends JPanel {
 
         enabledSystemPreferences = new TristateCheckBox(resourceBundle.getString("check_system_preferences"));
 
-        ActionListener actionListener = e -> SwingUtilities.invokeLater(() -> update(false));
+        ActionListener actionListener = e -> SwingUtilities.invokeLater(this::update);
         enabledSystemPreferences.addChangeListener(e -> {
             if (!enabledSystemPreferences.getTristateModel().isIndeterminate()) {
                 boolean selected = enabledSystemPreferences.getTristateModel().isSelected();
@@ -579,7 +574,7 @@ public class ThemeSettingsPanel extends JPanel {
                 if (selectionColorFollowsSystem.isEnabled()) selectionColorFollowsSystem.setSelected(selected);
                 if (fontSizeFollowsSystem.isEnabled()) fontSizeFollowsSystem.setSelected(selected);
             }
-            update(true);
+            update();
         });
         themeFollowsSystem.addActionListener(actionListener);
         accentColorFollowsSystem.addActionListener(actionListener);
