@@ -36,7 +36,7 @@ This project is available on Maven Central:
 </dependency>
 ````
 ### Gradle
-````
+````kotlin
 implementation("com.github.weisj:darklaf-core:[2.0.2,)")
 implementation("com.github.weisj:darklaf-theme:[2.0.2,)") // For the themes
 ````
