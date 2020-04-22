@@ -31,6 +31,7 @@ import javax.swing.*;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 public class TextFieldDemo implements ComponentDemo {
@@ -42,6 +43,7 @@ public class TextFieldDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         JTextField textField = createTextField();
+        textField.putClientProperty(DarkTextUI.KEY_DEFAULT_TEXT, "Default Text");
         DemoPanel panel = new DemoPanel(textField);
 
         JPanel controlPanel = panel.addControls();
@@ -59,7 +61,7 @@ public class TextFieldDemo implements ComponentDemo {
         });
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
-                setEnabled(true);
+                setSelected(textField.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> textField.setComponentOrientation(isSelected()
                         ? ComponentOrientation.LEFT_TO_RIGHT
                         : ComponentOrientation.RIGHT_TO_LEFT));
@@ -85,7 +87,14 @@ public class TextFieldDemo implements ComponentDemo {
     }
 
     protected JTextField createTextField() {
-        return new JTextField("Demo TextField");
+        return new JTextField("Demo TextField") {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension dim = super.getPreferredSize();
+                dim.width = Math.max(dim.width, 100);
+                return dim;
+            }
+        };
     }
 
     @Override

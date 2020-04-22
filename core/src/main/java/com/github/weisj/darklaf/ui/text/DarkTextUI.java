@@ -62,6 +62,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     public static final String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
     public static final String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
     public static final String KEY_IS_LIST_RENDER = DarkListUI.KEY_IS_LIST_RENDERER;
+    public static final String KEY_DEFAULT_TEXT = KEY_PREFIX + "defaultText";
 
     protected JTextComponent editor;
     private FocusListener focusListener = new FocusListener() {
@@ -83,6 +84,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             editor.repaint();
         }
     };
+    protected DefaultTextRenderer defaultTextRenderer;
 
     @Override
     protected Caret createCaret() {
@@ -109,6 +111,10 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
+    }
+
+    protected DefaultTextRenderer createDefaultTextRenderer() {
+        return new LabelDefaultTextRenderer();
     }
 
     @Override
@@ -205,7 +211,28 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected void paintSafely(final Graphics g) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         super.paintSafely(g);
+        config.restoreClip();
+        paintDefaultText(g);
         config.restore();
+    }
+
+    protected void paintDefaultText(final Graphics g) {
+        Document doc = editor.getDocument();
+        if (doc != null && doc.getLength() == 0) {
+            Object defaultText = editor.getClientProperty(KEY_DEFAULT_TEXT);
+            if (defaultText instanceof String) {
+                Rectangle rect = getVisibleEditorRect();
+                g.translate(rect.x, rect.y);
+                Component renderer = getDefaultTextRenderer().getRendererComponent(editor, (String) defaultText);
+                renderer.setBounds(rect);
+                renderer.paint(g);
+            }
+        }
+    }
+
+    protected DefaultTextRenderer getDefaultTextRenderer() {
+        if (defaultTextRenderer == null) defaultTextRenderer = createDefaultTextRenderer();
+        return defaultTextRenderer;
     }
 
     protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {

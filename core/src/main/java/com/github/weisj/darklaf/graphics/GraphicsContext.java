@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.graphics;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.Map;
 
 /**
@@ -40,6 +41,7 @@ public class GraphicsContext {
     private final Paint paint;
     private final Font font;
     private final Shape clip;
+    private final AffineTransform transform;
 
     public GraphicsContext(final Graphics g) {
         graphics2D = (Graphics2D) g;
@@ -50,6 +52,7 @@ public class GraphicsContext {
         paint = graphics2D.getPaint();
         font = graphics2D.getFont();
         clip = graphics2D.getClip();
+        transform = graphics2D.getTransform();
     }
 
     public GraphicsContext setAntialiasing(final boolean on) {
@@ -71,6 +74,11 @@ public class GraphicsContext {
         restorePaint();
         restoreFont();
         restoreClip();
+        restoreTransform();
+    }
+
+    public void restoreTransform() {
+        graphics2D.setTransform(transform);
     }
 
     public void restoreComposite() {
