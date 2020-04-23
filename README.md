@@ -42,10 +42,12 @@ implementation("com.github.weisj:darklaf-theme:[2.0.3,)") // For the themes
 ````
 
 ## Installation
-The LookAndFeel can be easily installed using the 'LafManager'
+The LookAndFeel can be easily installed using the `LafManager`
 ````java
 LafManager.install(); // For default theme (IntelliJ)
-// or
+````
+or
+````java
 LafManager.install(new DarculaTheme()); // Specify the used theme.
 ````
 or by using the UIManager
@@ -53,6 +55,8 @@ or by using the UIManager
 LafManager.setTheme(new DarculaTheme());
 UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
 ````
+
+**Note**: The recommended method is using the `LafManager` as it automatically handles reloading the ui. 
 
 ## Example
 ````java
@@ -129,7 +133,12 @@ Here is a list of things that currently are not finished or need refinement. Thi
   - `darklaf-windows` Code specific to Windows.
   - `darklaf-macos` Code specific to macOS.
 
+# Projects using Darklaf
 
+- [JMeter](https://github.com/apache/jmeter)
+- [Litiengine](https://github.com/gurkenlabs/litiengine)
+- [BoofVC](https://github.com/lessthanoptimal/BoofCV)
+- [threadtear](https://github.com/GraxCode/threadtear)
 
 # License
 This project is licensed under the [MIT license](https://github.com/weisJ/darklaf/blob/master/LICENSE).
