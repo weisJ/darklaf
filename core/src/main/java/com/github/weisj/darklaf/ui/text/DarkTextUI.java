@@ -159,6 +159,33 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        Dimension dim = super.getPreferredSize(c);
+        if (isEmpty()) {
+            String defaultText = getDefaultText();
+            if (!defaultText.isEmpty()) {
+                Component renderer = getDefaultTextRenderer().getRendererComponent(editor, defaultText);
+                Dimension prefSize = renderer.getPreferredSize();
+                Insets i = c.getInsets();
+                prefSize.width += i.left + i.right;
+                prefSize.height += i.top + i.bottom;
+                dim.width = Math.max(dim.width, prefSize.width);
+                dim.height = Math.max(dim.height, prefSize.height);
+            }
+        }
+        dim.width += getCaretWidth();
+        return dim;
+    }
+
+    protected int getCaretWidth() {
+        Caret caret = editor.getCaret();
+        if (caret instanceof DefaultCaret) {
+            return (int) ((DefaultCaret) caret).getWidth();
+        }
+        return 1;
+    }
+
+    @Override
     protected void paintBackground(final Graphics g) {
         final Container parent = getRelevantParent(editor);
         if (parent != null && parent.isOpaque() && !editor.isEnabled()) {
@@ -217,17 +244,26 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     protected void paintDefaultText(final Graphics g) {
-        Document doc = editor.getDocument();
-        if (doc != null && doc.getLength() == 0) {
-            Object defaultText = editor.getClientProperty(KEY_DEFAULT_TEXT);
-            if (defaultText instanceof String) {
+        if (isEmpty()) {
+            String defaultText = getDefaultText();
+            if (!defaultText.isEmpty()) {
                 Rectangle rect = getVisibleEditorRect();
                 g.translate(rect.x, rect.y);
-                Component renderer = getDefaultTextRenderer().getRendererComponent(editor, (String) defaultText);
+                Component renderer = getDefaultTextRenderer().getRendererComponent(editor, defaultText);
                 renderer.setBounds(rect);
                 renderer.paint(g);
             }
         }
+    }
+
+    protected String getDefaultText() {
+        Object defaultText = editor.getClientProperty(KEY_DEFAULT_TEXT);
+        return defaultText instanceof String ? (String) defaultText : "";
+    }
+
+    protected boolean isEmpty() {
+        Document doc = editor.getDocument();
+        return doc == null || doc.getLength() == 0;
     }
 
     protected DefaultTextRenderer getDefaultTextRenderer() {

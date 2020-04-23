@@ -25,7 +25,6 @@
 package com.github.weisj.darklaf;
 
 import java.awt.*;
-import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.AttributedCharacterIterator;
@@ -82,8 +81,7 @@ public final class PropertyLoader {
 
     private static boolean addReferenceInfo;
 
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.singletonMap(TextAttribute.KERNING,
-                                                                                                                   TextAttribute.KERNING_ON);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.emptyMap();
 
     public static void setAddReferenceInfo(final boolean addReferenceInfo) {
         PropertyLoader.addReferenceInfo = addReferenceInfo;

@@ -238,15 +238,15 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Rectangle posOffs1 = c.getUI().modelToView(c, offs1, Position.Bias.Backward);
         Rectangle posOffs1Forward = c.modelToView(offs1);
         Rectangle posOffs1Next = c.modelToView(Math.min(c.getDocument().getLength(), offs1 - 1));
-        boolean selectionStart = c.getSelectionStart() >= offs0;
-        boolean selectionEnd = c.getSelectionEnd() <= offs1;
+        boolean isSelectionStart = c.getSelectionStart() >= offs0;
+        boolean isSelectionEnd = c.getSelectionEnd() <= offs1;
 
         Insets margin = c.getInsets();
 
         boolean firstLineNotPainted = posStartPrev.y + posStartPrev.height == posStart.y;
         boolean lastLineNotPainted = posOffs1Next.y == posEnd.y && posOffs1.y == posOffs1Forward.y;
         boolean isToEndOfLine = posOffs1.y < posEnd.y && !lastLineNotPainted;
-        boolean isToStartOfLine = !selectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
+        boolean isToStartOfLine = !isSelectionEnd && posOffs0.y > posStart.y && (posOffs0.y != posOffs0Prev.y);
 
         Rectangle alloc;
         if (offs0 == offs1 && posEnd.y != posStart.y) {
@@ -280,7 +280,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                               false, false,
                                               isFirstLine, isLastLine, isSecondLastLine, isSecondLine,
                                               firstLineNotPainted, lastLineNotPainted);
-        } else if (!selectionStart && !selectionEnd) {
+        } else if (!isSelectionStart && !isSelectionEnd) {
             if (DEBUG_COLOR) g2d.setColor(Color.ORANGE);
             dirtyShape = paintMiddleSelection(g2d, alloc, c,
                                               isToEndOfLine, isToStartOfLine, isFirstLine, isLastLine,
@@ -294,9 +294,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                     suppressRounded = true;
                     rect = new Rectangle(originalX, alloc.y, originalWidth, alloc.height);
                 }
-                dirtyShape = paintSelection(g2d, c, rect, selectionStart, selectionEnd);
+                dirtyShape = paintSelection(g2d, c, rect, isSelectionStart, isSelectionEnd);
                 suppressRounded = false;
-            } else if (selectionStart) {
+            } else if (isSelectionStart) {
                 dirtyShape = paintSelectionStart(g2d, alloc, c, posStart, posOffs0, endBeforeStart, isSecondLastLine,
                                                  isToEndOfLine);
             } else {
@@ -309,7 +309,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                     isToEndOfLine, isToStartOfLine,
                                     isFirstLine, isLastLine,
                                     isSecondLine, isSecondLastLine,
-                                    selectionStart, selectionEnd,
+                                    isSelectionStart, isSelectionEnd,
                                     posStart, posEnd, dirtyShape.getBounds());
         return dirtyShape;
     }
@@ -367,6 +367,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
      */
     private Shape paintSelection(final Graphics2D g2d, final JTextComponent c, final Rectangle r,
                                  final boolean selectionStart, final boolean selectionEnd) {
+        g2d.setClip(r);
         if (DEBUG_COLOR) g2d.setColor(Color.BLUE);
         if (isRounded(c)) {
             paintRoundedLeftRight(g2d, selectionStart, selectionEnd, r);

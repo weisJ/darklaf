@@ -87,14 +87,7 @@ public class TextFieldDemo implements ComponentDemo {
     }
 
     protected JTextField createTextField() {
-        return new JTextField("Demo TextField") {
-            @Override
-            public Dimension getPreferredSize() {
-                Dimension dim = super.getPreferredSize();
-                dim.width = Math.max(dim.width, 100);
-                return dim;
-            }
-        };
+        return new JTextField("Demo TextField");
     }
 
     @Override

@@ -117,11 +117,26 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public enum CaretStyle {
-        VERTICAL_LINE_STYLE,
-        UNDERLINE_STYLE,
-        BLOCK_STYLE,
-        BLOCK_BORDER_STYLE,
-        THICK_VERTICAL_LINE_STYLE
+        VERTICAL_LINE_STYLE(1),
+        UNDERLINE_STYLE(0),
+        BLOCK_STYLE(0),
+        BLOCK_BORDER_STYLE(0),
+        THICK_VERTICAL_LINE_STYLE(1);
+
+        private final int width;
+
+        CaretStyle(final int width) {
+            this.width = width;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+    }
+
+    @Override
+    public double getWidth() {
+        return style.getWidth();
     }
 
     /**
@@ -288,7 +303,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                     g.fillRect(r.x, r.y, r.width, r.height);
                     break;
                 case BLOCK_BORDER_STYLE :
-                    PaintUtil.drawRect(g, r.x, r.y, r.width - 1, r.height, 1);
+                    PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, 1);
                     break;
                 case UNDERLINE_STYLE :
                     if (textAreaBg == null) {
@@ -299,10 +314,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                     g.fillRect(r.x, y - 1, r.width, 1);
                     break;
                 case THICK_VERTICAL_LINE_STYLE :
-                    g.fillRect(r.x, r.y, 2, r.height);
-                    break;
                 case VERTICAL_LINE_STYLE :
-                    g.fillRect(r.x, r.y, 1, r.height);
+                    g.fillRect(r.x, r.y, style.getWidth(), r.height);
                     break;
             }
         }
