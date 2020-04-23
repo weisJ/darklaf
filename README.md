@@ -140,5 +140,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [BoofVC](https://github.com/lessthanoptimal/BoofCV)
 - [threadtear](https://github.com/GraxCode/threadtear)
 
+Please send me your project and I'll add it here.
+
 # License
 This project is licensed under the [MIT license](https://github.com/weisJ/darklaf/blob/master/LICENSE).
