@@ -57,6 +57,7 @@ public class UIUpdater implements ThemeChangeListener {
 
     /**
      * Remove the registered {@link UIUpdater} from the component.
+     * This needs to be called in order for the component to be garbage collected.
      *
      * @param component the component to unregister.
      */
