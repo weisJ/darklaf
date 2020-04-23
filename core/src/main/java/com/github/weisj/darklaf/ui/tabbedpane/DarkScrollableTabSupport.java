@@ -35,7 +35,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
-import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
+import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 
 public class DarkScrollableTabSupport extends ScrollableTabSupport implements MouseWheelListener, ActionListener {
 

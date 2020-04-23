@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

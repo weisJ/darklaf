@@ -22,6 +22,24 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
-public interface CellRenderer {}
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+
+public class PopupMenuAdapter implements PopupMenuListener {
+    @Override
+    public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
+
+    }
+
+    @Override
+    public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
+
+    }
+
+    @Override
+    public void popupMenuCanceled(final PopupMenuEvent e) {
+
+    }
+}

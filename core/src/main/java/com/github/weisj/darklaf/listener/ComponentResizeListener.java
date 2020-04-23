@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;

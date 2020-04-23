@@ -30,8 +30,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.components.PlainAction;
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
-import com.github.weisj.darklaf.decorators.PlainAction;
 import com.github.weisj.darklaf.util.StringUtil;
 
 /**

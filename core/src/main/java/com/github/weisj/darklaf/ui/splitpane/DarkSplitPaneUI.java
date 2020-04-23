@@ -33,7 +33,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
-import com.github.weisj.darklaf.decorators.LayoutManagerDelegate;
+import com.github.weisj.darklaf.delegate.LayoutManagerDelegate;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /**

@@ -38,7 +38,7 @@ import com.github.weisj.darklaf.color.DarkColorModelCMYK;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.color.DarkColorModelRGB;
-import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /**

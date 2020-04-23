@@ -22,26 +22,31 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.components;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
 
-@FunctionalInterface
-public interface MouseClickListener extends MouseListener {
+import javax.swing.*;
+
+/**
+ * @author Jannis Weis
+ */
+public class PlainAction extends AbstractAction {
+
+    private final Runnable action;
+
+    public PlainAction(final String name, final Runnable action) {
+        super(name);
+        this.action = action;
+    }
+
+    public PlainAction(final String name, final Icon icon, final Runnable action) {
+        super(name, icon);
+        this.action = action;
+    }
 
     @Override
-    void mouseClicked(MouseEvent e);
-
-    @Override
-    default void mousePressed(final MouseEvent e) {}
-
-    @Override
-    default void mouseReleased(final MouseEvent e) {}
-
-    @Override
-    default void mouseEntered(final MouseEvent e) {}
-
-    @Override
-    default void mouseExited(final MouseEvent e) {}
+    public void actionPerformed(final ActionEvent e) {
+        action.run();
+    }
 }

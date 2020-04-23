@@ -22,52 +22,69 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.function.Consumer;
 
-public class MouseResponder implements MouseListener {
+import javax.swing.*;
 
-    private final Consumer<MouseEvent> consumer;
+/**
+ * @author Jannis Weis
+ */
+public class HoverListener implements MouseListener {
 
-    public MouseResponder(final Consumer<MouseEvent> consumer) {
-        this.consumer = consumer;
+    private final JComponent component;
+    private boolean hover = false;
+    private boolean scheduled = false;
+
+    public HoverListener(final JComponent component) {
+        this.component = component;
+    }
+
+    public boolean isHover() {
+        return hover;
     }
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        if (consumer != null) {
-            consumer.accept(e);
-        }
+
     }
 
     @Override
     public void mousePressed(final MouseEvent e) {
-        if (consumer != null) {
-            consumer.accept(e);
-        }
+
     }
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-        if (consumer != null) {
-            consumer.accept(e);
-        }
+
     }
 
     @Override
     public void mouseEntered(final MouseEvent e) {
-        if (consumer != null) {
-            consumer.accept(e);
+        if (!hover) {
+            hover = true;
+            scheduleRepaint();
+        }
+    }
+
+    private void scheduleRepaint() {
+        if (!scheduled) {
+            scheduled = true;
+            SwingUtilities.invokeLater(() -> {
+                component.invalidate();
+                component.repaint();
+                scheduled = false;
+            });
         }
     }
 
     @Override
     public void mouseExited(final MouseEvent e) {
-        if (consumer != null) {
-            consumer.accept(e);
+        if (hover) {
+            hover = false;
+            scheduleRepaint();
         }
     }
 }

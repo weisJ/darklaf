@@ -31,7 +31,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
-import com.github.weisj.darklaf.decorators.CellRenderer;
 import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;

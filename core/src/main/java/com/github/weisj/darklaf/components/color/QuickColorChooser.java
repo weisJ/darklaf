@@ -32,9 +32,9 @@ import java.util.function.Supplier;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.SolidColorIcon;
+import com.github.weisj.darklaf.listener.MouseClickListener;
 
 public class QuickColorChooser extends JPanel {
 

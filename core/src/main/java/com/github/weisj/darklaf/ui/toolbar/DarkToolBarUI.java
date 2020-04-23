@@ -32,7 +32,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-import com.github.weisj.darklaf.decorators.MouseResponder;
+import com.github.weisj.darklaf.listener.MouseResponder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**

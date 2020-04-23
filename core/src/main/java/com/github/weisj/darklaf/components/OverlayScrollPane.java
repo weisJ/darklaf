@@ -29,7 +29,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ScrollPaneUI;
 
-import com.github.weisj.darklaf.ui.scrollpane.ScrollLayoutManagerDelegate;
+import com.github.weisj.darklaf.delegate.ScrollLayoutManagerDelegate;
 
 /**
  * Scroll pane that displays its content beneath the scrollbar.

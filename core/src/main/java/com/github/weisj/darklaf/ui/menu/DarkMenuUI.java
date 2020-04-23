@@ -33,9 +33,9 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
-import com.github.weisj.darklaf.decorators.MouseInputDelegate;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.listener.MouseInputDelegate;
 
 public class DarkMenuUI extends BasicMenuUI {
 

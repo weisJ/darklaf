@@ -22,24 +22,52 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.function.Consumer;
 
-public class PopupMenuAdapter implements PopupMenuListener {
-    @Override
-    public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
+public class MouseResponder implements MouseListener {
 
+    private final Consumer<MouseEvent> consumer;
+
+    public MouseResponder(final Consumer<MouseEvent> consumer) {
+        this.consumer = consumer;
     }
 
     @Override
-    public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
-
+    public void mouseClicked(final MouseEvent e) {
+        if (consumer != null) {
+            consumer.accept(e);
+        }
     }
 
     @Override
-    public void popupMenuCanceled(final PopupMenuEvent e) {
+    public void mousePressed(final MouseEvent e) {
+        if (consumer != null) {
+            consumer.accept(e);
+        }
+    }
 
+    @Override
+    public void mouseReleased(final MouseEvent e) {
+        if (consumer != null) {
+            consumer.accept(e);
+        }
+    }
+
+    @Override
+    public void mouseEntered(final MouseEvent e) {
+        if (consumer != null) {
+            consumer.accept(e);
+        }
+    }
+
+    @Override
+    public void mouseExited(final MouseEvent e) {
+        if (consumer != null) {
+            consumer.accept(e);
+        }
     }
 }

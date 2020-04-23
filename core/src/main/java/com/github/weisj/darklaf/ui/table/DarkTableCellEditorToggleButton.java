@@ -30,7 +30,7 @@ import java.util.EventObject;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 
-import com.github.weisj.darklaf.decorators.CellRenderer;
+import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 

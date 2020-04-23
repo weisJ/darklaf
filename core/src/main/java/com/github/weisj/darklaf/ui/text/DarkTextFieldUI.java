@@ -35,11 +35,11 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.decorators.MouseClickListener;
-import com.github.weisj.darklaf.decorators.MouseMovementListener;
-import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.listener.MouseClickListener;
+import com.github.weisj.darklaf.listener.MouseMovementListener;
+import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**

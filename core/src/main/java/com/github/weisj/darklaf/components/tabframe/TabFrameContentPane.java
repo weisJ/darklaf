@@ -30,7 +30,7 @@ import java.util.function.BiConsumer;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 
-import com.github.weisj.darklaf.decorators.AncestorAdapter;
+import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.util.Alignment;
 
 /**

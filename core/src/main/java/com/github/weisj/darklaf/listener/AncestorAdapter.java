@@ -22,46 +22,18 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
-import java.awt.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
-public class LayoutManagerDelegate implements LayoutManager {
-    private final LayoutManager delegate;
-
-    public LayoutManagerDelegate(final LayoutManager delegate) {
-        if (delegate == null) {
-            throw new IllegalArgumentException("Delegate is null");
-        }
-        this.delegate = delegate;
-    }
-
-    public LayoutManager getDelegate() {
-        return delegate;
-    }
+public class AncestorAdapter implements AncestorListener {
+    @Override
+    public void ancestorAdded(final AncestorEvent event) {}
 
     @Override
-    public void addLayoutComponent(final String name, final Component comp) {
-        delegate.addLayoutComponent(name, comp);
-    }
+    public void ancestorRemoved(final AncestorEvent event) {}
 
     @Override
-    public void removeLayoutComponent(final Component comp) {
-        delegate.removeLayoutComponent(comp);
-    }
-
-    @Override
-    public Dimension preferredLayoutSize(final Container parent) {
-        return delegate.preferredLayoutSize(parent);
-    }
-
-    @Override
-    public Dimension minimumLayoutSize(final Container parent) {
-        return delegate.minimumLayoutSize(parent);
-    }
-
-    @Override
-    public void layoutContainer(final Container parent) {
-        delegate.layoutContainer(parent);
-    }
+    public void ancestorMoved(final AncestorEvent event) {}
 }

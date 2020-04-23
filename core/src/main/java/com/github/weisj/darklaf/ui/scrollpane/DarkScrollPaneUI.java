@@ -32,6 +32,8 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollPaneUI;
 
+import com.github.weisj.darklaf.delegate.ScrollLayoutManagerDelegate;
+
 /**
  * @author Jannis Weis
  */

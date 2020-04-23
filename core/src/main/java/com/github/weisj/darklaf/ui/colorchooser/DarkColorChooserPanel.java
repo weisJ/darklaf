@@ -34,8 +34,8 @@ import javax.swing.event.AncestorEvent;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
-import com.github.weisj.darklaf.decorators.AncestorAdapter;
-import com.github.weisj.darklaf.decorators.UpdateDocumentListener;
+import com.github.weisj.darklaf.listener.AncestorAdapter;
+import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.ColorUtil;
 

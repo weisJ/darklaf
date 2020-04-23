@@ -34,9 +34,9 @@ import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.decorators.MouseMovementListener;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.listener.MouseMovementListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**

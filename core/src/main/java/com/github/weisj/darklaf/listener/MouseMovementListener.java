@@ -22,31 +22,16 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
-import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
-import javax.swing.*;
-
-/**
- * @author Jannis Weis
- */
-public class PlainAction extends AbstractAction {
-
-    private final Runnable action;
-
-    public PlainAction(final String name, final Runnable action) {
-        super(name);
-        this.action = action;
-    }
-
-    public PlainAction(final String name, final Icon icon, final Runnable action) {
-        super(name, icon);
-        this.action = action;
-    }
+public interface MouseMovementListener extends MouseMotionListener {
 
     @Override
-    public void actionPerformed(final ActionEvent e) {
-        action.run();
-    }
+    default void mouseDragged(final MouseEvent e) {}
+
+    @Override
+    void mouseMoved(MouseEvent e);
 }

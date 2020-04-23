@@ -22,24 +22,6 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.ui.cell;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-@FunctionalInterface
-public interface UpdateDocumentListener extends DocumentListener {
-    default void insertUpdate(final DocumentEvent e) {
-        update();
-    }
-
-    default void removeUpdate(final DocumentEvent e) {
-        update();
-    }
-
-    default void changedUpdate(final DocumentEvent e) {
-        update();
-    }
-
-    void update();
-}
+public interface CellRenderer {}

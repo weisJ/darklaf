@@ -36,10 +36,10 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import com.github.weisj.darklaf.decorators.MouseClickListener;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.util.*;
 
 /**

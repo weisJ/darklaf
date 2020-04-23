@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.scrollpane;
+package com.github.weisj.darklaf.delegate;
 
 import java.awt.*;
 

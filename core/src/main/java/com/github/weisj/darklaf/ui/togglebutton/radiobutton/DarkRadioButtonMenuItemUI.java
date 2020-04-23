@@ -31,7 +31,7 @@ import javax.swing.plaf.ComponentUI;
 
 import sun.swing.MenuItemLayoutHelper;
 
-import com.github.weisj.darklaf.decorators.MouseClickListener;
+import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;

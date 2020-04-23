@@ -33,7 +33,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.decorators.PopupMenuAdapter;
+import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 

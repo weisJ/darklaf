@@ -22,18 +22,24 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.decorators;
+package com.github.weisj.darklaf.listener;
 
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-public class AncestorAdapter implements AncestorListener {
-    @Override
-    public void ancestorAdded(final AncestorEvent event) {}
+@FunctionalInterface
+public interface UpdateDocumentListener extends DocumentListener {
+    default void insertUpdate(final DocumentEvent e) {
+        update();
+    }
 
-    @Override
-    public void ancestorRemoved(final AncestorEvent event) {}
+    default void removeUpdate(final DocumentEvent e) {
+        update();
+    }
 
-    @Override
-    public void ancestorMoved(final AncestorEvent event) {}
+    default void changedUpdate(final DocumentEvent e) {
+        update();
+    }
+
+    void update();
 }

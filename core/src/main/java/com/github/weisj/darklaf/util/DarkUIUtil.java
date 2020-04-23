@@ -42,8 +42,8 @@ import javax.swing.tree.TreeCellRenderer;
 
 import sun.awt.SunToolkit;
 
-import com.github.weisj.darklaf.decorators.CellRenderer;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.table.DarkTableHeaderUI;
 
