@@ -71,13 +71,13 @@ LafManager.themeForPreferredStyle(getPreferredThemeStyle());
 
 The following settings are picked up by darklaf:
 
-| Windows | macOS | Setting             |
-|:-------:|:-----:|:--------------------|
-| [x]     | [x]   | Light/Dark mode     |
-| [x]     | [x]   | High contrast mode  |
-| [x]     | [x]   | Accent color        |
-| [ ]     | [x]   | Selection color     |
-| [x]     | [ ]   | Font size           |
+| Windows                   | macOS                   | Setting             |
+|:-------------------------:|:-----------------------:|:--------------------|
+| <ul><li>[x]</li></ul>     | <ul><li>[x]</li></ul>   | Light/Dark mode     |
+| <ul><li>[x]</li></ul>     | <ul><li>[x]</li></ul>   | High contrast mode  |
+| <ul><li>[x]</li></ul>     | <ul><li>[ ]</li></ul>   | Accent color        |
+| <ul><li>[ ]</li></ul>     | <ul><li>[x]</li></ul>   | Selection color     |
+| <ul><li>[x]</li></ul>     | <ul><li>[ ]</li></ul>   | Font size           |
 
 You can use the `ThemeSettings` class with `ThemeSettings#showSettingsDialog` or `ThemeSettings#getSettingsPanel` to provide the user
 the most possible customization.
