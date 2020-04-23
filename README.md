@@ -131,7 +131,7 @@ Further details can be found in the respective `library.md` file. The libraries 
 when building the project.
 When building the project there will be a message for every library that needs to be manually included.
 
-Note: You can still build the project without the libraries, but then custom decorations won't be supported.
+**Note**: You can still build the project without the libraries, but then custom decorations won't be supported.
 
 # Contribute
 Here is a list of things that currently are not finished or need refinement. This list is a work in progress and being updated regulary. If you find any problems with the LaF feel free to submit an issue:
