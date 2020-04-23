@@ -73,11 +73,11 @@ The following settings are picked up by darklaf:
 
 | Windows                   | macOS                   | Setting             |
 |:-------------------------:|:-----------------------:|:--------------------|
-| <ul><li>[x]</li></ul>     | <ul><li>[x]</li></ul>   | Light/Dark mode     |
-| <ul><li>[x]</li></ul>     | <ul><li>[x]</li></ul>   | High contrast mode  |
-| <ul><li>[x]</li></ul>     | <ul><li>[ ]</li></ul>   | Accent color        |
-| <ul><li>[ ]</li></ul>     | <ul><li>[x]</li></ul>   | Selection color     |
-| <ul><li>[x]</li></ul>     | <ul><li>[ ]</li></ul>   | Font size           |
+| :ballot_box_with_check:   | :ballot_box_with_check: | Light/Dark mode     |
+| :ballot_box_with_check:   | :ballot_box_with_check: | High contrast mode  |
+| :ballot_box_with_check:   | :ballot_box_with_check: | Accent color        |
+|                           | :ballot_box_with_check: | Selection color     |
+| :ballot_box_with_check:   |                         | Font size           |
 
 You can use the `ThemeSettings` class with `ThemeSettings#showSettingsDialog` or `ThemeSettings#getSettingsPanel` to provide the user
 the most possible customization.
