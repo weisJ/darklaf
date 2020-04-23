@@ -748,6 +748,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 right = tmp;
 
             }
+            right++; // Make sure mouse exit event is produced for left most button.
             JNIDecorationsWindows.updateValues(windowHandle,
                                                Scale.scaleWidth(left),
                                                Scale.scaleWidth(right),

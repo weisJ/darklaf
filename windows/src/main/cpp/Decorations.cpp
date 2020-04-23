@@ -234,9 +234,9 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackgrou
 
 void ExtendClientFrame(HWND handle)
 {
-    MARGINS margins = { 1,
-                        1,
-                        1,
+    MARGINS margins = { 0,
+                        0,
+                        0,
                         1 };
     DwmExtendFrameIntoClientArea(handle, &margins);
 }
