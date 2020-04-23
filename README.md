@@ -58,6 +58,19 @@ UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
 
 **Note**: The recommended method is using the `LafManager` as it automatically handles reloading the ui. 
 
+### Choosing a theme
+It is highly encouraged to provide users more than on theme. Forcing users to use a light/dark theme because of personal preferences might be degrading their experience in certain situations. 
+
+Darklaf supports detecting the system theme on macOS and Windows with the ablity to automatically change the theme if the settings change.
+
+````
+// This returns the preferred theme of the system settings.
+LafManager.themeForPreferredStyle(getPreferredThemeStyle());
+````
+
+You can use the `ThemeSettings` class with `ThemeSettings#showSettingsDialog` or `ThemeSettings#getSettingsPanel` to provide the user
+the most possible customization.
+
 ## Example
 ````java
 import com.github.weisj.darklaf.LafManager;
