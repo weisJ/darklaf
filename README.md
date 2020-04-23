@@ -63,7 +63,7 @@ It is highly encouraged to provide users more than on theme. Forcing users to us
 
 Darklaf supports detecting the system theme on macOS and Windows with the ablity to automatically change the theme if the settings change.
 
-````
+````java
 // This returns the preferred theme of the system settings.
 LafManager.themeForPreferredStyle(getPreferredThemeStyle());
 ````
