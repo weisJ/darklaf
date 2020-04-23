@@ -59,14 +59,25 @@ UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
 **Note**: The recommended method is using the `LafManager` as it automatically handles reloading the ui. 
 
 ### Choosing a theme
-It is highly encouraged to provide users more than on theme. Forcing users to use a light/dark theme because of personal preferences might be degrading their experience in certain situations. 
+It is highly encouraged to provide users more than one theme. Forcing users to use a light/dark theme because of personal preferences might be degrading their experience in certain situations. 
+For the visually impaired darklaf provides a set of high contrast themes, `HighContrastThemeLight` and `HighContrastThemeDark`.
 
-Darklaf supports detecting the system theme on macOS and Windows with the ablity to automatically change the theme if the settings change.
+Darklaf supports detecting the system theme on macOS and Windows with the ability to automatically change the theme if the settings change.
 
 ````java
 // This returns the preferred theme of the system settings.
 LafManager.themeForPreferredStyle(getPreferredThemeStyle());
 ````
+
+The following settings are picked up by darklaf:
+
+| Windows | macOS | Setting             |
+|:-------:|:-----:|:--------------------|
+| [x]     | [x]   | Light/Dark mode     |
+| [x]     | [x]   | High contrast mode  |
+| [x]     | [x]   | Accent color        |
+| [ ]     | [x]   | Selection color     |
+| [x]     | [ ]   | Font size           |
 
 You can use the `ThemeSettings` class with `ThemeSettings#showSettingsDialog` or `ThemeSettings#getSettingsPanel` to provide the user
 the most possible customization.
