@@ -40,13 +40,36 @@ import com.github.weisj.darklaf.theme.event.ThemeChangeListener;
  */
 public class UIUpdater implements ThemeChangeListener {
 
+    private static final String KEY_UPDATER = "JComponent.uiUpdaterLister";
+
     /**
      * Creates and registers a new {@link UIUpdater} with the given component.
      *
      * @param component the component.
      */
-    public static void registerComponent(final Component component) {
+    public static void registerComponent(final JComponent component) {
+        if (component == null) return;
+        removeComponent(component);
+        UIUpdater updater = new UIUpdater(component);
+        component.putClientProperty(KEY_UPDATER, updater);
         LafManager.addThemeChangeListener(new UIUpdater(component));
+    }
+
+    /**
+     * Remove the registered {@link UIUpdater} from the component.
+     *
+     * @param component the component to unregister.
+     */
+    public static void removeComponent(final JComponent component) {
+        Object updater = component.getClientProperty(KEY_UPDATER);
+        if (updater instanceof UIUpdater) {
+            removeComponent(component, (UIUpdater) updater);
+        }
+    }
+
+    private static void removeComponent(final JComponent component, final UIUpdater updater) {
+        component.putClientProperty(KEY_UPDATER, null);
+        LafManager.removeThemeChangeListener(updater);
     }
 
     private final Component component;
