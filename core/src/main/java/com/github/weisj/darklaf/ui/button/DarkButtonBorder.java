@@ -199,36 +199,31 @@ public class DarkButtonBorder implements Border, UIResource {
         boolean paintLeft = DarkUIUtil.hasFocus(left);
         if (paintLeft) {
             int h = height - Math.max(0, getShadowSize(left) - borderSize);
-            int arc = getFocusArc(left);
-            g2.translate(-2 * borderSize, 0);
-            PaintUtil.paintLineBorder(g2, -borderSize, borderSize, 3 * borderSize, h, arc);
-            PaintUtil.paintFocusBorder(g2, 3 * borderSize, h, arc, borderSize);
-            g2.translate(2 * borderSize, 0);
+            g2.translate(-3 * borderSize + 1, 0);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, h, getFocusArc(left), borderSize);
+            g2.translate(-(-3 * borderSize + 1), 0);
         }
         JComponent right = ButtonConstants.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
         boolean paintRight = DarkUIUtil.hasFocus(right);
-        g2.setColor(focusBorderColor);
         if (paintRight) {
             int h = height - Math.max(0, getShadowSize(right) - borderSize);
-            g2.translate(width - borderSize, 0);
-            PaintUtil.paintFocusBorder(g2, 3 * borderSize, h, getFocusArc(right), borderSize);
-            g2.translate(borderSize - width, 0);
+            g2.translate(width - borderSize - 1, 0);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, h, getFocusArc(right), borderSize);
+            g2.translate(-(width - borderSize - 1), 0);
         }
         JComponent top = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
         boolean paintTop = DarkUIUtil.hasFocus(top);
         if (paintTop) {
-            g2.translate(0, -2 * borderSize);
-            PaintUtil.paintFocusBorder(g2, width, 3 * borderSize,
-                                       getFocusArc(top), borderSize);
-            g2.translate(0, 2 * borderSize);
+            g2.translate(0, -3 * borderSize + 1);
+            PaintUtil.paintFocusBorder(g2, width, 4 * borderSize, getFocusArc(top), borderSize);
+            g2.translate(0, -(-3 * borderSize + 1));
         }
         JComponent bottom = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
         boolean paintBottom = DarkUIUtil.hasFocus(bottom);
         if (paintBottom) {
-            g2.translate(0, height - borderSize);
-            PaintUtil.paintFocusBorder(g2, width, 3 * borderSize,
-                                       getFocusArc(bottom), borderSize);
-            g2.translate(0, borderSize - height);
+            g2.translate(0, height - borderSize - 1);
+            PaintUtil.paintFocusBorder(g2, width, 4 * borderSize, getFocusArc(bottom), borderSize);
+            g2.translate(0, -(height - borderSize - 1));
         }
     }
 

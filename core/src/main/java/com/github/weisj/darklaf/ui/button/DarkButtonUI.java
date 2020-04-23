@@ -150,17 +150,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     @Override
-    public void update(final Graphics g, final JComponent c) {
-        super.update(g, c);
-        boolean isDefaultButton = ButtonConstants.isDefaultButton(c) && !SystemInfo.isMac;
-        if (isDefaultButton && !c.getFont().isBold()) {
-            c.setFont(c.getFont().deriveFont(Font.BOLD));
-        } else if (!isDefaultButton && c.getFont().isBold()) {
-            c.setFont(c.getFont().deriveFont(Font.PLAIN));
-        }
-    }
-
-    @Override
     public void paint(final Graphics g, final JComponent c) {
         GraphicsContext config = new GraphicsContext(g);
         AbstractButton b = (AbstractButton) c;
@@ -391,14 +380,14 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
 
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
-        Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
         if (corner != null) {
+            Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
             insetMask = corner.maskInsetsInverted(insetMask, 0);
+            i.left -= insetMask.left;
+            i.right -= insetMask.right;
+            i.top -= insetMask.top;
+            i.bottom -= insetMask.bottom;
         }
-        i.left -= insetMask.left;
-        i.right -= insetMask.right;
-        i.top -= insetMask.top;
-        i.bottom -= insetMask.bottom;
 
         viewRect.x = i.left;
         viewRect.y = i.top;
