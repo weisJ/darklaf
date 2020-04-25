@@ -275,6 +275,13 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             hitArea.setFrame(0, 0, 0, 0);
         } else if (DarkToggleButtonUI.KEY_CLEAR_HIT_AREA.equals(key)) {
             hitArea.setFrame(0, 0, 0, 0);
+        } else if (KEY_VERTICAL_ICON_OFFSET.equals(key)) {
+            Object obj = evt.getNewValue();
+            if (obj instanceof Integer) {
+                iconBaselineOffset = (Integer) obj;
+            } else {
+                iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + "iconBaselineOffset");
+            }
         }
     }
 }

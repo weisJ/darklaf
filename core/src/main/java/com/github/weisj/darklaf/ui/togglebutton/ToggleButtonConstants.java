@@ -38,6 +38,7 @@ public interface ToggleButtonConstants {
     String KEY_IS_TREE_RENDERER = DarkTreeUI.KEY_IS_TREE_RENDERER;
     String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
     String KEY_IS_TABLE_RENDERER = DarkTableUI.KEY_IS_TABLE_RENDERER;
+    String KEY_VERTICAL_ICON_OFFSET = "JToggleButton.iconBaselineOffset";
     String KEY_CLEAR_HIT_AREA = "JToggleButton.clearHitArea";
     String VARIANT_SLIDER = "slider";
 

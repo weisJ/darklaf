@@ -107,6 +107,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
             setOpaque(opaque);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
         }
 
         public void setHasFocus(final boolean hasFocus) {
@@ -132,6 +133,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
             setOpaque(opaque);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
         }
 
         public void setHasFocus(final boolean hasFocus) {

@@ -74,7 +74,9 @@ public class TableDemo implements ComponentDemo {
         };
 
         JTableHeader header = table.getTableHeader();
-        DemoPanel panel = new DemoPanel(new JScrollPane(table));
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        DemoPanel panel = new DemoPanel(scrollPane, new BorderLayout(), 10);
 
         JPanel controlPanel = panel.addControls(3);
         controlPanel.add(new JCheckBox("enabled") {

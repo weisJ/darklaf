@@ -39,6 +39,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.combobox.DarkComboBoxUI;
 import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
@@ -57,10 +58,12 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     private static final JCheckBox dummyCheckBox = new JCheckBox();
     private static final IconWrapper iconWrapper = new IconWrapper();
 
+    private final JToggleButton editorCheckBox = new DarkCellRendererToggleButton.CellEditorCheckBox(true);
     private final DarkTableCellEditorToggleButton checkBoxEditor = new DarkTableCellEditorToggleButton(this,
-                                                                                                       new DarkTableCellEditorToggleButton.CellCheckBox());
+                                                                                                       editorCheckBox);
+    private final JToggleButton editorRadioButton = new DarkCellRendererToggleButton.CellEditorRadioButton(true);
     private final DarkTableCellEditorToggleButton radioButtonEditor = new DarkTableCellEditorToggleButton(this,
-                                                                                                          new DarkTableCellEditorToggleButton.CellRadioButton());
+                                                                                                          editorRadioButton);
     private boolean value;
     private boolean isBooleanEditor;
     private JTable table;

@@ -30,7 +30,6 @@ import java.util.EventObject;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 
-import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -81,29 +80,5 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
     @Override
     public boolean shouldSelectCell(final EventObject anEvent) {
         return false;
-    }
-
-    public static class CellCheckBox extends JCheckBox implements CellRenderer {
-        @Override
-        public boolean hasFocus() {
-            return true;
-        }
-
-        @Override
-        public boolean isFocusOwner() {
-            return super.hasFocus();
-        }
-    }
-
-    public static class CellRadioButton extends JRadioButton implements CellRenderer {
-        @Override
-        public boolean hasFocus() {
-            return true;
-        }
-
-        @Override
-        public boolean isFocusOwner() {
-            return super.hasFocus();
-        }
     }
 }
