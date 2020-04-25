@@ -39,8 +39,6 @@ public abstract class CustomTitlePane extends JComponent {
      */
     protected abstract void install();
 
-    public abstract Insets getWindowSizeAdjustment();
-
     @Override
     public void addNotify() {
         super.addNotify();

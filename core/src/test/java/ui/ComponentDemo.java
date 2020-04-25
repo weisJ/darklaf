@@ -57,6 +57,7 @@ public interface ComponentDemo {
 
     static void showDemo(final ComponentDemo demo, final Dimension dimension) {
         SwingUtilities.invokeLater(() -> {
+            LafManager.setDecorationsEnabled(true);
             LafManager.install(demo.createTheme());
             JFrame frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

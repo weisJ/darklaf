@@ -61,17 +61,29 @@ public final class DarkUIUtil {
         if (insets != null && rect != null) {
             rect.x += insets.left;
             rect.y += insets.top;
-            rect.width -= (insets.right + rect.x);
-            rect.height -= (insets.bottom + rect.y);
+            rect.width -= (insets.right + insets.left);
+            rect.height -= (insets.bottom + insets.top);
         }
     }
 
+    public static Insets addInsets(final Insets ins1, final Insets ins2) {
+        if (ins2 == null) return ins1;
+        if (ins1 != null) {
+            ins1.left += ins2.left;
+            ins1.right += ins2.right;
+            ins1.top += ins2.top;
+            ins1.bottom += ins2.bottom;
+            return ins1;
+        }
+        return null;
+    }
+
     public static void removeInsets(final Rectangle rectangle, final Insets insets) {
-        if (insets != null) {
-            rectangle.x += insets.left;
-            rectangle.y += insets.top;
-            rectangle.width -= insets.left + insets.right;
-            rectangle.height -= insets.top + insets.bottom;
+        if (insets != null && rectangle != null) {
+            rectangle.x -= insets.left;
+            rectangle.y -= insets.top;
+            rectangle.width += insets.left + insets.right;
+            rectangle.height += insets.top + insets.bottom;
         }
     }
 

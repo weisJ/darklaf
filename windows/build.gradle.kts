@@ -32,8 +32,8 @@ library {
     binaries.whenElementFinalized(CppSharedLibrary::class) {
         linkTask.get().linkerArgs.addAll(
             when (toolChain) {
-                is Gcc, is Clang -> listOf("-ldwmapi", "-lGdi32", "-luser32", "-ladvapi32")
-                is VisualCpp -> listOf("dwmapi.lib", "user32.lib", "Gdi32.lib", "Advapi32.lib")
+                is Gcc, is Clang -> listOf("-ldwmapi", "-lGdi32", "-luser32", "-ladvapi32", "-Shell32")
+                is VisualCpp -> listOf("dwmapi.lib", "user32.lib", "Gdi32.lib", "Advapi32.lib", "Shell32.lib")
                 else -> emptyList()
             }
         )

@@ -104,7 +104,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
             }
 
             Insets i = progressBar.getInsets();
-            DarkUIUtil.removeInsets(r, i);
+            DarkUIUtil.applyInsets(r, i);
             int orientation = progressBar.getOrientation();
 
             Color startColor, endColor;
@@ -248,7 +248,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
             }
 
             Insets i = progressBar.getInsets();
-            DarkUIUtil.removeInsets(r, i);
+            DarkUIUtil.applyInsets(r, i);
             int amountFull = getAmountFull(i, r.width, r.height);
 
             Shape fullShape, coloredShape;

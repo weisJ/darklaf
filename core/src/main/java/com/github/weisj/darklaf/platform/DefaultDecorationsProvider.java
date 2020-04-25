@@ -41,11 +41,6 @@ public class DefaultDecorationsProvider implements DecorationsProvider {
 
             @Override
             public void uninstall() {}
-
-            @Override
-            public Insets getWindowSizeAdjustment() {
-                return new Insets(0, 0, 0, 0);
-            }
         };
     }
 

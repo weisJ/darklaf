@@ -79,7 +79,7 @@ public class DecorationsHandler {
     }
 
     public void installPopupWindow(final Window window) {
-        decorationsProvider.installPopupMenu(window);
+        decorationsProvider.installPopupWindow(window);
     }
 
     public void uninstallPopupWindow(final Window window) {
@@ -107,5 +107,13 @@ public class DecorationsHandler {
 
     public void setDecorationsEnabled(final boolean enabled) {
         decorationsEnabled = enabled;
+    }
+
+    public void adjustContentArea(final JRootPane root, final Rectangle rect) {
+        decorationsProvider.adjustContentArea(root, rect);
+    }
+
+    public void adjustWindowInsets(final Window window, final Insets i) {
+        decorationsProvider.adjustWindowInsets(window, i);
     }
 }

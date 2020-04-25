@@ -28,6 +28,7 @@ import java.awt.*;
 import java.util.Properties;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.icons.IconLoader;
@@ -53,15 +54,18 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void installPopupMenu(final Window window) {
+    public void installPopupWindow(final Window window) {
         if (!window.isDisplayable()) {
             window.addNotify();
         }
         long hwnd = PointerUtil.getHWND(window);
         if (hwnd != 0) {
-            if (JNIDecorationsWindows.installPopupMenuDecorations(hwnd)) {
-                Color bg = window.getBackground();
-                JNIDecorationsWindows.setBackground(hwnd, bg.getRed(), bg.getGreen(), bg.getBlue());
+            if (JNIDecorationsWindows.installPopupMenuDecorations(hwnd) && window instanceof RootPaneContainer) {
+                JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
+                Color bg = rootPane != null ? rootPane.getBackground() : null;
+                if (bg != null) {
+                    JNIDecorationsWindows.setBackground(hwnd, bg.getRed(), bg.getGreen(), bg.getBlue());
+                }
             }
         }
     }
@@ -74,6 +78,28 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
                 JNIDecorationsWindows.uninstallDecorations(hwnd);
             }
             window.dispose();
+        }
+    }
+
+    @Override
+    public void adjustContentArea(final JRootPane root, final Rectangle rect) {
+        Border border = root.getBorder();
+        if (border != null) {
+            Insets ins = border.getBorderInsets(root);
+            rect.x -= ins.left;
+            rect.y -= ins.top;
+        }
+    }
+
+    @Override
+    public void adjustWindowInsets(final Window window, final Insets i) {
+        // Compensate for the insets of the native window peer that include the decorations.
+        if (window != null) {
+            Insets insets = window.getInsets();
+            i.left -= insets.left;
+            i.right -= insets.right;
+            i.top -= insets.top;
+            i.bottom -= insets.bottom;
         }
     }
 

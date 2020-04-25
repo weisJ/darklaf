@@ -25,6 +25,11 @@
 #include <stdio.h>
 #include <windows.h>
 #include <windowsx.h>
+#include <dwmapi.h>
+#include <map>
+#include <iostream>
+#include <shellapi.h>
+#include <winuser.h>
 
 class WindowWrapper
 {
@@ -33,12 +38,19 @@ class WindowWrapper
         bool popup_menu = false;
         bool moving = false;
         bool move_mode = false;
+        bool maximized = false;
         WNDPROC prev_proc;
         HBRUSH bgBrush;
 
+        HWND window;
+        int width;
+        int height;
+
+        RECT rgn;
+
         int left = 0;
         int right = 0;
-        int height = 0;
+        int title_height = 0;
 
         static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 };

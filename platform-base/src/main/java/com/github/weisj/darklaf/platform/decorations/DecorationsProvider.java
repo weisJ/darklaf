@@ -65,10 +65,26 @@ public interface DecorationsProvider {
     /**
      * Initialize the window of a popup menu.
      */
-    default void installPopupMenu(final Window window) {}
+    default void installPopupWindow(final Window window) {}
 
     /**
      * Uninstall the window of a popup menu.
      */
     default void uninstallPopupWindow(final Window window) {}
+
+    /**
+     * Adjusts the content area.
+     *
+     * @param root the corresponding root pane.
+     * @param rect the proposed content area.
+     */
+    default void adjustContentArea(final JRootPane root, final Rectangle rect) {}
+
+    /**
+     * Adjust the window insets.
+     *
+     * @param window the corresponding window.
+     * @param i      the insets to adjust.
+     */
+    default void adjustWindowInsets(final Window window, final Insets i) {}
 }

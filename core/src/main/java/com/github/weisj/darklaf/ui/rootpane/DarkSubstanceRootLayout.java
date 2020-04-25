@@ -28,7 +28,9 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -53,17 +55,10 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         int tpWidth = 0;
         int tpHeight = 0;
         Insets i = parent.getInsets();
-
-        Insets sizeAdjustment = new Insets(0, 0, 0, 0);
-        CustomTitlePane titlePane = getTitlePane(SwingUtilities.getRootPane(parent));
-        if (titlePane != null) {
-            sizeAdjustment = titlePane.getWindowSizeAdjustment();
-        }
-
-        i.set(i.top + sizeAdjustment.top, i.left + sizeAdjustment.left,
-              i.bottom + sizeAdjustment.bottom, i.right + sizeAdjustment.right);
+        DecorationsHandler.getSharedInstance().adjustWindowInsets(DarkUIUtil.getWindow(parent), i);
 
         JRootPane root = (JRootPane) parent;
+        CustomTitlePane titlePane = getTitlePane(root);
 
         if (root.getContentPane() != null) {
             cpd = root.getContentPane().getPreferredSize();
@@ -125,8 +120,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         }
         if ((root.getWindowDecorationStyle() != JRootPane.NONE)
             && (root.getUI() instanceof DarkRootPaneUI)) {
-            JComponent titlePane = ((DarkRootPaneUI) root.getUI())
-                                                                  .getTitlePane();
+            JComponent titlePane = ((DarkRootPaneUI) root.getUI()).getTitlePane();
             if (titlePane != null) {
                 tpd = titlePane.getMinimumSize();
                 if (tpd != null) {
@@ -152,34 +146,42 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
     public void layoutContainer(final Container parent) {
         JRootPane root = (JRootPane) parent;
         Rectangle b = root.getBounds();
+
         Insets i = root.getInsets();
-        int nextY = 0;
-        int w = b.width - i.right - i.left;
-        int h = b.height - i.top - i.bottom;
+
+        b.setLocation(0, 0);
+        DarkUIUtil.applyInsets(b, i);
 
         if (root.getLayeredPane() != null) {
-            root.getLayeredPane().setBounds(i.left, i.top, w, h);
+            root.getLayeredPane().setBounds(b.x, b.y, b.width, b.height);
         }
         if (root.getGlassPane() != null) {
-            root.getGlassPane().setBounds(i.left, i.top, w, h);
+            root.getGlassPane().setBounds(b.x, b.y, b.width, b.height);
         }
 
+        DecorationsHandler.getSharedInstance().adjustContentArea(root, b);
+
+        layoutContent(root, b.x, b.y, b.width, b.height);
+    }
+
+    public void layoutContent(final JRootPane root, final int x, final int y, final int w, final int h) {
+        int nextY = y;
         JComponent titlePane = getTitlePane(root);
         if (titlePane != null) {
             Dimension tpd = titlePane.getPreferredSize();
             if (tpd != null) {
                 int tpHeight = tpd.height;
-                titlePane.setBounds(0, 0, w, tpHeight);
+                titlePane.setBounds(x, y, w, tpHeight);
                 nextY += tpHeight;
             }
         }
         if (root.getJMenuBar() != null) {
             Dimension mbd = root.getJMenuBar().getPreferredSize();
-            root.getJMenuBar().setBounds(0, nextY, w, mbd.height);
+            root.getJMenuBar().setBounds(x, nextY, w, mbd.height);
             nextY += mbd.height;
         }
         if (root.getContentPane() != null) {
-            root.getContentPane().setBounds(0, nextY, w, h < nextY ? 0 : h - nextY);
+            root.getContentPane().setBounds(x, nextY, w, h < nextY ? 0 : h - nextY);
         }
     }
 

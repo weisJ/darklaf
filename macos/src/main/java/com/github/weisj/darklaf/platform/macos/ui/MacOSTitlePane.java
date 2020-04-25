@@ -144,11 +144,6 @@ public class MacOSTitlePane extends CustomTitlePane {
         decorationInformation = null;
     }
 
-    @Override
-    public Insets getWindowSizeAdjustment() {
-        return new Insets(0, 0, 0, 0);
-    }
-
     private void installListeners() {
         if (window != null && useCustomTitle()) {
             windowListener = new WindowHandler();

@@ -24,47 +24,87 @@
  */
 #include "Decorations.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
-#include <dwmapi.h>
-#include <map>
-#include <iostream>
-#include <winuser.h>
+
+#ifndef WM_NCUAHDRAWCAPTION
+#define WM_NCUAHDRAWCAPTION (0x00AE)
+#endif
+#ifndef WM_NCUAHDRAWFRAME
+#define WM_NCUAHDRAWFRAME (0x00AF)
+#endif
 
 std::map<HWND, WindowWrapper*> wrapper_map = std::map<HWND, WindowWrapper*>();
 
-LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapper)
+bool Maximized(HWND hwnd)
+{
+    WINDOWPLACEMENT placement;
+    if (!GetWindowPlacement(hwnd, &placement))
+        return false;
+    return placement.showCmd == SW_MAXIMIZE;
+}
+
+LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y)
 {
     if (wrapper->popup_menu)
         return HTCLIENT;
-    // Get the point coordinates for the hit test.
-    POINT ptMouse = { GET_X_LPARAM(lParam),
-                      GET_Y_LPARAM(lParam) };
+
+    POINT ptMouse = { x,
+                      y };
 
     // Get the window rectangle.
     RECT rcWindow;
-    GetWindowRect(hWnd, &rcWindow);
+    GetWindowRect(wrapper->window, &rcWindow);
 
     // Determine if the hit test is for resizing. Default middle (1,1).
     USHORT uRow = 1;
     USHORT uCol = 1;
 
-    // Determine if the point is at the top or bottom of the window.
-    if (ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + 5)
+    if (!Maximized(wrapper->window))
     {
-        uRow = 0;
-    }
-    else if (ptMouse.y < rcWindow.bottom && ptMouse.y >= rcWindow.bottom - 5)
-    {
-        uRow = 2;
-    }
+        /* The horizontal frame should be the same size as the vertical frame,
+         since the NONCLIENTMETRICS structure does not distinguish between them */
+        int frame_size = GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+        /* The diagonal size handles are wider than the frame */
+        int diagonal_width = frame_size * 2 + GetSystemMetrics(SM_CXBORDER);
 
-    // Determine if the point is at the left or right of the window.
-    if (ptMouse.x >= rcWindow.left && ptMouse.x < rcWindow.left + 5)
-    {
-        uCol = 0; // left side
-    }
-    else if (ptMouse.x < rcWindow.right && ptMouse.x >= rcWindow.right - 5)
-    {
-        uCol = 2; // right side
+        bool top = ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size;
+        bool bottom = !top && (ptMouse.y < rcWindow.bottom && ptMouse.y >= rcWindow.bottom - frame_size);
+
+        bool left = ptMouse.x >= rcWindow.left && ptMouse.x < rcWindow.left + frame_size;
+        bool right = !left && (ptMouse.x < rcWindow.right && ptMouse.x >= rcWindow.right - frame_size);
+
+        bool diag_top = ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + diagonal_width;
+        bool diag_bottom = !diag_top && (ptMouse.y < rcWindow.bottom && ptMouse.y >= rcWindow.bottom - diagonal_width);
+
+        bool diag_left = ptMouse.x >= rcWindow.left && ptMouse.x < rcWindow.left + frame_size;
+        bool diag_right = !diag_left && (ptMouse.x < rcWindow.right && ptMouse.x >= rcWindow.right - diagonal_width);
+
+        if (top)
+            uRow = 0;
+        if (bottom)
+            uRow = 2;
+
+        if (top || bottom)
+        {
+            if (diag_left)
+                uCol = 0;
+            else if (diag_right)
+                uCol = 2;
+        }
+        else
+        {
+            if (left)
+                uCol = 0;
+            if (right)
+                uCol = 2;
+
+            if (left || right)
+            {
+                if (diag_top)
+                    uRow = 0;
+                else if (diag_bottom)
+                    uRow = 2;
+            }
+        }
     }
 
     // Hit test (HTTOPLEFT, ... HTBOTTOMRIGHT)
@@ -76,12 +116,12 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapp
                                  HTRIGHT },
                                { HTBOTTOMLEFT,
                                  HTBOTTOM,
-                                 HTBOTTOMRIGHT }, };
+                                 HTBOTTOMRIGHT } };
     LRESULT hit = hitTests[uRow][uCol];
     if (hit == HTNOWHERE || !wrapper->resizable)
     {
         //Handle window drag.
-        if (ptMouse.y < rcWindow.top + wrapper->height && ptMouse.x >= rcWindow.left + wrapper->left
+        if (ptMouse.y < rcWindow.top + wrapper->title_height && ptMouse.x >= rcWindow.left + wrapper->left
             && ptMouse.x <= rcWindow.right - wrapper->right)
         {
             return HTCAPTION;
@@ -94,12 +134,54 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam, WindowWrapper *wrapp
     }
 }
 
-bool Maximized(HWND hwnd)
+void UpdateRegion(WindowWrapper *wrapper)
 {
-    WINDOWPLACEMENT placement;
-    if (!GetWindowPlacement(hwnd, &placement))
-        return false;
-    return placement.showCmd == SW_MAXIMIZE;
+    if (wrapper->popup_menu)
+        return;
+    RECT old_rgn = wrapper->rgn;
+
+    if (Maximized(wrapper->window))
+    {
+        WINDOWINFO wi;
+        wi.cbSize = sizeof(WINDOWINFO);
+        GetWindowInfo(wrapper->window, &wi);
+
+        /* For maximized windows, a region is needed to cut off the non-client
+         borders that hang over the edge of the screen */
+        wrapper->rgn.left = wi.rcClient.left - wi.rcWindow.left;
+        wrapper->rgn.top = wi.rcClient.top - wi.rcWindow.top;
+        wrapper->rgn.right = wi.rcClient.right - wi.rcWindow.left;
+        wrapper->rgn.bottom = wi.rcClient.bottom - wi.rcWindow.top;
+
+    }
+    else
+    {
+        /* Don't mess with the region when composition is enabled and the
+         window is not maximized, otherwise it will lose its shadow */
+        wrapper->rgn.left = 0;
+        wrapper->rgn.top = 0;
+        wrapper->rgn.right = 0;
+        wrapper->rgn.bottom = 0;
+    }
+
+    /* Avoid unnecessarily updating the region to avoid unnecessary redraws */
+    if (EqualRect(&wrapper->rgn, &old_rgn))
+        return;
+    /* Treat empty regions as NULL regions */
+    RECT empty = { 0 };
+    if (EqualRect(&wrapper->rgn, &empty))
+        SetWindowRgn(wrapper->window, NULL, TRUE);
+    else
+        SetWindowRgn(wrapper->window, CreateRectRgnIndirect(&wrapper->rgn), TRUE);
+}
+
+bool AutoHideTaskbar(UINT edge, RECT mon)
+{
+    APPBARDATA data;
+    data.cbSize = sizeof(APPBARDATA);
+    data.uEdge = edge;
+    data.rc = mon;
+    return SHAppBarMessage(ABM_GETAUTOHIDEBAREX, &data);
 }
 
 void AdjustMaximizedClientArea(HWND window, RECT &rect)
@@ -107,36 +189,94 @@ void AdjustMaximizedClientArea(HWND window, RECT &rect)
     if (!Maximized(window))
         return;
 
-    auto monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONULL);
+    HMONITOR monitor = MonitorFromWindow(window, MONITOR_DEFAULTTOPRIMARY);
     if (!monitor)
         return;
 
     MONITORINFO monitor_info {};
-    monitor_info.cbSize = sizeof(monitor_info);
-    if (!GetMonitorInfoW(monitor, &monitor_info))
+    monitor_info.cbSize = sizeof(MONITORINFO);
+    if (!GetMonitorInfo(monitor, &monitor_info))
         return;
 
     rect = monitor_info.rcWork;
 }
 
-void AdjustMinMaxInfo(HWND hwnd, LPARAM lParam)
+void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam)
 {
-    HMONITOR hPrimaryMonitor = MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
-    HMONITOR hTargetMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+    union
+    {
+            LPARAM lparam;
+            RECT *rect;
+    } params;
+    params.lparam = lparam;
 
-    MONITORINFO primaryMonitorInfo { sizeof(MONITORINFO) };
-    MONITORINFO targetMonitorInfo { sizeof(MONITORINFO) };
+    /* DefWindowProc must be called in both the maximized and non-maximized
+     cases, otherwise tile/cascade windows won't work */
+    RECT nonclient = *params.rect;
+    DefWindowProc(wrapper->window, WM_NCCALCSIZE, wparam, lparam);
+    RECT client = *params.rect;
 
-    GetMonitorInfo(hPrimaryMonitor, &primaryMonitorInfo);
-    GetMonitorInfo(hTargetMonitor, &targetMonitorInfo);
+    if (Maximized(wrapper->window))
+    {
+        WINDOWINFO wi;
+        wi.cbSize = sizeof(wi);
+        GetWindowInfo(wrapper->window, &wi);
 
-    MINMAXINFO *min_max_info = reinterpret_cast<MINMAXINFO*>(lParam);
-    RECT max_rect = primaryMonitorInfo.rcWork;
-    RECT target_rect = targetMonitorInfo.rcWork;
-    min_max_info->ptMaxSize.x = target_rect.right - target_rect.left;
-    min_max_info->ptMaxSize.y = target_rect.bottom - target_rect.top;
-    min_max_info->ptMaxPosition.x = max_rect.left;
-    min_max_info->ptMaxPosition.y = max_rect.top;
+        /* Maximized windows always have a non-client border that hangs over
+         the edge of the screen, so the size proposed by WM_NCCALCSIZE is
+         fine. Just adjust the top border to remove the window title. */
+        (*params.rect).left = client.left;
+        (*params.rect).top = nonclient.top + wi.cyWindowBorders;
+        (*params.rect).right = client.right;
+        (*params.rect).bottom = client.bottom;
+
+        HMONITOR mon = MonitorFromWindow(wrapper->window, MONITOR_DEFAULTTOPRIMARY);
+        MONITORINFO mi;
+        mi.cbSize = sizeof(mi);
+        GetMonitorInfoW(mon, &mi);
+
+        /*
+         * If the client rectangle is the same as the monitor's rectangle,
+         * the shell assumes that the window has gone fullscreen, so it removes
+         * the topmost attribute from any auto-hide appbars, making them
+         * inaccessible. To avoid this, reduce the size of the client area by
+         * one pixel on a certain edge. The edge is chosen based on which side
+         * of the monitor is likely to contain an auto-hide appbar, so the
+         * missing client area is covered by it.
+         */
+        if (EqualRect(params.rect, &mi.rcMonitor))
+        {
+            if (AutoHideTaskbar(ABE_BOTTOM, mi.rcMonitor))
+                params.rect->bottom--;
+            else if (AutoHideTaskbar(ABE_LEFT, mi.rcMonitor))
+                params.rect->left++;
+            else if (AutoHideTaskbar(ABE_TOP, mi.rcMonitor))
+                params.rect->top++;
+            else if (AutoHideTaskbar(ABE_RIGHT, mi.rcMonitor))
+                params.rect->right--;
+        }
+    }
+    else
+    {
+        /* For the non-maximized case, set the output RECT to what it was
+         before WM_NCCALCSIZE modified it. This will make the client size the
+         same as the non-client size. */
+        *params.rect = nonclient;
+    }
+}
+
+void HandleWindowPosChanged(WindowWrapper *wrapper, const WINDOWPOS *pos)
+{
+    RECT client;
+    GetClientRect(wrapper->window, &client);
+    LONG old_width = wrapper->width;
+    LONG old_height = wrapper->height;
+    wrapper->width = client.right;
+    wrapper->height = client.bottom;
+    bool client_changed = wrapper->width != old_width || wrapper->height != old_height;
+
+    if (client_changed || (pos->flags & SWP_FRAMECHANGED))
+        UpdateRegion(wrapper);
 }
 
 void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper)
@@ -152,45 +292,49 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrapper = wrapper_map[handle];
 
-    if (uMsg == WM_NCACTIVATE)
+    switch(uMsg)
     {
+        case WM_NCACTIVATE:
         return TRUE;
-    }
-    else if (uMsg == WM_NCCALCSIZE)
-    {
+        case WM_NCCALCSIZE:
         if (wParam == TRUE)
         {
-            NCCALCSIZE_PARAMS& params = *reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
-            AdjustMaximizedClientArea(handle, params.rgrc[0]);
-            return TRUE;
+            HandleNCCalcSize(wrapper, wParam, lParam);
+            UpdateRegion(wrapper);
+            return 0;
         }
-    }
-    else if (uMsg == WM_GETMINMAXINFO)
-    {
-        AdjustMinMaxInfo(hwnd, lParam);
-        return FALSE;
-    }
-    else if (uMsg == WM_NCHITTEST)
-    {
-        return HitTestNCA(hwnd, wParam, lParam, wrapper);
-    }
-    else if (uMsg == WM_MOVE)
-    {
+        break;
+        case WM_NCHITTEST:
+        return HandleHitTest(wrapper, GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+        case WM_MOVE:
         wrapper->moving = wrapper->move_mode;
-    }
-    else if (uMsg == WM_ENTERSIZEMOVE)
-    {
+        break;
+        case WM_ENTERSIZEMOVE:
         wrapper->move_mode = TRUE;
-    }
-    else if (uMsg == WM_EXITSIZEMOVE)
-    {
+        break;
+        case WM_EXITSIZEMOVE:
         wrapper->moving = FALSE;
         wrapper->move_mode = FALSE;
-    }
-    else if ((uMsg == WM_PAINT || uMsg == WM_ERASEBKGND) && wrapper->bgBrush)
-    {
-        if (!wrapper->moving) PaintBackground(hwnd, wParam, wrapper);
-        if (uMsg == WM_ERASEBKGND) return TRUE;
+        break;
+        case WM_ERASEBKGND:
+        case WM_PAINT:
+        if (!wrapper->bgBrush)
+        break;
+        if (!wrapper->moving)
+        PaintBackground(hwnd, wParam, wrapper);
+        if (uMsg == WM_ERASEBKGND)
+        return TRUE;
+        break;
+        case WM_NCUAHDRAWCAPTION:
+        case WM_NCUAHDRAWFRAME:
+        /* These undocumented messages are sent to draw themed window borders.
+         Block them to prevent drawing borders over the client area. */
+        return 0;
+        case WM_WINDOWPOSCHANGED:
+        HandleWindowPosChanged(wrapper, (WINDOWPOS*)lParam);
+        break;
+        default:
+        break;
     }
 
     return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
@@ -217,7 +361,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValue
     {
         wrap->left = l;
         wrap->right = r;
-        wrap->height = h;
+        wrap->title_height = h;
     }
 }
 
@@ -236,15 +380,16 @@ void ExtendClientFrame(HWND handle)
 {
     MARGINS margins = { 0,
                         0,
-                        0,
-                        1 };
+                        1,
+                        0 };
     DwmExtendFrameIntoClientArea(handle, &margins);
 }
 
-void SetupWindowStyle(HWND handle)
+void SetupWindowStyle(HWND handle, bool is_popup)
 {
     auto style = GetWindowLongPtr(handle, GWL_STYLE);
-    SetWindowLongPtr(handle, GWL_STYLE, (style | WS_THICKFRAME));
+    style |= WS_THICKFRAME;
+    SetWindowLongPtr(handle, GWL_STYLE, style);
 }
 
 bool InstallDecorations(HWND handle, bool is_popup)
@@ -254,12 +399,13 @@ bool InstallDecorations(HWND handle, bool is_popup)
     if (it != wrapper_map.end())
         return false;
 
-    SetupWindowStyle(handle);
+    SetupWindowStyle(handle, is_popup);
     ExtendClientFrame(handle);
 
     WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWLP_WNDPROC));
 
     WindowWrapper *wrapper = new WindowWrapper();
+    wrapper->window = handle;
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
     wrapper_map[handle] = wrapper;

@@ -32,6 +32,7 @@ import java.util.List;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 
 import sun.awt.SunToolkit;
@@ -115,6 +116,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     private Color activeBackground;
     private Color activeForeground;
     private Color border;
+    private Border oldBorder;
 
     public WindowsTitlePane(final JRootPane root, final int decorationStyle, final Window window) {
         this.rootPane = root;
@@ -167,16 +169,6 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (menuBar != null) {
             getRootPane().setJMenuBar(menuBar);
         }
-    }
-
-    @Override
-    public Insets getWindowSizeAdjustment() {
-        // Compensate for the insets of the native window peer that include the decorations.
-        Insets insets = window != null && windowHandle != 0
-                ? window.getInsets()
-                : new Insets(0, 0, 0, 0);
-        insets.set(-insets.top, -insets.left, -insets.bottom, -insets.right);
-        return insets;
     }
 
     private void uninstallListeners() {
@@ -507,11 +499,14 @@ public class WindowsTitlePane extends CustomTitlePane {
             if (frame != null) {
                 JRootPane rootPane = getRootPane();
 
-                if (((state & Frame.MAXIMIZED_BOTH) != 0)
-                    && (rootPane.getBorder() == null
-                        || (rootPane.getBorder() instanceof UIResource))
-                    && frame.isShowing()) {
-                    rootPane.setBorder(null);
+                if (((state & Frame.MAXIMIZED_BOTH) != 0)) {
+                    oldBorder = rootPane.getBorder();
+                    LookAndFeel.uninstallBorder(rootPane);
+                } else {
+                    Border border = rootPane.getBorder();
+                    if (oldBorder != null && border == null || border instanceof UIResource) {
+                        rootPane.setBorder(oldBorder);
+                    }
                 }
 
                 if (frame.isResizable()) {

@@ -81,7 +81,6 @@ public class DarkPopupFactory extends PopupFactory {
                                      && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_NO_DECORATION)));
             boolean opaque = isJComponent
                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_OPAQUE));
-            window.setBackground(PaintUtil.TRANSPARENT_COLOR);
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
                 if (opaque) {
