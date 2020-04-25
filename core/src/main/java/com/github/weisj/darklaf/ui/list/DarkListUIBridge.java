@@ -353,7 +353,6 @@ public class DarkListUIBridge extends BasicListUI {
      * @since                           1.6
      */
     public int getBaseline(final JComponent c, final int width, final int height) {
-        super.getBaseline(c, width, height);
         int rowHeight = list.getFixedCellHeight();
         UIDefaults lafDefaults = UIManager.getLookAndFeelDefaults();
         Component renderer = (Component) lafDefaults.get(BASELINE_COMPONENT_KEY);
@@ -392,7 +391,6 @@ public class DarkListUIBridge extends BasicListUI {
      * @since                       1.6
      */
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
-        super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
     }
 
