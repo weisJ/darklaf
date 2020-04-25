@@ -1,51 +1,42 @@
 plugins {
-    `jni-library`
-}
-
-fun DependencyHandlerScope.javaImplementation(dep: Any) {
-    compileOnly(dep)
-    runtimeOnly(dep)
-}
-
-dependencies {
-    javaImplementation(project(":darklaf-theme"))
-    javaImplementation(project(":darklaf-native-utils"))
-    javaImplementation(project(":darklaf-utils"))
-    javaImplementation(project(":darklaf-platform-base"))
-    javaImplementation(project(":darklaf-property-loader"))
-}
-
-val macPath by tasks.registering(MacOSSdkPathTask::class)
-
-val sdkRoot: Provider<String> get() = macPath.map { it.sdkPath.absolutePath }
-
-fun ListProperty<String>.addJavaFrameworks() {
-    addAll("-framework", "JavaNativeFoundation")
-    add("-F")
-    add(sdkRoot.map { "$it/System/Library/Frameworks/JavaVM.framework/Frameworks" })
-    add("-F")
-    add("/System/Library/Frameworks/JavaVM.framework/Frameworks")
+    java
+    id("dev.nokee.jni-library")
+    id("dev.nokee.objective-cpp-language")
 }
 
 library {
-    targetMachines.addAll(machines.macOS.x86_64)
-    binaries.configureEach {
-        compileTask.get().apply {
-            dependsOn(macPath)
-            compilerArgs.addAll("-x", "objective-c++")
-            compilerArgs.addAll("-mmacosx-version-min=10.10")
-            compilerArgs.addJavaFrameworks()
-            source.from(
-                file("src/main/objectiveCpp/Decorations.mm"),
-                file("src/main/objectiveCpp/ThemeInfo.mm")
-            )
+    dependencies {
+        jvmImplementation(project(":darklaf-theme"))
+        jvmImplementation(project(":darklaf-native-utils"))
+        jvmImplementation(project(":darklaf-utils"))
+        jvmImplementation(project(":darklaf-platform-base"))
+        jvmImplementation(project(":darklaf-property-loader"))
+        nativeImplementation("dev.nokee.framework:JavaVM:10.15")
+        nativeImplementation("dev.nokee.framework:JavaVM:10.15") {
+            capabilities {
+                requireCapability("JavaVM:JavaNativeFoundation:10.15")
+            }
         }
     }
-    binaries.whenElementFinalized(CppSharedLibrary::class) {
-        linkTask.get().apply {
-            dependsOn(macPath)
-            linkerArgs.addAll("-lobjc", "-framework", "AppKit")
-            linkerArgs.addJavaFrameworks()
+
+    targetMachines.addAll(machines.macOS.x86_64)
+    variants.configureEach {
+        sharedLibrary {
+            compileTasks.configureEach {
+                compilerArgs.addAll("-mmacosx-version-min=10.10")
+
+                // Build type not modeled yet, assuming release
+                compilerArgs.addAll(toolChain.map {
+                    when (it) {
+                        is Gcc, is Clang -> listOf("-O2")
+                        is VisualCpp -> listOf("/O2")
+                        else -> emptyList()
+                    }
+                })
+            }
+            linkTask.configure {
+                linkerArgs.addAll("-lobjc", "-framework", "AppKit")
+            }
         }
     }
 }

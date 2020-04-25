@@ -1,41 +1,48 @@
-
-
 plugins {
-    `jni-library`
-}
-
-fun DependencyHandlerScope.javaImplementation(dep: Any) {
-    compileOnly(dep)
-    runtimeOnly(dep)
-}
-
-dependencies {
-    javaImplementation(project(":darklaf-native-utils"))
-    javaImplementation(project(":darklaf-utils"))
-    javaImplementation(project(":darklaf-platform-base"))
-    javaImplementation(project(":darklaf-theme"))
-    javaImplementation(project(":darklaf-property-loader"))
-    javaImplementation("net.java.dev.jna:jna")
+    java
+    id("dev.nokee.jni-library")
+    id("dev.nokee.cpp-language")
 }
 
 library {
-    targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)
-    binaries.configureEach {
-        compileTask.get().compilerArgs.addAll(
-            when (toolChain) {
-                is Gcc, is Clang -> listOf("--std=c++11")
-                is VisualCpp -> listOf("/EHsc")
-                else -> emptyList()
-            }
-        )
+    dependencies {
+        jvmImplementation(project(":darklaf-native-utils"))
+        jvmImplementation(project(":darklaf-utils"))
+        jvmImplementation(project(":darklaf-platform-base"))
+        jvmImplementation(project(":darklaf-theme"))
+        jvmImplementation(project(":darklaf-property-loader"))
+        jvmImplementation("net.java.dev.jna:jna")
     }
-    binaries.whenElementFinalized(CppSharedLibrary::class) {
-        linkTask.get().linkerArgs.addAll(
-            when (toolChain) {
-                is Gcc, is Clang -> listOf("-ldwmapi", "-lGdi32", "-luser32", "-ladvapi32", "-Shell32")
-                is VisualCpp -> listOf("dwmapi.lib", "user32.lib", "Gdi32.lib", "Advapi32.lib", "Shell32.lib")
-                else -> emptyList()
+    targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)
+    variants.configureEach {
+        sharedLibrary {
+            compileTasks.configureEach {
+                compilerArgs.addAll(toolChain.map {
+                    when (it) {
+                        is Gcc, is Clang -> listOf("--std=c++11")
+                        is VisualCpp -> listOf("/EHsc")
+                        else -> emptyList()
+                    }
+                })
+
+                // Build type not modeled yet, assuming release
+                compilerArgs.addAll(toolChain.map {
+                    when (it) {
+                        is Gcc, is Clang -> listOf("-O2")
+                        is VisualCpp -> listOf("/O2")
+                        else -> emptyList()
+                    }
+                })
             }
-        )
+            linkTask.configure {
+                linkerArgs.addAll(toolChain.map {
+                    when (it) {
+                        is Gcc, is Clang -> listOf("-ldwmapi", "-lGdi32", "-luser32", "-ladvapi32", "-Shell32")
+                        is VisualCpp -> listOf("dwmapi.lib", "user32.lib", "Gdi32.lib", "Advapi32.lib", "Shell32.lib")
+                        else -> emptyList()
+                    }
+                })
+            }
+        }
     }
 }
