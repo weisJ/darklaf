@@ -214,6 +214,16 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     }
 
     /**
+     * Load the properties specifying how to map the colors from the {@link AccentColorRule} are mapped to the
+     * properties.
+     *
+     * @return the properties providing the mapping rules.
+     */
+    public Properties loadAccentProperties() {
+        return loadPropertyFile("accents", true);
+    }
+
+    /**
      * Load a .properties file using {@link #getLoaderClass()}} to resolve the file path.
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead.
@@ -235,6 +245,10 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     protected final Properties loadWithClass(final String name, final Class<?> loaderClass) {
         final Properties properties = new Properties();
         try (InputStream stream = loaderClass.getResourceAsStream(name)) {
+            if (stream == null) {
+                LOGGER.log(Level.SEVERE, "Could not load " + name + ".properties. File not found");
+                return properties;
+            }
             properties.load(stream);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Could not load " + name + ".properties. " + e.getMessage(), e.getStackTrace());

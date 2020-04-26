@@ -49,8 +49,8 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
 
     public void applyColors(final Theme currentTheme, final Properties properties,
                             final Color accentColor, final Color selectionColor) {
-        Properties props = currentTheme.loadPropertyFile("accents", true);
-        if (props.isEmpty()) return;
+        Properties props = currentTheme.loadAccentProperties();
+        if (props == null || props.isEmpty()) return;
         if (accentColor != null) {
             adjustColors(MAIN_ACCENT_LIST_KEY, accentColor, props, properties);
         }
