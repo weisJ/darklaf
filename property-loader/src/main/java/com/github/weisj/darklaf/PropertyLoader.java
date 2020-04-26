@@ -38,13 +38,14 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.InsetsUIResource;
 
 import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.StateIcon;
+import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.PropertyValue;
@@ -307,13 +308,13 @@ public final class PropertyLoader {
         if (base == null) base = new Font("Dialog", Font.PLAIN, 12);
         if (size > 0) base = base.deriveFont((float) size);
         if (style >= 0) base = base.deriveFont(style);
-        return new FontUIResource(base.deriveFont(attributes));
+        return new DarkFontUIResource(base.deriveFont(attributes));
     }
 
     private static Font parseExplicitFont(final String value) {
         try {
             final String[] decode = value.split(String.valueOf(FONT_DELIMITER));
-            return new FontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
+            return new DarkFontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
         } catch (final Exception e) {
             return null;
         }

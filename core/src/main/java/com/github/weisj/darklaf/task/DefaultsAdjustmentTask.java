@@ -31,7 +31,9 @@ import com.github.weisj.darklaf.theme.Theme;
 public interface DefaultsAdjustmentTask {
 
     /**
-     * Execute the task.
+     * Execute the task. All values in the properties should be of type {@link javax.swing.plaf.UIResource}.
+     * This is specifically important for {@link javax.swing.plaf.FontUIResource} and
+     * {@link javax.swing.plaf.ColorUIResource}.
      *
      * @param currentTheme the current theme.
      * @param properties   the properties.

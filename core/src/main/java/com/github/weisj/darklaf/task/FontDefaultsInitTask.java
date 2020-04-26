@@ -33,13 +33,13 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class FontDefaultsInitTask implements DefaultsInitTask {
@@ -84,7 +84,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME : MAC_OS_FONT_NAME;
         Font macFont = new Font(fontName, font.getStyle(), font.getSize()).deriveFont(ENABLE_KERNING);
         if (font instanceof UIResource) {
-            macFont = new FontUIResource(macFont);
+            macFont = new DarkFontUIResource(macFont);
         }
         return macFont == null ? font : macFont;
     }
@@ -107,7 +107,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         Font withRule = font.deriveFont(newSize);
         if (font instanceof UIResource
             && !(withRule instanceof UIResource)) {
-            withRule = new FontUIResource(withRule);
+            withRule = new DarkFontUIResource(withRule);
         }
         return withRule;
     }

@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.github.weisj.darklaf.DarkColorUIResource;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.Pair;
 
 public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
