@@ -37,7 +37,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.InsetsUIResource;
@@ -217,7 +216,7 @@ public final class PropertyLoader {
                     ? Boolean.TRUE
                     : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
             if (color != null && (value.length() == 6 || value.length() == 8)) {
-                return new ColorUIResource(color);
+                return new DarkColorUIResource(color);
             } else if (invVal != null) {
                 return invVal;
             } else if (boolVal != null) {

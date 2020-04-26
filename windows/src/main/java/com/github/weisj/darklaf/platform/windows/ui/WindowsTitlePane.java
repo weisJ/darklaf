@@ -782,6 +782,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 }
             } else if (PropertyKey.TITLE.equals(name)) {
                 titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
+                doLayout();
                 repaint();
             } else if (PropertyKey.COMPONENT_ORIENTATION.equals(name)) {
                 revalidate();

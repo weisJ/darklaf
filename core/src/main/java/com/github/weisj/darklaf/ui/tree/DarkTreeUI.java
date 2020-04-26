@@ -152,6 +152,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        LookAndFeel.installColors(tree, "Tree.background", "Tree.foreground");
         selectionBackground = UIManager.getColor("Tree.unfocusedSelectionBackground");
         focusSelectionBackground = UIManager.getColor("Tree.selectionBackground");
         focusSelectedLineColor = UIManager.getColor("Tree.lineFocusSelected");

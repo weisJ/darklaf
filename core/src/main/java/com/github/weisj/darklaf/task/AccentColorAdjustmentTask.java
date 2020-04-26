@@ -29,8 +29,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.swing.plaf.ColorUIResource;
-
+import com.github.weisj.darklaf.DarkColorUIResource;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.Pair;
@@ -113,7 +112,7 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
             Color color = DarkColorModelHSB.getColorFromHSBValues(mapValue(hsbMatch[0], info.hAdj),
                                                                   mapValue(hsbMatch[1], info.sAdj),
                                                                   mapValue(hsbMatch[2], info.bAdj));
-            return new ColorUIResource(color);
+            return new DarkColorUIResource(color);
         }
         return obj;
     }
