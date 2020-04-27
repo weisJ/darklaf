@@ -28,7 +28,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -47,70 +46,101 @@ public class DarkPopupFactory extends PopupFactory {
     @Override
     public Popup getPopup(final Component owner, final Component contents,
                           final int x, final int y) throws IllegalArgumentException {
-        if (heavyWeightParent == null) {
-            JComponent box = Box.createHorizontalBox();
-            super.getPopup(null, box, 0, 0);
-            heavyWeightParent = new HeavyWeightParent(DarkUIUtil.getWindow(box));
-        }
         boolean isJComponent = contents instanceof JComponent;
         Popup popup = super.getPopup(owner, contents, x, y);
-        boolean isMediumWeight = popup.getClass().getSimpleName().endsWith("MediumWeightPopup");
-        boolean isLightWeight = popup.getClass().getSimpleName().endsWith("LightWeightPopup");
-        boolean forceHeavy = isJComponent
+        String popupClassName = popup.getClass().getSimpleName();
+        boolean isLightWeight = popupClassName.endsWith("LightWeightPopup");
+        boolean isMediumWeight = !isLightWeight && popupClassName.endsWith("MediumWeightPopup");
+        boolean forceHeavy = (isMediumWeight || isLightWeight) && isJComponent
                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FORCE_HEAVYWEIGHT));
-        boolean isFocusable = isJComponent
-                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
-        boolean startHidden = isJComponent
-                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
-        if (forceHeavy && (isMediumWeight || isLightWeight)) {
+        if (forceHeavy) {
             // null owner forces a heavyweight popup.
-            popup = super.getPopup(heavyWeightParent, contents, x, y);
+            popup = super.getPopup(getHeavyWeightParent(), contents, x, y);
         }
         if (isMediumWeight) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
             if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
         }
+
+        Window window = SwingUtilities.getWindowAncestor(contents);
+        if (window != null && !isMediumWeight) {
+            boolean isFocusable = isJComponent
+                                  && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
+            boolean startHidden = isJComponent
+                                  && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
+            setupWindow(window, contents, isJComponent, isFocusable, startHidden);
+        }
+        return popup;
+    }
+
+    protected void setupWindow(final Window window, final Component contents, final boolean isJComponent,
+                               final boolean isFocusable, final boolean startHidden) {
+        boolean noDecorations = isJComponent
+                                && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_NO_DECORATION));
+        boolean opaque = isJComponent
+                         && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_OPAQUE));
+        setupWindowBackground(window, opaque);
+        setupWindowFocusableState(isFocusable, window);
+        setupWindowDecorations(window, noDecorations);
+        setupWindowOpacity(contents, startHidden, window);
+    }
+
+    protected void setupWindowBackground(final Window window, final boolean opaque) {
         // Sometimes the background is java.awt.SystemColor[i=7]
         // It results in a flash of white background, that is repainted with
         // the proper popup background later.
         // That is why we set window background explicitly.
-        Window window = SwingUtilities.getWindowAncestor(contents);
-        if (window != null) {
-            boolean noDecorations = (isJComponent
-                                     && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_NO_DECORATION)));
-            boolean opaque = isJComponent
-                             && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_OPAQUE));
-            if (window instanceof RootPaneContainer) {
-                JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
-                if (opaque) {
-                    window.setBackground(rootPane.getBackground());
-                } else {
-                    rootPane.setBackground(PaintUtil.TRANSPARENT_COLOR);
-                    rootPane.setOpaque(false);
-                }
-            }
-
-            if (isFocusable && !window.getFocusableWindowState()) {
-                window.dispose();
-                window.setFocusableWindowState(true);
-            }
-
-            if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
-                if (noDecorations) {
-                    DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
-                } else {
-                    DecorationsHandler.getSharedInstance().installPopupWindow(window);
-                }
-            }
-            if (startHidden) {
-                try {
-                    ((JComponent) contents).putClientProperty(KEY_MAKE_VISIBLE, true);
-                    window.setOpacity(0);
-                } catch (Exception ignored) {}
+        if (window instanceof RootPaneContainer) {
+            JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
+            rootPane.setOpaque(opaque);
+            if (opaque) {
+                window.setBackground(rootPane.getBackground());
+            } else {
+                window.setBackground(getTranslucentPopupBackground());
             }
         }
-        return popup;
+    }
+
+    protected void setupWindowFocusableState(final boolean isFocusable, final Window window) {
+        if (isFocusable && !window.getFocusableWindowState()) {
+            window.dispose();
+            window.setFocusableWindowState(true);
+        }
+    }
+
+    protected void setupWindowDecorations(final Window window, final boolean noDecorations) {
+        if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
+            if (noDecorations) {
+                DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
+            } else {
+                DecorationsHandler.getSharedInstance().installPopupWindow(window);
+            }
+        }
+    }
+
+    protected void setupWindowOpacity(final Component contents, final boolean startHidden, final Window window) {
+        if (startHidden) {
+            try {
+                if (contents instanceof JComponent) {
+                    ((JComponent) contents).putClientProperty(KEY_MAKE_VISIBLE, true);
+                }
+                window.setOpacity(0);
+            } catch (Exception ignored) {}
+        }
+    }
+
+    protected HeavyWeightParent getHeavyWeightParent() {
+        if (heavyWeightParent == null) {
+            JComponent box = Box.createHorizontalBox();
+            super.getPopup(null, box, 0, 0);
+            heavyWeightParent = new HeavyWeightParent(DarkUIUtil.getWindow(box));
+        }
+        return heavyWeightParent;
+    }
+
+    protected Color getTranslucentPopupBackground() {
+        return UIManager.getColor("PopupMenu.translucentBackground");
     }
 
     private static class HeavyWeightParent extends JComponent {
