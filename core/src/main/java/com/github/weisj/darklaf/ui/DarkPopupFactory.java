@@ -31,6 +31,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.Pair;
 
 public class DarkPopupFactory extends PopupFactory {
 
@@ -47,32 +48,51 @@ public class DarkPopupFactory extends PopupFactory {
     public Popup getPopup(final Component owner, final Component contents,
                           final int x, final int y) throws IllegalArgumentException {
         boolean isJComponent = contents instanceof JComponent;
+        Pair<Popup, PopupType> result = getEffectivePopup(owner, contents, x, y, isJComponent);
+        Popup popup = result.getFirst();
+        PopupType type = result.getSecond();
+        setupPopup(popup, type, contents, isJComponent);
+        return popup;
+    }
+
+    protected Pair<Popup, PopupType> getEffectivePopup(final Component owner, final Component contents,
+                                                       final int x, final int y,
+                                                       final boolean isJComponent) {
         Popup popup = super.getPopup(owner, contents, x, y);
-        String popupClassName = popup.getClass().getSimpleName();
-        boolean isLightWeight = popupClassName.endsWith("LightWeightPopup");
-        boolean isMediumWeight = !isLightWeight && popupClassName.endsWith("MediumWeightPopup");
-        boolean isHeavyWeight = !(isLightWeight || isMediumWeight);
-        boolean forceHeavy = !isHeavyWeight && isJComponent
+        PopupType type = getPopupType(popup);
+        boolean forceHeavy = type != PopupType.HEAVY_WEIGHT && isJComponent
                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FORCE_HEAVYWEIGHT));
         if (forceHeavy) {
             // null owner forces a heavyweight popup.
-            popup = super.getPopup(getHeavyWeightParent(), contents, x, y);
+            Popup p = super.getPopup(getHeavyWeightParent(), contents, x, y);
+            return new Pair<>(p, PopupType.HEAVY_WEIGHT);
         }
-        if (isMediumWeight) {
+        return new Pair<>(popup, type);
+    }
+
+    protected PopupType getPopupType(final Popup popup) {
+        String popupClassName = popup.getClass().getSimpleName();
+        if (popupClassName.endsWith("LightWeightPopup")) return PopupType.LIGHT_WEIGHT;
+        if (popupClassName.endsWith("MediumWeightPopup")) return PopupType.MEDIUM_WEIGHT;
+        return PopupType.HEAVY_WEIGHT;
+    }
+
+    protected void setupPopup(final Popup popup, final PopupType type, final Component contents,
+                              final boolean isJComponent) {
+        if (type == PopupType.MEDIUM_WEIGHT) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
             if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
+        } else if (type == PopupType.HEAVY_WEIGHT) {
+            Window window = SwingUtilities.getWindowAncestor(contents);
+            if (window != null) {
+                boolean isFocusable = isJComponent
+                                      && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
+                boolean startHidden = isJComponent
+                                      && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
+                setupWindow(window, contents, isJComponent, isFocusable, startHidden);
+            }
         }
-
-        Window window = SwingUtilities.getWindowAncestor(contents);
-        if (window != null && isHeavyWeight) {
-            boolean isFocusable = isJComponent
-                                  && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
-            boolean startHidden = isJComponent
-                                  && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
-            setupWindow(window, contents, isJComponent, isFocusable, startHidden);
-        }
-        return popup;
     }
 
     protected void setupWindow(final Window window, final Component contents, final boolean isJComponent,
@@ -160,5 +180,11 @@ public class DarkPopupFactory extends PopupFactory {
         public Window getWindow() {
             return window;
         }
+    }
+
+    protected enum PopupType {
+        LIGHT_WEIGHT,
+        MEDIUM_WEIGHT,
+        HEAVY_WEIGHT
     }
 }
