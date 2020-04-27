@@ -51,7 +51,8 @@ public class DarkPopupFactory extends PopupFactory {
         String popupClassName = popup.getClass().getSimpleName();
         boolean isLightWeight = popupClassName.endsWith("LightWeightPopup");
         boolean isMediumWeight = !isLightWeight && popupClassName.endsWith("MediumWeightPopup");
-        boolean forceHeavy = (isMediumWeight || isLightWeight) && isJComponent
+        boolean isHeavyWeight = !(isLightWeight || isMediumWeight);
+        boolean forceHeavy = !isHeavyWeight && isJComponent
                              && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FORCE_HEAVYWEIGHT));
         if (forceHeavy) {
             // null owner forces a heavyweight popup.
@@ -64,7 +65,7 @@ public class DarkPopupFactory extends PopupFactory {
         }
 
         Window window = SwingUtilities.getWindowAncestor(contents);
-        if (window != null && !isMediumWeight) {
+        if (window != null && isHeavyWeight) {
             boolean isFocusable = isJComponent
                                   && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
             boolean startHidden = isJComponent
