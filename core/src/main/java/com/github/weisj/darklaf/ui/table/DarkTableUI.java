@@ -44,6 +44,7 @@ import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -485,17 +486,13 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         }
 
         protected JFileChooser getFileChooser() {
-            Object obj = table.getClientProperty(DarkTableUI.KEY_FILE_CHOOSER_PARENT);
-            if (obj instanceof Supplier<?>) {
-                Object supplied = ((Supplier<?>) obj).get();
-                return supplied instanceof JFileChooser ? (JFileChooser) supplied : null;
-            }
-            return null;
+            Object obj = PropertyUtil.getObject(table, DarkTableUI.KEY_FILE_CHOOSER_PARENT, Supplier.class, Object::new)
+                                     .get();
+            return obj instanceof JFileChooser ? (JFileChooser) obj : null;
         }
 
         protected Integer getFileNameColumnIndex() {
-            Object obj = table.getClientProperty(DarkTableUI.KEY_FILENAME_COLUMN_INDEX);
-            return obj instanceof Integer ? (Integer) obj : 0;
+            return PropertyUtil.getInteger(table, DarkTableUI.KEY_FILENAME_COLUMN_INDEX);
         }
 
         protected void startEditing(final int row, final int column) {

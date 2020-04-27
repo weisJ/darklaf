@@ -72,7 +72,6 @@ public class DarkPreviewPanel extends JPanel {
         }
         FontMetrics fm = host.getFontMetrics(getFont());
 
-        int ascent = fm.getAscent();
         int height = fm.getHeight();
         int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
 

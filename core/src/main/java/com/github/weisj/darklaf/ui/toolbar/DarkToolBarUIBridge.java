@@ -47,6 +47,7 @@ import sun.swing.UIAction;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * A Basic L&amp;F implementation of ToolBarUI. This implementation is a "combined" view/controller.
@@ -177,9 +178,7 @@ public abstract class DarkToolBarUIBridge extends ToolBarUI implements SwingCons
         setOrientation(toolBar.getOrientation());
         LookAndFeel.installProperty(c, PropertyKey.OPAQUE, Boolean.TRUE);
 
-        if (c.getClientProperty(FOCUSED_COMP_INDEX) != null) {
-            focusedCompIndex = (Integer) (c.getClientProperty(FOCUSED_COMP_INDEX));
-        }
+        focusedCompIndex = PropertyUtil.getInteger(c, FOCUSED_COMP_INDEX, focusedCompIndex);
     }
 
     public void uninstallUI(final JComponent c) {

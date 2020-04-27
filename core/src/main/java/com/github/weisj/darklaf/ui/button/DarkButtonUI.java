@@ -35,8 +35,6 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
-import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.text.View;
 
 import sun.swing.SwingUtilities2;
 
@@ -46,7 +44,10 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.AlignmentExt;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -265,29 +266,19 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         AbstractButton button = (AbstractButton) c;
         ButtonModel model = button.getModel();
         g.setColor(getForeground(button));
-        FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
         int mnemonicIndex = button.getDisplayedMnemonicIndex();
         if (!model.isEnabled()) {
             mnemonicIndex = -1;
         }
         SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
                                                   textRect.x + getTextShiftOffset(),
-                                                  textRect.y + metrics.getAscent() + getTextShiftOffset());
+                                                  textRect.y + getTextShiftOffset());
         config.restore();
     }
 
     protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
-        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
-        g.setClip(textRect);
-        if (text != null && !text.equals("")) {
-            View v = (View) c.getClientProperty(BasicHTML.propertyKey);
-            if (v != null) {
-                v.paint(g, textRect);
-            } else {
-                paintText(g, b, textRect, text);
-            }
-        }
-        context.restore();
+        PaintUtil.drawString(g, b, text, textRect, SwingUtilities2.getFontMetrics(b, g),
+                             (g1, c1, r1, t1) -> paintText(g1, b, r1, t1));
     }
 
     protected void paintIcon(final Graphics g, final AbstractButton b, final JComponent c) {
@@ -360,11 +351,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected Color getBorderlessBackground(final AbstractButton c) {
-        Object colorHover = c.getClientProperty(KEY_HOVER_COLOR);
-        Object colorClick = c.getClientProperty(KEY_CLICK_COLOR);
         boolean armed = c.getModel().isArmed();
-        return armed ? colorClick instanceof Color ? (Color) colorClick : borderlessClick
-                : colorHover instanceof Color ? (Color) colorHover : borderlessHover;
+        return armed ? PropertyUtil.getColor(c, KEY_CLICK_COLOR, borderlessClick)
+                : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
     }
 
     protected Color getBorderlessOutline(final AbstractButton c) {

@@ -125,8 +125,8 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         fadeAnimator = new FadeInAnimator();
         c.setOpaque(false);
         DarkTooltipBorder border = new DarkTooltipBorder();
-        Alignment align = (Alignment) c.getClientProperty(KEY_POINTER_LOCATION);
-        border.setPointerLocation(align == null ? Alignment.CENTER : align);
+        Alignment align = PropertyUtil.getObject(c, KEY_POINTER_LOCATION, Alignment.class, Alignment.CENTER);
+        border.setPointerLocation(align);
         toolTip.setBorder(border);
         updateStyle();
     }

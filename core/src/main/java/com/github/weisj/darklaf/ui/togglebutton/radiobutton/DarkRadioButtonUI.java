@@ -34,14 +34,13 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonListener;
-import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
-import javax.swing.text.View;
 
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
@@ -165,19 +164,15 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     public static void paintText(final Graphics2D g, final AbstractButton b,
                                  final Rectangle textRect, final String text, final FontMetrics fm,
                                  final Color disabledTextColor) {
-        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.setFont(b.getFont());
-        View view = (View) b.getClientProperty(BasicHTML.propertyKey);
-        if (view != null) {
-            view.paint(g, textRect);
-        } else {
-            g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
-            SwingUtilities2.drawStringUnderlineCharAt(b, g, text,
+        g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
+        PaintUtil.drawString(g, b, text, textRect, fm, (g2, c2, rect, t) -> {
+            int textX = rect.x;
+            int textY = rect.y;
+            SwingUtilities2.drawStringUnderlineCharAt(b, g2, t,
                                                       b.getDisplayedMnemonicIndex(),
-                                                      textRect.x,
-                                                      textRect.y + fm.getAscent());
-        }
-        context.restore();
+                                                      textX, textY);
+        });
     }
 
     protected Icon getStateIcon(final AbstractButton b) {

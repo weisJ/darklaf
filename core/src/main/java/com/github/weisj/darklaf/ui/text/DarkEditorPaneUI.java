@@ -36,6 +36,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
 
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -79,16 +80,8 @@ public class DarkEditorPaneUI extends DarkTextUI {
 
     void updateDisplayProperties(final Font font, final Color fg) {
         JComponent c = getComponent();
-        Object honorDisplayPropertiesObject = c.getClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
-        boolean honorDisplayProperties = false;
-        Object w3cLengthUnitsObject = c.getClientProperty(JEditorPane.W3C_LENGTH_UNITS);
-        boolean w3cLengthUnits = false;
-        if (honorDisplayPropertiesObject instanceof Boolean) {
-            honorDisplayProperties = (Boolean) honorDisplayPropertiesObject;
-        }
-        if (w3cLengthUnitsObject instanceof Boolean) {
-            w3cLengthUnits = (Boolean) w3cLengthUnitsObject;
-        }
+        boolean honorDisplayProperties = PropertyUtil.getBooleanProperty(c, JEditorPane.HONOR_DISPLAY_PROPERTIES);
+        boolean w3cLengthUnits = PropertyUtil.getBooleanProperty(c, JEditorPane.W3C_LENGTH_UNITS);
         if (this instanceof DarkTextPaneUI || honorDisplayProperties) {
             // using equals because can not use UIResource for Boolean
             Document doc = getComponent().getDocument();
@@ -318,12 +311,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
                 modelChanged();
             }
             if (PropertyKey.FOREGROUND.equals(name)) {
-                Object honorDisplayPropertiesObject = c.getClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
-                boolean honorDisplayProperties = false;
-                if (honorDisplayPropertiesObject instanceof Boolean) {
-                    honorDisplayProperties = (Boolean) honorDisplayPropertiesObject;
-                }
-                if (honorDisplayProperties) {
+                if (PropertyUtil.getBooleanProperty(c, JEditorPane.HONOR_DISPLAY_PROPERTIES)) {
                     modelChanged();
                 }
             }

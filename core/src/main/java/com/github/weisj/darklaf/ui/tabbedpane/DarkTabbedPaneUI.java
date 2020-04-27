@@ -131,8 +131,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Action getNewTabAction() {
-        Object action = tabPane.getClientProperty(KEY_NEW_TAB_ACTION);
-        return action instanceof Action ? (Action) action : null;
+        return PropertyUtil.getObject(tabPane, KEY_NEW_TAB_ACTION, Action.class);
     }
 
     @Override
@@ -724,14 +723,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
         newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
 
-        Object ins = tabPane.getClientProperty(KEY_TAB_AREA_INSETS);
-        if (ins instanceof Insets) {
-            tabAreaInsets = (Insets) ins;
-        }
-        ins = tabPane.getClientProperty(KEY_CONTENT_BORDER_INSETS);
-        if (ins instanceof Insets) {
-            contentBorderInsets = (Insets) ins;
-        }
+        tabAreaInsets = PropertyUtil.getObject(tabPane, KEY_TAB_AREA_INSETS, Insets.class, tabAreaInsets);
+        contentBorderInsets = PropertyUtil.getObject(tabPane, KEY_CONTENT_BORDER_INSETS, Insets.class,
+                                                     contentBorderInsets);
         installComponent(KEY_LEADING_COMP, c -> leadingComp = c);
         installComponent(KEY_TRAILING_COMP, c -> trailingComp = c);
         installComponent(KEY_NORTH_COMP, c -> northComp = c);
@@ -742,9 +736,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected void installComponent(final String key, final Consumer<Component> setter) {
-        Object comp = tabPane.getClientProperty(key);
-        if (comp instanceof Component) {
-            Component wrapped = wrapClientComponent((Component) comp);
+        Component comp = PropertyUtil.getObject(tabPane, key, Component.class);
+        if (comp != null) {
+            Component wrapped = wrapClientComponent(comp);
             setter.accept(wrapped);
             tabPane.add(wrapped);
         }

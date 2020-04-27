@@ -147,8 +147,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     private static JPopupMenu getSearchPopup(final JComponent c) {
-        Object value = c.getClientProperty(KEY_FIND_POPUP);
-        return value instanceof JPopupMenu ? (JPopupMenu) value : null;
+        return PropertyUtil.getObject(c, KEY_FIND_POPUP, JPopupMenu.class);
     }
 
     protected Point getSearchIconCoord() {

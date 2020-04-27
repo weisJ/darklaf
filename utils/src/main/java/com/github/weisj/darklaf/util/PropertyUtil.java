@@ -62,4 +62,71 @@ public class PropertyUtil {
         Object obj = c.getClientProperty(property);
         return Objects.equals(checkValue, obj);
     }
+
+    public static <T> T getObject(final Component c, final String key, final Class<T> type, final T defaultValue) {
+        if (!(c instanceof JComponent)) return defaultValue;
+        return getObject((JComponent) c, key, type, defaultValue);
+    }
+
+    public static <T> T getObject(final JComponent c, final String key, final Class<T> type, final T defaultValue) {
+        Object obj = c.getClientProperty(key);
+        if (type.isInstance(obj)) return (T) obj;
+        return defaultValue;
+    }
+
+    public static Color getColor(final JComponent c, final String key, final Color defaultValue) {
+        return getObject(c, key, Color.class, defaultValue);
+    }
+
+    public static Color getColor(final Component c, final String key, final Color defaultValue) {
+        return getObject(c, key, Color.class, defaultValue);
+    }
+
+    public static String getString(final JComponent c, final String key, final String defaultValue) {
+        return getObject(c, key, String.class, defaultValue);
+    }
+
+    public static String getString(final Component c, final String key, final String defaultValue) {
+        return getObject(c, key, String.class, defaultValue);
+    }
+
+    public static <T> T getObject(final Component c, final String key, final Class<T> type) {
+        return getObject(c, key, type, null);
+    }
+
+    public static <T> T getObject(final JComponent c, final String key, final Class<T> type) {
+        return getObject(c, key, type, null);
+    }
+
+    public static Color getColor(final JComponent c, final String key) {
+        return getColor(c, key, null);
+    }
+
+    public static Color getColor(final Component c, final String key) {
+        return getColor(c, key, null);
+    }
+
+    public static String getString(final JComponent c, final String key) {
+        return getString(c, key, null);
+    }
+
+    public static String getString(final Component c, final String key) {
+        return getString(c, key, null);
+    }
+
+    public static Integer getInteger(final JComponent c, final String key, final int defaultValue) {
+        return getObject(c, key, Integer.class, defaultValue);
+    }
+
+    public static Integer getInteger(final Component c, final String key, final int defaultValue) {
+        return getObject(c, key, Integer.class, defaultValue);
+    }
+
+    public static Integer getInteger(final Component c, final String key) {
+        return getInteger(c, key, 0);
+    }
+
+    public static Integer getInteger(final JComponent c, final String key) {
+        return getInteger(c, key, 0);
+    }
 }

@@ -35,14 +35,13 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.text.View;
 
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabLabel;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.listener.HoverListener;
 import com.github.weisj.darklaf.ui.label.DarkLabelUI;
@@ -98,21 +97,13 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
             icon.paintIcon(c, g, paintIconR.x, paintIconR.y);
         }
 
-        if (text != null) {
-            View v = (View) c.getClientProperty(BasicHTML.propertyKey);
-            if (v != null) {
-                v.paint(g, paintTextR);
+        PaintUtil.drawString(g, c, clippedText, paintTextR, fm, (g2, c2, rect, t) -> {
+            if (label.isEnabled()) {
+                paintEnabledText(label, g2, t, rect.x, rect.y);
             } else {
-                int textX = paintTextR.x;
-                int textY = paintTextR.y + fm.getAscent();
-
-                if (label.isEnabled()) {
-                    paintEnabledText(label, g, clippedText, textX, textY);
-                } else {
-                    paintDisabledText(label, g, clippedText, textX, textY);
-                }
+                paintDisabledText(label, g2, t, rect.x, rect.y);
             }
-        }
+        });
     }
 
     @Override

@@ -26,12 +26,14 @@ package com.github.weisj.darklaf.ui.scrollpane;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.PropertyUtil;
+
 public interface ScrollBarConstants {
     String KEY_SCROLL_PANE_PARENT = "JScrollBar.scrollPaneParent";
     String KEY_FAST_WHEEL_SCROLLING = "JScrollBar.fastWheelScrolling";
     String KEY_SMALL = "JComponent.small";
 
     static boolean isSmall(final JScrollBar scrollBar) {
-        return scrollBar.getClientProperty(KEY_SMALL) == Boolean.TRUE;
+        return PropertyUtil.getBooleanProperty(scrollBar, KEY_SMALL);
     }
 }

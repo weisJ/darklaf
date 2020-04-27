@@ -640,9 +640,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     protected boolean isPlainThumb() {
-        Boolean paintThumbArrowShape = (Boolean) slider.getClientProperty(KEY_THUMB_ARROW_SHAPE);
-        return (!slider.getPaintTicks() && paintThumbArrowShape == null) ||
-               paintThumbArrowShape == Boolean.FALSE;
+        return !slider.getPaintTicks() || !PropertyUtil.getBooleanProperty(slider, KEY_THUMB_ARROW_SHAPE, true);
     }
 
     private void paintSliderThumb(final Graphics2D g) {

@@ -74,8 +74,7 @@ public interface ButtonConstants {
     static boolean isBorderlessVariant(final Component c) {
         if (isBorderlessRectangular(c)) return true;
         if (c instanceof JButton) {
-            JButton b = (JButton) c;
-            return PropertyUtil.isPropertyEqual(b, KEY_VARIANT, VARIANT_BORDERLESS)
+            return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_BORDERLESS)
                    || doConvertToBorderless((AbstractButton) c);
         }
         return false;
@@ -104,9 +103,6 @@ public interface ButtonConstants {
     }
 
     static JComponent getNeighbour(final String key, final Component comp) {
-        if (!(comp instanceof JComponent)) return null;
-        Object obj = ((JComponent) comp).getClientProperty(key);
-        if (obj instanceof JComponent) return (JComponent) obj;
-        return null;
+        return PropertyUtil.getObject(comp, key, JComponent.class);
     }
 }

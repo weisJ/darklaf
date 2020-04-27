@@ -30,14 +30,13 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.basic.BasicLabelUI;
-import javax.swing.text.View;
 
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -101,21 +100,13 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
             icon.paintIcon(c, g, paintIconR.x, paintIconR.y);
         }
 
-        if (text != null) {
-            View v = (View) c.getClientProperty(BasicHTML.propertyKey);
-            if (v != null) {
-                v.paint(g, paintTextR);
+        PaintUtil.drawString(g, c, clippedText, paintTextR, fm, (g2, c2, rect, t) -> {
+            if (label.isEnabled()) {
+                paintEnabledText(label, g2, t, rect.x, rect.y);
             } else {
-                int textX = paintTextR.x;
-                int textY = paintTextR.y + fm.getAscent();
-
-                if (label.isEnabled()) {
-                    paintEnabledText(label, g, clippedText, textX, textY);
-                } else {
-                    paintDisabledText(label, g, clippedText, textX, textY);
-                }
+                paintDisabledText(label, g2, t, rect.x, rect.y);
             }
-        }
+        });
         config.restore();
     }
 

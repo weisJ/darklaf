@@ -37,6 +37,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -159,13 +160,7 @@ public class DarkTooltipBorder implements Border {
     }
 
     protected Insets getUserInsets(final Component c) {
-        if (c instanceof JComponent) {
-            Object obj = ((JComponent) c).getClientProperty(DarkTooltipUI.KEY_INSETS);
-            if (obj instanceof Insets) {
-                return (Insets) obj;
-            }
-        }
-        return margin;
+        return PropertyUtil.getObject(c, DarkTooltipUI.KEY_INSETS, Insets.class, margin);
     }
 
     @Override

@@ -30,6 +30,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.Animator;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkScrollBarListener extends MouseAdapter implements AdjustmentListener, ScrollBarConstants {
 
@@ -88,12 +89,12 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         if (scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
             || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()) {
             scrollbar.setValueIsAdjusting(true);
-            Object sp = scrollbar.getClientProperty(KEY_SCROLL_PANE_PARENT);
+            JScrollPane sp = PropertyUtil.getObject(scrollbar, KEY_SCROLL_PANE_PARENT, JScrollPane.class);
             if (scrollbar.getParent() instanceof JScrollPane) {
                 ScrollBarUtil.doScroll(scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
                                        scrollbar.getParent().getComponentOrientation().isLeftToRight());
-            } else if (sp instanceof JScrollPane) {
-                ScrollBarUtil.doScroll(scrollbar, ((JScrollPane) sp).getViewport(), e,
+            } else if (sp != null) {
+                ScrollBarUtil.doScroll(scrollbar, sp.getViewport(), e,
                                        scrollbar.getParent().getComponentOrientation().isLeftToRight());
             } else {
                 ScrollBarUtil.doScroll(scrollbar, null, e, scrollbar.getComponentOrientation().isLeftToRight());

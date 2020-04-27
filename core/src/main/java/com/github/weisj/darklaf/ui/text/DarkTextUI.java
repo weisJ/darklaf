@@ -50,6 +50,7 @@ import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -257,8 +258,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     protected String getDefaultText() {
-        Object defaultText = editor.getClientProperty(KEY_DEFAULT_TEXT);
-        return defaultText instanceof String ? (String) defaultText : "";
+        return PropertyUtil.getString(editor, KEY_DEFAULT_TEXT, "");
     }
 
     protected boolean isEmpty() {

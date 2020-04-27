@@ -586,7 +586,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     }
 
     protected String getLineStyle() {
-        return String.valueOf(tree.getClientProperty(KEY_LINE_STYLE));
+        return PropertyUtil.getString(tree, KEY_LINE_STYLE, "");
     }
 
     protected boolean selectedChildOf(final TreePath path) {

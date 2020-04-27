@@ -29,6 +29,11 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 
+import javax.swing.*;
+import javax.swing.text.View;
+
+import com.github.weisj.darklaf.ui.html.DarkHTML;
+
 public class PaintUtil {
 
     public static final Color TRANSPARENT_COLOR = new Color(0x0, true);
@@ -228,6 +233,29 @@ public class PaintUtil {
         g.fillRect(x, y + thickness, thickness, height - 2 * thickness);
         g.fillRect(x + width - thickness, y + thickness, thickness, height - 2 * thickness);
         g.fillRect(x, y + height - thickness, width, thickness);
+    }
+
+    public static void drawString(final Graphics g, final JComponent c,
+                                  final String text, final Rectangle textRect,
+                                  final FontMetrics fm,
+                                  final PaintMethod paintMethod) {
+        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
+        g.setClip(textRect);
+        if (text != null && !text.equals("")) {
+            View v = (View) c.getClientProperty(DarkHTML.propertyKey);
+            if (v != null) {
+                v.paint(g, textRect);
+            } else {
+                textRect.y += fm.getAscent();
+                paintMethod.paintText(g, c, textRect, text);
+            }
+        }
+        context.restore();
+    }
+
+    public interface PaintMethod {
+
+        void paintText(final Graphics g, final JComponent c, final Rectangle rect, final String text);
     }
 
     public enum Outline {

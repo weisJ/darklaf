@@ -39,6 +39,7 @@ import javax.swing.text.View;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class TabbedPaneHandler implements ChangeListener, ContainerListener, FocusListener,
                                MouseListener, MouseMotionListener, PropertyChangeListener {
@@ -261,9 +262,8 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         // currently no IndexPropertyChangeEvent. Once
         // IndexPropertyChangeEvents have been added this code should be
         // modified to use it.
-        Integer indexObj = (Integer) tp.getClientProperty("__index_to_remove__");
-        if (indexObj != null) {
-            int index = indexObj;
+        int index = PropertyUtil.getInteger(tp, "__index_to_remove__", -1);
+        if (index >= 0) {
             if (ui.htmlViews != null && ui.htmlViews.size() > index) {
                 ui.htmlViews.removeElementAt(index);
             }

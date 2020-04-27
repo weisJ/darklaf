@@ -37,6 +37,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -121,11 +122,7 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public static AlignmentExt getCornerFlag(final Component component) {
-        if (component instanceof JComponent) {
-            Object align = ((JComponent) component).getClientProperty(DarkButtonUI.KEY_CORNER);
-            return align instanceof AlignmentExt ? (AlignmentExt) align : null;
-        }
-        return null;
+        return PropertyUtil.getObject(component, DarkButtonUI.KEY_CORNER, AlignmentExt.class, null);
     }
 
     protected int getShadowSize(final JComponent c) {

@@ -149,7 +149,7 @@ public final class PropertyLoader {
                                                    final Predicate<Map.Entry<Object, T>> predicate,
                                                    final Function<Map.Entry<Object, T>, T> mapper) {
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            if (type == Object.class || type.isAssignableFrom(entry.getValue().getClass())) {
+            if (type == Object.class || type.isInstance(entry.getValue())) {
                 if (predicate.test((Map.Entry<Object, T>) entry)) {
                     T newValue = mapper.apply((Map.Entry<Object, T>) entry);
                     if (newValue != null) {
