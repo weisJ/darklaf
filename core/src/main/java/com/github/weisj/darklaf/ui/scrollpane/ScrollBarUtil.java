@@ -29,6 +29,8 @@ import java.awt.event.MouseWheelEvent;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.PropertyUtil;
+
 public class ScrollBarUtil implements ScrollBarConstants {
 
     @SuppressWarnings("MagicConstant")
@@ -45,9 +47,8 @@ public class ScrollBarUtil implements ScrollBarConstants {
 
             boolean limitScroll = Math.abs(e.getWheelRotation()) == 1;
 
-            Object fastWheelScroll = toScroll.getClientProperty(KEY_FAST_WHEEL_SCROLLING);
             Component comp = vp == null ? null : vp.getView();
-            if (Boolean.TRUE.equals(fastWheelScroll) && comp instanceof Scrollable) {
+            if (comp instanceof Scrollable && PropertyUtil.getBooleanProperty(toScroll, KEY_FAST_WHEEL_SCROLLING)) {
                 Scrollable scrollComp = (Scrollable) comp;
                 Rectangle viewRect = vp.getViewRect();
                 int startingX = viewRect.x;

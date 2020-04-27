@@ -36,6 +36,7 @@ import javax.swing.plaf.basic.BasicPopupMenuUI;
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * This implementation for PopupMenuUI is almost identical to the one of BasicPopupMenuUI. The key difference is that it
@@ -48,7 +49,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     public static final String KEY_DO_NOT_CANCEL_POPUP = "doNotCancelPopup";
     public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
-    public static final StringBufferWrapper HIDE_POPUP_VALUE = new StringBufferWrapper(new StringBuffer("doNotCancelPopup"));
+    public static final String HIDE_POPUP_VALUE = "doNotCancelPopup";
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
     private PopupMenuContainer popupMenuContainer;
 
@@ -59,8 +60,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     @Override
     public void paint(final Graphics g, final JComponent c) {
         Window window = SwingUtilities.getWindowAncestor(c);
-        if (window != null
-            && Boolean.TRUE.equals(popupMenu.getClientProperty(DarkPopupFactory.KEY_MAKE_VISIBLE))) {
+        if (window != null && PropertyUtil.getBooleanProperty(popupMenu, DarkPopupFactory.KEY_MAKE_VISIBLE)) {
             popupMenu.putClientProperty(DarkPopupFactory.KEY_MAKE_VISIBLE, false);
             window.setOpacity(1);
         }
@@ -100,25 +100,5 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         if (popupMenuContainer == null) return super.getPopup(popup, x, y);
         int maxHeight = DarkUIUtil.getScreenBounds(popup, x, y, false).height;
         return popupMenuContainer.createPopup(popup, x, y, maxHeight);
-    }
-
-    protected static class StringBufferWrapper {
-        private final StringBuffer buffer;
-
-        protected StringBufferWrapper(final StringBuffer buffer) {
-            this.buffer = buffer;
-        }
-
-        @Override
-        public String toString() {
-            return buffer.toString();
-        }
-
-        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-        @Override
-        public boolean equals(final Object obj) {
-            if (obj == null || buffer == null) return false;
-            return toString().equals(obj.toString());
-        }
     }
 }

@@ -30,6 +30,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkListCellRenderer extends DefaultListCellRenderer {
 
@@ -45,7 +46,7 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
             }
         }
         Component comp = null;
-        boolean isEditing = Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_IS_EDITING));
+        boolean isEditing = PropertyUtil.getBooleanProperty(list, DarkListUI.KEY_IS_EDITING);
         if (isEditing) {
             if (list.getSelectionModel().getLeadSelectionIndex() == index) {
                 comp = super.getListCellRendererComponent(list, value, index, false, false);
@@ -62,9 +63,7 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
         } else {
             if (DarkUIUtil.hasFocus(list) || DarkUIUtil.getParentOfType(JPopupMenu.class, list) != null) {
                 comp.setForeground(list.getSelectionForeground());
-                comp.setBackground(list.getSelectionBackground());
             } else {
-                comp.setBackground(UIManager.getColor("List.selectionNoFocusBackground"));
                 comp.setForeground(UIManager.getColor("List.selectionForegroundInactive"));
             }
         }

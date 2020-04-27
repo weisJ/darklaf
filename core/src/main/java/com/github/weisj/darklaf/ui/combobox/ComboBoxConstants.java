@@ -30,6 +30,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public interface ComboBoxConstants {
     String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
@@ -41,12 +42,10 @@ public interface ComboBoxConstants {
     }
 
     static boolean isTreeCellEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TREE_EDITOR));
+        return PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR);
     }
 
     static boolean isTableCellEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TABLE_EDITOR));
+        return PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR);
     }
 }

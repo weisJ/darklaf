@@ -46,6 +46,7 @@ import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
 import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.PropertyValue;
 
 /**
@@ -287,7 +288,8 @@ public class DarkTableCellEditor extends DefaultCellEditor {
     }
 
     protected TableCellEditor getBooleanEditor(final JTable table) {
-        if (DarkTableUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE))) {
+        if (PropertyUtil.isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE,
+                                         DarkTableUI.RENDER_TYPE_RADIOBUTTON)) {
             return radioButtonEditor;
         }
         return checkBoxEditor;

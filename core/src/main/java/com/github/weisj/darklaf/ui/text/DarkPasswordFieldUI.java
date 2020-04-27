@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.listener.MouseMovementListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -182,8 +183,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     }
 
     public static boolean hasShowIcon(final Component c) {
-        return c instanceof JPasswordField
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_SHOW_VIEW_BUTTON));
+        return PropertyUtil.getBooleanProperty(c, KEY_SHOW_VIEW_BUTTON);
     }
 
     private Point getShowIconCoord() {

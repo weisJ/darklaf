@@ -28,6 +28,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.PropertyUtil;
+
 /**
  * @author Jannis Weis
  */
@@ -51,7 +53,7 @@ public class DropPreviewPanel extends JComponent {
     }
 
     protected Color getBackgroundColor() {
-        boolean useToolbar = Boolean.TRUE.equals(toolBar.getClientProperty(DarkToolBarUI.KEY_USE_TOOL_BAR_BACKGROUND));
+        boolean useToolbar = PropertyUtil.getBooleanProperty(toolBar, DarkToolBarUI.KEY_USE_TOOL_BAR_BACKGROUND);
         if (!useToolbar) {
             Color c = dropBackground;
             if (c == null) {

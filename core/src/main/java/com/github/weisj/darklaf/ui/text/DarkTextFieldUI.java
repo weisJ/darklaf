@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.listener.MouseMovementListener;
 import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -166,7 +167,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     public static boolean isSearchField(final Component c) {
-        return c instanceof JTextField && VARIANT_SEARCH.equals(((JTextField) c).getClientProperty(KEY_VARIANT));
+        return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_SEARCH);
     }
 
     protected void paintBackground(final Graphics graphics) {

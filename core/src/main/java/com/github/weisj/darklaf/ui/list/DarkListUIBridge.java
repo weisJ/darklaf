@@ -48,6 +48,7 @@ import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * An extensible implementation of {@code ListUI}.
@@ -514,7 +515,7 @@ public class DarkListUIBridge extends BasicListUI {
      * Update is file list.
      */
     protected void updateIsFileList() {
-        boolean b = Boolean.TRUE.equals(list.getClientProperty("List.isFileList"));
+        boolean b = PropertyUtil.getBooleanProperty(list, "List.isFileList");
         if (b != isFileList) {
             isFileList = b;
             Font oldFont = list.getFont();

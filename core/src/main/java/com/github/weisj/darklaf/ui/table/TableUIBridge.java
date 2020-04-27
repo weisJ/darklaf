@@ -52,6 +52,7 @@ import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * The type Table ui bridge.
@@ -343,7 +344,7 @@ public abstract class TableUIBridge extends TableUI {
             }
         }
 
-        isFileList = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_IS_FILE_LIST));
+        isFileList = PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_IS_FILE_LIST);
     }
 
     /**
@@ -1841,8 +1842,8 @@ public abstract class TableUIBridge extends TableUI {
         public boolean accept(final Object sender) {
             String key = getName();
 
-            if (sender instanceof JTable &&
-                Boolean.TRUE.equals(((JTable) sender).getClientProperty(DarkTableUI.KEY_IS_FILE_LIST))) {
+            if (sender instanceof JTable
+                && PropertyUtil.getBooleanProperty((JTable) sender, DarkTableUI.KEY_IS_FILE_LIST)) {
                 if (Objects.equals(key, NEXT_COLUMN) ||
                     Objects.equals(key, NEXT_COLUMN_CELL) ||
                     Objects.equals(key, NEXT_COLUMN_EXTEND_SELECTION) ||
@@ -2582,7 +2583,7 @@ public abstract class TableUIBridge extends TableUI {
                 repaintDropLocation(oldValue);
                 repaintDropLocation(table.getDropLocation());
             } else if (DarkTableUI.KEY_IS_FILE_LIST.equals(changeName)) {
-                isFileList = Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_IS_FILE_LIST));
+                isFileList = PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_IS_FILE_LIST);
                 table.revalidate();
                 table.repaint();
                 if (isFileList) {

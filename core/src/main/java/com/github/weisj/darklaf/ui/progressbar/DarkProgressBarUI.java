@@ -39,6 +39,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -69,7 +70,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     }
 
     protected static boolean hasFailed(final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty(KEY_FAILED));
+        return PropertyUtil.getBooleanProperty(c, KEY_FAILED);
     }
 
     @Override
@@ -177,7 +178,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     }
 
     protected static boolean hasPassed(final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty(KEY_PASSED));
+        return PropertyUtil.getBooleanProperty(c, KEY_PASSED);
     }
 
     @Override

@@ -40,6 +40,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
@@ -185,7 +186,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected void installKeyboardActions() {
         super.installKeyboardActions();
 
-        if (Boolean.TRUE.equals(tree.getClientProperty(KEY_MAC_ACTIONS_INSTALLED))) return;
+        if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED)) return;
 
         tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
 
@@ -337,10 +338,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             if (owner == null) {
                 owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             }
-            boolean treeEditor = owner instanceof JComponent
-                                 && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_EDITOR));
-            boolean treeRenderer = !treeEditor && owner instanceof JComponent
-                                   && Boolean.TRUE.equals(((JComponent) owner).getClientProperty(DarkTreeUI.KEY_IS_TREE_RENDERER));
+            boolean treeEditor = PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_EDITOR);
+            boolean treeRenderer = !treeEditor
+                                   && PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_RENDERER);
             return treeEditor || treeRenderer;
         }
         return true;
@@ -540,10 +540,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
     protected Color getRowBackground(final int row, final boolean selected) {
         if (selected) {
-            boolean isTableTree = Boolean.TRUE.equals(tree.getClientProperty(KEY_TREE_TABLE_TREE));
+            boolean isTableTree = PropertyUtil.getBooleanProperty(tree, KEY_TREE_TABLE_TREE);
             return getTreeSelectionBackground(hasFocus() || isTableTree || tree.isEditing());
         }
-        if (Boolean.TRUE.equals(tree.getClientProperty(KEY_ALTERNATE_ROW_COLOR)) && row % 2 == 1) {
+        if (row % 2 == 1 && PropertyUtil.getBooleanProperty(tree, KEY_ALTERNATE_ROW_COLOR)) {
             return alternativeBackground;
         } else {
             return tree.getBackground();

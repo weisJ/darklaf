@@ -40,7 +40,8 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.listener.MouseClickListener;
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -114,12 +115,11 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private static boolean showVolumeIcon(final JComponent c) {
-        return isVolumeSlider(c)
-               && Boolean.TRUE.equals(c.getClientProperty(KEY_SHOW_VOLUME_ICON));
+        return isVolumeSlider(c) && PropertyUtil.getBooleanProperty(c, KEY_SHOW_VOLUME_ICON);
     }
 
     private static boolean isVolumeSlider(final JComponent c) {
-        return VARIANT_VOLUME.equals(c.getClientProperty(KEY_VARIANT));
+        return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_VOLUME);
     }
 
     @Override
@@ -307,8 +307,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
                       || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
         Component minLabel = ltr ? getLowestValueLabel() : getHighestValueLabel();
-        boolean adjustMin = minLabel instanceof JComponent
-                            && Boolean.TRUE.equals(((JComponent) minLabel).getClientProperty(KEY_MANUAL_LABEL_ALIGN));
+        boolean adjustMin = PropertyUtil.getBooleanProperty(minLabel, KEY_MANUAL_LABEL_ALIGN);
         int minPrefWidth = minLabel.getPreferredSize().width;
         float adj = (adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
         return (int) (minPrefWidth * adj) + 2 * (ltr ? focusInsets.left : focusInsets.right);
@@ -318,8 +317,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
                       || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
         Component maxLabel = ltr ? getHighestValueLabel() : getLowestValueLabel();
-        boolean adjustMax = maxLabel instanceof JComponent
-                            && Boolean.TRUE.equals(((JComponent) maxLabel).getClientProperty(KEY_MANUAL_LABEL_ALIGN));
+        boolean adjustMax = PropertyUtil.getBooleanProperty(maxLabel, KEY_MANUAL_LABEL_ALIGN);
         int maxPrefWidth = maxLabel.getPreferredSize().width;
         float adj = (adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
         return (int) (maxPrefWidth * (1f - adj)) + 2 * (ltr ? focusInsets.right : focusInsets.left);
@@ -420,8 +418,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         checkDisabled(g);
         int labelCenter = xPositionForValue(value);
         float align = Component.CENTER_ALIGNMENT;
-        if (label instanceof JComponent
-            && Boolean.TRUE.equals(((JComponent) label).getClientProperty(KEY_MANUAL_LABEL_ALIGN))) {
+        if (PropertyUtil.getBooleanProperty(label, KEY_MANUAL_LABEL_ALIGN)) {
             align = label.getAlignmentX();
         }
         int labelLeft = labelCenter - (int) (label.getPreferredSize().width * align);
@@ -665,7 +662,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private boolean paintFocus() {
-        return slider.hasFocus() && Boolean.TRUE.equals(slider.getClientProperty(KEY_SHOW_FOCUS_GLOW));
+        return slider.hasFocus() && PropertyUtil.getBooleanProperty(slider, KEY_SHOW_FOCUS_GLOW);
     }
 
     protected int getThumbWidth() {
@@ -753,7 +750,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private boolean instantScrollEnabled(final JComponent c) {
-        return Boolean.TRUE.equals(c.getClientProperty(KEY_INSTANT_SCROLL));
+        return PropertyUtil.getBooleanProperty(c, KEY_INSTANT_SCROLL);
     }
 
     public Rectangle getThumbRect() {

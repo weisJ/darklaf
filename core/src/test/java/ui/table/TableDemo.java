@@ -37,6 +37,7 @@ import ui.DemoPanel;
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class TableDemo implements ComponentDemo {
 
@@ -112,7 +113,7 @@ public class TableDemo implements ComponentDemo {
         });
         controlPanel.add(new JCheckBox(DarkTableUI.KEY_ALTERNATE_ROW_COLOR) {
             {
-                setSelected(Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR)));
+                setSelected(PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_ALTERNATE_ROW_COLOR));
                 addActionListener(e -> table.putClientProperty(DarkTableUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
             }
         });
@@ -144,7 +145,7 @@ public class TableDemo implements ComponentDemo {
         });
         controlPanel.add(new JCheckBox(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX) {
             {
-                setSelected(Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX)));
+                setSelected(PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
                 addActionListener(e -> table.putClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX,
                                                                isSelected()));
             }

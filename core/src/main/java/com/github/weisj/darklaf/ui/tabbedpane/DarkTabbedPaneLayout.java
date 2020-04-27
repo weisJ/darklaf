@@ -28,6 +28,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.PropertyUtil;
+
 public class DarkTabbedPaneLayout extends TabbedPaneLayout {
 
     private final DarkTabbedPaneUI ui;
@@ -39,7 +41,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
 
     @Override
     protected void centerTabs(final int tabPlacement, final int tabCount, final int returnAt) {
-        if (ui.runCount == 1 && Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS))) {
+        if (ui.runCount == 1 && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
             if (ui.isHorizontalTabPlacement()) {
                 int shift = (returnAt - (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width)) / 2;
                 for (int i = 0; i < tabCount; i++) {

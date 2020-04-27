@@ -37,6 +37,7 @@ import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -99,7 +100,8 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     }
 
     protected DarkTreeCellEditor getBooleanEditor(final JTree table) {
-        if (DarkTreeUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE))) {
+        if (PropertyUtil.isPropertyEqual(table, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE,
+                                         DarkTreeUI.RENDER_TYPE_RADIOBUTTON)) {
             return radioButtonEditor;
         }
         return checkBoxEditor;

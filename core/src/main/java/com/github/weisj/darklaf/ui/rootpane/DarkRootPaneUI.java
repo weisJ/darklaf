@@ -37,6 +37,7 @@ import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -211,7 +212,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     protected void updateClientDecoration() {
-        if (!Boolean.TRUE.equals(rootPane.getClientProperty(KEY_NO_DECORATIONS_UPDATE))) {
+        if (!PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS_UPDATE)) {
             uninstallClientDecorations(rootPane);
             if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
                 installClientDecorations(rootPane);

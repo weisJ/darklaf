@@ -30,6 +30,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public interface SpinnerConstants {
     String KEY_VARIANT = "JSpinner.variant";
@@ -41,7 +42,7 @@ public interface SpinnerConstants {
     String VARIANT_PLUS_MINUS = "plusMinus";
 
     static boolean usePlusMinusIcons(final JSpinner spinner) {
-        return VARIANT_PLUS_MINUS.equals(spinner.getClientProperty(KEY_VARIANT));
+        return PropertyUtil.isPropertyEqual(spinner, KEY_VARIANT, VARIANT_PLUS_MINUS);
     }
 
     static boolean isTreeOrTableCellEditor(final Component c) {
@@ -49,12 +50,10 @@ public interface SpinnerConstants {
     }
 
     static boolean isTreeCellEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TREE_EDITOR));
+        return PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR);
     }
 
     static boolean isTableCellEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(KEY_IS_TABLE_EDITOR));
+        return PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR);
     }
 }

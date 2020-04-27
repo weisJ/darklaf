@@ -33,6 +33,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkHandler extends TabbedPaneHandler {
 
@@ -108,7 +109,7 @@ public class DarkHandler extends TabbedPaneHandler {
             }
             ui.tabPane.doLayout();
         } else if (DarkTabbedPaneUI.KEY_DND.equals(key)) {
-            ui.dndEnabled = Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_DND));
+            ui.dndEnabled = PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_DND);
             DropTarget dropTarget = ui.tabPane.getDropTarget();
             if (dropTarget != null) dropTarget.setActive(ui.dndEnabled);
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {

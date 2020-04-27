@@ -38,6 +38,7 @@ import sun.awt.SunToolkit;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class MouseGrabber implements ChangeListener, AWTEventListener, ComponentListener, WindowListener {
 
@@ -168,9 +169,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                     (src instanceof JMenu && ((JMenu) src).isSelected())) {
                     return;
                 }
-                if (!(src instanceof JComponent) ||
-                    !DarkPopupMenuUI.HIDE_POPUP_VALUE.equals(((JComponent) src).getClientProperty(
-                                                                                                  DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP))) {
+                if (!PropertyUtil.isPropertyEqual(src, DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP,
+                                                  DarkPopupMenuUI.HIDE_POPUP_VALUE)) {
                     // Cancel popup only if this property was not set.
                     // If this property is set to TRUE component wants
                     // to deal with this event by himself.
@@ -246,9 +246,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                 break;
             } else if (c instanceof JPopupMenu) {
                 return true;
-            } else if (c instanceof JComponent
-                       && Boolean.TRUE.equals(((JComponent) c).getClientProperty(
-                                                                                 DarkPopupMenuUI.KEY_DO_NOT_CANCEL_ON_SCROLL))) {
+            } else if (PropertyUtil.getBooleanProperty(c, DarkPopupMenuUI.KEY_DO_NOT_CANCEL_ON_SCROLL)) {
                 /*
                  * Change here: allows scrollable components that contain the popupMenu.
                  */

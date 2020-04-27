@@ -103,7 +103,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     private boolean added;
 
     public static ComponentUI createUI(final JComponent c) {
-        if (Boolean.TRUE.equals(c.getClientProperty(KEY_PLAIN_TOOLTIP))) {
+        if (PropertyUtil.getBooleanProperty(c, KEY_PLAIN_TOOLTIP)) {
             return BasicToolTipUI.createUI(c);
         } else {
             return new DarkTooltipUI();

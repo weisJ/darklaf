@@ -30,6 +30,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -65,17 +66,14 @@ public class DarkTableCellFocusBorder extends DarkCellBorder {
     }
 
     public static boolean isRowFocusBorder(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER));
+        return PropertyUtil.getBooleanProperty(c, DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER);
     }
 
     protected static boolean forcePaintLeft(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FORCE_LEFT_BORDER));
+        return PropertyUtil.getBooleanProperty(c, DarkTableUI.KEY_FORCE_LEFT_BORDER);
     }
 
     protected static boolean forcePaintRight(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableUI.KEY_FORCE_RIGHT_BORDER));
+        return PropertyUtil.getBooleanProperty(c, DarkTableUI.KEY_FORCE_RIGHT_BORDER);
     }
 }

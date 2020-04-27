@@ -34,6 +34,7 @@ import ui.ComponentDemo;
 import ui.DemoPanel;
 
 import com.github.weisj.darklaf.ui.list.DarkListUI;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public final class ListDemo implements ComponentDemo {
 
@@ -52,7 +53,7 @@ public final class ListDemo implements ComponentDemo {
         JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox(DarkListUI.KEY_ALTERNATE_ROW_COLOR) {
             {
-                setSelected(Boolean.TRUE.equals(list.getClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR)));
+                setSelected(PropertyUtil.getBooleanProperty(list, DarkListUI.KEY_ALTERNATE_ROW_COLOR));
                 addActionListener(e -> list.putClientProperty(DarkListUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
             }
         }, "span");

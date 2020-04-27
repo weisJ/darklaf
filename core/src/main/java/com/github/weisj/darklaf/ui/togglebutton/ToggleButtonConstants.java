@@ -31,6 +31,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public interface ToggleButtonConstants {
     String KEY_VARIANT = "JToggleButton.variant";
@@ -43,8 +44,7 @@ public interface ToggleButtonConstants {
     String VARIANT_SLIDER = "slider";
 
     static boolean isSlider(final JComponent c) {
-        return c instanceof JToggleButton
-               && VARIANT_SLIDER.equals(c.getClientProperty(ToggleButtonConstants.KEY_VARIANT));
+        return PropertyUtil.isPropertyEqual(c, ToggleButtonConstants.KEY_VARIANT, VARIANT_SLIDER);
     }
 
     static boolean isInCell(final Component c) {
@@ -56,12 +56,10 @@ public interface ToggleButtonConstants {
     }
 
     static boolean isTreeCellEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR));
+        return PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR);
     }
 
     static boolean isTableCellEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR));
+        return PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR);
     }
 }

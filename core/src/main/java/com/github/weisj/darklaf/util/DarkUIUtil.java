@@ -155,8 +155,7 @@ public final class DarkUIUtil {
     }
 
     public static boolean isInCell(final Component c) {
-        boolean tableHeaderCell = c instanceof JComponent
-                                  && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTableHeaderUI.KEY_IS_HEADER_RENDERER));
+        boolean tableHeaderCell = PropertyUtil.getBooleanProperty(c, DarkTableHeaderUI.KEY_IS_HEADER_RENDERER);
         boolean inCellRenderer = !tableHeaderCell
                                  && (getParentOfType(CellRendererPane.class, c) != null
                                      || getParentOfType(TableCellRenderer.class, c) != null

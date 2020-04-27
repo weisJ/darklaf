@@ -35,6 +35,7 @@ import javax.swing.table.TableColumn;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author vincencopalazzo
@@ -47,7 +48,7 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
     private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(true));
 
     protected static boolean isBooleanRenderingEnabled(final JTable table) {
-        return Boolean.TRUE.equals(table.getClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
+        return PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX);
     }
 
     @Override
@@ -101,7 +102,8 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
     }
 
     protected TableCellRenderer getBooleanRenderer(final JTable table) {
-        if (DarkTableUI.RENDER_TYPE_RADIOBUTTON.equals(table.getClientProperty(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE))) {
+        if (PropertyUtil.isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE,
+                                         DarkTableUI.RENDER_TYPE_RADIOBUTTON)) {
             return radioRenderer;
         }
         return checkBoxRenderer;

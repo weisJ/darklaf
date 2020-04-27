@@ -32,6 +32,7 @@ import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkPopupFactory extends PopupFactory {
 
@@ -47,21 +48,19 @@ public class DarkPopupFactory extends PopupFactory {
     @Override
     public Popup getPopup(final Component owner, final Component contents,
                           final int x, final int y) throws IllegalArgumentException {
-        boolean isJComponent = contents instanceof JComponent;
-        Pair<Popup, PopupType> result = getEffectivePopup(owner, contents, x, y, isJComponent);
+        Pair<Popup, PopupType> result = getEffectivePopup(owner, contents, x, y);
         Popup popup = result.getFirst();
         PopupType type = result.getSecond();
-        setupPopup(popup, type, contents, isJComponent);
+        setupPopup(popup, type, contents);
         return popup;
     }
 
     protected Pair<Popup, PopupType> getEffectivePopup(final Component owner, final Component contents,
-                                                       final int x, final int y,
-                                                       final boolean isJComponent) {
+                                                       final int x, final int y) {
         Popup popup = super.getPopup(owner, contents, x, y);
         PopupType type = getPopupType(popup);
-        boolean forceHeavy = type != PopupType.HEAVY_WEIGHT && isJComponent
-                             && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FORCE_HEAVYWEIGHT));
+        boolean forceHeavy = type != PopupType.HEAVY_WEIGHT
+                             && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
         if (forceHeavy) {
             // null owner forces a heavyweight popup.
             Popup p = super.getPopup(getHeavyWeightParent(), contents, x, y);
@@ -77,8 +76,7 @@ public class DarkPopupFactory extends PopupFactory {
         return PopupType.HEAVY_WEIGHT;
     }
 
-    protected void setupPopup(final Popup popup, final PopupType type, final Component contents,
-                              final boolean isJComponent) {
+    protected void setupPopup(final Popup popup, final PopupType type, final Component contents) {
         if (type == PopupType.MEDIUM_WEIGHT) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
@@ -86,21 +84,17 @@ public class DarkPopupFactory extends PopupFactory {
         } else if (type == PopupType.HEAVY_WEIGHT) {
             Window window = SwingUtilities.getWindowAncestor(contents);
             if (window != null) {
-                boolean isFocusable = isJComponent
-                                      && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_FOCUSABLE_POPUP));
-                boolean startHidden = isJComponent
-                                      && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_START_HIDDEN));
-                setupWindow(window, contents, isJComponent, isFocusable, startHidden);
+                boolean isFocusable = PropertyUtil.getBooleanProperty(contents, KEY_FOCUSABLE_POPUP);
+                boolean startHidden = PropertyUtil.getBooleanProperty(contents, KEY_START_HIDDEN);
+                setupWindow(window, contents, isFocusable, startHidden);
             }
         }
     }
 
-    protected void setupWindow(final Window window, final Component contents, final boolean isJComponent,
+    protected void setupWindow(final Window window, final Component contents,
                                final boolean isFocusable, final boolean startHidden) {
-        boolean noDecorations = isJComponent
-                                && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_NO_DECORATION));
-        boolean opaque = isJComponent
-                         && Boolean.TRUE.equals(((JComponent) contents).getClientProperty(KEY_OPAQUE));
+        boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
+        boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
         setupWindowBackground(window, opaque);
         setupWindowFocusableState(isFocusable, window);
         setupWindowDecorations(window, noDecorations);

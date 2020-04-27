@@ -29,6 +29,8 @@ import java.util.function.Function;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.PropertyUtil;
+
 public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
     private final DarkTabbedPaneUI ui;
@@ -329,7 +331,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             restoreHiddenTabsX(leftMargin, returnAt, tabCount);
 
             if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
-                && Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS))) {
+                && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
                 adjustForCenterX(leftMargin, returnAt, tabCount);
             }
 
@@ -382,7 +384,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             restoreHiddenTabsY(topMargin, returnAt, tabCount);
 
             if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
-                && Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS))) {
+                && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
                 adjustForCenterY(topMargin, returnAt, tabCount);
             }
 

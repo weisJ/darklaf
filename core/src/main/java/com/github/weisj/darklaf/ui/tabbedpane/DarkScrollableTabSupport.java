@@ -36,6 +36,7 @@ import javax.swing.event.PopupMenuListener;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.listener.PopupMenuAdapter;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkScrollableTabSupport extends ScrollableTabSupport implements MouseWheelListener, ActionListener {
 
@@ -61,7 +62,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         moreTabsButton.addActionListener(this);
 
         newTabButton = ui.createNewTabButton();
-        newTabButton.setVisible(Boolean.TRUE.equals(ui.tabPane.getClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON)));
+        newTabButton.setVisible(PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON));
 
         scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt(DarkTabbedPaneUI.KEY_MAX_POPUP_HEIGHT));
         PopupMenuListener popupMenuListener = new PopupMenuAdapter() {

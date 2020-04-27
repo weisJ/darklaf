@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -144,7 +145,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
                                      final int textX, final int textY) {
         int accChar = l.getDisplayedMnemonicIndex();
         if (DarkUIUtil.isInCell(l)) {
-            boolean selected = Boolean.TRUE.equals(l.getClientProperty(CellUtil.KEY_SELECTED_CELL_RENDERER));
+            boolean selected = PropertyUtil.getBooleanProperty(l, CellUtil.KEY_SELECTED_CELL_RENDERER);
             boolean focused = hasFocusInCell(l);
             if (focused) {
                 if (selected) {

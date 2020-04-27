@@ -35,6 +35,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -74,8 +75,7 @@ public class DarkTextBorder implements Border, UIResource {
     }
 
     protected static boolean hasError(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkTextUI.KEY_HAS_ERROR));
+        return PropertyUtil.getBooleanProperty(c, DarkTextUI.KEY_HAS_ERROR);
     }
 
     protected int getArcSize(final Component c) {

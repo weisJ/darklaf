@@ -32,6 +32,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -156,7 +157,7 @@ public class DarkListUI extends DarkListUIBridge {
         int ch = rowBounds.height;
 
         if (empty || bgWidth > 0) {
-            boolean alternativeRow = Boolean.TRUE.equals(list.getClientProperty(KEY_ALTERNATE_ROW_COLOR));
+            boolean alternativeRow = PropertyUtil.getBooleanProperty(list, KEY_ALTERNATE_ROW_COLOR);
             Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
             Color normalColor = list.getBackground();
             Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
@@ -168,7 +169,7 @@ public class DarkListUI extends DarkListUIBridge {
         if (!empty) {
             Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, index, isSelected,
                                                                                     cellHasFocus);
-            if (Boolean.TRUE.equals(list.getClientProperty(KEY_SHRINK_WRAP))) {
+            if (PropertyUtil.getBooleanProperty(list, KEY_SHRINK_WRAP)) {
                 // Shrink renderer to preferred size. This is mostly used on Windows
                 // where selection is only shown around the file name, instead of
                 // across the whole list cell.
@@ -199,7 +200,7 @@ public class DarkListUI extends DarkListUIBridge {
             if (row < 0) {
                 // If shift is down in multi-select, we should do nothing.
                 // For single select or non-shift-click, clear the selection
-                if (isFileList && !Boolean.TRUE.equals(list.getClientProperty(KEY_FULL_ROW_SELECTION))
+                if (isFileList && !PropertyUtil.getBooleanProperty(list, KEY_FULL_ROW_SELECTION)
                     && e.getID() == MouseEvent.MOUSE_PRESSED &&
                     (!e.isShiftDown() || list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
                     list.clearSelection();

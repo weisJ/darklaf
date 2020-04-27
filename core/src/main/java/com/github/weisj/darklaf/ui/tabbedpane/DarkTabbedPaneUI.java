@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -402,7 +403,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected boolean shouldRotateTabRuns(final int tabPlacement) {
-        return Boolean.TRUE.equals(tabPane.getClientProperty(KEY_ROTATE_TAB_RUNS));
+        return PropertyUtil.getBooleanProperty(tabPane, KEY_ROTATE_TAB_RUNS);
     }
 
     @Override
@@ -478,7 +479,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected boolean drawFocusBar() {
-        return !Boolean.FALSE.equals(tabPane.getClientProperty(KEY_DRAW_FOCUS_BAR));
+        return PropertyUtil.getBooleanProperty(tabPane, KEY_DRAW_FOCUS_BAR, true);
     }
 
     protected Color getAccentColor() {
@@ -737,7 +738,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         installComponent(KEY_SOUTH_COMP, c -> southComp = c);
         installComponent(KEY_WEST_COMP, c -> westComp = c);
         installComponent(KEY_EAST_COMP, c -> eastComp = c);
-        dndEnabled = Boolean.TRUE.equals(tabPane.getClientProperty(KEY_DND));
+        dndEnabled = PropertyUtil.getBooleanProperty(tabPane, KEY_DND);
     }
 
     protected void installComponent(final String key, final Consumer<Component> setter) {

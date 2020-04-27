@@ -40,6 +40,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * Note this class only sits inside this weird package because of a hack used in {@link
@@ -409,7 +410,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private boolean isRounded(final JTextComponent c) {
         return !suppressRounded
-               && (roundedEdges || Boolean.TRUE.equals(c.getClientProperty(DarkTextUI.KEY_ROUNDED_SELECTION)));
+               && (roundedEdges || PropertyUtil.getBooleanProperty(c, DarkTextUI.KEY_ROUNDED_SELECTION));
     }
 
     private Shape paintExtension(final Graphics2D g2d, final JTextComponent c,

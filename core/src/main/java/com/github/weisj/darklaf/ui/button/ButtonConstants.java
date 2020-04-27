@@ -29,6 +29,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.util.PropertyUtil;
+
 public interface ButtonConstants {
     String KEY_VARIANT = "JButton.variant";
     String KEY_HOVER_COLOR = "JButton.borderless.hover";
@@ -49,45 +51,38 @@ public interface ButtonConstants {
     String VARIANT_NONE = "none";
 
     static boolean chooseAlternativeArc(final Component c) {
-        return c instanceof AbstractButton
-               && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_ALT_ARC));
+        return PropertyUtil.getBooleanProperty(c, KEY_ALT_ARC);
     }
 
     static boolean isLabelButton(final Component c) {
-        return c instanceof AbstractButton
-               && VARIANT_ONLY_LABEL.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
+        return PropertyUtil.getBooleanProperty(c, KEY_VARIANT);
     }
 
     static boolean isNoArc(final Component c) {
-        return c instanceof AbstractButton
-               && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_NO_ARC));
+        return PropertyUtil.getBooleanProperty(c, KEY_NO_ARC);
     }
 
     static boolean isSquare(final Component c) {
-        return c instanceof AbstractButton && Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_SQUARE));
+        return PropertyUtil.getBooleanProperty(c, KEY_SQUARE);
     }
 
     static boolean isThin(final Component c) {
-        if (c instanceof AbstractButton) {
-            boolean isThin = Boolean.TRUE.equals(((AbstractButton) c).getClientProperty(KEY_THIN));
-            return isThin || ButtonConstants.doConvertToBorderless((AbstractButton) c);
-        }
-        return false;
+        return PropertyUtil.getBooleanProperty(c, KEY_THIN)
+               || (c instanceof AbstractButton && ButtonConstants.doConvertToBorderless((AbstractButton) c));
     }
 
     static boolean isBorderlessVariant(final Component c) {
         if (isBorderlessRectangular(c)) return true;
         if (c instanceof JButton) {
             JButton b = (JButton) c;
-            return doConvertToBorderless((AbstractButton) c)
-                   || VARIANT_BORDERLESS.equals(b.getClientProperty(KEY_VARIANT));
+            return PropertyUtil.isPropertyEqual(b, KEY_VARIANT, VARIANT_BORDERLESS)
+                   || doConvertToBorderless((AbstractButton) c);
         }
         return false;
     }
 
     static boolean isBorderlessRectangular(final Component c) {
-        return c instanceof AbstractButton
-               && VARIANT_BORDERLESS_RECTANGULAR.equals(((AbstractButton) c).getClientProperty(KEY_VARIANT));
+        return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_BORDERLESS_RECTANGULAR);
     }
 
     static boolean doConvertToBorderless(final AbstractButton b) {
@@ -97,7 +92,7 @@ public interface ButtonConstants {
     static boolean convertIconButtonToBorderless(final AbstractButton b) {
         return !(b instanceof UIResource)
                && UIManager.getBoolean("Button.convertIconOnlyToBorderless")
-               && !Boolean.TRUE.equals(b.getClientProperty(KEY_NO_BORDERLESS_OVERWRITE));
+               && !PropertyUtil.getBooleanProperty(b, KEY_NO_BORDERLESS_OVERWRITE);
     }
 
     static boolean isIconOnly(final AbstractButton b) {

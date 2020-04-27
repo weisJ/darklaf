@@ -32,6 +32,7 @@ import javax.swing.plaf.ListUI;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class CellUtil {
 
@@ -107,7 +108,7 @@ public class CellUtil {
                                           final boolean selected, final int row,
                                           final String altBgKey, final Color bgColor, final String altColorKey,
                                           final Color selectionBackground, final String noFocusSelectionBgKey) {
-        boolean alternativeRow = Boolean.TRUE.equals(parent.getClientProperty(altBgKey));
+        boolean alternativeRow = PropertyUtil.getBooleanProperty(parent, altBgKey);
         Color alternativeRowColor = UIManager.getColor(altColorKey);
         Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : bgColor;
         if (selected) {
@@ -146,9 +147,7 @@ public class CellUtil {
     }
 
     protected static boolean isListEditor(final Component c) {
-        return c instanceof JComponent
-               && Boolean.TRUE.equals(((JComponent) c).getClientProperty(DarkListUI.KEY_IS_LIST_RENDERER))
-               && c.getParent() instanceof JList;
+        return PropertyUtil.getBooleanProperty(c, DarkListUI.KEY_IS_LIST_RENDERER) && c.getParent() instanceof JList;
     }
 
     public static Insets adjustEditorInsets(final Insets ins, final Component c) {

@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class TreeDemo implements ComponentDemo {
 
@@ -96,13 +97,13 @@ public class TreeDemo implements ComponentDemo {
         });
         controlPanel.add(new JCheckBox(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR) {
             {
-                setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR)));
+                setSelected(PropertyUtil.getBooleanProperty(tree, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR));
                 addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR, isSelected()));
             }
         });
         controlPanel.add(new JCheckBox(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX) {
             {
-                setSelected(Boolean.TRUE.equals(tree.getClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX)));
+                setSelected(PropertyUtil.getBooleanProperty(tree, DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
                 addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected()));
             }
         }, "span");

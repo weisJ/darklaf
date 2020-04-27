@@ -29,6 +29,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSDecorationsUtil {
@@ -80,11 +81,11 @@ public class MacOSDecorationsUtil {
     }
 
     private static boolean isFullWindowContentEnabled(final JRootPane rootPane) {
-        return Boolean.TRUE.equals(rootPane.getClientProperty(FULL_WINDOW_CONTENT_KEY));
+        return PropertyUtil.getBooleanProperty(rootPane, FULL_WINDOW_CONTENT_KEY);
     }
 
     private static boolean isTransparentTitleBarEnabled(final JRootPane rootPane) {
-        return Boolean.TRUE.equals(rootPane.getClientProperty(TRANSPARENT_TITLE_BAR_KEY));
+        return PropertyUtil.getBooleanProperty(rootPane, TRANSPARENT_TITLE_BAR_KEY);
     }
 
     private static void setFullWindowContentEnabled(final JRootPane rootPane,
