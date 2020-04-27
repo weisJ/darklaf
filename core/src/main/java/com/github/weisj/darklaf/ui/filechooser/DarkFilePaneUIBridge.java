@@ -457,7 +457,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         readOnly = UIManager.getBoolean("FileChooser.readOnly");
 
         // TUDU: On windows, get the following localized strings from the OS
-        UIDefaults metal = MetalUIDefaults.DEFAULTS;
+        UIDefaults metal = MetalUIDefaults.get();
 
         viewMenuLabelText = metal.getString("FileChooser.viewMenuLabelText", l);
         refreshActionLabelText = metal.getString("FileChooser.refreshActionLabelText", l);
@@ -600,7 +600,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 String title = dataItem.getTitle();
                 if (title != null && title.startsWith("FileChooser.") && title.endsWith("HeaderText")) {
                     // the column must have a string resource that we try to get
-                    String uiTitle = MetalUIDefaults.DEFAULTS.getString(title, table.getLocale());
+                    String uiTitle = MetalUIDefaults.get().getString(title, table.getLocale());
                     if (uiTitle != null) {
                         title = uiTitle;
                     }

@@ -28,10 +28,14 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.LazyValue;
 
 public class TooltipAwareButton extends JButton implements ToolTipAware {
 
-    private ToolTipContext context;
+    private final LazyValue<ToolTipContext> context = new LazyValue<>(() -> new ToolTipContext().setAlignment(Alignment.SOUTH)
+                                                                                                .setCenterAlignment(Alignment.SOUTH)
+                                                                                                .setAlignInside(false)
+                                                                                                .setIgnoreBorder(true));
 
     public TooltipAwareButton() {
         this(null, null);
@@ -62,12 +66,6 @@ public class TooltipAwareButton extends JButton implements ToolTipAware {
 
     @Override
     public ToolTipContext getToolTipContext() {
-        if (context == null) {
-            context = new ToolTipContext().setAlignment(Alignment.SOUTH)
-                                          .setCenterAlignment(Alignment.SOUTH)
-                                          .setAlignInside(false)
-                                          .setIgnoreBorder(true);
-        }
-        return context;
+        return context.get();
     }
 }

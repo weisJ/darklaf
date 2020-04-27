@@ -22,18 +22,29 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.filechooser;
+package com.github.weisj.darklaf.util;
 
-import javax.swing.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import java.util.function.Supplier;
 
-import com.github.weisj.darklaf.util.LazyValue;
+public class LazyValue<T> {
 
-// Extra class is for lazy initialization
-class MetalUIDefaults {
-    private static final LazyValue<UIDefaults> DEFAULTS = new LazyValue<>(() -> new MetalLookAndFeel().getDefaults());
+    private Supplier<T> supplier;
+    private T value;
 
-    static UIDefaults get() {
-        return DEFAULTS.get();
+    public LazyValue(final Supplier<T> supplier) {
+
+        this.supplier = supplier;
+    }
+
+    public boolean isInitialized() {
+        return supplier == null;
+    }
+
+    public T get() {
+        if (value == null && supplier != null) {
+            value = supplier.get();
+            supplier = null;
+        }
+        return value;
     }
 }

@@ -26,6 +26,8 @@ package com.github.weisj.darklaf.color;
 
 import java.awt.*;
 
+import com.github.weisj.darklaf.util.LazyValue;
+
 /**
  * @author Jannis Weis
  */
@@ -34,11 +36,10 @@ public class DarkColorModelHSL extends DarkColorModel {
     private static final int[] hsl = new int[3];
     private static final int[] rgb = new int[3];
 
-    private static DarkColorModelHSL instance;
+    private static final LazyValue<DarkColorModelHSL> instance = new LazyValue<>(DarkColorModelHSL::new);
 
     public static DarkColorModelHSL getInstance() {
-        if (instance == null) instance = new DarkColorModelHSL();
-        return instance;
+        return instance.get();
     }
 
     public DarkColorModelHSL() {

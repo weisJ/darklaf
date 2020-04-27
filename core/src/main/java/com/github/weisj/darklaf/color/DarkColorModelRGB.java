@@ -26,13 +26,14 @@ package com.github.weisj.darklaf.color;
 
 import java.awt.*;
 
+import com.github.weisj.darklaf.util.LazyValue;
+
 public class DarkColorModelRGB extends DarkColorModel {
 
-    private static DarkColorModelRGB instance;
+    private static final LazyValue<DarkColorModelRGB> instance = new LazyValue<>(DarkColorModelRGB::new);
 
     public static DarkColorModelRGB getInstance() {
-        if (instance == null) instance = new DarkColorModelRGB();
-        return instance;
+        return instance.get();
     }
 
     public DarkColorModelRGB() {

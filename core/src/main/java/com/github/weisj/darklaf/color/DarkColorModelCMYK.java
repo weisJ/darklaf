@@ -26,6 +26,8 @@ package com.github.weisj.darklaf.color;
 
 import java.awt.*;
 
+import com.github.weisj.darklaf.util.LazyValue;
+
 /**
  * @author Jannis Weis
  */
@@ -34,11 +36,10 @@ public class DarkColorModelCMYK extends DarkColorModel {
     private static final int[] cmyk = new int[4];
     private static final int[] rgb = new int[3];
 
-    private static DarkColorModelCMYK instance;
+    private static final LazyValue<DarkColorModelCMYK> instance = new LazyValue<>(DarkColorModelCMYK::new);
 
     public static DarkColorModelCMYK getInstance() {
-        if (instance == null) instance = new DarkColorModelCMYK();
-        return instance;
+        return instance.get();
     }
 
     public DarkColorModelCMYK() {

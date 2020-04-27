@@ -35,13 +35,15 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.LazyValue;
+
 /**
  * @author Jannis Weis
  */
 public final class IconLoader {
     private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
-    private static IconLoader instance;
+    private static final LazyValue<IconLoader> instance = new LazyValue<>(() -> get(null));
 
     private static Object currentThemeKey;
     private static AwareIconStyle currentAwareStyle;
@@ -63,8 +65,7 @@ public final class IconLoader {
      * @return the default icon loader.
      */
     public static IconLoader get() {
-        if (instance == null) instance = get(null);
-        return instance;
+        return instance.get();
     }
 
     /**

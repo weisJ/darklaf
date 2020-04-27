@@ -172,7 +172,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         Locale l = fc.getLocale();
 
-        UIDefaults defaults = MetalUIDefaults.DEFAULTS;
+        UIDefaults defaults = MetalUIDefaults.get();
 
         lookInLabelMnemonic = getMnemonic(defaults, "FileChooser.lookInLabelMnemonic", l);
         lookInLabelText = defaults.getString("FileChooser.lookInLabelText", l);
