@@ -35,7 +35,7 @@ import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.task.*;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.ui.popupmenu.MouseGrabberUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
@@ -120,10 +120,7 @@ public class DarkLaf extends BasicLookAndFeel {
     @Override
     public void uninitialize() {
         base.uninitialize();
-        DarkPopupMenuUI.MouseGrabber mouseGrabber = DarkPopupMenuUI.getMouseGrabber();
-        if (mouseGrabber != null) {
-            mouseGrabber.uninstall();
-        }
+        MouseGrabberUtil.uninstallMouseGrabber();
         isInitialized = false;
     }
 
