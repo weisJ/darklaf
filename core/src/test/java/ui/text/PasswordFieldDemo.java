@@ -59,7 +59,7 @@ public class PasswordFieldDemo implements ComponentDemo {
         });
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
-                setEnabled(true);
+                setSelected(textField.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> textField.setComponentOrientation(isSelected()
                         ? ComponentOrientation.LEFT_TO_RIGHT
                         : ComponentOrientation.RIGHT_TO_LEFT));

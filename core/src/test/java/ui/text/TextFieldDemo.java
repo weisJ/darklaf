@@ -31,8 +31,10 @@ import javax.swing.*;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
+import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class TextFieldDemo implements ComponentDemo {
 
@@ -76,6 +78,13 @@ public class TextFieldDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("JTextField.variant = search") {
             {
                 addActionListener(e -> textField.putClientProperty("JTextField.variant", isSelected() ? "search" : ""));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkTextFieldUI.KEY_SHOW_CLEAR) {
+            {
+                textField.addPropertyChangeListener(e -> setSelected(PropertyUtil.getBooleanProperty(textField,
+                                                                                                     DarkTextFieldUI.KEY_SHOW_CLEAR)));
+                addActionListener(e -> textField.putClientProperty(DarkTextFieldUI.KEY_SHOW_CLEAR, isSelected()));
             }
         });
         controlPanel.add(new JCheckBox("JTextComponent.hasError") {

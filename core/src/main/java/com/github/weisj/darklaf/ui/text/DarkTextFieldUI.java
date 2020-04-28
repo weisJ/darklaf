@@ -36,7 +36,6 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.listener.MouseMovementListener;
 import com.github.weisj.darklaf.listener.PopupMenuAdapter;
@@ -47,17 +46,20 @@ import com.github.weisj.darklaf.util.PropertyUtil;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener {
+public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener, MouseClickListener {
 
     protected static final String KEY_PREFIX = "JTextField.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
+    public static final String KEY_SHOW_CLEAR = KEY_PREFIX + "showClear";
     public static final String KEY_KEEP_SELECTION_ON_FOCUS_LOST = KEY_PREFIX + "keepSelectionOnFocusLost";
     public static final String KEY_FIND_POPUP = KEY_PREFIX + "Search.FindPopup";
     public static final String VARIANT_SEARCH = "search";
     protected static Icon clear;
     protected static Icon clearHover;
     protected static Icon search;
+    protected static Icon searchDisabled;
     protected static Icon searchWithHistory;
+    protected static Icon searchWithHistoryDisabled;
     protected int arcSize;
     protected int searchArcSize;
     protected int borderSize;
@@ -82,14 +84,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             });
         }
     };
-    private final MouseListener mouseListener = (MouseClickListener) e -> {
-        ClickAction actionUnder = getActionUnder(e.getPoint());
-        if (actionUnder == ClickAction.CLEAR) {
-            getComponent().setText("");
-        } else if (actionUnder == ClickAction.SEARCH_POPUP) {
-            showSearchPopup();
-        }
-    };
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTextFieldUI();
@@ -99,10 +93,34 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return clearHovered ? clearHover : clear;
     }
 
-    public static Rectangle getTextRect(final JComponent c) {
+    protected Rectangle getTextRect(final JTextComponent c) {
         Insets i = c.getInsets();
         Dimension dim = c.getSize();
-        return new Rectangle(i.left, i.top, dim.width - i.left - i.right, dim.height - i.top - i.bottom);
+        Rectangle r = new Rectangle(i.left, i.top, dim.width - i.left - i.right, dim.height - i.top - i.bottom);
+        adjustTextRect(c, r);
+        return r;
+    }
+
+    protected void adjustTextRect(final JTextComponent c, final Rectangle r) {
+        int end = r.x + r.width;
+        boolean ltr = c.getComponentOrientation().isLeftToRight();
+        if (doPaintLeftIcon(c)) {
+            Point p = getSearchIconCoord();
+            if (ltr) {
+                r.x = p.x + getSearchIcon(c).getIconWidth();
+            } else {
+                end = p.x;
+            }
+        }
+        if (doPaintRightIcon(c)) {
+            Point p = getClearIconCoord();
+            if (ltr) {
+                end = p.x;
+            } else {
+                r.x = p.x + getClearIcon(false).getIconWidth();
+            }
+        }
+        r.width = end - r.x;
     }
 
     public static boolean isOver(final Point p, final Icon icon, final Point e) {
@@ -113,17 +131,12 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected void updateCursor(final Point p) {
         ClickAction action = getActionUnder(p);
         boolean oldClear = clearHovered;
-        clearHovered = action == ClickAction.CLEAR;
+        clearHovered = action == ClickAction.RIGHT_ACTION;
         if (oldClear != clearHovered) {
             editor.repaint();
         }
-        Rectangle drawRect = getDrawingRect(getComponent());
         Rectangle textRect = getTextRect(getComponent());
-        int rightBoundary = getComponent().getText().isEmpty()
-                ? drawRect.x + drawRect.width
-                : getClearIconCoord().x;
-        boolean insideTextArea = drawRect.contains(p) && p.x >= textRect.x && p.x < rightBoundary;
-        if (insideTextArea) {
+        if (textRect.contains(p)) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
             Cursor cursor = action == ClickAction.NONE
@@ -133,15 +146,15 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         }
     }
 
-    private ClickAction getActionUnder(final Point p) {
-        Component c = getComponent();
-        if (isSearchField(c)) {
-            if (isOver(getClearIconCoord(), getClearIcon(clearHovered), p)) {
-                return ClickAction.CLEAR;
-            }
-            if (isOver(getSearchIconCoord(), getSearchIcon(c), p)) {
-                return ClickAction.SEARCH_POPUP;
-            }
+    protected ClickAction getActionUnder(final Point p) {
+        JTextComponent c = getComponent();
+        if (!c.isEnabled()) return ClickAction.NONE;
+        if (c.isEditable()
+            && isOver(getClearIconCoord(), getClearIcon(clearHovered), p) && showClearIcon(c)) {
+            return ClickAction.RIGHT_ACTION;
+        }
+        if (isOver(getSearchIconCoord(), getSearchIcon(c), p) && isSearchField(c)) {
+            return ClickAction.LEFT_ACTION;
         }
         return ClickAction.NONE;
     }
@@ -158,7 +171,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     protected static Icon getSearchIcon(final Component c) {
-        return isSearchFieldWithHistoryPopup(c) ? searchWithHistory : search;
+        boolean enabled = c.isEnabled();
+        return isSearchFieldWithHistoryPopup(c)
+                ? enabled ? searchWithHistory : searchWithHistoryDisabled
+                : enabled ? search : searchDisabled;
     }
 
     public static boolean isSearchFieldWithHistoryPopup(final Component c) {
@@ -169,22 +185,38 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_SEARCH);
     }
 
-    protected void paintBackground(final Graphics graphics) {
-        Graphics2D g = (Graphics2D) graphics;
-        JTextComponent c = this.getComponent();
+    public static boolean showClearIcon(final Component c) {
+        return PropertyUtil.getBooleanProperty(c, KEY_SHOW_CLEAR);
+    }
 
-        GraphicsContext config = new GraphicsContext(g);
-        if (isSearchField(c)) {
-            Container parent = c.getParent();
-            if (c.isOpaque() && parent != null) {
-                g.setColor(parent.getBackground());
-                g.fillRect(0, 0, c.getWidth(), c.getHeight());
-            }
-            paintSearchField(g, c);
-        } else {
-            super.paintBackground(g);
-        }
-        config.restore();
+    @Override
+    protected void paintSafely(final Graphics g) {
+        GraphicsContext context = new GraphicsContext(g);
+        super.paintSafely(g);
+        context.restore();
+        paintIcons(g);
+    }
+
+    protected void paintIcons(final Graphics g) {
+        JTextComponent c = getComponent();
+        if (doPaintLeftIcon(c)) paintLeftIcon(g);
+        if (doPaintRightIcon(c)) paintRightIcon(g);
+    }
+
+    protected boolean doPaintLeftIcon(final JTextComponent c) {
+        return isSearchField(c);
+    }
+
+    protected boolean doPaintRightIcon(final JTextComponent c) {
+        return c.getText().length() > 0 && showClearIcon(c);
+    }
+
+    protected void paintRightIcon(final Graphics g) {
+        paintClearIcon(g);
+    }
+
+    protected void paintLeftIcon(final Graphics g) {
+        paintSearchIcon(g);
     }
 
     @Override
@@ -198,14 +230,14 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return DarkTextFieldUI.isSearchField(c) ? searchArcSize : arcSize;
     }
 
-    private void paintClearIcon(final Graphics2D g) {
+    private void paintClearIcon(final Graphics g) {
         Point p = getClearIconCoord();
-        getClearIcon(clearHovered).paintIcon(null, g, p.x, p.y);
+        getClearIcon(clearHovered || !(editor.isEditable() && editor.isEnabled())).paintIcon(null, g, p.x, p.y);
     }
 
-    private void paintSearchIcon(final Graphics2D g) {
+    private void paintSearchIcon(final Graphics g) {
         Point p = getSearchIconCoord();
-        getSearchIcon(getComponent()).paintIcon(null, g, p.x, p.y);
+        getSearchIcon(editor).paintIcon(null, g, p.x, p.y);
     }
 
     protected Point getClearIconCoord() {
@@ -242,7 +274,9 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         clearHover = UIManager.getIcon("TextField.search.clearHover.icon");
         clear = UIManager.getIcon("TextField.search.clear.icon");
         searchWithHistory = UIManager.getIcon("TextField.search.searchWithHistory.icon");
+        searchWithHistoryDisabled = UIManager.getIcon("TextField.search.searchWithHistory.disabled.icon");
         search = UIManager.getIcon("TextField.search.search.icon");
+        searchDisabled = UIManager.getIcon("TextField.search.search.disabled.icon");
     }
 
     @Override
@@ -259,20 +293,26 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
                 ((JPopupMenu) newVal).addPopupMenuListener(searchPopupListener);
             }
         } else if (KEY_VARIANT.equals(key)) {
-            editor.doLayout();
-            Component parent = editor.getParent();
-            if (parent instanceof JComponent) {
-                parent.doLayout();
-            }
-            editor.repaint();
+            editor.putClientProperty(KEY_SHOW_CLEAR, isSearchField(editor));
+            layoutChanged();
+        } else if (KEY_SHOW_CLEAR.equals(key)) {
+            layoutChanged();
         }
+    }
+
+    protected void layoutChanged() {
+        Component parent = editor.getParent();
+        if (parent instanceof JComponent) {
+            parent.doLayout();
+        }
+        editor.repaint();
     }
 
     @Override
     protected void installListeners() {
         super.installListeners();
         JTextComponent c = getComponent();
-        c.addMouseListener(mouseListener);
+        c.addMouseListener(this);
         c.addMouseMotionListener(mouseMotionListener);
         c.addKeyListener(keyListener);
     }
@@ -280,25 +320,24 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     @Override
     protected void uninstallListeners() {
         JTextComponent c = getComponent();
-        c.removeMouseListener(mouseListener);
+        c.removeMouseListener(this);
         c.removeMouseMotionListener(mouseMotionListener);
         c.removeKeyListener(keyListener);
     }
 
-    protected void paintSearchField(final Graphics2D g, final JTextComponent c) {
-        g.setColor(c.getBackground());
-        Rectangle r = getDrawingRect(getComponent());
-        int arc = getArcSize(c);
-        PaintUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
-        paintSearchIcon(g);
-        if (c.getText().length() > 0) {
-            paintClearIcon(g);
+    @Override
+    public void mouseClicked(final MouseEvent e) {
+        ClickAction actionUnder = getActionUnder(e.getPoint());
+        if (actionUnder == ClickAction.RIGHT_ACTION) {
+            getComponent().setText("");
+        } else if (actionUnder == ClickAction.LEFT_ACTION) {
+            showSearchPopup();
         }
     }
 
-    private enum ClickAction {
-        CLEAR,
-        SEARCH_POPUP,
+    protected enum ClickAction {
+        RIGHT_ACTION,
+        LEFT_ACTION,
         NONE
     }
 }

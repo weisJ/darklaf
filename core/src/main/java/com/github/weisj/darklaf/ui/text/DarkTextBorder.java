@@ -130,18 +130,21 @@ public class DarkTextBorder implements Border, UIResource {
     public Insets getBorderInsets(final Component c) {
         Insets insets = new Insets(borderSize + padding.top, borderSize + padding.left,
                                    borderSize + padding.bottom, borderSize + padding.right);
-        if (DarkTextFieldUI.isSearchField(c)) {
-            int searchWidth = DarkTextFieldUI.getSearchIcon(c).getIconWidth();
-            int clearWidth = DarkTextFieldUI.getClearIcon(false).getIconWidth();
-            insets.left += padding.left + searchWidth;
-            insets.right += padding.right + clearWidth;
-        } else if (DarkPasswordFieldUI.hasShowIcon(c)) {
-            int eyeWidth = showIcon.getIconWidth();
-            if (c.getComponentOrientation().isLeftToRight()) {
-                insets.right += padding.right + eyeWidth;
-            } else {
-                insets.left += padding.left + eyeWidth;
-            }
+        Icon left = DarkTextFieldUI.isSearchField(c) ? DarkTextFieldUI.getSearchIcon(c) : null;
+        Icon right = DarkPasswordFieldUI.hasShowIcon(c)
+                ? showIcon
+                : DarkTextFieldUI.showClearIcon(c) ? DarkTextFieldUI.getClearIcon(false)
+                : null;
+        if (!c.getComponentOrientation().isLeftToRight()) {
+            Icon tmp = right;
+            right = left;
+            left = tmp;
+        }
+        if (left != null) {
+            insets.left += padding.left + left.getIconWidth();
+        }
+        if (right != null) {
+            insets.right += padding.right + right.getIconWidth();
         }
         return insets;
     }

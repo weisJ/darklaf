@@ -36,7 +36,6 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.listener.MouseMovementListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -50,49 +49,10 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     public static final String KEY_SHOW_VIEW_BUTTON = "JPasswordField.showViewIcon";
     protected Icon show;
     protected Icon showPressed;
-    private final FocusListener focusListener = new FocusAdapter() {
-        public void focusGained(final FocusEvent e) {
-            getComponent().repaint();
-        }
-
-        public void focusLost(final FocusEvent e) {
-            getComponent().repaint();
-        }
-    };
-    private final MouseMotionListener mouseMotionListener = (MouseMovementListener) e -> updateCursor(e.getPoint());
-    private final KeyListener keyListener = new KeyAdapter() {
-        @Override
-        public void keyTyped(final KeyEvent e) {
-            SwingUtilities.invokeLater(() -> {
-                Point p = MouseInfo.getPointerInfo().getLocation();
-                SwingUtilities.convertPointFromScreen(p, getComponent());
-                updateCursor(p);
-            });
-        }
-    };
     protected int borderSize;
     protected int arc;
     private char echo_dot = '*';
     private boolean showTriggered = false;
-    private final MouseListener mouseListener = new MouseAdapter() {
-        @Override
-        public void mousePressed(final MouseEvent e) {
-            if (hasShowIcon(editor) && isOverEye(e.getPoint())) {
-                ((JPasswordField) getComponent()).setEchoChar((char) 0);
-                showTriggered = true;
-                getComponent().repaint();
-            }
-        }
-
-        @Override
-        public void mouseReleased(final MouseEvent e) {
-            if (showTriggered) {
-                ((JPasswordField) getComponent()).setEchoChar(echo_dot);
-                showTriggered = false;
-                getComponent().repaint();
-            }
-        }
-    };
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkPasswordFieldUI();
@@ -107,37 +67,25 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         showPressed = UIManager.getIcon("PasswordField.showPressed.icon");
     }
 
-    protected void updateCursor(final Point p) {
-        boolean useShow = hasShowIcon(editor);
-        Rectangle textRect = DarkTextFieldUI.getTextRect(getComponent());
-        int rightMargin = useShow ? getShowIconCoord().x : textRect.x + textRect.width + 1;
-        boolean insideTextArea = getDrawingRect(getComponent()).contains(p)
-                                 && p.x >= textRect.x && p.x < rightMargin;
-        if (insideTextArea) {
-            getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-        } else if (useShow && isOverEye(p)) {
-            getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        } else {
-            getComponent().setCursor(Cursor.getDefaultCursor());
+    @Override
+    protected void adjustTextRect(final JTextComponent c, final Rectangle r) {
+        int end = r.x + r.width;
+        boolean ltr = c.getComponentOrientation().isLeftToRight();
+        if (doPaintRightIcon(c)) {
+            boolean eye = hasShowIcon(c);
+            Point p = eye ? getShowIconCoord() : getClearIconCoord();
+            if (ltr) {
+                end = p.x;
+            } else {
+                r.x = p.x + (eye ? getShowIcon() : getClearIcon(false)).getIconWidth();
+            }
         }
+        r.width = end - r.x;
     }
 
-    protected void installListeners() {
-        super.installListeners();
-        Component c = getComponent();
-        c.addFocusListener(focusListener);
-        c.addMouseListener(mouseListener);
-        c.addMouseMotionListener(mouseMotionListener);
-        c.addKeyListener(keyListener);
-    }
-
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        Component c = getComponent();
-        c.removeFocusListener(focusListener);
-        c.removeMouseListener(mouseListener);
-        c.removeMouseMotionListener(mouseMotionListener);
-        c.removeKeyListener(keyListener);
+    @Override
+    protected boolean doPaintLeftIcon(final JTextComponent c) {
+        return false;
     }
 
     protected void paintBackground(final Graphics graphics) {
@@ -169,9 +117,23 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         config.restore();
     }
 
-    private void paintShowIcon(final Graphics2D g) {
+    @Override
+    protected boolean doPaintRightIcon(final JTextComponent c) {
+        return super.doPaintRightIcon(c) || hasShowIcon(c);
+    }
+
+    @Override
+    protected void paintRightIcon(final Graphics g) {
+        if (hasShowIcon(getComponent())) {
+            paintShowIcon(g);
+        } else {
+            super.paintRightIcon(g);
+        }
+    }
+
+    private void paintShowIcon(final Graphics g) {
         Point p = getShowIconCoord();
-        if (showTriggered) {
+        if (showTriggered || !(editor.isEnabled() && editor.isEditable())) {
             getShowTriggeredIcon().paintIcon(getComponent(), g, p.x, p.y);
         } else {
             getShowIcon().paintIcon(getComponent(), g, p.x, p.y);
@@ -214,6 +176,40 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         super.installUI(c);
         if (c instanceof JPasswordField) {
             echo_dot = ((JPasswordField) c).getEchoChar();
+        }
+    }
+
+    @Override
+    protected ClickAction getActionUnder(final Point p) {
+        ClickAction action = super.getActionUnder(p);
+        if (isOverEye(p)
+            && hasShowIcon(editor)) {
+            action = ClickAction.RIGHT_ACTION;
+        }
+        return action;
+    }
+
+    @Override
+    public void mouseClicked(final MouseEvent e) {
+        if (hasShowIcon(getComponent())) return;
+        super.mouseClicked(e);
+    }
+
+    @Override
+    public void mousePressed(final MouseEvent e) {
+        if (hasShowIcon(editor) && isOverEye(e.getPoint())) {
+            ((JPasswordField) getComponent()).setEchoChar((char) 0);
+            showTriggered = true;
+            getComponent().repaint();
+        }
+    }
+
+    @Override
+    public void mouseReleased(final MouseEvent e) {
+        if (showTriggered) {
+            ((JPasswordField) getComponent()).setEchoChar(echo_dot);
+            showTriggered = false;
+            getComponent().repaint();
         }
     }
 

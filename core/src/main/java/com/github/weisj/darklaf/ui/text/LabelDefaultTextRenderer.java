@@ -32,14 +32,10 @@ import javax.swing.text.JTextComponent;
 public class LabelDefaultTextRenderer extends JLabel implements DefaultTextRenderer {
 
     @Override
-    public void setOpaque(final boolean isOpaque) {
-        super.setOpaque(isOpaque);
-    }
-
-    @Override
     public Component getRendererComponent(final JTextComponent parent, final String value) {
         setComponentOrientation(parent.getComponentOrientation());
         setText(value);
+        setOpaque(false);
         setEnabled(false);
         return this;
     }
