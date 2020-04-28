@@ -1,7 +1,10 @@
+import UberJniJarPlugin.asVariantName
+
 plugins {
     java
     id("dev.nokee.jni-library")
     id("dev.nokee.objective-cpp-language")
+    `uber-jni-jar`
 }
 
 library {
@@ -21,6 +24,7 @@ library {
 
     targetMachines.addAll(machines.macOS.x86_64)
     variants.configureEach {
+        resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${asVariantName(targetMachine)}")
         sharedLibrary {
             compileTasks.configureEach {
                 compilerArgs.addAll("-mmacosx-version-min=10.10")

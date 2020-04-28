@@ -1,16 +1,24 @@
 plugins {
-    `kotlin-dsl`
+    `java-gradle-plugin`
+    groovy
 }
 
 dependencies {
-    implementation(kotlin("gradle-plugin"))
+    implementation("dev.nokee:platformJni:0.3.0-df4e5ab")
 }
 
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    maven { url = uri("https://dl.bintray.com/nokeedev/distributions") }
+    maven { url = uri("https://dl.bintray.com/nokeedev/distributions-snapshots") }
 }
 
-configure<KotlinDslPluginOptions> {
-    experimentalWarning.set(false)
+gradlePlugin {
+    plugins {
+        create("uber-jni-jar") {
+            id = "uber-jni-jar"
+            implementationClass = "UberJniJarPlugin"
+        }
+    }
 }

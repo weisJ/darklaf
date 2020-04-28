@@ -1,7 +1,10 @@
+import UberJniJarPlugin.asVariantName
+
 plugins {
     java
     id("dev.nokee.jni-library")
     id("dev.nokee.cpp-language")
+    `uber-jni-jar`
 }
 
 library {
@@ -15,6 +18,7 @@ library {
     }
     targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)
     variants.configureEach {
+        resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${asVariantName(targetMachine)}")
         sharedLibrary {
             compileTasks.configureEach {
                 compilerArgs.addAll(toolChain.map {
