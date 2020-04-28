@@ -165,7 +165,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
 
         paintIcon(g, b, c);
-        paintText(g, b, c, text);
+        paintText(g, b, text);
         config.restore();
     }
 
@@ -262,7 +262,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void paintText(final Graphics g, final JComponent c,
                              final Rectangle textRect, final String text) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         AbstractButton button = (AbstractButton) c;
         ButtonModel model = button.getModel();
         g.setColor(getForeground(button));
@@ -273,12 +272,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
                                                   textRect.x + getTextShiftOffset(),
                                                   textRect.y + getTextShiftOffset());
-        config.restore();
     }
 
-    protected void paintText(final Graphics g, final AbstractButton b, final JComponent c, final String text) {
-        PaintUtil.drawString(g, b, text, textRect, SwingUtilities2.getFontMetrics(b, g),
-                             (g1, c1, r1, t1) -> paintText(g1, b, r1, t1));
+    protected void paintText(final Graphics g, final AbstractButton b, final String text) {
+        PaintUtil.drawString(g, b, text, textRect, SwingUtilities2.getFontMetrics(b, g), this::paintText);
     }
 
     protected void paintIcon(final Graphics g, final AbstractButton b, final JComponent c) {

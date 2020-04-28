@@ -37,7 +37,9 @@ import sun.swing.UIAction;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.util.StringUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -161,40 +163,24 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         rightAlignAccText(lh, lr);
         if (!StringUtil.isBlank(lh.getAccText())) {
-            ButtonModel model = mi.getModel();
             g.setFont(lh.getAccFontMetrics().getFont());
-            if (!model.isEnabled()) {
-                // *** paint the accText disabled
-                if (disabledForeground != null) {
-                    g.setColor(disabledForeground);
-                    SwingUtilities2.drawString(mi, g,
-                                               lh.getAccText(), lr.getAccRect().x,
-                                               lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
-                } else {
-                    g.setColor(mi.getBackground().brighter());
-                    SwingUtilities2.drawString(mi, g,
-                                               lh.getAccText(), lr.getAccRect().x,
-                                               lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
-                    g.setColor(mi.getBackground().darker());
-                    SwingUtilities2.drawString(mi, g,
-                                               lh.getAccText(), lr.getAccRect().x - 1,
-                                               lr.getAccRect().y + lh.getFontMetrics().getAscent() - 1);
-                }
-            } else {
-                // *** paint the accText normally
-                if (model.isArmed()
-                    || (mi instanceof JMenu
-                        && model.isSelected())) {
-                    g.setColor(acceleratorSelectionForeground);
-                } else {
-                    g.setColor(acceleratorForeground);
-                }
-                SwingUtilities2.drawString(mi, g, lh.getAccText(),
-                                           lr.getAccRect().x, lr.getAccRect().y +
-                                                              lh.getAccFontMetrics().getAscent());
-            }
+            g.setColor(getAcceleratorForeground(mi));
+            SwingUtilities2.drawString(mi, g, lh.getAccText(), lr.getAccRect().x,
+                                       lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
         }
         config.restore();
+    }
+
+    protected Color getAcceleratorForeground(final AbstractButton b) {
+        ButtonModel model = b.getModel();
+        if (!model.isEnabled()) return disabledForeground;
+        if (model.isArmed()
+            || (b instanceof JMenu
+                && model.isSelected())) {
+            return acceleratorSelectionForeground;
+        } else {
+            return acceleratorForeground;
+        }
     }
 
     protected void paintIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,

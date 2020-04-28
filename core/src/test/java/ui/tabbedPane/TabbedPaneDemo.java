@@ -96,6 +96,12 @@ public class TabbedPaneDemo implements ComponentDemo {
         }, "sgx");
 
         controlPanel = panel.addControls();
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(tabbedPane.isEnabled());
+                addActionListener(e -> tabbedPane.setEnabled(isSelected()));
+            }
+        });
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(tabbedPane.getComponentOrientation().isLeftToRight());

@@ -33,6 +33,7 @@ import javax.swing.*;
 import javax.swing.text.View;
 
 import com.github.weisj.darklaf.ui.html.DarkHTML;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class PaintUtil {
 
@@ -235,14 +236,14 @@ public class PaintUtil {
         g.fillRect(x, y + height - thickness, width, thickness);
     }
 
-    public static void drawString(final Graphics g, final JComponent c,
-                                  final String text, final Rectangle textRect,
-                                  final FontMetrics fm,
-                                  final PaintMethod paintMethod) {
+    public static <T extends JComponent> void drawString(final Graphics g, final T c,
+                                                         final String text, final Rectangle textRect,
+                                                         final FontMetrics fm,
+                                                         final PaintMethod<T> paintMethod) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.setClip(textRect);
         if (text != null && !text.equals("")) {
-            View v = (View) c.getClientProperty(DarkHTML.propertyKey);
+            View v = PropertyUtil.getObject(c, DarkHTML.propertyKey, View.class);
             if (v != null) {
                 v.paint(g, textRect);
             } else {
@@ -253,9 +254,9 @@ public class PaintUtil {
         context.restore();
     }
 
-    public interface PaintMethod {
+    public interface PaintMethod<T extends JComponent> {
 
-        void paintText(final Graphics g, final JComponent c, final Rectangle rect, final String text);
+        void paintText(final Graphics g, final T c, final Rectangle rect, final String text);
     }
 
     public enum Outline {

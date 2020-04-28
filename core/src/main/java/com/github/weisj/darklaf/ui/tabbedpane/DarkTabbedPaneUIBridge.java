@@ -390,26 +390,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         tabContainer = null;
     }
 
-    public void paint(final Graphics g, final JComponent c) {
-        int selectedIndex = tabPane.getSelectedIndex();
-        int tabPlacement = tabPane.getTabPlacement();
-
-        ensureCurrentLayout();
-
-        // Paint content border and tab area
-        if (tabsOverlapBorder) {
-            paintContentBorder(g, tabPlacement, selectedIndex);
-        }
-        // If scrollable tabs are enabled, the tab area will be
-        // painted by the scrollable tab panel instead.
-        //
-        if (!scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
-            paintTabArea(g, tabPlacement, selectedIndex);
-        }
-        if (!tabsOverlapBorder) {
-            paintContentBorder(g, tabPlacement, selectedIndex);
-        }
-    }
+    public abstract void paint(final Graphics g, final JComponent c);
 
     public Dimension getMinimumSize(final JComponent c) {
         // Default to LayoutManager's minimumLayoutSize
@@ -709,47 +690,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param textRect     the text rectangle
      * @param isSelected   selection status
      */
-    protected void paintText(final Graphics g, final int tabPlacement,
-                             final Font font, final FontMetrics metrics, final int tabIndex,
-                             final String title, final Rectangle textRect,
-                             final boolean isSelected) {
-
-        g.setFont(font);
-
-        View v = getTextViewForTab(tabIndex);
-        if (v != null) {
-            // html
-            v.paint(g, textRect);
-        } else {
-            // plain text
-            int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
-
-            if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
-                Color fg = tabPane.getForegroundAt(tabIndex);
-                if (isSelected && (fg instanceof UIResource)) {
-                    Color selectedFG = selectedForeground;
-                    if (selectedFG != null) {
-                        fg = selectedFG;
-                    }
-                }
-                g.setColor(fg);
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
-
-            } else { // tab disabled
-                g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x, textRect.y + metrics.getAscent());
-                g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
-                SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                          title, mnemIndex,
-                                                          textRect.x - 1, textRect.y + metrics.getAscent() - 1);
-
-            }
-        }
-    }
+    protected abstract void paintText(final Graphics g, final int tabPlacement,
+                                      final Font font, final FontMetrics metrics, final int tabIndex,
+                                      final String title, final Rectangle textRect,
+                                      final boolean isSelected);
 
     /**
      * Paints an icon.
@@ -882,15 +826,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      *
      * @since 1.4
      */
-    protected void installComponents() {
-        if (scrollableTabLayoutEnabled()) {
-            if (tabScroller == null) {
-                tabScroller = new ScrollableTabSupport(this);
-                tabPane.add(tabScroller.viewport);
-            }
-        }
-        installTabContainer();
-    }
+    protected abstract void installComponents();
 
     /**
      * Install the defaults.
@@ -1365,22 +1301,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     }
 
     // BasicTabbedPaneUI methods
-
-    /**
-     * Paint focus indicator.
-     *
-     * @param g            the g
-     * @param tabPlacement the tab placement
-     * @param rects        the rects
-     * @param tabIndex     the tab index
-     * @param iconRect     the icon rect
-     * @param textRect     the text rect
-     * @param isSelected   the is selected
-     */
-    protected abstract void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                                final Rectangle[] rects, final int tabIndex,
-                                                final Rectangle iconRect, final Rectangle textRect,
-                                                final boolean isSelected);
 
     /**
      * Assure the rectangles are created.

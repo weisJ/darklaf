@@ -35,6 +35,9 @@ import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
+import javax.swing.text.View;
+
+import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -110,6 +113,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected Color selectedBackground;
     protected Color hoverBackground;
     protected Color tabAreaBackground;
+    protected Color disabledForeground;
 
     protected Icon moreTabsIcon;
     protected Icon newTabIcon;
@@ -170,6 +174,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         super.uninstallUI(c);
     }
 
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         int selectedIndex = tabPane.getSelectedIndex();
         int tabPlacement = tabPane.getTabPlacement();
@@ -203,9 +208,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex) {
-
-    }
+    protected void paintContentBorder(final Graphics g, final int tabPlacement, final int selectedIndex) {}
 
     @Override
     protected void paintTabArea(final Graphics g, final int tabPlacement, final int selectedIndex) {
@@ -371,13 +374,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
-    @Override
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement,
-                                       final Rectangle[] rects, final int tabIndex,
-                                       final Rectangle iconRect, final Rectangle textRect,
-                                       final boolean isSelected) {}
-
-    private void paintTabAreaBorder(final Graphics g, final int tabPlacement) {
+    protected void paintTabAreaBorder(final Graphics g, final int tabPlacement) {
         int width = tabPane.getWidth();
         int height = tabPane.getHeight();
         Insets ins = tabPane.getInsets();
@@ -702,8 +699,36 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                              final FontMetrics metrics, final int tabIndex, final String title,
                              final Rectangle textRect, final boolean isSelected) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected);
+        g.setFont(font);
+
+        View v = getTextViewForTab(tabIndex);
+        if (v != null) {
+            // html
+            v.paint(g, textRect);
+        } else {
+            // plain text
+            int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
+            g.setColor(getTabForeground(tabIndex, isSelected));
+            SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+                                                      title, mnemIndex,
+                                                      textRect.x, textRect.y + metrics.getAscent());
+        }
         config.restore();
+    }
+
+    protected Color getTabForeground(final int index, final boolean isSelected) {
+        if (tabPane.isEnabled() && tabPane.isEnabledAt(index)) {
+            Color fg = tabPane.getForegroundAt(index);
+            if (isSelected && (fg instanceof UIResource)) {
+                Color selectedFG = selectedForeground;
+                if (selectedFG != null) {
+                    fg = selectedFG;
+                }
+            }
+            return fg;
+        } else {
+            return disabledForeground;
+        }
     }
 
     @Override
@@ -718,6 +743,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         selectedBackground = UIManager.getColor("TabbedPane.selectedBackground");
         hoverBackground = UIManager.getColor("TabbedPane.hoverBackground");
         tabAreaBackground = UIManager.getColor("TabbedPane.tabAreaBackground");
+        disabledForeground = UIManager.getColor("TabbedPane.disabledForeground");
 
         focusSize = UIManager.getInt("TabbedPane.focusBarHeight");
         moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");

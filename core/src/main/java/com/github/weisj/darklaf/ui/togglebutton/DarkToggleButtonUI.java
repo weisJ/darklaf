@@ -90,7 +90,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
             paintSlider((Graphics2D) g, b);
             paintIcon(g, b, c);
-            paintText(g, b, c, text);
+            paintText(g, b, text);
             config.restore();
         } else {
             super.paint(g, c);
