@@ -178,6 +178,19 @@ public final class PropertyLoader {
             skipObjects = true;
         }
 
+        final Color color = ColorUtil.fromHex(value, null);
+        final Integer invVal = getInteger(value);
+        final Boolean boolVal = PropertyValue.TRUE.equalsIgnoreCase(value)
+                ? Boolean.TRUE
+                : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
+        if (color != null && (value.length() == 6 || value.length() == 8)) {
+            return new DarkColorUIResource(color);
+        } else if (invVal != null) {
+            return invVal;
+        } else if (boolVal != null) {
+            return boolVal;
+        }
+
         Object returnVal = new LoadError();
         if (key.endsWith("Insets") || key.endsWith(".insets")) {
             returnVal = parseInsets(value, accumulator, currentDefaults, iconLoader);
@@ -210,22 +223,7 @@ public final class PropertyLoader {
         } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
             returnVal = parseReference(key, value, accumulator, currentDefaults);
         }
-        if (returnVal instanceof LoadError) {
-            final Color color = ColorUtil.fromHex(value, null);
-            final Integer invVal = getInteger(value);
-            final Boolean boolVal = PropertyValue.TRUE.equalsIgnoreCase(value)
-                    ? Boolean.TRUE
-                    : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
-            if (color != null && (value.length() == 6 || value.length() == 8)) {
-                return new DarkColorUIResource(color);
-            } else if (invVal != null) {
-                return invVal;
-            } else if (boolVal != null) {
-                return boolVal;
-            }
-        } else {
-            return returnVal;
-        }
+        if (!(returnVal instanceof LoadError)) return returnVal;
         return value;
     }
 

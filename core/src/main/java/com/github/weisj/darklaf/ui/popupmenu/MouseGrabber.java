@@ -36,11 +36,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import sun.awt.SunToolkit;
+import sun.awt.UngrabEvent;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import sun.awt.UngrabEvent;
 
 public class MouseGrabber implements ChangeListener, AWTEventListener, ComponentListener, WindowListener {
 
