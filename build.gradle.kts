@@ -44,8 +44,9 @@ releaseParams {
     }
 }
 
-fun BaseFormatExtension.license() {
-    licenseHeader(File("${project.rootDir}/LICENSE").readText()) {
+fun BaseFormatExtension.license(addition: String = "") {
+    val extra = if (addition.isEmpty()) "" else "\n$addition"
+    licenseHeader(File("${project.rootDir}/LICENSE").readText() + extra) {
         filter {
             exclude("**/org/pbjar/jxlayer/*")
         }
@@ -53,7 +54,22 @@ fun BaseFormatExtension.license() {
         copyrightStyle("cmd", DefaultCopyrightStyle.REM)
     }
     trimTrailingWhitespace()
-    endWithNewline()
+    if (addition.isEmpty()) {
+        endWithNewline()
+    }
+}
+
+fun BaseFormatExtension.configFilter(init: PatternFilterable.() -> Unit) {
+    filter {
+        // Autostyle does not support gitignore yet https://github.com/autostyle/autostyle/issues/13
+        exclude("out/**")
+        if (project == rootProject) {
+            exclude("gradlew*", "gradle/**")
+        } else {
+            exclude("bin/**")
+        }
+        init()
+    }
 }
 
 allprojects {
@@ -73,18 +89,18 @@ allprojects {
             kotlinGradle {
                 ktlint()
             }
+            format("properties") {
+                configFilter {
+                    include("**/*.properties")
+                    exclude("**/gradle.properties")
+                }
+                license("\nsuppress inspection \"UnusedProperty\" for whole file")
+            }
             format("configs") {
-                filter {
+                configFilter {
                     include("**/*.sh", "**/*.bsh", "**/*.cmd", "**/*.bat")
-                    include("**/*.properties", "**/*.yml")
+                    include("**/*.yml")
                     include("**/*.xsd", "**/*.xsl", "**/*.xml")
-                    // Autostyle does not support gitignore yet https://github.com/autostyle/autostyle/issues/13
-                    exclude("out/**")
-                    if (project == rootProject) {
-                        exclude("gradlew*")
-                    } else {
-                        exclude("bin/**")
-                    }
                 }
                 license()
             }
