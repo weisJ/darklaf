@@ -33,6 +33,7 @@ import javax.swing.tree.TreeCellRenderer;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.PropertyValue;
 
@@ -58,11 +59,12 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
                                                   final boolean expanded, final boolean leaf, final int row,
                                                   final boolean hasFocus) {
+        boolean isFocused = DarkUIUtil.hasFocus(tree);
         Object val = unwrapBooleanIfPossible(value);
         if (val instanceof Boolean && isBooleanRenderingEnabled(tree)) {
             super.getTreeCellRendererComponent(tree, val, sel, expanded, leaf, row, hasFocus);
             Component comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
-                                                                                   row, hasFocus);
+                                                                                   row, isFocused);
             rendererComponent.setComponentOrientation(tree.getComponentOrientation());
             comp.setComponentOrientation(tree.getComponentOrientation());
             comp.setFont(tree.getFont());
@@ -72,9 +74,9 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
         }
         Component comp;
         if (parent != null) {
-            comp = parent.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+            comp = parent.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, isFocused);
         } else {
-            comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+            comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, isFocused);
         }
         CellUtil.setupForeground(comp, tree, sel, getTextSelectionColor(), "Tree.selectionForegroundInactive");
         return comp;
