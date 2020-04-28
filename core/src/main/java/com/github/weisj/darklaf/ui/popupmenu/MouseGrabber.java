@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.ui.popupmenu;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
+import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 
@@ -39,15 +40,12 @@ import sun.awt.SunToolkit;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import sun.awt.UngrabEvent;
 
 public class MouseGrabber implements ChangeListener, AWTEventListener, ComponentListener, WindowListener {
 
     Window grabbedWindow;
     MenuElement[] lastPathSelected;
-
-    public MouseGrabber() {
-        install();
-    }
 
     public void install() {
         MenuSelectionManager msm = MenuSelectionManager.defaultManager();
@@ -61,7 +59,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     protected void grabWindow(final MenuElement[] newPath) {
         // A grab needs to be added
         final Toolkit tk = Toolkit.getDefaultToolkit();
-        java.security.AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
             tk.addAWTEventListener(MouseGrabber.this,
                                    AWTEvent.MOUSE_EVENT_MASK
                                                       | AWTEvent.MOUSE_MOTION_EVENT_MASK
@@ -146,7 +144,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     }
 
     public void eventDispatched(final AWTEvent ev) {
-        if (ev instanceof sun.awt.UngrabEvent) {
+        if (ev instanceof UngrabEvent) {
             // Popup should be canceled in case of ungrab event
             cancelPopupMenu();
             return;
