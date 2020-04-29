@@ -252,8 +252,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
-        if (hitArea == null || (hitArea.isEmpty() && c instanceof JRadioButton)) {
-            layout((JRadioButton) c, c.getFontMetrics(c.getFont()));
+        if (hitArea == null || (hitArea.isEmpty()) && c instanceof JToggleButton) {
+            layout((JToggleButton) c, c.getFontMetrics(c.getFont()));
         }
         return hitArea.contains(x, y);
     }

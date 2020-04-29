@@ -374,4 +374,13 @@ public final class DarkUIUtil {
             return false;
         }
     }
+
+    public static boolean isUndecorated(final Window window) {
+        if (window instanceof Frame) {
+            return ((Frame) window).isUndecorated();
+        } else if (window instanceof Dialog) {
+            return ((Dialog) window).isUndecorated();
+        }
+        return false;
+    }
 }

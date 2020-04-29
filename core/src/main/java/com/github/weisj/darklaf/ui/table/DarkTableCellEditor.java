@@ -194,7 +194,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         if (anEvent instanceof KeyEvent) {
             if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
         }
-        if (DarkTableCellRenderer.isBooleanRenderingEnabled(table) && anEvent instanceof MouseEvent) {
+        if (anEvent instanceof MouseEvent && DarkTableCellRenderer.isBooleanRenderingEnabled(table)) {
             Point p = ((MouseEvent) anEvent).getPoint();
             int row = table.rowAtPoint(p);
             int col = table.columnAtPoint(p);
@@ -206,6 +206,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                     p.y -= rect.y;
                     Component editor = getBooleanEditor(table).getTableCellEditorComponent(table, true,
                                                                                            false, row, col);
+                    editor.setBounds(rect);
                     return editor.contains(p);
                 }
             }

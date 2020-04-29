@@ -109,6 +109,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     protected int decorationsStyleFromWindow(final Window window, final int windowDecorationsStyle) {
         if (windowDecorationsStyle != JRootPane.NONE) return windowDecorationsStyle;
+        if (DarkUIUtil.isUndecorated(window)) return JRootPane.NONE;
         if (window instanceof JFrame) return JRootPane.FRAME;
         if (window instanceof JDialog) return JRootPane.PLAIN_DIALOG;
         return windowDecorationsStyle;
