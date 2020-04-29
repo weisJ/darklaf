@@ -30,6 +30,8 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -95,13 +97,13 @@ public class DarkPopupFactory extends PopupFactory {
                                final boolean isFocusable, final boolean startHidden) {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
-        setupWindowBackground(window, opaque);
+        setupWindowBackground(window, opaque, !noDecorations);
         setupWindowFocusableState(isFocusable, window);
         setupWindowDecorations(window, noDecorations);
         setupWindowOpacity(contents, startHidden, window);
     }
 
-    protected void setupWindowBackground(final Window window, final boolean opaque) {
+    protected void setupWindowBackground(final Window window, final boolean opaque, final boolean decorations) {
         // Sometimes the background is java.awt.SystemColor[i=7]
         // It results in a flash of white background, that is repainted with
         // the proper popup background later.
@@ -112,7 +114,8 @@ public class DarkPopupFactory extends PopupFactory {
             if (opaque) {
                 window.setBackground(rootPane.getBackground());
             } else {
-                window.setBackground(getTranslucentPopupBackground());
+                Color bg = getTranslucentPopupBackground(decorations);
+                window.setBackground(bg);
             }
         }
     }
@@ -154,8 +157,10 @@ public class DarkPopupFactory extends PopupFactory {
         return heavyWeightParent;
     }
 
-    protected Color getTranslucentPopupBackground() {
-        return UIManager.getColor("PopupMenu.translucentBackground");
+    protected Color getTranslucentPopupBackground(final boolean decorated) {
+        Color c = UIManager.getColor("PopupMenu.translucentBackground");
+        if (!decorated) c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
+        return c;
     }
 
     private static class HeavyWeightParent extends JComponent {

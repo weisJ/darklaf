@@ -320,7 +320,7 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
         case WM_PAINT:
         if (!wrapper->bgBrush)
         break;
-        if (!wrapper->moving)
+        if (!wrapper->moving || wrapper->popup_menu)
         PaintBackground(hwnd, wParam, wrapper);
         if (uMsg == WM_ERASEBKGND)
         return TRUE;

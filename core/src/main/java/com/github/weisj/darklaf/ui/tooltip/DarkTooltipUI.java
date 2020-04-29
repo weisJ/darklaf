@@ -122,6 +122,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         toolTip.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, true);
         toolTip.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
         toolTip.putClientProperty(DarkPopupFactory.KEY_FORCE_HEAVYWEIGHT, true);
+        // toolTip.putClientProperty(DarkPopupFactory.KEY_OPAQUE, false);
         fadeAnimator = new FadeInAnimator();
         c.setOpaque(false);
         DarkTooltipBorder border = new DarkTooltipBorder();
