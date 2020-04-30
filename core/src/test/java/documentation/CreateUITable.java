@@ -66,7 +66,6 @@ public class CreateUITable {
     public static void main(final String[] args) throws IOException {
         for (Theme theme : LafManager.getRegisteredThemes()) {
             createThemeDefaultsPage(theme);
-            break;
         }
     }
 
