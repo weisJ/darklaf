@@ -32,11 +32,12 @@ import java.util.logging.Logger;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
 
-    private static final Logger LOGGER = Logger.getLogger(AccentColorAdjustmentTask.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(AccentColorAdjustmentTask.class);
     private static final String MAIN_ACCENT_LIST_KEY = "accent.propertyList";
     private static final String SELECTION_ACCENT_LIST_KEY = "selection.propertyList";
 

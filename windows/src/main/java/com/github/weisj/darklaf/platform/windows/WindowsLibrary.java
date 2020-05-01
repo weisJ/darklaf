@@ -28,11 +28,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.weisj.darklaf.platform.NativeUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class WindowsLibrary {
 
-    private static final Logger LOGGER = Logger.getLogger(WindowsLibrary.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(WindowsLibrary.class);
 
     private static boolean loaded;
     private static boolean attemptedLoad;

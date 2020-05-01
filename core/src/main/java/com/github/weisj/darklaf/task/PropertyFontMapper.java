@@ -31,10 +31,11 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.LogUtil;
 
 public class PropertyFontMapper implements FontMapper {
 
-    private static final Logger LOGGER = Logger.getLogger(PropertyFontMapper.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(PropertyFontMapper.class);
 
     private Theme lastTheme = null;
     private int adjustment;

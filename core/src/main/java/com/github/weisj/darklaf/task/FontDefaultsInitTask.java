@@ -40,11 +40,12 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class FontDefaultsInitTask implements DefaultsInitTask {
 
-    private static final Logger LOGGER = Logger.getLogger(FontDefaultsInitTask.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(FontDefaultsInitTask.class);
     private static final String FONT_PROPERTY_PATH = "properties/";
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";

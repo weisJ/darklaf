@@ -28,9 +28,11 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+import com.github.weisj.darklaf.util.LogUtil;
+
 public class MacOSPreferenceMonitor {
 
-    private static final Logger LOGGER = Logger.getLogger(MacOSThemePreferenceProvider.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(MacOSThemePreferenceProvider.class);
 
     private final MacOSThemePreferenceProvider preferenceProvider;
 

@@ -30,12 +30,14 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.util.LogUtil;
+
 /**
  * @author Jannis Weis
  */
 public abstract class LazyIcon implements Icon, UIResource {
 
-    private static final Logger LOGGER = Logger.getLogger(LazyIcon.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(LazyIcon.class);
     protected final String path;
     protected final IconLoader.IconKey key;
     protected final Class<?> parentClass;

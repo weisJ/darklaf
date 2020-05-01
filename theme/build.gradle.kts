@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     implementation(project(":darklaf-property-loader"))
+    implementation(project(":darklaf-utils"))
 }

@@ -40,12 +40,13 @@ import javax.swing.text.html.StyleSheet;
 
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.theme.info.*;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * @author Jannis Weis
  */
 public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
-    private static final Logger LOGGER = Logger.getLogger(Theme.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(Theme.class);
 
     private final FontSizeRule fontSizeRule;
     private final AccentColorRule accentColorRule;

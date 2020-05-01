@@ -36,12 +36,13 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * @author Jannis Weis
  */
 public final class IconLoader {
-    private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
     private static final LazyValue<IconLoader> instance = new LazyValue<>(() -> get(null));
 

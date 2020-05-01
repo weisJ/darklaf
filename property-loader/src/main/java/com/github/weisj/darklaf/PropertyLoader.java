@@ -47,6 +47,7 @@ import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.PropertyValue;
 
@@ -55,7 +56,7 @@ import com.github.weisj.darklaf.util.PropertyValue;
  * @author Jannis Weis
  */
 public final class PropertyLoader {
-    private static final Logger LOGGER = Logger.getLogger(PropertyLoader.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(PropertyLoader.class);
     private static final IconLoader ICON_LOADER = IconLoader.get(IconLoader.class);
     private static final char INT_LIST_START = '[';
     private static final char INT_LIST_END = ']';

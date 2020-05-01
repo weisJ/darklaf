@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.LogUtil;
 import com.kitfox.svg.app.beans.SVGIcon;
 
 /**
@@ -42,7 +43,7 @@ import com.kitfox.svg.app.beans.SVGIcon;
  */
 public class DarkSVGIcon implements Icon, Serializable {
 
-    private static final Logger LOGGER = Logger.getLogger(DarkSVGIcon.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
     private final Dimension size;
     private final SVGIcon icon;
     private final URI uri;

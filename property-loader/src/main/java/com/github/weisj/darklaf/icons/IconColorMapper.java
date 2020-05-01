@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.kitfox.svg.*;
 import com.kitfox.svg.animation.AnimationElement;
@@ -43,7 +44,7 @@ import com.kitfox.svg.xml.StyleAttribute;
  * @author Jannis Weis
  */
 public final class IconColorMapper {
-    private static final Logger LOGGER = Logger.getLogger(IconLoader.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Color FALLBACK_COLOR = Color.RED;
 
     public static void patchColors(final SVGIcon svgIcon) {

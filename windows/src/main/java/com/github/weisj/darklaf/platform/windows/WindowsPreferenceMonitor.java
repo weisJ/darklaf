@@ -26,9 +26,11 @@ package com.github.weisj.darklaf.platform.windows;
 
 import java.util.logging.Logger;
 
+import com.github.weisj.darklaf.util.LogUtil;
+
 public class WindowsPreferenceMonitor {
 
-    private static final Logger LOGGER = Logger.getLogger(WindowsThemePreferenceProvider.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(WindowsThemePreferenceProvider.class);
 
     private final WindowsThemePreferenceProvider preferenceProvider;
 

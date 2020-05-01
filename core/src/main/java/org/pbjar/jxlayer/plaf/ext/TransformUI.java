@@ -46,6 +46,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.GlyphView.GlyphPainter;
 import javax.swing.text.JTextComponent;
 
+import com.github.weisj.darklaf.util.LogUtil;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
 import org.jdesktop.jxlayer.plaf.LayerUI;
@@ -119,7 +120,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
     private static final String KEY_VIEW = "view";
     private static final boolean delegatePossible;
     private static final RepaintManager wrappedManager = new TransformRepaintManager();
-    private static final Logger LOGGER = Logger.getLogger(TransformUI.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(TransformUI.class);
 
     static {
         LOGGER.setUseParentHandlers(false);

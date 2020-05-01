@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.LogUtil;
 import org.jdesktop.swingx.ForwardingRepaintManager;
 
 import com.github.weisj.darklaf.log.LogFormatter;
@@ -50,7 +51,7 @@ import com.github.weisj.darklaf.log.LogFormatter;
  */
 public final class RepaintManagerUtils {
 
-    private static final Logger LOGGER = Logger.getLogger(RepaintManagerUtils.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(RepaintManagerUtils.class);
     /**
      * Indicates the availability of SwingX on the class path.
      */

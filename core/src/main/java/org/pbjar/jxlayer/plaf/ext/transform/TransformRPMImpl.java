@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.LogUtil;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
@@ -53,7 +54,7 @@ import com.github.weisj.darklaf.log.LogFormatter;
  */
 public final class TransformRPMImpl {
 
-    private static final Logger LOGGER = Logger.getLogger(TransformRPMImpl.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(TransformRPMImpl.class);
     /**
      * A flag, indicating whether or not a very dirty initialization on created {@link RepaintManager}s must be
      * performed.

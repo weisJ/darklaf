@@ -36,6 +36,7 @@ import com.github.weisj.darklaf.task.*;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.MouseGrabberUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
@@ -45,7 +46,7 @@ public class DarkLaf extends BasicLookAndFeel {
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
     public static final String ALLOW_NATIVE_CODE_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "allowNativeCode";
-    private static final Logger LOGGER = Logger.getLogger(DarkLaf.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(DarkLaf.class);
     /*
      * All tasks for initializing the ui defaults in order of execution.
      */

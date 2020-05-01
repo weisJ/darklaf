@@ -25,20 +25,14 @@
 package com.github.weisj.darklaf;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.log.LogHandler;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.settings.ThemeSettings;
@@ -49,6 +43,7 @@ import com.github.weisj.darklaf.theme.event.*;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemeProvider;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * Manager for the Look and Feel.
@@ -65,7 +60,6 @@ public final class LafManager {
     private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport = new ThemeEventSupport<>();
 
     static {
-        setupLogging();
         setLogLevel(Level.INFO);
         registerTheme(new IntelliJTheme(),
                       new DarculaTheme(),
@@ -74,18 +68,6 @@ public final class LafManager {
                       new OneDarkTheme(),
                       new HighContrastLightTheme(),
                       new HighContrastDarkTheme());
-    }
-
-    private static void setupLogging() {
-        try (InputStream inputStream = DarkLaf.class.getResourceAsStream("log/logging.properties")) {
-            if (inputStream != null) {
-                Logger.getGlobal().fine("Loading logging configuration.");
-                LogManager.getLogManager().readConfiguration(inputStream);
-            }
-            Logger.getGlobal().fine(() -> "Loaded logging config" + LogManager.getLogManager().toString());
-        } catch (IOException e) {
-            Logger.getGlobal().log(Level.SEVERE, "init logging system", e);
-        }
     }
 
     /**
@@ -105,11 +87,7 @@ public final class LafManager {
      * @param level the new log level.
      */
     public static void setLogLevel(final Level level) {
-        for (Handler handler : Logger.getLogger("").getHandlers()) {
-            if (handler instanceof LogHandler) {
-                handler.setLevel(level);
-            }
-        }
+        LogUtil.setLevel(level);
     }
 
     /**
