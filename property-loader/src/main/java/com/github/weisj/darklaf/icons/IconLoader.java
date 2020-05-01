@@ -214,10 +214,10 @@ public final class IconLoader {
             key.w = -1; // Enable wild card search. Find any icon that matches path.
             if (iconMap.containsKey(key)) {
                 Icon icon = iconMap.get(key);
-                if (icon instanceof DarkSVGIcon) {
+                if (icon instanceof DerivableIcon) {
                     // If the desired icon is an DarkSVGIcon we can create a view that shares the underlying svg with
                     // the existing icon.
-                    Icon derived = ((DarkSVGIcon) icon).derive(w, h);
+                    Icon derived = ((DerivableIcon<Icon>) icon).derive(w, h);
                     key.w = w;
                     iconMap.put(key, derived);
                     return derived;

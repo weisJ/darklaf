@@ -35,6 +35,7 @@ public class RotatableIcon implements Icon {
 
     private Icon icon;
     private Alignment alignment;
+    private double angle;
 
     public RotatableIcon() {
         this(null);
@@ -42,7 +43,6 @@ public class RotatableIcon implements Icon {
 
     public RotatableIcon(final Icon icon) {
         setIcon(icon);
-        setOrientation(null);
     }
 
     public void setIcon(final Icon icon) {
@@ -62,36 +62,8 @@ public class RotatableIcon implements Icon {
         }
     }
 
-    private double getAngle() {
-        double angle = 0.0;
-        switch (alignment) {
-            case NORTH :
-            case CENTER :
-                angle = 0.0;
-                break;
-            case SOUTH :
-                angle = 180.0;
-                break;
-            case EAST :
-                angle = 90.0;
-                break;
-            case WEST :
-                angle = 270.0;
-                break;
-            case NORTH_EAST :
-                angle = 45.0;
-                break;
-            case NORTH_WEST :
-                angle = 315.0;
-                break;
-            case SOUTH_EAST :
-                angle = 135.0;
-                break;
-            case SOUTH_WEST :
-                angle = 225.0;
-                break;
-        }
-        return Math.toRadians(angle);
+    public double getAngle() {
+        return angle;
     }
 
     @Override
@@ -110,5 +82,11 @@ public class RotatableIcon implements Icon {
 
     public void setOrientation(final Alignment alignment) {
         this.alignment = alignment != null ? alignment : Alignment.NORTH;
+        this.angle = this.alignment.getAngle();
+    }
+
+    public void setRotation(final double angle) {
+        this.alignment = null;
+        this.angle = angle;
     }
 }

@@ -41,7 +41,7 @@ import com.kitfox.svg.app.beans.SVGIcon;
  * @author Jannis Weis
  * @since  2019
  */
-public class DarkSVGIcon implements Icon, Serializable {
+public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, Serializable {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
     private final Dimension size;
@@ -72,6 +72,7 @@ public class DarkSVGIcon implements Icon, Serializable {
         this.loaded = icon.loaded;
     }
 
+    @Override
     public DarkSVGIcon derive(final int width, final int height) {
         return new DarkSVGIcon(width, height, this);
     }
