@@ -66,18 +66,22 @@ public abstract class Animator {
         this.repeatable = repeatable;
         this.forward = forward;
         currentFrame = forward ? 0 : totalFrames;
-
+        resetTime();
         reset();
     }
 
-    public void reset() {
-        currentFrame = 0;
+    private void resetTime() {
         startTime = -1;
+    }
+
+    public void reset() {
+        currentFrame %= totalFrames;
+        if (!forward) currentFrame = totalFrames - currentFrame;
     }
 
     private static ScheduledExecutorService createScheduler() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, r -> {
-            final Thread thread = new Thread(r, "Darcula Animations");
+            final Thread thread = new Thread(r, "Animations Thread");
             thread.setDaemon(true);
             thread.setPriority(Thread.MAX_PRIORITY);
             return thread;
@@ -89,7 +93,8 @@ public abstract class Animator {
     }
 
     public void suspend() {
-        startTime = -1;
+        resetTime();
+        reset();
         stopTicker();
     }
 
@@ -119,10 +124,11 @@ public abstract class Animator {
 
                 @Override
                 public void run() {
-                    if (isScheduled.compareAndSet(false, true) && !isDisposed()) {
+                    if (!isScheduled.get() && !isDisposed()) {
+                        isScheduled.set(true);
                         SwingUtilities.invokeLater(() -> {
-                            isScheduled.set(false);
                             onTick();
+                            isScheduled.set(false);
                         });
                     }
                 }
@@ -136,7 +142,6 @@ public abstract class Animator {
 
     private void animationDone() {
         stopTicker();
-
         SwingUtilities.invokeLater(this::paintCycleEnd);
     }
 
@@ -145,11 +150,11 @@ public abstract class Animator {
     }
 
     private void onTick() {
-        if (isDisposed()) return;
+        if (isDisposed() || ticker == null) return;
 
         if (startTime == -1) {
             startTime = System.currentTimeMillis();
-            stopTime = startTime + cycleDuration * (totalFrames - currentFrame) / totalFrames;
+            stopTime = startTime + (cycleDuration * (totalFrames - currentFrame)) / totalFrames;
         }
 
         final double passedTime = System.currentTimeMillis() - startTime;

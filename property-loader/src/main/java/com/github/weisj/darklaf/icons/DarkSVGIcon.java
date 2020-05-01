@@ -41,7 +41,7 @@ import com.kitfox.svg.app.beans.SVGIcon;
  * @author Jannis Weis
  * @since  2019
  */
-public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, Serializable {
+public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Serializable {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
     private final Dimension size;
@@ -99,15 +99,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, Serializable {
         return new SVGIcon();
     }
 
-    /**
-     * Paint the icon with rotation.
-     *
-     * @param c        the parent component.
-     * @param g        the graphics object.
-     * @param x        the x coordinate
-     * @param y        the y coordinate
-     * @param rotation the rotation in radians.
-     */
+    @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y,
                           final double rotation) {
         ensureLoaded();

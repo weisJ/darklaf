@@ -24,25 +24,38 @@
  */
 package ui.label;
 
-import java.awt.*;
-
 import javax.swing.*;
 
 import ui.ComponentDemo;
+import ui.DemoPanel;
 import ui.DemoResources;
 
-public class LabelDemo extends LabelDemoBase<JLabel> {
+import com.github.weisj.darklaf.components.loading.LoadingIndicator;
+
+public class LoadIndicator extends LabelDemoBase<LoadingIndicator> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LabelDemo());
+        ComponentDemo.showDemo(new LoadIndicator());
     }
 
-    protected JLabel createLabel() {
-        return new JLabel("Test Label", DemoResources.FOLDER_ICON, JLabel.LEFT);
+    @Override
+    protected JPanel createControlPanel(final DemoPanel panel, final LoadingIndicator label) {
+        JPanel controls = super.createControlPanel(panel, label);
+        controls.add(new JCheckBox("running") {
+            {
+                setSelected(label.isRunning());
+                addActionListener(e -> label.setRunning(isSelected()));
+            }
+        });
+        return controls;
+    }
+
+    protected LoadingIndicator createLabel() {
+        return new LoadingIndicator("Load Indicator", DemoResources.FOLDER_ICON, JLabel.LEFT);
     }
 
     @Override
     public String getTitle() {
-        return "Label Demo";
+        return "Load Indicator Demo";
     }
 }

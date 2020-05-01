@@ -51,8 +51,8 @@ public class RotatableIcon implements Icon {
 
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        if (icon instanceof DarkSVGIcon) {
-            ((DarkSVGIcon) icon).paintIcon(c, g, x, y, getAngle());
+        if (icon instanceof RotateIcon) {
+            ((RotateIcon) icon).paintIcon(c, g, x, y, getAngle());
         } else if (icon != null) {
             Graphics2D g2 = (Graphics2D) g.create();
             AffineTransform transform = new AffineTransform();

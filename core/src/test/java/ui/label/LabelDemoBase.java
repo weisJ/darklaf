@@ -29,20 +29,36 @@ import java.awt.*;
 import javax.swing.*;
 
 import ui.ComponentDemo;
-import ui.DemoResources;
+import ui.DemoPanel;
 
-public class LabelDemo extends LabelDemoBase<JLabel> {
-
-    public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LabelDemo());
-    }
-
-    protected JLabel createLabel() {
-        return new JLabel("Test Label", DemoResources.FOLDER_ICON, JLabel.LEFT);
-    }
+public abstract class LabelDemoBase<T extends JLabel> implements ComponentDemo {
 
     @Override
-    public String getTitle() {
-        return "Label Demo";
+    public JComponent createComponent() {
+        T label = createLabel();
+        DemoPanel panel = new DemoPanel(label);
+
+        JPanel controlPanel = createControlPanel(panel, label);
+        return panel;
     }
+
+    protected JPanel createControlPanel(final DemoPanel panel, final T label) {
+        JPanel controlPanel = panel.addControls();
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(label.isEnabled());
+                addActionListener(e -> label.setEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(label.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> label.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                        : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        return controlPanel;
+    }
+
+    protected abstract T createLabel();
 }

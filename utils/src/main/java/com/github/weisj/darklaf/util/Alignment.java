@@ -304,4 +304,36 @@ public enum Alignment {
     public boolean isWest(final boolean includePure) {
         return (this == Alignment.WEST && includePure) || this == Alignment.NORTH_WEST || this == Alignment.SOUTH_WEST;
     }
+
+    public double getAngle() {
+        double angle = 0.0;
+        switch (this) {
+            case NORTH :
+            case CENTER :
+                angle = 0.0;
+                break;
+            case SOUTH :
+                angle = 180.0;
+                break;
+            case EAST :
+                angle = 90.0;
+                break;
+            case WEST :
+                angle = 270.0;
+                break;
+            case NORTH_EAST :
+                angle = 45.0;
+                break;
+            case NORTH_WEST :
+                angle = 315.0;
+                break;
+            case SOUTH_EAST :
+                angle = 135.0;
+                break;
+            case SOUTH_WEST :
+                angle = 225.0;
+                break;
+        }
+        return Math.toRadians(angle);
+    }
 }

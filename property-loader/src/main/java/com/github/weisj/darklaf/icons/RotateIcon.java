@@ -22,27 +22,20 @@
  * SOFTWARE.
  *
  */
-package ui.label;
+package com.github.weisj.darklaf.icons;
 
 import java.awt.*;
 
-import javax.swing.*;
+public interface RotateIcon {
 
-import ui.ComponentDemo;
-import ui.DemoResources;
-
-public class LabelDemo extends LabelDemoBase<JLabel> {
-
-    public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LabelDemo());
-    }
-
-    protected JLabel createLabel() {
-        return new JLabel("Test Label", DemoResources.FOLDER_ICON, JLabel.LEFT);
-    }
-
-    @Override
-    public String getTitle() {
-        return "Label Demo";
-    }
+    /**
+     * Paint the icon with rotation.
+     *
+     * @param c        the parent component.
+     * @param g        the graphics object.
+     * @param x        the x coordinate
+     * @param y        the y coordinate
+     * @param rotation the rotation in radians.
+     */
+    void paintIcon(Component c, Graphics g, int x, int y, double rotation);
 }
