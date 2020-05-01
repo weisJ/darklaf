@@ -41,6 +41,7 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabLabel;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.listener.HoverListener;
@@ -79,6 +80,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
+        GraphicsContext config = new GraphicsContext(g);
         g.setColor(getBackground(tabComponent));
         g.fillRect(0, 0, tabComponent.getWidth(), tabComponent.getHeight());
 
@@ -95,6 +97,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
         if (icon != null) {
             icon.paintIcon(c, g, paintIconR.x, paintIconR.y);
+            config.restoreClip();
         }
 
         PaintUtil.drawString(g, c, clippedText, paintTextR, fm, (g2, c2, rect, t) -> {

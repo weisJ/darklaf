@@ -165,8 +165,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
 
         paintIcon(g, b, c);
+        config.restoreClip();
         paintText(g, b, text);
-        config.restore();
     }
 
     protected void paintButtonBackground(final Graphics g, final JComponent c) {

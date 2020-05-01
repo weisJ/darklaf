@@ -35,7 +35,6 @@ import javax.swing.plaf.basic.BasicLabelUI;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -84,7 +83,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
+        GraphicsContext config = new GraphicsContext(g);
         JLabel label = (JLabel) c;
         String text = label.getText();
         Icon icon = getIcon(label);
@@ -98,6 +97,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
 
         if (icon != null) {
             icon.paintIcon(c, g, paintIconR.x, paintIconR.y);
+            config.restoreClip();
         }
 
         PaintUtil.drawString(g, c, clippedText, paintTextR, fm, (g2, c2, rect, t) -> {
@@ -107,7 +107,6 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
                 paintDisabledText(label, g2, t, rect.x, rect.y);
             }
         });
-        config.restore();
     }
 
     @Override
