@@ -61,6 +61,10 @@ public class TreeDemo implements ComponentDemo {
         root.add(parent1);
         root.add(parent2);
 
+        for (int i = 0; i < 100; i++) {
+            root.add(new DefaultMutableTreeNode("Leaf " + i));
+        }
+
         JTree tree = new JTree(root);
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
             @Override
