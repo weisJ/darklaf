@@ -31,12 +31,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.log.LogHandler;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.settings.ThemeSettings;
@@ -57,14 +59,14 @@ public final class LafManager {
 
     private static ThemeProvider themeProvider;
     private static Theme theme;
-    private static boolean logEnabled = false;
     private static final List<Theme> registeredThemes = new ArrayList<>();
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new ArrayList<>();
     private static final Collection<DefaultsInitTask> uiInitTasks = new ArrayList<>();
     private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport = new ThemeEventSupport<>();
 
     static {
-        enableLogging(true);
+        setupLogging();
+        setLogLevel(Level.INFO);
         registerTheme(new IntelliJTheme(),
                       new DarculaTheme(),
                       new SolarizedLightTheme(),
@@ -74,28 +76,40 @@ public final class LafManager {
                       new HighContrastDarkTheme());
     }
 
+    private static void setupLogging() {
+        try (InputStream inputStream = DarkLaf.class.getResourceAsStream("log/logging.properties")) {
+            if (inputStream != null) {
+                Logger.getGlobal().fine("Loading logging configuration.");
+                LogManager.getLogManager().readConfiguration(inputStream);
+            }
+            Logger.getGlobal().fine(() -> "Loaded logging config" + LogManager.getLogManager().toString());
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "init logging system", e);
+        }
+    }
+
     /**
      * Enable logging for the Look and Feel.
+     * true means Level.INFO, false Level.SEVERE.
      *
+     * @see              #setLogLevel(Level)
      * @param logEnabled true if messages should be logged.
      */
     public static void enableLogging(final boolean logEnabled) {
-        if (logEnabled == LafManager.logEnabled) return;
-        if (!logEnabled) {
-            LogManager.getLogManager().reset();
-        } else {
-            try (InputStream inputStream = DarkLaf.class.getClassLoader()
-                                                        .getResourceAsStream("com/github/weisj/darklaf/log/logging.properties")) {
-                if (inputStream != null) {
-                    Logger.getGlobal().fine("Loading logging configuration.");
-                    LogManager.getLogManager().readConfiguration(inputStream);
-                }
-                Logger.getGlobal().fine(() -> "Loaded logging config" + LogManager.getLogManager().toString());
-            } catch (IOException e) {
-                Logger.getGlobal().log(Level.SEVERE, "init logging system", e);
+        setLogLevel(logEnabled ? Level.INFO : Level.SEVERE);
+    }
+
+    /**
+     * Sets the log level.
+     *
+     * @param level the new log level.
+     */
+    public static void setLogLevel(final Level level) {
+        for (Handler handler : Logger.getLogger("").getHandlers()) {
+            if (handler instanceof LogHandler) {
+                handler.setLevel(level);
             }
         }
-        LafManager.logEnabled = logEnabled;
     }
 
     /**
