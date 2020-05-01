@@ -427,8 +427,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                     }
                     bounds = getPathBounds(path, insets, boundsBuffer);
                     if (bounds == null) return;
-                    paintRowBackground(g, paintBounds, insets, bounds, path,
-                                       tree.getRowForPath(path), isExpanded, hasBeenExpanded, isLeaf);
+                    if (paintBounds.intersects(bounds)) {
+                        paintRowBackground(g, paintBounds, insets, bounds, path,
+                                           tree.getRowForPath(path), isExpanded, hasBeenExpanded, isLeaf);
+                    }
                 }
             }
 
@@ -525,7 +527,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             rowGraphics.setColor(getRowBackground(row, selected));
             rowGraphics.fillRect(xOffset, bounds.y, containerWidth, bounds.height);
 
-            super.paintRow(rowGraphics, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
             rowGraphics.dispose();
         }
     }
