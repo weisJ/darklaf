@@ -43,6 +43,7 @@ public class TooltipAwareButton extends JButton implements ToolTipAware {
 
     public TooltipAwareButton(final String text, final Icon icon) {
         super(text, icon);
+        init();
     }
 
     public TooltipAwareButton(final Icon icon) {
@@ -55,13 +56,12 @@ public class TooltipAwareButton extends JButton implements ToolTipAware {
 
     public TooltipAwareButton(final Action a) {
         super(a);
+        init();
     }
 
-    @Override
-    public void updateUI() {
+    private void init() {
         putClientProperty(DarkTooltipUI.KEY_CONTEXT, getToolTipContext());
         putClientProperty(DarkTooltipUI.KEY_STYLE, ToolTipStyle.BALLOON);
-        super.updateUI();
     }
 
     @Override

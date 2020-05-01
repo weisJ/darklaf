@@ -43,13 +43,12 @@ public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAw
 
     public TooltipAwareToggleButton(final String text, final Icon icon) {
         super(text, icon);
+        init();
     }
 
-    @Override
-    public void updateUI() {
+    private void init() {
         putClientProperty(DarkTooltipUI.KEY_CONTEXT, getToolTipContext());
         putClientProperty(DarkTooltipUI.KEY_STYLE, ToolTipStyle.BALLOON);
-        super.updateUI();
     }
 
     public TooltipAwareToggleButton(final Icon icon) {
@@ -62,6 +61,7 @@ public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAw
 
     public TooltipAwareToggleButton(final Action a) {
         super(a);
+        init();
     }
 
     @Override
