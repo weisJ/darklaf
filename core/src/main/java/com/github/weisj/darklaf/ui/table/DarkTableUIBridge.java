@@ -28,18 +28,15 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTableUIBridge extends TableUIBridge {
+public abstract class DarkTableUIBridge extends TableUIBridge {
 
     protected Color dropLine;
     protected Color dropLineShort;
@@ -54,6 +51,7 @@ public class DarkTableUIBridge extends TableUIBridge {
     /**
      * Paint a representation of the <code>table</code> instance that was set in installUI().
      */
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         Rectangle clip = g.getClipBounds();
 
@@ -149,6 +147,7 @@ public class DarkTableUIBridge extends TableUIBridge {
         paintDropLines(g);
     }
 
+    @Override
     protected void paintDropLines(final Graphics g) {
         JTable.DropLocation loc = table.getDropLocation();
         if (loc == null) {
@@ -194,50 +193,10 @@ public class DarkTableUIBridge extends TableUIBridge {
         }
     }
 
-    /*
-     * Paints the grid lines within <I>aRect</I>, using the grid
-     * color set with <I>setGridColor</I>. Paints vertical lines
-     * if <code>getShowVerticalLines()</code> returns true and paints
-     * horizontal lines if <code>getShowHorizontalLines()</code>
-     * returns true.
-     */
-    protected void paintGrid(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax) {
-        g.setColor(table.getGridColor());
+    @Override
+    protected abstract void paintGrid(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax);
 
-        Rectangle minCell = table.getCellRect(rMin, cMin, true);
-        Rectangle maxCell = table.getCellRect(rMax, cMax, true);
-        Rectangle damagedArea = minCell.union(maxCell);
-
-        if (table.getShowHorizontalLines()) {
-            int tableWidth = damagedArea.x + damagedArea.width;
-            int y = damagedArea.y;
-            for (int row = rMin; row <= rMax; row++) {
-                y += table.getRowHeight(row);
-                SwingUtilities2.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
-            }
-        }
-        if (table.getShowVerticalLines()) {
-            TableColumnModel cm = table.getColumnModel();
-            int tableHeight = damagedArea.y + damagedArea.height;
-            int x;
-            if (table.getComponentOrientation().isLeftToRight()) {
-                x = damagedArea.x;
-                for (int column = cMin; column <= cMax; column++) {
-                    int w = cm.getColumn(column).getWidth();
-                    x += w;
-                    SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
-                }
-            } else {
-                x = damagedArea.x;
-                for (int column = cMax; column >= cMin; column--) {
-                    int w = cm.getColumn(column).getWidth();
-                    x += w;
-                    SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
-                }
-            }
-        }
-    }
-
+    @Override
     protected void paintCells(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax) {
         JTableHeader header = table.getTableHeader();
         TableColumn draggedColumn = (header == null) ? null : header.getDraggedColumn();
@@ -291,160 +250,18 @@ public class DarkTableUIBridge extends TableUIBridge {
         rendererPane.removeAll();
     }
 
-    protected Rectangle getHDropLineRect(final JTable.DropLocation loc) {
-        if (!loc.isInsertRow()) {
-            return null;
-        }
+    @Override
+    protected abstract void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column);
 
-        int row = loc.getRow();
-        int col = loc.getColumn();
-        if (col >= table.getColumnCount()) {
-            col--;
-        }
-
-        Rectangle rect = table.getCellRect(row, col, true);
-
-        if (row >= table.getRowCount()) {
-            row--;
-            Rectangle prevRect = table.getCellRect(row, col, true);
-            rect.y = prevRect.y + prevRect.height;
-        }
-
-        if (rect.y == 0) {
-            rect.y = -1;
-        } else {
-            rect.y -= 2;
-        }
-
-        rect.height = 3;
-
-        return rect;
-    }
-
-    protected Rectangle extendRect(final Rectangle rect, final boolean horizontal) {
-        if (rect == null) {
-            return null;
-        }
-
-        if (horizontal) {
-            rect.x = 0;
-            rect.width = table.getWidth();
-        } else {
-            rect.y = 0;
-
-            if (table.getRowCount() != 0) {
-                Rectangle lastRect = table.getCellRect(table.getRowCount() - 1, 0, true);
-                rect.height = lastRect.y + lastRect.height;
-            } else {
-                rect.height = table.getHeight();
-            }
-        }
-
-        return rect;
-    }
-
-    protected Rectangle getVDropLineRect(final JTable.DropLocation loc) {
-        if (!loc.isInsertColumn()) {
-            return null;
-        }
-
-        boolean ltr = table.getComponentOrientation().isLeftToRight();
-        int col = loc.getColumn();
-        Rectangle rect = table.getCellRect(loc.getRow(), col, true);
-
-        if (col >= table.getColumnCount()) {
-            col--;
-            rect = table.getCellRect(loc.getRow(), col, true);
-            if (ltr) {
-                rect.x = rect.x + rect.width;
-            }
-        } else if (!ltr) {
-            rect.x = rect.x + rect.width;
-        }
-
-        if (rect.x == 0) {
-            rect.x = -1;
-        } else {
-            rect.x -= 2;
-        }
-
-        rect.width = 3;
-
-        return rect;
-    }
-
-    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
-        if (table.isEditing() && table.getEditingRow() == row &&
-            table.getEditingColumn() == column) {
-            Component component = table.getEditorComponent();
-            component.setBounds(cellRect);
-            component.validate();
-        } else {
-            TableCellRenderer renderer = table.getCellRenderer(row, column);
-            Component component = table.prepareRenderer(renderer, row, column);
-            rendererPane.paintComponent(g, component, table, cellRect.x, cellRect.y,
-                                        cellRect.width, cellRect.height, true);
-        }
-    }
-
+    @Override
     protected int viewIndexForColumn(final TableColumn aColumn) {
         return viewIndexForColumn(aColumn, table);
     }
 
-    protected void paintDraggedArea(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax,
-                                    final TableColumn draggedColumn, final int distance) {
-        int draggedColumnIndex = viewIndexForColumn(draggedColumn);
-
-        Rectangle minCell = table.getCellRect(rMin, draggedColumnIndex, true);
-        Rectangle maxCell = table.getCellRect(rMax, draggedColumnIndex, true);
-
-        Rectangle vacatedColumnRect = minCell.union(maxCell);
-
-        // Paint a gray well in place of the moving column.
-        g.setColor(table.getParent().getBackground());
-        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
-                   vacatedColumnRect.width, vacatedColumnRect.height);
-
-        // Move to the where the cell has been dragged.
-        vacatedColumnRect.x += distance;
-
-        // Fill the background.
-        g.setColor(table.getBackground());
-        g.fillRect(vacatedColumnRect.x, vacatedColumnRect.y,
-                   vacatedColumnRect.width, vacatedColumnRect.height);
-
-        // Paint the vertical grid lines if necessary.
-        if (table.getShowVerticalLines()) {
-            g.setColor(table.getGridColor());
-            int x1 = vacatedColumnRect.x;
-            int y1 = vacatedColumnRect.y;
-            int x2 = x1 + vacatedColumnRect.width - 1;
-            int y2 = y1 + vacatedColumnRect.height - 1;
-            // Left
-            g.fillRect(x1 - 1, y1, 1, y2 - y1);
-            // Right
-            g.fillRect(x2 - 1, y1, 1, y2 - y1);
-        }
-
-        for (int row = rMin; row <= rMax; row++) {
-            // Render the cell value
-            Rectangle r = table.getCellRect(row, draggedColumnIndex, false);
-            r.x += distance;
-            paintCell(g, r, row, draggedColumnIndex);
-
-            // Paint the (lower) horizontal grid line if necessary.
-            if (table.getShowHorizontalLines()) {
-                g.setColor(table.getGridColor());
-                Rectangle rcr = table.getCellRect(row, draggedColumnIndex, true);
-                rcr.x += distance;
-                int x1 = rcr.x;
-                int y1 = rcr.y;
-                int x2 = x1 + rcr.width - 1;
-                int y2 = y1 + rcr.height - 1;
-                g.fillRect(x1 - 1, y2 - 1, x2 - x1, 1);
-            }
-        }
-    }
+    protected abstract void paintDraggedArea(final Graphics g,
+                                             final int rMin, final int rMax,
+                                             final int cMin, final int cMax,
+                                             final TableColumn draggedColumn, final int distance);
 
     public static int viewIndexForColumn(final TableColumn aColumn, final JTable table) {
         TableColumnModel cm = table.getColumnModel();

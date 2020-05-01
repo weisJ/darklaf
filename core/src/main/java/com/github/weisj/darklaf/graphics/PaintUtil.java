@@ -241,7 +241,7 @@ public class PaintUtil {
                                                          final FontMetrics fm,
                                                          final PaintMethod<T> paintMethod) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
-        g.setClip(textRect);
+        g.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);
         if (text != null && !text.equals("")) {
             View v = PropertyUtil.getObject(c, DarkHTML.propertyKey, View.class);
             if (v != null) {

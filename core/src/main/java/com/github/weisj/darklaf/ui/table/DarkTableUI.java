@@ -516,12 +516,6 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         }
     }
 
-    protected boolean isFocusCell(final int row, final int col) {
-        boolean rowFocus = table.getSelectionModel().getLeadSelectionIndex() == row;
-        boolean columnFocus = table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == col;
-        return rowFocus && columnFocus;
-    }
-
     @Override
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
         Rectangle bounds = table.getVisibleRect();
