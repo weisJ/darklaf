@@ -44,6 +44,7 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
+import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -104,6 +105,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
+        PropertyUtil.installProperty(b, ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
         LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");
