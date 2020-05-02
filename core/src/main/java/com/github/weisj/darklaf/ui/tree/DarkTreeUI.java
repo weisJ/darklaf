@@ -168,11 +168,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         collapsedSelected = UIManager.getIcon("Tree.collapsed.selected.unfocused.icon");
         collapsedFocus = UIManager.getIcon("Tree.collapsed.unselected.focused.icon");
         collapsed = UIManager.getIcon("Tree.collapsed.unselected.unfocused.icon");
-        tree.putClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX,
-                               UIManager.getBoolean("Tree.renderBooleanAsCheckBox"));
-        tree.putClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Tree.booleanRenderType"));
-        tree.setShowsRootHandles(true);
-        tree.putClientProperty(KEY_LINE_STYLE, UIManager.getString("Tree.defaultLineStyle"));
+        PropertyUtil.installBooleanProperty(tree, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Tree.renderBooleanAsCheckBox");
+        PropertyUtil.installProperty(tree, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Tree.booleanRenderType"));
+        PropertyUtil.installProperty(tree, KEY_LINE_STYLE, UIManager.getString("Tree.defaultLineStyle"));
+        LookAndFeel.installProperty(tree, JTree.SHOWS_ROOT_HANDLES_PROPERTY, true);
     }
 
     @Override

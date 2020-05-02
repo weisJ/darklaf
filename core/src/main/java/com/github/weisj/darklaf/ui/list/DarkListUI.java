@@ -61,7 +61,7 @@ public class DarkListUI extends DarkListUIBridge {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        list.putClientProperty(KEY_ALTERNATE_ROW_COLOR, UIManager.getBoolean("List.alternateRowColor"));
+        PropertyUtil.installBooleanProperty(list, KEY_ALTERNATE_ROW_COLOR, "List.alternateRowColor");
     }
 
     @Override

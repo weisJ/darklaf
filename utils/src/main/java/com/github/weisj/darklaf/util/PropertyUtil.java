@@ -31,6 +31,16 @@ import javax.swing.*;
 
 public class PropertyUtil {
 
+    public static void installProperty(final JComponent c, final String key, final Object value) {
+        if (c.getClientProperty(key) == null) {
+            c.putClientProperty(key, value);
+        }
+    }
+
+    public static void installBooleanProperty(final JComponent c, final String key, final String valueKey) {
+        installProperty(c, key, UIManager.getBoolean(valueKey));
+    }
+
     public static boolean getBooleanProperty(final Component c, final String property) {
         return getBooleanProperty(c, property, false);
     }

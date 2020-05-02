@@ -28,7 +28,6 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.UIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -78,9 +77,7 @@ public class DarkTableHeaderUI extends DarkTableHeaderUIBridge {
     @Override
     protected void uninstallDefaults() {
         super.uninstallDefaults();
-        if (header.getBorder() instanceof UIResource) {
-            LookAndFeel.uninstallBorder(header);
-        }
+        LookAndFeel.uninstallBorder(header);
     }
 
     @Override

@@ -51,7 +51,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected static final String KEY_PREFIX = "JTextField.";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_SHOW_CLEAR = KEY_PREFIX + "showClear";
-    public static final String KEY_KEEP_SELECTION_ON_FOCUS_LOST = KEY_PREFIX + "keepSelectionOnFocusLost";
     public static final String KEY_FIND_POPUP = KEY_PREFIX + "Search.FindPopup";
     public static final String VARIANT_SEARCH = "search";
     protected static Icon clear;
@@ -264,8 +263,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        editor.putClientProperty(KEY_KEEP_SELECTION_ON_FOCUS_LOST,
-                                 UIManager.getBoolean("TextField.keepSelectionOnFocusLost"));
         arcSize = UIManager.getInt("TextField.arc");
         borderSize = UIManager.getInt("TextField.borderThickness");
         searchArcSize = UIManager.getInt("TextField.searchArc");

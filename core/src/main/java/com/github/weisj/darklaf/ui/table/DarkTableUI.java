@@ -204,10 +204,9 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
             LookAndFeel.installProperty(table, "rowHeight", ROW_HEIGHT_FALLBACK);
         }
         table.setDefaultEditor(Object.class, new DarkTableCellEditor());
-        table.putClientProperty(KEY_RENDER_BOOLEAN_AS_CHECKBOX,
-                                UIManager.getBoolean("Table.renderBooleanAsCheckBox"));
-        table.putClientProperty(KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
-        table.putClientProperty(KEY_ALTERNATE_ROW_COLOR, UIManager.getBoolean("Table.alternateRowColor"));
+        PropertyUtil.installBooleanProperty(table, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Table.renderBooleanAsCheckBox");
+        PropertyUtil.installBooleanProperty(table, KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowColor");
+        PropertyUtil.installProperty(table, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
         setupRendererComponents(table);
         borderColor = UIManager.getColor("TableHeader.borderColor");
         selectionFocusBackground = UIManager.getColor("Table.focusSelectionBackground");

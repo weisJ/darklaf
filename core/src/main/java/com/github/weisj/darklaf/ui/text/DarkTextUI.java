@@ -108,7 +108,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             editor.setBorder(null);
         }
         if (editor != null) {
-            editor.putClientProperty(KEY_ROUNDED_SELECTION, UIManager.getBoolean("TextComponent.roundedSelection"));
+            PropertyUtil.installBooleanProperty(editor, KEY_ROUNDED_SELECTION, "TextComponent.roundedSelection");
         }
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");

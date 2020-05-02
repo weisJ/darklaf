@@ -27,6 +27,8 @@ package com.github.weisj.darklaf.components.text;
 import javax.swing.*;
 import javax.swing.text.Document;
 
+import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
+
 public class SearchTextField extends JTextField {
 
     public static final int SEARCH = 0;
@@ -57,7 +59,7 @@ public class SearchTextField extends JTextField {
      */
     public SearchTextField(final Document doc, final String text, final int columns) {
         super(doc, text, columns);
-        putClientProperty("JTextField.variant", "search");
+        putClientProperty(DarkTextFieldUI.KEY_VARIANT, DarkTextFieldUI.VARIANT_SEARCH);
         addActionListener(e -> {
             SearchListener[] list = listenerList.getListeners(SearchListener.class);
             SearchEvent evt = new SearchEvent(SearchTextField.this, SEARCH, "search", getText());
