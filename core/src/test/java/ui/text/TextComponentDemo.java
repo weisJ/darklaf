@@ -24,6 +24,8 @@
  */
 package ui.text;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
@@ -41,7 +43,7 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
     public JComponent createComponent() {
         T text = createTextComponent();
         text.setText(StringUtil.repeat(StringUtil.repeat("Word ", 5) + "\n", 5));
-        DemoPanel panel = new DemoPanel(text);
+        DemoPanel panel = new DemoPanel(text, new BorderLayout(), 10);
         Border textBorder = new DarkTextBorder();
         Border border = text.getBorder();
 

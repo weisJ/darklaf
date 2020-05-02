@@ -37,6 +37,8 @@ import javax.swing.text.*;
 import javax.swing.text.DefaultHighlighterDark.DarkHighlightPainter;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.text.action.SelectLineAction;
+import com.github.weisj.darklaf.ui.text.action.SelectWordAction;
 
 /**
  * @author Jannis Weis
@@ -88,11 +90,6 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-    @Override
-    protected void positionCaret(final MouseEvent e) {
-        super.positionCaret(e);
-    }
-
     public boolean isAlwaysVisible() {
         return alwaysVisible;
     }
@@ -117,26 +114,32 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public enum CaretStyle {
-        VERTICAL_LINE_STYLE(1),
-        UNDERLINE_STYLE(0),
-        BLOCK_STYLE(0),
-        BLOCK_BORDER_STYLE(0),
-        THICK_VERTICAL_LINE_STYLE(1);
+        VERTICAL_LINE_STYLE(1, false),
+        UNDERLINE_STYLE(1, true),
+        BLOCK_STYLE(1, true),
+        BLOCK_BORDER_STYLE(1, true),
+        THICK_VERTICAL_LINE_STYLE(2, false);
 
-        private final int width;
+        private final int size;
+        private final boolean charWidth;
 
-        CaretStyle(final int width) {
-            this.width = width;
+        CaretStyle(final int size, final boolean charWidth) {
+            this.size = size;
+            this.charWidth = charWidth;
         }
 
-        public int getWidth() {
-            return width;
+        public int getSize() {
+            return size;
+        }
+
+        public boolean isCharacterWidth() {
+            return charWidth;
         }
     }
 
     @Override
     public double getWidth() {
-        return style.getWidth();
+        return getStyle().getSize();
     }
 
     /**
@@ -265,14 +268,19 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     @Override
+    public boolean isVisible() {
+        return super.isVisible() || isAlwaysVisible();
+    }
+
+    @Override
     public void paint(final Graphics g) {
-        if (isVisible() || alwaysVisible) {
+        if (isVisible()) {
             JTextComponent textArea = getComponent();
             g.setColor(textArea.getCaretColor());
             TextUI mapper = textArea.getUI();
             Rectangle r;
             try {
-                r = mapper.modelToView(textArea, getDot(), Position.Bias.Forward);
+                r = mapper.modelToView(textArea, getDot(), getDotBias());
             } catch (BadLocationException ex) {
                 r = new Rectangle(0, 0, 0, 0);
             }
@@ -294,28 +302,25 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             r.y += 1;
 
             Color textAreaBg = textArea.getBackground();
+            if (textAreaBg == null) {
+                textAreaBg = Color.white;
+            }
             switch (style) {
                 case BLOCK_STYLE :
-                    if (textAreaBg == null) {
-                        textAreaBg = Color.white;
-                    }
                     g.setXORMode(textAreaBg);
                     g.fillRect(r.x, r.y, r.width, r.height);
                     break;
                 case BLOCK_BORDER_STYLE :
-                    PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, 1);
+                    PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, style.getSize());
                     break;
                 case UNDERLINE_STYLE :
-                    if (textAreaBg == null) {
-                        textAreaBg = Color.white;
-                    }
                     g.setXORMode(textAreaBg);
                     int y = r.y + r.height;
-                    g.fillRect(r.x, y - 1, r.width, 1);
+                    g.fillRect(r.x, y - style.getSize(), r.width, style.getSize());
                     break;
                 case THICK_VERTICAL_LINE_STYLE :
                 case VERTICAL_LINE_STYLE :
-                    g.fillRect(r.x, r.y, style.getWidth(), r.height);
+                    g.fillRect(r.x, r.y, style.getSize(), r.height);
                     break;
             }
         }
@@ -347,7 +352,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     private void validateWidth(final Rectangle rect) {
-        if (rect != null && rect.width <= 1) {
+        if (rect != null && (rect.width <= 1 || getStyle().isCharacterWidth())) {
             JTextComponent textArea = getComponent();
             try {
                 textArea.getDocument().getText(getDot(), 1, seg);

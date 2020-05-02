@@ -20,9 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-package com.github.weisj.darklaf.ui.text;
+package com.github.weisj.darklaf.ui.text.action;
 
 import java.awt.event.ActionEvent;
 
