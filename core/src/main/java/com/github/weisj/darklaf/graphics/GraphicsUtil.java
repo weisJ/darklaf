@@ -25,7 +25,6 @@
 package com.github.weisj.darklaf.graphics;
 
 import java.awt.*;
-import java.util.Map;
 
 import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -36,6 +35,8 @@ import com.github.weisj.darklaf.util.SystemInfo;
  */
 public final class GraphicsUtil {
 
+    public static final String DESKTOP_HINTS_KEY = "awt.font.desktophints";
+
     private GraphicsUtil() {}
 
     public static GraphicsContext setupAntialiasing(final Graphics g2) {
@@ -45,18 +46,11 @@ public final class GraphicsUtil {
     public static GraphicsContext setupAntialiasing(final Graphics g2, final boolean enableAA,
                                                     final boolean ignoreSystemSettings) {
         GraphicsContext config = new GraphicsContext(g2);
-        if (g2 instanceof Graphics2D) {
+        if (ignoreSystemSettings && g2 instanceof Graphics2D) {
             Graphics2D g = (Graphics2D) g2;
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            Map<?, ?> map = (Map<?, ?>) tk.getDesktopProperty("awt.font.desktophints");
-            if (map != null && !ignoreSystemSettings) {
-                g.addRenderingHints(map);
-            } else {
-                g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                                   enableAA
-                                           ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR
-                                           : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-            }
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                               enableAA ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR
+                                       : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         }
         return config;
     }

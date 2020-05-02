@@ -37,6 +37,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
@@ -64,6 +65,23 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             patchMacOSFonts(defaults);
         }
         applyFontRule(currentTheme, defaults);
+        setupRenderingHints(defaults);
+    }
+
+    private void setupRenderingHints(final UIDefaults defaults) {
+        if (!SystemInfo.isMacOSMojave) {
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            Map<?, ?> desktopHints = (Map<?, ?>) toolkit.getDesktopProperty(GraphicsUtil.DESKTOP_HINTS_KEY);
+
+            Object aaHint = (desktopHints == null) ? null : desktopHints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
+            if (aaHint != null
+                && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
+                && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
+                defaults.put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
+                defaults.put(RenderingHints.KEY_TEXT_LCD_CONTRAST,
+                             desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST));
+            }
+        }
     }
 
     private void loadFontProperties(final UIDefaults defaults) {
@@ -83,7 +101,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private Font macOSFontFromFont(final Font font) {
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME : MAC_OS_FONT_NAME;
-        Font macFont = new Font(fontName, font.getStyle(), font.getSize()).deriveFont(ENABLE_KERNING);
+        Font macFont = new Font(fontName, font.getStyle(), font.getSize());
+        if (SystemInfo.isMacOSMojave) macFont = macFont.deriveFont(ENABLE_KERNING);
         if (font instanceof UIResource) {
             macFont = new DarkFontUIResource(macFont);
         }
