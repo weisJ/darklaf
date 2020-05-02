@@ -100,7 +100,7 @@ public class InputDefaultsInitTask implements DefaultsInitTask {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask), DefaultEditorKit.cutAction);
     }
 
-    private static void patchComboBox(final UIDefaults metalDefaults, final UIDefaults defaults) {
+    private void patchComboBox(final UIDefaults metalDefaults, final UIDefaults defaults) {
         defaults.remove("ComboBox.ancestorInputMap");
         defaults.remove("ComboBox.actionMap");
         defaults.put("ComboBox.ancestorInputMap", metalDefaults.get("ComboBox.ancestorInputMap"));

@@ -51,20 +51,64 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     private final DarkHighlightPainter selectionPainter;
     private MouseEvent selectedWordEvent;
     private CaretStyle style;
+    private CaretStyle insertStyle;
     private boolean alwaysVisible;
     private boolean pasteOnMiddleMouseClick;
 
+    private boolean insertMode;
+    private boolean deleteCharMode;
+
     public DarkCaret() {
-        this(CaretStyle.THICK_VERTICAL_LINE_STYLE);
+        this(null, null);
     }
 
-    public DarkCaret(final CaretStyle style) {
+    public DarkCaret(final CaretStyle style, final CaretStyle insertStyle) {
         seg = new Segment();
-        setStyle(style);
+        setStyles(style, insertStyle);
         selectionPainter = new DarkHighlightPainter();
         selectLine = new SelectLineAction();
         selectWord = new SelectWordAction();
         pasteOnMiddleMouseClick = true;
+    }
+
+    public boolean isInsertMode() {
+        return insertMode;
+    }
+
+    public void setInsertMode(final boolean insertMode) {
+        if (this.insertMode != insertMode) {
+            this.insertMode = insertMode;
+            repaint();
+        }
+    }
+
+    public void setDeleteCharMode(final boolean deleteCharMode) {
+        this.deleteCharMode = deleteCharMode;
+    }
+
+    @Override
+    public int getMark() {
+        int mark = super.getMark();
+        int dot = super.getDot();
+        JTextComponent target = getComponent();
+        if (isInsertMode()
+            && target != null
+            && mark == dot
+            && !deleteCharMode
+            && !isEndOfLine(target, dot)) {
+            mark += 1;
+        }
+        return mark;
+    }
+
+    private boolean isEndOfLine(final JTextComponent target, final int dot) {
+        Document doc = target.getDocument();
+        if (dot >= doc.getLength()) return true;
+        try {
+            return target.getText(dot, 1).equals("\n");
+        } catch (BadLocationException e) {
+            return false;
+        }
     }
 
     public boolean getRoundedSelectionEdges() {
@@ -76,16 +120,21 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public CaretStyle getStyle() {
-        return style;
+        return isInsertMode() ? insertStyle : style;
     }
 
-    public void setStyle(final CaretStyle style) {
+    public void setStyles(final CaretStyle style, final CaretStyle insertStyle) {
         CaretStyle s = style;
+        CaretStyle is = insertStyle;
         if (s == null) {
             s = CaretStyle.THICK_VERTICAL_LINE_STYLE;
         }
-        if (s != this.style) {
+        if (is == null) {
+            is = CaretStyle.BLOCK_BORDER_STYLE;
+        }
+        if (s != this.style || is != this.insertStyle) {
             this.style = s;
+            this.insertStyle = is;
             repaint();
         }
     }
@@ -305,18 +354,18 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             if (textAreaBg == null) {
                 textAreaBg = Color.white;
             }
-            switch (style) {
+            switch (getStyle()) {
                 case BLOCK_STYLE :
                     g.setXORMode(textAreaBg);
                     g.fillRect(r.x, r.y, r.width, r.height);
                     break;
                 case BLOCK_BORDER_STYLE :
-                    PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, style.getSize());
+                    PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, getStyle().getSize());
                     break;
                 case UNDERLINE_STYLE :
                     g.setXORMode(textAreaBg);
                     int y = r.y + r.height;
-                    g.fillRect(r.x, y - style.getSize(), r.width, style.getSize());
+                    g.fillRect(r.x, y - getStyle().getSize(), r.width, getStyle().getSize());
                     break;
                 case THICK_VERTICAL_LINE_STYLE :
                 case VERTICAL_LINE_STYLE :

@@ -28,7 +28,6 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
-import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
@@ -243,7 +242,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
      * Fetch an action map to use. The map for a JEditorPane is not shared because it changes with the EditorKit.
      */
     public ActionMap getActionMap() {
-        ActionMap am = new ActionMapUIResource();
+        ActionMap am = super.getActionMap();
         am.put("requestFocus", new FocusAction());
         EditorKit editorKit = getEditorKit(getComponent());
         if (editorKit != null) {

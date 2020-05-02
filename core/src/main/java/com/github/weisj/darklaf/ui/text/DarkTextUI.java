@@ -48,6 +48,9 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.text.action.DeleteNextCharAction;
+import com.github.weisj.darklaf.ui.text.action.DeletePreviousCharAction;
+import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -64,6 +67,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     public static final String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
     public static final String KEY_IS_LIST_RENDER = DarkListUI.KEY_IS_LIST_RENDERER;
     public static final String KEY_DEFAULT_TEXT = KEY_PREFIX + "defaultText";
+
+    protected static final String TOGGLE_INSERT = "toggle_insert";
 
     protected JTextComponent editor;
     private FocusListener focusListener = new FocusListener() {
@@ -89,10 +94,14 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     @Override
     protected Caret createCaret() {
-        return new DarkCaret(getDefaultCaretStyle());
+        return new DarkCaret(getDefaultCaretStyle(), getDefaultInsertCaretStyle());
     }
 
     protected abstract DarkCaret.CaretStyle getDefaultCaretStyle();
+
+    protected DarkCaret.CaretStyle getDefaultInsertCaretStyle() {
+        return DarkCaret.CaretStyle.BLOCK_STYLE;
+    }
 
     protected Color disabledColor;
     protected Color inactiveColor;
@@ -342,6 +351,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         if (shared != null) {
             map.setParent(shared);
         }
+        map.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), TOGGLE_INSERT);
         return map;
     }
 
@@ -366,6 +376,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
          * processed when the text component has focus and isn't editable.
          *
          */
+        System.out.println(getEditorKit(editor));
         if (getEditorKit(editor) instanceof DefaultEditorKit) {
             if (map != null) {
                 Object obj = map.get(DefaultEditorKit.insertBreakAction);
@@ -373,6 +384,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                     Action action = new TextActionWrapper((TextAction) obj);
                     componentMap.put(action.getValue(Action.NAME), action);
                 }
+                map.put(DefaultEditorKit.deletePrevCharAction, new DeletePreviousCharAction());
+                map.put(DefaultEditorKit.deleteNextCharAction, new DeleteNextCharAction());
+                map.put(TOGGLE_INSERT, new ToggleInsertAction());
             }
         }
         if (map != null) {
