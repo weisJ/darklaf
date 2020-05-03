@@ -46,8 +46,8 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
-import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.text.action.DarkKeyTypedAction;
 import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
@@ -197,9 +197,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void paintBackground(final Graphics g) {
         final Container parent = getRelevantParent(editor);
-        if (parent != null && parent.isOpaque() && !editor.isEnabled()) {
+        if (parent != null) {
             g.setColor(parent.getBackground());
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
+        }
+
+        if (!editor.isEnabled()) {
             return;
         }
 
@@ -209,16 +212,13 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 || PropertyUtil.getBooleanProperty(editor, KEY_IS_TABLE_EDITOR)) {
                 g.setColor(getBackground(editor));
                 g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
-            } else if (parent != null && parent.isOpaque()) {
-                g.setColor(parent.getBackground());
-                g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
             }
         }
 
         Border border = editor.getBorder();
         if (border instanceof DarkTextBorder) {
             paintBorderBackground((Graphics2D) g, editor);
-        } else if (border instanceof DarkTableCellBorder) {
+        } else if (border instanceof TextTableCellEditorBorder) {
             g.setColor(editor.getBackground());
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         } else if (border != null && !(border instanceof DarkPlainTextBorder)) {
@@ -242,7 +242,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         } else if (parent instanceof JComboBox) {
             parent = parent.getParent();
         }
-        return parent;
+        return DarkUIUtil.getOpaqueParent(parent);
     }
 
     @Override

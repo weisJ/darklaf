@@ -394,4 +394,10 @@ public final class DarkUIUtil {
         }
         return false;
     }
+
+    public static Container getOpaqueParent(final Container parent) {
+        Container p;
+        for (p = parent; p != null && !p.isOpaque(); p = p.getParent()) {}
+        return p;
+    }
 }
