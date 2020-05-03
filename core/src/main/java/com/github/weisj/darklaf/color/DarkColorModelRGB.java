@@ -65,6 +65,10 @@ public class DarkColorModelRGB extends DarkColorModel {
         return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
     }
 
+    public int[] getValuesFromColorWithAlpha(final Color color) {
+        return new int[]{color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
+    }
+
     public Color getColorFromValues(final int[] values) {
         return new Color(values[0], values[1], values[2]);
     }

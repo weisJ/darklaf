@@ -24,28 +24,40 @@
  */
 package com.github.weisj.darklaf.ui.text.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
 import javax.swing.text.Caret;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
-import javax.swing.text.TextAction;
 
 import com.github.weisj.darklaf.ui.text.DarkCaret;
 
-public abstract class DarkTextAction extends TextAction {
+public class DarkKeyTypedAction extends DefaultEditorKit.DefaultKeyTypedAction {
 
-    /**
-     * Creates a new JTextAction object.
-     *
-     * @param name the name of the action
-     */
-    public DarkTextAction(final String name) {
-        super(name);
-    }
-
-    protected void setupDeleteMode(final JTextComponent textComponent, final boolean isDeleteMode) {
-        if (textComponent == null) return;
-        Caret c = textComponent.getCaret();
-        if (c instanceof DarkCaret) {
-            ((DarkCaret) c).setExpandMode(isDeleteMode);
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+        JTextComponent target = getTextComponent(e);
+        if ((target != null) && (e != null)) {
+            if ((!target.isEditable()) || (!target.isEnabled())) {
+                return;
+            }
+            String content = e.getActionCommand();
+            Caret c = target.getCaret();
+            if (c instanceof DarkCaret) {
+                boolean isDelete = !content.isEmpty();
+                if (isDelete) {
+                    char key = content.charAt(0);
+                    isDelete = key == KeyEvent.VK_DELETE || key == KeyEvent.VK_BACK_SPACE;
+                }
+                if (((DarkCaret) c).isInsertMode()) {
+                    ((DarkCaret) c).setExpandMode(!isDelete);
+                }
+                super.actionPerformed(e);
+                ((DarkCaret) c).setExpandMode(false);
+                return;
+            }
         }
+        super.actionPerformed(e);
     }
 }

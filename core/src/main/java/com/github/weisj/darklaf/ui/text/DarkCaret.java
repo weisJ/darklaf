@@ -56,7 +56,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     private boolean pasteOnMiddleMouseClick;
 
     private boolean insertMode;
-    private boolean deleteCharMode;
+    private boolean expandMode;
 
     public DarkCaret() {
         this(null, null);
@@ -82,8 +82,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-    public void setDeleteCharMode(final boolean deleteCharMode) {
-        this.deleteCharMode = deleteCharMode;
+    public void setExpandMode(final boolean expandMode) {
+        this.expandMode = expandMode;
     }
 
     @Override
@@ -91,10 +91,9 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         int mark = super.getMark();
         int dot = super.getDot();
         JTextComponent target = getComponent();
-        if (isInsertMode()
+        if (expandMode && isInsertMode()
             && target != null
             && mark == dot
-            && !deleteCharMode
             && !isEndOfLine(target, dot)) {
             mark += 1;
         }
@@ -418,5 +417,15 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 rect.width = fm.charWidth(' ');
             }
         }
+    }
+
+    private char getCharAtCaret() {
+        JTextComponent textArea = getComponent();
+        try {
+            textArea.getDocument().getText(getDot(), 1, seg);
+        } catch (BadLocationException e) {
+            return ' ';
+        }
+        return seg.array[seg.offset];
     }
 }

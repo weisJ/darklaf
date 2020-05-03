@@ -48,8 +48,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.text.action.DeleteNextCharAction;
-import com.github.weisj.darklaf.ui.text.action.DeletePreviousCharAction;
+import com.github.weisj.darklaf.ui.text.action.DarkKeyTypedAction;
 import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -385,8 +384,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                     Action action = new TextActionWrapper((TextAction) obj);
                     componentMap.put(action.getValue(Action.NAME), action);
                 }
-                map.put(DefaultEditorKit.deletePrevCharAction, new DeletePreviousCharAction());
-                map.put(DefaultEditorKit.deleteNextCharAction, new DeleteNextCharAction());
                 map.put(TOGGLE_INSERT, new ToggleInsertAction());
             }
         }
@@ -394,6 +391,13 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             componentMap.setParent(map);
         }
         return componentMap;
+    }
+
+    @Override
+    protected Keymap createKeymap() {
+        Keymap km = super.createKeymap();
+        km.setDefaultAction(new DarkKeyTypedAction());
+        return km;
     }
 
     /**

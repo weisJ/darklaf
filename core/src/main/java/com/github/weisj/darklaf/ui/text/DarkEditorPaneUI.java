@@ -35,8 +35,6 @@ import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
 
-import com.github.weisj.darklaf.ui.text.action.DeleteNextCharAction;
-import com.github.weisj.darklaf.ui.text.action.DeletePreviousCharAction;
 import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -262,8 +260,6 @@ public class DarkEditorPaneUI extends DarkTextUI {
         am.put(TransferHandler.getPasteAction().getValue(Action.NAME),
                TransferHandler.getPasteAction());
         if (editorKit instanceof DefaultEditorKit) {
-            am.put(DefaultEditorKit.deletePrevCharAction, new DeletePreviousCharAction());
-            am.put(DefaultEditorKit.deleteNextCharAction, new DeleteNextCharAction());
             am.put(TOGGLE_INSERT, new ToggleInsertAction());
         }
         return am;
