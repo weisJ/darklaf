@@ -29,7 +29,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkListCellRenderer extends DefaultListCellRenderer {
@@ -55,19 +54,8 @@ public class DarkListCellRenderer extends DefaultListCellRenderer {
         if (comp == null) {
             comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }
-        CellUtil.setupBackground(comp, list, isSelected, index, DarkListUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "List.alternateRowBackground",
-                                 "List.selectionNoFocusBackground");
-        if (!(isSelected)) {
-            comp.setForeground(list.getForeground());
-        } else {
-            if (DarkUIUtil.hasFocus(list) || DarkUIUtil.getParentOfType(JPopupMenu.class, list) != null) {
-                comp.setForeground(list.getSelectionForeground());
-                comp.setBackground(list.getSelectionBackground());
-            } else {
-                comp.setForeground(UIManager.getColor("List.selectionForegroundInactive"));
-            }
-        }
+        CellUtil.setupListBackground(comp, list, isSelected, index);
+        CellUtil.setupListForeground(comp, list, isSelected);
         if (getText().isEmpty()) {
             // Fix cell height for empty string.
             setText(" ");

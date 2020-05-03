@@ -39,11 +39,11 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.tree.TreeCellEditor;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -166,22 +166,15 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             ((JToggleButton) editorComponent).setSelected(!(((JToggleButton) editorComponent).isSelected()));
             SwingUtilities.invokeLater(tree::stopEditing);
         }
-        editorComponent.setOpaque(false);
+        editorComponent.setOpaque(true);
         editorComponent.setComponentOrientation(tree.getComponentOrientation());
-        if (DarkUIUtil.hasFocus(tree) || DarkUIUtil.hasFocus(editorComponent)) {
-            editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
-        } else {
-            editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
-        }
+        CellUtil.setupTreeBackground(editorComponent, tree, false, row);
+        CellUtil.setupTreeForeground(editorComponent, tree, false);
         return editorComponent;
     }
 
     protected void updateFocus(final FocusEvent e) {
-        if (DarkUIUtil.hasFocus(editorComponent, e)) {
-            editorComponent.setForeground(UIManager.getColor("Tree.selectionForeground"));
-        } else {
-            editorComponent.setForeground(UIManager.getColor("Tree.selectionForegroundInactive"));
-        }
+        CellUtil.setupTreeForeground(editorComponent, tree, false);
     }
 
     @Override

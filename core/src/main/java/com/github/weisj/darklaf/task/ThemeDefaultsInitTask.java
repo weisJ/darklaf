@@ -40,7 +40,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private static final String GLOBAL_PREFIX = "global.";
     private static final String MAC_OS_MENU_BAR_KEY = "apple.laf.useScreenMenuBar";
-    private static final String[] UI_PROPERTIES = new String[]{"borders", "button", "checkBox", "colorChooser",
+    private static final String[] UI_PROPERTIES = new String[]{"borders", "button", "cell", "checkBox", "colorChooser",
                                                                "comboBox", "fileChooser", "tristate",
                                                                "internalFrame", "label", "list", "menu", "menuBar",
                                                                "menuItem", "numberingPane", "optionPane", "panel",

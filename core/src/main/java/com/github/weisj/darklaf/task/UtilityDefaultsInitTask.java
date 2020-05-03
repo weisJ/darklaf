@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.AwareIconStyle;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 
 public class UtilityDefaultsInitTask implements DefaultsInitTask {
     @Override
@@ -54,6 +55,8 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
 
         IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(currentTheme);
+
+        CellUtil.updateColors(defaults);
     }
 
     private float getOpacity(final UIDefaults defaults, final String key) {

@@ -74,11 +74,17 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
         }
         Component comp;
         if (parent != null) {
+            if (parent instanceof JLabel) {
+                ((JLabel) parent).setIcon(null);
+                ((JLabel) parent).setDisabledIcon(null);
+            }
             comp = parent.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, isFocused);
         } else {
+            setIcon(null);
+            setDisabledIcon(null);
             comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, isFocused);
         }
-        CellUtil.setupForeground(comp, tree, sel, getTextSelectionColor(), "Tree.selectionForegroundInactive");
+        CellUtil.setupTreeForeground(comp, tree, sel);
         return comp;
     }
 

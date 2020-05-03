@@ -39,6 +39,8 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -50,7 +52,6 @@ import com.github.weisj.darklaf.util.SystemInfo;
 public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
     protected static final String KEY_PREFIX = "JTree.";
-    public static final String KEY_TREE_TABLE_TREE = KEY_PREFIX + "treeTableTree";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
     public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
     public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
@@ -107,12 +108,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             }
         }
     };
-    protected Color alternativeBackground;
     protected Color lineColor;
     protected Color focusSelectedLineColor;
     protected Color selectedLineColor;
-    protected Color selectionBackground;
-    protected Color focusSelectionBackground;
     protected Icon expandedFocusSelected;
     protected Icon expandedSelected;
     protected Icon expandedFocus;
@@ -121,7 +119,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected Icon collapsedSelected;
     protected Icon collapsedFocus;
     protected Icon collapsed;
-    private boolean myOldRepaintAllRowValue;
+    private boolean oldRepaintAllRowValue;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTreeUI();
@@ -144,7 +142,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void completeUIInstall() {
         super.completeUIInstall();
-        myOldRepaintAllRowValue = UIManager.getBoolean("Tree.repaintWholeRow");
+        oldRepaintAllRowValue = UIManager.getBoolean("Tree.repaintWholeRow");
         UIManager.put("Tree.repaintWholeRow", true);
         tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR,
                                UIManager.getBoolean("Tree.alternateRowColor"));
@@ -153,13 +151,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        rendererPane = createCellRendererPane();
         LookAndFeel.installColors(tree, "Tree.background", "Tree.foreground");
-        selectionBackground = UIManager.getColor("Tree.unfocusedSelectionBackground");
-        focusSelectionBackground = UIManager.getColor("Tree.selectionBackground");
         focusSelectedLineColor = UIManager.getColor("Tree.lineFocusSelected");
         selectedLineColor = UIManager.getColor("Tree.lineSelected");
         lineColor = UIManager.getColor("Tree.lineUnselected");
-        alternativeBackground = UIManager.getColor("Tree.alternateRowBackground");
         expandedFocusSelected = UIManager.getIcon("Tree.expanded.selected.focused.icon");
         expandedSelected = UIManager.getIcon("Tree.expanded.selected.unfocused.icon");
         expandedFocus = UIManager.getIcon("Tree.expanded.unselected.focused.icon");
@@ -172,6 +168,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         PropertyUtil.installProperty(tree, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Tree.booleanRenderType"));
         PropertyUtil.installProperty(tree, KEY_LINE_STYLE, UIManager.getString("Tree.defaultLineStyle"));
         LookAndFeel.installProperty(tree, JTree.SHOWS_ROOT_HANDLES_PROPERTY, true);
+    }
+
+    protected CellRendererPane createCellRendererPane() {
+        return new DarkCellRendererPane();
     }
 
     @Override
@@ -361,7 +361,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void uninstallDefaults() {
         super.uninstallDefaults();
-        UIManager.put("Tree.repaintWholeRow", myOldRepaintAllRowValue);
+        UIManager.put("Tree.repaintWholeRow", oldRepaintAllRowValue);
     }
 
     @Override
@@ -523,7 +523,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             Graphics2D rowGraphics = (Graphics2D) g.create();
             rowGraphics.setClip(clipBounds);
 
-            rowGraphics.setColor(getRowBackground(row, selected));
+            rowGraphics.setColor(CellUtil.getTreeBackground(tree, selected, row));
             rowGraphics.fillRect(xOffset, bounds.y, containerWidth, bounds.height);
 
             rowGraphics.dispose();
@@ -535,18 +535,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         super.updateRenderer();
         if (!(currentCellRenderer instanceof DarkTreeCellRenderer)) {
             currentCellRenderer = new DarkTreeCellRenderer(currentCellRenderer);
-        }
-    }
-
-    protected Color getRowBackground(final int row, final boolean selected) {
-        if (selected) {
-            boolean isTableTree = PropertyUtil.getBooleanProperty(tree, KEY_TREE_TABLE_TREE);
-            return getTreeSelectionBackground(hasFocus() || isTableTree || tree.isEditing());
-        }
-        if (row % 2 == 1 && PropertyUtil.getBooleanProperty(tree, KEY_ALTERNATE_ROW_COLOR)) {
-            return alternativeBackground;
-        } else {
-            return tree.getBackground();
         }
     }
 
@@ -579,10 +567,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         } else {
             return focused ? collapsedFocus : collapsed;
         }
-    }
-
-    protected Color getTreeSelectionBackground(final boolean focused) {
-        return focused ? focusSelectionBackground : selectionBackground;
     }
 
     protected String getLineStyle() {

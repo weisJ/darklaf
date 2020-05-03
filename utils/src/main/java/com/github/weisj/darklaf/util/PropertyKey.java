@@ -36,6 +36,7 @@ public class PropertyKey {
     public static final String OPAQUE = "opaque";
     public static final String ANCESTOR = "ancestor";
     public static final String EDITABLE = "editable";
+    public static final String ENABLED = "enabled";
     public static final String BACKGROUND = "background";
     public static final String FOREGROUND = "foreground";
     public static final String FONT = "font";

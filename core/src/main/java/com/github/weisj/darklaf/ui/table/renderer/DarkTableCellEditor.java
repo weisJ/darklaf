@@ -20,9 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-package com.github.weisj.darklaf.ui.table;
+package com.github.weisj.darklaf.ui.table.renderer;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -44,6 +43,8 @@ import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.combobox.DarkComboBoxUI;
 import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
 import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -241,9 +242,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         setupEditorComponent(value, rendererComp);
         comp = applyRendererIcon(comp, rendererComp);
 
-        CellUtil.setupBackground(comp, table, false, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "Table.alternateRowBackground",
-                                 "Table.selectionNoFocusBackground");
+        CellUtil.setupTableBackground(comp, table, false, row);
         return comp;
     }
 

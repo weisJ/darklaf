@@ -51,6 +51,12 @@ public final class ListDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(list, new BorderLayout(), 0);
 
         JPanel controlPanel = panel.addControls();
+        controlPanel.add(new JCheckBox("enabled") {
+            {
+                setSelected(list.isEnabled());
+                addActionListener(e -> list.setEnabled(isSelected()));
+            }
+        });
         controlPanel.add(new JCheckBox(DarkListUI.KEY_ALTERNATE_ROW_COLOR) {
             {
                 setSelected(PropertyUtil.getBooleanProperty(list, DarkListUI.KEY_ALTERNATE_ROW_COLOR));

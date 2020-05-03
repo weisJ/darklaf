@@ -30,7 +30,9 @@ import javax.swing.*;
 import javax.swing.plaf.ListUI;
 
 import com.github.weisj.darklaf.ui.list.DarkListUI;
-import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -38,55 +40,309 @@ public class CellUtil {
 
     public static final String KEY_SELECTED_CELL_RENDERER = "JComponent.selectedCellRenderer";
 
+    // Default Colors
+    private static Color cellForeground;
+    private static Color cellForegroundSelected;
+    private static Color cellForegroundNoFocus;
+    private static Color cellForegroundSelectedNoFocus;
+
+    private static Color cellInactiveForeground;
+    private static Color cellInactiveForegroundSelected;
+    private static Color cellInactiveForegroundNoFocus;
+    private static Color cellInactiveForegroundSelectedNoFocus;
+
+    private static Color cellBackground;
+    private static Color cellBackgroundAlternative;
+    private static Color cellBackgroundSelected;
+    private static Color cellBackgroundNoFocus;
+    private static Color cellBackgroundNoFocusAlternative;
+    private static Color cellBackgroundSelectedNoFocus;
+
+    private static Color cellInactiveBackground;
+    private static Color cellInactiveBackgroundAlternative;
+    private static Color cellInactiveBackgroundSelected;
+    private static Color cellInactiveBackgroundNoFocus;
+    private static Color cellInactiveBackgroundNoFocusAlternative;
+    private static Color cellInactiveBackgroundSelectedNoFocus;
+
+    // Table Colors
+    private static Color tableCellForeground;
+    private static Color tableCellForegroundSelected;
+    private static Color tableCellForegroundNoFocus;
+    private static Color tableCellForegroundSelectedNoFocus;
+
+    private static Color tableCellInactiveForeground;
+    private static Color tableCellInactiveForegroundSelected;
+    private static Color tableCellInactiveForegroundNoFocus;
+    private static Color tableCellInactiveForegroundSelectedNoFocus;
+
+    private static Color tableCellBackground;
+    private static Color tableCellBackgroundAlternative;
+    private static Color tableCellBackgroundSelected;
+    private static Color tableCellBackgroundNoFocus;
+    private static Color tableCellBackgroundNoFocusAlternative;
+    private static Color tableCellBackgroundSelectedNoFocus;
+
+    private static Color tableCellInactiveBackground;
+    private static Color tableCellInactiveBackgroundAlternative;
+    private static Color tableCellInactiveBackgroundSelected;
+    private static Color tableCellInactiveBackgroundNoFocus;
+    private static Color tableCellInactiveBackgroundNoFocusAlternative;
+    private static Color tableCellInactiveBackgroundSelectedNoFocus;
+
+    // Tree Colors
+    private static Color treeCellForeground;
+    private static Color treeCellForegroundSelected;
+    private static Color treeCellForegroundNoFocus;
+    private static Color treeCellForegroundSelectedNoFocus;
+
+    private static Color treeCellInactiveForeground;
+    private static Color treeCellInactiveForegroundSelected;
+    private static Color treeCellInactiveForegroundNoFocus;
+    private static Color treeCellInactiveForegroundSelectedNoFocus;
+
+    private static Color treeCellBackground;
+    private static Color treeCellBackgroundAlternative;
+    private static Color treeCellBackgroundSelected;
+    private static Color treeCellBackgroundNoFocus;
+    private static Color treeCellBackgroundNoFocusAlternative;
+    private static Color treeCellBackgroundSelectedNoFocus;
+
+    private static Color treeCellInactiveBackground;
+    private static Color treeCellInactiveBackgroundAlternative;
+    private static Color treeCellInactiveBackgroundSelected;
+    private static Color treeCellInactiveBackgroundNoFocus;
+    private static Color treeCellInactiveBackgroundNoFocusAlternative;
+    private static Color treeCellInactiveBackgroundSelectedNoFocus;
+
+    // List Colors
+    private static Color listCellForeground;
+    private static Color listCellForegroundSelected;
+    private static Color listCellForegroundNoFocus;
+    private static Color listCellForegroundSelectedNoFocus;
+
+    private static Color listCellInactiveForeground;
+    private static Color listCellInactiveForegroundSelected;
+    private static Color listCellInactiveForegroundNoFocus;
+    private static Color listCellInactiveForegroundSelectedNoFocus;
+
+    private static Color listCellBackground;
+    private static Color listCellBackgroundAlternative;
+    private static Color listCellBackgroundSelected;
+    private static Color listCellBackgroundNoFocus;
+    private static Color listCellBackgroundNoFocusAlternative;
+    private static Color listCellBackgroundSelectedNoFocus;
+
+    private static Color listCellInactiveBackground;
+    private static Color listCellInactiveBackgroundAlternative;
+    private static Color listCellInactiveBackgroundSelected;
+    private static Color listCellInactiveBackgroundNoFocus;
+    private static Color listCellInactiveBackgroundNoFocusAlternative;
+    private static Color listCellInactiveBackgroundSelectedNoFocus;
+
+    public static void updateColors(final UIDefaults defaults) {
+        UIDefaults d = defaults != null ? defaults : UIManager.getDefaults();
+        // Default colors
+        cellForeground = d.getColor("Cell.foreground");
+        cellForegroundSelected = d.getColor("Cell.foregroundSelected");
+        cellForegroundNoFocus = d.getColor("Cell.foregroundNoFocus");
+        cellForegroundSelectedNoFocus = d.getColor("Cell.foregroundSelectedNoFocus");
+
+        cellInactiveForeground = d.getColor("Cell.inactiveForeground");
+        cellInactiveForegroundSelected = d.getColor("Cell.inactiveForegroundSelected");
+        cellInactiveForegroundNoFocus = d.getColor("Cell.inactiveForegroundNoFocus");
+        cellInactiveForegroundSelectedNoFocus = d.getColor("Cell.inactiveSelectedNoFocus");
+
+        cellBackground = d.getColor("Cell.background");
+        cellBackgroundAlternative = d.getColor("Cell.backgroundAlternative");
+        cellBackgroundSelected = d.getColor("Cell.backgroundSelected");
+        cellBackgroundNoFocus = d.getColor("Cell.backgroundNoFocus");
+        cellBackgroundNoFocusAlternative = d.getColor("Cell.backgroundNoFocusAlternative");
+        cellBackgroundSelectedNoFocus = d.getColor("Cell.backgroundSelectedNoFocus");
+
+        cellInactiveBackground = d.getColor("Cell.inactiveBackground");
+        cellInactiveBackgroundAlternative = d.getColor("Cell.inactiveBackgroundAlternative");
+        cellInactiveBackgroundSelected = d.getColor("Cell.inactiveBackgroundSelected");
+        cellInactiveBackgroundNoFocus = d.getColor("Cell.inactiveBackgroundNoFocus");
+        cellInactiveBackgroundNoFocusAlternative = d.getColor("Cell.inactiveBackgroundNoFocusAlternative");
+        cellInactiveBackgroundSelectedNoFocus = d.getColor("Cell.inactiveBackgroundSelectedNoFocus");
+
+        // Table colors
+        tableCellForeground = d.getColor("Table.foreground");
+        tableCellForegroundSelected = d.getColor("Table.foregroundSelected");
+        tableCellForegroundNoFocus = d.getColor("Table.foregroundNoFocus");
+        tableCellForegroundSelectedNoFocus = d.getColor("Table.foregroundSelectedNoFocus");
+
+        tableCellInactiveForeground = d.getColor("Table.inactiveForeground");
+        tableCellInactiveForegroundSelected = d.getColor("Table.inactiveForegroundSelected");
+        tableCellInactiveForegroundNoFocus = d.getColor("Table.inactiveForegroundNoFocus");
+        tableCellInactiveForegroundSelectedNoFocus = d.getColor("Table.inactiveSelectedNoFocus");
+
+        tableCellBackground = d.getColor("Table.background");
+        tableCellBackgroundAlternative = d.getColor("Table.backgroundAlternative");
+        tableCellBackgroundSelected = d.getColor("Table.backgroundSelected");
+        tableCellBackgroundNoFocus = d.getColor("Table.backgroundNoFocus");
+        tableCellBackgroundNoFocusAlternative = d.getColor("Table.backgroundNoFocusAlternative");
+        tableCellBackgroundSelectedNoFocus = d.getColor("Table.backgroundSelectedNoFocus");
+
+        tableCellInactiveBackground = d.getColor("Table.inactiveBackground");
+        tableCellInactiveBackgroundAlternative = d.getColor("Table.inactiveBackgroundAlternative");
+        tableCellInactiveBackgroundSelected = d.getColor("Table.inactiveBackgroundSelected");
+        tableCellInactiveBackgroundNoFocus = d.getColor("Table.inactiveBackgroundNoFocus");
+        tableCellInactiveBackgroundNoFocusAlternative = d.getColor("Table.inactiveBackgroundNoFocusAlternative");
+        tableCellInactiveBackgroundSelectedNoFocus = d.getColor("Table.inactiveBackgroundSelectedNoFocus");
+
+        // Tree colors
+        treeCellForeground = d.getColor("Tree.foreground");
+        treeCellForegroundSelected = d.getColor("Tree.foregroundSelected");
+        treeCellForegroundNoFocus = d.getColor("Tree.foregroundNoFocus");
+        treeCellForegroundSelectedNoFocus = d.getColor("Tree.foregroundSelectedNoFocus");
+
+        treeCellInactiveForeground = d.getColor("Tree.inactiveForeground");
+        treeCellInactiveForegroundSelected = d.getColor("Tree.inactiveForegroundSelected");
+        treeCellInactiveForegroundNoFocus = d.getColor("Tree.inactiveForegroundNoFocus");
+        treeCellInactiveForegroundSelectedNoFocus = d.getColor("Tree.inactiveSelectedNoFocus");
+
+        treeCellBackground = d.getColor("Tree.background");
+        treeCellBackgroundAlternative = d.getColor("Tree.backgroundAlternative");
+        treeCellBackgroundSelected = d.getColor("Tree.backgroundSelected");
+        treeCellBackgroundNoFocus = d.getColor("Tree.backgroundNoFocus");
+        treeCellBackgroundNoFocusAlternative = d.getColor("Tree.backgroundNoFocusAlternative");
+        treeCellBackgroundSelectedNoFocus = d.getColor("Tree.backgroundSelectedNoFocus");
+
+        treeCellInactiveBackground = d.getColor("Tree.inactiveBackground");
+        treeCellInactiveBackgroundAlternative = d.getColor("Tree.inactiveBackgroundAlternative");
+        treeCellInactiveBackgroundSelected = d.getColor("Tree.inactiveBackgroundSelected");
+        treeCellInactiveBackgroundNoFocus = d.getColor("Tree.inactiveBackgroundNoFocus");
+        treeCellInactiveBackgroundNoFocusAlternative = d.getColor("Tree.inactiveBackgroundNoFocusAlternative");
+        treeCellInactiveBackgroundSelectedNoFocus = d.getColor("Tree.inactiveBackgroundSelectedNoFocus");
+
+        // List colors
+        listCellForeground = d.getColor("List.foreground");
+        listCellForegroundSelected = d.getColor("List.foregroundSelected");
+        listCellForegroundNoFocus = d.getColor("List.foregroundNoFocus");
+        listCellForegroundSelectedNoFocus = d.getColor("List.foregroundSelectedNoFocus");
+
+        listCellInactiveForeground = d.getColor("List.inactiveForeground");
+        listCellInactiveForegroundSelected = d.getColor("List.inactiveForegroundSelected");
+        listCellInactiveForegroundNoFocus = d.getColor("List.inactiveForegroundNoFocus");
+        listCellInactiveForegroundSelectedNoFocus = d.getColor("List.inactiveSelectedNoFocus");
+
+        listCellBackground = d.getColor("List.background");
+        listCellBackgroundAlternative = d.getColor("List.backgroundAlternative");
+        listCellBackgroundSelected = d.getColor("List.backgroundSelected");
+        listCellBackgroundNoFocus = d.getColor("List.backgroundNoFocus");
+        listCellBackgroundNoFocusAlternative = d.getColor("List.backgroundNoFocusAlternative");
+        listCellBackgroundSelectedNoFocus = d.getColor("List.backgroundSelectedNoFocus");
+
+        listCellInactiveBackground = d.getColor("List.inactiveBackground");
+        listCellInactiveBackgroundAlternative = d.getColor("List.inactiveBackgroundAlternative");
+        listCellInactiveBackgroundSelected = d.getColor("List.inactiveBackgroundSelected");
+        listCellInactiveBackgroundNoFocus = d.getColor("List.inactiveBackgroundNoFocus");
+        listCellInactiveBackgroundNoFocusAlternative = d.getColor("List.inactiveBackgroundNoFocusAlternative");
+        listCellInactiveBackgroundSelectedNoFocus = d.getColor("List.inactiveBackgroundSelectedNoFocus");
+    }
+
+    public static void setupTableForeground(final Component comp, final JTable parent, final boolean selected) {
+        setupForeground(comp, parent, selected,
+                        tableCellForeground, tableCellForegroundSelected,
+                        tableCellForegroundNoFocus, tableCellForegroundSelectedNoFocus,
+                        tableCellInactiveForeground, tableCellInactiveForegroundSelected,
+                        tableCellInactiveForegroundNoFocus, tableCellInactiveForegroundSelectedNoFocus);
+    }
+
+    public static void setupTreeForeground(final Component comp, final JTree parent, final boolean selected) {
+        setupForeground(comp, parent, selected,
+                        treeCellForeground, treeCellForegroundSelected,
+                        treeCellForegroundNoFocus, treeCellForegroundSelectedNoFocus,
+                        treeCellInactiveForeground, treeCellInactiveForegroundSelected,
+                        treeCellInactiveForegroundNoFocus, treeCellInactiveForegroundSelectedNoFocus);
+    }
+
+    public static void setupListForeground(final Component comp, final JList<?> parent, final boolean selected) {
+        setupForeground(comp, parent, selected,
+                        listCellForeground, listCellForegroundSelected,
+                        listCellForegroundNoFocus, listCellForegroundSelectedNoFocus,
+                        listCellInactiveForeground, listCellInactiveForegroundSelected,
+                        listCellInactiveForegroundNoFocus, listCellInactiveForegroundSelectedNoFocus);
+    }
+
+    public static void setupStandardForeground(final Component comp, final JComponent parent, final boolean selected) {
+        setupForeground(comp, parent, selected,
+                        cellForeground, cellForegroundSelected,
+                        cellForegroundNoFocus, cellForegroundSelectedNoFocus,
+                        cellInactiveForeground, cellInactiveForegroundSelected,
+                        cellInactiveForegroundNoFocus, cellInactiveForegroundSelectedNoFocus);
+    }
+
     public static void setupForeground(final Component comp, final JComponent parent, final boolean selected,
-                                       final String activeKey, final String inactiveKey) {
-        setupForeground(comp, parent, selected, UIManager.getColor(activeKey), inactiveKey);
+                                       final Color fg, final Color selFg,
+                                       final Color fgNoFocus, final Color selFgNoFocus,
+                                       final Color inactiveFg, final Color inactiveSelFg,
+                                       final Color inactiveFgNoFocus, final Color inactiveSelFgNoFocus) {
+        boolean enabled = comp.isEnabled() && parent.isEnabled();
+        boolean focus = hasFocus(parent, comp);
+        setupForeground(comp, parent, focus, selected, enabled, fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg,
+                        inactiveSelFg, inactiveFgNoFocus, inactiveSelFgNoFocus);
     }
 
-    public static void setupForeground(final Component comp, final JTable parent, final boolean selected,
-                                       final String inactiveKey) {
-        setupForeground(comp, parent, selected, parent.getSelectionForeground(), inactiveKey);
-    }
-
-    public static void setupForeground(final Component comp, final JComponent parent, final boolean selected,
-                                       final Color activeColor, final String inactiveKey) {
-        if (selected) {
-            if (DarkUIUtil.hasFocus(parent)) {
-                comp.setForeground(activeColor);
-            } else {
-                comp.setForeground(UIManager.getColor(inactiveKey));
-            }
-        } else {
-            comp.setForeground(parent.getForeground());
-        }
-        setSelectedFlag(comp, selected);
-    }
-
-    public static void setSelectedFlag(final Component comp, final boolean selected) {
-        if (comp instanceof JComponent) {
-            ((JComponent) comp).putClientProperty(KEY_SELECTED_CELL_RENDERER, selected);
+    public static void setupForeground(final Component comp, final JComponent parent,
+                                       final boolean focus, final boolean selected, final boolean enabled,
+                                       final Color fg, final Color selFg,
+                                       final Color fgNoFocus, final Color selFgNoFocus,
+                                       final Color inactiveFg, final Color inactiveSelFg,
+                                       final Color inactiveFgNoFocus, final Color inactiveSelFgNoFocus) {
+        Color c = getColor(enabled, selected, focus,
+                           fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg, inactiveSelFg,
+                           inactiveFgNoFocus, inactiveSelFgNoFocus);
+        if (c != null) {
+            comp.setForeground(c);
         }
     }
 
-    public static void setupBackground(final Component comp, final JTable parent,
-                                       final boolean selected, final int row,
-                                       final String altBgKey, final String altColorKey,
-                                       final String noFocusSelectionBgKey) {
-        setupBackground(comp, parent, selected, row, altBgKey, parent.getBackground(), altColorKey,
-                        parent.getSelectionBackground(), noFocusSelectionBgKey);
+    public static void setupTableBackground(final Component comp, final JTable parent, final boolean selected,
+                                            final int row) {
+        boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTableUI.KEY_ALTERNATE_ROW_COLOR);
+        setupBackground(comp, hasFocus(parent, comp), selected,
+                        alt ? tableCellBackgroundAlternative : tableCellBackground,
+                        tableCellBackgroundSelected,
+                        alt ? tableCellBackgroundNoFocusAlternative : tableCellBackgroundNoFocus,
+                        tableCellBackgroundSelectedNoFocus,
+                        alt ? tableCellInactiveBackgroundAlternative : tableCellInactiveBackground,
+                        tableCellInactiveBackgroundSelected,
+                        alt ? tableCellInactiveBackgroundNoFocusAlternative : tableCellInactiveBackgroundNoFocus,
+                        tableCellInactiveBackgroundSelectedNoFocus);
     }
 
-    public static void setupBackground(final Component comp, final JTable parent,
-                                       final boolean selected, final int row,
-                                       final String altBgKey, final String colorKey, final String altColorKey,
-                                       final String noFocusSelectionBgKey) {
-        setupBackground(comp, parent, selected, row, altBgKey, UIManager.getColor(colorKey),
-                        altColorKey, parent.getSelectionBackground(), noFocusSelectionBgKey);
+    public static void setupTreeBackground(final Component comp, final JTree parent, final boolean selected,
+                                           final int row) {
+        boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
+        setupBackground(comp, hasFocus(parent, comp), selected,
+                        alt ? treeCellBackgroundAlternative : treeCellBackground,
+                        treeCellBackgroundSelected,
+                        alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
+                        treeCellBackgroundSelectedNoFocus,
+                        alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground,
+                        treeCellInactiveBackgroundSelected,
+                        alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
+                        treeCellInactiveBackgroundSelectedNoFocus);
     }
 
-    public static void setupBackground(final Component comp, final JList<?> parent, final boolean selected,
-                                       final int index, final String altBgKey, final String altColorKey,
-                                       final String noFocusSelectionBgKey) {
+    public static Color getTreeBackground(final JTree tree, final boolean selected, final int row) {
+        boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(tree, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
+        return getColor(tree.isEnabled(), selected, hasFocus(tree, tree),
+                        alt ? treeCellBackgroundAlternative : treeCellBackground,
+                        treeCellBackgroundSelected,
+                        alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
+                        treeCellBackgroundSelectedNoFocus,
+                        alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground,
+                        treeCellInactiveBackgroundSelected,
+                        alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
+                        treeCellInactiveBackgroundSelectedNoFocus);
+    }
+
+    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
+                                           final int index) {
         int layout = parent.getLayoutOrientation();
         boolean altRow = false;
         if (layout == JList.VERTICAL) {
@@ -100,25 +356,85 @@ public class CellUtil {
                 altRow = false;
             }
         }
-        setupBackground(comp, parent, selected, altRow ? 1 : 0, altBgKey, parent.getBackground(),
-                        altColorKey, parent.getSelectionBackground(), noFocusSelectionBgKey);
+        boolean alt = altRow && PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_ALTERNATE_ROW_COLOR);
+        setupBackground(comp, hasFocus(parent, comp), selected,
+                        alt ? listCellBackgroundAlternative : listCellBackground,
+                        listCellBackgroundSelected,
+                        alt ? listCellBackgroundNoFocusAlternative : listCellBackgroundNoFocus,
+                        listCellBackgroundSelectedNoFocus,
+                        alt ? listCellInactiveBackgroundAlternative : listCellInactiveBackground,
+                        listCellInactiveBackgroundSelected,
+                        alt ? listCellInactiveBackgroundNoFocusAlternative : listCellInactiveBackgroundNoFocus,
+                        listCellInactiveBackgroundSelectedNoFocus);
     }
 
-    protected static void setupBackground(final Component comp, final JComponent parent,
-                                          final boolean selected, final int row,
-                                          final String altBgKey, final Color bgColor, final String altColorKey,
-                                          final Color selectionBackground, final String noFocusSelectionBgKey) {
-        boolean alternativeRow = PropertyUtil.getBooleanProperty(parent, altBgKey);
-        Color alternativeRowColor = UIManager.getColor(altColorKey);
-        Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : bgColor;
-        if (selected) {
-            if (DarkUIUtil.hasFocus(parent)) {
-                comp.setBackground(selectionBackground);
+    public static void setupStandardBackground(final Component comp, final JComponent parent, final boolean selected) {
+        setupBackground(comp, hasFocus(parent, comp), selected,
+                        cellBackground, cellBackgroundSelected,
+                        cellBackgroundNoFocus, cellBackgroundSelectedNoFocus,
+                        cellInactiveBackground, cellInactiveBackgroundSelected,
+                        cellInactiveBackgroundNoFocus, cellInactiveBackgroundSelectedNoFocus);
+    }
+
+    public static void setupBackground(final Component comp, final boolean focus, final boolean selected,
+                                       final Color bg, final Color selBg,
+                                       final Color bgNoFocus, final Color selBgNoFocus,
+                                       final Color inactiveBg, final Color inactiveSelBg,
+                                       final Color inactiveBgNoFocus, final Color inactiveSelBgNoFocus) {
+        boolean enabled = comp.isEnabled();
+        Color c = getColor(enabled, selected, focus,
+                           bg, selBg, bgNoFocus, selBgNoFocus, inactiveBg, inactiveSelBg,
+                           inactiveBgNoFocus, inactiveSelBgNoFocus);
+        if (c != null) {
+            comp.setBackground(c);
+        }
+    }
+
+    public static Color getColor(final boolean enabled, final boolean selected, final boolean focus,
+                                 final Color color, final Color selColor,
+                                 final Color colorNoFocus, final Color selColorNoFocus,
+                                 final Color inactiveColor, final Color inactiveSelColor,
+                                 final Color inactiveColorNoFocus, final Color inactiveSelColorNoFocus) {
+        Color c;
+        if (enabled) {
+            if (selected) {
+                if (focus) {
+                    c = selColor;
+                } else {
+                    c = selColorNoFocus;
+                }
             } else {
-                comp.setBackground(UIManager.getColor(noFocusSelectionBgKey));
+                if (focus) {
+                    c = color;
+                } else {
+                    c = colorNoFocus;
+                }
             }
         } else {
-            comp.setBackground(background);
+            if (selected) {
+                if (focus) {
+                    c = inactiveSelColor;
+                } else {
+                    c = inactiveSelColorNoFocus;
+                }
+            } else {
+                if (focus) {
+                    c = inactiveColor;
+                } else {
+                    c = inactiveColorNoFocus;
+                }
+            }
+        }
+        return c;
+    }
+
+    protected static boolean hasFocus(final Component c, final Component comp) {
+        return comp.hasFocus() || (DarkUIUtil.hasFocus(c) || DarkUIUtil.getParentOfType(JPopupMenu.class, c) != null);
+    }
+
+    public static void setSelectedFlag(final Component comp, final boolean selected) {
+        if (comp instanceof JComponent) {
+            ((JComponent) comp).putClientProperty(KEY_SELECTED_CELL_RENDERER, selected);
         }
     }
 

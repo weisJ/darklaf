@@ -48,9 +48,9 @@ import sun.awt.shell.ShellFolderColumnInfo;
 import sun.swing.FilePane;
 
 import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
-import com.github.weisj.darklaf.ui.table.DarkTableCellEditor;
-import com.github.weisj.darklaf.ui.table.DarkTableCellRenderer;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /**

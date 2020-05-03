@@ -42,6 +42,10 @@ import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
+import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -99,10 +103,12 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
                    || KEY_RENDER_BOOLEAN_AS_CHECKBOX.equals(key)
                    || KEY_BOOLEAN_RENDER_TYPE.equals(key)) {
             table.repaint();
+        } else if (PropertyKey.ENABLED.equals(key)) {
+            DarkUIUtil.repaint(table.getTableHeader());
         }
     };
+    protected Color selectionBackgroundNoFocus;
     protected Color selectionBackground;
-    protected Color selectionFocusBackground;
     protected Color borderColor;
 
     public static ComponentUI createUI(final JComponent c) {
@@ -116,7 +122,6 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
-        table.setSurrendersFocusOnKeystroke(true);
     }
 
     @Override
@@ -138,7 +143,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
     public void focusGained(final FocusEvent e) {
         Color bg = table.getSelectionBackground();
         if (bg instanceof UIResource) {
-            table.setSelectionBackground(selectionFocusBackground);
+            table.setSelectionBackground(selectionBackground);
         }
         table.repaint();
     }
@@ -150,7 +155,7 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
             if (table.isEditing()) {
                 table.setSelectionBackground(table.getBackground());
             } else {
-                table.setSelectionBackground(selectionBackground);
+                table.setSelectionBackground(selectionBackgroundNoFocus);
             }
         }
         table.repaint();
@@ -168,6 +173,33 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         super.uninstallDefaults();
         Container oldUnwrapped = DarkUIUtil.getUnwrappedParent(table.getParent());
         LookAndFeel.uninstallBorder((JComponent) oldUnwrapped);
+    }
+
+    protected Color getBorderColor() {
+        return borderColor;
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        int rowHeight = UIManager.getInt("Table.rowHeight");
+        if (rowHeight > 0) {
+            LookAndFeel.installProperty(table, "rowHeight", ROW_HEIGHT_FALLBACK);
+        }
+        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
+        PropertyUtil.installBooleanProperty(table, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Table.renderBooleanAsCheckBox");
+        PropertyUtil.installBooleanProperty(table, KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowColor");
+        PropertyUtil.installProperty(table, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
+        setupRendererComponents(table);
+        borderColor = UIManager.getColor("TableHeader.borderColor");
+        selectionBackground = UIManager.getColor("Table.backgroundSelected");
+        selectionBackgroundNoFocus = UIManager.getColor("Table.backgroundSelectedNoFocus");
+        rendererPane = createCellRendererPane();
+        table.setSurrendersFocusOnKeystroke(true);
+    }
+
+    protected CellRendererPane createCellRendererPane() {
+        return new DarkCellRendererPane();
     }
 
     protected static void setupRendererComponents(final JTable table) {
@@ -190,27 +222,6 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         table.setDefaultEditor(Float.class, cellEditor);
         table.setDefaultEditor(Boolean.class, cellEditor);
         table.setDefaultEditor(Color.class, colorRendererEditor);
-    }
-
-    protected Color getBorderColor() {
-        return borderColor;
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        int rowHeight = UIManager.getInt("Table.rowHeight");
-        if (rowHeight > 0) {
-            LookAndFeel.installProperty(table, "rowHeight", ROW_HEIGHT_FALLBACK);
-        }
-        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
-        PropertyUtil.installBooleanProperty(table, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Table.renderBooleanAsCheckBox");
-        PropertyUtil.installBooleanProperty(table, KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowColor");
-        PropertyUtil.installProperty(table, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
-        setupRendererComponents(table);
-        borderColor = UIManager.getColor("TableHeader.borderColor");
-        selectionFocusBackground = UIManager.getColor("Table.focusSelectionBackground");
-        selectionBackground = UIManager.getColor("Table.selectionNoFocusBackground");
     }
 
     protected void checkFocus() {
@@ -581,8 +592,8 @@ public class DarkTableUI extends DarkTableUIBridge implements FocusListener {
         }
     }
 
-    protected static int adjustDistance(final int distance, final Rectangle rect,
-                                        final JTable comp) {
+    public static int adjustDistance(final int distance, final Rectangle rect,
+                                     final JTable comp) {
         int dist = distance;
         int min = 0;
         int max = comp.getX() + comp.getWidth();

@@ -36,10 +36,8 @@ import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -49,10 +47,6 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     protected static final DarkLabelUI darkLabelUI = new DarkLabelUI();
 
     private Color inactiveForeground;
-    private Color cellForegroundNoFocus;
-    private Color cellInactiveForeground;
-    private Color cellInactiveForegroundSelectedNoFocus;
-    private Color cellInactiveForegroundSelected;
 
     protected final Rectangle paintIconR = new Rectangle();
     protected final Rectangle paintTextR = new Rectangle();
@@ -75,10 +69,6 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
         super.installDefaults(c);
         LookAndFeel.installProperty(c, PropertyKey.OPAQUE, false);
         inactiveForeground = UIManager.getColor("Label.inactiveForeground");
-        cellForegroundNoFocus = UIManager.getColor("Label.cellForegroundNoFocus");
-        cellInactiveForeground = UIManager.getColor("Label.cellInactiveForeground");
-        cellInactiveForegroundSelected = UIManager.getColor("Label.cellInactiveForegroundSelected");
-        cellInactiveForegroundSelectedNoFocus = UIManager.getColor("Label.cellInactiveForegroundSelectedNoFocus");
     }
 
     @Override
@@ -113,44 +103,17 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     protected void paintEnabledText(final JLabel l, final Graphics g, final String s,
                                     final int textX, final int textY) {
         int mnemIndex = l.getDisplayedMnemonicIndex();
-        if (DarkUIUtil.isInCell(l) && !hasFocusInCell(l)) {
-            g.setColor(cellForegroundNoFocus);
-        } else {
-            g.setColor(l.getForeground());
-        }
+        g.setColor(l.getForeground());
         SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex,
                                                   textX, textY);
-    }
-
-    protected boolean hasFocusInCell(final JLabel l) {
-        return (DarkUIUtil.hasFocus(l)
-                || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTree.class, l))
-                || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JTable.class, l))
-                || DarkUIUtil.hasFocus(DarkUIUtil.getParentOfType(JList.class, l))
-                || DarkUIUtil.getParentOfType(JPopupMenu.class, l) != null);
     }
 
     @Override
     protected void paintDisabledText(final JLabel l, final Graphics g, final String s,
                                      final int textX, final int textY) {
         int accChar = l.getDisplayedMnemonicIndex();
-        if (DarkUIUtil.isInCell(l)) {
-            boolean selected = PropertyUtil.getBooleanProperty(l, CellUtil.KEY_SELECTED_CELL_RENDERER);
-            boolean focused = hasFocusInCell(l);
-            if (focused) {
-                if (selected) {
-                    g.setColor(cellInactiveForegroundSelected);
-                } else {
-                    g.setColor(cellInactiveForeground);
-                }
-            } else {
-                if (selected) {
-                    g.setColor(cellInactiveForegroundSelectedNoFocus);
-                } else {
-                    g.setColor(inactiveForeground);
-                }
-            }
-        } else {
+        g.setColor(l.getForeground());
+        if (!DarkUIUtil.isInCell(l)) {
             g.setColor(inactiveForeground);
         }
         SwingUtilities2.drawStringUnderlineCharAt(l, g, s, accChar,

@@ -20,9 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-package com.github.weisj.darklaf.ui.table;
+package com.github.weisj.darklaf.ui.table.renderer;
 
 import java.awt.*;
 import java.util.EventObject;
@@ -31,6 +30,8 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
@@ -61,9 +62,8 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
                                       && !DarkTableCellFocusBorder.isRowFocusBorder(table);
 
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
-        CellUtil.setupForeground(toggleButton, table, paintSelected, "Table.selectionForegroundInactive");
-        CellUtil.setupBackground(toggleButton, table, paintSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "Table.alternateRowBackground", "Table.selectionNoFocusBackground");
+        CellUtil.setupTableForeground(toggleButton, table, paintSelected);
+        CellUtil.setupTableBackground(toggleButton, table, paintSelected, row);
         return toggleButton;
     }
 

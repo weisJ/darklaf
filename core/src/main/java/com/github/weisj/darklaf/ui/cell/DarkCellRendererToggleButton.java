@@ -32,7 +32,6 @@ import javax.swing.tree.TreeCellRenderer;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
 import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -65,11 +64,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
                                       && focus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
-        CellUtil.setupForeground(toggleButton, table, paintSelected,
-                                 "Table.selectionForeground", "Table.selectionForegroundInactive");
-        CellUtil.setupBackground(toggleButton, table, paintSelected, row, DarkTableUI.KEY_ALTERNATE_ROW_COLOR,
-                                 "Table.background", "Table.alternateRowBackground",
-                                 "Table.selectionNoFocusBackground");
+        CellUtil.setupTableForeground(toggleButton, table, paintSelected);
+        CellUtil.setupTableBackground(toggleButton, table, paintSelected, row);
         return toggleButton;
     }
 
@@ -89,8 +85,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         toggleButton.setHorizontalAlignment(tree.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(false);
 
-        CellUtil.setupForeground(toggleButton, tree, selected,
-                                 "Tree.selectionForeground", "Tree.selectionForegroundInactive");
+        CellUtil.setupTreeForeground(toggleButton, tree, selected);
 
         return toggleButton;
     }

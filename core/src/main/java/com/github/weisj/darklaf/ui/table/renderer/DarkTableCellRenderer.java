@@ -20,9 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-package com.github.weisj.darklaf.ui.table;
+package com.github.weisj.darklaf.ui.table.renderer;
 
 import java.awt.*;
 
@@ -34,6 +33,8 @@ import javax.swing.table.TableColumn;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
+import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -69,11 +70,10 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && hasFocus && !isRowFocus;
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
+
         setupBorderStyle(table, row, column, component, isRowFocus);
-        CellUtil.setupForeground(component, table, paintSelected, "Table.selectionForegroundInactive");
-        CellUtil.setupBackground(component, table, paintSelected, row,
-                                 DarkTableUI.KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowBackground",
-                                 "Table.selectionNoFocusBackground");
+        CellUtil.setupTableForeground(component, table, paintSelected);
+        CellUtil.setupTableBackground(component, table, paintSelected, row);
         return component;
     }
 

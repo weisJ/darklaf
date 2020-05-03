@@ -43,7 +43,7 @@ import javax.swing.table.DefaultTableModel;
 import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.table.DarkColorTableCellRendererEditor;
+import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
 
 public class UIManagerDefaults implements ItemListener, ComponentDemo {
     private static final String[] COLUMN_NAMES = {"Key", "Value", "Sample"};

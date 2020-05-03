@@ -73,13 +73,19 @@ public class TreeDemo implements ComponentDemo {
                                                           final boolean leaf, final int row, final boolean hasFocus) {
                 Component component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
                                                                          hasFocus);
-                component.setEnabled(value != parent1 && value != child);
+                component.setEnabled(tree.isEnabled() && (value != parent1 && value != child));
                 return component;
             }
         });
         DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
+        controlPanel.add(new JCheckBox(PropertyKey.ENABLED) {
+            {
+                setSelected(tree.isEnabled());
+                addActionListener(e -> tree.setEnabled(isSelected()));
+            }
+        });
         controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {
             {
                 setSelected(tree.isEditable());

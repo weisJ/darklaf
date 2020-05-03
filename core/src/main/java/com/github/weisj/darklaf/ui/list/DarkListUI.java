@@ -31,6 +31,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -61,7 +62,12 @@ public class DarkListUI extends DarkListUIBridge {
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        rendererPane = createCellRendererPane();
         PropertyUtil.installBooleanProperty(list, KEY_ALTERNATE_ROW_COLOR, "List.alternateRowColor");
+    }
+
+    protected CellRendererPane createCellRendererPane() {
+        return new DarkCellRendererPane();
     }
 
     @Override

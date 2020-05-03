@@ -37,7 +37,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.InsetsUIResource;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 
 import sun.awt.SunToolkit;
@@ -45,7 +47,7 @@ import sun.awt.SunToolkit;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
-import com.github.weisj.darklaf.ui.table.DarkTableHeaderUI;
+import com.github.weisj.darklaf.ui.table.header.DarkTableHeaderRendererPane;
 
 /**
  * @author Konstantin Bulenkov
@@ -155,13 +157,11 @@ public final class DarkUIUtil {
     }
 
     public static boolean isInCell(final Component c) {
-        boolean tableHeaderCell = PropertyUtil.getBooleanProperty(c, DarkTableHeaderUI.KEY_IS_HEADER_RENDERER);
-        boolean inCellRenderer = !tableHeaderCell
-                                 && (getParentOfType(CellRendererPane.class, c) != null
-                                     || getParentOfType(TableCellRenderer.class, c) != null
-                                     || getParentOfType(TreeCellRenderer.class, c) != null
-                                     || getParentOfType(CellRenderer.class, c) != null
-                                     || getParentOfType(CellEditor.class, c) != null);
+        if (getParentOfType(DarkTableHeaderRendererPane.class, c) != null) return false;
+        boolean inCellRenderer = getParentOfType(c, CellRendererPane.class, CellEditor.class,
+                                                 TableCellRenderer.class, TableCellEditor.class,
+                                                 TreeCellRenderer.class, TreeCellEditor.class,
+                                                 ListCellRenderer.class, CellRenderer.class) != null;
         return inCellRenderer && getParentOfType(JComboBox.class, c) == null;
     }
 
@@ -170,6 +170,17 @@ public final class DarkUIUtil {
         for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
             if (cls.isAssignableFrom(eachParent.getClass())) {
                 return (T) eachParent;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T getParentOfType(final Component c, final Class<? extends T>... classes) {
+        for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
+            for (Class<? extends T> cls : classes) {
+                if (cls.isAssignableFrom(eachParent.getClass())) {
+                    return (T) eachParent;
+                }
             }
         }
         return null;

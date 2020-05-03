@@ -205,7 +205,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
 
         if (editor.isOpaque()) {
-            if (DarkUIUtil.isInCell(editor)) {
+            if (DarkUIUtil.isInCell(editor)
+                || PropertyUtil.getBooleanProperty(editor, KEY_IS_TREE_EDITOR)
+                || PropertyUtil.getBooleanProperty(editor, KEY_IS_TABLE_EDITOR)) {
                 g.setColor(getBackground(editor));
                 g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
             } else if (parent != null && parent.isOpaque()) {
