@@ -376,7 +376,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
          * processed when the text component has focus and isn't editable.
          *
          */
-        System.out.println(getEditorKit(editor));
         if (getEditorKit(editor) instanceof DefaultEditorKit) {
             if (map != null) {
                 Object obj = map.get(DefaultEditorKit.insertBreakAction);

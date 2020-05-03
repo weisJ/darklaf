@@ -28,12 +28,16 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
+import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
 
+import com.github.weisj.darklaf.ui.text.action.DeleteNextCharAction;
+import com.github.weisj.darklaf.ui.text.action.DeletePreviousCharAction;
+import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -242,7 +246,7 @@ public class DarkEditorPaneUI extends DarkTextUI {
      * Fetch an action map to use. The map for a JEditorPane is not shared because it changes with the EditorKit.
      */
     public ActionMap getActionMap() {
-        ActionMap am = super.getActionMap();
+        ActionMap am = new ActionMapUIResource();
         am.put("requestFocus", new FocusAction());
         EditorKit editorKit = getEditorKit(getComponent());
         if (editorKit != null) {
@@ -257,6 +261,11 @@ public class DarkEditorPaneUI extends DarkTextUI {
                TransferHandler.getCopyAction());
         am.put(TransferHandler.getPasteAction().getValue(Action.NAME),
                TransferHandler.getPasteAction());
+        if (editorKit instanceof DefaultEditorKit) {
+            am.put(DefaultEditorKit.deletePrevCharAction, new DeletePreviousCharAction());
+            am.put(DefaultEditorKit.deleteNextCharAction, new DeleteNextCharAction());
+            am.put(TOGGLE_INSERT, new ToggleInsertAction());
+        }
         return am;
     }
 
