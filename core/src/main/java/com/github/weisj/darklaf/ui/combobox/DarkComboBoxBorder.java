@@ -72,10 +72,10 @@ public class DarkComboBoxBorder implements Border, UIResource {
         final boolean isTreeCellEditor = ComboBoxConstants.isTreeCellEditor(comboBox);
         final boolean isCellEditor = isTableCellEditor || isTreeCellEditor;
         int bSize = !isCellEditor ? borderSize : 0;
+        int editBSize = !isCellEditor ? borderSize + 1 : 0;
 
         ui.checkFocus();
         Graphics2D g = (Graphics2D) g2;
-        GraphicsContext config = new GraphicsContext(g);
         g.translate(x, y);
 
         Color borderColor = getBorderColor(c);
@@ -98,11 +98,10 @@ public class DarkComboBoxBorder implements Border, UIResource {
             boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
             int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
             g.setColor(borderColor);
-            g.fillRect(off, bSize, 1, height - 2 * bSize);
+            g.fillRect(off, editBSize, 1, height - 2 * editBSize);
         }
 
         g.translate(-x, -y);
-        config.restore();
     }
 
     protected void paintCellBorder(final Component c, final int width, final int height,
