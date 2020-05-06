@@ -40,12 +40,15 @@ public final class ImageUtil {
 
     private static final int FRAME_ICON_SIZE = 32;
 
-    public static Image createFrameIcon(final Icon icon) {
+    public static Image createFrameIcon(final Icon icon, final Component c) {
         if (icon == null) return null;
         int w = icon.getIconWidth();
         int h = icon.getIconHeight();
-        double scaleX = Scale.SCALE_X * (((double) FRAME_ICON_SIZE) / w);
-        double scaleY = Scale.SCALE_Y * (((double) FRAME_ICON_SIZE) / h);
+        GraphicsConfiguration gc = c.getGraphicsConfiguration();
+        double sx = gc != null ? Scale.getScaleX(gc) : Scale.SCALE_X;
+        double sy = gc != null ? Scale.getScaleY(gc) : Scale.SCALE_Y;
+        double scaleX = sx * (((double) FRAME_ICON_SIZE) / w);
+        double scaleY = sy * (((double) FRAME_ICON_SIZE) / h);
         return createScaledImage(icon, scaleX, scaleY);
     }
 
@@ -108,7 +111,8 @@ public final class ImageUtil {
      * @return        image containing the captured area.
      */
     public static BufferedImage scaledImageFromComponent(final Component c, final Rectangle bounds) {
-        return scaledImageFromComponent(c, bounds, Scale.SCALE_X, Scale.SCALE_Y, true);
+        GraphicsConfiguration gc = c.getGraphicsConfiguration();
+        return scaledImageFromComponent(c, bounds, Scale.getScaleX(gc), Scale.getScaleY(gc), true);
     }
 
     /**

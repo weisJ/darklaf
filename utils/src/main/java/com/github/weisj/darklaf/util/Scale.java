@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.util;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public class Scale {
     public static final double SCALE;
@@ -39,16 +40,14 @@ public class Scale {
         SCALE = SCALE_X;
     }
 
-    public static int scale(final int i) {
-        return (int) (SCALE * i);
+    public static double scaleWidth(final double value, final GraphicsConfiguration gc) {
+        AffineTransform transform = gc.getDefaultTransform();
+        return transform.getScaleX() * value;
     }
 
-    public static float scale(final float f) {
-        return (float) (SCALE * f);
-    }
-
-    public static double scale(final double d) {
-        return SCALE * d;
+    public static double scaleHeight(final double value, final GraphicsConfiguration gc) {
+        AffineTransform transform = gc.getDefaultTransform();
+        return transform.getScaleY() * value;
     }
 
     public static int scaleWidth(final int i) {
@@ -73,5 +72,21 @@ public class Scale {
 
     public static double scaleHeight(final double d) {
         return SCALE_Y * d;
+    }
+
+    public static double getScaleX(final Graphics2D g) {
+        return g.getTransform().getScaleX();
+    }
+
+    public static double getScaleY(final Graphics2D g) {
+        return g.getTransform().getScaleY();
+    }
+
+    public static double getScaleX(final GraphicsConfiguration gc) {
+        return gc.getDefaultTransform().getScaleX();
+    }
+
+    public static double getScaleY(final GraphicsConfiguration gc) {
+        return gc.getDefaultTransform().getScaleY();
     }
 }

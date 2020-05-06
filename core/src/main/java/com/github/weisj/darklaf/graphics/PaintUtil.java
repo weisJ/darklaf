@@ -209,9 +209,12 @@ public class PaintUtil {
     public static void fillRoundRect(final Graphics2D g, final float x, final float y,
                                      final float width, final float height, final int arc,
                                      final boolean adjustForBorder) {
-        float lw = adjustForBorder ? getStrokeWidth(g) / 2f : 0;
+        int stroke = adjustForBorder ? (int) getStrokeWidth(g) : 0;
+        float lw = stroke / 2f;
+        g.translate(lw, lw);
         float arcSze = arc - lw;
-        g.fill(new RoundRectangle2D.Float(x + lw, y + lw, width - 2 * lw, height - 2 * lw, arcSze, arcSze));
+        g.fillRoundRect((int) x, (int) y, (int) width - stroke, (int) height - stroke, (int) arcSze, (int) arcSze);
+        g.translate(-lw, -lw);
     }
 
     public static Color blendColors(final Color color1, final Color color2, final double percent) {

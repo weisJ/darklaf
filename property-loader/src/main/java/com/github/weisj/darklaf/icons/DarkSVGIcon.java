@@ -103,14 +103,14 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     public void paintIcon(final Component c, final Graphics g, final int x, final int y,
                           final double rotation) {
         ensureLoaded();
-        Graphics2D g2 = (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g;
         g2.translate(x, y);
         if (rotation != 0) {
             g2.rotate(rotation, size.width / 2.0, size.height / 2.0);
         }
         icon.setPreferredSize(size);
         icon.paintIcon(c, g2, 0, 0);
-        g2.dispose();
+        g2.translate(-x, -y);
     }
 
     @Override

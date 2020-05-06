@@ -33,26 +33,28 @@ import com.github.weisj.darklaf.util.Scale;
 public class ScaledIcon implements Icon {
 
     private final Image img;
+    private final Component c;
 
-    public ScaledIcon(final Image img) {
+    public ScaledIcon(final Image img, final Component c) {
         this.img = img;
+        this.c = c;
     }
 
     @Override
     public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
-        g.scale(1.0 / Scale.SCALE_X, 1.0 / Scale.SCALE_Y);
+        g.scale(1.0 / Scale.getScaleX(g), 1.0 / Scale.getScaleY(g));
         g.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
     }
 
     @Override
     public int getIconWidth() {
-        return (int) (img.getWidth(null) / Scale.SCALE_X);
+        return (int) (img.getWidth(null) / Scale.getScaleX(c.getGraphicsConfiguration()));
     }
 
     @Override
     public int getIconHeight() {
-        return (int) (img.getHeight(null) / Scale.SCALE_Y);
+        return (int) (img.getHeight(null) / Scale.getScaleY(c.getGraphicsConfiguration()));
     }
 }

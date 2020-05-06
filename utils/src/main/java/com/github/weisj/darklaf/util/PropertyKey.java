@@ -50,4 +50,5 @@ public class PropertyKey {
     public static final String FOCUSABLE = "focusable";
     public static final String ROLLOVER = AbstractButton.ROLLOVER_ENABLED_CHANGED_PROPERTY;
     public static final String LAF = "lookAndFeel";
+    public static final String GRAPHICS_CONFIGURATION = "graphicsConfiguration";
 }
