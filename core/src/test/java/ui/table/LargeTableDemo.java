@@ -25,12 +25,13 @@
 package ui.table;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 
 import ui.ComponentDemo;
 
 public class LargeTableDemo implements ComponentDemo {
 
-    private static final int COLUMN_COUNT = 10;
+    private static final int COLUMN_COUNT = 100;
     private static final int CELL_COUNT = 5000000;
 
     public static void main(final String[] args) {
@@ -41,22 +42,9 @@ public class LargeTableDemo implements ComponentDemo {
     public JComponent createComponent() {
         JPanel holder = new JPanel();
         holder.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        Integer[] cols = new Integer[COLUMN_COUNT];
-        for (int i = 0; i < cols.length; i++) {
-            cols[i] = i;
-        }
-        Integer[][] numbers = new Integer[CELL_COUNT / COLUMN_COUNT][COLUMN_COUNT];
-        int row = 0;
-        int col = 0;
-        for (int i = 0; i < CELL_COUNT; i++) {
-            if (col >= COLUMN_COUNT) {
-                col = 0;
-                row++;
-            }
-            numbers[row][col] = i;
-            col++;
-        }
-        JTable table = new JTable(numbers, cols);
+        JTable table = new JTable();
+        table.setModel(new DarkTableModel(CELL_COUNT / COLUMN_COUNT, COLUMN_COUNT));
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         holder.add(new JScrollPane(table));
         return holder;
     }
@@ -64,5 +52,31 @@ public class LargeTableDemo implements ComponentDemo {
     @Override
     public String getTitle() {
         return "Large Table Demo";
+    }
+
+    static class DarkTableModel extends AbstractTableModel {
+
+        int rows;
+        int cols;
+
+        public DarkTableModel(final int rows, final int cols) {
+            this.rows = rows;
+            this.cols = cols;
+        }
+
+        @Override
+        public int getRowCount() {
+            return rows;
+        }
+
+        @Override
+        public int getColumnCount() {
+            return cols;
+        }
+
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            return rowIndex * cols + columnIndex;
+        }
     }
 }
