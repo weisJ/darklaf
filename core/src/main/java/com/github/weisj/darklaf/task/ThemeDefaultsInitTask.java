@@ -24,11 +24,11 @@
  */
 package com.github.weisj.darklaf.task;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Properties;
 
 import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
@@ -84,8 +84,6 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         DecorationsHandler.getSharedInstance().loadDecorationProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
         defaults.putAll(uiProps);
-
-        new HTMLEditorKit().setStyleSheet(currentTheme.loadStyleSheet());
     }
 
     private void initGlobals(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
