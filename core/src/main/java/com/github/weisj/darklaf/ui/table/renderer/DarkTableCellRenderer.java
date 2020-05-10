@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table.renderer;
 
@@ -69,7 +70,6 @@ public class DarkTableCellRenderer extends DefaultTableCellRenderer {
         boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table);
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && hasFocus && !isRowFocus;
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
-
 
         setupBorderStyle(table, row, column, component, isRowFocus);
         CellUtil.setupTableForeground(component, table, paintSelected);

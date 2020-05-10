@@ -36,14 +36,15 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTableUI;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
 import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
@@ -59,31 +60,6 @@ public abstract class TableUIBridge extends BasicTableUI {
     //
     // Instance Variables
     //
-
-    /**
-     * The instance of {@code JTable}.
-     */
-    protected JTable table;
-    /**
-     * The instance of {@code CellRendererPane}.
-     */
-    protected CellRendererPane rendererPane;
-    /**
-     * {@code KeyListener} that are attached to the {@code JTable}.
-     */
-    protected KeyListener keyListener;
-    /**
-     * {@code FocusListener} that are attached to the {@code JTable}.
-     */
-    protected FocusListener focusListener;
-    /**
-     * {@code MouseInputListener} that are attached to the {@code JTable}.
-     */
-    protected MouseInputListener mouseInputListener;
-    /**
-     * The Handler.
-     */
-    protected Handler handler;
 
     //
     // Helper class for keyboard actions
@@ -161,12 +137,9 @@ public abstract class TableUIBridge extends BasicTableUI {
     public void installUI(final JComponent c) {
         table = (JTable) c;
         super.installUI(c);
-
+        table.remove(rendererPane);
         rendererPane = new CellRendererPane();
         table.add(rendererPane);
-        installDefaults();
-        installListeners();
-        installKeyboardActions();
     }
 
     /**
@@ -177,45 +150,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      * @see #installUI #installUI
      */
     protected void installDefaults() {
-        LookAndFeel.installColorsAndFont(table, "Table.background",
-                                         "Table.foreground", "Table.font");
-        // JTable's original row height is 16. To correctly display the
-        // contents on Linux we should have set it to 18, Windows 19 and
-        // Solaris 20. As these values vary so much it's too hard to
-        // be backward compatable and try to update the row height, we're
-        // therefor NOT going to adjust the row height based on font. If the
-        // developer changes the font, it's there responsability to update
-        // the row height.
-
-        LookAndFeel.installProperty(table, PropertyKey.OPAQUE, Boolean.TRUE);
-
-        Color sbg = table.getSelectionBackground();
-        if (sbg == null || sbg instanceof UIResource) {
-            sbg = UIManager.getColor("Table.selectionBackground");
-            table.setSelectionBackground(sbg != null ? sbg : UIManager.getColor("textHighlight"));
-        }
-
-        Color sfg = table.getSelectionForeground();
-        if (sfg == null || sfg instanceof UIResource) {
-            sfg = UIManager.getColor("Table.selectionForeground");
-            table.setSelectionForeground(sfg != null ? sfg : UIManager.getColor("textHighlightText"));
-        }
-
-        Color gridColor = table.getGridColor();
-        if (gridColor == null || gridColor instanceof UIResource) {
-            gridColor = UIManager.getColor("Table.gridColor");
-            table.setGridColor(gridColor != null ? gridColor : Color.GRAY);
-        }
-
-        // install the scrollpane border
-        Container parent = DarkUIUtil.getUnwrappedParent(table); // should be viewport
-        if (parent != null) {
-            parent = parent.getParent(); // should be the scrollpane
-            if (parent instanceof JScrollPane) {
-                LookAndFeel.installBorder((JScrollPane) parent, "Table.scrollPaneBorder");
-            }
-        }
-
+        super.installDefaults();
         isFileList = PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_IS_FILE_LIST);
     }
 
@@ -223,18 +158,9 @@ public abstract class TableUIBridge extends BasicTableUI {
      * Attaches listeners to the JTable.
      */
     protected void installListeners() {
-        focusListener = createFocusListener();
-        keyListener = createKeyListener();
+        super.installListeners();
         mouseInputListener = createMouseInputListener();
-
-        table.addFocusListener(focusListener);
-        table.addKeyListener(keyListener);
-        table.addMouseListener(mouseInputListener);
-        table.addMouseMotionListener(mouseInputListener);
         table.addPropertyChangeListener(getHandler());
-        if (isFileList) {
-            table.getSelectionModel().addListSelectionListener(getHandler());
-        }
     }
 
     //
@@ -242,24 +168,6 @@ public abstract class TableUIBridge extends BasicTableUI {
     //
 
     // Installation
-
-    /**
-     * Creates the focus listener for handling keyboard navigation in the {@code JTable}.
-     *
-     * @return the focus listener for handling keyboard navigation in the {@code JTable}
-     */
-    protected FocusListener createFocusListener() {
-        return getHandler();
-    }
-
-    /**
-     * Creates the key listener for handling keyboard navigation in the {@code JTable}.
-     *
-     * @return the key listener for handling keyboard navigation in the {@code JTable}
-     */
-    protected KeyListener createKeyListener() {
-        return null;
-    }
 
     /**
      * Creates the mouse listener for the {@code JTable}.
@@ -271,16 +179,11 @@ public abstract class TableUIBridge extends BasicTableUI {
     }
 
     /**
-     * Gets handler.
+     * Gets handlerF.
      *
      * @return the handler
      */
-    protected Handler getHandler() {
-        if (handler == null) {
-            handler = new Handler();
-        }
-        return handler;
-    }
+    protected abstract Handler getHandler();
 
     /**
      * Gets input map.
@@ -343,7 +246,6 @@ public abstract class TableUIBridge extends BasicTableUI {
         focusListener = null;
         keyListener = null;
         mouseInputListener = null;
-        handler = null;
     }
 
     /**
@@ -628,7 +530,10 @@ public abstract class TableUIBridge extends BasicTableUI {
      */
     protected class Handler implements FocusListener, MouseInputListener,
                             PropertyChangeListener, ListSelectionListener, ActionListener,
-                            DragRecognitionSupport.BeforeDrag {
+                            DragRecognitionSupport.BeforeDrag, KeyListener {
+
+        protected final FocusListener focusListener;
+        protected final KeyListener keyListener;
 
         /**
          * The Dispatch component.
@@ -683,113 +588,34 @@ public abstract class TableUIBridge extends BasicTableUI {
         // Used to delay the start of editing.
         protected Timer timer = null;
 
+        protected Handler(final KeyListener keyListener, final FocusListener focusListener) {
+            this.keyListener = keyListener;
+            this.focusListener = focusListener;
+        }
+
+        @Override
         public void focusGained(final FocusEvent e) {
-            repaintLeadCell();
+            if (focusListener != null) focusListener.focusGained(e);
         }
 
-        /**
-         * Repaint lead cell.
-         */
-        // FocusListener
-        protected void repaintLeadCell() {
-            int lr = getAdjustedLead(table, true);
-            int lc = getAdjustedLead(table, false);
-
-            if (lr < 0 || lc < 0) {
-                return;
-            }
-
-            Rectangle dirtyRect = table.getCellRect(lr, lc, false);
-            table.repaint(dirtyRect);
-        }
-
+        @Override
         public void focusLost(final FocusEvent e) {
-            repaintLeadCell();
+            if (focusListener != null) focusListener.focusLost(e);
         }
 
-        /**
-         * Key pressed.
-         *
-         * @param e the e
-         */
-        // KeyListener
-        public void keyPressed(final KeyEvent e) {}
+        @Override
+        public void keyPressed(final KeyEvent e) {
+            if (keyListener != null) keyListener.keyPressed(e);
+        }
 
-        /**
-         * Key released.
-         *
-         * @param e the e
-         */
-        public void keyReleased(final KeyEvent e) {}
+        @Override
+        public void keyReleased(final KeyEvent e) {
+            if (keyListener != null) keyListener.keyReleased(e);
+        }
 
-        /**
-         * Key typed.
-         *
-         * @param e the e
-         */
-        @SuppressWarnings("deprecation")
+        @Override
         public void keyTyped(final KeyEvent e) {
-            KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyChar(),
-                                                         e.getModifiers());
-
-            // We register all actions using ANCESTOR_OF_FOCUSED_COMPONENT
-            // which means that we might perform the appropriate action
-            // in the table and then forward it to the editor if the editor
-            // had focus. Make sure this doesn't happen by checking our
-            // InputMaps.
-            InputMap map = table.getInputMap(JComponent.WHEN_FOCUSED);
-            if (map != null && map.get(keyStroke) != null) {
-                return;
-            }
-            map = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-            if (map != null && map.get(keyStroke) != null) {
-                return;
-            }
-
-            keyStroke = KeyStroke.getKeyStrokeForEvent(e);
-
-            // The AWT seems to generate an unconsumed \r event when
-            // ENTER (\n) is pressed.
-            if (e.getKeyChar() == '\r') {
-                return;
-            }
-
-            int leadRow = getAdjustedLead(table, true);
-            int leadColumn = getAdjustedLead(table, false);
-            if (leadRow != -1 && leadColumn != -1 && !table.isEditing()) {
-                if (!table.editCellAt(leadRow, leadColumn)) {
-                    return;
-                }
-            }
-
-            // Forwarding events this way seems to put the component
-            // in a state where it believes it has focus. In reality
-            // the table retains focus - though it is difficult for
-            // a user to tell, since the caret is visible and flashing.
-
-            // Calling table.requestFocus() here, to get the focus back to
-            // the table, seems to have no effect.
-
-            Component editorComp = table.getEditorComponent();
-            if (table.isEditing() && editorComp != null) {
-                if (editorComp instanceof JComponent) {
-                    JComponent component = (JComponent) editorComp;
-                    map = component.getInputMap(JComponent.WHEN_FOCUSED);
-                    Object binding = (map != null) ? map.get(keyStroke) : null;
-                    if (binding == null) {
-                        map = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-                        binding = (map != null) ? map.get(keyStroke) : null;
-                    }
-                    if (binding != null) {
-                        ActionMap am = component.getActionMap();
-                        Action action = (am != null) ? am.get(binding) : null;
-                        if (action != null && SwingUtilities.notifyAction(action, keyStroke, e, component,
-                                                                          e.getModifiers())) {
-                            e.consume();
-                        }
-                    }
-                }
-            }
+            if (keyListener != null) keyListener.keyTyped(e);
         }
 
         public void mouseClicked(final MouseEvent e) {}
@@ -1123,71 +949,8 @@ public abstract class TableUIBridge extends BasicTableUI {
         // PropertyChangeListener
         public void propertyChange(final PropertyChangeEvent event) {
             String changeName = event.getPropertyName();
-
-            if (PropertyKey.COMPONENT_ORIENTATION.equals(changeName)) {
-                InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-                SwingUtilities.replaceUIInputMap(table,
-                                                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
-                                                 inputMap);
-
-                JTableHeader header = table.getTableHeader();
-                if (header != null) {
-                    header.setComponentOrientation((ComponentOrientation) event.getNewValue());
-                }
-            } else if ("dropLocation".equals(changeName)) {
-                JTable.DropLocation oldValue = (JTable.DropLocation) event.getOldValue();
-                repaintDropLocation(oldValue);
-                repaintDropLocation(table.getDropLocation());
-            } else if (DarkTableUI.KEY_IS_FILE_LIST.equals(changeName)) {
+            if (DarkTableUI.KEY_IS_FILE_LIST.equals(changeName)) {
                 isFileList = PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_IS_FILE_LIST);
-                table.revalidate();
-                table.repaint();
-                if (isFileList) {
-                    table.getSelectionModel().addListSelectionListener(getHandler());
-                } else {
-                    table.getSelectionModel().removeListSelectionListener(getHandler());
-                    timer = null;
-                }
-            } else if ("selectionModel".equals(changeName)) {
-                if (isFileList) {
-                    ListSelectionModel old = (ListSelectionModel) event.getOldValue();
-                    old.removeListSelectionListener(getHandler());
-                    table.getSelectionModel().addListSelectionListener(getHandler());
-                }
-            }
-        }
-
-        /**
-         * Repaint drop location.
-         *
-         * @param loc the loc
-         */
-        protected void repaintDropLocation(final JTable.DropLocation loc) {
-            if (loc == null) {
-                return;
-            }
-
-            if (!loc.isInsertRow() && !loc.isInsertColumn()) {
-                Rectangle rect = table.getCellRect(loc.getRow(), loc.getColumn(), false);
-                if (rect != null) {
-                    table.repaint(rect);
-                }
-                return;
-            }
-
-            if (loc.isInsertRow()) {
-                Rectangle rect = extendRect(getHDropLineRect(loc), true);
-                if (rect != null) {
-                    table.repaint(rect);
-                }
-            }
-
-            if (loc.isInsertColumn()) {
-                Rectangle rect = extendRect(getVDropLineRect(loc), false);
-                if (rect != null) {
-                    table.repaint(rect);
-                }
             }
         }
     }

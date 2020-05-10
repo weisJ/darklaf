@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 package com.github.weisj.darklaf.ui.table.header;
 
@@ -50,14 +51,10 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
 
     @Override
     public void installUI(final JComponent c) {
-        header = (JTableHeader) c;
-
+        super.installUI(c);
+        header.remove(rendererPane);
         rendererPane = createCellRendererPane();
         header.add(rendererPane);
-
-        installDefaults();
-        installListeners();
-        installKeyboardActions();
     }
 
     @Override
