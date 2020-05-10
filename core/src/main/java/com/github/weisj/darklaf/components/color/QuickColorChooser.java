@@ -39,7 +39,7 @@ import com.github.weisj.darklaf.listener.MouseClickListener;
 public class QuickColorChooser extends JPanel {
 
     private final SolidColorIcon icon;
-    private final JCheckBox checkBox;
+    private JCheckBox checkBox;
 
     public QuickColorChooser(final String title, final Color color, final Consumer<Color> onColorChange) {
         this(title, color, (b, c) -> onColorChange.accept(c), false);
@@ -47,9 +47,9 @@ public class QuickColorChooser extends JPanel {
 
     public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange,
                              final boolean showCheckBox) {
-        super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        checkBox = new JCheckBox();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         if (showCheckBox) {
+            checkBox = new JCheckBox();
             checkBox.addActionListener(e -> onStatusChange.accept(isSelected(), getColor()));
             add(checkBox);
         }
@@ -63,7 +63,6 @@ public class QuickColorChooser extends JPanel {
         }, icon::getColor);
 
         add(colorLabel);
-
         add(new JLabel(title, EmptyIcon.create(2, 2), JLabel.LEFT));
     }
 
@@ -94,7 +93,7 @@ public class QuickColorChooser extends JPanel {
     }
 
     public boolean isSelected() {
-        return checkBox.isSelected();
+        return checkBox != null && checkBox.isSelected();
     }
 
     public Color getColor() {
