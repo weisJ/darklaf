@@ -199,6 +199,13 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         final Container parent = getRelevantParent(editor);
         if (parent != null) {
             g.setColor(parent.getBackground());
+            if (parent instanceof JTextComponent) {
+                if (!parent.isEnabled()) {
+                    g.setColor(disabledColor);
+                } else if (!((JTextComponent) parent).isEditable()) {
+                    g.setColor(inactiveColor);
+                }
+            }
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
 
@@ -234,15 +241,15 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
     }
 
-    protected Container getRelevantParent(final Component c) {
+    protected Container getRelevantParent(final Component comp) {
         Container parent = editor.getParent();
         if (parent instanceof JSpinner.DefaultEditor) {
-            JSpinner spinner = DarkUIUtil.getParentOfType(JSpinner.class, c);
+            JSpinner spinner = DarkUIUtil.getParentOfType(JSpinner.class, comp);
             if (spinner != null) parent = spinner.getParent();
         } else if (parent instanceof JComboBox) {
             parent = parent.getParent();
         }
-        return DarkUIUtil.getOpaqueParent(parent);
+        return DarkUIUtil.getParentMatching(parent, c -> c.isOpaque() || c instanceof JTextComponent);
     }
 
     @Override

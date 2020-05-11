@@ -264,7 +264,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @return the {@link StyleSheet}.
      */
     public final StyleSheet loadStyleSheet() {
-        return loadStyleSheetWithClass(getLoaderClass());
+        return new StyleSheet();
     }
 
     /**

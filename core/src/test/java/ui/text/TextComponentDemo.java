@@ -42,8 +42,11 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
     @Override
     public JComponent createComponent() {
         T text = createTextComponent();
-        text.setText(StringUtil.repeat(StringUtil.repeat("Word ", 5) + "\n", 5));
-        DemoPanel panel = new DemoPanel(text, new BorderLayout(), 10);
+        String txt = text.getText();
+        if (txt == null || txt.isEmpty()) {
+            text.setText(StringUtil.repeat(StringUtil.repeat("Word ", 5) + "\n", 5));
+        }
+        DemoPanel panel = new DemoPanel(new JScrollPane(text), new BorderLayout(), 10);
         Border textBorder = new DarkTextBorder();
         Border border = text.getBorder();
 

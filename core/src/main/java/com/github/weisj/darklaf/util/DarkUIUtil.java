@@ -32,6 +32,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -396,9 +397,13 @@ public final class DarkUIUtil {
         return false;
     }
 
-    public static Container getOpaqueParent(final Container parent) {
+    public static Container getParentMatching(final Container parent, final Predicate<Container> test) {
         Container p;
-        for (p = parent; p != null && !p.isOpaque(); p = p.getParent()) {}
+        for (p = parent; p != null && !test.test(p); p = p.getParent()) {}
         return p;
+    }
+
+    public static Container getOpaqueParent(final Container parent) {
+        return getParentMatching(parent, Container::isOpaque);
     }
 }
