@@ -184,7 +184,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         return editor;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void replaceEditor(final JComponent oldEditor, final JComponent newEditor) {
         super.replaceEditor(oldEditor, newEditor);

@@ -59,7 +59,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
  * @author Philip Milne
  * @author Shannon Hickey (drag and drop)
  */
-public class DarkListUIBridge extends BasicListUI {
+public abstract class DarkListUIBridge extends BasicListUI {
 
     /**
      * The constant BASELINE_COMPONENT_KEY.
@@ -286,62 +286,13 @@ public class DarkListUIBridge extends BasicListUI {
     }
 
     /**
-     * Paint one List cell: compute the relevant state, get the "rubber stamp" cell renderer component, and then use the
-     * {@code CellRendererPane} to paint it. Subclasses may want to override this method rather than {@code paint()}.
-     *
-     * @param g            an instance of {@code Graphics}
-     * @param row          a row
-     * @param rowBounds    a bounding rectangle to render to
-     * @param cellRenderer a list of {@code ListCellRenderer}
-     * @param dataModel    a list model
-     * @param selModel     a selection model
-     * @param leadIndex    a lead index
-     * @see                #paint
-     */
-    protected void paintCell(final Graphics g,
-                             final int row,
-                             final Rectangle rowBounds,
-                             final ListCellRenderer cellRenderer,
-                             final ListModel dataModel,
-                             final ListSelectionModel selModel,
-                             final int leadIndex) {
-        Object value = dataModel.getElementAt(row);
-        boolean cellHasFocus = list.hasFocus() && (row == leadIndex);
-        boolean isSelected = selModel.isSelectedIndex(row);
-
-        Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, row, isSelected,
-                                                                                cellHasFocus);
-
-        int cx = rowBounds.x;
-        int cy = rowBounds.y;
-        int cw = rowBounds.width;
-        int ch = rowBounds.height;
-
-        if (isFileList) {
-            // Shrink renderer to preferred size. This is mostly used on Windows
-            // where selection is only shown around the file name, instead of
-            // across the whole list cell.
-            int w = Math.min(cw, rendererComponent.getPreferredSize().width + 4);
-            if (!isLeftToRight) {
-                cx += (cw - w);
-            }
-            cw = w;
-        }
-
-        rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
-    }
-
-    /**
      * Paint the rows that intersect the Graphics objects clipRect. This method calls paintCell as necessary.
      * Subclasses may want to override these methods.
-     *
-     * @see #paintCell
      */
     public void paint(final Graphics g, final JComponent c) {
         Shape clip = g.getClip();
         paintImpl(g, c);
         g.setClip(clip);
-
         paintDropLine(g);
     }
 
@@ -1300,84 +1251,7 @@ public class DarkListUIBridge extends BasicListUI {
      * @param g the g
      * @param c the c
      */
-    protected void paintImpl(final Graphics g, final JComponent c) {
-        switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP :
-                if (list.getHeight() != listHeight) {
-                    updateLayoutStateNeeded |= heightChanged;
-                    redrawList();
-                }
-                break;
-            case JList.HORIZONTAL_WRAP :
-                if (list.getWidth() != listWidth) {
-                    updateLayoutStateNeeded |= widthChanged;
-                    redrawList();
-                }
-                break;
-            default :
-                break;
-        }
-        maybeUpdateLayoutState();
-
-        ListCellRenderer<Object> renderer = list.getCellRenderer();
-        ListModel<Object> dataModel = list.getModel();
-        ListSelectionModel selModel = list.getSelectionModel();
-        int size;
-
-        if ((renderer == null) || (size = dataModel.getSize()) == 0) {
-            return;
-        }
-
-        // Determine how many columns we need to paint
-        Rectangle paintBounds = g.getClipBounds();
-
-        int startColumn, endColumn;
-        if (c.getComponentOrientation().isLeftToRight()) {
-            startColumn = convertLocationToColumn(paintBounds.x,
-                                                  paintBounds.y);
-            endColumn = convertLocationToColumn(paintBounds.x +
-                                                paintBounds.width,
-                                                paintBounds.y);
-        } else {
-            startColumn = convertLocationToColumn(paintBounds.x +
-                                                  paintBounds.width,
-                                                  paintBounds.y);
-            endColumn = convertLocationToColumn(paintBounds.x,
-                                                paintBounds.y);
-        }
-        int maxY = paintBounds.y + paintBounds.height;
-        int leadIndex = adjustIndex(list.getLeadSelectionIndex(), list);
-        int rowIncrement = (layoutOrientation == JList.HORIZONTAL_WRAP) ? columnCount : 1;
-
-        for (int colCounter = startColumn; colCounter <= endColumn;
-             colCounter++) {
-            // And then how many rows in this columnn
-            int row = convertLocationToRowInColumn(paintBounds.y, colCounter);
-            int rowCount = getRowCount(colCounter);
-            int index = getModelIndex(colCounter, row);
-            Rectangle rowBounds = getCellBounds(list, index, index);
-
-            if (rowBounds == null) {
-                // Not valid, bail!
-                return;
-            }
-            while (row < rowCount && rowBounds.y < maxY &&
-                   index < size) {
-                rowBounds.height = getHeight(colCounter, row);
-                g.setClip(rowBounds.x, rowBounds.y, rowBounds.width,
-                          rowBounds.height);
-                g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width,
-                           paintBounds.height);
-                paintCell(g, index, rowBounds, renderer, dataModel, selModel,
-                          leadIndex);
-                rowBounds.y += rowBounds.height;
-                index += rowIncrement;
-                row++;
-            }
-        }
-        // Empty out the renderer pane, allowing renderers to be gc'ed.
-        rendererPane.removeAll();
-    }
+    protected abstract void paintImpl(final Graphics g, final JComponent c);
 
     /**
      * Redraw list.
@@ -1813,7 +1687,7 @@ public class DarkListUIBridge extends BasicListUI {
             String name = getName();
             @SuppressWarnings("unchecked")
             JList<Object> list = (JList) e.getSource();
-            DarkListUIBridge ui = (DarkListUIBridge) DarkUIUtil.getUIOfType(list.getUI(), DarkListUIBridge.class);
+            DarkListUIBridge ui = DarkUIUtil.getUIOfType(list.getUI(), DarkListUIBridge.class);
 
             if (Objects.equals(name, SELECT_PREVIOUS_COLUMN)) {
                 changeSelection(list, CHANGE_SELECTION,

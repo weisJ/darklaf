@@ -64,7 +64,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     public static final String KEY_HAS_ERROR = KEY_PREFIX + "hasError";
     public static final String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
     public static final String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
-    public static final String KEY_IS_LIST_RENDER = DarkListUI.KEY_IS_LIST_RENDERER;
+    public static final String KEY_IS_LIST_EDITOR = DarkListUI.KEY_IS_LIST_EDITOR;
     public static final String KEY_DEFAULT_TEXT = KEY_PREFIX + "defaultText";
 
     protected static final String TOGGLE_INSERT = "toggle_insert";

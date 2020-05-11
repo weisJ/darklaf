@@ -31,61 +31,50 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
+import com.github.weisj.darklaf.delegate.TreeCellRendererDelegate;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererCheckBox;
+import com.github.weisj.darklaf.ui.cell.DarkCellRendererRadioButton;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.PropertyValue;
 
-/**
- * @author Jannis Weis
- */
-public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements TreeRendererSupport {
+public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate implements TreeRendererSupport {
 
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(false));
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(false));
+    private final DarkCellRendererCheckBox checkBoxRenderer = new DarkCellRendererCheckBox(false);
+    private final DarkCellRendererRadioButton radioRenderer = new DarkCellRendererRadioButton(false);
     private final TreeRendererComponent rendererComponent = new TreeRendererComponent();
-    private final TreeCellRenderer parent;
 
-    public DarkTreeCellRenderer() {
-        this(null);
-    }
-
-    public DarkTreeCellRenderer(final TreeCellRenderer parent) {
-        this.parent = parent;
+    public DarkTreeCellRendererDelegate(final TreeCellRenderer renderer) {
+        super(renderer);
     }
 
     @Override
-    public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
-                                                  final boolean expanded, final boolean leaf, final int row,
-                                                  final boolean hasFocus) {
+    public Component getTreeCellRendererComponent(final JTree tree, final Object value,
+                                                  final boolean selected, final boolean expanded,
+                                                  final boolean leaf, final int row, final boolean hasFocus) {
         boolean isFocused = DarkUIUtil.hasFocus(tree);
-        Object val = unwrapBooleanIfPossible(value);
-        if (val instanceof Boolean && isBooleanRenderingEnabled(tree)) {
-            super.getTreeCellRendererComponent(tree, val, sel, expanded, leaf, row, hasFocus);
-            Component comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
-                                                                                   row, isFocused);
+        Object unwrapped = unwrapBooleanIfPossible(value);
+        Component renderer;
+        if (unwrapped instanceof Boolean && isBooleanRenderingEnabled(tree)) {
+            Component comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded,
+                                                                                   leaf, row, isFocused);
             rendererComponent.setComponentOrientation(tree.getComponentOrientation());
             comp.setComponentOrientation(tree.getComponentOrientation());
             comp.setFont(tree.getFont());
             rendererComponent.setRenderer(this);
             rendererComponent.setRenderComponent(comp);
-            return rendererComponent;
-        }
-        Component comp;
-        if (parent != null) {
-            if (parent instanceof JLabel) {
-                ((JLabel) parent).setIcon(null);
-                ((JLabel) parent).setDisabledIcon(null);
-            }
-            comp = parent.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, isFocused);
+            renderer = rendererComponent;
         } else {
-            setIcon(null);
-            setDisabledIcon(null);
-            comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, isFocused);
+            if (getDelegate() instanceof DefaultTreeCellRenderer) {
+                ((DefaultTreeCellRenderer) getDelegate()).setIcon(null);
+                ((DefaultTreeCellRenderer) getDelegate()).setDisabledIcon(null);
+            }
+            renderer = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
         }
-        CellUtil.setupTreeForeground(comp, tree, sel);
-        return comp;
+        CellUtil.setupTreeForeground(renderer, tree, selected);
+        return renderer;
     }
 
     public static Object unwrapBooleanIfPossible(final Object value) {
@@ -111,5 +100,20 @@ public class DarkTreeCellRenderer extends DefaultTreeCellRenderer implements Tre
             return radioRenderer;
         }
         return checkBoxRenderer;
+    }
+
+    @Override
+    public Icon getIcon() {
+        return getDelegate() instanceof JLabel ? ((JLabel) getDelegate()).getIcon() : null;
+    }
+
+    @Override
+    public int getIconTextGap() {
+        return getDelegate() instanceof JLabel ? ((JLabel) getDelegate()).getIconTextGap() : 0;
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return getDelegate() instanceof JComponent ? ((JComponent) getDelegate()).getPreferredSize() : null;
     }
 }

@@ -31,7 +31,7 @@ import javax.swing.plaf.ListUI;
 
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -295,9 +295,7 @@ public class CellUtil {
         Color c = getColor(enabled, selected, focus,
                            fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg, inactiveSelFg,
                            inactiveFgNoFocus, inactiveSelFgNoFocus);
-        if (c != null) {
-            comp.setForeground(c);
-        }
+        PropertyUtil.installForeground(comp, c);
     }
 
     public static void setupTableBackground(final Component comp, final JTable parent, final boolean selected,
@@ -385,9 +383,7 @@ public class CellUtil {
         Color c = getColor(enabled, selected, focus,
                            bg, selBg, bgNoFocus, selBgNoFocus, inactiveBg, inactiveSelBg,
                            inactiveBgNoFocus, inactiveSelBgNoFocus);
-        if (c != null) {
-            comp.setBackground(c);
-        }
+        PropertyUtil.installBackground(comp, c);
     }
 
     public static Color getColor(final boolean enabled, final boolean selected, final boolean focus,
@@ -459,19 +455,19 @@ public class CellUtil {
     }
 
     protected static boolean isInWrapper(final Component c) {
-        return c.getParent() instanceof DarkTableCellEditor.IconWrapper;
+        return c.getParent() instanceof IconWrapper;
     }
 
     protected static boolean isListEditor(final Component c) {
-        return PropertyUtil.getBooleanProperty(c, DarkListUI.KEY_IS_LIST_RENDERER) && c.getParent() instanceof JList;
+        return PropertyUtil.getBooleanProperty(c, DarkListUI.KEY_IS_LIST_EDITOR) && c.getParent() instanceof JList;
     }
 
     public static Insets adjustEditorInsets(final Insets ins, final Component c) {
         if (isInWrapper(c)) {
             if (parentLTR(c)) {
-                ins.left -= ((DarkTableCellEditor.IconWrapper) c.getParent()).getIconCompGap();
+                ins.left -= ((IconWrapper) c.getParent()).getIconCompGap();
             } else {
-                ins.right -= ((DarkTableCellEditor.IconWrapper) c.getParent()).getIconCompGap();
+                ins.right -= ((IconWrapper) c.getParent()).getIconCompGap();
             }
         } else if (isListEditor(c)) {
             ListCellRenderer<?> renderer = ((JList<?>) c.getParent()).getCellRenderer();

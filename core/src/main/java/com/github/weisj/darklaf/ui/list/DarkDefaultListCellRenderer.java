@@ -22,26 +22,8 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.table.header;
-
-import java.awt.*;
+package com.github.weisj.darklaf.ui.list;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
 
-public class DarkTableHeaderRenderer implements TableCellRenderer {
-
-    private final TableCellRenderer renderer;
-
-    public DarkTableHeaderRenderer(final TableCellRenderer renderer) {
-        this.renderer = renderer;
-    }
-
-    @Override
-    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
-                                                   final boolean hasFocus, final int row, final int column) {
-        Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        c.setEnabled(table.isEnabled());
-        return c;
-    }
-}
+public class DarkDefaultListCellRenderer extends DefaultListCellRenderer {}

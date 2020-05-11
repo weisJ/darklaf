@@ -126,4 +126,16 @@ public class TreeRendererComponent extends Container {
                           totalY;
         return getHeight() / 2 - (totalY + (totalHeight / 2));
     }
+
+    @Override
+    public void setForeground(final Color c) {
+        super.setForeground(c);
+        if (renderComponent != null) renderComponent.setForeground(c);
+    }
+
+    @Override
+    public void setBackground(final Color c) {
+        super.setBackground(c);
+        if (renderComponent != null) renderComponent.setBackground(c);
+    }
 }

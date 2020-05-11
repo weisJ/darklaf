@@ -43,9 +43,10 @@ import javax.swing.text.Position;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
+import com.github.weisj.darklaf.ui.list.DarkListCellRendererDelegate;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DarkFilePane extends DarkFilePaneUIBridge {
@@ -63,6 +64,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         editCell = new JTextField();
         editCell.setBorder(new TextTableCellEditorBorder());
         editCell.putClientProperty("JTextField.listCellEditor", true);
+        editCell.putClientProperty(DarkTextUI.KEY_IS_LIST_EDITOR, true);
     }
 
     public JPanel createList() {
@@ -467,7 +469,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         }
     }
 
-    public class DarkFileRenderer extends DarkListCellRenderer {
+    public class DarkFileRenderer extends DarkListCellRendererDelegate {
 
         @Override
         public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,

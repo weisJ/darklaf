@@ -34,10 +34,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTreeUI;
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
@@ -121,6 +118,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     protected Icon collapsed;
     private boolean oldRepaintAllRowValue;
 
+    protected DarkTreeCellRendererDelegate rendererDelegate;
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTreeUI();
     }
@@ -151,6 +150,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        rendererDelegate = new DarkTreeCellRendererDelegate(null);
         rendererPane = createCellRendererPane();
         LookAndFeel.installColors(tree, "Tree.background", "Tree.foreground");
         focusSelectedLineColor = UIManager.getColor("Tree.lineFocusSelected");
@@ -347,15 +347,17 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
 
     @Override
     protected TreeCellEditor createDefaultCellEditor() {
-        if (currentCellRenderer != null && (currentCellRenderer instanceof DarkTreeCellRenderer)) {
-            return new DarkDefaultTreeEditor(tree, (DarkTreeCellRenderer) currentCellRenderer);
+        if (currentCellRenderer instanceof DefaultTreeCellRenderer) {
+            return new DarkDefaultTreeEditor(tree, (DefaultTreeCellRenderer) currentCellRenderer);
         }
         return new DarkDefaultTreeEditor(tree, null);
     }
 
     @Override
     protected TreeCellRenderer createDefaultCellRenderer() {
-        return new DarkTreeCellRenderer();
+        TreeCellRenderer renderer = super.createDefaultCellRenderer();
+        rendererDelegate.setDelegate(renderer);
+        return renderer;
     }
 
     @Override
@@ -493,6 +495,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
         drawingCache.clear();
     }
 
+    @Override
+    public TreeCellRenderer getCellRenderer() {
+        return super.getCellRenderer();
+    }
+
     protected Rectangle getPathBounds(final TreePath path, final Insets insets, Rectangle bounds) {
         bounds = treeState.getBounds(path, bounds);
         if (bounds != null) {
@@ -533,9 +540,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     @Override
     protected void updateRenderer() {
         super.updateRenderer();
-        if (!(currentCellRenderer instanceof DarkTreeCellRenderer)) {
-            currentCellRenderer = new DarkTreeCellRenderer(currentCellRenderer);
+        if (currentCellRenderer != rendererDelegate) {
+            rendererDelegate.setDelegate(currentCellRenderer);
         }
+        currentCellRenderer = rendererDelegate;
     }
 
     protected boolean shouldPaintLines() {

@@ -73,7 +73,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             }
 
             public void setValue(final Object value) {
-                boolean selected = Boolean.TRUE.equals(DarkTreeCellRenderer.unwrapBooleanIfPossible(value));
+                boolean selected = Boolean.TRUE.equals(DarkTreeCellRendererDelegate.unwrapBooleanIfPossible(value));
                 toggleButton.setSelected(selected);
                 if (value instanceof SelectableTreeNode) {
                     toggleButton.setText(((SelectableTreeNode) value).getLabel());
@@ -145,10 +145,6 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
                 return true;
             }
         };
-    }
-
-    public boolean isBooleanEditor(final JTree tree) {
-        return editorComponent instanceof JToggleButton && DarkTreeCellRenderer.isBooleanRenderingEnabled(tree);
     }
 
     @SuppressWarnings("unchecked")

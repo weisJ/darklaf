@@ -144,9 +144,10 @@ public final class DarkUIUtil {
         return ActionEvent.ALT_MASK;
     }
 
-    public static Object getUIOfType(final ComponentUI ui, final Class<?> klass) {
+    @SuppressWarnings("unchecked")
+    public static <T> T getUIOfType(final ComponentUI ui, final Class<T> klass) {
         if (klass.isInstance(ui)) {
-            return ui;
+            return (T) ui;
         }
         return null;
     }

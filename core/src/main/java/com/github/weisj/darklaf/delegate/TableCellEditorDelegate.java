@@ -33,50 +33,54 @@ import javax.swing.table.TableCellEditor;
 
 public class TableCellEditorDelegate implements TableCellEditor {
 
-    private final TableCellEditor editor;
+    private final TableCellEditor delegate;
 
     public TableCellEditorDelegate(final TableCellEditor editor) {
-        this.editor = editor;
+        this.delegate = editor;
+    }
+
+    public TableCellEditor getDelegate() {
+        return delegate;
     }
 
     @Override
     public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
                                                  final int row, final int column) {
-        return editor.getTableCellEditorComponent(table, value, isSelected, row, column);
+        return getDelegate().getTableCellEditorComponent(table, value, isSelected, row, column);
     }
 
     @Override
     public Object getCellEditorValue() {
-        return editor.getCellEditorValue();
+        return getDelegate().getCellEditorValue();
     }
 
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
-        return editor.isCellEditable(anEvent);
+        return getDelegate().isCellEditable(anEvent);
     }
 
     @Override
     public boolean shouldSelectCell(final EventObject anEvent) {
-        return editor.shouldSelectCell(anEvent);
+        return getDelegate().shouldSelectCell(anEvent);
     }
 
     @Override
     public boolean stopCellEditing() {
-        return editor.stopCellEditing();
+        return getDelegate().stopCellEditing();
     }
 
     @Override
     public void cancelCellEditing() {
-        editor.cancelCellEditing();
+        getDelegate().cancelCellEditing();
     }
 
     @Override
     public void addCellEditorListener(final CellEditorListener l) {
-        editor.addCellEditorListener(l);
+        getDelegate().addCellEditorListener(l);
     }
 
     @Override
     public void removeCellEditorListener(final CellEditorListener l) {
-        editor.removeCellEditorListener(l);
+        getDelegate().removeCellEditorListener(l);
     }
 }

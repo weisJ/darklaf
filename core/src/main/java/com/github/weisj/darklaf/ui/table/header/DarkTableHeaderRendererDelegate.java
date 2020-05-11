@@ -22,25 +22,26 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.filechooser;
+package com.github.weisj.darklaf.ui.table.header;
 
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
+import javax.swing.table.TableCellRenderer;
 
-import com.github.weisj.darklaf.ui.list.DarkListCellRendererDelegate;
+import com.github.weisj.darklaf.delegate.TableCellRendererDelegate;
 
-public class DarkFilterComboBoxRenderer extends DarkListCellRendererDelegate {
+public class DarkTableHeaderRendererDelegate extends TableCellRendererDelegate {
 
-    public Component getListCellRendererComponent(final JList<?> list,
-                                                  final Object value, final int index, final boolean isSelected,
-                                                  final boolean cellHasFocus) {
+    public DarkTableHeaderRendererDelegate(final TableCellRenderer renderer) {
+        super(renderer);
+    }
 
-        Object val = value;
-        if (value instanceof FileFilter) {
-            val = ((FileFilter) value).getDescription();
-        }
-        return super.getListCellRendererComponent(list, val, index, isSelected, cellHasFocus);
+    @Override
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+                                                   final boolean hasFocus, final int row, final int column) {
+        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        c.setEnabled(table.isEnabled());
+        return c;
     }
 }

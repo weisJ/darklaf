@@ -33,50 +33,54 @@ import javax.swing.tree.TreeCellEditor;
 
 public class TreeCellEditorDelegate implements TreeCellEditor {
 
-    protected final TreeCellEditor editor;
+    protected final TreeCellEditor delegate;
 
     public TreeCellEditorDelegate(final TreeCellEditor editor) {
-        this.editor = editor;
+        this.delegate = editor;
     }
 
     @Override
     public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
                                                 final boolean expanded, final boolean leaf, final int row) {
-        return editor.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+        return delegate.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+    }
+
+    public TreeCellEditor getDelegate() {
+        return delegate;
     }
 
     @Override
     public Object getCellEditorValue() {
-        return editor.getCellEditorValue();
+        return getDelegate().getCellEditorValue();
     }
 
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
-        return editor.isCellEditable(anEvent);
+        return getDelegate().isCellEditable(anEvent);
     }
 
     @Override
     public boolean shouldSelectCell(final EventObject anEvent) {
-        return editor.shouldSelectCell(anEvent);
+        return getDelegate().shouldSelectCell(anEvent);
     }
 
     @Override
     public boolean stopCellEditing() {
-        return editor.stopCellEditing();
+        return getDelegate().stopCellEditing();
     }
 
     @Override
     public void cancelCellEditing() {
-        editor.cancelCellEditing();
+        getDelegate().cancelCellEditing();
     }
 
     @Override
     public void addCellEditorListener(final CellEditorListener l) {
-        editor.addCellEditorListener(l);
+        getDelegate().addCellEditorListener(l);
     }
 
     @Override
     public void removeCellEditorListener(final CellEditorListener l) {
-        editor.removeCellEditorListener(l);
+        getDelegate().removeCellEditorListener(l);
     }
 }

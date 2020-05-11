@@ -22,25 +22,16 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.filechooser;
+package com.github.weisj.darklaf.ui.cell;
 
-import java.awt.*;
+public class DarkCellRendererRadioButton extends
+                                         DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellRadioButton> {
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
+    public DarkCellRendererRadioButton() {
+        this(true);
+    }
 
-import com.github.weisj.darklaf.ui.list.DarkListCellRendererDelegate;
-
-public class DarkFilterComboBoxRenderer extends DarkListCellRendererDelegate {
-
-    public Component getListCellRendererComponent(final JList<?> list,
-                                                  final Object value, final int index, final boolean isSelected,
-                                                  final boolean cellHasFocus) {
-
-        Object val = value;
-        if (value instanceof FileFilter) {
-            val = ((FileFilter) value).getDescription();
-        }
-        return super.getListCellRendererComponent(list, val, index, isSelected, cellHasFocus);
+    public DarkCellRendererRadioButton(final boolean opaque) {
+        super(new CellRadioButton(opaque));
     }
 }

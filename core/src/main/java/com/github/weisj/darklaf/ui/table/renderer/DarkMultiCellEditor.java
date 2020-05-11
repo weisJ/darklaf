@@ -22,33 +22,42 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.delegate;
+package com.github.weisj.darklaf.ui.table.renderer;
 
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableCellEditor;
 
-public class TableCellRendererDelegate implements TableCellRenderer {
+import com.github.weisj.darklaf.delegate.TableCellEditorDelegate;
+import com.github.weisj.darklaf.util.LazyValue;
 
-    private TableCellRenderer delegate;
+public class DarkMultiCellEditor extends TableCellEditorDelegate {
 
-    public TableCellRendererDelegate(final TableCellRenderer renderer) {
-        this.delegate = renderer;
-    }
+    private final LazyValue<DarkTableCellEditor> spinnerEditor = new LazyValue<>(() -> new DarkTableCellEditor(new JSpinner()));
+    private TableCellEditor currentEditor;
 
-    public TableCellRenderer getDelegate() {
-        return delegate;
-    }
-
-    public void setDelegate(final TableCellRenderer delegate) {
-        this.delegate = delegate;
+    public DarkMultiCellEditor() {
+        super(new DarkTableCellEditor());
     }
 
     @Override
-    public Component getTableCellRendererComponent(final JTable table, final Object value,
-                                                   final boolean isSelected, final boolean hasFocus,
-                                                   final int row, final int column) {
-        return getDelegate().getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
+                                                 final int row, final int column) {
+        currentEditor = getEditor(value);
+        return super.getTableCellEditorComponent(table, value, isSelected, row, column);
+    }
+
+    private TableCellEditor getEditor(final Object value) {
+        if (value instanceof Number) {
+            return spinnerEditor.get();
+        } else {
+            return getDelegate();
+        }
+    }
+
+    @Override
+    public TableCellEditor getDelegate() {
+        return currentEditor != null ? currentEditor : super.getDelegate();
     }
 }

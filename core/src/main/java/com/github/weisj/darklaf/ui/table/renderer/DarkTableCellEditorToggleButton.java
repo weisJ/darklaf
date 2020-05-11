@@ -30,10 +30,6 @@ import java.util.EventObject;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-
 /**
  * @author vincencopalazzo
  * @author atarw
@@ -43,11 +39,9 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
 
     private final JToggleButton toggleButton;
 
-    public DarkTableCellEditorToggleButton(final DarkTableCellEditor delegate,
-                                           final JToggleButton toggleButton) {
+    public DarkTableCellEditorToggleButton(final JToggleButton toggleButton) {
         this.toggleButton = toggleButton;
         toggleButton.setOpaque(true);
-        toggleButton.addChangeListener(e -> delegate.setValue(toggleButton.isSelected()));
     }
 
     @Override
@@ -56,14 +50,6 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         }
-        toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
-
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && isSelected
-                                      && !DarkTableCellFocusBorder.isRowFocusBorder(table);
-
-        boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
-        CellUtil.setupTableForeground(toggleButton, table, paintSelected);
-        CellUtil.setupTableBackground(toggleButton, table, paintSelected, row);
         return toggleButton;
     }
 

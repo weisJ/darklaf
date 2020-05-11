@@ -30,10 +30,18 @@ import javax.swing.*;
 
 public class ListCellRendererDelegate<T> implements ListCellRenderer<T> {
 
-    private final ListCellRenderer<T> renderer;
+    private ListCellRenderer<T> delegate;
 
     public ListCellRendererDelegate(final ListCellRenderer<T> renderer) {
-        this.renderer = renderer;
+        setDelegate(renderer);
+    }
+
+    public ListCellRenderer<T> getDelegate() {
+        return delegate;
+    }
+
+    public void setDelegate(final ListCellRenderer<T> delegate) {
+        this.delegate = delegate;
     }
 
     @Override
@@ -41,6 +49,6 @@ public class ListCellRendererDelegate<T> implements ListCellRenderer<T> {
                                                   final T value, final int index,
                                                   final boolean isSelected,
                                                   final boolean cellHasFocus) {
-        return renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        return getDelegate().getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }
 }

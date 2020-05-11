@@ -33,19 +33,14 @@ import java.util.function.Supplier;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
-import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
-import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
-import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
+import com.github.weisj.darklaf.ui.table.renderer.*;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -53,31 +48,16 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /**
  * @author Jannis Weis
  */
-public class DarkTableUI extends DarkTableUIBridge {
-
-    public static final String KEY_IS_TABLE_EDITOR = "JComponent.isTableEditor";
-    public static final String KEY_IS_TABLE_RENDERER = "JComponent.isTableRenderer";
-    protected static final String KEY_PREFIX = "JTable.";
-    public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
-    public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
-    public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
-    public static final String KEY_FULL_ROW_FOCUS_BORDER = KEY_PREFIX + "rowFocusBorder";
-    public static final String KEY_FORCE_LEFT_BORDER = KEY_PREFIX + "forcePaintLeft";
-    public static final String KEY_FORCE_RIGHT_BORDER = KEY_PREFIX + "forcePaintRight";
-    public static final String KEY_FILE_CHOOSER_PARENT = KEY_PREFIX + "fileChooserParent";
-    public static final String KEY_FILENAME_COLUMN_INDEX = KEY_PREFIX + "fileNameColumnIndex";
-    public static final String KEY_HORIZONTAL_LINES = "showHorizontalLines";
-    public static final String KEY_VERTICAL_LINES = "showVerticalLines";
-    public static final String KEY_IS_FILE_LIST = "Table.isFileList";
-    public static final String KEY_IS_PRINT_MODE = "Table.printMode";
-    public static final String RENDER_TYPE_CHECKBOX = "checkBox";
-    public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
+public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
     private static final int ROW_HEIGHT_FALLBACK = 22;
     protected Color selectionBackgroundNoFocus;
     protected Color selectionBackground;
     protected Color borderColor;
     protected Handler handler;
+
+    protected DarkTableCellEditorDelegate editorDelegate;
+    protected DarkTableCellRendererDelegate rendererDelegate;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
@@ -125,7 +105,7 @@ public class DarkTableUI extends DarkTableUIBridge {
         if (rowHeight > 0) {
             LookAndFeel.installProperty(table, "rowHeight", ROW_HEIGHT_FALLBACK);
         }
-        table.setDefaultEditor(Object.class, new DarkTableCellEditor());
+        table.setDefaultEditor(Object.class, new DarkTableCellEditorDelegate());
         PropertyUtil.installBooleanProperty(table, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Table.renderBooleanAsCheckBox");
         PropertyUtil.installBooleanProperty(table, KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowColor");
         PropertyUtil.installProperty(table, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
@@ -142,8 +122,8 @@ public class DarkTableUI extends DarkTableUIBridge {
     }
 
     protected static void setupRendererComponents(final JTable table) {
-        DarkTableCellRenderer cellRenderer = new DarkTableCellRenderer();
-        DarkTableCellEditor cellEditor = new DarkTableCellEditor();
+        TableCellRenderer cellRenderer = new DarkTableCellRenderer();
+        TableCellEditor cellEditor = new DarkTableCellEditorDelegate();
         DarkColorTableCellRendererEditor colorRendererEditor = new DarkColorTableCellRendererEditor();
 
         table.setDefaultRenderer(Object.class, cellRenderer);
@@ -438,15 +418,36 @@ public class DarkTableUI extends DarkTableUIBridge {
             }
         }
         if (isEditorCell) {
-            Component component = table.getEditorComponent();
+            Component component = getCellEditor();
             component.setBounds(r);
             component.validate();
         } else {
-            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            TableCellRenderer renderer = getCellRenderer(row, column);
             Component component = table.prepareRenderer(renderer, row, column);
             CellUtil.setSelectedFlag(component, table.isCellSelected(row, column));
             rendererPane.paintComponent(g, component, table, r.x, r.y, r.width, r.height, true);
         }
+    }
+
+    protected TableCellRenderer getCellRenderer(final int row, final int column) {
+        TableCellRenderer renderer = table.getCellRenderer(row, column);
+        if (rendererDelegate == null) {
+            rendererDelegate = new DarkTableCellRendererDelegate(renderer);
+        }
+        rendererDelegate.setDelegate(renderer);
+        return rendererDelegate;
+    }
+
+    protected Component getCellEditor() {
+        Component c = table.getEditorComponent();
+        if (!(table.getCellEditor() instanceof DarkTableCellEditorDelegate)) {
+            int row = table.getEditingRow();
+            int column = table.getEditingColumn();
+            Object value = table.getValueAt(row, column);
+            c = DarkTableCellEditorDelegate.prepareEditor(c, table, value,
+                                                          table.isCellSelected(row, column), row, column);
+        }
+        return c;
     }
 
     public static int adjustDistance(final int distance, final Rectangle rect,

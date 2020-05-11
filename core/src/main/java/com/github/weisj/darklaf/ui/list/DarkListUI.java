@@ -49,20 +49,26 @@ public class DarkListUI extends DarkListUIBridge {
     public static final String KEY_IS_EDITING = KEY_PREFIX + "isEditing";
     public static final String RENDER_TYPE_CHECKBOX = "checkBox";
     public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
-    public static final String KEY_IS_LIST_RENDERER = "JComponent.listCellEditor";
+    public static final String KEY_IS_LIST_EDITOR = "JComponent.listCellEditor";
 
-    static {
-        UIManager.put("List.cellRenderer", new DarkListCellRenderer());
-    }
+    protected DarkListCellRendererDelegate rendererDelegate;
 
     public static ComponentUI createUI(final JComponent list) {
         return new DarkListUI();
     }
 
     @Override
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+        c.remove(rendererPane);
+        rendererPane = createCellRendererPane();
+        c.add(rendererPane);
+    }
+
+    @Override
     protected void installDefaults() {
         super.installDefaults();
-        rendererPane = createCellRendererPane();
+        rendererDelegate = new DarkListCellRendererDelegate();
         PropertyUtil.installBooleanProperty(list, KEY_ALTERNATE_ROW_COLOR, "List.alternateRowColor");
     }
 
@@ -97,7 +103,7 @@ public class DarkListUI extends DarkListUIBridge {
         }
         maybeUpdateLayoutState();
 
-        ListCellRenderer<Object> renderer = list.getCellRenderer();
+        ListCellRenderer<Object> renderer = getCellRenderer(list);
         ListModel<Object> dataModel = list.getModel();
         ListSelectionModel selModel = list.getSelectionModel();
 
@@ -145,6 +151,12 @@ public class DarkListUI extends DarkListUIBridge {
         }
         // Empty out the renderer pane, allowing renderers to be gc'ed.
         rendererPane.removeAll();
+    }
+
+    protected ListCellRenderer<Object> getCellRenderer(final JList<Object> list) {
+        ListCellRenderer<Object> renderer = list.getCellRenderer();
+        rendererDelegate.setDelegate(renderer);
+        return rendererDelegate;
     }
 
     protected void paintCell(final Graphics g, final int index, final Rectangle rowBounds,

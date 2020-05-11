@@ -25,30 +25,22 @@
 package com.github.weisj.darklaf.ui.table.renderer;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.EventObject;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.table.TableCellEditor;
+import javax.swing.text.DefaultFormatter;
 
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.combobox.DarkComboBoxUI;
-import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
 import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.PropertyValue;
 
 /**
@@ -59,17 +51,6 @@ import com.github.weisj.darklaf.util.PropertyValue;
 public class DarkTableCellEditor extends DefaultCellEditor {
 
     private static final JCheckBox dummyCheckBox = new JCheckBox();
-    private static final IconWrapper iconWrapper = new IconWrapper();
-
-    private final JToggleButton editorCheckBox = new DarkCellRendererToggleButton.CellEditorCheckBox(true);
-    private final DarkTableCellEditorToggleButton checkBoxEditor = new DarkTableCellEditorToggleButton(this,
-                                                                                                       editorCheckBox);
-    private final JToggleButton editorRadioButton = new DarkCellRendererToggleButton.CellEditorRadioButton(true);
-    private final DarkTableCellEditorToggleButton radioButtonEditor = new DarkTableCellEditorToggleButton(this,
-                                                                                                          editorRadioButton);
-    private boolean value;
-    private boolean isBooleanEditor;
-    private JTable table;
 
     public DarkTableCellEditor() {
         this(new JTextField());
@@ -82,24 +63,38 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         setClickCountToStart(2);
     }
 
-    public DarkTableCellEditor(final JComboBox<?> comboBox) {
+    public DarkTableCellEditor(final JComboBox<Object> comboBox) {
         super(comboBox);
-        comboBox.addPopupMenuListener(new PopupMenuListener() {
+        EditorDelegate del = delegate;
+        delegate = new EditorDelegate() {
             @Override
-            public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                if (table != null) table.repaint();
+            public void setValue(final Object value) {
+                comboBox.removeAllItems();
+                if (value != null && value.getClass().isArray()) {
+                    for (Object obj : (Object[]) value) {
+                        comboBox.addItem(obj);
+                    }
+                } else {
+                    comboBox.addItem(value);
+                    comboBox.setSelectedItem(value);
+                }
             }
 
             @Override
-            public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
-                if (table != null) table.repaint();
+            public Object getCellEditorValue() {
+                return del.getCellEditorValue();
             }
 
             @Override
-            public void popupMenuCanceled(final PopupMenuEvent e) {
-
+            public boolean shouldSelectCell(final EventObject anEvent) {
+                return del.shouldSelectCell(anEvent);
             }
-        });
+
+            @Override
+            public boolean stopCellEditing() {
+                return del.stopCellEditing();
+            }
+        };
         comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TABLE_EDITOR, true);
         setClickCountToStart(2);
     }
@@ -117,12 +112,23 @@ public class DarkTableCellEditor extends DefaultCellEditor {
             public void setValue(final Object value) {
                 try {
                     SpinnerModel model = spinner.getModel();
-                    if (model instanceof SpinnerNumberModel) {
+                    if (model instanceof SpinnerNumberModel && !(value instanceof Number)) {
                         spinner.setValue(NumberFormat.getInstance().parse(value.toString()));
-                    } else if (model instanceof SpinnerDateModel) {
+                    } else if (model instanceof SpinnerDateModel && !(value instanceof Date)) {
                         spinner.setValue(DateFormat.getInstance().parse(value.toString()));
                     } else {
                         spinner.setValue(value);
+                    }
+                    if (spinner.getValue() != null) {
+                        Component editor = spinner.getEditor();
+                        if (editor instanceof JSpinner.DefaultEditor) {
+                            JSpinner.DefaultEditor defaultEditor = ((JSpinner.DefaultEditor) editor);
+                            JFormattedTextField.AbstractFormatter formatter = defaultEditor.getTextField()
+                                                                                           .getFormatter();
+                            if (formatter instanceof DefaultFormatter) {
+                                ((DefaultFormatter) formatter).setValueClass(spinner.getValue().getClass());
+                            }
+                        }
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -167,186 +173,11 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         toggleButton.setRequestFocusEnabled(false);
     }
 
-    public DarkTableCellEditor(final JRadioButton checkBox) {
-        this((JToggleButton) checkBox);
-    }
-
-    public void setValue(final Object value) {
-        delegate.setValue(value);
-        if (value instanceof Boolean) {
-            this.value = (boolean) value;
-        } else {
-            isBooleanEditor = false;
-        }
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-        if (isBooleanEditor) {
-            return value;
-        } else {
-            return super.getCellEditorValue();
-        }
-    }
-
-    @Override
-    public boolean isCellEditable(final EventObject anEvent) {
-        if (anEvent == null) return super.isCellEditable(anEvent);
-        JTable table = ((JTable) anEvent.getSource());
-        if (anEvent instanceof KeyEvent) {
-            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
-        }
-        if (anEvent instanceof MouseEvent && DarkTableCellRenderer.isBooleanRenderingEnabled(table)) {
-            Point p = ((MouseEvent) anEvent).getPoint();
-            int row = table.rowAtPoint(p);
-            int col = table.columnAtPoint(p);
-            if (row >= 0 && row < table.getRowCount() && col >= 0 && col < table.getColumnCount()) {
-                Object value = table.getValueAt(row, col);
-                if (useBooleanEditor(value, table)) {
-                    Rectangle rect = table.getCellRect(row, col, false);
-                    p.x -= rect.x;
-                    p.y -= rect.y;
-                    Component editor = getBooleanEditor(table).getTableCellEditorComponent(table, true,
-                                                                                           false, row, col);
-                    editor.setBounds(rect);
-                    return editor.contains(p);
-                }
-            }
-        }
-        return super.isCellEditable(anEvent);
-    }
-
     @Override
     public boolean stopCellEditing() {
         if (editorComponent instanceof JComboBox) {
             ((DarkComboBoxUI) ((JComboBox<?>) editorComponent).getUI()).resetPopup();
         }
         return super.stopCellEditing();
-    }
-
-    @Override
-    public Component getTableCellEditorComponent(final JTable table, final Object value,
-                                                 final boolean isSelected, final int row, final int column) {
-        this.table = table;
-        if (useBooleanEditor(value, table)) {
-            isBooleanEditor = true;
-            return getBooleanEditor(table).getTableCellEditorComponent(table, value, isSelected, row, column);
-        } else {
-            isBooleanEditor = false;
-        }
-
-        delegate.setValue(value);
-
-        JComponent comp = editorComponent;
-        Component rendererComp = table.getCellRenderer(row, column)
-                                      .getTableCellRendererComponent(table, value, isSelected, false, row, column);
-        setupEditorComponent(value, rendererComp);
-        comp = applyRendererIcon(comp, rendererComp);
-
-        CellUtil.setupTableBackground(comp, table, false, row);
-        return comp;
-    }
-
-    protected JComponent applyRendererIcon(JComponent comp, final Component rendererComp) {
-        if (rendererComp instanceof JLabel) {
-            Icon icon = ((JLabel) rendererComp).getIcon();
-            if (icon != null) {
-                comp = iconWrapper;
-                iconWrapper.init(editorComponent, icon, rendererComp.getComponentOrientation().isLeftToRight());
-                iconWrapper.setIconGap(((JLabel) rendererComp).getIconTextGap() - 1);
-            }
-        }
-        return comp;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void setupEditorComponent(final Object value,
-                                        final Component rendererComp) {
-        if (editorComponent instanceof JComboBox) {
-            ((JComboBox<?>) editorComponent).removeAllItems();
-            if (value != null && value.getClass().isArray()) {
-                for (Object obj : (Object[]) value) {
-                    ((JComboBox<Object>) editorComponent).addItem(obj);
-                }
-            } else {
-                ((JComboBox<Object>) editorComponent).addItem(value);
-                ((JComboBox<?>) editorComponent).setSelectedItem(value);
-            }
-        } else if (editorComponent instanceof JSpinner) {
-            if (rendererComp instanceof JTextField) {
-                editorComponent.putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT,
-                                                  ((JTextField) rendererComp).getHorizontalAlignment());
-            } else if (rendererComp instanceof JLabel) {
-                editorComponent.putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT,
-                                                  ((JLabel) rendererComp).getHorizontalAlignment());
-            }
-        }
-    }
-
-    private boolean useBooleanEditor(final Object value, final JTable table) {
-        return value instanceof Boolean && DarkTableCellRenderer.isBooleanRenderingEnabled(table)
-               && !(editorComponent instanceof JCheckBox || editorComponent instanceof JRadioButton);
-    }
-
-    protected TableCellEditor getBooleanEditor(final JTable table) {
-        if (PropertyUtil.isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE,
-                                         DarkTableUI.RENDER_TYPE_RADIOBUTTON)) {
-            return radioButtonEditor;
-        }
-        return checkBoxEditor;
-    }
-
-    public static class IconWrapper extends JPanel {
-
-        private final JLabel label;
-        private JComponent c;
-        private int iconGap;
-
-        protected IconWrapper() {
-            setLayout(null);
-            label = new JLabel();
-            label.setIconTextGap(0);
-            add(label);
-        }
-
-        protected void setIconGap(final int iconGap) {
-            this.iconGap = iconGap;
-        }
-
-        protected void init(final JComponent component, final Icon icon, final boolean ltr) {
-            setComponentOrientation(ltr ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT);
-            if (c != null) {
-                remove(c);
-            }
-            add(component);
-            this.c = component;
-            label.setIcon(icon);
-        }
-
-        @Override
-        public void doLayout() {
-            if (c == null) return;
-            int w = getWidth();
-            int h = getHeight();
-            Border b = c.getBorder();
-            Insets ins = new Insets(0, 0, 0, 0);
-            Dimension labelSize = label.getPreferredSize();
-            int gap = getIconCompGap();
-            if (b != null) {
-                ins = b.getBorderInsets(c);
-            }
-            if (getComponentOrientation().isLeftToRight()) {
-                label.setBounds(ins.left + gap, 0, labelSize.width + 1, h);
-                c.setBounds(ins.left + labelSize.width + 2 * gap - 1, 0,
-                            w - ins.left - labelSize.width - 2 * gap + 1, h);
-            } else {
-                c.setBounds(0, 0, w - ins.right - labelSize.width - gap - 1, h);
-                label.setBounds(w - ins.right - labelSize.width - gap - 1, 0, labelSize.width + 1, h);
-            }
-        }
-
-        public int getIconCompGap() {
-            return iconGap;
-        }
     }
 }

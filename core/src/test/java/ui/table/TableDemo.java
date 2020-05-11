@@ -73,7 +73,6 @@ public class TableDemo implements ComponentDemo {
                 }
             }
         };
-
         JTableHeader header = table.getTableHeader();
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());

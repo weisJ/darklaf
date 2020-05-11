@@ -31,16 +31,24 @@ import javax.swing.tree.TreeCellRenderer;
 
 public class TreeCellRendererDelegate implements TreeCellRenderer {
 
-    private final TreeCellRenderer renderer;
+    private TreeCellRenderer delegate;
 
     public TreeCellRendererDelegate(final TreeCellRenderer renderer) {
-        this.renderer = renderer;
+        this.delegate = renderer;
+    }
+
+    public TreeCellRenderer getDelegate() {
+        return delegate;
+    }
+
+    public void setDelegate(final TreeCellRenderer delegate) {
+        this.delegate = delegate;
     }
 
     @Override
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
                                                   final boolean expanded, final boolean leaf, final int row,
                                                   final boolean hasFocus) {
-        return renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+        return getDelegate().getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     }
 }

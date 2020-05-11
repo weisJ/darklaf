@@ -31,14 +31,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
 import com.github.weisj.darklaf.components.SelectableTreeNode;
-import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.ui.tree.DarkTreeCellRenderer;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.tree.DarkTreeCellRendererDelegate;
 
 /**
- * @author vincencopalazzo
- * @author atarw
  * @author Jannis Weis
  */
 public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorToggleButton>
@@ -57,15 +53,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         }
-        toggleButton.setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(focus);
-
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
-                                      && focus && !DarkTableCellFocusBorder.isRowFocusBorder(table);
-        boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
-
-        CellUtil.setupTableForeground(toggleButton, table, paintSelected);
-        CellUtil.setupTableBackground(toggleButton, table, paintSelected, row);
         return toggleButton;
     }
 
@@ -76,17 +64,14 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         } else {
-            boolean sel = Boolean.TRUE.equals(DarkTreeCellRenderer.unwrapBooleanIfPossible(value));
+            boolean sel = Boolean.TRUE.equals(DarkTreeCellRendererDelegate.unwrapBooleanIfPossible(value));
             toggleButton.setSelected(sel);
             if (value instanceof SelectableTreeNode) {
                 toggleButton.setText(((SelectableTreeNode) value).getLabel());
             }
         }
-        toggleButton.setHorizontalAlignment(tree.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         toggleButton.setHasFocus(false);
-
-        CellUtil.setupTreeForeground(toggleButton, tree, selected);
-
+        toggleButton.setHorizontalAlignment(tree.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         return toggleButton;
     }
 
@@ -94,11 +79,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         return toggleButton;
     }
 
-    public static class CellEditorCheckBox extends JCheckBox implements CellRenderer, CellEditorToggleButton {
+    public static class CellCheckBox extends JCheckBox implements CellRenderer, CellEditorToggleButton {
 
         private boolean hasFocus;
 
-        public CellEditorCheckBox(final boolean opaque) {
+        public CellCheckBox(final boolean opaque) {
             setOpaque(opaque);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
@@ -120,11 +105,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         }
     }
 
-    public static class CellEditorRadioButton extends JRadioButton implements CellRenderer, CellEditorToggleButton {
+    public static class CellRadioButton extends JRadioButton implements CellRenderer, CellEditorToggleButton {
 
         private boolean hasFocus;
 
-        public CellEditorRadioButton(final boolean opaque) {
+        public CellRadioButton(final boolean opaque) {
             setOpaque(opaque);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);

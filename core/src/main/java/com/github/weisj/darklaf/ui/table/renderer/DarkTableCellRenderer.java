@@ -24,88 +24,9 @@
  */
 package com.github.weisj.darklaf.ui.table.renderer;
 
-import java.awt.*;
-
-import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
-import com.github.weisj.darklaf.ui.table.DarkTableCellFocusBorder;
-import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
- * @author vincencopalazzo
- * @author atarw
  * @author Jannis Weis
  */
-public class DarkTableCellRenderer extends DefaultTableCellRenderer {
-
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorCheckBox> checkBoxRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorCheckBox(true));
-    private final DarkCellRendererToggleButton<DarkCellRendererToggleButton.CellEditorRadioButton> radioRenderer = new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellEditorRadioButton(true));
-
-    protected static boolean isBooleanRenderingEnabled(final JTable table) {
-        return PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX);
-    }
-
-    @Override
-    public Component getTableCellRendererComponent(final JTable table, final Object value,
-                                                   final boolean isSelected, final boolean hasFocus,
-                                                   final int row, final int column) {
-        if (value instanceof Boolean && isBooleanRenderingEnabled(table)) {
-            return getBooleanRenderer(table).getTableCellRendererComponent(table, value, isSelected,
-                                                                           hasFocus, row, column);
-        }
-
-        JComponent component = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                                                                                row, column);
-        this.setVerticalAlignment(SwingConstants.CENTER);
-        setHorizontalAlignment(table.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
-
-        boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table);
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && hasFocus && !isRowFocus;
-        boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
-
-        setupBorderStyle(table, row, column, component, isRowFocus);
-        CellUtil.setupTableForeground(component, table, paintSelected);
-        CellUtil.setupTableBackground(component, table, paintSelected, row);
-        return component;
-    }
-
-    public void setupBorderStyle(final JTable table, final int row, final int column,
-                                 final JComponent component, final boolean isRowFocus) {
-        if (isRowFocus
-            && table.getSelectionModel().getLeadSelectionIndex() == row
-            && DarkUIUtil.hasFocus(table)
-            && !table.isEditing()) {
-            component.setBorder(UIManager.getBorder("Table.focusSelectedCellHighlightBorder"));
-            component.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, true);
-            JTableHeader header = table.getTableHeader();
-            TableColumn draggedColumn = (header == null) ? null : header.getDraggedColumn();
-            boolean forceLeft = false;
-            boolean forceRight = false;
-            if (draggedColumn != null) {
-                int index = DarkTableUI.viewIndexForColumn(draggedColumn, table);
-                forceLeft = column == index + 1 || column == index;
-                forceRight = column == index - 1 || column == index;
-            }
-            component.putClientProperty(DarkTableUI.KEY_FORCE_RIGHT_BORDER, forceRight);
-            component.putClientProperty(DarkTableUI.KEY_FORCE_LEFT_BORDER, forceLeft);
-        } else {
-            component.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, false);
-        }
-    }
-
-    protected TableCellRenderer getBooleanRenderer(final JTable table) {
-        if (PropertyUtil.isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE,
-                                         DarkTableUI.RENDER_TYPE_RADIOBUTTON)) {
-            return radioRenderer;
-        }
-        return checkBoxRenderer;
-    }
-}
+public class DarkTableCellRenderer extends DefaultTableCellRenderer {}

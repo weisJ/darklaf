@@ -48,6 +48,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
     protected Color borderColor;
     protected Color background;
     protected int defaultHeight;
+    protected DarkTableHeaderRendererDelegate rendererDelegate;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableHeaderUI();
@@ -72,15 +73,11 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
             defaultHeight = HEADER_HEIGHT;
         }
         TableCellRenderer defaultRenderer = header.getDefaultRenderer();
-        if (defaultRenderer != null
-            && defaultRenderer.getClass().getName().equals("sun.swing.table.DefaultTableCellHeaderRenderer")) {
-            defaultRenderer = new DarkTableHeaderRenderer(defaultRenderer);
-            header.setDefaultRenderer(defaultRenderer);
-        }
         if (defaultRenderer instanceof DefaultTableCellRenderer) {
             DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) defaultRenderer;
             renderer.setHorizontalAlignment(SwingConstants.LEADING);
         }
+        rendererDelegate = new DarkTableHeaderRendererDelegate(defaultRenderer);
     }
 
     @Override
@@ -324,9 +321,10 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         }
 
         boolean hasFocus = !header.isPaintingForPrint() && header.hasFocus();
-        return renderer.getTableCellRendererComponent(header.getTable(),
-                                                      aColumn.getHeaderValue(),
-                                                      false, hasFocus,
-                                                      -1, columnIndex);
+        rendererDelegate.setDelegate(renderer);
+        return rendererDelegate.getTableCellRendererComponent(header.getTable(),
+                                                              aColumn.getHeaderValue(),
+                                                              false, hasFocus,
+                                                              -1, columnIndex);
     }
 }

@@ -47,7 +47,6 @@ import sun.awt.shell.ShellFolder;
 import sun.awt.shell.ShellFolderColumnInfo;
 import sun.swing.FilePane;
 
-import com.github.weisj.darklaf.ui.list.DarkListCellRenderer;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
@@ -104,7 +103,9 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             int[] indices = list.getSelectedIndices();
             for (int i : indices) {
                 Rectangle bounds = list.getCellBounds(i, i);
-                list.repaint(bounds);
+                if (bounds != null) {
+                    list.repaint(bounds);
+                }
             }
         }
 
@@ -1553,36 +1554,6 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
     class EditActionListener implements ActionListener {
         public void actionPerformed(final ActionEvent e) {
             applyEdit();
-        }
-    }
-
-    @SuppressWarnings("serial") // JDK-implementation class
-    protected class FileRenderer extends DarkListCellRenderer {
-
-        public Component getListCellRendererComponent(final JList<?> list, final Object value,
-                                                      final int index, boolean isSelected,
-                                                      final boolean cellHasFocus) {
-
-            if (listViewWindowsStyle && !list.isFocusOwner()) {
-                isSelected = false;
-            }
-
-            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            File file = (File) value;
-            String fileName = getFileChooser().getName(file);
-            setText(fileName);
-            setFont(list.getFont());
-
-            Icon icon = getFileChooser().getIcon(file);
-            if (icon != null) {
-                setIcon(icon);
-            } else {
-                if (getFileChooser().getFileSystemView().isTraversable(file)) {
-                    setText(fileName + File.separator);
-                }
-            }
-
-            return this;
         }
     }
 
