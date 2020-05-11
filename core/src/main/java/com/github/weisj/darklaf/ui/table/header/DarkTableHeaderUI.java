@@ -29,7 +29,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicTableHeaderUI;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.ui.table.DarkTableScrollPaneBorder;
@@ -44,6 +47,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
     private static final int HEADER_HEIGHT = 26;
     protected Color borderColor;
     protected Color background;
+    protected int defaultHeight;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableHeaderUI();
@@ -63,12 +67,10 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         background = UIManager.getColor("TableHeader.background");
         borderColor = UIManager.getColor("TableHeader.borderColor");
         LookAndFeel.installBorder(header, "TableHeader.border");
-        Dimension dim = header.getPreferredSize();
-        int headerHeight = UIManager.getInt("TableHeader.height");
-        if (headerHeight < 0) {
-            headerHeight = HEADER_HEIGHT;
+        defaultHeight = UIManager.getInt("TableHeader.height");
+        if (defaultHeight < 0) {
+            defaultHeight = HEADER_HEIGHT;
         }
-        header.setPreferredSize(new Dimension(dim.width, Math.max(dim.height, headerHeight)));
         TableCellRenderer defaultRenderer = header.getDefaultRenderer();
         if (defaultRenderer != null
             && defaultRenderer.getClass().getName().equals("sun.swing.table.DefaultTableCellHeaderRenderer")) {
@@ -79,6 +81,13 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
             DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) defaultRenderer;
             renderer.setHorizontalAlignment(SwingConstants.LEADING);
         }
+    }
+
+    @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        Dimension dim = super.getPreferredSize(c);
+        dim.height = Math.max(defaultHeight, dim.height);
+        return dim;
     }
 
     protected CellRendererPane createCellRendererPane() {
@@ -96,11 +105,13 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         final Graphics2D g = (Graphics2D) g2;
         final GraphicsContext config = new GraphicsContext(g);
 
+        int x = 0;
+        int y = 0;
         int h = c.getHeight();
         int w = c.getWidth();
 
         g.setColor(getHeaderBackground());
-        g.fillRect(0, 0, w, h);
+        g.fillRect(x, y, w, h);
 
         if (header.getColumnModel().getColumnCount() <= 0) {
             return;
