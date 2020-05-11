@@ -158,10 +158,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         AbstractButton b = (AbstractButton) c;
         paintButtonBackground(g, c);
 
-        if (ButtonConstants.isDefaultButton(b)) {
-            g.setFont(g.getFont().deriveFont(Font.BOLD));
-        } else if (g.getFont().isBold()) {
-            g.setFont(g.getFont().deriveFont(Font.PLAIN));
+        Font font = g.getFont();
+        if (ButtonConstants.isDefaultButton(b) && !font.isBold()) {
+            g.setFont(font.deriveFont(Font.BOLD));
+        } else if (font.isBold()) {
+            g.setFont(font.deriveFont(Font.PLAIN));
         }
 
         String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());

@@ -31,8 +31,6 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonListener;
 
-import com.github.weisj.darklaf.util.PropertyKey;
-
 public class DarkButtonListener extends BasicButtonListener {
 
     private final DarkButtonUI ui;
@@ -77,12 +75,8 @@ public class DarkButtonListener extends BasicButtonListener {
         super.propertyChange(e);
         AbstractButton b = (AbstractButton) e.getSource();
         String key = e.getPropertyName();
-        if (key.startsWith("JButton.")
-            || PropertyKey.FOCUSABLE.equals(key)
-            || AbstractButton.TEXT_CHANGED_PROPERTY.equals(key)) {
-            b.revalidate();
-            b.doLayout();
-            b.repaint();
+        if (key.startsWith("JButton.")) {
+            b.invalidate();
         }
     }
 }
