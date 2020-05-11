@@ -28,8 +28,23 @@ import java.awt.*;
 import java.util.Objects;
 
 import javax.swing.*;
+import javax.swing.plaf.UIResource;
 
 public class PropertyUtil {
+
+    public static void installBackground(final JComponent component, final Color color) {
+        Color c = component.getBackground();
+        if (c == null || c instanceof UIResource) {
+            component.setBackground(color);
+        }
+    }
+
+    public static void installForeground(final JComponent component, final Color color) {
+        Color c = component.getForeground();
+        if (c == null || c instanceof UIResource) {
+            component.setForeground(color);
+        }
+    }
 
     public static void installProperty(final JComponent c, final String key, final Object value) {
         if (c.getClientProperty(key) == null) {
