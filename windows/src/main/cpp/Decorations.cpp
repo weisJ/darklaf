@@ -308,7 +308,7 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
                 // Adjust the maximized frame size to respect auto hiding taskbars.
                 HandleNCCalcSize(wrapper, wParam, lParam);
                 // Cut off unnecessary part of the window region (e.g. in maximized state)
-                UpdateRegion wrapper);
+                UpdateRegion(wrapper);
                 return 0;
             }
             break;
