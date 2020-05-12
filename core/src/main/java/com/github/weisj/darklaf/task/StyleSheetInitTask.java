@@ -42,139 +42,211 @@ public class StyleSheetInitTask implements DefaultsInitTask {
         this.defaults = defaults;
         StyleSheet styleSheet = new StyleSheet();
         Font font = defaults.getFont("html.font");
-        StringBuilder b = new StringBuilder();
-        b.append("body {")
-         .append("font-size: 14pt;")
-         .append("font-family: ").append(font.getFamily()).append(", ").append(font.getFontName()).append(";")
-         .append("font-weight: normal;")
-         .append("margin-left: 0;")
-         .append("margin-right: 0;")
-         .append("color: ").append(hex("textForeground")).append(";")
-         .append("}");
-        makeSingle(b, "p", "margin-top", "15px");
-        makeHeading(b, 1, "x-large");
-        makeHeading(b, 2, "large");
-        makeHeading(b, 3, "medium");
-        makeHeading(b, 4, "small");
-        makeHeading(b, 5, "x-small");
-        makeHeading(b, 6, "xx-small");
-        makeTBMargins(b, "li p");
-        makeSingle(b, "td p", "margin-top", "0");
-        makeTBMargins(b, "menu li p");
-        makeZeroMargins(b, "menu li");
-        makeMargins(b, "menu");
-        makeTBMargins(b, "dir li p");
-        makeZeroMargins(b, "dir li");
-        makeMargins(b, "dir");
-        makeMargins(b, "dd");
-        makeZeroMargins(b, "dd p");
-        makeTBMargins(b, "dt");
-        b.append("dl {")
-         .append("margin-left: 0;")
-         .append("margin-top: 10px;")
-         .append("margin-bottom: 10px;")
-         .append("}");
-        makeZeroMargins(b, "ol li");
-        b.append("ol {")
-         .append("margin-top: 10px;")
-         .append("margin-bottom: 10px;")
-         .append("margin-left-ltr: 50px;")
-         .append("margin-right-rtl: 50px;")
-         .append("list-style-type: decimal;")
-         .append("}");
-        makeTBMargins(b, "ol li p");
-        makeZeroMargins(b, "ul li");
-        b.append("ul {")
-         .append("margin-top: 10px;")
-         .append("margin-bottom: 10px;")
-         .append("margin-left-ltr: 50px;")
-         .append("margin-right-rtl: 50px;")
-         .append("list-style-type: disc;")
-         .append("-bullet-gap: 10px;")
-         .append("}");
-        makeZeroMargins(b, "ul li ul li");
-        b.append("ul li ul {")
-         .append("margin-left-ltr: 25px;")
-         .append("margin-right-rtl: 25px;")
-         .append("list-style-type: circle;")
-         .append("}");
-        makeZeroMargins(b, "ul li ul li ul li");
-        b.append("ul li menu {")
-         .append("margin-left-ltr: 25px;")
-         .append("margin-right-rtl: 25px;")
-         .append("list-style-type: circle;")
-         .append("}");
-        makeTBMargins(b, "ul li p");
-        b.append("a {")
-         .append("color: ").append(hex("hyperlink")).append(";")
-         .append("text-decoration: underline;")
-         .append("}");
-        b.append("address {")
-         .append("color: ").append(hex("hyperlink"))
-         .append("font-style: italic;")
-         .append("}");
-        makeSingle(b, "big", "font-size", "x-large");
-        makeSingle(b, "small", "font-size", "x-small");
-        makeMono(b, "samp");
-        makeItalic(b, "cite");
-        makeMono(b, "code");
-        makeItalic(b, "dfn");
-        makeItalic(b, "em");
-        makeItalic(b, "i");
-        makeBold(b, "b");
-        makeMono(b, "kbd");
-        makeSingle(b, "strike", "text-decoration", "line-through");
-        makeSingle(b, "s", "text-decoration", "line-through");
-        makeBold(b, "strong");
-        makeSingle(b, "sub", "vertical-align", "sub");
-        makeSingle(b, "sup", "vertical-align", "sub");
-        makeSingle(b, "tt", "font-family", "Monospaced, monospace");
-        makeSingle(b, "u", "text-decoration", "underline");
-        b.append("var {")
-         .append("font-weight: bold;")
-         .append("font-style: italic;")
-         .append("}");
-        b.append("table {")
-         .append("border-color: ").append(hex("border")).append(";")
-         .append("border-style: solid;")
-         .append("border-width: 1px;")
-         .append("border-collapse: collapse;")
-         .append("}");
-        makeSingle(b, "tr", "text-align", "left");
-        b.append("td {")
-         .append("border-color: ").append(hex("border")).append(";")
-         .append("border-style: none;")
-         .append("border-width: 1px;")
-         .append("padding: 3px;")
-         .append("border-collapse: collapse;")
-         .append("}");
-        b.append("th {")
-         .append("border-color: ").append(hex("border")).append(";")
-         .append("border-style: solid;")
-         .append("border-width: 1px;")
-         .append("font-weight: bold;")
-         .append("border-collapse: collapse;")
-         .append("padding: 3px;")
-         .append("}");
-        makeSingle(b, "blockquote", "margin", "5px 35px");
-        makeSingle(b, "center", "text-align", "center");
-        b.append("pre {")
-         .append("margin-top: 5px;")
-         .append("margin-bottom: 5px;")
-         .append("font-family: Monospaced, monospace;")
-         .append("}");
-        makeSingle(b, "pre p", "margin-top", "0");
-        b.append("caption {")
-         .append("caption-side: top;")
-         .append("text-align: center;")
-         .append("}");
-        makeSingle(b, "nobr", "white-space", "nowrap");
-        makeSingle(b, "input", "border", "none");
-        b.append("div {")
-         .append("border-color: ").append(hex("borderSecondary")).append(";")
-         .append("border-width: 1px;")
-         .append("}");
-        styleSheet.addRule(b.toString());
+        CSSBuilder builder = new CSSBuilder();
+
+        // @formatter:off
+        builder.group("body")
+                    .fontSize(pt(14))
+                    .fontFamily(font.getFamily(), font.getName())
+                    .fontWeight("normal")
+                    .marginRight(0)
+                    .marginLeft(0)
+                    .color(hex("textForeground"))
+               .group("p")
+                    .marginTop(px(15))
+               .group("h1")
+                   .fontSize("x-large")
+                   .fontWeight("bold")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("h2")
+                   .fontSize("large")
+                   .fontWeight("bold")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("h3")
+                   .fontSize("medium")
+                   .fontWeight("bold")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("h4")
+                   .fontSize("small")
+                   .fontWeight("bold")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("h5")
+                   .fontSize("x-small")
+                   .fontWeight("bold")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("h6")
+                   .fontSize("xx-small")
+                   .fontWeight("bold")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("li p")
+                   .marginTop(0)
+                   .marginBottom(0)
+                   .group("td p")
+                   .marginTop(0)
+               .group("menu li p")
+                   .marginTop(0)
+                   .marginBottom(0)
+               .group("menu li")
+                   .margin(0)
+               .group("menu")
+                   .marginLeftLTR(px(40))
+                   .marginRightRTL(px(40))
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("dir li p")
+                   .marginTop(0)
+                   .marginBottom(0)
+               .group("dir li")
+                   .margin(0)
+               .group("dir")
+                   .marginLeftLTR(px(40))
+                   .marginRightRTL(px(40))
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("dd")
+                   .marginLeftLTR(px(40))
+                   .marginRightRTL(px(40))
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("dd p")
+                   .margin(0)
+               .group("dt")
+                   .marginTop(0)
+                   .marginBottom(0)
+               .group("dl")
+                   .marginLeft(0)
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+               .group("ol li")
+                   .margin(0)
+               .group("ol")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+                   .marginLeftLTR(px(50))
+                   .marginRightRTL(px(50))
+                   .listStyleType("decimal")
+               .group("ol li p")
+                   .marginTop(0)
+                   .marginBottom(0)
+               .group("ul li")
+                   .margin(0)
+               .group("ul")
+                   .marginTop(px(10))
+                   .marginBottom(px(10))
+                   .marginLeftLTR(px(50))
+                   .marginRightRTL(px(50))
+                   .listStyleType("disc")
+                   .property("-bullet-gap", px(10))
+               .group("ul li ul li")
+                   .margin(0)
+               .group("ul li ul")
+                   .marginLeftLTR(px(25))
+                   .marginRightRTL(px(25))
+                   .listStyleType("circle")
+               .group("ul li ul li ul li")
+                   .margin(0)
+               .group("ul li menu")
+                   .marginLeftLTR(px(25))
+                   .marginRightRTL(px(25))
+                   .listStyleType("circle")
+               .group("ul li p")
+                   .marginTop(0)
+                   .marginBottom(0)
+               .group("a")
+                   .color(hex("hyperlink"))
+                   .textDecoration("underline")
+               .group("address")
+                   .color(hex("hyperlink"))
+                   .fontStyle("italic")
+               .group("big")
+                   .fontSize("x-large")
+                   .group("small")
+                   .fontSize("x-small")
+               .group("samp")
+                   .fontSize("small")
+                   .fontFamily("Monospaced", "monospace")
+               .group("code")
+                   .fontSize("small")
+                   .fontFamily("Monospaced", "monospace")
+               .group("kbd")
+                   .fontSize("small")
+                   .fontFamily("Monospaced", "monospace")
+               .group("cite")
+                   .fontStyle("italic")
+               .group("dfn")
+                   .fontStyle("italic")
+               .group("em")
+                   .fontStyle("italic")
+               .group("i")
+                   .fontStyle("italic")
+               .group("b")
+                   .fontWeight("bold")
+               .group("strong")
+                   .fontWeight("bold")
+               .group("strike")
+                   .textDecoration("line-through")
+               .group("s")
+                   .textDecoration("line-through")
+               .group("sub")
+                   .property("vertical-align", "sub")
+               .group("sup")
+                   .property("vertical-align", "sub")
+               .group("tt")
+                   .fontFamily("Monospaced", "monospace")
+               .group("u")
+                   .textDecoration("underline")
+               .group("var")
+                   .fontWeight("bold")
+                   .fontStyle("italic")
+               .group("table")
+                   .borderColor(hex("border"))
+                   .borderStyle("solid")
+                   .borderWidth(px(1))
+                   .borderCollapse("collapse")
+               .group("td")
+                   .borderColor(hex("border"))
+                   .borderStyle("none")
+                   .borderWidth(px(1))
+                   .padding(px(3))
+                   .borderCollapse("collapse")
+               .group("th")
+                   .borderColor(hex("border"))
+                   .borderStyle("solid")
+                   .borderWidth(px(1))
+                   .padding(px(3))
+                   .fontWeight("bold")
+                   .borderCollapse("collapse")
+               .group("tr")
+                   .property("text-align", "left")
+               .group("blockquote")
+                   .margin(px(5) + " " + px(35))
+               .group("center")
+                   .property("text-align", "center")
+               .group("pre")
+                   .marginTop(px(5))
+                   .marginBottom(px(5))
+                   .fontFamily("Monospaced", "monospace")
+               .group("pre p")
+                   .marginTop(0)
+               .group("caption")
+                   .property("caption-side", "top")
+                   .property("text-align", "center")
+               .group("nobr")
+                   .property("white-space", "nowrap")
+               .group("input")
+                   .border("none")
+               .group("div")
+                   .borderColor(hex("borderSecondary"))
+                   .borderWidth(px(1));
+        // @formatter:on
+
+        styleSheet.addRule(builder.toString());
         StyleSheet custom = currentTheme.loadStyleSheet();
         if (custom.getStyleNames().hasMoreElements()) {
             styleSheet.addStyleSheet(custom);
@@ -182,60 +254,17 @@ public class StyleSheetInitTask implements DefaultsInitTask {
         new HTMLEditorKit().setStyleSheet(styleSheet);
     }
 
-    protected void makeHeading(final StringBuilder b, final int type, final String size) {
-        b.append("h").append(type).append("{")
-         .append("font-size: ").append(size).append(";")
-         .append("font-weight: bold;")
-         .append("margin-top: 10px;")
-         .append("margin-bottom: 10px;")
-         .append("}");
-    }
-
-    protected void makeMargins(final StringBuilder b, final String name) {
-        b.append(name).append(" {")
-         .append("margin-left-ltr: 40px;")
-         .append("margin-right-rtl: 40px;")
-         .append("margin-top: 10px;")
-         .append("margin-bottom: 10px;")
-         .append("}");
-    }
-
-    protected void makeTBMargins(final StringBuilder b, final String name) {
-        b.append(name).append(" {")
-         .append("margin-top: 0;")
-         .append("margin-bottom: 0;")
-         .append("}");
-    }
-
-    protected void makeZeroMargins(final StringBuilder b, final String name) {
-        makeSingle(b, name, "margin", "0");
-    }
-
-    protected void makeItalic(final StringBuilder b, final String name) {
-        makeSingle(b, name, "font-style", "italic");
-    }
-
-    protected void makeBold(final StringBuilder b, final String name) {
-        makeSingle(b, name, "font-weight", "bold");
-    }
-
-    protected void makeSingle(final StringBuilder b, final String name,
-                              final String key, final String value) {
-        b.append(name).append(" {")
-         .append(key).append(": ").append(value).append(";")
-         .append("}");
-    }
-
-    protected void makeMono(final StringBuilder b, final String name) {
-        b.append(name).append(" {")
-         .append("font-size: small;")
-         .append("font-family: Monospaced, monospace;")
-         .append("}");
-    }
-
     protected String hex(final String key) {
         Color c = defaults.getColor(key);
         return "#" + ColorUtil.toHex(c);
+    }
+
+    protected String px(final int px) {
+        return px + "px";
+    }
+
+    protected String pt(final int pt) {
+        return pt + "pt";
     }
 
     @Override
