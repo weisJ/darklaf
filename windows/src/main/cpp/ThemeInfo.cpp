@@ -50,8 +50,7 @@
 #define FONT_SCALE_DEFAULT_VALUE 100
 #define ACCENT_COLOR_DEFAULT_VALUE 0
 
-void ModifyFlags(DWORD &flags)
-{
+void ModifyFlags(DWORD &flags) {
 #ifdef _WIN64
     flags |= RRF_SUBKEY_WOW6464KEY;
 #else
@@ -59,105 +58,84 @@ void ModifyFlags(DWORD &flags)
 #endif
 }
 
-DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value)
-{
+DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
     DWORD data {};
     DWORD dataSize = sizeof(data);
     DWORD flags = RRF_RT_REG_DWORD;
     ModifyFlags(flags);
     LONG retCode = ::RegGetValue(hKey, subKey, value, flags, nullptr, &data, &dataSize);
-    if (retCode != ERROR_SUCCESS)
-        throw retCode;
+    if (retCode != ERROR_SUCCESS) throw retCode;
 
     return data;
 }
 
-std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value)
-{
+std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
     DWORD dataSize {};
     DWORD flags = RRF_RT_REG_SZ;
     ModifyFlags(flags);
     LONG retCode = ::RegGetValue(hKey, subKey, value, flags, nullptr, nullptr, &dataSize);
-    if (retCode != ERROR_SUCCESS)
-        throw retCode;
+    if (retCode != ERROR_SUCCESS) throw retCode;
 
     std::string data;
     DWORD stringLengthInChars = dataSize / sizeof(char);
     data.resize(stringLengthInChars);
     retCode = ::RegGetValue(hKey, subKey, value, flags, nullptr, &data[0], &dataSize);
-    if (retCode != ERROR_SUCCESS)
-        throw retCode;
+    if (retCode != ERROR_SUCCESS) throw retCode;
 
     return data;
 }
 
-bool IsHighContrastMode()
-{
+bool IsHighContrastMode() {
     HIGHCONTRAST info = { 0 };
     info.cbSize = sizeof(HIGHCONTRAST);
     BOOL ok = SystemParametersInfo(SPI_GETHIGHCONTRAST, 0, &info, 0);
-    if (ok)
-    {
+    if (ok) {
         return info.dwFlags & HCF_HIGHCONTRASTON;
     }
     return HIGH_CONTRAST_DEFAULT_VALUE;
 }
 
-bool IsDarkMode()
-{
-    try
-    {
+bool IsDarkMode() {
+    try {
         bool appsUseDark = (0 == RegGetDword(HKEY_CURRENT_USER, DARK_MODE_PATH,
         DARK_MODE_KEY));
         bool isHighContrast = IsHighContrastMode();
-        if (!isHighContrast)
-            return appsUseDark;
+        if (!isHighContrast) return appsUseDark;
 
         std::string themeValue = RegGetString(HKEY_CURRENT_USER,
         HIGH_CONTRAST_PATH, HIGH_CONTRAST_THEME_KEY);
         return (strcmp(themeValue.c_str(), HIGH_CONTRAST_LIGHT_THEME) != 0);
-    } catch (LONG e)
-    {
+    } catch (LONG e) {
         return DARK_MODE_DEFAULT_VALUE;
     }
 }
 
-unsigned int GetTextScaleFactor()
-{
-    try
-    {
+unsigned int GetTextScaleFactor() {
+    try {
         return RegGetDword(HKEY_CURRENT_USER, FONT_SCALE_PATH, FONT_SCALE_KEY);
-    } catch (LONG e)
-    {
+    } catch (LONG e) {
         return FONT_SCALE_DEFAULT_VALUE;
     }
 }
 
-bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event)
-{
+bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event) {
     HKEY hKey;
     REGSAM flags = KEY_NOTIFY;
     ModifyFlags(flags);
     DWORD res = RegOpenKeyEx(HKEY_CURRENT_USER, subKey, 0, flags, &hKey);
-    if (res == ERROR_SUCCESS)
-    {
+    if (res == ERROR_SUCCESS) {
         LSTATUS status = RegNotifyChangeKeyValue(hKey, FALSE, REG_NOTIFY_CHANGE_LAST_SET, event, TRUE);
         return status == ERROR_SUCCESS;
-    }
-    else
-    {
+    } else {
         return FALSE;
     }
 }
 
-int GetAccentColor()
-{
-    try
-    {
+int GetAccentColor() {
+    try {
         return RegGetDword(HKEY_CURRENT_USER, ACCENT_COLOR_PATH,
         ACCENT_COLOR_KEY);
-    } catch (LONG e)
-    {
+    } catch (LONG e) {
         return ACCENT_COLOR_DEFAULT_VALUE;
     }
 }
@@ -186,8 +164,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColo
     return (jint) GetAccentColor();
 }
 
-struct EventHandler
-{
+struct EventHandler {
         JavaVM *jvm;
         JNIEnv *env;
         jobject callback;
@@ -195,48 +172,33 @@ struct EventHandler
         std::thread notificationLoop;
         std::atomic<bool> running = FALSE;
 
-        void runCallBack()
-        {
+        void runCallBack() {
             jclass runnableClass = env->GetObjectClass(callback);
             jmethodID runMethodId = env->GetMethodID(runnableClass, "run", "()V");
-            if (runMethodId)
-            {
+            if (runMethodId) {
                 env->CallVoidMethod(callback, runMethodId);
             }
         }
 
-        bool awaitPreferenceChange()
-        {
-            if (!RegisterRegistryEvent(FONT_SCALE_PATH, eventHandle))
-                return FALSE;
-            if (!RegisterRegistryEvent(DARK_MODE_PATH, eventHandle))
-                return FALSE;
-            if (!RegisterRegistryEvent(HIGH_CONTRAST_PATH, eventHandle))
-                return FALSE;
-            if (!RegisterRegistryEvent(ACCENT_COLOR_PATH, eventHandle))
-                return FALSE;
+        bool awaitPreferenceChange() {
+            if (!RegisterRegistryEvent(FONT_SCALE_PATH, eventHandle)) return FALSE;
+            if (!RegisterRegistryEvent(DARK_MODE_PATH, eventHandle)) return FALSE;
+            if (!RegisterRegistryEvent(HIGH_CONTRAST_PATH, eventHandle)) return FALSE;
+            if (!RegisterRegistryEvent(ACCENT_COLOR_PATH, eventHandle)) return FALSE;
             return WaitForSingleObject(eventHandle, INFINITE) != WAIT_FAILED;
         }
 
-        void run()
-        {
+        void run() {
             int getEnvStat = jvm->GetEnv((void**) &env, JNI_VERSION_1_6);
-            if (getEnvStat == JNI_EDETACHED)
-            {
-                if (jvm->AttachCurrentThread((void**) &env, NULL) != 0)
-                    return;
-            }
-            else if (getEnvStat == JNI_EVERSION)
-            {
+            if (getEnvStat == JNI_EDETACHED) {
+                if (jvm->AttachCurrentThread((void**) &env, NULL) != 0) return;
+            } else if (getEnvStat == JNI_EVERSION) {
                 return;
             }
-            while (running && awaitPreferenceChange())
-            {
-                if (running)
-                {
+            while (running && awaitPreferenceChange()) {
+                if (running) {
                     runCallBack();
-                    if (env->ExceptionCheck())
-                    {
+                    if (env->ExceptionCheck()) {
                         env->ExceptionDescribe();
                         break;
                     }
@@ -245,15 +207,13 @@ struct EventHandler
             jvm->DetachCurrentThread();
         }
 
-        void stop()
-        {
+        void stop() {
             running = FALSE;
             SetEvent(eventHandle);
             notificationLoop.join();
         }
 
-        EventHandler(JavaVM *jvm_, jobject callback_, HANDLE eventHandle_)
-        {
+        EventHandler(JavaVM *jvm_, jobject callback_, HANDLE eventHandle_) {
             jvm = jvm_;
             callback = callback_;
             eventHandle = eventHandle_;

@@ -31,23 +31,28 @@
 #include <shellapi.h>
 #include <winuser.h>
 
-class WindowWrapper
-{
+class WindowWrapper {
     public:
         bool resizable = true;
         bool popup_menu = false;
         bool moving = false;
         bool move_mode = false;
         bool maximized = false;
+
+        // The original window procedure.
         WNDPROC prev_proc;
+
+        // The background brush.
         HBRUSH bgBrush;
 
         HWND window;
         int width;
         int height;
 
+        // The window region.
         RECT rgn;
 
+        // The insets for the title bar area that is draggable.
         int left = 0;
         int right = 0;
         int title_height = 0;

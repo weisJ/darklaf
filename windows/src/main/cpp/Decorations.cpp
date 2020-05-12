@@ -34,21 +34,16 @@
 
 std::map<HWND, WindowWrapper*> wrapper_map = std::map<HWND, WindowWrapper*>();
 
-bool Maximized(HWND hwnd)
-{
+bool Maximized(HWND hwnd) {
     WINDOWPLACEMENT placement;
-    if (!GetWindowPlacement(hwnd, &placement))
-        return false;
+    if (!GetWindowPlacement(hwnd, &placement)) return false;
     return placement.showCmd == SW_MAXIMIZE;
 }
 
-LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y)
-{
-    if (wrapper->popup_menu)
-        return HTCLIENT;
+LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
+    if (wrapper->popup_menu) return HTCLIENT;
 
-    POINT ptMouse = { x,
-                      y };
+    POINT ptMouse = { x, y };
 
     // Get the window rectangle.
     RECT rcWindow;
@@ -58,12 +53,13 @@ LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y)
     USHORT uRow = 1;
     USHORT uCol = 1;
 
-    if (!Maximized(wrapper->window))
-    {
-        /* The horizontal frame should be the same size as the vertical frame,
-         since the NONCLIENTMETRICS structure does not distinguish between them */
+    if (!Maximized(wrapper->window)) {
+        /*
+         * The horizontal frame should be the same size as the vertical frame,
+         * since the NONCLIENTMETRICS structure does not distinguish between them
+         */
         int frame_size = GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
-        /* The diagonal size handles are wider than the frame */
+        // The diagonal size handles are wider than the frame
         int diagonal_width = frame_size * 2 + GetSystemMetrics(SM_CXBORDER);
 
         bool top = ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size;
@@ -78,105 +74,82 @@ LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y)
         bool diag_left = ptMouse.x >= rcWindow.left && ptMouse.x < rcWindow.left + frame_size;
         bool diag_right = !diag_left && (ptMouse.x < rcWindow.right && ptMouse.x >= rcWindow.right - diagonal_width);
 
-        if (top)
-            uRow = 0;
-        if (bottom)
-            uRow = 2;
+        if (top) uRow = 0;
+        if (bottom) uRow = 2;
 
-        if (top || bottom)
-        {
-            if (diag_left)
-                uCol = 0;
-            else if (diag_right)
-                uCol = 2;
-        }
-        else
-        {
-            if (left)
-                uCol = 0;
-            if (right)
-                uCol = 2;
+        if (top || bottom) {
+            if (diag_left) uCol = 0;
+            else if (diag_right) uCol = 2;
+        } else {
+            if (left) uCol = 0;
+            if (right) uCol = 2;
 
-            if (left || right)
-            {
-                if (diag_top)
-                    uRow = 0;
-                else if (diag_bottom)
-                    uRow = 2;
+            if (left || right) {
+                if (diag_top) uRow = 0;
+                else if (diag_bottom) uRow = 2;
             }
         }
     }
 
     // Hit test (HTTOPLEFT, ... HTBOTTOMRIGHT)
-    LRESULT hitTests[3][3] = { { HTTOPLEFT,
-                                 HTTOP,
-                                 HTTOPRIGHT },
-                               { HTLEFT,
-                                 HTNOWHERE,
-                                 HTRIGHT },
-                               { HTBOTTOMLEFT,
-                                 HTBOTTOM,
-                                 HTBOTTOMRIGHT } };
+// @formatter:off
+    LRESULT hitTests[3][3] = { { HTTOPLEFT, HTTOP, HTTOPRIGHT },
+                               { HTLEFT, HTNOWHERE, HTRIGHT },
+                               { HTBOTTOMLEFT, HTBOTTOM, HTBOTTOMRIGHT } };
+
     LRESULT hit = hitTests[uRow][uCol];
-    if (hit == HTNOWHERE || !wrapper->resizable)
-    {
+    if (hit == HTNOWHERE || !wrapper->resizable) {
         //Handle window drag.
-        if (ptMouse.y < rcWindow.top + wrapper->title_height && ptMouse.x >= rcWindow.left + wrapper->left
-            && ptMouse.x <= rcWindow.right - wrapper->right)
-        {
+        if (ptMouse.y < rcWindow.top + wrapper->title_height
+            && ptMouse.x >= rcWindow.left + wrapper->left
+            && ptMouse.x <= rcWindow.right - wrapper->right) {
             return HTCAPTION;
         }
         return HTCLIENT;
-    }
-    else
-    {
+    } else {
         return hit;
     }
+// @formatter:on
 }
 
-void UpdateRegion(WindowWrapper *wrapper)
-{
-    if (wrapper->popup_menu)
-        return;
+void UpdateRegion(WindowWrapper *wrapper) {
+    if (wrapper->popup_menu) return;
     RECT old_rgn = wrapper->rgn;
 
-    if (Maximized(wrapper->window))
-    {
+    if (Maximized(wrapper->window)) {
         WINDOWINFO wi;
         wi.cbSize = sizeof(WINDOWINFO);
         GetWindowInfo(wrapper->window, &wi);
 
-        /* For maximized windows, a region is needed to cut off the non-client
-         borders that hang over the edge of the screen */
+        /*
+         * For maximized windows, a region is needed to cut off the non-client
+         * borders that hang over the edge of the screen
+         */
         wrapper->rgn.left = wi.rcClient.left - wi.rcWindow.left;
         wrapper->rgn.top = wi.rcClient.top - wi.rcWindow.top;
         wrapper->rgn.right = wi.rcClient.right - wi.rcWindow.left;
         wrapper->rgn.bottom = wi.rcClient.bottom - wi.rcWindow.top;
 
-    }
-    else
-    {
-        /* Don't mess with the region when composition is enabled and the
-         window is not maximized, otherwise it will lose its shadow */
+    } else {
+        /*
+         * Don't mess with the region when composition is enabled and the
+         * window is not maximized, otherwise it will lose its shadow
+         */
         wrapper->rgn.left = 0;
         wrapper->rgn.top = 0;
         wrapper->rgn.right = 0;
         wrapper->rgn.bottom = 0;
     }
 
-    /* Avoid unnecessarily updating the region to avoid unnecessary redraws */
-    if (EqualRect(&wrapper->rgn, &old_rgn))
-        return;
-    /* Treat empty regions as NULL regions */
+    // Avoid unnecessarily updating the region to avoid unnecessary redraws
+    if (EqualRect(&wrapper->rgn, &old_rgn)) return;
+    // Treat empty regions as NULL regions
     RECT empty = { 0 };
-    if (EqualRect(&wrapper->rgn, &empty))
-        SetWindowRgn(wrapper->window, NULL, TRUE);
-    else
-        SetWindowRgn(wrapper->window, CreateRectRgnIndirect(&wrapper->rgn), TRUE);
+    if (EqualRect(&wrapper->rgn, &empty)) SetWindowRgn(wrapper->window, NULL, TRUE);
+    else SetWindowRgn(wrapper->window, CreateRectRgnIndirect(&wrapper->rgn), TRUE);
 }
 
-bool AutoHideTaskbar(UINT edge, RECT mon)
-{
+bool AutoHideTaskbar(UINT edge, RECT mon) {
     APPBARDATA data;
     data.cbSize = sizeof(APPBARDATA);
     data.uEdge = edge;
@@ -184,47 +157,47 @@ bool AutoHideTaskbar(UINT edge, RECT mon)
     return SHAppBarMessage(ABM_GETAUTOHIDEBAREX, &data);
 }
 
-void AdjustMaximizedClientArea(HWND window, RECT &rect)
-{
-    if (!Maximized(window))
-        return;
+void AdjustMaximizedClientArea(HWND window, RECT &rect) {
+    if (!Maximized(window)) return;
 
     HMONITOR monitor = MonitorFromWindow(window, MONITOR_DEFAULTTOPRIMARY);
-    if (!monitor)
-        return;
+    if (!monitor) return;
 
     MONITORINFO monitor_info {};
     monitor_info.cbSize = sizeof(MONITORINFO);
-    if (!GetMonitorInfo(monitor, &monitor_info))
-        return;
+    if (!GetMonitorInfo(monitor, &monitor_info)) return;
 
     rect = monitor_info.rcWork;
 }
 
-void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam)
-{
-    union
-    {
+/**
+ * Adjust the maximized frame size to respect auto hiding taskbars.
+ */
+void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam) {
+    union {
             LPARAM lparam;
             RECT *rect;
     } params;
     params.lparam = lparam;
 
-    /* DefWindowProc must be called in both the maximized and non-maximized
-     cases, otherwise tile/cascade windows won't work */
+    /*
+     * DefWindowProc must be called in both the maximized and non-maximized
+     * cases, otherwise tile/cascade windows won't work
+     */
     RECT nonclient = *params.rect;
     DefWindowProc(wrapper->window, WM_NCCALCSIZE, wparam, lparam);
     RECT client = *params.rect;
 
-    if (Maximized(wrapper->window))
-    {
+    if (Maximized(wrapper->window)) {
         WINDOWINFO wi;
         wi.cbSize = sizeof(wi);
         GetWindowInfo(wrapper->window, &wi);
 
-        /* Maximized windows always have a non-client border that hangs over
-         the edge of the screen, so the size proposed by WM_NCCALCSIZE is
-         fine. Just adjust the top border to remove the window title. */
+        /*
+         * Maximized windows always have a non-client border that hangs over
+         * the edge of the screen, so the size proposed by WM_NCCALCSIZE is
+         * fine. Just adjust the top border to remove the window title.
+         */
         (*params.rect).left = client.left;
         (*params.rect).top = nonclient.top + wi.cyWindowBorders;
         (*params.rect).right = client.right;
@@ -244,29 +217,23 @@ void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam)
          * of the monitor is likely to contain an auto-hide appbar, so the
          * missing client area is covered by it.
          */
-        if (EqualRect(params.rect, &mi.rcMonitor))
-        {
-            if (AutoHideTaskbar(ABE_BOTTOM, mi.rcMonitor))
-                params.rect->bottom--;
-            else if (AutoHideTaskbar(ABE_LEFT, mi.rcMonitor))
-                params.rect->left++;
-            else if (AutoHideTaskbar(ABE_TOP, mi.rcMonitor))
-                params.rect->top++;
-            else if (AutoHideTaskbar(ABE_RIGHT, mi.rcMonitor))
-                params.rect->right--;
+        if (EqualRect(params.rect, &mi.rcMonitor)) {
+            if (AutoHideTaskbar(ABE_BOTTOM, mi.rcMonitor)) params.rect->bottom--;
+            else if (AutoHideTaskbar(ABE_LEFT, mi.rcMonitor)) params.rect->left++;
+            else if (AutoHideTaskbar(ABE_TOP, mi.rcMonitor)) params.rect->top++;
+            else if (AutoHideTaskbar(ABE_RIGHT, mi.rcMonitor)) params.rect->right--;
         }
-    }
-    else
-    {
-        /* For the non-maximized case, set the output RECT to what it was
-         before WM_NCCALCSIZE modified it. This will make the client size the
-         same as the non-client size. */
+    } else {
+        /*
+         * For the non-maximized case, set the output RECT to what it was
+         * before WM_NCCALCSIZE modified it. This will make the client size the
+         * same as the non-client size.
+         */
         *params.rect = nonclient;
     }
 }
 
-void HandleWindowPosChanged(WindowWrapper *wrapper, const WINDOWPOS *pos)
-{
+void HandleWindowPosChanged(WindowWrapper *wrapper, const WINDOWPOS *pos) {
     RECT client;
     GetClientRect(wrapper->window, &client);
     LONG old_width = wrapper->width;
@@ -275,129 +242,38 @@ void HandleWindowPosChanged(WindowWrapper *wrapper, const WINDOWPOS *pos)
     wrapper->height = client.bottom;
     bool client_changed = wrapper->width != old_width || wrapper->height != old_height;
 
-    if (client_changed || (pos->flags & SWP_FRAMECHANGED))
-        UpdateRegion(wrapper);
+    if (client_changed || (pos->flags & SWP_FRAMECHANGED)) UpdateRegion(wrapper);
 }
 
-void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper)
-{
+void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper) {
     HDC hdc = reinterpret_cast<HDC>(wParam);
     RECT clientRect;
     GetClientRect(hwnd, &clientRect);
     FillRect(hdc, &clientRect, wrapper->bgBrush);
 }
 
-LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
-{
-    HWND handle = reinterpret_cast<HWND>(hwnd);
-    auto wrapper = wrapper_map[handle];
-
-    switch(uMsg)
-    {
-        case WM_NCACTIVATE:
-        return TRUE;
-        case WM_NCCALCSIZE:
-        if (wParam == TRUE)
-        {
-            HandleNCCalcSize(wrapper, wParam, lParam);
-            UpdateRegion(wrapper);
-            return 0;
-        }
-        break;
-        case WM_NCHITTEST:
-        return HandleHitTest(wrapper, GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
-        case WM_MOVE:
-        wrapper->moving = wrapper->move_mode;
-        break;
-        case WM_ENTERSIZEMOVE:
-        wrapper->move_mode = TRUE;
-        break;
-        case WM_EXITSIZEMOVE:
-        wrapper->moving = FALSE;
-        wrapper->move_mode = FALSE;
-        break;
-        case WM_ERASEBKGND:
-        case WM_PAINT:
-        if (!wrapper->bgBrush)
-        break;
-        if (!wrapper->moving || wrapper->popup_menu)
-        PaintBackground(hwnd, wParam, wrapper);
-        if (uMsg == WM_ERASEBKGND)
-        return TRUE;
-        break;
-        case WM_NCUAHDRAWCAPTION:
-        case WM_NCUAHDRAWFRAME:
-        /* These undocumented messages are sent to draw themed window borders.
-         Block them to prevent drawing borders over the client area. */
-        return 0;
-        case WM_WINDOWPOSCHANGED:
-        HandleWindowPosChanged(wrapper, (WINDOWPOS*)lParam);
-        break;
-        default:
-        break;
-    }
-
-    return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
-}
-
-JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizable(JNIEnv *env, jclass obj, jlong hwnd, jboolean res)
-{
-    HWND handle = reinterpret_cast<HWND>(hwnd);
-    auto wrap = wrapper_map[handle];
-    if (wrap)
-    {
-        wrap->resizable = res;
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv *env, jclass obj, jlong hwnd,
-        jint l, jint r, jint h)
-{
-    HWND handle = reinterpret_cast<HWND>(hwnd);
-    auto wrap = wrapper_map[handle];
-    if (wrap)
-    {
-        wrap->left = l;
-        wrap->right = r;
-        wrap->title_height = h;
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackground(JNIEnv *env, jclass obj, jlong hwnd, jint r, jint g, jint b)
-{
-    HWND handle = reinterpret_cast<HWND>(hwnd);
-    auto wrap = wrapper_map[handle];
-    if (wrap)
-    {
-        wrap->bgBrush = CreateSolidBrush(RGB(r, g, b));
-    }
-}
-
-void ExtendClientFrame(HWND handle)
-{
-    MARGINS margins = { 0,
-                        0,
-                        1,
-                        0 };
+/**
+ * Extend the client area into the frame. Leaves a the margin at the top to make sure windows still recognizes the
+ * window to have a size frame. Otherwise no shadow is drawn.
+ */
+void ExtendClientFrame(HWND handle) {
+    MARGINS margins = { 0, 0, 1, 0 };
     DwmExtendFrameIntoClientArea(handle, &margins);
 }
 
-void SetupWindowStyle(HWND handle, bool is_popup)
-{
+/**
+ * Make sure windows recognizes the window to be resizable. Necessary for shadows and aero-snap.
+ */
+void SetupWindowStyle(HWND handle, bool is_popup) {
     auto style = GetWindowLongPtr(handle, GWL_STYLE);
     style |= WS_THICKFRAME;
     SetWindowLongPtr(handle, GWL_STYLE, style);
 }
 
-bool InstallDecorations(HWND handle, bool is_popup)
-{
-    //Prevent multiple installations overriding the real window procedure.
+bool InstallDecorations(HWND handle, bool is_popup) {
+    // Prevent multiple installations overriding the real window procedure.
     auto it = wrapper_map.find(handle);
-    if (it != wrapper_map.end())
-        return false;
+    if (it != wrapper_map.end()) return false;
 
     SetupWindowStyle(handle, is_popup);
     ExtendClientFrame(handle);
@@ -409,26 +285,111 @@ bool InstallDecorations(HWND handle, bool is_popup)
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
     wrapper_map[handle] = wrapper;
+
+    // Update the window procedure with our custom procedure.
     SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR) WindowWrapper::WindowProc);
     UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED;
     SetWindowPos(handle, NULL, 0, 0, 0, 0, flags);
     return true;
 }
 
+// @formatter:off
+LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) {
+    HWND handle = reinterpret_cast<HWND>(hwnd);
+    auto wrapper = wrapper_map[handle];
+
+    switch (uMsg) {
+        case WM_NCACTIVATE:
+            // Prevents window flickering when being blocked by dialogs or when activating.
+            return TRUE;
+        case WM_NCCALCSIZE:
+            // If wParam is TRUE return 0 to signify the whole frame is the client area.
+            if (wParam == TRUE) {
+                // Adjust the maximized frame size to respect auto hiding taskbars.
+                HandleNCCalcSize(wrapper, wParam, lParam);
+                // Cut off unnecessary part of the window region (e.g. in maximized state)
+                UpdateRegion wrapper);
+                return 0;
+            }
+            break;
+        case WM_NCHITTEST:
+            return HandleHitTest(wrapper, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        case WM_MOVE:
+            wrapper->moving = wrapper->move_mode;
+            break;
+        case WM_ENTERSIZEMOVE:
+            wrapper->move_mode = TRUE;
+            break;
+        case WM_EXITSIZEMOVE:
+            wrapper->moving = FALSE;
+            wrapper->move_mode = FALSE;
+            break;
+        case WM_ERASEBKGND:
+        case WM_PAINT:
+            if (!wrapper->bgBrush) break;
+            if (!wrapper->moving || wrapper->popup_menu) {
+                // Don't paint the background if the window is moving to avoid teared graphics on the window edge.
+                PaintBackground(hwnd, wParam, wrapper);
+            }
+            if (uMsg == WM_ERASEBKGND) return TRUE;
+            break;
+        case WM_NCUAHDRAWCAPTION:
+        case WM_NCUAHDRAWFRAME:
+            /*
+             * These undocumented messages are sent to draw themed window borders.
+             * Block them to prevent drawing borders over the client area.
+             */
+            return 0;
+        case WM_WINDOWPOSCHANGED:
+            // Update window region if necessary.
+            HandleWindowPosChanged(wrapper, (WINDOWPOS*) lParam);
+            break;
+        default:
+            break;
+    }
+    return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
+}
+// @formatter:on
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizable(JNIEnv *env, jclass obj, jlong hwnd, jboolean res) {
+    HWND handle = reinterpret_cast<HWND>(hwnd);
+    auto wrap = wrapper_map[handle];
+    if (wrap) {
+        wrap->resizable = res;
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv *env, jclass obj, jlong hwnd, jint l, jint r, jint h) {
+    HWND handle = reinterpret_cast<HWND>(hwnd);
+    auto wrap = wrapper_map[handle];
+    if (wrap) {
+        wrap->left = l;
+        wrap->right = r;
+        wrap->title_height = h;
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackground(JNIEnv *env, jclass obj, jlong hwnd, jint r, jint g, jint b) {
+    HWND handle = reinterpret_cast<HWND>(hwnd);
+    auto wrap = wrapper_map[handle];
+    if (wrap) {
+        wrap->bgBrush = CreateSolidBrush(RGB(r, g, b));
+    }
+}
+
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     return (jboolean) InstallDecorations(handle, false);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
-    if (wrap)
-    {
+    if (wrap) {
         SetWindowLongPtr(handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
         wrapper_map.erase(handle);
         delete (wrap);
@@ -436,8 +397,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     return (jboolean) InstallDecorations(handle, true);
 }
@@ -445,22 +405,19 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopu
 //Window functions.
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_minimize(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_minimize(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_MINIMIZE);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_maximize(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_maximize(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_MAXIMIZE);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv *env, jclass obj, jlong hwnd)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_RESTORE);
 }
