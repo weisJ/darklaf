@@ -25,8 +25,6 @@
 package com.github.weisj.darklaf.ui.spinner;
 
 import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -255,14 +253,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         if (!SpinnerConstants.isTreeOrTableCellEditor(c)) {
             PaintUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
         } else {
-            Rectangle bounds = prevButton.getBounds();
-            boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
-            int off = leftToRight ? bounds.x + 1 : bounds.x + bounds.width;
-            if (leftToRight) {
-                g.fillRect(0, 0, off, height);
-            } else {
-                g.fillRect(off, 0, width - off, height);
-            }
+            g.fillRect(0, 0, width, height);
         }
         if (editor != null) {
             paintSpinBackground((Graphics2D) g, width, height, size, arc);
@@ -271,25 +262,23 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
     protected void paintSpinBackground(final Graphics2D g, final int width, final int height,
                                        final int bSize, final int arc) {
-        Rectangle bounds = prevButton.getBounds();
+        Rectangle arrowBounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
-        int off = leftToRight ? bounds.x : bounds.x + bounds.width;
-        Area rect;
-        if (!SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
-            rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
-                                                        height - 2 * bSize,
-                                                        arc, arc));
-        } else {
-            rect = new Area(new Rectangle(0, 0, width, height));
-        }
-        Area iconRect = new Area(new Rectangle(off, 0, width, height));
+
+        Shape oldClip = g.getClip();
+        g.setColor(getArrowBackground(spinner));
+
         if (leftToRight) {
-            rect.intersect(iconRect);
+            g.clipRect(arrowBounds.x, 0, width - arrowBounds.x, height);
         } else {
-            rect.subtract(iconRect);
+            g.clipRect(0, 0, arrowBounds.x + arrowBounds.width, height);
         }
-        g.setPaint(getArrowBackground(spinner));
-        g.fill(rect);
+        if (SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
+            g.fillRect(0, 0, width, height);
+        } else {
+            PaintUtil.fillRoundRect(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize, arc);
+        }
+        g.setClip(oldClip);
     }
 
     protected Color getBackground(final JComponent c) {

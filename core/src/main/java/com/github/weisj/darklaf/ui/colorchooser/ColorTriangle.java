@@ -25,8 +25,18 @@
 package com.github.weisj.darklaf.ui.colorchooser;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
@@ -65,6 +75,7 @@ public class ColorTriangle extends JComponent {
     protected double lightnessHSL;
     protected double opacity = 1.0;
 
+    protected CircleInfo circleInfo = new CircleInfo();
     protected Shape circleShape;
     protected Shape triangleShape;
     protected AffineTransform triangleInverse;
@@ -503,6 +514,7 @@ public class ColorTriangle extends JComponent {
     protected Shape calculateCircleShape(final double x, final double y, final int size, final int outerSize) {
         outerRadius = size / 2.0;
         innerRadius = outerRadius - outerSize;
+        if (!circleInfo.update(x, y, size, outerSize) && circleShape != null) return circleShape;
 
         Area outer = new Area(new Ellipse2D.Double(x, y, size, size));
         Area inner = new Area(new Ellipse2D.Double(x + outerSize, y + outerSize,
@@ -675,5 +687,21 @@ public class ColorTriangle extends JComponent {
         OUTSIDE,
         WHEEL,
         TRIANGLE
+    }
+
+    protected static class CircleInfo {
+        public double x;
+        public double y;
+        public int size;
+        public int outerSize;
+
+        public boolean update(final double x, final double y, final int size, final int outerSize) {
+            boolean updated = this.x != x || this.y != y || this.size != size || this.outerSize != outerSize;
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.outerSize = outerSize;
+            return updated;
+        }
     }
 }

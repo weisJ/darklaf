@@ -27,7 +27,9 @@ package com.github.weisj.darklaf.ui.slider;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
+import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Dictionary;
@@ -364,19 +366,19 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         Color selectionColor = getSelectedTrackColor();
 
         if (isHorizontal()) {
-            Area track = getHorizontalTrackShape();
+            Shape track = getHorizontalTrackShape();
             g.setColor(bgColor);
             g.fill(track);
-            Shape selection = getHorizontalSliderShape(track);
+            setHorizontalTrackClip(g);
             g.setColor(selectionColor);
-            g.fill(selection);
+            g.fill(track);
         } else {
-            Area track = getVerticalTrackShape();
+            Shape track = getVerticalTrackShape();
             g.setColor(bgColor);
             g.fill(track);
-            Shape selection = getVerticalSliderShape(track);
+            setVerticalTrackClip(g);
             g.setColor(selectionColor);
-            g.fill(selection);
+            g.fill(track);
         }
         config.restore();
     }
@@ -453,7 +455,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected void scrollDueToClickInTrack(final int dir) {
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, slider);
-        Area area = isHorizontal() ? getHorizontalTrackShape() : getVerticalTrackShape();
+        Shape area = isHorizontal() ? getHorizontalTrackShape() : getVerticalTrackShape();
         if (!area.getBounds().contains(p)) {
             return;
         }
@@ -536,24 +538,15 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    private Area getHorizontalSliderShape(final Area track) {
-        double x = thumbRect.x + thumbRect.width / 2.0;
-        Area leftArea = new Area(new Rectangle2D.Double(0, 0, x, slider.getHeight()));
-        Area rightArea = new Area(new Rectangle2D.Double(x, 0, slider.getWidth() - x, slider.getHeight()));
-        if (slider.getComponentOrientation().isLeftToRight()) {
-            if (slider.getInverted()) {
-                track.intersect(rightArea);
-            } else {
-                track.intersect(leftArea);
-            }
+    private void setHorizontalTrackClip(final Graphics g) {
+        int x = thumbRect.x + thumbRect.width / 2;
+        boolean ltr = slider.getComponentOrientation().isLeftToRight();
+        boolean inverted = slider.getInverted();
+        if ((ltr && !inverted) || (!ltr && inverted)) {
+            g.clipRect(0, 0, x, slider.getHeight());
         } else {
-            if (!slider.getInverted()) {
-                track.intersect(rightArea);
-            } else {
-                track.intersect(leftArea);
-            }
+            g.clipRect(x, 0, slider.getWidth() - x, slider.getHeight());
         }
-        return track;
     }
 
     protected Icon getVolumeIcon() {
@@ -578,37 +571,36 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return slider.getOrientation() == JSlider.HORIZONTAL;
     }
 
-    private Area getHorizontalTrackShape() {
+    private Shape getHorizontalTrackShape() {
         int arc = arcSize;
         int yOff = (trackRect.height / 2) - trackSize / 2;
         int w = showVolumeIcon(slider) ? trackRect.width + getIconBarExt() : trackRect.width;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            return new Area(new RoundRectangle2D.Double(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc));
+            return new RoundRectangle2D.Double(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc);
         } else {
-            return new Area(new RoundRectangle2D.Double(trackRect.x - getIconBarExt(), trackRect.y + yOff, w, trackSize,
-                                                        arc, arc));
+            return new RoundRectangle2D.Double(trackRect.x - getIconBarExt(), trackRect.y + yOff,
+                                               w, trackSize, arc, arc);
         }
     }
 
-    private Area getVerticalSliderShape(final Area track) {
+    private void setVerticalTrackClip(final Graphics g) {
         int y = thumbRect.y + thumbRect.height / 2;
         if (slider.getInverted()) {
-            track.intersect(new Area(new Rectangle2D.Double(0, 0, slider.getWidth(), y)));
+            g.clipRect(0, 0, slider.getWidth(), y);
         } else {
-            track.intersect(new Area(new Rectangle2D.Double(0, y, slider.getWidth(), slider.getHeight() - y)));
+            g.clipRect(0, y, slider.getWidth(), slider.getHeight() - y);
         }
-        return track;
     }
 
-    private Area getVerticalTrackShape() {
+    private Shape getVerticalTrackShape() {
         int arc = arcSize;
         int xOff = (trackRect.width / 2) - trackSize / 2;
         int h = showVolumeIcon(slider) ? trackRect.height + getIconBarExt() : trackRect.height;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            return new Area(new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc));
+            return new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc);
         } else {
-            return new Area(new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y - getIconBarExt(), trackSize, h,
-                                                        arc, arc));
+            return new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y - getIconBarExt(),
+                                               trackSize, h, arc, arc);
 
         }
     }

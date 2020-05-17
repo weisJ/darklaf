@@ -29,8 +29,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -221,8 +219,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         }
         if (!isCellEditor) {
             PaintUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize,
-                                    width - 2 * borderSize, height - 2 * borderSize,
-                                    arcSize);
+                                    width - 2 * borderSize, height - 2 * borderSize, arcSize);
         } else {
             g.fillRect(0, 0, width, height);
         }
@@ -239,22 +236,22 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
                                      final Graphics2D g) {
         Rectangle arrowBounds = arrowButton.getBounds();
         boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
-        int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
-        Area rect;
-        Area iconRect = new Area(new Rectangle(off, 0, width, height));
-        if (!isCellEditor) {
-            rect = new Area(new RoundRectangle2D.Double(bSize, bSize, width - 2 * bSize,
-                                                        height - 2 * bSize, arc, arc));
-        } else {
-            rect = new Area(new Rectangle(0, 0, width, height));
-        }
+
+        Shape oldClip = g.getClip();
+        g.setColor(getArrowBackground(comboBox));
+
         if (leftToRight) {
-            rect.intersect(iconRect);
+            g.clipRect(arrowBounds.x, 0, width - arrowBounds.x, height);
         } else {
-            rect.subtract(iconRect);
+            g.clipRect(0, 0, arrowBounds.x + arrowBounds.width, height);
         }
-        g.setPaint(getArrowBackground(comboBox));
-        g.fill(rect);
+        if (isCellEditor) {
+            g.fillRect(0, 0, width, height);
+        } else {
+            PaintUtil.fillRoundRect(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize,
+                                    arc, false);
+        }
+        g.setClip(oldClip);
     }
 
     protected Color getBackground(final JComboBox<?> c) {

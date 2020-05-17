@@ -34,6 +34,7 @@ import javax.swing.text.View;
 
 import com.github.weisj.darklaf.ui.html.DarkHTML;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.Scale;
 
 public class PaintUtil {
 
@@ -46,6 +47,8 @@ public class PaintUtil {
     private static Color focusGlow;
     private static Color focusInactiveGlow;
     private static Color warningGlow;
+
+    private static final RoundRectangle2D roundRect = new RoundRectangle2D.Double();
 
     public static void setGlowOpacity(final float alpha) {
         glowComposite = glowComposite.derive(alpha);
@@ -209,12 +212,16 @@ public class PaintUtil {
     public static void fillRoundRect(final Graphics2D g, final float x, final float y,
                                      final float width, final float height, final int arc,
                                      final boolean adjustForBorder) {
+        GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
         int stroke = adjustForBorder ? (int) getStrokeWidth(g) : 0;
-        float lw = stroke / 2f;
+        float lw = Scale.equalWithError(Scale.getScaleX(g), 1f) ? stroke : stroke / 2f;
+        float arcSize = arc;
+
+        arcSize -= stroke;
         g.translate(lw, lw);
-        float arcSze = arc - lw;
-        g.fillRoundRect((int) x, (int) y, (int) width - stroke, (int) height - stroke, (int) arcSze, (int) arcSze);
-        g.translate(-lw, -lw);
+        roundRect.setRoundRect(x, y, width - 2 * lw, height - 2, arcSize, arcSize);
+        g.fill(roundRect);
+        context.restore();
     }
 
     public static void drawRect(final Graphics g, final Rectangle rect, final int thickness) {

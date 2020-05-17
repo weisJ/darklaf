@@ -31,7 +31,12 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Position;
+import javax.swing.text.View;
 
 import sun.swing.SwingUtilities2;
 
@@ -64,6 +69,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private final int arcSize;
     private boolean suppressRounded = false;
     private boolean enabled;
+
+    private Shape startArc;
+    private Shape endArc;
 
     public DarkHighlightPainter() {
         this(null);
@@ -477,14 +485,22 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private void paintStartArc(final Graphics2D g2d, final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
-        Area arc = new Area(new Rectangle2D.Double(r.x - arcSize + 0.25, r.y + r.height - arcSize + 0.25, arcSize,
-                                                   arcSize));
-        arc.subtract(new Area(new Arc2D.Double(r.x - 2 * arcSize + 0.25,
-                                               r.y + r.height - 2 * arcSize + 0.25, 2 * arcSize, 2 * arcSize,
-                                               0, -90, Arc2D.Double.PIE)));
-        g2d.fill(arc);
+        g2d.translate(r.x - arcSize, r.y + r.height - arcSize);
+        g2d.fill(getStartArc());
+        g2d.translate(-(r.x - arcSize), -(r.y + r.height - arcSize));
+
         r.x -= arcSize;
         r.width += arcSize;
+    }
+
+    private Shape getStartArc() {
+        if (startArc == null) {
+            Area arc = new Area(new Rectangle2D.Double(0, 0, arcSize, arcSize));
+            arc.subtract(new Area(new Arc2D.Double(-arcSize, -arcSize,
+                                                   2 * arcSize, 2 * arcSize, 0, -90, Arc2D.PIE)));
+            startArc = arc;
+        }
+        return startArc;
     }
 
     private void paintRoundedLeftRight(final Graphics g, final boolean left, final boolean right, final Rectangle r) {
@@ -504,10 +520,19 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private void paintEndArc(final Graphics2D g2d, final Rectangle r) {
         if (DEBUG_COLOR) g2d.setColor(Color.PINK);
-        Area arc = new Area(new Rectangle2D.Double(r.x + r.width - 0.25, r.y - 0.25, arcSize, arcSize));
-        arc.subtract(new Area(new Arc2D.Double(r.x + r.width - 0.25,
-                                               r.y - 0.25, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.Double.PIE)));
-        g2d.fill(arc);
+        g2d.translate(r.x + r.width, r.y);
+        g2d.fill(getEndArc());
+        g2d.translate(-(r.x + r.width), -r.y);
+    }
+
+    private Shape getEndArc() {
+        if (endArc == null) {
+            Area arc = new Area(new Rectangle2D.Double(0, 0, arcSize, arcSize));
+            arc.subtract(new Area(new Arc2D.Double(0, 0, 2 * arcSize, 2 * arcSize,
+                                                   90, 90, Arc2D.PIE)));
+            endArc = arc;
+        }
+        return endArc;
     }
 
     private void setupColor(final Graphics2D g2d, final JTextComponent c) {

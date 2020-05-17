@@ -66,16 +66,15 @@ public class DarkTooltipBorder implements Border {
                                             false, true, true, true);
     }
 
-    public Area getBackgroundArea(final Component c, final int width, final int height, final boolean forPaint) {
+    public Area getBackgroundArea(final Component c, final int width, final int height) {
         if (isPlain(c)) {
             return new Area(new Rectangle(0, 0, width, height));
         }
         Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
-        float adj = forPaint ? 0.5f : 0;
-        return bubbleBorder.getBubbleArea(ins.left - adj, ins.top - adj,
-                                          width - ins.left - ins.right + 2 * adj,
-                                          height - ins.top - ins.bottom + 2 * adj, true);
+        return bubbleBorder.getBubbleArea(ins.left, ins.top,
+                                          width - ins.left - ins.right,
+                                          height - ins.top - ins.bottom, false);
     }
 
     public int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
