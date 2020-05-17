@@ -28,8 +28,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jdesktop.swingx.renderer.DefaultListRenderer;
-
 import com.github.weisj.darklaf.delegate.ListCellRendererDelegate;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -43,7 +41,7 @@ public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Objec
     @Override
     public void setDelegate(final ListCellRenderer<Object> delegate) {
         if (delegate == null) {
-            super.setDelegate(new DefaultListRenderer());
+            super.setDelegate(new DefaultListCellRenderer());
         } else {
             super.setDelegate(delegate);
         }

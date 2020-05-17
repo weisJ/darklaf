@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.icons.ImageSource;
 import com.github.weisj.darklaf.util.Scale;
 
 /**
@@ -45,8 +46,8 @@ public final class ImageUtil {
         int w = icon.getIconWidth();
         int h = icon.getIconHeight();
         GraphicsConfiguration gc = c.getGraphicsConfiguration();
-        double sx = gc != null ? Scale.getScaleX(gc) : Scale.SCALE_X;
-        double sy = gc != null ? Scale.getScaleY(gc) : Scale.SCALE_Y;
+        double sx = Scale.getScaleX(gc);
+        double sy = Scale.getScaleY(gc);
         double scaleX = sx * (((double) FRAME_ICON_SIZE) / w);
         double scaleY = sy * (((double) FRAME_ICON_SIZE) / h);
         return createScaledImage(icon, scaleX, scaleY);
@@ -56,12 +57,16 @@ public final class ImageUtil {
         if (icon == null) return null;
         int w = (int) (scalex * icon.getIconWidth());
         int h = (int) (scaley * icon.getIconHeight());
-        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = (Graphics2D) image.getGraphics();
-        g.scale(scalex, scaley);
-        icon.paintIcon(null, g, 0, 0);
-        g.dispose();
-        return image;
+        if (icon instanceof ImageSource) {
+            return ((ImageSource) icon).createImage(w, h);
+        } else {
+            BufferedImage image = createCompatibleTranslucentImage(w, h);
+            Graphics2D g = (Graphics2D) image.getGraphics();
+            g.scale(scalex, scaley);
+            icon.paintIcon(null, g, 0, 0);
+            g.dispose();
+            return image;
+        }
     }
 
     public static Image createDragImage(final Component c, final int lw, final Color borderColor) {
@@ -130,10 +135,9 @@ public final class ImageUtil {
         BufferedImage image;
         boolean scale = scalex != 1.0 || scaley != 1.0;
         if (scale) {
-            image = new BufferedImage((int) (scalex * bounds.width), (int) (scaley * bounds.height),
-                                      BufferedImage.TYPE_INT_RGB);
+            image = createCompatibleImage((int) (scalex * bounds.width), (int) (scaley * bounds.height));
         } else {
-            image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
+            image = createCompatibleImage(bounds.width, bounds.height);
         }
         final Graphics2D g2d = (Graphics2D) image.getGraphics();
         if (scale) {
@@ -148,6 +152,13 @@ public final class ImageUtil {
 
         g2d.dispose();
         return image;
+    }
+
+    public static BufferedImage createCompatibleImage(final int width,
+                                                      final int height) {
+        return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+                : getGraphicsConfiguration().createCompatibleImage(width, height,
+                                                                   Transparency.OPAQUE);
     }
 
     public static BufferedImage createCompatibleTranslucentImage(final int width,

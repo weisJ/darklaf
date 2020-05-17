@@ -31,6 +31,7 @@ public class Scale {
     public static final double SCALE;
     public static final double SCALE_X;
     public static final double SCALE_Y;
+    private static final double EPSILON = 0.0001;
 
     static {
         DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
@@ -41,11 +42,13 @@ public class Scale {
     }
 
     public static double scaleWidth(final double value, final GraphicsConfiguration gc) {
+        if (gc == null) return scaleWidth(value);
         AffineTransform transform = gc.getDefaultTransform();
         return transform.getScaleX() * value;
     }
 
     public static double scaleHeight(final double value, final GraphicsConfiguration gc) {
+        if (gc == null) return scaleHeight(value);
         AffineTransform transform = gc.getDefaultTransform();
         return transform.getScaleY() * value;
     }
@@ -83,10 +86,28 @@ public class Scale {
     }
 
     public static double getScaleX(final GraphicsConfiguration gc) {
+        if (gc == null) return SCALE_X;
         return gc.getDefaultTransform().getScaleX();
     }
 
     public static double getScaleY(final GraphicsConfiguration gc) {
+        if (gc == null) return SCALE_Y;
         return gc.getDefaultTransform().getScaleY();
+    }
+
+    public static Dimension scale(final GraphicsConfiguration gc, final Dimension size) {
+        return new Dimension((int) scaleWidth(size.width, gc), (int) scaleHeight(size.height, gc));
+    }
+
+    public static double scale(final double scale, final double value) {
+        return scale * value;
+    }
+
+    public static Dimension scale(final double scaleX, final double scaleY, final Dimension size) {
+        return new Dimension((int) scale(scaleX, size.width), (int) scale(scaleY, size.height));
+    }
+
+    public static boolean equalWithError(final double a, final double b) {
+        return Math.abs(a - b) < EPSILON;
     }
 }

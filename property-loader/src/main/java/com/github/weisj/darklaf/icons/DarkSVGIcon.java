@@ -30,9 +30,8 @@ import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
-import javax.swing.*;
-
 import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.Scale;
 import com.kitfox.svg.app.beans.SVGIcon;
 
 /**
@@ -41,13 +40,16 @@ import com.kitfox.svg.app.beans.SVGIcon;
  * @author Jannis Weis
  * @since  2019
  */
-public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Serializable {
+public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Serializable, ImageSource {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
     private final Dimension size;
     private final SVGIcon icon;
-    private final URI uri;
+    protected final URI uri;
     private final AtomicBoolean loaded;
+    private double scaleX;
+    private double scaleY;
+    private Image image;
 
     /**
      * Method to fetch the SVG icon from a url.
@@ -83,16 +85,38 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        ensureLoaded();
         paintIcon(c, g, x, y, 0);
     }
 
-    private void ensureLoaded() {
+    protected boolean ensureLoaded() {
         if (!loaded.get()) {
             LOGGER.fine(() -> "Loading icon '" + uri.toASCIIString() + "'.");
             icon.setSvgURI(uri);
             loaded.set(true);
+            return true;
         }
+        return false;
+    }
+
+    protected void updateCache(final boolean update, final Component c) {
+        GraphicsConfiguration gc = c != null ? c.getGraphicsConfiguration() : null;
+        double sx = Scale.getScaleX(gc);
+        double sy = Scale.getScaleY(gc);
+        if (!update && Scale.equalWithError(scaleX, sx) && Scale.equalWithError(scaleY, sy) && image != null) return;
+        scaleX = sx;
+        scaleY = sy;
+        image = createImage(Scale.scale(scaleX, scaleY, size));
+    }
+
+    @Override
+    public Image createImage(final Dimension size) {
+        ensureLoaded();
+        icon.setPreferredSize(size);
+        return icon.getImage();
+    }
+
+    protected void ensureImageLoaded(final Component c) {
+        updateCache(ensureLoaded(), c);
     }
 
     protected SVGIcon createSVGIcon() {
@@ -102,14 +126,17 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y,
                           final double rotation) {
-        ensureLoaded();
+        ensureImageLoaded(c);
         Graphics2D g2 = (Graphics2D) g;
         g2.translate(x, y);
+        double sx = size.width / (double) image.getWidth(null);
+        double sy = size.height / (double) image.getWidth(null);
+        g2.scale(sx, sy);
         if (rotation != 0) {
             g2.rotate(rotation, size.width / 2.0, size.height / 2.0);
         }
-        icon.setPreferredSize(size);
-        icon.paintIcon(c, g2, 0, 0);
+        g2.drawImage(image, 0, 0, null);
+        g2.scale(1 / sx, 1 / sy);
         g2.translate(-x, -y);
     }
 
@@ -124,7 +151,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     public SVGIcon getSVGIcon() {
-        ensureLoaded();
+        if (!loaded.get()) ensureLoaded();
         return icon;
     }
 }

@@ -25,38 +25,12 @@
 package com.github.weisj.darklaf.icons;
 
 import java.awt.*;
-import java.net.URI;
 
-/**
- * @author Jannis Weis
- */
-public class ThemedSVGIcon extends DarkSVGIcon {
+public interface ImageSource {
 
-    private Object currentTheme;
+    Image createImage(final Dimension size);
 
-    public ThemedSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
-        super(uri, displayWidth, displayHeight);
-        currentTheme = new Object();
-    }
-
-    protected boolean ensureLoaded() {
-        /*
-         * Use non-short-circuiting operand here to ensure the colors are actually patched.
-         */
-        return super.ensureLoaded() | ensureTheme();
-    }
-
-    protected boolean ensureTheme() {
-        Object theme = IconLoader.getThemeStatus();
-        if (currentTheme != theme) {
-            patchColors();
-            currentTheme = theme;
-            return true;
-        }
-        return false;
-    }
-
-    protected void patchColors() {
-        IconColorMapper.patchColors(getSVGIcon());
+    default Image createImage(final int width, final int height) {
+        return createImage(new Dimension(width, height));
     }
 }
