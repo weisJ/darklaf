@@ -195,7 +195,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         boolean focus = c.hasFocus() && c.isFocusPainted();
 
         Rectangle bgRect = getEffectiveRect(width, height, c, -(effectiveArc + 1), corner, focus);
-        if (showShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
+        if (c.isEnabled() && showShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
             g.setColor(shadowColor);
             Composite comp = g.getComposite();
             g.setComposite(PaintUtil.getShadowComposite());
