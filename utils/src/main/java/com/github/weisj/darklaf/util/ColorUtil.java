@@ -31,8 +31,14 @@ import java.awt.*;
  */
 public final class ColorUtil {
 
-    private ColorUtil() {
-
+    public static Color blendColors(final Color color1, final Color color2, final double percent) {
+        if (percent == 1) return color1;
+        if (percent == 0) return color2;
+        double inverse_percent = 1.0 - percent;
+        int redPart = (int) (color1.getRed() * percent + color2.getRed() * inverse_percent);
+        int greenPart = (int) (color1.getGreen() * percent + color2.getGreen() * inverse_percent);
+        int bluePart = (int) (color1.getBlue() * percent + color2.getBlue() * inverse_percent);
+        return new Color(redPart, greenPart, bluePart);
     }
 
     public static Color shift(final Color c, final double d) {

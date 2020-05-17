@@ -32,6 +32,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.util.ColorUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -155,7 +156,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         Color thumbColor = getThumbColor();
         float thumbAlpha = scrollBarListener.getThumbAlpha();
         double percent = Math.min(1.0, Math.max(0.0, 1 - (thumbAlpha - THUMB_ALPHA)));
-        g.setColor(PaintUtil.blendColors(thumbBorderColor, thumbColor, percent));
+        g.setColor(ColorUtil.blendColors(thumbBorderColor, thumbColor, percent));
         PaintUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
         g.setColor(thumbColor);
         g.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
@@ -163,7 +164,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     }
 
     protected Color getThumbColor() {
-        return PaintUtil.blendColors(thumbFadeEndColor, thumbFadeStartColor, scrollBarListener.getThumbAlpha());
+        return ColorUtil.blendColors(thumbFadeEndColor, thumbFadeStartColor, scrollBarListener.getThumbAlpha());
     }
 
     @Override

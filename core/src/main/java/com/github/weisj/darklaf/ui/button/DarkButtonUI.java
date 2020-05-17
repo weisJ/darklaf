@@ -75,6 +75,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color borderlessClick;
     protected Color borderlessOutlineHover;
     protected Color borderlessOutlineClick;
+    protected Color shadowColor;
     protected AbstractButton button;
     protected int arc;
     protected int squareArc;
@@ -92,11 +93,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     @Override
-    public String getPropertyPrefix() {
-        return super.getPropertyPrefix();
-    }
-
-    @Override
     public void installUI(final JComponent c) {
         button = (AbstractButton) c;
         super.installUI(c);
@@ -109,6 +105,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");
+        shadowColor = UIManager.getColor("Button.shadow");
         inactiveForeground = UIManager.getColor("Button.disabledText");
         defaultForeground = UIManager.getColor("Button.selectedButtonForeground");
         defaultBackground = UIManager.getColor("Button.defaultFillColor");
@@ -182,31 +179,48 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             Insets margin = b.getMargin();
             if (margin instanceof UIResource) margin = new Insets(0, 0, 0, 0);
             if (ButtonConstants.isBorderlessVariant(c)) {
-                paintBorderlessBackground(g, c, g2, b, arc, width, height, margin);
+                paintBorderlessBackground(b, g2, arc, width, height, margin);
             } else {
-                paintDefaultBackground((Graphics2D) g, b, g2, arc, width, height);
+                paintDefaultBackground(b, g2, arc, width, height);
             }
         }
     }
 
-    protected void paintDefaultBackground(final Graphics2D g, final AbstractButton c, final Graphics2D g2,
+    protected void paintDefaultBackground(final AbstractButton c, final Graphics2D g,
                                           final int arc, final int width, final int height) {
-        int shadow = DarkButtonBorder.showDropShadow(c) ? shadowHeight : 0;
+        boolean showShadow = DarkButtonBorder.showDropShadow(c);
+        int shadow = showShadow ? shadowHeight : 0;
         int effectiveArc = ButtonConstants.isSquare(c) && !ButtonConstants.chooseAlternativeArc(c) ? 0 : arc;
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
         boolean focus = c.hasFocus() && c.isFocusPainted();
 
         Rectangle bgRect = getEffectiveRect(width, height, c, -(effectiveArc + 1), corner, focus);
-        g2.setColor(getBackgroundColor(c));
-        paintBackgroundRect(g, g2, shadow, effectiveArc, bgRect);
+        if (showShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
+            g.setColor(shadowColor);
+            Composite comp = g.getComposite();
+            g.setComposite(PaintUtil.getShadowComposite());
+            int sh = Math.max(shadow, 2 * effectiveArc);
+            paintBackgroundRect(g, effectiveArc, bgRect.x, bgRect.y + bgRect.height + shadow - sh,
+                                bgRect.width, sh, false);
+            g.setComposite(comp);
+        }
+
+        g.setColor(getBackgroundColor(c));
+        paintBackgroundRect(g, effectiveArc, bgRect, true);
     }
 
-    private void paintBackgroundRect(final Graphics2D g, final Graphics2D g2,
-                                     final int shadow, final int effectiveArc, final Rectangle bgRect) {
+    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final Rectangle bgRect,
+                                     final boolean respectBorder) {
+        paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height, respectBorder);
+    }
+
+    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc,
+                                     final int x, final int y, final int width, final int height,
+                                     final boolean respectBorder) {
         if (effectiveArc == 0) {
-            g2.fillRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height);
+            g2.fillRect(x, y, width, height);
         } else {
-            PaintUtil.fillRoundRect(g, bgRect.x, bgRect.y, bgRect.width, bgRect.height, effectiveArc);
+            PaintUtil.fillRoundRect(g2, x, y, width, height, effectiveArc, respectBorder);
         }
     }
 
@@ -223,13 +237,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return new Rectangle(bx, by, bw, bh);
     }
 
-    protected void paintBorderlessBackground(final Graphics g, final JComponent c, final Graphics2D g2,
-                                             final AbstractButton b, final int arc,
+    protected void paintBorderlessBackground(final AbstractButton b, final Graphics2D g, final int arc,
                                              final int width, final int height, final Insets margin) {
         if (b.isEnabled() && b.getModel().isRollover()) {
-            GraphicsUtil.setupAAPainting(g2);
+            GraphicsUtil.setupAAPainting(g);
             g.setColor(getBorderlessBackground(b));
-            if (ButtonConstants.isBorderlessRectangular(c)) {
+            if (ButtonConstants.isBorderlessRectangular(b)) {
                 g.fillRect(margin.left, margin.top, width - margin.left - margin.right,
                            height - margin.top - margin.bottom);
                 PaintUtil.drawRect(g, margin.left, margin.top, width - margin.left - margin.right,

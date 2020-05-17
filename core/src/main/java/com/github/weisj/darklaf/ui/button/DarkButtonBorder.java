@@ -25,8 +25,6 @@
 package com.github.weisj.darklaf.ui.button;
 
 import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -45,7 +43,6 @@ import com.github.weisj.darklaf.util.PropertyUtil;
  */
 public class DarkButtonBorder implements Border, UIResource {
 
-    private final Color shadowColor;
     private final Color focusBorderColor;
     private final Color defaultBorderColor;
     private final Color borderColor;
@@ -66,7 +63,6 @@ public class DarkButtonBorder implements Border, UIResource {
     private Insets borderlessRectangularInsets;
 
     public DarkButtonBorder() {
-        shadowColor = UIManager.getColor("Button.shadow");
         focusBorderColor = UIManager.getColor("Button.focusBorderColor");
         defaultBorderColor = UIManager.getColor("Button.defaultBorderColor");
         borderColor = UIManager.getColor("Button.activeBorderColor");
@@ -172,10 +168,6 @@ public class DarkButtonBorder implements Border, UIResource {
         int fw = width - focusIns.left - focusIns.right;
         int fh = (by + bh + borderSize - fy) - focusIns.top - focusIns.bottom;
 
-        if (c.isEnabled() && paintShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
-            paintShadow((Graphics2D) g, bx, by, bw, bh, arc);
-        }
-
         if (paintFocus(c)) {
             g.translate(fx, fy);
             PaintUtil.paintFocusBorder(g2, fw, fh, focusArc, borderSize);
@@ -229,19 +221,6 @@ public class DarkButtonBorder implements Border, UIResource {
             return ((AbstractButton) c).isFocusPainted() && c.hasFocus();
         }
         return c.hasFocus();
-    }
-
-    private void paintShadow(final Graphics2D g2, final int x, final int y,
-                             final int width, final int height, final int arc) {
-        GraphicsContext context = new GraphicsContext(g2);
-        int shadowSize = getShadowSize();
-        Area shadowShape = new Area(new RoundRectangle2D.Double(x, y, width, height + shadowSize, arc, arc));
-        Area innerArea = new Area(new RoundRectangle2D.Double(x, y, width, height, arc, arc));
-        shadowShape.subtract(innerArea);
-        g2.setComposite(PaintUtil.getShadowComposite());
-        g2.setColor(shadowColor);
-        g2.fill(shadowShape);
-        context.restore();
     }
 
     public boolean isBorderOpaque() {
