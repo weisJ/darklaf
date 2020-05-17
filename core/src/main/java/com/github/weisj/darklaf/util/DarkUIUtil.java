@@ -337,9 +337,13 @@ public final class DarkUIUtil {
 
     public static Rectangle getScreenBounds(final JComponent target, final int x, final int y,
                                             final boolean subtractInsets) {
-        GraphicsConfiguration gc = getDrawingGC(x, y);
+        GraphicsConfiguration gc = target != null ? target.getGraphicsConfiguration() : null;
         if (gc == null) {
-            gc = target.getGraphicsConfiguration();
+            gc = getDrawingGC(x, y);
+        }
+        if (gc == null) {
+            // Should never happen.
+            return new Rectangle();
         }
 
         Rectangle sBounds = gc.getBounds();

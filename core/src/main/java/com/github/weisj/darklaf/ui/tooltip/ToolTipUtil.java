@@ -98,17 +98,15 @@ public class ToolTipUtil {
     }
 
     protected static Alignment[] getAlignments(final Alignment start) {
-        // Example with NORTH:
-        return new Alignment[]{
-                               start, // NORTH
-                               start.opposite(), // SOUTH
-                               start.clockwise().clockwise(), // EAST
-                               start.anticlockwise().anticlockwise(), // WEST
-                               start.clockwise(), // NORTH_EAST
-                               start.clockwise().opposite(), // SOUTH_WEST
-                               start.anticlockwise(), // NORTH_WEST
-                               start.anticlockwise().opposite() // SOUTH_EAST
-        };
+        // Example with start == NORTH: [NORTH, SOUTH, EAST, WEST, NORTH_EAST, SOUTH_WEST, NORTH_WEST, SOUTH_EAST]
+        return new Alignment[]{start,
+                               start.opposite(),
+                               start.clockwise().clockwise(),
+                               start.anticlockwise().anticlockwise(),
+                               start.clockwise(),
+                               start.clockwise().opposite(),
+                               start.anticlockwise(),
+                               start.anticlockwise().opposite()};
     }
 
     protected static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
