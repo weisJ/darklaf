@@ -99,6 +99,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     private void paintSlider(final Graphics2D g, final AbstractButton c) {
         Rectangle bounds = getSliderBounds(c);
+        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         g.translate(bounds.x, bounds.y);
 
         if (c.hasFocus()) {
@@ -115,7 +116,6 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         PaintUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height);
 
         int size = bounds.height - 2;
-        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         if (c.isSelected()) {
             g.setColor(getSliderColor(c));
             PaintUtil.fillRoundRect(g, bounds.width - size - 1, 1, size, size, size);
@@ -127,7 +127,6 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             g.setColor(getSliderBorderColor(c));
             PaintUtil.paintLineBorder(g, 1, 1, size, size, size);
         }
-        g.translate(-bounds.x, -bounds.y);
         config.restore();
     }
 
