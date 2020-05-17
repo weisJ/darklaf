@@ -108,6 +108,8 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected Icon volume3Inactive;
     protected Icon volume4Inactive;
 
+    protected RoundRectangle2D trackShape = new RoundRectangle2D.Double();
+
     public DarkSliderUI(final JSlider b) {
         super(b);
     }
@@ -366,14 +368,14 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         Color selectionColor = getSelectedTrackColor();
 
         if (isHorizontal()) {
-            Shape track = getHorizontalTrackShape();
+            Shape track = getHorizontalTrackShape(trackShape);
             g.setColor(bgColor);
             g.fill(track);
             setHorizontalTrackClip(g);
             g.setColor(selectionColor);
             g.fill(track);
         } else {
-            Shape track = getVerticalTrackShape();
+            Shape track = getVerticalTrackShape(trackShape);
             g.setColor(bgColor);
             g.fill(track);
             setVerticalTrackClip(g);
@@ -455,7 +457,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected void scrollDueToClickInTrack(final int dir) {
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, slider);
-        Shape area = isHorizontal() ? getHorizontalTrackShape() : getVerticalTrackShape();
+        Shape area = isHorizontal() ? getHorizontalTrackShape(trackShape) : getVerticalTrackShape(trackShape);
         if (!area.getBounds().contains(p)) {
             return;
         }
@@ -571,16 +573,16 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return slider.getOrientation() == JSlider.HORIZONTAL;
     }
 
-    private Shape getHorizontalTrackShape() {
+    private Shape getHorizontalTrackShape(final RoundRectangle2D trackShape) {
         int arc = arcSize;
         int yOff = (trackRect.height / 2) - trackSize / 2;
         int w = showVolumeIcon(slider) ? trackRect.width + getIconBarExt() : trackRect.width;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            return new RoundRectangle2D.Double(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc);
+            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc);
         } else {
-            return new RoundRectangle2D.Double(trackRect.x - getIconBarExt(), trackRect.y + yOff,
-                                               w, trackSize, arc, arc);
+            trackShape.setRoundRect(trackRect.x - getIconBarExt(), trackRect.y + yOff, w, trackSize, arc, arc);
         }
+        return trackShape;
     }
 
     private void setVerticalTrackClip(final Graphics g) {
@@ -592,17 +594,16 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         }
     }
 
-    private Shape getVerticalTrackShape() {
+    private Shape getVerticalTrackShape(final RoundRectangle2D trackShape) {
         int arc = arcSize;
         int xOff = (trackRect.width / 2) - trackSize / 2;
         int h = showVolumeIcon(slider) ? trackRect.height + getIconBarExt() : trackRect.height;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            return new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc);
+            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc);
         } else {
-            return new RoundRectangle2D.Double(trackRect.x + xOff, trackRect.y - getIconBarExt(),
-                                               trackSize, h, arc, arc);
-
+            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y - getIconBarExt(), trackSize, h, arc, arc);
         }
+        return trackShape;
     }
 
     private int getIconBarExt() {
