@@ -130,7 +130,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         Graphics2D g2 = (Graphics2D) g;
         g2.translate(x, y);
         double sx = size.width / (double) image.getWidth(null);
-        double sy = size.height / (double) image.getWidth(null);
+        double sy = size.height / (double) image.getHeight(null);
         g2.scale(sx, sy);
         if (rotation != 0) {
             g2.rotate(rotation, size.width / 2.0, size.height / 2.0);
