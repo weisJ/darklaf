@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.text;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.text.Element;
-import javax.swing.text.View;
 
 /**
  * @author Jannis Weis
@@ -38,9 +36,6 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
         return new DarkTextPaneUI();
     }
 
-    /*
-     * Implementation of BasicEditorPaneUI
-     */
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
@@ -52,7 +47,9 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     }
 
     @Override
-    public View create(final Element elem) {
-        return super.create(elem);
+    protected DarkCaret createDarkCaret() {
+        DarkCaret caret = super.createDarkCaret();
+        caret.setLineExtendingEnabled(true);
+        return caret;
     }
 }

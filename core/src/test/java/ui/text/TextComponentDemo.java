@@ -63,6 +63,13 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
                 addActionListener(e -> text.setEditable(isSelected()));
             }
         });
+        controlPanel.add(new JCheckBox("LeftToRight") {
+            {
+                setSelected(text.getComponentOrientation().isLeftToRight());
+                addActionListener(e -> text.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
+                        : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
         controlPanel.add(new JCheckBox("text border") {
             {
                 setSelected(false);

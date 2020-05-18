@@ -34,32 +34,18 @@ import java.util.Map;
  */
 public class GraphicsContext {
     private final Graphics2D graphics2D;
-    private final Composite composite;
-    private final Map<?, ?> hintsMap;
-    private final Stroke stroke;
-    private final Color color;
-    private final Paint paint;
-    private final Font font;
-    private final Shape clip;
-    private final AffineTransform transform;
+    private Composite composite;
+    private Map<?, ?> hintsMap;
+    private Stroke stroke;
+    private Color color;
+    private Paint paint;
+    private Font font;
+    private Shape clip;
+    private AffineTransform transform;
 
     public GraphicsContext(final Graphics g) {
         graphics2D = (Graphics2D) g;
-        hintsMap = (Map<?, ?>) graphics2D.getRenderingHints().clone();
-        composite = graphics2D.getComposite();
-        stroke = graphics2D.getStroke();
-        color = graphics2D.getColor();
-        paint = graphics2D.getPaint();
-        font = graphics2D.getFont();
-        clip = graphics2D.getClip();
-        transform = graphics2D.getTransform();
-    }
-
-    public GraphicsContext setAntialiasing(final boolean on) {
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    on ? RenderingHints.VALUE_ANTIALIAS_ON
-                                            : RenderingHints.VALUE_ANTIALIAS_OFF);
-        return this;
+        save();
     }
 
     public Graphics2D getGraphics() {
@@ -75,6 +61,17 @@ public class GraphicsContext {
         restoreFont();
         restoreClip();
         restoreTransform();
+    }
+
+    public void save() {
+        saveRenderingHints();
+        saveComposite();
+        saveStroke();
+        saveColor();
+        savePaint();
+        saveFont();
+        saveClip();
+        saveTransform();
     }
 
     public void restoreTransform() {
@@ -107,5 +104,37 @@ public class GraphicsContext {
 
     public void restoreClip() {
         graphics2D.setClip(clip);
+    }
+
+    public void saveTransform() {
+        transform = graphics2D.getTransform();
+    }
+
+    public void saveComposite() {
+        composite = graphics2D.getComposite();
+    }
+
+    public void saveFont() {
+        font = graphics2D.getFont();
+    }
+
+    public void saveRenderingHints() {
+        hintsMap = graphics2D.getRenderingHints();
+    }
+
+    public void saveStroke() {
+        stroke = graphics2D.getStroke();
+    }
+
+    public void saveColor() {
+        color = graphics2D.getColor();
+    }
+
+    public void savePaint() {
+        paint = graphics2D.getPaint();
+    }
+
+    public void saveClip() {
+        clip = graphics2D.getClip();
     }
 }

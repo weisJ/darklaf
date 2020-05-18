@@ -41,6 +41,6 @@ public class TextPaneDemo extends TextComponentDemo<JTextPane> {
 
     @Override
     public String getTitle() {
-        return "TextArea Demo";
+        return "TextPane Demo";
     }
 }

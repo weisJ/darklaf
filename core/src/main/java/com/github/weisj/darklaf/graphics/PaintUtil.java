@@ -221,11 +221,16 @@ public class PaintUtil {
         g.translate(lw, lw);
         roundRect.setRoundRect(x, y, width - 2 * lw, height - 2, arcSize, arcSize);
         g.fill(roundRect);
+        g.translate(-lw, -lw);
         context.restore();
     }
 
     public static void drawRect(final Graphics g, final Rectangle rect, final int thickness) {
         drawRect(g, rect.x, rect.y, rect.width, rect.height, thickness);
+    }
+
+    public static void drawRect(final Graphics g, final Rectangle rect) {
+        drawRect(g, rect, 1);
     }
 
     public static void drawRect(final Graphics g, final int x, final int y,
@@ -252,6 +257,10 @@ public class PaintUtil {
             }
         }
         context.restore();
+    }
+
+    public static void fillRect(final Graphics g, final Rectangle r) {
+        g.fillRect(r.x, r.y, r.width, r.height);
     }
 
     public interface PaintMethod<T extends JComponent> {

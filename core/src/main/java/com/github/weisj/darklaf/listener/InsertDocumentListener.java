@@ -22,14 +22,24 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.text;
+package com.github.weisj.darklaf.listener;
 
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.UIResource;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-public class DarkPlainTextBorder extends EmptyBorder implements UIResource {
+public interface InsertDocumentListener extends DocumentListener {
 
-    public DarkPlainTextBorder() {
-        super(0, 0, 0, 0);
+    @Override
+    default void insertUpdate(final DocumentEvent e) {
+        onInsert();
     }
+
+    @Override
+    default void removeUpdate(final DocumentEvent e) {}
+
+    @Override
+    default void changedUpdate(final DocumentEvent e) {}
+
+    void onInsert();
 }

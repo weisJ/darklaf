@@ -111,11 +111,19 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public boolean getRoundedSelectionEdges() {
-        return ((DarkHighlightPainter) getSelectionPainter()).getRoundedEdges();
+        return getDarkSelectionPainter().getRoundedEdges();
     }
 
     public void setRoundedSelectionEdges(final boolean rounded) {
-        ((DarkHighlightPainter) getSelectionPainter()).setRoundedEdges(rounded);
+        getDarkSelectionPainter().setRoundedEdges(rounded);
+    }
+
+    public boolean isExtendingEnabled() {
+        return getDarkSelectionPainter().isLineExtendingEnabled();
+    }
+
+    public void setLineExtendingEnabled(final boolean enabled) {
+        getDarkSelectionPainter().setLineExtendingEnabled(enabled);
     }
 
     public CaretStyle getStyle() {
@@ -288,16 +296,20 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     @Override
     protected Highlighter.HighlightPainter getSelectionPainter() {
+        return getDarkSelectionPainter();
+    }
+
+    protected DarkHighlightPainter getDarkSelectionPainter() {
         return selectionPainter;
     }
 
     @Override
     public boolean isSelectionVisible() {
-        return super.isSelectionVisible() && selectionPainter.isEnabled();
+        return super.isSelectionVisible() && getDarkSelectionPainter().isEnabled();
     }
 
     public void setPaintSelectionHighlight(final boolean paintSelectionHighlight) {
-        selectionPainter.setEnabled(paintSelectionHighlight);
+        getDarkSelectionPainter().setEnabled(paintSelectionHighlight);
     }
 
     public boolean getPasteOnMiddleMouseClick() {

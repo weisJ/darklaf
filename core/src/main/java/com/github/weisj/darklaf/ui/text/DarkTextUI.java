@@ -93,6 +93,10 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     @Override
     protected Caret createCaret() {
+        return createDarkCaret();
+    }
+
+    protected DarkCaret createDarkCaret() {
         return new DarkCaret(getDefaultCaretStyle(), getDefaultInsertCaretStyle());
     }
 
@@ -223,21 +227,19 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
 
         Border border = editor.getBorder();
+        g.setColor(getBackground(editor));
         if (border instanceof DarkTextBorder) {
             paintBorderBackground((Graphics2D) g, editor);
-        } else if (border instanceof TextTableCellEditorBorder) {
-            g.setColor(editor.getBackground());
-            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
-        } else if (border != null && !(border instanceof DarkPlainTextBorder)) {
-            Insets ins = border.getBorderInsets(editor);
-            if (ins != null) {
-                g.setColor(getBackground(editor));
-                g.fillRect(ins.left, ins.top, editor.getWidth() - ins.left - ins.right,
-                           editor.getHeight() - ins.top - ins.bottom);
-            }
         } else {
-            g.setColor(getBackground(editor));
-            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
+            Insets ins = null;
+            if (border instanceof TextTableCellEditorBorder) {
+                ins = new Insets(0, 0, 0, 0);
+            } else if (border != null) {
+                ins = border.getBorderInsets(editor);
+            }
+            if (ins == null) ins = new Insets(0, 0, 0, 0);
+            g.fillRect(ins.left, ins.top, editor.getWidth() - ins.left - ins.right,
+                       editor.getHeight() - ins.top - ins.bottom);
         }
     }
 
@@ -274,6 +276,14 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
     }
 
+    @Override
+    protected Rectangle getVisibleEditorRect() {
+        Rectangle r = super.getVisibleEditorRect();
+        Insets m = editor.getMargin();
+        DarkUIUtil.applyInsets(r, m);
+        return r;
+    }
+
     protected String getDefaultText() {
         return PropertyUtil.getString(editor, KEY_DEFAULT_TEXT, "");
     }
@@ -289,7 +299,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
-        g.setColor(getBackground(c));
         Rectangle r = getDrawingRect(c);
         int arc = getArcSize(c);
         PaintUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
@@ -297,11 +306,17 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     public Rectangle getDrawingRect(final JTextComponent c) {
         Border border = c.getBorder();
-        int w = 0;
+        Rectangle r = new Rectangle(0, 0, c.getWidth(), c.getHeight());
         if (border instanceof DarkTextBorder) {
-            w = ((DarkTextBorder) border).getBorderSize();
+            int bw = ((DarkTextBorder) border).getBorderSize();
+            r.x += bw;
+            r.y += bw;
+            r.width -= 2 * bw;
+            r.height -= 2 * bw;
+        } else {
+            DarkUIUtil.applyInsets(r, border.getBorderInsets(c));
         }
-        return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
+        return r;
     }
 
     protected int getArcSize(final JComponent c) {

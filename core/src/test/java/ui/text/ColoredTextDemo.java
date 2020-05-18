@@ -25,26 +25,43 @@
 package ui.text;
 
 import java.awt.*;
+import java.util.Random;
 
 import javax.swing.*;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import ui.ComponentDemo;
 
-public class TextAreaDemo extends TextComponentDemo<JTextArea> {
+import com.github.weisj.darklaf.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.listener.InsertDocumentListener;
+
+public class ColoredTextDemo extends TextPaneDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new TextAreaDemo());
+        ComponentDemo.showDemo(new ColoredTextDemo());
     }
 
     @Override
-    protected JTextArea createTextComponent() {
-        JTextArea textArea = new JTextArea();
-        textArea.setMargin(new Insets(10, 10, 10, 10));
-        return textArea;
+    protected JTextPane createTextComponent() {
+        JTextPane textPane = super.createTextComponent();
+        textPane.getDocument().addDocumentListener((InsertDocumentListener) () -> SwingUtilities.invokeLater(() -> {
+            StyledDocument document = textPane.getStyledDocument();
+            Random r = new Random();
+            for (int i = 0; i < document.getLength() - 2; i++) {
+                MutableAttributeSet a = new SimpleAttributeSet();
+                Color c = DarkColorModelHSB.getColorFromHSBValues(r.nextDouble(), 1, 1);
+                StyleConstants.setForeground(a, c);
+                document.setCharacterAttributes(i, 1, a, true);
+            }
+        }));
+        return textPane;
     }
 
     @Override
     public String getTitle() {
-        return "TextArea Demo";
+        return "Colored Text Demo";
     }
 }
