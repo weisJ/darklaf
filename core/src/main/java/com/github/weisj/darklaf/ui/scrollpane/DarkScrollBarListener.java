@@ -34,13 +34,12 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkScrollBarListener extends MouseAdapter implements AdjustmentListener, ScrollBarConstants {
 
-    private static final float THUMB_ALPHA = 0.6f;
     private static final float MAX_TRACK_ALPHA = 0.3f;
     private static final float MAX_THUMB_ALPHA = 1;
     private static final int DELAY_FRAMES = 6;
     private static final int FADEOUT_FRAMES_COUNT = 10 + DELAY_FRAMES;
     private static final int FADEIN_FRAMES_COUNT = FADEOUT_FRAMES_COUNT / 2;
-    private static final int FADEOUT_FRAME_COUNT_FACTOR = 50;
+    private static final int FADEOUT_FRAME_COUNT_FACTOR = 25;
     private static final int FADEIN_FRAME_COUNT_FACTOR = 25;
 
     protected final JScrollBar scrollbar;

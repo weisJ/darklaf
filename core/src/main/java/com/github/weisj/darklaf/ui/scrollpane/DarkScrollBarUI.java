@@ -40,8 +40,8 @@ import com.github.weisj.darklaf.util.ColorUtil;
  */
 public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConstants {
 
-    private static final float THUMB_ALPHA = 0.6f;
-    private static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
+    protected static final float THUMB_ALPHA = 0.6f;
+    protected static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     protected DarkScrollBarListener scrollBarListener;
     protected Color thumbBorderColor;
     protected Color thumbFadeStartColor;
@@ -137,11 +137,9 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         }
         float trackAlpha = scrollBarListener.getTrackAlpha();
         if (trackAlpha == 0) return;
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setColor(getTrackColor());
-        g2.setComposite(COMPOSITE.derive(trackAlpha));
-        g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-        g2.dispose();
+        g.setColor(getTrackColor());
+        ((Graphics2D) g).setComposite(COMPOSITE.derive(trackAlpha));
+        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
     protected void paintThumb(final Graphics g, final JComponent c, final Rectangle thumbBounds) {
@@ -151,7 +149,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     }
 
     protected void paintMaxiThumb(final Graphics2D g, final Rectangle rect) {
-        final Composite c = g.getComposite();
         g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
         Color thumbColor = getThumbColor();
         float thumbAlpha = scrollBarListener.getThumbAlpha();
@@ -160,7 +157,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         PaintUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
         g.setColor(thumbColor);
         g.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
-        g.setComposite(c);
     }
 
     protected Color getThumbColor() {
@@ -180,11 +176,17 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         return ScrollBarConstants.isSmall(scrollbar) ? smallSize : size;
     }
 
+    /*
+     * Widen visibility
+     */
     @Override
     public Rectangle getTrackBounds() {
         return super.getTrackBounds();
     }
 
+    /*
+     * Widen visibility
+     */
     @Override
     public Rectangle getThumbBounds() {
         return super.getThumbBounds();
