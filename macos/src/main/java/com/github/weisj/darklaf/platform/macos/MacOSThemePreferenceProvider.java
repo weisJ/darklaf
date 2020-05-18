@@ -39,7 +39,7 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public PreferredThemeStyle getPreference() {
-        if (!MacOSLibrary.isLoaded()) return fallbackStyle;
+        if (!MacOSLibrary.get().isLoaded()) return fallbackStyle;
         boolean darkMode = JNIThemeInfoMacOS.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         Color accentColor = JNIThemeInfoMacOS.getAccentColor();
@@ -65,7 +65,7 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void setReporting(final boolean reporting) {
-        if (reporting && !MacOSLibrary.isLoaded()) MacOSLibrary.updateLibrary();
+        if (reporting && !MacOSLibrary.get().isLoaded()) MacOSLibrary.get().updateLibrary();
         synchronized (monitor) {
             monitor.setRunning(reporting);
         }
@@ -78,7 +78,7 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void initialize() {
-        MacOSLibrary.updateLibrary();
+        MacOSLibrary.get().updateLibrary();
     }
 
     @Override
@@ -93,16 +93,16 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public boolean supportsNativeAccentColor() {
-        return SystemInfo.isMacOSMojave && MacOSLibrary.isLoaded();
+        return SystemInfo.isMacOSMojave && MacOSLibrary.get().isLoaded();
     }
 
     @Override
     public boolean supportsNativeSelectionColor() {
-        return SystemInfo.isMacOSMojave && MacOSLibrary.isLoaded();
+        return SystemInfo.isMacOSMojave && MacOSLibrary.get().isLoaded();
     }
 
     @Override
     public boolean supportsNativeTheme() {
-        return MacOSLibrary.isLoaded();
+        return MacOSLibrary.get().isLoaded();
     }
 }

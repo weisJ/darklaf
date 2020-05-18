@@ -44,12 +44,12 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
 
     @Override
     public boolean isCustomDecorationSupported() {
-        return MacOSLibrary.isLoaded();
+        return MacOSLibrary.get().isLoaded();
     }
 
     @Override
     public void initialize() {
-        MacOSLibrary.updateLibrary();
+        MacOSLibrary.get().updateLibrary();
     }
 
     @Override

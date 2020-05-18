@@ -24,57 +24,49 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.platform.AbstractLibrary;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-public class WindowsLibrary {
+public class WindowsLibrary extends AbstractLibrary {
 
-    private static final Logger LOGGER = LogUtil.getLogger(WindowsLibrary.class);
+    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-windows/";
+    private static final String DLL_NAME = "darklaf-windows.dll";
+    private static final String x86_PATH = "windows-x86/";
+    private static final String x86_64_PATH = "windows-x86-64/";
+    private static final WindowsLibrary library = new WindowsLibrary();
 
-    private static boolean loaded;
-    private static boolean attemptedLoad;
+    public static WindowsLibrary get() {
+        return library;
+    }
 
-    /**
-     * Load the decorations-library if necessary.
-     */
-    public static void updateLibrary() {
-        if (!loaded && !attemptedLoad) {
-            loadLibrary();
+    protected WindowsLibrary() {
+        super(PATH, DLL_NAME);
+    }
+
+    @Override
+    protected String getLibraryPath() {
+        if (!(SystemInfo.isX64 || SystemInfo.isX86)) {
+            logger.warning("Could not determine jre model '"
+                           + SystemInfo.jreArchitecture
+                           + "'. Native features will be disabled");
+            return null;
+        }
+        return super.getLibraryPath();
+    }
+
+    @Override
+    protected String getPath() {
+        if (SystemInfo.isX86) {
+            return super.getPath() + x86_PATH;
+        } else if (SystemInfo.isX64) {
+            return super.getPath() + x86_64_PATH;
+        } else {
+            return super.getPath();
         }
     }
 
-    private static void loadLibrary() {
-        attemptedLoad = true;
-        if (!SystemInfo.isWindows || loaded) {
-            return;
-        }
-        try {
-            if (SystemInfo.isX86) {
-                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86/darklaf-windows.dll");
-            } else if (SystemInfo.isX64) {
-                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-windows/windows-x86-64/darklaf-windows.dll");
-            } else {
-                LOGGER.warning("Could not determine jre model '"
-                               + SystemInfo.jreArchitecture
-                               + "'. Native features will be disabled");
-                return;
-            }
-            loaded = true;
-            LOGGER.info("Loaded darklaf-windows.dll. Native features are enabled.");
-        } catch (Throwable e) {
-            // Library not found, SecurityManager prevents library loading etc.
-            LOGGER.log(Level.SEVERE,
-                       "Could not load decorations library darklaf-windows.dll." +
-                                     " Native features will be disabled",
-                       e);
-        }
-    }
-
-    public static boolean isLoaded() {
-        return loaded;
+    @Override
+    protected boolean canLoad() {
+        return SystemInfo.isWindows10;
     }
 }

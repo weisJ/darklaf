@@ -24,52 +24,36 @@
  */
 package com.github.weisj.darklaf.platform.macos;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.github.weisj.darklaf.platform.NativeUtil;
-import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.platform.AbstractLibrary;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-public class MacOSLibrary {
+public class MacOSLibrary extends AbstractLibrary {
 
-    private static final Logger LOGGER = LogUtil.getLogger(MacOSLibrary.class);
-    private static boolean loaded;
-    private static boolean attemptedLoad;
+    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/";
+    private static final String DLL_NAME = "libdarklaf-macos.dylib";
+    private static final MacOSLibrary instance = new MacOSLibrary();
 
-    /**
-     * Load the decorations-library if necessary.
-     */
-    public static void updateLibrary() {
-        if (!loaded && !attemptedLoad) {
-            loadLibrary();
-        }
+    public static MacOSLibrary get() {
+        return instance;
     }
 
-    private static void loadLibrary() {
-        attemptedLoad = true;
-        if (!SystemInfo.isMacOSYosemite || loaded) {
-            return;
-        }
-        try {
-            if (SystemInfo.isX64) {
-                NativeUtil.loadLibraryFromJar("/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/libdarklaf-macos.dylib");
-                loaded = true;
-                LOGGER.info("Loaded libdarklaf-macos.dylib. Native features are enabled.");
-            } else {
-                LOGGER.warning("JRE model '"
-                               + SystemInfo.jreArchitecture
-                               + "' not supported. Native features will be disabled");
-            }
-        } catch (Throwable e) {
-            // Library not found, SecurityManager prevents library loading etc.
-            LOGGER.log(Level.SEVERE, "Could not load decorations library libdarklaf-macos.dylib." +
-                                     " Native features will be disabled",
-                       e);
-        }
+    protected MacOSLibrary() {
+        super(PATH, DLL_NAME);
     }
 
-    public static boolean isLoaded() {
-        return loaded;
+    @Override
+    protected String getLibraryPath() {
+        if (!SystemInfo.isX64) {
+            logger.warning("JRE model '"
+                           + SystemInfo.jreArchitecture
+                           + "' not supported. Native features will be disabled");
+            return null;
+        }
+        return super.getLibraryPath();
+    }
+
+    @Override
+    protected boolean canLoad() {
+        return SystemInfo.isMacOSYosemite;
     }
 }
