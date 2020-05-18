@@ -45,11 +45,4 @@ public class DarkTextPaneUI extends DarkEditorPaneUI {
     protected String getPropertyPrefix() {
         return "TextPane";
     }
-
-    @Override
-    protected DarkCaret createDarkCaret() {
-        DarkCaret caret = super.createDarkCaret();
-        caret.setLineExtendingEnabled(true);
-        return caret;
-    }
 }

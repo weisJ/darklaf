@@ -61,6 +61,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     protected static final String KEY_PREFIX = "JTextComponent.";
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
+    public static final String KEY_EXTEND_LINE_SELECTION = KEY_PREFIX + "extendSelection";
     public static final String KEY_HAS_ERROR = KEY_PREFIX + "hasError";
     public static final String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
     public static final String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
@@ -90,14 +91,23 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
     };
     protected DefaultTextRenderer defaultTextRenderer;
+    protected DarkCaret darkCaret;
 
     @Override
     protected Caret createCaret() {
-        return createDarkCaret();
+        return getDarkCaret();
+    }
+
+    protected DarkCaret getDarkCaret() {
+        if (darkCaret == null) darkCaret = createDarkCaret();
+        return darkCaret;
     }
 
     protected DarkCaret createDarkCaret() {
-        return new DarkCaret(getDefaultCaretStyle(), getDefaultInsertCaretStyle());
+        DarkCaret c = new DarkCaret(getDefaultCaretStyle(), getDefaultInsertCaretStyle());
+        c.setLineExtendingEnabled(PropertyUtil.getBooleanProperty(editor, KEY_EXTEND_LINE_SELECTION));
+        c.setRoundedSelectionEdges(PropertyUtil.getBooleanProperty(editor, KEY_ROUNDED_SELECTION));
+        return c;
     }
 
     protected abstract DarkCaret.CaretStyle getDefaultCaretStyle();
@@ -121,6 +131,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
         if (editor != null) {
             PropertyUtil.installBooleanProperty(editor, KEY_ROUNDED_SELECTION, "TextComponent.roundedSelection");
+            PropertyUtil.installBooleanProperty(editor, KEY_EXTEND_LINE_SELECTION,
+                                                getPropertyPrefix() + ".extendSelection");
         }
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
@@ -140,8 +152,14 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if (KEY_ROUNDED_SELECTION.equals(key)) {
+            boolean rounded = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_ROUNDED_SELECTION);
+            getDarkCaret().setRoundedSelectionEdges(rounded);
             editor.repaint();
         } else if (KEY_HAS_ERROR.equals(key)) {
+            editor.repaint();
+        } else if (KEY_EXTEND_LINE_SELECTION.equals(key)) {
+            boolean extendLines = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_EXTEND_LINE_SELECTION);
+            getDarkCaret().setLineExtendingEnabled(extendLines);
             editor.repaint();
         }
     }

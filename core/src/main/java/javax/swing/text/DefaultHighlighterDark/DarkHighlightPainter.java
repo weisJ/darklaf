@@ -39,10 +39,9 @@ import com.github.weisj.darklaf.graphics.ColorWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * Note this class only sits inside this weird package because of a hack used in {@link
@@ -194,7 +193,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     protected Shape paintRoundedLayer(final Graphics2D g, final JTextComponent c, final int offs0, final int offs1,
                                       final GraphicsContext context) {
-        Insets ins = c.getInsets();
+        Insets ins = DarkUIUtil.addInsets(c.getInsets(), c.getMargin(), true);
 
         Rectangle posOffs0 = getPosRect(c, offs0);
         Rectangle posOffs1 = getPosRect(c, offs1, Position.Bias.Backward);
@@ -393,8 +392,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private boolean isRounded(final JTextComponent c) {
         // Rounded selections still have some issues when using in RtL mode.
-        return c.getComponentOrientation().isLeftToRight()
-               && (roundedEdges || PropertyUtil.getBooleanProperty(c, DarkTextUI.KEY_ROUNDED_SELECTION));
+        return c.getComponentOrientation().isLeftToRight() && roundedEdges;
     }
 
     private Rectangle paintRoundRect(final Graphics g, final GraphicsContext context, final Rectangle shape,

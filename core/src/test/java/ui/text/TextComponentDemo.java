@@ -34,7 +34,9 @@ import ui.ComponentDemo;
 import ui.DemoPanel;
 
 import com.github.weisj.darklaf.ui.text.DarkTextBorder;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.StringUtil;
 
 public abstract class TextComponentDemo<T extends JTextComponent> implements ComponentDemo {
@@ -72,19 +74,26 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
         });
         controlPanel.add(new JCheckBox("text border") {
             {
-                setSelected(false);
+                setSelected(text.getBorder() instanceof DarkTextBorder);
                 addActionListener(e -> text.setBorder(isSelected() ? textBorder : border));
             }
         });
-        controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {
+        controlPanel.add(new JCheckBox(DarkTextUI.KEY_ROUNDED_SELECTION) {
             {
-                setSelected(true);
-                addActionListener(e -> text.putClientProperty("JTextComponent.roundedSelection", isSelected()));
+                setSelected(PropertyUtil.getBooleanProperty(text, DarkTextUI.KEY_ROUNDED_SELECTION));
+                addActionListener(e -> text.putClientProperty(DarkTextUI.KEY_ROUNDED_SELECTION, isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox("JTextComponent.hasError") {
+        controlPanel.add(new JCheckBox(DarkTextUI.KEY_EXTEND_LINE_SELECTION) {
             {
-                addActionListener(e -> text.putClientProperty("JTextComponent.hasError", isSelected()));
+                setSelected(PropertyUtil.getBooleanProperty(text, DarkTextUI.KEY_EXTEND_LINE_SELECTION));
+                addActionListener(e -> text.putClientProperty(DarkTextUI.KEY_EXTEND_LINE_SELECTION, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkTextUI.KEY_HAS_ERROR) {
+            {
+                setSelected(PropertyUtil.getBooleanProperty(text, DarkTextUI.KEY_HAS_ERROR));
+                addActionListener(e -> text.putClientProperty(DarkTextUI.KEY_HAS_ERROR, isSelected()));
             }
         });
         return panel;
