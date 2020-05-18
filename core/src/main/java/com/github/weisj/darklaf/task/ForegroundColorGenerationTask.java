@@ -58,13 +58,11 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
     }
 
     private void adjustForegroundList(final List<?> list, final Properties properties) {
-        for (Object o : list) {
-            if (!(o instanceof Pair<?, ?>)) continue;
-            Pair<?, ?> pair = (Pair<?, ?>) o;
-            if (!(pair.getFirst() instanceof Color)) continue;
-            Color c = (Color) pair.getFirst();
-            properties.put(pair.getSecond(), makeForeground(c));
-        }
+        list.stream()
+            .filter(o -> o instanceof Pair<?, ?>)
+            .map(Pair.class::cast)
+            .filter(p -> p.getFirst() instanceof Color)
+            .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
     }
 
     private Color makeForeground(final Color c) {

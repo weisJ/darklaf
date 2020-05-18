@@ -27,10 +27,10 @@ package com.github.weisj.darklaf.task;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.text.AttributedCharacterIterator;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -43,6 +43,7 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class FontDefaultsInitTask implements DefaultsInitTask {
@@ -51,6 +52,9 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String FONT_PROPERTY_PATH = "properties/";
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";
+    private static final String KERNING_LIST = "fontList.kerningEnabled";
+
+    private static final String ALL_FONTS = "__all__";
 
     private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING = Collections.singletonMap(TextAttribute.KERNING,
                                                                                                                        TextAttribute.KERNING_ON);
@@ -66,12 +70,31 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
         if (SystemInfo.isMac) {
             patchOSFonts(defaults, this::mapMacOSFont);
-        } else if (SystemInfo.isWindows10) {
+        } else if (SystemInfo.isWindows) {
             patchOSFonts(defaults, this::mapWindowsFont);
+        }
+
+        if (systemKerningEnabled()) {
+            List<String> kerningFontsList = PropertyUtil.getList(defaults, KERNING_LIST, String.class);
+            if (!kerningFontsList.isEmpty()) {
+                Set<String> kerningFonts = new HashSet<>(kerningFontsList);
+                boolean enabledAll = ALL_FONTS.equals(kerningFontsList.get(0));
+
+                setupKerningPerFont(defaults, key -> {
+                    if (enabledAll) return true;
+                    return kerningFonts.contains(key);
+                });
+            }
         }
 
         applyFontRule(currentTheme, defaults);
         setupRenderingHints(defaults);
+    }
+
+    private boolean systemKerningEnabled() {
+        if (SystemInfo.isMac) return SystemInfo.isMacOSMojave;
+        if (SystemInfo.isWindows) return SystemInfo.isWindowsVista;
+        return false;
     }
 
     private void setupRenderingHints(final UIDefaults defaults) {
@@ -116,12 +139,22 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private Font mapWindowsFont(final Font font) {
-        if (!SystemInfo.isWindows10) return font;
+        if (!SystemInfo.isWindowsVista) return font;
         Font windowsFont = new Font(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);
         }
         return windowsFont;
+    }
+
+    private void setupKerningPerFont(final UIDefaults defaults, final Predicate<String> kerningPredicate) {
+        PropertyLoader.replacePropertiesOfType(Font.class, defaults,
+                                               e -> kerningPredicate.test(e.getKey().toString()),
+                                               f -> {
+                                                   Font font = f.deriveFont(ENABLE_KERNING);
+                                                   if (f instanceof UIResource) font = new DarkFontUIResource(font);
+                                                   return font;
+                                               });
     }
 
     private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {

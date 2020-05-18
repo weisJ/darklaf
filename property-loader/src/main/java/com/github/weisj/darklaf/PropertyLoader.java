@@ -135,30 +135,31 @@ public final class PropertyLoader {
     public static void replaceProperties(final Map<Object, Object> properties,
                                          final Predicate<Map.Entry<Object, Object>> predicate,
                                          final Function<Map.Entry<Object, Object>, Object> mapper) {
-        replacePropertiesOfType(Object.class, properties, predicate, mapper);
+        replacePropertyEntriesOfType(Object.class, properties, predicate, mapper);
     }
 
     public static <T> void replacePropertiesOfType(final Class<T> type,
                                                    final Map<Object, Object> properties,
                                                    final Function<T, T> mapper) {
-        replacePropertiesOfType(type, properties, e -> true, e -> mapper.apply(e.getValue()));
+        replacePropertyEntriesOfType(type, properties, e -> true, e -> mapper.apply(e.getValue()));
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> void replacePropertiesOfType(final Class<T> type,
                                                    final Map<Object, Object> properties,
                                                    final Predicate<Map.Entry<Object, T>> predicate,
-                                                   final Function<Map.Entry<Object, T>, T> mapper) {
-        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            if (type == Object.class || type.isInstance(entry.getValue())) {
-                if (predicate.test((Map.Entry<Object, T>) entry)) {
-                    T newValue = mapper.apply((Map.Entry<Object, T>) entry);
-                    if (newValue != null) {
-                        entry.setValue(newValue);
-                    }
-                }
-            }
-        }
+                                                   final Function<T, T> mapper) {
+        replacePropertyEntriesOfType(type, properties, predicate, e -> mapper.apply(e.getValue()));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> void replacePropertyEntriesOfType(final Class<T> type,
+                                                        final Map<Object, Object> properties,
+                                                        final Predicate<Map.Entry<Object, T>> predicate,
+                                                        final Function<Map.Entry<Object, T>, T> mapper) {
+        properties.entrySet().stream()
+                  .filter(e -> type == Object.class || type.isInstance(e.getValue()))
+                  .filter(e -> predicate.test((Map.Entry<Object, T>) e))
+                  .forEach(e -> Optional.ofNullable(mapper.apply((Map.Entry<Object, T>) e)).ifPresent(e::setValue));
     }
 
     private static String parseKey(final String key) {
@@ -380,6 +381,7 @@ public final class PropertyLoader {
             val = value.substring(1, value.length() - 1);
         }
         String[] values = val.split(String.valueOf(delimiter));
+        if (values.length == 0) return Collections.emptyList();
         return Arrays.stream(values)
                      .map(k -> mapper.parseValue(k, accumulator, currentDefaults, iconLoader))
                      .collect(Collectors.toList());

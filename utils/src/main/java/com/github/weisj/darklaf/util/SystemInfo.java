@@ -36,24 +36,32 @@ public class SystemInfo {
     public static final String OS_VERSION = System.getProperty("os.version").toLowerCase();
     public static final String JAVA_VERSION = System.getProperty("java.version");
     public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
+
     public static final boolean isWindows;
     public static final boolean isOS2;
     public static final boolean isMac;
     public static final boolean isLinux;
     public static final boolean isUnix;
+
     public static final boolean isFileSystemCaseSensitive;
+
     public static final boolean isAppleJvm;
     public static final boolean isOracleJvm;
     public static final boolean isSunJvm;
+
     public static final String jreArchitecture = System.getProperty("sun.arch.data.model");
     public static final boolean isX86;
     public static final boolean isX64;
     public static final boolean isUndefined;
+
     protected static final String _OS_NAME;
+
     public static final boolean isMacOSMojave;
     public static final boolean isMacOSCatalina;
     public static final boolean isMacOSYosemite;
     public static final boolean isWindows10;
+    public static final boolean isWindows7;
+    public static final boolean isWindowsVista;
 
     static {
         _OS_NAME = OS_NAME.toLowerCase();
@@ -69,10 +77,12 @@ public class SystemInfo {
         isX64 = X64.equals(jreArchitecture);
         isX86 = X86.equals(jreArchitecture);
         isUndefined = !isX86 & !isX64;
-        isMacOSMojave = isMac && isOsVersionAtLeast("10.14");
         isMacOSCatalina = isMac && isOsVersionAtLeast("10.15");
-        isMacOSYosemite = isMac && isOsVersionAtLeast("10.10");
+        isMacOSMojave = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.14"));
+        isMacOSYosemite = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.10"));
         isWindows10 = isWindows && isOsVersionAtLeast("10.0");
+        isWindows7 = isWindows10 || (isWindows && isOsVersionAtLeast("6.1"));
+        isWindowsVista = isWindows7 || (isWindows && isOsVersionAtLeast("6.0"));
     }
 
     public static boolean isOsVersionAtLeast(final String version) {

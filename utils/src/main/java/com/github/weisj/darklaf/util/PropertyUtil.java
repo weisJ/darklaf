@@ -25,7 +25,10 @@
 package com.github.weisj.darklaf.util;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -155,5 +158,20 @@ public class PropertyUtil {
 
     public static Integer getInteger(final JComponent c, final String key) {
         return getInteger(c, key, 0);
+    }
+
+    public static <T> List<T> getList(final UIDefaults defaults, final String key, final Class<T> type) {
+        Object obj = defaults.get(key);
+        if (!(obj instanceof List)) return Collections.emptyList();
+        List<?> list = (List<?>) obj;
+        return asTypedList(list, type);
+    }
+
+    public static <T> List<T> asTypedList(final List<?> list, final Class<T> type) {
+        return list.stream()
+                   .filter(Objects::nonNull)
+                   .filter(t -> type.isAssignableFrom(t.getClass()))
+                   .map(type::cast)
+                   .collect(Collectors.toList());
     }
 }
