@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.icons;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,10 +44,22 @@ import com.kitfox.svg.app.beans.SVGIcon;
 public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Serializable, ImageSource {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
+
+    /*
+     * Render the icon a bit larger than needed to ensure it is painted good enough when rotated.
+     * This accounts for diagonal lines (i.e. when the rotation is pi/4). Ideally this value would only need to
+     * be sqrt(2) but 1.5 behaves a lot better w.r.t. floating point calculations.
+     *
+     * The scale factor is only used if the icon is painted with a non trivial rotation.
+     */
+    private static final double extraScale = 1.5;
+
     private final Dimension size;
     private final SVGIcon icon;
     protected final URI uri;
     private final AtomicBoolean loaded;
+
+    private boolean loadedWithExtraScale;
     private double scaleX;
     private double scaleY;
     private Image image;
@@ -105,7 +118,9 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         if (!update && Scale.equalWithError(scaleX, sx) && Scale.equalWithError(scaleY, sy) && image != null) return;
         scaleX = sx;
         scaleY = sy;
-        image = createImage(Scale.scale(scaleX, scaleY, size));
+        double effectiveScaleX = loadedWithExtraScale ? scaleX * extraScale : scaleX;
+        double effectiveScaleY = loadedWithExtraScale ? scaleY * extraScale : scaleY;
+        image = createImage(Scale.scale(effectiveScaleX, effectiveScaleY, size));
     }
 
     @Override
@@ -115,8 +130,23 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         return icon.getImage();
     }
 
-    protected void ensureImageLoaded(final Component c) {
-        updateCache(ensureLoaded(), c);
+    protected void ensureImageLoaded(final Component c, final double rotation) {
+        boolean rotationChanged = false;
+        if (!loadedWithExtraScale) {
+            loadedWithExtraScale = !isExactRotation(rotation);
+            rotationChanged = true;
+        }
+        updateCache(ensureLoaded() || rotationChanged, c);
+    }
+
+    private boolean isExactRotation(final double rotation) {
+        double r = rotation;
+        if (r < 0) r += 2 * Math.PI;
+        if (r > 2 * Math.PI) r -= 2 * Math.PI;
+        return Scale.equalWithError(r, 0)
+               || Scale.equalWithError(r, Math.PI / 2)
+               || Scale.equalWithError(r, Math.PI)
+               || Scale.equalWithError(r, 3 * Math.PI / 2);
     }
 
     protected SVGIcon createSVGIcon() {
@@ -126,18 +156,22 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y,
                           final double rotation) {
-        ensureImageLoaded(c);
+        ensureImageLoaded(c, rotation);
         Graphics2D g2 = (Graphics2D) g;
+        AffineTransform transform = g2.getTransform();
         g2.translate(x, y);
-        double sx = size.width / (double) image.getWidth(null);
-        double sy = size.height / (double) image.getHeight(null);
+        double imageWidth = image.getWidth(null);
+        double imageHeight = image.getHeight(null);
+        double sx = size.width / imageWidth;
+        double sy = size.height / imageHeight;
         g2.scale(sx, sy);
         if (rotation != 0) {
-            g2.rotate(rotation, size.width / 2.0, size.height / 2.0);
+            g2.rotate(rotation, imageWidth / 2.0, imageHeight / 2.0);
         }
         g2.drawImage(image, 0, 0, null);
         g2.scale(1 / sx, 1 / sy);
         g2.translate(-x, -y);
+        g2.setTransform(transform);
     }
 
     @Override

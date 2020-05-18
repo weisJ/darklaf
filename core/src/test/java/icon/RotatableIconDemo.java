@@ -31,6 +31,7 @@ import ui.DemoPanel;
 import ui.DemoResources;
 
 import com.github.weisj.darklaf.icons.RotatableIcon;
+import com.github.weisj.darklaf.util.Alignment;
 
 public class RotatableIconDemo implements ComponentDemo {
 
@@ -41,6 +42,7 @@ public class RotatableIconDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         RotatableIcon folderIcon = new RotatableIcon(DemoResources.FOLDER_ICON);
+        folderIcon.setOrientation(Alignment.NORTH);
         JLabel label = new JLabel(folderIcon);
         SwingUtilities.invokeLater(() -> {
             Timer timer = new Timer(1000, e -> {
