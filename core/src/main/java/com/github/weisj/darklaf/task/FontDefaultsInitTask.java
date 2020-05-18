@@ -30,6 +30,7 @@ import java.text.AttributedCharacterIterator;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -56,14 +57,19 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING = Collections.singletonMap(TextAttribute.KERNING,
                                                                                                                         null);
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
+    private static final String WINDOWS_10_FONT_NAME = "Segoe UI";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
         loadFontProperties(defaults);
+
         if (SystemInfo.isMac) {
-            patchMacOSFonts(defaults);
+            patchOSFonts(defaults, this::mapMacOSFont);
+        } else if (SystemInfo.isWindows10) {
+            patchOSFonts(defaults, this::mapWindowsFont);
         }
+
         applyFontRule(currentTheme, defaults);
         setupRenderingHints(defaults);
     }
@@ -95,11 +101,11 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         PropertyLoader.putProperties(fontProps, defaults);
     }
 
-    private void patchMacOSFonts(final UIDefaults defaults) {
-        PropertyLoader.replacePropertiesOfType(Font.class, defaults, this::macOSFontFromFont);
+    private void patchOSFonts(final UIDefaults defaults, final Function<Font, Font> mapper) {
+        PropertyLoader.replacePropertiesOfType(Font.class, defaults, mapper);
     }
 
-    private Font macOSFontFromFont(final Font font) {
+    private Font mapMacOSFont(final Font font) {
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME : MAC_OS_FONT_NAME;
         Font macFont = new Font(fontName, font.getStyle(), font.getSize());
         if (SystemInfo.isMacOSMojave) macFont = macFont.deriveFont(ENABLE_KERNING);
@@ -107,6 +113,15 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             macFont = new DarkFontUIResource(macFont);
         }
         return macFont == null ? font : macFont;
+    }
+
+    private Font mapWindowsFont(final Font font) {
+        if (!SystemInfo.isWindows10) return font;
+        Font windowsFont = new Font(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
+        if (font instanceof UIResource) {
+            windowsFont = new DarkFontUIResource(windowsFont);
+        }
+        return windowsFont;
     }
 
     private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
