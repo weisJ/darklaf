@@ -368,6 +368,7 @@ public final class DarkUIUtil {
     }
 
     private static GraphicsConfiguration getDrawingGC(final int x, final int y) {
+        if (GraphicsEnvironment.isHeadless()) return null;
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] devices = env.getScreenDevices();
         for (GraphicsDevice device : devices) {

@@ -34,11 +34,18 @@ public class Scale {
     private static final double EPSILON = 0.0001;
 
     static {
-        DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        SCALE_X = mode.getWidth() / (double) screenSize.width;
-        SCALE_Y = mode.getHeight() / (double) screenSize.height;
-        SCALE = SCALE_X;
+        if (GraphicsEnvironment.isHeadless()) {
+            SCALE = 1;
+            SCALE_X = 1;
+            SCALE_Y = 1;
+        } else {
+            DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+                                                  .getDisplayMode();
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            SCALE_X = mode.getWidth() / (double) screenSize.width;
+            SCALE_Y = mode.getHeight() / (double) screenSize.height;
+            SCALE = SCALE_X;
+        }
     }
 
     public static double scaleWidth(final double value, final GraphicsConfiguration gc) {
