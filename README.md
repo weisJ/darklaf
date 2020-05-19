@@ -14,8 +14,8 @@ This project is based on the [darcula](https://github.com/bulenkov/Darcula) look
 |![Solarized Light](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/solatized_light.png)|![Solarized Dark](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/solarized_dark.png)|
 |![High Contrast Light](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/high_constrast_light.png)|![High Contrast Dark](https://github.com/weisJ/darklaf/blob/master/img/file_chooser/high_constrast_dark.png)|
 
-# Usage & [Features](https://github.com/weisJ/darklaf/wiki/Features)
-A list of all features can be found [here](https://github.com/weisJ/darklaf/wiki/Features).
+# Usage & [Features](https://github.com/weisJ/darklaf/wiki#features)
+A list of all features can be found [here](https://github.com/weisJ/darklaf/wiki#features).
 The LaF is compatible with Java >=1.8 (you need >=1.9 to get proper scaling).
 
 You can find all property values on [weisj.github.io/darklaf-docs](https://weisj.github.io/darklaf-docs/)
