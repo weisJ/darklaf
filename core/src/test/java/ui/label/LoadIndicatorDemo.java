@@ -32,10 +32,10 @@ import ui.DemoResources;
 
 import com.github.weisj.darklaf.components.loading.LoadingIndicator;
 
-public class LoadIndicator extends LabelDemoBase<LoadingIndicator> {
+public class LoadIndicatorDemo extends LabelDemoBase<LoadingIndicator> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LoadIndicator());
+        ComponentDemo.showDemo(new LoadIndicatorDemo());
     }
 
     @Override

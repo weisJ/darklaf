@@ -413,8 +413,7 @@ public class ToolTipContext {
      * @see               #setInsideArea(Area)
      */
     public ToolTipContext setInsideArea(final Rectangle insideRect) {
-        this.hotSpotArea = new Area(insideRect);
-        return this;
+        return setInsideArea(new Area(insideRect));
     }
 
     /**

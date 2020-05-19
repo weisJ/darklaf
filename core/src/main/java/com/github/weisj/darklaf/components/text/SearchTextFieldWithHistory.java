@@ -24,6 +24,9 @@
  */
 package com.github.weisj.darklaf.components.text;
 
+import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
+
 import java.util.List;
 
 import javax.swing.text.Document;
@@ -64,7 +67,7 @@ public class SearchTextFieldWithHistory extends SearchTextField {
     public SearchTextFieldWithHistory(final Document doc, final String text, final int columns) {
         super(doc, text, columns);
         history = new TextFieldHistoryPopup(this, 100, 800);
-        putClientProperty("JTextField.Search.FindPopup", history);
+        putClientProperty(DarkTextFieldUI.KEY_FIND_POPUP, history);
     }
 
     /**
@@ -168,12 +171,5 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      */
     public int getLength() {
         return history.getLength();
-    }
-
-    public void setHistoryLength(final int length) {
-        if (length < 0) throw new IllegalArgumentException("History can't have negative size");
-        if (length == 0) {
-            putClientProperty("JTextField.Search.FindPopup", null);
-        }
     }
 }

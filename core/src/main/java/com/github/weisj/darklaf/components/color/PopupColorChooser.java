@@ -129,8 +129,7 @@ public class PopupColorChooser extends JToolTip {
     }
 
     protected ToolTipContext createToolTipContext() {
-        return new ToolTipContext()
-                                   .setAlignment(Alignment.CENTER)
+        return new ToolTipContext().setAlignment(Alignment.CENTER)
                                    .setCenterAlignment(Alignment.SOUTH)
                                    .setUseBestFit(true)
                                    .setToolTipInsets(new Insets(2, 2, 2, 2))
