@@ -203,9 +203,9 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
     }
 
     protected boolean scrollBarVisible() {
-        JScrollPane comp = DarkUIUtil.getParentOfType(JScrollPane.class, table);
-        return comp != null && comp.getVerticalScrollBar().isVisible()
-               && DarkUIUtil.getParentOfType(OverlayScrollPane.class, table) == null;
+        JScrollPane comp = DarkUIUtil.getParentOfType(JScrollPane.class, table, 2);
+        OverlayScrollPane overlayScrollPane = DarkUIUtil.getParentOfType(OverlayScrollPane.class, table, 3);
+        return comp != null && overlayScrollPane == null && comp.getVerticalScrollBar().isVisible();
     }
 
     protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
@@ -264,7 +264,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         // Paint a gray well in place of the moving column.
         Container parent = table.getParent();
         if (isInScrollPane()) {
-            JScrollPane par = DarkUIUtil.getParentOfType(JScrollPane.class, table);
+            Component par = DarkUIUtil.getUnwrappedParent(table).getParent();
             if (par != null && par.getParent() != null) {
                 parent = par.getParent();
             }

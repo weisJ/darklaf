@@ -39,16 +39,26 @@ public class PopupMenuDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        Icon icon = DemoResources.FOLDER_ICON;
-        panel.add(new JLabel("Right click anywhere to open menu.") {
+        JPanel leftPanel = new JPanel();
+        leftPanel.setPreferredSize(new Dimension(200, 200));
+        leftPanel.setLayout(new GridBagLayout());
+        leftPanel.add(new JLabel("<html>Right click anywhere <br> to open menu.") {
             {
                 setInheritsPopupMenu(true);
             }
         });
-        panel.setPreferredSize(new Dimension(200, 200));
-        panel.setComponentPopupMenu(new JPopupMenu() {
+
+        JPanel rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(200, 200));
+        rightPanel.setLayout(new GridBagLayout());
+        rightPanel.add(new JLabel("<html>Right click anywhere <br> to open large menu.") {
+            {
+                setInheritsPopupMenu(true);
+            }
+        });
+
+        Icon icon = DemoResources.FOLDER_ICON;
+        leftPanel.setComponentPopupMenu(new JPopupMenu() {
             {
                 for (int i = 0; i < 3; i++) {
                     add(new JMenu("Menu " + i) {
@@ -90,7 +100,32 @@ public class PopupMenuDemo implements ComponentDemo {
                 }
             }
         });
-        return panel;
+        rightPanel.setComponentPopupMenu(new JPopupMenu() {
+            {
+                setName("Right Menu");
+                for (int i = 0; i < 70; i++) {
+                    if (i % 20 == 0) {
+                        add(new JMenu("Menu " + i) {
+                            {
+                                setName(getText());
+                                for (int j = 0; j < 5; j++) {
+                                    add(new JMenuItem("Item " + j));
+                                }
+                            }
+                        });
+                    } else {
+                        add(new JMenuItem("Item " + i) {
+                            {
+                                setName(getText());
+                            }
+                        });
+                    }
+                }
+
+            }
+        });
+
+        return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
     }
 
     @Override
@@ -101,6 +136,13 @@ public class PopupMenuDemo implements ComponentDemo {
             {
                 for (int i = 0; i < 10; i++) {
                     add(new JCheckBoxMenuItem("Item " + i));
+                }
+            }
+        });
+        menuBar.add(new JMenu("Many Items") {
+            {
+                for (int i = 0; i < 70; i++) {
+                    add(new JMenuItem("Item " + i));
                 }
             }
         });

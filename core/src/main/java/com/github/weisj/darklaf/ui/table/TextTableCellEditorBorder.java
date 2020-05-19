@@ -47,7 +47,7 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
     public void paintBorder(final Component c, final Graphics g, final int x, final int y,
                             final int width, final int height) {
         g.setColor(borderColor);
-        JTable table = DarkUIUtil.getParentOfType(JTable.class, c);
+        JTable table = getTable(c);
         if (table != null) {
             CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
@@ -55,8 +55,12 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
         }
     }
 
+    private JTable getTable(final Component c) {
+        return DarkUIUtil.getParentOfType(JTable.class, c, 2);
+    }
+
     @Override
     public Insets getBorderInsets(final Component c) {
-        return CellUtil.adjustEditorInsets(super.getBorderInsets(), c);
+        return CellUtil.adjustEditorInsets(super.getBorderInsets(), c, getTable(c));
     }
 }

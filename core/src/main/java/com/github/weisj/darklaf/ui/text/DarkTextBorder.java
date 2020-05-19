@@ -54,8 +54,6 @@ public class DarkTextBorder implements Border, UIResource {
     protected final int searchArc;
     protected final int focusArc;
     protected final int searchFocusArc;
-    protected Insets padding;
-    protected final Icon showIcon;
 
     public DarkTextBorder() {
         focusErrorBorderColor = UIManager.getColor("TextField.border.focusError");
@@ -69,9 +67,6 @@ public class DarkTextBorder implements Border, UIResource {
         focusArc = UIManager.getInt("TextField.focusArc");
         searchArc = UIManager.getInt("TextField.searchArc");
         searchFocusArc = UIManager.getInt("TextField.searchFocusArc");
-        padding = UIManager.getInsets("TextField.insets");
-        showIcon = UIManager.getIcon("PasswordField.show.icon");
-        if (padding == null) padding = new Insets(0, 0, 0, 0);
     }
 
     protected static boolean hasError(final Component c) {
@@ -128,25 +123,7 @@ public class DarkTextBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        Insets insets = new Insets(borderSize + padding.top, borderSize + padding.left,
-                                   borderSize + padding.bottom, borderSize + padding.right);
-        Icon left = DarkTextFieldUI.isSearchField(c) ? DarkTextFieldUI.getSearchIcon(c) : null;
-        Icon right = DarkPasswordFieldUI.hasShowIcon(c)
-                ? showIcon
-                : DarkTextFieldUI.showClearIcon(c) ? DarkTextFieldUI.getClearIcon(false)
-                : null;
-        if (!c.getComponentOrientation().isLeftToRight()) {
-            Icon tmp = right;
-            right = left;
-            left = tmp;
-        }
-        if (left != null) {
-            insets.left += padding.left + left.getIconWidth();
-        }
-        if (right != null) {
-            insets.right += padding.right + right.getIconWidth();
-        }
-        return insets;
+        return new Insets(borderSize, borderSize, borderSize, borderSize);
     }
 
     @Override

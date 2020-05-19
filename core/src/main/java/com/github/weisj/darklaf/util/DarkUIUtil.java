@@ -32,6 +32,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.*;
@@ -56,17 +57,19 @@ import com.github.weisj.darklaf.ui.table.header.DarkTableHeaderRendererPane;
  */
 public final class DarkUIUtil {
 
+    private static final int CELL_SEARCH_DEPTH = 3;
     public static final IconLoader ICON_LOADER = IconLoader.get(IconLoader.class);
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
 
-    public static void applyInsets(final Rectangle rect, final Insets insets) {
+    public static Rectangle applyInsets(final Rectangle rect, final Insets insets) {
         if (insets != null && rect != null) {
             rect.x += insets.left;
             rect.y += insets.top;
             rect.width -= (insets.right + insets.left);
             rect.height -= (insets.bottom + insets.top);
         }
+        return rect;
     }
 
     public static Insets addInsets(final Insets ins1, final Insets ins2, final boolean createNew) {
@@ -98,8 +101,42 @@ public final class DarkUIUtil {
         }
     }
 
-    public static void repaint(final JComponent component) {
-        if (component != null) component.repaint();
+    public static void repaint(final Component component) {
+        if (component != null && component.isVisible()) component.repaint();
+    }
+
+    public static void repaint(final JComponent component, final Rectangle bounds) {
+        repaint(component, bounds.x, bounds.y, bounds.width, bounds.height, false);
+    }
+
+    public static void repaint(final JComponent component, final Rectangle bounds, final boolean immediately) {
+        repaint(component, bounds.x, bounds.y, bounds.width, bounds.height, immediately);
+    }
+
+    public static void repaint(final JComponent component, final int x, final int y,
+                               final int width, final int height, final boolean immediately) {
+        if (component != null && component.isVisible()) {
+            if (immediately) {
+                component.paintImmediately(x, y, width, height);
+            } else {
+                component.repaint(x, y, width, height);
+            }
+        }
+    }
+
+    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
+                                                          final Rectangle bounds) {
+        repaintChild(component, func, bounds, false);
+    }
+
+    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
+                                                          final Rectangle bounds, final boolean immediately) {
+        if (component != null) {
+            JComponent c = func.apply(component);
+            Rectangle r = SwingUtilities.convertRectangle(component, bounds, c);
+            r = r.intersection(new Rectangle(0, 0, c.getWidth(), c.getHeight()));
+            repaint(c, r, immediately);
+        }
     }
 
     public static boolean hasFocus(final Component c) {
@@ -153,10 +190,9 @@ public final class DarkUIUtil {
         return ActionEvent.ALT_MASK;
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T getUIOfType(final ComponentUI ui, final Class<T> klass) {
-        if (klass.isInstance(ui)) {
-            return (T) ui;
+        if (klass.isAssignableFrom(ui.getClass())) {
+            return klass.cast(ui);
         }
         return null;
     }
@@ -167,31 +203,46 @@ public final class DarkUIUtil {
     }
 
     public static boolean isInCell(final Component c) {
-        if (getParentOfType(DarkTableHeaderRendererPane.class, c) != null) return false;
-        boolean inCellRenderer = getParentOfType(c, CellRendererPane.class, CellEditor.class,
+        if (getParentOfType(DarkTableHeaderRendererPane.class, c, CELL_SEARCH_DEPTH) != null) return false;
+        boolean inCellRenderer = getParentOfType(c, CELL_SEARCH_DEPTH, CellRendererPane.class, CellEditor.class,
                                                  TableCellRenderer.class, TableCellEditor.class,
                                                  TreeCellRenderer.class, TreeCellEditor.class,
                                                  ListCellRenderer.class, CellRenderer.class) != null;
         return inCellRenderer && getParentOfType(JComboBox.class, c) == null;
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {
+        return getParentOfType(cls, c, Integer.MAX_VALUE);
+    }
+
+    public static <T> T getParentOfType(final Class<? extends T> cls, final Component c, final int searchDepth) {
+        int depth = 0;
         for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
             if (cls.isAssignableFrom(eachParent.getClass())) {
-                return (T) eachParent;
+                return cls.cast(eachParent);
             }
+            if (depth >= searchDepth) break;
+            depth++;
         }
         return null;
     }
 
+    @SafeVarargs
     public static <T> T getParentOfType(final Component c, final Class<? extends T>... classes) {
+        return getParentOfType(c, Integer.MAX_VALUE, classes);
+    }
+
+    @SafeVarargs
+    public static <T> T getParentOfType(final Component c, final int searchDepth, final Class<? extends T>... classes) {
+        int depth = 0;
         for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
             for (Class<? extends T> cls : classes) {
                 if (cls.isAssignableFrom(eachParent.getClass())) {
-                    return (T) eachParent;
+                    return cls.cast(eachParent);
                 }
             }
+            if (depth >= searchDepth) break;
+            depth++;
         }
         return null;
     }

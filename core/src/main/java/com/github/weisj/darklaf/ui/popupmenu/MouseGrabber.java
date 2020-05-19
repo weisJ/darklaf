@@ -124,8 +124,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
             ungrabWindow();
         }
 
-        lastPathSelected = p;
         repaintIfNecessary(e);
+        lastPathSelected = p;
     }
 
     protected void repaintIfNecessary(final ChangeEvent e) {
@@ -133,12 +133,18 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         if (source instanceof MenuSelectionManager) {
             MenuSelectionManager manager = (MenuSelectionManager) source;
             MenuElement[] path = manager.getSelectedPath();
-            if (path != null && path.length > 0) {
-                Component comp = path[0].getComponent();
-                if (comp.isVisible()) {
-                    OverlayScrollPane sp = DarkUIUtil.getParentOfType(OverlayScrollPane.class, comp);
-                    if (sp != null) sp.repaint(comp.getBounds());
-                }
+            repaintPath(path);
+            repaintPath(lastPathSelected);
+        }
+    }
+
+    private void repaintPath(final MenuElement[] path) {
+        if (path != null && path.length > 0) {
+            MenuElement menuElement = path[path.length - 1];
+            Component comp = menuElement.getComponent();
+            if (comp.isVisible() && !(comp instanceof JPopupMenu)) {
+                OverlayScrollPane sp = DarkUIUtil.getParentOfType(OverlayScrollPane.class, comp, 5);
+                DarkUIUtil.repaint(sp, SwingUtilities.convertRectangle(comp, comp.getBounds(), sp));
             }
         }
     }

@@ -36,8 +36,7 @@ public class IdeaDefaultsInitTask implements DefaultsInitTask {
 
     @SuppressWarnings({"HardCodedStringLiteral"})
     private void initIdeaDefaults(final UIDefaults defaults) {
-        defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[]{
-                                                                                        "ctrl C", "copy",
+        defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[]{"ctrl C", "copy",
                                                                                         "meta C", "copy",
                                                                                         "ctrl V", "paste",
                                                                                         "meta V", "paste",

@@ -36,7 +36,7 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
@@ -67,27 +67,6 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
         showPressed = UIManager.getIcon("PasswordField.showPressed.icon");
     }
 
-    @Override
-    protected void adjustTextRect(final JTextComponent c, final Rectangle r) {
-        int end = r.x + r.width;
-        boolean ltr = c.getComponentOrientation().isLeftToRight();
-        if (doPaintRightIcon(c)) {
-            boolean eye = hasShowIcon(c);
-            Point p = eye ? getShowIconCoord() : getClearIconCoord();
-            if (ltr) {
-                end = p.x;
-            } else {
-                r.x = p.x + (eye ? getShowIcon() : getClearIcon(false)).getIconWidth();
-            }
-        }
-        r.width = end - r.x;
-    }
-
-    @Override
-    protected boolean doPaintLeftIcon(final JTextComponent c) {
-        return false;
-    }
-
     protected void paintBackground(final Graphics graphics) {
         Graphics2D g = (Graphics2D) graphics;
         JTextComponent c = getComponent();
@@ -108,13 +87,15 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
             int height = c.getHeight();
             int w = borderSize;
             PaintUtil.fillRoundRect(g, w, w, width - 2 * w, height - 2 * w, arc);
-            if (hasShowIcon(c) && showShowIcon()) {
-                paintShowIcon(g);
-            }
         } else {
             super.paintBackground(g);
         }
         config.restore();
+    }
+
+    @Override
+    protected boolean doPaintLeftIcon(final JTextComponent c) {
+        return false;
     }
 
     @Override
@@ -123,52 +104,33 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     }
 
     @Override
-    protected void paintRightIcon(final Graphics g) {
-        if (hasShowIcon(getComponent())) {
-            paintShowIcon(g);
-        } else {
-            super.paintRightIcon(g);
-        }
+    protected Icon getLeftIcon(final JTextComponent c) {
+        return EmptyIcon.create(0);
     }
 
-    private void paintShowIcon(final Graphics g) {
-        Point p = getShowIconCoord();
-        if (showTriggered || !(editor.isEnabled() && editor.isEditable())) {
-            getShowTriggeredIcon().paintIcon(getComponent(), g, p.x, p.y);
-        } else {
-            getShowIcon().paintIcon(getComponent(), g, p.x, p.y);
-        }
+    @Override
+    protected Icon getRightIcon(final JTextComponent c) {
+        return hasShowIcon(c) ? getShowIcon(c) : super.getRightIcon(c);
     }
 
-    protected Icon getShowTriggeredIcon() {
-        return showPressed;
+    protected Icon getShowIcon(final JTextComponent c) {
+        return showTriggered || !editor.isEditable() || !editor.isEditable() ? showPressed : show;
     }
 
     public static boolean hasShowIcon(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_SHOW_VIEW_BUTTON);
     }
 
-    private Point getShowIconCoord() {
-        Rectangle r = getDrawingRect(getComponent());
-        int w = getShowIcon().getIconWidth();
-        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - borderSize, r.y + (r.height - w) / 2),
-                                               w, editor);
-    }
-
     private boolean isOverEye(final Point p) {
-        return showShowIcon() && DarkTextFieldUI.isOver(getShowIconCoord(), getShowIcon(), p);
+        return !passwordEmpty() && DarkTextFieldUI.isOver(getRightIconCoord(), getShowIcon(editor), p);
     }
 
-    protected Icon getShowIcon() {
-        return show;
-    }
-
-    private boolean showShowIcon() {
+    protected boolean passwordEmpty() {
         JPasswordField c = (JPasswordField) getComponent();
         char[] pw = c.getPassword();
-        boolean show = pw.length > 0;
+        boolean empty = pw.length == 0;
         Arrays.fill(pw, (char) 0);
-        return show;
+        return empty;
     }
 
     @Override

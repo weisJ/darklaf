@@ -235,13 +235,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             return;
         }
 
-        if (editor.isOpaque()) {
-            if (DarkUIUtil.isInCell(editor)
-                || PropertyUtil.getBooleanProperty(editor, KEY_IS_TREE_EDITOR)
-                || PropertyUtil.getBooleanProperty(editor, KEY_IS_TABLE_EDITOR)) {
-                g.setColor(getBackground(editor));
-                g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
-            }
+        if (editor.isOpaque() && isInCell(editor)) {
+            g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
 
         Border border = editor.getBorder();
@@ -261,10 +256,19 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
     }
 
+    protected boolean isInCell(final JComponent c) {
+        if (c.getBorder() instanceof DarkTextBorder) return false;
+        return DarkUIUtil.getParentOfType(JSpinner.class, c, 2) != null
+               || DarkUIUtil.isInCell(c)
+               || PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR)
+               || PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR)
+               || PropertyUtil.getBooleanProperty(c, KEY_IS_LIST_EDITOR);
+    }
+
     protected Container getRelevantParent(final Component comp) {
-        Container parent = editor.getParent();
+        Container parent = comp.getParent();
         if (parent instanceof JSpinner.DefaultEditor) {
-            JSpinner spinner = DarkUIUtil.getParentOfType(JSpinner.class, comp);
+            JSpinner spinner = DarkUIUtil.getParentOfType(JSpinner.class, comp, 2);
             if (spinner != null) parent = spinner.getParent();
         } else if (parent instanceof JComboBox) {
             parent = parent.getParent();

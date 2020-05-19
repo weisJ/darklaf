@@ -53,18 +53,20 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     public static final String KEY_SHOW_CLEAR = KEY_PREFIX + "showClear";
     public static final String KEY_FIND_POPUP = KEY_PREFIX + "Search.FindPopup";
     public static final String VARIANT_SEARCH = "search";
-    protected static Icon clear;
-    protected static Icon clearHover;
-    protected static Icon search;
-    protected static Icon searchDisabled;
-    protected static Icon searchWithHistory;
-    protected static Icon searchWithHistoryDisabled;
+
+    protected Icon clear;
+    protected Icon clearHover;
+    protected Icon search;
+    protected Icon searchDisabled;
+    protected Icon searchWithHistory;
+    protected Icon searchWithHistoryDisabled;
     protected int arcSize;
     protected int searchArcSize;
-    protected int borderSize;
     protected Color background;
     protected Color inactiveBackground;
     private long lastSearchEvent;
+    protected Insets padding;
+
     private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
         @Override
         public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
@@ -88,38 +90,81 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return new DarkTextFieldUI();
     }
 
-    protected static Icon getClearIcon(final boolean clearHovered) {
+    protected Icon getRightIcon(final JTextComponent c) {
+        return getClearIcon(clearHovered || !c.isEditable() || !c.isEnabled());
+    }
+
+    protected Icon getClearIcon(final boolean clearHovered) {
         return clearHovered ? clearHover : clear;
     }
 
-    protected Rectangle getTextRect(final JTextComponent c) {
-        Insets i = c.getInsets();
-        Dimension dim = c.getSize();
-        Rectangle r = new Rectangle(i.left, i.top, dim.width - i.left - i.right, dim.height - i.top - i.bottom);
-        adjustTextRect(c, r);
-        return r;
+    protected Icon getLeftIcon(final JTextComponent c) {
+        return getSearchIcon(c);
+    }
+
+    protected Icon getSearchIcon(final JTextComponent c) {
+        boolean enabled = c.isEnabled();
+        return isSearchFieldWithHistoryPopup(c)
+                ? enabled ? searchWithHistory : searchWithHistoryDisabled
+                : enabled ? search : searchDisabled;
+    }
+
+    @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        return addIconSizes(addPadding(c, super.getPreferredSize(c)));
+    }
+
+    @Override
+    public Dimension getMinimumSize(final JComponent c) {
+        return addIconSizes(addPadding(c, super.getMinimumSize(c)));
+    }
+
+    protected Dimension addIconSizes(final Dimension dim) {
+        JTextComponent comp = getComponent();
+        boolean ltr = comp.getComponentOrientation().isLeftToRight();
+        int leftPad = ltr ? padding.left : padding.right;
+        int rightPad = ltr ? padding.right : padding.left;
+        if (doPaintLeftIcon(comp)) {
+            Icon left = getLeftIcon(comp);
+            dim.width += left.getIconWidth() + leftPad;
+            dim.height = Math.max(dim.height, left.getIconHeight());
+        }
+        if (doPaintRightIcon(comp)) {
+            Icon right = getRightIcon(comp);
+            dim.width += right.getIconWidth() + rightPad;
+            dim.height = Math.max(dim.height, right.getIconHeight());
+        }
+        return dim;
+    }
+
+    protected Dimension addPadding(final JComponent c, final Dimension dim) {
+        if (!isInCell(c)) {
+            dim.width += padding.left + padding.right;
+            dim.height += padding.top + padding.bottom;
+        }
+        return dim;
+    }
+
+    @Override
+    protected Rectangle getVisibleEditorRect() {
+        Rectangle rect = super.getVisibleEditorRect();
+        adjustTextRect(getComponent(), rect);
+        return rect;
     }
 
     protected void adjustTextRect(final JTextComponent c, final Rectangle r) {
-        int end = r.x + r.width;
         boolean ltr = c.getComponentOrientation().isLeftToRight();
+        if (!isInCell(c)) DarkUIUtil.applyInsets(r, padding);
         if (doPaintLeftIcon(c)) {
-            Point p = getSearchIconCoord();
-            if (ltr) {
-                r.x = p.x + getSearchIcon(c).getIconWidth();
-            } else {
-                end = p.x;
-            }
+            int w = getLeftIcon(c).getIconWidth() + padding.left;
+            if (ltr) r.x += w;
+            r.width -= w;
         }
         if (doPaintRightIcon(c)) {
-            Point p = getClearIconCoord();
-            if (ltr) {
-                end = p.x;
-            } else {
-                r.x = p.x + getClearIcon(false).getIconWidth();
-            }
+            int w = getRightIcon(c).getIconWidth() + padding.right;
+            if (!ltr) r.x += w;
+            r.width -= w;
         }
-        r.width = end - r.x;
     }
 
     public static boolean isOver(final Point p, final Icon icon, final Point e) {
@@ -134,7 +179,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         if (oldClear != clearHovered) {
             editor.repaint();
         }
-        Rectangle textRect = getTextRect(getComponent());
+        Rectangle textRect = getVisibleEditorRect();
         if (textRect.contains(p)) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
@@ -148,11 +193,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected ClickAction getActionUnder(final Point p) {
         JTextComponent c = getComponent();
         if (!c.isEnabled()) return ClickAction.NONE;
-        if (c.isEditable()
-            && isOver(getClearIconCoord(), getClearIcon(clearHovered), p) && showClearIcon(c)) {
+        if (isOver(getRightIconCoord(), getRightIcon(c), p) && doPaintRightIcon(c)) {
             return ClickAction.RIGHT_ACTION;
         }
-        if (isOver(getSearchIconCoord(), getSearchIcon(c), p) && isSearchField(c)) {
+        if (isOver(getLeftIconCoord(), getLeftIcon(c), p) && doPaintLeftIcon(c)) {
             return ClickAction.LEFT_ACTION;
         }
         return ClickAction.NONE;
@@ -162,29 +206,15 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return PropertyUtil.getObject(c, KEY_FIND_POPUP, JPopupMenu.class);
     }
 
-    protected Point getSearchIconCoord() {
-        Rectangle r = getDrawingRect(getComponent());
-        int w = getSearchIcon(getComponent()).getIconWidth();
-        return DarkUIUtil.adjustForOrientation(new Point(r.x + borderSize, r.y + (r.height - w) / 2),
-                                               w, editor);
-    }
-
-    protected static Icon getSearchIcon(final Component c) {
-        boolean enabled = c.isEnabled();
-        return isSearchFieldWithHistoryPopup(c)
-                ? enabled ? searchWithHistory : searchWithHistoryDisabled
-                : enabled ? search : searchDisabled;
-    }
-
-    public static boolean isSearchFieldWithHistoryPopup(final Component c) {
-        return isSearchField(c) && getSearchPopup((JComponent) c) != null;
+    public static boolean isSearchFieldWithHistoryPopup(final JTextComponent c) {
+        return isSearchField(c) && getSearchPopup(c) != null;
     }
 
     public static boolean isSearchField(final Component c) {
         return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_SEARCH);
     }
 
-    public static boolean showClearIcon(final Component c) {
+    public static boolean showClearIcon(final JComponent c) {
         return PropertyUtil.getBooleanProperty(c, KEY_SHOW_CLEAR);
     }
 
@@ -207,21 +237,22 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     protected boolean doPaintRightIcon(final JTextComponent c) {
-        return c.getText().length() > 0 && showClearIcon(c);
+        return c.isEditable() && c.getText().length() > 0 && showClearIcon(c);
     }
 
     protected void paintRightIcon(final Graphics g) {
-        paintClearIcon(g);
+        Point p = getRightIconCoord();
+        getRightIcon(editor).paintIcon(null, g, p.x, p.y);
     }
 
     protected void paintLeftIcon(final Graphics g) {
-        paintSearchIcon(g);
+        Point p = getLeftIconCoord();
+        getLeftIcon(editor).paintIcon(null, g, p.x, p.y);
     }
 
     @Override
     public Rectangle getDrawingRect(final JTextComponent c) {
-        int w = borderSize;
-        return new Rectangle(w, w, c.getWidth() - 2 * w, c.getHeight() - 2 * w);
+        return DarkUIUtil.applyInsets(new Rectangle(0, 0, c.getWidth(), c.getHeight()), c.getInsets());
     }
 
     @Override
@@ -229,20 +260,19 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return DarkTextFieldUI.isSearchField(c) ? searchArcSize : arcSize;
     }
 
-    private void paintClearIcon(final Graphics g) {
-        Point p = getClearIconCoord();
-        getClearIcon(clearHovered || !(editor.isEditable() && editor.isEnabled())).paintIcon(null, g, p.x, p.y);
-    }
-
-    private void paintSearchIcon(final Graphics g) {
-        Point p = getSearchIconCoord();
-        getSearchIcon(editor).paintIcon(null, g, p.x, p.y);
-    }
-
-    protected Point getClearIconCoord() {
+    protected Point getLeftIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
-        int w = getClearIcon(clearHovered).getIconWidth();
-        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - borderSize, r.y + (r.height - w) / 2),
+        int w = getLeftIcon(getComponent()).getIconWidth();
+        int left = getComponent().getInsets().left + padding.left;
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + left, r.y + (r.height - w) / 2),
+                                               w, editor);
+    }
+
+    protected Point getRightIconCoord() {
+        Rectangle r = getDrawingRect(getComponent());
+        int w = getRightIcon(getComponent()).getIconWidth();
+        int right = getComponent().getInsets().right + padding.right;
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - right, r.y + (r.height - w) / 2),
                                                w, editor);
     }
 
@@ -250,7 +280,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
             JPopupMenu menu = getSearchPopup(getComponent());
             if (menu != null) {
-                menu.show(getComponent(), getSearchIconCoord().x, getComponent().getHeight());
+                menu.show(getComponent(), getLeftIconCoord().x, getComponent().getHeight());
             }
         }
     }
@@ -264,7 +294,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected void installDefaults() {
         super.installDefaults();
         arcSize = UIManager.getInt("TextField.arc");
-        borderSize = UIManager.getInt("TextField.borderThickness");
         searchArcSize = UIManager.getInt("TextField.searchArc");
         background = UIManager.getColor("TextField.background");
         inactiveBackground = UIManager.getColor("TextField.disabledBackground");
@@ -274,6 +303,9 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         searchWithHistoryDisabled = UIManager.getIcon("TextField.search.searchWithHistory.disabled.icon");
         search = UIManager.getIcon("TextField.search.search.icon");
         searchDisabled = UIManager.getIcon("TextField.search.search.disabled.icon");
+        padding = UIManager.getInsets("TextField.insets");
+        if (padding == null) padding = new Insets(0, 0, 0, 0);
+
     }
 
     @Override
@@ -326,10 +358,18 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     public void mouseClicked(final MouseEvent e) {
         ClickAction actionUnder = getActionUnder(e.getPoint());
         if (actionUnder == ClickAction.RIGHT_ACTION) {
-            getComponent().setText("");
+            rightActionClicked();
         } else if (actionUnder == ClickAction.LEFT_ACTION) {
-            showSearchPopup();
+            leftActionClicked();
         }
+    }
+
+    protected void leftActionClicked() {
+        showSearchPopup();
+    }
+
+    protected void rightActionClicked() {
+        getComponent().setText("");
     }
 
     protected enum ClickAction {

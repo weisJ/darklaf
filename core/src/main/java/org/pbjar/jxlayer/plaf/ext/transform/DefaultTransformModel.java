@@ -80,9 +80,9 @@ public class DefaultTransformModel implements TransformModel {
         double centerX = p.getX();
         double centerY = p.getY();
         AffineTransform transform = transformNoScale(centerX, centerY);
-        double scaleX = getValue(Type.PreferredScale);
+        double scaleX = getScale();
         transform.translate(centerX, centerY);
-        transform.scale(getValue(Type.Mirror) ? -scaleX : scaleX, scaleX);
+        transform.scale(isMirror() ? -scaleX : scaleX, scaleX);
         transform.translate(-centerX, -centerY);
         return transform;
     }
@@ -126,12 +126,23 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setRotation(double)
      */
     public double getRotation() {
-        return (Double) getValue(Type.Rotation);
+        return getDouble(Type.Rotation);
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T> T getValue(final Type type) {
-        return (T) values[type.ordinal()];
+    protected <T> T getValue(final Type type, final Class<T> cls) {
+        return cls.cast(values[type.ordinal()]);
+    }
+
+    protected double getDouble(final Type type) {
+        return getValue(type, Double.class);
+    }
+
+    protected int getInteger(final Type type) {
+        return getValue(type, Integer.class);
+    }
+
+    protected boolean getBoolean(final Type type) {
+        return getValue(type, Boolean.class);
     }
 
     /**
@@ -141,7 +152,7 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setQuadrantRotation(int)
      */
     public int getQuadrantRotation() {
-        return (Integer) getValue(Type.QuadrantRotation);
+        return getInteger(Type.QuadrantRotation);
     }
 
     /**
@@ -197,7 +208,7 @@ public class DefaultTransformModel implements TransformModel {
             System.arraycopy(values, 0, prevValues, 0, values.length);
             transform.setToIdentity();
             if (view != null) {
-                Point2D p = getRotationCenter(layer == null ? null : layer.getSize());
+                Point2D p = getRotationCenter(layer.getSize());
                 double centerX = p.getX();
                 double centerY = p.getY();
 
@@ -205,24 +216,24 @@ public class DefaultTransformModel implements TransformModel {
 
                 double scaleX;
                 double scaleY;
-                if (getValue(Type.ScaleToPreferredSize)) {
-                    scaleX = getValue(Type.PreferredScale);
+                if (isScaleToPreferredSize()) {
+                    scaleX = getScale();
                     scaleY = scaleX;
                 } else {
                     Area area = new Area(new Rectangle2D.Double(0, 0, view.getWidth(), view.getHeight()));
                     area.transform(nonScaledTransform);
                     Rectangle2D bounds = area.getBounds2D();
-                    scaleX = layer == null ? 0 : layer.getWidth() / bounds.getWidth();
-                    scaleY = layer == null ? 0 : layer.getHeight() / bounds.getHeight();
+                    scaleX = layer.getWidth() / bounds.getWidth();
+                    scaleY = layer.getHeight() / bounds.getHeight();
 
-                    if (getValue(Type.PreserveAspectRatio)) {
+                    if (isPreserveAspectRatio()) {
                         scaleX = Math.min(scaleX, scaleY);
                         scaleY = scaleX;
                     }
                 }
 
                 transform.translate(centerX, centerY);
-                transform.scale(getValue(Type.Mirror) ? -scaleX : scaleX, scaleY);
+                transform.scale(isMirror() ? -scaleX : scaleX, scaleY);
                 transform.translate(-centerX, -centerY);
                 transform.concatenate(nonScaledTransform);
             }
@@ -238,7 +249,7 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setShearX(double)
      */
     public double getShearX() {
-        return (Double) getValue(Type.ShearX);
+        return getDouble(Type.ShearX);
     }
 
     /**
@@ -258,7 +269,7 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setShearY(double)
      */
     public double getShearY() {
-        return (Double) getValue(Type.ShearY);
+        return getDouble(Type.ShearY);
     }
 
     /**
@@ -305,7 +316,7 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setScale(double)
      */
     public double getScale() {
-        return (Double) getValue(Type.PreferredScale);
+        return getDouble(Type.PreferredScale);
     }
 
     /**
@@ -336,7 +347,7 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setMirror(boolean)
      */
     public boolean isMirror() {
-        return (Boolean) getValue(Type.Mirror);
+        return getBoolean(Type.Mirror);
     }
 
     /**
@@ -360,7 +371,7 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setPreserveAspectRatio(boolean)
      */
     public boolean isPreserveAspectRatio() {
-        return (Boolean) getValue(Type.PreserveAspectRatio);
+        return getBoolean(Type.PreserveAspectRatio);
     }
 
     /**
@@ -390,7 +401,7 @@ public class DefaultTransformModel implements TransformModel {
      * @see    #setScaleToPreferredSize(boolean)
      */
     public boolean isScaleToPreferredSize() {
-        return (Boolean) getValue(Type.ScaleToPreferredSize);
+        return getBoolean(Type.ScaleToPreferredSize);
     }
 
     /**

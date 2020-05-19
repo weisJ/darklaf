@@ -123,7 +123,6 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
         return comp;
     }
 
-    @SuppressWarnings("unchecked")
     protected static void setupEditorComponent(final Component editorComponent, final Object value,
                                                final Component rendererComp) {
         if (editorComponent instanceof JSpinner) {

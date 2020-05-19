@@ -30,6 +30,7 @@ import javax.swing.*;
 import javax.swing.plaf.ScrollPaneUI;
 
 import com.github.weisj.darklaf.delegate.ScrollLayoutManagerDelegate;
+import com.github.weisj.darklaf.ui.scrollpane.ScrollBarConstants;
 
 /**
  * Scroll pane that displays its content beneath the scrollbar.
@@ -134,7 +135,7 @@ public class OverlayScrollPane extends JLayeredPane {
 
         private PopupScrollBar(final int direction) {
             super(direction);
-            putClientProperty("JScrollBar.fastWheelScrolling", true);
+            putClientProperty(ScrollBarConstants.KEY_FAST_WHEEL_SCROLLING, true);
             setOpaque(false);
         }
 
@@ -158,11 +159,11 @@ public class OverlayScrollPane extends JLayeredPane {
         public void setUI(final ScrollPaneUI ui) {
             if (verticalScrollBar == null) {
                 verticalScrollBar = new PopupScrollBar(JScrollBar.VERTICAL);
-                verticalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
+                verticalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, this);
             }
             if (horizontalScrollBar == null) {
                 horizontalScrollBar = new PopupScrollBar(JScrollBar.HORIZONTAL);
-                horizontalScrollBar.putClientProperty("JScrollBar.scrollPaneParent", this);
+                horizontalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, this);
             }
             super.setUI(ui);
             SwingUtilities.invokeLater(() -> {

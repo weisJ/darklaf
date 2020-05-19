@@ -425,7 +425,8 @@ public class CellUtil {
     }
 
     protected static boolean hasFocus(final Component c, final Component comp) {
-        return comp.hasFocus() || (DarkUIUtil.hasFocus(c) || DarkUIUtil.getParentOfType(JPopupMenu.class, c) != null);
+        return comp.hasFocus()
+               || (DarkUIUtil.hasFocus(c) || DarkUIUtil.getParentOfType(JPopupMenu.class, c, 4) != null);
     }
 
     public static void setSelectedFlag(final Component comp, final boolean selected) {
@@ -463,6 +464,10 @@ public class CellUtil {
     }
 
     public static Insets adjustEditorInsets(final Insets ins, final Component c) {
+        return adjustEditorInsets(ins, c, DarkUIUtil.getParentOfType(JTable.class, c, 2));
+    }
+
+    public static Insets adjustEditorInsets(final Insets ins, final Component c, final JTable table) {
         if (isInWrapper(c)) {
             if (parentLTR(c)) {
                 ins.left -= ((IconWrapper) c.getParent()).getIconCompGap();
@@ -479,7 +484,7 @@ public class CellUtil {
                 }
             }
         }
-        return adjustTableCellEditorInsets(ins, DarkUIUtil.getParentOfType(JTable.class, c));
+        return adjustTableCellEditorInsets(ins, table);
     }
 
     public static Insets adjustTableCellEditorInsets(final Insets ins, final JTable table) {

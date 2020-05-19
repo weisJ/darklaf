@@ -64,9 +64,9 @@ public class TabDragListener extends MouseAdapter {
         TransferHandler th = tabComponent.getTabFrame().getTransferHandler();
         if (th != null && tabComponent.getTabFrame().isDndEnabled()) {
             Point p = e.getPoint();
-            p = SwingXUtil.convertPointToParent(tabComponent.getComponent(), p);
             JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class,
-                                                                             tabComponent.getComponent());
+                                                                             tabComponent.getComponent(), 3);
+            p = SwingXUtil.convertPointToParent(tabComponent.getComponent(), layer, p);
             p = SwingUtilities.convertPoint(layer != null ? layer : tabComponent.getComponent().getParent(),
                                             p, tabComponent.getTabFrame());
             tabComponent.getTabFrame().initTransfer(tabComponent.getOrientation(), tabComponent.getIndex());
