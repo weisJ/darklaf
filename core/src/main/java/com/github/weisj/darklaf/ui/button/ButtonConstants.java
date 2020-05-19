@@ -41,10 +41,16 @@ public interface ButtonConstants {
     String KEY_THIN = "JButton.thin";
     String KEY_NO_BORDERLESS_OVERWRITE = "JButton.noBorderlessOverwrite";
     String KEY_CORNER = "JButton.cornerFlag";
+
     String KEY_LEFT_NEIGHBOUR = "JButton.leftNeighbour";
     String KEY_RIGHT_NEIGHBOUR = "JButton.rightNeighbour";
     String KEY_TOP_NEIGHBOUR = "JButton.topNeighbour";
+    String KEY_TOP_LEFT_NEIGHBOUR = "JButton.topLeftNeighbour";
+    String KEY_TOP_RIGHT_NEIGHBOUR = "JButton.topRightNeighbour";
     String KEY_BOTTOM_NEIGHBOUR = "JButton.bottomNeighbour";
+    String KEY_BOTTOM_LEFT_NEIGHBOUR = "JButton.bottomLeftNeighbour";
+    String KEY_BOTTOM_RIGHT_NEIGHBOUR = "JButton.bottomRightNeighbour";
+
     String VARIANT_ONLY_LABEL = "onlyLabel";
     String VARIANT_BORDERLESS_RECTANGULAR = "borderlessRectangular";
     String VARIANT_BORDERLESS = "borderless";

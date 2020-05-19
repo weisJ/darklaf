@@ -304,8 +304,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected void repaintNeighbours() {
         DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_LEFT_NEIGHBOUR, button));
         DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_TOP_NEIGHBOUR, button));
+        DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_TOP_RIGHT_NEIGHBOUR, button));
+        DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_TOP_LEFT_NEIGHBOUR, button));
         DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_RIGHT_NEIGHBOUR, button));
         DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_BOTTOM_NEIGHBOUR, button));
+        DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_BOTTOM_RIGHT_NEIGHBOUR, button));
+        DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_BOTTOM_LEFT_NEIGHBOUR, button));
     }
 
     protected boolean shouldDrawBackground(final JComponent c) {

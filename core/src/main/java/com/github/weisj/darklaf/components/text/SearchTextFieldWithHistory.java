@@ -24,12 +24,11 @@
  */
 package com.github.weisj.darklaf.components.text;
 
-import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
-import com.github.weisj.darklaf.ui.text.DarkTextUI;
-
 import java.util.List;
 
 import javax.swing.text.Document;
+
+import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
 
 /**
  * {@link SearchTextField} that has a popup that displays the search history. A search entry is added

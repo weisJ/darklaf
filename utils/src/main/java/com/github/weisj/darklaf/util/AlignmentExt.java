@@ -28,7 +28,7 @@ import java.awt.*;
 
 public enum AlignmentExt {
     NORTH(Alignment.NORTH),
-    SOUTH(Alignment.SOUTH_WEST),
+    SOUTH(Alignment.SOUTH),
     EAST(Alignment.EAST),
     WEST(Alignment.WEST),
     NORTH_EAST(Alignment.NORTH_EAST),
