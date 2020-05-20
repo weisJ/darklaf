@@ -45,6 +45,8 @@ import com.github.weisj.darklaf.ui.text.action.SelectWordAction;
  */
 public class DarkCaret extends DefaultCaret implements UIResource {
 
+    private static final int FLAG_SIZE = 3;
+
     private static Action selectWord;
     private static Action selectLine;
     private final Segment seg;
@@ -57,6 +59,10 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     private boolean insertMode;
     private boolean expandMode;
+
+    private boolean dotLtr = true;
+    private final int[] flagXPoints = new int[3];
+    private final int[] flagYPoints = new int[3];
 
     public DarkCaret() {
         this(null, null);
@@ -290,6 +296,12 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             y = r.y;
             width = r.width + 4;
             height = r.height;
+
+            if (isBidiText() && !dotLtr) {
+                x -= FLAG_SIZE;
+                width += FLAG_SIZE;
+            }
+
             repaint();
         }
     }
@@ -381,9 +393,49 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 case THICK_VERTICAL_LINE_STYLE :
                 case VERTICAL_LINE_STYLE :
                     g.fillRect(r.x, r.y, style.getSize(), r.height);
+                    if (isBidiText()) {
+                        flagXPoints[0] = r.x + (dotLtr ? style.getSize() : 0);
+                        flagYPoints[0] = r.y;
+                        flagXPoints[1] = flagXPoints[0];
+                        flagYPoints[1] = flagYPoints[0] + FLAG_SIZE;
+                        flagXPoints[2] = flagXPoints[0] + ((dotLtr) ? FLAG_SIZE : -FLAG_SIZE);
+                        flagYPoints[2] = flagYPoints[0];
+                        g.fillPolygon(flagXPoints, flagYPoints, 3);
+                    }
                     break;
             }
         }
+    }
+
+    protected boolean isBidiText() {
+        Document doc = getComponent().getDocument();
+        if (doc instanceof AbstractDocument) {
+            Element bidi = ((AbstractDocument) doc).getBidiRootElement();
+            return (bidi != null) && (bidi.getElementCount() > 1);
+        }
+        return false;
+    }
+
+    protected boolean isPositionLTR(int position, final Position.Bias bias) {
+        Document doc = getComponent().getDocument();
+        if (bias == Position.Bias.Backward && --position < 0) position = 0;
+        return isLeftToRight(doc, position, position);
+    }
+
+    protected static boolean isLeftToRight(final Document doc, final int p0, final int p1) {
+        if (Boolean.TRUE.equals(doc.getProperty("i18n"))) {
+            if (doc instanceof AbstractDocument) {
+                AbstractDocument adoc = (AbstractDocument) doc;
+                Element bidiRoot = adoc.getBidiRootElement();
+                int index = bidiRoot.getElementIndex(p0);
+                Element bidiElem = bidiRoot.getElement(index);
+                if (bidiElem.getEndOffset() >= p1) {
+                    AttributeSet bidiAttrs = bidiElem.getAttributes();
+                    return ((StyleConstants.getBidiLevel(bidiAttrs) % 2) == 0);
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -431,13 +483,29 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
     }
 
-    private char getCharAtCaret() {
-        JTextComponent textArea = getComponent();
-        try {
-            textArea.getDocument().getText(getDot(), 1, seg);
-        } catch (BadLocationException e) {
-            return ' ';
+    @Override
+    public void setDot(final int d, final Position.Bias bias) {
+        super.setDot(d, bias);
+        updateDot(d, bias);
+    }
+
+    public void updateDot(final int d, final Position.Bias bias) {
+        Document doc = getComponent().getDocument();
+        int dot = d;
+        Position.Bias dotBias = bias;
+        if (doc != null) {
+            dot = Math.min(dot, doc.getLength());
         }
-        return seg.array[seg.offset];
+        dot = Math.max(dot, 0);
+
+        // The position (0,Backward) is out of range so disallow it.
+        if (dot == 0) dotBias = Position.Bias.Forward;
+        dotLtr = isPositionLTR(d, dotBias);
+    }
+
+    @Override
+    public void moveDot(final int dot, final Position.Bias dotBias) {
+        super.moveDot(dot, dotBias);
+        updateDot(dot, dotBias);
     }
 }

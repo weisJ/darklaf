@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.text;
+package com.github.weisj.darklaf.ui.text.bridge;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicPasswordFieldUI;
@@ -30,6 +30,9 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Element;
 import javax.swing.text.PasswordView;
 import javax.swing.text.View;
+
+import com.github.weisj.darklaf.ui.text.DarkPasswordFieldUI;
+import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
 
 /**
  * This class is an exact copy of the implementation of {@link BasicPasswordFieldUI}. In this way it is possible to
@@ -40,11 +43,7 @@ import javax.swing.text.View;
  */
 public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
 
-    /**
-     * Installs the necessary properties on the JPasswordField.
-     *
-     * @since 1.6
-     */
+    @Override
     protected void installDefaults() {
         super.installDefaults();
         String prefix = getPropertyPrefix();
@@ -54,30 +53,17 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
         }
     }
 
-    /**
-     * Fetches the name used as a key to look up properties through the UIManager. This is used as a prefix to all the
-     * standard text properties.
-     *
-     * @return the name ("PasswordField")
-     */
+    @Override
     protected String getPropertyPrefix() {
         return "PasswordField";
     }
 
-    /**
-     * Creates a view (PasswordView) for an element.
-     *
-     * @param  elem the element
-     * @return      the view
-     */
+    @Override
     public View create(final Element elem) {
         return new PasswordView(elem);
     }
 
-    /**
-     * Create the action map for Password Field. This map provides same actions for double mouse click and and for
-     * triple mouse click (see bug 4231444).
-     */
+    @Override
     public ActionMap createActionMap() {
         ActionMap map = super.createActionMap();
         if (map.get(DefaultEditorKit.selectWordAction) != null) {

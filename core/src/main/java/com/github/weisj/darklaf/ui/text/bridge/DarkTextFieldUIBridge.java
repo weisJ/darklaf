@@ -22,29 +22,44 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.text;
+package com.github.weisj.darklaf.ui.text.bridge;
+
+import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicTextFieldUI;
+import javax.swing.text.*;
 
-import com.github.weisj.darklaf.ui.text.bridge.DarkTextAreaUIBridge;
+import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 
 /**
+ * This class is an exact copy of the implementation of {@link BasicTextFieldUI}. In this way it is possible to contain
+ * all Laf specific methods in {@link DarkTextFieldUI}, without having to extends {@link BasicTextFieldUI} directly and
+ * instead extend the {@link DarkTextUI} base class.
+ *
  * @author Jannis Weis
  */
-public class DarkTextAreaUI extends DarkTextAreaUIBridge {
+public abstract class DarkTextFieldUIBridge extends DarkTextUI {
 
-    public static ComponentUI createUI(final JComponent ta) {
-        return new DarkTextAreaUI();
-    }
+    private static final BasicTextFieldUI basicTextFieldUI = new BasicTextFieldUI();
 
-    @Override
     protected String getPropertyPrefix() {
-        return "TextArea";
+        return "TextField";
     }
 
     @Override
-    protected DarkCaret.CaretStyle getDefaultCaretStyle() {
-        return DarkCaret.CaretStyle.VERTICAL_LINE_STYLE;
+    public View create(final Element elem) {
+        return basicTextFieldUI.create(elem);
+    }
+
+    @Override
+    public int getBaseline(final JComponent c, final int width, final int height) {
+        return basicTextFieldUI.getBaseline(c, width, height);
+    }
+
+    @Override
+    public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
+        return basicTextFieldUI.getBaselineResizeBehavior(c);
     }
 }

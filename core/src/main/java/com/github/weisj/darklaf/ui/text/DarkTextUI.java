@@ -517,7 +517,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
      * traversalKeysSet in case editor is non editable
      */
     @SuppressWarnings("deprecation")
-    void updateFocusTraversalKeys() {
+    protected void updateFocusTraversalKeys() {
         /*
          * Fix for 4514331 Non-editable JTextArea and similar
          * should allow Tab to keyboard - accessibility

@@ -37,6 +37,7 @@ import javax.swing.text.JTextComponent;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.ui.text.bridge.DarkPasswordFieldUIBridge;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
@@ -46,7 +47,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     protected static final String KEY_PREFIX = "JPasswordField.";
-    public static final String KEY_SHOW_VIEW_BUTTON = "JPasswordField.showViewIcon";
+    public static final String KEY_SHOW_VIEW_BUTTON = KEY_PREFIX + "showViewIcon";
     protected Icon show;
     protected Icon showPressed;
     protected int borderSize;

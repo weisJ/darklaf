@@ -22,29 +22,27 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.text;
+package com.github.weisj.darklaf.ui.text.dummy;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicTextAreaUI;
 
-import com.github.weisj.darklaf.ui.text.bridge.DarkTextAreaUIBridge;
+public class DummyTextAreaUI extends BasicTextAreaUI {
 
-/**
- * @author Jannis Weis
- */
-public class DarkTextAreaUI extends DarkTextAreaUIBridge {
-
-    public static ComponentUI createUI(final JComponent ta) {
-        return new DarkTextAreaUI();
+    @Override
+    public void installUI(final JComponent c) {
+        super.installUI(c);
     }
 
     @Override
-    protected String getPropertyPrefix() {
-        return "TextArea";
-    }
+    protected void installDefaults() {}
 
     @Override
-    protected DarkCaret.CaretStyle getDefaultCaretStyle() {
-        return DarkCaret.CaretStyle.VERTICAL_LINE_STYLE;
-    }
+    protected void installKeyboardActions() {}
+
+    @Override
+    protected void installListeners() {}
+
+    @Override
+    protected void modelChanged() {}
 }

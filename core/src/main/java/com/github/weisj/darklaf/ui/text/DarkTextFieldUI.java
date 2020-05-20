@@ -39,6 +39,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.listener.MouseMovementListener;
 import com.github.weisj.darklaf.listener.PopupMenuAdapter;
+import com.github.weisj.darklaf.ui.text.bridge.DarkTextFieldUIBridge;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
