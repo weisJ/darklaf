@@ -87,9 +87,10 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         if (ToggleButtonConstants.isSlider(c)) {
             GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
             AbstractButton b = (AbstractButton) c;
-            String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
+            String text = layoutSlider(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
             paintSlider((Graphics2D) g, b);
             paintIcon(g, b, c);
+            config.restoreClip();
             paintText(g, b, text);
             config.restore();
         } else {
@@ -99,7 +100,6 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     private void paintSlider(final Graphics2D g, final AbstractButton c) {
         Rectangle bounds = getSliderBounds(c);
-        GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         g.translate(bounds.x, bounds.y);
 
         if (c.hasFocus()) {
@@ -127,7 +127,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             g.setColor(getSliderBorderColor(c));
             PaintUtil.paintLineBorder(g, 1, 1, size, size, size);
         }
-        config.restore();
+        g.translate(-bounds.x, -bounds.y);
     }
 
     @Override
@@ -190,27 +190,20 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         return rect;
     }
 
-    @Override
-    protected String layout(final AbstractButton b, final JComponent c,
-                            final FontMetrics fm, final int width, final int height) {
-        if (ToggleButtonConstants.isSlider(c)) {
-            return layoutSlider(b, c, fm, width, height);
-        } else {
-            return super.layout(b, c, fm, width, height);
-        }
-    }
-
     private String layoutSlider(final AbstractButton b, final JComponent c,
                                 final FontMetrics fm, final int width, final int height) {
         Insets i = b.getInsets();
         Rectangle bounds = getSliderBounds(c);
-        viewRect.x = bounds.width + 2 * borderSize;
+        viewRect.x = bounds.x + bounds.width + 2 * borderSize;
         viewRect.width = width - (i.right + viewRect.x);
         viewRect.y = i.top;
         viewRect.height = height - (i.bottom + viewRect.y);
 
+        int horizontalPos = SwingConstants.LEFT;
+
         if (!b.getComponentOrientation().isLeftToRight()) {
             viewRect.x = bounds.x - viewRect.width - borderSize;
+            horizontalPos = SwingConstants.RIGHT;
         }
 
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
@@ -218,7 +211,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
         // layout the text and icon
         return SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), b.getIcon(),
-                                                  b.getVerticalAlignment(), b.getHorizontalAlignment(),
+                                                  b.getVerticalAlignment(), horizontalPos,
                                                   b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
                                                   viewRect, iconRect, textRect,
                                                   b.getText() == null ? 0 : b.getIconTextGap());
