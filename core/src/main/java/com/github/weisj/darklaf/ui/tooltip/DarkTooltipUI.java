@@ -39,6 +39,7 @@ import javax.swing.text.View;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.*;
 
@@ -171,14 +172,14 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             fadeAnimator.reset();
             fadeAnimator.resume();
         }
-        GraphicsContext config = new GraphicsContext(g);
+        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.setColor(c.getBackground());
         if (c.getBorder() instanceof DarkTooltipBorder) {
             Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
             ((Graphics2D) g).fill(area);
         }
         super.paint(g, c);
-        config.restore();
+        context.restore();
     }
 
     public Dimension getPreferredSize(final JComponent c) {

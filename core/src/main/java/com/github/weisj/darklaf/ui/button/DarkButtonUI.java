@@ -206,12 +206,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
 
         g.setColor(getBackgroundColor(c));
-        paintBackgroundRect(g, effectiveArc, bgRect, true);
+        paintBackgroundRect(g, effectiveArc, bgRect);
     }
 
-    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final Rectangle bgRect,
-                                     final boolean respectBorder) {
-        paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height, respectBorder);
+    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final Rectangle bgRect) {
+        paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height, true);
     }
 
     private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc,
@@ -394,6 +393,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             i.top -= insetMask.top;
             i.bottom -= insetMask.bottom;
         }
+
+        viewRect.setRect(0, 0, width, height);
+        DarkUIUtil.applyInsets(viewRect, i);
+
+        Insets margins = b.getMargin();
+        if (!(margins instanceof UIResource)) DarkUIUtil.applyInsets(viewRect, margins);
 
         viewRect.x = i.left;
         viewRect.y = i.top;

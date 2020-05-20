@@ -25,6 +25,7 @@
 package javax.swing.text.DefaultHighlighterDark;
 
 import java.awt.*;
+import java.awt.font.TextAttribute;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
@@ -187,7 +188,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         setupColor((Graphics2D) g, c, bounds);
         Shape dirtyShape;
 
-        if (isLineExtendingEnabled() || isRounded(c)) {
+        boolean ltr = isLeftTorRight(c);
+
+        if (ltr && (isLineExtendingEnabled() || isRounded())) {
             dirtyShape = paintRoundedLayer(g2d, c, offs0, offs1, context, false);
 
             // Swing may not recognise the painted extension. Just repaint if the selection changed to guarantee
@@ -218,6 +221,11 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
         context.restore();
         return dirtyShape;
+    }
+
+    private boolean isLeftTorRight(final JTextComponent c) {
+        return !TextAttribute.RUN_DIRECTION_RTL.equals(c.getDocument().getProperty(TextAttribute.RUN_DIRECTION))
+               && !Boolean.TRUE.equals(c.getDocument().getProperty("i18n"));
     }
 
     protected Rectangle paintRoundedLayer(final Graphics2D g, final JTextComponent c, final int offs0, final int offs1,
@@ -309,7 +317,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             if (isPaintingPreceding) layerRect.height = currentLineRect.height;
         }
 
-        boolean rounded = isRounded(c);
+        boolean rounded = isRounded();
         boolean canRoundLeft = rounded && startX(currentLineRect) == startX(layerRect);
         boolean canRoundRight = rounded && endX(currentLineRect) == endX(layerRect);
 
@@ -448,9 +456,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         start.setRect(startX, startY, endX - startX, endY - startY);
     }
 
-    private boolean isRounded(final JTextComponent c) {
-        // Rounded selections still have some issues when using in RtL mode.
-        return c.getComponentOrientation().isLeftToRight() && roundedEdges;
+    private boolean isRounded() {
+        return roundedEdges;
     }
 
     private Rectangle paintRoundRect(final Graphics g, final GraphicsContext context, final Rectangle shape,

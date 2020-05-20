@@ -301,12 +301,16 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
+        Insets margins = c instanceof AbstractButton ? ((AbstractButton) c).getMargin() : null;
+
         if (ButtonConstants.isBorderlessRectangular(c)) {
-            return new InsetsUIResource(borderlessRectangularInsets.top, borderlessRectangularInsets.left,
-                                        borderlessRectangularInsets.bottom, borderlessRectangularInsets.right);
+            Insets ins = new InsetsUIResource(borderlessRectangularInsets.top, borderlessRectangularInsets.left,
+                                              borderlessRectangularInsets.bottom, borderlessRectangularInsets.right);
+            return getInsets(ins, margins);
         }
         if (ButtonConstants.isLabelButton(c)) {
-            return new InsetsUIResource(labelInsets.top, labelInsets.left, labelInsets.bottom, labelInsets.right);
+            Insets ins = new InsetsUIResource(labelInsets.top, labelInsets.left, labelInsets.bottom, labelInsets.right);
+            return getInsets(ins, margins);
         }
         boolean shadowVariant = ButtonConstants.isBorderlessVariant(c);
         int shadow = shadowVariant ? 0 : getShadowSize();
@@ -315,7 +319,15 @@ public class DarkButtonBorder implements Border, UIResource {
                 : thinInsets
                 : square ? squareInsets
                 : insets;
+        pad = getInsets(pad, margins);
         return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
+    }
+
+    protected Insets getInsets(final Insets ins, final Insets margin) {
+        if (margin != null && !(margin instanceof UIResource)) {
+            return margin;
+        }
+        return ins;
     }
 
     protected Insets maskInsets(final Insets ins, final Component c, final int shadow) {

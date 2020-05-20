@@ -46,6 +46,7 @@ public class ButtonDemo implements ComponentDemo {
     public JComponent createComponent() {
         Icon icon = DemoResources.FOLDER_ICON;
         JButton button = new JButton("Test Button", icon);
+
         button.setToolTipText("TipText");
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.addControls();

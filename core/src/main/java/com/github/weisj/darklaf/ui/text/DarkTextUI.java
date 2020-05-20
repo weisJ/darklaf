@@ -42,6 +42,7 @@ import javax.swing.text.*;
 import sun.awt.SunToolkit;
 import sun.swing.DefaultLookup;
 
+import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
@@ -118,6 +119,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     protected Color disabledColor;
     protected Color inactiveColor;
+    protected boolean uninstalling;
 
     @Override
     protected void installDefaults() {
@@ -136,6 +138,17 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
+
+        installBorder();
+    }
+
+    protected void installBorder() {
+        if (uninstalling) return;
+        MarginBorderWrapper.installBorder(editor);
+    }
+
+    protected void uninstallBorder() {
+        MarginBorderWrapper.uninstallBorder(editor);
     }
 
     protected DefaultTextRenderer createDefaultTextRenderer() {
@@ -145,7 +158,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void uninstallDefaults() {
         super.uninstallDefaults();
-        editor.putClientProperty(KEY_ROUNDED_SELECTION, null);
+        uninstalling = true;
+        uninstallBorder();
     }
 
     @Override
@@ -161,20 +175,20 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             boolean extendLines = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_EXTEND_LINE_SELECTION);
             getDarkCaret().setLineExtendingEnabled(extendLines);
             editor.repaint();
+        } else if ("border".equals(key)) {
+            installBorder();
         }
     }
 
     @Override
     protected void installListeners() {
         super.installListeners();
-        editor.addPropertyChangeListener(this);
         editor.addFocusListener(focusListener);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        editor.removePropertyChangeListener(this);
         editor.removeFocusListener(focusListener);
         focusListener = null;
     }
@@ -239,7 +253,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             g.fillRect(0, 0, editor.getWidth(), editor.getHeight());
         }
 
-        Border border = editor.getBorder();
+        Border border = getBorder(editor);
+
         g.setColor(getBackground(editor));
         if (border instanceof DarkTextBorder) {
             paintBorderBackground((Graphics2D) g, editor);
@@ -257,7 +272,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     protected boolean isInCell(final JComponent c) {
-        if (c.getBorder() instanceof DarkTextBorder) return false;
+        if (getBorder(c) instanceof DarkTextBorder) return false;
         return DarkUIUtil.getParentOfType(JSpinner.class, c, 2) != null
                || DarkUIUtil.isInCell(c)
                || PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR)
@@ -298,14 +313,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         }
     }
 
-    @Override
-    protected Rectangle getVisibleEditorRect() {
-        Rectangle r = super.getVisibleEditorRect();
-        Insets m = editor.getMargin();
-        DarkUIUtil.applyInsets(r, m);
-        return r;
-    }
-
     protected String getDefaultText() {
         return PropertyUtil.getString(editor, KEY_DEFAULT_TEXT, "");
     }
@@ -326,8 +333,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         PaintUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
     }
 
+    protected Border getBorder(final JComponent c) {
+        return MarginBorderWrapper.getBorder(c);
+    }
+
     public Rectangle getDrawingRect(final JTextComponent c) {
-        Border border = c.getBorder();
+        Border border = getBorder(c);
         Rectangle r = new Rectangle(0, 0, c.getWidth(), c.getHeight());
         if (border instanceof DarkTextBorder) {
             int bw = ((DarkTextBorder) border).getBorderSize();
@@ -342,7 +353,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     protected int getArcSize(final JComponent c) {
-        Border border = c.getBorder();
+        Border border = getBorder(c);
         if (border instanceof DarkTextBorder) {
             return ((DarkTextBorder) border).getArcSize(c);
         }
