@@ -27,6 +27,9 @@ package ui.text;
 import javax.swing.*;
 
 import ui.ComponentDemo;
+import ui.DemoResources;
+
+import com.github.weisj.darklaf.util.StringUtil;
 
 public class EditorPaneDemo extends TextComponentDemo<JEditorPane> {
 
@@ -36,7 +39,9 @@ public class EditorPaneDemo extends TextComponentDemo<JEditorPane> {
 
     @Override
     protected JEditorPane createTextComponent() {
-        return new JEditorPane();
+        JEditorPane pane = new JEditorPane();
+        pane.setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 2));
+        return pane;
     }
 
     @Override

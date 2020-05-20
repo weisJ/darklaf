@@ -63,6 +63,11 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private final int arcSize;
     private boolean enabled;
 
+    private int repaintCount;
+
+    private int lastSelStart = -1;
+    private int lastSelEnd = -1;
+
     private final Shape[] arcs = new Shape[4];
 
     private final Point tmpPoint = new Point();
@@ -162,11 +167,15 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         if (color == null) {
             color = StyleConstants.getForeground(view.getAttributes());
         }
+        boolean customColor = color != null;
         if (color == null) {
             color = c.getSelectedTextColor();
         }
+
+        boolean isForeground = Objects.equals(color, c.getForeground());
+        customColor = customColor || isForeground;
         wrapper.setColor(color);
-        wrapper.setCustomForeground(!Objects.equals(color, c.getForeground()));
+        wrapper.setCustomForeground(!isForeground);
 
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = GraphicsUtil.setupAAPainting(g2d);
@@ -179,7 +188,27 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Shape dirtyShape;
 
         if (isLineExtendingEnabled() || isRounded(c)) {
-            dirtyShape = paintRoundedLayer(g2d, c, offs0, offs1, context);
+            dirtyShape = paintRoundedLayer(g2d, c, offs0, offs1, context, false);
+
+            // Swing may not recognise the painted extension. Just repaint if the selection changed to guarantee
+            // everything is visible.
+            if (isLineExtendingEnabled()) {
+                if ((lastSelEnd != c.getSelectionEnd() || lastSelStart != c.getSelectionStart())) {
+                    lastSelEnd = c.getSelectionEnd();
+                    lastSelStart = c.getSelectionStart();
+                    repaintCount = 1;
+                }
+                if (repaintCount > 0) {
+                    if (customColor) {
+                        c.repaint();
+                    } else {
+                        Rectangle repaintBounds = dirtyShape.getBounds();
+                        repaintBounds.grow(10, 10);
+                        c.repaint(repaintBounds);
+                    }
+                    repaintCount--;
+                }
+            }
         } else {
             Color oldColor = wrapper.getColor();
             wrapper.setColor(g.getColor());
@@ -191,8 +220,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return dirtyShape;
     }
 
-    protected Shape paintRoundedLayer(final Graphics2D g, final JTextComponent c, final int offs0, final int offs1,
-                                      final GraphicsContext context) {
+    protected Rectangle paintRoundedLayer(final Graphics2D g, final JTextComponent c, final int offs0, final int offs1,
+                                          final GraphicsContext context, final boolean isPaintingPreceding) {
         Insets ins = DarkUIUtil.addInsets(c.getInsets(), c.getMargin(), true);
 
         Rectangle posOffs0 = getPosRect(c, offs0);
@@ -201,17 +230,20 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Rectangle posStart = getPosRect(c, c.getSelectionStart());
         Rectangle posEnd = getPosRect(c, c.getSelectionEnd());
 
-        int currentLineStart = getOffset(c, 0, posOffs0.y);
-        int currentLineEnd = getOffset(c, c.getWidth(), posOffs1.y);
+        int currentLineStart = isPaintingPreceding ? offs0 : getOffset(c, 0, posOffs0.y);
+        int currentLineEnd = isPaintingPreceding ? offs1 : getOffset(c, c.getWidth(), posOffs1.y);
 
         int previousLineEnd = currentLineStart - 1;
-        int previousLineStart = getOffset(c, 0, getPosRect(c, previousLineEnd).y);
+        Rectangle prevEnd = getPosRect(c, previousLineEnd);
+        int previousLineStart = getOffset(c, 0, prevEnd.y);
+        Rectangle prevStart = getPosRect(c, previousLineStart);
 
         int nextLineStart = currentLineEnd + 1;
         int nextLineEnd = getOffset(c, c.getWidth(), getPosRect(c, nextLineStart).y);
+        if (nextLineEnd < nextLineStart) nextLineEnd = nextLineStart;
 
         Rectangle layerRect = getRect(posOffs0, posOffs1);
-        Rectangle previousLineRect = getLineRect(c, previousLineStart, previousLineEnd);
+        Rectangle previousLineRect = getRect(prevStart, prevEnd);
         Rectangle currentLineRect = getLineRect(c, currentLineStart, currentLineEnd);
         Rectangle nextLineRect = getLineRect(c, nextLineStart, nextLineEnd);
 
@@ -238,86 +270,90 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             currentLineRect.width = posEnd.x + posEnd.width - currentLineRect.x;
         }
 
-        boolean hasLineAbove = previousLineRect.y < currentLineRect.y
-                               && previousLineRect.width > 0
-                               && previousLineStart < previousLineEnd
-                               && previousLineEnd >= c.getSelectionStart()
-                               && previousLineRect.y >= posStart.y;
-        boolean hasLineBelow = nextLineRect.y > currentLineRect.y
-                               && nextLineRect.width > 0
-                               && nextLineStart < nextLineEnd
-                               && nextLineStart <= c.getSelectionEnd()
-                               && nextLineRect.y >= posStart.y;
+        boolean hasLineAbove = previousLineEnd >= c.getSelectionStart();
+        boolean hasLineBelow = nextLineStart <= c.getSelectionEnd();
+
+        boolean previousLineVisible = hasLineAbove
+                                      && previousLineRect.width > 0
+                                      && previousLineStart < previousLineEnd;
+        boolean nextLineVisible = hasLineBelow
+                                  && nextLineRect.width > 0
+                                  && nextLineStart < nextLineEnd;
+
+        boolean paintPreviousLine = false;
 
         if (isLineExtendingEnabled()) {
             // Adjust the line rects for the adjacent lines for correct rounded corner placement.
-            extendAdjacentLines(c, ins, posStart, posEnd, previousLineRect, nextLineRect, hasLineAbove, hasLineBelow);
+            extendLine(c, ins, previousLineRect,
+                       hasLineAbove && previousLineStart >= c.getSelectionStart(),
+                       hasLineAbove && previousLineEnd <= c.getSelectionEnd());
 
-            boolean extendRight = hasLineBelow && endX(layerRect) == endX(currentLineRect);
-            boolean extendLeft = hasLineAbove && startX(layerRect) == startX(currentLineRect);
+            boolean extendNextRight = hasLineBelow
+                                      && nextLineEnd < c.getDocument().getLength()
+                                      && getOffset(c, getPosRect(c, nextLineEnd + 1)) <= c.getSelectionEnd();
 
-            // Extend line to the right side.
-            if (extendRight) {
-                layerRect.width = c.getWidth() - ins.right - layerRect.x;
-                currentLineRect.width = c.getWidth() - ins.right - currentLineRect.x;
-            }
+            extendLine(c, ins, nextLineRect,
+                       hasLineBelow && nextLineStart >= c.getSelectionStart(),
+                       extendNextRight);
 
-            // Extend line to the left side.
-            if (extendLeft) {
-                layerRect.width = endX(layerRect) - ins.left;
-                layerRect.x = ins.left;
+            paintPreviousLine = hasLineAbove && previousLineStart == previousLineEnd;
+            previousLineVisible = hasLineAbove;
+            if (nextLineRect.y != posEnd.y) nextLineVisible = hasLineBelow;
 
-                currentLineRect.width = endX(currentLineRect) - ins.left;
-                currentLineRect.x = ins.left;
-            }
+            boolean extendRight = isPaintingPreceding || (hasLineBelow && (endX(layerRect) == endX(currentLineRect)));
+            boolean extendLeft = isPaintingPreceding || (hasLineAbove && startX(layerRect) == startX(currentLineRect));
+
+            extendLine(c, ins, layerRect, extendLeft, extendRight);
+            extendLine(c, ins, currentLineRect, extendLeft, extendRight);
+
+            if (isPaintingPreceding) layerRect.height = currentLineRect.height;
         }
 
         boolean rounded = isRounded(c);
         boolean canRoundLeft = rounded && startX(currentLineRect) == startX(layerRect);
         boolean canRoundRight = rounded && endX(currentLineRect) == endX(layerRect);
 
-        boolean roundedTopLeft = !hasLineAbove || leftRoundedVisible(currentLineRect, previousLineRect);
-        boolean roundedTopRight = !hasLineAbove || rightRoundedVisible(currentLineRect, previousLineRect);
-        boolean roundedBottomLeft = !hasLineBelow || leftRoundedVisible(currentLineRect, nextLineRect);
-        boolean roundedBottomRight = !hasLineBelow || rightRoundedVisible(currentLineRect, nextLineRect);
+        boolean roundedTopLeft = !previousLineVisible || leftRoundedVisible(currentLineRect, previousLineRect);
+        boolean roundedTopRight = !previousLineVisible || rightRoundedVisible(currentLineRect, previousLineRect);
+        boolean roundedBottomLeft = !nextLineVisible || leftRoundedVisible(currentLineRect, nextLineRect);
+        boolean roundedBottomRight = !nextLineVisible || rightRoundedVisible(currentLineRect, nextLineRect);
 
-        boolean arcTopLeft = hasLineAbove && !roundedTopLeft && leftArcVisible(currentLineRect, previousLineRect);
-        boolean arcTopRight = hasLineAbove && !roundedTopRight && rightArcVisible(currentLineRect, previousLineRect);
-        boolean arcBottomLeft = hasLineBelow && !roundedBottomLeft && leftArcVisible(currentLineRect, nextLineRect);
-        boolean arcBottomRight = hasLineBelow && !roundedBottomRight && rightArcVisible(currentLineRect, nextLineRect);
+        boolean arcTopLeft = previousLineVisible && !roundedTopLeft
+                             && leftArcVisible(currentLineRect, previousLineRect);
+        boolean arcTopRight = previousLineVisible && !roundedTopRight
+                              && rightArcVisible(currentLineRect, previousLineRect);
+        boolean arcBottomLeft = nextLineVisible && !roundedBottomLeft && leftArcVisible(currentLineRect, nextLineRect);
+        boolean arcBottomRight = nextLineVisible && !roundedBottomRight
+                                 && rightArcVisible(currentLineRect, nextLineRect);
 
         layerRect = paintRoundRect(g, context, layerRect,
                                    canRoundLeft && roundedTopLeft,
                                    canRoundRight && roundedTopRight,
                                    canRoundLeft && roundedBottomLeft,
                                    canRoundRight && roundedBottomRight);
-        return paintArcs(g, context, layerRect,
-                         canRoundLeft && arcTopLeft,
-                         canRoundRight && arcTopRight,
-                         canRoundLeft && arcBottomLeft,
-                         canRoundRight && arcBottomRight);
+        Rectangle r = paintArcs(g, context, layerRect,
+                                canRoundLeft && arcTopLeft,
+                                canRoundRight && arcTopRight,
+                                canRoundLeft && arcBottomLeft,
+                                canRoundRight && arcBottomRight);
+
+        if (paintPreviousLine && !isPaintingPreceding) {
+            Rectangle prev = paintRoundedLayer(g, c, previousLineStart, previousLineEnd, context, true);
+            convexHull(r, prev);
+        }
+        return r;
     }
 
-    private void extendAdjacentLines(final JTextComponent c, final Insets ins,
-                                     final Rectangle posStart, final Rectangle posEnd,
-                                     final Rectangle previousLineRect, final Rectangle nextLineRect,
-                                     final boolean hasLineAbove, final boolean hasLineBelow) {
-        if (hasLineAbove) {
+    private void extendLine(final JTextComponent c, final Insets ins, final Rectangle previousLineRect,
+                            final boolean extendLeft, final boolean extendRight) {
+        if (extendRight || extendLeft) {
             int x = startX(previousLineRect);
-            previousLineRect.x = ins.left;
-            previousLineRect.width = c.getWidth() - ins.left - ins.right;
-            if (posStart.y == previousLineRect.y) {
-                previousLineRect.width = previousLineRect.x + previousLineRect.width - x;
-                previousLineRect.x = x;
+            if (extendRight) {
+                previousLineRect.width = c.getWidth() - ins.left - x;
             }
-        }
-
-        if (hasLineBelow) {
-            int x = endX(nextLineRect);
-            nextLineRect.x = ins.left;
-            nextLineRect.width = c.getWidth() - ins.left - ins.right;
-            if (posEnd.y == nextLineRect.y) {
-                nextLineRect.width = x - nextLineRect.x;
+            if (extendLeft) {
+                previousLineRect.width = previousLineRect.x + previousLineRect.width - ins.left;
+                previousLineRect.x = ins.left;
             }
         }
     }
@@ -368,6 +404,10 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return getOffset(c, tmpPoint);
     }
 
+    private int getOffset(final JTextComponent c, final Rectangle r) {
+        return getOffset(c, r.getLocation());
+    }
+
     private int getOffset(final JTextComponent c, final Point p) {
         return c.viewToModel(p);
     }
@@ -380,14 +420,32 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return r.x + r.width;
     }
 
+    private int startY(final Rectangle r) {
+        return r.y;
+    }
+
+    private int endY(final Rectangle r) {
+        return r.y + r.height;
+    }
+
     private Rectangle getLineRect(final JTextComponent c, final int startPos, final int endPos) {
         Rectangle rectStart = getPosRect(c, startPos);
-        Rectangle rectEnd = getPosRect(c, endPos, Position.Bias.Backward);
+        Rectangle rectEnd = endPos <= startPos ? rectStart : getPosRect(c, endPos, Position.Bias.Backward);
         return getRect(rectStart, rectEnd);
     }
 
     private Rectangle getRect(final Rectangle start, final Rectangle end) {
         return new Rectangle(start.x, start.y, end.x + end.width - start.x, end.y + end.height - start.y);
+    }
+
+    private void convexHull(final Rectangle start, final Rectangle end) {
+        int startX = Math.min(startX(start), startX(end));
+        int startY = Math.min(startY(start), startY(end));
+
+        int endX = Math.max(endX(start), endX(end));
+        int endY = Math.max(endY(start), endY(end));
+
+        start.setRect(startX, startY, endX - startX, endY - startY);
     }
 
     private boolean isRounded(final JTextComponent c) {
