@@ -87,16 +87,16 @@ public final class IconColorMapper {
         }
     }
 
-    private static Color resolveColor(final String key, final String[] fallbacks, final Color fallbackColor,
-                                      final UIDefaults defaults) {
+    private static Color resolveColor(final String key, final String[] fallbacks,
+                                      final Color fallbackColor, final UIDefaults defaults) {
         Color color = defaults.getColor(key);
         for (int i = 0; i < fallbacks.length && color == null; i++) {
             color = defaults.getColor(fallbacks[i]);
         }
         if (color == null) {
             color = fallbackColor;
-            LOGGER.warning("Could not load color with id'" + key + "' fallbacks" + Arrays.toString(fallbacks)
-                           + " Using color " + fallbackColor + " instead.");
+            LOGGER.warning("Could not load color with id '" + key + "' fallbacks" + Arrays.toString(fallbacks)
+                           + ". Using color '" + fallbackColor + "' instead.");
         }
         return color;
     }
@@ -129,8 +129,9 @@ public final class IconColorMapper {
         return 1;
     }
 
-    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name, final float opacity)
-                                                                                                                     throws SVGElementException {
+    private static Pair<LinearGradient, Runnable> createColor(final Color c,
+                                                              final String name,
+                                                              final float opacity) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
         return new Pair<>(grad, () -> {
