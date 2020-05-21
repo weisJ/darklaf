@@ -40,13 +40,13 @@ import javax.swing.plaf.UIResource;
 public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
     private final DarkUIAwareIcon dual;
-    private final String darkKey;
-    private final String lightKey;
-    private final int w;
-    private final int h;
-    private final Class<?> parentClass;
-    private transient boolean loaded;
-    private transient Icon icon;
+    protected final String darkKey;
+    protected final String lightKey;
+    protected final int w;
+    protected final int h;
+    protected final Class<?> parentClass;
+    protected transient boolean loaded;
+    protected transient Icon icon;
     private AwareIconStyle currentStyle;
 
     /**
@@ -87,19 +87,27 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
         g2.dispose();
     }
 
-    private void ensureLoaded() {
+    protected void ensureLoaded() {
         if (!isLoaded()) {
+            updateStyle();
             loadIcon();
         }
     }
 
-    private boolean isLoaded() {
+    protected void updateStyle() {
+        currentStyle = IconLoader.getAwareStyle();
+    }
+
+    protected boolean isLoaded() {
         return loaded && (currentStyle == IconLoader.getAwareStyle());
     }
 
-    private void loadIcon() {
-        currentStyle = IconLoader.getAwareStyle();
-        if (currentStyle == AwareIconStyle.DARK) {
+    public boolean isDark() {
+        return currentStyle == AwareIconStyle.DARK;
+    }
+
+    protected void loadIcon() {
+        if (isDark()) {
             icon = IconLoader.get(parentClass).getIcon(darkKey, w, h);
         } else {
             icon = IconLoader.get(parentClass).getIcon(lightKey, w, h);

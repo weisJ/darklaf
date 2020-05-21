@@ -52,6 +52,8 @@ public final class IconLoader {
     private static final int DEFAULT_W = 16;
     private static final int DEFAULT_H = 16;
     private final Class<?> parentClass;
+
+    private boolean cacheEnabled = true;
     private final Map<IconKey, DarkUIAwareIcon> awareIconMap = new HashMap<>();
     private final Map<IconKey, Icon> iconMap = new HashMap<>();
 
@@ -82,6 +84,24 @@ public final class IconLoader {
             iconLoaderMap.put(parentClass, loader);
             return loader;
         }
+    }
+
+    /**
+     * Sets whether icons should be cached or
+     *
+     * @param cacheEnabled true if caching is enabled.
+     */
+    public void setCacheEnabled(final boolean cacheEnabled) {
+        this.cacheEnabled = cacheEnabled;
+    }
+
+    /**
+     * Returns whether icons are cached when creating them.
+     *
+     * @return true if caching is enabled.
+     */
+    public boolean isCacheEnabled() {
+        return cacheEnabled;
     }
 
     /**
@@ -147,11 +167,11 @@ public final class IconLoader {
      */
     public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
-        if (awareIconMap.containsKey(key)) {
+        if (isCacheEnabled() && awareIconMap.containsKey(key)) {
             return awareIconMap.get(key);
         } else {
             DarkUIAwareIcon icon = createUIAwareIcon(path, w, h);
-            awareIconMap.put(key, icon);
+            cache(awareIconMap, key, icon);
             return icon;
         }
     }
@@ -206,11 +226,13 @@ public final class IconLoader {
      */
     public Icon getIcon(final String path, final int w, final int h, final boolean themed) {
         IconKey key = new IconKey(path, w, h);
-        if (iconMap.containsKey(key)) {
-            return iconMap.get(key);
-        } else if (awareIconMap.containsKey(key)) {
-            return awareIconMap.get(key);
-        } else {
+
+        if (isCacheEnabled()) {
+            if (iconMap.containsKey(key)) {
+                return iconMap.get(key);
+            } else if (awareIconMap.containsKey(key)) {
+                return awareIconMap.get(key);
+            }
             key.w = -1; // Enable wild card search. Find any icon that matches path.
             if (iconMap.containsKey(key)) {
                 Icon icon = iconMap.get(key);
@@ -219,20 +241,29 @@ public final class IconLoader {
                     // the existing icon.
                     Icon derived = ((DerivableIcon<Icon>) icon).derive(w, h);
                     key.w = w;
-                    iconMap.put(key, derived);
+                    cache(iconMap, key, derived);
                     return derived;
                 }
             }
-            key.w = w; // Restore key.
-            if (path.endsWith(".svg")) {
-                Icon icon = loadSVGIcon(path, w, h, themed);
-                iconMap.put(key, icon);
-                return icon;
-            } else {
-                Icon icon = new LazyImageIcon(path, key, parentClass);
-                iconMap.put(key, icon);
-                return icon;
-            }
+        }
+
+        // Icon not found or caching is disabled.
+
+        key.w = w; // Restore key.
+        if (path.endsWith(".svg")) {
+            Icon icon = loadSVGIcon(path, w, h, themed);
+            cache(iconMap, key, icon);
+            return icon;
+        } else {
+            Icon icon = new LazyImageIcon(path, key, parentClass);
+            cache(iconMap, key, icon);
+            return icon;
+        }
+    }
+
+    private <T extends Icon> void cache(final Map<IconKey, T> iconMap, final IconKey key, final T icon) {
+        if (cacheEnabled) {
+            iconMap.put(key, icon);
         }
     }
 
