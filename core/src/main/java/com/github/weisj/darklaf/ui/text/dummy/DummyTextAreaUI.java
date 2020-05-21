@@ -24,6 +24,8 @@
  */
 package com.github.weisj.darklaf.ui.text.dummy;
 
+import java.beans.PropertyChangeEvent;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextAreaUI;
 
@@ -45,4 +47,9 @@ public class DummyTextAreaUI extends BasicTextAreaUI {
 
     @Override
     protected void modelChanged() {}
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+    }
 }

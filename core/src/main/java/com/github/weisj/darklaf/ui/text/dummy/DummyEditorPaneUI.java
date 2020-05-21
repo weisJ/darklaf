@@ -24,6 +24,8 @@
  */
 package com.github.weisj.darklaf.ui.text.dummy;
 
+import java.beans.PropertyChangeEvent;
+
 import javax.swing.plaf.basic.BasicEditorPaneUI;
 
 public class DummyEditorPaneUI extends BasicEditorPaneUI {
@@ -36,4 +38,16 @@ public class DummyEditorPaneUI extends BasicEditorPaneUI {
 
     @Override
     protected void modelChanged() {}
+
+    @Override
+    protected void installKeyboardActions() {}
+
+    public void installKeyBoardActionsReal() {
+        super.installKeyboardActions();
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+    }
 }

@@ -64,8 +64,9 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
     }
 
     @Override
-    public ActionMap createActionMap() {
-        ActionMap map = super.createActionMap();
+    protected void installKeyboardActions() {
+        super.installKeyboardActions();
+        ActionMap map = getComponent().getActionMap();
         if (map.get(DefaultEditorKit.selectWordAction) != null) {
             Action a = map.get(DefaultEditorKit.selectLineAction);
             if (a != null) {
@@ -73,6 +74,5 @@ public abstract class DarkPasswordFieldUIBridge extends DarkTextFieldUI {
                 map.put(DefaultEditorKit.selectWordAction, a);
             }
         }
-        return map;
     }
 }
