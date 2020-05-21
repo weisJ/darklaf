@@ -25,19 +25,16 @@
 package com.github.weisj.darklaf.ui.text.bridge;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicEditorPaneUI;
-import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.EditorKit;
 import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
-import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPane;
 import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPaneUI;
 import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -45,103 +42,86 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
 
     private static final DummyEditorPane editorPane = new DummyEditorPane();
-    private static final BasicEditorPaneUI basicEditorPaneUI = new DummyEditorPaneUI();
+    private static final DummyEditorPaneUI basicEditorPaneUI = new DummyEditorPaneUI();
 
-    static {
-        basicEditorPaneUI.installUI(editorPane);
-    }
+    private PropertyChangeListener propertyChangeListener;
 
     @Override
     public void installUI(final JComponent c) {
+        editorPane.setEditorPane((JEditorPane) c);
+        basicEditorPaneUI.installUI(editorPane);
         super.installUI(c);
-        updateDisplayProperties(c);
+        updateDisplayProperties();
+    }
+
+    @Override
+    protected void installListeners() {
+        propertyChangeListener = editorPane.getPropertyChangeListener();
+        super.installListeners();
     }
 
     @Override
     public void uninstallUI(final JComponent c) {
         cleanDisplayProperties(c);
         super.uninstallUI(c);
+        editorPane.setEditorPane(null);
+        editorPane.addPropertyChangeListener(null);
     }
 
-    protected void updateDisplayProperties(final JComponent c) {
-        if (c instanceof JEditorPane) {
-            editorPane.setEditorPane((JEditorPane) c);
-            basicEditorPaneUI.installUI(editorPane);
-        }
+    protected void updateDisplayProperties() {
+        updateDisplayProperties((JEditorPane) getComponent(),
+                                new PropertyChangeEvent(editorPane, PropertyKey.FONT,
+                                                        editorPane.getFont(), editorPane.getFont()));
+    }
+
+    protected void updateDisplayProperties(final JEditorPane c, final PropertyChangeEvent event) {
+        editorPane.setEditorPane(c);
+        basicEditorPaneUI.propertyChange(event);
     }
 
     protected void cleanDisplayProperties(final JComponent c) {
-        if (c instanceof JEditorPane) {
-            editorPane.setEditorPane((JEditorPane) c);
-            basicEditorPaneUI.uninstallUI(editorPane);
-        }
+        editorPane.setEditorPane((JEditorPane) c);
+        basicEditorPaneUI.uninstallUI(editorPane);
     }
 
     @Override
-    public ActionMap getActionMap() {
+    protected void installKeyboardActions() {
+        super.installKeyboardActions();
+        updateActionMap();
+    }
+
+    protected void updateFocusAcceleratorBinding(final PropertyChangeEvent event) {
+        /*
+         * This invokes the UpdateHandler propertyChange event which in turn invokes
+         * #updateFocusAcceleratorBinding
+         */
+        propertyChangeListener.propertyChange(event);
+    }
+
+    protected void updateActionMap() {
+        editorPane.setActionMap(new ActionMap());
         editorPane.setEditorPane((JEditorPane) getComponent());
-        ActionMap am = editorPane.getActionMap();
-        EditorKit editorKit = getEditorKit(getComponent());
-        if (editorKit instanceof DefaultEditorKit) {
-            am.put(TOGGLE_INSERT, new ToggleInsertAction());
-        }
-        return am;
+        basicEditorPaneUI.installKeyBoardActionsReal();
+        ActionMap map = editorPane.getActionMap();
+        SwingUtilities.replaceUIActionMap(getComponent(), map);
+        installDarkKeyBoardActions();
     }
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
         String name = evt.getPropertyName();
-        if ("editorKit".equals(name)) {
-            ActionMap map = SwingUtilities.getUIActionMap(getComponent());
-            if (map != null) {
-                Object oldValue = evt.getOldValue();
-                if (oldValue instanceof EditorKit) {
-                    Action[] actions = ((EditorKit) oldValue).getActions();
-                    if (actions != null) {
-                        removeActions(map, actions);
-                    }
-                }
-                Object newValue = evt.getNewValue();
-                if (newValue instanceof EditorKit) {
-                    Action[] actions = ((EditorKit) newValue).getActions();
-                    if (actions != null) {
-                        addActions(map, actions);
-                    }
-                }
-            }
-            updateFocusTraversalKeys();
-        } else if (PropertyKey.EDITABLE.equals(name)) {
-            updateFocusTraversalKeys();
+        if ("editorKit".equals(name) || PropertyKey.EDITABLE.equals(name)) {
+            editorPane.setEditorPane((JEditorPane) getComponent());
+            basicEditorPaneUI.propertyChange(evt);
         } else if (PropertyKey.FOREGROUND.equals(name)
                    || PropertyKey.FONT.equals(name)
                    || PropertyKey.DOCUMENT.equals(name)
                    || JEditorPane.W3C_LENGTH_UNITS.equals(name)
                    || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
-            JComponent c = getComponent();
-            updateDisplayProperties(getComponent());
-            if (JEditorPane.W3C_LENGTH_UNITS.equals(name)
-                || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
-                modelChanged();
-            }
-            if (PropertyKey.FOREGROUND.equals(name)) {
-                if (PropertyUtil.getBooleanProperty(c, JEditorPane.HONOR_DISPLAY_PROPERTIES)) {
-                    modelChanged();
-                }
-            }
-
-        }
-    }
-
-    protected void addActions(final ActionMap map, final Action[] actions) {
-        for (Action a : actions) {
-            map.put(a.getValue(Action.NAME), a);
-        }
-    }
-
-    protected void removeActions(final ActionMap map, final Action[] actions) {
-        for (Action a : actions) {
-            map.remove(a.getValue(Action.NAME));
+            updateDisplayProperties((JEditorPane) getComponent(), evt);
+        } else if ("focusAccelerator".equals(name)) {
+            updateFocusAcceleratorBinding(evt);
         }
     }
 

@@ -42,9 +42,14 @@ import javax.swing.text.Highlighter;
 public class DummyEditorPane extends JEditorPane {
 
     private JEditorPane editorPane;
+    private PropertyChangeListener propertyChangeListener;
 
     public void setEditorPane(final JEditorPane editorPane) {
         this.editorPane = editorPane;
+    }
+
+    public PropertyChangeListener getPropertyChangeListener() {
+        return propertyChangeListener;
     }
 
     @Override
@@ -72,6 +77,11 @@ public class DummyEditorPane extends JEditorPane {
     }
 
     @Override
+    public boolean isEditable() {
+        return editorPane.isEditable();
+    }
+
+    @Override
     protected void setUI(final ComponentUI newUI) {}
 
     @Override
@@ -81,7 +91,9 @@ public class DummyEditorPane extends JEditorPane {
     public void updateUI() {}
 
     @Override
-    public void addPropertyChangeListener(final PropertyChangeListener listener) {}
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
+        propertyChangeListener = listener;
+    }
 
     @Override
     public synchronized void addMouseListener(final MouseListener l) {}

@@ -28,7 +28,6 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTextAreaUI;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
@@ -44,7 +43,7 @@ import com.github.weisj.darklaf.util.PropertyKey;
 public abstract class DarkTextAreaUIBridge extends DarkTextUI {
 
     private static final JTextArea area = new DummyTextArea();
-    private static final BasicTextAreaUI basicTextAreaUI = new DummyTextAreaUI();
+    private static final DummyTextAreaUI basicTextAreaUI = new DummyTextAreaUI();
 
     /*
      * Implementation of BasicTextAreaUI
@@ -58,7 +57,7 @@ public abstract class DarkTextAreaUIBridge extends DarkTextUI {
             // rebuild the view
             modelChanged();
         } else if (PropertyKey.EDITABLE.equals(evt.getPropertyName())) {
-            updateFocusTraversalKeys();
+            basicTextAreaUI.propertyChange(evt);
         }
     }
 

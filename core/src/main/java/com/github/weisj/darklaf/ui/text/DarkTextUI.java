@@ -25,22 +25,16 @@
 package com.github.weisj.darklaf.ui.text;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.ActionMapUIResource;
-import javax.swing.plaf.ComponentInputMapUIResource;
-import javax.swing.plaf.InputMapUIResource;
 import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.*;
-
-import sun.awt.SunToolkit;
-import sun.swing.DefaultLookup;
 
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -58,7 +52,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /**
  * @author Jannis Weis
  */
-public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener {
+public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener, FocusListener {
 
     protected static final String KEY_PREFIX = "JTextComponent.";
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
@@ -72,25 +66,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected static final String TOGGLE_INSERT = "toggle_insert";
 
     protected JTextComponent editor;
-    private FocusListener focusListener = new FocusListener() {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            Caret caret = editor.getCaret();
-            if (caret instanceof DarkCaret) {
-                ((DarkCaret) caret).setPaintSelectionHighlight(true);
-            }
-            editor.repaint();
-        }
-
-        @Override
-        public void focusLost(final FocusEvent e) {
-            Caret caret = editor.getCaret();
-            if (caret instanceof DarkCaret) {
-                ((DarkCaret) caret).setPaintSelectionHighlight(false);
-            }
-            editor.repaint();
-        }
-    };
     protected DefaultTextRenderer defaultTextRenderer;
     protected DarkCaret darkCaret;
 
@@ -164,6 +139,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
+        super.propertyChange(evt);
         String key = evt.getPropertyName();
         if (KEY_ROUNDED_SELECTION.equals(key)) {
             boolean rounded = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_ROUNDED_SELECTION);
@@ -183,14 +159,13 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void installListeners() {
         super.installListeners();
-        editor.addFocusListener(focusListener);
+        editor.addFocusListener(this);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        editor.removeFocusListener(focusListener);
-        focusListener = null;
+        editor.removeFocusListener(this);
     }
 
     protected Color getBackground(final JTextComponent c) {
@@ -360,23 +335,11 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         return 0;
     }
 
-    protected void installKeyboardActions() {
-        // backward compatibility support... keymaps for the UI
-        // are now installed in the more friendly input map.
-        editor.setKeymap(createKeymap());
-
-        InputMap km = getInputMap();
-        if (km != null) {
-            SwingUtilities.replaceUIInputMap(editor, JComponent.WHEN_FOCUSED,
-                                             km);
-        }
-
-        ActionMap map = getActionMap();
-        if (map != null) {
-            SwingUtilities.replaceUIActionMap(editor, map);
-        }
-
-        updateFocusAcceleratorBinding(false);
+    protected void installDarkKeyBoardActions() {
+        ActionMap actionMap = SwingUtilities.getUIActionMap(getComponent());
+        actionMap.put(TOGGLE_INSERT, new ToggleInsertAction());
+        InputMap inputMap = SwingUtilities.getUIInputMap(getComponent(), JComponent.WHEN_FOCUSED);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), TOGGLE_INSERT);
     }
 
     @Override
@@ -385,67 +348,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             editor = (JTextComponent) c;
         }
         super.installUI(c);
+        installDarkKeyBoardActions();
     }
 
     @Override
     protected Highlighter createHighlighter() {
         return new DarkHighlighter();
-    }
-
-    /*
-     * Implementation of BasicTextUI.
-     */
-    /**
-     * Get the InputMap to use for the UI.
-     *
-     * @return the input map
-     */
-    protected InputMap getInputMap() {
-        InputMap map = new InputMapUIResource();
-
-        InputMap shared = (InputMap) DefaultLookup.get(editor, this, getPropertyPrefix() + ".focusInputMap");
-        if (shared != null) {
-            map.setParent(shared);
-        }
-        map.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), TOGGLE_INSERT);
-        return map;
-    }
-
-    protected ActionMap getActionMap() {
-        String mapName = getPropertyPrefix() + ".actionMap";
-        ActionMap map = (ActionMap) UIManager.get(mapName);
-
-        if (map == null) {
-            map = createActionMap();
-            if (map != null) {
-                UIManager.getLookAndFeelDefaults().put(mapName, map);
-            }
-        }
-        ActionMap componentMap = new ActionMapUIResource();
-        componentMap.put("requestFocus", new FocusAction());
-        /*
-         * fix for bug 4515750
-         * JTextField & non-editable JTextArea bind return key - default btn not accessible
-         *
-         * Wrap the return action so that it is only enabled when the
-         * component is editable. This allows the default button to be
-         * processed when the text component has focus and isn't editable.
-         *
-         */
-        if (getEditorKit(editor) instanceof DefaultEditorKit) {
-            if (map != null) {
-                Object obj = map.get(DefaultEditorKit.insertBreakAction);
-                if (obj instanceof DefaultEditorKit.InsertBreakAction) {
-                    Action action = new TextActionWrapper((TextAction) obj);
-                    componentMap.put(action.getValue(Action.NAME), action);
-                }
-                map.put(TOGGLE_INSERT, new ToggleInsertAction());
-            }
-        }
-        if (map != null) {
-            componentMap.setParent(map);
-        }
-        return componentMap;
     }
 
     @Override
@@ -455,124 +363,21 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         return km;
     }
 
-    /**
-     * Invoked when the focus accelerator changes, this will update the key bindings as necessary.
-     *
-     * @param changed the changed
-     */
-    @SuppressWarnings("MagicConstant")
-    protected void updateFocusAcceleratorBinding(final boolean changed) {
-        char accelerator = editor.getFocusAccelerator();
-
-        if (changed || accelerator != '\0') {
-            InputMap km = SwingUtilities.getUIInputMap(editor, JComponent.WHEN_IN_FOCUSED_WINDOW);
-
-            if (km == null && accelerator != '\0') {
-                km = new ComponentInputMapUIResource(editor);
-                SwingUtilities.replaceUIInputMap(editor, JComponent.WHEN_IN_FOCUSED_WINDOW, km);
-                ActionMap am = getActionMap();
-                SwingUtilities.replaceUIActionMap(editor, am);
-            }
-            if (km != null) {
-                km.clear();
-                if (accelerator != '\0') {
-                    km.put(KeyStroke.getKeyStroke(accelerator, getFocusAcceleratorKeyMask()), "requestFocus");
-                    km.put(KeyStroke.getKeyStroke(accelerator,
-                                                  DarkUIUtil.setAltGraphMask(getFocusAcceleratorKeyMask())),
-                           "requestFocus");
-                }
-            }
+    @Override
+    public void focusGained(final FocusEvent e) {
+        Caret caret = editor.getCaret();
+        if (caret instanceof DarkCaret) {
+            ((DarkCaret) caret).setPaintSelectionHighlight(true);
         }
+        editor.repaint();
     }
 
-    /**
-     * Create a default action map. This is basically the set of actions found exported by the component.
-     *
-     * @return the action map
-     */
-    public ActionMap createActionMap() {
-        ActionMap map = new ActionMapUIResource();
-        Action[] actions = editor.getActions();
-        for (Action a : actions) {
-            map.put(a.getValue(Action.NAME), a);
+    @Override
+    public void focusLost(final FocusEvent e) {
+        Caret caret = editor.getCaret();
+        if (caret instanceof DarkCaret) {
+            ((DarkCaret) caret).setPaintSelectionHighlight(false);
         }
-        map.put(TransferHandler.getCutAction().getValue(Action.NAME), TransferHandler.getCutAction());
-        map.put(TransferHandler.getCopyAction().getValue(Action.NAME), TransferHandler.getCopyAction());
-        map.put(TransferHandler.getPasteAction().getValue(Action.NAME), TransferHandler.getPasteAction());
-        return map;
-    }
-
-    protected static int getFocusAcceleratorKeyMask() {
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        if (tk instanceof SunToolkit) {
-            return ((SunToolkit) tk).getFocusAcceleratorKeyMask();
-        }
-        return ActionEvent.ALT_MASK;
-    }
-
-    /**
-     * Invoked when editable property is changed.
-     * <p>
-     * removing 'TAB' and 'SHIFT-TAB' from traversalKeysSet in case editor is editable adding 'TAB' and 'SHIFT-TAB' to
-     * traversalKeysSet in case editor is non editable
-     */
-    @SuppressWarnings("deprecation")
-    protected void updateFocusTraversalKeys() {
-        /*
-         * Fix for 4514331 Non-editable JTextArea and similar
-         * should allow Tab to keyboard - accessibility
-         */
-        EditorKit editorKit = getEditorKit(editor);
-        if (editorKit instanceof DefaultEditorKit) {
-            Set<AWTKeyStroke> storedForwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> storedBackwardTraversalKeys = editor.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
-            Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<>(storedForwardTraversalKeys);
-            Set<AWTKeyStroke> backwardTraversalKeys = new HashSet<>(storedBackwardTraversalKeys);
-            if (editor.isEditable()) {
-                forwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
-                backwardTraversalKeys.remove(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK));
-            } else {
-                forwardTraversalKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
-                backwardTraversalKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK));
-            }
-            LookAndFeel.installProperty(editor, "focusTraversalKeysForward", forwardTraversalKeys);
-            LookAndFeel.installProperty(editor, "focusTraversalKeysBackward", backwardTraversalKeys);
-        }
-    }
-
-    public class FocusAction extends AbstractAction {
-
-        public void actionPerformed(final ActionEvent e) {
-            editor.requestFocus();
-        }
-
-        public boolean isEnabled() {
-            return editor.isEditable();
-        }
-    }
-
-    /**
-     * Wrapper for text actions to return isEnabled false in case editor is non editable
-     */
-    public class TextActionWrapper extends TextAction {
-        final TextAction action;
-
-        public TextActionWrapper(final TextAction action) {
-            super((String) action.getValue(Action.NAME));
-            this.action = action;
-        }
-
-        /**
-         * The operation to perform when this action is triggered.
-         *
-         * @param e the action event
-         */
-        public void actionPerformed(final ActionEvent e) {
-            action.actionPerformed(e);
-        }
-
-        public boolean isEnabled() {
-            return (editor == null || editor.isEditable()) && action.isEnabled();
-        }
+        editor.repaint();
     }
 }
