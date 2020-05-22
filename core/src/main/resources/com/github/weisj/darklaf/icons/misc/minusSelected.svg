@@ -5,5 +5,5 @@
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <rect x="4.8" y="7.3" fill="url(#Icons.minusSelected.color)" width="6.5" height="1.5"/>
+    <rect x="4.5" y="7" fill="url(#Icons.minusSelected.color)" width="7" height="2"/>
 </svg>

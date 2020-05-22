@@ -43,7 +43,7 @@ public class HelpButton extends JButton {
     protected void init() {
         putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         putClientProperty(DarkButtonUI.KEY_ROUND, true);
-        setIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/helpHighlight.svg"));
-        setDisabledIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/helpDisabled.svg"));
+        setIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/helpHighlight.svg", true));
+        setDisabledIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/helpDisabled.svg", true));
     }
 }

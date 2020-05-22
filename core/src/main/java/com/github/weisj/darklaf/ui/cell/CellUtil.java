@@ -34,6 +34,7 @@ import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class CellUtil {
@@ -384,6 +385,9 @@ public class CellUtil {
                            bg, selBg, bgNoFocus, selBgNoFocus, inactiveBg, inactiveSelBg,
                            inactiveBgNoFocus, inactiveSelBgNoFocus);
         PropertyUtil.installBackground(comp, c);
+        if (comp instanceof JComponent) {
+            LookAndFeel.installProperty((JComponent) comp, PropertyKey.OPAQUE, true);
+        }
     }
 
     public static Color getColor(final boolean enabled, final boolean selected, final boolean focus,

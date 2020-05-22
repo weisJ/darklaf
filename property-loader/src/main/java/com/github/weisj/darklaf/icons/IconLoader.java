@@ -200,6 +200,21 @@ public final class IconLoader {
     /**
      * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
      * will be loaded as an svg.icon.
+     * Uses 16x16 icons by default.
+     *
+     * @see           #get(Class)
+     * @see           #get
+     * @param  path   the path to the icon with respect to the IconLoader resource root.
+     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return        the icon.
+     */
+    public Icon getIcon(final String path, final boolean themed) {
+        return getIcon(path, DEFAULT_W, DEFAULT_H, themed);
+    }
+
+    /**
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
+     * will be loaded as an svg.icon.
      *
      * @see         #get(Class)
      * @see         #get
