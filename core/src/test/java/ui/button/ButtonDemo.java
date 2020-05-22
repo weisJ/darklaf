@@ -88,6 +88,12 @@ public class ButtonDemo implements ComponentDemo {
                 addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_SQUARE, isSelected()));
             }
         });
+        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_ROUND) {
+            {
+                setSelected(false);
+                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_ROUND, isSelected()));
+            }
+        });
         controlPanel.add(new JCheckBox(DarkButtonUI.KEY_THIN) {
             {
                 setSelected(false);

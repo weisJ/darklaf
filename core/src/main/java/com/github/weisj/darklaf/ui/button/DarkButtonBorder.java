@@ -89,6 +89,7 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public static boolean showDropShadow(final JComponent c) {
+        if (ButtonConstants.isRound(c)) return false;
         return showDropShadow(getCornerFlag(c));
     }
 
@@ -104,17 +105,11 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     protected int getArc(final Component c) {
-        if (ButtonConstants.isNoArc(c)) return 0;
-        boolean square = ButtonConstants.isSquare(c);
-        boolean alt = ButtonConstants.chooseAlternativeArc(c);
-        return square ? alt ? arc : squareArc : alt ? squareArc : arc;
+        return ButtonConstants.chooseArcWithBorder(c, arc, 0, squareArc, getBorderSize());
     }
 
     protected int getFocusArc(final Component c) {
-        if (ButtonConstants.isNoArc(c)) return minimumArc;
-        boolean square = ButtonConstants.isSquare(c);
-        boolean alt = ButtonConstants.chooseAlternativeArc(c);
-        return square ? alt ? focusArc : squareFocusArc : alt ? squareFocusArc : focusArc;
+        return ButtonConstants.chooseArcWithBorder(c, focusArc, minimumArc, squareFocusArc, getBorderSize());
     }
 
     public static AlignmentExt getCornerFlag(final Component component) {
@@ -180,9 +175,6 @@ public class DarkButtonBorder implements Border, UIResource {
             paintNeighbourFocus(g2, c, width, height);
         }
         config.restore();
-
-        // g.setColor(Color.GREEN);
-        // PaintUtil.drawRect(g, 0,0, width, height, 1);
     }
 
     protected void paintNeighbourFocus(final Graphics2D g2, final Component c,

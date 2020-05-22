@@ -88,8 +88,7 @@ public class TriCheckBoxDemo implements ComponentDemo {
 
     @Override
     public JMenuBar createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.add(ComponentDemo.createThemeMenu());
+        JMenuBar menuBar = ComponentDemo.getDefaultMenuBar();
         menuBar.add(new JMenu("Demo") {
             {
                 add(new TristateCheckBoxMenuItem("TristateCheckBox menu item"));

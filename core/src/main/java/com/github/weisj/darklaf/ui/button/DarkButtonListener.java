@@ -76,7 +76,8 @@ public class DarkButtonListener extends BasicButtonListener {
         AbstractButton b = (AbstractButton) e.getSource();
         String key = e.getPropertyName();
         if (key.startsWith("JButton.")) {
-            b.invalidate();
+            b.doLayout();
+            b.repaint();
         }
     }
 }

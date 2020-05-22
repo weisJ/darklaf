@@ -41,6 +41,7 @@ public interface ButtonConstants {
     String KEY_THIN = "JButton.thin";
     String KEY_NO_BORDERLESS_OVERWRITE = "JButton.noBorderlessOverwrite";
     String KEY_CORNER = "JButton.cornerFlag";
+    String KEY_ROUND = "JButton.round";
 
     String KEY_LEFT_NEIGHBOUR = "JButton.leftNeighbour";
     String KEY_RIGHT_NEIGHBOUR = "JButton.rightNeighbour";
@@ -64,12 +65,30 @@ public interface ButtonConstants {
         return PropertyUtil.getBooleanProperty(c, KEY_VARIANT);
     }
 
+    static int chooseArcWithBorder(final Component c, final int arc, final int minimum,
+                                   final int squareArc, final int borderSize) {
+        return chooseArc(c, arc, minimum, squareArc, c.getHeight() - 2 * borderSize);
+    }
+
+    static int chooseArc(final Component c, final int arc, final int minimum,
+                         final int squareArc, final int roundedArc) {
+        if (ButtonConstants.isNoArc(c)) return minimum;
+        if (ButtonConstants.isRound(c)) return roundedArc;
+        boolean square = ButtonConstants.isSquare(c);
+        boolean alt = ButtonConstants.chooseAlternativeArc(c);
+        return square ? alt ? arc : squareArc : alt ? squareArc : arc;
+    }
+
     static boolean isNoArc(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_NO_ARC);
     }
 
     static boolean isSquare(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_SQUARE);
+    }
+
+    static boolean isRound(final Component c) {
+        return PropertyUtil.getBooleanProperty(c, KEY_ROUND);
     }
 
     static boolean isThin(final Component c) {

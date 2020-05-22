@@ -22,40 +22,38 @@
  * SOFTWARE.
  *
  */
-package ui.radioButton;
-
-import java.awt.*;
+package ui.button;
 
 import javax.swing.*;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
+import com.github.weisj.darklaf.components.help.HelpButton;
+import com.github.weisj.darklaf.components.help.HelpMenuItem;
 
-public class RadioButtonDemo implements ComponentDemo {
+public class HelpButtonDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new RadioButtonDemo());
+        ComponentDemo.showDemo(new HelpButtonDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        JRadioButton button = new JRadioButton("Test RadioButton");
-        DemoPanel panel = new DemoPanel(button);
+        JButton button = new HelpButton();
 
-        JPanel controlPanel = panel.addControls(1);
+        DemoPanel panel = new DemoPanel(button);
+        JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {
             {
                 setSelected(button.isEnabled());
                 addActionListener(e -> button.setEnabled(isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox("LeftToRight") {
+        controlPanel.add(new JCheckBox("focusable") {
             {
-                setSelected(button.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> button.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                        : ComponentOrientation.RIGHT_TO_LEFT));
+                setSelected(button.isFocusable());
+                addActionListener(e -> button.setFocusable(isSelected()));
             }
         });
         controlPanel.add(new JCheckBox("Rollover") {
@@ -64,34 +62,22 @@ public class RadioButtonDemo implements ComponentDemo {
                 addActionListener(e -> button.setRolloverEnabled(isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TREE_EDITOR) {
-            {
-                setSelected(false);
-                addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TREE_EDITOR, isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR) {
-            {
-                setSelected(false);
-                addActionListener(e -> button.putClientProperty(DarkToggleButtonUI.KEY_IS_TABLE_EDITOR, isSelected()));
-            }
-        });
         return panel;
-    }
-
-    @Override
-    public String getTitle() {
-        return "RadioButton Demo";
     }
 
     @Override
     public JMenuBar createMenuBar() {
         JMenuBar menuBar = ComponentDemo.getDefaultMenuBar();
-        menuBar.add(new JMenu("Demo") {
+        menuBar.add(new JMenu("Help") {
             {
-                add(new JRadioButtonMenuItem("RadioButton menu item"));
+                add(new HelpMenuItem("View Help"));
             }
         });
         return menuBar;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Help Button Demo";
     }
 }

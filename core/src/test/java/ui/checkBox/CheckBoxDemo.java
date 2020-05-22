@@ -86,8 +86,7 @@ public class CheckBoxDemo implements ComponentDemo {
 
     @Override
     public JMenuBar createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.add(ComponentDemo.createThemeMenu());
+        JMenuBar menuBar = ComponentDemo.getDefaultMenuBar();
         menuBar.add(new JMenu("Demo") {
             {
                 add(new JCheckBoxMenuItem("CheckBox menu item"));

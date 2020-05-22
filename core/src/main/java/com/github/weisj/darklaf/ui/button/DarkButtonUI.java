@@ -190,11 +190,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                                           final int arc, final int width, final int height) {
         boolean showShadow = DarkButtonBorder.showDropShadow(c);
         int shadow = showShadow ? shadowHeight : 0;
-        int effectiveArc = ButtonConstants.isSquare(c) && !ButtonConstants.chooseAlternativeArc(c) ? 0 : arc;
+        int effectiveArc = ButtonConstants.chooseArcWithBorder(c, arc, 0, 0, borderSize);
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
-        boolean focus = c.hasFocus() && c.isFocusPainted();
 
-        Rectangle bgRect = getEffectiveRect(width, height, c, -(effectiveArc + 1), corner, focus);
+        Rectangle bgRect = getEffectiveRect(width, height, -(effectiveArc + 1), corner);
         if (c.isEnabled() && showShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
             g.setColor(shadowColor);
             Composite comp = g.getComposite();
@@ -223,8 +222,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    protected Rectangle getEffectiveRect(final int width, final int height, final AbstractButton c,
-                                         final int adjustment, final AlignmentExt corner, final boolean focus) {
+    protected Rectangle getEffectiveRect(final int width, final int height,
+                                         final int adjustment, final AlignmentExt corner) {
         Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadowHeight), borderSize);
         if (corner != null) {
             insetMask = corner.maskInsets(insetMask, adjustment);
@@ -319,10 +318,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected int getArc(final Component c) {
-        if (ButtonConstants.isNoArc(c)) return 0;
-        boolean square = ButtonConstants.isSquare(c);
-        boolean alt = ButtonConstants.chooseAlternativeArc(c);
-        return square ? alt ? arc : squareArc : alt ? squareArc : arc;
+        return ButtonConstants.chooseArc(c, arc, 0, squareArc, borderSize);
     }
 
     protected Color getForeground(final AbstractButton button) {

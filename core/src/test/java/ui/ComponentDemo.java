@@ -145,6 +145,10 @@ public interface ComponentDemo {
     }
 
     default JMenuBar createMenuBar() {
+        return getDefaultMenuBar();
+    }
+
+    static JMenuBar getDefaultMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createThemeMenu());
         menuBar.add(createSettingsMenu());
