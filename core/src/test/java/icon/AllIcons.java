@@ -51,12 +51,11 @@ import com.kitfox.svg.app.beans.SVGIcon;
 
 public class AllIcons implements ComponentDemo {
 
-    private static final String[] FOLDERS = new String[]{
-                                                         "icons/control", "icons/dialog", "icons/files",
+    private static final int ICON_SIZE = 50;
+    private static final String[] FOLDERS = new String[]{"icons/control", "icons/dialog", "icons/files",
                                                          "icons/indicator", "icons/menu", "icons/misc",
                                                          "icons/navigation", "platform/windows/icons/window",
-                                                         "platform/windows/icons"
-    };
+                                                         "platform/windows/icons"};
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new AllIcons());
@@ -96,18 +95,23 @@ public class AllIcons implements ComponentDemo {
                 try (FileSystem fs = files.getSecond().isPresent() ? files.getSecond().get() : null) {
                     files.getFirst().forEach(p -> {
                         if (p.getFileName().toString().endsWith(".svg")) {
-                            int SIZE = 30;
+                            int size = ICON_SIZE;
                             ThemedSVGIcon icon = (ThemedSVGIcon) IconLoader.get(DarkLaf.class)
                                                                            .loadSVGIcon(folder + "/" + p.getFileName(),
-                                                                                        SIZE, SIZE, true);
+                                                                                        size, size, true);
                             SVGIcon svgIcon = icon.getSVGIcon();
                             int autosize = svgIcon.getAutosize();
                             svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
-                            int width = Math.min(svgIcon.getIconWidth() * 2, 100);
+                            int width = size;
                             int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
+                            if (height > size) {
+                                height = size;
+                                width = (int) (((double) height / svgIcon.getIconHeight()) * svgIcon.getIconWidth());
+                            }
+
                             icon.setDisplaySize(width, height);
                             svgIcon.setAutosize(autosize);
-                            list.add(new Pair<>(p.getFileName().toString(), icon));
+                            list.add(new Pair<>(p.getFileName().toString(), new CenterIcon(icon, size, size)));
                         }
                     });
                 }
@@ -118,9 +122,8 @@ public class AllIcons implements ComponentDemo {
         return list;
     }
 
-    public Pair<Stream<Path>, Optional<FileSystem>> walk(final String path, final Class<?> clazz)
-                                                                                                  throws URISyntaxException,
-                                                                                                  IOException {
+    public Pair<Stream<Path>, Optional<FileSystem>> walk(final String path,
+                                                         final Class<?> clazz) throws URISyntaxException, IOException {
         URI uri = clazz.getResource(path).toURI();
         if ("jar".equals(uri.getScheme())) {
             FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
@@ -153,6 +156,36 @@ public class AllIcons implements ComponentDemo {
             setIcon(value.getSecond());
             setText(value.getFirst());
             return this;
+        }
+    }
+
+    private static class CenterIcon implements Icon {
+
+        private final Icon icon;
+        private final int width;
+        private final int height;
+
+        private CenterIcon(final Icon icon, final int width, final int height) {
+            this.icon = icon;
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+            int px = x + (width - icon.getIconWidth()) / 2;
+            int py = y + (height - icon.getIconHeight()) / 2;
+            icon.paintIcon(c, g, px, py);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return width;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return height;
         }
     }
 }
