@@ -100,8 +100,12 @@ public class PropertyUtil {
 
     public static <T> T getObject(final JComponent c, final String key, final Class<T> type, final T defaultValue) {
         Object obj = c.getClientProperty(key);
-        if (type.isInstance(obj)) return (T) obj;
+        if (type.isInstance(obj)) return type.cast(obj);
         return defaultValue;
+    }
+
+    public static Object getObject(final Component c, final String key) {
+        return getObject(c, key, Object.class, null);
     }
 
     public static Color getColor(final JComponent c, final String key, final Color defaultValue) {

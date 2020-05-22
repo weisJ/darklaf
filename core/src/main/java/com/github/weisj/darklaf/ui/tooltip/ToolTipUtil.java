@@ -33,12 +33,19 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class ToolTipUtil {
 
     public static void applyContext(final JToolTip toolTip) {
         JComponent target = toolTip.getComponent();
         if (target == null) return;
+
+        Object style = PropertyUtil.getObject(target, ToolTipConstants.KEY_STYLE);
+
+        boolean isBalloon = DarkTooltipUI.getStyle(style) == ToolTipStyle.BALLOON;
+
+        if (!isBalloon) return;
 
         ToolTipContext context = getToolTipContext(toolTip);
         if (context == null) return;

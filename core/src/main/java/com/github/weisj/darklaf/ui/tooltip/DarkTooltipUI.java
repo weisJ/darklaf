@@ -41,7 +41,9 @@ import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -320,9 +322,18 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         if (style instanceof ToolTipStyle) return (ToolTipStyle) style;
         if (style == null) return null;
         String name = style.toString();
-        if (VARIANT_PLAIN_BALLOON.equals(name)) return ToolTipStyle.PLAIN_BALLOON;
-        if (VARIANT_BALLOON.equals(name)) return ToolTipStyle.BALLOON;
-        if (VARIANT_PLAIN.equals(name)) return ToolTipStyle.PLAIN;
+        if (VARIANT_PLAIN_BALLOON.equalsIgnoreCase(name)
+            || ToolTipStyle.PLAIN_BALLOON.name().equalsIgnoreCase(name)) {
+            return ToolTipStyle.PLAIN_BALLOON;
+        }
+        if (VARIANT_BALLOON.equalsIgnoreCase(name)
+            || ToolTipStyle.BALLOON.name().equalsIgnoreCase(name)) {
+            return ToolTipStyle.BALLOON;
+        }
+        if (VARIANT_PLAIN.equalsIgnoreCase(name)
+            || ToolTipStyle.PLAIN.name().equalsIgnoreCase(name)) {
+            return ToolTipStyle.PLAIN;
+        }
         return null;
     }
 

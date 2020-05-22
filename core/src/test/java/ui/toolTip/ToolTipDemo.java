@@ -77,7 +77,7 @@ public class ToolTipDemo implements ComponentDemo {
         controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {
             {
                 setSelectedItem(ToolTipStyle.BALLOON);
-                addItemListener(e -> context.setToolTipStyle((ToolTipStyle) e.getItem()));
+                addItemListener(e -> button.putClientProperty(DarkTooltipUI.KEY_STYLE, e.getItem()));
             }
         }, "sgx");
         controlPanel.add(new JLabel("Alignment:", JLabel.RIGHT));
