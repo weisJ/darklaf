@@ -42,7 +42,6 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * Note this class only sits inside this weird package because of a hack used in {@link
@@ -230,7 +229,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     protected Rectangle paintRoundedLayer(final Graphics2D g, final JTextComponent c, final int offs0, final int offs1,
                                           final GraphicsContext context, final boolean isPaintingPreceding) {
-        Insets ins = DarkUIUtil.addInsets(c.getInsets(), c.getMargin(), true);
+        Insets ins = c.getInsets();
 
         Rectangle posOffs0 = getPosRect(c, offs0);
         Rectangle posOffs1 = getPosRect(c, offs1, Position.Bias.Backward);
