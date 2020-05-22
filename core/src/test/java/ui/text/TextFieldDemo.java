@@ -69,15 +69,16 @@ public class TextFieldDemo implements ComponentDemo {
                         : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
-        controlPanel.add(new JCheckBox("JTextComponent.roundedSelection") {
+        controlPanel.add(new JCheckBox(DarkTextUI.KEY_ROUNDED_SELECTION) {
             {
-                setSelected(true);
-                addActionListener(e -> textField.putClientProperty("JTextComponent.roundedSelection", isSelected()));
+                setSelected(PropertyUtil.getBooleanProperty(textField, DarkTextUI.KEY_ROUNDED_SELECTION));
+                addActionListener(e -> textField.putClientProperty(DarkTextUI.KEY_ROUNDED_SELECTION, isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox("JTextField.variant = search") {
+        controlPanel.add(new JCheckBox(DarkTextFieldUI.KEY_VARIANT + " = " + DarkTextFieldUI.VARIANT_SEARCH) {
             {
-                addActionListener(e -> textField.putClientProperty("JTextField.variant", isSelected() ? "search" : ""));
+                addActionListener(e -> textField.putClientProperty(DarkTextFieldUI.KEY_VARIANT,
+                                                                   isSelected() ? DarkTextFieldUI.VARIANT_SEARCH : ""));
             }
         });
         controlPanel.add(new JCheckBox(DarkTextFieldUI.KEY_SHOW_CLEAR) {
@@ -87,9 +88,16 @@ public class TextFieldDemo implements ComponentDemo {
                 addActionListener(e -> textField.putClientProperty(DarkTextFieldUI.KEY_SHOW_CLEAR, isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox("JTextComponent.hasError") {
+        controlPanel.add(new JCheckBox(DarkTextUI.KEY_HAS_ERROR) {
             {
-                addActionListener(e -> textField.putClientProperty("JTextComponent.hasError", isSelected()));
+                setSelected(PropertyUtil.getBooleanProperty(textField, DarkTextUI.KEY_HAS_ERROR));
+                addActionListener(e -> textField.putClientProperty(DarkTextUI.KEY_HAS_ERROR, isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox(DarkTextUI.KEY_HAS_WARNING) {
+            {
+                setSelected(PropertyUtil.getBooleanProperty(textField, DarkTextUI.KEY_HAS_WARNING));
+                addActionListener(e -> textField.putClientProperty(DarkTextUI.KEY_HAS_WARNING, isSelected()));
             }
         });
         return panel;

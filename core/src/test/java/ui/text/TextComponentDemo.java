@@ -98,6 +98,12 @@ public abstract class TextComponentDemo<T extends JTextComponent> implements Com
                 addActionListener(e -> text.putClientProperty(DarkTextUI.KEY_HAS_ERROR, isSelected()));
             }
         });
+        controlPanel.add(new JCheckBox(DarkTextUI.KEY_HAS_WARNING) {
+            {
+                setSelected(PropertyUtil.getBooleanProperty(text, DarkTextUI.KEY_HAS_WARNING));
+                addActionListener(e -> text.putClientProperty(DarkTextUI.KEY_HAS_WARNING, isSelected()));
+            }
+        });
         return panel;
     }
 

@@ -44,6 +44,8 @@ public class DarkTextBorder implements Border, UIResource {
 
     protected final Color errorBorderColor;
     protected final Color focusErrorBorderColor;
+    protected final Color warningBorderColor;
+    protected final Color focusWarningBorderColor;
     protected final Color focusBorderColor;
     protected final Color borderColor;
     protected final Color inactiveBorderColor;
@@ -57,8 +59,10 @@ public class DarkTextBorder implements Border, UIResource {
 
     public DarkTextBorder() {
         focusErrorBorderColor = UIManager.getColor("TextField.border.focusError");
+        focusWarningBorderColor = UIManager.getColor("TextField.border.focusWarning");
         focusBorderColor = UIManager.getColor("TextField.border.focus");
         errorBorderColor = UIManager.getColor("TextField.border.error");
+        warningBorderColor = UIManager.getColor("TextField.border.warning");
         borderColor = UIManager.getColor("TextField.border.enabled");
         inactiveBorderColor = UIManager.getColor("TextField.border.disabled");
         inactiveFocusBorderColor = UIManager.getColor("TextField.border.disabled.focus");
@@ -71,6 +75,10 @@ public class DarkTextBorder implements Border, UIResource {
 
     protected static boolean hasError(final Component c) {
         return PropertyUtil.getBooleanProperty(c, DarkTextUI.KEY_HAS_ERROR);
+    }
+
+    protected static boolean hasWarning(final Component c) {
+        return PropertyUtil.getBooleanProperty(c, DarkTextUI.KEY_HAS_WARNING);
     }
 
     protected int getArcSize(final Component c) {
@@ -90,34 +98,53 @@ public class DarkTextBorder implements Border, UIResource {
         boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();
         boolean focus = DarkUIUtil.hasFocus(c);
         boolean error = hasError(c);
+        boolean warning = !error && hasWarning(c);
 
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
         int arcSize = getArcSize(c);
         int focusArcSize = getFocusArcSize(c);
-        if (error) {
-            PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
-                                         c.hasFocus(), PaintUtil.Outline.error);
-        } else if (c.hasFocus()) {
-            PaintUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize, editable);
-        }
-        g.setColor(getBorderColor(focus, error, editable, c.isEnabled()));
+        paintFocus(g, c, width, height, editable, error, warning, focusArcSize);
+
+        g.setColor(getBorderColor(focus, error, warning, editable, c.isEnabled()));
         PaintUtil.paintLineBorder(g, borderSize, borderSize, width - 2 * borderSize,
                                   height - 2 * borderSize, arcSize);
         g.translate(-x, -y);
         config.restore();
     }
 
-    protected Color getBorderColor(final boolean focus, final boolean error,
+    public void paintFocus(final Graphics2D g, final Component c, final int width, final int height,
+                           final boolean editable, final boolean error, final boolean warning, final int focusArcSize) {
+        if (error) {
+            PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
+                                         c.hasFocus(), PaintUtil.Outline.error);
+        } else if (warning) {
+            PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
+                                         c.hasFocus(), PaintUtil.Outline.warning);
+        } else if (c.hasFocus()) {
+            PaintUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize, editable);
+        }
+    }
+
+    protected Color getBorderColor(final boolean focus, final boolean error, final boolean warning,
                                    final boolean editable, final boolean enabled) {
         if (focus) {
-            return error ? focusErrorBorderColor
-                    : enabled && editable ? focusBorderColor : inactiveFocusBorderColor;
-        } else if (error) {
-            return errorBorderColor;
+            if (error) {
+                return focusErrorBorderColor;
+            } else if (warning) {
+                return focusWarningBorderColor;
+            } else {
+                return enabled && editable ? focusBorderColor : inactiveFocusBorderColor;
+            }
         } else {
-            return enabled && editable ? borderColor : inactiveBorderColor;
+            if (error) {
+                return errorBorderColor;
+            } else if (warning) {
+                return warningBorderColor;
+            } else {
+                return enabled && editable ? borderColor : inactiveBorderColor;
+            }
         }
     }
 

@@ -58,6 +58,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
     public static final String KEY_EXTEND_LINE_SELECTION = KEY_PREFIX + "extendSelection";
     public static final String KEY_HAS_ERROR = KEY_PREFIX + "hasError";
+    public static final String KEY_HAS_WARNING = KEY_PREFIX + "hasWarning";
     public static final String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
     public static final String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
     public static final String KEY_IS_LIST_EDITOR = DarkListUI.KEY_IS_LIST_EDITOR;
