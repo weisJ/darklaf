@@ -144,7 +144,9 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
             Component comp = menuElement.getComponent();
             if (comp.isVisible() && !(comp instanceof JPopupMenu)) {
                 OverlayScrollPane sp = DarkUIUtil.getParentOfType(OverlayScrollPane.class, comp, 5);
-                DarkUIUtil.repaint(sp, SwingUtilities.convertRectangle(comp, comp.getBounds(), sp));
+                if (sp != null) {
+                    DarkUIUtil.repaint(sp, SwingUtilities.convertRectangle(comp, comp.getBounds(), sp));
+                }
             }
         }
     }
