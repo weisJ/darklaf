@@ -33,7 +33,6 @@ import javax.swing.plaf.ComponentUI;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkCheckBoxUI extends DarkRadioButtonUI {

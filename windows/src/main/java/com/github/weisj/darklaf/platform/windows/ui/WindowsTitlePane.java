@@ -46,7 +46,6 @@ import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.Scale;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class WindowsTitlePane extends CustomTitlePane {

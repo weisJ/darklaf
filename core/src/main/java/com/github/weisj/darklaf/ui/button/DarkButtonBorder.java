@@ -38,7 +38,6 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkButtonBorder implements Border, UIResource {
@@ -89,7 +88,6 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public static boolean showDropShadow(final JComponent c) {
-        if (ButtonConstants.isRound(c)) return false;
         return showDropShadow(getCornerFlag(c));
     }
 

@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.graphics;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
@@ -117,10 +118,17 @@ public class PaintUtil {
     private static void doPaint(final Graphics2D g, final float width, final float height, final float arc,
                                 final float bw, final boolean inside) {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
-        float outerArc = inside ? arc : arc + bw;
-        float innerArc = inside ? arc - bw : arc;
-        Shape outerRect = new RoundRectangle2D.Float(0, 0, width, height, outerArc, outerArc);
-        Shape innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, innerArc, innerArc);
+        Shape outerRect;
+        Shape innerRect;
+        if (Scale.equalWithError(arc, 0)) {
+            outerRect = new Rectangle2D.Float(0, 0, width, height);
+            innerRect = new Rectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw);
+        } else {
+            float outerArc = inside ? arc : arc + bw;
+            float innerArc = inside ? arc - bw : arc;
+            outerRect = new RoundRectangle2D.Float(0, 0, width, height, outerArc, outerArc);
+            innerRect = new RoundRectangle2D.Float(bw, bw, width - 2 * bw, height - 2 * bw, innerArc, innerArc);
+        }
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         path.append(outerRect, false);
         path.append(innerRect, false);

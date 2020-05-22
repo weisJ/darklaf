@@ -40,7 +40,6 @@ import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener {

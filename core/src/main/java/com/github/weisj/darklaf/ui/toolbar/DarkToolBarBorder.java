@@ -31,7 +31,6 @@ import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.UIResource;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkToolBarBorder extends AbstractBorder implements UIResource, SwingConstants {

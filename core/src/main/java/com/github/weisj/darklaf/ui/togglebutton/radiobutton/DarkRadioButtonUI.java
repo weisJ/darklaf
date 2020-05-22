@@ -48,7 +48,6 @@ import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActio
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyChangeListener, ToggleButtonConstants {

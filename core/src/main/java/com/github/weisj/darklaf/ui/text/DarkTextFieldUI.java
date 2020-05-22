@@ -44,7 +44,6 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener, MouseClickListener {

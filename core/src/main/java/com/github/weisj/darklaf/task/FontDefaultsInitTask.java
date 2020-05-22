@@ -60,7 +60,12 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
                                                                                                                        TextAttribute.KERNING_ON);
     private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING = Collections.singletonMap(TextAttribute.KERNING,
                                                                                                                         null);
+    /*
+     * On Catalina the are issues with font kerning and .AppleSystemUIFont.
+     * For now Helvetica Neue is used instead.
+     */
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
+    private static final String MAC_OS_CATALINA_FONT_NAME_FALLBACK = "Helvetica Neue";
     private static final String WINDOWS_10_FONT_NAME = "Segoe UI";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
 
@@ -74,16 +79,18 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             patchOSFonts(defaults, this::mapWindowsFont);
         }
 
+        if (SystemInfo.isMacOSCatalina) {
+            defaults.put(RenderingHints.KEY_FRACTIONALMETRICS,
+                         RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        }
+
         if (systemKerningEnabled()) {
             List<String> kerningFontsList = PropertyUtil.getList(defaults, KERNING_LIST, String.class);
             if (!kerningFontsList.isEmpty()) {
                 Set<String> kerningFonts = new HashSet<>(kerningFontsList);
                 boolean enabledAll = ALL_FONTS.equals(kerningFontsList.get(0));
 
-                setupKerningPerFont(defaults, key -> {
-                    if (enabledAll) return true;
-                    return kerningFonts.contains(key);
-                });
+                setupKerningPerFont(defaults, key -> enabledAll || kerningFonts.contains(key));
             }
         }
 

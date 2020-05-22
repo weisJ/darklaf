@@ -35,7 +35,6 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.ColorUtil;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConstants {

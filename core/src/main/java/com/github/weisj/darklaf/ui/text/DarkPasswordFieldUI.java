@@ -25,23 +25,19 @@
 package com.github.weisj.darklaf.ui.text;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.text.bridge.DarkPasswordFieldUIBridge;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
@@ -51,7 +47,6 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     protected Icon show;
     protected Icon showPressed;
     protected int borderSize;
-    protected int arc;
     private char echo_dot = '*';
     private boolean showTriggered = false;
 
@@ -62,36 +57,8 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        borderSize = UIManager.getInt("PasswordField.borderThickness");
-        arc = UIManager.getInt("PasswordField.arc");
         show = UIManager.getIcon("PasswordField.show.icon");
         showPressed = UIManager.getIcon("PasswordField.showPressed.icon");
-    }
-
-    protected void paintBackground(final Graphics graphics) {
-        Graphics2D g = (Graphics2D) graphics;
-        JTextComponent c = getComponent();
-
-        Container parent = c.getParent();
-        if (parent != null) {
-            g.setColor(parent.getBackground());
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        }
-
-        Border border = c.getBorder();
-        GraphicsContext config = new GraphicsContext(g);
-        if (border instanceof DarkTextBorder) {
-            if (c.isEnabled() && c.isEditable()) {
-                g.setColor(c.getBackground());
-            }
-            int width = c.getWidth();
-            int height = c.getHeight();
-            int w = borderSize;
-            PaintUtil.fillRoundRect(g, w, w, width - 2 * w, height - 2 * w, arc);
-        } else {
-            super.paintBackground(g);
-        }
-        config.restore();
     }
 
     @Override

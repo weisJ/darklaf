@@ -51,7 +51,6 @@ import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
@@ -198,9 +197,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             g.setColor(shadowColor);
             Composite comp = g.getComposite();
             g.setComposite(PaintUtil.getShadowComposite());
-            int sh = Math.max(shadow, 2 * effectiveArc);
-            paintBackgroundRect(g, effectiveArc, bgRect.x, bgRect.y + bgRect.height + shadow - sh,
-                                bgRect.width, sh, false);
+            int stroke = (int) PaintUtil.getStrokeWidth(g);
+            paintBackgroundRect(g, effectiveArc, bgRect.x, bgRect.y + shadow + stroke,
+                                bgRect.width, bgRect.height);
             g.setComposite(comp);
         }
 
@@ -209,16 +208,15 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final Rectangle bgRect) {
-        paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height, true);
+        paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height);
     }
 
     private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc,
-                                     final int x, final int y, final int width, final int height,
-                                     final boolean respectBorder) {
+                                     final int x, final int y, final int width, final int height) {
         if (effectiveArc == 0) {
             g2.fillRect(x, y, width, height);
         } else {
-            PaintUtil.fillRoundRect(g2, x, y, width, height, effectiveArc, respectBorder);
+            PaintUtil.fillRoundRect(g2, x, y, width, height, effectiveArc, true);
         }
     }
 
