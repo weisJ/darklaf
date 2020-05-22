@@ -13,6 +13,20 @@
     ````
 - Performance improvements.
 - New scrollbar appearance on macOS that more closely resembles the system appearance.
+- Added rounded button variant.
+  ````java
+  button.putClientProperty(DarkButtonUI.KEY_ROUND, true);
+  ````
+- Added warning variant for text components.
+  ````java
+  textComp.putClientProperty(DarkTextUI.KEY_HAS_WARNING, true);
+  ````
+
+  ![Text Warning](https://github.com/weisJ/darklaf/wiki/text_warning.png)
+- Added `HelpButton` component.
+
+  ![Help Button](https://github.com/weisJ/darklaf/wiki/help_button.png)
+  
 
 ### Addressed issues
 - Disabled tables/trees/lists don't paint the cells disabled. dcf86461aeb7770bcf25f5c75f7f7c0c35dadab3
