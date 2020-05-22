@@ -43,7 +43,7 @@ public class ToolTipUtil {
 
         Object style = PropertyUtil.getObject(target, ToolTipConstants.KEY_STYLE);
 
-        boolean isBalloon = DarkTooltipUI.getStyle(style) == ToolTipStyle.BALLOON;
+        boolean isBalloon = ToolTipStyle.parse(style) == ToolTipStyle.BALLOON;
 
         if (!isBalloon) return;
 
@@ -149,11 +149,7 @@ public class ToolTipUtil {
         if (context instanceof ToolTipContext) {
             return (ToolTipContext) context;
         }
-        Object style = tooltip.getComponent().getClientProperty(DarkTooltipUI.KEY_STYLE);
-        if (ToolTipStyle.BALLOON.equals(DarkTooltipUI.getStyle(style))) {
-            return ToolTipContext.getDefaultContext();
-        }
-        return null;
+        return ToolTipContext.getDefaultContext();
     }
 
     public static void moveToolTip(final JToolTip toolTip, final int x, final int y, final JComponent target) {

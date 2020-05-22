@@ -38,6 +38,7 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 
 import sun.swing.SwingUtilities2;
 
+import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.delegate.AbstractButtonLayoutDelegate;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
@@ -100,7 +101,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        PropertyUtil.installProperty(b, ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
+        PropertyUtil.installProperty(b, ToolTipConstants.KEY_STYLE,
+                                     ToolTipStyle.parse(UIManager.get("Button.toolTipStyle")));
         LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");

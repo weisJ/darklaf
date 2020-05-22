@@ -98,7 +98,6 @@ public class ToolTipContext {
     private boolean hideOnExit;
     private JToolTip toolTip;
     private Insets insets;
-    private ToolTipStyle style;
     private boolean ignoreBorder;
     private boolean bestFit;
     private Function<ToolTipContext, Point> fallBackPositionProvider;
@@ -133,7 +132,6 @@ public class ToolTipContext {
                           final AlignmentStrategy alignmentStrategy,
                           final boolean alignInside, final Function<MouseEvent, Rectangle> toolTipRectSupplier) {
         this.target = target;
-        setToolTipStyle(ToolTipStyle.BALLOON);
         setUpdatePosition(false);
         setHideOnExit(false);
         setFallBackPositionProvider(null);
@@ -142,21 +140,6 @@ public class ToolTipContext {
         setCenterAlignment(centerAlignment);
         setAlignmentStrategy(alignmentStrategy);
         setToolTipRectSupplier(toolTipRectSupplier);
-    }
-
-    /**
-     * Set the style of the tooltip.
-     *
-     * @param  style the tooltip style.
-     * @return       this
-     * @see          ToolTipStyle ToolTipStyle
-     */
-    public ToolTipContext setToolTipStyle(final ToolTipStyle style) {
-        this.style = style;
-        if (style == null) {
-            this.style = ToolTipStyle.BALLOON;
-        }
-        return this;
     }
 
     /**
@@ -374,7 +357,6 @@ public class ToolTipContext {
                                               ? centerAlignment.opposite()
                                               : alignInside ? alignment : alignment.opposite());
             toolTip.putClientProperty(DarkTooltipUI.KEY_INSETS, insets);
-            toolTip.putClientProperty(DarkTooltipUI.KEY_STYLE, style);
             toolTip.doLayout();
         }
     }

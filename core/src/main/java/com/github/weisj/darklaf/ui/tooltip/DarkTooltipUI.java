@@ -311,30 +311,11 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
     private void updateStyle() {
         JComponent comp = toolTip.getComponent();
         if (comp != null) {
-            ToolTipStyle style = getStyle(comp.getClientProperty(KEY_STYLE));
-            ToolTipStyle tooltipStyle = getStyle(toolTip.getClientProperty(KEY_STYLE));
+            ToolTipStyle style = ToolTipStyle.parse(comp.getClientProperty(KEY_STYLE));
+            ToolTipStyle tooltipStyle = ToolTipStyle.parse(toolTip.getClientProperty(KEY_STYLE));
             toolTip.putClientProperty(KEY_STYLE, style != null ? style : tooltipStyle != null ? tooltipStyle
                     : ToolTipStyle.PLAIN_BALLOON);
         }
-    }
-
-    public static ToolTipStyle getStyle(final Object style) {
-        if (style instanceof ToolTipStyle) return (ToolTipStyle) style;
-        if (style == null) return null;
-        String name = style.toString();
-        if (VARIANT_PLAIN_BALLOON.equalsIgnoreCase(name)
-            || ToolTipStyle.PLAIN_BALLOON.name().equalsIgnoreCase(name)) {
-            return ToolTipStyle.PLAIN_BALLOON;
-        }
-        if (VARIANT_BALLOON.equalsIgnoreCase(name)
-            || ToolTipStyle.BALLOON.name().equalsIgnoreCase(name)) {
-            return ToolTipStyle.BALLOON;
-        }
-        if (VARIANT_PLAIN.equalsIgnoreCase(name)
-            || ToolTipStyle.PLAIN.name().equalsIgnoreCase(name)) {
-            return ToolTipStyle.PLAIN;
-        }
-        return null;
     }
 
     protected void updateSize() {
