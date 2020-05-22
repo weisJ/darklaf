@@ -54,6 +54,8 @@ public class SystemInfo {
     public static final boolean isX64;
     public static final boolean isUndefined;
 
+    public static final boolean isJava9OrGreater;
+
     protected static final String _OS_NAME;
 
     public static final boolean isMacOSMojave;
@@ -83,6 +85,7 @@ public class SystemInfo {
         isWindows10 = isWindows && isOsVersionAtLeast("10.0");
         isWindows7 = isWindows10 || (isWindows && isOsVersionAtLeast("6.1"));
         isWindowsVista = isWindows7 || (isWindows && isOsVersionAtLeast("6.0"));
+        isJava9OrGreater = isJavaVersionAtLeast("9");
     }
 
     public static boolean isOsVersionAtLeast(final String version) {

@@ -86,6 +86,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
         if (systemKerningEnabled()) {
             List<String> kerningFontsList = PropertyUtil.getList(defaults, KERNING_LIST, String.class);
+
             if (!kerningFontsList.isEmpty()) {
                 Set<String> kerningFonts = new HashSet<>(kerningFontsList);
                 boolean enabledAll = ALL_FONTS.equals(kerningFontsList.get(0));
@@ -131,11 +132,12 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         PropertyLoader.putProperties(fontProps, defaults);
     }
 
-    private void patchOSFonts(final UIDefaults defaults, final Function<Font, Font> mapper) {
-        PropertyLoader.replacePropertiesOfType(Font.class, defaults, mapper);
+    private void patchOSFonts(final UIDefaults defaults, final Function<Map.Entry<Object, Font>, Font> mapper) {
+        PropertyLoader.replacePropertyEntriesOfType(Font.class, defaults, e -> true, mapper);
     }
 
-    private Font mapMacOSFont(final Font font) {
+    private Font mapMacOSFont(final Map.Entry<Object, Font> entry) {
+        Font font = entry.getValue();
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME : MAC_OS_FONT_NAME;
         Font macFont = new Font(fontName, font.getStyle(), font.getSize());
         if (SystemInfo.isMacOSMojave) macFont = macFont.deriveFont(ENABLE_KERNING);
@@ -145,8 +147,14 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         return macFont == null ? font : macFont;
     }
 
-    private Font mapWindowsFont(final Font font) {
+    private Font mapWindowsFont(final Map.Entry<Object, Font> entry) {
+        Font font = entry.getValue();
         if (!SystemInfo.isWindowsVista) return font;
+        /*
+         * Java 8 doesn't properly handle the font in tooltips when using the system font.
+         * The result always looks bold. Revert to the default font in this case.
+         */
+        if ("ToolTip.font".equals(entry.getKey()) && !SystemInfo.isJava9OrGreater) return font;
         Font windowsFont = new Font(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);

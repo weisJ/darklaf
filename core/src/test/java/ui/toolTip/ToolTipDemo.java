@@ -28,6 +28,7 @@ import javax.swing.*;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
+import ui.DemoResources;
 
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
@@ -43,7 +44,7 @@ public class ToolTipDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        JButton button = new JButton("Demo Button");
+        JButton button = new JButton("Demo Button", DemoResources.FOLDER_ICON);
         DemoPanel panel = new DemoPanel(button);
         ToolTipContext context = new ToolTipContext(button).setAlignment(Alignment.CENTER)
                                                            .setCenterAlignment(Alignment.SOUTH);
