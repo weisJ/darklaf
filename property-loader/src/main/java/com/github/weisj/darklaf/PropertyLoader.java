@@ -256,14 +256,12 @@ public final class PropertyLoader {
             LOGGER.warning("Could not reference value '" + val + "' while loading '" + key + "'. " +
                            "Maybe is a forward reference");
         }
-        Object returnVal = accumulatorContainsKey ? accumulator.get(val)
-                : currentDefault.get(val);
+        Object returnVal = accumulatorContainsKey ? accumulator.get(val) : currentDefault.get(val);
         if (addReferenceInfo) {
             if (returnVal == null) {
-                returnVal = accumulatorContainsKey ? accumulator.get(referenceFreeKey)
-                        : currentDefault.get(val);
+                returnVal = accumulatorContainsKey ? accumulator.get(referenceFreeKey) : currentDefault.get(val);
             }
-            returnVal = new Pair<>(value, returnVal);
+            returnVal = new ReferenceInfo<>(value, returnVal);
         }
         return returnVal;
     }
@@ -309,13 +307,8 @@ public final class PropertyLoader {
         if (base == null) base = new Font(null, Font.PLAIN, 12);
         if (size <= 0) size = base.getSize();
         if (style < 0) style = base.getStyle();
-        Font font = base.deriveFont(style).deriveFont((float) size);
+        Font font = base.deriveFont(style, size);
         font = new DarkFontUIResource(font.deriveFont(attributes));
-        if (size != font.getSize()) {
-            throw new IllegalStateException("Font Sizes are not equal. Expected " + size + " but got "
-                                            + font.getSize());
-        }
-        assert base.getSize() == font.getSize();
         return font;
     }
 
@@ -339,7 +332,7 @@ public final class PropertyLoader {
         int[] values = new int[subKeys.length];
         for (int i = 0; i < values.length; i++) {
             if (subKeys[i].startsWith(String.valueOf(REFERENCE_PREFIX))) {
-                Object ref = parseReference(identifier, subKeys[i], accumulator, currrentDefault);
+                Object ref = unpackReference(parseReference(identifier, subKeys[i], accumulator, currrentDefault));
                 values[i] = ref instanceof Integer ? (Integer) ref : 0;
             } else {
                 try {
@@ -354,6 +347,14 @@ public final class PropertyLoader {
             result += i;
         }
         return new Pair<>(result, rest);
+    }
+
+    public static Object unpackReference(final Object object) {
+        Object obj = object;
+        while (obj instanceof ReferenceInfo) {
+            obj = ((ReferenceInfo<?>) obj).getValue();
+        }
+        return obj;
     }
 
     private static Pair<Font, String> parseFrom(final String val,
@@ -500,6 +501,21 @@ public final class PropertyLoader {
                              final Map<Object, Object> accumulator,
                              final UIDefaults currentDefaults, final IconLoader iconLoader) {
             return map(value);
+        }
+    }
+
+    public static class ReferenceInfo<T> extends Pair<String, T> {
+
+        public ReferenceInfo(final String key, final T value) {
+            super(key, value);
+        }
+
+        public String getReferenceKey() {
+            return getFirst();
+        }
+
+        public T getValue() {
+            return getSecond();
         }
     }
 }

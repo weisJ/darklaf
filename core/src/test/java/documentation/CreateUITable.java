@@ -91,7 +91,6 @@ public class CreateUITable {
 
     private String createTables(final Theme theme, final int ident) {
         UIDefaults defaults = setupThemeDefaults(theme);
-        defaults.entrySet().stream().filter(e -> e.getValue() instanceof Font).forEach(System.out::println);
 
         String misc = "__Misc__";
 
@@ -199,10 +198,11 @@ public class CreateUITable {
         String key = entry.getKey().toString();
         appendData(builder, key, ident + 1);
         Object value = entry.getValue();
-        if (value instanceof Pair) {
-            appendData(builder, parseValue(((Pair<?, ?>) value).getSecond()), ident + 1); // Value
-            appendData(builder, ((Pair<?, ?>) value).getFirst(), ident + 1); // Reference
-            builder.append(parsePreview(key, ((Pair<?, ?>) value).getSecond(), ident + 1));
+        if (value instanceof PropertyLoader.ReferenceInfo) {
+            PropertyLoader.ReferenceInfo<?> info = (PropertyLoader.ReferenceInfo<?>) value;
+            appendData(builder, parseValue(info.getValue()), ident + 1); // Value
+            appendData(builder, info.getReferenceKey(), ident + 1); // Reference
+            builder.append(parsePreview(key, info.getValue(), ident + 1));
         } else {
             appendData(builder, parseValue(value), ident + 1); // Value
             appendData(builder, "", ident + 1); // Reference
@@ -228,10 +228,7 @@ public class CreateUITable {
     }
 
     private Object getValue(final Object val) {
-        Object value = val;
-        while (value instanceof Pair) {
-            value = ((Pair<?, ?>) value).getSecond();
-        }
+        Object value = PropertyLoader.unpackReference(val);
         if (value instanceof UIDefaults.ActiveValue) {
             value = ((UIDefaults.ActiveValue) value).createValue(currentDefaults);
         }
@@ -306,10 +303,7 @@ public class CreateUITable {
     }
 
     private Color getColor(final UIDefaults defaults, final String key) {
-        Object obj = defaults.get(key);
-        while (obj instanceof Pair) {
-            obj = ((Pair<?, ?>) obj).getSecond();
-        }
+        Object obj = getValue(defaults.get(key));
         if (obj instanceof Color) return (Color) obj;
         return null;
     }
