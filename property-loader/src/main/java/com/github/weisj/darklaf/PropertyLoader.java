@@ -301,14 +301,22 @@ public final class PropertyLoader {
             } else {
                 break;
             }
+            if (val.isEmpty()) break;
         }
         if (base == null) base = parseExplicitFont(value);
         if (base == null && accumulator.get(key) instanceof Font) base = (Font) accumulator.get(key);
         if (base == null) base = currentDefaults.getFont(key);
         if (base == null) base = new Font(null, Font.PLAIN, 12);
-        if (size > 0) base = base.deriveFont((float) size);
-        if (style >= 0) base = base.deriveFont(style);
-        return new DarkFontUIResource(base.deriveFont(attributes));
+        if (size <= 0) size = base.getSize();
+        if (style < 0) style = base.getStyle();
+        Font font = base.deriveFont(style).deriveFont((float) size);
+        font = new DarkFontUIResource(font.deriveFont(attributes));
+        if (size != font.getSize()) {
+            throw new IllegalStateException("Font Sizes are not equal. Expected " + size + " but got "
+                                            + font.getSize());
+        }
+        assert base.getSize() == font.getSize();
+        return font;
     }
 
     private static Font parseExplicitFont(final String value) {

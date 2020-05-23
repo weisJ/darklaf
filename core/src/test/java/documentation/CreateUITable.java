@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -73,8 +74,8 @@ public class CreateUITable {
         workingFolder = FOLDER + theme.getPrefix() + "/";
         String os = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
         String htmlFile = workingFolder + "defaults_" + os + ".html";
-        new File(workingFolder).mkdirs();
-        new File(htmlFile).createNewFile();
+        Files.createDirectories(new File(workingFolder).toPath());
+        Files.createFile(new File(htmlFile).toPath());
 
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(htmlFile),
                                                                 StandardCharsets.UTF_8)) {
@@ -90,6 +91,7 @@ public class CreateUITable {
 
     private String createTables(final Theme theme, final int ident) {
         UIDefaults defaults = setupThemeDefaults(theme);
+        defaults.entrySet().stream().filter(e -> e.getValue() instanceof Font).forEach(System.out::println);
 
         String misc = "__Misc__";
 

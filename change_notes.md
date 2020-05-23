@@ -6,13 +6,14 @@
 - Balloons tooltips are now enabled by default for buttons.
 - Improved html style sheet.
 - On Windows (Vista and later) darklaf will now use the system font.
+- Better interoperability with custom cell renderers.
 - Improved selection painting.
   - Added property to control whether the selection is extended to the end of the text component.
     ````java
     textComp.putClientProperty(DarkTextUI.KEY_EXTEND_LINE_SELECTION, enabled);
     ````
 - Performance improvements.
-- New scrollbar appearance on macOS that more closely resembles the system appearance.
+- New scrollbar appearance on macOS that resembles the system appearance more closely.
 - Added rounded button variant.
   ````java
   button.putClientProperty(DarkButtonUI.KEY_ROUND, true);
