@@ -40,13 +40,14 @@ import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyValue;
+import com.github.weisj.darklaf.util.ResourceUtil;
 
 public class ThemeSettings implements ThemePreferenceListener {
 
     private static final LazyValue<ThemeSettings> instance = new LazyValue<>(ThemeSettings::new);
     private final JPanel contentPane;
     private final ThemeSettingsPanel settingsPanel;
-    private final ResourceBundle resourceBundle = ResourceBundle.getBundle("theme_settings");
+    private final ResourceBundle resourceBundle = ResourceUtil.getResourceBundle("theme_settings");
     private JDialog dialog;
 
     public static ThemeSettings getInstance() {

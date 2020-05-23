@@ -3,6 +3,7 @@
 ### New in this release
 - Support for insert text mode.
 - Text cursor will now show directional hints for bidi text.
+- Added cut/copy/paste context menu for text components.
 - Balloons tooltips are now enabled by default for buttons.
 - Improved html style sheet.
 - On Windows (Vista and later) darklaf will now use the system font.

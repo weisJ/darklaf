@@ -26,17 +26,21 @@ package com.github.weisj.darklaf.ui.text.popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.JTextComponent;
 
+import com.github.weisj.darklaf.util.ResourceUtil;
+
 public class DarkTextPopupMenu extends JPopupMenu implements UIResource {
 
     public DarkTextPopupMenu(final JTextComponent editor) {
-        add(new CutMenuItem("Cut", editor));
-        add(new CopyMenuItem("Copy", editor));
-        add(new PasteMenuItem("Paste", editor));
+        ResourceBundle bundle = ResourceUtil.getResourceBundle("actions", editor);
+        add(new CutMenuItem(bundle.getString("Actions.cut"), editor));
+        add(new CopyMenuItem(bundle.getString("Actions.copy"), editor));
+        add(new PasteMenuItem(bundle.getString("Actions.paste"), editor));
     }
 
     protected abstract static class EditMenuItem extends JMenuItem implements ActionListener {
