@@ -24,48 +24,34 @@
  */
 package com.github.weisj.darklaf.ui.text.popup;
 
-import java.awt.*;
-import java.util.ResourceBundle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.util.ResourceUtil;
+public abstract class EditMenuItem extends JMenuItem implements ActionListener {
 
-public class DarkTextPopupMenu extends JPopupMenu implements UIResource {
+    protected final JTextComponent editor;
 
-    private final JMenuItem cut;
-    private final JMenuItem copy;
-    private final JMenuItem paste;
+    public EditMenuItem(final String title, final JTextComponent editor) {
+        this.editor = editor;
+        setupIcons();
+        setText(title);
+        addActionListener(this);
+    }
 
-    public DarkTextPopupMenu(final JTextComponent editor) {
-        ResourceBundle bundle = ResourceUtil.getResourceBundle("actions", editor);
-        cut = new CutMenuItem(bundle.getString("Actions.cut"), editor);
-        copy = new CopyMenuItem(bundle.getString("Actions.copy"), editor);
-        paste = new PasteMenuItem(bundle.getString("Actions.paste"), editor);
-        add(cut);
-        add(copy);
-        add(paste);
+    protected void setupIcons() {}
+
+    @Override
+    public boolean isEnabled() {
+        return editor != null && editor.isEnabled() && editor.isEditable() && canPerformAction();
+    }
+
+    protected boolean canPerformAction() {
+        return true;
     }
 
     @Override
-    public void show(final Component invoker, final int x, final int y) {
-        updateMenuItems();
-        if (!(cut.isEnabled() || copy.isEnabled() || paste.isEnabled())) {
-            // No action available. Don't show the popup.
-            return;
-        }
-        super.show(invoker, x, y);
-    }
-
-    protected void updateMenuItems() {
-        updateMenuItem(cut);
-        updateMenuItem(copy);
-        updateMenuItem(paste);
-    }
-
-    protected void updateMenuItem(final JMenuItem item) {
-        item.setEnabled(item.isEnabled());
-    }
+    public void actionPerformed(final ActionEvent e) {}
 }

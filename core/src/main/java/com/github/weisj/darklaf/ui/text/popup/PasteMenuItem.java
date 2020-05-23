@@ -24,48 +24,31 @@
  */
 package com.github.weisj.darklaf.ui.text.popup;
 
-import java.awt.*;
-import java.util.ResourceBundle;
+import java.awt.event.ActionEvent;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.util.ResourceUtil;
 
-public class DarkTextPopupMenu extends JPopupMenu implements UIResource {
+public class PasteMenuItem extends EditMenuItem {
 
-    private final JMenuItem cut;
-    private final JMenuItem copy;
-    private final JMenuItem paste;
+    public PasteMenuItem(final JTextComponent editor) {
+        this(ResourceUtil.getResourceBundle("actions", editor).getString("Actions.paste"), editor);
+    }
 
-    public DarkTextPopupMenu(final JTextComponent editor) {
-        ResourceBundle bundle = ResourceUtil.getResourceBundle("actions", editor);
-        cut = new CutMenuItem(bundle.getString("Actions.cut"), editor);
-        copy = new CopyMenuItem(bundle.getString("Actions.copy"), editor);
-        paste = new PasteMenuItem(bundle.getString("Actions.paste"), editor);
-        add(cut);
-        add(copy);
-        add(paste);
+    public PasteMenuItem(final String title, final JTextComponent editor) {
+        super(title, editor);
     }
 
     @Override
-    public void show(final Component invoker, final int x, final int y) {
-        updateMenuItems();
-        if (!(cut.isEnabled() || copy.isEnabled() || paste.isEnabled())) {
-            // No action available. Don't show the popup.
-            return;
-        }
-        super.show(invoker, x, y);
+    protected void setupIcons() {
+        setIcon(UIManager.getIcon("TextComponent.paste.icon"));
+        setDisabledIcon(UIManager.getIcon("TextComponent.pasteDisabled.icon"));
     }
 
-    protected void updateMenuItems() {
-        updateMenuItem(cut);
-        updateMenuItem(copy);
-        updateMenuItem(paste);
-    }
-
-    protected void updateMenuItem(final JMenuItem item) {
-        item.setEnabled(item.isEnabled());
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+        if (editor != null) editor.paste();
     }
 }
