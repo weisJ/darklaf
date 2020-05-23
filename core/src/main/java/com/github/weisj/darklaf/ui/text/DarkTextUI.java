@@ -33,6 +33,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.*;
 
@@ -45,6 +46,7 @@ import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.text.action.DarkKeyTypedAction;
 import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
+import com.github.weisj.darklaf.ui.text.popup.DarkTextPopupMenu;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -116,6 +118,25 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
 
         installBorder();
+        installPopupMenu();
+    }
+
+    protected void installPopupMenu() {
+        JPopupMenu popupMenu = editor.getComponentPopupMenu();
+        if (popupMenu == null || popupMenu instanceof UIResource) {
+            editor.setComponentPopupMenu(createPopupMenu(editor));
+        }
+    }
+
+    protected JPopupMenu createPopupMenu(final JTextComponent textComponent) {
+        return new DarkTextPopupMenu(textComponent);
+    }
+
+    protected void uninstallPopupMenu() {
+        JPopupMenu popupMenu = editor.getComponentPopupMenu();
+        if (popupMenu instanceof UIResource) {
+            editor.setComponentOrientation(null);
+        }
     }
 
     protected void installBorder() {
@@ -136,6 +157,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         super.uninstallDefaults();
         uninstalling = true;
         uninstallBorder();
+        uninstallPopupMenu();
     }
 
     @Override
@@ -376,6 +398,11 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     public void focusLost(final FocusEvent e) {
         Caret caret = editor.getCaret();
+        JPopupMenu popupMenu = editor.getComponentPopupMenu();
+        Component other = e.getOppositeComponent();
+        MenuElement[] path = MenuSelectionManager.defaultManager().getSelectedPath();
+        if (popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other)
+            || path != null && path.length > 0 && path[0] == popupMenu) return;
         if (caret instanceof DarkCaret) {
             ((DarkCaret) caret).setPaintSelectionHighlight(false);
         }

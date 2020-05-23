@@ -62,6 +62,11 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     }
 
     @Override
+    protected JPopupMenu createPopupMenu(final JTextComponent textComponent) {
+        return null;
+    }
+
+    @Override
     protected boolean doPaintLeftIcon(final JTextComponent c) {
         return false;
     }
