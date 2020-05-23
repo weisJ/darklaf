@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.platform.windows;
 
 import com.github.weisj.darklaf.platform.AbstractLibrary;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class WindowsLibrary extends AbstractLibrary {
@@ -40,7 +41,7 @@ public class WindowsLibrary extends AbstractLibrary {
     }
 
     protected WindowsLibrary() {
-        super(PATH, DLL_NAME);
+        super(PATH, DLL_NAME, LogUtil.getLogger(WindowsLibrary.class));
     }
 
     @Override

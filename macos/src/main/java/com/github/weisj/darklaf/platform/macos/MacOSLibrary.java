@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.platform.macos;
 
 import com.github.weisj.darklaf.platform.AbstractLibrary;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSLibrary extends AbstractLibrary {
@@ -38,7 +39,7 @@ public class MacOSLibrary extends AbstractLibrary {
     }
 
     protected MacOSLibrary() {
-        super(PATH, DLL_NAME);
+        super(PATH, DLL_NAME, LogUtil.getLogger(MacOSLibrary.class));
     }
 
     @Override

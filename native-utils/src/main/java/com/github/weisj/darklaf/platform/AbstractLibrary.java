@@ -35,10 +35,14 @@ public abstract class AbstractLibrary {
     private boolean loaded;
     private boolean attemptedLoad;
 
-    protected AbstractLibrary(final String path, final String libraryName) {
+    public AbstractLibrary(final String path, final String libraryName) {
+        this(path, libraryName, Logger.getLogger(libraryName));
+    }
+
+    public AbstractLibrary(final String path, final String libraryName, final Logger logger) {
         this.path = path;
         this.libraryName = libraryName;
-        logger = Logger.getLogger(libraryName);
+        this.logger = logger;
     }
 
     /**
