@@ -55,33 +55,54 @@ public interface ComponentDemo {
         showDemo(demo, null);
     }
 
-    static void showDemo(final ComponentDemo demo, final Dimension dimension) {
-        SwingUtilities.invokeLater(() -> {
-            LafManager.setDecorationsEnabled(true);
-            LafManager.install(demo.createTheme());
-            JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.addWindowListener(demo.createWindowListener());
-            frame.setTitle(demo.getTitle());
-            frame.setContentPane(demo.createComponent());
-            frame.setJMenuBar(demo.createMenuBar());
-            Image image = demo.getIconImage();
-            if (image != null) frame.setIconImage(image);
+    static void showDemo(final ComponentDemo demo, final boolean asDialog) {
+        showDemo(demo, null, asDialog);
+    }
 
-            frame.pack();
+    static void showDemo(final ComponentDemo demo, final Dimension dimension) {
+        showDemo(demo, dimension, false);
+    }
+
+    static void showDemo(final ComponentDemo demo, final Dimension dimension, final boolean asDialog) {
+        SwingUtilities.invokeLater(() -> {
+            if (!LafManager.isInstalled()) {
+                LafManager.install(demo.createTheme());
+            }
+            Window window;
+            if (!asDialog) {
+                JFrame frame = new JFrame();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.addWindowListener(demo.createWindowListener());
+                frame.setTitle(demo.getTitle());
+                frame.setContentPane(demo.createComponent());
+                frame.setJMenuBar(demo.createMenuBar());
+                window = frame;
+            } else {
+                JDialog dialog = new JDialog();
+                dialog.setModalityType(Dialog.ModalityType.MODELESS);
+                dialog.setTitle(demo.getTitle());
+                dialog.setContentPane(demo.createComponent());
+                dialog.setJMenuBar(demo.createMenuBar());
+                window = dialog;
+            }
+
+            Image image = demo.getIconImage();
+            if (image != null) window.setIconImage(image);
+
+            window.pack();
             if (dimension == null) {
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
                 Dimension dim = new Dimension(screenSize.width / 2,
                                               screenSize.height / 2);
-                Dimension targetSize = frame.getSize();
+                Dimension targetSize = window.getSize();
                 targetSize.width = Math.min(targetSize.width, dim.width);
                 targetSize.height = Math.min(targetSize.height, dim.height);
-                frame.setSize(targetSize);
+                window.setSize(targetSize);
             } else {
-                frame.setSize(dimension);
+                window.setSize(dimension);
             }
-            frame.setVisible(true);
-            frame.setLocationRelativeTo(null);
+            window.setVisible(true);
+            window.setLocationRelativeTo(null);
         });
     }
 

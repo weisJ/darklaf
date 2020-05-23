@@ -22,6 +22,8 @@
  * SOFTWARE.
  *
  */
+package ui;
+
 import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;

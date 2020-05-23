@@ -290,6 +290,15 @@ public final class LafManager {
     }
 
     /**
+     * Checks whether darklaf is currently installed.
+     *
+     * @return true if installed.
+     */
+    public static boolean isInstalled() {
+        return theme != null && UIManager.getLookAndFeel() instanceof DarkLaf;
+    }
+
+    /**
      * Set the current theme.
      *
      * @param theme The theme to use.
