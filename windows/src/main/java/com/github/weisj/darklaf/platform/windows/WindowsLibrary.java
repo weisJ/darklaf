@@ -46,7 +46,7 @@ public class WindowsLibrary extends AbstractLibrary {
 
     @Override
     protected String getLibraryPath() {
-        if (!(SystemInfo.isX64 || SystemInfo.isX86)) {
+        if (SystemInfo.undefinedArchitecture) {
             logger.warning("Could not determine jre model '"
                            + SystemInfo.jreArchitecture
                            + "'. Native features will be disabled");

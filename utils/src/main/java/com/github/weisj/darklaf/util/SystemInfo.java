@@ -52,7 +52,7 @@ public class SystemInfo {
     public static final String jreArchitecture = System.getProperty("sun.arch.data.model");
     public static final boolean isX86;
     public static final boolean isX64;
-    public static final boolean isUndefined;
+    public static final boolean undefinedArchitecture;
 
     public static final boolean isJava9OrGreater;
 
@@ -78,7 +78,7 @@ public class SystemInfo {
         isSunJvm = isSunJvm();
         isX64 = X64.equals(jreArchitecture);
         isX86 = X86.equals(jreArchitecture);
-        isUndefined = !isX86 & !isX64;
+        undefinedArchitecture = !isX86 && !isX64;
         isMacOSCatalina = isMac && isOsVersionAtLeast("10.15");
         isMacOSMojave = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.14"));
         isMacOSYosemite = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.10"));
