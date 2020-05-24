@@ -32,9 +32,10 @@ on:
     branches:
       - '*'
 jobs:
-  strategy:
-    matrix:
-      os: [windows-latest, macos-latest, ubuntu-latest]
+  gradle:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
