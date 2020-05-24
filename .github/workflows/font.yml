@@ -22,15 +22,12 @@
 # SOFTWARE.
 #
 #
-name: Documentation
+name: Fonts
+
 on:
   push:
     branches:
       - 'master'
-    paths:
-      - '**.properties'
-      - '**/CreateUITable.java'
-
 jobs:
   gradle:
     strategy:
@@ -45,11 +42,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: :darklaf-core:makeDocumentation -PskipAutostyle
-      - name: Upload documentation
+      - name: Build
+        run: ./gradlew :darklaf-core:fontTest -PskipAutostyle
+      - name: Upload Results
         uses: actions/upload-artifact@v1
         with:
-          name: ${{ matrix.os }}-documentation
-          path: build/documentation
+          name: ${{ matrix.os }}-font_test
+          path: build/font_test

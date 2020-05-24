@@ -31,6 +31,17 @@ val makeDocumentation by tasks.registering(JavaExec::class) {
     classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
 }
 
+val fontTest by tasks.registering(JavaExec::class) {
+    group = "Verification"
+    description = "Creates font sample images"
+    dependsOn(tasks.testClasses)
+
+    workingDir = File(project.rootDir, "build")
+    workingDir.mkdirs()
+    main = "FontTest"
+    classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
+}
+
 tasks.shadowJar {
     exclude("help/")
     exclude("icons/")
@@ -63,7 +74,7 @@ abstract class DemoTask : JavaExec() {
 
 val runDemo by tasks.registering(DemoTask::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
-    description = "Launches demo (e.g. UIDemo, ui.table.TableDemo, ui.button.ButtonDemo, ...)"
+    description = "Launches demo (e.g. DemoLauncher, ui.table.TableDemo, ui.button.ButtonDemo, ...)"
 
     classpath(sourceSets.test.map { it.runtimeClasspath })
 
