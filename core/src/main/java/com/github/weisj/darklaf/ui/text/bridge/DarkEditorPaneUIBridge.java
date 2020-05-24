@@ -42,17 +42,29 @@ import com.github.weisj.darklaf.util.PropertyKey;
  */
 public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
 
-    private static final DummyEditorPane editorPane = new DummyEditorPane();
-    protected static DummyTextUIMethods basicEditorPaneUI = new DummyEditorPaneUI();
+    private static final DummyEditorPane shareDummyEditorPane = new DummyEditorPane();
+    private static final DummyTextUIMethods sharedDummyUI = new DummyEditorPaneUI();
 
+    private DummyEditorPane editorPane;
+    private DummyTextUIMethods basicEditorPaneUI;
     private PropertyChangeListener propertyChangeListener;
 
     @Override
     public void installUI(final JComponent c) {
+        editorPane = createDummyEditorPane();
+        basicEditorPaneUI = createDummyUI();
         editorPane.setEditorPane((JEditorPane) c);
         basicEditorPaneUI.installUI(editorPane);
         super.installUI(c);
         updateDisplayProperties();
+    }
+
+    protected DummyTextUIMethods createDummyUI() {
+        return sharedDummyUI;
+    }
+
+    protected DummyEditorPane createDummyEditorPane() {
+        return shareDummyEditorPane;
     }
 
     @Override

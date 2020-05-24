@@ -22,29 +22,28 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.text;
+package com.github.weisj.darklaf.ui.text.bridge;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 
-import com.github.weisj.darklaf.ui.text.bridge.DarkTextPaneUIBridge;
+import com.github.weisj.darklaf.ui.text.DarkEditorPaneUI;
+import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPane;
+import com.github.weisj.darklaf.ui.text.dummy.DummyTextPaneUI;
+import com.github.weisj.darklaf.ui.text.dummy.DummyTextUIMethods;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTextPaneUI extends DarkTextPaneUIBridge {
+public abstract class DarkTextPaneUIBridge extends DarkEditorPaneUI {
 
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkTextPaneUI();
+    private static final DummyEditorPane sharedDummyTextPane = new DummyEditorPane();
+    private static final DummyTextUIMethods sharedDummyUI = new DummyTextPaneUI();
+
+    protected DummyTextUIMethods createDummyUI() {
+        return sharedDummyUI;
     }
 
-    @Override
-    protected DarkCaret.CaretStyle getDefaultCaretStyle() {
-        return DarkCaret.CaretStyle.THICK_VERTICAL_LINE_STYLE;
-    }
-
-    @Override
-    protected String getPropertyPrefix() {
-        return "TextPane";
+    protected DummyEditorPane createDummyEditorPane() {
+        return sharedDummyTextPane;
     }
 }
