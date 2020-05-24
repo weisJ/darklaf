@@ -145,9 +145,9 @@ public final class ImageUtil {
         }
         g2d.translate(-bounds.x, -bounds.y);
         if (print) {
-            c.printAll(g2d);
+            c.print(g2d);
         } else {
-            c.paintAll(g2d);
+            c.paint(g2d);
         }
 
         g2d.dispose();
