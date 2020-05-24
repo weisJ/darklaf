@@ -48,7 +48,7 @@ public class ToolTipDemo implements ComponentDemo {
         DemoPanel panel = new DemoPanel(button);
         ToolTipContext context = new ToolTipContext(button).setAlignment(Alignment.CENTER)
                                                            .setCenterAlignment(Alignment.SOUTH);
-        button.putClientProperty(DarkTooltipUI.KEY_CONTEXT, context);
+        ToolTipContext.setDefaultContext(context);
         button.setToolTipText("This is the ToolTip demo text!");
         button.putClientProperty(DarkTooltipUI.KEY_STYLE, DarkTooltipUI.VARIANT_BALLOON);
 
