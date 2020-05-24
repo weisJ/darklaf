@@ -4,6 +4,7 @@
 - Support for insert text mode.
 - Text cursor will now show directional hints for bidi text.
 - Added cut/copy/paste context menu for text components.
+- On macOS Catalina the default font will now be `Helvetica Neue` due to karning issues with the `San Francisco` font.
 - Balloons tooltips are now enabled by default for buttons.
 - Improved html style sheet.
 - On Windows (Vista and later) darklaf will now use the system font.
