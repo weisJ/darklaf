@@ -26,10 +26,10 @@ package com.github.weisj.darklaf.ui.text.dummy;
 
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.plaf.basic.BasicEditorPaneUI;
+import javax.swing.plaf.basic.BasicTextPaneUI;
 import javax.swing.text.JTextComponent;
 
-public class DummyEditorPaneUI extends BasicEditorPaneUI implements DummyTextUIMethods {
+public class DummyTextPaneUI extends BasicTextPaneUI implements DummyTextUIMethods {
 
     @Override
     protected void installDefaults() {}

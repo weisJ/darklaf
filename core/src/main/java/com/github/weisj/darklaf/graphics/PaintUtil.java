@@ -33,6 +33,8 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.*;
 import javax.swing.text.View;
 
+import sun.swing.SwingUtilities2;
+
 import com.github.weisj.darklaf.ui.html.DarkHTML;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.Scale;
@@ -249,9 +251,13 @@ public class PaintUtil {
     }
 
     public static <T extends JComponent> void drawString(final Graphics g, final T c,
+                                                         final String text, final Rectangle textRect) {
+        drawString(g, c, text, textRect, SwingUtilities2.getFontMetrics(c, g));
+    }
+
+    public static <T extends JComponent> void drawString(final Graphics g, final T c,
                                                          final String text, final Rectangle textRect,
-                                                         final FontMetrics fm,
-                                                         final PaintMethod<T> paintMethod) {
+                                                         final FontMetrics fm) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);
         Font font = c.getFont();
@@ -262,7 +268,34 @@ public class PaintUtil {
                 v.paint(g, textRect);
             } else {
                 textRect.y += fm.getAscent();
-                paintMethod.paintText(g, c, textRect, text);
+                SwingUtilities2.drawString(c, g, text, textRect.x, textRect.y);
+            }
+        }
+        context.restore();
+    }
+
+    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
+                                                                        final String text, final int mnemIndex,
+                                                                        final Rectangle textRect) {
+        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, SwingUtilities2.getFontMetrics(c, g));
+    }
+
+    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
+                                                                        final String text, final int mnemIndex,
+                                                                        final Rectangle textRect,
+                                                                        final FontMetrics fm) {
+        GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
+        g.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);
+        Font font = c.getFont();
+        g.setFont(font);
+
+        if (text != null && !text.equals("")) {
+            View v = PropertyUtil.getObject(c, DarkHTML.propertyKey, View.class);
+            if (v != null) {
+                v.paint(g, textRect);
+            } else {
+                textRect.y += fm.getAscent();
+                SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemIndex, textRect.x, textRect.y);
             }
         }
         context.restore();
@@ -270,11 +303,6 @@ public class PaintUtil {
 
     public static void fillRect(final Graphics g, final Rectangle r) {
         g.fillRect(r.x, r.y, r.width, r.height);
-    }
-
-    public interface PaintMethod<T extends JComponent> {
-
-        void paintText(final Graphics g, final T c, final Rectangle rect, final String text);
     }
 
     public enum Outline {

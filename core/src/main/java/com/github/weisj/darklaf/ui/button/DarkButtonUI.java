@@ -273,23 +273,14 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    @Override
-    protected void paintText(final Graphics g, final JComponent c,
-                             final Rectangle textRect, final String text) {
-        AbstractButton button = (AbstractButton) c;
-        ButtonModel model = button.getModel();
-        g.setColor(getForeground(button));
-        int mnemonicIndex = button.getDisplayedMnemonicIndex();
+    protected void paintText(final Graphics g, final AbstractButton b, final String text) {
+        ButtonModel model = b.getModel();
+        g.setColor(getForeground(b));
+        int mnemonicIndex = b.getDisplayedMnemonicIndex();
         if (!model.isEnabled()) {
             mnemonicIndex = -1;
         }
-        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, mnemonicIndex,
-                                                  textRect.x + getTextShiftOffset(),
-                                                  textRect.y + getTextShiftOffset());
-    }
-
-    protected void paintText(final Graphics g, final AbstractButton b, final String text) {
-        PaintUtil.drawString(g, b, text, textRect, SwingUtilities2.getFontMetrics(b, g), this::paintText);
+        PaintUtil.drawStringUnderlineCharAt(g, b, text, mnemonicIndex, textRect);
     }
 
     protected void paintIcon(final Graphics g, final AbstractButton b, final JComponent c) {

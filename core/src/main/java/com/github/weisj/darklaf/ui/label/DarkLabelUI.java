@@ -78,6 +78,8 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
         String text = label.getText();
         Icon icon = getIcon(label);
 
+        paintBackground(g, c);
+
         if ((icon == null) && (text == null)) {
             return;
         }
@@ -90,34 +92,34 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
             config.restoreClip();
         }
 
-        PaintUtil.drawString(g, c, clippedText, paintTextR, fm, (g2, c2, rect, t) -> {
-            if (label.isEnabled()) {
-                paintEnabledText(label, g2, t, rect.x, rect.y);
-            } else {
-                paintDisabledText(label, g2, t, rect.x, rect.y);
-            }
-        });
+        paintText(g, label, fm, clippedText);
     }
 
-    @Override
-    protected void paintEnabledText(final JLabel l, final Graphics g, final String s,
-                                    final int textX, final int textY) {
-        int mnemIndex = l.getDisplayedMnemonicIndex();
-        g.setColor(l.getForeground());
-        SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex,
-                                                  textX, textY);
+    protected void paintBackground(final Graphics g, final JComponent c) {}
+
+    public void paintText(final Graphics g, final JLabel label, final FontMetrics fm, final String clippedText) {
+        int mnemIndex = label.isEnabled() ? label.getDisplayedMnemonicIndex() : -1;
+        g.setColor(getForeground(label));
+        PaintUtil.drawStringUnderlineCharAt(g, label, clippedText, mnemIndex, paintTextR, fm);
     }
 
-    @Override
-    protected void paintDisabledText(final JLabel l, final Graphics g, final String s,
-                                     final int textX, final int textY) {
-        int accChar = l.getDisplayedMnemonicIndex();
-        g.setColor(l.getForeground());
-        if (!DarkUIUtil.isInCell(l)) {
-            g.setColor(inactiveForeground);
+    protected Color getForeground(final Component label) {
+        if (label.isEnabled()) {
+            return getEnabledForeground(label);
+        } else {
+            return getDisabledForeground(label);
         }
-        SwingUtilities2.drawStringUnderlineCharAt(l, g, s, accChar,
-                                                  textX, textY);
+    }
+
+    protected Color getEnabledForeground(final Component label) {
+        return label.getForeground();
+    }
+
+    protected Color getDisabledForeground(final Component label) {
+        if (!DarkUIUtil.isInCell(label)) {
+            return inactiveForeground;
+        }
+        return getEnabledForeground(label);
     }
 
     protected Icon getIcon(final JLabel label) {

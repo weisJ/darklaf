@@ -165,13 +165,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
                                  final Color disabledTextColor) {
         g.setFont(b.getFont());
         g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
-        PaintUtil.drawString(g, b, text, textRect, fm, (g2, c2, rect, t) -> {
-            int textX = rect.x;
-            int textY = rect.y;
-            SwingUtilities2.drawStringUnderlineCharAt(b, g2, t,
-                                                      b.getDisplayedMnemonicIndex(),
-                                                      textX, textY);
-        });
+        int mnemIndex = b.isEnabled() ? b.getDisplayedMnemonicIndex() : -1;
+        PaintUtil.drawStringUnderlineCharAt(g, b, text, mnemIndex, textRect, fm);
     }
 
     protected Icon getStateIcon(final AbstractButton b) {

@@ -36,8 +36,6 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.View;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -187,8 +185,6 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     protected void paintText(final Graphics g, final JComponent c) {
-        Font font = c.getFont();
-        FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g, font);
         Dimension size = c.getSize();
 
         g.setColor(c.getForeground());
@@ -198,9 +194,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         Rectangle paintTextR = new Rectangle(insets.left, insets.top,
                                              size.width - (insets.left + insets.right),
                                              size.height - (insets.top + insets.bottom));
-        PaintUtil.drawString(g, c, tipText, paintTextR, metrics, (g2, c2, r, t) -> {
-            SwingUtilities2.drawString(c, g, t, r.x, r.y);
-        });
+        PaintUtil.drawString(g, c, tipText, paintTextR);
     }
 
     protected String getTipText(final JToolTip c) {

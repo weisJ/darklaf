@@ -57,7 +57,7 @@ public class SampleRenderer extends JLabel implements TableCellRenderer {
         setText("");
 
         if (sample instanceof Color) {
-            setBackground((Color) sample);
+            setBackground(new Color(((Color) sample).getRGB()));
         } else if (sample instanceof Border) {
             setBorder((Border) sample);
         } else if (sample instanceof Font) {

@@ -24,21 +24,24 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+
+import com.github.weisj.darklaf.ui.text.dummy.DummyTextPaneUI;
 
 /**
  * @author Jannis Weis
  */
 public class DarkTextPaneUI extends DarkEditorPaneUI {
 
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkTextPaneUI();
+    static {
+        basicEditorPaneUI = new DummyTextPaneUI();
     }
 
-    @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
+    public static ComponentUI createUI(final JComponent c) {
+        return new DarkTextPaneUI();
     }
 
     @Override

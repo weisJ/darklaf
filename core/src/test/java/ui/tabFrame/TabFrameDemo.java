@@ -51,7 +51,6 @@ public class TabFrameDemo implements ComponentDemo {
         NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {
             {
                 setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));
-                setFont(new Font(Font.MONOSPACED, Font.PLAIN, getFont().getSize()));
             }
         });
         NumberingPane numbering = numberPane.getNumberingPane();

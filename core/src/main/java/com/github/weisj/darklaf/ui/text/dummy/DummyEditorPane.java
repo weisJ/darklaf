@@ -46,6 +46,14 @@ public class DummyEditorPane extends JEditorPane {
 
     public void setEditorPane(final JEditorPane editorPane) {
         this.editorPane = editorPane;
+        if (editorPane != null) {
+            copyProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
+            copyProperty(JEditorPane.W3C_LENGTH_UNITS);
+        }
+    }
+
+    protected void copyProperty(final String key) {
+        putClientProperty(key, editorPane.getClientProperty(key));
     }
 
     public PropertyChangeListener getPropertyChangeListener() {

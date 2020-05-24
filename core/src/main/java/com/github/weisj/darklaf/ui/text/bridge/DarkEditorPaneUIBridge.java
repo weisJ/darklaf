@@ -34,6 +34,7 @@ import javax.swing.text.JTextComponent;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPane;
 import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPaneUI;
+import com.github.weisj.darklaf.ui.text.dummy.DummyTextUIMethods;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
@@ -42,7 +43,7 @@ import com.github.weisj.darklaf.util.PropertyKey;
 public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
 
     private static final DummyEditorPane editorPane = new DummyEditorPane();
-    private static final DummyEditorPaneUI basicEditorPaneUI = new DummyEditorPaneUI();
+    protected static DummyTextUIMethods basicEditorPaneUI = new DummyEditorPaneUI();
 
     private PropertyChangeListener propertyChangeListener;
 

@@ -135,7 +135,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     protected void uninstallPopupMenu() {
         JPopupMenu popupMenu = editor.getComponentPopupMenu();
         if (popupMenu instanceof UIResource) {
-            editor.setComponentOrientation(null);
+            editor.setComponentPopupMenu(null);
         }
     }
 

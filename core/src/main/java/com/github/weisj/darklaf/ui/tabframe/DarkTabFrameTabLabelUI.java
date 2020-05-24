@@ -36,13 +36,9 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabLabel;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.listener.HoverListener;
 import com.github.weisj.darklaf.ui.label.DarkLabelUI;
@@ -79,42 +75,9 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     @Override
-    public void paint(final Graphics g, final JComponent c) {
-        GraphicsContext config = new GraphicsContext(g);
+    protected void paintBackground(final Graphics g, final JComponent c) {
         g.setColor(getBackground(tabComponent));
         g.fillRect(0, 0, tabComponent.getWidth(), tabComponent.getHeight());
-
-        JLabel label = (JLabel) c;
-        String text = label.getText();
-        Icon icon = getIcon();
-
-        if ((icon == null) && (text == null)) {
-            return;
-        }
-
-        FontMetrics fm = SwingUtilities2.getFontMetrics(label, g);
-        String clippedText = layout(label, fm, c.getWidth(), c.getHeight());
-
-        if (icon != null) {
-            icon.paintIcon(c, g, paintIconR.x, paintIconR.y);
-            config.restoreClip();
-        }
-
-        PaintUtil.drawString(g, c, clippedText, paintTextR, fm, (g2, c2, rect, t) -> {
-            if (label.isEnabled()) {
-                paintEnabledText(label, g2, t, rect.x, rect.y);
-            } else {
-                paintDisabledText(label, g2, t, rect.x, rect.y);
-            }
-        });
-    }
-
-    @Override
-    protected void paintEnabledText(final JLabel l, final Graphics g, final String s,
-                                    final int textX, final int textY) {
-        int mnemIndex = l.getDisplayedMnemonicIndex();
-        g.setColor(getForeground(tabComponent));
-        SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex, textX, textY);
     }
 
     @Override
@@ -259,7 +222,12 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
                 : tab.getBackground();
     }
 
-    public Color getForeground(final TabFrameTabLabel tab) {
+    @Override
+    protected Color getEnabledForeground(final Component label) {
+        return getTabForeground((TabFrameTabLabel) label);
+    }
+
+    public Color getTabForeground(final TabFrameTabLabel tab) {
         if (printing) return tab.getForeground();
         return tab.isSelected()
                 ? selectedFontColor
@@ -268,7 +236,8 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
                 : tab.getForeground();
     }
 
-    protected Icon getIcon() {
+    @Override
+    protected Icon getIcon(final JLabel label) {
         Icon icon = (tabComponent.isEnabled()) ? tabComponent.getIcon() : tabComponent.getDisabledIcon();
         rotatableIcon.setIcon(icon);
         if (rotatableIcon.getOrientation() == null) {

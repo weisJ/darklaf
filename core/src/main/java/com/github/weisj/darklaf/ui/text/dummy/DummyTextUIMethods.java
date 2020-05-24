@@ -26,40 +26,15 @@ package com.github.weisj.darklaf.ui.text.dummy;
 
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.plaf.basic.BasicEditorPaneUI;
 import javax.swing.text.JTextComponent;
 
-public class DummyEditorPaneUI extends BasicEditorPaneUI implements DummyTextUIMethods {
+public interface DummyTextUIMethods {
 
-    @Override
-    protected void installDefaults() {}
+    void installKeyBoardActionsReal();
 
-    @Override
-    protected void installListeners() {}
+    void installUI(final JTextComponent editor);
 
-    @Override
-    protected void modelChanged() {}
+    void propertyChange(final PropertyChangeEvent event);
 
-    @Override
-    protected void installKeyboardActions() {}
-
-    @Override
-    public void installKeyBoardActionsReal() {
-        super.installKeyboardActions();
-    }
-
-    @Override
-    public void installUI(final JTextComponent editor) {
-        super.installUI(editor);
-    }
-
-    @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
-        super.propertyChange(evt);
-    }
-
-    @Override
-    public void uninstallUI(final JTextComponent editor) {
-        super.uninstallUI(editor);
-    }
+    void uninstallUI(final JTextComponent editor);
 }
