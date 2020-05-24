@@ -150,11 +150,6 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private Font mapWindowsFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
         if (!SystemInfo.isWindowsVista) return font;
-        /*
-         * Java 8 doesn't properly handle the font in tooltips when using the system font.
-         * The result always looks bold. Revert to the default font in this case.
-         */
-        if ("ToolTip.font".equals(entry.getKey()) && !SystemInfo.isJava9OrGreater) return font;
         Font windowsFont = new Font(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);

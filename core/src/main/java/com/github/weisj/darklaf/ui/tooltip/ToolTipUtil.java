@@ -134,15 +134,15 @@ public class ToolTipUtil {
     }
 
     protected static ToolTipContext getToolTipContext(final JToolTip tooltip) {
-        Object context = tooltip.getClientProperty(DarkTooltipUI.KEY_CONTEXT);
+        Object context = tooltip.getClientProperty(DarkToolTipUI.KEY_CONTEXT);
         if (context instanceof ToolTipContext) {
             return (ToolTipContext) context;
         }
-        context = tooltip.getComponent().getClientProperty(DarkTooltipUI.KEY_CONTEXT);
+        context = tooltip.getComponent().getClientProperty(DarkToolTipUI.KEY_CONTEXT);
         if (context instanceof ToolTipContext) {
             return (ToolTipContext) context;
         }
-        Object style = tooltip.getComponent().getClientProperty(DarkTooltipUI.KEY_STYLE);
+        Object style = tooltip.getComponent().getClientProperty(DarkToolTipUI.KEY_STYLE);
         if (ToolTipStyle.BALLOON.equals(ToolTipStyle.parse(style))) {
             return ToolTipContext.getDefaultContext();
         }

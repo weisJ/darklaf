@@ -36,10 +36,13 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.View;
 
+import sun.swing.SwingUtilities2;
+
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -48,7 +51,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /**
  * @author Jannis Weis
  */
-public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener,
+public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener,
                            ToolTipConstants {
 
     protected static final float MAX_ALPHA = 1.0f;
@@ -109,7 +112,7 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         if (PropertyUtil.getBooleanProperty(c, KEY_PLAIN_TOOLTIP)) {
             return BasicToolTipUI.createUI(c);
         } else {
-            return new DarkTooltipUI();
+            return new DarkToolTipUI();
         }
     }
 
@@ -125,7 +128,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         toolTip.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, true);
         toolTip.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
         toolTip.putClientProperty(DarkPopupFactory.KEY_FORCE_HEAVYWEIGHT, true);
-        // toolTip.putClientProperty(DarkPopupFactory.KEY_OPAQUE, false);
         fadeAnimator = new FadeInAnimator();
         c.setOpaque(false);
         DarkTooltipBorder border = new DarkTooltipBorder();
@@ -180,8 +182,33 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
             Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
             ((Graphics2D) g).fill(area);
         }
-        super.paint(g, c);
+        paintText(g, c);
         context.restore();
+    }
+
+    protected void paintText(final Graphics g, final JComponent c) {
+        Font font = c.getFont();
+        FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g, font);
+        Dimension size = c.getSize();
+
+        g.setColor(c.getForeground());
+        String tipText = getTipText((JToolTip) c);
+
+        Insets insets = c.getInsets();
+        Rectangle paintTextR = new Rectangle(insets.left, insets.top,
+                                             size.width - (insets.left + insets.right),
+                                             size.height - (insets.top + insets.bottom));
+        PaintUtil.drawString(g, c, tipText, paintTextR, metrics, (g2, c2, r, t) -> {
+            SwingUtilities2.drawString(c, g, t, r.x, r.y);
+        });
+    }
+
+    protected String getTipText(final JToolTip c) {
+        String tipText = c.getTipText();
+        if (tipText == null) {
+            tipText = "";
+        }
+        return tipText;
     }
 
     public Dimension getPreferredSize(final JComponent c) {
@@ -194,10 +221,10 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
         if ((text != null) && !text.equals("")) {
             View v = (View) c.getClientProperty(PropertyKey.HTML);
             if (v != null) {
-                prefSize.width += (int) v.getPreferredSpan(View.X_AXIS) + 6;
+                prefSize.width += (int) v.getPreferredSpan(View.X_AXIS);
                 prefSize.height += (int) v.getPreferredSpan(View.Y_AXIS);
             } else {
-                prefSize.width += fm.stringWidth(text) + 6;
+                prefSize.width += fm.stringWidth(text);
                 prefSize.height += fm.getHeight();
             }
         }
@@ -282,8 +309,6 @@ public class DarkTooltipUI extends BasicToolTipUI implements PropertyChangeListe
                         if (tipText != null && !tipText.startsWith("<html>")) {
                             if (tipText.contains("\n")) {
                                 tooltip.setTipText("<html>" + tipText.replaceAll("\n", "<\\br>") + "</html>");
-                            } else {
-                                tooltip.setTipText("<html><body><nobr>" + tipText + "</nobr></body></html>");
                             }
                         } else {
                             tooltip.setTipText(tipText);

@@ -171,6 +171,11 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         config.restore();
     }
 
+    @Override
+    protected void paintText(final Graphics g, final JMenuItem menuItem, final Rectangle textRect, final String text) {
+        super.paintText(g, menuItem, textRect, text);
+    }
+
     protected Color getAcceleratorForeground(final AbstractButton b) {
         ButtonModel model = b.getModel();
         if (!model.isEnabled()) return disabledForeground;

@@ -33,7 +33,7 @@ import ui.DemoResources;
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.util.Alignment;
 
 public class ToolTipDemo implements ComponentDemo {
@@ -50,7 +50,7 @@ public class ToolTipDemo implements ComponentDemo {
                                                            .setCenterAlignment(Alignment.SOUTH);
         ToolTipContext.setDefaultContext(context);
         button.setToolTipText("This is the ToolTip demo text!");
-        button.putClientProperty(DarkTooltipUI.KEY_STYLE, DarkTooltipUI.VARIANT_BALLOON);
+        button.putClientProperty(DarkToolTipUI.KEY_STYLE, DarkToolTipUI.VARIANT_BALLOON);
 
         JPanel controlPanel = panel.addControls(3);
 
@@ -78,7 +78,7 @@ public class ToolTipDemo implements ComponentDemo {
         controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {
             {
                 setSelectedItem(ToolTipStyle.BALLOON);
-                addItemListener(e -> button.putClientProperty(DarkTooltipUI.KEY_STYLE, e.getItem()));
+                addItemListener(e -> button.putClientProperty(DarkToolTipUI.KEY_STYLE, e.getItem()));
             }
         }, "sgx");
         controlPanel.add(new JLabel("Alignment:", JLabel.RIGHT));

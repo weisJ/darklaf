@@ -26,7 +26,7 @@ package com.github.weisj.darklaf.components.tooltip;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.LazyValue;
 
@@ -47,8 +47,8 @@ public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAw
     }
 
     private void init() {
-        putClientProperty(DarkTooltipUI.KEY_CONTEXT, getToolTipContext());
-        putClientProperty(DarkTooltipUI.KEY_STYLE, ToolTipStyle.BALLOON);
+        putClientProperty(DarkToolTipUI.KEY_CONTEXT, getToolTipContext());
+        putClientProperty(DarkToolTipUI.KEY_STYLE, ToolTipStyle.BALLOON);
     }
 
     public TooltipAwareToggleButton(final Icon icon) {

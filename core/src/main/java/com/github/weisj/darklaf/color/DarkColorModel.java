@@ -70,6 +70,19 @@ public abstract class DarkColorModel {
         return new char[]{Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE};
     }
 
+    public String[] getFullLabelDescriptorsAfter() {
+        char[] after = getLabelDescriptorsAfter();
+        String[] fullAfter = new String[after.length];
+        for (int i = 0; i < fullAfter.length; i++) {
+            if (after[i] != Character.MIN_VALUE) {
+                fullAfter[i] = String.valueOf(after[i]);
+            } else {
+                fullAfter[i] = "";
+            }
+        }
+        return fullAfter;
+    }
+
     public int[] getValuesFromColor(final Color color) {
         return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
     }

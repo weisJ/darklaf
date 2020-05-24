@@ -27,7 +27,6 @@ package com.github.weisj.darklaf.ui.slider;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
@@ -108,6 +107,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected Icon volume3Inactive;
     protected Icon volume4Inactive;
 
+    protected int focusBorderSize;
     protected RoundRectangle2D trackShape = new RoundRectangle2D.Double();
 
     public DarkSliderUI(final JSlider b) {
@@ -293,9 +293,22 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     protected void adjustRect(final Rectangle rectangle, final boolean outwards) {
         boolean horizontal = slider.getOrientation() == JSlider.HORIZONTAL;
-        if (!horizontal) return;
+
+        if (horizontal) {
+            boolean ltr = slider.getComponentOrientation().isLeftToRight();
+            int left = ltr ? focusInsets.left : focusInsets.right;
+            int right = ltr ? focusInsets.right : focusInsets.left;
+            rectangle.x += left;
+            rectangle.width -= left + right;
+        } else {
+            rectangle.y += focusInsets.top;
+            rectangle.height -= focusInsets.top + focusInsets.bottom;
+        }
+
         Dictionary<?, ?> dict = slider.getLabelTable();
-        if (!slider.getPaintLabels() || dict == null || dict.isEmpty()) return;
+        if (!slider.getPaintLabels() || dict == null || dict.isEmpty() || !horizontal) {
+            return;
+        }
 
         int extra = getLowerHorizontalExtend();
         int extend = getUpperHorizontalExtend();
@@ -314,7 +327,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         boolean adjustMin = PropertyUtil.getBooleanProperty(minLabel, KEY_MANUAL_LABEL_ALIGN);
         int minPrefWidth = minLabel.getPreferredSize().width;
         float adj = (adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
-        return (int) (minPrefWidth * adj) + 2 * (ltr ? focusInsets.left : focusInsets.right);
+        return (int) (minPrefWidth * adj) + (ltr ? focusInsets.left : focusInsets.right);
     }
 
     protected int getUpperHorizontalExtend() {
@@ -324,7 +337,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         boolean adjustMax = PropertyUtil.getBooleanProperty(maxLabel, KEY_MANUAL_LABEL_ALIGN);
         int maxPrefWidth = maxLabel.getPreferredSize().width;
         float adj = (adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
-        return (int) (maxPrefWidth * (1f - adj)) + 2 * (ltr ? focusInsets.right : focusInsets.left);
+        return (int) (maxPrefWidth * (1f - adj)) + (ltr ? focusInsets.right : focusInsets.left);
     }
 
     @Override
@@ -339,7 +352,8 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     @Override
     public Dimension getThumbSize() {
         if (isPlainThumb()) {
-            return new Dimension(plainThumbRadius + 6, plainThumbRadius + 6);
+            return new Dimension(plainThumbRadius + 2 * focusBorderSize,
+                                 plainThumbRadius + 2 * focusBorderSize);
         }
         return isHorizontal()
                 ? new Dimension(thumbSize.width, thumbSize.height)
@@ -505,6 +519,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         volumeThumbInactiveBackground = UIManager.getColor("Slider.volume.inactiveThumbFill");
         thumbBorderColor = UIManager.getColor("Slider.thumbBorderColor");
         thumbInactiveBorderColor = UIManager.getColor("Slider.thumbBorderColorDisabled");
+        focusBorderSize = UIManager.getInt("Slider.focusBorderSize");
 
         volume0 = UIManager.getIcon("Slider.volume.enabled_level_0.icon");
         volume1 = UIManager.getIcon("Slider.volume.enabled_level_1.icon");
@@ -612,24 +627,16 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     private void paintPlainSliderThumb(final Graphics2D g) {
         int r = plainThumbRadius;
-        int x = isHorizontal() ? 4 : (thumbRect.width - r) / 2;
-        int y = isHorizontal() ? (thumbRect.height - r) / 2 : 4;
-        g.translate(x, y);
-        Ellipse2D.Double thumb = new Ellipse2D.Double(0, 0, r, r);
-        Ellipse2D.Double innerThumb = new Ellipse2D.Double(1, 1, r - 2, r - 2);
-        if (paintFocus()) {
-            PaintUtil.paintFocusOval(g, 1, 1, r - 2, r - 2);
-        }
-        if (isVolumeSlider(slider)) {
-            g.setColor(getThumbColor());
-            g.fill(thumb);
-        } else {
+        int bw = focusBorderSize;
+        g.setColor(getThumbColor());
+        PaintUtil.fillRoundRect(g, bw, bw, r, r, r);
+        if (!isVolumeSlider(slider)) {
             g.setColor(getThumbBorderColor());
-            g.fill(thumb);
-            g.setColor(getThumbColor());
-            g.fill(innerThumb);
+            PaintUtil.paintLineBorder(g, bw, bw, r, r, r);
         }
-        g.translate(-x, -y);
+        if (paintFocus()) {
+            PaintUtil.paintFocusBorder(g, r + 2 * bw, r + 2 * bw, r + 2 * bw, bw);
+        }
     }
 
     protected boolean isPlainThumb() {

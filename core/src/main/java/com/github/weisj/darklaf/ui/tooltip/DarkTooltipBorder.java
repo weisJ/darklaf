@@ -159,7 +159,7 @@ public class DarkTooltipBorder implements Border {
     }
 
     protected Insets getUserInsets(final Component c) {
-        return PropertyUtil.getObject(c, DarkTooltipUI.KEY_INSETS, Insets.class, margin);
+        return PropertyUtil.getObject(c, DarkToolTipUI.KEY_INSETS, Insets.class, margin);
     }
 
     @Override
@@ -181,8 +181,8 @@ public class DarkTooltipBorder implements Border {
 
     protected boolean isPlain(final Component c) {
         if (!(c instanceof JComponent)) return false;
-        Object prop = ((JComponent) c).getClientProperty(DarkTooltipUI.KEY_STYLE);
-        return prop == ToolTipStyle.PLAIN || DarkTooltipUI.VARIANT_PLAIN.equals(prop);
+        Object prop = ((JComponent) c).getClientProperty(DarkToolTipUI.KEY_STYLE);
+        return prop == ToolTipStyle.PLAIN || DarkToolTipUI.VARIANT_PLAIN.equals(prop);
     }
 
     public int getShadowSize(final Component c) {

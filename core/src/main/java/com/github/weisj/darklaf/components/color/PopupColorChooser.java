@@ -34,7 +34,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -71,7 +71,7 @@ public class PopupColorChooser extends JToolTip {
     @Override
     public void updateUI() {
         putClientProperty(DarkPopupFactory.KEY_FOCUSABLE_POPUP, true);
-        putClientProperty(DarkTooltipUI.KEY_CONTEXT, getContext());
+        putClientProperty(DarkToolTipUI.KEY_CONTEXT, getContext());
         super.updateUI();
     }
 
@@ -79,6 +79,9 @@ public class PopupColorChooser extends JToolTip {
                                         final Consumer<Color> callback,
                                         final Consumer<AWTEvent> onClose) {
         JToolTip toolTip = new PopupColorChooser(parent, initial, callback);
+        /*
+         * Position is (0,0) as the ToolTipContext figures out the correct location.
+         */
         final Popup popup = PopupFactory.getSharedInstance().getPopup(parent, toolTip, 0, 0);
         popup.show();
         Window window = DarkUIUtil.getWindow(parent);

@@ -235,15 +235,14 @@ public class SmallColorChooser extends JPanel {
 
     protected JComponent createColorModelComponent(final DarkColorModel model) {
         Box box = Box.createVerticalBox();
-        box.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         String[] descriptors = model.getFullLabelDescriptorsBefore();
-        char[] descriptorsAfter = model.getLabelDescriptorsAfter();
+        String[] descriptorsAfter = model.getFullLabelDescriptorsAfter();
         int count = model.getCount();
         JSlider[] sliders = new JSlider[count];
         Descriptor[] labels = new Descriptor[count];
         for (int i = 0; i < count; i++) {
-            Descriptor label = new Descriptor(descriptors[i],
-                                              String.valueOf(descriptorsAfter[i]));
+            Descriptor label = new Descriptor(descriptors[i], descriptorsAfter[i]);
             JSlider slider = new JSlider(model.getMinimum(i), model.getMaximum(i));
             slider.putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, true);
             slider.setValue(model.getDefault(i));
@@ -251,7 +250,7 @@ public class SmallColorChooser extends JPanel {
             slider.setPaintLabels(false);
             label.setLabelFor(slider);
 
-            label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+            label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
             JPanel holder = new JPanel(new BorderLayout());
             holder.setOpaque(false);
             holder.add(label, BorderLayout.BEFORE_FIRST_LINE);

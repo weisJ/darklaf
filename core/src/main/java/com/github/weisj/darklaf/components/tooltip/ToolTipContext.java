@@ -36,7 +36,7 @@ import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -352,11 +352,11 @@ public class ToolTipContext {
 
     public void updateToolTip() {
         if (toolTip != null) {
-            toolTip.putClientProperty(DarkTooltipUI.KEY_POINTER_LOCATION,
+            toolTip.putClientProperty(DarkToolTipUI.KEY_POINTER_LOCATION,
                                       alignment == Alignment.CENTER
                                               ? centerAlignment.opposite()
                                               : alignInside ? alignment : alignment.opposite());
-            toolTip.putClientProperty(DarkTooltipUI.KEY_INSETS, insets);
+            toolTip.putClientProperty(DarkToolTipUI.KEY_INSETS, insets);
             toolTip.doLayout();
         }
     }

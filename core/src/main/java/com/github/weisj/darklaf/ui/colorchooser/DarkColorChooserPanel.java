@@ -234,7 +234,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
     private void updateDescriptors() {
         char[] desc = getDarkColorModel().getLabelDescriptorsBefore();
-        char[] descAfter = getDarkColorModel().getLabelDescriptorsAfter();
+        String[] descAfter = getDarkColorModel().getFullLabelDescriptorsAfter();
         for (int i = 0; i < descriptors.length; i++) {
             if (i < desc.length) {
                 descriptors[i].setText(desc[i] + ":");
@@ -242,7 +242,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
                 descriptors[i].setText("");
             }
             if (i < descAfter.length) {
-                descriptorsAfter[i].setText(String.valueOf(descAfter[i]));
+                descriptorsAfter[i].setText(descAfter[i]);
             } else {
                 descriptorsAfter[i].setText("");
             }

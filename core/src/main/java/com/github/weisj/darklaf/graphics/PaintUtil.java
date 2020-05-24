@@ -176,24 +176,23 @@ public class PaintUtil {
     }
 
     public static void paintFocusOval(final Graphics2D g, final int x, final int y,
-                                      final int width, final int height) {
-        paintFocusOval(g, (float) x, (float) y, (float) width, (float) height);
+                                      final int width, final int height, final int bw) {
+        paintFocusOval(g, (float) x, (float) y, (float) width, (float) height, (float) bw);
     }
 
     public static void paintFocusOval(final Graphics2D g, final float x, final float y,
-                                      final float width, final float height) {
-        paintFocusOval(g, x, y, width, height, true);
+                                      final float width, final float height, final float bw) {
+        paintFocusOval(g, x, y, width, height, true, bw);
     }
 
     public static void paintFocusOval(final Graphics2D g, final float x, final float y,
-                                      final float width, final float height, final boolean active) {
+                                      final float width, final float height, final boolean active, final float bw) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(PaintUtil.glowComposite);
         Outline.focus.setGraphicsColor(g, active);
 
-        float blw = 3.0f;
         Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        shape.append(new Ellipse2D.Float(x - blw, y - blw, width + blw * 2, height + blw * 2), false);
+        shape.append(new Ellipse2D.Float(x - bw, y - bw, width + bw * 2, height + bw * 2), false);
         shape.append(new Ellipse2D.Float(x, y, width, height), false);
         g.fill(shape);
         config.restore();
@@ -255,6 +254,8 @@ public class PaintUtil {
                                                          final PaintMethod<T> paintMethod) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);
+        Font font = c.getFont();
+        g.setFont(font);
         if (text != null && !text.equals("")) {
             View v = PropertyUtil.getObject(c, DarkHTML.propertyKey, View.class);
             if (v != null) {
