@@ -51,8 +51,7 @@ public class FontTest {
     private static final String WORKING_DIR = "font_test";
 
     static {
-        kerning = Collections.singletonMap(TextAttribute.KERNING,
-                                           TextAttribute.KERNING_ON);
+        kerning = Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
     }
 
     public static void main(final String[] args) throws IOException {
@@ -88,19 +87,27 @@ public class FontTest {
 
     private static void createImages(final String folder, final JComponent c,
                                      final List<FontSpec> fontSpecs) throws IOException {
-        Files.createDirectory(new File(folder).toPath());
+        createFolder(folder);
         for (FontSpec spec : fontSpecs) {
             c.setFont(createFont(spec.fontName));
             setFractionalMetrics(spec.useFractionalMetrics);
-            saveScreenShot(folder + "/" + spec.getImageName(), c);
+            saveScreenShot(getPath(folder, spec), c);
         }
+    }
+
+    private static void createFolder(final String folder) throws IOException {
+        Files.createDirectories(new File(WORKING_DIR + "/" + folder).toPath());
+    }
+
+    private static String getPath(final String folder, final FontSpec spec) {
+        return WORKING_DIR + "/" + folder + "/" + spec.getImageName();
     }
 
     private static void saveScreenShot(final String name, final JComponent c) {
         try {
             Rectangle rect = new Rectangle(0, 0, c.getWidth(), c.getHeight());
             BufferedImage image = ImageUtil.scaledImageFromComponent(c, rect, SCALING_FACTOR, SCALING_FACTOR, false);
-            ImageIO.write(image, "png", new File(WORKING_DIR + "/" + name + ".png"));
+            ImageIO.write(image, "png", new File(name + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

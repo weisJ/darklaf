@@ -27,10 +27,7 @@ name: Fonts
 on:
   push:
     branches:
-      - '*'
-  pull_request:
-    branches:
-      - '*'
+      - 'master'
 jobs:
   gradle:
     strategy:
