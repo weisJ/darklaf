@@ -32,9 +32,10 @@ on:
     branches:
       - '*'
 jobs:
-  macos:
-    name: macOS (Java 11)
-    runs-on: macos-latest
+  strategy:
+    matrix:
+      os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -48,5 +49,5 @@ jobs:
       - name: Upload Results
         uses: actions/upload-artifact@v1
         with:
-          name: font_test
+          name: ${{ matrix.os }}-font_test
           path: build/font_test

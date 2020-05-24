@@ -29,7 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.AttributedCharacterIterator;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -54,33 +56,44 @@ public class FontTest {
     }
 
     public static void main(final String[] args) throws IOException {
-        if (!SystemInfo.isMacOSCatalina) return;
-        Files.createDirectory(new File(WORKING_DIR).toPath());
         LafManager.install(new IntelliJTheme());
         JTextArea textArea = new JTextArea();
         textArea.setText(DemoResources.KERNING_TEST);
         textArea.setSize(textArea.getPreferredSize());
         textArea.doLayout();
 
-        textArea.setFont(createFont(".AppleSystemUIFont"));
-        setFractionalMetrics(true);
-        saveScreenShot("system_font_frac_metrics", textArea);
+        if (SystemInfo.isMac) {
+            List<FontSpec> fontSpecs = new ArrayList<>();
+            if (SystemInfo.isMacOSMojave) {
+                fontSpecs.add(new FontSpec(".AppleSystemUIFont", false));
+                fontSpecs.add(new FontSpec(".AppleSystemUIFont", true));
+            }
+            fontSpecs.add(new FontSpec(".SF NS Text", false));
+            fontSpecs.add(new FontSpec(".SF NS Text", true));
+            fontSpecs.add(new FontSpec("Helvetica Neue", false));
+            fontSpecs.add(new FontSpec("Helvetica Neue", true));
+            createImages("macOS", textArea, fontSpecs);
+        } else if (SystemInfo.isWindows) {
+            List<FontSpec> fontSpecs = new ArrayList<>();
+            fontSpecs.add(new FontSpec("Segoe UI", false));
+            fontSpecs.add(new FontSpec("Segoe UI", true));
+            createImages("windows", textArea, fontSpecs);
+        } else if (SystemInfo.isLinux) {
+            List<FontSpec> fontSpecs = new ArrayList<>();
+            fontSpecs.add(new FontSpec("Ubuntu", false));
+            fontSpecs.add(new FontSpec("Ubuntu", true));
+            createImages("linux", textArea, fontSpecs);
+        }
+    }
 
-        textArea.setFont(createFont(".SF NS Text"));
-        setFractionalMetrics(false);
-        saveScreenShot("san_francisco", textArea);
-
-        textArea.setFont(createFont(".SF NS Text"));
-        setFractionalMetrics(true);
-        saveScreenShot("san_francisco_fra_metrics", textArea);
-
-        textArea.setFont(createFont("Helvetica Neue"));
-        setFractionalMetrics(false);
-        saveScreenShot("helvetica", textArea);
-
-        textArea.setFont(createFont("Helvetica Neue"));
-        setFractionalMetrics(true);
-        saveScreenShot("helvetica_frac_metrics", textArea);
+    private static void createImages(final String folder, final JComponent c,
+                                     final List<FontSpec> fontSpecs) throws IOException {
+        Files.createDirectory(new File(folder).toPath());
+        for (FontSpec spec : fontSpecs) {
+            c.setFont(createFont(spec.fontName));
+            setFractionalMetrics(spec.useFractionalMetrics);
+            saveScreenShot(folder + "/" + spec.getImageName(), c);
+        }
     }
 
     private static void saveScreenShot(final String name, final JComponent c) {
@@ -101,5 +114,23 @@ public class FontTest {
 
     private static Font createFont(final String name) {
         return new Font(name, Font.PLAIN, 12).deriveFont(kerning);
+    }
+
+    private static class FontSpec {
+        private final String fontName;
+        private final boolean useFractionalMetrics;
+
+        private FontSpec(final String fontName, final boolean useFractionalMetrics) {
+            this.fontName = fontName;
+            this.useFractionalMetrics = useFractionalMetrics;
+        }
+
+        private String getImageName() {
+            String name = fontName.replace(".", "").replace(" ", "_").toLowerCase();
+            if (useFractionalMetrics) {
+                name += "_frac_metrics";
+            }
+            return name;
+        }
     }
 }
