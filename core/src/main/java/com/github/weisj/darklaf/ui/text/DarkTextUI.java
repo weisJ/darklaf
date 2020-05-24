@@ -231,7 +231,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void paintBackground(final Graphics g) {
         final Container parent = getRelevantParent(editor);
-        if (parent != null) {
+        if (parent != null && !(parent instanceof Window)) {
             g.setColor(parent.getBackground());
             if (parent instanceof JTextComponent) {
                 if (!parent.isEnabled()) {

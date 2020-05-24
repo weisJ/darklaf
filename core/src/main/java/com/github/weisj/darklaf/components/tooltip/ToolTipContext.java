@@ -35,8 +35,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
