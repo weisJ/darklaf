@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.components.color;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -66,6 +67,7 @@ public class PopupColorChooser extends JToolTip {
         setComponent(parent);
         setLayout(new BorderLayout());
         add(getChooser(initial, callback), BorderLayout.CENTER);
+        setBackground(UIManager.getColor("ColorChooser.background"));
     }
 
     @Override
@@ -73,6 +75,12 @@ public class PopupColorChooser extends JToolTip {
         putClientProperty(DarkPopupFactory.KEY_FOCUSABLE_POPUP, true);
         putClientProperty(DarkToolTipUI.KEY_CONTEXT, getContext());
         super.updateUI();
+        setBackground(UIManager.getColor("ColorChooser.background"));
+    }
+
+    @Override
+    public void setBackground(final Color bg) {
+        super.setBackground(bg);
     }
 
     public static void showColorChooser(final JComponent parent, final Color initial,

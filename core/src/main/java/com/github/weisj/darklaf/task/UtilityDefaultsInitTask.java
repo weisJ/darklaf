@@ -45,7 +45,7 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
     private void setupUtils(final Theme currentTheme, final UIDefaults defaults) {
         PaintUtil.setDropOpacity(getOpacity(defaults, "dropOpacity"));
         PaintUtil.setGlowOpacity(getOpacity(defaults, "glowOpacity"));
-        PaintUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacity"));
+        PaintUtil.setShadowOpacity(getOpacity(defaults, "shadowOpacityLight"));
 
         PaintUtil.setErrorGlow(defaults.getColor("glowError"));
         PaintUtil.setErrorFocusGlow(defaults.getColor("glowFocusError"));
