@@ -27,11 +27,11 @@ package com.github.weisj.darklaf.ui.slider;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Dictionary;
+import java.util.Enumeration;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -40,7 +40,10 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.listener.MouseClickListener;
+import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -54,12 +57,9 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     public static final String KEY_SHOW_VOLUME_ICON = KEY_PREFIX + "volume.showIcon";
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_INSTANT_SCROLL = KEY_PREFIX + "instantScrollEnabled";
-    public static final String KEY_SHOW_FOCUS_GLOW = KEY_PREFIX + "paintFocusGlow";
     public static final String KEY_MANUAL_LABEL_ALIGN = KEY_PREFIX + "manualLabelAlign";
     public static final String VARIANT_VOLUME = "volume";
 
-    private static final int ICON_BAR_EXT = 5;
-    private static final int ICON_PAD = 10;
     private final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
     private final MouseListener mouseListener = new MouseClickListener() {
         private boolean muted = false;
@@ -82,6 +82,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected int plainThumbRadius;
     protected int arcSize;
     protected int trackSize;
+    protected int iconPad;
     protected Dimension thumbSize;
     protected Color inactiveTickForeground;
     protected Color trackBackground;
@@ -94,7 +95,18 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected Color volumeThumbBackground;
     protected Color volumeThumbInactiveBackground;
     protected Color thumbBorderColor;
+    protected Color thumbFocusBorderColor;
     protected Color thumbInactiveBorderColor;
+
+    protected RotatableIcon rotatableIcon;
+
+    protected Icon thumb;
+    protected Icon thumbDisabled;
+    protected Icon thumbFocused;
+
+    protected Icon volumeThumb;
+    protected Icon volumeThumbDisabled;
+    protected Icon volumeThumbFocused;
 
     protected Icon volume0;
     protected Icon volume1;
@@ -108,6 +120,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected Icon volume4Inactive;
 
     protected int focusBorderSize;
+    protected boolean paintFocus;
     protected RoundRectangle2D trackShape = new RoundRectangle2D.Double();
 
     public DarkSliderUI(final JSlider b) {
@@ -119,7 +132,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private static boolean showVolumeIcon(final JComponent c) {
-        return isVolumeSlider(c) && PropertyUtil.getBooleanProperty(c, KEY_SHOW_VOLUME_ICON);
+        return PropertyUtil.getBooleanProperty(c, KEY_SHOW_VOLUME_ICON);
     }
 
     private static boolean isVolumeSlider(final JComponent c) {
@@ -156,35 +169,43 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     @Override
+    protected void calculateFocusRect() {
+        focusRect.setRect(0, 0, slider.getWidth(), slider.getHeight());
+        DarkUIUtil.applyInsets(focusRect, focusInsets);
+    }
+
+    @Override
     protected void calculateContentRect() {
-        super.calculateContentRect();
+        contentRect.setRect(focusRect);
+        boolean horizontal = slider.getOrientation() == JSlider.HORIZONTAL;
         if (showVolumeIcon(slider)) {
-            if (isHorizontal()) {
-                contentRect.width -= getVolumeIcon().getIconWidth() + ICON_PAD;
+            if (horizontal) {
+                contentRect.width -= getVolumeIcon().getIconWidth() + iconPad;
                 if (!slider.getComponentOrientation().isLeftToRight()) {
-                    contentRect.x += getVolumeIcon().getIconWidth() + ICON_PAD;
+                    contentRect.x += getVolumeIcon().getIconWidth() + iconPad;
                 }
             } else {
-                contentRect.height -= getVolumeIcon().getIconHeight() + ICON_PAD;
+                contentRect.height -= getVolumeIcon().getIconHeight() + iconPad;
                 if (!slider.getComponentOrientation().isLeftToRight()) {
-                    contentRect.y += getVolumeIcon().getIconHeight() + ICON_PAD;
+                    contentRect.y += getVolumeIcon().getIconHeight() + iconPad;
                 }
             }
         }
+        if (horizontal) {
+            int thumbWidth = getThumbWidth();
+            contentRect.x += thumbWidth / 2;
+            contentRect.width -= thumbWidth;
+        } else {
+            int thumbHeight = getThumbHeight();
+            contentRect.y += thumbHeight / 2;
+            contentRect.height -= thumbHeight;
+        }
+        adjustRect(contentRect);
     }
 
     @Override
     protected void calculateTrackBuffer() {
-        super.calculateTrackBuffer();
-        if (slider.getOrientation() == JSlider.HORIZONTAL) {
-            trackBuffer = 0;
-        }
-    }
-
-    @Override
-    protected void calculateTrackRect() {
-        super.calculateTrackRect();
-        adjustRect(trackRect);
+        trackBuffer = 0;
     }
 
     @Override
@@ -293,29 +314,13 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     protected void adjustRect(final Rectangle rectangle, final boolean outwards) {
         boolean horizontal = slider.getOrientation() == JSlider.HORIZONTAL;
-
-        if (horizontal) {
-            boolean ltr = slider.getComponentOrientation().isLeftToRight();
-            int left = ltr ? focusInsets.left : focusInsets.right;
-            int right = ltr ? focusInsets.right : focusInsets.left;
-            rectangle.x += left;
-            rectangle.width -= left + right;
-        } else {
-            rectangle.y += focusInsets.top;
-            rectangle.height -= focusInsets.top + focusInsets.bottom;
-        }
-
         Dictionary<?, ?> dict = slider.getLabelTable();
         if (!slider.getPaintLabels() || dict == null || dict.isEmpty() || !horizontal) {
             return;
         }
-
         int extra = getLowerHorizontalExtend();
         int extend = getUpperHorizontalExtend();
-        int thumbWidth = getThumbWidth() / 2;
         int factor = outwards ? 1 : -1;
-        extra -= thumbWidth;
-        extend -= thumbWidth;
         rectangle.x -= factor * extra;
         rectangle.width += factor * (extra + extend);
     }
@@ -327,7 +332,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         boolean adjustMin = PropertyUtil.getBooleanProperty(minLabel, KEY_MANUAL_LABEL_ALIGN);
         int minPrefWidth = minLabel.getPreferredSize().width;
         float adj = (adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
-        return (int) (minPrefWidth * adj) + (ltr ? focusInsets.left : focusInsets.right);
+        return (int) (minPrefWidth * adj);
     }
 
     protected int getUpperHorizontalExtend() {
@@ -337,23 +342,35 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         boolean adjustMax = PropertyUtil.getBooleanProperty(maxLabel, KEY_MANUAL_LABEL_ALIGN);
         int maxPrefWidth = maxLabel.getPreferredSize().width;
         float adj = (adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
-        return (int) (maxPrefWidth * (1f - adj)) + (ltr ? focusInsets.right : focusInsets.left);
+        return (int) (maxPrefWidth * (1f - adj));
     }
 
-    @Override
     public Dimension getPreferredHorizontalSize() {
         Dimension dim = super.getPreferredHorizontalSize();
         Rectangle rect = new Rectangle(0, 0, 0, 0);
         rect.setSize(dim);
         adjustRect(rect, true);
+        Dictionary<?, ?> dict = slider.getLabelTable();
+        if (dict != null && !dict.isEmpty()) {
+            int totalLabelWidth = 0;
+            Enumeration<?> labels = dict.elements();
+            while (labels.hasMoreElements()) {
+                Object obj = labels.nextElement();
+                if (obj instanceof Component) {
+                    totalLabelWidth += ((Component) obj).getPreferredSize().width;
+                }
+            }
+            totalLabelWidth += getThumbWidth();
+            rect.width = Math.max(rect.width, totalLabelWidth);
+        }
         return rect.getSize();
     }
 
     @Override
     public Dimension getThumbSize() {
         if (isPlainThumb()) {
-            return new Dimension(plainThumbRadius + 2 * focusBorderSize,
-                                 plainThumbRadius + 2 * focusBorderSize);
+            int bw = 2 * getFocusBorderSize();
+            return new Dimension(plainThumbRadius + bw, plainThumbRadius + bw);
         }
         return isHorizontal()
                 ? new Dimension(thumbSize.width, thumbSize.height)
@@ -455,15 +472,12 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     public void paintThumb(final Graphics g2) {
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
-        g.translate(thumbRect.x, thumbRect.y);
 
         if (isPlainThumb()) {
             paintPlainSliderThumb(g);
         } else {
             paintSliderThumb(g);
         }
-
-        g.translate(-thumbRect.x, -thumbRect.y);
         context.restore();
     }
 
@@ -494,12 +508,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     @Override
-    public void installUI(final JComponent c) {
-        super.installUI(c);
-        slider.putClientProperty(KEY_SHOW_FOCUS_GLOW, UIManager.getBoolean("Slider.paintFocusGlow"));
-    }
-
-    @Override
     protected void installDefaults(final JSlider slider) {
         super.installDefaults(slider);
         LookAndFeel.installProperty(slider, PropertyKey.OPAQUE, false);
@@ -507,6 +515,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         trackSize = UIManager.getInt("Slider.trackThickness");
         plainThumbRadius = UIManager.getInt("Slider.plainThumbRadius");
         thumbSize = UIManager.getDimension("Slider.thumbSize");
+        iconPad = UIManager.getInt("Slider.iconPad");
         inactiveTickForeground = UIManager.getColor("Slider.disabledTickColor");
         trackBackground = UIManager.getColor("Slider.trackBackground");
         selectedTrackBackground = UIManager.getColor("Slider.selectedTrackColor");
@@ -518,8 +527,18 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         volumeThumbBackground = UIManager.getColor("Slider.volume.activeThumbFill");
         volumeThumbInactiveBackground = UIManager.getColor("Slider.volume.inactiveThumbFill");
         thumbBorderColor = UIManager.getColor("Slider.thumbBorderColor");
+        thumbFocusBorderColor = UIManager.getColor("Slider.thumbFocusBorderColor");
         thumbInactiveBorderColor = UIManager.getColor("Slider.thumbBorderColorDisabled");
         focusBorderSize = UIManager.getInt("Slider.focusBorderSize");
+        paintFocus = UIManager.getBoolean("Slider.paintFocusGlow");
+
+        thumb = UIManager.getIcon("Slider.enabledThumb.icon");
+        thumbDisabled = UIManager.getIcon("Slider.disabledThumb.icon");
+        thumbFocused = UIManager.getIcon("Slider.focusedThumb.icon");
+
+        volumeThumb = UIManager.getIcon("Slider.volume.enabledThumb.icon");
+        volumeThumbDisabled = UIManager.getIcon("Slider.volume.disabledThumb.icon");
+        volumeThumbFocused = UIManager.getIcon("Slider.volume.focusedThumb.icon");
 
         volume0 = UIManager.getIcon("Slider.volume.enabled_level_0.icon");
         volume1 = UIManager.getIcon("Slider.volume.enabled_level_1.icon");
@@ -531,26 +550,34 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         volume2Inactive = UIManager.getIcon("Slider.volume.disabled_level_2.icon");
         volume3Inactive = UIManager.getIcon("Slider.volume.disabled_level_3.icon");
         volume4Inactive = UIManager.getIcon("Slider.volume.disabled_level_4.icon");
+
+        rotatableIcon = new RotatableIcon();
+    }
+
+    public int getFocusBorderSize() {
+        return paintFocus ? focusBorderSize : 0;
     }
 
     protected void calculateIconRect() {
         iconRect.width = getVolumeIcon().getIconWidth();
         iconRect.height = getVolumeIcon().getIconHeight();
         if (isHorizontal()) {
+            int extraSpace = iconPad + getThumbWidth() / 2;
             if (slider.getComponentOrientation().isLeftToRight()) {
-                iconRect.x = trackRect.x + trackRect.width + ICON_PAD;
+                iconRect.x = trackRect.x + trackRect.width + extraSpace;
                 iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
             } else {
-                iconRect.x = trackRect.x - iconRect.width - ICON_PAD;
+                iconRect.x = trackRect.x - iconRect.width - extraSpace;
                 iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
             }
         } else {
+            int extraSpace = iconPad + getThumbHeight() / 2;
             if (slider.getComponentOrientation().isLeftToRight()) {
                 iconRect.x = trackRect.x + (trackRect.width - iconRect.width) / 2;
-                iconRect.y = trackRect.y + trackRect.height + ICON_PAD;
+                iconRect.y = trackRect.y + trackRect.height + extraSpace;
             } else {
                 iconRect.x = trackRect.x + (trackRect.width - iconRect.width) / 2;
-                iconRect.y = trackRect.y - iconRect.height - ICON_PAD;
+                iconRect.y = trackRect.y - iconRect.height - extraSpace;
             }
         }
     }
@@ -591,11 +618,11 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     private Shape getHorizontalTrackShape(final RoundRectangle2D trackShape) {
         int arc = arcSize;
         int yOff = (trackRect.height / 2) - trackSize / 2;
-        int w = showVolumeIcon(slider) ? trackRect.width + getIconBarExt() : trackRect.width;
+        int w = trackRect.width;
         if (slider.getComponentOrientation().isLeftToRight()) {
             trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc);
         } else {
-            trackShape.setRoundRect(trackRect.x - getIconBarExt(), trackRect.y + yOff, w, trackSize, arc, arc);
+            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc);
         }
         return trackShape;
     }
@@ -612,22 +639,19 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     private Shape getVerticalTrackShape(final RoundRectangle2D trackShape) {
         int arc = arcSize;
         int xOff = (trackRect.width / 2) - trackSize / 2;
-        int h = showVolumeIcon(slider) ? trackRect.height + getIconBarExt() : trackRect.height;
+        int h = trackRect.height;
         if (slider.getComponentOrientation().isLeftToRight()) {
             trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc);
         } else {
-            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y - getIconBarExt(), trackSize, h, arc, arc);
+            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc);
         }
         return trackShape;
     }
 
-    private int getIconBarExt() {
-        return isPlainThumb() && showVolumeIcon(slider) ? ICON_BAR_EXT : 0;
-    }
-
     private void paintPlainSliderThumb(final Graphics2D g) {
+        g.translate(thumbRect.x, thumbRect.y);
         int r = plainThumbRadius;
-        int bw = focusBorderSize;
+        int bw = getFocusBorderSize();
         g.setColor(getThumbColor());
         PaintUtil.fillRoundRect(g, bw, bw, r, r, r);
         if (!isVolumeSlider(slider)) {
@@ -637,30 +661,50 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         if (paintFocus()) {
             PaintUtil.paintFocusBorder(g, r + 2 * bw, r + 2 * bw, r + 2 * bw, bw);
         }
+        g.translate(-thumbRect.x, -thumbRect.y);
     }
 
     protected boolean isPlainThumb() {
         return !slider.getPaintTicks() || !PropertyUtil.getBooleanProperty(slider, KEY_THUMB_ARROW_SHAPE, true);
     }
 
-    private void paintSliderThumb(final Graphics2D g) {
-        Path2D thumb = getThumbShape();
-        if (paintFocus()) {
-            GraphicsContext config = new GraphicsContext(g);
-            g.setComposite(PaintUtil.getGlowComposite());
-            g.setStroke(new BasicStroke(4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 8));
-            PaintUtil.Outline.focus.setGraphicsColor(g, true);
-            g.draw(thumb);
-            config.restore();
+    protected Icon getThumbIcon() {
+        boolean enabled = slider.isEnabled();
+        boolean focused = slider.hasFocus();
+        boolean volume = isVolumeSlider(slider);
+        Icon icon;
+        if (volume) {
+            icon = enabled ? focused ? volumeThumbFocused : volumeThumb : volumeThumbDisabled;
+        } else {
+            icon = enabled ? focused ? thumbFocused : thumb : thumbDisabled;
         }
-        g.setColor(getThumbColor());
-        g.fill(thumb);
-        g.setColor(getThumbBorderColor());
-        g.draw(thumb);
+        rotatableIcon.setIcon(icon);
+        if (isHorizontal()) {
+            rotatableIcon.setOrientation(Alignment.NORTH);
+        } else {
+            if (slider.getComponentOrientation().isLeftToRight()) {
+                rotatableIcon.setOrientation(Alignment.WEST);
+            } else {
+                rotatableIcon.setOrientation(Alignment.EAST);
+            }
+        }
+        return rotatableIcon;
+    }
+
+    private void paintSliderThumb(final Graphics2D g) {
+        if (isHorizontal()) {
+            getThumbIcon().paintIcon(slider, g, thumbRect.x, thumbRect.y);
+        } else {
+            int cx = thumbRect.x + thumbRect.width / 2;
+            int cy = thumbRect.y + thumbRect.height / 2;
+            int x = cx - thumbRect.height / 2;
+            int y = cy - thumbRect.width / 2;
+            getThumbIcon().paintIcon(slider, g, x, y);
+        }
     }
 
     private boolean paintFocus() {
-        return slider.hasFocus() && PropertyUtil.getBooleanProperty(slider, KEY_SHOW_FOCUS_GLOW);
+        return slider.hasFocus() && paintFocus;
     }
 
     protected int getThumbWidth() {
@@ -669,58 +713,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     protected int getThumbHeight() {
         return thumbRect.height;
-    }
-
-    private Path2D getThumbShape() {
-        if (isHorizontal()) {
-            return getHorizontalThumbShape();
-        } else if (slider.getComponentOrientation().isLeftToRight()) {
-            return getVerticalThumbShapeLR();
-        } else {
-            return getVerticalThumbShapeRL();
-        }
-    }
-
-    private Path2D getHorizontalThumbShape() {
-        int w = thumbRect.width;
-        int h = thumbRect.height;
-        int cw = w / 2;
-        Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        shape.moveTo(1, 1);
-        shape.lineTo(w - 2, 1);
-        shape.lineTo(w - 2, h - cw - 1);
-        shape.lineTo(cw, h - 2);
-        shape.lineTo(1, h - cw - 1);
-        shape.closePath();
-        return shape;
-    }
-
-    private Path2D getVerticalThumbShapeLR() {
-        int w = thumbRect.width;
-        int h = thumbRect.height;
-        int cw = h / 2;
-        Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        shape.moveTo(2, 1);
-        shape.lineTo(w - cw - 1, 1);
-        shape.lineTo(w - 1, h - cw);
-        shape.lineTo(w - cw - 1, h - 2);
-        shape.lineTo(2, h - 2);
-        shape.closePath();
-        return shape;
-    }
-
-    private Path2D getVerticalThumbShapeRL() {
-        int w = thumbRect.width;
-        int h = thumbRect.height;
-        int cw = h / 2;
-        Path2D shape = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        shape.moveTo(w - 2, 1);
-        shape.lineTo(cw + 1, 1);
-        shape.lineTo(1, h - cw);
-        shape.lineTo(cw + 1, h - 2);
-        shape.lineTo(w - 2, h - 2);
-        shape.closePath();
-        return shape;
     }
 
     protected Color getThumbColor() {
@@ -732,7 +724,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     protected Color getThumbBorderColor() {
-        return slider.isEnabled() ? thumbBorderColor : thumbInactiveBorderColor;
+        return slider.isEnabled() ? paintFocus() ? thumbFocusBorderColor : thumbBorderColor : thumbInactiveBorderColor;
     }
 
     protected Color getTrackBackground() {

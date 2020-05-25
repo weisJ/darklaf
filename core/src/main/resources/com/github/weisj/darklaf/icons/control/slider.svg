@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="23" viewBox="0 0 20 23">
+    <defs id="colors">
+        <linearGradient id="Icons.Slider.activeFillColor">
+            <stop offset="0" stop-color="#43494A"/>
+            <stop offset="1" stop-color="#43494A"/>
+        </linearGradient>
+        <linearGradient id="Icons.Slider.borderColor">
+            <stop offset="0" stop-color="#6B6B6B"/>
+            <stop offset="1" stop-color="#6B6B6B"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(2,2)">
+        <path fill="url(#Icons.Slider.borderColor)"
+              d="M15,1v9.6l-7,7l-7-7V1H15 M16,0H0v11l8,8l8-8V0L16,0z"/>
+        <polyline fill="url(#Icons.Slider.activeFillColor)" points="15,1 15,10.6 8,17.6 1,10.6 1,1 15,1 "/>
+    </g>
+</svg>

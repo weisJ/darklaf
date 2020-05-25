@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="23" viewBox="0 0 20 23">
+    <defs id="colors">
+        <linearGradient id="Icons.VolumeSliderFocused.activeFillColor">
+            <stop offset="0" stop-color="#A0A0A0"/>
+            <stop offset="1" stop-color="#A0A0A0"/>
+        </linearGradient>
+        <linearGradient id="Icons.VolumeSliderFocused.focusBorderColor">
+            <stop offset="0" stop-color="#466D94"/>
+            <stop offset="1" stop-color="#466D94"/>
+        </linearGradient>
+        <linearGradient id="Icons.VolumeSliderFocused.glowFocus" opacity="Icons.VolumeSlider.glowOpacity">
+            <stop offset="0" stop-color="#3e84c9" stop-opacity="0.5"/>
+            <stop offset="1" stop-color="#3e84c9" stop-opacity="0.5"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(2,2)">
+        <path fill="url(#Icons.VolumeSliderFocused.glowFocus)" d="M16,0C16,0,16,0,16,0l0,11l-8,8H8l-8-8V0c0,0,0,0,0,0H16 M16-2H0c-1.1,0-2,0.9-2,2V11c0,0.5,0.2,1.1,0.6,1.4
+	      l8,8C7,20.8,7.5,21,8,21s1-0.2,1.4-0.6l8-8C17.8,12,18,11.5,18,11V0C18-1.1,17.1-2,16-2L16-2z"/>
+        <path fill="url(#Icons.VolumeSliderFocused.focusBorderColor)"
+              d="M15,1v9.6l-7,7l-7-7V1H15 M16,0H0v11l8,8l8-8V0L16,0z"/>
+        <polyline fill="url(#Icons.VolumeSliderFocused.activeFillColor)" points="15,1 15,10.6 8,17.6 1,10.6 1,1 15,1 "/>
+    </g>
+</svg>

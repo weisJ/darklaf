@@ -24,7 +24,6 @@
  */
 package com.github.weisj.darklaf.task;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -49,8 +48,8 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
                                                                "slider", "spinner", "splitPane", "statusBar",
                                                                "tabbedPane", "tabFrame", "table", "taskPane", "text",
                                                                "toggleButton", "toolBar", "toolTip", "tree", "misc"};
-    private static final String[] ICON_PROPERTIES = new String[]{"checkBox", "radioButton", "dialog", "files", "frame",
-                                                                 "indicator", "menu", "misc", "navigation"};
+    private static final String[] ICON_PROPERTIES = new String[]{"checkBox", "radioButton", "slider", "dialog", "files",
+                                                                 "frame", "indicator", "menu", "misc", "navigation"};
     private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserDefaultsAdjustmentTask();
     private final DefaultsAdjustmentTask accentColorAdjustment = new AccentColorAdjustmentTask();
     private final DefaultsAdjustmentTask foregroundGeneration = new ForegroundColorGenerationTask();
