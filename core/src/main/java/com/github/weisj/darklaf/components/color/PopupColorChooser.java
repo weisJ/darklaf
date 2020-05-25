@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.components.color;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 

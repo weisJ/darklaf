@@ -75,10 +75,11 @@ public final class IconColorMapper {
         for (Object child : children) {
             if (child instanceof LinearGradient) {
                 String id = ((LinearGradient) child).getId();
-                String[] fallbacks = getFallbacks((LinearGradient) child);
-                float opacity = getOpacity((LinearGradient) child);
-                Color c = resolveColor(id, fallbacks, FALLBACK_COLOR, defaults);
-                Pair<LinearGradient, Runnable> result = createColor(c, id, opacity);
+                StyleAttribute fallbacks = getFallbacks((LinearGradient) child);
+                String opacityKey = getOpacityKey((LinearGradient) child);
+                float opacity = getOpacity(opacityKey);
+                Color c = resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, defaults);
+                Pair<LinearGradient, Runnable> result = createColor(c, id, opacityKey, fallbacks, opacity);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
                 themedDefs.loaderAddChild(null, gradient);
@@ -101,39 +102,59 @@ public final class IconColorMapper {
         return color;
     }
 
-    private static String[] getFallbacks(final LinearGradient child) {
+    private static StyleAttribute getFallbacks(final LinearGradient child) {
         StyleAttribute attribute = new StyleAttribute();
         attribute.setName("fallback");
         try {
             child.getStyle(attribute);
         } catch (SVGException e) {
-            return new String[0];
+            return null;
         }
-        return attribute.getStringList();
+        return attribute;
     }
 
-    private static float getOpacity(final LinearGradient child) {
-        StyleAttribute attribute = new StyleAttribute();
-        attribute.setName("opacity");
-        try {
-            child.getStyle(attribute);
-        } catch (SVGException e) {
-            return 1;
-        }
+    private static String[] getFallbacks(final StyleAttribute fallbacks) {
+        if (fallbacks == null) return new String[0];
+        return fallbacks.getStringList();
+    }
+
+    private static float getOpacity(final String key) {
         // UIManager defaults to 0, if the values isn't an integer (or null).
-        Object obj = UIManager.get(attribute.getStringValue());
+        Object obj = UIManager.get(key);
         if (obj instanceof Integer) {
             return ((Integer) obj) / 100.0f;
+        }
+        if (key != null && !key.isEmpty()) {
+            LOGGER.warning(obj + " is an invalid opacity value. Key = '" + key + "'");
         }
         // In this case we default to 1.
         return 1;
     }
 
+    private static String getOpacityKey(final LinearGradient child) {
+        StyleAttribute attribute = new StyleAttribute();
+        attribute.setName("opacity");
+        try {
+            child.getStyle(attribute);
+        } catch (SVGException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return attribute.getStringValue();
+    }
+
     private static Pair<LinearGradient, Runnable> createColor(final Color c,
-                                                              final String name,
+                                                              final String name, final String opacityKey,
+                                                              final StyleAttribute fallbacks,
                                                               final float opacity) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
+        if (opacityKey != null) {
+            grad.addAttribute("opacity", AnimationElement.AT_XML, opacityKey);
+        }
+        if (fallbacks != null) {
+            grad.addAttribute(fallbacks.getName(), AnimationElement.AT_XML, fallbacks.getStringValue());
+        }
         return new Pair<>(grad, () -> {
             Stop stop1 = new Stop();
             Stop stop2 = new Stop();

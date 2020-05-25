@@ -43,3 +43,4 @@
 - Poor performance when using bidirectional text with non zero margins. #167 252885df6fa18044c215361cbbe200cdf3358cf5
 - Text isn't painted when using the toggle button slider variant. 0d1f2913dd25d5a684fa2567c37a94b549f030b0
 - Kerning issues on macOS Catalina. #128 d3fd5dedabe11d84685e593a03b1941b8ea56836
+- Icons loose opaque parts after changing the theme.

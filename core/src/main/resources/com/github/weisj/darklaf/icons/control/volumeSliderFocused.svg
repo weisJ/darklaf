@@ -8,7 +8,7 @@
             <stop offset="0" stop-color="#466D94"/>
             <stop offset="1" stop-color="#466D94"/>
         </linearGradient>
-        <linearGradient id="Icons.VolumeSliderFocused.glowFocus" opacity="Icons.VolumeSlider.glowOpacity">
+        <linearGradient id="Icons.VolumeSliderFocused.glowFocus" opacity="Icons.VolumeSliderFocused.glowOpacity">
             <stop offset="0" stop-color="#3e84c9" stop-opacity="0.5"/>
             <stop offset="1" stop-color="#3e84c9" stop-opacity="0.5"/>
         </linearGradient>
