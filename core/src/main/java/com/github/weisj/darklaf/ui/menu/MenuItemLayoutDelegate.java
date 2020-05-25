@@ -28,8 +28,7 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 
 import javax.swing.*;
-
-import com.github.weisj.darklaf.ui.html.DarkHTML;
+import javax.swing.plaf.basic.BasicHTML;
 
 public class MenuItemLayoutDelegate extends JMenuItem {
 
@@ -42,7 +41,7 @@ public class MenuItemLayoutDelegate extends JMenuItem {
     public void setDelegate(final JMenuItem delegate) {
         this.delegate = delegate;
         if (delegate != null) {
-            putClientProperty(DarkHTML.propertyKey, delegate.getClientProperty(DarkHTML.propertyKey));
+            putClientProperty(BasicHTML.propertyKey, delegate.getClientProperty(BasicHTML.propertyKey));
             putClientProperty(TextAttribute.NUMERIC_SHAPING, delegate.getClientProperty(TextAttribute.NUMERIC_SHAPING));
         }
     }

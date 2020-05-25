@@ -56,7 +56,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
     protected Color borderColor;
     protected Handler handler;
 
-    protected DarkTableCellEditorDelegate editorDelegate;
     protected DarkTableCellRendererDelegate rendererDelegate;
 
     public static ComponentUI createUI(final JComponent c) {

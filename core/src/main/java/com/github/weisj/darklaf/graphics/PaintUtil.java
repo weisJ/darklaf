@@ -31,11 +31,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
 import sun.swing.SwingUtilities2;
 
-import com.github.weisj.darklaf.ui.html.DarkHTML;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.Scale;
 
@@ -263,7 +263,7 @@ public class PaintUtil {
         Font font = c.getFont();
         g.setFont(font);
         if (text != null && !text.equals("")) {
-            View v = PropertyUtil.getObject(c, DarkHTML.propertyKey, View.class);
+            View v = PropertyUtil.getObject(c, BasicHTML.propertyKey, View.class);
             if (v != null) {
                 v.paint(g, textRect);
             } else {
@@ -290,7 +290,7 @@ public class PaintUtil {
         g.setFont(font);
 
         if (text != null && !text.equals("")) {
-            View v = PropertyUtil.getObject(c, DarkHTML.propertyKey, View.class);
+            View v = PropertyUtil.getObject(c, BasicHTML.propertyKey, View.class);
             if (v != null) {
                 v.paint(g, textRect);
             } else {
@@ -302,7 +302,11 @@ public class PaintUtil {
     }
 
     public static void fillRect(final Graphics g, final Rectangle r) {
-        g.fillRect(r.x, r.y, r.width, r.height);
+        fillRect(g, r.x, r.y, r.width, r.height);
+    }
+
+    public static void fillRect(final Graphics g, final int x, final int y, final int w, final int h) {
+        g.fillRect(x, y, w, h);
     }
 
     public enum Outline {
