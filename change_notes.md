@@ -7,7 +7,7 @@
 - Balloons tooltips are now enabled by default for buttons.
 - Improved html style sheet.
 - On Windows (Vista and later) darklaf will now use the system font.
-- On macOS Catalina the default font will now be `Helvetica Neue` due to karning issues with the `San Francisco` font.
+- On macOS Catalina the default font will now be `Helvetica Neue` due to kerning issues with the `San Francisco` font.
 - Better interoperability with custom cell renderers.
 - Improved selection painting.
   - Added property to control whether the selection is extended to the end of the text component.
@@ -16,6 +16,7 @@
     ````
 - Performance improvements.
 - New scrollbar appearance on macOS that resembles the system appearance more closely.
+- Improved slider thumb appearance.
 - Added rounded button variant.
   ````java
   button.putClientProperty(DarkButtonUI.KEY_ROUND, true);
