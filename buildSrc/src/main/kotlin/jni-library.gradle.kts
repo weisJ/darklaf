@@ -111,7 +111,7 @@ afterEvaluate {
                         }
                         else -> {
                             val downloadUrl =
-                                "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+branch%3Amaster"
+                                "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+is%3Asuccess+branch%3Amaster"
                             logger.warn(
                                 """
                                 ${project.name}: Library $relativePath for targetMachine $variantName does not exist.
