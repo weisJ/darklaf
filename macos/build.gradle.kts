@@ -34,6 +34,7 @@ library {
             dependsOn(macPath)
             compilerArgs.addAll("-x", "objective-c++")
             compilerArgs.addAll("-mmacosx-version-min=10.10")
+            compilerArgs.addAll("-Wunguarded-availability")
             compilerArgs.addJavaFrameworks()
             source.from(
                 file("src/main/objectiveCpp/Decorations.mm"),
