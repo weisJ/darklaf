@@ -334,7 +334,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     /**
      * Load the theme property file with the specified name. The name gets resolved to the resource location of the
-     * theme adds the theme property prefix and appends ".properties" e.g. "test" ->
+     * theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
      * @param  name the properties name.
@@ -346,7 +346,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     /**
      * Load the theme property file with the specified name. The name gets resolved to the resource location of the
-     * theme adds the theme property prefix and appends ".properties" e.g. "test" ->
+     * theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
      * @param  name   the properties name.
