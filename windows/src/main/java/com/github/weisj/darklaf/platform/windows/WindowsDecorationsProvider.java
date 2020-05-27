@@ -60,7 +60,8 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
         }
         long hwnd = PointerUtil.getHWND(window);
         if (hwnd != 0) {
-            if (JNIDecorationsWindows.installPopupMenuDecorations(hwnd) && window instanceof RootPaneContainer) {
+            JNIDecorationsWindows.installPopupMenuDecorations(hwnd);
+            if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
                 Color bg = rootPane != null ? rootPane.getBackground() : null;
                 if (bg != null) {
