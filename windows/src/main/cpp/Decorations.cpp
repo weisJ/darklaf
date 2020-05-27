@@ -331,7 +331,7 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
                 // Don't paint the background if the window is moving to avoid teared graphics on the window edge.
                 PaintBackground(hwnd, wParam, wrapper);
             }
-            if (uMsg == WM_ERASEBKGND) return TRUE;
+            if (uMsg == WM_ERASEBKGND && wrapper->skipEraseBg) return TRUE;
             break;
         case WM_NCUAHDRAWCAPTION:
         case WM_NCUAHDRAWFRAME:
