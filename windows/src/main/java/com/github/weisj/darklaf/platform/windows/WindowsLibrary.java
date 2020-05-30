@@ -45,17 +45,6 @@ public class WindowsLibrary extends AbstractLibrary {
     }
 
     @Override
-    protected String getLibraryPath() {
-        if (SystemInfo.undefinedArchitecture) {
-            logger.warning("Could not determine jre model '"
-                           + SystemInfo.jreArchitecture
-                           + "'. Native features will be disabled");
-            return null;
-        }
-        return super.getLibraryPath();
-    }
-
-    @Override
     protected String getPath() {
         if (SystemInfo.isX86) {
             return super.getPath() + x86_PATH;
@@ -68,6 +57,6 @@ public class WindowsLibrary extends AbstractLibrary {
 
     @Override
     protected boolean canLoad() {
-        return SystemInfo.isWindows10;
+        return !SystemInfo.undefinedArchitecture && SystemInfo.isWindows10;
     }
 }

@@ -63,14 +63,12 @@ public abstract class AbstractLibrary {
             String path = getLibraryPath();
             if (path != null && !path.isEmpty()) {
                 NativeUtil.loadLibraryFromJar(getLibraryPath());
+                loaded = true;
+                info("Loaded " + getLibraryName() + ".");
             }
-            loaded = true;
-            logger.info("Loaded " + getLibraryName() + ". Native features are enabled.");
         } catch (Throwable e) {
             // Library not found, SecurityManager prevents library loading etc.
-            logger.log(Level.SEVERE,
-                       "Could not load library " + getLibraryName() + ". Native features will be disabled",
-                       e);
+            error("Could not load library " + getLibraryName() + ".", e);
         }
     }
 
@@ -90,5 +88,17 @@ public abstract class AbstractLibrary {
 
     public boolean isLoaded() {
         return loaded;
+    }
+
+    protected void info(final String message) {
+        if (logger != null) logger.info(message);
+    }
+
+    protected void warning(final String message) {
+        if (logger != null) logger.warning(message);
+    }
+
+    protected void error(final String message, final Throwable e) {
+        if (logger != null) logger.log(Level.SEVERE, message, e);
     }
 }

@@ -109,4 +109,8 @@ public class JNIThemeInfoMacOS {
      * @param listenerPtr pointer to the listener.
      */
     public static native void deletePreferenceChangeListener(final long listenerPtr);
+
+    public static native void patchAppBundle();
+
+    public static native void unpackAppBundle();
 }

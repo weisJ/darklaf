@@ -55,13 +55,13 @@ jobs:
       - name: Upload x86 artifact
         uses: actions/upload-artifact@v1
         with:
-          name: darklaf-windows_x86.dll
-          path: windows/build/lib/main/release/x86/darklaf-windows.dll
+          name: windows-x86
+          path: windows/build/libs/main/x86/darklaf-windows.dll
       - name: Upload x86-64 artifact
         uses: actions/upload-artifact@v1
         with:
-          name: darklaf-windows_x86-64.dll
-          path: windows/build/lib/main/release/x86-64/darklaf-windows.dll
+          name: windows-x86-64
+          path: windows/build/libs/main/x86-64/darklaf-windows.dll
 
   macOS:
     name: macOS (Java 11)
@@ -79,5 +79,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: libdarklaf-macos.dylib
-          path: macos/build/lib/main/release/stripped/libdarklaf-macos.dylib
+          name: macos-x86-64
+          path: macos/build/libs/main/libdarklaf-macos.dylib
+      - name: Print library information
+        run: otool -l macos/build/libs/main/libdarklaf-macos.dylib

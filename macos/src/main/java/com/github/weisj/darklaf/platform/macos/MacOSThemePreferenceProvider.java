@@ -27,6 +27,8 @@ package com.github.weisj.darklaf.platform.macos;
 import java.awt.*;
 import java.util.function.Consumer;
 
+import javax.swing.*;
+
 import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -79,6 +81,11 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
     @Override
     public void initialize() {
         MacOSLibrary.get().updateLibrary();
+        if (MacOSLibrary.get().isLoaded()) {
+            JNIThemeInfoMacOS.patchAppBundle();
+            SwingUtilities.invokeLater(() -> { /* Do nothing. This simply forces native resources to be loaded */ });
+            JNIThemeInfoMacOS.unpackAppBundle();
+        }
     }
 
     @Override

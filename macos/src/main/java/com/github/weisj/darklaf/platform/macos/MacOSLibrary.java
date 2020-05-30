@@ -43,18 +43,7 @@ public class MacOSLibrary extends AbstractLibrary {
     }
 
     @Override
-    protected String getLibraryPath() {
-        if (!SystemInfo.isX64) {
-            logger.warning("JRE model '"
-                           + SystemInfo.jreArchitecture
-                           + "' not supported. Native features will be disabled");
-            return null;
-        }
-        return super.getLibraryPath();
-    }
-
-    @Override
     protected boolean canLoad() {
-        return SystemInfo.isMacOSYosemite;
+        return SystemInfo.isX64 && SystemInfo.isMacOSYosemite;
     }
 }
