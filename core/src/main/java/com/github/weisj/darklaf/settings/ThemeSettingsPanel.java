@@ -556,7 +556,7 @@ public class ThemeSettingsPanel extends JPanel {
         themeFollowsSystem = new JCheckBox(resourceBundle.getString("check_system_theme")) {
             @Override
             public void setEnabled(final boolean b) {
-                boolean enabled = b && ThemePreferencesHandler.getSharedInstance().supportsNativeFontSize();
+                boolean enabled = b && ThemePreferencesHandler.getSharedInstance().supportsNativeTheme();
                 super.setEnabled(enabled);
             }
         };

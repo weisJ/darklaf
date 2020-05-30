@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow")
     id("com.github.vlsi.crlf")
 }
 
@@ -42,27 +41,9 @@ val fontTest by tasks.registering(JavaExec::class) {
     classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
 }
 
-tasks.shadowJar {
-    exclude("help/")
-    exclude("icons/")
-    exclude("org/jdesktop/jxlayer/plaf/ext/images/")
-    exclude("com/sun/jna/darwin/")
-    exclude("com/sun/jna/freebsd-x86/")
-    exclude("com/sun/jna/freebsd-x86-64/")
-    exclude("com/sun/jna/linux-arm/")
-    exclude("com/sun/jna/linux-x86/")
-    exclude("com/sun/jna/linux-x86-64/")
-    exclude("com/sun/jna/openbsd-x86/")
-    exclude("com/sun/jna/openbsd-x86-64/")
-    exclude("com/sun/jna/sunos-sparc/")
-    exclude("com/sun/jna/sunos-sparcv9/")
-    exclude("com/sun/jna/sunos-x86/")
-    exclude("com/sun/jna/sunos-x86-64/")
-}
-
 abstract class DemoTask : JavaExec() {
     init {
-        main = "UIDemo"
+        main = "DemoLauncher"
     }
 
     @Option(

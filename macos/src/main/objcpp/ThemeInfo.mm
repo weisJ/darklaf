@@ -27,8 +27,9 @@
 
 #define OBJC(jl) ((id)jlong_to_ptr(jl))
 
+#define NSRequiresAquaSystemAppearance CFSTR("NSRequiresAquaSystemAppearance")
+
 #define KEY_APPLE_INTERFACE_STYLE @"AppleInterfaceStyle"
-#define KEY_SWITCHES_AUTOMATICALLY @"AppleInterfaceStyleSwitchesAutomatically"
 #define KEY_ACCENT_COLOR @"AppleAccentColor"
 #define KEY_SELECTION_COLOR @"selectedTextBackgroundColor"
 #define KEY_SYSTEM_COLOR_LIST @"System"
@@ -43,6 +44,8 @@
 #define VALUE_DEFAULT_ACCENT_COLOR (-2)
 #define VALUE_NO_ACCENT_COLOR (-100)
 #define VALUE_NO_SELECTION_COLOR (-1)
+
+BOOL patched = NO;
 
 @interface PreferenceChangeListener:NSObject {
     @public JavaVM *jvm;
@@ -101,19 +104,34 @@
 }
 
 - (void)notificationEvent:(NSNotification *)notification {
-    [self runCallback];
+    [JNFRunLoop performOnMainThreadWaiting:NO withBlock:^{
+        [self runCallback];
+    }];
 }
 
 @end
 
+BOOL isDarkModeCatalina() {
+    NSAppearance *appearance = NSApp.effectiveAppearance;
+    NSAppearanceName appearanceName = [appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua,
+                                                                                          NSAppearanceNameDarkAqua]];
+    return [appearanceName isEqualToString:NSAppearanceNameDarkAqua];
+}
+
+BOOL isDarkModeMojave() {
+    NSString *interfaceStyle = [[NSUserDefaults standardUserDefaults] stringForKey:KEY_APPLE_INTERFACE_STYLE];
+    return [VALUE_DARK caseInsensitiveCompare:interfaceStyle] == NSOrderedSame;
+}
+
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
-    if(@available(macOS 10.14, *)) {
-        NSString *interfaceStyle = [[NSUserDefaults standardUserDefaults] stringForKey:KEY_APPLE_INTERFACE_STYLE];
-        // interfaceStyle can be nil (light mode) or "Dark" (dark mode).
-        BOOL isDark = [VALUE_DARK caseInsensitiveCompare:interfaceStyle] == NSOrderedSame;
-        return (jboolean) isDark;
+    if(@available(macOS 10.15, *)) {
+        // Todo: Check if library was already loaded before patching.
+        return (jboolean) isDarkModeCatalina();
+    }
+    if (@available(macOS 10.14, *)) {
+        return (jboolean) isDarkModeMojave();
     } else {
         return (jboolean) NO;
     }
@@ -179,6 +197,39 @@ JNF_COCOA_ENTER(env);
         env->DeleteGlobalRef(listener->callback);
         [listener release];
         [listener dealloc];
+    }
+JNF_COCOA_EXIT(env);
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_patchAppBundle(JNIEnv *env, jclass obj) {
+JNF_COCOA_ENTER(env);
+    if (@available(macOS 10.15, *)) {
+        NSString *name = [[NSBundle mainBundle] bundleIdentifier];
+        CFStringRef bundleName = (__bridge CFStringRef)name;
+
+        Boolean exists = false;
+        CFPreferencesGetAppBooleanValue(NSRequiresAquaSystemAppearance, bundleName, &exists);
+
+        if (!exists) {
+            // Only patch if value hasn't been explicitly set
+            CFPreferencesSetAppValue(NSRequiresAquaSystemAppearance, kCFBooleanFalse, bundleName);
+            CFPreferencesAppSynchronize(bundleName);
+            patched = YES;
+        }
+    }
+JNF_COCOA_EXIT(env);
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_unpatchAppBundle(JNIEnv *env, jclass obj) {
+JNF_COCOA_ENTER(env);
+    if (!patched) return;
+    if (@available(macOS 10.15, *)) {
+        NSString *name = [[NSBundle mainBundle] bundleIdentifier];
+        CFStringRef bundleName = (__bridge CFStringRef)name;
+        CFPreferencesSetAppValue(NSRequiresAquaSystemAppearance, nil, bundleName);
+        CFPreferencesAppSynchronize(bundleName);
     }
 JNF_COCOA_EXIT(env);
 }
