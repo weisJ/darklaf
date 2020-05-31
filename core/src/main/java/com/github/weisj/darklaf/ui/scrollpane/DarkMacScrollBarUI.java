@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.ui.scrollpane;
 
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -39,13 +40,22 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
     }
 
     @Override
+    protected void paintTrack(final Graphics g, final JComponent c, final Rectangle bounds) {}
+
+    @Override
     protected void paintMaxiThumb(final Graphics2D g, final Rectangle rect) {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
-        g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
-        g.setColor(getThumbColor());
+        g.setComposite(COMPOSITE.derive(thumbAlpha));
         boolean horizontal = scrollbar.getOrientation() == JScrollBar.HORIZONTAL;
-        int arc = horizontal ? (rect.height - 2) : (rect.width - 2);
-        g.fillRoundRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2, arc, arc);
+        int ins = 2;
+        int arc = horizontal ? (rect.height - 2 * ins) : (rect.width - 2 * ins);
+        RoundRectangle2D roundRect = new RoundRectangle2D.Float();
+        roundRect.setRoundRect(rect.x + ins, rect.y + ins,
+                               rect.width - 2 * ins, rect.height - 2 * ins, arc, arc);
+        g.setColor(getThumbColor());
+        g.fill(roundRect);
+        g.setColor(getThumbBorderColor());
+        g.draw(roundRect);
         context.restore();
     }
 }

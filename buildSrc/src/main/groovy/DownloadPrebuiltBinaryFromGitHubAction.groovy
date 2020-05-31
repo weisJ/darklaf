@@ -24,7 +24,7 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
     private static final String TEMP_PATH = "tmp${File.separator}prebuild"
     private static final String PRE_BUILD_PATH = "libs${File.separator}prebuild"
 
-    private final OneTimeLogger tokenWarning = new OneTimeLogger({
+    private final OneTimeLogger tokenWarning = new OneTimeLogger.Static({
         error("""No github access token is specified. Latest artifacts will need to be included manually.
               |The access token needs to have the 'read-public' property. Specify using:
               |    -PgithubAccessToken=<your token>
@@ -32,7 +32,7 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
               |    githubAccessToken=<your token>
               |inside the gradle.properties file.
               |""".stripMargin())
-    })
+    }, "missingTokenWarning")
     private final OneTimeLogger useCachedWarning = new OneTimeLogger({
         log("Could not download artifact or artifact information. Using cached version")
     })
@@ -64,13 +64,16 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
         }
 
         return prebuiltBinary.orElseGet {
-            String errorMessage = """${project.name}: Library for $variant could not be downloaded.
-                      |${(" " * (project.name.size() + 1))} Download it from $manualDownloadUrl
+            String errorMessage = """Library for $variant could not be downloaded.
+                      |Download it from $manualDownloadUrl
                       |""".stripMargin()
+
             if (missingLibraryIsFailure) {
-                throw new GradleException(errorMessage)
+                throw new GradleException(format(errorMessage))
             } else {
-                error(errorMessage)
+                new OneTimeLogger.Static({
+                    error(errorMessage)
+                }, "${variant}-missing").log()
             }
             return createDirectory(tempFilePath("dummy/"))
         }
@@ -320,15 +323,20 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
     }
 
     private void info(String message) {
-        project.logger.info("${project.name}: $message")
+        project.logger.info(format(message))
     }
 
     private void log(String message) {
-        project.logger.warn("${project.name}: $message")
+        project.logger.warn(format(message))
     }
 
     private void error(String message) {
-        project.logger.error("${project.name}: $message")
+        project.logger.error(format(message))
+    }
+
+    private String format(String message) {
+        String pad = " " * (project.name.size() + 2)
+        return "${project.name}: ${message.replace("\n", "\n$pad")}"
     }
 
     private class DownloadInfo {

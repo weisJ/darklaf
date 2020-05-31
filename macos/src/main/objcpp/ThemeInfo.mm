@@ -45,6 +45,9 @@
 #define VALUE_NO_ACCENT_COLOR (-100)
 #define VALUE_NO_SELECTION_COLOR (-1)
 
+BOOL patched = NO;
+BOOL catalinaEnabled = NO;
+
 @interface PreferenceChangeListener:NSObject {
     @public JavaVM *jvm;
     @public jobject callback;
@@ -112,7 +115,7 @@
 BOOL isDarkModeCatalina() {
     NSAppearance *appearance = NSApp.effectiveAppearance;
     NSAppearanceName appearanceName = [appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua,
-                                                                                          NSAppearanceNameDarkAqua]];
+                                                                                      NSAppearanceNameDarkAqua]];
     return [appearanceName isEqualToString:NSAppearanceNameDarkAqua];
 }
 
@@ -125,8 +128,9 @@ JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
     if(@available(macOS 10.15, *)) {
-        // Todo: Check if library was already loaded before patching.
-        return (jboolean) isDarkModeCatalina();
+        if (catalinaEnabled) {
+            return (jboolean) isDarkModeCatalina();
+        }
     }
     if (@available(macOS 10.14, *)) {
         return (jboolean) isDarkModeMojave();
@@ -200,19 +204,23 @@ JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_patchAppBundle(JNIEnv *env, jclass obj) {
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_patchAppBundle(JNIEnv *env, jclass obj, jboolean preJava11) {
 JNF_COCOA_ENTER(env);
     if (@available(macOS 10.15, *)) {
         NSString *name = [[NSBundle mainBundle] bundleIdentifier];
+
         CFStringRef bundleName = (__bridge CFStringRef)name;
 
         Boolean exists = false;
         CFPreferencesGetAppBooleanValue(NSRequiresAquaSystemAppearance, bundleName, &exists);
 
+        catalinaEnabled = preJava11 || exists;
+
         if (!exists) {
             // Only patch if value hasn't been explicitly set
             CFPreferencesSetAppValue(NSRequiresAquaSystemAppearance, kCFBooleanFalse, bundleName);
             CFPreferencesAppSynchronize(bundleName);
+            patched = YES;
         }
     }
 JNF_COCOA_EXIT(env);
@@ -221,6 +229,7 @@ JNF_COCOA_EXIT(env);
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_unpatchAppBundle(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
+    if (!patched) return;
     if (@available(macOS 10.15, *)) {
         NSString *name = [[NSBundle mainBundle] bundleIdentifier];
         CFStringRef bundleName = (__bridge CFStringRef)name;

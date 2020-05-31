@@ -39,7 +39,6 @@ import com.github.weisj.darklaf.util.ColorUtil;
  */
 public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConstants {
 
-    protected static final float THUMB_ALPHA = 0.6f;
     protected static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     protected DarkScrollBarListener scrollBarListener;
     protected Color thumbBorderColor;
@@ -48,6 +47,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     protected Color trackBackground;
     protected int smallSize;
     protected int size;
+    protected float thumbAlpha;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkScrollBarUI();
@@ -77,6 +77,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         trackBackground = UIManager.getColor("ScrollBar.trackColor");
         smallSize = UIManager.getInt("ScrollBar.smallWidth");
         size = UIManager.getInt("ScrollBar.width");
+        thumbAlpha = UIManager.getInt("ScrollBar.thumbAlpha") / 100.0f;
     }
 
     @Override
@@ -148,14 +149,16 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     }
 
     protected void paintMaxiThumb(final Graphics2D g, final Rectangle rect) {
-        g.setComposite(COMPOSITE.derive(THUMB_ALPHA));
-        Color thumbColor = getThumbColor();
-        float thumbAlpha = scrollBarListener.getThumbAlpha();
-        double percent = Math.min(1.0, Math.max(0.0, 1 - (thumbAlpha - THUMB_ALPHA)));
-        g.setColor(ColorUtil.blendColors(thumbBorderColor, thumbColor, percent));
+        g.setComposite(COMPOSITE.derive(thumbAlpha));
+        g.setColor(getThumbBorderColor());
         PaintUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
-        g.setColor(thumbColor);
-        g.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
+        g.setColor(getThumbColor());
+        PaintUtil.fillRect(g, rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
+    }
+
+    protected Color getThumbBorderColor() {
+        double percent = Math.min(1.0, Math.max(0.0, 1 - (scrollBarListener.getThumbAlpha() - thumbAlpha)));
+        return ColorUtil.blendColors(thumbBorderColor, thumbColor, percent);
     }
 
     protected Color getThumbColor() {

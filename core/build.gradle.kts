@@ -43,7 +43,7 @@ val fontTest by tasks.registering(JavaExec::class) {
 
 abstract class DemoTask : JavaExec() {
     init {
-        main = "UIDemo"
+        main = "DemoLauncher"
     }
 
     @Option(

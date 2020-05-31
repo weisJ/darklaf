@@ -110,7 +110,7 @@ public class JNIThemeInfoMacOS {
      */
     public static native void deletePreferenceChangeListener(final long listenerPtr);
 
-    public static native void patchAppBundle();
+    public static native void patchAppBundle(final boolean isJava11OrOlder);
 
-    public static native void unpackAppBundle();
+    public static native void unpatchAppBundle();
 }

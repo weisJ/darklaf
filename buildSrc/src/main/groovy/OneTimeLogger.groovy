@@ -6,10 +6,40 @@ class OneTimeLogger {
         this.logger = logger
     }
 
+    protected boolean isLogged() {
+        return messageAlreadyLogged
+    }
+
+    protected void setLogged(boolean logged) {
+        messageAlreadyLogged = logged
+    }
+
     protected void log() {
-        if (!messageAlreadyLogged) {
+        if (!isLogged()) {
             logger.run()
-            messageAlreadyLogged = true
+            setLogged(true)
+        }
+    }
+
+    static class Static extends OneTimeLogger {
+
+        private static final Map<Object, Boolean> isLogged = new HashMap<>()
+
+        private final Object identifier
+
+        Static(Runnable logger, Object identifier) {
+            super(logger)
+            this.identifier = identifier
+        }
+
+        @Override
+        protected void setLogged(boolean logged) {
+            isLogged.put(identifier, logged)
+        }
+
+        @Override
+        protected boolean isLogged() {
+            return Boolean.TRUE == isLogged.get(identifier)
         }
     }
 }

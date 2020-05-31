@@ -10,7 +10,7 @@ plugins {
 
 library {
     val minOs = "10.10"
-    val frameworkVersion = "10.15.4"
+    val frameworkVersion = "10.15"
 
     dependencies {
         jvmImplementation(project(":darklaf-theme"))
@@ -18,14 +18,14 @@ library {
         jvmImplementation(project(":darklaf-utils"))
         jvmImplementation(project(":darklaf-platform-base"))
         jvmImplementation(project(":darklaf-property-loader"))
-        nativeImplementation("dev.nokee.framework:JavaVM:$frameworkVersion")
-        nativeImplementation("dev.nokee.framework:JavaVM:$frameworkVersion") {
+        nativeImplementation("dev.nokee.framework:JavaVM:[$frameworkVersion,)")
+        nativeImplementation("dev.nokee.framework:JavaVM:[$frameworkVersion,)") {
             capabilities {
-                requireCapability("JavaVM:JavaNativeFoundation:$frameworkVersion")
+                requireCapability("JavaVM:JavaNativeFoundation:[$frameworkVersion,)")
             }
         }
-        nativeImplementation("dev.nokee.framework:AppKit:$frameworkVersion")
-        nativeImplementation("dev.nokee.framework:Cocoa:$frameworkVersion")
+        nativeImplementation("dev.nokee.framework:AppKit:[$frameworkVersion,)")
+        nativeImplementation("dev.nokee.framework:Cocoa:[$frameworkVersion,)")
     }
 
     targetMachines.addAll(machines.macOS.x86_64)
