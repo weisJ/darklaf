@@ -36,7 +36,6 @@ import javax.swing.plaf.basic.BasicPopupMenuUI;
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * This implementation for PopupMenuUI is almost identical to the one of BasicPopupMenuUI. The key difference is that it
@@ -60,8 +59,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     @Override
     public void paint(final Graphics g, final JComponent c) {
         Window window = SwingUtilities.getWindowAncestor(c);
-        if (window != null && PropertyUtil.getBooleanProperty(popupMenu, DarkPopupFactory.KEY_MAKE_VISIBLE)) {
-            popupMenu.putClientProperty(DarkPopupFactory.KEY_MAKE_VISIBLE, false);
+        if (window != null && window.getOpacity() != 1) {
             window.setOpacity(1);
         }
         super.paint(g, c);

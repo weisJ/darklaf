@@ -42,7 +42,6 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_FOCUSABLE_POPUP = "JPopupFactory.focusablePopup";
     public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
     public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
-    public static final String KEY_MAKE_VISIBLE = "JPopupFactory.makeVisible";
     public static final String KEY_OPAQUE = "JPopupFactory.opaque";
 
     private HeavyWeightParent heavyWeightParent;
@@ -100,7 +99,7 @@ public class DarkPopupFactory extends PopupFactory {
         setupWindowBackground(window, opaque, !noDecorations);
         setupWindowFocusableState(isFocusable, window);
         setupWindowDecorations(window, noDecorations);
-        setupWindowOpacity(contents, startHidden, window);
+        setupWindowOpacity(startHidden, window);
     }
 
     protected void setupWindowBackground(final Window window, final boolean opaque, final boolean decorations) {
@@ -137,12 +136,10 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected void setupWindowOpacity(final Component contents, final boolean startHidden, final Window window) {
-        if (startHidden) {
+    protected void setupWindowOpacity(final boolean startHidden, final Window window) {
+        boolean translucencySupported = DarkUIUtil.supportsTransparency(window);
+        if (startHidden && translucencySupported) {
             try {
-                if (contents instanceof JComponent) {
-                    ((JComponent) contents).putClientProperty(KEY_MAKE_VISIBLE, true);
-                }
                 window.setOpacity(0);
             } catch (Exception ignored) {}
         }

@@ -43,6 +43,7 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -168,7 +169,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
     @Override
     public void paint(final Graphics g, final JComponent c) {
         if (((JToolTip) c).getTipText() == null) return;
-        if (added) {
+        if (added && DarkUIUtil.supportsTransparency(DarkUIUtil.getWindow(c))) {
             added = false;
             alpha = 0;
             fadeAnimator.reset();
