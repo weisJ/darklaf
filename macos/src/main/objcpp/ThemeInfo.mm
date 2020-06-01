@@ -30,6 +30,7 @@
 #define NSRequiresAquaSystemAppearance CFSTR("NSRequiresAquaSystemAppearance")
 
 #define KEY_APPLE_INTERFACE_STYLE @"AppleInterfaceStyle"
+#define KEY_SWITCHES_AUTOMATICALLY @"AppleInterfaceStyleSwitchesAutomatically"
 #define KEY_ACCENT_COLOR @"AppleAccentColor"
 #define KEY_SELECTION_COLOR @"selectedTextBackgroundColor"
 #define KEY_SYSTEM_COLOR_LIST @"System"
@@ -127,8 +128,14 @@ BOOL isDarkModeMojave() {
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
+    BOOL isAutoMode = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SWITCHES_AUTOMATICALLY];
     if(@available(macOS 10.15, *)) {
-        if (catalinaEnabled) {
+        if (catalinaEnabled && isAutoMode) {
+            /*
+             * The newer method is more unsafe with regards to the JDK version nad the apps info.plist
+             * We only use it if necessary i.e. 'Auto' mode is selected and the app bundle is correctly patched.
+             * i.e. a specific value has been set in the app bundle or we have patched it manually (only jdk <=11).
+             */
             return (jboolean) isDarkModeCatalina();
         }
     }
