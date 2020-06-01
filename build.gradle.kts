@@ -98,6 +98,7 @@ allprojects {
                 accessToken = githubAccessToken
                 manualDownloadUrl =
                     "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+is%3Asuccess+branch%3Amaster"
+                timeout = 50000
             }
         }
     }

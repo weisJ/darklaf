@@ -45,6 +45,7 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
     private String workflow
     private List<String> branches = []
     private boolean missingLibraryIsFailure
+    private int timeout
 
     private String githubAccessToken
     private String variant
@@ -109,6 +110,10 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
 
     void setBranches(List<String> branches) {
         this.branches = branches
+    }
+
+    void setTimeout(int timeout) {
+        this.timeout = timeout
     }
 
     private Map getCacheInfo() {
@@ -289,6 +294,9 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
         if (isOffline()) return Optional.empty()
         HttpURLConnection get = new URL(url).openConnection() as HttpURLConnection
         get.setRequestMethod("GET")
+        if (timeout >= 0) {
+            get.setConnectTimeout(timeout)
+        }
         githubAccessToken?.with {
             get.setRequestProperty("Authorization", "token $it")
         }
@@ -300,6 +308,7 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
                 log("Could not fetch $url. Response code '$responseCode'.")
             }
         } catch (IOException ignored) {
+            error(ignored.getMessage())
         }
         return Optional.empty()
     }

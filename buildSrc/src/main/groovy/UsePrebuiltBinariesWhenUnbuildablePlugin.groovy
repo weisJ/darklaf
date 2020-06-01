@@ -47,6 +47,7 @@ class UsePrebuiltBinariesWhenUnbuildablePlugin implements Plugin<Project> {
                         it.manualDownloadUrl = githubArtifactExtension.manualDownloadUrl
                         it.branches = githubArtifactExtension.branches
                         it.missingLibraryIsFailure = prebuildExtension.missingLibraryIsFailure
+                        it.timeout = githubArtifactExtension.timeout
                     }
                     var.nativeRuntimeFiles.setFrom(prebuiltBinariesTask.map { it.prebuiltBinaryFile })
                     var.nativeRuntimeFiles.from(new CallableLogger({
@@ -110,6 +111,7 @@ class UsePrebuiltBinariesWhenUnbuildablePlugin implements Plugin<Project> {
         private String workflow
         private String manualDownloadUrl
         private String accessToken
+        private int timeout = 0
         private List<String> branches = ["master"]
 
         String getUser() {
@@ -136,6 +138,10 @@ class UsePrebuiltBinariesWhenUnbuildablePlugin implements Plugin<Project> {
             return branches
         }
 
+        int getTimeout() {
+            return timeout
+        }
+
         void setUser(String user) {
             this.user = user
         }
@@ -158,6 +164,10 @@ class UsePrebuiltBinariesWhenUnbuildablePlugin implements Plugin<Project> {
 
         void setBranches(List<String> branches) {
             this.branches = branches
+        }
+
+        void setTimeout(int timeout) {
+            this.timeout = timeout
         }
     }
 
