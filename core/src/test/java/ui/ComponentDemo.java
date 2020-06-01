@@ -64,6 +64,8 @@ public interface ComponentDemo {
     }
 
     static void showDemo(final ComponentDemo demo, final Dimension dimension, final boolean asDialog) {
+        LafManager.enabledPreferenceChangeReporting(false);
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
         SwingUtilities.invokeLater(() -> {
             if (!LafManager.isInstalled()) {
                 LafManager.install(demo.createTheme());

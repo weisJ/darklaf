@@ -19,8 +19,9 @@ val enableGradleMetadata by props()
 val skipAutostyle by props()
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
+val projectVersion = "darklaf".v
 
-val buildVersion = "darklaf".v + releaseParams.snapshotSuffix
+val buildVersion = projectVersion + releaseParams.snapshotSuffix
 println("Building: Darklaf $buildVersion")
 println("     JDK: " + System.getProperty("java.home"))
 
@@ -81,6 +82,24 @@ allprojects {
             mavenLocal()
         }
         mavenCentral()
+    }
+
+    val githubAccessToken by props("")
+
+    plugins.withType<UsePrebuiltBinariesWhenUnbuildablePlugin> {
+        prebuildBinaries {
+            prebuildLibrariesFolder = "pre-build-libraries"
+            missingLibraryIsFailure = false
+            github {
+                user = "weisj"
+                repository = "darklaf"
+                workflow = "libs.yml"
+                branches = listOf("master", "v$projectVersion", projectVersion)
+                accessToken = githubAccessToken
+                manualDownloadUrl =
+                    "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+is%3Asuccess+branch%3Amaster"
+            }
+        }
     }
 
     if (!skipAutostyle) {
@@ -266,7 +285,8 @@ allprojects {
 
         configure<PublishingExtension> {
             if (project.path.startsWith(":darklaf-dependencies-bom") ||
-                project.path == ":") {
+                project.path == ":"
+            ) {
                 // We don't it to Central for now
                 return@configure
             }

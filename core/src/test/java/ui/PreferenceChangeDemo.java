@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.theme.Theme;
 public class PreferenceChangeDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
+        LafManager.enabledPreferenceChangeReporting(false);
         ComponentDemo.showDemo(new PreferenceChangeDemo());
     }
 

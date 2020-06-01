@@ -27,6 +27,8 @@ package com.github.weisj.darklaf.platform.macos;
 import java.awt.*;
 import java.util.function.Consumer;
 
+import javax.swing.*;
+
 import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -79,6 +81,17 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
     @Override
     public void initialize() {
         MacOSLibrary.get().updateLibrary();
+        if (MacOSLibrary.get().isLoaded()) {
+            /*
+             * Patching the app bundle doesn't work anymore in JDK 14. I am not sure what the last version is,
+             * where it still works, so for now everything below or equal to JDK 11 will benefit from the newer
+             * catalina algorithm. For everything else we fall back to the Mojave style. This should still give a
+             * correct answer most of the time.
+             */
+            JNIThemeInfoMacOS.patchAppBundle(!SystemInfo.isJavaVersionAtLeast("12"));
+            SwingUtilities.invokeLater(() -> { /* Do nothing. This simply forces native resources to be loaded */ });
+            JNIThemeInfoMacOS.unpatchAppBundle();
+        }
     }
 
     @Override
