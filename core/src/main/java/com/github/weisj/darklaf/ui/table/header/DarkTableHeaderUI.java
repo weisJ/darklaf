@@ -68,7 +68,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         borderColor = UIManager.getColor("TableHeader.borderColor");
         LookAndFeel.installBorder(header, "TableHeader.border");
         defaultHeight = UIManager.getInt("TableHeader.height");
-        if (defaultHeight < 0) {
+        if (defaultHeight <= 0) {
             defaultHeight = HEADER_HEIGHT;
         }
         rendererDelegate = new DarkTableHeaderRendererDelegate(header.getDefaultRenderer());
