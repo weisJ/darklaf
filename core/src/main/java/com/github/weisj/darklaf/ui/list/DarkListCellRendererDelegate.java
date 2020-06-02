@@ -61,13 +61,6 @@ public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Objec
                 // Fix cell height for empty string.
                 label.setText(" ");
             }
-            if (label.getHorizontalAlignment() != CENTER) {
-                if (list.getComponentOrientation().isLeftToRight()) {
-                    label.setHorizontalAlignment(LEFT);
-                } else {
-                    label.setHorizontalAlignment(RIGHT);
-                }
-            }
         }
         CellUtil.setupListBackground(renderer, list, isSelected, index);
         CellUtil.setupListForeground(renderer, list, isSelected);

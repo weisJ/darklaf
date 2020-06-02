@@ -58,17 +58,6 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
                 ? getBooleanRenderer(table)
                 : super.getDelegate();
         Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        int horizontalAlignment = table.getComponentOrientation().isLeftToRight()
-                ? SwingConstants.LEFT
-                : SwingConstants.RIGHT;
-
-        if (component instanceof JLabel) {
-            ((JLabel) component).setVerticalAlignment(SwingConstants.CENTER);
-            ((JLabel) component).setHorizontalAlignment(horizontalAlignment);
-        } else if (component instanceof AbstractButton) {
-            ((AbstractButton) component).setVerticalAlignment(SwingConstants.CENTER);
-            ((AbstractButton) component).setHorizontalAlignment(horizontalAlignment);
-        }
 
         boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table);
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && hasFocus && !isRowFocus;

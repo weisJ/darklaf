@@ -24,9 +24,29 @@
  */
 package com.github.weisj.darklaf.ui.table.renderer;
 
+import java.awt.*;
+
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTableCellRenderer extends DefaultTableCellRenderer {}
+public class DarkTableCellRenderer extends DefaultTableCellRenderer {
+
+    @Override
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+                                                   final boolean hasFocus, final int row, final int column) {
+        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        int horizontalAlignment = table.getComponentOrientation().isLeftToRight()
+                ? SwingConstants.LEFT
+                : SwingConstants.RIGHT;
+
+        if (component instanceof JLabel) {
+            ((JLabel) component).setHorizontalAlignment(horizontalAlignment);
+        } else if (component instanceof AbstractButton) {
+            ((AbstractButton) component).setHorizontalAlignment(horizontalAlignment);
+        }
+        return component;
+    }
+}
