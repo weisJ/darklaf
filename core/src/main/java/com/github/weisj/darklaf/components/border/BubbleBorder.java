@@ -156,6 +156,7 @@ public class BubbleBorder extends AbstractBorder {
      */
     public BubbleBorder setPointerSize(final int size) {
         pointerSize = Math.max(size, 0);
+        int pSize = getPointerSide() != Alignment.CENTER ? pointerSize : 0;
         float left = thickness;
         float right = thickness;
         float bottom = thickness;
@@ -165,18 +166,18 @@ public class BubbleBorder extends AbstractBorder {
             case NORTH :
             case NORTH_WEST :
             case NORTH_EAST :
-                top += pointerSize;
+                top += pSize;
                 break;
             case SOUTH :
             case SOUTH_WEST :
             case SOUTH_EAST :
-                bottom += pointerSize;
+                bottom += pSize;
                 break;
             case WEST :
-                left += pointerSize;
+                left += pSize;
                 break;
             case EAST :
-                right += pointerSize;
+                right += pSize;
                 break;
             default :
                 break;

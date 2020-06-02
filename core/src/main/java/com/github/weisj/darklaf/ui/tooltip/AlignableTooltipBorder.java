@@ -27,24 +27,20 @@ package com.github.weisj.darklaf.ui.tooltip;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.Alignment;
 
-public class DarkDefaultToolTipBorder extends MutableLineBorder implements UIResource, AlignableTooltipBorder {
+public interface AlignableTooltipBorder {
 
-    protected Insets padding;
-
-    public DarkDefaultToolTipBorder() {
-        super(1, 1, 1, 1, null);
-        setColor(UIManager.getColor("ToolTip.borderColor"));
-        padding = UIManager.getInsets("ToolTip.plainInsets");
+    default int getDistanceToPointer() {
+        return 0;
     }
 
-    @Override
-    public Insets getBorderInsets(final Component c) {
-        Insets ins = super.getBorderInsets(c);
-        return DarkUIUtil.addInsets(ins, padding);
+    default int getPointerOffset(final Component c, final Dimension dim, final int factor) {
+        return 0;
     }
+
+    default void adjustContentSize(final JToolTip toolTip, final Dimension dimension, final Alignment align) {}
+
+    default void setPointerLocation(final Alignment center, final boolean showPointer) {}
 }

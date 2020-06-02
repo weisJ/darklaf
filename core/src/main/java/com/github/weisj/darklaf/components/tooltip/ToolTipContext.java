@@ -35,8 +35,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.components.alignment.AlignmentStrategy;
+import com.github.weisj.darklaf.ui.tooltip.AlignableTooltipBorder;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -520,8 +520,9 @@ public class ToolTipContext {
     private Dimension getContentSize() {
         Dimension dim = toolTip.getPreferredSize();
         Alignment align = alignment == Alignment.CENTER ? centerAlignment : alignment;
-        if (align == Alignment.EAST || align == Alignment.WEST) {
-            dim.height -= ((DarkTooltipBorder) toolTip.getBorder()).getShadowSize(toolTip);
+        Border border = toolTip.getBorder();
+        if (border instanceof AlignableTooltipBorder) {
+            ((AlignableTooltipBorder) border).adjustContentSize(toolTip, dim, align);
         }
         return dim;
     }
@@ -546,27 +547,26 @@ public class ToolTipContext {
     }
 
     private Point adjustPoint(final Point p, final Alignment align, final Dimension dim, final boolean outside) {
-        int factor = outside ? 1 : -1;
-        DarkTooltipBorder border = ((DarkTooltipBorder) toolTip.getBorder());
-        if (align == Alignment.EAST) {
-            p.x -= factor * border.getDistanceToPointer();
-        } else if (align == Alignment.WEST) {
-            p.x += factor * border.getDistanceToPointer();
-        } else if (align.isNorth()) {
-            p.y += factor * border.getDistanceToPointer();
-        } else if (align.isSouth()) {
-            p.y -= factor * border.getDistanceToPointer();
-        }
-        if (align == Alignment.NORTH_EAST || align == Alignment.SOUTH_EAST) {
-            p.x -= factor * border.getPointerOffset(toolTip, dim, factor);
-        } else if (align == Alignment.NORTH_WEST || align == Alignment.SOUTH_WEST) {
-            p.x += factor * border.getPointerOffset(toolTip, dim, factor);
+        Border b = toolTip.getBorder();
+        if (b instanceof AlignableTooltipBorder) {
+            AlignableTooltipBorder border = (AlignableTooltipBorder) b;
+            int factor = outside ? 1 : -1;
+            if (align == Alignment.EAST) {
+                p.x -= factor * border.getDistanceToPointer();
+            } else if (align == Alignment.WEST) {
+                p.x += factor * border.getDistanceToPointer();
+            } else if (align.isNorth()) {
+                p.y += factor * border.getDistanceToPointer();
+            } else if (align.isSouth()) {
+                p.y -= factor * border.getDistanceToPointer();
+            }
+            if (align.isEast(false)) {
+                p.x -= factor * border.getPointerOffset(toolTip, dim, factor);
+            } else if (align.isWest(false)) {
+                p.x += factor * border.getPointerOffset(toolTip, dim, factor);
+            }
         }
         return p;
-    }
-
-    public void removeToolTip() {
-        setHideOnExit(false);
     }
 
     public Alignment getAlignment() {

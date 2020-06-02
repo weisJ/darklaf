@@ -42,14 +42,14 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /**
  * @author Jannis Weis
  */
-public class DarkTooltipBorder implements Border {
+public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
 
     private final DropShadowBorder shadowBorder;
     private final BubbleBorder bubbleBorder;
-    private final int shadowSize;
-    private final float opacity;
     private boolean skipShadow;
     private Insets margin;
+    private Alignment alignment;
+    private boolean showPointer;
 
     public DarkTooltipBorder() {
         margin = UIManager.getInsets("ToolTip.borderInsets");
@@ -59,8 +59,8 @@ public class DarkTooltipBorder implements Border {
         bubbleBorder.setPointerSize(8);
         bubbleBorder.setPointerWidth(12);
         bubbleBorder.setPointerSide(Alignment.CENTER);
-        shadowSize = UIManager.getInt("ToolTip.shadowSize");
-        opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
+        int shadowSize = UIManager.getInt("ToolTip.shadowSize");
+        float opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
         shadowBorder = new DropShadowBorder(UIManager.getColor("ToolTip.borderShadowColor"),
                                             shadowSize, opacity, 2 * shadowSize,
                                             false, true, true, true);
@@ -77,8 +77,9 @@ public class DarkTooltipBorder implements Border {
                                           height - ins.top - ins.bottom, false);
     }
 
+    @Override
     public int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
-        if (isPlain(c)) return 0;
+        if (!showPointer || isPlain(c)) return 0;
         int offset = (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
                      + shadowBorder.getShadowSize();
         int thickness = bubbleBorder.getThickness();
@@ -87,16 +88,23 @@ public class DarkTooltipBorder implements Border {
         return offset;
     }
 
+    @Override
+    public void adjustContentSize(final JToolTip toolTip, final Dimension dim, final Alignment align) {
+        if (align == Alignment.EAST || align == Alignment.WEST) {
+            dim.height -= getShadowSize(toolTip);
+        }
+    }
+
     private void adjustInsets(final Insets si) {
         Alignment align = bubbleBorder.getPointerSide();
         int pointerSize = bubbleBorder.getPointerSize();
-        if (align == Alignment.SOUTH || align == Alignment.SOUTH_EAST || align == Alignment.SOUTH_WEST) {
+        if (align.isSouth()) {
             si.bottom -= pointerSize;
         } else if (align == Alignment.EAST) {
             si.right -= pointerSize;
         } else if (align == Alignment.WEST) {
             si.left -= pointerSize;
-        } else if (align == Alignment.NORTH_EAST || align == Alignment.NORTH || align == Alignment.NORTH_WEST) {
+        } else if (align.isNorth()) {
             si.top = 0;
         }
     }
@@ -104,13 +112,13 @@ public class DarkTooltipBorder implements Border {
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
+        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         GraphicsContext context = new GraphicsContext(g);
         if (isPlain(c)) {
             g.setColor(bubbleBorder.getColor());
             PaintUtil.drawRect(g, x, y, width, height, 1);
             return;
         }
-        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         Insets ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
         Area innerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
@@ -167,8 +175,13 @@ public class DarkTooltipBorder implements Border {
         return false;
     }
 
-    public void setPointerLocation(final Alignment side) {
-        bubbleBorder.setPointerSide(side);
+    @Override
+    public void setPointerLocation(final Alignment side, final boolean showPointer) {
+        if (showPointer) {
+            bubbleBorder.setPointerSide(side);
+        }
+        this.showPointer = showPointer;
+        alignment = side;
     }
 
     public void setPointerWidth(final int width) {
@@ -194,8 +207,9 @@ public class DarkTooltipBorder implements Border {
         this.skipShadow = skip;
     }
 
+    @Override
     public int getDistanceToPointer() {
-        switch (bubbleBorder.getPointerSide()) {
+        switch (alignment) {
             case WEST :
             case SOUTH :
             case SOUTH_EAST :

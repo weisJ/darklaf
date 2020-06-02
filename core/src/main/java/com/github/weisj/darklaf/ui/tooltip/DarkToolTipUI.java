@@ -45,7 +45,6 @@ import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
@@ -54,12 +53,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
                            ToolTipConstants {
 
     protected static final float MAX_ALPHA = 1.0f;
-    protected Animator fadeAnimator;
-    protected float alpha = 0;
 
-    protected JToolTip toolTip;
-    protected ToolTipStyle style;
-    protected boolean isTipTextChanging;
     protected final MouseListener exitListener = new MouseAdapter() {
         @Override
         public void mouseExited(final MouseEvent e) {
@@ -105,14 +99,17 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
             updateStyle();
         }
     };
-    private boolean added;
+
+    protected Animator fadeAnimator;
+    protected float alpha = 0;
+    protected JToolTip toolTip;
+    protected ToolTipStyle style;
+
+    private boolean animationScheduled;
+    protected String effectiveTipText;
 
     public static ComponentUI createUI(final JComponent c) {
-        if (PropertyUtil.getBooleanProperty(c, KEY_PLAIN_TOOLTIP)) {
-            return BasicToolTipUI.createUI(c);
-        } else {
-            return new DarkToolTipUI();
-        }
+        return new DarkToolTipUI();
     }
 
     @Override
@@ -129,10 +126,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         toolTip.putClientProperty(DarkPopupFactory.KEY_FORCE_HEAVYWEIGHT, true);
         fadeAnimator = new FadeInAnimator();
         c.setOpaque(false);
-        DarkTooltipBorder border = new DarkTooltipBorder();
-        Alignment align = PropertyUtil.getObject(c, KEY_POINTER_LOCATION, Alignment.class, Alignment.CENTER);
-        border.setPointerLocation(align);
-        toolTip.setBorder(border);
+        updateTipText(toolTip);
         updateStyle();
     }
 
@@ -168,16 +162,19 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
-        if (((JToolTip) c).getTipText() == null) return;
-        if (added && DarkUIUtil.supportsTransparency(DarkUIUtil.getWindow(c))) {
-            added = false;
-            alpha = 0;
-            fadeAnimator.reset();
-            fadeAnimator.resume();
+        if (getTipText().isEmpty()) return;
+        boolean isPlain = style == ToolTipStyle.PLAIN;
+        if (animationScheduled) {
+            startAnimation();
+        } else {
+            Window window = DarkUIUtil.getWindow(c);
+            if (window.getOpacity() != 1 && !transparencySupported(window)) {
+                window.setOpacity(1);
+            }
         }
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.setColor(c.getBackground());
-        if (c.getBorder() instanceof DarkTooltipBorder) {
+        if (!isPlain && c.getBorder() instanceof DarkTooltipBorder) {
             Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
             ((Graphics2D) g).fill(area);
         } else {
@@ -187,11 +184,18 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         context.restore();
     }
 
+    protected void startAnimation() {
+        animationScheduled = false;
+        fadeAnimator.reset();
+        alpha = 0;
+        fadeAnimator.resume();
+    }
+
     protected void paintText(final Graphics g, final JComponent c) {
         Dimension size = c.getSize();
 
         g.setColor(c.getForeground());
-        String tipText = getTipText((JToolTip) c);
+        String tipText = getTipText();
 
         Insets insets = c.getInsets();
         Rectangle paintTextR = new Rectangle(insets.left, insets.top,
@@ -200,12 +204,14 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         PaintUtil.drawString(g, c, tipText, paintTextR);
     }
 
-    protected String getTipText(final JToolTip c) {
-        String tipText = c.getTipText();
-        if (tipText == null) {
-            tipText = "";
+    protected String getTipText() {
+        if (effectiveTipText == null) {
+            updateTipText(toolTip);
         }
-        return tipText;
+        if (effectiveTipText == null) {
+            effectiveTipText = "";
+        }
+        return effectiveTipText;
     }
 
     public Dimension getPreferredSize(final JComponent c) {
@@ -214,7 +220,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         Insets insets = c.getInsets();
         Dimension prefSize = new Dimension(insets.left + insets.right,
                                            insets.top + insets.bottom);
-        String text = ((JToolTip) c).getTipText();
+        String text = getTipText();
         if ((text != null) && !text.equals("")) {
             View v = (View) c.getClientProperty(PropertyKey.HTML);
             if (v != null) {
@@ -265,78 +271,107 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         String key = evt.getPropertyName();
         if (evt.getSource() instanceof JToolTip) {
             JToolTip tooltip = (JToolTip) evt.getSource();
-            if (tooltip.getBorder() instanceof DarkTooltipBorder) {
-                DarkTooltipBorder border = (DarkTooltipBorder) tooltip.getBorder();
+            if (tooltip.getBorder() instanceof AlignableTooltipBorder) {
+                AlignableTooltipBorder b = (AlignableTooltipBorder) tooltip.getBorder();
                 Object newVal = evt.getNewValue();
                 if (KEY_POINTER_LOCATION.equals(key)) {
                     if (newVal instanceof Alignment) {
-                        border.setPointerLocation((Alignment) newVal);
+                        b.setPointerLocation((Alignment) newVal, pointerEnabled());
                     } else {
-                        border.setPointerLocation(Alignment.CENTER);
+                        b.setPointerLocation(Alignment.CENTER, pointerEnabled());
                     }
                     updateSize();
-                } else if (KEY_POINTER_HEIGHT.equals(key)) {
-                    if (newVal instanceof Integer) {
-                        border.setPointerHeight((Integer) newVal);
-                    }
-                    updateSize();
-                } else if (KEY_POINTER_WIDTH.equals(key)) {
-                    if (newVal instanceof Integer) {
-                        border.setPointerWidth((Integer) newVal);
-                    }
-                    updateSize();
-                } else if (KEY_INSETS.equals(key)) {
-                    updateSize();
-                } else if (PropertyKey.COMPONENT.equals(key)) {
-                    Object oldComp = evt.getOldValue();
-                    if (oldComp instanceof Component) {
-                        ((Component) oldComp).removeMouseListener(mouseListener);
-                        ((Component) oldComp).removePropertyChangeListener(componentPropertyChaneListener);
-                    }
-                    Object newComp = evt.getNewValue();
-                    if (newComp instanceof Component) {
-                        ((Component) newComp).addMouseListener(mouseListener);
-                        ((Component) newComp).addPropertyChangeListener(componentPropertyChaneListener);
-                    }
-                    updateStyle();
-                } else if (TIP_TEXT_PROPERTY.equals(key)) {
-                    if (!isTipTextChanging) {
-                        isTipTextChanging = true;
-                        String tipText = tooltip.getTipText();
-                        if (tipText != null && !tipText.startsWith("<html>")) {
-                            if (tipText.contains("\n")) {
-                                tooltip.setTipText("<html>" + tipText.replaceAll("\n", "<\\br>") + "</html>");
-                            }
-                        } else {
-                            tooltip.setTipText(tipText);
+                }
+
+                if (b instanceof DarkTooltipBorder) {
+                    DarkTooltipBorder border = (DarkTooltipBorder) tooltip.getBorder();
+                    if (pointerEnabled() && KEY_POINTER_HEIGHT.equals(key)) {
+                        if (newVal instanceof Integer) {
+                            border.setPointerHeight((Integer) newVal);
                         }
                         updateSize();
-                        isTipTextChanging = false;
-                    }
-                } else if (PropertyKey.ANCESTOR.equals(key)) {
-                    if (evt.getOldValue() == null) {
-                        // Added to hierarchy. Schedule animation start.
-                        added = true;
-                        ToolTipUtil.applyContext(toolTip);
-                    }
-                    if (evt.getNewValue() == null) {
-                        alpha = 0;
+                    } else if (pointerEnabled() && KEY_POINTER_WIDTH.equals(key)) {
+                        if (newVal instanceof Integer) {
+                            border.setPointerWidth((Integer) newVal);
+                        }
+                        updateSize();
+                    } else if (KEY_INSETS.equals(key)) {
+                        updateSize();
                     }
                 }
             }
-            if (KEY_STYLE.equals(key)) {
+            if (PropertyKey.COMPONENT.equals(key)) {
+                Object oldComp = evt.getOldValue();
+                if (oldComp instanceof Component) {
+                    ((Component) oldComp).removeMouseListener(mouseListener);
+                    ((Component) oldComp).removePropertyChangeListener(componentPropertyChaneListener);
+                }
+                Object newComp = evt.getNewValue();
+                if (newComp instanceof Component) {
+                    ((Component) newComp).addMouseListener(mouseListener);
+                    ((Component) newComp).addPropertyChangeListener(componentPropertyChaneListener);
+                }
+                updateStyle();
+            } else if (TIP_TEXT_PROPERTY.equals(key)) {
+                updateTipText(tooltip);
                 updateSize();
+            } else if (PropertyKey.ANCESTOR.equals(key)) {
+                if (evt.getOldValue() == null) {
+                    // Added to hierarchy. Schedule animation start.
+                    scheduleAnimation();
+                    ToolTipUtil.applyContext(toolTip);
+                }
+                if (evt.getNewValue() == null) {
+                    alpha = 0;
+                }
             }
         }
     }
 
-    private void updateStyle() {
+    protected boolean pointerEnabled() {
+        return style.supportsPointer();
+    }
+
+    protected void updateTipText(final JToolTip tooltip) {
+        String tipText = tooltip.getTipText();
+        if (tipText != null && !tipText.startsWith("<html>") && tipText.contains("\n")) {
+            effectiveTipText = "<html>" + tipText.replaceAll("\n", "<\\br>") + "</html>";
+        } else {
+            effectiveTipText = tipText;
+        }
+        if (effectiveTipText == null) effectiveTipText = "";
+    }
+
+    protected void scheduleAnimation() {
+        animationScheduled = transparencySupported(DarkUIUtil.getWindow(toolTip));
+    }
+
+    protected boolean transparencySupported(final Window window) {
+        return style != ToolTipStyle.PLAIN && DarkUIUtil.supportsTransparency(window);
+    }
+
+    protected void updateStyle() {
         JComponent comp = toolTip.getComponent();
-        if (comp != null) {
-            ToolTipStyle style = ToolTipStyle.parse(comp.getClientProperty(KEY_STYLE));
-            ToolTipStyle tooltipStyle = ToolTipStyle.parse(toolTip.getClientProperty(KEY_STYLE));
-            toolTip.putClientProperty(KEY_STYLE, style != null ? style : tooltipStyle != null ? tooltipStyle
-                    : ToolTipStyle.PLAIN_BALLOON);
+        ToolTipStyle style = comp != null ? ToolTipStyle.parse(comp.getClientProperty(KEY_STYLE)) : null;
+        ToolTipStyle tooltipStyle = ToolTipStyle.parse(toolTip.getClientProperty(KEY_STYLE));
+        if (style == null) style = tooltipStyle;
+        if (style == null) style = ToolTipStyle.parse(UIManager.get("ToolTip.defaultStyle"));
+        if (style != tooltipStyle) {
+            toolTip.putClientProperty(KEY_STYLE, style);
+        }
+        if (style != this.style) {
+            this.style = style;
+            updateBorder(style);
+        }
+    }
+
+    protected void updateBorder(final ToolTipStyle style) {
+        if (style == ToolTipStyle.PLAIN) {
+            toolTip.setBorder(new DarkDefaultToolTipBorder());
+        } else {
+            DarkTooltipBorder border = new DarkTooltipBorder();
+            border.setPointerLocation(Alignment.CENTER, pointerEnabled());
+            toolTip.setBorder(border);
         }
     }
 
