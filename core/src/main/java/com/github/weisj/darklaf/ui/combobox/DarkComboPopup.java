@@ -98,7 +98,7 @@ public class DarkComboPopup extends BasicComboPopup {
     @Override
     protected JScrollPane createScroller() {
         overlayScrollPane = new OverlayScrollPane(list, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                                  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                                                  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         overlayScrollPane.getVerticalScrollBar().putClientProperty(DarkScrollBarUI.KEY_SMALL, Boolean.TRUE);
         return overlayScrollPane.getScrollPane();
     }
