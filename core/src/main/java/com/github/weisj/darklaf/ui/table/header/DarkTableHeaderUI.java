@@ -29,7 +29,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicTableHeaderUI;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -72,12 +71,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         if (defaultHeight < 0) {
             defaultHeight = HEADER_HEIGHT;
         }
-        TableCellRenderer defaultRenderer = header.getDefaultRenderer();
-        if (defaultRenderer instanceof DefaultTableCellRenderer) {
-            DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) defaultRenderer;
-            renderer.setHorizontalAlignment(SwingConstants.LEADING);
-        }
-        rendererDelegate = new DarkTableHeaderRendererDelegate(defaultRenderer);
+        rendererDelegate = new DarkTableHeaderRendererDelegate(header.getDefaultRenderer());
     }
 
     @Override
