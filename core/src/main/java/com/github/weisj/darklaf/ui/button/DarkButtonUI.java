@@ -36,8 +36,6 @@ import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.delegate.AbstractButtonLayoutDelegate;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -50,6 +48,8 @@ import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
+
+import sun.swing.SwingUtilities2;
 
 /**
  * @author Jannis Weis
@@ -419,7 +419,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
         int bs = borderSize;
         int arc = getArc(c);
-        return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getWidth() - 2 * bs,
+        return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs,
                                           arc, arc).contains(x, y);
     }
 }
