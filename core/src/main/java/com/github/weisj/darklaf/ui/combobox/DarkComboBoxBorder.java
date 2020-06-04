@@ -95,7 +95,7 @@ public class DarkComboBoxBorder implements Border, UIResource {
         if (comboBox.isEditable()) {
             Rectangle arrowBounds = arrowButton.getBounds();
             boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
-            int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width;
+            int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width - 1;
             g.setColor(borderColor);
             g.fillRect(off, editBSize, 1, height - 2 * editBSize);
         }

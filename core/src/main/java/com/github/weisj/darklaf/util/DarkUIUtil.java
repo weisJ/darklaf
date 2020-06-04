@@ -81,6 +81,22 @@ public final class DarkUIUtil {
         }
     }
 
+    public static Insets addInsets(final Insets ins1, final int extra) {
+        ins1.left += extra;
+        ins1.right += extra;
+        ins1.top += extra;
+        ins1.bottom += extra;
+        return ins1;
+    }
+
+    public static Insets addInsets(final Insets ins1, final int extra, final boolean createNew) {
+        if (createNew) {
+            return addInsets(addInsets(new Insets(0, 0, 0, 0), ins1), extra);
+        } else {
+            return addInsets(ins1, extra);
+        }
+    }
+
     public static Insets addInsets(final Insets ins1, final Insets ins2) {
         if (ins2 == null) return ins1;
         if (ins1 != null) {

@@ -324,9 +324,8 @@ public class WindowsTitlePane extends CustomTitlePane {
         windowIconButton = new JButton();
         windowIconButton.putClientProperty("JButton.noShadowOverwrite", true);
         windowIconButton.setComponentPopupMenu(createMenu());
-        windowIconButton.putClientProperty("JButton.variant", "onlyLabel");
-        windowIconButton.addActionListener(e -> windowIconButton
-                                                                .getComponentPopupMenu()
+        windowIconButton.putClientProperty("JButton.noBackground", true);
+        windowIconButton.addActionListener(e -> windowIconButton.getComponentPopupMenu()
                                                                 .show(windowIconButton,
                                                                       windowIconButton.getWidth() / 2,
                                                                       windowIconButton.getHeight() / 2));

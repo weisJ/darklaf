@@ -42,6 +42,7 @@ public interface ButtonConstants {
     String KEY_NO_BORDERLESS_OVERWRITE = "JButton.noBorderlessOverwrite";
     String KEY_CORNER = "JButton.cornerFlag";
     String KEY_ROUND = "JButton.round";
+    String KEY_NO_BACKGROUND = "JButton.noBackground";
 
     String KEY_LEFT_NEIGHBOUR = "JButton.leftNeighbour";
     String KEY_RIGHT_NEIGHBOUR = "JButton.rightNeighbour";
@@ -52,7 +53,6 @@ public interface ButtonConstants {
     String KEY_BOTTOM_LEFT_NEIGHBOUR = "JButton.bottomLeftNeighbour";
     String KEY_BOTTOM_RIGHT_NEIGHBOUR = "JButton.bottomRightNeighbour";
 
-    String VARIANT_ONLY_LABEL = "onlyLabel";
     String VARIANT_BORDERLESS_RECTANGULAR = "borderlessRectangular";
     String VARIANT_BORDERLESS = "borderless";
     String VARIANT_NONE = "none";
@@ -98,7 +98,7 @@ public interface ButtonConstants {
 
     static boolean isBorderlessVariant(final Component c) {
         if (isBorderlessRectangular(c)) return true;
-        if (c instanceof JButton) {
+        if (c instanceof JButton || c instanceof JToggleButton) {
             return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_BORDERLESS)
                    || doConvertToBorderless((AbstractButton) c);
         }
@@ -110,7 +110,8 @@ public interface ButtonConstants {
     }
 
     static boolean doConvertToBorderless(final AbstractButton b) {
-        return isIconOnly(b) && !b.isFocusable() && convertIconButtonToBorderless(b) && (b instanceof JButton);
+        return isIconOnly(b) && !b.isFocusable() && convertIconButtonToBorderless(b)
+               && (b instanceof JButton || b instanceof JToggleButton);
     }
 
     static boolean convertIconButtonToBorderless(final AbstractButton b) {
@@ -129,5 +130,9 @@ public interface ButtonConstants {
 
     static JComponent getNeighbour(final String key, final Component comp) {
         return PropertyUtil.getObject(comp, key, JComponent.class);
+    }
+
+    static boolean isNoBackground(final AbstractButton b) {
+        return PropertyUtil.getBooleanProperty(b, KEY_NO_BACKGROUND);
     }
 }

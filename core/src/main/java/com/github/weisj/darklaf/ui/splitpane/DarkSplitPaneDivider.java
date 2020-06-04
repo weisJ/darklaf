@@ -120,9 +120,9 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
 
     protected static class OneTouchButton extends JButton implements UIResource {
         protected OneTouchButton() {
-            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
             setMinimumSize(new Dimension(ONE_TOUCH_SIZE, ONE_TOUCH_SIZE));
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, true);
             setRequestFocusEnabled(false);
             setBorderPainted(false);
             setFocusPainted(false);

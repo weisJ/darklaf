@@ -81,10 +81,12 @@ public class ClosableTabComponent extends JPanel {
 
         protected TabButton(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;
-            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_ONLY_LABEL);
+            putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, true);
             putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
+            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
             setOpaque(false);
             setRolloverEnabled(true);
+            setBorderPainted(false);
             setIcon(UIManager.getIcon("TabbedPane.tabCloseIcon"));
             setRolloverIcon(UIManager.getIcon("TabbedPane.tabCloseHoverIcon"));
             addActionListener(this);

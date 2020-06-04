@@ -281,7 +281,7 @@ public class DarkButtonBorder implements Border, UIResource {
     protected Color getBorderColor(final Component c, final boolean focus) {
         if (focus) {
             return focusBorderColor;
-        } else if (c instanceof JButton && ((JButton) c).isDefaultButton() && c.isEnabled()) {
+        } else if (c instanceof JComponent && ButtonConstants.isDefaultButton((JComponent) c) && c.isEnabled()) {
             return defaultBorderColor;
         } else if (c.isEnabled()) {
             return borderColor;

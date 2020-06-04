@@ -324,8 +324,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
                 rect.x += boxPadding.left;
                 rect.width -= boxPadding.left;
             } else {
-                rect.width -= borderSize + 1;
-                rect.x += 1;
+                rect.width -= boxPadding.right - borderSize;
             }
         }
         return rect;

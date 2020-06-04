@@ -154,7 +154,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected void adjustTextRect(final JTextComponent c, final Rectangle r) {
         boolean ltr = c.getComponentOrientation().isLeftToRight();
-        if (!isInCell(c)) DarkUIUtil.applyInsets(r, padding);
+        if (!isInCell(c) && getBorder(c) != null) DarkUIUtil.applyInsets(r, padding);
         if (doPaintLeftIcon(c)) {
             int w = getLeftIcon(c).getIconWidth() + padding.left;
             if (ltr) r.x += w;

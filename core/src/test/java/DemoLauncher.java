@@ -25,6 +25,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
@@ -74,6 +75,7 @@ public class DemoLauncher implements ComponentDemo {
         demoClasses = getClasses("ui", "icon", "defaults").filter(demoType::isAssignableFrom)
                                                           .filter(cls -> !cls.equals(DemoEntry.class))
                                                           .filter(cls -> !cls.isInterface())
+                                                          .filter(cls -> !Modifier.isAbstract(cls.getModifiers()))
                                                           .map(this::getInstance)
                                                           .filter(Objects::nonNull)
                                                           .map(demoType::cast)

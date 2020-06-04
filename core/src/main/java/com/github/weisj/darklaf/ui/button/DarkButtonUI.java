@@ -36,6 +36,8 @@ import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 
+import sun.swing.SwingUtilities2;
+
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.delegate.AbstractButtonLayoutDelegate;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -49,8 +51,6 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-import sun.swing.SwingUtilities2;
-
 /**
  * @author Jannis Weis
  */
@@ -59,6 +59,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected static final Rectangle viewRect = new Rectangle();
     protected static final Rectangle textRect = new Rectangle();
     protected static final Rectangle iconRect = new Rectangle();
+    protected static final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
     protected int borderSize;
     protected int shadowHeight;
     protected boolean drawOutline;
@@ -154,7 +155,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     public void paint(final Graphics g, final JComponent c) {
         GraphicsContext config = new GraphicsContext(g);
         AbstractButton b = (AbstractButton) c;
-        paintButtonBackground(g, c);
+        if (!ButtonConstants.isNoBackground(b)) {
+            paintButtonBackground(g, c);
+        }
 
         Font font = g.getFont();
         if (ButtonConstants.isDefaultButton(b) && !font.isBold()) {
@@ -237,40 +240,43 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected void paintBorderlessBackground(final AbstractButton b, final Graphics2D g, final int arc,
                                              final int width, final int height, final Insets margin) {
-        if (b.isEnabled() && b.getModel().isRollover()) {
+        if (isRolloverBorderless(b)) {
             GraphicsUtil.setupAAPainting(g);
             g.setColor(getBorderlessBackground(b));
+            boolean borderlessRectangular = ButtonConstants.isBorderlessRectangular(b);
+            if (!borderlessRectangular) DarkUIUtil.addInsets(margin, borderSize);
             if (ButtonConstants.isBorderlessRectangular(b)) {
                 g.fillRect(margin.left, margin.top, width - margin.left - margin.right,
                            height - margin.top - margin.bottom);
-                PaintUtil.drawRect(g, margin.left, margin.top, width - margin.left - margin.right,
-                                   height - margin.top - margin.bottom, 1);
             } else if (ButtonConstants.doConvertToBorderless(b)) {
                 int size = Math.min(width - margin.left - margin.right,
                                     height - margin.left - margin.right);
                 if (!drawOutline) {
-                    g.fillRoundRect((width - size) / 2 + 2, (height - size) / 2 + 2,
-                                    size - 4, size - 4, arc, arc);
+                    g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
                 } else {
                     g.setColor(getBorderlessOutline(b));
-                    g.drawRoundRect((width - size) / 2 + 2, (height - size) / 2 + 2,
-                                    size - 4, size - 4, arc, arc);
+                    PaintUtil.paintLineBorder(g, (width - size) / 2.0f,
+                                              (height - size) / 2.0f, size, size, arc);
                 }
             } else {
                 if (!drawOutline) {
-                    g.fillRoundRect(margin.left + 2, margin.top + 2,
-                                    width - margin.left - margin.right - 4,
-                                    height - margin.top - margin.bottom - 4,
+                    g.fillRoundRect(margin.left, margin.top,
+                                    width - margin.left - margin.right,
+                                    height - margin.top - margin.bottom,
                                     arc, arc);
                 } else {
                     g.setColor(getBorderlessOutline(b));
-                    g.drawRoundRect(margin.left + 2, margin.top + 2,
-                                    width - margin.left - margin.right - 4,
-                                    height - margin.top - margin.bottom - 4,
-                                    arc, arc);
+                    PaintUtil.paintLineBorder(g, margin.left, margin.top,
+                                              width - margin.left - margin.right,
+                                              height - margin.top - margin.bottom,
+                                              arc);
                 }
             }
         }
+    }
+
+    protected boolean isRolloverBorderless(final AbstractButton b) {
+        return b.isEnabled() && b.getModel().isRollover();
     }
 
     protected void paintText(final Graphics g, final AbstractButton b, final String text) {
@@ -354,9 +360,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected Color getBorderlessBackground(final AbstractButton c) {
-        boolean armed = c.getModel().isArmed();
-        return armed ? PropertyUtil.getColor(c, KEY_CLICK_COLOR, borderlessClick)
+        return isArmedBorderless(c) ? PropertyUtil.getColor(c, KEY_CLICK_COLOR, borderlessClick)
                 : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
+    }
+
+    protected boolean isArmedBorderless(final AbstractButton b) {
+        return b.getModel().isArmed();
     }
 
     protected Color getBorderlessOutline(final AbstractButton c) {
@@ -417,9 +426,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             return super.contains(c, x, y);
         }
         if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
-        int bs = borderSize;
+        int bs = c.getBorder() instanceof DarkButtonBorder ? borderSize : 0;
         int arc = getArc(c);
-        return new RoundRectangle2D.Float(bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs,
-                                          arc, arc).contains(x, y);
+        hitArea.setRoundRect(bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs, arc, arc);
+        return hitArea.contains(x, y);
     }
 }

@@ -25,7 +25,6 @@
 package com.github.weisj.darklaf.ui.togglebutton;
 
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -37,6 +36,7 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 /**
@@ -132,7 +132,9 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     @Override
     protected Color getForeground(final AbstractButton button) {
-        if (button.isSelected() && !ToggleButtonConstants.isSlider(button)
+        if (button.isSelected()
+            && !ToggleButtonConstants.isSlider(button)
+            && !ButtonConstants.isBorderlessVariant(button)
             && button.getForeground() instanceof UIResource) {
             return selectedForeground;
         }
@@ -160,6 +162,16 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         } else {
             return inactiveBackground;
         }
+    }
+
+    @Override
+    protected boolean isRolloverBorderless(final AbstractButton b) {
+        return super.isRolloverBorderless(b) || b.isSelected();
+    }
+
+    @Override
+    protected boolean isArmedBorderless(final AbstractButton b) {
+        return super.isArmedBorderless(b) || b.isSelected();
     }
 
     protected Color getToggleBorderColor(final AbstractButton b) {
@@ -230,7 +242,8 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         if (!ToggleButtonConstants.isSlider(c)) return super.contains(c, x, y);
         if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
         Rectangle bounds = getSliderBounds(c);
-        return new RoundRectangle2D.Float(bounds.x, bounds.y, bounds.width, bounds.height,
-                                          bounds.height, bounds.height).contains(x, y);
+        int arc = Math.min(bounds.width, bounds.height);
+        hitArea.setRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, arc, arc);
+        return hitArea.contains(x, y);
     }
 }
