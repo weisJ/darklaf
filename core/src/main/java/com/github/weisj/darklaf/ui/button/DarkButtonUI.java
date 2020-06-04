@@ -60,6 +60,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected static final Rectangle textRect = new Rectangle();
     protected static final Rectangle iconRect = new Rectangle();
     protected static final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
+    protected static final AbstractButtonLayoutDelegate layoutDelegate = new ButtonLayoutDelegate();
     protected int borderSize;
     protected int shadowHeight;
     protected boolean drawOutline;
@@ -81,13 +82,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected int arc;
     protected int squareArc;
     protected KeyListener keyListener;
-
-    protected final AbstractButtonLayoutDelegate layoutDelegate = new AbstractButtonLayoutDelegate() {
-        @Override
-        public Font getFont() {
-            return delegate != null ? delegate.getFont().deriveFont(Font.BOLD) : null;
-        }
-    };
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkButtonUI();
@@ -159,14 +153,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             paintButtonBackground(g, c);
         }
 
-        Font font = g.getFont();
-        if (ButtonConstants.isDefaultButton(b) && !font.isBold()) {
-            g.setFont(font.deriveFont(Font.BOLD));
-        } else if (font.isBold()) {
-            g.setFont(font.deriveFont(Font.PLAIN));
-        }
-
-        String text = layout(b, c, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
+        prepareDelegate(b);
+        String text = layout(layoutDelegate, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()),
+                             b.getWidth(), b.getHeight());
 
         paintIcon(g, b, c);
         config.restoreClip();
@@ -286,7 +275,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (!model.isEnabled()) {
             mnemonicIndex = -1;
         }
-        PaintUtil.drawStringUnderlineCharAt(g, b, text, mnemonicIndex, textRect);
+        PaintUtil.drawStringUnderlineCharAt(g, b, text, mnemonicIndex, textRect, layoutDelegate.getFont());
     }
 
     protected void paintIcon(final Graphics g, final AbstractButton b, final JComponent c) {
@@ -373,14 +362,14 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return armed ? borderlessOutlineClick : borderlessOutlineHover;
     }
 
-    protected String layout(final AbstractButton b, final JComponent c, final FontMetrics fm,
+    protected String layout(final AbstractButton b, final FontMetrics fm,
                             final int width, final int height) {
         Insets i = b.getInsets();
         if (!ButtonConstants.isBorderlessVariant(b)) {
             i = new Insets(i.top, borderSize, i.bottom, borderSize);
         }
 
-        AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
+        AlignmentExt corner = DarkButtonBorder.getCornerFlag(b);
         if (corner != null) {
             Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
             insetMask = corner.maskInsetsInverted(insetMask, 0);
@@ -416,8 +405,18 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     public Dimension getPreferredSize(final JComponent c) {
         AbstractButton b = (AbstractButton) c;
-        layoutDelegate.setDelegate(b);
+        prepareDelegate(b);
         return BasicGraphicsUtils.getPreferredButtonSize(layoutDelegate, b.getIconTextGap());
+    }
+
+    protected void prepareDelegate(final AbstractButton b) {
+        layoutDelegate.setDelegate(b);
+        Font f = b.getFont();
+        if (ButtonConstants.isDefaultButton(b) && !f.isBold()) {
+            layoutDelegate.setFont(f.deriveFont(Font.BOLD));
+        } else {
+            layoutDelegate.setFont(f);
+        }
     }
 
     @Override
@@ -430,5 +429,19 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         int arc = getArc(c);
         hitArea.setRoundRect(bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs, arc, arc);
         return hitArea.contains(x, y);
+    }
+
+    protected static class ButtonLayoutDelegate extends AbstractButtonLayoutDelegate {
+        protected Font font;
+
+        @Override
+        public void setFont(final Font font) {
+            this.font = font;
+        }
+
+        @Override
+        public Font getFont() {
+            return font;
+        }
     }
 }

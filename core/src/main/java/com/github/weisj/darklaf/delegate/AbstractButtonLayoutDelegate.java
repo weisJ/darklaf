@@ -24,6 +24,8 @@
  */
 package com.github.weisj.darklaf.delegate;
 
+import static java.awt.RenderingHints.*;
+
 import java.awt.*;
 
 import javax.swing.*;
@@ -36,7 +38,12 @@ public class AbstractButtonLayoutDelegate extends AbstractButton {
 
     public void setDelegate(final AbstractButton delegate) {
         this.delegate = delegate;
-        if (delegate != null) putClientProperty(PropertyKey.HTML, delegate.getClientProperty(PropertyKey.HTML));
+        if (delegate != null) {
+            putClientProperty(PropertyKey.HTML, delegate.getClientProperty(PropertyKey.HTML));
+            putClientProperty(KEY_TEXT_ANTIALIASING, delegate.getClientProperty(KEY_TEXT_ANTIALIASING));
+            putClientProperty(KEY_TEXT_LCD_CONTRAST, delegate.getClientProperty(KEY_TEXT_LCD_CONTRAST));
+            putClientProperty(KEY_FRACTIONALMETRICS, delegate.getClientProperty(KEY_FRACTIONALMETRICS));
+        }
     }
 
     @Override
@@ -82,6 +89,11 @@ public class AbstractButtonLayoutDelegate extends AbstractButton {
     @Override
     public Insets getInsets() {
         return delegate.getInsets();
+    }
+
+    @Override
+    public ButtonModel getModel() {
+        return delegate.getModel();
     }
 
     @Override

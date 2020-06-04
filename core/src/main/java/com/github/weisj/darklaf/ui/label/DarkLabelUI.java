@@ -100,7 +100,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     public void paintText(final Graphics g, final JLabel label, final FontMetrics fm, final String clippedText) {
         int mnemIndex = label.isEnabled() ? label.getDisplayedMnemonicIndex() : -1;
         g.setColor(getForeground(label));
-        PaintUtil.drawStringUnderlineCharAt(g, label, clippedText, mnemIndex, paintTextR, fm);
+        PaintUtil.drawStringUnderlineCharAt(g, label, clippedText, mnemIndex, paintTextR, label.getFont(), fm);
     }
 
     protected Color getForeground(final Component label) {

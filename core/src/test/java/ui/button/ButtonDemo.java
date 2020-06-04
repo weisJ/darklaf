@@ -50,8 +50,12 @@ public class ButtonDemo extends AbstractButtonDemo<JButton> {
         controlPanel.add(new JCheckBox("default") {
             {
                 setSelected(button.isDefaultButton());
-                addActionListener(e -> SwingUtilities.getRootPane(button)
-                                                     .setDefaultButton(isSelected() ? button : null));
+                addActionListener(e -> {
+                    JRootPane rootPane = SwingUtilities.getRootPane(button);
+                    rootPane.setDefaultButton(isSelected() ? button : null);
+                    button.getParent().doLayout();
+                    button.getParent().repaint();
+                });
             }
         });
     }

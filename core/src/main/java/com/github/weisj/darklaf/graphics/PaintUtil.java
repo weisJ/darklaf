@@ -277,16 +277,24 @@ public class PaintUtil {
     public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
                                                                         final String text, final int mnemIndex,
                                                                         final Rectangle textRect) {
-        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, SwingUtilities2.getFontMetrics(c, g));
+        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, c.getFont());
     }
 
     public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
                                                                         final String text, final int mnemIndex,
                                                                         final Rectangle textRect,
+                                                                        final Font f) {
+        g.setFont(f);
+        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, f, SwingUtilities2.getFontMetrics(c, g));
+    }
+
+    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
+                                                                        final String text, final int mnemIndex,
+                                                                        final Rectangle textRect,
+                                                                        final Font font,
                                                                         final FontMetrics fm) {
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);
-        Font font = c.getFont();
         g.setFont(font);
 
         if (text != null && !text.equals("")) {
