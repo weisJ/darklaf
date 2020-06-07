@@ -44,7 +44,12 @@ import com.github.weisj.darklaf.util.StringUtil;
 public class TabFrameDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new TabFrameDemo(), new Dimension(1000, 500));
+        ComponentDemo.showDemo(new TabFrameDemo());
+    }
+
+    @Override
+    public Dimension getDisplayDimension() {
+        return new Dimension(1000, 500);
     }
 
     private static Component createTextArea() {

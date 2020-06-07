@@ -36,28 +36,26 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import ui.ComponentDemo;
+import ui.DemoPanel;
 
-import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 
-/*
- * internalFrame.InternalFrameDemo.java requires:
- * internalFrame.MyInternalFrame.java
- */
-public class InternalFrameDemo extends JFrame implements ActionListener {
-    private final JDesktopPane desktop;
+public class InternalFrameDemo implements ActionListener, ComponentDemo {
 
-    private InternalFrameDemo() {
-        super("InternalFrameDemo");
+    private JDesktopPane desktop;
 
-        // Make the big window be indented 50 pixels from each edge
-        // of the screen.
-        int inset = 50;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new InternalFrameDemo());
+    }
 
+    @Override
+    public Dimension getDisplayDimension() {
+        return new Dimension(1000, 500);
+    }
+
+    @Override
+    public JComponent createComponent() {
         desktop = new JDesktopPane();
-
         JPanel panel = new JPanel();
         panel.setBorder(new CompoundBorder(new EmptyBorder(20, 20, 20, 20),
                                            DarkBorders.createLineBorder(1, 1, 1, 1)));
@@ -65,19 +63,15 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         panel.add(desktop, BorderLayout.CENTER);
 
         createFrame();
-        setContentPane(panel);
-        setJMenuBar(createMenuBar());
 
         // Make dragging a little faster but perhaps uglier.
         desktop.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
+        return new DemoPanel(desktop, new BorderLayout(), 10);
     }
 
-    public static void main(final String[] args) {
-        SwingUtilities.invokeLater(InternalFrameDemo::createAndShowGUI);
-    }
-
-    private JMenuBar createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
+    @Override
+    public JMenuBar createMenuBar() {
+        JMenuBar menuBar = ComponentDemo.getDefaultMenuBar();
 
         // Set up the lone menu.
         JMenu menu = new JMenu("Document");
@@ -92,34 +86,17 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
-        // Set up the second menu item.
-        menuItem = new JMenuItem("Quit");
-        menuItem.setMnemonic(KeyEvent.VK_Q);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.ALT_DOWN_MASK));
-        menuItem.setActionCommand("quit");
-        menuItem.addActionListener(this);
-        menu.add(menuItem);
-
         return menuBar;
     }
 
-    /**
-     * Create the GUI and show it. For thread safety, this method should be invoked from the event-dispatching thread.
-     */
-    private static void createAndShowGUI() {
-        LafManager.install(ComponentDemo.getTheme());
-
-        // Create and set up the window.
-        InternalFrameDemo frame = new InternalFrameDemo();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Display the window.
-        frame.setVisible(true);
+    @Override
+    public String getTitle() {
+        return "Internal Frame Demo";
     }
 
     // Create a new internal frame.
     private void createFrame() {
-        DemoInternalFrame frame = new DemoInternalFrame();
+        DemoFrame frame = new DemoFrame();
         frame.setVisible(true);
         desktop.add(frame);
         try {
@@ -131,14 +108,6 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         if ("new".equals(e.getActionCommand())) {
             createFrame();
-        } else {
-            quit();
         }
-    }
-
-    // Quit the application.
-
-    private void quit() {
-        System.exit(0);
     }
 }

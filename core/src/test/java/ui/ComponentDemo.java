@@ -52,18 +52,10 @@ public interface ComponentDemo {
     JComponent createComponent();
 
     static void showDemo(final ComponentDemo demo) {
-        showDemo(demo, null);
+        showDemo(demo, false);
     }
 
     static void showDemo(final ComponentDemo demo, final boolean asDialog) {
-        showDemo(demo, null, asDialog);
-    }
-
-    static void showDemo(final ComponentDemo demo, final Dimension dimension) {
-        showDemo(demo, dimension, false);
-    }
-
-    static void showDemo(final ComponentDemo demo, final Dimension dimension, final boolean asDialog) {
         LafManager.enabledPreferenceChangeReporting(false);
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         SwingUtilities.invokeLater(() -> {
@@ -92,6 +84,7 @@ public interface ComponentDemo {
             if (image != null) window.setIconImage(image);
 
             window.pack();
+            Dimension dimension = demo.getDisplayDimension();
             if (dimension == null) {
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
                 Dimension dim = new Dimension(screenSize.width / 2,
@@ -106,6 +99,10 @@ public interface ComponentDemo {
             window.setVisible(true);
             window.setLocationRelativeTo(null);
         });
+    }
+
+    default Dimension getDisplayDimension() {
+        return null;
     }
 
     default Image getIconImage() {
