@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.ui.internalframe;
 
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.accessibility.AccessibleContext;
@@ -41,10 +42,9 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 /**
  * @author Jannis Weis
  */
-public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
+public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane implements PropertyChangeListener {
+
     protected static final int PAD = 5;
-    protected static final int BAR_HEIGHT = 28;
-    protected static final int BUTTON_WIDTH = 46;
     protected static final int IMAGE_HEIGHT = 16;
     protected static final int IMAGE_WIDTH = 16;
 
@@ -62,7 +62,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     private ToggleIcon maximizeIcon;
     private ToggleIcon iconifyIcon;
 
-    private PropertyChangeListener propertyChangeListener2;
+    private boolean useExternalMenuBar;
 
     public DarkInternalFrameTitlePane(final JInternalFrame f) {
         super(f);
@@ -71,8 +71,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     @Override
     protected void addSubComponents() {
         super.addSubComponents();
-        label = new JLabel();
-        label.setOpaque(false);
+        label = createTitleLabel();
         if (menu != null) {
             menu = frame.getJMenuBar();
             frame.getRootPane().setJMenuBar(null);
@@ -83,24 +82,25 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         add(label);
     }
 
+    protected JLabel createTitleLabel() {
+        JLabel label = new JLabel();
+        label.setOpaque(false);
+        return label;
+    }
+
     @Override
     protected void installListeners() {
         super.installListeners();
-        propertyChangeListener2 = e -> {
-            Object menuBar = e.getNewValue();
-            if (menuBar instanceof JMenuBar) {
-                frame.getRootPane().setJMenuBar(null);
-                menu = (JMenuBar) menuBar;
-                add(menu);
-            }
-        };
-        frame.addPropertyChangeListener(JInternalFrame.MENU_BAR_PROPERTY, propertyChangeListener2);
+        useExternalMenuBar = UIManager.getBoolean("InternalFrame.useExternalMenuBar");
+        if (!useExternalMenuBar) {
+            frame.addPropertyChangeListener(JInternalFrame.MENU_BAR_PROPERTY, this);
+        }
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        frame.removePropertyChangeListener(propertyChangeListener2);
+        frame.removePropertyChangeListener(this);
     }
 
     @Override
@@ -185,8 +185,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     public void paintComponent(final Graphics g) {
         g.setColor(getTitleBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(border);
-        g.fillRect(0, getHeight() - 1, getWidth(), 1);
     }
 
     @Override
@@ -215,8 +213,10 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         };
         button.setFocusable(false);
         button.setOpaque(true);
-        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
-        button.putClientProperty("paintActive", Boolean.TRUE);
+        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
+        button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        button.putClientProperty(DarkButtonUI.KEY_THIN, true);
+        button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
         button.setText(null);
         return button;
@@ -228,11 +228,14 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
         Color colorClick = frame.isSelected() ? selectedButtonColorClick : buttonColorClick;
         Color colorHover = frame.isSelected() ? selectedButtonColorHover : buttonColorHover;
         Color bg = frame.isSelected() ? selectedButtonColor : buttonColor;
+
         iconButton.setBackground(bg);
         closeButton.setBackground(bg);
         maxButton.setBackground(bg);
-        menu.setBackground(bg);
-        menu.setOpaque(false);
+        if (menu != null) {
+            menu.setBackground(bg);
+            menu.setOpaque(false);
+        }
 
         iconButton.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, colorHover);
         closeButton.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, colorHover);
@@ -245,7 +248,20 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
     }
 
     @Override
-    protected void paintBorder(final Graphics g) {}
+    protected void paintBorder(final Graphics g) {
+        g.setColor(border);
+        g.fillRect(0, getHeight() - 1, getWidth(), 1);
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent e) {
+        Object menuBar = e.getNewValue();
+        if (menuBar instanceof JMenuBar) {
+            frame.getRootPane().setJMenuBar(null);
+            menu = (JMenuBar) menuBar;
+            add(menu);
+        }
+    }
 
     protected class DarkTitlePaneLayout implements LayoutManager {
         public void addLayoutComponent(final String name, final Component c) {}
@@ -258,47 +274,53 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
 
         public Dimension minimumLayoutSize(final Container c) {
             int width = 2 * PAD;
+            int height = 0;
+
+            // Calculate height.
+            Icon icon = frame.getFrameIcon();
+            FontMetrics fm = frame.getFontMetrics(getFont());
+
+            int iconHeight = 0;
+            if (icon != null) {
+                // SystemMenuBar forces the icon to be 16x16 or less.
+                height = Math.min(icon.getIconHeight(), IMAGE_HEIGHT) + 2;
+            }
+            height = Math.max(fm.getHeight() + 2, iconHeight);
+            if (menu != null) {
+                height = Math.max(height, menu.getPreferredSize().height);
+            }
 
             if (frame.isClosable()) {
-                width += BUTTON_WIDTH;
+                Dimension pref = closeButton.getPreferredSize();
+                width += pref.width;
+                height = Math.max(height, pref.height);
             }
             if (frame.isMaximizable()) {
-                width += BUTTON_WIDTH;
+                Dimension pref = maxButton.getPreferredSize();
+                width += pref.width;
+                height = Math.max(height, pref.height);
             }
             if (frame.isIconifiable()) {
-                width += BUTTON_WIDTH;
+                Dimension pref = iconButton.getPreferredSize();
+                width += pref.width;
+                height = Math.max(height, pref.height);
             }
 
-            FontMetrics fm = frame.getFontMetrics(getFont());
             String frameTitle = frame.getTitle();
-            int title_w = frameTitle != null ? SwingUtilities2.stringWidth(frame, fm, frameTitle) : 0;
-            int title_length = frameTitle != null ? frameTitle.length() : 0;
+            int titleWidth = frameTitle != null ? SwingUtilities2.stringWidth(frame, fm, frameTitle) : 0;
+            int titleLength = frameTitle != null ? frameTitle.length() : 0;
 
             // Leave room for three characters in the title.
-            if (title_length > 3) {
+            if (titleLength > 3) {
                 int subtitle_w = SwingUtilities2.stringWidth(frame, fm, frameTitle.substring(0, 3) + "...");
-                width += Math.min(title_w, subtitle_w);
+                width += Math.min(titleWidth, subtitle_w);
             } else {
-                width += title_w;
+                width += titleWidth;
             }
 
             if (menu != null) {
                 width += menu.getPreferredSize().width + PAD;
             }
-
-            // Calculate height.
-            Icon icon = frame.getFrameIcon();
-            int fontHeight = fm.getHeight();
-            fontHeight += 2;
-            int iconHeight = 0;
-            if (icon != null) {
-                // SystemMenuBar forces the icon to be 16x16 or less.
-                iconHeight = Math.min(icon.getIconHeight(), IMAGE_HEIGHT);
-            }
-            iconHeight += 2;
-
-            int height = Math.max(fontHeight, iconHeight);
-            height = Math.max(height, BAR_HEIGHT);
 
             Dimension dim = new Dimension(width, height);
 
@@ -311,57 +333,106 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane {
             return dim;
         }
 
+        protected boolean useExternalMenuBar() {
+            return useExternalMenuBar;
+        }
+
         public void layoutContainer(final Container c) {
-            boolean leftToRight = frame.getComponentOrientation().isLeftToRight();
+            boolean useExternalMenuBar = useExternalMenuBar();
 
             int w = getWidth();
             int h = getHeight() - 1;
             int x1;
             int x2;
 
-            Icon icon = frame.getFrameIcon();
-            int iconHeight = 0;
-            if (icon != null) {
-                iconHeight = icon.getIconHeight();
-            }
-            x1 = (leftToRight) ? PAD : w - IMAGE_WIDTH - PAD;
-            menuBar.setBounds(x1, (h - iconHeight) / 2, IMAGE_WIDTH, IMAGE_HEIGHT);
-            x1 += (leftToRight) ? IMAGE_WIDTH : -IMAGE_WIDTH;
-            x1 += (leftToRight) ? PAD : -PAD;
-            if (menu != null) {
-                int width = menu.getPreferredSize().width;
-                if (leftToRight) {
+            if (!useExternalMenuBar) {
+                Icon icon = frame.getFrameIcon();
+                int iconHeight = 0;
+                if (icon != null) {
+                    iconHeight = icon.getIconHeight();
+                }
+                x1 = PAD;
+                menuBar.setBounds(x1, (h - iconHeight) / 2, IMAGE_WIDTH, IMAGE_HEIGHT);
+                x1 += IMAGE_WIDTH;
+                x1 += PAD;
+
+                if (menu != null) {
+                    int width = menu.getPreferredSize().width;
                     menu.setBounds(x1, 0, width, h + 1);
                     x1 += width + PAD;
-                } else {
-                    x1 -= width;
-                    menu.setBounds(x1, 0, width, h + 1);
-                    x1 -= PAD;
                 }
-            }
 
-            x2 = (leftToRight) ? w - BUTTON_WIDTH : 0;
+                x2 = w;
 
-            if (frame.isClosable()) {
-                closeButton.setBounds(x2, 0, BUTTON_WIDTH, h);
-                x2 += (leftToRight) ? -BUTTON_WIDTH : BUTTON_WIDTH;
-            }
+                if (frame.isClosable()) {
+                    Dimension pref = closeButton.getPreferredSize();
+                    x2 -= pref.width;
+                    closeButton.setBounds(x2, (h - pref.height) / 2, pref.width, pref.height);
+                }
 
-            if (frame.isMaximizable()) {
-                maxButton.setBounds(x2, 0, BUTTON_WIDTH, h);
-                x2 += (leftToRight) ? -BUTTON_WIDTH : BUTTON_WIDTH;
-            }
+                if (frame.isMaximizable()) {
+                    Dimension pref = maxButton.getPreferredSize();
+                    x2 -= pref.width;
+                    maxButton.setBounds(x2, (h - pref.height) / 2, pref.width, pref.height);
+                }
 
-            if (frame.isIconifiable()) {
-                iconButton.setBounds(x2, 0, BUTTON_WIDTH, h);
-            }
-            x2 += (leftToRight) ? -PAD : PAD;
+                if (frame.isIconifiable()) {
+                    Dimension pref = iconButton.getPreferredSize();
+                    x2 -= pref.width;
+                    iconButton.setBounds(x2, (h - pref.height) / 2, pref.width, pref.height);
+                }
 
-            if (leftToRight) {
+                x2 -= PAD;
+
                 label.setBounds(x1, 0, x2 - x1, h);
             } else {
-                label.setBounds(x2, 0, x1 - x2, h);
+                x2 = 0;
+                if (frame.isClosable()) {
+                    Dimension pref = closeButton.getPreferredSize();
+                    closeButton.setBounds(x2, (h - pref.height) / 2, pref.width, pref.height);
+                    x2 += pref.width;
+                }
+
+                if (frame.isIconifiable()) {
+                    Dimension pref = iconButton.getPreferredSize();
+                    iconButton.setBounds(x2, (h - pref.height) / 2, pref.width, pref.height);
+                    x2 += pref.width;
+                }
+
+                if (frame.isMaximizable()) {
+                    Dimension pref = maxButton.getPreferredSize();
+                    maxButton.setBounds(x2, (h - pref.height) / 2, pref.width, pref.height);
+                    x2 += pref.width;
+                }
+
+                x2 += PAD;
+
+                Icon icon = frame.getFrameIcon();
+                int iconHeight = 0;
+                if (icon != null) {
+                    iconHeight = icon.getIconHeight();
+                }
+
+                int midWidth = Math.min(w - x2, IMAGE_WIDTH + label.getPreferredSize().width);
+
+                x1 = (w - midWidth) / 2;
+                menuBar.setBounds(x1, (h - iconHeight) / 2, IMAGE_WIDTH, IMAGE_HEIGHT);
+                x1 += IMAGE_WIDTH;
+                label.setBounds(x1, 0, midWidth - IMAGE_WIDTH, h);
             }
+        }
+    }
+
+    @Override
+    protected JMenuBar createSystemMenuBar() {
+        return new DarkSystemMenuBar();
+    }
+
+    protected class DarkSystemMenuBar extends SystemMenuBar {
+
+        @Override
+        public boolean isOpaque() {
+            return false;
         }
     }
 }

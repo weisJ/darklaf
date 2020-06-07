@@ -36,7 +36,7 @@ public class DemoInternalFrame extends JInternalFrame {
         setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
         setJMenuBar(new JMenuBar() {
             {
-                add(new JMenu("Test") {
+                add(new JMenu("Test " + openFrameCount) {
                     {
                         add(new JMenuItem("Test Item"));
                     }

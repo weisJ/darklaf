@@ -39,17 +39,19 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 /**
  * @author Jannis Weis
  */
-public class DarkDesktopIconUI extends BasicDesktopIconUI {
+public class DarkDesktopIconUI extends BasicDesktopIconUI implements PropertyChangeListener {
 
     protected JButton button;
-    protected JLabel label;
-    protected TitleListener titleListener;
+    protected JLabel gripLabel;
     protected int width;
+    protected int height;
+    protected int labelPad;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkDesktopIconUI();
     }
 
+    @Override
     protected void installComponents() {
         frame = desktopIcon.getInternalFrame();
         Icon icon = frame.getFrameIcon();
@@ -67,63 +69,63 @@ public class DarkDesktopIconUI extends BasicDesktopIconUI {
         button.setBackground(desktopIcon.getBackground());
         button.setForeground(desktopIcon.getForeground());
 
-        Icon drag = UIManager.getIcon("DesktopIcon.drag.icon");
-        label = new JLabel(drag);
+        labelPad = UIManager.getInt("DesktopIcon.labelPad");
 
-        label.setBorder(new MatteBorder(0, 2, 0, 1, desktopIcon.getBackground()));
-        desktopIcon.setLayout(new BorderLayout(2, 0));
+        Icon drag = UIManager.getIcon("DesktopIcon.drag.icon");
+        gripLabel = new JLabel(drag);
+
+        gripLabel.setBorder(new MatteBorder(0, 2, 0, 1, desktopIcon.getBackground()));
+        desktopIcon.setLayout(new BorderLayout(labelPad, 0));
         desktopIcon.add(button, BorderLayout.CENTER);
-        desktopIcon.add(label, BorderLayout.WEST);
+        desktopIcon.add(gripLabel, BorderLayout.EAST);
     }
 
+    @Override
     protected void uninstallComponents() {
         desktopIcon.setLayout(null);
-        desktopIcon.remove(label);
+        desktopIcon.remove(gripLabel);
         desktopIcon.remove(button);
         button = null;
         frame = null;
     }
 
+    @Override
     protected void installListeners() {
         super.installListeners();
-        titleListener = new TitleListener();
-        desktopIcon.getInternalFrame().addPropertyChangeListener(titleListener);
+        desktopIcon.getInternalFrame().addPropertyChangeListener(this);
     }
 
+    @Override
     protected void uninstallListeners() {
-        desktopIcon.getInternalFrame().removePropertyChangeListener(titleListener);
-        titleListener = null;
+        desktopIcon.getInternalFrame().removePropertyChangeListener(this);
         super.uninstallListeners();
     }
 
+    @Override
     protected void installDefaults() {
         super.installDefaults();
         LookAndFeel.installColorsAndFont(desktopIcon, "DesktopIcon.background",
                                          "DesktopIcon.foreground", "DesktopIcon.font");
-        width = UIManager.getInt("DesktopIcon.width");
     }
 
-    public Dimension getPreferredSize(final JComponent c) {
-        return getMinimumSize(c);
-    }
-
+    @Override
     public Dimension getMinimumSize(final JComponent c) {
-        return new Dimension(width, DarkInternalFrameTitlePane.BAR_HEIGHT);
+        return getPreferredSize(c);
     }
 
+    @Override
     public Dimension getMaximumSize(final JComponent c) {
-        return getMinimumSize(c);
+        return getPreferredSize(c);
     }
 
-    class TitleListener implements PropertyChangeListener {
-        public void propertyChange(final PropertyChangeEvent e) {
-            if (e.getPropertyName().equals("title")) {
-                button.setText((String) e.getNewValue());
-            }
+    @Override
+    public void propertyChange(final PropertyChangeEvent e) {
+        if (e.getPropertyName().equals("title")) {
+            button.setText((String) e.getNewValue());
+        }
 
-            if (e.getPropertyName().equals("frameIcon")) {
-                button.setIcon((Icon) e.getNewValue());
-            }
+        if (e.getPropertyName().equals("frameIcon")) {
+            button.setIcon((Icon) e.getNewValue());
         }
     }
 }

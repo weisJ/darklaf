@@ -494,4 +494,14 @@ public final class DarkUIUtil {
         return gd.map(d -> d.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT))
                  .orElse(false);
     }
+
+    public static Dimension getPreferredSize(final JComponent component) {
+        if (component == null) return new Dimension(0, 0);
+        LayoutManager menuBarLayout = component.getLayout();
+        Dimension size = null;
+        if (menuBarLayout != null) {
+            size = menuBarLayout.preferredLayoutSize(component);
+        }
+        return (size != null) ? size : component.getPreferredSize();
+    }
 }

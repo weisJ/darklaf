@@ -154,7 +154,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
 
         prepareDelegate(b);
-        String text = layout(layoutDelegate, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()),
+        String text = layout(layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()),
                              b.getWidth(), b.getHeight());
 
         paintIcon(g, b, c);
@@ -362,7 +362,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return armed ? borderlessOutlineClick : borderlessOutlineHover;
     }
 
-    protected String layout(final AbstractButton b, final FontMetrics fm,
+    protected String layout(final AbstractButtonLayoutDelegate bl, final AbstractButton b,
+                            final FontMetrics fm,
                             final int width, final int height) {
         Insets i = b.getInsets();
         if (!ButtonConstants.isBorderlessVariant(b)) {
@@ -393,13 +394,13 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
         // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), b.getIcon(),
-                                                  b.getVerticalAlignment(), b.getHorizontalAlignment(),
-                                                  b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+        return SwingUtilities.layoutCompoundLabel(bl, fm, bl.getText(), bl.getIcon(),
+                                                  bl.getVerticalAlignment(), bl.getHorizontalAlignment(),
+                                                  bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(),
                                                   viewRect, iconRect, textRect,
-                                                  b.getText() == null || ButtonConstants.isIconOnly(b)
+                                                  bl.getText() == null || ButtonConstants.isIconOnly(b)
                                                           ? 0
-                                                          : b.getIconTextGap());
+                                                          : bl.getIconTextGap());
     }
 
     @Override

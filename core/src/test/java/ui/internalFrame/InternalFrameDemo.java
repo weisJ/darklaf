@@ -32,10 +32,13 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.border.DarkBorders;
 
 /*
  * internalFrame.InternalFrameDemo.java requires:
@@ -54,8 +57,15 @@ public class InternalFrameDemo extends JFrame implements ActionListener {
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
 
         desktop = new JDesktopPane();
+
+        JPanel panel = new JPanel();
+        panel.setBorder(new CompoundBorder(new EmptyBorder(20, 20, 20, 20),
+                                           DarkBorders.createLineBorder(1, 1, 1, 1)));
+        panel.setLayout(new BorderLayout());
+        panel.add(desktop, BorderLayout.CENTER);
+
         createFrame();
-        setContentPane(desktop);
+        setContentPane(panel);
         setJMenuBar(createMenuBar());
 
         // Make dragging a little faster but perhaps uglier.

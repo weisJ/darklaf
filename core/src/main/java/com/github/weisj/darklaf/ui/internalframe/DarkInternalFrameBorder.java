@@ -37,10 +37,21 @@ import com.github.weisj.darklaf.components.border.DropShadowBorder;
  */
 public class DarkInternalFrameBorder extends DropShadowBorder implements UIResource {
 
+    private final float activeOpacity;
+    private final float inactiveOpacity;
+
     public DarkInternalFrameBorder() {
-        super(null, 7, .1f, 9,
-              true, true, true, true);
+        activeOpacity = UIManager.getInt("InternalFrame.activeShadowOpacity") / 100f;
+        inactiveOpacity = UIManager.getInt("InternalFrame.inactiveShadowOpacity") / 100f;
+        int shadowSize = UIManager.getInt("InternalFrame.shadowSize");
+        setShadowSize(shadowSize);
+        setCornerSize(2 * shadowSize);
+        setShadowOpacity(activeOpacity);
         setShadowColor(UIManager.getColor("InternalFrame.borderShadowColor"));
+        setShowTopShadow(true);
+        setShowBottomShadow(true);
+        setShowLeftShadow(true);
+        setShowRightShadow(true);
     }
 
     @Override
@@ -49,15 +60,15 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
         if (c instanceof JInternalFrame && ((JInternalFrame) c).isMaximum()) {
             return;
         }
-        updateSize(c);
+        updateOpacity(c);
         super.paintBorder(c, graphics, x, y, width, height);
     }
 
-    protected void updateSize(final Component c) {
+    protected void updateOpacity(final Component c) {
         if (c instanceof JInternalFrame && ((JInternalFrame) c).isSelected()) {
-            setShadowOpacity(0.2f);
+            setShadowOpacity(activeOpacity);
         } else {
-            setShadowOpacity(0.1f);
+            setShadowOpacity(inactiveOpacity);
         }
     }
 
@@ -66,7 +77,7 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
         if (c instanceof JInternalFrame && ((JInternalFrame) c).isMaximum()) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
-        updateSize(c);
+        updateOpacity(c);
         return super.getBorderInsets(c);
     }
 }

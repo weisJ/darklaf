@@ -35,6 +35,7 @@ import javax.swing.plaf.basic.BasicRootPaneUI;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -77,6 +78,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         LookAndFeel.installColors(rootPane, "RootPane.background", "RootPane.foreground");
         updateClientDecoration();
         installBorder(rootPane);
+        installListeners(rootPane);
     }
 
     protected void installBorder(final JRootPane root) {
@@ -89,6 +91,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         super.uninstallUI(c);
         uninstallClientDecorations(rootPane);
         uninstallBorder(rootPane);
+        uninstallListeners(rootPane);
         layoutManager = null;
         rootPane = null;
     }
@@ -150,7 +153,16 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         installLayout(root);
         setTitlePane(root, titlePane);
         if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
+    }
+
+    @Override
+    protected void installListeners(final JRootPane root) {
         root.addHierarchyListener(this);
+    }
+
+    @Override
+    protected void uninstallListeners(final JRootPane root) {
+        root.removeHierarchyListener(this);
     }
 
     private void setTitlePane(final JRootPane root, final CustomTitlePane titlePane) {
@@ -212,11 +224,17 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     protected void updateClientDecoration() {
-        if (!PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS_UPDATE)) {
+        if (decorationsEnabled(rootPane)) {
             uninstallClientDecorations(rootPane);
             if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
                 installClientDecorations(rootPane);
             }
         }
+    }
+
+    protected boolean decorationsEnabled(final JRootPane rootPane) {
+        return !(rootPane.getParent() instanceof JInternalFrame)
+               && !PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS_UPDATE)
+               && rootPane.getParent() != null;
     }
 }
