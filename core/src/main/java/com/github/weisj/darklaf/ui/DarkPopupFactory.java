@@ -52,7 +52,7 @@ public class DarkPopupFactory extends PopupFactory {
         Pair<Popup, PopupType> result = getEffectivePopup(owner, contents, x, y);
         Popup popup = result.getFirst();
         PopupType type = result.getSecond();
-        setupPopup(popup, type, contents);
+        setupPopup(type, contents, x, y);
         return popup;
     }
 
@@ -77,7 +77,7 @@ public class DarkPopupFactory extends PopupFactory {
         return PopupType.HEAVY_WEIGHT;
     }
 
-    protected void setupPopup(final Popup popup, final PopupType type, final Component contents) {
+    protected void setupPopup(final PopupType type, final Component contents, final int x, final int y) {
         if (type == PopupType.MEDIUM_WEIGHT) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
@@ -103,10 +103,12 @@ public class DarkPopupFactory extends PopupFactory {
     }
 
     protected void setupWindowBackground(final Window window, final boolean opaque, final boolean decorations) {
-        // Sometimes the background is java.awt.SystemColor[i=7]
-        // It results in a flash of white background, that is repainted with
-        // the proper popup background later.
-        // That is why we set window background explicitly.
+        /*
+         * Sometimes the background is java.awt.SystemColor[i=7]
+         * It results in a flash of white background, that is repainted with
+         * the proper popup background later.
+         * That is why we set window background explicitly.
+         */
         if (window instanceof RootPaneContainer) {
             JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
             rootPane.setOpaque(opaque);

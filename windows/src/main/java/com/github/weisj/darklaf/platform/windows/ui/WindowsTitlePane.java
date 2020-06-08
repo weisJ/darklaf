@@ -121,6 +121,8 @@ public class WindowsTitlePane extends CustomTitlePane {
     private int right;
     private int height;
 
+    private GraphicsConfiguration gc;
+
     public WindowsTitlePane(final JRootPane root, final int decorationStyle, final Window window) {
         this.rootPane = root;
         this.window = window;
@@ -213,7 +215,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             determineColors();
             setActive(window.isActive());
             installListeners();
-            updateSystemIcon();
+            updateSystemIcon(getGraphicsConfiguration());
         }
     }
 
@@ -465,6 +467,13 @@ public class WindowsTitlePane extends CustomTitlePane {
             g.setColor(border);
             g.fillRect(0, height - 1, width, 1);
         }
+
+        GraphicsConfiguration currentGC = getGraphicsConfiguration();
+        if (currentGC != null && currentGC != gc) {
+            gc = currentGC;
+            updateDragArea(gc);
+            updateSystemIcon(gc);
+        }
     }
 
     public JRootPane getRootPane() {
@@ -566,7 +575,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 : window.getComponentOrientation().isLeftToRight();
     }
 
-    private void updateSystemIcon() {
+    private void updateSystemIcon(final GraphicsConfiguration gc) {
         boolean frame = getDecorationStyle() == JRootPane.FRAME;
         Window window = getWindow();
         if (window == null) {
@@ -575,7 +584,6 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         List<Image> icons = window.getIconImages();
-        GraphicsConfiguration gc = getGraphicsConfiguration();
         Icon systemIcon = null;
         if (icons == null || icons.size() == 0) {
             if (frame) {
@@ -665,6 +673,13 @@ public class WindowsTitlePane extends CustomTitlePane {
         return Math.max(BAR_HEIGHT, height);
     }
 
+    protected void updateDragArea(final GraphicsConfiguration gc) {
+        JNIDecorationsWindows.updateValues(windowHandle,
+                                           (int) Scale.scaleWidth(left, gc),
+                                           (int) Scale.scaleWidth(right, gc),
+                                           (int) Scale.scaleHeight(height, gc));
+    }
+
     private class TitlePaneLayout implements LayoutManager {
         public void addLayoutComponent(final String name, final Component c) {}
 
@@ -749,12 +764,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
             }
             right++; // Make sure mouse exit event is produced for left most button.
-            GraphicsConfiguration gc = getGraphicsConfiguration();
-            JNIDecorationsWindows.updateValues(windowHandle,
-                                               (int) Scale.scaleWidth(left, gc),
-                                               (int) Scale.scaleWidth(right, gc),
-                                               (int) Scale.scaleHeight(height, gc));
-
+            updateDragArea(getGraphicsConfiguration());
         }
 
         private void mirror(final JComponent component, final int w) {
@@ -775,6 +785,8 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     protected class PropertyChangeHandler implements PropertyChangeListener {
+
+        @Override
         public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
             if (KEY_RESIZABLE.equals(name) || KEY_STATE.equals(name)) {
@@ -794,20 +806,13 @@ public class WindowsTitlePane extends CustomTitlePane {
                 revalidate();
                 repaint();
             } else if (KEY_ICON_IMAGE.equals(name)) {
-                updateSystemIcon();
+                updateSystemIcon(getGraphicsConfiguration());
                 revalidate();
                 repaint();
             } else if (PropertyKey.BACKGROUND.equals(name) && pce.getNewValue() instanceof Color) {
                 Color color = (Color) pce.getNewValue();
                 if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
-            } else if (PropertyKey.GRAPHICS_CONFIGURATION.equals(name)) {
-                GraphicsConfiguration gc = getGraphicsConfiguration();
-                JNIDecorationsWindows.updateValues(windowHandle,
-                                                   (int) Scale.scaleWidth(left, gc),
-                                                   (int) Scale.scaleWidth(right, gc),
-                                                   (int) Scale.scaleHeight(height, gc));
-                updateSystemIcon();
             }
         }
     }

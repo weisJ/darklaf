@@ -404,6 +404,7 @@ public final class DarkUIUtil {
     }
 
     public static Rectangle getScreenBounds(final JComponent target, final Point p) {
+        if (p == null) return getScreenBounds(target, target.getLocationOnScreen());
         return getScreenBounds(target, p.x, p.y);
     }
 
@@ -415,7 +416,7 @@ public final class DarkUIUtil {
                                             final boolean subtractInsets) {
         GraphicsConfiguration gc = target != null ? target.getGraphicsConfiguration() : null;
         if (gc == null) {
-            gc = getDrawingGC(x, y);
+            gc = getGraphicsConfigurationForLocation(x, y);
         }
         if (gc == null) {
             // Should never happen.
@@ -435,7 +436,7 @@ public final class DarkUIUtil {
         return sBounds;
     }
 
-    private static GraphicsConfiguration getDrawingGC(final int x, final int y) {
+    public static GraphicsConfiguration getGraphicsConfigurationForLocation(final int x, final int y) {
         if (GraphicsEnvironment.isHeadless()) return null;
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] devices = env.getScreenDevices();

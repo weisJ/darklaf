@@ -60,6 +60,18 @@ public class Scale {
         return transform.getScaleY() * value;
     }
 
+    public static double inverseScaleWidth(final double value, final GraphicsConfiguration gc) {
+        if (gc == null) return inverseScaleWidth(value);
+        AffineTransform transform = gc.getDefaultTransform();
+        return (1 / transform.getScaleX()) * value;
+    }
+
+    public static double inverseScaleHeight(final double value, final GraphicsConfiguration gc) {
+        if (gc == null) return inverseScaleHeight(value);
+        AffineTransform transform = gc.getDefaultTransform();
+        return (1 / transform.getScaleY()) * value;
+    }
+
     public static int scaleWidth(final int i) {
         return (int) (SCALE_X * i);
     }
@@ -72,6 +84,18 @@ public class Scale {
         return SCALE_X * d;
     }
 
+    public static int inverseScaleWidth(final int i) {
+        return (int) ((1 / SCALE_X) * i);
+    }
+
+    public static float inverseScaleWidth(final float f) {
+        return (float) ((1 / SCALE_X) * f);
+    }
+
+    public static double inverseScaleWidth(final double d) {
+        return (1 / SCALE_X) * d;
+    }
+
     public static int scaleHeight(final int i) {
         return (int) (SCALE_Y * i);
     }
@@ -82,6 +106,18 @@ public class Scale {
 
     public static double scaleHeight(final double d) {
         return SCALE_Y * d;
+    }
+
+    public static int inverseScaleHeight(final int i) {
+        return (int) ((1 / SCALE_Y) * i);
+    }
+
+    public static float inverseScaleHeight(final float f) {
+        return (float) ((1 / SCALE_Y) * f);
+    }
+
+    public static double inverseScaleHeight(final double d) {
+        return (1 / SCALE_Y) * d;
     }
 
     public static double getScaleX(final Graphics2D g) {
@@ -104,6 +140,18 @@ public class Scale {
 
     public static Dimension scale(final GraphicsConfiguration gc, final Dimension size) {
         return new Dimension((int) scaleWidth(size.width, gc), (int) scaleHeight(size.height, gc));
+    }
+
+    public static Point scale(final GraphicsConfiguration gc, final Point p) {
+        return new Point((int) scaleWidth(p.x, gc), (int) scaleHeight(p.y, gc));
+    }
+
+    public static Dimension inverseScale(final GraphicsConfiguration gc, final Dimension size) {
+        return new Dimension((int) inverseScaleWidth(size.width, gc), (int) inverseScaleHeight(size.height, gc));
+    }
+
+    public static Point inverseScale(final GraphicsConfiguration gc, final Point p) {
+        return new Point((int) inverseScaleWidth(p.x, gc), (int) inverseScaleHeight(p.y, gc));
     }
 
     public static double scale(final double scale, final double value) {

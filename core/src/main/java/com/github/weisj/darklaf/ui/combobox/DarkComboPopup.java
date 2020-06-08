@@ -30,11 +30,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicComboPopup;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
@@ -144,8 +144,8 @@ public class DarkComboPopup extends BasicComboPopup {
         // is the same width as the combo box.
         popupSize.setSize(popupSize.width - (insets.right + insets.left),
                           getPopupHeightForRowCount(comboBox.getMaximumRowCount()));
-        Rectangle popupBounds = computePopupBounds(0, comboBox.getBounds().height - borderSize,
-                                                   popupSize.width, popupSize.height);
+        Rectangle popupBounds = computePopupBounds(borderSize, comboBox.getBounds().height - borderSize,
+                                                   popupSize.width - 2 * borderSize, popupSize.height);
         Dimension scrollSize = popupBounds.getSize();
         Point popupLocation = popupBounds.getLocation();
 
@@ -159,36 +159,17 @@ public class DarkComboPopup extends BasicComboPopup {
     }
 
     protected Rectangle computePopupBounds(final int px, final int py, final int pw, final int ph) {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Rectangle screenBounds;
+        Rectangle screenBounds = DarkUIUtil.getScreenBounds(comboBox, null);
 
-        // Calculate the desktop dimensions relative to the combo box.
-        GraphicsConfiguration gc = comboBox.getGraphicsConfiguration();
-        Point p = new Point();
-        SwingUtilities.convertPointFromScreen(p, comboBox);
-        if (gc != null) {
-            Insets screenInsets = toolkit.getScreenInsets(gc);
-            screenBounds = gc.getBounds();
-            screenBounds.width -= (screenInsets.left + screenInsets.right);
-            screenBounds.height -= (screenInsets.top + screenInsets.bottom);
-            screenBounds.x += (p.x + screenInsets.left);
-            screenBounds.y += (p.y + screenInsets.top);
-        } else {
-            screenBounds = new Rectangle(p, toolkit.getScreenSize());
-        }
-        int borderHeight = 0;
-        Border popupBorder = getBorder();
-        if (popupBorder != null) {
-            Insets borderInsets = popupBorder.getBorderInsets(this);
-            borderHeight = borderInsets.top + borderInsets.bottom;
-            screenBounds.width -= (borderInsets.left + borderInsets.right);
-            screenBounds.height -= borderHeight;
-        }
+        Point relativeOrigin = new Point();
+        SwingUtilities.convertPointFromScreen(relativeOrigin, comboBox);
+        screenBounds.setLocation(relativeOrigin);
+
         Rectangle rect = new Rectangle(px, py, pw, ph);
         if (py + ph > screenBounds.y + screenBounds.height) {
-            if (ph <= -screenBounds.y - borderHeight) {
+            if (ph <= -screenBounds.y) {
                 // popup goes above
-                rect.y = -ph - borderHeight + borderSize;
+                rect.y = -ph + borderSize;
             } else {
                 // a full screen height popup
                 rect.y = screenBounds.y + Math.max(0, (screenBounds.height - ph) / 2);

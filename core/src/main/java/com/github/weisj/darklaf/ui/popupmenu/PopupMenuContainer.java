@@ -92,11 +92,17 @@ public class PopupMenuContainer extends JPanel {
     }
 
     public void setPopupMenu(final JPopupMenu popupMenu) {
+        if (this.popupMenu != null) {
+            this.popupMenu.removeMenuKeyListener(menuKeyListener);
+            this.popupMenu.removePopupMenuListener(menuListener);
+        }
         this.popupMenu = popupMenu;
-        popupMenu.removeMenuKeyListener(menuKeyListener);
-        popupMenu.removePopupMenuListener(menuListener);
-        popupMenu.addMenuKeyListener(menuKeyListener);
-        popupMenu.addPopupMenuListener(menuListener);
+        if (popupMenu != null) {
+            popupMenu.removeMenuKeyListener(menuKeyListener);
+            popupMenu.removePopupMenuListener(menuListener);
+            popupMenu.addMenuKeyListener(menuKeyListener);
+            popupMenu.addPopupMenuListener(menuListener);
+        }
     }
 
     public Popup createPopup(final JPopupMenu popupMenu, final int posX, final int posY, final int maxHeight) {
