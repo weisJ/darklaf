@@ -1,0 +1,22 @@
+name: Build SNAPSHOT
+
+on:
+  push:
+    branches:
+      - 'master'
+jobs:
+  linux:
+    name: Linux (Java 8)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Build
+        run: ./gradlew build -PskipAutostyle
+      - name: Publish
+        run: ./gradlew prepareVote -Prc=1 -Pgh -Prelease=false -PskipJavadoc -PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GH_GIT_PASSWORD }} -PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }} -PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}

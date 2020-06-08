@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":darklaf-theme"))
+    api(project(":darklaf-theme"))
+    api(project(":darklaf-utils"))
     implementation(project(":darklaf-native-utils"))
-    implementation(project(":darklaf-utils"))
     implementation(project(":darklaf-platform-base"))
     implementation(project(":darklaf-windows"))
     implementation(project(":darklaf-macos"))

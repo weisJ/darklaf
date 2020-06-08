@@ -41,6 +41,23 @@ implementation("com.github.weisj:darklaf-core:[2.2.1,)")
 implementation("com.github.weisj:darklaf-theme:[2.2.1,)") // For the themes
 ````
 
+You can also use the latest nightly build.
+````kotlin
+repositories {
+    maven {
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+}
+
+dependencies {
+    implementation("com.github.weisj:darklaf-core:latest.integration")
+}
+````
+
 ## Installation
 The LookAndFeel can be easily installed using the `LafManager`
 ````java
@@ -125,11 +142,13 @@ When building on Windows, you need a C++ toolchain installed to build native ext
 
 When building on macOS you need to have XCode (or the command line tools) installed to build the native extension.
 
-If you want to build for platforms different from your machine you can download the respective native libraries
+If you want to build for platforms different from your machine the necessary binaries are automatically downloaded.
+For this you have to specify a valid GithubAccessToken using `githubAccessToken` property in your local `gradle.properties` file.
+The access token only needs to have the permission to read repositories.
+
+You can also manually download the respective native libraries
 from the latest successful run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+branch%3Amaster) and place it in the corresponding `<variant>/libraries` folder.
-Further details can be found in the respective `library.md` file. The libraries are then automatically included in the jar
-when building the project.
-When building the project there will be a message for every library that needs to be manually included.
+This is necessary if you don't have the appropriate toolchain installed, but you machine is a binary target. 
 
 **Note**: You can still build the project without the libraries, but then custom decorations won't be supported.
 

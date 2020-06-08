@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":darklaf-utils"))
+    api(project(":darklaf-utils"))
     implementation("com.formdev:svgSalamander")
 }

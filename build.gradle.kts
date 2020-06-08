@@ -3,6 +3,8 @@ import com.github.autostyle.gradle.BaseFormatExtension
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.properties.dsl.props
+import com.github.vlsi.gradle.properties.dsl.stringProperty
+import com.github.vlsi.gradle.properties.dsl.toBool
 import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
 
@@ -17,13 +19,10 @@ val skipJavadoc by props()
 val enableMavenLocal by props()
 val enableGradleMetadata by props()
 val skipAutostyle by props()
+val isRelease = project.stringProperty("release").toBool()
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 val projectVersion = "darklaf".v
-
-val buildVersion = projectVersion + releaseParams.snapshotSuffix
-println("Building: Darklaf $buildVersion")
-println("     JDK: " + System.getProperty("java.home"))
 
 releaseParams {
     tlp.set("darklaf")
@@ -32,6 +31,8 @@ releaseParams {
     prefixForProperties.set("gh")
     svnDistEnabled.set(false)
     sitePreviewEnabled.set(false)
+    release.set(isRelease)
+    rcTag.set("v$projectVersion${releaseParams.snapshotSuffix}")
     nexus {
         mavenCentral()
     }
@@ -44,6 +45,12 @@ releaseParams {
         """.trimIndent()
     }
 }
+
+tasks.closeRepository.configure { enabled = isRelease }
+
+val buildVersion = projectVersion + releaseParams.snapshotSuffix
+println("Building: Darklaf $buildVersion")
+println("     JDK: " + System.getProperty("java.home"))
 
 fun BaseFormatExtension.license(addition: String = "") {
     val extra = if (addition.isEmpty()) "" else "\n$addition"
@@ -194,7 +201,7 @@ allprojects {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
             withSourcesJar()
-            if (!skipJavadoc) {
+            if (!skipJavadoc && isRelease) {
                 withJavadocJar()
             }
         }
@@ -213,6 +220,19 @@ allprojects {
         }
 
         apply(plugin = "maven-publish")
+
+        val useInMemoryKey by props()
+        if (useInMemoryKey) {
+            apply(plugin = "signing")
+
+            configure<SigningExtension> {
+                useInMemoryPgpKeys(
+                    project.stringProperty("signing.inMemoryKey")?.replace("#", "\n"),
+                    project.stringProperty("signing.password")
+                )
+            }
+        }
+
 
         tasks {
             withType<JavaCompile>().configureEach {
@@ -295,7 +315,7 @@ allprojects {
             publications {
                 create<MavenPublication>(project.name) {
                     artifactId = project.name
-                    version = rootProject.version.toString()
+                    version = buildVersion
                     description = project.description
                     from(project.components["java"])
                 }
