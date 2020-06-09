@@ -50,8 +50,8 @@ jobs:
         run: ./gradlew build -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} -PskipAutostyle --info
       - name: Publish
         env:
-          RELEASE_PROPS: ${{ '-Prc=1 -Pgh -Prelease=false -PskipJavadoc' }}
-          GIT_PROPS: ${{ '-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GH_GIT_PASSWORD }}' }}
-          NEXUS_PROPS: ${{ '-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}' }}
-          SIGNING_PROPS: ${{ '-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}' }}
-        run: ./gradlew prepareVote $RELEASE_PROPS $GIT_PROPS $NEXUS_PROPS $SIGNING_PROPS
+          RELEASE_PROPS: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc"
+          GIT_PROPS: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GH_GIT_PASSWORD }}"
+          NEXUS_PROPS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
+          SIGNING_PROPS: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
+        run: ./gradlew prepareVote ${RELEASE_PROPS} ${GIT_PROPS} ${NEXUS_PROPS} ${SIGNING_PROPS}
