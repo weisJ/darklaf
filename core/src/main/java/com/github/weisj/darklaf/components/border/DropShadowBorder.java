@@ -37,6 +37,7 @@ import java.util.Map;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.graphics.ImageUtil;
+import com.github.weisj.darklaf.util.Disposable;
 
 /**
  * Implements a DropShadow for components. In general, the DropShadowBorder will work with any rectangular components
@@ -93,15 +94,10 @@ public class DropShadowBorder implements Border, Serializable {
     @Override
     public void paintBorder(final Component c, final Graphics graphics,
                             final int x, final int y, final int width, final int height) {
-        /*
-         * 1) Get images for this border
-         * 2) Paint the images for each side of the border that should be painted
-         */
-        BufferedImage[] images = getImages((Graphics2D) graphics);
+        final BufferedImage[] images = getImages();
+        final Graphics2D g2 = (Graphics2D) graphics.create();
 
-        Graphics2D g2 = (Graphics2D) graphics.create();
-
-        try {
+        try (Disposable d = g2::dispose) {
             // The location and size of the shadows depends on which shadows are being
             // drawn. For instance, if the left & bottom shadows are being drawn, then
             // the left shadow extends all the way down to the corner, a corner is drawn,
@@ -160,78 +156,72 @@ public class DropShadowBorder implements Border, Serializable {
             }
 
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             g2.setRenderingHint(RenderingHints.KEY_RENDERING,
                                 RenderingHints.VALUE_RENDER_SPEED);
 
             if (showLeftShadow) {
                 assert topLeftShadowPoint != null && bottomLeftShadowPoint != null;
-                Rectangle leftShadowRect = new Rectangle(x, topLeftShadowPoint.y + shadowSize, shadowSize,
-                                                         bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
-                g2.drawImage(images[Position.LEFT.ordinal()],
-                             leftShadowRect.x, leftShadowRect.y,
-                             leftShadowRect.width, leftShadowRect.height, null);
+                drawImage(g2, images[Position.LEFT.ordinal()],
+                          x,
+                          topLeftShadowPoint.y + shadowSize,
+                          shadowSize,
+                          bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
             }
 
             if (showBottomShadow) {
                 assert bottomLeftShadowPoint != null && bottomRightShadowPoint != null;
-                Rectangle bottomShadowRect = new Rectangle(bottomLeftShadowPoint.x + shadowSize,
-                                                           y + height - shadowSize,
-                                                           bottomRightShadowPoint.x - bottomLeftShadowPoint.x
-                                                                                    - shadowSize,
-                                                           shadowSize);
-                g2.drawImage(images[Position.BOTTOM.ordinal()],
-                             bottomShadowRect.x, bottomShadowRect.y,
-                             bottomShadowRect.width, bottomShadowRect.height, null);
+                drawImage(g2, images[Position.BOTTOM.ordinal()],
+                          bottomLeftShadowPoint.x + shadowSize,
+                          y + height - shadowSize,
+                          bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize,
+                          shadowSize);
             }
 
             if (showRightShadow) {
                 assert topRightShadowPoint != null && bottomRightShadowPoint != null;
-                Rectangle rightShadowRect = new Rectangle(x + width - shadowSize, topRightShadowPoint.y + shadowSize,
-                                                          shadowSize,
-                                                          bottomRightShadowPoint.y - topRightShadowPoint.y
-                                                                      - shadowSize);
-                g2.drawImage(images[Position.RIGHT.ordinal()],
-                             rightShadowRect.x, rightShadowRect.y,
-                             rightShadowRect.width, rightShadowRect.height, null);
+                drawImage(g2, images[Position.RIGHT.ordinal()],
+                          x + width - shadowSize,
+                          topRightShadowPoint.y + shadowSize,
+                          shadowSize,
+                          bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize);
             }
 
             if (showTopShadow) {
                 assert topLeftShadowPoint != null && topRightShadowPoint != null;
-                Rectangle topShadowRect = new Rectangle(topLeftShadowPoint.x + shadowSize, y,
-                                                        topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize,
-                                                        shadowSize);
-                g2.drawImage(images[Position.TOP.ordinal()],
-                             topShadowRect.x, topShadowRect.y,
-                             topShadowRect.width, topShadowRect.height, null);
+                drawImage(g2, images[Position.TOP.ordinal()],
+                          topLeftShadowPoint.x + shadowSize,
+                          y,
+                          topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize,
+                          shadowSize);
             }
 
             if (showLeftShadow || showTopShadow) {
-                assert topLeftShadowPoint != null;
-                g2.drawImage(images[Position.TOP_LEFT.ordinal()], topLeftShadowPoint.x, topLeftShadowPoint.y, null);
+                drawImage(g2, images[Position.TOP_LEFT.ordinal()], topLeftShadowPoint);
             }
             if (showLeftShadow || showBottomShadow) {
-                assert bottomLeftShadowPoint != null;
-                g2.drawImage(images[Position.BOTTOM_LEFT.ordinal()], bottomLeftShadowPoint.x, bottomLeftShadowPoint.y,
-                             null);
+                drawImage(g2, images[Position.BOTTOM_LEFT.ordinal()], bottomLeftShadowPoint);
             }
             if (showRightShadow || showBottomShadow) {
-                assert bottomRightShadowPoint != null;
-                g2.drawImage(images[Position.BOTTOM_RIGHT.ordinal()], bottomRightShadowPoint.x,
-                             bottomRightShadowPoint.y, null);
+                drawImage(g2, images[Position.BOTTOM_RIGHT.ordinal()], bottomRightShadowPoint);
             }
             if (showRightShadow || showTopShadow) {
-                assert topRightShadowPoint != null;
-                g2.drawImage(images[Position.TOP_RIGHT.ordinal()], topRightShadowPoint.x, topRightShadowPoint.y, null);
+                drawImage(g2, images[Position.TOP_RIGHT.ordinal()], topRightShadowPoint);
             }
-        } finally {
-            g2.dispose();
         }
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
+    protected void drawImage(final Graphics g, final Image image, final Point p) {
+        if (p == null) return;
+        g.drawImage(image, p.x, p.y, null);
+    }
 
-    private BufferedImage[] getImages(final Graphics2D g2) {
+    protected void drawImage(final Graphics g, final Image image, final int x, final int y, final int w, final int h) {
+        g.drawImage(image, x, y, w, h, null);
+    }
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    private BufferedImage[] getImages() {
         // first, check to see if an image for this size has already been rendered
         // if so, use the cache. Else, draw and save
         BufferedImage[] images = CACHE.get(getBorderHash(shadowSize, shadowOpacity, shadowColor));
@@ -258,13 +248,11 @@ public class DropShadowBorder implements Border, Serializable {
             BufferedImage image = ImageUtil.createCompatibleTranslucentImage(imageWidth, imageWidth);
             Graphics2D buffer = (Graphics2D) image.getGraphics();
 
-            try {
+            try (Disposable d = buffer::dispose) {
                 buffer.setPaint(new Color(shadowColor.getRed(), shadowColor.getGreen(),
                                           shadowColor.getBlue(), (int) (shadowOpacity * 255)));
                 buffer.translate(shadowSize, shadowSize);
                 buffer.fill(rect);
-            } finally {
-                buffer.dispose();
             }
 
             float blurry = 1.0f / (float) (shadowSize * shadowSize);
@@ -336,10 +324,8 @@ public class DropShadowBorder implements Border, Serializable {
         BufferedImage ret = ImageUtil.createCompatibleTranslucentImage(w, h);
         Graphics2D g2 = ret.createGraphics();
 
-        try {
+        try (Disposable d = g2::dispose) {
             g2.drawImage(img, 0, 0, w, h, x, y, x + w, y + h, null);
-        } finally {
-            g2.dispose();
         }
 
         return ret;
