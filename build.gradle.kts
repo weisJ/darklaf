@@ -32,7 +32,9 @@ releaseParams {
     svnDistEnabled.set(false)
     sitePreviewEnabled.set(false)
     release.set(isRelease)
-    rcTag.set("v$projectVersion${releaseParams.snapshotSuffix}")
+    if (!isRelease) {
+        rcTag.set("v$projectVersion${releaseParams.snapshotSuffix}")
+    }
     nexus {
         mavenCentral()
     }
