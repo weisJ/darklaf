@@ -51,8 +51,8 @@ jobs:
       - name: Publish
         run: ./gradlew prepareVote $releaseProps $gitProps $nexusProps $signingProps --info
         env:
-          - releaseProps: '-Prc=1 -Pgh -Prelease=false -PskipJavadoc'
-          - gitProps: '-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GH_GIT_PASSWORD }}'
-          - nexusProsp: '-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}'
-          - signingProps: '-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}'
-          - githubProps: '-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}'
+          releaseProps: '-Prc=1 -Pgh -Prelease=false -PskipJavadoc'
+          gitProps: '-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GH_GIT_PASSWORD }}'
+          nexusProsp: '-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}'
+          signingProps: '-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}'
+          githubProps: '-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}'
