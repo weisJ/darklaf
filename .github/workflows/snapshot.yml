@@ -37,7 +37,7 @@ on:
 
 jobs:
   gradle:
-    name: Publish SNAPSHOT
+    name: Publish nightly snapshot
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
