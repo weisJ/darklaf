@@ -35,7 +35,7 @@ on:
       - '**/snapshot.yml'
 
 jobs:
-  linux:
+  gradle:
     name: Linux (Java 8)
     runs-on: ubuntu-latest
     steps:
@@ -56,5 +56,5 @@ jobs:
           PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
         run: |
-          ./gradlew prepareVote ${PROPS_RELEASE} ${PROPS_GIT} ${PROPS_NEXUS} ${PROPS_SIGNING} ${PROPS_GITHUB}
           echo ${PROPS_RELEASE} ${PROPS_GIT} ${PROPS_NEXUS} ${PROPS_SIGNING} ${PROPS_GITHUB}
+#          ./gradlew prepareVote ${PROPS_RELEASE} ${PROPS_GIT} ${PROPS_NEXUS} ${PROPS_SIGNING} ${PROPS_GITHUB}
