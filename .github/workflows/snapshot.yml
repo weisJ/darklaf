@@ -28,6 +28,11 @@ on:
   schedule:
     # Midnight every day
     - cron: "0 0 * * *"
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '**/snapshot.yml'
 
 jobs:
   linux:
@@ -44,4 +49,10 @@ jobs:
       - name: Build
         run: ./gradlew build -PskipAutostyle
       - name: Publish
-        run: ./gradlew prepareVote -Prc=1 -Pgh -Prelease=false -PskipJavadoc -PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GH_GIT_PASSWORD }} -PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }} -PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew prepareVote $releaseProps $gitProps $nexusProps $signingProps --info
+        env:
+          - releaseProps='-Prc=1 -Pgh -Prelease=false -PskipJavadoc'
+          - gitProps='-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GH_GIT_PASSWORD }}'
+          - nexusProsp='-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}'
+          - signingProps='-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}'
+          - githubProps='-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}'
