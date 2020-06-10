@@ -38,6 +38,7 @@ import org.junit.jupiter.api.condition.OS;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
+import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -57,6 +58,7 @@ public class TooltipTest extends AbstractImageTest {
         JToolTip toolTip = new JToolTip();
         toolTip.setTipText("Test ToolTip");
         toolTip.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
+        toolTip.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, false);
         toolTip.setSize(toolTip.getPreferredSize());
         toolTip.doLayout();
         return toolTip;
@@ -79,13 +81,23 @@ public class TooltipTest extends AbstractImageTest {
 
         SwingUtilities.invokeAndWait(() -> {
             try {
+                Component c;
+                for (c = toolTip.getParent(); c != null; c = c.getParent()) {
+                    Color bg = c.getBackground();
+                    Assertions.assertNotNull(bg, "Background is null for " + c);
+                    if (c.isOpaque()) {
+                        Assertions.assertEquals(0, bg.getAlpha(), "Background is opaque " + c);
+                    }
+                    if (c instanceof Window) break;
+                }
+                Assertions.assertEquals(c, window, "Did not traverse full hierarchy");
+
                 JRootPane rootPane = SwingUtilities.getRootPane(window);
                 Assertions.assertNotNull(rootPane, "RootPane is null");
                 Assertions.assertFalse(rootPane.isOpaque(), "RootPane is opaque");
 
                 Color backgroundColor = window.getBackground();
                 Assertions.assertNotNull(backgroundColor, "Background is null");
-                Assertions.assertEquals(0, backgroundColor.getAlpha(), "Background is opaque");
 
                 BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
                 Assertions.assertNotNull(img, "Tooltip Image is null");

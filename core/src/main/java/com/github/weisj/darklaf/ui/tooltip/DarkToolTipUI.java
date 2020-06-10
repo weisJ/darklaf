@@ -150,6 +150,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
     @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
+        fadeAnimator.dispose();
         toolTip = null;
     }
 
