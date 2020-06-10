@@ -65,7 +65,6 @@ public class TooltipTest extends AbstractImageTest {
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS})
     public void testTooltipTransparency() throws InvocationTargetException, InterruptedException {
-
         JToolTip toolTip = createTooltip();
 
         SwingUtilities.invokeAndWait(() -> {
