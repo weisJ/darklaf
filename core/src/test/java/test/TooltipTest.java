@@ -26,15 +26,18 @@ package test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -45,24 +48,52 @@ public class TooltipTest extends AbstractImageTest {
         super("tooltip");
     }
 
-    @Test
-    @EnabledOnOs({OS.MAC, OS.WINDOWS})
-    public void testTooltipTransparency() {
-        LafManager.install();
+    @BeforeAll
+    static void setup() {
+        LafManager.install(new IntelliJTheme());
+    }
 
+    private JToolTip createTooltip() {
         JToolTip toolTip = new JToolTip();
         toolTip.setTipText("Test ToolTip");
         toolTip.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
         toolTip.setSize(toolTip.getPreferredSize());
         toolTip.doLayout();
+        return toolTip;
+    }
 
-        Popup popup = PopupFactory.getSharedInstance().getPopup(null, toolTip, 0, 0);
-        popup.show();
+    @Test
+    @EnabledOnOs({OS.MAC, OS.WINDOWS})
+    public void testTooltipTransparency() throws InvocationTargetException, InterruptedException {
+
+        JToolTip toolTip = createTooltip();
+
+        SwingUtilities.invokeAndWait(() -> {
+            Popup popup = PopupFactory.getSharedInstance().getPopup(null, toolTip, 0, 0);
+            popup.show();
+        });
+
         Window window = DarkUIUtil.getWindow(toolTip);
+        SwingUtilities.invokeAndWait(() -> window.setOpacity(1));
 
-        BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
-        Assertions.assertNotNull(img, "Tooltip Image is null");
-        int alpha = new Color(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1), true).getAlpha();
-        Assertions.assertEquals(0, alpha, "Tooltip is not opaque");
+        SwingUtilities.invokeLater(() -> {
+
+            JRootPane rootPane = SwingUtilities.getRootPane(window);
+            Assertions.assertNotNull(rootPane, "RootPane is null");
+            Assertions.assertFalse(rootPane.isOpaque(), "RootPane is opaque");
+
+            Color backgroundColor = window.getBackground();
+            Assertions.assertNotNull(backgroundColor, "Background is null");
+            Assertions.assertEquals(0, backgroundColor.getAlpha(), "Background is opaque");
+
+            BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
+            Assertions.assertNotNull(img, "Tooltip Image is null");
+            int alpha = getAlpha(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1));
+            Assertions.assertEquals(0, alpha, "Tooltip is opaque");
+        });
+    }
+
+    private int getAlpha(final int rgb) {
+        return new Color(rgb, true).getAlpha();
     }
 }

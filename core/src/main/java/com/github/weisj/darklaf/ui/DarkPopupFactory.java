@@ -25,19 +25,18 @@
 package com.github.weisj.darklaf.ui;
 
 import java.awt.*;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.Pair;
-import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.*;
 
 public class DarkPopupFactory extends PopupFactory {
 
+    private static final Logger LOGGER = LogUtil.getLogger(DarkPopupFactory.class);
     public static final String KEY_NO_DECORATION = "JPopupFactory.noDecorations";
     public static final String KEY_FOCUSABLE_POPUP = "JPopupFactory.focusablePopup";
     public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
@@ -52,6 +51,7 @@ public class DarkPopupFactory extends PopupFactory {
         Pair<Popup, PopupType> result = getEffectivePopup(owner, contents, x, y);
         Popup popup = result.getFirst();
         PopupType type = result.getSecond();
+        LOGGER.info(String.format("Popup: effective type=%s content=%s popup=%s", type, contents, popup));
         setupPopup(type, contents, x, y);
         return popup;
     }
@@ -60,6 +60,7 @@ public class DarkPopupFactory extends PopupFactory {
                                                        final int x, final int y) {
         Popup popup = super.getPopup(owner, contents, x, y);
         PopupType type = getPopupType(popup);
+        LOGGER.info(String.format("Popup: type=%s content=%s", type, contents));
         boolean forceHeavy = type != PopupType.HEAVY_WEIGHT
                              && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
         if (forceHeavy) {
