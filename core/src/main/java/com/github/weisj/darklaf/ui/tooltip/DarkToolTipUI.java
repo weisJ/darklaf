@@ -42,7 +42,9 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
+import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -242,9 +244,11 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
 
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
-        if (toolTip.getParent() instanceof JComponent) {
-            // For MediumWeightPopup still need to make parent non opaque.
-            ((JComponent) toolTip.getParent()).setOpaque(false);
+        // For MediumWeightPopup still need to make parent non opaque.
+        Component component = toolTip.getParent();
+        if (component instanceof JComponent) {
+            ((JComponent) component).setOpaque(false);
+            component.setBackground(new DarkColorUIResource(ColorUtil.toAlpha(component.getBackground(), 0)));
         }
     }
 

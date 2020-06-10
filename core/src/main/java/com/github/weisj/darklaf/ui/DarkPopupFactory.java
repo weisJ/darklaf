@@ -49,7 +49,6 @@ public class DarkPopupFactory extends PopupFactory {
         Pair<Popup, PopupType> result = getEffectivePopup(owner, contents, x, y);
         Popup popup = result.getFirst();
         PopupType type = result.getSecond();
-        System.out.println(String.format("Popup: effective type=%s content=%s popup=%s", type, contents, popup));
         setupPopup(type, contents, x, y);
         return popup;
     }
@@ -58,7 +57,6 @@ public class DarkPopupFactory extends PopupFactory {
                                                        final int x, final int y) {
         Popup popup = super.getPopup(owner, contents, x, y);
         PopupType type = getPopupType(popup);
-        System.out.println(String.format("Popup: type=%s content=%s", type, contents));
         boolean forceHeavy = type != PopupType.HEAVY_WEIGHT
                              && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
         if (forceHeavy) {
@@ -116,6 +114,7 @@ public class DarkPopupFactory extends PopupFactory {
             } else {
                 Color bg = getTranslucentPopupBackground(decorations);
                 window.setBackground(bg);
+                rootPane.setBackground(bg);
             }
         }
     }
