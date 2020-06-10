@@ -26,7 +26,7 @@ package test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
 
@@ -64,7 +64,7 @@ public class TooltipTest extends AbstractImageTest {
 
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS})
-    public void testTooltipTransparency() throws InvocationTargetException, InterruptedException {
+    public void testTooltipTransparency() throws Exception {
         JToolTip toolTip = createTooltip();
 
         SwingUtilities.invokeAndWait(() -> {
@@ -75,21 +75,28 @@ public class TooltipTest extends AbstractImageTest {
         Window window = DarkUIUtil.getWindow(toolTip);
         SwingUtilities.invokeAndWait(() -> window.setOpacity(1));
 
+        AtomicReference<Exception> exception = new AtomicReference<>();
+
         SwingUtilities.invokeLater(() -> {
+            try {
+                JRootPane rootPane = SwingUtilities.getRootPane(window);
+                Assertions.assertNotNull(rootPane, "RootPane is null");
+                Assertions.assertFalse(rootPane.isOpaque(), "RootPane is opaque");
 
-            JRootPane rootPane = SwingUtilities.getRootPane(window);
-            Assertions.assertNotNull(rootPane, "RootPane is null");
-            Assertions.assertFalse(rootPane.isOpaque(), "RootPane is opaque");
+                Color backgroundColor = window.getBackground();
+                Assertions.assertNotNull(backgroundColor, "Background is null");
+                Assertions.assertEquals(0, backgroundColor.getAlpha(), "Background is opaque");
 
-            Color backgroundColor = window.getBackground();
-            Assertions.assertNotNull(backgroundColor, "Background is null");
-            Assertions.assertEquals(0, backgroundColor.getAlpha(), "Background is opaque");
-
-            BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
-            Assertions.assertNotNull(img, "Tooltip Image is null");
-            int alpha = getAlpha(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1));
-            Assertions.assertEquals(0, alpha, "Tooltip is opaque");
+                BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
+                Assertions.assertNotNull(img, "Tooltip Image is null");
+                int alpha = getAlpha(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1));
+                Assertions.assertEquals(0, alpha, "Tooltip is opaque");
+            } catch (Exception e) {
+                exception.set(e);
+            }
         });
+
+        Assertions.assertNotNull(exception.get(), () -> exception.get().getMessage());
     }
 
     private int getAlpha(final int rgb) {
