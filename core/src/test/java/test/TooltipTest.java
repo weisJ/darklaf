@@ -77,7 +77,7 @@ public class TooltipTest extends AbstractImageTest {
 
         AtomicReference<Exception> exception = new AtomicReference<>();
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeAndWait(() -> {
             try {
                 JRootPane rootPane = SwingUtilities.getRootPane(window);
                 Assertions.assertNotNull(rootPane, "RootPane is null");
@@ -96,7 +96,8 @@ public class TooltipTest extends AbstractImageTest {
             }
         });
 
-        Assertions.assertNotNull(exception.get(), () -> exception.get().getMessage());
+        Exception e = exception.get();
+        if (e != null) Assertions.fail(e.getMessage());
     }
 
     private int getAlpha(final int rgb) {
