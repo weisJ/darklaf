@@ -88,6 +88,7 @@ public class TooltipTest extends AbstractImageTest {
                     if (c.isOpaque()) {
                         Assertions.assertEquals(0, bg.getAlpha(), "Background is opaque " + c);
                     }
+                    System.out.println(c.isOpaque() + " " + bg + " " + bg.getAlpha() + " " + c);
                     if (c instanceof Window) break;
                 }
                 Assertions.assertEquals(c, window, "Did not traverse full hierarchy");
