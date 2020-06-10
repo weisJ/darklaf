@@ -47,7 +47,7 @@ jobs:
           java-version: 11
       - uses: eskatos/gradle-command-action@v1
         with:
-          arguments: :darklaf-core:makeDocumentation -PskipAutostyle
+          arguments: :darklaf-core:makeDocumentation -PskipAutostyle -x test
       - name: Upload documentation
         uses: actions/upload-artifact@v1
         with:

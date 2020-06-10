@@ -26,7 +26,6 @@ package test;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;
-import java.io.IOException;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +59,7 @@ public class FontTest extends AbstractImageTest {
 
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS, OS.LINUX})
-    public void testFontChoices() throws IOException {
+    public void testFontChoices() {
         LafManager.install(new IntelliJTheme());
         JTextArea textArea = new JTextArea();
         textArea.setText(DemoResources.KERNING_TEST);
@@ -92,8 +91,7 @@ public class FontTest extends AbstractImageTest {
     }
 
     private void createImages(final String folder, final JComponent c,
-                              final List<FontSpec> fontSpecs) throws IOException {
-        createFolder(folder);
+                              final List<FontSpec> fontSpecs) {
         for (FontSpec spec : fontSpecs) {
             c.setFont(createFont(spec.fontName));
             setFractionalMetrics(spec.useFractionalMetrics);

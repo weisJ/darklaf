@@ -52,7 +52,7 @@ public abstract class AbstractImageTest {
         Files.createDirectories(new File(getWorkingDirectory() + "/" + folder).toPath());
     }
 
-    protected BufferedImage saveScreenShot(final String name, final JComponent c) {
+    protected BufferedImage saveScreenShot(final String name, final Component c) {
         return saveScreenShot(name, c, SCALING_FACTOR);
     }
 
@@ -60,11 +60,13 @@ public abstract class AbstractImageTest {
         return getWorkingDirectory() + "/" + name;
     }
 
-    protected BufferedImage saveScreenShot(final String name, final JComponent c, final double scalingFactor) {
+    protected BufferedImage saveScreenShot(final String name, final Component c, final double scalingFactor) {
         try {
+            File file = new File(name + ".png");
+            file.getParentFile().mkdirs();
             Rectangle rect = new Rectangle(0, 0, c.getWidth(), c.getHeight());
             BufferedImage image = ImageUtil.scaledImageFromComponent(c, rect, scalingFactor, scalingFactor, false);
-            ImageIO.write(image, "png", new File(name + ".png"));
+            ImageIO.write(image, "png", file);
             return image;
         } catch (IOException e) {
             e.printStackTrace();

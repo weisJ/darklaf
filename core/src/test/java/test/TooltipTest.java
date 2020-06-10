@@ -36,6 +36,8 @@ import org.junit.jupiter.api.condition.OS;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public class TooltipTest extends AbstractImageTest {
 
@@ -47,14 +49,20 @@ public class TooltipTest extends AbstractImageTest {
     @EnabledOnOs({OS.MAC, OS.WINDOWS})
     public void testTooltipTransparency() {
         LafManager.install();
+
         JToolTip toolTip = new JToolTip();
         toolTip.setTipText("Test ToolTip");
         toolTip.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
         toolTip.setSize(toolTip.getPreferredSize());
         toolTip.doLayout();
-        BufferedImage img = saveScreenShot(getPath("tooltip_mac"), toolTip);
-        Assertions.assertNotNull(img);
+
+        Popup popup = PopupFactory.getSharedInstance().getPopup(null, toolTip, 0, 0);
+        popup.show();
+        Window window = DarkUIUtil.getWindow(toolTip);
+
+        BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
+        Assertions.assertNotNull(img, "Tooltip Image is null");
         int alpha = new Color(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1), true).getAlpha();
-        Assertions.assertEquals(0, alpha);
+        Assertions.assertEquals(0, alpha, "Tooltip is not opaque");
     }
 }

@@ -88,6 +88,10 @@ public class SystemInfo {
         isJava9OrGreater = isJavaVersionAtLeast("9");
     }
 
+    public static String getOsName() {
+        return isMac ? "mac" : isWindows ? "windows" : "linux";
+    }
+
     public static boolean isOsVersionAtLeast(final String version) {
         return compareVersionNumbers(OS_VERSION, version) >= 0;
     }

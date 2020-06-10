@@ -127,7 +127,8 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "properties/platform/"),
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, SystemInfo.getOsName(),
+                                                                   "properties/platform/"),
                                      uiProps, defaults);
         currentTheme.customizePlatformProperties(uiProps, defaults);
     }
@@ -139,9 +140,5 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         if (SystemInfo.isMac && useScreenMenuBar) {
             uiProps.remove("MenuBarUI");
         }
-    }
-
-    private String getOsName() {
-        return SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
     }
 }

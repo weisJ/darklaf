@@ -44,7 +44,7 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew build -PskipAutostyle --info
+        run: ./gradlew build -PskipAutostyle --info -x test
       - name: Test
         run: ./gradlew :darklaf-core:test -PskipAutostyle
       - name: Upload Results
@@ -65,7 +65,7 @@ jobs:
         with:
           java-version: 8
       - name: Build
-        run: ./gradlew build -PskipAutostyle --info
+        run: ./gradlew build -PskipAutostyle --info -x test
       - name: Test
         run: ./gradlew :darklaf-core:test -PskipAutostyle
       - name: Upload Results
@@ -86,7 +86,7 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew build -PskipAutostyle --info
+        run: ./gradlew build -PskipAutostyle --info -x test
       - name: Test
         run: ./gradlew :darklaf-core:test -PskipAutostyle
       - name: Upload Results
