@@ -135,9 +135,9 @@ public final class ImageUtil {
         BufferedImage image;
         boolean scale = scalex != 1.0 || scaley != 1.0;
         if (scale) {
-            image = createCompatibleImage((int) (scalex * bounds.width), (int) (scaley * bounds.height));
+            image = createCompatibleTranslucentImage((int) (scalex * bounds.width), (int) (scaley * bounds.height));
         } else {
-            image = createCompatibleImage(bounds.width, bounds.height);
+            image = createCompatibleTranslucentImage(bounds.width, bounds.height);
         }
         final Graphics2D g2d = (Graphics2D) image.getGraphics();
         if (scale) {

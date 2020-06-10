@@ -35,5 +35,7 @@ dependencies {
         apiv("com.formdev:svgSalamander")
         apiv("com.miglayout:miglayout-core", "miglayout")
         apiv("com.miglayout:miglayout-swing", "miglayout")
+        apiv("org.junit.jupiter:junit-jupiter-api", "junit")
+        apiv("org.junit.jupiter:junit-jupiter-engine", "junit")
     }
 }

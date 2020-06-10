@@ -17,6 +17,14 @@ dependencies {
     testImplementation("com.miglayout:miglayout-core")
     testImplementation("com.miglayout:miglayout-swing")
     testImplementation("org.swinglabs:swingx")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    workingDir = File(project.rootDir, "build/test_results")
+    workingDir.mkdirs()
 }
 
 val makeDocumentation by tasks.registering(JavaExec::class) {
@@ -27,17 +35,6 @@ val makeDocumentation by tasks.registering(JavaExec::class) {
     workingDir = File(project.rootDir, "build")
     workingDir.mkdirs()
     main = "documentation.CreateUITable"
-    classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
-}
-
-val fontTest by tasks.registering(JavaExec::class) {
-    group = "Verification"
-    description = "Creates font sample images"
-    dependsOn(tasks.testClasses)
-
-    workingDir = File(project.rootDir, "build")
-    workingDir.mkdirs()
-    main = "FontTest"
     classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
 }
 

@@ -22,39 +22,45 @@
  * SOFTWARE.
  *
  */
+package test;
+
 import java.awt.*;
 import java.awt.font.TextAttribute;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import ui.DemoResources;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-public class FontTest {
+public class FontTest extends AbstractImageTest {
 
     private static final Map<AttributedCharacterIterator.Attribute, Integer> kerning;
-    private static final int SCALING_FACTOR = 3;
-    private static final String WORKING_DIR = "font_test";
 
     static {
         kerning = Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
     }
 
-    public static void main(final String[] args) throws IOException {
+    public FontTest() {
+        super("font");
+    }
+
+    @Test
+    @EnabledOnOs({OS.MAC, OS.WINDOWS, OS.LINUX})
+    public void testFontChoices() throws IOException {
         LafManager.install(new IntelliJTheme());
         JTextArea textArea = new JTextArea();
         textArea.setText(DemoResources.KERNING_TEST);
@@ -85,32 +91,18 @@ public class FontTest {
         }
     }
 
-    private static void createImages(final String folder, final JComponent c,
-                                     final List<FontSpec> fontSpecs) throws IOException {
+    private void createImages(final String folder, final JComponent c,
+                              final List<FontSpec> fontSpecs) throws IOException {
         createFolder(folder);
         for (FontSpec spec : fontSpecs) {
             c.setFont(createFont(spec.fontName));
             setFractionalMetrics(spec.useFractionalMetrics);
-            saveScreenShot(getPath(folder, spec), c);
+            Assertions.assertNotNull(saveScreenShot(getImagePath(folder, spec), c));
         }
     }
 
-    private static void createFolder(final String folder) throws IOException {
-        Files.createDirectories(new File(WORKING_DIR + "/" + folder).toPath());
-    }
-
-    private static String getPath(final String folder, final FontSpec spec) {
-        return WORKING_DIR + "/" + folder + "/" + spec.getImageName();
-    }
-
-    private static void saveScreenShot(final String name, final JComponent c) {
-        try {
-            Rectangle rect = new Rectangle(0, 0, c.getWidth(), c.getHeight());
-            BufferedImage image = ImageUtil.scaledImageFromComponent(c, rect, SCALING_FACTOR, SCALING_FACTOR, false);
-            ImageIO.write(image, "png", new File(name + ".png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private String getImagePath(final String folder, final FontSpec spec) {
+        return getPath(folder + "/" + spec.getImageName());
     }
 
     private static void setFractionalMetrics(final boolean enabled) {

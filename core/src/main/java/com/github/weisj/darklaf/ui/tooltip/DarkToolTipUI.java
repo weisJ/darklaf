@@ -125,9 +125,14 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         toolTip.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
         toolTip.putClientProperty(DarkPopupFactory.KEY_FORCE_HEAVYWEIGHT, true);
         fadeAnimator = new FadeInAnimator();
-        c.setOpaque(false);
         updateTipText(toolTip);
         updateStyle();
+    }
+
+    @Override
+    public void update(final Graphics g, final JComponent c) {
+        // Ensures no background is painted.
+        paint(g, c);
     }
 
     @Override
@@ -168,7 +173,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
             startAnimation();
         } else {
             Window window = DarkUIUtil.getWindow(c);
-            if (window.getOpacity() != 1 && !transparencySupported(window)) {
+            if (window != null && window.getOpacity() != 1 && !transparencySupported(window)) {
                 window.setOpacity(1);
             }
         }
@@ -236,7 +241,6 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
 
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
-        Window w = SwingUtilities.getWindowAncestor(toolTip);
         if (toolTip.getParent() instanceof JComponent) {
             // For MediumWeightPopup still need to make parent non opaque.
             ((JComponent) toolTip.getParent()).setOpaque(false);

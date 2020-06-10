@@ -45,6 +45,13 @@ jobs:
           java-version: 11
       - name: Build
         run: ./gradlew build -PskipAutostyle --info
+      - name: Test
+        run: ./gradlew :darklaf-core:test -PskipAutostyle
+      - name: Upload Results
+        uses: actions/upload-artifact@v1
+        with:
+          name: windows-test-results
+          path: build/test_results
 
   linux:
     name: Linux (Java 8)
@@ -59,6 +66,13 @@ jobs:
           java-version: 8
       - name: Build
         run: ./gradlew build -PskipAutostyle --info
+      - name: Test
+        run: ./gradlew :darklaf-core:test -PskipAutostyle
+      - name: Upload Results
+        uses: actions/upload-artifact@v1
+        with:
+          name: linux-test-results
+          path: build/test_results
 
   macos:
     name: macOS (Java 11)
@@ -73,3 +87,10 @@ jobs:
           java-version: 11
       - name: Build
         run: ./gradlew build -PskipAutostyle --info
+      - name: Test
+        run: ./gradlew :darklaf-core:test -PskipAutostyle
+      - name: Upload Results
+        uses: actions/upload-artifact@v1
+        with:
+          name: macOS-test-results
+          path: build/test_results
