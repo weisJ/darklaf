@@ -39,16 +39,30 @@ import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 public class ClosableTabComponent extends JPanel {
 
     private JTabbedPane pane;
+    private final Component component;
 
     public ClosableTabComponent(final JTabbedPane pane) {
-        super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        this(pane, null);
+    }
+
+    public ClosableTabComponent(final JTabbedPane pane, final Component component) {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        this.component = component != null ? component : new TabLabel(this);
         if (pane == null) {
             throw new NullPointerException("TabbedPane is null.");
         }
         this.pane = pane;
         setOpaque(false);
-        add(new TabLabel(this));
-        add(new TabButton(this));
+        add(this.component);
+        add(new CloseButton(this));
+    }
+
+    public Component getTabComponent() {
+        return component;
+    }
+
+    public boolean hasCustomTabComponent() {
+        return !(component instanceof TabLabel);
     }
 
     public void setTabbedPane(final JTabbedPane pane) {
@@ -75,19 +89,21 @@ public class ClosableTabComponent extends JPanel {
         }
     }
 
-    protected static class TabButton extends JButton implements ActionListener {
+    protected static class CloseButton extends JButton implements ActionListener {
 
         private final ClosableTabComponent tabComponent;
 
-        protected TabButton(final ClosableTabComponent tabComponent) {
+        protected CloseButton(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;
             putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, true);
             putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
             putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
+            putClientProperty(DarkButtonUI.KEY_THIN, true);
             setOpaque(false);
             setRolloverEnabled(true);
             setBorderPainted(false);
             setIcon(UIManager.getIcon("TabbedPane.tabCloseIcon"));
+            setDisabledIcon(UIManager.getIcon("TabbedPane.tabCloseDisabledIcon"));
             setRolloverIcon(UIManager.getIcon("TabbedPane.tabCloseHoverIcon"));
             addActionListener(this);
             MouseListener mouseListener = new MouseAdapter() {

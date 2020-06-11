@@ -44,26 +44,41 @@ public class ClosableTabbedPane extends JTabbedPane {
         }
         super.insertTab(title, icon, component, tip, index);
         setTabComponentAt(indexOfComponent(component), new ClosableTabComponent(this));
-        notifyTabListeners(new TabEvent(this, TabEvent.TAB_OPENED, "tabOpened", index));
+        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_OPENED, "tabOpened", index, component));
     }
 
     @Override
     public void removeTabAt(final int index) {
         checkIndex(index);
+        Component c = getComponentAt(index);
         if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, "tabClosed",
                                                                      getComponentAt(index), null, index))) {
             return;
         }
-        notifyTabListeners(new TabEvent(this, TabEvent.TAB_CLOSED, "tabClosed", index));
+        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSING, "tabClosing", index, c));
         super.removeTabAt(index);
+        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSED, "tabClosed", index, c));
     }
 
     @Override
     public void setTabComponentAt(final int index, final Component component) {
         if (component instanceof ClosableTabComponent) {
             ((ClosableTabComponent) component).setTabbedPane(this);
+            super.setTabComponentAt(index, component);
+        } else {
+            super.setTabComponentAt(index, new ClosableTabComponent(this, component));
         }
-        super.setTabComponentAt(index, component);
+    }
+
+    @Override
+    public Component getTabComponentAt(final int index) {
+        Component c = super.getTabComponentAt(index);
+        if (c instanceof ClosableTabComponent) {
+            if (((ClosableTabComponent) c).hasCustomTabComponent()) {
+                return ((ClosableTabComponent) c).getTabComponent();
+            }
+        }
+        return c;
     }
 
     private void checkIndex(final int index) {

@@ -24,6 +24,7 @@
  */
 package com.github.weisj.darklaf.components;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -33,14 +34,42 @@ public class TabEvent extends ActionEvent {
 
     public static final int TAB_OPENED = 0;
     public static final int TAB_CLOSED = 1;
+    public static final int TAB_CLOSING = 2;
+    private final Type type;
     private final int tabIndex;
+    private final Component component;
 
-    public TabEvent(final Object source, final int id, final String command, final int tabIndex) {
-        super(source, id, command);
+    public TabEvent(final Object source, final Type type, final String command, final int tabIndex, final Component c) {
+        super(source, type.ordinal(), command);
+        this.type = type;
         this.tabIndex = tabIndex;
+        this.component = c;
+    }
+
+    public Component getComponent() {
+        return component;
     }
 
     public int getTabIndex() {
         return tabIndex;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "TabEvent{" +
+               "type=" + type +
+               ", tabIndex=" + tabIndex +
+               ", component=" + component +
+               '}';
+    }
+
+    public enum Type {
+        TAB_OPENED,
+        TAB_CLOSED,
+        TAB_CLOSING
     }
 }

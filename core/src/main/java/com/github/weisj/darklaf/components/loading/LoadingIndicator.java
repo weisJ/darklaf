@@ -37,8 +37,8 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
  */
 public class LoadingIndicator extends JLabel {
 
-    private final RotatableIcon loadIcon = new RotatableIcon(DarkUIUtil.ICON_LOADER.getIcon("progress/step_working.svg"));
-    private final Icon pausedIcon = DarkUIUtil.ICON_LOADER.getIcon("progress/step_passive.svg");
+    private final RotatableIcon loadIcon = new RotatableIcon(DarkUIUtil.ICON_LOADER.getIcon("progress/stepWorking.svg"));
+    private final Icon pausedIcon = DarkUIUtil.ICON_LOADER.getIcon("progress/stepPassive.svg");
     private final Icon emptyIcon = EmptyIcon.create(loadIcon.getIconWidth(), loadIcon.getIconHeight());
     private final TwoIcon displayIcon = new TwoIcon(loadIcon, null);
     private final RotatableIconAnimator animator = new RotatableIconAnimator(8, loadIcon, this);
