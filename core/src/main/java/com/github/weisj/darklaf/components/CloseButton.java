@@ -22,27 +22,24 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.components.help;
+package com.github.weisj.darklaf.components;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
-public class HelpButton extends JButton {
+class CloseButton extends JButton {
 
-    public HelpButton() {
-        this(null);
-    }
-
-    public HelpButton(final String text) {
-        super(text);
-        init();
-    }
-
-    protected void init() {
-        putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-        putClientProperty(DarkButtonUI.KEY_ROUND, true);
-        setIcon(UIManager.getIcon("HelpButton.helpHighlightIcon"));
-        setDisabledIcon(UIManager.getIcon("HelpButton.helpDisabledIcon"));
+    protected CloseButton() {
+        putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, true);
+        putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
+        putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
+        putClientProperty(DarkButtonUI.KEY_THIN, true);
+        setOpaque(false);
+        setRolloverEnabled(true);
+        setBorderPainted(false);
+        setIcon(UIManager.getIcon("CloseButton.closeIcon"));
+        setDisabledIcon(UIManager.getIcon("CloseButton.closeDisabledIcon"));
+        setRolloverIcon(UIManager.getIcon("CloseButton.closeHoverIcon"));
     }
 }

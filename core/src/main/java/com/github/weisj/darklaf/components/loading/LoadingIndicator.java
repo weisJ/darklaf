@@ -30,22 +30,26 @@ import com.github.weisj.darklaf.components.RotatableIconAnimator;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.icons.TwoIcon;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * Label that functions as an loading indicator.
  */
 public class LoadingIndicator extends JLabel {
 
-    private final RotatableIcon loadIcon = new RotatableIcon(DarkUIUtil.ICON_LOADER.getIcon("progress/stepWorking.svg"));
-    private final Icon pausedIcon = DarkUIUtil.ICON_LOADER.getIcon("progress/stepPassive.svg");
-    private final Icon emptyIcon = EmptyIcon.create(loadIcon.getIconWidth(), loadIcon.getIconHeight());
-    private final TwoIcon displayIcon = new TwoIcon(loadIcon, null);
-    private final RotatableIconAnimator animator = new RotatableIconAnimator(8, loadIcon, this);
+    private final RotatableIcon loadIcon;
+    private final Icon pausedIcon;
+    private final Icon emptyIcon;
+    private final TwoIcon displayIcon;
+    private final RotatableIconAnimator animator;
     private boolean running;
 
     public LoadingIndicator(final String text, final Icon icon, final int horizontalAlignment) {
         super(text, icon, horizontalAlignment);
+        loadIcon = new RotatableIcon(UIManager.getIcon("LoadIndicator.stepWorkingIcon"));
+        pausedIcon = UIManager.getIcon("LoadIndicator.stepPassiveIcon");
+        emptyIcon = EmptyIcon.create(loadIcon);
+        displayIcon = new TwoIcon(loadIcon, null);
+        animator = new RotatableIconAnimator(8, loadIcon, this);
         displayIcon.setIconGap(getIconTextGap());
     }
 

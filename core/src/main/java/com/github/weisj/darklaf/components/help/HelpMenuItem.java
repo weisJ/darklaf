@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.components.help;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-
 public class HelpMenuItem extends JMenuItem {
 
     public HelpMenuItem(final String text) {
@@ -36,7 +34,7 @@ public class HelpMenuItem extends JMenuItem {
     }
 
     protected void init() {
-        setIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/help.svg"));
-        setDisabledIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/helpDisabled.svg"));
+        setIcon(UIManager.getIcon("HelpButton.helpIcon"));
+        setDisabledIcon(UIManager.getIcon("HelpButton.helpDisabledIcons"));
     }
 }

@@ -30,7 +30,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 
 /**
@@ -54,7 +53,7 @@ public class ClosableTabComponent extends JPanel {
         this.pane = pane;
         setOpaque(false);
         add(this.component);
-        add(new CloseButton(this));
+        add(new TabCloseButton(this));
     }
 
     public Component getTabComponent() {
@@ -89,22 +88,12 @@ public class ClosableTabComponent extends JPanel {
         }
     }
 
-    protected static class CloseButton extends JButton implements ActionListener {
+    protected static class TabCloseButton extends CloseButton implements ActionListener {
 
         private final ClosableTabComponent tabComponent;
 
-        protected CloseButton(final ClosableTabComponent tabComponent) {
+        protected TabCloseButton(final ClosableTabComponent tabComponent) {
             this.tabComponent = tabComponent;
-            putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, true);
-            putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
-            putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
-            putClientProperty(DarkButtonUI.KEY_THIN, true);
-            setOpaque(false);
-            setRolloverEnabled(true);
-            setBorderPainted(false);
-            setIcon(UIManager.getIcon("TabbedPane.tabCloseIcon"));
-            setDisabledIcon(UIManager.getIcon("TabbedPane.tabCloseDisabledIcon"));
-            setRolloverIcon(UIManager.getIcon("TabbedPane.tabCloseHoverIcon"));
             addActionListener(this);
             MouseListener mouseListener = new MouseAdapter() {
                 @Override
@@ -114,7 +103,7 @@ public class ClosableTabComponent extends JPanel {
                         int i = tabComponent.pane.indexOfTabComponent(tabComponent);
                         if (i != -1) {
                             ((DarkTabbedPaneUI) ui).setRolloverTab(i);
-                            tabComponent.pane.repaint();
+                            tabComponent.pane.repaint(tabComponent.pane.getBoundsAt(i));
                         }
                     }
                 }
