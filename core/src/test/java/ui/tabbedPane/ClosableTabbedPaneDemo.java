@@ -29,19 +29,33 @@ import javax.swing.*;
 import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.components.ClosableTabbedPane;
+import com.github.weisj.darklaf.components.TabEvent;
+import com.github.weisj.darklaf.components.TabListener;
 
-public class ClosableTabbedPaneDemo extends TabbedPaneDemo {
+public class ClosableTabbedPaneDemo extends TabbedPaneDemo implements TabListener {
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new ClosableTabbedPaneDemo());
     }
 
     protected JTabbedPane createTabbedPane() {
-        return new ClosableTabbedPane();
+        ClosableTabbedPane tabbedPane = new ClosableTabbedPane();
+        tabbedPane.addTabListener(this);
+        return tabbedPane;
     }
 
     @Override
     public String getTitle() {
         return "ClosableTabbPane Demo";
+    }
+
+    @Override
+    public void tabOpened(final TabEvent e) {
+        System.out.println(e);
+    }
+
+    @Override
+    public void tabClosed(final TabEvent e) {
+        System.out.println(e);
     }
 }

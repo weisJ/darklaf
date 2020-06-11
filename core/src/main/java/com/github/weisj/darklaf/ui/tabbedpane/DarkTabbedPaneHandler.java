@@ -35,7 +35,7 @@ import javax.swing.event.ChangeEvent;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public class DarkHandler extends TabbedPaneHandler {
+public class DarkTabbedPaneHandler extends TabbedPaneHandler {
 
     protected final DarkTabbedPaneUI ui;
 
@@ -43,7 +43,7 @@ public class DarkHandler extends TabbedPaneHandler {
     protected Point tabOrigin;
     protected int pressedIndex;
 
-    protected DarkHandler(final DarkTabbedPaneUI ui) {
+    protected DarkTabbedPaneHandler(final DarkTabbedPaneUI ui) {
         super(ui);
         this.ui = ui;
     }

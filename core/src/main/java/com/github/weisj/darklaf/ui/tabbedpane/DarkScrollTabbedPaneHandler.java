@@ -26,9 +26,9 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 
 import java.awt.event.MouseEvent;
 
-public class DarkScrollHandler extends DarkHandler {
+public class DarkScrollTabbedPaneHandler extends DarkTabbedPaneHandler {
 
-    protected DarkScrollHandler(final DarkTabbedPaneUI ui) {
+    protected DarkScrollTabbedPaneHandler(final DarkTabbedPaneUI ui) {
         super(ui);
     }
 

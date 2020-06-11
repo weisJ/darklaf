@@ -118,7 +118,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected Icon moreTabsIcon;
     protected Icon newTabIcon;
 
-    protected DarkScrollHandler scrollHandler;
+    protected DarkScrollTabbedPaneHandler scrollHandler;
     protected Component leadingComp;
     protected Component trailingComp;
     protected Component northComp;
@@ -344,7 +344,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     @Override
     protected TabbedPaneHandler getHandler() {
         if (handler == null) {
-            handler = new DarkHandler(this);
+            handler = new DarkTabbedPaneHandler(this);
         }
         return handler;
     }
@@ -467,9 +467,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         return max;
     }
 
-    protected DarkScrollHandler getScrollHandler() {
+    protected DarkScrollTabbedPaneHandler getScrollHandler() {
         if (scrollHandler == null) {
-            scrollHandler = new DarkScrollHandler(this);
+            scrollHandler = new DarkScrollTabbedPaneHandler(this);
         }
         return scrollHandler;
     }
@@ -673,24 +673,30 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                     p.y += vl.y;
                     rect.setLocation(p);
                 } else {
-                    rect.setBounds(0, 0, 0, 0);
+                    rect.setBounds(Integer.MIN_VALUE, Integer.MIN_VALUE, 0, 0);
                 }
             }
 
             Dimension preferredSize = c.getPreferredSize();
+            int width = Math.min(preferredSize.width, rect.width);
+            int height = Math.min(preferredSize.height, rect.height);
+
             Insets insets = getTabInsets(tabPane.getTabPlacement(), i);
             int outerX = rect.x + insets.left + delta.x;
             int outerY = rect.y + insets.top + delta.y;
             int outerWidth = rect.width - insets.left - insets.right;
             int outerHeight = rect.height - insets.top - insets.bottom;
-            // centralize component
-            int x = outerX + (outerWidth - preferredSize.width) / 2;
-            int y = outerY + (outerHeight - preferredSize.height) / 2;
+
+            // center component
+            int x = outerX + (outerWidth - width) / 2;
+            int y = outerY + (outerHeight - height) / 2;
+
             int tabPlacement = tabPane.getTabPlacement();
             boolean isSeleceted = i == tabPane.getSelectedIndex();
+
             c.setBounds(x + getTabLabelShiftX(tabPlacement, i, isSeleceted),
                         y + getTabLabelShiftY(tabPlacement, i, isSeleceted),
-                        preferredSize.width, preferredSize.height);
+                        width, height);
         }
     }
 
