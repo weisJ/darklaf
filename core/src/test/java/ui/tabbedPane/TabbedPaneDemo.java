@@ -55,6 +55,11 @@ public class TabbedPaneDemo implements ComponentDemo {
             editor.setText(StringUtil.repeat("Demo Content" + "\n", i + 1));
             tabbedPane.addTab("Tab (" + i + ")", editor);
         }
+
+        JLabel label = new JLabel("Custom Tab");
+        label.setForeground(Color.RED);
+        tabbedPane.setTabComponentAt(0, label);
+
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         DemoPanel panel = new DemoPanel(tabbedPane, new BorderLayout(), 0);

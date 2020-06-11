@@ -70,17 +70,6 @@ public class ClosableTabbedPane extends JTabbedPane {
         }
     }
 
-    @Override
-    public Component getTabComponentAt(final int index) {
-        Component c = super.getTabComponentAt(index);
-        if (c instanceof ClosableTabComponent) {
-            if (((ClosableTabComponent) c).hasCustomTabComponent()) {
-                return ((ClosableTabComponent) c).getTabComponent();
-            }
-        }
-        return c;
-    }
-
     private void checkIndex(final int index) {
         int tabCount = getTabCount();
         if (index < 0 || index >= tabCount) {
