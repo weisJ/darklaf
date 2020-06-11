@@ -134,7 +134,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         boolean rotationChanged = false;
         if (!loadedWithExtraScale) {
             loadedWithExtraScale = !isExactRotation(rotation);
-            rotationChanged = true;
+            rotationChanged = loadedWithExtraScale;
         }
         updateCache(ensureLoaded() || rotationChanged, c);
     }
