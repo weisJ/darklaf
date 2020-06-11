@@ -121,63 +121,64 @@ public class TabbedPaneDemo implements ComponentDemo {
                 addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS, isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.dndEnabled") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_DND) {
             {
                 setSelected(false);
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.dndEnabled", isSelected()));
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_DND, isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.showNewTabButton") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON) {
             {
                 setSelected(false);
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.showNewTabButton", isSelected()));
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON,
+                                                                    isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.leadingComponent") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_LEADING_COMP) {
             {
                 setSelected(false);
                 JLabel leading = new PlaceholderLabel("Leading");
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.leadingComponent",
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_LEADING_COMP,
                                                                     isSelected() ? leading : null));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.trailingComponent") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_TRAILING_COMP) {
             {
                 setSelected(false);
                 JLabel trailing = new PlaceholderLabel("Trailing");
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.trailingComponent",
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_TRAILING_COMP,
                                                                     isSelected() ? trailing : null));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.northComponent") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_NORTH_COMP) {
             {
                 setSelected(false);
                 JLabel north = new PlaceholderLabel("North");
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.northComponent",
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_NORTH_COMP,
                                                                     isSelected() ? north : null));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.eastComponent") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_EAST_COMP) {
             {
                 setSelected(false);
                 JLabel east = new PlaceholderLabel("East");
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.eastComponent",
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_EAST_COMP,
                                                                     isSelected() ? east : null));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.southComponent") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_SOUTH_COMP) {
             {
                 setSelected(false);
                 JLabel south = new PlaceholderLabel("South");
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.southComponent",
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SOUTH_COMP,
                                                                     isSelected() ? south : null));
             }
         });
-        controlPanel.add(new JCheckBox("JTabbedPane.westComponent") {
+        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_WEST_COMP) {
             {
                 setSelected(false);
                 JLabel west = new PlaceholderLabel("West");
-                addActionListener(e -> tabbedPane.putClientProperty("JTabbedPane.westComponent",
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_WEST_COMP,
                                                                     isSelected() ? west : null));
             }
         });
