@@ -29,12 +29,9 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.DefaultButton;
-import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.settings.ThemeSettings;
 
 public class SettingsDemo implements ComponentDemo {
-
-    JPanel content;
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new SettingsDemo());
@@ -42,7 +39,7 @@ public class SettingsDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        content = new JPanel(new BorderLayout());
+        JPanel content = new JPanel(new BorderLayout());
         ThemeSettings settings = ThemeSettings.getInstance();
         JComponent settingsPanel = settings.getSettingsPanel();
         content.add(settingsPanel, BorderLayout.CENTER);
@@ -64,8 +61,8 @@ public class SettingsDemo implements ComponentDemo {
     }
 
     @Override
-    public Image getIconImage() {
-        return ImageUtil.createFrameIcon(ThemeSettings.getInstance().getIcon(), content);
+    public Icon getFrameIcon() {
+        return ThemeSettings.getInstance().getIcon();
     }
 
     @Override

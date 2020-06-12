@@ -29,7 +29,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.icons.ImageSource;
+import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 import com.github.weisj.darklaf.util.Scale;
 
 /**
@@ -41,7 +43,45 @@ public final class ImageUtil {
 
     private static final int FRAME_ICON_SIZE = 32;
 
-    public static Image createFrameIcon(final Icon icon, final Component c) {
+    public static Image createFrameIcon(final Icon icon, final Window c) {
+        if (c instanceof JFrame) {
+            return createFrameIcon(icon, (JFrame) c);
+        } else if (c instanceof JDialog) {
+            return createFrameIcon(icon, (JDialog) c);
+        } else {
+            return createScaledFrameIcon(icon, c);
+        }
+    }
+
+    public static Image createFrameIcon(final Icon icon, final JFrame c) {
+        if (icon == null) return null;
+        if (c != null) {
+            ThemeInstalledListener listener = e -> c.setIconImage(iconToImage(icon, c));
+            LafManager.addThemeChangeListener(listener);
+        }
+        return createScaledFrameIcon(icon, c);
+    }
+
+    public static Image createFrameIcon(final Icon icon, final JDialog c) {
+        if (icon == null) return null;
+        if (c != null) {
+            ThemeInstalledListener listener = e -> c.setIconImage(iconToImage(icon, c));
+            LafManager.addThemeChangeListener(listener);
+        }
+        return createScaledFrameIcon(icon, c);
+    }
+
+    private static Image createScaledFrameIcon(final Icon icon, final Window c) {
+        if (c != null && !c.isVisible()) {
+            Component parent = c.getParent();
+            if (parent != null) {
+                return iconToImage(icon, c);
+            }
+        }
+        return iconToImage(icon, c);
+    }
+
+    public static Image iconToImage(final Icon icon, final Component c) {
         if (icon == null) return null;
         int w = icon.getIconWidth();
         int h = icon.getIconHeight();

@@ -37,6 +37,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -80,8 +81,10 @@ public interface ComponentDemo {
                 window = dialog;
             }
 
-            Image image = demo.getIconImage();
-            if (image != null) window.setIconImage(image);
+            Icon icon = demo.getFrameIcon();
+            if (icon != null) {
+                window.setIconImage(ImageUtil.createFrameIcon(icon, window));
+            }
 
             window.pack();
             Dimension dimension = demo.getDisplayDimension();
@@ -105,7 +108,7 @@ public interface ComponentDemo {
         return null;
     }
 
-    default Image getIconImage() {
+    default Icon getFrameIcon() {
         return null;
     }
 

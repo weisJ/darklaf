@@ -90,7 +90,7 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected JDialog createDialog(final Window parent) {
         JDialog dialog = new JDialog(parent);
-        dialog.setIconImage(ImageUtil.createFrameIcon(settingsPanel.getIcon(), parent));
+        dialog.setIconImage(ImageUtil.createFrameIcon(settingsPanel.getIcon(), dialog));
         dialog.setTitle(settingsPanel.getTitle());
         dialog.setContentPane(contentPane);
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
