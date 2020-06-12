@@ -54,17 +54,18 @@ dependencies {
 ## Installation
 The LookAndFeel can be easily installed using the `LafManager`
 ````java
-LafManager.install(); // For default theme (IntelliJ)
+// For default theme (IntelliJ)
+LafManager.install();
+
+// Specify explicit theme.
+LafManager.setTheme(new IntelliJTheme());
+LafManager.install();
+
+// Directly install theme
+LafManager.install(new DarculaTheme());
 ````
-or
-````java
-LafManager.install(new DarculaTheme()); // Specify the used theme.
-````
-or by using the UIManager
-````java
-LafManager.setTheme(new DarculaTheme());
-UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
-````
+
+For more information see the [wiki](https://github.com/weisJ/darklaf/wiki/LafManager#setting-the-theme).
 
 **Note**: The recommended method is using the `LafManager` as it automatically handles reloading the ui. 
 
