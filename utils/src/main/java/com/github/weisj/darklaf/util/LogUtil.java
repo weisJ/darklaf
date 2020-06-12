@@ -38,6 +38,8 @@ public class LogUtil {
 
     static {
         LOG_HANDLER.setFormatter(new LogFormatter());
+        PARENT.setUseParentHandlers(false);
+        PARENT.addHandler(LOG_HANDLER);
     }
 
     public static Logger getLogger(final Class<?> clazz) {
@@ -50,5 +52,10 @@ public class LogUtil {
     public static void setLevel(final Level level) {
         PARENT.setLevel(level);
         LOG_HANDLER.setLevel(level);
+    }
+
+    public static <T> T log(final T obj) {
+        PARENT.info(String.valueOf(obj));
+        return obj;
     }
 }

@@ -192,7 +192,7 @@ public class TabbedPaneUtil implements SwingConstants {
         } else {
             int placement = destTabbedPane.getTabPlacement();
             Rectangle b = ui.getTabAreaBounds();
-            Rectangle prev = destTabbedPane.getBoundsAt(tab - 1);
+            Rectangle prev = tab > 0 ? destTabbedPane.getBoundsAt(tab - 1) : EMPTY_RECT;
 
             if (placement == LEFT || placement == RIGHT) {
                 DarkUIUtil.rotateRectangle(tabBounds);

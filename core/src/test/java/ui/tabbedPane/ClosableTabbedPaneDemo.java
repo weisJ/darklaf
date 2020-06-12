@@ -24,24 +24,34 @@
  */
 package ui.tabbedPane;
 
-import javax.swing.*;
-
 import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.components.ClosableTabbedPane;
 import com.github.weisj.darklaf.components.TabEvent;
 import com.github.weisj.darklaf.components.TabListener;
 
-public class ClosableTabbedPaneDemo extends TabbedPaneDemo implements TabListener {
+public class ClosableTabbedPaneDemo extends AbstractTabbedPaneDemo<ClosableTabbedPane> implements TabListener {
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new ClosableTabbedPaneDemo());
     }
 
-    protected JTabbedPane createTabbedPane() {
+    protected ClosableTabbedPane createTabbedPane() {
         ClosableTabbedPane tabbedPane = new ClosableTabbedPane();
         tabbedPane.addTabListener(this);
         return tabbedPane;
+    }
+
+    @Override
+    protected void setupTabbedPane(final ClosableTabbedPane tabbedPane) {
+        super.setupTabbedPane(tabbedPane);
+        tabbedPane.setEnabledAt(2, false);
+        tabbedPane.setTabClosable(1, false);
+    }
+
+    @Override
+    protected int getTabCount() {
+        return 4;
     }
 
     @Override

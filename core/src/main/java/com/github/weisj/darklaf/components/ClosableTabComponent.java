@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.components;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.function.BiFunction;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -39,6 +40,8 @@ public class ClosableTabComponent extends JPanel {
 
     private JTabbedPane pane;
     private final Component component;
+    private boolean closable;
+    private final CloseButton closeButton;
 
     public ClosableTabComponent(final JTabbedPane pane) {
         this(pane, null);
@@ -51,21 +54,50 @@ public class ClosableTabComponent extends JPanel {
             throw new NullPointerException("TabbedPane is null.");
         }
         this.pane = pane;
+        closable = true;
+        closeButton = new TabCloseButton(this);
         setOpaque(false);
-        add(this.component);
-        add(new TabCloseButton(this));
+        add(getTabComponent());
+        add(getCloseButton());
     }
 
     public Component getTabComponent() {
         return component;
     }
 
-    public boolean hasCustomTabComponent() {
-        return !(component instanceof TabLabel);
+    public CloseButton getCloseButton() {
+        return closeButton;
+    }
+
+    public boolean isClosable() {
+        return closable;
+    }
+
+    public void setClosable(final boolean closable) {
+        if (this.closable != closable) {
+            this.closable = closable;
+            if (!closable) {
+                remove(closeButton);
+            } else {
+                add(closeButton);
+            }
+            doLayout();
+        }
     }
 
     public void setTabbedPane(final JTabbedPane pane) {
         this.pane = pane;
+    }
+
+    public int getIndexInTabbedPane() {
+        return pane.indexOfTabComponent(this);
+    }
+
+    @Override
+    public void setEnabled(final boolean enabled) {
+        super.setEnabled(enabled);
+        getTabComponent().setEnabled(enabled);
+        getCloseButton().setEnabled(enabled);
     }
 
     protected static class TabLabel extends JLabel {
@@ -77,14 +109,34 @@ public class ClosableTabComponent extends JPanel {
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         }
 
+        protected <T> T getTabProperty(final BiFunction<JTabbedPane, Integer, T> mapper, final T fallback) {
+            if (tabComponent != null) {
+                int i = tabComponent.getIndexInTabbedPane();
+                if (i != -1) {
+                    return mapper.apply(tabComponent.pane, i);
+                }
+            }
+            return fallback;
+        }
+
+        @Override
+        public Icon getIcon() {
+            return getTabProperty(JTabbedPane::getIconAt, null);
+        }
+
+        @Override
+        public Icon getDisabledIcon() {
+            return getTabProperty(JTabbedPane::getDisabledIconAt, null);
+        }
+
+        @Override
+        public int getDisplayedMnemonic() {
+            return getTabProperty(JTabbedPane::getDisplayedMnemonicIndexAt, -1);
+        }
+
         @Override
         public String getText() {
-            if (tabComponent == null) return "";
-            int i = tabComponent.pane.indexOfTabComponent(tabComponent);
-            if (i != -1) {
-                return tabComponent.pane.getTitleAt(i);
-            }
-            return "";
+            return getTabProperty(JTabbedPane::getTitleAt, "");
         }
     }
 

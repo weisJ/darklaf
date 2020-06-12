@@ -505,4 +505,9 @@ public final class DarkUIUtil {
         }
         return (size != null) ? size : component.getPreferredSize();
     }
+
+    public static <T> T nullableCast(final Class<T> type, final Object o) {
+        if (type != null && type.isInstance(o)) return type.cast(o);
+        return null;
+    }
 }

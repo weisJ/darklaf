@@ -662,6 +662,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                 continue;
             }
             getTabBounds(i, rect);
+            c.setEnabled(tabPane.isEnabledAt(i));
 
             // Adjust dragged component position.
             if (i == dropSourceIndex) {
@@ -678,6 +679,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             }
 
             Dimension preferredSize = c.getPreferredSize();
+
             int width = Math.min(preferredSize.width, rect.width);
             int height = Math.min(preferredSize.height, rect.height);
 

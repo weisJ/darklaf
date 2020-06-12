@@ -187,37 +187,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         ui.isRunsDirty = false;
     }
 
-    protected void layoutTabComponents() {
-        if (ui.tabContainer == null) {
-            return;
-        }
-        Rectangle rect = new Rectangle();
-        Point delta = new Point(-ui.tabContainer.getX(), -ui.tabContainer.getY());
-        if (ui.scrollableTabLayoutEnabled()) {
-            ui.translatePointToTabPanel(0, 0, delta);
-        }
-        for (int i = 0; i < ui.tabPane.getTabCount(); i++) {
-            Component c = ui.tabPane.getTabComponentAt(i);
-            if (c == null) {
-                continue;
-            }
-            ui.getTabBounds(i, rect);
-            Dimension preferredSize = c.getPreferredSize();
-            Insets insets = ui.getTabInsets(ui.tabPane.getTabPlacement(), i);
-            int outerX = rect.x + insets.left + delta.x;
-            int outerY = rect.y + insets.top + delta.y;
-            int outerWidth = rect.width - insets.left - insets.right;
-            int outerHeight = rect.height - insets.top - insets.bottom;
-            // centralize component
-            int x = outerX + (outerWidth - preferredSize.width) / 2;
-            int y = outerY + (outerHeight - preferredSize.height) / 2;
-            int tabPlacement = ui.tabPane.getTabPlacement();
-            boolean isSeleceted = i == ui.tabPane.getSelectedIndex();
-            c.setBounds(x + ui.getTabLabelShiftX(tabPlacement, i, isSeleceted),
-                        y + ui.getTabLabelShiftY(tabPlacement, i, isSeleceted),
-                        preferredSize.width, preferredSize.height);
-        }
-    }
+    protected abstract void layoutTabComponents();
 
     /**
      * Calculate the tab rectangles.

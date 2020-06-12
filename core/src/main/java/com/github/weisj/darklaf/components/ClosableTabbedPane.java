@@ -30,6 +30,8 @@ import java.beans.VetoableChangeListener;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
+
 /**
  * @author Jannis Weis
  */
@@ -70,6 +72,39 @@ public class ClosableTabbedPane extends JTabbedPane {
         }
     }
 
+    /**
+     * Returns the {@link ClosableTabComponent} at the given index or null
+     * if no tab component is set.
+     *
+     * @param  index the index.
+     * @return       the {@link ClosableTabComponent} at the index.
+     */
+    public ClosableTabComponent getClosableTabComponent(final int index) {
+        return DarkUIUtil.nullableCast(ClosableTabComponent.class, super.getTabComponentAt(index));
+    }
+
+    /**
+     * Sets whether a given tab is closable.
+     *
+     * @param index    the index of the tab.
+     * @param closable true if closable.
+     */
+    public void setTabClosable(final int index, final boolean closable) {
+        ClosableTabComponent tab = getClosableTabComponent(index);
+        if (tab != null) tab.setClosable(closable);
+    }
+
+    /**
+     * Sets whether a given tab is closable.
+     *
+     * @param  index the tab index.
+     * @return       true if closable.
+     */
+    public boolean isTabClosable(final int index) {
+        ClosableTabComponent tab = getClosableTabComponent(index);
+        return tab != null && tab.isClosable();
+    }
+
     private void checkIndex(final int index) {
         int tabCount = getTabCount();
         if (index < 0 || index >= tabCount) {
@@ -87,6 +122,11 @@ public class ClosableTabbedPane extends JTabbedPane {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void setEnabledAt(final int index, final boolean enabled) {
+        super.setEnabledAt(index, enabled);
     }
 
     private void notifyTabListeners(final TabEvent event) {

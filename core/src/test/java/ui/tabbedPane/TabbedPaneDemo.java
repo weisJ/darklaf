@@ -24,165 +24,14 @@
  */
 package ui.tabbedPane;
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.plaf.UIResource;
 
 import ui.ComponentDemo;
-import ui.DemoPanel;
 
-import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
-import com.github.weisj.darklaf.util.StringUtil;
-
-public class TabbedPaneDemo implements ComponentDemo {
+public class TabbedPaneDemo extends AbstractTabbedPaneDemo<JTabbedPane> {
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new TabbedPaneDemo());
-    }
-
-    @Override
-    public JComponent createComponent() {
-        JTabbedPane tabbedPane = createTabbedPane();
-        tabbedPane.setName("DemoTabbedPane");
-        for (int i = 0; i < 4; i++) {
-            JTextPane editor = new JTextPane();
-            editor.setText(StringUtil.repeat("Demo Content" + "\n", i + 1));
-            tabbedPane.addTab("Tab (" + i + ")", editor);
-        }
-
-        JLabel label = new JLabel("Custom Tab");
-        label.setForeground(Color.RED);
-        tabbedPane.setTabComponentAt(0, label);
-
-        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-
-        DemoPanel panel = new DemoPanel(tabbedPane, new BorderLayout(), 0);
-
-        JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JLabel("TabLayoutPolicy:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {
-            {
-                Map<String, Integer> mapping = new HashMap<String, Integer>() {
-                    {
-                        put("SCROLL_TAB_LAYOUT", JTabbedPane.SCROLL_TAB_LAYOUT);
-                        put("WRAP_TAB_LAYOUT", JTabbedPane.WRAP_TAB_LAYOUT);
-                    }
-                };
-                addItem("SCROLL_TAB_LAYOUT");
-                addItem("WRAP_TAB_LAYOUT");
-                setSelectedItem("SCROLL_TAB_LAYOUT");
-                addItemListener(e -> tabbedPane.setTabLayoutPolicy(mapping.get(e.getItem().toString())));
-            }
-        }, "sgx");
-        controlPanel.add(new JLabel("TabPlacement:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<String>() {
-            {
-                Map<String, Integer> mapping = new HashMap<String, Integer>() {
-                    {
-                        put("TOP", JTabbedPane.TOP);
-                        put("BOTTOM", JTabbedPane.BOTTOM);
-                        put("LEFT", JTabbedPane.LEFT);
-                        put("RIGHT", JTabbedPane.RIGHT);
-                    }
-                };
-                addItem("TOP");
-                addItem("BOTTOM");
-                addItem("LEFT");
-                addItem("RIGHT");
-                setSelectedItem("TOP");
-                addItemListener(e -> tabbedPane.setTabPlacement(mapping.get(e.getItem().toString())));
-            }
-        }, "sgx");
-
-        controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {
-            {
-                setSelected(tabbedPane.isEnabled());
-                addActionListener(e -> tabbedPane.setEnabled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("LeftToRight") {
-            {
-                setSelected(tabbedPane.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> tabbedPane.setComponentOrientation(isSelected()
-                        ? ComponentOrientation.LEFT_TO_RIGHT
-                        : ComponentOrientation.RIGHT_TO_LEFT));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_CENTER_TABS) {
-            {
-                setSelected(false);
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS, isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_DND) {
-            {
-                setSelected(false);
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_DND, isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON) {
-            {
-                setSelected(false);
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON,
-                                                                    isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_LEADING_COMP) {
-            {
-                setSelected(false);
-                JLabel leading = new PlaceholderLabel("Leading");
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_LEADING_COMP,
-                                                                    isSelected() ? leading : null));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_TRAILING_COMP) {
-            {
-                setSelected(false);
-                JLabel trailing = new PlaceholderLabel("Trailing");
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_TRAILING_COMP,
-                                                                    isSelected() ? trailing : null));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_NORTH_COMP) {
-            {
-                setSelected(false);
-                JLabel north = new PlaceholderLabel("North");
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_NORTH_COMP,
-                                                                    isSelected() ? north : null));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_EAST_COMP) {
-            {
-                setSelected(false);
-                JLabel east = new PlaceholderLabel("East");
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_EAST_COMP,
-                                                                    isSelected() ? east : null));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_SOUTH_COMP) {
-            {
-                setSelected(false);
-                JLabel south = new PlaceholderLabel("South");
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SOUTH_COMP,
-                                                                    isSelected() ? south : null));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_WEST_COMP) {
-            {
-                setSelected(false);
-                JLabel west = new PlaceholderLabel("West");
-                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_WEST_COMP,
-                                                                    isSelected() ? west : null));
-            }
-        });
-        return panel;
     }
 
     protected JTabbedPane createTabbedPane() {
@@ -190,15 +39,12 @@ public class TabbedPaneDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
-        return "TabbPane Demo";
+    protected int getTabCount() {
+        return 10;
     }
 
-    private static class PlaceholderLabel extends JLabel implements UIResource {
-        private PlaceholderLabel(final String title) {
-            super(title);
-            setBorder(new CompoundBorder(new LineBorder(Color.RED),
-                                         new EmptyBorder(5, 5, 5, 5)));
-        }
+    @Override
+    public String getTitle() {
+        return "TabbPane Demo";
     }
 }

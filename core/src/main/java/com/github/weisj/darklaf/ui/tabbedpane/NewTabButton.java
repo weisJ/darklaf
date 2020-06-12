@@ -61,8 +61,6 @@ public class NewTabButton extends JPanel implements UIResource {
         button.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
         button.setRolloverEnabled(true);
         button.setOpaque(false);
-        Insets margin = UIManager.getInsets("TabbedPane.newTabButton.insets");
-        button.setMargin(new Insets(margin.top, margin.left, margin.bottom, margin.right));
         return button;
     }
 

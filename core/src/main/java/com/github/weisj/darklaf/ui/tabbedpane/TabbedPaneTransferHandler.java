@@ -160,10 +160,6 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             createDragImage(tabPane, ui);
             ui.setSourceIndicator(currentTransferable.transferData.tabIndex);
         }
-        if ((ui != null && !ui.scrollableTabLayoutEnabled())
-            || tabPane.getTabLayoutPolicy() == JTabbedPane.WRAP_TAB_LAYOUT) {
-            tabPane.setSelectedIndex(currentTransferable.transferData.tabIndex);
-        }
         return currentTransferable;
     }
 
