@@ -1,3 +1,6 @@
+import com.github.vlsi.gradle.crlf.CrLfSpec
+import com.github.vlsi.gradle.crlf.LineEndings
+
 plugins {
     `java-library`
     id("com.github.vlsi.crlf")
@@ -25,6 +28,18 @@ tasks.test {
     useJUnitPlatform()
     workingDir = File(project.rootDir, "build/test_results")
     workingDir.mkdirs()
+}
+
+tasks.jar {
+    CrLfSpec(LineEndings.LF).run {
+        into("META-INF") {
+            filteringCharset = "UTF-8"
+            textFrom("$rootDir/licenses/DARCULA_LICENSE.txt")
+            textFrom("$rootDir/licenses/INTELLIJ_LICENSE.txt")
+            textFrom("$rootDir/licenses/INTELLIJ_NOTICE.txt")
+            textFrom("$rootDir/licenses/PBJAR_LICENSE.txt")
+        }
+    }
 }
 
 val makeDocumentation by tasks.registering(JavaExec::class) {
