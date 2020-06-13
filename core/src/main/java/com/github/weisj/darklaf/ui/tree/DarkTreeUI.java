@@ -220,9 +220,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                                 }
                             }
                         }
+                        expandAction.actionPerformed(e);
+                        tree.repaint();
                     }
-                    expandAction.actionPerformed(e);
-                    tree.repaint();
                 }
             });
         }
