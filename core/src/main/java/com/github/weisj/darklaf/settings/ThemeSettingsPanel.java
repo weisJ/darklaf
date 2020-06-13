@@ -40,6 +40,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.graphics.ThemedColor;
+import com.github.weisj.darklaf.listener.UIUpdater;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
 import com.github.weisj.darklaf.theme.Theme;
@@ -491,11 +492,13 @@ public class ThemeSettingsPanel extends JPanel {
         int tickSpacing = 25;
         Dictionary<Integer, JComponent> dict = fontSlider.createStandardLabels(tickSpacing);
         JLabel min = ((JLabel) dict.get(fontSlider.getMinimum()));
+        UIUpdater.registerComponent(min);
         min.setText(resourceBundle.getString("label_font_smaller"));
         min.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         min.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
 
         JLabel mid = ((JLabel) dict.get(fontSlider.getMinimum() + tickSpacing));
+        UIUpdater.registerComponent(mid);
         dict.remove(fontSlider.getMinimum() + tickSpacing);
         dict.put(FontSizePreset.NORMAL.getPercentage(), mid);
         mid.setText(resourceBundle.getString("label_font_default"));
@@ -507,6 +510,7 @@ public class ThemeSettingsPanel extends JPanel {
         max.setText(resourceBundle.getString("label_font_bigger"));
         max.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
+        UIUpdater.registerComponent(max);
 
         dict.remove(FontSizePreset.Small.getPercentage());
         dict.remove(FontSizePreset.SMALL.getPercentage());

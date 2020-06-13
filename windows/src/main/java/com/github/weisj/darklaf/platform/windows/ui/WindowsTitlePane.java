@@ -316,6 +316,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         inactiveHover = UIManager.getColor("Windows.TitlePane.inactiveBackgroundHover");
         inactiveClick = UIManager.getColor("Windows.TitlePane.inactiveBackgroundClick");
         border = UIManager.getColor("Windows.TitlePane.borderColor");
+
+        // Ensure they don't get overwritten by ui updated.
+        activeForeground = new Color(activeForeground.getRGB());
+        inactiveForeground = new Color(inactiveForeground.getRGB());
     }
 
     private void installDefaults() {

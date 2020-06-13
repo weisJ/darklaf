@@ -160,7 +160,15 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     @Override
     protected void calculateGeometry() {
-        super.calculateGeometry();
+        // Thumb size should be calculated before content rect.
+        calculateFocusRect();
+        calculateThumbSize();
+        calculateContentRect();
+        calculateTrackBuffer();
+        calculateTrackRect();
+        calculateTickRect();
+        calculateLabelRect();
+        calculateThumbLocation();
         if (showVolumeIcon(slider)) {
             calculateIconRect();
         } else {

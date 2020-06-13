@@ -156,11 +156,13 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     @Override
     protected void installListeners(final JRootPane root) {
+        root.addPropertyChangeListener(this);
         root.addHierarchyListener(this);
     }
 
     @Override
     protected void uninstallListeners(final JRootPane root) {
+        root.removePropertyChangeListener(this);
         root.removeHierarchyListener(this);
     }
 

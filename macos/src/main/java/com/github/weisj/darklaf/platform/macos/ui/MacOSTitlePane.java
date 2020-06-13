@@ -82,6 +82,10 @@ public class MacOSTitlePane extends CustomTitlePane {
         inactiveBackground = UIManager.getColor("MacOS.TitlePane.inactiveBackground");
         inactiveForeground = UIManager.getColor("MacOS.TitlePane.inactiveForeground");
         border = UIManager.getColor("MacOS.TitlePane.borderColor");
+
+        // Ensure they don't get overwritten by ui updated.
+        activeForeground = new Color(activeForeground.getRGB());
+        inactiveForeground = new Color(inactiveForeground.getRGB());
     }
 
     @Override

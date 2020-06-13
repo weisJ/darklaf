@@ -46,6 +46,10 @@ public class ToggleIcon implements Icon {
         this.active = active;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         currentIcon().paintIcon(c, g, x, y);
