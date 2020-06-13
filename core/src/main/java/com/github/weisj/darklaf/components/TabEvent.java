@@ -32,22 +32,26 @@ import java.awt.event.ActionEvent;
  */
 public class TabEvent extends ActionEvent {
 
-    public static final int TAB_OPENED = 0;
-    public static final int TAB_CLOSED = 1;
-    public static final int TAB_CLOSING = 2;
     private final Type type;
     private final int tabIndex;
     private final Component component;
+    private final ClosableTabbedPane closableTabbedPane;
 
-    public TabEvent(final Object source, final Type type, final String command, final int tabIndex, final Component c) {
-        super(source, type.ordinal(), command);
+    public TabEvent(final ClosableTabbedPane closableTabbedPane, final Type type, final int tabIndex,
+                    final Component c) {
+        super(closableTabbedPane, type.ordinal(), type.getCommand());
         this.type = type;
         this.tabIndex = tabIndex;
         this.component = c;
+        this.closableTabbedPane = closableTabbedPane;
     }
 
     public Component getComponent() {
         return component;
+    }
+
+    public ClosableTabbedPane getClosableTabbedPane() {
+        return closableTabbedPane;
     }
 
     public int getTabIndex() {
@@ -68,8 +72,18 @@ public class TabEvent extends ActionEvent {
     }
 
     public enum Type {
-        TAB_OPENED,
-        TAB_CLOSED,
-        TAB_CLOSING
+        TAB_OPENED("tabOpened"),
+        TAB_CLOSED("tabClosed"),
+        TAB_CLOSING("tabClosing");
+
+        private final String command;
+
+        Type(final String command) {
+            this.command = command;
+        }
+
+        public String getCommand() {
+            return command;
+        }
     }
 }

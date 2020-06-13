@@ -33,5 +33,7 @@ public interface TabListener extends EventListener {
 
     void tabOpened(TabEvent e);
 
+    void tabClosing(TabEvent e);
+
     void tabClosed(TabEvent e);
 }

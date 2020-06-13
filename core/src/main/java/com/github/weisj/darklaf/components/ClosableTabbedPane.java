@@ -40,26 +40,26 @@ public class ClosableTabbedPane extends JTabbedPane {
     @Override
     public void insertTab(final String title, final Icon icon, final Component component,
                           final String tip, final int index) {
-        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, "tabOpened",
+        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, TabEvent.Type.TAB_OPENED.getCommand(),
                                                                      null, component, index))) {
             return;
         }
         super.insertTab(title, icon, component, tip, index);
         setTabComponentAt(indexOfComponent(component), new ClosableTabComponent(this));
-        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_OPENED, "tabOpened", index, component));
+        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_OPENED, index, component));
     }
 
     @Override
     public void removeTabAt(final int index) {
         checkIndex(index);
         Component c = getComponentAt(index);
-        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, "tabClosed",
+        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, TabEvent.Type.TAB_CLOSING.getCommand(),
                                                                      getComponentAt(index), null, index))) {
             return;
         }
-        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSING, "tabClosing", index, c));
+        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSING, index, c));
         super.removeTabAt(index);
-        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSED, "tabClosed", index, c));
+        notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSED, index, c));
     }
 
     @Override
@@ -131,15 +131,20 @@ public class ClosableTabbedPane extends JTabbedPane {
 
     private void notifyTabListeners(final TabEvent event) {
         TabListener[] listeners = listenerList.getListeners(TabListener.class);
-        switch (event.getID()) {
-            case TabEvent.TAB_CLOSED :
+        switch (event.getType()) {
+            case TAB_CLOSED :
                 for (TabListener l : listeners) {
                     l.tabClosed(event);
                 }
                 break;
-            case TabEvent.TAB_OPENED :
+            case TAB_OPENED :
                 for (TabListener l : listeners) {
                     l.tabOpened(event);
+                }
+                break;
+            case TAB_CLOSING :
+                for (TabListener l : listeners) {
+                    l.tabClosing(event);
                 }
                 break;
         }

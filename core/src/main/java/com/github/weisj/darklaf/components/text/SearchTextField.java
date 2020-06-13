@@ -31,8 +31,6 @@ import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
 
 public class SearchTextField extends JTextField {
 
-    public static final int SEARCH = 0;
-
     /**
      * Constructs a new <code>TextField</code>. A default model is created, the initial string is <code>null</code>,
      * and the number of columns is set to 0.
@@ -60,9 +58,10 @@ public class SearchTextField extends JTextField {
     public SearchTextField(final Document doc, final String text, final int columns) {
         super(doc, text, columns);
         putClientProperty(DarkTextFieldUI.KEY_VARIANT, DarkTextFieldUI.VARIANT_SEARCH);
+        putClientProperty(DarkTextFieldUI.KEY_SHOW_CLEAR, true);
         addActionListener(e -> {
             SearchListener[] list = listenerList.getListeners(SearchListener.class);
-            SearchEvent evt = new SearchEvent(SearchTextField.this, SEARCH, "search", getText());
+            SearchEvent evt = new SearchEvent(SearchTextField.this, SearchEvent.Type.SEARCH, getText());
             for (SearchListener listener : list) {
                 if (listener != null) {
                     listener.searchPerformed(evt);

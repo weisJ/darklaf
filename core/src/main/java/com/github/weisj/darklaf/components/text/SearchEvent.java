@@ -28,14 +28,40 @@ import java.awt.event.ActionEvent;
 
 public class SearchEvent extends ActionEvent {
 
+    private SearchTextField searchTextField;
     private final String text;
+    private final Type type;
 
-    public SearchEvent(final Object source, final int id, final String command, final String text) {
-        super(source, id, command);
+    public SearchEvent(final SearchTextField source, final Type type, final String text) {
+        super(source, type.ordinal(), type.getCommand());
+        this.source = source;
         this.text = text;
+        this.type = type;
+    }
+
+    public SearchTextField getSearchTextField() {
+        return searchTextField;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public String getText() {
         return text;
+    }
+
+    public enum Type {
+        SEARCH("search");
+
+        private final String command;
+
+        Type(final String command) {
+            this.command = command;
+        }
+
+        public String getCommand() {
+            return command;
+        }
     }
 }
