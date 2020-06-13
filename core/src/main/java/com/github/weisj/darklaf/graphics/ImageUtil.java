@@ -26,12 +26,17 @@ package com.github.weisj.darklaf.graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
+import java.util.function.BiConsumer;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.icons.ImageSource;
+import com.github.weisj.darklaf.icons.ThemedIcon;
+import com.github.weisj.darklaf.icons.UIAwareIcon;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
+import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.Scale;
 
 /**
@@ -54,21 +59,29 @@ public final class ImageUtil {
     }
 
     public static Image createFrameIcon(final Icon icon, final JFrame c) {
+        return createFrameIcon(icon, c, JFrame::setIconImage);
+    }
+
+    public static Image createFrameIcon(final Icon icon, final JDialog c) {
+        return createFrameIcon(icon, c, JDialog::setIconImage);
+    }
+
+    public static <T extends Window> Image createFrameIcon(final Icon icon, final T c,
+                                                           final BiConsumer<T, Image> iconSetter) {
         if (icon == null) return null;
         if (c != null) {
-            ThemeInstalledListener listener = e -> c.setIconImage(iconToImage(icon, c));
-            LafManager.addThemeChangeListener(listener);
+            if (iconNeedUpdates(icon)) {
+                ThemeInstalledListener listener = e -> iconSetter.accept(c, iconToImage(icon, c));
+                LafManager.addThemeChangeListener(listener);
+            }
+            PropertyChangeListener propertyChangeListener = e -> iconSetter.accept(c, iconToImage(icon, c));
+            c.addPropertyChangeListener(PropertyKey.GRAPHICS_CONFIGURATION, propertyChangeListener);
         }
         return createScaledFrameIcon(icon, c);
     }
 
-    public static Image createFrameIcon(final Icon icon, final JDialog c) {
-        if (icon == null) return null;
-        if (c != null) {
-            ThemeInstalledListener listener = e -> c.setIconImage(iconToImage(icon, c));
-            LafManager.addThemeChangeListener(listener);
-        }
-        return createScaledFrameIcon(icon, c);
+    private static boolean iconNeedUpdates(final Icon icon) {
+        return icon instanceof UIAwareIcon || icon instanceof ThemedIcon;
     }
 
     private static Image createScaledFrameIcon(final Icon icon, final Window c) {
