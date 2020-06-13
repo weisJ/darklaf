@@ -32,6 +32,7 @@ import javax.swing.text.*;
 
 import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
+import com.github.weisj.darklaf.ui.text.dummy.DummyTextFieldUI;
 
 /**
  * This class is an exact copy of the implementation of {@link BasicTextFieldUI}. In this way it is possible to contain
@@ -42,7 +43,7 @@ import com.github.weisj.darklaf.ui.text.DarkTextUI;
  */
 public abstract class DarkTextFieldUIBridge extends DarkTextUI {
 
-    private static final BasicTextFieldUI basicTextFieldUI = new BasicTextFieldUI();
+    private static final DummyTextFieldUI basicTextFieldUI = new DummyTextFieldUI();
 
     protected String getPropertyPrefix() {
         return "TextField";
@@ -55,6 +56,7 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
 
     @Override
     public int getBaseline(final JComponent c, final int width, final int height) {
+        basicTextFieldUI.setRootView(getRootView((JTextComponent) c));
         return basicTextFieldUI.getBaseline(c, width, height);
     }
 
