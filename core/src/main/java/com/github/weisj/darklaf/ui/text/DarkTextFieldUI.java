@@ -65,6 +65,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Color background;
     protected Color inactiveBackground;
     private long lastSearchEvent;
+
     protected Insets padding;
 
     private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
@@ -111,12 +112,12 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     @Override
     public Dimension getPreferredSize(final JComponent c) {
-        return addIconSizes(addPadding(c, super.getPreferredSize(c)));
+        return addIconSizes(super.getPreferredSize(c));
     }
 
     @Override
     public Dimension getMinimumSize(final JComponent c) {
-        return addIconSizes(addPadding(c, super.getMinimumSize(c)));
+        return addIconSizes(super.getMinimumSize(c));
     }
 
     protected Dimension addIconSizes(final Dimension dim) {
@@ -137,14 +138,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return dim;
     }
 
-    protected Dimension addPadding(final JComponent c, final Dimension dim) {
-        if (!isInCell(c)) {
-            dim.width += padding.left + padding.right;
-            dim.height += padding.top + padding.bottom;
-        }
-        return dim;
-    }
-
     @Override
     protected Rectangle getVisibleEditorRect() {
         Rectangle rect = super.getVisibleEditorRect();
@@ -154,7 +147,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected void adjustTextRect(final JTextComponent c, final Rectangle r) {
         boolean ltr = c.getComponentOrientation().isLeftToRight();
-        if (!isInCell(c) && getBorder(c) != null) DarkUIUtil.applyInsets(r, padding);
         if (doPaintLeftIcon(c)) {
             int w = getLeftIcon(c).getIconWidth() + padding.left;
             if (ltr) r.x += w;
@@ -168,8 +160,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     public static boolean isOver(final Point p, final Icon icon, final Point e) {
-        return new Rectangle(p.x, p.y,
-                             icon.getIconWidth(), icon.getIconHeight()).contains(e);
+        return new Rectangle(p.x, p.y, icon.getIconWidth(), icon.getIconHeight()).contains(e);
     }
 
     protected void updateCursor(final Point p) {
@@ -250,20 +241,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         getLeftIcon(editor).paintIcon(null, g, p.x, p.y);
     }
 
-    @Override
-    public Rectangle getDrawingRect(final JTextComponent c) {
-        return DarkUIUtil.applyInsets(new Rectangle(0, 0, c.getWidth(), c.getHeight()), c.getInsets());
-    }
-
-    @Override
-    protected int getArcSize(final JComponent c) {
-        return DarkTextFieldUI.isSearchField(c) ? searchArcSize : arcSize;
-    }
-
     protected Point getLeftIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getLeftIcon(getComponent()).getIconWidth();
-        int left = getComponent().getInsets().left + padding.left;
+        int left = getBorderInsets(getComponent()).left + padding.left;
         return DarkUIUtil.adjustForOrientation(new Point(r.x + left, r.y + (r.height - w) / 2),
                                                w, editor);
     }
@@ -271,7 +252,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Point getRightIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getRightIcon(getComponent()).getIconWidth();
-        int right = getComponent().getInsets().right + padding.right;
+        int right = getBorderInsets(getComponent()).right + padding.right;
         return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - right, r.y + (r.height - w) / 2),
                                                w, editor);
     }
@@ -305,7 +286,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         searchDisabled = UIManager.getIcon("TextField.search.search.disabled.icon");
         padding = UIManager.getInsets("TextField.insets");
         if (padding == null) padding = new Insets(0, 0, 0, 0);
-
     }
 
     @Override

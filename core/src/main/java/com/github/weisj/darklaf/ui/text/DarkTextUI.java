@@ -35,7 +35,12 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTextUI;
-import javax.swing.text.*;
+import javax.swing.text.Caret;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.Document;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Keymap;
 
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -255,7 +260,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
         g.setColor(getBackground(editor));
         if (border instanceof DarkTextBorder) {
-            paintBorderBackground((Graphics2D) g, editor);
+            paintBorderBackground((Graphics2D) g, editor, (DarkTextBorder) border);
         } else {
             Insets ins = null;
             if (border instanceof TextTableCellEditorBorder) {
@@ -325,37 +330,30 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         return defaultTextRenderer;
     }
 
-    protected void paintBorderBackground(final Graphics2D g, final JTextComponent c) {
-        Rectangle r = getDrawingRect(c);
-        int arc = getArcSize(c);
-        PaintUtil.fillRoundRect(g, r.x, r.y, r.width, r.height, arc);
+    protected void paintBorderBackground(final Graphics2D g, final JTextComponent c, final DarkTextBorder border) {
+        int arc = border.getArcSize(c);
+        int bs = border.getBorderSize();
+        PaintUtil.fillRoundRect(g, bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs, arc);
     }
 
     protected Border getBorder(final JComponent c) {
         return MarginBorderWrapper.getBorder(c);
     }
 
-    public Rectangle getDrawingRect(final JTextComponent c) {
-        Border border = getBorder(c);
-        Rectangle r = new Rectangle(0, 0, c.getWidth(), c.getHeight());
-        if (border instanceof DarkTextBorder) {
-            int bw = ((DarkTextBorder) border).getBorderSize();
-            r.x += bw;
-            r.y += bw;
-            r.width -= 2 * bw;
-            r.height -= 2 * bw;
-        } else {
-            DarkUIUtil.applyInsets(r, border.getBorderInsets(c));
+    protected Insets getBorderInsets(final JComponent c) {
+        Border b = getBorder(c);
+        if (b == null) {
+            return new Insets(0, 0, 0, 0);
         }
-        return r;
+        if (b instanceof DarkTextBorder) {
+            int bs = ((DarkTextBorder) b).getBorderSize();
+            return new Insets(bs, bs, bs, bs);
+        }
+        return b.getBorderInsets(c);
     }
 
-    protected int getArcSize(final JComponent c) {
-        Border border = getBorder(c);
-        if (border instanceof DarkTextBorder) {
-            return ((DarkTextBorder) border).getArcSize(c);
-        }
-        return 0;
+    public Rectangle getDrawingRect(final JTextComponent c) {
+        return DarkUIUtil.applyInsets(new Rectangle(0, 0, c.getWidth(), c.getHeight()), getBorderInsets(c));
     }
 
     protected void installDarkKeyBoardActions() {
