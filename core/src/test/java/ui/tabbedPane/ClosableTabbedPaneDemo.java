@@ -24,13 +24,18 @@
  */
 package ui.tabbedPane;
 
+import java.util.logging.Logger;
+
 import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.components.ClosableTabbedPane;
 import com.github.weisj.darklaf.components.TabEvent;
 import com.github.weisj.darklaf.components.TabListener;
+import com.github.weisj.darklaf.util.LogUtil;
 
 public class ClosableTabbedPaneDemo extends AbstractTabbedPaneDemo<ClosableTabbedPane> implements TabListener {
+
+    private static final Logger LOGGER = LogUtil.getLogger(ClosableTabbedPane.class);
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new ClosableTabbedPaneDemo());
@@ -61,11 +66,16 @@ public class ClosableTabbedPaneDemo extends AbstractTabbedPaneDemo<ClosableTabbe
 
     @Override
     public void tabOpened(final TabEvent e) {
-        System.out.println(e);
+        LOGGER.info(e.toString());
     }
 
     @Override
     public void tabClosed(final TabEvent e) {
-        System.out.println(e);
+        LOGGER.info(e.toString());
+    }
+
+    @Override
+    public void tabClosing(final TabEvent e) {
+        LOGGER.info(e.toString());
     }
 }
