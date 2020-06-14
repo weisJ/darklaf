@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.util;
 import javax.swing.*;
 
 public class PropertyKey {
+    public static final String UI = "UI";
     public static final String COMPONENT_ORIENTATION = "componentOrientation";
     public static final String LAYOUT_ORIENTATION = "layoutOrientation";
     public static final String ORIENTATION = "orientation";
