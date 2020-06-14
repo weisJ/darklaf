@@ -82,7 +82,7 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
      */
     public OverlayScrollPane(final JComponent view, final int vsbPolicy, final int hsbPolicy) {
         this.scrollPane = createScrollPane(view, vsbPolicy, hsbPolicy);
-        this.scrollPane.setViewportView(view);
+        setViewportView(view);
         setupScrollPane(scrollPane);
         add(scrollPane, JLayeredPane.DEFAULT_LAYER);
 
@@ -181,12 +181,6 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
 
     protected void updateScrollPaneUI() {
         if (scrollPane == null) return;
-        SwingUtilities.invokeLater(() -> {
-            Component component = scrollPane.getViewport().getView();
-            if (component != null) {
-                scrollPane.getViewport().setBackground(component.getBackground());
-            }
-        });
         scrollPane.setLayout(new ScrollLayoutManagerDelegate((ScrollPaneLayout) scrollPane.getLayout()) {
 
             @Override
@@ -269,12 +263,14 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
         scrollPane.setPreferredSize(preferredSize);
     }
 
-    private final class ControlPanel extends JPanel {
+    private static final class ControlPanel extends JPanel {
 
         private boolean showVertical;
         private boolean showHorizontal;
+        private final JScrollPane scrollPane;
 
         private ControlPanel(final JScrollPane scrollPane) {
+            this.scrollPane = scrollPane;
             setLayout(null);
             scrollPane.setVerticalScrollBar(scrollPane.getVerticalScrollBar());
             if (scrollPane.getVerticalScrollBarPolicy() != JScrollPane.VERTICAL_SCROLLBAR_NEVER) {

@@ -31,6 +31,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -52,6 +53,7 @@ public class DarkListUI extends DarkListUIBridge {
     public static final String KEY_IS_LIST_EDITOR = "JComponent.listCellEditor";
 
     protected DarkListCellRendererDelegate rendererDelegate;
+    private final JLabel emptyRenderer = new JLabel();
 
     public static ComponentUI createUI(final JComponent list) {
         return new DarkListUI();
@@ -138,8 +140,11 @@ public class DarkListUI extends DarkListUIBridge {
                 // Not valid, bail!
                 return;
             }
-            int bgWidth = colCounter == endColumn ? maxX - rowBounds.x : 0;
-            while (row < rowCount && rowBounds.y < maxY) {
+            boolean lastColumn = colCounter == endColumn
+                                 && colCounter * rowsPerColumn + rowCount >= dataModel.getSize();
+            int bgWidth = lastColumn ? maxX - rowBounds.x : 0;
+            int maxRow = lastColumn ? Integer.MAX_VALUE : rowCount;
+            while (row < maxRow && rowBounds.y < maxY) {
                 rowBounds.height = getHeight(colCounter, row);
                 g.setClip(rowBounds.x, rowBounds.y, bgWidth > 0 ? bgWidth : rowBounds.width, rowBounds.height);
                 g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);
@@ -175,14 +180,9 @@ public class DarkListUI extends DarkListUIBridge {
         int ch = rowBounds.height;
 
         if (empty || bgWidth > 0) {
-            boolean alternativeRow = PropertyUtil.getBooleanProperty(list, KEY_ALTERNATE_ROW_COLOR);
-            Color alternativeRowColor = UIManager.getColor("List.alternateRowBackground");
-            Color normalColor = list.getBackground();
-            Color background = alternativeRow && row % 2 == 1 ? alternativeRowColor : normalColor;
-            Color c = g.getColor();
-            g.setColor(background);
-            g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
-            g.setColor(c);
+            CellUtil.setupListBackground(emptyRenderer, list, false, row);
+            rendererPane.paintComponent(g, emptyRenderer, list,
+                                        cx, cy, bgWidth > 0 ? bgWidth : cw, ch, false);
         }
         if (!empty) {
             Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, index, isSelected,
@@ -199,6 +199,15 @@ public class DarkListUI extends DarkListUIBridge {
             }
             rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
         }
+    }
+
+    @Override
+    public int getRowCount(final int column) {
+        return super.getRowCount(column);
+    }
+
+    public int getColumnCount() {
+        return columnCount;
     }
 
     protected class DarkHandler extends Handler {

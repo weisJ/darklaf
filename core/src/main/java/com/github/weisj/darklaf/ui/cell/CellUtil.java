@@ -27,7 +27,6 @@ package com.github.weisj.darklaf.ui.cell;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.plaf.ListUI;
 
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
@@ -347,14 +346,25 @@ public class CellUtil {
         if (layout == JList.VERTICAL) {
             altRow = index % 2 == 1;
         } else if (layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP) {
-            ListUI ui = parent.getUI();
-            if (ui instanceof DarkListUI) {
-                int row = ((DarkListUI) ui).convertModelToRow(index);
+            DarkListUI ui = DarkUIUtil.getUIOfType(parent.getUI(), DarkListUI.class);
+            if (ui != null) {
+                int row = ui.convertModelToRow(index);
+                if (row == -1 && index >= parent.getModel().getSize()) {
+                    row = ui.convertModelToRow(index - ui.getRowCount(ui.getColumnCount() - 1));
+                }
+                if (row == -1) {
+                    row = index;
+                }
                 altRow = row % 2 == 1;
             } else {
                 altRow = false;
             }
         }
+        setupListBackground(comp, parent, selected, altRow);
+    }
+
+    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
+                                           final boolean altRow) {
         boolean alt = altRow && PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_ALTERNATE_ROW_COLOR);
         setupBackground(comp, hasFocus(parent, comp), selected,
                         alt ? listCellBackgroundAlternative : listCellBackground,
