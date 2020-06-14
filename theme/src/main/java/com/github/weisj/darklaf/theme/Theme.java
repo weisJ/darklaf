@@ -247,12 +247,12 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
         final Properties properties = new Properties();
         try (InputStream stream = loaderClass.getResourceAsStream(name)) {
             if (stream == null) {
-                LOGGER.log(Level.SEVERE, "Could not load " + name + ".properties. File not found");
+                LOGGER.log(Level.SEVERE, "Could not load " + name + ". File not found");
                 return properties;
             }
             properties.load(stream);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Could not load " + name + ".properties. " + e.getMessage(), e.getStackTrace());
+            LOGGER.log(Level.SEVERE, "Could not load " + name + ". " + e.getMessage(), e.getStackTrace());
         }
         return properties;
     }

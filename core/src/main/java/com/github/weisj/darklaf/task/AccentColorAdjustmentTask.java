@@ -50,6 +50,15 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
 
     public void applyColors(final Theme currentTheme, final Properties properties,
                             final Color accentColor, final Color selectionColor) {
+        if (!currentTheme.supportsCustomAccentColor()
+            && !currentTheme.supportsCustomSelectionColor()) {
+            // No custom colors are supported. Nothing needs to be mapped.
+            return;
+        }
+        if (accentColor == null && selectionColor == null) {
+            // No colors will be affected.
+            return;
+        }
         Properties props = currentTheme.loadAccentProperties();
         if (props == null || props.isEmpty()) return;
         if (accentColor != null) {
