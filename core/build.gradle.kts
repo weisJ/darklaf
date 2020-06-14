@@ -21,6 +21,7 @@ dependencies {
     testImplementation("com.miglayout:miglayout-swing")
     testImplementation("org.swinglabs:swingx")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("com.fifesoft:rsyntaxtextarea:3.1.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 

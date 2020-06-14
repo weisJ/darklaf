@@ -95,12 +95,10 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
      * be controlled
      * with a pair of scrollbars. The scrollbars appear over the viewport.
      *
-     * @param view       the view of the component.
-     * @param scrollPane the scrollpane to use.
+     * @param scrollPane the scroll pane to use.
      */
-    public OverlayScrollPane(final JComponent view, final JScrollPane scrollPane) {
+    public OverlayScrollPane(final JScrollPane scrollPane) {
         this.scrollPane = scrollPane;
-        this.scrollPane.setViewportView(view);
         setupScrollPane(scrollPane);
         add(scrollPane, JLayeredPane.DEFAULT_LAYER);
 
@@ -117,10 +115,12 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
         verticalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, this);
         JScrollBar horizontalScrollBar = createScrollBar(JScrollBar.HORIZONTAL);
         horizontalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, this);
-        scrollPane.setVerticalScrollBar(verticalScrollBar);
-        scrollPane.setHorizontalScrollBar(horizontalScrollBar);
         scrollPane.addPropertyChangeListener(this);
         updateScrollPaneUI();
+        scrollPane.setVerticalScrollBar(verticalScrollBar);
+        scrollPane.setHorizontalScrollBar(horizontalScrollBar);
+        scrollPane.setColumnHeader(scrollPane.getColumnHeader());
+        scrollPane.setRowHeader(scrollPane.getRowHeader());
     }
 
     protected JScrollBar createScrollBar(final int orientation) {
