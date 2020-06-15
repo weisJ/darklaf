@@ -50,7 +50,7 @@ public class DarkButtonBorder implements Border, UIResource {
     private final int arc;
     private final int focusArc;
     private final int squareFocusArc;
-    private final int squareArc;
+    private final int altArc;
     private final int minimumArc;
     private final int borderSize;
     private final int shadowSize;
@@ -58,7 +58,6 @@ public class DarkButtonBorder implements Border, UIResource {
     private Insets thinInsets;
     private Insets squareInsets;
     private Insets squareThinInsets;
-    private Insets labelInsets;
     private Insets borderlessRectangularInsets;
 
     public DarkButtonBorder() {
@@ -69,7 +68,7 @@ public class DarkButtonBorder implements Border, UIResource {
         arc = UIManager.getInt("Button.arc");
         focusArc = UIManager.getInt("Button.focusArc");
         squareFocusArc = UIManager.getInt("Button.squareFocusArc");
-        squareArc = UIManager.getInt("Button.squareArc");
+        altArc = UIManager.getInt("Button.altArc");
         minimumArc = UIManager.getInt("Button.minimumArc");
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowSize = UIManager.getInt("Button.shadowHeight");
@@ -77,18 +76,16 @@ public class DarkButtonBorder implements Border, UIResource {
         thinInsets = UIManager.getInsets("Button.thinBorderInsets");
         squareInsets = UIManager.getInsets("Button.squareBorderInsets");
         squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
-        labelInsets = UIManager.getInsets("Button.onlyLabelInsets");
         borderlessRectangularInsets = UIManager.getInsets("Button.borderlessRectangularInsets");
         if (insets == null) insets = new Insets(0, 0, 0, 0);
         if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
         if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
         if (squareInsets == null) squareInsets = new Insets(0, 0, 0, 0);
         if (borderlessRectangularInsets == null) borderlessRectangularInsets = new Insets(0, 0, 0, 0);
-        if (labelInsets == null) labelInsets = new Insets(0, 0, 0, 0);
     }
 
     public static boolean showDropShadow(final JComponent c) {
-        return showDropShadow(getCornerFlag(c));
+        return showDropShadow(getCornerFlag(c)) && !ButtonConstants.isBorderlessVariant(c);
     }
 
     public static boolean showDropShadow(final AlignmentExt a) {
@@ -103,7 +100,7 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     protected int getArc(final Component c) {
-        return ButtonConstants.chooseArcWithBorder(c, arc, 0, squareArc, getBorderSize());
+        return ButtonConstants.chooseArcWithBorder(c, arc, 0, altArc, getBorderSize());
     }
 
     protected int getFocusArc(final Component c) {
@@ -129,7 +126,7 @@ public class DarkButtonBorder implements Border, UIResource {
     @Override
     public void paintBorder(final Component c, final Graphics g,
                             final int x, final int y, final int width, final int height) {
-        if (ButtonConstants.isBorderlessVariant(c) || ButtonConstants.isLabelButton(c)) {
+        if (ButtonConstants.isBorderlessVariant(c)) {
             return;
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -298,10 +295,6 @@ public class DarkButtonBorder implements Border, UIResource {
                                               borderlessRectangularInsets.bottom, borderlessRectangularInsets.right);
             return getInsets(ins, margins);
         }
-        if (ButtonConstants.isLabelButton(c)) {
-            Insets ins = new InsetsUIResource(labelInsets.top, labelInsets.left, labelInsets.bottom, labelInsets.right);
-            return getInsets(ins, margins);
-        }
         boolean shadowVariant = ButtonConstants.isBorderlessVariant(c);
         int shadow = shadowVariant ? 0 : getShadowSize();
         boolean square = ButtonConstants.isSquare(c);
@@ -314,9 +307,6 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     protected Insets getInsets(final Insets ins, final Insets margin) {
-        if (margin != null && !(margin instanceof UIResource)) {
-            return margin;
-        }
         return ins;
     }
 

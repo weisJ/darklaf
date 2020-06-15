@@ -80,7 +80,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color shadowColor;
     protected AbstractButton button;
     protected int arc;
-    protected int squareArc;
+    protected int altArc;
     protected KeyListener keyListener;
 
     public static ComponentUI createUI(final JComponent c) {
@@ -116,7 +116,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         borderlessOutlineHover = UIManager.getColor("Button.borderless.outline.hover");
         borderlessOutlineClick = UIManager.getColor("Button.borderless.outline.click");
         arc = UIManager.getInt("Button.arc");
-        squareArc = UIManager.getInt("Button.squareArc");
+        altArc = UIManager.getInt("Button.altArc");
         drawOutline = UIManager.getBoolean("Button.borderless.drawOutline");
     }
 
@@ -149,9 +149,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     public void paint(final Graphics g, final JComponent c) {
         GraphicsContext config = new GraphicsContext(g);
         AbstractButton b = (AbstractButton) c;
-        if (!ButtonConstants.isNoBackground(b)) {
-            paintButtonBackground(g, c);
-        }
+        paintButtonBackground(g, c);
 
         prepareDelegate(b);
         String text = layout(layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()),
@@ -164,8 +162,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected void paintButtonBackground(final Graphics g, final JComponent c) {
         Graphics2D g2 = (Graphics2D) g;
-        if (shouldDrawBackground(c)) {
-            AbstractButton b = (AbstractButton) c;
+        AbstractButton b = (AbstractButton) c;
+        if (shouldDrawBackground(b)) {
             int arc = getArc(c);
             int width = c.getWidth();
             int height = c.getHeight();
@@ -232,8 +230,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (isRolloverBorderless(b)) {
             GraphicsUtil.setupAAPainting(g);
             g.setColor(getBorderlessBackground(b));
-            boolean borderlessRectangular = ButtonConstants.isBorderlessRectangular(b);
-            if (!borderlessRectangular) DarkUIUtil.addInsets(margin, borderSize);
             if (ButtonConstants.isBorderlessRectangular(b)) {
                 g.fillRect(margin.left, margin.top, width - margin.left - margin.right,
                            height - margin.top - margin.bottom);
@@ -296,15 +292,14 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         DarkUIUtil.repaint(ButtonConstants.getNeighbour(KEY_BOTTOM_LEFT_NEIGHBOUR, button));
     }
 
-    protected boolean shouldDrawBackground(final JComponent c) {
-        if (ButtonConstants.isLabelButton(c)) return false;
-        AbstractButton button = (AbstractButton) c;
+    protected boolean shouldDrawBackground(final AbstractButton c) {
+        if (ButtonConstants.isNoBackground(c)) return false;
         Border border = c.getBorder();
         return c.isEnabled() && border != null && button.isContentAreaFilled();
     }
 
     protected int getArc(final Component c) {
-        return ButtonConstants.chooseArc(c, arc, 0, squareArc, borderSize);
+        return ButtonConstants.chooseArc(c, arc, 0, altArc, borderSize);
     }
 
     protected Color getForeground(final AbstractButton button) {
@@ -407,7 +402,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     public Dimension getPreferredSize(final JComponent c) {
         AbstractButton b = (AbstractButton) c;
         prepareDelegate(b);
-        return BasicGraphicsUtils.getPreferredButtonSize(layoutDelegate, b.getIconTextGap());
+        Dimension dim = BasicGraphicsUtils.getPreferredButtonSize(layoutDelegate, b.getIconTextGap());
+        if (ButtonConstants.isSquare(b)) {
+            int size = Math.max(dim.width, dim.height);
+            dim.setSize(size, size);
+        }
+        return dim;
     }
 
     protected void prepareDelegate(final AbstractButton b) {
@@ -422,11 +422,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
-        if (ButtonConstants.isLabelButton(c)) {
+        if (ButtonConstants.isBorderlessRectangular(c)) {
             return super.contains(c, x, y);
         }
         if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
-        int bs = c.getBorder() instanceof DarkButtonBorder ? borderSize : 0;
+        int bs = c.getBorder() instanceof DarkButtonBorder && !ButtonConstants.isBorderless(c) ? borderSize : 0;
         int arc = getArc(c);
         hitArea.setRoundRect(bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs, arc, arc);
         return hitArea.contains(x, y);

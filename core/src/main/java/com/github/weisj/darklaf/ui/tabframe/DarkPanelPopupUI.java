@@ -38,10 +38,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.components.tabframe.JTabFrame;
-import com.github.weisj.darklaf.components.tabframe.PanelPopup;
-import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
-import com.github.weisj.darklaf.components.tabframe.TabFramePopupUI;
+import com.github.weisj.darklaf.components.tabframe.*;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
@@ -185,6 +182,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         super.uninstallUI(c);
         uninstallComponents();
         uninstallListeners();
+        popupComponent.removeAll();
         popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                       .remove(KeyStroke.getKeyStroke(accelerator));
         popupComponent.getActionMap().remove(accelerator);
@@ -274,11 +272,24 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             JTabFrame tabFrame = popupComponent.getTabFrame();
             boolean[] status = tabFrame.getContentPane().getStatus();
             Alignment alignment = popupComponent.getAlignment();
-            Insets insets = getBorderSize(alignment, status);
+            Insets insets = getBorderSize(tabFrame, alignment, status);
 
             applyBorderInsets(insets);
+            Component component = popupComponent.getComponent();
             popupComponent.doLayout();
             popupComponent.repaint();
+            if (component != null && component != popupComponent) {
+                component.doLayout();
+                component.repaint();
+            }
+            if (header != null) {
+                Component headerParent = header.getParent();
+                if (headerParent != null) {
+                    headerParent.doLayout();
+                    headerParent.repaint();
+                }
+            }
+
             if (notifyPeer) {
                 try {
                     Component peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
@@ -288,12 +299,12 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
     }
 
-    protected Insets getBorderSize(final Alignment a, final boolean[] info) {
+    protected Insets getBorderSize(final JTabFrame tabFrame, final Alignment a, final boolean[] info) {
         Insets insets = new Insets(0, 0, 0, 0);
         switch (a) {
             case NORTH :
             case NORTH_EAST :
-                if (info[Alignment.NORTH.getIndex()] || info[Alignment.NORTH_EAST.getIndex()]) {
+                if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.bottom = 1;
                 }
                 if (info[Alignment.NORTH.getIndex()] && a == Alignment.NORTH_EAST) {
@@ -302,7 +313,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 return insets;
             case SOUTH :
             case SOUTH_WEST :
-                if (info[Alignment.SOUTH_WEST.getIndex()] || info[Alignment.SOUTH.getIndex()]) {
+                if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.top = 1;
                 }
                 if (info[Alignment.SOUTH_WEST.getIndex()] && a == Alignment.SOUTH) {
@@ -311,7 +322,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 return insets;
             case EAST :
             case SOUTH_EAST :
-                if (info[Alignment.EAST.getIndex()] || info[Alignment.SOUTH_EAST.getIndex()]) {
+                if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.left = 1;
                 }
                 if (info[Alignment.EAST.getIndex()] && a == Alignment.SOUTH_EAST) {
@@ -320,7 +331,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 return insets;
             case WEST :
             case NORTH_WEST :
-                if (info[Alignment.NORTH_WEST.getIndex()] || info[Alignment.WEST.getIndex()]) {
+                if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.right = 1;
                 }
                 if (info[Alignment.NORTH_WEST.getIndex()] && a == Alignment.WEST) {
@@ -365,12 +376,12 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             super(icon);
             this.ui = ui;
             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-            putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
             putClientProperty(DarkButtonUI.KEY_THIN, true);
             putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
             putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
             setRolloverEnabled(true);
-            setMargin(UIManager.getInsets("TabFramePopup.headerButton.insets"));
+            Insets ins = UIManager.getInsets("TabFramePopup.headerButton.insets");
+            setMargin(new Insets(ins.top, ins.left, ins.bottom, ins.right));
             setFocus(false);
             setFocusable(false);
             setOpaque(false);

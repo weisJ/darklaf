@@ -43,6 +43,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
+import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
@@ -52,6 +53,7 @@ import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.text.action.DarkKeyTypedAction;
 import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.ui.text.popup.DarkTextPopupMenu;
+import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -115,6 +117,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             editor.setBorder(null);
         }
         if (editor != null) {
+            PropertyUtil.installProperty(editor, ToolTipConstants.KEY_STYLE, ToolTipStyle.PLAIN);
             PropertyUtil.installBooleanProperty(editor, KEY_ROUNDED_SELECTION, "TextComponent.roundedSelection");
             PropertyUtil.installBooleanProperty(editor, KEY_EXTEND_LINE_SELECTION,
                                                 getPropertyPrefix() + ".extendSelection");

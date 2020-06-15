@@ -83,7 +83,7 @@ public class MutableLineBorder extends AbstractBorder {
 
     @Override
     public Insets getBorderInsets(final Component c, final Insets insets) {
-        insets.left = getRight();
+        insets.left = getLeft();
         insets.top = getTop();
         insets.right = getRight();
         insets.bottom = getBottom();

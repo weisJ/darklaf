@@ -35,6 +35,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
+import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -72,6 +73,7 @@ public class PopupColorChooser extends JToolTip {
     @Override
     public void updateUI() {
         putClientProperty(DarkPopupFactory.KEY_FOCUSABLE_POPUP, true);
+        putClientProperty(DarkToolTipUI.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
         putClientProperty(DarkToolTipUI.KEY_CONTEXT, getContext());
         super.updateUI();
         setBackground(UIManager.getColor("ColorChooser.background"));
@@ -154,7 +156,7 @@ public class PopupColorChooser extends JToolTip {
 
     @Override
     public String getTipText() {
-        return "";
+        return ToolTipConstants.NO_TEXT;
     }
 
     @Override

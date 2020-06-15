@@ -24,9 +24,9 @@
  */
 package com.github.weisj.darklaf.ui.tabframe;
 
-import javax.swing.plaf.BorderUIResource;
+import javax.swing.border.EmptyBorder;
 
-public class DarkTabFramePopupHeaderBorder extends BorderUIResource.EmptyBorderUIResource {
+public class DarkTabFramePopupHeaderBorder extends EmptyBorder {
 
     public DarkTabFramePopupHeaderBorder() {
         super(1, 0, 1, 0);

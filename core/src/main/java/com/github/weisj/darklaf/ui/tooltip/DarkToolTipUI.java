@@ -170,7 +170,9 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
-        if (getTipText().isEmpty()) return;
+        if (getTipText().isEmpty()) {
+            return;
+        }
         boolean isPlain = style == ToolTipStyle.PLAIN;
         if (animationScheduled) {
             startAnimation();
@@ -205,11 +207,14 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         g.setColor(c.getForeground());
         String tipText = getTipText();
 
-        Insets insets = c.getInsets();
-        Rectangle paintTextR = new Rectangle(insets.left, insets.top,
-                                             size.width - (insets.left + insets.right),
-                                             size.height - (insets.top + insets.bottom));
-        PaintUtil.drawString(g, c, tipText, paintTextR);
+        // noinspection StringEquality
+        if (tipText != NO_TEXT) {
+            Insets insets = c.getInsets();
+            Rectangle paintTextR = new Rectangle(insets.left, insets.top,
+                                                 size.width - (insets.left + insets.right),
+                                                 size.height - (insets.top + insets.bottom));
+            PaintUtil.drawString(g, c, tipText, paintTextR);
+        }
     }
 
     protected String getTipText() {

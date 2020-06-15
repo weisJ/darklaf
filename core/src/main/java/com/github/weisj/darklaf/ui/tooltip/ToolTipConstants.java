@@ -36,4 +36,5 @@ public interface ToolTipConstants {
     String VARIANT_PLAIN_BALLOON = "plainBalloon";
     String TIP_TEXT_PROPERTY = "tiptext";
     String KEY_CONTEXT = "JToolTip.toolTipContext";
+    String NO_TEXT = "NO_TEXT";
 }

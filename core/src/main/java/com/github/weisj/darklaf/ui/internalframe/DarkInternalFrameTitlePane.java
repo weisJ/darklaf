@@ -62,6 +62,8 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     private ToggleIcon maximizeIcon;
     private ToggleIcon iconifyIcon;
 
+    private int buttonMarginPad;
+
     private boolean useExternalMenuBar;
 
     public DarkInternalFrameTitlePane(final JInternalFrame f) {
@@ -132,6 +134,8 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         buttonColorClick = UIManager.getColor("InternalFrameTitlePane.buttonClickColor");
 
         border = UIManager.getColor("InternalFrameTitlePane.borderColor");
+
+        buttonMarginPad = UIManager.getInt("InternalFrameTitlePane.buttonPad");
     }
 
     @Override
@@ -204,7 +208,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
     }
 
-    private static JButton createButton(final String accessibleName) {
+    private JButton createButton(final String accessibleName) {
         JButton button = new JButtonUIResource() {
             @Override
             public boolean isRolloverEnabled() {
@@ -216,7 +220,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         button.putClientProperty(DarkButtonUI.KEY_THIN, true);
-        button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
+        button.setMargin(new Insets(buttonMarginPad, buttonMarginPad, buttonMarginPad, buttonMarginPad));
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
         button.setText(null);
         return button;

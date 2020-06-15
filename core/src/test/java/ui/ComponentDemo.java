@@ -39,12 +39,14 @@ import javax.swing.event.MenuListener;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.settings.ThemeSettings;
+import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
 public interface ComponentDemo {
 
     static Theme getTheme() {
+        if (true) return new IntelliJTheme();
         PreferredThemeStyle themeStyle = LafManager.getPreferredThemeStyle();
         return LafManager.themeForPreferredStyle(new PreferredThemeStyle(themeStyle.getContrastRule(),
                                                                          themeStyle.getColorToneRule()));

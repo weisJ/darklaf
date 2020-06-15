@@ -345,8 +345,6 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
     protected void setupButton(final AbstractButton button, final String accessibleName, final String tipText) {
         button.putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-        button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, true);
-        button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         button.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         button.setAlignmentY(JComponent.CENTER_ALIGNMENT);
         button.setToolTipText(tipText);

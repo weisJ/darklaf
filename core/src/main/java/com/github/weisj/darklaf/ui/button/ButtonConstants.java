@@ -61,22 +61,17 @@ public interface ButtonConstants {
         return PropertyUtil.getBooleanProperty(c, KEY_ALT_ARC);
     }
 
-    static boolean isLabelButton(final Component c) {
-        return PropertyUtil.getBooleanProperty(c, KEY_VARIANT);
-    }
-
     static int chooseArcWithBorder(final Component c, final int arc, final int minimum,
-                                   final int squareArc, final int borderSize) {
-        return chooseArc(c, arc, minimum, squareArc, c.getHeight() - 2 * borderSize);
+                                   final int altArc, final int borderSize) {
+        return chooseArc(c, arc, minimum, altArc, c.getHeight() - 2 * borderSize);
     }
 
     static int chooseArc(final Component c, final int arc, final int minimum,
-                         final int squareArc, final int roundedArc) {
+                         final int altArc, final int roundedArc) {
         if (ButtonConstants.isNoArc(c)) return minimum;
         if (ButtonConstants.isRound(c)) return roundedArc;
-        boolean square = ButtonConstants.isSquare(c);
         boolean alt = ButtonConstants.chooseAlternativeArc(c);
-        return square ? alt ? arc : squareArc : alt ? squareArc : arc;
+        return alt ? altArc : arc;
     }
 
     static boolean isNoArc(final Component c) {
@@ -99,10 +94,13 @@ public interface ButtonConstants {
     static boolean isBorderlessVariant(final Component c) {
         if (isBorderlessRectangular(c)) return true;
         if (c instanceof JButton || c instanceof JToggleButton) {
-            return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_BORDERLESS)
-                   || doConvertToBorderless((AbstractButton) c);
+            return isBorderless(c) || doConvertToBorderless((AbstractButton) c);
         }
         return false;
+    }
+
+    static boolean isBorderless(final Component c) {
+        return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_BORDERLESS);
     }
 
     static boolean isBorderlessRectangular(final Component c) {

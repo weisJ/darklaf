@@ -190,7 +190,6 @@ public class SmallColorChooser extends JPanel {
                                                                                  c.getBlue()));
         pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
         pipetteButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
-        pipetteButton.putClientProperty(DarkButtonUI.KEY_ALT_ARC, Boolean.TRUE);
         pipetteButton.setRolloverEnabled(true);
         pipetteButton.setFocusable(false);
         pipetteButton.setIcon(pipetteIcon);
