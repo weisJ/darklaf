@@ -25,53 +25,26 @@
 package ui.scrollPane;
 
 import java.awt.*;
-import java.util.Random;
 
 import javax.swing.*;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
+import ui.DemoResources;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.util.StringUtil;
 
-public class OverlayScrollPaneDemo implements ComponentDemo {
+public class OverlayScrollPaneTextDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new OverlayScrollPaneDemo());
+        ComponentDemo.showDemo(new OverlayScrollPaneTextDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        JComponent component = new JComponent() {
-
-            private final Random r = new Random();
-            private final Color[][] colors = new Color[100][100];
-
-            {
-                for (int x = 0; x < 100; x++) {
-                    for (int y = 0; y < 100; y++) {
-                        colors[x][y] = new Color(r.nextInt());
-                    }
-                }
-            }
-
-            @Override
-            protected void paintComponent(final Graphics g) {
-                super.paintComponent(g);
-                for (int x = 0; x < 100; x++) {
-                    for (int y = 0; y < 100; y++) {
-                        g.setColor(colors[x][y]);
-                        g.fillRect(x * 10, y * 10, 10, 10);
-                    }
-                }
-            }
-
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(1000, 1000);
-            }
-        };
-        OverlayScrollPane scrollPane = new OverlayScrollPane(component);
+        OverlayScrollPane scrollPane = new OverlayScrollPane(new JTextArea(StringUtil.repeat(DemoResources.LOREM_IPSUM,
+                                                                                             5)));
         return new DemoPanel(scrollPane, new BorderLayout(), 0);
     }
 

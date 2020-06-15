@@ -56,11 +56,10 @@ public class DarkLaf extends BasicLookAndFeel {
                                                                                 new IdeaDefaultsInitTask(),
                                                                                 new FontDefaultsInitTask(),
                                                                                 new StyleSheetInitTask(),
-                                                                                new UtilityDefaultsInitTask(),
                                                                                 new SystemDefaultsInitTask(),
                                                                                 new PlatformDefaultsInitTask(),
                                                                                 new UserInitTask(),
-    };
+                                                                                new UtilityDefaultsInitTask()};
     /*
      * The base look and feel. This may vary to handle different platform support.
      */

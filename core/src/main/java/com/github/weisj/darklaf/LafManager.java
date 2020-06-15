@@ -379,8 +379,8 @@ public final class LafManager {
             getTheme();
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             updateLaf();
-            eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
-                                       ThemeChangeListener::themeInstalled);
+            SwingUtilities.invokeLater(() -> eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
+                                                                        ThemeChangeListener::themeInstalled));
         } catch (final ClassNotFoundException
                        | InstantiationException
                        | IllegalAccessException

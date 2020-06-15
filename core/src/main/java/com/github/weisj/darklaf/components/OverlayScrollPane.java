@@ -123,7 +123,7 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
         scrollPane.setRowHeader(scrollPane.getRowHeader());
     }
 
-    protected JScrollBar createScrollBar(final int orientation) {
+    protected PopupScrollBar createScrollBar(final int orientation) {
         return new PopupScrollBar(orientation);
     }
 
@@ -243,7 +243,7 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
         });
     }
 
-    private static final class PopupScrollBar extends JScrollBar {
+    protected static final class PopupScrollBar extends JScrollBar {
 
         private PopupScrollBar(final int direction) {
             super(direction);

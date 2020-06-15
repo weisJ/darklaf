@@ -59,15 +59,15 @@ public final class ImageUtil {
     }
 
     public static Image createFrameIcon(final Icon icon, final JFrame c) {
-        return createFrameIcon(icon, c, JFrame::setIconImage);
+        return createWindowIcon(icon, c, JFrame::setIconImage);
     }
 
     public static Image createFrameIcon(final Icon icon, final JDialog c) {
-        return createFrameIcon(icon, c, JDialog::setIconImage);
+        return createWindowIcon(icon, c, JDialog::setIconImage);
     }
 
-    public static <T extends Window> Image createFrameIcon(final Icon icon, final T c,
-                                                           final BiConsumer<T, Image> iconSetter) {
+    private static <T extends Window> Image createWindowIcon(final Icon icon, final T c,
+                                                             final BiConsumer<T, Image> iconSetter) {
         if (icon == null) return null;
         if (c != null) {
             if (iconNeedUpdates(icon)) {

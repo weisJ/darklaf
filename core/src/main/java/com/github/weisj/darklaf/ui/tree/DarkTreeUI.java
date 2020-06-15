@@ -414,6 +414,13 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
             TreePath path;
             boolean rootVisible = isRootVisible();
 
+            final int containerWidth = tree.getParent() instanceof JViewport
+                    ? tree.getParent().getWidth()
+                    : tree.getWidth();
+            final int xOffset = tree.getParent() instanceof JViewport
+                    ? ((JViewport) tree.getParent()).getViewPosition().x
+                    : 0;
+
             // Paint row backgrounds
             Enumeration<?> backgroundEnumerator = treeState.getVisiblePathsFrom(initialPath);
             while (backgroundEnumerator != null && backgroundEnumerator.hasMoreElements()) {
@@ -428,9 +435,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
                     }
                     bounds = getPathBounds(path, insets, boundsBuffer);
                     if (bounds == null) return;
+                    bounds.x = xOffset;
+                    bounds.width = containerWidth;
                     if (paintBounds.intersects(bounds)) {
-                        paintRowBackground(g, paintBounds, insets, bounds, path,
-                                           tree.getRowForPath(path), isExpanded, hasBeenExpanded, isLeaf);
+                        paintRowBackground(g, paintBounds, bounds, path,
+                                           tree.getRowForPath(path));
                     }
                 }
             }
@@ -515,23 +524,15 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     }
 
     protected void paintRowBackground(final Graphics g, final Rectangle clipBounds,
-                                      final Insets insets, final Rectangle bounds, final TreePath path,
-                                      final int row, final boolean isExpanded,
-                                      final boolean hasBeenExpanded, final boolean isLeaf) {
-        final int containerWidth = tree.getParent() instanceof JViewport
-                ? tree.getParent().getWidth()
-                : tree.getWidth();
-        final int xOffset = tree.getParent() instanceof JViewport
-                ? ((JViewport) tree.getParent()).getViewPosition().x
-                : 0;
-
+                                      final Rectangle bounds, final TreePath path,
+                                      final int row) {
         if (path != null) {
             boolean selected = tree.isPathSelected(path);
             Graphics2D rowGraphics = (Graphics2D) g.create();
             rowGraphics.setClip(clipBounds);
 
             rowGraphics.setColor(CellUtil.getTreeBackground(tree, selected, row));
-            rowGraphics.fillRect(xOffset, bounds.y, containerWidth, bounds.height);
+            rowGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
             rowGraphics.dispose();
         }
