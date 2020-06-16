@@ -123,11 +123,6 @@ public class TransformUI extends MouseEventUI<JComponent> {
     private static final Logger LOGGER = LogUtil.getLogger(TransformUI.class);
 
     static {
-        LOGGER.setUseParentHandlers(false);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new LogFormatter());
-        LOGGER.addHandler(handler);
-
         boolean value;
         try {
             SwingUtilities3.class.getMethod("setDelegateRepaintManager", JComponent.class, RepaintManager.class);
