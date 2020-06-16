@@ -37,6 +37,7 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameTabbedPopupUI;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.tabbedpane.DarkTabAreaButton;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.tabbedpane.MoreTabsButton;
 import com.github.weisj.darklaf.ui.tabbedpane.NewTabButton;
@@ -239,7 +240,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
         }
 
         @Override
-        public JButton createMoreTabsButton() {
+        public DarkTabAreaButton createMoreTabsButton() {
             return new TabFrameMoreTabsButton(this);
         }
     }

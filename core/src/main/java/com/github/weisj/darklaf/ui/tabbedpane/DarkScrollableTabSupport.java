@@ -42,7 +42,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
 
     protected static final int SCROLL_REWIND_DELAY = 1200;
     protected final ScrollPopupMenu scrollPopupMenu;
-    protected final JButton moreTabsButton;
+    protected final DarkTabAreaButton moreTabsButton;
     protected final JComponent newTabButton;
     protected final Timer timer;
     protected long lastClickEvent;

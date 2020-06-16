@@ -28,9 +28,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
-import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 public class MoreTabsButton extends DarkTabAreaButton {
@@ -43,15 +40,18 @@ public class MoreTabsButton extends DarkTabAreaButton {
     public MoreTabsButton(final DarkTabbedPaneUI ui) {
         super(ui);
         this.ui = ui;
+        setLayout(null);
         icon = ui.getMoreTabsIcon();
+        setForeground(UIManager.getColor("TabbedPane.moreTabsButton.foreground"));
         pad = UIManager.getInt("TabbedPane.moreTabsButton.pad");
-        int fontSize = UIManager.getInt("TabbedPane.moreTabsButton.fontSize");
-        setIcon(EmptyIcon.create(icon.getIconWidth(), icon.getIconHeight()));
-        putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, true);
-        putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
+        setFont(UIManager.getFont("TabbedPane.moreTabsButton.font"));
+        setIcon(new MoreTabsIcon(icon, this));
+        putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
         putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        putClientProperty(DarkButtonUI.KEY_THIN, true);
+        setMargin(new Insets(pad, pad, pad, pad));
         setFocusable(false);
-        setFont(getFont().deriveFont((float) fontSize));
+        setOpaque(true);
     }
 
     @Override
@@ -60,45 +60,39 @@ public class MoreTabsButton extends DarkTabAreaButton {
         return ui.getTabAreaBackground();
     }
 
-    protected void paintButton(final Graphics g) {
-        FontMetrics metrics = g.getFontMetrics();
-        String label = getLabelString();
-        int labelWidth = metrics.stringWidth(label);
-        int x = (getWidth() - (icon.getIconWidth() + labelWidth + pad)) / 2;
-        int y = (getHeight() - icon.getIconHeight()) / 2;
-
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        /*
-         * These offsets are due to the nature of the used icon. They are applied to match the baseline of
-         * the label.properties text.
-         * A different icon might need a different offset.
-         */
-        int off = 5;
-        int tabPlacement = ui.tabPane.getTabPlacement();
-        if (tabPlacement == TOP) {
-            y += 2;
-        } else if (tabPlacement == BOTTOM) {
-            y -= 1;
-        }
-
-        icon.paintIcon(this, g, x, y);
-        config.restore();
-        config = GraphicsUtil.setupAntialiasing(g);
-        g.drawString(label, x + icon.getIconWidth() + pad, y + icon.getIconHeight() - off);
-        config.restore();
-    }
-
     protected String getLabelString() {
         int invisible = Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible,
                                  ui.tabPane.getTabCount());
         return invisible >= 100 ? INFINITY : String.valueOf(invisible);
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        Dimension size = super.getPreferredSize();
-        FontMetrics metrics = getFontMetrics(getFont());
-        size.width += metrics.stringWidth(getLabelString()) + 4 * pad;
-        return size;
+    protected static class MoreTabsIcon implements Icon {
+
+        private final Icon icon;
+        private final MoreTabsButton button;
+
+        protected MoreTabsIcon(final Icon icon, final MoreTabsButton button) {
+            this.icon = icon;
+            this.button = button;
+        }
+
+        @Override
+        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+            icon.paintIcon(c, g, x, y + getIconHeight() - icon.getIconHeight());
+            String text = button.getLabelString();
+            g.setColor(button.getForeground());
+            g.drawString(text, x + icon.getIconWidth() + button.pad, y + icon.getIconHeight());
+        }
+
+        @Override
+        public int getIconWidth() {
+            int textWidth = button.getFontMetrics(button.getFont()).stringWidth(button.getLabelString());
+            return icon.getIconWidth() + textWidth + button.pad;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return icon.getIconHeight() + button.pad;
+        }
     }
 }

@@ -138,7 +138,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     th -= tabAreaInsets.top + tabAreaInsets.bottom;
                     break;
             }
-            JButton moreTabs = ui.scrollableTabSupport.moreTabsButton;
+            JComponent moreTabs = ui.scrollableTabSupport.moreTabsButton;
             JComponent newTab = ui.scrollableTabSupport.newTabButton;
 
             for (int i = 0; i < numChildren; i++) {
@@ -311,7 +311,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             calculateRect(i, tabBounds, metrics, verticalTabRuns, tabPlacement);
         }
 
-        JButton tabsButton = ui.scrollableTabSupport.moreTabsButton;
+        JComponent tabsButton = ui.scrollableTabSupport.moreTabsButton;
         Rectangle selectedBounds = ui.tabPane.getSelectedIndex() > 0
                 ? new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()])
                 : new Rectangle(0, 0, 0, 0);
@@ -438,7 +438,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         Dimension size = ui.tabPane.getSize();
         Insets insets = ui.tabPane.getInsets();
         Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
-        JButton tabsButton = ui.scrollableTabSupport.moreTabsButton;
+        JComponent tabsButton = ui.scrollableTabSupport.moreTabsButton;
         JComponent newTabsButton = ui.scrollableTabSupport.newTabButton;
         if (ui.isHorizontalTabPlacement()) {
             int leftMargin = 0;
@@ -630,7 +630,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
     }
 
     protected void layoutMoreTabsButton(final int tabCount) {
-        final JButton button = ui.scrollableTabSupport.moreTabsButton;
+        final JComponent button = ui.scrollableTabSupport.moreTabsButton;
         if (ui.minVisible > 0 || ui.maxVisible < tabCount - 1) {
             if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
                 if (ui.minVisible != ui.minVisibleOld || ui.maxVisible != ui.maxVisibleOld) {

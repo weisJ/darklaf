@@ -29,6 +29,7 @@ import static java.awt.RenderingHints.*;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -84,6 +85,11 @@ public class AbstractButtonLayoutDelegate extends AbstractButton {
     @Override
     public int getHorizontalTextPosition() {
         return delegate.getHorizontalTextPosition();
+    }
+
+    @Override
+    public Border getBorder() {
+        return delegate.getBorder();
     }
 
     @Override

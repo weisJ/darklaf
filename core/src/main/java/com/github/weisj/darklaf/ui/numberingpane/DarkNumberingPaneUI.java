@@ -192,6 +192,13 @@ public class DarkNumberingPaneUI extends ComponentUI {
                                  final Element root, final int descent) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
+        Font font = numberingPane.getTextComponent().getFont();
+        if (font != null) {
+            float newSize = (float) font.getSize() - 1;
+            if (newSize > 0) {
+                g.setFont(numberingPane.getFont().deriveFont(newSize));
+            }
+        }
         int digits = String.valueOf(root.getElementCount()).length();
         for (int i = startLine; i <= endLine; i++) {
             int off = root.getElement(i).getStartOffset();

@@ -361,9 +361,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                             final FontMetrics fm,
                             final int width, final int height) {
         Insets i = b.getInsets();
-        if (!ButtonConstants.isBorderlessVariant(b)) {
-            i = new Insets(i.top, borderSize, i.bottom, borderSize);
-        }
 
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(b);
         if (corner != null) {
@@ -380,11 +377,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
         Insets margins = b.getMargin();
         if (!(margins instanceof UIResource)) DarkUIUtil.applyInsets(viewRect, margins);
-
-        viewRect.x = i.left;
-        viewRect.y = i.top;
-        viewRect.width = width - (i.right + i.left);
-        viewRect.height = height - (i.bottom + i.top);
 
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;

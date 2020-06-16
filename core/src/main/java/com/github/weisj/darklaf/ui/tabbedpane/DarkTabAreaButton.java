@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.ui.tabbedpane;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -38,11 +39,13 @@ public class DarkTabAreaButton extends JButton implements UIResource {
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
-        super.paintComponent(g);
+    public void paint(final Graphics g) {
+        super.paint(g);
         paintButton(g);
         ui.paintTabAreaBorder(g, ui.tabPane.getTabPlacement(), 0, 0, getWidth(), getHeight());
     }
 
     protected void paintButton(final Graphics g) {}
+
+    public void addActionListener(final ActionListener actionListener) {}
 }
