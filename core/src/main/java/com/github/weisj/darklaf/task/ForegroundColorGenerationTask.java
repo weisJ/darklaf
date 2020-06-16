@@ -49,10 +49,10 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
     protected void runTask(final Theme currentTheme, final Properties properties) {
         Properties props = currentTheme.loadPropertyFile("accents", true);
         AccentColorRule accentColorRule = currentTheme.getAccentColorRule();
-        if (accentColorRule.getAccentColor() != null) {
+        if (accentColorRule.getAccentColor() != null && currentTheme.supportsCustomAccentColor()) {
             adjust(ACCENT_LIST_KEY, props, list -> adjustForegroundList(list, properties));
         }
-        if (accentColorRule.getSelectionColor() != null) {
+        if (accentColorRule.getSelectionColor() != null && currentTheme.supportsCustomSelectionColor()) {
             adjust(FOREGROUND_LIST_KEY, props, list -> adjustForegroundList(list, properties));
         }
     }
