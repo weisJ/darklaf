@@ -59,6 +59,11 @@ public class SolarizedDarkTheme extends Theme {
     }
 
     @Override
+    public boolean supportsCustomSelectionColor() {
+        return true;
+    }
+
+    @Override
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.customizeUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);
