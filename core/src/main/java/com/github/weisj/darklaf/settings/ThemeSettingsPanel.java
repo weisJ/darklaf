@@ -236,33 +236,6 @@ public class ThemeSettingsPanel extends JPanel {
         Color currentAccentColor = LafManager.getTheme().getAccentColorRule().getAccentColor();
         Color currentSelectionColor = LafManager.getTheme().getAccentColorRule().getSelectionColor();
 
-        JComponent accentBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        JLabel accentColorLabel = new JLabel(resourceBundle.getString("label_accent_color"));
-        accentColorLabel.setLabelFor(accentBox);
-
-        defaultAccentColor = createDefaultColor("widgetFillDefault");
-        bgAccent = new ButtonGroup();
-        defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_FILLED,
-                                         resourceBundle.getString("color_default"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.BLUE,
-                         resourceBundle.getString("color_Blue"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.LILAC,
-                         resourceBundle.getString("color_lilac"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ROSE,
-                         resourceBundle.getString("color_rose"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.RED,
-                         resourceBundle.getString("color_red"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ORANGE,
-                         resourceBundle.getString("color_orange"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.YELLOW,
-                         resourceBundle.getString("color_yellow"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.GREEN,
-                         resourceBundle.getString("color_green"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.GRAY,
-                         resourceBundle.getString("color_gray"));
-        customAccent = addCustomButton(bgAccent, accentBox, currentAccentColor, defaultAccentColor,
-                                       resourceBundle.getString("color_custom"));
-
         JComponent selectionBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JLabel selectionColorLabel = new JLabel(resourceBundle.getString("label_selection_color"));
         selectionColorLabel.setLabelFor(selectionBox);
@@ -271,8 +244,51 @@ public class ThemeSettingsPanel extends JPanel {
         defaultSelectionColor = createDefaultColor("textCompSelectionBackground");
         defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor,
                                             resourceBundle.getString("color_default"));
+        AbstractButton selectionBlue = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_BLUE,
+                                                        resourceBundle.getString("color_blue"));
+        AbstractButton selectionPurple = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_PURPLE,
+                                                          resourceBundle.getString("color_purple"));
+        AbstractButton selectionPink = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_PINK,
+                                                        resourceBundle.getString("color_pink"));
+        AbstractButton selectionRed = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_RED,
+                                                       resourceBundle.getString("color_red"));
+        AbstractButton selectionOrange = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_ORANGE,
+                                                          resourceBundle.getString("color_orange"));
+        AbstractButton selectionYellow = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_YELLOW,
+                                                          resourceBundle.getString("color_yellow"));
+        AbstractButton selectionGreen = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_GREEN,
+                                                         resourceBundle.getString("color_green"));
+        AbstractButton selectionGraphite = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_GRAPHITE,
+                                                            resourceBundle.getString("color_gray"));
         customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
                                           resourceBundle.getString("color_custom"));
+
+        JComponent accentBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JLabel accentColorLabel = new JLabel(resourceBundle.getString("label_accent_color"));
+        accentColorLabel.setLabelFor(accentBox);
+
+        defaultAccentColor = createDefaultColor("widgetFillDefault");
+        bgAccent = new ButtonGroup();
+        defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_FILLED, defaultSelection,
+                                         resourceBundle.getString("color_default"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_BLUE, selectionBlue,
+                         resourceBundle.getString("color_blue"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_LILAC, selectionPurple,
+                         resourceBundle.getString("color_lilac"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_ROSE, selectionPink,
+                         resourceBundle.getString("color_rose"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_RED, selectionRed,
+                         resourceBundle.getString("color_red"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_ORANGE, selectionOrange,
+                         resourceBundle.getString("color_orange"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_YELLOW, selectionYellow,
+                         resourceBundle.getString("color_yellow"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_GREEN, selectionGreen,
+                         resourceBundle.getString("color_green"));
+        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_GRAPHITE, selectionGraphite,
+                         resourceBundle.getString("color_gray"));
+        customAccent = addCustomButton(bgAccent, accentBox, currentAccentColor, defaultAccentColor,
+                                       resourceBundle.getString("color_custom"));
 
         fontSlider = createFontSlider();
         JLabel fontSizeLabel = new JLabel(resourceBundle.getString("label_font_size"));
@@ -658,6 +674,18 @@ public class ThemeSettingsPanel extends JPanel {
                                                final String tipText) {
         setupButton(button, bg, tipText);
         parent.add(button);
+        return button;
+    }
+
+    public ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                               final Color color, final AbstractButton peer,
+                                               final String tipText) {
+        ColoredRadioButton button = addColoredButton(new ColoredRadioButton(null, color), bg, parent, tipText);
+        button.addActionListener(e -> {
+            if (button.isSelected()) {
+                peer.setSelected(true);
+            }
+        });
         return button;
     }
 

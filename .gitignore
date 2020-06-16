@@ -55,6 +55,7 @@ Thumbs.db
 /*/bin/
 *.dylib
 *.dll
+/scratch/
 
 # Eclipse
 .classpath

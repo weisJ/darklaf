@@ -173,7 +173,7 @@ JNF_COCOA_EXIT(env);
 JNIEXPORT jint JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetSelectionColor(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
-    NSColorSpace *rgbSpace = [NSColorSpace genericRGBColorSpace];
+    NSColorSpace *rgbSpace = [NSColorSpace sRGBColorSpace];
     NSColor *accentColor = [[[NSColorList colorListNamed: KEY_SYSTEM_COLOR_LIST] colorWithKey:KEY_SELECTION_COLOR] colorUsingColorSpace:rgbSpace];
     NSInteger r = (NSInteger) (255 * [accentColor redComponent]);
     NSInteger g = (NSInteger) (255 * [accentColor greenComponent]);

@@ -58,21 +58,21 @@ public class JNIThemeInfoMacOS {
         int index = nativeGetAccentColor();
         switch (index) {
             case -2 :
-                return MacOSColors.BLUE;
+                return MacOSColors.ACCENT_BLUE;
             case -1 :
-                return MacOSColors.GRAY;
+                return MacOSColors.ACCENT_GRAPHITE;
             case 0 :
-                return MacOSColors.RED;
+                return MacOSColors.ACCENT_RED;
             case 1 :
-                return MacOSColors.ORANGE;
+                return MacOSColors.ACCENT_ORANGE;
             case 2 :
-                return MacOSColors.YELLOW;
+                return MacOSColors.ACCENT_YELLOW;
             case 3 :
-                return MacOSColors.GREEN;
+                return MacOSColors.ACCENT_GREEN;
             case 5 :
-                return MacOSColors.LILAC;
+                return MacOSColors.ACCENT_LILAC;
             case 6 :
-                return MacOSColors.ROSE;
+                return MacOSColors.ACCENT_ROSE;
             default :
                 return null;
         }
