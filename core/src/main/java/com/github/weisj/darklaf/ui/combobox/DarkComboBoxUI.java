@@ -40,6 +40,7 @@ import javax.swing.plaf.basic.ComboPopup;
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.delegate.LayoutManagerDelegate;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.list.DarkDefaultListCellRenderer;
 import com.github.weisj.darklaf.ui.list.DarkListCellRendererDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -131,7 +132,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     @Override
     protected ListCellRenderer<Object> createRenderer() {
-        return new DarkListCellRendererDelegate();
+        return new DarkDefaultListCellRenderer();
     }
 
     @Override

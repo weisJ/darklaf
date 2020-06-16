@@ -69,6 +69,16 @@ public class OneDarkTheme extends Theme {
     }
 
     @Override
+    public boolean supportsCustomAccentColor() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsCustomSelectionColor() {
+        return true;
+    }
+
+    @Override
     public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
         super.customizeIconTheme(properties, currentDefaults);
         loadCustomProperties("icons_adjustments", properties, currentDefaults);

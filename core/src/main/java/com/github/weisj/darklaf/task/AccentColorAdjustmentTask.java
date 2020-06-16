@@ -88,7 +88,8 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
                 properties.put(info.key, c);
             } else {
                 LOGGER.warning("Color with key '" + info.key
-                               + "' could not be adjusted because the value '" + c + "' is not a color");
+                               + "' could not be adjusted because the value '" + c + ", '" + c.getClass()
+                               + " is not a color");
             }
         }
     }

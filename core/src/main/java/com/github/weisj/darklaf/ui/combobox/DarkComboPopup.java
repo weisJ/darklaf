@@ -33,6 +33,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboPopup;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -67,6 +68,13 @@ public class DarkComboPopup extends BasicComboPopup {
     public DarkComboPopup(final JComboBox<Object> combo, final int borderSize) {
         super(combo);
         this.borderSize = borderSize;
+    }
+
+    @Override
+    protected JList<Object> createList() {
+        JList<Object> list = super.createList();
+        list.putClientProperty(DarkListUI.KEY_IS_COMBO_LIST, true);
+        return list;
     }
 
     @Override

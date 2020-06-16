@@ -129,6 +129,7 @@ public class CellUtil {
     private static Color listCellBackground;
     private static Color listCellBackgroundAlternative;
     private static Color listCellBackgroundSelected;
+    private static Color comboListCellBackgroundSelected;
     private static Color listCellBackgroundNoFocus;
     private static Color listCellBackgroundNoFocusAlternative;
     private static Color listCellBackgroundSelectedNoFocus;
@@ -231,6 +232,7 @@ public class CellUtil {
         listCellBackground = d.getColor("List.background");
         listCellBackgroundAlternative = d.getColor("List.backgroundAlternative");
         listCellBackgroundSelected = d.getColor("List.backgroundSelected");
+        comboListCellBackgroundSelected = d.getColor("ComboBox.selectionBackground");
         listCellBackgroundNoFocus = d.getColor("List.backgroundNoFocus");
         listCellBackgroundNoFocusAlternative = d.getColor("List.backgroundNoFocusAlternative");
         listCellBackgroundSelectedNoFocus = d.getColor("List.backgroundSelectedNoFocus");
@@ -366,9 +368,10 @@ public class CellUtil {
     public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
                                            final boolean altRow) {
         boolean alt = altRow && PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_ALTERNATE_ROW_COLOR);
+        boolean comboList = PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_IS_COMBO_LIST);
         setupBackground(comp, hasFocus(parent, comp), selected,
                         alt ? listCellBackgroundAlternative : listCellBackground,
-                        listCellBackgroundSelected,
+                        comboList ? comboListCellBackgroundSelected : listCellBackgroundSelected,
                         alt ? listCellBackgroundNoFocusAlternative : listCellBackgroundNoFocus,
                         listCellBackgroundSelectedNoFocus,
                         alt ? listCellInactiveBackgroundAlternative : listCellInactiveBackground,

@@ -208,7 +208,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (effectiveArc == 0) {
             g2.fillRect(x, y, width, height);
         } else {
-            PaintUtil.fillRoundRect(g2, x, y, width, height, effectiveArc, true);
+            PaintUtil.fillRoundRect(g2, x, y, width, height, effectiveArc, false);
         }
     }
 

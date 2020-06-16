@@ -228,7 +228,7 @@ public class PaintUtil {
 
         arcSize -= stroke;
         g.translate(lw, lw);
-        roundRect.setRoundRect(x, y, width - 2 * lw, height - 2, arcSize, arcSize);
+        roundRect.setRoundRect(x, y, width - 2 * lw, height - 2 * lw, arcSize, arcSize);
         g.fill(roundRect);
         g.translate(-lw, -lw);
         context.restore();
