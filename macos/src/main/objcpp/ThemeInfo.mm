@@ -175,10 +175,14 @@ Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetSelectio
 JNF_COCOA_ENTER(env);
     NSColorSpace *rgbSpace = [NSColorSpace sRGBColorSpace];
     NSColor *accentColor = [[[NSColorList colorListNamed: KEY_SYSTEM_COLOR_LIST] colorWithKey:KEY_SELECTION_COLOR] colorUsingColorSpace:rgbSpace];
-    NSInteger r = (NSInteger) (255 * [accentColor redComponent]);
-    NSInteger g = (NSInteger) (255 * [accentColor greenComponent]);
-    NSInteger b = (NSInteger) (255 * [accentColor blueComponent]);
-    return (jint) (0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0));
+    // This is the same conversion as in MacOSColors for consistency.
+    NSInteger r = (NSInteger) (255 * [accentColor redComponent] + 0.5);
+    NSInteger g = (NSInteger) (255 * [accentColor greenComponent] + 0.5);
+    NSInteger b = (NSInteger) (255 * [accentColor blueComponent] + 0.5);
+    return (jint) ((255 & 0xFF) << 24) |
+                    ((r & 0xFF) << 16) |
+                    ((g & 0xFF) << 8)  |
+                    ((b & 0xFF) << 0);
 JNF_COCOA_EXIT(env);
     return (jint) VALUE_NO_SELECTION_COLOR;
 }

@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.task;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.swing.*;
@@ -99,8 +100,12 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void backupAccentColors(final Properties uiProps) {
-        uiProps.put(ACCENT_COLOR_BACKUP_KEY, uiProps.get(ACCENT_COLOR_SOURCE_KEY));
-        uiProps.put(SELECTION_COLOR_BACKUP_KEY, uiProps.get(SELECTION_COLOR_SOURCE_KEY));
+        uiProps.put(ACCENT_COLOR_BACKUP_KEY,
+                    Objects.requireNonNull(uiProps.get(PropertyLoader.asKey(ACCENT_COLOR_SOURCE_KEY)),
+                                           ACCENT_COLOR_SOURCE_KEY));
+        uiProps.put(SELECTION_COLOR_BACKUP_KEY,
+                    Objects.requireNonNull(uiProps.get(PropertyLoader.asKey(SELECTION_COLOR_SOURCE_KEY)),
+                                           SELECTION_COLOR_SOURCE_KEY));
     }
 
     private void initAccentProperties(final Theme currentTheme, final Properties uiProps) {
@@ -108,10 +113,10 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         Color selectionColor = currentTheme.getAccentColorRule().getSelectionColor();
         uiProps.put(ACCENT_COLOR_KEY, accentColor != null
                 ? accentColor
-                : uiProps.get(ACCENT_COLOR_SOURCE_KEY));
+                : uiProps.get(ACCENT_COLOR_BACKUP_KEY));
         uiProps.put(SELECTION_COLOR_KEY, selectionColor != null
                 ? selectionColor
-                : uiProps.get(SELECTION_COLOR_SOURCE_KEY));
+                : uiProps.get(SELECTION_COLOR_BACKUP_KEY));
     }
 
     private void initGlobals(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {

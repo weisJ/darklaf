@@ -483,6 +483,11 @@ public final class PropertyLoader {
         return null;
     }
 
+    public static String asKey(final String key) {
+        if (addReferenceInfo) return REFERENCE_PREFIX + key;
+        return key;
+    }
+
     private static final class LoadError {}
 
     private interface ParseFunction<T> {

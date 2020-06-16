@@ -75,7 +75,8 @@ public class CreateUITable {
         String os = SystemInfo.getOsName();
         String htmlFile = workingFolder + "defaults_" + os + ".html";
         Files.createDirectories(new File(workingFolder).toPath());
-        Files.createFile(new File(htmlFile).toPath());
+        File f = new File(htmlFile);
+        if (!f.exists()) Files.createFile(f.toPath());
 
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(htmlFile),
                                                                 StandardCharsets.UTF_8)) {
