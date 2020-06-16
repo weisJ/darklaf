@@ -37,7 +37,6 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -56,7 +55,6 @@ import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
 import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
 
-import com.github.weisj.darklaf.log.LogFormatter;
 import com.sun.java.swing.SwingUtilities3;
 
 /**
