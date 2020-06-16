@@ -440,16 +440,31 @@ public class ToolTipContext {
     /**
      * Calculates the tooltip location.
      *
-     * @param  mp         the mouse position in the target component coordinate space.
-     * @param  mouseEvent the mouse event.
-     * @return            the tooltip location.
-     * @see               JComponent#getToolTipLocation(MouseEvent)
+     * @param mp         the mouse position in the target component coordinate space.
+     * @param mouseEvent the mouse event.
+     * @see              JComponent#getToolTipLocation(MouseEvent)
      */
     public Point getToolTipLocation(final Point mp, final MouseEvent mouseEvent) {
+        return getToolTipLocation(mp, mouseEvent, false, false);
+    }
+
+    /**
+     * Calculates the tooltip location.
+     *
+     * @param  mp                 the mouse position in the target component coordinate space.
+     * @param  mouseEvent         the mouse event.
+     * @param  centerHorizontally whether the tooltip should be aligned to the center horizontally regardless of
+     *                            alignment
+     * @param  centerVertically   whether the tooltip should be aligned to the center vertically regardless of alignment
+     * @return                    the tooltip location.
+     * @see                       JComponent#getToolTipLocation(MouseEvent)
+     */
+    public Point getToolTipLocation(final Point mp, final MouseEvent mouseEvent,
+                                    final boolean centerHorizontally, final boolean centerVertically) {
         if (target == null) return null;
         updateToolTip();
         MouseEvent event = processEvent(mouseEvent, mp);
-        Rectangle rect = getTargetRect(event);
+        Rectangle rect = getTargetRect(event, centerHorizontally, centerVertically);
         if (applyInsetsToRect) {
             DarkUIUtil.applyInsets(rect, target.getInsets(calcInsets));
         }
@@ -471,7 +486,8 @@ public class ToolTipContext {
         return alignmentStrategy.align(compPoint, mousePoint);
     }
 
-    private Rectangle getTargetRect(final MouseEvent event) {
+    private Rectangle getTargetRect(final MouseEvent event,
+                                    final boolean centerHorizontally, final boolean centerVertically) {
         Rectangle rect = toolTipRectSupplier.apply(event);
         if (ignoreBorder) {
             Border border = target.getBorder();
@@ -482,6 +498,14 @@ public class ToolTipContext {
                 rect.width -= ins.left + ins.right;
                 rect.height -= ins.top + ins.bottom;
             }
+        }
+        if (centerHorizontally) {
+            rect.x += rect.width / 2;
+            rect.width = 0;
+        }
+        if (centerVertically) {
+            rect.y += rect.height / 2;
+            rect.height = 0;
         }
         return rect;
     }

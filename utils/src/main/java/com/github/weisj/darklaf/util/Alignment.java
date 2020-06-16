@@ -305,6 +305,18 @@ public enum Alignment {
         return (this == Alignment.WEST && includePure) || this == Alignment.NORTH_WEST || this == Alignment.SOUTH_WEST;
     }
 
+    public boolean isVertical() {
+        return this == Alignment.NORTH || this == Alignment.SOUTH;
+    }
+
+    public boolean isHorizontal() {
+        return this == Alignment.EAST || this == Alignment.WEST;
+    }
+
+    public boolean isDiagonal() {
+        return !isVertical() && !isHorizontal();
+    }
+
     public double getAngle() {
         double angle = 0.0;
         switch (this) {

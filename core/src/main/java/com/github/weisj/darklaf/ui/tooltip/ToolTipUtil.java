@@ -65,23 +65,27 @@ public class ToolTipUtil {
 
         Alignment original = context.getAlignment();
         Alignment originalCenter = context.getCenterAlignment();
+
         boolean isCenter = original == Alignment.CENTER;
-        Alignment[] alignments = getAlignments(isCenter ? originalCenter : original);
+        Alignment targetAlignment = isCenter ? originalCenter : original;
+
+        boolean centerVertically = targetAlignment.isHorizontal();
+        boolean centerHorizontally = targetAlignment.isVertical();
+
+        Alignment[] alignments = getAlignments(targetAlignment);
         Point pos = null;
-        BiConsumer<ToolTipContext, Alignment> setter = isCenter ? ToolTipContext::setCenterAlignment
+        BiConsumer<ToolTipContext, Alignment> setter = isCenter
+                ? ToolTipContext::setCenterAlignment
                 : ToolTipContext::setAlignment;
         // Check if a position keeps the tooltip inside the window.
-        for (Alignment a : alignments) {
-            pos = tryPosition(a, context, p, tooltipBounds, windowBounds, screenBounds, setter);
-            if (pos != null) break;
-        }
+        pos = tryAlignments(alignments, context, p, tooltipBounds, windowBounds, screenBounds, setter,
+                            centerHorizontally, centerVertically);
         if (pos == null) {
             // Try again with screen bounds instead.
-            for (Alignment a : alignments) {
-                pos = tryPosition(a, context, p, tooltipBounds, screenBounds, screenBounds, setter);
-                if (pos != null) break;
-            }
+            pos = tryAlignments(alignments, context, p, tooltipBounds, screenBounds, screenBounds, setter,
+                                centerHorizontally, centerVertically);
         }
+
         /*
          * At this point if the tooltip is still extending outside the screen boundary
          * we surrender and leave the tooltip as it was.
@@ -94,6 +98,25 @@ public class ToolTipUtil {
         context.updateToolTip();
         context.setAlignment(original);
         context.setCenterAlignment(originalCenter);
+        return pos;
+    }
+
+    protected static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
+                                         final Rectangle tooltipBounds, final Rectangle boundary,
+                                         final Rectangle screenBoundary,
+                                         final BiConsumer<ToolTipContext, Alignment> setter,
+                                         final boolean centerHorizontally,
+                                         final boolean centerVertically) {
+        Point pos = null;
+        for (Alignment a : alignments) {
+            if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
+                pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter,
+                                  centerHorizontally, centerVertically);
+                if (pos != null) break;
+            }
+            pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter, false, false);
+            if (pos != null) break;
+        }
         return pos;
     }
 
@@ -112,11 +135,13 @@ public class ToolTipUtil {
     protected static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
                                        final Rectangle tooltipBounds, final Rectangle boundary,
                                        final Rectangle screenBoundary,
-                                       final BiConsumer<ToolTipContext, Alignment> setter) {
+                                       final BiConsumer<ToolTipContext, Alignment> setter,
+                                       final boolean centerHorizontally,
+                                       final boolean centerVertically) {
         setter.accept(context, a);
         context.setCenterAlignment(a);
         context.updateToolTip();
-        Point pos = context.getToolTipLocation(p, null);
+        Point pos = context.getToolTipLocation(p, null, centerHorizontally, centerVertically);
         Point screenPos = new Point(pos.x, pos.y);
         SwingUtilities.convertPointToScreen(screenPos, context.getTarget());
         tooltipBounds.setLocation(screenPos);
