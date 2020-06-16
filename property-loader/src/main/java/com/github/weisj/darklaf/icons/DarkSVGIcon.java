@@ -101,7 +101,11 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         paintIcon(c, g, x, y, 0);
     }
 
-    protected boolean ensureLoaded() {
+    protected boolean ensureLoaded(final boolean painting) {
+        return ensureSVGLoaded();
+    }
+
+    private boolean ensureSVGLoaded() {
         if (!loaded.get()) {
             LOGGER.fine(() -> "Loading icon '" + uri.toASCIIString() + "'.");
             icon.setSvgURI(uri);
@@ -125,7 +129,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     @Override
     public Image createImage(final Dimension size) {
-        ensureLoaded();
+        ensureLoaded(false);
         icon.setPreferredSize(size);
         return icon.getImage();
     }
@@ -136,7 +140,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
             loadedWithExtraScale = !isExactRotation(rotation);
             rotationChanged = loadedWithExtraScale;
         }
-        updateCache(ensureLoaded() || rotationChanged, c);
+        updateCache(ensureLoaded(true) || rotationChanged, c);
     }
 
     private boolean isExactRotation(final double rotation) {
@@ -185,7 +189,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     public SVGIcon getSVGIcon() {
-        if (!loaded.get()) ensureLoaded();
+        if (!loaded.get()) ensureSVGLoaded();
         return icon;
     }
 }

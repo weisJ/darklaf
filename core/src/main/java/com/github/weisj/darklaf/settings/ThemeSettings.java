@@ -45,6 +45,7 @@ import com.github.weisj.darklaf.util.ResourceUtil;
 public class ThemeSettings implements ThemePreferenceListener {
 
     private static final LazyValue<ThemeSettings> instance = new LazyValue<>(ThemeSettings::new);
+    private static final LazyValue<Icon> icon = new LazyValue<>(() -> UIManager.getIcon("ThemeSettings.icon"));
     private final JPanel contentPane;
     private final ThemeSettingsPanel settingsPanel;
     private final ResourceBundle resourceBundle = ResourceUtil.getResourceBundle("theme_settings");
@@ -90,7 +91,7 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected JDialog createDialog(final Window parent) {
         JDialog dialog = new JDialog(parent);
-        dialog.setIconImage(ImageUtil.createFrameIcon(settingsPanel.getIcon(), dialog));
+        dialog.setIconImage(ImageUtil.createFrameIcon(getIcon(), dialog));
         dialog.setTitle(settingsPanel.getTitle());
         dialog.setContentPane(contentPane);
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -111,6 +112,10 @@ public class ThemeSettings implements ThemePreferenceListener {
         Window parentWindow = DarkUIUtil.getWindow(getSettingsPanel());
         if (parentWindow != null && parentWindow != DarkUIUtil.getWindow(dialog)) {
             throw new IllegalStateException("Can't show dialog while settings panel is used elsewhere");
+        }
+        if (dialog != null && dialog.isVisible()) {
+            dialog.requestFocus();
+            return;
         }
         refresh();
         Window window = DarkUIUtil.getWindow(parent);
@@ -385,8 +390,8 @@ public class ThemeSettings implements ThemePreferenceListener {
      *
      * @return the icon
      */
-    public Icon getIcon() {
-        return settingsPanel.getIcon();
+    public static Icon getIcon() {
+        return icon.get();
     }
 
     /**

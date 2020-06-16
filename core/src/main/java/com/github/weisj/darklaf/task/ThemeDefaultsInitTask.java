@@ -24,6 +24,7 @@
  */
 package com.github.weisj.darklaf.task;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -51,6 +52,12 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private static final String[] ICON_PROPERTIES = new String[]{"checkBox", "radioButton", "slider", "dialog", "files",
                                                                  "frame", "indicator", "menu", "misc", "navigation",
                                                                  "progress"};
+    private static final String ACCENT_COLOR_KEY = "effectiveAccentColor";
+    private static final String ACCENT_COLOR_BACKUP_KEY = "themeAccentColor";
+    private static final String ACCENT_COLOR_SOURCE_KEY = "widgetFillDefault";
+    private static final String SELECTION_COLOR_KEY = "effectiveSelectionColor";
+    private static final String SELECTION_COLOR_BACKUP_KEY = "themeSelectionColor";
+    private static final String SELECTION_COLOR_SOURCE_KEY = "textCompSelectionBackground";
     private final DefaultsAdjustmentTask userPreferenceAdjustment = new UserDefaultsAdjustmentTask();
     private final DefaultsAdjustmentTask accentColorAdjustment = new AccentColorAdjustmentTask();
     private final DefaultsAdjustmentTask foregroundGeneration = new ForegroundColorGenerationTask();
@@ -63,6 +70,8 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private void loadThemeDefaults(final Theme currentTheme, final UIDefaults defaults) {
         Properties uiProps = new Properties();
         currentTheme.loadDefaults(uiProps, defaults);
+
+        backupAccentColors(uiProps);
 
         /*
          * User preferences need to be applied here so changes are applied to all
@@ -83,7 +92,26 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
         DecorationsHandler.getSharedInstance().loadDecorationProperties(uiProps, defaults);
         adjustPlatformSpecifics(uiProps);
+
+        initAccentProperties(currentTheme, uiProps);
+
         defaults.putAll(uiProps);
+    }
+
+    private void backupAccentColors(final Properties uiProps) {
+        uiProps.put(ACCENT_COLOR_BACKUP_KEY, uiProps.get(ACCENT_COLOR_SOURCE_KEY));
+        uiProps.put(SELECTION_COLOR_BACKUP_KEY, uiProps.get(SELECTION_COLOR_SOURCE_KEY));
+    }
+
+    private void initAccentProperties(final Theme currentTheme, final Properties uiProps) {
+        Color accentColor = currentTheme.getAccentColorRule().getAccentColor();
+        Color selectionColor = currentTheme.getAccentColorRule().getSelectionColor();
+        uiProps.put(ACCENT_COLOR_KEY, accentColor != null
+                ? accentColor
+                : uiProps.get(ACCENT_COLOR_SOURCE_KEY));
+        uiProps.put(SELECTION_COLOR_KEY, selectionColor != null
+                ? selectionColor
+                : uiProps.get(SELECTION_COLOR_SOURCE_KEY));
     }
 
     private void initGlobals(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {

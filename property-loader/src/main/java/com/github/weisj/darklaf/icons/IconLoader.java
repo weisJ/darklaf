@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,8 +47,8 @@ public final class IconLoader {
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
     private static final LazyValue<IconLoader> instance = new LazyValue<>(() -> get(null));
 
-    private static Object currentThemeKey;
-    private static AwareIconStyle currentAwareStyle;
+    private static final AtomicReference<Object> currentThemeKey = new AtomicReference<>(null);
+    private static final AtomicReference<AwareIconStyle> currentAwareStyle = new AtomicReference<>(null);
 
     private static final int DEFAULT_W = 16;
     private static final int DEFAULT_H = 16;
@@ -111,7 +112,7 @@ public final class IconLoader {
      * @param style the new style.
      */
     public static void updateAwareStyle(final AwareIconStyle style) {
-        currentAwareStyle = style;
+        currentAwareStyle.set(style);
     }
 
     /**
@@ -122,7 +123,7 @@ public final class IconLoader {
      * @param theme the new theme object.
      */
     public static void updateThemeStatus(final Object theme) {
-        currentThemeKey = theme;
+        currentThemeKey.set(theme);
     }
 
     /**
@@ -131,7 +132,7 @@ public final class IconLoader {
      * @return the aware icon style.
      */
     public static AwareIconStyle getAwareStyle() {
-        return currentAwareStyle;
+        return currentAwareStyle.get();
     }
 
     /**
@@ -141,7 +142,7 @@ public final class IconLoader {
      * @return the current theme object.
      */
     public static Object getThemeStatus() {
-        return currentThemeKey;
+        return currentThemeKey.get();
     }
 
     /**

@@ -33,24 +33,34 @@ import java.net.URI;
 public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
 
     private Object currentTheme;
+    private boolean updatedNotDuringPaint;
 
     public ThemedSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
         super(uri, displayWidth, displayHeight);
         currentTheme = new Object();
     }
 
-    protected boolean ensureLoaded() {
+    @Override
+    protected boolean ensureLoaded(final boolean painting) {
         /*
          * Use non-short-circuiting operand here to ensure the colors are actually patched.
          */
-        return super.ensureLoaded() | ensureTheme();
+        return super.ensureLoaded(painting) | ensureTheme(painting);
     }
 
-    protected boolean ensureTheme() {
+    protected boolean ensureTheme(final boolean painting) {
         Object theme = IconLoader.getThemeStatus();
         if (currentTheme != theme) {
             patchColors();
+
             currentTheme = theme;
+            updatedNotDuringPaint = !painting;
+            return true;
+        }
+        if (updatedNotDuringPaint) {
+            updatedNotDuringPaint = false;
+            // Update didn't happen during painting call.
+            // Image might not be up to date.
             return true;
         }
         return false;

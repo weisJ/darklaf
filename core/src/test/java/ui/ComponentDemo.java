@@ -38,7 +38,7 @@ import javax.swing.event.MenuListener;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.ImageUtil;
-import com.github.weisj.darklaf.settings.ThemeSettings;
+import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
@@ -155,9 +155,7 @@ public interface ComponentDemo {
 
     static JMenuItem createSettingsMenu() {
         JMenu menu = new JMenu("Settings");
-        JMenuItem mi = new JMenuItem("Theme Options");
-        mi.addActionListener(e -> ThemeSettings.showSettingsDialog(menu));
-        menu.add(mi);
+        menu.add(new ThemeSettingsMenuItem("Theme Options"));
         return menu;
     }
 

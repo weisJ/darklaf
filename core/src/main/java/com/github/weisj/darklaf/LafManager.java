@@ -371,20 +371,17 @@ public final class LafManager {
     }
 
     /**
-     * Install the current theme. If no theme is installed, the default is {@link DarculaTheme}. This sets the current
-     * LaF and applies the given theme.
+     * Install the current theme. If no theme is installed, the default is based on the current {@link ThemeProvider}.
+     * This sets the current LaF and applies the given theme.
      */
     public static void install() {
         try {
             getTheme();
-            UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
+            UIManager.setLookAndFeel(new DarkLaf());
             updateLaf();
-            SwingUtilities.invokeLater(() -> eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
-                                                                        ThemeChangeListener::themeInstalled));
-        } catch (final ClassNotFoundException
-                       | InstantiationException
-                       | IllegalAccessException
-                       | UnsupportedLookAndFeelException e) {
+            eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
+                                       ThemeChangeListener::themeInstalled);
+        } catch (final UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
     }

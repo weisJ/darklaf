@@ -241,7 +241,7 @@ public class ThemeSettingsPanel extends JPanel {
         selectionColorLabel.setLabelFor(selectionBox);
 
         bgSelection = new ButtonGroup();
-        defaultSelectionColor = createDefaultColor("textCompSelectionBackground");
+        defaultSelectionColor = createDefaultColor("themeSelectionColor");
         defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor,
                                             resourceBundle.getString("color_default"));
         AbstractButton selectionBlue = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_BLUE,
@@ -267,7 +267,7 @@ public class ThemeSettingsPanel extends JPanel {
         JLabel accentColorLabel = new JLabel(resourceBundle.getString("label_accent_color"));
         accentColorLabel.setLabelFor(accentBox);
 
-        defaultAccentColor = createDefaultColor("widgetFillDefault");
+        defaultAccentColor = createDefaultColor("themeAccentColor");
         bgAccent = new ButtonGroup();
         defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_FILLED, defaultSelection,
                                          resourceBundle.getString("color_default"));
@@ -321,20 +321,7 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     protected Color createDefaultColor(final String key) {
-        return new ThemedColor() {
-
-            private final Properties props = new Properties();
-            private final UIDefaults defaults = new UIDefaults();
-
-            @Override
-            protected Color getUpdatedColor() {
-                LafManager.getTheme().loadDefaults(props, defaults);
-                Object obj = props.get(key);
-                props.clear();
-                defaults.clear();
-                return obj instanceof Color ? (Color) obj : null;
-            }
-        };
+        return new ThemedColor(key);
     }
 
     public boolean isSystemPreferencesEnabled() {
@@ -724,15 +711,5 @@ public class ThemeSettingsPanel extends JPanel {
 
     public String getTitle() {
         return resourceBundle.getString("title");
-    }
-
-    public Icon getIcon() {
-        return icon;
-    }
-
-    @Override
-    public void updateUI() {
-        super.updateUI();
-        icon = UIManager.getIcon("ThemeSettings.icon");
     }
 }
