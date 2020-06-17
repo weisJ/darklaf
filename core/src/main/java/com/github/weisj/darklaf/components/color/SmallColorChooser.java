@@ -37,7 +37,6 @@ import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPreviewComponent;
@@ -150,10 +149,15 @@ public class SmallColorChooser extends JPanel {
     }
 
     protected JComponent createCenterComponent() {
-        colorModelTabbedPane = new JTabbedPane();
+        colorModelTabbedPane = new JTabbedPane() {
+            @Override
+            public Color getBackground() {
+                Component parent = getParent();
+                return parent != null ? parent.getBackground() : super.getBackground();
+            }
+        };
         colorModelTabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_CENTER_TABS, true);
         colorModelTabbedPane.setOpaque(false);
-        colorModelTabbedPane.setBackground(PaintUtil.TRANSPARENT_COLOR);
         addColorModels(colorModelTabbedPane, COLOR_MODELS);
         colorModelTabbedPane.setBorder(DarkBorders.createLineBorder(1, 0, 1, 0));
         return colorModelTabbedPane;

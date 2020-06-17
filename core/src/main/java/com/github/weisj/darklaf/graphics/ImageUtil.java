@@ -113,7 +113,7 @@ public final class ImageUtil {
         if (icon instanceof ImageSource) {
             return ((ImageSource) icon).createImage(w, h);
         } else {
-            BufferedImage image = createCompatibleTranslucentImage(w, h);
+            BufferedImage image = createCompatibleTransparentImage(w, h);
             Graphics2D g = (Graphics2D) image.getGraphics();
             g.scale(scalex, scaley);
             icon.paintIcon(null, g, 0, 0);
@@ -188,9 +188,9 @@ public final class ImageUtil {
         BufferedImage image;
         boolean scale = scalex != 1.0 || scaley != 1.0;
         if (scale) {
-            image = createCompatibleTranslucentImage((int) (scalex * bounds.width), (int) (scaley * bounds.height));
+            image = createCompatibleTransparentImage((int) (scalex * bounds.width), (int) (scaley * bounds.height));
         } else {
-            image = createCompatibleTranslucentImage(bounds.width, bounds.height);
+            image = createCompatibleTransparentImage(bounds.width, bounds.height);
         }
         final Graphics2D g2d = (Graphics2D) image.getGraphics();
         if (scale) {
@@ -212,6 +212,13 @@ public final class ImageUtil {
         return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
                 : getGraphicsConfiguration().createCompatibleImage(width, height,
                                                                    Transparency.OPAQUE);
+    }
+
+    public static BufferedImage createCompatibleTransparentImage(final int width,
+                                                                 final int height) {
+        return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+                : getGraphicsConfiguration().createCompatibleImage(width, height,
+                                                                   Transparency.BITMASK);
     }
 
     public static BufferedImage createCompatibleTranslucentImage(final int width,

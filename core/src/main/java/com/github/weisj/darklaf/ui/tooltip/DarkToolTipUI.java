@@ -182,15 +182,6 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
                 if (window.getOpacity() != 1 && !transparencySupported(window)) {
                     window.setOpacity(1);
                 }
-                /*
-                 * In non opaque windows on Windows subpixel AA doesn't work. The translucent background isn't needed
-                 * for the plain tooltip style, so we set it here.
-                 *
-                 * See https://bugs.openjdk.java.net/browse/JDK-8215980?attachmentOrder=desc
-                 */
-                if (style == ToolTipStyle.PLAIN) {
-                    window.setBackground(c.getBackground());
-                }
             }
         }
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
@@ -387,6 +378,13 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         if (style != this.style) {
             this.style = style;
             updateBorder(style);
+            /*
+             * In non opaque windows on Windows subpixel AA doesn't work. The translucent background isn't needed
+             * for the plain tooltip style, so we set it here.
+             *
+             * See https://bugs.openjdk.java.net/browse/JDK-8215980?attachmentOrder=desc
+             */
+            toolTip.putClientProperty(DarkPopupFactory.KEY_OPAQUE, style.isOpqaue());
         }
     }
 

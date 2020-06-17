@@ -37,11 +37,8 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.View;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -706,22 +703,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected void paintText(final Graphics g, final int tabPlacement, final Font font,
                              final FontMetrics metrics, final int tabIndex, final String title,
                              final Rectangle textRect, final boolean isSelected) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        g.setFont(font);
-
         View v = getTextViewForTab(tabIndex);
-        if (v != null) {
-            // html
-            v.paint(g, textRect);
-        } else {
-            // plain text
-            int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
-            g.setColor(getTabForeground(tabIndex, isSelected));
-            SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
-                                                      title, mnemIndex,
-                                                      textRect.x, textRect.y + metrics.getAscent());
-        }
-        config.restore();
+        int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
+        Color bg = getTabBackgroundColor(tabIndex, isSelected, getRolloverTab() == tabIndex);
+        g.setColor(getTabForeground(tabIndex, isSelected));
+        PaintUtil.drawStringImpl(g, tabPane, v, title, textRect, font, metrics, mnemIndex, bg);
     }
 
     protected Color getTabForeground(final int index, final boolean isSelected) {

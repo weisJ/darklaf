@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 
 public class Scale {
     public static final double SCALE;
@@ -151,7 +152,11 @@ public class Scale {
     }
 
     public static Point inverseScale(final GraphicsConfiguration gc, final Point p) {
-        return new Point((int) inverseScaleWidth(p.x, gc), (int) inverseScaleHeight(p.y, gc));
+        try {
+            return (Point) gc.getDefaultTransform().inverseTransform(p, p);
+        } catch (NoninvertibleTransformException e) {
+            return p;
+        }
     }
 
     public static double scale(final double scale, final double value) {

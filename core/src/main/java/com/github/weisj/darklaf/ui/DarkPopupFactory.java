@@ -25,21 +25,25 @@
 package com.github.weisj.darklaf.ui;
 
 import java.awt.*;
+import java.util.Objects;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkPopupFactory extends PopupFactory {
 
     public static final String KEY_NO_DECORATION = "JPopupFactory.noDecorations";
     public static final String KEY_FOCUSABLE_POPUP = "JPopupFactory.focusablePopup";
     public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
-    public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
     public static final String KEY_OPAQUE = "JPopupFactory.opaque";
+    public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
 
     private HeavyWeightParent heavyWeightParent;
 
@@ -61,7 +65,19 @@ public class DarkPopupFactory extends PopupFactory {
                              && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
         if (forceHeavy) {
             // Heavy weight owner forces a heavyweight popup.
-            Popup p = super.getPopup(getHeavyWeightParent(), contents, x, y);
+            Window targetWindow = DarkUIUtil.getWindow(owner);
+            Popup p = super.getPopup(getHeavyWeightParent(targetWindow), contents, x, y);
+            Window window = DarkUIUtil.getWindow(contents);
+            if (!Objects.equals(window.getGraphicsConfiguration(),
+                                targetWindow.getGraphicsConfiguration())) {
+                /*
+                 * Window uses incorrect graphics configuration.
+                 * Setting the focusable window state will force the PopupFactory to dispose it and create
+                 * a new window.
+                 */
+                window.setFocusableWindowState(true);
+                p = super.getPopup(getHeavyWeightParent(targetWindow), contents, x, y);
+            }
             return new Pair<>(p, PopupType.HEAVY_WEIGHT);
         }
         return new Pair<>(popup, type);
@@ -85,6 +101,7 @@ public class DarkPopupFactory extends PopupFactory {
                 boolean isFocusable = PropertyUtil.getBooleanProperty(contents, KEY_FOCUSABLE_POPUP);
                 boolean startHidden = PropertyUtil.getBooleanProperty(contents, KEY_START_HIDDEN);
                 setupWindow(window, contents, isFocusable, startHidden);
+                window.setLocation(x, y);
             }
         }
     }
@@ -145,12 +162,13 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected HeavyWeightParent getHeavyWeightParent() {
+    protected HeavyWeightParent getHeavyWeightParent(final Container owner) {
         if (heavyWeightParent == null) {
             JComponent box = Box.createHorizontalBox();
             super.getPopup(null, box, 0, 0);
             heavyWeightParent = new HeavyWeightParent(DarkUIUtil.getWindow(box));
         }
+        heavyWeightParent.setOwner(owner);
         return heavyWeightParent;
     }
 
@@ -162,19 +180,31 @@ public class DarkPopupFactory extends PopupFactory {
 
     private static class HeavyWeightParent extends JComponent {
 
-        private final Window window;
+        private int parentRequestCount = 0;
+        private final Window heavyWeightParent;
+        private Container owner;
 
-        private HeavyWeightParent(final Window window) {
-            this.window = window;
+        private HeavyWeightParent(final Window heavyWeightParent) {
+            this.heavyWeightParent = heavyWeightParent;
+        }
+
+        public void setOwner(Container owner) {
+            parentRequestCount = 0;
+            this.owner = owner;
+        }
+
+        @Override
+        public GraphicsConfiguration getGraphicsConfiguration() {
+            return super.getGraphicsConfiguration();
         }
 
         @Override
         public Container getParent() {
-            return window;
-        }
-
-        public Window getWindow() {
-            return window;
+            if (parentRequestCount == 0) {
+                parentRequestCount++;
+                return heavyWeightParent;
+            }
+            return owner;
         }
     }
 

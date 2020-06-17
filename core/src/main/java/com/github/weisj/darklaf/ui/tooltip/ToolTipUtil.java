@@ -73,7 +73,7 @@ public class ToolTipUtil {
         boolean centerHorizontally = targetAlignment.isVertical();
 
         Alignment[] alignments = getAlignments(targetAlignment);
-        Point pos = null;
+        Point pos;
         BiConsumer<ToolTipContext, Alignment> setter = isCenter
                 ? ToolTipContext::setCenterAlignment
                 : ToolTipContext::setAlignment;
@@ -177,7 +177,12 @@ public class ToolTipUtil {
     public static void moveToolTip(final JToolTip toolTip, final int x, final int y, final JComponent target) {
         Window window = DarkUIUtil.getWindow(toolTip);
         if (window == null) return;
-        Point targetPos = target.getLocationOnScreen();
-        window.setLocation(targetPos.x + x, targetPos.y + y);
+        Point p = new Point(x, y);
+        Window targetWindow = DarkUIUtil.getWindow(target);
+        p = SwingUtilities.convertPoint(target, p, targetWindow);
+        Point windowPos = targetWindow.getLocation();
+        p.x += windowPos.x;
+        p.y += windowPos.y;
+        window.setLocation(p);
     }
 }
