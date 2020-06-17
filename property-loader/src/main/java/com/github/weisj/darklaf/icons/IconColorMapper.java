@@ -158,15 +158,15 @@ public final class IconColorMapper {
                                                               final float opacity) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
-        if (opacityKey != null) {
+        if (opacityKey != null && !opacityKey.isEmpty()) {
             grad.addAttribute("opacity", AnimationElement.AT_XML, opacityKey);
         }
-        if (fallbacks != null) {
+        if (fallbacks != null && !fallbacks.getStringValue().isEmpty()) {
             grad.addAttribute(fallbacks.getName(), AnimationElement.AT_XML, fallbacks.getStringValue());
         }
         return new Pair<>(grad, () -> {
-            Stop stop1 = new Stop();
-            Stop stop2 = new Stop();
+            SolidStop stop1 = new SolidStop();
+            SolidStop stop2 = new SolidStop();
             String color = toHexString(c);
             try {
                 stop1.addAttribute("stop-color", AnimationElement.AT_XML, color);
@@ -177,9 +177,11 @@ public final class IconColorMapper {
                     stop1.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity));
                     stop2.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity));
                 }
-                grad.loaderAddChild(null, stop1);
-                grad.loaderAddChild(null, stop2);
-            } catch (SVGElementException e) {
+                stop1.build();
+                stop2.build();
+                grad.appendStop(stop1);
+                grad.appendStop(stop2);
+            } catch (SVGException e) {
                 e.printStackTrace();
             }
         });
@@ -187,5 +189,13 @@ public final class IconColorMapper {
 
     private static String toHexString(final Color color) {
         return "#" + ColorUtil.toHex(color);
+    }
+
+    private static class SolidStop extends Stop {
+
+        @Override
+        public void build() throws SVGException {
+            super.build();
+        }
     }
 }

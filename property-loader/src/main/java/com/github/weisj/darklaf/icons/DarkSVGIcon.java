@@ -131,7 +131,27 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     public Image createImage(final Dimension size) {
         ensureLoaded(false);
         icon.setPreferredSize(size);
-        return icon.getImage();
+        try {
+            return icon.getImage();
+        } catch (RuntimeException e) {
+            if (!(this instanceof ThemedSVGIcon)) {
+                IconColorMapper.patchColors(icon);
+                Image img = icon.getImage();
+                /*
+                 * If we get to here the issue was that the icon hasn't been patched because it isn't loaded as a themed
+                 * svg icon.
+                 */
+                LOGGER.severe("Icon '" + getName() + "' that defines custom colors isn't loaded as themed icon.");
+                return img;
+            }
+            throw e;
+        }
+    }
+
+    private String getName() {
+        String name = uri.toASCIIString();
+        name = name.substring(Math.min(name.length() - 1, name.lastIndexOf('/') + 1));
+        return name;
     }
 
     protected void ensureImageLoaded(final Component c, final double rotation) {
