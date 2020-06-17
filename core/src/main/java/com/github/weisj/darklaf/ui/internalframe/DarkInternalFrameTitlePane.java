@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.ui.internalframe;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ResourceBundle;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -34,10 +35,13 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 import sun.swing.SwingUtilities2;
 
+import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
+import com.github.weisj.darklaf.util.ResourceUtil;
 
 /**
  * @author Jannis Weis
@@ -65,6 +69,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     private int buttonMarginPad;
 
     private boolean useExternalMenuBar;
+    private ResourceBundle bundle;
 
     public DarkInternalFrameTitlePane(final JInternalFrame f) {
         super(f);
@@ -109,6 +114,8 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     protected void installDefaults() {
         super.installDefaults();
 
+        bundle = ResourceUtil.getResourceBundle("actions", frame);
+
         closeIcon = UIManager.getIcon("InternalFrameTitlePane.close.icon");
         minimizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.minimize.icon"),
                                       EmptyIcon.create(16));
@@ -140,18 +147,22 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
 
     @Override
     protected void createButtons() {
-        iconButton = createButton(UIManager.getString("InternalFrameTitlePane.iconifyButtonAccessibleName"));
-        iconButton.addActionListener(iconifyAction);
-        maxButton = createButton(UIManager.getString("InternalFrameTitlePane.maximizeButtonAccessibleName"));
+        iconButton = createButton(iconifyAction);
+        maxButton = createButton(maximizeAction);
         maxButton.addActionListener(e -> {
             if (maximizeAction.isEnabled()) {
-                maximizeAction.actionPerformed(e);
+                restoreAction.setEnabled(true);
+                maxButton.setAction(restoreAction);
+                maximizeAction.setEnabled(false);
             } else {
-                restoreAction.actionPerformed(e);
+                maximizeAction.setEnabled(true);
+                maxButton.setAction(restoreAction);
+                restoreAction.setEnabled(false);
             }
+            maxButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, maxButton.getText());
+            maxButton.setText(null);
         });
-        closeButton = createButton(UIManager.getString("InternalFrameTitlePane.closeButtonAccessibleName"));
-        closeButton.addActionListener(closeAction);
+        closeButton = createButton(closeAction);
         setButtonIcons();
     }
 
@@ -175,6 +186,15 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         mi = systemMenu.add(closeAction);
         mi.setMnemonic(getButtonMnemonic("close"));
         mi.setIcon(closeIcon);
+    }
+
+    @Override
+    protected void createActions() {
+        super.createActions();
+        maximizeAction.putValue(Action.NAME, bundle.getString("Actions.maximize"));
+        closeAction.putValue(Action.NAME, bundle.getString("Actions.close"));
+        iconifyAction.putValue(Action.NAME, bundle.getString("Actions.minimize"));
+        restoreAction.putValue(Action.NAME, bundle.getString("Actions.restore"));
     }
 
     private static int getButtonMnemonic(final String button) {
@@ -208,20 +228,28 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
     }
 
-    private JButton createButton(final String accessibleName) {
-        JButton button = new JButtonUIResource() {
+    private JButton createButton(final Action action) {
+        JButton button = new JButtonUIResource(action) {
             @Override
             public boolean isRolloverEnabled() {
                 return true;
             }
+
+            @Override
+            public String getToolTipText() {
+                Object tipText = getAction().getValue(Action.NAME);
+                return tipText != null ? tipText.toString() : null;
+            }
         };
+        ToolTipManager.sharedInstance().registerComponent(button);
         button.setFocusable(false);
         button.setOpaque(true);
         button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         button.putClientProperty(DarkButtonUI.KEY_THIN, true);
+        button.putClientProperty(DarkToolTipUI.KEY_STYLE, ToolTipStyle.PLAIN);
         button.setMargin(new Insets(buttonMarginPad, buttonMarginPad, buttonMarginPad, buttonMarginPad));
-        button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
+        button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, button.getText());
         button.setText(null);
         return button;
     }

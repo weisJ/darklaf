@@ -29,6 +29,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -121,11 +122,14 @@ public class WindowsTitlePane extends CustomTitlePane {
     private int right;
     private int height;
 
+    private final ResourceBundle bundle;
+
     private GraphicsConfiguration gc;
 
     public WindowsTitlePane(final JRootPane root, final int decorationStyle, final Window window) {
         this.rootPane = root;
         this.window = window;
+        bundle = ResourceBundle.getBundle("com.github.weisj.darklaf.bundles.actions", getLocale());
         setDecorationsStyle(decorationStyle);
         rootPane.addContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
@@ -136,13 +140,13 @@ public class WindowsTitlePane extends CustomTitlePane {
         setLayout(createLayout());
     }
 
-    private static JButton createButton(final String accessibleName, final Icon icon, final Action action) {
-        return createButton(accessibleName, icon, action, false);
+    private static JButton createButton(final Icon icon, final Action action) {
+        return createButton(icon, action, false);
     }
 
-    private static JButton createButton(final String accessibleName, final Icon icon, final Action action,
+    private static JButton createButton(final Icon icon, final Action action,
                                         final boolean close) {
-        JButton button = new JButton() {
+        JButton button = new JButton(action) {
             @Override
             public boolean isRolloverEnabled() {
                 return true;
@@ -160,8 +164,9 @@ public class WindowsTitlePane extends CustomTitlePane {
         button.setRolloverEnabled(true);
         button.putClientProperty("JButton.variant", "borderlessRectangular");
         button.putClientProperty("paintActive", Boolean.TRUE);
-        button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
-        button.setAction(action);
+        button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, button.getText());
+        button.putClientProperty("JToolTip.style", "plain");
+        button.setToolTipText(button.getText());
         button.setIcon(icon);
         button.setText(null);
         return button;
@@ -416,13 +421,13 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private void createButtons() {
-        closeButton = createButton("Close", closeIcon, closeAction, true);
+        closeButton = createButton(closeIcon, closeAction, true);
         Icon closePressed = UIManager.getIcon("Windows.TitlePane.closeHover.icon");
         closeButton.setRolloverIcon(closePressed);
         closeButton.setPressedIcon(closePressed);
 
-        minimizeButton = createButton("Iconify", minimizeIcon, minimizeAction);
-        maximizeToggleButton = createButton("Maximize", maximizeIcon, restoreAction);
+        minimizeButton = createButton(minimizeIcon, minimizeAction);
+        maximizeToggleButton = createButton(maximizeIcon, restoreAction);
         windowIconButton = createWindowIcon();
     }
 
@@ -571,6 +576,9 @@ public class WindowsTitlePane extends CustomTitlePane {
     private void updateToggleButton(final Action action, final Icon icon) {
         maximizeToggleButton.setAction(action);
         maximizeToggleButton.setIcon(icon);
+        maximizeToggleButton.setToolTipText(maximizeToggleButton.getText());
+        maximizeToggleButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
+                                               maximizeToggleButton.getText());
         maximizeToggleButton.setText(null);
     }
 
@@ -612,7 +620,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class CloseAction extends AbstractAction {
         public CloseAction() {
-            super("Close", closeIcon);
+            super(bundle.getString("Actions.close"), closeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -622,8 +630,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class MinimizeAction extends AbstractAction {
         public MinimizeAction() {
-            // UIManager.getString("Minimize", getLocale())
-            super("Minimize", minimizeIcon);
+            super(bundle.getString("Actions.minimize"), minimizeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -633,7 +640,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class MaximizeAction extends AbstractAction {
         public MaximizeAction() {
-            super("Maximize", maximizeIcon);
+            super(bundle.getString("Actions.maximize"), maximizeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -643,7 +650,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class RestoreAction extends AbstractAction {
         public RestoreAction() {
-            super("Restore", restoreIcon);
+            super(bundle.getString("Actions.restore"), restoreIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
