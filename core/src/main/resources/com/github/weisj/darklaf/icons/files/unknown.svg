@@ -2,11 +2,9 @@
     <defs id="colors">
         <linearGradient id="Icons.unknownFile.color">
             <stop offset="0" stop-color="#9AA7B0"/>
-            <stop offset="1" stop-color="#9AA7B0"/>
         </linearGradient>
         <linearGradient id="Icons.unknownFile.questionColor">
             <stop offset="0" stop-color="#40B6E0"/>
-            <stop offset="1" stop-color="#40B6E0"/>
         </linearGradient>
     </defs>
     <polygon fill="url(#Icons.unknownFile.color)" points="7 1 3 5 7 5" opacity=".8"/>

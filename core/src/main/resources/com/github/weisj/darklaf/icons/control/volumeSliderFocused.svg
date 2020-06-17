@@ -2,15 +2,12 @@
     <defs id="colors">
         <linearGradient id="Icons.VolumeSliderFocused.activeFillColor">
             <stop offset="0" stop-color="#A0A0A0"/>
-            <stop offset="1" stop-color="#A0A0A0"/>
         </linearGradient>
         <linearGradient id="Icons.VolumeSliderFocused.focusBorderColor">
             <stop offset="0" stop-color="#466D94"/>
-            <stop offset="1" stop-color="#466D94"/>
         </linearGradient>
         <linearGradient id="Icons.VolumeSliderFocused.glowFocus" opacity="Icons.VolumeSliderFocused.glowOpacity">
             <stop offset="0" stop-color="#3e84c9" stop-opacity="0.5"/>
-            <stop offset="1" stop-color="#3e84c9" stop-opacity="0.5"/>
         </linearGradient>
     </defs>
     <g transform="translate(2,2)">

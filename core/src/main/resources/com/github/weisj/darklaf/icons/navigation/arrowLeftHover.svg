@@ -2,7 +2,6 @@
     <defs id="colors">
         <linearGradient id="Icons.arrowLeftHover.color">
             <stop offset="0" stop-color="#dddddd"/>
-            <stop offset="1" stop-color="#dddddd"/>
         </linearGradient>
     </defs>
     <polygon fill="url(#Icons.arrowLeftHover.color)" fill-rule="evenodd" points="7.5 5.5 12 10.5 3 10.5"

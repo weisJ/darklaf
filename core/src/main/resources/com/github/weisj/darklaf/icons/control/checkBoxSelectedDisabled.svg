@@ -2,15 +2,12 @@
     <defs id="colors">
         <linearGradient id="Icons.CheckBoxSelectedDisabled.inactiveFillColor">
             <stop offset="0" stop-color="#3C3F41"/>
-            <stop offset="1" stop-color="#3C3F41"/>
         </linearGradient>
         <linearGradient id="Icons.CheckBoxSelectedDisabled.inactiveBorderColor">
             <stop offset="0" stop-color="#545556"/>
-            <stop offset="1" stop-color="#545556"/>
         </linearGradient>
         <linearGradient id="Icons.CheckBoxSelectedDisabled.selectionDisabledColor">
             <stop offset="0" stop-color="#606060"/>
-            <stop offset="1" stop-color="#606060"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">

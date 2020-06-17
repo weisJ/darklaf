@@ -2,7 +2,6 @@
     <defs id="colors">
         <linearGradient id="Icons.step.passive.color">
             <stop offset="0" stop-color="#AFB1B3"/>
-            <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
     <g fill="url(#Icons.step.passive.color)" fill-opacity="0.5" fill-rule="evenodd" transform="translate(1 1)">

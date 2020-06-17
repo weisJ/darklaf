@@ -753,7 +753,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 minimizeButton.setBounds(x, y, BUTTON_WIDTH, height);
             }
             start = Math.max(start, PAD);
-            titleLabel.setBounds(start, 0, x - start - PAD, height);
+            titleLabel.setBounds(start, 0, x - start, height);
 
             if (!leftToRight) {
                 mirror(windowIconButton, w);
@@ -767,7 +767,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 right = tmp;
 
             }
-            right++; // Make sure mouse exit event is produced for left most button.
+            right += 2; // Make sure mouse exit event is produced for left most button.
             updateDragArea(getGraphicsConfiguration());
         }
 

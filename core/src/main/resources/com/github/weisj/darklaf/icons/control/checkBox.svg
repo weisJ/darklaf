@@ -2,11 +2,9 @@
     <defs id="colors">
         <linearGradient id="Icons.CheckBox.activeFillColor">
             <stop offset="0" stop-color="#43494A"/>
-            <stop offset="1" stop-color="#43494A"/>
         </linearGradient>
         <linearGradient id="Icons.CheckBox.activeBorderColor">
             <stop offset="0" stop-color="#6B6B6B"/>
-            <stop offset="1" stop-color="#6B6B6B"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">

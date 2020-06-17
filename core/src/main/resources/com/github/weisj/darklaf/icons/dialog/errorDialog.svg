@@ -2,7 +2,6 @@
     <defs id="colors">
         <linearGradient id="Icons.errorDialog.color">
             <stop offset="0" stop-color="#C75450"/>
-            <stop offset="1" stop-color="#C75450"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.errorDialog.color)" fill-rule="evenodd"

@@ -2,7 +2,6 @@
     <defs id="colors">
         <linearGradient id="Windows.Icons.windowRestoreInactive.color">
             <stop offset="0" stop-color="#8C8C8C"/>
-            <stop offset="1" stop-color="#8C8C8C"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">
