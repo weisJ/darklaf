@@ -134,7 +134,7 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> implements Co
         controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
                                                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR,
                                                                                   b ? c : null)));
-        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
+        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_CLICK_COLOR, Color.BLACK,
                                                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR,
                                                                                   b ? c : null)));
 
