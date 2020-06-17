@@ -65,7 +65,15 @@ public final class IconColorMapper {
     private static void loadColors(final SVGDiagram diagram, final UIDefaults defaults) throws SVGElementException {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
-        if (defs == null) return;
+        if (defs == null) {
+            LOGGER.warning(() -> {
+                String uri = diagram.getXMLBase().toASCIIString();
+                String name = uri.substring(Math.min(uri.lastIndexOf('/') + 1, uri.length() - 1));
+                return "Themed icon '" + name
+                       + "' has no color definitions. Consider loading it as a standard icon or add missing definitions";
+            });
+            return;
+        }
         List<?> children = defs.getChildren(null);
         root.removeChild(defs);
 
