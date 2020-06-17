@@ -188,7 +188,7 @@ public class DarkPopupFactory extends PopupFactory {
             this.heavyWeightParent = heavyWeightParent;
         }
 
-        public void setOwner(Container owner) {
+        public void setOwner(final Container owner) {
             parentRequestCount = 0;
             this.owner = owner;
         }
