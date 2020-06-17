@@ -343,6 +343,7 @@ public class PaintUtil {
                 drawingGraphics.fillRect(0, 0, img.getWidth(), img.getHeight());
                 drawingGraphics.setColor(g.getColor());
                 textRect.setLocation(0, 0);
+                drawingGraphics.setClip(0, 0, img.getWidth(), img.getHeight());
                 drawingGraphics.scale(scaleX, scaleY);
             } else {
                 drawingGraphics.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);

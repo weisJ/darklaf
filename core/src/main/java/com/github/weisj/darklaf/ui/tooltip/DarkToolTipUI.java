@@ -349,12 +349,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
     }
 
     protected void updateTipText(final JToolTip tooltip) {
-        String tipText = tooltip.getTipText();
-        if (tipText != null && !tipText.startsWith("<html>") && tipText.contains("\n")) {
-            effectiveTipText = "<html>" + tipText.replaceAll("\n", "<\\br>") + "</html>";
-        } else {
-            effectiveTipText = tipText;
-        }
+        effectiveTipText = tooltip.getTipText();
         if (effectiveTipText == null) effectiveTipText = "";
     }
 

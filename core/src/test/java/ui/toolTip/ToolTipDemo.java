@@ -35,6 +35,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.StringUtil;
 
 public class ToolTipDemo implements ComponentDemo {
 
@@ -49,7 +50,7 @@ public class ToolTipDemo implements ComponentDemo {
         ToolTipContext context = new ToolTipContext(button).setAlignment(Alignment.CENTER)
                                                            .setCenterAlignment(Alignment.SOUTH);
         ToolTipContext.setDefaultContext(context);
-        button.setToolTipText("This is the ToolTip demo text!");
+        button.setToolTipText(StringUtil.toHtml(StringUtil.repeat("This is the ToolTip demo text!\n", 3)));
         button.putClientProperty(DarkToolTipUI.KEY_STYLE, DarkToolTipUI.VARIANT_BALLOON);
 
         JPanel controlPanel = panel.addControls(3);

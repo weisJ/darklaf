@@ -36,6 +36,14 @@ public final class StringUtil {
 
     private StringUtil() {}
 
+    public static String toHtml(final String text) {
+        if (text == null) return "";
+        if (!text.startsWith("<html>") && text.contains("\n")) {
+            return "<html>" + text.replaceAll("\n", "<\\br>") + "</html>";
+        }
+        return text;
+    }
+
     public static String toUpperCase(final String a) {
         return a == null ? null : toUpperCase((CharSequence) a).toString();
     }
