@@ -37,6 +37,7 @@ import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPreviewComponent;
@@ -44,7 +45,6 @@ import com.github.weisj.darklaf.ui.colorchooser.ColorTriangle;
 import com.github.weisj.darklaf.ui.colorchooser.ColorValueFormatter;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
-import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.ColorUtil;
 
 public class SmallColorChooser extends JPanel {
@@ -212,10 +212,10 @@ public class SmallColorChooser extends JPanel {
     protected JComponent createHexField() {
         hexField = new JFormattedTextField();
         hexField.setColumns(6);
-        hexField.putClientProperty(DarkTextUI.KEY_ROUNDED_SELECTION, false);
         hexField.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
         hexFormatter = ColorValueFormatter.init(null, 0, true, hexField);
         hexFormatter.setModel(getDarkColorModel());
+        GraphicsUtil.setOpaqueBuffered(hexField, true);
         return hexField;
     }
 

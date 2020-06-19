@@ -127,7 +127,8 @@ public class DarkPopupFactory extends PopupFactory {
             JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
             rootPane.setOpaque(opaque);
             if (opaque) {
-                window.setBackground(rootPane.getBackground());
+                Color bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
+                window.setBackground(bg);
             } else {
                 Color bg = getTranslucentPopupBackground(decorations);
                 window.setBackground(bg);

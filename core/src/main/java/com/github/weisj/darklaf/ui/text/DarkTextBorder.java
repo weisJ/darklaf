@@ -33,6 +33,7 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.graphics.Outline;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -122,10 +123,10 @@ public class DarkTextBorder implements Border, UIResource {
                            final boolean editable, final boolean error, final boolean warning, final int focusArcSize) {
         if (error) {
             PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
-                                         c.hasFocus(), PaintUtil.Outline.error);
+                                         c.hasFocus(), Outline.error);
         } else if (warning) {
             PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize,
-                                         c.hasFocus(), PaintUtil.Outline.warning);
+                                         c.hasFocus(), Outline.warning);
         } else if (c.hasFocus()) {
             PaintUtil.paintFocusBorder(g, width, height, focusArcSize, borderSize, editable);
         }

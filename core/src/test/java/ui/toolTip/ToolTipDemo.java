@@ -50,7 +50,10 @@ public class ToolTipDemo implements ComponentDemo {
         ToolTipContext context = new ToolTipContext(button).setAlignment(Alignment.CENTER)
                                                            .setCenterAlignment(Alignment.SOUTH);
         ToolTipContext.setDefaultContext(context);
-        button.setToolTipText(StringUtil.toHtml(StringUtil.repeat("This is the ToolTip demo text!\n", 3)));
+        button.setToolTipText(StringUtil.toHtml(
+                                                "<p style=\"color:red;\">This is the ToolTip demo text!\n"
+                                                + "<p style=\"color:blue;\">This is the ToolTip demo text!\n"
+                                                + "<p style=\"color:green;\">This is the ToolTip demo text!\n"));
         button.putClientProperty(DarkToolTipUI.KEY_STYLE, DarkToolTipUI.VARIANT_BALLOON);
 
         JPanel controlPanel = panel.addControls(3);

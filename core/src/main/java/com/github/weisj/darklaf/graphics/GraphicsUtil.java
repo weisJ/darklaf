@@ -26,6 +26,9 @@ package com.github.weisj.darklaf.graphics;
 
 import java.awt.*;
 
+import javax.swing.*;
+
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -36,8 +39,18 @@ import com.github.weisj.darklaf.util.SystemInfo;
 public final class GraphicsUtil {
 
     public static final String DESKTOP_HINTS_KEY = "awt.font.desktophints";
+    public static final String KEY_OPAQUE_BUFFERED = "JComponent.opaqueBuffered";
 
     private GraphicsUtil() {}
+
+    public static void setOpaqueBuffered(final JComponent c, final boolean opaqueBuffered) {
+        if (c != null) c.putClientProperty(KEY_OPAQUE_BUFFERED, opaqueBuffered);
+    }
+
+    public static boolean isOpaqueBuffered(final JComponent c) {
+        if (!SystemInfo.isWindows) return false;
+        return PropertyUtil.getBooleanProperty(c, KEY_OPAQUE_BUFFERED);
+    }
 
     public static GraphicsContext setupAntialiasing(final Graphics g2) {
         return setupAntialiasing(g2, true, false);

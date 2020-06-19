@@ -35,18 +35,15 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTextUI;
-import javax.swing.text.Caret;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.Document;
-import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Keymap;
+import javax.swing.text.*;
 
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.StringPainter;
+import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
@@ -61,7 +58,8 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /**
  * @author Jannis Weis
  */
-public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener, FocusListener {
+public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener, FocusListener,
+                                 OpacityBufferedUI {
 
     protected static final String KEY_PREFIX = "JTextComponent.";
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
@@ -306,6 +304,16 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         config.restore();
     }
 
+    @Override
+    public void update(final Graphics g, final JComponent c) {
+        StringPainter.paintOpacityBuffered(g, c, this);
+    }
+
+    @Override
+    public void updateUI(final Graphics g, final JComponent c) {
+        super.update(g, c);
+    }
+
     protected void paintDefaultText(final Graphics g) {
         if (isEmpty()) {
             String defaultText = getDefaultText();
@@ -314,7 +322,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 g.translate(rect.x, rect.y);
                 Component renderer = getDefaultTextRenderer().getRendererComponent(editor, defaultText);
                 renderer.setBounds(rect);
+                editor.add(renderer);
                 renderer.paint(g);
+                editor.remove(renderer);
             }
         }
     }

@@ -43,6 +43,7 @@ import com.github.weisj.darklaf.delegate.AbstractButtonLayoutDelegate;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
@@ -271,7 +272,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (!model.isEnabled()) {
             mnemonicIndex = -1;
         }
-        PaintUtil.drawStringUnderlineCharAt(g, b, text, mnemonicIndex, textRect, layoutDelegate.getFont());
+        StringPainter.drawStringUnderlineCharAt(g, b, text, mnemonicIndex, textRect, layoutDelegate.getFont());
     }
 
     protected void paintIcon(final Graphics g, final AbstractButton b, final JComponent c) {

@@ -40,7 +40,7 @@ import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
-import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
@@ -165,7 +165,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
                                  final Color disabledTextColor) {
         g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
         int mnemIndex = b.isEnabled() ? b.getDisplayedMnemonicIndex() : -1;
-        PaintUtil.drawStringUnderlineCharAt(g, b, text, mnemIndex, textRect, b.getFont(), fm);
+        StringPainter.drawStringUnderlineCharAt(g, b, text, mnemIndex, textRect, b.getFont(), fm);
     }
 
     protected Icon getStateIcon(final AbstractButton b) {

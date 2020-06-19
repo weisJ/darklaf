@@ -29,18 +29,10 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.text.View;
 
-import sun.swing.SwingUtilities2;
-
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.Scale;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.util.*;
 
 public class PaintUtil {
 
@@ -253,171 +245,11 @@ public class PaintUtil {
         g.fillRect(x, y + height - thickness, width, thickness);
     }
 
-    public static <T extends JComponent> void drawString(final Graphics g, final T c,
-                                                         final String text, final Rectangle textRect) {
-        drawString(g, c, text, textRect, SwingUtilities2.getFontMetrics(c, g));
-    }
-
-    public static <T extends JComponent> void drawString(final Graphics g, final T c, final View view,
-                                                         final String text, final Rectangle textRect,
-                                                         final FontMetrics fm) {
-        drawStringImpl(g, c, view, text, textRect, c.getFont(), fm, -1);
-    }
-
-    public static <T extends JComponent> void drawString(final Graphics g, final T c,
-                                                         final String text, final Rectangle textRect,
-                                                         final FontMetrics fm) {
-        drawStringImpl(g, c, null, text, textRect, c.getFont(), fm, -1);
-    }
-
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect) {
-        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, c.getFont());
-    }
-
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect,
-                                                                        final Font f) {
-        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, f, SwingUtilities2.getFontMetrics(c, g));
-    }
-
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c, final View view,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect,
-                                                                        final Font font,
-                                                                        final FontMetrics fm) {
-        drawStringImpl(g, c, view, text, textRect, font, fm, mnemIndex);
-    }
-
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect,
-                                                                        final Font font,
-                                                                        final FontMetrics fm) {
-        drawStringImpl(g, c, null, text, textRect, font, fm, mnemIndex);
-    }
-
-    public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c,
-                                                             final View view,
-                                                             final String text, final Rectangle textRect,
-                                                             final Font font, final FontMetrics fm,
-                                                             final int mnemIndex) {
-        drawStringImpl(g, c, view, text, textRect, font, fm, mnemIndex, c.getBackground());
-    }
-
-    public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c,
-                                                             final View view,
-                                                             final String text, final Rectangle textRect,
-                                                             final Font font, final FontMetrics fm,
-                                                             final int mnemIndex,
-                                                             final Color bg) {
-        if (text != null && !text.equals("")) {
-            GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
-
-            int asc = fm.getAscent();
-            int x = textRect.x;
-            int y = textRect.y;
-
-            Graphics2D drawingGraphics = (Graphics2D) g;
-            BufferedImage img = null;
-            Window window = DarkUIUtil.getWindow(c);
-
-            /*
-             * If the parent window is non-opaque on Windows no sub-pixel AA is supported.
-             * In this case we paint the text to an offscreen image with opaque background and paste
-             * it draw it back to the original graphics object.
-             *
-             * See https://bugs.openjdk.java.net/browse/JDK-8215980?attachmentOrder=desc
-             */
-            boolean imgGraphics = SystemInfo.isWindows
-                                  && window != null && window.getBackground().getAlpha() < 255;
-            if (imgGraphics) {
-                double scaleX = Scale.getScaleX((Graphics2D) g);
-                double scaleY = Scale.getScaleX((Graphics2D) g);
-                img = ImageUtil.createCompatibleImage((int) Math.round(scaleX * textRect.width),
-                                                      (int) Math.round(scaleY * textRect.height));
-                drawingGraphics = (Graphics2D) img.getGraphics();
-                drawingGraphics.setColor(bg);
-                drawingGraphics.fillRect(0, 0, img.getWidth(), img.getHeight());
-                drawingGraphics.setColor(g.getColor());
-                textRect.setLocation(0, 0);
-                drawingGraphics.setClip(0, 0, img.getWidth(), img.getHeight());
-                drawingGraphics.scale(scaleX, scaleY);
-            } else {
-                drawingGraphics.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);
-            }
-
-            drawingGraphics.setFont(font);
-
-            View v = view != null ? view : PropertyUtil.getObject(c, BasicHTML.propertyKey, View.class);
-            if (v != null) {
-                v.paint(drawingGraphics, textRect);
-            } else {
-                textRect.y += asc;
-                if (mnemIndex >= 0) {
-                    SwingUtilities2.drawStringUnderlineCharAt(c, drawingGraphics, text,
-                                                              mnemIndex, textRect.x, textRect.y);
-                } else {
-                    SwingUtilities2.drawString(c, drawingGraphics, text, textRect.x, textRect.y);
-                }
-            }
-            if (img != null) {
-                drawingGraphics.dispose();
-                g.drawImage(img, x, y, textRect.width, textRect.height, null);
-            }
-            context.restore();
-        }
-    }
-
     public static void fillRect(final Graphics g, final Rectangle r) {
         fillRect(g, r.x, r.y, r.width, r.height);
     }
 
     public static void fillRect(final Graphics g, final int x, final int y, final int w, final int h) {
         g.fillRect(x, y, w, h);
-    }
-
-    public enum Outline {
-        error {
-            @Override
-            public void setGraphicsColor(final Graphics2D g, final boolean focused) {
-                if (focused) {
-                    g.setColor(getErrorFocusGlow());
-                } else {
-                    g.setColor(getErrorGlow());
-                }
-            }
-        },
-
-        warning {
-            @Override
-            public void setGraphicsColor(final Graphics2D g, final boolean focused) {
-                g.setColor(getWarningGlow());
-            }
-        },
-
-        defaultButton {
-            @Override
-            public void setGraphicsColor(final Graphics2D g, final boolean focused) {
-                if (focused) {
-                    g.setColor(getFocusGlow());
-                }
-            }
-        },
-
-        focus {
-            @Override
-            public void setGraphicsColor(final Graphics2D g, final boolean active) {
-                if (active) {
-                    g.setColor(getFocusGlow());
-                } else {
-                    g.setColor(getFocusInactiveGlow());
-                }
-            }
-        };
-
-        public abstract void setGraphicsColor(Graphics2D g, boolean focused);
     }
 }

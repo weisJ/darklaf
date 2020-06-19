@@ -40,6 +40,7 @@ import javax.swing.text.View;
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -707,7 +708,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
         Color bg = getTabBackgroundColor(tabIndex, isSelected, getRolloverTab() == tabIndex);
         g.setColor(getTabForeground(tabIndex, isSelected));
-        PaintUtil.drawStringImpl(g, tabPane, v, title, textRect, font, metrics, mnemIndex, bg);
+        StringPainter.drawStringImpl(g, tabPane, v, title, textRect, font, metrics, mnemIndex, bg);
     }
 
     protected Color getTabForeground(final int index, final boolean isSelected) {

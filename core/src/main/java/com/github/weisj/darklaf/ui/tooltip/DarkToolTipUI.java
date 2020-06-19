@@ -37,10 +37,7 @@ import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.View;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.graphics.Animator;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
-import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.*;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.Alignment;
@@ -215,7 +212,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
             Rectangle paintTextR = new Rectangle(insets.left, insets.top,
                                                  size.width - (insets.left + insets.right),
                                                  size.height - (insets.top + insets.bottom));
-            PaintUtil.drawString(g, c, tipText, paintTextR);
+            StringPainter.drawString(g, c, tipText, paintTextR);
         }
     }
 
@@ -253,7 +250,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
     public void hierarchyChanged(final HierarchyEvent e) {
         // For MediumWeightPopup still need to make parent non opaque.
         Component component = toolTip.getParent();
-        if (component instanceof JComponent) {
+        if (component instanceof JComponent && style != ToolTipStyle.PLAIN) {
             ((JComponent) component).setOpaque(false);
             component.setBackground(new DarkColorUIResource(ColorUtil.toAlpha(component.getBackground(), 0)));
         }

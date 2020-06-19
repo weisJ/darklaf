@@ -35,7 +35,7 @@ import javax.swing.plaf.basic.BasicLabelUI;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -100,7 +100,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     public void paintText(final Graphics g, final JLabel label, final FontMetrics fm, final String clippedText) {
         int mnemIndex = label.isEnabled() ? label.getDisplayedMnemonicIndex() : -1;
         g.setColor(getForeground(label));
-        PaintUtil.drawStringUnderlineCharAt(g, label, clippedText, mnemIndex, paintTextR, label.getFont(), fm);
+        StringPainter.drawStringUnderlineCharAt(g, label, clippedText, mnemIndex, paintTextR, label.getFont(), fm);
     }
 
     protected Color getForeground(final Component label) {

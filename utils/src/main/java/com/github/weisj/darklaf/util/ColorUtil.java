@@ -94,4 +94,10 @@ public final class ColorUtil {
     public static Color removeAlpha(final Color color) {
         return toAlpha(color, 255);
     }
+
+    public static double getBrightness(final Color c) {
+        return Math.sqrt(0.241 * c.getRed() * c.getRed()
+                         + 0.691 * c.getGreen() * c.getGreen()
+                         + 0.068 * c.getBlue() * c.getBlue());
+    }
 }
