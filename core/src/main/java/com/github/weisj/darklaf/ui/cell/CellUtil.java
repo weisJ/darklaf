@@ -294,16 +294,15 @@ public class CellUtil {
                                        final Color fgNoFocus, final Color selFgNoFocus,
                                        final Color inactiveFg, final Color inactiveSelFg,
                                        final Color inactiveFgNoFocus, final Color inactiveSelFgNoFocus) {
-        Color c = getColor(enabled, selected, focus,
-                           fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg, inactiveSelFg,
+        Color c = getColor(enabled, focus, selected, fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg, inactiveSelFg,
                            inactiveFgNoFocus, inactiveSelFgNoFocus);
         PropertyUtil.installForeground(comp, c);
     }
 
-    public static void setupTableBackground(final Component comp, final JTable parent, final boolean selected,
-                                            final int row) {
+    public static Color getTableBackground(final Component comp, final JTable parent, final boolean selected,
+                                           final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTableUI.KEY_ALTERNATE_ROW_COLOR);
-        setupBackground(comp, hasFocus(parent, comp), selected,
+        return getColor(comp, hasFocus(parent, comp), selected,
                         alt ? tableCellBackgroundAlternative : tableCellBackground,
                         tableCellBackgroundSelected,
                         alt ? tableCellBackgroundNoFocusAlternative : tableCellBackgroundNoFocus,
@@ -314,10 +313,15 @@ public class CellUtil {
                         tableCellInactiveBackgroundSelectedNoFocus);
     }
 
-    public static void setupTreeBackground(final Component comp, final JTree parent, final boolean selected,
-                                           final int row) {
+    public static void setupTableBackground(final Component comp, final JTable parent, final boolean selected,
+                                            final int row) {
+        setupBackground(comp, getTableBackground(comp, parent, selected, row));
+    }
+
+    public static Color getTreeBackground(final Component comp, final JTree parent, final boolean selected,
+                                          final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
-        setupBackground(comp, hasFocus(parent, comp), selected,
+        return getColor(comp, hasFocus(parent, comp), selected,
                         alt ? treeCellBackgroundAlternative : treeCellBackground,
                         treeCellBackgroundSelected,
                         alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
@@ -326,11 +330,16 @@ public class CellUtil {
                         treeCellInactiveBackgroundSelected,
                         alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
                         treeCellInactiveBackgroundSelectedNoFocus);
+    }
+
+    public static void setupTreeBackground(final Component comp, final JTree parent, final boolean selected,
+                                           final int row) {
+        setupBackground(comp, getTreeBackground(comp, parent, selected, row));
     }
 
     public static Color getTreeBackground(final JTree tree, final boolean selected, final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(tree, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(tree.isEnabled(), selected, hasFocus(tree, tree),
+        return getColor(tree.isEnabled(), hasFocus(tree, tree), selected,
                         alt ? treeCellBackgroundAlternative : treeCellBackground,
                         treeCellBackgroundSelected,
                         alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
@@ -341,8 +350,8 @@ public class CellUtil {
                         treeCellInactiveBackgroundSelectedNoFocus);
     }
 
-    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
-                                           final int index) {
+    public static Color getListBackground(final Component comp, final JList<?> parent,
+                                          final boolean selected, final int index) {
         int layout = parent.getLayoutOrientation();
         boolean altRow = false;
         if (layout == JList.VERTICAL) {
@@ -362,14 +371,14 @@ public class CellUtil {
                 altRow = false;
             }
         }
-        setupListBackground(comp, parent, selected, altRow);
+        return getListBackground(comp, parent, selected, altRow);
     }
 
-    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
-                                           final boolean altRow) {
+    public static Color getListBackground(final Component comp, final JList<?> parent, final boolean selected,
+                                          final boolean altRow) {
         boolean alt = altRow && PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_ALTERNATE_ROW_COLOR);
         boolean comboList = PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_IS_COMBO_LIST);
-        setupBackground(comp, hasFocus(parent, comp), selected,
+        return getColor(comp, hasFocus(parent, comp), selected,
                         alt ? listCellBackgroundAlternative : listCellBackground,
                         comboList ? comboListCellBackgroundSelected : listCellBackgroundSelected,
                         alt ? listCellBackgroundNoFocusAlternative : listCellBackgroundNoFocus,
@@ -380,30 +389,41 @@ public class CellUtil {
                         listCellInactiveBackgroundSelectedNoFocus);
     }
 
-    public static void setupStandardBackground(final Component comp, final JComponent parent, final boolean selected) {
-        setupBackground(comp, hasFocus(parent, comp), selected,
-                        cellBackground, cellBackgroundSelected,
-                        cellBackgroundNoFocus, cellBackgroundSelectedNoFocus,
-                        cellInactiveBackground, cellInactiveBackgroundSelected,
-                        cellInactiveBackgroundNoFocus, cellInactiveBackgroundSelectedNoFocus);
+    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
+                                           final int index) {
+        setupBackground(comp, getListBackground(comp, parent, selected, index));
     }
 
-    public static void setupBackground(final Component comp, final boolean focus, final boolean selected,
-                                       final Color bg, final Color selBg,
-                                       final Color bgNoFocus, final Color selBgNoFocus,
-                                       final Color inactiveBg, final Color inactiveSelBg,
-                                       final Color inactiveBgNoFocus, final Color inactiveSelBgNoFocus) {
-        boolean enabled = comp.isEnabled();
-        Color c = getColor(enabled, selected, focus,
-                           bg, selBg, bgNoFocus, selBgNoFocus, inactiveBg, inactiveSelBg,
-                           inactiveBgNoFocus, inactiveSelBgNoFocus);
+    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
+                                           final boolean altRow) {
+        setupBackground(comp, getListBackground(comp, parent, selected, altRow));
+    }
+
+    public static void setupStandardBackground(final Component comp, final JComponent parent, final boolean selected) {
+        setupBackground(comp, getColor(comp, hasFocus(parent, comp), selected,
+                                       cellBackground, cellBackgroundSelected,
+                                       cellBackgroundNoFocus, cellBackgroundSelectedNoFocus,
+                                       cellInactiveBackground, cellInactiveBackgroundSelected,
+                                       cellInactiveBackgroundNoFocus, cellInactiveBackgroundSelectedNoFocus));
+    }
+
+    public static void setupBackground(final Component comp, final Color c) {
         PropertyUtil.installBackground(comp, c);
         if (comp instanceof JComponent) {
             LookAndFeel.installProperty((JComponent) comp, PropertyKey.OPAQUE, true);
         }
     }
 
-    public static Color getColor(final boolean enabled, final boolean selected, final boolean focus,
+    public static Color getColor(final Component comp, final boolean focus, final boolean selected,
+                                 final Color bg, final Color selBg,
+                                 final Color bgNoFocus, final Color selBgNoFocus,
+                                 final Color inactiveBg, final Color inactiveSelBg,
+                                 final Color inactiveBgNoFocus, final Color inactiveSelBgNoFocus) {
+        return getColor(comp.isEnabled(), focus, selected, bg, selBg, bgNoFocus, selBgNoFocus, inactiveBg,
+                        inactiveSelBg, inactiveBgNoFocus, inactiveSelBgNoFocus);
+    }
+
+    public static Color getColor(final boolean enabled, final boolean focus, final boolean selected,
                                  final Color color, final Color selColor,
                                  final Color colorNoFocus, final Color selColorNoFocus,
                                  final Color inactiveColor, final Color inactiveSelColor,

@@ -54,7 +54,6 @@ public class DarkListUI extends DarkListUIBridge {
     public static final String KEY_IS_LIST_EDITOR = "JComponent.listCellEditor";
 
     protected DarkListCellRendererDelegate rendererDelegate;
-    private final JLabel emptyRenderer = new JLabel();
 
     public static ComponentUI createUI(final JComponent list) {
         return new DarkListUI();
@@ -142,11 +141,15 @@ public class DarkListUI extends DarkListUIBridge {
                 return;
             }
             boolean lastColumn = colCounter == endColumn
+                                 && getColumnCount() > 1
                                  && colCounter * rowsPerColumn + rowCount >= dataModel.getSize();
             int bgWidth = lastColumn ? maxX - rowBounds.x : 0;
             int maxRow = lastColumn ? Integer.MAX_VALUE : rowCount;
             while (row < maxRow && rowBounds.y < maxY) {
                 rowBounds.height = getHeight(colCounter, row);
+                if (rowBounds.height <= 0) {
+                    rowBounds.height = colCounter >= 1 ? getHeight(colCounter - 1, row) : getRowHeight(row);
+                }
                 g.setClip(rowBounds.x, rowBounds.y, bgWidth > 0 ? bgWidth : rowBounds.width, rowBounds.height);
                 g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);
                 paintCell(g, index, rowBounds, renderer, dataModel, selModel, leadIndex, row, bgWidth);
@@ -180,12 +183,10 @@ public class DarkListUI extends DarkListUIBridge {
         int cw = rowBounds.width;
         int ch = rowBounds.height;
 
-        if (empty || bgWidth > 0) {
-            CellUtil.setupListBackground(emptyRenderer, list, false, row);
-            rendererPane.paintComponent(g, emptyRenderer, list,
-                                        cx, cy, bgWidth > 0 ? bgWidth : cw, ch, false);
-        }
-        if (!empty) {
+        if (empty) {
+            g.setColor(CellUtil.getListBackground(list, list, false, row));
+            // g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
+        } else {
             Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, index, isSelected,
                                                                                     cellHasFocus);
             if (PropertyUtil.getBooleanProperty(list, KEY_SHRINK_WRAP)) {
