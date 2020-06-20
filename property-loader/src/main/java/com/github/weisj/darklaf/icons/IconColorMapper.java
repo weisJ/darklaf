@@ -66,7 +66,7 @@ public final class IconColorMapper {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
         if (defs == null) {
-            LOGGER.warning(() -> {
+            LOGGER.info(() -> {
                 String uri = diagram.getXMLBase().toASCIIString();
                 String name = uri.substring(Math.min(uri.lastIndexOf('/') + 1, uri.length() - 1));
                 return "Themed icon '" + name
