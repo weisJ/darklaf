@@ -130,7 +130,7 @@ public class PopupMenuDemo implements ComponentDemo {
 
     @Override
     public JMenuBar createMenuBar() {
-        JMenuBar menuBar = ComponentDemo.getDefaultMenuBar();
+        JMenuBar menuBar = ComponentDemo.super.createMenuBar();
         menuBar.add(new JMenu("CheckBoxes") {
             {
                 for (int i = 0; i < 10; i++) {

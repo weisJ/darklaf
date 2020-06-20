@@ -52,6 +52,10 @@ public interface ComponentDemo {
                                                                          themeStyle.getColorToneRule()));
     }
 
+    default Theme createTheme() {
+        return getTheme();
+    }
+
     JComponent createComponent();
 
     static void showDemo(final ComponentDemo demo) {
@@ -169,10 +173,6 @@ public interface ComponentDemo {
     }
 
     default JMenuBar createMenuBar() {
-        return getDefaultMenuBar();
-    }
-
-    static JMenuBar getDefaultMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createThemeMenu());
         menuBar.add(createSettingsMenu());
@@ -180,7 +180,7 @@ public interface ComponentDemo {
         return menuBar;
     }
 
-    static JMenu createDevSettings() {
+    default JMenu createDevSettings() {
         JMenu dev = new JMenu("Dev");
         JMenu logging = new JMenu("Logging");
         ButtonGroup bg = new ButtonGroup();
@@ -205,10 +205,6 @@ public interface ComponentDemo {
         dev.add(aaPainting);
         dev.add(experimentalAA);
         return dev;
-    }
-
-    default Theme createTheme() {
-        return getTheme();
     }
 
     String getTitle();

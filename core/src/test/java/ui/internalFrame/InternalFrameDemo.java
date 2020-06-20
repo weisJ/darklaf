@@ -64,14 +64,13 @@ public class InternalFrameDemo implements ActionListener, ComponentDemo {
 
         createFrame();
 
-        // Make dragging a little faster but perhaps uglier.
         desktop.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
         return new DemoPanel(desktop, new BorderLayout(), 10);
     }
 
     @Override
     public JMenuBar createMenuBar() {
-        JMenuBar menuBar = ComponentDemo.getDefaultMenuBar();
+        JMenuBar menuBar = ComponentDemo.super.createMenuBar();
 
         // Set up the lone menu.
         JMenu menu = new JMenu("Document");
