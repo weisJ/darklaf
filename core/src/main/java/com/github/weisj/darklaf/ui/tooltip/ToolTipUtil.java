@@ -178,11 +178,8 @@ public class ToolTipUtil {
         Window window = DarkUIUtil.getWindow(toolTip);
         if (window == null) return;
         Point p = new Point(x, y);
-        Window targetWindow = DarkUIUtil.getWindow(target);
-        p = SwingUtilities.convertPoint(target, p, targetWindow);
-        Point windowPos = targetWindow.getLocation();
-        p.x += windowPos.x;
-        p.y += windowPos.y;
+        SwingUtilities.convertPointToScreen(p, target);
         window.setLocation(p);
+        SwingUtilities.invokeLater(() -> window.setLocation(p));
     }
 }
