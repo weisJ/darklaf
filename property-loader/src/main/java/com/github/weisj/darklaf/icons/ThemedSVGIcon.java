@@ -39,6 +39,17 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
         currentTheme = new Object();
     }
 
+    protected ThemedSVGIcon(final int width, final int height, final ThemedSVGIcon icon) {
+        super(width, height, icon);
+        this.currentTheme = icon.currentTheme;
+        this.updatedNotDuringPaint = icon.updatedNotDuringPaint;
+    }
+
+    @Override
+    public ThemedSVGIcon derive(final int width, final int height) {
+        return new ThemedSVGIcon(width, height, this);
+    }
+
     @Override
     protected boolean ensureLoaded(final boolean painting) {
         /*

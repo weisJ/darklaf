@@ -45,6 +45,16 @@ public class CustomThemedIcon extends ThemedSVGIcon {
         }
     }
 
+    protected CustomThemedIcon(final int width, final int height, final CustomThemedIcon icon) {
+        super(width, height, icon);
+        this.defaults = icon.defaults;
+    }
+
+    @Override
+    public CustomThemedIcon derive(final int width, final int height) {
+        return new CustomThemedIcon(width, height, this);
+    }
+
     @Override
     protected SVGIcon createSVGIcon() {
         SVGIcon icon = new SVGIcon();

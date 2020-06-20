@@ -56,7 +56,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     private final Dimension size;
     private final SVGIcon icon;
-    protected final URI uri;
+    private final URI uri;
     private final AtomicBoolean loaded;
 
     private boolean loadedWithExtraScale;
@@ -80,7 +80,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         loaded = new AtomicBoolean(false);
     }
 
-    private DarkSVGIcon(final int width, final int height, final DarkSVGIcon icon) {
+    protected DarkSVGIcon(final int width, final int height, final DarkSVGIcon icon) {
         this.size = new Dimension(width, height);
         this.icon = icon.icon;
         this.uri = icon.uri;
@@ -148,7 +148,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         }
     }
 
-    private String getName() {
+    protected String getName() {
         String name = uri.toASCIIString();
         name = name.substring(Math.min(name.length() - 1, name.lastIndexOf('/') + 1));
         return name;
