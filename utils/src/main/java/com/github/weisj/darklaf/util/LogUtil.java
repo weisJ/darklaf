@@ -54,6 +54,10 @@ public class LogUtil {
         LOG_HANDLER.setLevel(level);
     }
 
+    public static Level getLevel() {
+        return PARENT.getLevel();
+    }
+
     public static <T> T log(final T obj) {
         PARENT.info(String.valueOf(obj));
         return obj;

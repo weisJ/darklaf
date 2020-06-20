@@ -91,6 +91,15 @@ public final class LafManager {
     }
 
     /**
+     * Get the current log level.
+     *
+     * @return the log level.
+     */
+    public static Level getLogLevel() {
+        return LogUtil.getLevel();
+    }
+
+    /**
      * Returns whether custom decorations should be used. If this returns true decorations still might not be used if
      * the theme or platform don't support them.
      *
