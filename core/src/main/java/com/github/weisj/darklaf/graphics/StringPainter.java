@@ -41,7 +41,7 @@ import com.github.weisj.darklaf.util.*;
 
 public class StringPainter {
 
-    private static boolean translucentAAPaintingEnabled = false;
+    private static boolean translucentAAPaintingEnabled = true;
     private static boolean experimentalAntialiasingEnabled = false;
 
     public static void setExperimentalAntialiasingEnabled(final boolean enabled) {
@@ -50,6 +50,14 @@ public class StringPainter {
 
     public static void setTranslucentAAPaintingEnabled(final boolean enabled) {
         translucentAAPaintingEnabled = enabled;
+    }
+
+    public static boolean isTranslucentAAPaintingEnabled() {
+        return translucentAAPaintingEnabled;
+    }
+
+    public static boolean isExperimentalAntialiasingEnabled() {
+        return experimentalAntialiasingEnabled;
     }
 
     public static <T extends JComponent> void drawString(final Graphics g, final T c,

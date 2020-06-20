@@ -31,6 +31,7 @@ import java.awt.event.WindowListener;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
@@ -38,6 +39,7 @@ import javax.swing.event.MenuListener;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.ImageUtil;
+import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -58,6 +60,7 @@ public interface ComponentDemo {
 
     static void showDemo(final ComponentDemo demo, final boolean asDialog) {
         LafManager.enabledPreferenceChangeReporting(false);
+        LafManager.setDecorationsEnabled(true);
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         SwingUtilities.invokeLater(() -> {
             if (!LafManager.isInstalled()) {
@@ -173,7 +176,35 @@ public interface ComponentDemo {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createThemeMenu());
         menuBar.add(createSettingsMenu());
+        menuBar.add(createDevSettings());
         return menuBar;
+    }
+
+    static JMenu createDevSettings() {
+        JMenu dev = new JMenu("Dev");
+        JMenu logging = new JMenu("Logging");
+        ButtonGroup bg = new ButtonGroup();
+        Level[] levels = new Level[]{Level.ALL, Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE, Level.OFF};
+        Level currentLevel = LafManager.getLogLevel();
+        for (Level level : levels) {
+            JRadioButtonMenuItem mi = new JRadioButtonMenuItem(level.getName());
+            bg.add(mi);
+            logging.add(mi);
+            if (level.equals(currentLevel)) {
+                mi.setSelected(true);
+            }
+        }
+        JCheckBoxMenuItem aaPainting = new JCheckBoxMenuItem("Translucent Antialiasing");
+        aaPainting.addActionListener(e -> StringPainter.setTranslucentAAPaintingEnabled(aaPainting.isSelected()));
+        aaPainting.setSelected(StringPainter.isTranslucentAAPaintingEnabled());
+        JCheckBoxMenuItem experimentalAA = new JCheckBoxMenuItem("Experimental Antialiasing");
+        experimentalAA.addActionListener(e -> StringPainter.setExperimentalAntialiasingEnabled(experimentalAA.isSelected()));
+        experimentalAA.setSelected(StringPainter.isExperimentalAntialiasingEnabled());
+
+        dev.add(logging);
+        dev.add(aaPainting);
+        dev.add(experimentalAA);
+        return dev;
     }
 
     default Theme createTheme() {
