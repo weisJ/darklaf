@@ -2,9 +2,11 @@
     <defs id="colors">
         <linearGradient id="Icons.moreTabs.color" opacity="Icons.moreTabs.opacity">
             <stop offset="0" stop-color="#AFB1B3" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#AFB1B3" stop-opacity=".8"/>
         </linearGradient>
         <linearGradient id="Icons.moreTabs.arrowColor" opacity="Icons.moreTabs.opacity">
             <stop offset="0" stop-color="#AFB1B3" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#AFB1B3" stop-opacity=".8"/>
         </linearGradient>
     </defs>
     <rect width="8" height="1" x="8" y="4" fill="url(#Icons.moreTabs.color)"/>

@@ -2,9 +2,11 @@
     <defs id="colors">
         <linearGradient id="Icons.searchWithHistory.color">
             <stop offset="0" stop-color="#7F8B91"/>
+            <stop offset="1" stop-color="#7F8B91"/>
         </linearGradient>
         <linearGradient id="Icons.searchWithHistory.arrowColor">
             <stop offset="0" stop-color="#7F8B91"/>
+            <stop offset="1" stop-color="#7F8B91"/>
         </linearGradient>
     </defs>
     <g fill="none" opacity=".8">

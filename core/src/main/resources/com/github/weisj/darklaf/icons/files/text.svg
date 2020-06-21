@@ -2,9 +2,11 @@
     <defs id="colors">
         <linearGradient id="Icons.textFile.color" opacity="Icons.textFile.opacity">
             <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
         </linearGradient>
         <linearGradient id="Icons.textFile.foregroundColor" opacity="Icons.textFile.opacity">
             <stop offset="0" stop-color="#231F20" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#231F20" stop-opacity=".8"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">

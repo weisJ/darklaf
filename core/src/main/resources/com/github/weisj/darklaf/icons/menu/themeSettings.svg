@@ -2,12 +2,15 @@
     <defs id="colors">
         <linearGradient id="Icons.themeSettings.color">
             <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
         <linearGradient id="effectiveAccentColor">
             <stop offset="0" stop-color="#365880"/>
+            <stop offset="1" stop-color="#365880"/>
         </linearGradient>
         <linearGradient id="effectiveSelectionColor">
             <stop offset="0" stop-color="#214283"/>
+            <stop offset="1" stop-color="#214283"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.themeSettings.color)" d="M9.4,9.1C9.9,7.9,11.1,7,12.6,7c0.6,0,1.2,0.2,1.7,0.5c0.7-1.1,0.9-2.5,0.4-3.8l-2.9,2.9L9.6,4.4l2.9-2.9

@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.windowRestore.color">
             <stop offset="0" stop-color="#A9A9A9"/>
+            <stop offset="1" stop-color="#A9A9A9"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">

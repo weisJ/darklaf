@@ -2,9 +2,11 @@
     <defs id="colors">
         <linearGradient id="Icons.speaker4.color">
             <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
         <linearGradient id="Icons.speaker4.volumeColor">
             <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.speaker4.color)" stroke="url(#Icons.speaker4.color)" stroke-width="15"

@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.arrowDivider.color" opacity="Icons.arrowDivider.opacity">
             <stop offset="0" stop-color="#AFB1B3" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#AFB1B3" stop-opacity=".8"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.arrowDivider.color)"

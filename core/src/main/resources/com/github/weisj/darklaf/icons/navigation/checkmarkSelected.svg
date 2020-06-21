@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.checkmarkSelected.color">
             <stop offset="0" stop-color="#FFF"/>
+            <stop offset="1" stop-color="#FFF"/>
         </linearGradient>
     </defs>
     <polyline fill="none" stroke="url(#Icons.checkmarkSelected.color)" stroke-linecap="round" stroke-linejoin="round"

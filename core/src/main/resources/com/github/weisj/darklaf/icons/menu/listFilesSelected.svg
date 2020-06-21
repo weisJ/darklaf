@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.listFiles.selected.color">
             <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">

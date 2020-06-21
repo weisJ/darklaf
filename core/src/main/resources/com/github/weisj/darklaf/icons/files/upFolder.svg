@@ -2,9 +2,11 @@
     <defs id="colors">
         <linearGradient id="Icons.upFolder.color" opacity="Icons.upFolder.opacity">
             <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
         </linearGradient>
         <linearGradient id="Icons.upFolder.arrowColor">
             <stop offset="0" stop-color="#40B6E0"/>
+            <stop offset="1" stop-color="#40B6E0"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.upFolder.color)" fill-rule="evenodd"

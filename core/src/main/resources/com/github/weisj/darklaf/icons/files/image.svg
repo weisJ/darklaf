@@ -2,12 +2,15 @@
     <defs id="colors">
         <linearGradient id="Icons.image.color" opacity="Icons.image.opacity">
             <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
         </linearGradient>
         <linearGradient id="Icons.image.sky.color">
             <stop offset="0" stop-color="#40B6E0"/>
+            <stop offset="1" stop-color="#40B6E0"/>
         </linearGradient>
         <linearGradient id="Icons.image.grass.color">
             <stop offset="0" stop-color="#62B543"/>
+            <stop offset="1" stop-color="#62B543"/>
         </linearGradient>
     </defs>
     <g fill="url(#Icons.image.color)" fill-opacity=".8">

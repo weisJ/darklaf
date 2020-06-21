@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.informationDialog.color">
             <stop offset="0" stop-color="#3592C4"/>
+            <stop offset="1" stop-color="#3592C4"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.informationDialog.color)" fill-rule="evenodd"

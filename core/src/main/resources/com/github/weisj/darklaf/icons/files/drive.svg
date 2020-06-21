@@ -2,9 +2,11 @@
     <defs id="colors">
         <linearGradient id="Icons.drive.color" opacity="Icons.drive.opacity">
             <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
         </linearGradient>
         <linearGradient id="Icons.drive.dotColor">
             <stop offset="0" stop-color="#499C54"/>
+            <stop offset="1" stop-color="#499C54"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">

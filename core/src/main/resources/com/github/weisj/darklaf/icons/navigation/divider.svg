@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.divider.color">
             <stop offset="0" stop-color="#515151"/>
+            <stop offset="1" stop-color="#515151"/>
         </linearGradient>
     </defs>
     <rect width="1" height="19" fill="url(#Icons.divider.color)"/>

@@ -2,16 +2,20 @@
     <defs id="colors">
         <linearGradient id="Icons.RadioButtonSelectedFocused.selectedFillColor">
             <stop offset="0" stop-color="#43494A"/>
+            <stop offset="1" stop-color="#43494A"/>
         </linearGradient>
         <linearGradient id="Icons.RadioButtonSelectedFocused.focusSelectedBorderColor">
             <stop offset="0" stop-color="#466D94"/>
+            <stop offset="1" stop-color="#466D94"/>
         </linearGradient>
         <linearGradient id="Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor">
             <stop offset="0" stop-color="#A7A7A7"/>
+            <stop offset="1" stop-color="#A7A7A7"/>
         </linearGradient>
         <linearGradient id="Icons.RadioButtonSelectedFocused.glowFocus"
                         opacity="Icons.RadioButtonSelectedFocused.glowOpacity">
             <stop offset="0" stop-color="#3e84c9" stop-opacity="0.5"/>
+            <stop offset="1" stop-color="#3e84c9" stop-opacity="0.5"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">

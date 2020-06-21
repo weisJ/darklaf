@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.search.color">
             <stop offset="0" stop-color="#7F8B91"/>
+            <stop offset="1" stop-color="#7F8B91"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.search.color)" opacity=".8"

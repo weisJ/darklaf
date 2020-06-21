@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="Icons.Help.color">
             <stop offset="0" stop-color="#6E6E6E"/>
+            <stop offset="1" stop-color="#6E6E6E"/>
         </linearGradient>
     </defs>
     <path fill="url(#Icons.Help.color)"

@@ -2,6 +2,7 @@
     <defs id="colors">
         <linearGradient id="effectiveAccentColor">
             <stop offset="0" stop-color="#ED1C24"/>
+            <stop offset="1" stop-color="#ED1C24"/>
         </linearGradient>
     </defs>
     <g transform="scale(0.04)">
