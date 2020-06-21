@@ -35,24 +35,18 @@ import com.kitfox.svg.app.beans.SVGIcon;
 
 public class CustomThemedIcon extends ThemedSVGIcon {
 
-    private final UIDefaults defaults;
+    private final Map<Object, Object> defaults;
 
     public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight,
                             final Map<Object, Object> colors) {
         super(uriSupplier, displayWidth, displayHeight);
-        defaults = new UIDefaults(colors.size(), 1f);
-        for (Map.Entry<Object, Object> entry : colors.entrySet()) {
-            defaults.put(entry.getKey(), entry.getValue());
-        }
+        defaults = colors;
     }
 
     public CustomThemedIcon(final URI uri, final int displayWidth, final int displayHeight,
                             final Map<Object, Object> colors) {
         super(uri, displayWidth, displayHeight);
-        defaults = new UIDefaults(colors.size(), 1f);
-        for (Map.Entry<Object, Object> entry : colors.entrySet()) {
-            defaults.put(entry.getKey(), entry.getValue());
-        }
+        defaults = colors;
     }
 
     protected CustomThemedIcon(final int width, final int height, final CustomThemedIcon icon) {

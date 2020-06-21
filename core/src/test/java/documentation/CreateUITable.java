@@ -30,10 +30,9 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -47,9 +46,13 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.icons.IconColorMapper;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.*;
 import com.github.weisj.darklaf.util.ImageUtil;
+import com.kitfox.svg.LinearGradient;
+import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 import defaults.SampleRenderer;
 
@@ -292,15 +295,29 @@ public class CreateUITable {
             e.printStackTrace();
         }
         sb.append(StringUtil.repeat(IDENT, ident)).append("</td>\n");
+
         String svg = sb.toString();
-        Matcher matcher = Pattern.compile("url\\(#([^()]*)\\)").matcher(svg);
-        StringBuffer result = new StringBuffer();
-        while (matcher.find()) {
-            String color = String.format("#%s", ColorUtil.toHex(getColor(currentDefaults, matcher.group(1))));
-            matcher.appendReplacement(result, color);
+
+        SVGDiagram svgDiagram = icon.getSvgUniverse().getDiagram(icon.getSvgURI());
+        SVGElement defs = svgDiagram.getElement("colors");
+        List<?> children = defs.getChildren(null);
+        for (Object child : children) {
+            if (child instanceof LinearGradient) {
+                float opacity = IconColorMapper.getOpacity((LinearGradient) child, currentDefaults);
+                Color color = IconColorMapper.getColor((LinearGradient) child, currentDefaults);
+                String id = ((LinearGradient) child).getId();
+                String match = "=\"url\\(#" + id + "\\)\"";
+                String fillReplacement = "fill=\"#" + ColorUtil.toHex(color) + "\"";
+                if (opacity != 1) fillReplacement += " fill-opacity=\"" + opacity + "\"";
+                svg = svg.replaceAll("fill" + match, fillReplacement);
+
+                String strokeReplacement = "stroke=\"#" + ColorUtil.toHex(color) + "\"";
+                if (opacity != 1) strokeReplacement += " stroke-opacity=\"" + opacity + "\"";
+                svg = svg.replaceAll("stroke" + match, strokeReplacement);
+            }
         }
-        matcher.appendTail(result);
-        return result.toString();
+        svg = svg.replaceAll("\\<defs id\\=\\\"colors\\\"\\>(\\n.*)* \\<\\/defs\\>\\s+", "");
+        return svg;
     }
 
     private Color getColor(final UIDefaults defaults, final String key) {

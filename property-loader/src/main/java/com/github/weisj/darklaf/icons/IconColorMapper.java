@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.icons;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +52,7 @@ public final class IconColorMapper {
         patchColors(svgIcon, UIManager.getDefaults());
     }
 
-    public static void patchColors(final SVGIcon svgIcon, final UIDefaults defaults) {
+    public static void patchColors(final SVGIcon svgIcon, final Map<Object, Object> defaults) {
         SVGUniverse universe = svgIcon.getSvgUniverse();
         SVGDiagram diagram = universe.getDiagram(svgIcon.getSvgURI());
         LOGGER.fine(() -> "Patching colors of icon " + svgIcon.getSvgURI());
@@ -62,7 +63,8 @@ public final class IconColorMapper {
         }
     }
 
-    private static void loadColors(final SVGDiagram diagram, final UIDefaults defaults) throws SVGElementException {
+    private static void loadColors(final SVGDiagram diagram,
+                                   final Map<Object, Object> defaults) throws SVGElementException {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
         if (defs == null) {
@@ -86,7 +88,7 @@ public final class IconColorMapper {
                 String id = ((LinearGradient) child).getId();
                 StyleAttribute fallbacks = getFallbacks((LinearGradient) child);
                 String opacityKey = getOpacityKey((LinearGradient) child);
-                float opacity = getOpacity(opacityKey);
+                float opacity = getOpacity(opacityKey, defaults);
                 Color c = resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, defaults);
                 Pair<LinearGradient, Runnable> result = createColor(c, id, opacityKey, fallbacks, opacity);
                 LinearGradient gradient = result.getFirst();
@@ -97,18 +99,29 @@ public final class IconColorMapper {
         }
     }
 
+    public static float getOpacity(final LinearGradient gradient, final Map<Object, Object> propertyMap) {
+        String opacityKey = getOpacityKey(gradient);
+        return getOpacity(opacityKey, propertyMap);
+    }
+
+    public static Color getColor(final LinearGradient gradient, final Map<Object, Object> propertyMap) {
+        String id = (gradient).getId();
+        StyleAttribute fallbacks = getFallbacks(gradient);
+        return resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, propertyMap);
+    }
+
     private static Color resolveColor(final String key, final String[] fallbacks,
-                                      final Color fallbackColor, final UIDefaults defaults) {
-        Color color = defaults.getColor(key);
-        for (int i = 0; i < fallbacks.length && color == null; i++) {
-            color = defaults.getColor(fallbacks[i]);
+                                      final Color fallbackColor, final Map<Object, Object> propertyMap) {
+        Object color = propertyMap.get(key);
+        for (int i = 0; i < fallbacks.length && !(color instanceof Color); i++) {
+            color = propertyMap.get(fallbacks[i]);
         }
-        if (color == null) {
+        if (!(color instanceof Color)) {
             color = fallbackColor;
             LOGGER.warning("Could not load color with id '" + key + "' fallbacks" + Arrays.toString(fallbacks)
                            + ". Using color '" + fallbackColor + "' instead.");
         }
-        return color;
+        return (Color) color;
     }
 
     private static StyleAttribute getFallbacks(final LinearGradient child) {
@@ -127,9 +140,9 @@ public final class IconColorMapper {
         return fallbacks.getStringList();
     }
 
-    private static float getOpacity(final String key) {
+    private static float getOpacity(final String key, final Map<Object, Object> propertyMap) {
         // UIManager defaults to 0, if the values isn't an integer (or null).
-        Object obj = UIManager.get(key);
+        Object obj = propertyMap.get(key);
         if (obj instanceof Integer) {
             return ((Integer) obj) / 100.0f;
         }
