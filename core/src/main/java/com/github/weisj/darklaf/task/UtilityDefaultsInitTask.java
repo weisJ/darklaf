@@ -53,10 +53,11 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         PaintUtil.setFocusInactiveGlow(defaults.getColor("glowFocusInactive"));
         PaintUtil.setWarningGlow(defaults.getColor("glowWarning"));
 
+        CellUtil.updateColors(defaults);
+
         IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(currentTheme);
-
-        CellUtil.updateColors(defaults);
+        IconLoader.reloadFrameIcons();
     }
 
     private float getOpacity(final UIDefaults defaults, final String key) {

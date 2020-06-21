@@ -31,9 +31,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 
-import com.github.weisj.darklaf.graphics.ImageUtil;
+import com.github.weisj.darklaf.util.ImageUtil;
 
 public abstract class AbstractImageTest {
     private static final int SCALING_FACTOR = 3;

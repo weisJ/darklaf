@@ -38,8 +38,8 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
+import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -90,7 +90,7 @@ public interface ComponentDemo {
 
             Icon icon = demo.getFrameIcon();
             if (icon != null) {
-                window.setIconImage(ImageUtil.createFrameIcon(icon, window));
+                window.setIconImage(IconLoader.createFrameIcon(icon, window));
             }
 
             window.pack();

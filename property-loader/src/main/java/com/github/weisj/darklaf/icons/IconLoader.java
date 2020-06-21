@@ -24,6 +24,7 @@
  */
 package com.github.weisj.darklaf.icons;
 
+import java.awt.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -124,6 +125,13 @@ public final class IconLoader {
      */
     public static void updateThemeStatus(final Object theme) {
         currentThemeKey.set(theme);
+    }
+
+    /**
+     * Reload all created frame icons if necessary.
+     */
+    public static void reloadFrameIcons() {
+        IconUtil.reloadDynamicFrameIcons();
     }
 
     /**
@@ -363,6 +371,19 @@ public final class IconLoader {
             LOGGER.severe("Could not find icon file: '" + path + "'");
             return null;
         }
+    }
+
+    /**
+     * Create an {@link Image} from an {@link Icon} suitable for a window icon.
+     * If the window is moved to a screen with a different scaling factor or
+     * the theme changes the icon automatically gets updated.
+     *
+     * @param  icon   the icon.
+     * @param  window the window.
+     * @return        the converted {@link Image}.
+     */
+    public static Image createFrameIcon(final Icon icon, final Window window) {
+        return IconUtil.createFrameIcon(icon, window);
     }
 
     protected URL getResource(final String name) {

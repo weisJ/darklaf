@@ -22,22 +22,10 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.graphics;
+package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
-import java.util.function.BiConsumer;
-
-import javax.swing.*;
-
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.icons.ImageSource;
-import com.github.weisj.darklaf.icons.ThemedIcon;
-import com.github.weisj.darklaf.icons.UIAwareIcon;
-import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
-import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.Scale;
 
 /**
  * @author Jannis Weis
@@ -45,99 +33,6 @@ import com.github.weisj.darklaf.util.Scale;
 public final class ImageUtil {
 
     private ImageUtil() {}
-
-    private static final int FRAME_ICON_SIZE = 32;
-
-    public static Image createFrameIcon(final Icon icon, final Window c) {
-        if (c instanceof JFrame) {
-            return createFrameIcon(icon, (JFrame) c);
-        } else if (c instanceof JDialog) {
-            return createFrameIcon(icon, (JDialog) c);
-        } else {
-            return createScaledFrameIcon(icon, c);
-        }
-    }
-
-    public static Image createFrameIcon(final Icon icon, final JFrame c) {
-        return createWindowIcon(icon, c, JFrame::setIconImage);
-    }
-
-    public static Image createFrameIcon(final Icon icon, final JDialog c) {
-        return createWindowIcon(icon, c, JDialog::setIconImage);
-    }
-
-    private static <T extends Window> Image createWindowIcon(final Icon icon, final T c,
-                                                             final BiConsumer<T, Image> iconSetter) {
-        if (icon == null) return null;
-        if (c != null) {
-            if (iconNeedUpdates(icon)) {
-                ThemeInstalledListener listener = e -> iconSetter.accept(c, iconToImage(icon, c));
-                LafManager.addThemeChangeListener(listener);
-            }
-            PropertyChangeListener propertyChangeListener = e -> iconSetter.accept(c, iconToImage(icon, c));
-            c.addPropertyChangeListener(PropertyKey.GRAPHICS_CONFIGURATION, propertyChangeListener);
-        }
-        return createScaledFrameIcon(icon, c);
-    }
-
-    private static boolean iconNeedUpdates(final Icon icon) {
-        return icon instanceof UIAwareIcon || icon instanceof ThemedIcon;
-    }
-
-    private static Image createScaledFrameIcon(final Icon icon, final Window c) {
-        if (c != null && !c.isVisible()) {
-            Component parent = c.getParent();
-            if (parent != null) {
-                return iconToImage(icon, c);
-            }
-        }
-        return iconToImage(icon, c);
-    }
-
-    public static Image iconToImage(final Icon icon, final Component c) {
-        if (icon == null) return null;
-        int w = icon.getIconWidth();
-        int h = icon.getIconHeight();
-        GraphicsConfiguration gc = c.getGraphicsConfiguration();
-        double sx = Scale.getScaleX(gc);
-        double sy = Scale.getScaleY(gc);
-        double scaleX = sx * (((double) FRAME_ICON_SIZE) / w);
-        double scaleY = sy * (((double) FRAME_ICON_SIZE) / h);
-        return createScaledImage(icon, scaleX, scaleY);
-    }
-
-    public static Image createScaledImage(final Icon icon, final double scalex, final double scaley) {
-        if (icon == null) return null;
-        int w = (int) (scalex * icon.getIconWidth());
-        int h = (int) (scaley * icon.getIconHeight());
-        if (icon instanceof ImageSource) {
-            return ((ImageSource) icon).createImage(w, h);
-        } else {
-            BufferedImage image = createCompatibleTransparentImage(w, h);
-            Graphics2D g = (Graphics2D) image.getGraphics();
-            g.scale(scalex, scaley);
-            icon.paintIcon(null, g, 0, 0);
-            g.dispose();
-            return image;
-        }
-    }
-
-    public static Image createDragImage(final Component c, final int lw, final Color borderColor) {
-        return createDragImage(c, new Rectangle(0, 0, c.getWidth(), c.getHeight()), lw, borderColor);
-    }
-
-    public static Image createDragImage(final Component c, final Rectangle bounds,
-                                        final int lw, final Color borderColor) {
-        Image tabImage = ImageUtil.scaledImageFromComponent(c, bounds);
-        int w = tabImage.getWidth(null);
-        int h = tabImage.getHeight(null);
-        Graphics g = tabImage.getGraphics();
-
-        g.setColor(borderColor);
-        PaintUtil.drawRect(g, 0, 0, w, h, lw);
-        g.dispose();
-        return tabImage;
-    }
 
     /**
      * Create image from component.

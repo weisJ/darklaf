@@ -38,8 +38,8 @@ import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
-import com.github.weisj.darklaf.graphics.ImageUtil;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.DnDUtil;
 
 /**
  * @author Jannis Weis
@@ -298,7 +298,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
     protected void createDragImage(final TabFrameUI ui) {
         Component comp = currentTransferable.transferData.tab.getComponent();
-        Image tabImage = ImageUtil.createDragImage(comp, 2, ui.getDragBorderColor());
+        Image tabImage = DnDUtil.createDragImage(comp, 2, ui.getDragBorderColor());
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
         setDragImageOffset(new Point(w / 2, h / 2));

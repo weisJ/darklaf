@@ -6,7 +6,7 @@
 - Added utility method to create themed frame icons that change depending on the
   current theme:
   ````java
-  frame.setIconImage(ImageUtil.createFrameIcon(icon, frame));
+  window.setIconImage(IconLoader.createFrameIcon(icon, window));
   ````
 - The value of `ButtonConstants.KEY_SQUARE` no longer affects the arc size of buttons.
 - If a button specifies the `ButtonConstants.VARIANT_BORDERLESS` style it no longer has a default margin of the focus border size.
@@ -34,3 +34,4 @@
 - Popups show up at the wrong location after moving the frame to a screen with a different `GraphicsConfiguration`. 995da5a2325fad4e3873388a215bbb345a779658 
 - The value of `ComboBox.selectionBackground` isn't respected. 6b9fa9f1596bbf90914d7008c4d49fc43f3efb94
 - `JTree` doesn't paint the full background if repainted area lies outside of the row bounds. 4e5fe2a6faea05e9315bc1e9b30d7cec92ce9e6b
+- Tooltips have an incorrect position in some scenarios. a42f4bbbaa1c8d245efc1b95ad56e3c9aec6701d

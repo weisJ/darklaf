@@ -26,4 +26,4 @@ package com.github.weisj.darklaf.icons;
 
 import javax.swing.*;
 
-public interface ThemedIcon extends Icon {}
+public interface ThemedIcon extends DynamicIcon {}

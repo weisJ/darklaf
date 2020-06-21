@@ -32,7 +32,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.DefaultButton;
-import com.github.weisj.darklaf.graphics.ImageUtil;
+import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
@@ -91,7 +91,7 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected JDialog createDialog(final Window parent) {
         JDialog dialog = new JDialog(parent);
-        dialog.setIconImage(ImageUtil.createFrameIcon(getIcon(), dialog));
+        dialog.setIconImage(IconLoader.createFrameIcon(getIcon(), dialog));
         dialog.setTitle(settingsPanel.getTitle());
         dialog.setContentPane(contentPane);
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

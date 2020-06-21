@@ -35,7 +35,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.plaf.TabbedPaneUI;
 
-import com.github.weisj.darklaf.graphics.ImageUtil;
+import com.github.weisj.darklaf.util.DnDUtil;
 
 /**
  * @author Robert Futrell
@@ -166,7 +166,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     protected void createDragImage(final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
         Color color = ui != null ? ui.getDragBorderColor()
                 : tabbedPane.getBackgroundAt(currentTransferable.transferData.tabIndex);
-        Image tabImage = ImageUtil.createDragImage(tabbedPane, currentTransferable.transferData.tabBounds, 2, color);
+        Image tabImage = DnDUtil.createDragImage(tabbedPane, currentTransferable.transferData.tabBounds, 2, color);
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
         setDragImageOffset(new Point(w / 2, h / 2));
