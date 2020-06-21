@@ -129,16 +129,23 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     private boolean ensureSVGLoaded() {
         if (!loaded.get()) {
-            if (uri == null && uriSupplier != null) {
-                uri = uriSupplier.get();
-                uriSupplier = null;
-            }
+            ensureURILoaded();
             LOGGER.fine(() -> "Loading icon '" + uri.toASCIIString() + "'.");
             icon.setSvgURI(uri);
             loaded.set(true);
             return true;
         }
         return false;
+    }
+
+    private void ensureURILoaded() {
+        if (uri == null && uriSupplier != null) {
+            uri = uriSupplier.get();
+            uriSupplier = null;
+        }
+        if (uri == null) {
+            throw new IllegalStateException("Uri is null.");
+        }
     }
 
     protected void updateCache(final boolean update, final Component c) {
@@ -175,6 +182,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     protected String getName() {
+        ensureURILoaded();
         String name = uri.toASCIIString();
         name = name.substring(Math.min(name.length() - 1, name.lastIndexOf('/') + 1));
         return name;
