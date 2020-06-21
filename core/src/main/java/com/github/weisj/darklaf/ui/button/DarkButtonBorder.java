@@ -288,26 +288,17 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
-        Insets margins = c instanceof AbstractButton ? ((AbstractButton) c).getMargin() : null;
-
         if (ButtonConstants.isBorderlessRectangular(c)) {
-            Insets ins = new InsetsUIResource(borderlessRectangularInsets.top, borderlessRectangularInsets.left,
-                                              borderlessRectangularInsets.bottom, borderlessRectangularInsets.right);
-            return getInsets(ins, margins);
+            return new InsetsUIResource(borderlessRectangularInsets.top, borderlessRectangularInsets.left,
+                                        borderlessRectangularInsets.bottom, borderlessRectangularInsets.right);
         }
-        boolean shadowVariant = ButtonConstants.isBorderlessVariant(c);
+        boolean shadowVariant = ButtonConstants.isBorderless(c);
         int shadow = shadowVariant ? 0 : getShadowSize();
         boolean square = ButtonConstants.isSquare(c);
-        Insets pad = ButtonConstants.isThin(c) ? square ? squareThinInsets
-                : thinInsets
-                : square ? squareInsets
-                : insets;
-        pad = getInsets(pad, margins);
+        Insets pad = ButtonConstants.isThin(c)
+                ? square ? squareThinInsets : thinInsets
+                : square ? squareInsets : insets;
         return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
-    }
-
-    protected Insets getInsets(final Insets ins, final Insets margin) {
-        return ins;
     }
 
     protected Insets maskInsets(final Insets ins, final Component c, final int shadow) {
