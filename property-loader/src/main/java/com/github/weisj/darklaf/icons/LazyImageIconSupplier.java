@@ -24,19 +24,27 @@
  */
 package com.github.weisj.darklaf.icons;
 
+import java.awt.*;
+import java.util.function.Supplier;
+
 import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
-public class LazyImageIcon extends LazyIcon {
+public class LazyImageIconSupplier extends AbstractLazyIconSupplier<ImageIcon>
+                                   implements Supplier<Image> {
 
-    public LazyImageIcon(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
+    public LazyImageIconSupplier(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
         super(path, key, parentClass);
     }
 
     @Override
-    protected Icon loadIcon() {
+    protected ImageIcon loadIcon() {
         return IconLoader.get(parentClass).createImageIcon(path, path);
+    }
+
+    @Override
+    public Image get() {
+        ImageIcon imageIcon = getIcon();
+        if (imageIcon != null) return imageIcon.getImage();
+        return null;
     }
 }

@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.icons;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.swing.*;
 
@@ -35,6 +36,15 @@ import com.kitfox.svg.app.beans.SVGIcon;
 public class CustomThemedIcon extends ThemedSVGIcon {
 
     private final UIDefaults defaults;
+
+    public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight,
+                            final Map<Object, Object> colors) {
+        super(uriSupplier, displayWidth, displayHeight);
+        defaults = new UIDefaults(colors.size(), 1f);
+        for (Map.Entry<Object, Object> entry : colors.entrySet()) {
+            defaults.put(entry.getKey(), entry.getValue());
+        }
+    }
 
     public CustomThemedIcon(final URI uri, final int displayWidth, final int displayHeight,
                             final Map<Object, Object> colors) {

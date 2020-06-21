@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -162,7 +163,7 @@ public final class IconLoader {
      * @return      the icon.
      */
     public DarkUIAwareIcon getUIAwareIcon(final String path) {
-        return getUIAwareIcon(path, DEFAULT_W, DEFAULT_H);
+        return getUIAwareIcon(path, getDefaultWidth(path), getDefaultHeight(path));
     }
 
     /**
@@ -203,7 +204,7 @@ public final class IconLoader {
      * @return      the icon.
      */
     public Icon getIcon(final String path) {
-        return getIcon(path, DEFAULT_W, DEFAULT_H);
+        return getIcon(path, getDefaultWidth(path), getDefaultHeight(path));
     }
 
     /**
@@ -218,7 +219,7 @@ public final class IconLoader {
      * @return        the icon.
      */
     public Icon getIcon(final String path, final boolean themed) {
-        return getIcon(path, DEFAULT_W, DEFAULT_H, themed);
+        return getIcon(path, getDefaultWidth(path), getDefaultHeight(path), themed);
     }
 
     /**
@@ -257,32 +258,36 @@ public final class IconLoader {
             } else if (awareIconMap.containsKey(key)) {
                 return awareIconMap.get(key);
             }
-            key.w = -1; // Enable wild card search. Find any icon that matches path.
-            if (iconMap.containsKey(key)) {
-                Icon icon = iconMap.get(key);
-                if (icon instanceof DerivableIcon) {
-                    // If the desired icon is an DarkSVGIcon we can create a view that shares the underlying svg with
-                    // the existing icon.
-                    Icon derived = ((DerivableIcon<Icon>) icon).derive(w, h);
-                    key.w = w;
-                    cache(iconMap, key, derived);
-                    return derived;
-                }
-            }
+            Icon icon = getWildcardIcon(iconMap, key, w, h);
+            if (icon != null) return icon;
         }
 
         // Icon not found or caching is disabled.
 
         key.w = w; // Restore key.
-        if (path.endsWith(".svg")) {
+        if (isSVGIcon(path)) {
             Icon icon = loadSVGIcon(path, w, h, themed);
             cache(iconMap, key, icon);
             return icon;
         } else {
-            Icon icon = new LazyImageIcon(path, key, parentClass);
+            Icon icon = new DerivableImageIcon(new LazyImageIconSupplier(path, key, parentClass), w, h);
             cache(iconMap, key, icon);
             return icon;
         }
+    }
+
+    private Icon getWildcardIcon(final Map<IconKey, Icon> iconMap,
+                                 final IconKey iconKey, final int w, final int h) {
+        iconKey.w = -1;
+        Icon icon = iconMap.get(iconKey);
+        if (icon instanceof DerivableIcon) {
+            @SuppressWarnings("unchecked")
+            Icon derived = ((DerivableIcon<Icon>) icon).derive(w, h);
+            iconKey.w = w;
+            cache(iconMap, iconKey, derived);
+            return derived;
+        }
+        return null;
     }
 
     private <T extends Icon> void cache(final Map<IconKey, T> iconMap, final IconKey key, final T icon) {
@@ -337,22 +342,28 @@ public final class IconLoader {
      */
     public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
                             final Map<Object, Object> propertyMap) {
-        try {
-            if (themed) {
-                final URI uri = Objects.requireNonNull(getResource(path).toURI());
-                if (propertyMap != null) {
-                    return new CustomThemedIcon(uri, w, h, propertyMap);
-                } else {
-                    return new ThemedSVGIcon(uri, w, h);
-                }
+        Supplier<URI> uriSupplier = createURISupplier(path);
+        if (themed) {
+            if (propertyMap != null) {
+                return new CustomThemedIcon(uriSupplier, w, h, propertyMap);
             } else {
-                return new DarkSVGIcon(Objects.requireNonNull(getResource(path).toURI()), w, h);
+                return new ThemedSVGIcon(uriSupplier, w, h);
             }
-        } catch (NullPointerException | URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
-                       e.getStackTrace());
+        } else {
+            return new DarkSVGIcon(createURISupplier(path), w, h);
         }
-        return EmptyIcon.create(0);
+    }
+
+    private Supplier<URI> createURISupplier(final String path) {
+        return () -> {
+            try {
+                return Objects.requireNonNull(getResource(path).toURI());
+            } catch (NullPointerException | URISyntaxException e) {
+                LOGGER.log(Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
+                           e.getStackTrace());
+            }
+            return null;
+        };
     }
 
     /**
@@ -362,8 +373,7 @@ public final class IconLoader {
      * @param  description description of the icon as described in {@link ImageIcon#setDescription(String)}
      * @return             the ImageIcon.
      */
-    public ImageIcon createImageIcon(final String path,
-                                     final String description) {
+    ImageIcon createImageIcon(final String path, final String description) {
         java.net.URL imgURL = getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
@@ -394,6 +404,20 @@ public final class IconLoader {
         }
     }
 
+    private int getDefaultWidth(final String path) {
+        if (!isSVGIcon(path)) return -1;
+        return DEFAULT_W;
+    }
+
+    private int getDefaultHeight(final String path) {
+        if (!isSVGIcon(path)) return -1;
+        return DEFAULT_H;
+    }
+
+    private boolean isSVGIcon(final String path) {
+        return path != null && path.endsWith(".svg");
+    }
+
     protected static final class IconKey {
         final String path;
         int w;
@@ -407,7 +431,7 @@ public final class IconLoader {
 
         @Override
         public int hashCode() {
-            return Objects.hash(path, w, h);
+            return Objects.hash(path);
         }
 
         @Override
@@ -417,7 +441,7 @@ public final class IconLoader {
 
             IconKey iconKey = (IconKey) o;
 
-            if (iconKey.w == -1 || iconKey.h == -1) {
+            if (iconKey.w == -1 || iconKey.h == -1 || this.h == -1 || this.w == -1) {
                 // Math any size.
                 return Objects.equals(path, iconKey.path);
             }

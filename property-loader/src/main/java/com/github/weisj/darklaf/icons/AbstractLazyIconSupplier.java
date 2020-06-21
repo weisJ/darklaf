@@ -24,36 +24,25 @@
  */
 package com.github.weisj.darklaf.icons;
 
-import java.awt.*;
 import java.util.logging.Logger;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.util.LogUtil;
 
-/**
- * @author Jannis Weis
- */
-public abstract class LazyIcon implements Icon, UIResource {
+public abstract class AbstractLazyIconSupplier<T extends Icon> implements IconSupplier<T> {
 
-    private static final Logger LOGGER = LogUtil.getLogger(LazyIcon.class);
+    private static final Logger LOGGER = LogUtil.getLogger(AbstractLazyIconSupplier.class);
     protected final String path;
     protected final IconLoader.IconKey key;
     protected final Class<?> parentClass;
     private boolean loaded;
-    private Icon icon;
+    private T icon;
 
-    public LazyIcon(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
+    public AbstractLazyIconSupplier(final String path, final IconLoader.IconKey key, final Class<?> parentClass) {
         this.path = path;
         this.key = key;
         this.parentClass = parentClass;
-    }
-
-    @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        ensureLoaded();
-        icon.paintIcon(c, g, x, y);
     }
 
     private void ensureLoaded() {
@@ -69,17 +58,11 @@ public abstract class LazyIcon implements Icon, UIResource {
         }
     }
 
-    protected abstract Icon loadIcon();
+    protected abstract T loadIcon();
 
     @Override
-    public int getIconWidth() {
+    public T getIcon() {
         ensureLoaded();
-        return icon.getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-        ensureLoaded();
-        return icon.getIconHeight();
+        return icon;
     }
 }

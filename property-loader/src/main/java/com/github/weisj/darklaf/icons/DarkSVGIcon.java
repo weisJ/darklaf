@@ -29,6 +29,7 @@ import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import com.github.weisj.darklaf.util.LogUtil;
@@ -54,15 +55,34 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
      */
     private static final double extraScale = 1.5;
 
+    private final AtomicBoolean loaded;
     private final Dimension size;
     private final SVGIcon icon;
-    private final URI uri;
-    private final AtomicBoolean loaded;
+
+    private Supplier<URI> uriSupplier;
+    private URI uri;
 
     private boolean loadedWithExtraScale;
     private double scaleX;
     private double scaleY;
     private Image image;
+
+    /**
+     * Method to fetch the SVG icon from a url.
+     *
+     * @param uriSupplier   supplier for the uri from which to fetch the SVG icon.
+     * @param displayWidth  display width of icon.
+     * @param displayHeight display height of icon.
+     */
+    public DarkSVGIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight) {
+        this.uri = null;
+        this.uriSupplier = uriSupplier;
+        size = new Dimension(displayWidth, displayHeight);
+        icon = createSVGIcon();
+        icon.setAutosize(SVGIcon.AUTOSIZE_STRETCH);
+        icon.setAntiAlias(true);
+        loaded = new AtomicBoolean(false);
+    }
 
     /**
      * Method to fetch the SVG icon from a url.
@@ -73,6 +93,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
      */
     public DarkSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
         this.uri = uri;
+        uriSupplier = null;
         size = new Dimension(displayWidth, displayHeight);
         icon = createSVGIcon();
         icon.setAutosize(SVGIcon.AUTOSIZE_STRETCH);
@@ -84,6 +105,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         this.size = new Dimension(width, height);
         this.icon = icon.icon;
         this.uri = icon.uri;
+        this.uriSupplier = icon.uriSupplier;
         this.loaded = icon.loaded;
     }
 
@@ -107,6 +129,10 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     private boolean ensureSVGLoaded() {
         if (!loaded.get()) {
+            if (uri == null && uriSupplier != null) {
+                uri = uriSupplier.get();
+                uriSupplier = null;
+            }
             LOGGER.fine(() -> "Loading icon '" + uri.toASCIIString() + "'.");
             icon.setSvgURI(uri);
             loaded.set(true);
