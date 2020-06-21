@@ -210,7 +210,8 @@ public class StringPainter {
         if (translucentAAPaintingEnabled && SystemInfo.isWindows) {
             Component comp = c;
             while (comp != null) {
-                imgGraphics = comp.getBackground().getAlpha() < 255;
+                Color bg = comp.getBackground();
+                imgGraphics = bg != null && bg.getAlpha() < 255;
                 if (imgGraphics) {
                     break;
                 }
