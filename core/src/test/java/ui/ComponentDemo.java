@@ -188,6 +188,7 @@ public interface ComponentDemo {
         Level currentLevel = LafManager.getLogLevel();
         for (Level level : levels) {
             JRadioButtonMenuItem mi = new JRadioButtonMenuItem(level.getName());
+            mi.addActionListener(e -> LafManager.setLogLevel(level));
             bg.add(mi);
             logging.add(mi);
             if (level.equals(currentLevel)) {

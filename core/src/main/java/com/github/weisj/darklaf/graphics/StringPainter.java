@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.lang.reflect.Field;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
@@ -40,6 +41,8 @@ import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.util.*;
 
 public class StringPainter {
+
+    private static final Logger LOGGER = LogUtil.getLogger(StringPainter.class);
 
     private static boolean translucentAAPaintingEnabled = true;
     private static boolean experimentalAntialiasingEnabled = false;
@@ -146,6 +149,7 @@ public class StringPainter {
         boolean paintOpaqueBuffered = window != null;
 
         if (paintOpaqueBuffered) {
+            LOGGER.fine(() -> "Using opaque buffering for " + c);
             double scaleX = Scale.getScaleX((Graphics2D) g);
             double scaleY = Scale.getScaleX((Graphics2D) g);
 
