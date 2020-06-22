@@ -32,17 +32,18 @@ import java.util.function.Supplier;
 import javax.accessibility.*;
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.LazyValue;
+
 public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Accessible {
 
-    private static final int DEFAULT_SCALING_MODE = Image.SCALE_SMOOTH;
+    private static final int DEFAULT_SCALING_MODE = Image.SCALE_DEFAULT;
     private final int scalingMode;
 
     private int width;
     private int height;
 
-    private Supplier<Image> imageSupplier;
-    private Image original;
-    private Image img;
+    private final LazyValue<Image> original;
+    private final LazyImageValue image;
     private String description;
     private AccessibleContext accessibleContext;
 
@@ -125,7 +126,8 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
         this.width = width;
         this.height = height;
         this.scalingMode = scalingMode;
-        this.imageSupplier = imageSupplier;
+        this.original = new LazyValue<>(imageSupplier);
+        this.image = new LazyImageValue(this);
     }
 
     /**
@@ -220,10 +222,8 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
         this.width = width;
         this.height = height;
         this.scalingMode = scalingMode;
-        this.original = img;
-        if (img != null && img.getWidth(null) == width && img.getHeight(null) == height) {
-            this.img = img;
-        }
+        this.original = new LazyValue<>(img);
+        this.image = new LazyImageValue(this);
     }
 
     protected DerivableImageIcon(final DerivableImageIcon parent, final int width, final int height) {
@@ -232,16 +232,7 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
         this.scalingMode = parent.scalingMode;
         this.original = parent.original;
         this.description = parent.description;
-        this.imageSupplier = parent.imageSupplier;
-        if (this.original != null
-            && this.original.getWidth(null) == width
-            && this.original.getHeight(null) == height) {
-            this.img = this.original;
-        } else if (parent.img != null
-                   && parent.img.getWidth(null) == width
-                   && parent.img.getHeight(null) == height) {
-            this.img = parent.img;
-        }
+        this.image = parent.image.derive(this);
     }
 
     @Override
@@ -249,31 +240,9 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
         return new DerivableImageIcon(this, width, height);
     }
 
-    protected void ensureOriginalLoaded() {
-        if (original == null && imageSupplier != null) {
-            original = imageSupplier.get();
-            imageSupplier = null;
-        }
-    }
-
-    protected void ensureLoaded() {
-        ensureOriginalLoaded();
-        if (original != null && (width < 0 || height < 0)) {
-            if (width < 0) width = original.getWidth(null);
-            if (height < 0) height = original.getHeight(null);
-        }
-        if (img == null && original != null && width > 0 && height > 0) {
-            if (original.getWidth(null) != width || original.getHeight(null) != height) {
-                img = original.getScaledInstance(width, height, scalingMode);
-            } else {
-                img = original;
-            }
-        }
-    }
-
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        ensureLoaded();
+        Image img = image.get();
         if (img != null) {
             g.drawImage(img, x, y, width, height, null);
         }
@@ -285,19 +254,32 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * @return the image.
      */
     public Image getImage() {
-        ensureLoaded();
+        return image.get();
+    }
+
+    protected Image getOriginal() {
+        Image img = original.get();
+        calculateSize();
         return img;
+    }
+
+    private void calculateSize() {
+        Image originalImage = original.get();
+        if (originalImage != null && (width < 0 || height < 0)) {
+            if (width < 0) width = originalImage.getWidth(null);
+            if (height < 0) height = originalImage.getHeight(null);
+        }
     }
 
     @Override
     public int getIconWidth() {
-        if (width < 0) ensureLoaded();
+        if (width < 0) calculateSize();
         return width;
     }
 
     @Override
     public int getIconHeight() {
-        if (height < 0) ensureLoaded();
+        if (height < 0) calculateSize();
         return height;
     }
 
@@ -390,6 +372,40 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
         @Override
         public int getAccessibleIconHeight() {
             return icon.getIconHeight();
+        }
+    }
+
+    protected static class LazyImageValue extends LazyValue<Image> {
+
+        private final DerivableImageIcon icon;
+
+        public LazyImageValue(final DerivableImageIcon icon) {
+            super((Image) null);
+            this.icon = icon;
+        }
+
+        public LazyImageValue derive(final DerivableImageIcon icon) {
+            if (this.icon.width == icon.width && this.icon.height == icon.height) {
+                // Make sure all icons with the same dimension share one image.
+                return this;
+            }
+            return new LazyImageValue(icon);
+        }
+
+        @Override
+        protected Image load() {
+            Image originalImage = icon.getOriginal();
+            int width = icon.getIconWidth();
+            int height = icon.getIconHeight();
+            if (originalImage != null && width > 0 && height > 0) {
+                if (originalImage.getWidth(null) != width
+                    || originalImage.getHeight(null) != height) {
+                    return originalImage.getScaledInstance(width, height, icon.scalingMode);
+                } else {
+                    return originalImage;
+                }
+            }
+            return null;
         }
     }
 }

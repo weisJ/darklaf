@@ -22,38 +22,33 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.icons;
 
-import java.util.function.Supplier;
+import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
-public class LazyValue<T> {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-    private Supplier<T> supplier;
-    private T value;
+public class DerivableImageIconTest {
 
-    public LazyValue(final T value) {
-        this.value = value;
-    }
-
-    public LazyValue(final Supplier<T> supplier) {
-        this.supplier = supplier;
-    }
-
-    public boolean isInitialized() {
-        return supplier == null;
-    }
-
-    protected T load() {
-        if (supplier != null) {
-            T obj = supplier.get();
-            supplier = null;
-            return obj;
+    @Test
+    public void testCache() {
+        IconLoader loader = IconLoader.get(DerivableImageIconTest.class);
+        DerivableImageIcon icon = (DerivableImageIcon) loader.getIcon("image_icon.png");
+        Set<Image> imageSet = new HashSet<>();
+        for (int i = 0; i < 100; i++) {
+            Image img = ((DerivableImageIcon) loader.getIcon("image_icon.png", 100, 100)).getImage();
+            imageSet.add(img);
         }
-        return value;
-    }
+        Assertions.assertEquals(1, imageSet.size());
 
-    public T get() {
-        if (value == null) value = load();
-        return value;
+        imageSet.clear();
+        icon = icon.derive(50, 50);
+        for (int i = 0; i < 100; i++) {
+            imageSet.add(icon.derive(50, 50).getImage());
+        }
+        Assertions.assertEquals(1, imageSet.size());
     }
 }

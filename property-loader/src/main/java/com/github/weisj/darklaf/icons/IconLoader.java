@@ -263,8 +263,6 @@ public final class IconLoader {
         }
 
         // Icon not found or caching is disabled.
-
-        key.w = w; // Restore key.
         if (isSVGIcon(path)) {
             Icon icon = loadSVGIcon(path, w, h, themed);
             cache(iconMap, key, icon);
@@ -278,15 +276,16 @@ public final class IconLoader {
 
     private Icon getWildcardIcon(final Map<IconKey, Icon> iconMap,
                                  final IconKey iconKey, final int w, final int h) {
-        iconKey.w = -1;
+        iconKey.isWildcardEnabled = true;
         Icon icon = iconMap.get(iconKey);
         if (icon instanceof DerivableIcon) {
             @SuppressWarnings("unchecked")
             Icon derived = ((DerivableIcon<Icon>) icon).derive(w, h);
-            iconKey.w = w;
+            iconKey.isWildcardEnabled = false;
             cache(iconMap, iconKey, derived);
             return derived;
         }
+        iconKey.isWildcardEnabled = false;
         return null;
     }
 
@@ -374,7 +373,7 @@ public final class IconLoader {
      * @return             the ImageIcon.
      */
     ImageIcon createImageIcon(final String path, final String description) {
-        java.net.URL imgURL = getResource(path);
+        URL imgURL = getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
         } else {
@@ -422,6 +421,7 @@ public final class IconLoader {
         final String path;
         int w;
         int h;
+        boolean isWildcardEnabled;
 
         private IconKey(final String path, final int w, final int h) {
             this.path = path;
@@ -441,7 +441,7 @@ public final class IconLoader {
 
             IconKey iconKey = (IconKey) o;
 
-            if (iconKey.w == -1 || iconKey.h == -1 || this.h == -1 || this.w == -1) {
+            if (iconKey.isWildcardEnabled || this.isWildcardEnabled) {
                 // Math any size.
                 return Objects.equals(path, iconKey.path);
             }

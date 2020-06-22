@@ -101,12 +101,12 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         loaded = new AtomicBoolean(false);
     }
 
-    protected DarkSVGIcon(final int width, final int height, final DarkSVGIcon icon) {
+    protected DarkSVGIcon(final int width, final int height, final DarkSVGIcon parent) {
         this.size = new Dimension(width, height);
-        this.icon = icon.icon;
-        this.uri = icon.uri;
-        this.uriSupplier = icon.uriSupplier;
-        this.loaded = icon.loaded;
+        this.icon = parent.icon;
+        this.uri = parent.uri;
+        this.uriSupplier = parent.uriSupplier;
+        this.loaded = parent.loaded;
     }
 
     @Override
@@ -174,15 +174,14 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
                  * If we get to here the issue was that the icon hasn't been patched because it isn't loaded as a themed
                  * svg icon.
                  */
-                LOGGER.severe("Icon '" + getName() + "' that defines custom colors isn't loaded as themed icon.");
+                LOGGER.severe("Icon '" + getName(uri) + "' that defines custom colors isn't loaded as themed icon.");
                 return img;
             }
             throw e;
         }
     }
 
-    protected String getName() {
-        ensureURILoaded();
+    protected String getName(final URI uri) {
         String name = uri.toASCIIString();
         name = name.substring(Math.min(name.length() - 1, name.lastIndexOf('/') + 1));
         return name;
