@@ -47,7 +47,8 @@ public class DerivableImageIconTest {
         imageSet.clear();
         icon = icon.derive(50, 50);
         for (int i = 0; i < 100; i++) {
-            imageSet.add(icon.derive(50, 50).getImage());
+            icon = icon.derive(50, 50);
+            imageSet.add(icon.getImage());
         }
         Assertions.assertEquals(1, imageSet.size());
     }
