@@ -42,6 +42,7 @@ import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 import com.github.weisj.darklaf.ui.text.bridge.DarkTextFieldUIBridge;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import sun.swing.SwingUtilities2;
 
 /**
  * @author Jannis Weis
@@ -141,6 +142,12 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     @Override
     protected Rectangle getVisibleEditorRect() {
         Rectangle rect = super.getVisibleEditorRect();
+        FontMetrics fm = SwingUtilities2.getFontMetrics(editor, editor.getFont());
+        int asc = fm.getMaxAscent();
+        Insets ins = editor.getInsets();
+        int height = editor.getHeight() - ins.top - ins.bottom;
+        rect.y = ins.top + (height - asc) / 2;
+        rect.y -= fm.getDescent() / 2;
         adjustTextRect(getComponent(), rect);
         return rect;
     }
