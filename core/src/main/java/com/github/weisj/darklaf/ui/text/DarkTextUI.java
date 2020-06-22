@@ -214,6 +214,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             String defaultText = getDefaultText();
             if (!defaultText.isEmpty()) {
                 Component renderer = getDefaultTextRenderer().getRendererComponent(editor, defaultText);
+                renderer.setFont(editor.getFont());
                 Dimension prefSize = renderer.getPreferredSize();
                 Insets i = c.getInsets();
                 prefSize.width += i.left + i.right;
@@ -321,6 +322,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 Rectangle rect = getVisibleEditorRect();
                 g.translate(rect.x, rect.y);
                 Component renderer = getDefaultTextRenderer().getRendererComponent(editor, defaultText);
+                renderer.setFont(editor.getFont());
                 renderer.setBounds(rect);
                 editor.add(renderer);
                 renderer.paint(g);
