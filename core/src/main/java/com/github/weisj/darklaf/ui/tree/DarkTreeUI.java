@@ -39,6 +39,7 @@ import javax.swing.tree.*;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
+import com.github.weisj.darklaf.ui.cell.hint.CellHintPopupListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -117,6 +118,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     protected Icon collapsed;
     private boolean oldRepaintAllRowValue;
 
+    protected CellHintPopupListener<JTree, ?> popupListener;
+
     protected DarkTreeCellRendererDelegate rendererDelegate;
 
     public static ComponentUI createUI(final JComponent c) {
@@ -176,8 +179,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     @Override
     protected void installListeners() {
         super.installListeners();
+        popupListener = createPopupMouseListener();
+        popupListener.install();
         tree.addPropertyChangeListener(this);
         tree.addMouseListener(selectionListener);
+    }
+
+    protected CellHintPopupListener<JTree, ?> createPopupMouseListener() {
+        return new CellHintPopupListener<>(new TreeCellContainer(tree, this));
     }
 
     @Override
@@ -368,6 +377,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
+        popupListener.uninstall();
+        popupListener = null;
         tree.removeMouseListener(selectionListener);
         tree.removePropertyChangeListener(this);
     }
@@ -425,20 +436,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             while (backgroundEnumerator != null && backgroundEnumerator.hasMoreElements()) {
                 path = (TreePath) backgroundEnumerator.nextElement();
                 if (path != null) {
-                    isLeaf = treeModel.isLeaf(path.getLastPathComponent());
-                    if (isLeaf) {
-                        isExpanded = hasBeenExpanded = false;
-                    } else {
-                        isExpanded = treeState.getExpandedState(path);
-                        hasBeenExpanded = tree.hasBeenExpanded(path);
-                    }
                     bounds = getPathBounds(path, insets, boundsBuffer);
                     if (bounds == null) return;
                     bounds.x = xOffset;
                     bounds.width = containerWidth;
                     if (paintBounds.intersects(bounds)) {
-                        paintRowBackground(g, paintBounds, bounds, path,
-                                           tree.getRowForPath(path));
+                        paintRowBackground(g, paintBounds, bounds, path, tree.getRowForPath(path));
                     }
                 }
             }
@@ -508,6 +511,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         return super.getCellRenderer();
     }
 
+    public Component getEditingComponent() {
+        return editingComponent;
+    }
+
+    public int getEditingRow() {
+        return editingRow;
+    }
+
     protected Rectangle getPathBounds(final TreePath path, final Insets insets, Rectangle bounds) {
         bounds = treeState.getBounds(path, bounds);
         if (bounds != null) {
@@ -535,6 +546,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
             rowGraphics.dispose();
         }
+    }
+
+    @Override
+    public void update(final Graphics g, final JComponent c) {
+        popupListener.repaint();
+        super.update(g, c);
     }
 
     @Override

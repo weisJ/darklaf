@@ -66,24 +66,26 @@ public class DarkPopupFactory extends PopupFactory {
         if (forceHeavy) {
             // Heavy weight owner forces a heavyweight popup.
             Window targetWindow = DarkUIUtil.getWindow(owner);
-            Popup p = super.getPopup(getHeavyWeightParent(targetWindow), contents, x, y);
+            popup = super.getPopup(getHeavyWeightParent(targetWindow), contents, x, y);
+            type = PopupType.HEAVY_WEIGHT;
+        }
+        if (type == PopupType.HEAVY_WEIGHT) {
             Window window = DarkUIUtil.getWindow(contents);
-            if (!Objects.equals(window.getGraphicsConfiguration(),
-                                targetWindow.getGraphicsConfiguration())) {
+            if ((owner != null && window != null)
+                && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())) {
                 /*
                  * Window uses incorrect graphics configuration.
                  * Setting the focusable window state will force the PopupFactory to dispose it and create
                  * a new window.
                  */
                 window.setFocusableWindowState(true);
-                p = super.getPopup(getHeavyWeightParent(targetWindow), contents, x, y);
+                popup = super.getPopup(getHeavyWeightParent(DarkUIUtil.getWindow(owner)), contents, x, y);
             }
-            return new Pair<>(p, PopupType.HEAVY_WEIGHT);
         }
         return new Pair<>(popup, type);
     }
 
-    protected PopupType getPopupType(final Popup popup) {
+    public static PopupType getPopupType(final Popup popup) {
         String popupClassName = popup.getClass().getSimpleName();
         if (popupClassName.endsWith("LightWeightPopup")) return PopupType.LIGHT_WEIGHT;
         if (popupClassName.endsWith("MediumWeightPopup")) return PopupType.MEDIUM_WEIGHT;
@@ -209,7 +211,7 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected enum PopupType {
+    public enum PopupType {
         LIGHT_WEIGHT,
         MEDIUM_WEIGHT,
         HEAVY_WEIGHT
