@@ -31,6 +31,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -39,7 +40,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /**
  * @author Jannis Weis
  */
-public class DarkListUI extends DarkListUIBridge {
+public class DarkListUI extends DarkListUIBridge implements CellConstants {
 
     protected static final String KEY_PREFIX = "JList.";
     public static final String KEY_IS_COMBO_LIST = KEY_PREFIX + ".isComboList";
@@ -49,8 +50,6 @@ public class DarkListUI extends DarkListUIBridge {
     public static final String KEY_SHRINK_WRAP = KEY_PREFIX + "shrinkWrap";
     public static final String KEY_FULL_ROW_SELECTION = KEY_PREFIX + "fullRowSelection";
     public static final String KEY_IS_EDITING = KEY_PREFIX + "isEditing";
-    public static final String RENDER_TYPE_CHECKBOX = "checkBox";
-    public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
     public static final String KEY_IS_LIST_EDITOR = "JComponent.listCellEditor";
 
     protected DarkListCellRendererDelegate rendererDelegate;

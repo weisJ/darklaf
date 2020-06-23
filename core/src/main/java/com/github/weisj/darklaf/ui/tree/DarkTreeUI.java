@@ -36,6 +36,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 
+import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -46,7 +47,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
+public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, CellConstants {
 
     protected static final String KEY_PREFIX = "JTree.";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
@@ -54,8 +55,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener {
     public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
     public static final String KEY_LINE_STYLE = KEY_PREFIX + "lineStyle";
     public static final String KEY_MAC_ACTIONS_INSTALLED = "MacTreeUi.actionsInstalled";
-    public static final String RENDER_TYPE_CHECKBOX = "checkBox";
-    public static final String RENDER_TYPE_RADIOBUTTON = "radioButton";
     public static final String STYLE_LINE = "line";
     public static final String STYLE_DASHED = "dashed";
     public static final String STYLE_NONE = "none";

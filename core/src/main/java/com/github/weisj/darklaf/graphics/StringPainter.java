@@ -208,10 +208,10 @@ public class StringPainter {
         }
     }
 
-    private static Component getNonOpaqueWindow(final Component c) {
+    private static Component getNonOpaqueWindow(final JComponent c) {
         boolean imgGraphics = false;
         Component window = c;
-        if (translucentAAPaintingEnabled && SystemInfo.isWindows) {
+        if (translucentAAPaintingEnabled && SystemInfo.isWindows && !GraphicsUtil.isOpaqueBuffered(c)) {
             Component comp = c;
             while (comp != null) {
                 Color bg = comp.getBackground();

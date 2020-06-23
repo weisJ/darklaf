@@ -26,9 +26,10 @@ package com.github.weisj.darklaf.ui.table;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public interface TableConstants {
+public interface TableConstants extends CellConstants {
 
     String KEY_IS_TABLE_EDITOR = "JComponent.isTableEditor";
     String KEY_IS_TABLE_RENDERER = "JComponent.isTableRenderer";
@@ -44,8 +45,6 @@ public interface TableConstants {
     String KEY_VERTICAL_LINES = "showVerticalLines";
     String KEY_IS_FILE_LIST = "Table.isFileList";
     String KEY_IS_PRINT_MODE = "Table.printMode";
-    String RENDER_TYPE_CHECKBOX = "checkBox";
-    String RENDER_TYPE_RADIOBUTTON = "radioButton";
 
     static boolean isBooleanRenderingEnabled(final JTable table) {
         return PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX);

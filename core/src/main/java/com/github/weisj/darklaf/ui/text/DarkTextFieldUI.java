@@ -35,6 +35,8 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
+import sun.swing.SwingUtilities2;
+
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.listener.MouseMovementListener;
@@ -42,7 +44,6 @@ import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 import com.github.weisj.darklaf.ui.text.bridge.DarkTextFieldUIBridge;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import sun.swing.SwingUtilities2;
 
 /**
  * @author Jannis Weis

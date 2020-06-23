@@ -22,18 +22,9 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.tooltip;
+package com.github.weisj.darklaf.ui.cell;
 
-public interface ToolTipConstants {
-    String KEY_STYLE = "JToolTip.style";
-    String KEY_INSETS = "JToolTip.insets";
-    String KEY_POINTER_LOCATION = "JToolTip.pointerLocation";
-    String KEY_POINTER_WIDTH = "JToolTip.pointerWidth";
-    String KEY_POINTER_HEIGHT = "JToolTip.pointerHeight";
-    String VARIANT_PLAIN = "plain";
-    String VARIANT_BALLOON = "balloon";
-    String VARIANT_PLAIN_BALLOON = "plainBalloon";
-    String TIP_TEXT_PROPERTY = "tiptext";
-    String KEY_CONTEXT = "JToolTip.toolTipContext";
-    String NO_TEXT = "NO_TEXT";
+public interface CellConstants {
+    String RENDER_TYPE_CHECKBOX = "checkBox";
+    String RENDER_TYPE_RADIOBUTTON = "radioButton";
 }

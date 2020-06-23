@@ -49,7 +49,7 @@ public class ToolTipContext {
         return defaultContext;
     }
 
-    private static ToolTipContext createDefaultContext() {
+    public static ToolTipContext createDefaultContext() {
         return new ToolTipContext().setAlignment(Alignment.SOUTH)
                                    .setCenterAlignment(Alignment.SOUTH)
                                    .setAlignInside(false)

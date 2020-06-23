@@ -132,24 +132,43 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         getDarkSelectionPainter().setLineExtendingEnabled(enabled);
     }
 
-    public CaretStyle getStyle() {
+    public CaretStyle getEffectiveStyle() {
         return isInsertMode() ? insertStyle : style;
     }
 
-    public void setStyles(final CaretStyle style, final CaretStyle insertStyle) {
+    public CaretStyle getStyle() {
+        return style;
+    }
+
+    public CaretStyle getInsertStyle() {
+        return insertStyle;
+    }
+
+    public void setStyle(final CaretStyle style) {
         CaretStyle s = style;
-        CaretStyle is = insertStyle;
         if (s == null) {
             s = CaretStyle.THICK_VERTICAL_LINE_STYLE;
         }
+        if (s != this.style) {
+            this.style = s;
+            repaint();
+        }
+    }
+
+    public void setInsertStyle(final CaretStyle insertStyle) {
+        CaretStyle is = insertStyle;
         if (is == null) {
             is = CaretStyle.BLOCK_BORDER_STYLE;
         }
-        if (s != this.style || is != this.insertStyle) {
-            this.style = s;
+        if (is != this.insertStyle) {
             this.insertStyle = is;
             repaint();
         }
+    }
+
+    public void setStyles(final CaretStyle style, final CaretStyle insertStyle) {
+        setInsertStyle(insertStyle);
+        setStyle(style);
     }
 
     public boolean isAlwaysVisible() {
@@ -201,7 +220,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     @Override
     public double getWidth() {
-        return getStyle().getSize();
+        return getEffectiveStyle().getSize();
     }
 
     /**
@@ -377,18 +396,18 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             if (textAreaBg == null) {
                 textAreaBg = Color.white;
             }
-            switch (getStyle()) {
+            switch (getEffectiveStyle()) {
                 case BLOCK_STYLE :
                     g.setXORMode(textAreaBg);
                     g.fillRect(r.x, r.y, r.width, r.height);
                     break;
                 case BLOCK_BORDER_STYLE :
-                    PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, getStyle().getSize());
+                    PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, getEffectiveStyle().getSize());
                     break;
                 case UNDERLINE_STYLE :
                     g.setXORMode(textAreaBg);
                     int y = r.y + r.height;
-                    g.fillRect(r.x, y - getStyle().getSize(), r.width, getStyle().getSize());
+                    g.fillRect(r.x, y - getEffectiveStyle().getSize(), r.width, getEffectiveStyle().getSize());
                     break;
                 case THICK_VERTICAL_LINE_STYLE :
                 case VERTICAL_LINE_STYLE :
@@ -464,7 +483,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     private void validateWidth(final Rectangle rect) {
-        if (rect != null && (rect.width <= 1 || getStyle().isCharacterWidth())) {
+        if (rect != null && (rect.width <= 1 || getEffectiveStyle().isCharacterWidth())) {
             JTextComponent textArea = getComponent();
             try {
                 textArea.getDocument().getText(getDot(), 1, seg);
