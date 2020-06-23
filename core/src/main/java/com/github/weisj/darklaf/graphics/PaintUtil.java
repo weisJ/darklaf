@@ -30,9 +30,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
-import javax.swing.*;
-
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.Scale;
 
 public class PaintUtil {
 
@@ -243,6 +241,15 @@ public class PaintUtil {
         g.fillRect(x, y + thickness, thickness, height - 2 * thickness);
         g.fillRect(x + width - thickness, y + thickness, thickness, height - 2 * thickness);
         g.fillRect(x, y + height - thickness, width, thickness);
+    }
+
+    public static void drawRect(final Graphics g, final int x, final int y,
+                                final int width, final int height, final Insets lineWidths) {
+        g.fillRect(x, y, width, lineWidths.top);
+        g.fillRect(x, y + lineWidths.top, lineWidths.left, height - lineWidths.top - lineWidths.bottom);
+        g.fillRect(x + width - lineWidths.right, y + lineWidths.top, lineWidths.right,
+                   height - lineWidths.left - lineWidths.right);
+        g.fillRect(x, y + height - lineWidths.bottom, width, lineWidths.bottom);
     }
 
     public static void fillRect(final Graphics g, final Rectangle r) {

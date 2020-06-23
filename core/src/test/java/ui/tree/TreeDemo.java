@@ -49,11 +49,11 @@ public class TreeDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Node A");
-        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Leaf A");
+        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Very very very very very long node A");
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode("A loooooooooooooooooooooooooooooooooooooong leaf A");
         DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
         DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf C");
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
 
         parent1.add(child);
         parent1.add(child1);
@@ -77,7 +77,11 @@ public class TreeDemo implements ComponentDemo {
                 return component;
             }
         });
-        DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setLeftComponent(new OverlayScrollPane(tree));
+        splitPane.setRightComponent(new JPanel());
+        SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5));
+        DemoPanel panel = new DemoPanel(splitPane, new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.setLayout(new MigLayout("fillx, wrap 2", "[][grow]"));
         controlPanel.add(new JCheckBox(PropertyKey.ENABLED) {
@@ -117,6 +121,8 @@ public class TreeDemo implements ComponentDemo {
                 addActionListener(e -> tree.putClientProperty(DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected()));
             }
         }, "span");
+
+        controlPanel = panel.addControls();
         controlPanel.add(new JLabel(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE + ":", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {
             {
@@ -126,14 +132,14 @@ public class TreeDemo implements ComponentDemo {
                 addItemListener(e -> tree.putClientProperty(DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, e.getItem()));
             }
         });
-        controlPanel.add(new JLabel("JTree.lineStyle:", JLabel.RIGHT));
+        controlPanel.add(new JLabel(DarkTreeUI.KEY_LINE_STYLE + ":", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {
             {
-                addItem("Dashed");
-                addItem("None");
-                addItem("Line");
-                setSelectedItem("Line");
-                addItemListener(e -> tree.putClientProperty("JTree.lineStyle", e.getItem()));
+                addItem(DarkTreeUI.STYLE_LINE);
+                addItem(DarkTreeUI.STYLE_DASHED);
+                addItem(DarkTreeUI.STYLE_NONE);
+                setSelectedItem(DarkTreeUI.STYLE_LINE);
+                addItemListener(e -> tree.putClientProperty(DarkTreeUI.KEY_LINE_STYLE, e.getItem()));
             }
         });
         tree.setLargeModel(true);
