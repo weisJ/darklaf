@@ -189,14 +189,20 @@ public final class DarkUIUtil {
         return SwingUtilities.getWindowAncestor(owner) == w;
     }
 
-    public static Container getUnwrappedParent(final Container comp) {
+    public static Container getUnwrappedParent(final Component comp) {
         if (comp == null) return null;
         return SwingUtilities.getUnwrappedParent(comp);
     }
 
-    public static Container getUnwrappedParent(final Component comp) {
-        if (comp == null) return null;
-        return SwingUtilities.getUnwrappedParent(comp);
+    public static Component unwrapComponent(final Component component) {
+        if (component == null) return null;
+        if (!(component.getParent() instanceof JLayer)
+            && !(component.getParent() instanceof JViewport)) return component;
+        Container parent = component.getParent();
+        while (parent instanceof JLayer || parent instanceof JViewport) {
+            parent = parent.getParent();
+        }
+        return parent;
     }
 
     public static int getFocusAcceleratorKeyMask() {
@@ -480,9 +486,21 @@ public final class DarkUIUtil {
     }
 
     public static Container getParentMatching(final Container parent, final Predicate<Container> test) {
-        Container p;
-        for (p = parent; p != null && !test.test(p); p = p.getParent()) {}
+        Container p = parent;
+        while (p != null && !test.test(p)) {
+            p = p.getParent();
+        }
         return p;
+    }
+
+    public static Container getParentBeforeMatching(final Container parent, final Predicate<Container> test) {
+        Container p = parent;
+        Container prev = null;
+        while (p != null && !test.test(p)) {
+            prev = p;
+            p = prev.getParent();
+        }
+        return prev;
     }
 
     public static Container getOpaqueParent(final Container parent) {

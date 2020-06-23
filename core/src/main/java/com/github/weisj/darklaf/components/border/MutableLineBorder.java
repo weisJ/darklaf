@@ -66,7 +66,7 @@ public class MutableLineBorder extends AbstractBorder {
         return true;
     }
 
-    protected Color getColor() {
+    public Color getColor() {
         return color;
     }
 

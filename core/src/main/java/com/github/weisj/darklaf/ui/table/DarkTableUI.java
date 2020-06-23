@@ -92,12 +92,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
     }
 
     @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        handler = null;
-    }
-
-    @Override
     protected void installDefaults() {
         super.installDefaults();
         int rowHeight = UIManager.getInt("Table.rowHeight");
@@ -114,6 +108,12 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         selectionBackgroundNoFocus = UIManager.getColor("Table.backgroundSelectedNoFocus");
         rendererPane = createCellRendererPane();
         table.setSurrendersFocusOnKeystroke(true);
+    }
+
+    @Override
+    protected void uninstallListeners() {
+        super.uninstallListeners();
+        handler = null;
     }
 
     protected CellRendererPane createCellRendererPane() {
@@ -417,7 +417,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             }
         }
         if (isEditorCell) {
-            Component component = getCellEditor();
+            Component component = getCellEditorComponent();
             component.setBounds(r);
             component.validate();
         } else {
@@ -437,7 +437,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         return rendererDelegate;
     }
 
-    protected Component getCellEditor() {
+    public Component getCellEditorComponent() {
         Component c = table.getEditorComponent();
         if (!(table.getCellEditor() instanceof DarkTableCellEditorDelegate)) {
             int row = table.getEditingRow();
