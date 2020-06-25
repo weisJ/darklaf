@@ -25,10 +25,9 @@
 package com.github.weisj.darklaf.icons;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import javax.swing.*;
 
 import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.app.beans.SVGIcon;
@@ -37,10 +36,14 @@ public class CustomThemedIcon extends ThemedSVGIcon {
 
     private final Map<Object, Object> defaults;
 
+    public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight) {
+        this(uriSupplier, displayWidth, displayHeight, null);
+    }
+
     public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight,
                             final Map<Object, Object> colors) {
         super(uriSupplier, displayWidth, displayHeight);
-        defaults = colors;
+        defaults = colors != null ? colors : new HashMap<>();
     }
 
     public CustomThemedIcon(final URI uri, final int displayWidth, final int displayHeight,
@@ -52,6 +55,41 @@ public class CustomThemedIcon extends ThemedSVGIcon {
     protected CustomThemedIcon(final int width, final int height, final CustomThemedIcon icon) {
         super(width, height, icon);
         this.defaults = icon.defaults;
+    }
+
+    /**
+     * Set a property if the underlying property map supports mutation.
+     *
+     * @param  key                           the property key.
+     * @param  value                         the property value.
+     * @throws UnsupportedOperationException if the underlying property map doesnt support mutation.
+     */
+    public void setProperty(final Object key, final Object value) throws UnsupportedOperationException {
+        defaults.put(key, value);
+    }
+
+    /**
+     * Get a property.
+     *
+     * @param  key the property key.
+     * @return     the property value.
+     */
+    public Object getProperty(final Object key) {
+        return defaults.get(key);
+    }
+
+    /**
+     * Get a property of a given type.
+     *
+     * @param  key  the property key.
+     * @param  type the type.
+     * @param  <T>  the types type parameter.
+     * @return      the property value if the type matches or null otherwise.
+     */
+    public <T> T getPropertyOfType(final Object key, final Class<T> type) {
+        Object obj = getProperty(key);
+        if (type != null && type.isInstance(obj)) return type.cast(obj);
+        return null;
     }
 
     @Override
