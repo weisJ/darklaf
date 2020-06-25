@@ -143,7 +143,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     @Override
     protected Rectangle getVisibleEditorRect() {
         Rectangle rect = super.getVisibleEditorRect();
-        System.out.println(editor);
         if (rect != null) {
             FontMetrics fm = SwingUtilities2.getFontMetrics(editor, editor.getFont());
             int asc = fm.getMaxAscent();
