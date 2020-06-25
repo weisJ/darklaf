@@ -85,12 +85,36 @@ public final class IconColorMapper {
 
         for (Object child : children) {
             if (child instanceof LinearGradient) {
-                String id = ((LinearGradient) child).getId();
-                StyleAttribute fallbacks = getFallbacks((LinearGradient) child);
-                String opacityKey = getOpacityKey((LinearGradient) child);
+                LinearGradient grad = (LinearGradient) child;
+                String id = grad.getId();
+                StyleAttribute fallbacks = getFallbacks(grad);
+                String opacityKey = getOpacityKey(grad);
+
                 float opacity = getOpacity(opacityKey, defaults);
+                float opacity1 = opacity;
+                float opacity2 = opacity;
+                if (opacity < 0) {
+                    opacity = 1;
+                    int childCount = grad.getNumChildren();
+                    if (childCount > 0) {
+                        SVGElement elem = grad.getChild(0);
+                        if (elem instanceof Stop) {
+                            opacity1 = getStopOpacity((Stop) elem);
+                        }
+                    }
+                    if (childCount > 1) {
+                        SVGElement elem = grad.getChild(1);
+                        if (elem instanceof Stop) {
+                            opacity2 = getStopOpacity((Stop) elem);
+                        }
+                    }
+
+                    if (opacity1 < 0) opacity1 = opacity;
+                    if (opacity2 < 0) opacity2 = opacity;
+                }
+
                 Color c = resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, defaults);
-                Pair<LinearGradient, Runnable> result = createColor(c, id, opacityKey, fallbacks, opacity);
+                Pair<LinearGradient, Runnable> result = createColor(c, id, opacityKey, fallbacks, opacity1, opacity2);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
                 themedDefs.loaderAddChild(null, gradient);
@@ -135,6 +159,17 @@ public final class IconColorMapper {
         return attribute;
     }
 
+    private static float getStopOpacity(final Stop stop) {
+        StyleAttribute attribute = new StyleAttribute();
+        attribute.setName("stop-opacity");
+        try {
+            stop.getStyle(attribute);
+        } catch (SVGException e) {
+            return -1;
+        }
+        return !attribute.getStringValue().isEmpty() ? attribute.getFloatValue() : -1;
+    }
+
     private static String[] getFallbacks(final StyleAttribute fallbacks) {
         if (fallbacks == null) return new String[0];
         return fallbacks.getStringList();
@@ -145,12 +180,18 @@ public final class IconColorMapper {
         Object obj = propertyMap.get(key);
         if (obj instanceof Integer) {
             return ((Integer) obj) / 100.0f;
+        } else if (obj instanceof Long) {
+            return ((Long) obj) / 100.0f;
+        } else if (obj instanceof Float) {
+            return (Float) obj;
+        } else if (obj instanceof Double) {
+            return ((Double) obj).floatValue();
         }
         if (key != null && !key.isEmpty()) {
             LOGGER.warning(obj + " is an invalid opacity value. Key = '" + key + "'");
         }
-        // In this case we default to 1.
-        return 1;
+        // In this case we default to -1.
+        return -1;
     }
 
     private static String getOpacityKey(final LinearGradient child) {
@@ -168,7 +209,8 @@ public final class IconColorMapper {
     private static Pair<LinearGradient, Runnable> createColor(final Color c,
                                                               final String name, final String opacityKey,
                                                               final StyleAttribute fallbacks,
-                                                              final float opacity) throws SVGElementException {
+                                                              final float opacity1,
+                                                              final float opacity2) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
         if (opacityKey != null && !opacityKey.isEmpty()) {
@@ -178,22 +220,22 @@ public final class IconColorMapper {
             grad.addAttribute(fallbacks.getName(), AnimationElement.AT_XML, fallbacks.getStringValue());
         }
         return new Pair<>(grad, () -> {
-            SolidStop stop1 = new SolidStop();
-            SolidStop stop2 = new SolidStop();
+            Stop stop1 = new Stop();
+            Stop stop2 = new Stop();
             String color = toHexString(c);
             try {
                 stop1.addAttribute("stop-color", AnimationElement.AT_XML, color);
                 stop1.addAttribute("offset", AnimationElement.AT_XML, "0");
                 stop2.addAttribute("stop-color", AnimationElement.AT_XML, color);
                 stop2.addAttribute("offset", AnimationElement.AT_XML, "1");
-                if (opacity != 1) {
-                    stop1.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity));
-                    stop2.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity));
+                if (opacity1 != 1) {
+                    stop1.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity1));
                 }
-                stop1.build();
-                stop2.build();
-                grad.appendStop(stop1);
-                grad.appendStop(stop2);
+                if (opacity2 != 1) {
+                    stop2.addAttribute("stop-opacity", AnimationElement.AT_XML, String.valueOf(opacity2));
+                }
+                grad.loaderAddChild(null, stop1);
+                grad.loaderAddChild(null, stop2);
             } catch (SVGException e) {
                 e.printStackTrace();
             }
@@ -202,13 +244,5 @@ public final class IconColorMapper {
 
     private static String toHexString(final Color color) {
         return "#" + ColorUtil.toHex(color);
-    }
-
-    private static class SolidStop extends Stop {
-
-        @Override
-        public void build() throws SVGException {
-            super.build();
-        }
     }
 }
