@@ -34,7 +34,8 @@ import com.kitfox.svg.app.beans.SVGIcon;
 
 public class CustomThemedIcon extends ThemedSVGIcon {
 
-    private final Map<Object, Object> defaults;
+    private Map<Object, Object> defaults;
+    private boolean derived;
 
     public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight) {
         this(uriSupplier, displayWidth, displayHeight, null);
@@ -43,7 +44,7 @@ public class CustomThemedIcon extends ThemedSVGIcon {
     public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight,
                             final Map<Object, Object> colors) {
         super(uriSupplier, displayWidth, displayHeight);
-        defaults = colors != null ? colors : new HashMap<>();
+        defaults = colors;
     }
 
     public CustomThemedIcon(final URI uri, final int displayWidth, final int displayHeight,
@@ -55,6 +56,7 @@ public class CustomThemedIcon extends ThemedSVGIcon {
     protected CustomThemedIcon(final int width, final int height, final CustomThemedIcon icon) {
         super(width, height, icon);
         this.defaults = icon.defaults;
+        this.derived = true;
     }
 
     /**
@@ -65,7 +67,7 @@ public class CustomThemedIcon extends ThemedSVGIcon {
      * @throws UnsupportedOperationException if the underlying property map doesnt support mutation.
      */
     public void setProperty(final Object key, final Object value) throws UnsupportedOperationException {
-        defaults.put(key, value);
+        getProperties().put(key, value);
     }
 
     /**
@@ -75,7 +77,7 @@ public class CustomThemedIcon extends ThemedSVGIcon {
      * @return     the property value.
      */
     public Object getProperty(final Object key) {
-        return defaults.get(key);
+        return getProperties().get(key);
     }
 
     /**
@@ -92,6 +94,18 @@ public class CustomThemedIcon extends ThemedSVGIcon {
         return null;
     }
 
+    private Map<Object, Object> getProperties() {
+        if (defaults == null) {
+            defaults = new HashMap<>();
+            return defaults;
+        }
+        if (derived) {
+            defaults = new HashMap<>(defaults);
+            derived = false;
+        }
+        return defaults;
+    }
+
     @Override
     public CustomThemedIcon derive(final int width, final int height) {
         return new CustomThemedIcon(width, height, this);
@@ -106,6 +120,6 @@ public class CustomThemedIcon extends ThemedSVGIcon {
 
     @Override
     protected void patchColors() {
-        IconColorMapper.patchColors(getSVGIcon(), defaults);
+        IconColorMapper.patchColors(getSVGIcon(), getProperties());
     }
 }
