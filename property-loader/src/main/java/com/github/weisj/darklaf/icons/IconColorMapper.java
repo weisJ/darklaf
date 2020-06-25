@@ -176,6 +176,7 @@ public final class IconColorMapper {
     }
 
     private static float getOpacity(final String key, final String[] fallbacks, final Map<Object, Object> propertyMap) {
+        if ((key == null || key.isEmpty()) && (fallbacks == null || fallbacks.length == 0)) return -1;
         // UIManager defaults to 0, if the value isn't an integer (or null).
         Number obj = get(propertyMap, key, fallbacks, Number.class);
         if (obj instanceof Integer) {
@@ -187,9 +188,7 @@ public final class IconColorMapper {
         } else if (obj instanceof Double) {
             return obj.floatValue();
         }
-        if (key != null && !key.isEmpty()) {
-            LOGGER.warning(obj + " is an invalid opacity value. Key = '" + key + "'");
-        }
+        LOGGER.warning(obj + " is an invalid opacity value. Key = '" + key + "'");
         // In this case we default to -1.
         return -1;
     }
