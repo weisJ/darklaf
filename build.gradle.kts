@@ -20,9 +20,12 @@ val enableMavenLocal by props()
 val enableGradleMetadata by props()
 val skipAutostyle by props()
 val isRelease = project.stringProperty("release").toBool()
+val snapshotName by props("")
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 val projectVersion = "darklaf".v
+
+val snapshotIdentifier = if (!isRelease && snapshotName.isNotEmpty()) "-$snapshotName" else ""
 
 releaseParams {
     tlp.set("darklaf")
@@ -33,7 +36,7 @@ releaseParams {
     sitePreviewEnabled.set(false)
     release.set(isRelease)
     if (!isRelease) {
-        rcTag.set("v$projectVersion${releaseParams.snapshotSuffix}")
+        rcTag.set("v$projectVersion$snapshotIdentifier$snapshotSuffix")
     }
     nexus {
         mavenCentral()
@@ -50,7 +53,7 @@ releaseParams {
 
 tasks.closeRepository.configure { enabled = isRelease }
 
-val buildVersion = projectVersion + releaseParams.snapshotSuffix
+val buildVersion = "$projectVersion$snapshotIdentifier${releaseParams.snapshotSuffix}"
 println("Building: Darklaf $buildVersion")
 println("     JDK: " + System.getProperty("java.home"))
 
@@ -315,7 +318,7 @@ allprojects {
 
             publications {
                 create<MavenPublication>(project.name) {
-                    artifactId = project.name
+                    artifactId = "${project.name}$snapshotIdentifier"
                     version = buildVersion
                     description = project.description
                     from(project.components["java"])
