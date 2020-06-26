@@ -22,52 +22,18 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.settings;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.Theme;
 
-public class LazyValue<T> {
+public class DefaultSettingsConfiguration extends SettingsConfiguration {
 
-    private Supplier<T> supplier;
-    private T value;
-
-    public LazyValue(final T value) {
-        this.value = value;
-    }
-
-    public LazyValue(final Supplier<T> supplier) {
-        this.supplier = supplier;
-    }
-
-    public boolean isInitialized() {
-        return supplier == null;
-    }
-
-    protected T load() {
-        if (supplier != null) {
-            T obj = supplier.get();
-            supplier = null;
-            return obj;
-        }
-        return value;
-    }
-
-    public void ifPresent(final Consumer<T> action) {
-        if (isInitialized() && value != null) {
-            action.accept(value);
-        }
-    }
-
-    public void ifPresentNullable(final Consumer<Optional<T>> action) {
-        if (isInitialized()) {
-            action.accept(Optional.ofNullable(value));
-        }
-    }
-
-    public T get() {
-        if (value == null) value = load();
-        return value;
+    public DefaultSettingsConfiguration() {
+        setEnabledSystemPreferences(LafManager.isPreferenceChangeReportingEnabled());
+        Theme theme = LafManager.getTheme();
+        setTheme(theme);
+        setFontSizeRule(theme.getFontSizeRule());
+        setAccentColorRule(theme.getAccentColorRule());
     }
 }

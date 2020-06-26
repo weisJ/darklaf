@@ -28,7 +28,7 @@ import java.awt.*;
 import java.util.Properties;
 
 import javax.swing.*;
-import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
@@ -36,6 +36,7 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
+import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -44,24 +45,48 @@ public class ColoredRadioButton extends JRadioButton {
 
     public static final Color DEFAULT_FILLED = new Color(0);
     private Color color;
+    private Color focusColor;
 
     public ColoredRadioButton(final String text, final Color color) {
         super(text, null, false);
-        setColor(color);
+        setColors(color, color);
     }
 
     public ColoredRadioButton(final String text, final boolean selected, final Color color) {
         super(text, null, selected);
-        setColor(color);
+        setColors(color, color);
+    }
+
+    public ColoredRadioButton(final String text, final Color color, final Color focusColor) {
+        super(text, null, false);
+        setColors(color, focusColor);
+    }
+
+    public ColoredRadioButton(final String text, final boolean selected, final Color color, final Color focusColor) {
+        super(text, null, selected);
+        setColors(color, focusColor);
+    }
+
+    public void setColors(final Color color, final Color focusColor) {
+        this.color = color;
+        this.focusColor = focusColor != null ? focusColor : color;
+        updateColorUI();
     }
 
     public void setColor(final Color color) {
         this.color = color;
-        ButtonUI ui = getUI();
-        if (ui instanceof ColoredRadioButtonUI) {
-            ((ColoredRadioButtonUI) ui).setColor(color);
-        }
-        SwingUtilities.invokeLater(this::updateUI);
+        updateColorUI();
+    }
+
+    public void setFocusColor(final Color color) {
+        this.focusColor = color;
+        updateColorUI();
+    }
+
+    private void updateColorUI() {
+        ColoredRadioButtonUI ui = DarkUIUtil.getUIOfType(getUI(), ColoredRadioButtonUI.class);
+        if (ui != null) ui.setColors(color, focusColor);
+        repaint();
     }
 
     public Color getColor() {
@@ -69,14 +94,21 @@ public class ColoredRadioButton extends JRadioButton {
     }
 
     @Override
+    protected void setUI(final ComponentUI newUI) {
+        if (!(newUI instanceof ColoredRadioButtonUI)) {
+            throw new IllegalArgumentException("UI must be of type ColoredRadioButtonUI");
+        }
+        super.setUI(newUI);
+    }
+
+    @Override
     public void updateUI() {
-        setUI(new ColoredRadioButtonUI(color));
+        setUI(new ColoredRadioButtonUI(color, focusColor));
     }
 
     protected static class ColoredRadioButtonUI extends DarkRadioButtonUI {
 
-        private static final String[] PROPERTIES = {
-                                                    "Icons.RadioButton.activeFillColor",
+        private static final String[] PROPERTIES = {"Icons.RadioButton.activeFillColor",
                                                     "Icons.RadioButton.activeBorderColor",
                                                     "Icons.RadioButtonDisabled.inactiveFillColor",
                                                     "Icons.RadioButtonDisabled.inactiveBorderColor",
@@ -94,45 +126,73 @@ public class ColoredRadioButton extends JRadioButton {
                                                     "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor",
                                                     "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor",
                                                     "Icons.RadioButtonSelectedFocused.glowFocus",
-                                                    "Icons.RadioButtonSelectedFocused.glowOpacity"
-        };
-        private static final String[] COLOR_PROPERTIES = {
-                                                          "Icons.RadioButton.activeFillColor",
+                                                    "Icons.RadioButtonSelectedFocused.glowOpacity"};
+        private static final String[] COLOR_PROPERTIES = {"Icons.RadioButton.activeFillColor",
                                                           "Icons.RadioButton.activeBorderColor",
                                                           "Icons.RadioButtonFocused.activeFillColor",
                                                           "Icons.RadioButtonFocused.focusBorderColor",
                                                           "Icons.RadioButtonSelected.selectedFillColor",
                                                           "Icons.RadioButtonSelected.selectedBorderColor",
                                                           "Icons.RadioButtonSelectedFocused.selectedFillColor",
-                                                          "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor"
-        };
+                                                          "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor"};
+        private static final String[] FOCUS_COLOR_PROPERTIES = {"Icons.RadioButtonFocused.glowFocus",
+                                                                "Icons.RadioButtonSelectedFocused.glowFocus"};
+        private static final String[] FOREGROUND_PROPERTIES = {"Icons.RadioButtonSelected.selectionSelectedColor",
+                                                               "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor"};
+        private static final double MIN_FG_CONTRAST = 0.6;
         private Properties propertyMap;
 
         private Icon stateIcon;
-        private final Color color;
+        private Color color;
+        private Color focusColor;
+
+        private Color patchedColor;
+        private Color patchedFocusColor;
+
+        private boolean patched;
         private static final AccentColorAdjustmentTask adjustment = new AccentColorAdjustmentTask();
 
-        public ColoredRadioButtonUI(final Color color) {
+        public ColoredRadioButtonUI(final Color color, final Color focusColor) {
             super();
             this.color = color;
+            this.focusColor = focusColor;
         }
 
         @Override
         protected void installIcons() {
             super.installIcons();
-            setColor(color);
+            patchColors(color, focusColor);
         }
 
-        public void setColor(final Color color) {
-            if (color == null) return;
+        public void setColors(final Color color, final Color focusColor) {
+            this.color = color;
+            this.focusColor = focusColor != null ? focusColor : color;
+        }
+
+        @Override
+        public void update(final Graphics g, final JComponent c) {
+            if (patchedColor != color || patchedFocusColor != focusColor) {
+                patchColors(color, focusColor);
+            }
+            super.update(g, c);
+        }
+
+        private void patchColors(final Color color, final Color focusColor) {
+            if (color == null || (patched && patchedColor == color && patchedFocusColor == focusColor)) {
+                return;
+            }
+            this.patchedColor = color;
+            this.patchedFocusColor = focusColor;
             IconLoader loader = DarkUIUtil.ICON_LOADER;
             Theme theme = LafManager.getTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             theme.loadDefaults(props, defaults);
-            Color c = color == DEFAULT_FILLED ? (Color) props.get("widgetFillDefault") : color;
-            adjustment.applyColors(LafManager.getTheme(), props, c, null);
-            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/ui/"),
+            Color accentCol = color == DEFAULT_FILLED ? (Color) props.get("widgetFillDefault") : color;
+            Color focusCol = color == DEFAULT_FILLED ? accentCol : focusColor;
+            adjustment.applyColors(LafManager.getTheme(), props, accentCol, null);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton",
+                                                                       "properties/ui/"),
                                          props, defaults);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton",
                                                                        "properties/icons/"),
@@ -142,7 +202,15 @@ public class ColoredRadioButton extends JRadioButton {
                 propertyMap.put(prop, props.get(prop));
             }
             for (String prop : COLOR_PROPERTIES) {
-                propertyMap.put(prop, c);
+                propertyMap.put(prop, accentCol);
+            }
+            for (String prop : FOCUS_COLOR_PROPERTIES) {
+                propertyMap.put(prop, focusCol);
+            }
+            for (String prop : FOREGROUND_PROPERTIES) {
+                Color fg = ForegroundColorGenerationTask.makeAdjustedForeground((Color) props.get(prop),
+                                                                                accentCol, MIN_FG_CONTRAST);
+                propertyMap.put(prop, fg);
             }
 
             stateIcon = new StateIcon(new Icon[]{load(loader, "control/radio.svg"),
@@ -151,6 +219,7 @@ public class ColoredRadioButton extends JRadioButton {
                                                  load(loader, "control/radioSelected.svg"),
                                                  load(loader, "control/radioSelectedDisabled.svg"),
                                                  load(loader, "control/radioSelectedFocused.svg")});
+            patched = true;
         }
 
         private Icon load(final IconLoader loader, final String name) {
@@ -159,7 +228,7 @@ public class ColoredRadioButton extends JRadioButton {
 
         @Override
         protected Icon getStateIcon(final AbstractButton b) {
-            return color != null ? stateIcon : super.getStateIcon(b);
+            return patched ? stateIcon : super.getStateIcon(b);
         }
     }
 }

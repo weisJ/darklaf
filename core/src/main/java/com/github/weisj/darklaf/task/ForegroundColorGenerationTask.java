@@ -28,9 +28,13 @@ import java.awt.*;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.plaf.ColorUIResource;
+
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
+import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
@@ -62,18 +66,56 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
             .filter(o -> o instanceof Pair<?, ?>)
             .map(Pair.class::cast)
             .filter(p -> p.getFirst() instanceof Color)
-            .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
+            .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst(),
+                                                                       MIN_FOREGROUND_DIFFERENCE)));
     }
 
-    private Color makeForeground(final Color c) {
-        double[] hsb = DarkColorModelHSB.RGBtoHSBValues(c.getRed(), c.getGreen(), c.getBlue());
-        double b = hsb[2];
-        double brightness = 1 - b;
-        double difference = Math.abs(brightness - b);
-        if (difference < MIN_FOREGROUND_DIFFERENCE) {
-            int bias = b < 0.5 ? 1 : -1;
-            brightness += bias * (Math.abs(MIN_FOREGROUND_DIFFERENCE - difference));
+    public static ColorUIResource makeForeground(final Color c, final double minimumBrightnessDifference) {
+        double[] hsbBG = DarkColorModelHSB.RGBtoHSBValues(c.getRed(), c.getGreen(), c.getBlue());
+        double[] hsbFG = new double[]{hsbBG[0], 0, 1 - hsbBG[2]};
+        return makeAdjustedForeground(hsbFG, hsbBG, Bias.BACKGROUND, minimumBrightnessDifference);
+    }
+
+    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg,
+                                                         final double minimumBrightnessDifference) {
+        return makeAdjustedForeground(fg, bg, Bias.BACKGROUND, minimumBrightnessDifference);
+    }
+
+    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg, final Bias bias,
+                                                         final double minimumBrightnessDifference) {
+        double[] hsbBG = DarkColorModelHSB.RGBtoHSBValues(bg.getRed(), bg.getGreen(), bg.getBlue());
+        double[] hsbFG = DarkColorModelHSB.RGBtoHSBValues(fg.getRed(), fg.getGreen(), fg.getBlue());
+        return makeAdjustedForeground(hsbFG, hsbBG, bias, minimumBrightnessDifference);
+    }
+
+    private static ColorUIResource makeAdjustedForeground(final double[] hsbFG, final double[] hsbBG, final Bias bias,
+                                                          final double minimumBrightnessDifference) {
+        double bgBrightness = hsbBG[2];
+        double fgBrightness = hsbFG[2];
+
+        Bias b = bias != null ? bias : Bias.BACKGROUND;
+        if (b == Bias.BACKGROUND) {
+            Color c = DarkColorModelHSB.getColorFromHSBValues(hsbBG[0], hsbBG[1], hsbBG[2]);
+            double bgBright = (1 - hsbBG[1]) * ColorUtil.getPerceivedBrightness(c);
+            b = bgBright <= 127.5f ? Bias.WHITE : Bias.BLACK;
         }
-        return DarkColorModelHSB.getColorFromHSBValues(hsb[0], 0, brightness);
+
+        double difference = Math.abs(fgBrightness - bgBrightness);
+        if (difference < minimumBrightnessDifference) {
+            fgBrightness += b.direction * (Math.abs(minimumBrightnessDifference - difference));
+        }
+        return new DarkColorUIResource(DarkColorModelHSB.getColorFromHSBValues(hsbFG[0], hsbFG[1], fgBrightness));
+    }
+
+    public enum Bias {
+        BACKGROUND(0),
+        WHITE(1),
+        BLACK(-1);
+
+        private final int direction;
+
+        Bias(final int direction) {
+            this.direction = direction;
+        }
     }
 }

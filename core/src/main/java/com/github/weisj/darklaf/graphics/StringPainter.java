@@ -163,7 +163,7 @@ public class StringPainter {
                  * Ensure the background color has sufficient contrast to the foreground.
                  */
                 Color fg = g.getColor();
-                double brightness = ColorUtil.getBrightness(fg);
+                double brightness = ColorUtil.getPerceivedBrightness(fg);
                 bgColor = brightness > 127 ? Color.BLACK : Color.WHITE;
             }
 

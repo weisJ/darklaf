@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.ResourceUtil;
@@ -46,10 +47,14 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     private static final LazyValue<ThemeSettings> instance = new LazyValue<>(ThemeSettings::new);
     private static final LazyValue<Icon> icon = new LazyValue<>(() -> UIManager.getIcon("ThemeSettings.icon"));
-    private final JPanel contentPane;
-    private final ThemeSettingsPanel settingsPanel;
     private final ResourceBundle resourceBundle = ResourceUtil.getResourceBundle("theme_settings");
+
+    private final LazyValue<ThemeSettingsPanel> settingsPanel;
+
     private JDialog dialog;
+
+    private final SettingsConfiguration savedConfiguration;
+    private final SettingsConfiguration currentConfiguration;
 
     public static ThemeSettings getInstance() {
         return instance.get();
@@ -81,19 +86,26 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     protected ThemeSettings() {
-        settingsPanel = new ThemeSettingsPanel(resourceBundle);
-        contentPane = new JPanel(new BorderLayout());
-        contentPane.add(settingsPanel, BorderLayout.CENTER);
-        contentPane.add(createButtonPanel(), BorderLayout.SOUTH);
-        settingsPanel.fetch(true);
         LafManager.addThemePreferenceChangeListener(this);
+        currentConfiguration = new DefaultSettingsConfiguration();
+        savedConfiguration = new DefaultSettingsConfiguration();
+        settingsPanel = new LazyValue<>(() -> {
+            ThemeSettingsPanel panel = new ThemeSettingsPanel(resourceBundle);
+            panel.loadConfiguration(currentConfiguration);
+            return panel;
+        });
     }
 
     protected JDialog createDialog(final Window parent) {
         JDialog dialog = new JDialog(parent);
         dialog.setIconImage(IconLoader.createFrameIcon(getIcon(), dialog));
-        dialog.setTitle(settingsPanel.getTitle());
+        dialog.setTitle(getTitle());
+
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.add(settingsPanel.get(), BorderLayout.CENTER);
+        contentPane.add(createButtonPanel(), BorderLayout.SOUTH);
         dialog.setContentPane(contentPane);
+
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialog.pack();
         dialog.setLocationByPlatform(true);
@@ -133,7 +145,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @return the settings panel.
      */
     public JComponent getSettingsPanel() {
-        return settingsPanel;
+        return settingsPanel.get();
     }
 
     /**
@@ -147,7 +159,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #isFontSizeFollowsSystem()
      */
     public boolean isSystemPreferencesEnabled() {
-        return settingsPanel.isSystemPreferencesEnabled();
+        return currentConfiguration.isSystemPreferencesEnabled();
     }
 
     /**
@@ -157,7 +169,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #setAccentColorFollowsSystem(boolean)
      */
     public boolean isAccentColorFollowsSystem() {
-        return settingsPanel.isAccentColorFollowsSystem();
+        return currentConfiguration.isAccentColorFollowsSystem();
     }
 
     /**
@@ -167,7 +179,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #setFontSizeFollowsSystem(boolean)
      */
     public boolean isFontSizeFollowsSystem() {
-        return settingsPanel.isFontSizeFollowsSystem();
+        return currentConfiguration.isFontSizeFollowsSystem();
     }
 
     /**
@@ -177,7 +189,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #setSelectionColorFollowsSystem(boolean)
      */
     public boolean isSelectionColorFollowsSystem() {
-        return settingsPanel.isSelectionColorFollowsSystem();
+        return currentConfiguration.isSelectionColorFollowsSystem();
     }
 
     /**
@@ -187,7 +199,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #setThemeFollowsSystem(boolean)
      */
     public boolean isThemeFollowsSystem() {
-        return settingsPanel.isThemeFollowsSystem();
+        return currentConfiguration.isThemeFollowsSystem();
     }
 
     /**
@@ -198,7 +210,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #setAccentColorRule(AccentColorRule)
      */
     public AccentColorRule getAccentColorRule() {
-        return settingsPanel.getAccentColorRule();
+        return currentConfiguration.getAccentColorRule();
     }
 
     /**
@@ -209,7 +221,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #setFontSizeRule(FontSizeRule)
      */
     public FontSizeRule getFontSizeRule() {
-        return settingsPanel.getFontSizeRule();
+        return currentConfiguration.getFontSizeRule();
     }
 
     /**
@@ -220,7 +232,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see    #setTheme(Theme)
      */
     public Theme getTheme() {
-        return settingsPanel.getTheme();
+        return currentConfiguration.getTheme();
     }
 
     /**
@@ -233,7 +245,8 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see           #setThemeFollowsSystem(boolean)
      */
     public void setEnabledSystemPreferences(final boolean enabled) {
-        settingsPanel.setEnabledSystemPreferences(enabled);
+        currentConfiguration.setEnabledSystemPreferences(enabled);
+        updateSettingsPanel();
     }
 
     /**
@@ -244,7 +257,8 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see                            #isAccentColorFollowsSystem()
      */
     public void setAccentColorFollowsSystem(final boolean accentColorFollowsSystem) {
-        settingsPanel.setAccentColorFollowsSystem(accentColorFollowsSystem);
+        currentConfiguration.setAccentColorFollowsSystem(accentColorFollowsSystem);
+        updateSettingsPanel();
     }
 
     /**
@@ -255,7 +269,8 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see                         #isFontSizeFollowsSystem()
      */
     public void setFontSizeFollowsSystem(final boolean fontSizeFollowsSystem) {
-        settingsPanel.setFontSizeFollowsSystem(fontSizeFollowsSystem);
+        currentConfiguration.setFontSizeFollowsSystem(fontSizeFollowsSystem);
+        updateSettingsPanel();
     }
 
     /**
@@ -266,7 +281,8 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see                               #isSelectionColorFollowsSystem()
      */
     public void setSelectionColorFollowsSystem(final boolean selectionColorFollowsSystem) {
-        settingsPanel.setSelectionColorFollowsSystem(selectionColorFollowsSystem);
+        currentConfiguration.setSelectionColorFollowsSystem(selectionColorFollowsSystem);
+        updateSettingsPanel();
     }
 
     /**
@@ -277,7 +293,8 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see                      #isThemeFollowsSystem()
      */
     public void setThemeFollowsSystem(final boolean themeFollowsSystem) {
-        settingsPanel.setThemeFollowsSystem(themeFollowsSystem);
+        currentConfiguration.setThemeFollowsSystem(themeFollowsSystem);
+        updateSettingsPanel();
     }
 
     /**
@@ -287,7 +304,8 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see                   #getAccentColorRule()
      */
     public void setAccentColorRule(final AccentColorRule accentColorRule) {
-        settingsPanel.setAccentColorRule(accentColorRule);
+        currentConfiguration.setAccentColorRule(accentColorRule);
+        updateSettingsPanel();
     }
 
     /**
@@ -297,7 +315,9 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see                #getFontSizeRule()
      */
     public void setFontSizeRule(final FontSizeRule fontSizeRule) {
-        settingsPanel.setFontSizeRule(fontSizeRule);
+        currentConfiguration.setFontSizeRule(fontSizeRule);
+        updateSettingsPanel();
+
     }
 
     /**
@@ -307,7 +327,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see         #getTheme()
      */
     public void setTheme(final Theme theme) {
-        settingsPanel.setTheme(theme);
+        currentConfiguration.setTheme(theme);
     }
 
     protected Component createButtonPanel() {
@@ -333,7 +353,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         box.add(ok);
         box.add(cancel);
         box.add(apply);
-        box.setBorder(settingsPanel.getBorder());
+        box.setBorder(settingsPanel.get().getBorder());
         return box;
     }
 
@@ -341,14 +361,29 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Updates all values according to the current settings.
      */
     public void refresh() {
-        settingsPanel.fetch(true);
+        currentConfiguration.setEnabledSystemPreferences(LafManager.isPreferenceChangeReportingEnabled());
+        updateSettingsPanel();
+    }
+
+    private void updateSettingsPanel() {
+        settingsPanel.ifPresent(p -> p.loadConfiguration(currentConfiguration));
+    }
+
+    private void fetchFromSettingsPanel() {
+        settingsPanel.ifPresent(ThemeSettingsPanel::updateConfiguration);
     }
 
     /**
      * Saves the settings.
      */
     public void save() {
-        settingsPanel.saveSettings();
+        fetchFromSettingsPanel();
+        LafManager.enabledPreferenceChangeReporting(currentConfiguration.isSystemPreferencesEnabled());
+        savedConfiguration.load(currentConfiguration);
+    }
+
+    public void setConfiguration(final SettingsConfiguration configuration) {
+        this.currentConfiguration.load(configuration);
     }
 
     /**
@@ -363,7 +398,37 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Sets the theme according to the selected options. Does not save the settings.
      */
     public void peek() {
-        applyTheme(settingsPanel.getEffectiveTheme());
+        applyTheme(getEffectiveTheme());
+    }
+
+    private Theme getEffectiveTheme() {
+        return getEffectiveTheme(LafManager.getPreferredThemeStyle());
+    }
+
+    private Theme getEffectiveTheme(final PreferredThemeStyle themeStyle) {
+        Theme baseTheme = getEffectiveBaseTheme(themeStyle);
+        if (baseTheme == null) return null;
+        FontSizeRule fontSizeRule = getEffectiveFontSizeRule(baseTheme, themeStyle);
+        AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme);
+        return baseTheme.derive(fontSizeRule, accentColorRule);
+    }
+
+    private Theme getEffectiveBaseTheme(final PreferredThemeStyle preferredThemeStyle) {
+        return isThemeFollowsSystem()
+                ? LafManager.themeForPreferredStyle(preferredThemeStyle)
+                : getTheme();
+    }
+
+    private FontSizeRule getEffectiveFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
+        if (theme == null) return FontSizeRule.getDefault();
+        return isFontSizeFollowsSystem()
+                ? preferredThemeStyle.getFontSizeRule()
+                : getFontSizeRule();
+    }
+
+    private AccentColorRule getEffectiveAccentColorRule(final Theme theme) {
+        if (theme == null) return AccentColorRule.getDefault();
+        return currentConfiguration.getAccentColorRule();
     }
 
     /**
@@ -372,7 +437,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @see #save()
      */
     public void revert() {
-        settingsPanel.discardChanges();
+        currentConfiguration.load(savedConfiguration);
         refresh();
     }
 
@@ -381,7 +446,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         if (LafManager.getTheme().appearsEqualTo(theme)) return;
         SwingUtilities.invokeLater(() -> {
             LafManager.installTheme(theme);
-            settingsPanel.fetch(true);
+            refresh();
         });
     }
 
@@ -400,12 +465,12 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @return the title
      */
     public String getTitle() {
-        return settingsPanel.getTitle();
+        return resourceBundle.getString("title");
     }
 
     @Override
     public void themePreferenceChanged(final ThemePreferenceChangeEvent e) {
-        settingsPanel.fetch(e.getPreferredThemeStyle());
-        applyTheme(settingsPanel.getEffectiveTheme(e.getPreferredThemeStyle()));
+        refresh();
+        applyTheme(getEffectiveTheme(e.getPreferredThemeStyle()));
     }
 }

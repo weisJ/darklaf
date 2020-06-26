@@ -95,9 +95,15 @@ public final class ColorUtil {
         return toAlpha(color, 255);
     }
 
-    public static double getBrightness(final Color c) {
-        return Math.sqrt(0.241 * c.getRed() * c.getRed()
-                         + 0.691 * c.getGreen() * c.getGreen()
-                         + 0.068 * c.getBlue() * c.getBlue());
+    /**
+     * Calculate the perceived brightness of a color.
+     *
+     * @param  c the color.
+     * @return   the brightness from 0 to 255.
+     */
+    public static double getPerceivedBrightness(final Color c) {
+        return Math.sqrt(0.299 * c.getRed() * c.getRed()
+                         + 0.587 * c.getGreen() * c.getGreen()
+                         + 0.114 * c.getBlue() * c.getBlue());
     }
 }

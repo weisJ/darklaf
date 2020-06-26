@@ -25,7 +25,6 @@
 package com.github.weisj.darklaf.settings;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.function.Supplier;
@@ -56,7 +55,8 @@ import com.github.weisj.darklaf.util.Alignment;
 public class ThemeSettingsPanel extends JPanel {
 
     private final ResourceBundle resourceBundle;
-    private Icon icon;
+
+    private final SettingsPanelConfiguration settingsConfiguration;
 
     private JCheckBox fontSizeFollowsSystem;
     private JCheckBox accentColorFollowsSystem;
@@ -69,11 +69,6 @@ public class ThemeSettingsPanel extends JPanel {
     private ButtonGroup bgSelection;
     private ButtonGroup bgAccent;
 
-    private boolean followFontSize;
-    private boolean followAccentColor;
-    private boolean followSelectionColor;
-    private boolean followTheme;
-    private boolean systemPreferences;
     private Color defaultAccentColor;
     private Color defaultSelectionColor;
     private ColoredRadioButton customAccent;
@@ -83,6 +78,7 @@ public class ThemeSettingsPanel extends JPanel {
 
     public ThemeSettingsPanel(final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        this.settingsConfiguration = new SettingsPanelConfiguration();
         init();
     }
 
@@ -91,93 +87,38 @@ public class ThemeSettingsPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(createGeneralSettings(), BorderLayout.CENTER);
         add(createMonitorSettings(), BorderLayout.SOUTH);
-        fetch(true);
+    }
+
+    public void loadConfiguration(final SettingsConfiguration configuration) {
+        themeComboBox.setModel(LafManager.getThemeComboBoxModel());
+        settingsConfiguration.load(configuration);
+        settingsConfiguration.setAccentColorRule(settingsConfiguration.getAccentColorRule());
+
         update();
-    }
-
-    public void saveSettings() {
-        systemPreferences = !enabledSystemPreferences.getTristateModel().isDeselected();
-        followTheme = fontSizeFollowsSystem.isSelected();
-        followAccentColor = accentColorFollowsSystem.isSelected();
-        followSelectionColor = selectionColorFollowsSystem.isSelected();
-        followFontSize = fontSizeFollowsSystem.isSelected();
-        LafManager.enabledPreferenceChangeReporting(!enabledSystemPreferences.getTristateModel().isDeselected());
-    }
-
-    public void discardChanges() {
-        setFontSizeFollowsSystem(followFontSize);
-        setThemeFollowsSystem(followTheme);
-        setAccentColorFollowsSystem(followAccentColor);
-        setSelectionColorFollowsSystem(followSelectionColor);
-        setEnabledSystemPreferences(systemPreferences);
     }
 
     private void update() {
-        Theme selectedTheme = (Theme) themeComboBox.getSelectedItem();
-        if (selectedTheme == null) selectedTheme = LafManager.getTheme();
-
         boolean enabled = !enabledSystemPreferences.getTristateModel().isDeselected();
-        themeFollowsSystem.setEnabled(enabled);
-        accentColorFollowsSystem.setEnabled(enabled);
-        selectionColorFollowsSystem.setEnabled(enabled);
-        fontSizeFollowsSystem.setEnabled(enabled);
-        if (enabledSystemPreferences.isSelected()) {
-            themeFollowsSystem.setSelected(themeFollowsSystem.isSelected() && themeFollowsSystem.isEnabled());
-            accentColorFollowsSystem.setSelected(accentColorFollowsSystem.isSelected()
-                                                 && accentColorFollowsSystem.isEnabled());
-            selectionColorFollowsSystem.setSelected(selectionColorFollowsSystem.isSelected()
-                                                    && selectionColorFollowsSystem.isEnabled());
-            fontSizeFollowsSystem.setSelected(fontSizeFollowsSystem.isSelected() && fontSizeFollowsSystem.isEnabled());
-        }
-        enabledSystemPreferences.setEnabled(ThemePreferencesHandler.getSharedInstance().canReport());
-        themeComboBox.setEnabled(!(isThemeFollowsSystem() && isSystemPreferencesEnabled()));
-        setEnabledSystemPreferences(isSystemPreferencesEnabled());
 
-        enableButtonGroup(bgAccent, selectedTheme.supportsCustomAccentColor()
-                                    && !accentColorFollowsSystem.isSelected());
-        enableButtonGroup(bgSelection, selectedTheme.supportsCustomSelectionColor()
-                                       && !selectionColorFollowsSystem.isSelected());
+        enabledSystemPreferences.setEnabled(settingsConfiguration.isSystemPreferencesSupported());
 
-        fontSlider.setEnabled(!(isFontSizeFollowsSystem() && isSystemPreferencesEnabled()));
+        themeFollowsSystem.setEnabled(enabled && settingsConfiguration.isSystemThemeSupported());
+        accentColorFollowsSystem.setEnabled(enabled && settingsConfiguration.isSystemAccentColorSupported());
+        selectionColorFollowsSystem.setEnabled(enabled && settingsConfiguration.isSystemSelectionColorSupported());
+        fontSizeFollowsSystem.setEnabled(enabled && settingsConfiguration.isSystemFontSizeSupported());
+
+        settingsConfiguration.setEnabledSystemPreferences(settingsConfiguration.isSystemPreferencesEnabled());
+
+        enableButtonGroup(bgAccent, !settingsConfiguration.isAccentColorFollowsSystem()
+                                    && settingsConfiguration.getSelectedTheme().supportsCustomAccentColor());
+        enableButtonGroup(bgSelection, !settingsConfiguration.isSelectionColorFollowsSystem()
+                                       && settingsConfiguration.getSelectedTheme().supportsCustomSelectionColor());
+        themeComboBox.setEnabled(!settingsConfiguration.isThemeFollowsSystem());
+        fontSlider.setEnabled(!settingsConfiguration.isFontSizeFollowsSystem());
     }
 
-    protected void fetch(final PreferredThemeStyle themeStyle, final boolean ignoreSettings) {
-        Theme theme = LafManager.themeForPreferredStyle(themeStyle);
-        fetch(theme, ignoreSettings);
-    }
-
-    protected void fetch(final Theme theme, final boolean ignoreSettings) {
-        Theme selectedTheme = (Theme) themeComboBox.getSelectedItem();
-        Theme currentTheme = LafManager.getTheme();
-        themeComboBox.setModel(LafManager.getThemeComboBoxModel());
-        if (ignoreSettings || isThemeFollowsSystem()) {
-            setTheme(isThemeFollowsSystem() ? theme : currentTheme);
-        } else {
-            themeComboBox.setSelectedItem(selectedTheme);
-        }
-        if (ignoreSettings || isFontSizeFollowsSystem()) {
-            setFontSizeRule(isFontSizeFollowsSystem()
-                    ? theme.getFontSizeRule()
-                    : currentTheme.getFontSizeRule());
-        }
-        if (ignoreSettings || isAccentColorFollowsSystem()) {
-            setAccentColor(getAccentColor(isAccentColorFollowsSystem() ? theme : currentTheme, true));
-        }
-        if (ignoreSettings || isSelectionColorFollowsSystem()) {
-            setSelectionColor(getSelectionColor(isSelectionColorFollowsSystem() ? theme : currentTheme, true));
-        }
-        if (!ignoreSettings) {
-            setEnabledSystemPreferences(LafManager.isPreferenceChangeReportingEnabled());
-        }
-        update();
-    }
-
-    public void fetch(final PreferredThemeStyle themeStyle) {
-        fetch(themeStyle, false);
-    }
-
-    public void fetch(final boolean ignoreSettings) {
-        fetch(LafManager.getPreferredThemeStyle(), ignoreSettings);
+    public void updateConfiguration() {
+        ThemeSettings.getInstance().setConfiguration(settingsConfiguration);
     }
 
     private boolean updateButtonGroup(final ButtonGroup bg, final Color currentColor,
@@ -192,18 +133,6 @@ public class ThemeSettingsPanel extends JPanel {
             if (selected) return true;
         }
         return false;
-    }
-
-    public Theme getEffectiveTheme(final PreferredThemeStyle preferredThemeStyle) {
-        Theme theme = getTheme(preferredThemeStyle);
-        if (theme == null) return null;
-        FontSizeRule fontSizeRule = getFontSizeRule(theme, preferredThemeStyle);
-        AccentColorRule accentColorRule = getAccentColorRule(theme);
-        return theme.derive(fontSizeRule, accentColorRule);
-    }
-
-    public Theme getEffectiveTheme() {
-        return getEffectiveTheme(LafManager.getPreferredThemeStyle());
     }
 
     protected Color getSelectedColor(final ButtonGroup bg, final AbstractButton defaultButton) {
@@ -244,21 +173,29 @@ public class ThemeSettingsPanel extends JPanel {
         defaultSelectionColor = createDefaultColor("themeSelectionColor");
         defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor,
                                             resourceBundle.getString("color_default"));
-        AbstractButton selectionBlue = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_BLUE,
+        AbstractButton selectionBlue = addColoredButton(bgSelection, selectionBox,
+                                                        MacOSColors.SELECTION_BLUE, MacOSColors.ACCENT_BLUE,
                                                         resourceBundle.getString("color_blue"));
-        AbstractButton selectionPurple = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_PURPLE,
+        AbstractButton selectionPurple = addColoredButton(bgSelection, selectionBox,
+                                                          MacOSColors.SELECTION_PURPLE, MacOSColors.ACCENT_LILAC,
                                                           resourceBundle.getString("color_purple"));
-        AbstractButton selectionPink = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_PINK,
+        AbstractButton selectionPink = addColoredButton(bgSelection, selectionBox,
+                                                        MacOSColors.SELECTION_PINK, MacOSColors.ACCENT_ROSE,
                                                         resourceBundle.getString("color_pink"));
-        AbstractButton selectionRed = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_RED,
+        AbstractButton selectionRed = addColoredButton(bgSelection, selectionBox,
+                                                       MacOSColors.SELECTION_RED, MacOSColors.ACCENT_RED,
                                                        resourceBundle.getString("color_red"));
-        AbstractButton selectionOrange = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_ORANGE,
+        AbstractButton selectionOrange = addColoredButton(bgSelection, selectionBox,
+                                                          MacOSColors.SELECTION_ORANGE, MacOSColors.ACCENT_ORANGE,
                                                           resourceBundle.getString("color_orange"));
-        AbstractButton selectionYellow = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_YELLOW,
+        AbstractButton selectionYellow = addColoredButton(bgSelection, selectionBox,
+                                                          MacOSColors.SELECTION_YELLOW, MacOSColors.ACCENT_YELLOW,
                                                           resourceBundle.getString("color_yellow"));
-        AbstractButton selectionGreen = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_GREEN,
+        AbstractButton selectionGreen = addColoredButton(bgSelection, selectionBox,
+                                                         MacOSColors.SELECTION_GREEN, MacOSColors.ACCENT_GREEN,
                                                          resourceBundle.getString("color_green"));
-        AbstractButton selectionGraphite = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_GRAPHITE,
+        AbstractButton selectionGraphite = addColoredButton(bgSelection, selectionBox,
+                                                            MacOSColors.SELECTION_GRAPHITE, MacOSColors.ACCENT_GRAPHITE,
                                                             resourceBundle.getString("color_gray"));
         customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
                                           resourceBundle.getString("color_custom"));
@@ -324,116 +261,6 @@ public class ThemeSettingsPanel extends JPanel {
         return new ThemedColor(key);
     }
 
-    public boolean isSystemPreferencesEnabled() {
-        return !enabledSystemPreferences.getTristateModel().isDeselected() && enabledSystemPreferences.isEnabled();
-    }
-
-    public boolean isAccentColorFollowsSystem() {
-        return accentColorFollowsSystem.isSelected() && accentColorFollowsSystem.isEnabled();
-    }
-
-    public boolean isFontSizeFollowsSystem() {
-        return fontSizeFollowsSystem.isSelected() && fontSizeFollowsSystem.isEnabled();
-    }
-
-    public boolean isSelectionColorFollowsSystem() {
-        return selectionColorFollowsSystem.isSelected() && selectionColorFollowsSystem.isEnabled();
-    }
-
-    public boolean isThemeFollowsSystem() {
-        return themeFollowsSystem.isSelected() && themeFollowsSystem.isEnabled();
-    }
-
-    public Theme getTheme() {
-        return getTheme(LafManager.getPreferredThemeStyle());
-    }
-
-    protected Theme getTheme(final PreferredThemeStyle preferredThemeStyle) {
-        return isThemeFollowsSystem()
-                ? LafManager.themeForPreferredStyle(preferredThemeStyle)
-                : (Theme) themeComboBox.getSelectedItem();
-    }
-
-    public FontSizeRule getFontSizeRule() {
-        PreferredThemeStyle preferredThemeStyle = LafManager.getPreferredThemeStyle();
-        return getFontSizeRule(getTheme(preferredThemeStyle), preferredThemeStyle);
-    }
-
-    protected FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
-        if (theme == null) return FontSizeRule.getDefault();
-        return isFontSizeFollowsSystem()
-                ? preferredThemeStyle.getFontSizeRule()
-                : FontSizeRule.relativeAdjustment(fontSlider.getValue());
-    }
-
-    public AccentColorRule getAccentColorRule() {
-        PreferredThemeStyle preferredThemeStyle = LafManager.getPreferredThemeStyle();
-        return getAccentColorRule(getTheme(preferredThemeStyle));
-    }
-
-    protected AccentColorRule getAccentColorRule(final Theme theme) {
-        if (theme == null) return AccentColorRule.getDefault();
-        Color accentColor = getAccentColor(theme, isAccentColorFollowsSystem());
-        Color selectionColor = getSelectionColor(theme, isSelectionColorFollowsSystem());
-        return AccentColorRule.fromColor(accentColor, selectionColor);
-    }
-
-    protected Color getAccentColor(final Theme theme, final boolean useThemeColor) {
-        return theme.supportsCustomAccentColor() ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
-                : getSelectedColor(bgAccent, defaultAccent)
-                : null;
-    }
-
-    protected Color getSelectionColor(final Theme theme, final boolean useThemeColor) {
-        return theme.supportsCustomSelectionColor() ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
-                : getSelectedColor(bgSelection, defaultSelection)
-                : null;
-    }
-
-    public void setEnabledSystemPreferences(final boolean enabled) {
-        TristateState state = TristateState.DESELECTED;
-        if (enabled
-            && (isFontSizeFollowsSystem() || !fontSizeFollowsSystem.isEnabled())
-            && (isThemeFollowsSystem() || !themeFollowsSystem.isEnabled())
-            && (isAccentColorFollowsSystem() || !accentColorFollowsSystem.isEnabled())
-            && (isSelectionColorFollowsSystem() || !selectionColorFollowsSystem.isEnabled())) {
-            state = TristateState.SELECTED;
-        } else if (enabled) {
-            enabledSystemPreferences.getTristateModel().setIndeterminate();
-            return;
-        }
-        enabledSystemPreferences.getTristateModel().setState(state);
-    }
-
-    public void setAccentColorFollowsSystem(final boolean accentColorFollowsSystem) {
-        this.accentColorFollowsSystem.setSelected(accentColorFollowsSystem);
-    }
-
-    public void setFontSizeFollowsSystem(final boolean fontSizeFollowsSystem) {
-        this.fontSizeFollowsSystem.setSelected(fontSizeFollowsSystem);
-    }
-
-    public void setSelectionColorFollowsSystem(final boolean selectionColorFollowsSystem) {
-        this.selectionColorFollowsSystem.setSelected(selectionColorFollowsSystem);
-    }
-
-    public void setThemeFollowsSystem(final boolean themeFollowsSystem) {
-        this.themeFollowsSystem.setSelected(themeFollowsSystem);
-    }
-
-    public void setTheme(final Theme theme) {
-        themeComboBox.setSelectedItem(LafManager.getClosestMatchForTheme(theme));
-    }
-
-    public void setAccentColorRule(final AccentColorRule accentColorRule) {
-        setAccentColorRule(accentColorRule.getAccentColor(), accentColorRule.getSelectionColor());
-    }
-
-    protected void setAccentColorRule(final Color accentColor, final Color selectionColor) {
-        setAccentColor(accentColor);
-        setSelectionColor(selectionColor);
-    }
-
     protected void setAccentColor(final Color accentColor) {
         setXColor(accentColor, bgAccent, customAccent, defaultAccent, defaultAccentColor);
     }
@@ -453,14 +280,6 @@ public class ThemeSettingsPanel extends JPanel {
         if (!updateButtonGroup(bg, color, defaultButton, defaultColor)) {
             customButton.setSelected(true);
             if (customButton.getColor() == null) customButton.setColor(color);
-        }
-    }
-
-    public void setFontSizeRule(final FontSizeRule fontSizeRule) {
-        if (fontSizeRule == null) {
-            fontSlider.setValue(FontSizePreset.NORMAL.getPercentage());
-        } else {
-            fontSlider.setValue(fontSizeRule.getPercentage());
         }
     }
 
@@ -572,10 +391,10 @@ public class ThemeSettingsPanel extends JPanel {
 
         enabledSystemPreferences = new TristateCheckBox(resourceBundle.getString("check_system_preferences"));
 
-        ActionListener actionListener = e -> SwingUtilities.invokeLater(this::update);
         enabledSystemPreferences.addChangeListener(e -> {
             if (!enabledSystemPreferences.getTristateModel().isIndeterminate()) {
                 boolean selected = enabledSystemPreferences.getTristateModel().isSelected();
+
                 if (themeFollowsSystem.isEnabled()) themeFollowsSystem.setSelected(selected);
                 if (accentColorFollowsSystem.isEnabled()) accentColorFollowsSystem.setSelected(selected);
                 if (selectionColorFollowsSystem.isEnabled()) selectionColorFollowsSystem.setSelected(selected);
@@ -583,10 +402,11 @@ public class ThemeSettingsPanel extends JPanel {
             }
             update();
         });
-        themeFollowsSystem.addActionListener(actionListener);
-        accentColorFollowsSystem.addActionListener(actionListener);
-        selectionColorFollowsSystem.addActionListener(actionListener);
-        fontSizeFollowsSystem.addActionListener(actionListener);
+        themeFollowsSystem.addActionListener(e -> update());
+
+        accentColorFollowsSystem.addActionListener(e -> update());
+        selectionColorFollowsSystem.addActionListener(e -> update());
+        fontSizeFollowsSystem.addActionListener(e -> update());
 
         enabledSystemPreferences.setSelected(LafManager.isPreferenceChangeReportingEnabled());
 
@@ -656,34 +476,49 @@ public class ThemeSettingsPanel extends JPanel {
         }
     }
 
-    public ColoredRadioButton addColoredButton(final ColoredRadioButton button,
-                                               final ButtonGroup bg, final JComponent parent,
-                                               final String tipText) {
-        setupButton(button, bg, tipText);
-        parent.add(button);
+    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                                final Color color, final String tipText) {
+        return addColoredButton(bg, parent, color, color, tipText);
+    }
+
+    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                                final Color color, final AbstractButton peer,
+                                                final String tipText) {
+        return addColoredButton(bg, parent, color, color, peer, tipText);
+    }
+
+    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                                final Color color, final Color focusColor,
+                                                final String tipText) {
+        return addColoredButton(bg, parent, color, focusColor, null, tipText);
+    }
+
+    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                                final Color color, final Color focusColor,
+                                                final AbstractButton peer,
+                                                final String tipText) {
+        ColoredRadioButton button = addColoredButtonImpl(new ColoredRadioButton(null, color, focusColor),
+                                                         bg, parent, tipText);
+        if (peer != null) {
+            button.addActionListener(e -> {
+                if (button.isSelected()) {
+                    peer.setSelected(true);
+                }
+            });
+        }
         return button;
     }
 
-    public ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                               final Color color, final AbstractButton peer,
-                                               final String tipText) {
-        ColoredRadioButton button = addColoredButton(new ColoredRadioButton(null, color), bg, parent, tipText);
-        button.addActionListener(e -> {
-            if (button.isSelected()) {
-                peer.setSelected(true);
-            }
-        });
-        return button;
+    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                                final Supplier<Color> colorSupplier, final String tipText) {
+        return addColoredButton(bg, parent, colorSupplier, colorSupplier, tipText);
     }
 
-    public ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                               final Color color, final String tipText) {
-        return addColoredButton(new ColoredRadioButton(null, color), bg, parent, tipText);
-    }
-
-    public ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                               final Supplier<Color> colorSupplier, final String tipText) {
-        return addColoredButton(new ColoredRadioButton(null, null) {
+    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
+                                                final Supplier<Color> colorSupplier,
+                                                final Supplier<Color> focusColorSupplier,
+                                                final String tipText) {
+        return addColoredButtonImpl(new ColoredRadioButton(null, null) {
             {
                 addActionListener(e -> getColor());
             }
@@ -692,11 +527,19 @@ public class ThemeSettingsPanel extends JPanel {
             public Color getColor() {
                 Color c = super.getColor();
                 if (c == null) {
-                    setColor(colorSupplier.get());
+                    setColors(colorSupplier.get(), focusColorSupplier.get());
                 }
                 return super.getColor();
             }
         }, bg, parent, tipText);
+    }
+
+    private ColoredRadioButton addColoredButtonImpl(final ColoredRadioButton button,
+                                                    final ButtonGroup bg, final JComponent parent,
+                                                    final String tipText) {
+        setupButton(button, bg, tipText);
+        parent.add(button);
+        return button;
     }
 
     private void setupButton(final ColoredRadioButton button, final ButtonGroup bg, final String tipText) {
@@ -709,7 +552,162 @@ public class ThemeSettingsPanel extends JPanel {
         button.putClientProperty(ToolTipConstants.KEY_CONTEXT, context);
     }
 
-    public String getTitle() {
-        return resourceBundle.getString("title");
+    private class SettingsPanelConfiguration extends SettingsConfiguration {
+
+        @Override
+        public boolean isSystemPreferencesEnabled() {
+            return !enabledSystemPreferences.getTristateModel().isDeselected() && isSystemPreferencesSupported();
+        }
+
+        @Override
+        public boolean isAccentColorFollowsSystem() {
+            return accentColorFollowsSystem.isSelected() && isSystemAccentColorSupported();
+        }
+
+        @Override
+        public boolean isFontSizeFollowsSystem() {
+            return fontSizeFollowsSystem.isSelected() && isSystemFontSizeSupported();
+        }
+
+        @Override
+        public boolean isSelectionColorFollowsSystem() {
+            return selectionColorFollowsSystem.isSelected() && isSystemSelectionColorSupported();
+        }
+
+        @Override
+        public boolean isThemeFollowsSystem() {
+            return themeFollowsSystem.isSelected() && isSystemThemeSupported();
+        }
+
+        @Override
+        public boolean isSystemAccentColorSupported() {
+            return super.isSystemAccentColorSupported() && getSelectedTheme().supportsCustomAccentColor();
+        }
+
+        @Override
+        public boolean isSystemSelectionColorSupported() {
+            return super.isSystemSelectionColorSupported() && getSelectedTheme().supportsCustomSelectionColor();
+        }
+
+        @Override
+        public AccentColorRule getAccentColorRule() {
+            PreferredThemeStyle preferredThemeStyle = LafManager.getPreferredThemeStyle();
+            return getAccentColorRule(getTheme(preferredThemeStyle));
+        }
+
+        private AccentColorRule getAccentColorRule(final Theme theme) {
+            if (theme == null) return AccentColorRule.getDefault();
+            Color accentColor = getAccentColor(theme, isAccentColorFollowsSystem());
+            Color selectionColor = getSelectionColor(theme, isSelectionColorFollowsSystem());
+            return AccentColorRule.fromColor(accentColor, selectionColor);
+        }
+
+        private Color getAccentColor(final Theme theme, final boolean useThemeColor) {
+            return theme.supportsCustomAccentColor()
+                    ? useThemeColor
+                            ? theme.getAccentColorRule().getAccentColor()
+                            : getSelectedColor(bgAccent, defaultAccent)
+                    : null;
+        }
+
+        private Color getSelectionColor(final Theme theme, final boolean useThemeColor) {
+            return theme.supportsCustomSelectionColor()
+                    ? useThemeColor
+                            ? theme.getAccentColorRule().getSelectionColor()
+                            : getSelectedColor(bgSelection, defaultSelection)
+                    : null;
+        }
+
+        @Override
+        public FontSizeRule getFontSizeRule() {
+            PreferredThemeStyle preferredThemeStyle = LafManager.getPreferredThemeStyle();
+            return getFontSizeRule(getTheme(preferredThemeStyle), preferredThemeStyle);
+        }
+
+        private FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
+            if (theme == null) return FontSizeRule.getDefault();
+            return isFontSizeFollowsSystem()
+                    ? preferredThemeStyle.getFontSizeRule()
+                    : FontSizeRule.relativeAdjustment(fontSlider.getValue()); // Todo
+        }
+
+        @Override
+        public Theme getTheme() {
+            return getTheme(LafManager.getPreferredThemeStyle());
+        }
+
+        private Theme getTheme(final PreferredThemeStyle preferredThemeStyle) {
+            return isThemeFollowsSystem()
+                    ? LafManager.themeForPreferredStyle(preferredThemeStyle)
+                    : getSelectedTheme();
+        }
+
+        private Theme getSelectedTheme() {
+            return (Theme) themeComboBox.getSelectedItem();
+        }
+
+        @Override
+        public void setEnabledSystemPreferences(final boolean enabled) {
+            TristateState state = TristateState.DESELECTED;
+            if (enabled
+                && (isFontSizeFollowsSystem() || !fontSizeFollowsSystem.isEnabled())
+                && (isThemeFollowsSystem() || !themeFollowsSystem.isEnabled())
+                && (isAccentColorFollowsSystem() || !accentColorFollowsSystem.isEnabled())
+                && (isSelectionColorFollowsSystem() || !selectionColorFollowsSystem.isEnabled())) {
+                state = TristateState.SELECTED;
+            } else if (enabled) {
+                enabledSystemPreferences.getTristateModel().setIndeterminate();
+                return;
+            }
+            enabledSystemPreferences.getTristateModel().setState(state);
+        }
+
+        @Override
+        public void setAccentColorFollowsSystem(final boolean accentColorFollowsSystem) {
+            ThemeSettingsPanel.this.accentColorFollowsSystem.setSelected(accentColorFollowsSystem);
+        }
+
+        @Override
+        public void setFontSizeFollowsSystem(final boolean fontSizeFollowsSystem) {
+            ThemeSettingsPanel.this.fontSizeFollowsSystem.setSelected(fontSizeFollowsSystem);
+        }
+
+        @Override
+        public void setSelectionColorFollowsSystem(final boolean selectionColorFollowsSystem) {
+            ThemeSettingsPanel.this.selectionColorFollowsSystem.setSelected(selectionColorFollowsSystem);
+        }
+
+        @Override
+        public void setThemeFollowsSystem(final boolean themeFollowsSystem) {
+            ThemeSettingsPanel.this.themeFollowsSystem.setSelected(themeFollowsSystem);
+        }
+
+        @Override
+        public void setAccentColorRule(final AccentColorRule accentColorRule) {
+            if (accentColorRule == null) {
+                setAccentColorRule(null, null);
+            } else {
+                setAccentColorRule(accentColorRule.getAccentColor(), accentColorRule.getSelectionColor());
+            }
+        }
+
+        protected void setAccentColorRule(final Color accentColor, final Color selectionColor) {
+            setAccentColor(accentColor);
+            setSelectionColor(selectionColor);
+        }
+
+        @Override
+        public void setFontSizeRule(final FontSizeRule fontSizeRule) {
+            if (fontSizeRule == null) {
+                fontSlider.setValue(FontSizePreset.NORMAL.getPercentage());
+            } else {
+                fontSlider.setValue(fontSizeRule.getPercentage());
+            }
+        }
+
+        @Override
+        public void setTheme(final Theme theme) {
+            themeComboBox.setSelectedItem(LafManager.getClosestMatchForTheme(theme));
+        }
     }
 }

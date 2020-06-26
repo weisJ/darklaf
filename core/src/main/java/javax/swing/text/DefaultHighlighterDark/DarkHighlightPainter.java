@@ -86,7 +86,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     public DarkHighlightPainter(final Paint paint, final boolean rounded, final float alpha) {
         super(null);
-        wrapper = new HighlighterColor(color);
+        wrapper = new HighlighterColor(null);
         arcSize = UIManager.getInt("Highlight.arc");
         setPaint(paint);
         setRoundedEdges(rounded);

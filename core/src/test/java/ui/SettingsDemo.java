@@ -57,12 +57,13 @@ public class SettingsDemo implements ComponentDemo {
             }
         });
         content.add(box, BorderLayout.SOUTH);
+
         return content;
     }
 
     @Override
     public Icon getFrameIcon() {
-        return ThemeSettings.getInstance().getIcon();
+        return ThemeSettings.getIcon();
     }
 
     @Override
