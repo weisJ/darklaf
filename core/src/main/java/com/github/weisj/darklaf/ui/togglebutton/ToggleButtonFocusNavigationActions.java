@@ -24,26 +24,48 @@
  */
 package com.github.weisj.darklaf.ui.togglebutton;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.*;
 
 public class ToggleButtonFocusNavigationActions {
 
-    public static void installActions(final AbstractButton button) {
+    private final KeyListener keyListener;
+    private final AbstractButton button;
+    private boolean traversalKeysEnabled;
+
+    public ToggleButtonFocusNavigationActions(final AbstractButton button) {
+        this.button = button;
+        keyListener = new DarkToggleButtonKeyHandler();
+    }
+
+    public void installActions() {
         if (button == null) return;
+        traversalKeysEnabled = button.getFocusTraversalKeysEnabled();
+        button.setFocusTraversalKeysEnabled(false);
+        button.addKeyListener(keyListener);
         button.getActionMap().put("Previous", new SelectPreviousBtn());
         button.getActionMap().put("Next", new SelectNextBtn());
 
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("UP"), "Previous");
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("DOWN"), "Next");
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("LEFT"),
-                                                                              "Previous");
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("RIGHT"), "Next");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+              .put(KeyStroke.getKeyStroke("UP"), "Previous");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+              .put(KeyStroke.getKeyStroke("DOWN"), "Next");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+              .put(KeyStroke.getKeyStroke("LEFT"), "Previous");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+              .put(KeyStroke.getKeyStroke("RIGHT"), "Next");
     }
 
-    public static void uninstallActions(final AbstractButton button) {
+    public void uninstallActions() {
         if (button == null) return;
+        if (!button.getFocusTraversalKeysEnabled()) {
+            button.setFocusTraversalKeysEnabled(traversalKeysEnabled);
+        }
+        button.removeKeyListener(keyListener);
+
         button.getActionMap().remove("Previous");
         button.getActionMap().remove("Next");
         button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
@@ -60,7 +82,7 @@ public class ToggleButtonFocusNavigationActions {
         // Get the source of the event.
         Object eventSrc = event.getSource();
 
-        // Check whether the source is JRadioButton, it so, whether it is visible
+        // Check whether the source is AbstractButton, it so, whether it is visible
         if (!ButtonGroupInfo.isValidButton(eventSrc)) {
             return;
         }

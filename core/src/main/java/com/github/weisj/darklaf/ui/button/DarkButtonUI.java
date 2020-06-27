@@ -25,7 +25,6 @@
 package com.github.weisj.darklaf.ui.button;
 
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
@@ -44,7 +43,6 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.AlignmentExt;
@@ -82,7 +80,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected AbstractButton button;
     protected int arc;
     protected int altArc;
-    protected KeyListener keyListener;
+    protected ToggleButtonFocusNavigationActions keyboardActions;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkButtonUI();
@@ -124,13 +122,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void installListeners(final AbstractButton b) {
         super.installListeners(b);
-        keyListener = createKeyListener(b);
-        b.addKeyListener(keyListener);
-        ToggleButtonFocusNavigationActions.installActions(b);
-    }
-
-    protected KeyListener createKeyListener(final AbstractButton button) {
-        return new DarkToggleButtonKeyHandler();
+        keyboardActions = new ToggleButtonFocusNavigationActions(b);
+        keyboardActions.installActions();
     }
 
     @Override
@@ -141,9 +134,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void uninstallListeners(final AbstractButton b) {
         super.uninstallListeners(b);
-        b.removeKeyListener(keyListener);
-        keyListener = null;
-        ToggleButtonFocusNavigationActions.uninstallActions(b);
+        keyboardActions.uninstallActions();
+        keyboardActions = null;
     }
 
     @Override

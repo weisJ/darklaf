@@ -38,17 +38,33 @@ public class DarkToggleButtonKeyHandler implements KeyListener {
     // to next/previous component
     public void keyPressed(final KeyEvent e) {
         AWTKeyStroke stroke = AWTKeyStroke.getAWTKeyStrokeForEvent(e);
-        if (stroke != null && e.getSource() instanceof JRadioButton) {
-            JRadioButton source = (JRadioButton) e.getSource();
-            boolean next = isFocusTraversalKey(source,
-                                               KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-                                               stroke);
-            if (next || isFocusTraversalKey(source,
-                                            KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
-                                            stroke)) {
-                e.consume();
-                ButtonGroupInfo btnGroupInfo = new ButtonGroupInfo(source);
-                btnGroupInfo.jumpToNextComponent(next);
+        if (stroke != null && e.getSource() instanceof AbstractButton) {
+            AbstractButton source = (AbstractButton) e.getSource();
+            ButtonModel model = source.getModel();
+            if (!(model instanceof DefaultButtonModel)) model = null;
+
+            DefaultButtonModel bm = model != null ? (DefaultButtonModel) model : null;
+            ButtonGroup group = bm != null ? bm.getGroup() : null;
+            if (group == null || group.getButtonCount() == 0) group = null;
+
+            KeyboardFocusManager fm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            Container comp = group != null ? group.getElements().nextElement() : source;
+            if (isFocusTraversalKey(source,
+                                    KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
+                                    stroke)) {
+                fm.focusNextComponent(comp);
+            } else if (isFocusTraversalKey(source,
+                                           KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
+                                           stroke)) {
+                fm.focusPreviousComponent(comp);
+            } else if (isFocusTraversalKey(source,
+                                           KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS,
+                                           stroke)) {
+                fm.upFocusCycle(comp);
+            } else if (isFocusTraversalKey(source,
+                                           KeyboardFocusManager.DOWN_CYCLE_TRAVERSAL_KEYS,
+                                           stroke)) {
+                fm.downFocusCycle(comp);
             }
         }
     }

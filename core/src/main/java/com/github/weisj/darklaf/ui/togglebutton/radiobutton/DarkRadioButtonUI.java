@@ -25,7 +25,6 @@
 package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
 
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RectangularShape;
 import java.beans.PropertyChangeEvent;
@@ -41,7 +40,6 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
-import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonKeyHandler;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
@@ -62,7 +60,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
     private Icon stateIcon;
     protected BasicButtonListener buttonListener;
-    protected KeyListener keyListener;
+    protected ToggleButtonFocusNavigationActions keyboardAction;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonUI();
@@ -95,14 +93,9 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         button.addFocusListener(buttonListener);
         button.addPropertyChangeListener(buttonListener);
         button.addChangeListener(buttonListener);
-        keyListener = createKeyListener(button);
-        button.addKeyListener(keyListener);
-        ToggleButtonFocusNavigationActions.installActions(radioButton);
         button.addPropertyChangeListener(this);
-    }
-
-    protected KeyListener createKeyListener(final AbstractButton button) {
-        return new DarkToggleButtonKeyHandler();
+        keyboardAction = new ToggleButtonFocusNavigationActions(button);
+        keyboardAction.installActions();
     }
 
     @Override
@@ -118,11 +111,9 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         button.removeFocusListener(buttonListener);
         button.removeChangeListener(buttonListener);
         button.removePropertyChangeListener(buttonListener);
-        buttonListener = null;
-        button.removeKeyListener(keyListener);
-        keyListener = null;
-        ToggleButtonFocusNavigationActions.uninstallActions(radioButton);
         button.removePropertyChangeListener(this);
+        keyboardAction.uninstallActions();
+        keyboardAction = null;
     }
 
     @Override
