@@ -90,7 +90,7 @@ public final class LafManager {
      */
     public static void setLogLevel(final Level level) {
         LogUtil.setLevel(level);
-        LOGGER.fine("Setting log level to" + level);
+        LOGGER.fine("Setting log level to " + level);
     }
 
     /**
