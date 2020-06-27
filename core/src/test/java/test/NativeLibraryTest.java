@@ -47,7 +47,6 @@ public class NativeLibraryTest {
     @Test
     @EnabledOnOs(OS.WINDOWS)
     public void testWindowsLibraryLoading() {
-        if (!isAdmin()) return;
         WindowsLibrary library = new TestWindowsLibrary();
         Assertions.assertNotNull(getClass().getResource(library.getX64Path() + library.getLibraryName()),
                                  "x64 library doesn't exist");
@@ -55,15 +54,6 @@ public class NativeLibraryTest {
                                  "x86 library doesn't exist");
         // Assertions.assertDoesNotThrow(library::updateLibrary);
         // Assertions.assertTrue(library.isLoaded(), "Windows library isn't loaded");
-    }
-
-    private static boolean isAdmin() {
-        String[] groups = (new com.sun.security.auth.module.NTSystem()).getGroupIDs();
-        for (String group : groups) {
-            if ("S-1-5-32-544".equals(group))
-                return true;
-        }
-        return false;
     }
 
     private static class TestMacOsLibrary extends MacOSLibrary {
