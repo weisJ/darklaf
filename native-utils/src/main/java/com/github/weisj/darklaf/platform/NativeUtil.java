@@ -48,7 +48,7 @@ public class NativeUtil {
     /**
      * Temporary directory which will contain the DLLs.
      */
-    private static Path temporaryDir;
+    private static File temporaryDir;
 
     private NativeUtil() {}
 
@@ -85,43 +85,43 @@ public class NativeUtil {
         // Prepare temporary file
         if (temporaryDir == null) {
             temporaryDir = createTempDirectory(NATIVE_FOLDER_PATH_PREFIX);
-            temporaryDir.toFile().deleteOnExit();
+            temporaryDir.deleteOnExit();
         }
 
-        Path temp = temporaryDir.resolve(filename);
+        File temp = new File(temporaryDir, filename);
 
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
-            if (!temporaryDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
-            Files.copy(is, temp.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            delete(temp);
+            temp.delete();
             throw e;
         } catch (NullPointerException e) {
-            delete(temp);
+            temp.delete();
             throw new FileNotFoundException("File " + path + " was not found inside JAR.");
         }
 
         try {
-            System.load(temp.toAbsolutePath().toString());
+            System.load(temp.getAbsolutePath());
         } finally {
             if (isPosixCompliant()) {
                 // Assume POSIX compliant file system, can be deleted after loading
-                delete(temp);
+                temp.delete();
             } else {
                 // Assume non-POSIX, and don't delete until last file descriptor closed
-                temp.toFile().deleteOnExit();
+                temp.deleteOnExit();
             }
         }
     }
 
-    private static void delete(final Path path) {
-        try {
-            Files.deleteIfExists(path);
-        } catch (IOException ignored) {}
-    }
+    private static File createTempDirectory(final String prefix) throws IOException {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        File generatedDir = new File(tempDir, prefix + System.nanoTime());
 
-    private static Path createTempDirectory(final String prefix) throws IOException {
-        return Files.createTempDirectory(prefix + System.nanoTime());
+        if (!generatedDir.mkdir()) {
+            throw new IOException("Failed to create temp directory " + generatedDir.getName());
+        }
+
+        return generatedDir;
     }
 
     private static boolean isPosixCompliant() {
