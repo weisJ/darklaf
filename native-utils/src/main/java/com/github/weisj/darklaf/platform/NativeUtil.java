@@ -93,10 +93,10 @@ public class NativeUtil {
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
             Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            Files.deleteIfExists(temp);
+            delete(temp);
             throw e;
         } catch (NullPointerException e) {
-            Files.deleteIfExists(temp);
+            delete(temp);
             throw new FileNotFoundException("File " + path + " was not found inside JAR.");
         }
 
@@ -105,12 +105,18 @@ public class NativeUtil {
         } finally {
             if (isPosixCompliant()) {
                 // Assume POSIX compliant file system, can be deleted after loading
-                Files.deleteIfExists(temp);
+                delete(temp);
             } else {
                 // Assume non-POSIX, and don't delete until last file descriptor closed
                 temp.toFile().deleteOnExit();
             }
         }
+    }
+
+    private static void delete(final Path path) {
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException ignored) {}
     }
 
     private static Path createTempDirectory(final String prefix) throws IOException {
