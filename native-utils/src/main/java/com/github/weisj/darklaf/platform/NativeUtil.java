@@ -93,8 +93,7 @@ public class NativeUtil {
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
             Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            e.printStackTrace();
-            Files.deleteIfExists(temp);
+            // Files.deleteIfExists(temp);
             throw e;
         } catch (NullPointerException e) {
             Files.deleteIfExists(temp);
