@@ -165,7 +165,7 @@ public class ThemeSettingsPanel extends JPanel {
         Color currentAccentColor = LafManager.getTheme().getAccentColorRule().getAccentColor();
         Color currentSelectionColor = LafManager.getTheme().getAccentColorRule().getSelectionColor();
 
-        JComponent selectionBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JComponent selectionBox = Box.createHorizontalBox();
         JLabel selectionColorLabel = new JLabel(resourceBundle.getString("label_selection_color"));
         selectionColorLabel.setLabelFor(selectionBox);
 
@@ -200,7 +200,7 @@ public class ThemeSettingsPanel extends JPanel {
         customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
                                           resourceBundle.getString("color_custom"));
 
-        JComponent accentBox = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JComponent accentBox = Box.createHorizontalBox();
         JLabel accentColorLabel = new JLabel(resourceBundle.getString("label_accent_color"));
         accentColorLabel.setLabelFor(accentBox);
 

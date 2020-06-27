@@ -62,13 +62,13 @@ public class DarkColorModelHSB extends DarkColorModel {
     }
 
     @Override
-    public char[] getLabelDescriptorsBefore() {
-        return new char[]{'H', 'S', 'B'};
+    public String[] getLabelDescriptorsBefore() {
+        return new String[]{"H", "S", "B"};
     }
 
     @Override
-    public char[] getLabelDescriptorsAfter() {
-        return new char[]{'\u00B0', '%', '%'};
+    public String[] getLabelDescriptorsAfter() {
+        return new String[]{"\u00B0", "%", "%"};
     }
 
     @Override

@@ -60,34 +60,21 @@ public abstract class DarkColorModel {
     @Override
     public abstract String toString();
 
-    public abstract char[] getLabelDescriptorsBefore();
+    public abstract String[] getLabelDescriptorsBefore();
 
     public String[] getFullLabelDescriptorsBefore() {
         return labels;
     }
 
-    public char[] getLabelDescriptorsAfter() {
-        return new char[]{Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE};
+    public String[] getLabelDescriptorsAfter() {
+        return new String[]{"", "", "", ""};
     }
 
     public String[] getFullLabelDescriptorsAfter() {
-        char[] after = getLabelDescriptorsAfter();
-        String[] fullAfter = new String[after.length];
-        for (int i = 0; i < fullAfter.length; i++) {
-            if (after[i] != Character.MIN_VALUE) {
-                fullAfter[i] = String.valueOf(after[i]);
-            } else {
-                fullAfter[i] = "";
-            }
-        }
-        return fullAfter;
+        return getLabelDescriptorsAfter();
     }
 
-    public int[] getValuesFromColor(final Color color) {
-        return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
-    }
+    public abstract int[] getValuesFromColor(final Color color);
 
-    public Color getColorFromValues(final int[] values) {
-        return new Color(values[0], values[1], values[2]);
-    }
+    public abstract Color getColorFromValues(final int[] values);
 }

@@ -53,12 +53,12 @@ public class DarkColorModelRGB extends DarkColorModel {
         return "RGB";
     }
 
-    public char[] getLabelDescriptorsBefore() {
-        return new char[]{'R', 'G', 'B'};
+    public String[] getLabelDescriptorsBefore() {
+        return new String[]{"R", "G", "B"};
     }
 
-    public char[] getLabelDescriptorsAfter() {
-        return new char[]{Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE, Character.MIN_VALUE};
+    public String[] getLabelDescriptorsAfter() {
+        return new String[]{"", "", "", ""};
     }
 
     public int[] getValuesFromColor(final Color color) {

@@ -62,13 +62,13 @@ public class DarkColorModelCMYK extends DarkColorModel {
     }
 
     @Override
-    public char[] getLabelDescriptorsBefore() {
-        return new char[]{'C', 'M', 'Y', 'K'};
+    public String[] getLabelDescriptorsBefore() {
+        return new String[]{"C", "M", "Y", "K"};
     }
 
     @Override
-    public char[] getLabelDescriptorsAfter() {
-        return new char[]{'%', '%', '%', '%'};
+    public String[] getLabelDescriptorsAfter() {
+        return new String[]{"%", "%", "%", "%"};
     }
 
     @Override

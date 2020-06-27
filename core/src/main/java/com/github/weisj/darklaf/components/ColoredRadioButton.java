@@ -189,7 +189,7 @@ public class ColoredRadioButton extends JRadioButton {
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             theme.loadDefaults(props, defaults);
             Color accentCol = color == DEFAULT_FILLED ? (Color) props.get("widgetFillDefault") : color;
-            Color focusCol = color == DEFAULT_FILLED ? accentCol : focusColor;
+            Color focusCol = focusColor == DEFAULT_FILLED ? accentCol : focusColor;
             adjustment.applyColors(LafManager.getTheme(), props, accentCol, null);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton",
                                                                        "properties/ui/"),
@@ -204,12 +204,15 @@ public class ColoredRadioButton extends JRadioButton {
             for (String prop : COLOR_PROPERTIES) {
                 propertyMap.put(prop, accentCol);
             }
-            for (String prop : FOCUS_COLOR_PROPERTIES) {
-                propertyMap.put(prop, focusCol);
+            if (focusColor != DEFAULT_FILLED) {
+                for (String prop : FOCUS_COLOR_PROPERTIES) {
+                    propertyMap.put(prop, focusCol);
+                }
             }
             for (String prop : FOREGROUND_PROPERTIES) {
                 Color fg = ForegroundColorGenerationTask.makeAdjustedForeground((Color) props.get(prop),
-                                                                                accentCol, MIN_FG_CONTRAST);
+                                                                                accentCol,
+                                                                                MIN_FG_CONTRAST);
                 propertyMap.put(prop, fg);
             }
 
