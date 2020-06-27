@@ -34,10 +34,10 @@ import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 
-public class ForegroundDemo implements ComponentDemo {
+public class ForegroundGenerationDemo implements ComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ForegroundDemo());
+        ComponentDemo.showDemo(new ForegroundGenerationDemo());
     }
 
     @Override
@@ -72,6 +72,6 @@ public class ForegroundDemo implements ComponentDemo {
 
     @Override
     public String getTitle() {
-        return "Foreground Color Demo";
+        return "Foreground Color Generation Demo";
     }
 }
