@@ -72,7 +72,7 @@ public abstract class AbstractLibrary {
         }
     }
 
-    protected String getLibraryPath() {
+    public String getLibraryPath() {
         return getPath() + getLibraryName();
     }
 

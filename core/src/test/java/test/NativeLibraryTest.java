@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
-import com.github.weisj.darklaf.platform.AbstractLibrary;
 import com.github.weisj.darklaf.platform.macos.MacOSLibrary;
 import com.github.weisj.darklaf.platform.windows.WindowsLibrary;
 
@@ -38,7 +37,9 @@ public class NativeLibraryTest {
     @Test
     @EnabledOnOs(OS.MAC)
     public void testMacOSLibraryLoading() {
-        AbstractLibrary library = new TestMacOsLibrary();
+        MacOSLibrary library = new TestMacOsLibrary();
+        Assertions.assertNotNull(getClass().getResource(library.getLibraryPath()),
+                                 "macOS library doesn't exist");
         Assertions.assertDoesNotThrow(library::updateLibrary);
         Assertions.assertTrue(library.isLoaded(), "MacOS library isn't loaded");
     }
@@ -46,7 +47,11 @@ public class NativeLibraryTest {
     @Test
     @EnabledOnOs(OS.WINDOWS)
     public void testWindowsLibraryLoading() {
-        AbstractLibrary library = new TestWindowsLibrary();
+        WindowsLibrary library = new TestWindowsLibrary();
+        Assertions.assertNotNull(getClass().getResource(library.getX64Path() + library.getLibraryName()),
+                                 "x64 library doesn't exist");
+        Assertions.assertNotNull(getClass().getResource(library.getX86Path() + library.getLibraryName()),
+                                 "x86 library doesn't exist");
         Assertions.assertDoesNotThrow(library::updateLibrary);
         Assertions.assertTrue(library.isLoaded(), "Windows library isn't loaded");
     }
