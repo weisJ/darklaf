@@ -40,6 +40,15 @@ bool Maximized(HWND hwnd) {
     return placement.showCmd == SW_MAXIMIZE;
 }
 
+bool IsLeftMousePressed(WindowWrapper *wrapper) {
+    if (wrapper->left_pressed) return true;
+    if (GetSystemMetrics(SM_SWAPBUTTON)) {
+        return GetAsyncKeyState(VK_RBUTTON) < 0;
+    } else {
+        return GetAsyncKeyState(VK_LBUTTON) < 0;
+    }
+}
+
 LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
     if (wrapper->popup_menu) return HTCLIENT;
 
@@ -100,7 +109,8 @@ LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
     LRESULT hit = hitTests[uRow][uCol];
     if (hit == HTNOWHERE || !wrapper->resizable) {
         //Handle window drag.
-        if (ptMouse.y < rcWindow.top + wrapper->title_height
+        if (IsLeftMousePressed(wrapper)
+            && ptMouse.y < rcWindow.top + wrapper->title_height
             && ptMouse.x >= rcWindow.left + wrapper->left
             && ptMouse.x <= rcWindow.right - wrapper->right) {
             return HTCAPTION;
@@ -299,6 +309,12 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
     auto wrapper = wrapper_map[handle];
 
     switch (uMsg) {
+        case WM_LBUTTONDOWN:
+            wrapper->left_pressed = true;
+            break;
+        case WM_LBUTTONUP:
+            wrapper->left_pressed = false;
+            break;
         case WM_NCACTIVATE:
             // Prevents window flickering when being blocked by dialogs or when activating.
             return TRUE;

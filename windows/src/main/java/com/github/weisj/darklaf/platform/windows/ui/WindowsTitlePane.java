@@ -774,7 +774,6 @@ public class WindowsTitlePane extends CustomTitlePane {
                 right = tmp;
 
             }
-            right += 2; // Make sure mouse exit event is produced for left most button.
             updateDragArea(getGraphicsConfiguration());
         }
 

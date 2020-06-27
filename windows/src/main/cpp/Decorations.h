@@ -39,6 +39,7 @@ class WindowWrapper {
         bool move_mode = false;
         bool maximized = false;
         bool skipEraseBg = true;
+        bool left_pressed = false;
 
         // The original window procedure.
         WNDPROC prev_proc;
