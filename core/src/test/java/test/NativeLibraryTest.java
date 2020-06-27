@@ -53,8 +53,8 @@ public class NativeLibraryTest {
                                  "x64 library doesn't exist");
         Assertions.assertNotNull(getClass().getResource(library.getX86Path() + library.getLibraryName()),
                                  "x86 library doesn't exist");
-        Assertions.assertDoesNotThrow(library::updateLibrary);
-        Assertions.assertTrue(library.isLoaded(), "Windows library isn't loaded");
+        // Assertions.assertDoesNotThrow(library::updateLibrary);
+        // Assertions.assertTrue(library.isLoaded(), "Windows library isn't loaded");
     }
 
     private static boolean isAdmin() {
