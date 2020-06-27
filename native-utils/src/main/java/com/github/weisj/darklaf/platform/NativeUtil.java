@@ -48,7 +48,7 @@ public class NativeUtil {
     /**
      * Temporary directory which will contain the DLLs.
      */
-    private static File temporaryDir;
+    private static Path temporaryDir;
 
     private NativeUtil() {}
 
@@ -85,43 +85,36 @@ public class NativeUtil {
         // Prepare temporary file
         if (temporaryDir == null) {
             temporaryDir = createTempDirectory(NATIVE_FOLDER_PATH_PREFIX);
-            temporaryDir.deleteOnExit();
+            temporaryDir.toFile().deleteOnExit();
         }
 
-        File temp = new File(temporaryDir, filename);
+        Path temp = temporaryDir.resolve(filename);
 
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
-            Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            temp.delete();
+            Files.deleteIfExists(temp);
             throw e;
         } catch (NullPointerException e) {
-            temp.delete();
+            Files.deleteIfExists(temp);
             throw new FileNotFoundException("File " + path + " was not found inside JAR.");
         }
 
         try {
-            System.load(temp.getAbsolutePath());
+            System.load(temp.toAbsolutePath().toString());
         } finally {
             if (isPosixCompliant()) {
                 // Assume POSIX compliant file system, can be deleted after loading
-                temp.delete();
+                Files.deleteIfExists(temp);
             } else {
                 // Assume non-POSIX, and don't delete until last file descriptor closed
-                temp.deleteOnExit();
+                temp.toFile().deleteOnExit();
             }
         }
     }
 
-    private static File createTempDirectory(final String prefix) throws IOException {
-        String tempDir = System.getProperty("java.io.tmpdir");
-        File generatedDir = new File(tempDir, prefix + System.nanoTime());
-
-        if (!generatedDir.mkdir()) {
-            throw new IOException("Failed to create temp directory " + generatedDir.getName());
-        }
-
-        return generatedDir;
+    private static Path createTempDirectory(final String prefix) throws IOException {
+        return Files.createTempDirectory(prefix + System.nanoTime());
     }
 
     private static boolean isPosixCompliant() {
