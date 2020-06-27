@@ -171,7 +171,8 @@ public class ThemeSettingsPanel extends JPanel {
 
         bgSelection = new ButtonGroup();
         defaultSelectionColor = createDefaultColor("themeSelectionColor");
-        defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor,
+        defaultSelection = addColoredButton(bgSelection, selectionBox,
+                                            defaultSelectionColor, ColoredRadioButton.DEFAULT_COLOR,
                                             resourceBundle.getString("color_default"));
         AbstractButton selectionBlue = addColoredButton(bgSelection, selectionBox,
                                                         MacOSColors.SELECTION_BLUE, MacOSColors.ACCENT_BLUE,
@@ -206,7 +207,7 @@ public class ThemeSettingsPanel extends JPanel {
 
         defaultAccentColor = createDefaultColor("themeAccentColor");
         bgAccent = new ButtonGroup();
-        defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_FILLED, defaultSelection,
+        defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_COLOR, defaultSelection,
                                          resourceBundle.getString("color_default"));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_BLUE, selectionBlue,
                          resourceBundle.getString("color_blue"));

@@ -43,7 +43,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class ColoredRadioButton extends JRadioButton {
 
-    public static final Color DEFAULT_FILLED = new Color(0);
+    public static final Color DEFAULT_COLOR = new Color(0);
     private Color color;
     private Color focusColor;
 
@@ -188,8 +188,8 @@ public class ColoredRadioButton extends JRadioButton {
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             theme.loadDefaults(props, defaults);
-            Color accentCol = color == DEFAULT_FILLED ? (Color) props.get("widgetFillDefault") : color;
-            Color focusCol = focusColor == DEFAULT_FILLED ? accentCol : focusColor;
+            Color accentCol = color == DEFAULT_COLOR ? (Color) props.get("widgetFillDefault") : color;
+            Color focusCol = focusColor == DEFAULT_COLOR ? accentCol : focusColor;
             adjustment.applyColors(LafManager.getTheme(), props, accentCol, null);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton",
                                                                        "properties/ui/"),
@@ -204,7 +204,7 @@ public class ColoredRadioButton extends JRadioButton {
             for (String prop : COLOR_PROPERTIES) {
                 propertyMap.put(prop, accentCol);
             }
-            if (focusColor != DEFAULT_FILLED) {
+            if (focusColor != DEFAULT_COLOR) {
                 for (String prop : FOCUS_COLOR_PROPERTIES) {
                     propertyMap.put(prop, focusCol);
                 }
