@@ -109,13 +109,16 @@ public class PopupMenuContainer extends JPanel {
         return menuListener;
     }
 
+    protected void uninstallListeners() {
+        if (this.popupMenu != null) {
+            this.popupMenu.removeMenuKeyListener(menuKeyListener);
+            this.popupMenu.removePopupMenuListener(menuListener);
+        }
+    }
+
     public void setPopupMenu(final JPopupMenu popupMenu) {
         MenuKeyListener keyListener = getMenuKeyListener();
         PopupMenuListener popupMenuListener = getMenuListener();
-        if (this.popupMenu != null) {
-            this.popupMenu.removeMenuKeyListener(keyListener);
-            this.popupMenu.removePopupMenuListener(popupMenuListener);
-        }
         this.popupMenu = popupMenu;
         if (popupMenu != null) {
             popupMenu.removeMenuKeyListener(keyListener);
@@ -126,14 +129,15 @@ public class PopupMenuContainer extends JPanel {
     }
 
     public Popup createPopup(final JPopupMenu popupMenu, final int posX, final int posY, final int maxHeight) {
-        setPopupMenu(popupMenu);
         final Dimension prefSize = popupMenu.getPreferredSize();
+        uninstallListeners();
         if (maxHeight <= 0 || prefSize.height <= maxHeight) {
             setBounds(0, 0, prefSize.width, prefSize.height);
             popupMenu.setBorderPainted(true);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), popupMenu, posX, posY);
         } else {
             initComponents();
+            setPopupMenu(popupMenu);
             int increment = 1;
             if (popupMenu.getComponentCount() > 0) {
                 increment = Math.max(1, popupMenu.getComponent(0).getPreferredSize().height / 2);
