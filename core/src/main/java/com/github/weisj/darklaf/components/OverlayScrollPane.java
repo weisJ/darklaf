@@ -112,9 +112,9 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
 
     protected void setupScrollPane(final JScrollPane scrollPane) {
         JScrollBar verticalScrollBar = createScrollBar(JScrollBar.VERTICAL);
-        verticalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, this);
+        verticalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, scrollPane);
         JScrollBar horizontalScrollBar = createScrollBar(JScrollBar.HORIZONTAL);
-        horizontalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, this);
+        horizontalScrollBar.putClientProperty(ScrollBarConstants.KEY_SCROLL_PANE_PARENT, scrollPane);
         scrollPane.addPropertyChangeListener(this);
         updateScrollPaneUI();
         scrollPane.setVerticalScrollBar(verticalScrollBar);
