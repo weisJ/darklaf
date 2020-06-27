@@ -42,7 +42,7 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
 
     private static final String FOREGROUND_LIST_KEY = "selectionForeground.propertyList";
     private static final String ACCENT_LIST_KEY = "accentForeground.propertyList";
-    private static final double MIN_FOREGROUND_DIFFERENCE = 0.6;
+    private static final double MIN_FOREGROUND_DIFFERENCE = 0.5;
 
     @Override
     protected void beforeTask(final Theme currentTheme, final Properties properties) {
