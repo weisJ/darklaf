@@ -39,7 +39,9 @@ import com.github.weisj.darklaf.listener.MouseClickListener;
 public class QuickColorChooser extends JPanel {
 
     private final SolidColorIcon icon;
-    private JCheckBox checkBox;
+    private final JCheckBox checkBox;
+    private final JLabel colorLabel;
+    private final BiConsumer<Boolean, Color> onStatusChange;
 
     public QuickColorChooser(final String title, final Color color, final Consumer<Color> onColorChange) {
         this(title, color, (b, c) -> onColorChange.accept(c), false);
@@ -52,18 +54,23 @@ public class QuickColorChooser extends JPanel {
             checkBox = new JCheckBox();
             checkBox.addActionListener(e -> onStatusChange.accept(isSelected(), getColor()));
             add(checkBox);
+        } else {
+            checkBox = null;
         }
 
         icon = new SolidColorIcon(color);
-        JLabel colorLabel = new JLabel(icon, JLabel.LEFT);
-        attachToComponent(colorLabel, c -> {
-            onStatusChange.accept(isSelected(), c);
-            icon.setColor(c);
-            colorLabel.repaint();
-        }, icon::getColor);
+        colorLabel = new JLabel(icon, JLabel.LEFT);
+        this.onStatusChange = onStatusChange;
+        attachToComponent(colorLabel, this::onColorChange, icon::getColor);
 
         add(colorLabel);
         add(new JLabel(title, EmptyIcon.create(2, 2), JLabel.LEFT));
+    }
+
+    private void onColorChange(final Color c) {
+        onStatusChange.accept(isSelected(), c);
+        icon.setColor(c);
+        colorLabel.repaint();
     }
 
     public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange) {
@@ -96,7 +103,15 @@ public class QuickColorChooser extends JPanel {
         return checkBox != null && checkBox.isSelected();
     }
 
+    public void setSelected(final boolean selected) {
+        if (checkBox != null) checkBox.setSelected(selected);
+    }
+
     public Color getColor() {
         return icon.getColor();
+    }
+
+    public void setColor(final Color color) {
+        onColorChange(color);
     }
 }

@@ -35,13 +35,14 @@ import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
 
     private static final String FOREGROUND_LIST_KEY = "selectionForeground.propertyList";
     private static final String ACCENT_LIST_KEY = "accentForeground.propertyList";
-    private static final double MIN_FOREGROUND_DIFFERENCE = 0.4;
+    private static final double MIN_FOREGROUND_DIFFERENCE = 0.6;
 
     @Override
     protected void beforeTask(final Theme currentTheme, final Properties properties) {
@@ -66,19 +67,22 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
             .filter(o -> o instanceof Pair<?, ?>)
             .map(Pair.class::cast)
             .filter(p -> p.getFirst() instanceof Color)
-            .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst(),
-                                                                       MIN_FOREGROUND_DIFFERENCE)));
+            .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
+    }
+
+    public static ColorUIResource makeForeground(final Color bg) {
+        return makeForeground(bg, MIN_FOREGROUND_DIFFERENCE);
     }
 
     public static ColorUIResource makeForeground(final Color bg, final double minimumBrightnessDifference) {
         double[] hsbBG = DarkColorModelHSB.RGBtoHSBValues(bg.getRed(), bg.getGreen(), bg.getBlue());
         Color fg = DarkColorModelHSB.getColorFromHSBValues(hsbBG[0], 0, 1 - hsbBG[2]);
-        return makeAdjustedForeground(fg, bg, Bias.BACKGROUND, minimumBrightnessDifference);
+        return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
     }
 
     public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg,
                                                          final double minimumBrightnessDifference) {
-        return makeAdjustedForeground(fg, bg, Bias.BACKGROUND, minimumBrightnessDifference);
+        return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
     }
 
     public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg, final Bias bias,
@@ -88,11 +92,11 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
         double bgBrightness = hslBG[2];
         double fgBrightness = hslFG[2];
 
-        Bias b = bias != null ? bias : Bias.BACKGROUND;
+        Bias b = bias != null ? bias : Bias.getBackground();
 
         if (b == Bias.BACKGROUND) {
-            double bgBright = getLuminance(bg);
-            b = bgBright <= 0.552 ? Bias.WHITE : Bias.BLACK;
+            double bgBright = ColorUtil.getLuminance(bg);
+            b = bgBright <= b.threshold ? Bias.WHITE : Bias.BLACK;
         }
 
         double bright1 = fgBrightness > bgBrightness && (fgBrightness - bgBrightness) >= minimumBrightnessDifference
@@ -106,35 +110,24 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
         return new DarkColorUIResource(DarkColorModelHSL.getColorFromHSLValues(hslFG[0], hslFG[1], brightness));
     }
 
-    private static double getLuminance(final Color c) {
-        return getLuminance(c.getRed(), c.getGreen(), c.getBlue());
-    }
-
-    private static double getLuminance(final int red, final int green, final int blue) {
-        double r = red / 255.0;
-        double g = green / 255.0;
-        double b = blue / 255.0;
-        double R = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
-        double G = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
-        double B = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
-        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
-    }
-
-    private static double calculateContrast(final double fgBrightness, final double bgBrightness) {
-        double bright = Math.max(fgBrightness, bgBrightness);
-        double dark = Math.min(fgBrightness, bgBrightness);
-        return (bright + 0.05) / (dark + 0.05);
-    }
-
     public enum Bias {
-        BACKGROUND(0),
-        WHITE(1),
-        BLACK(-1);
+        BACKGROUND,
+        WHITE,
+        BLACK;
 
-        private final int direction;
+        public static Bias getBackground() {
+            return getBackground(0.5);
+        }
 
-        Bias(final int direction) {
-            this.direction = direction;
+        public static Bias getBackground(final double threshold) {
+            BACKGROUND.setThreshold(threshold);
+            return BACKGROUND;
+        }
+
+        private double threshold = 0.5;
+
+        public void setThreshold(final double threshold) {
+            this.threshold = threshold;
         }
     }
 }

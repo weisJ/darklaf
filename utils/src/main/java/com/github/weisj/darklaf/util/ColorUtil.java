@@ -106,4 +106,18 @@ public final class ColorUtil {
                          + 0.587 * c.getGreen() * c.getGreen()
                          + 0.114 * c.getBlue() * c.getBlue());
     }
+
+    public static double getLuminance(final Color c) {
+        return getLuminance(c.getRed(), c.getGreen(), c.getBlue());
+    }
+
+    public static double getLuminance(final int red, final int green, final int blue) {
+        double r = red / 255.0;
+        double g = green / 255.0;
+        double b = blue / 255.0;
+        double R = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+        double G = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+        double B = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    }
 }

@@ -210,8 +210,10 @@ public class ColoredRadioButton extends JRadioButton {
                 }
             }
             for (String prop : FOREGROUND_PROPERTIES) {
+                ForegroundColorGenerationTask.Bias bias = ForegroundColorGenerationTask.Bias.getBackground(0.552);
                 Color fg = ForegroundColorGenerationTask.makeAdjustedForeground((Color) props.get(prop),
                                                                                 accentCol,
+                                                                                bias,
                                                                                 MIN_FG_CONTRAST);
                 propertyMap.put(prop, fg);
             }
