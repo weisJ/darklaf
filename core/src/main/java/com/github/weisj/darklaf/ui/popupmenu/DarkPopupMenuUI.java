@@ -80,11 +80,15 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     @Override
     public void installDefaults() {
-        if (!(popupMenu instanceof ScrollPopupMenu)) {
-            popupMenuContainer = new PopupMenuContainer();
-        }
         super.installDefaults();
         popupMenu.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
+    }
+
+    private PopupMenuContainer getPopupMenuContainer() {
+        if (popupMenuContainer == null && !(popupMenu instanceof ScrollPopupMenu)) {
+            popupMenuContainer = new PopupMenuContainer();
+        }
+        return popupMenuContainer;
     }
 
     @Override
@@ -95,8 +99,9 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     @Override
     public Popup getPopup(final JPopupMenu popup, final int x, final int y) {
-        if (popupMenuContainer == null) return super.getPopup(popup, x, y);
+        PopupMenuContainer container = getPopupMenuContainer();
+        if (container == null) return super.getPopup(popup, x, y);
         int maxHeight = DarkUIUtil.getScreenBounds(popup, x, y, false).height;
-        return popupMenuContainer.createPopup(popup, x, y, maxHeight);
+        return container.createPopup(popup, x, y, maxHeight);
     }
 }

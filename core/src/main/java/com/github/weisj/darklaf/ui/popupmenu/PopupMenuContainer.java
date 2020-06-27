@@ -39,69 +39,89 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class PopupMenuContainer extends JPanel {
 
-    private final JScrollPane scrollPane;
-    private final MenuKeyListener menuKeyListener;
-    private final PopupMenuListener menuListener;
-    private final JPanel view;
+    private JScrollPane scrollPane;
+    private JPanel view;
+
+    private MenuKeyListener menuKeyListener;
+    private PopupMenuListener menuListener;
     private JPopupMenu popupMenu;
 
     public PopupMenuContainer() {
         super(new BorderLayout());
-        view = new JPanel(new BorderLayout());
-        OverlayScrollPane overlayScrollPane = createScrollPane(view);
-        scrollPane = overlayScrollPane.getScrollPane();
-        add(overlayScrollPane, BorderLayout.CENTER);
-        menuKeyListener = new MenuKeyListener() {
-            @Override
-            public void menuKeyTyped(final MenuKeyEvent e) {}
+    }
 
-            @Override
-            public void menuKeyPressed(final MenuKeyEvent e) {
-                SwingUtilities.invokeLater(() -> {
+    private void initComponents() {
+        if (view == null) {
+            view = new JPanel(new BorderLayout());
+            OverlayScrollPane overlayScrollPane = createScrollPane(view);
+            scrollPane = overlayScrollPane.getScrollPane();
+            add(overlayScrollPane, BorderLayout.CENTER);
+        }
+    }
+
+    protected MenuKeyListener getMenuKeyListener() {
+        if (menuKeyListener == null) {
+            menuKeyListener = new MenuKeyListener() {
+                @Override
+                public void menuKeyTyped(final MenuKeyEvent e) {}
+
+                @Override
+                public void menuKeyPressed(final MenuKeyEvent e) {
+                    SwingUtilities.invokeLater(() -> {
+                        if (popupMenu == null) return;
+                        MenuElement[] path = e.getMenuSelectionManager().getSelectedPath();
+                        if (path.length == 0) {
+                            return;
+                        }
+                        Rectangle bounds = path[path.length - 1].getComponent().getBounds();
+                        Rectangle r = SwingUtilities.convertRectangle(popupMenu, bounds, scrollPane);
+                        scrollPane.getViewport().scrollRectToVisible(r);
+                    });
+                }
+
+                @Override
+                public void menuKeyReleased(final MenuKeyEvent e) {}
+            };
+        }
+        return menuKeyListener;
+    }
+
+    protected PopupMenuListener getMenuListener() {
+        if (menuListener == null) {
+            menuListener = new PopupMenuAdapter() {
+                @Override
+                public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
+                    onHide();
+                }
+
+                @Override
+                public void popupMenuCanceled(final PopupMenuEvent e) {
+                    onHide();
+                }
+
+                private void onHide() {
                     if (popupMenu == null) return;
-                    MenuElement[] path = e.getMenuSelectionManager().getSelectedPath();
-                    if (path.length == 0) {
-                        return;
-                    }
-                    Rectangle bounds = path[path.length - 1].getComponent().getBounds();
-                    Rectangle r = SwingUtilities.convertRectangle(popupMenu, bounds, scrollPane);
-                    scrollPane.getViewport().scrollRectToVisible(r);
-                });
-            }
-
-            @Override
-            public void menuKeyReleased(final MenuKeyEvent e) {}
-        };
-        menuListener = new PopupMenuAdapter() {
-            @Override
-            public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
-                onHide();
-            }
-
-            @Override
-            public void popupMenuCanceled(final PopupMenuEvent e) {
-                onHide();
-            }
-
-            private void onHide() {
-                if (popupMenu == null) return;
-                popupMenu.removePopupMenuListener(this);
-                popupMenu.removeMenuKeyListener(menuKeyListener);
-            }
-        };
+                    popupMenu.removePopupMenuListener(this);
+                    popupMenu.removeMenuKeyListener(menuKeyListener);
+                }
+            };
+        }
+        return menuListener;
     }
 
     public void setPopupMenu(final JPopupMenu popupMenu) {
+        MenuKeyListener keyListener = getMenuKeyListener();
+        PopupMenuListener popupMenuListener = getMenuListener();
         if (this.popupMenu != null) {
-            this.popupMenu.removeMenuKeyListener(menuKeyListener);
-            this.popupMenu.removePopupMenuListener(menuListener);
+            this.popupMenu.removeMenuKeyListener(keyListener);
+            this.popupMenu.removePopupMenuListener(popupMenuListener);
         }
         this.popupMenu = popupMenu;
         if (popupMenu != null) {
-            popupMenu.removeMenuKeyListener(menuKeyListener);
-            popupMenu.removePopupMenuListener(menuListener);
-            popupMenu.addMenuKeyListener(menuKeyListener);
-            popupMenu.addPopupMenuListener(menuListener);
+            popupMenu.removeMenuKeyListener(keyListener);
+            popupMenu.removePopupMenuListener(popupMenuListener);
+            popupMenu.addMenuKeyListener(keyListener);
+            popupMenu.addPopupMenuListener(popupMenuListener);
         }
     }
 
@@ -113,6 +133,7 @@ public class PopupMenuContainer extends JPanel {
             popupMenu.setBorderPainted(true);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), popupMenu, posX, posY);
         } else {
+            initComponents();
             int increment = 1;
             if (popupMenu.getComponentCount() > 0) {
                 increment = Math.max(1, popupMenu.getComponent(0).getPreferredSize().height / 2);
