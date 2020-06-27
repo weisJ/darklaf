@@ -107,7 +107,7 @@ public class ThemeSettingsPanel extends JPanel {
         selectionColorFollowsSystem.setEnabled(enabled && settingsConfiguration.isSystemSelectionColorSupported());
         fontSizeFollowsSystem.setEnabled(enabled && settingsConfiguration.isSystemFontSizeSupported());
 
-        settingsConfiguration.setEnabledSystemPreferences(settingsConfiguration.isSystemPreferencesEnabled());
+        settingsConfiguration.setSystemPreferencesEnabled(settingsConfiguration.isSystemPreferencesEnabled());
 
         enableButtonGroup(bgAccent, !settingsConfiguration.isAccentColorFollowsSystem()
                                     && settingsConfiguration.getSelectedTheme().supportsCustomAccentColor());
@@ -647,7 +647,7 @@ public class ThemeSettingsPanel extends JPanel {
         }
 
         @Override
-        public void setEnabledSystemPreferences(final boolean enabled) {
+        public void setSystemPreferencesEnabled(final boolean enabled) {
             TristateState state = TristateState.DESELECTED;
             if (enabled
                 && (isFontSizeFollowsSystem() || !fontSizeFollowsSystem.isEnabled())

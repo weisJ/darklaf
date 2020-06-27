@@ -30,7 +30,7 @@ import com.github.weisj.darklaf.theme.Theme;
 public class DefaultSettingsConfiguration extends SettingsConfiguration {
 
     public DefaultSettingsConfiguration() {
-        setEnabledSystemPreferences(LafManager.isPreferenceChangeReportingEnabled());
+        setSystemPreferencesEnabled(LafManager.isPreferenceChangeReportingEnabled());
         Theme theme = LafManager.getTheme();
         setTheme(theme);
         setFontSizeRule(theme.getFontSizeRule());

@@ -130,7 +130,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     private boolean ensureSVGLoaded() {
         if (!loaded.get()) {
             ensureURILoaded();
-            LOGGER.fine(() -> "Loading icon '" + uri.toASCIIString() + "'.");
+            LOGGER.finer(() -> "Loading icon '" + uri.toASCIIString() + "'.");
             icon.setSvgURI(uri);
             loaded.set(true);
             return true;

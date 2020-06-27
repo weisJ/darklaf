@@ -149,7 +149,7 @@ public class StringPainter {
         boolean paintOpaqueBuffered = window != null;
 
         if (paintOpaqueBuffered) {
-            LOGGER.fine(() -> "Using opaque buffering for " + c);
+            LOGGER.finest(() -> "Using opaque buffering for " + c);
             double scaleX = Scale.getScaleX((Graphics2D) g);
             double scaleY = Scale.getScaleX((Graphics2D) g);
 

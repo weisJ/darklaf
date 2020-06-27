@@ -47,7 +47,7 @@ public abstract class AbstractLazyIconSupplier<T extends Icon> implements IconSu
 
     private void ensureLoaded() {
         if (!loaded) {
-            LOGGER.fine(() -> "Loading icon '" + path + "'. Resolving from " + parentClass);
+            LOGGER.finer(() -> "Loading icon '" + path + "'. Resolving from " + parentClass);
             icon = loadIcon();
             loaded = true;
             if (icon == null) {

@@ -44,7 +44,7 @@ public class SettingsConfiguration {
     private Theme theme;
 
     public void load(final SettingsConfiguration config) {
-        setEnabledSystemPreferences(config.isSystemPreferencesEnabled());
+        setSystemPreferencesEnabled(config.isSystemPreferencesEnabled());
         setAccentColorFollowsSystem(config.isAccentColorFollowsSystem());
         setSelectionColorFollowsSystem(config.isSelectionColorFollowsSystem());
         setFontSizeFollowsSystem(config.isFontSizeFollowsSystem());
@@ -151,7 +151,7 @@ public class SettingsConfiguration {
      * @see           #setFontSizeFollowsSystem(boolean)
      * @see           #setThemeFollowsSystem(boolean)
      */
-    public void setEnabledSystemPreferences(final boolean enabled) {
+    public void setSystemPreferencesEnabled(final boolean enabled) {
         isSystemPreferencesEnabled = enabled;
     }
 
@@ -251,5 +251,19 @@ public class SettingsConfiguration {
     public boolean isSystemThemeSupported() {
         return isSystemPreferencesEnabled()
                && ThemePreferencesHandler.getSharedInstance().supportsNativeTheme();
+    }
+
+    @Override
+    public String toString() {
+        return "SettingsConfiguration{" +
+               "isSystemPreferencesEnabled=" + isSystemPreferencesEnabled +
+               ", isAccentColorFollowsSystem=" + isAccentColorFollowsSystem +
+               ", isFontSizeFollowsSystem=" + isFontSizeFollowsSystem +
+               ", isThemeFollowsSystem=" + isThemeFollowsSystem +
+               ", isSelectionColorFollowsSystem=" + isSelectionColorFollowsSystem +
+               ", accentColorRule=" + accentColorRule +
+               ", fontSizeRule=" + fontSizeRule +
+               ", theme=" + theme +
+               '}';
     }
 }

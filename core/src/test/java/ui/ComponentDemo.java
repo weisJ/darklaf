@@ -65,6 +65,7 @@ public interface ComponentDemo {
     static void showDemo(final ComponentDemo demo, final boolean asDialog) {
         LafManager.enabledPreferenceChangeReporting(false);
         LafManager.setDecorationsEnabled(true);
+        LafManager.setLogLevel(Level.FINE);
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         SwingUtilities.invokeLater(() -> {
             if (!LafManager.isInstalled()) {

@@ -55,7 +55,7 @@ public final class IconColorMapper {
     public static void patchColors(final SVGIcon svgIcon, final Map<Object, Object> defaults) {
         SVGUniverse universe = svgIcon.getSvgUniverse();
         SVGDiagram diagram = universe.getDiagram(svgIcon.getSvgURI());
-        LOGGER.fine(() -> "Patching colors of icon " + svgIcon.getSvgURI());
+        LOGGER.finer(() -> "Patching colors of icon " + svgIcon.getSvgURI());
         try {
             loadColors(diagram, defaults);
         } catch (SVGElementException e) {

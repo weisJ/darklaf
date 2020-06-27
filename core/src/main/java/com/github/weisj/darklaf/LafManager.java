@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
@@ -52,6 +53,7 @@ import com.github.weisj.darklaf.util.LogUtil;
  */
 public final class LafManager {
 
+    private static final Logger LOGGER = LogUtil.getLogger(LafManager.class);
     private static ThemeProvider themeProvider;
     private static Theme theme;
     private static final List<Theme> registeredThemes = new ArrayList<>();
@@ -60,7 +62,7 @@ public final class LafManager {
     private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport = new ThemeEventSupport<>();
 
     static {
-        setLogLevel(Level.INFO);
+        setLogLevel(Level.WARNING);
         registerTheme(new IntelliJTheme(),
                       new DarculaTheme(),
                       new SolarizedLightTheme(),
@@ -88,6 +90,7 @@ public final class LafManager {
      */
     public static void setLogLevel(final Level level) {
         LogUtil.setLevel(level);
+        LOGGER.fine("Setting log level to" + level);
     }
 
     /**
@@ -134,7 +137,7 @@ public final class LafManager {
      */
     public static void enabledPreferenceChangeReporting(final boolean enabled) {
         ThemePreferencesHandler.getSharedInstance().enablePreferenceChangeReporting(enabled);
-        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().setEnabledSystemPreferences(enabled);
+        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().setSystemPreferencesEnabled(enabled);
     }
 
     /**
@@ -317,6 +320,7 @@ public final class LafManager {
         LafManager.theme = theme;
         if (old != theme) {
             eventSupport.dispatchEvent(new ThemeChangeEvent(old, theme), ThemeChangeListener::themeChanged);
+            LOGGER.fine(() -> "Setting theme to " + theme);
         }
         if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().refresh();
     }
@@ -386,6 +390,7 @@ public final class LafManager {
     public static void install() {
         try {
             getTheme();
+            LOGGER.fine(() -> "Installing theme " + theme);
             UIManager.setLookAndFeel(new DarkLaf());
             updateLaf();
             eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
