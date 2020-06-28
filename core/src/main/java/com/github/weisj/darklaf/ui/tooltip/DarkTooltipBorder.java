@@ -74,7 +74,8 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         adjustInsets(ins);
         return bubbleBorder.getBubbleArea(ins.left, ins.top,
                                           width - ins.left - ins.right,
-                                          height - ins.top - ins.bottom, false);
+                                          height - ins.top - ins.bottom,
+                                          bubbleBorder.getThickness() / 2f);
     }
 
     @Override
@@ -123,13 +124,15 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         adjustInsets(ins);
         Area innerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
                                                     width - ins.left - ins.right,
-                                                    height - ins.top - ins.bottom, true);
+                                                    height - ins.top - ins.bottom,
+                                                    bubbleBorder.getThickness());
         if (!skipShadow && UIManager.getBoolean("ToolTip.paintShadow")) {
             paintShadow(c, g, x, y, width, height, innerArea);
         }
         Area outerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
                                                     width - ins.left - ins.right,
-                                                    height - ins.top - ins.bottom, false);
+                                                    height - ins.top - ins.bottom,
+                                                    0);
         outerArea.subtract(innerArea);
         bubbleBorder.paintBorder(g, outerArea);
         context.restore();

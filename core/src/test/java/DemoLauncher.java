@@ -29,6 +29,7 @@ import javax.swing.*;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
+import util.ClassFinder;
 
 public class DemoLauncher implements ComponentDemo {
 

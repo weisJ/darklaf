@@ -24,6 +24,8 @@
  */
 package com.github.weisj.darklaf.util;
 
+import java.util.Comparator;
+
 public class Pair<T, H> {
 
     private T first;
@@ -53,5 +55,13 @@ public class Pair<T, H> {
     @Override
     public String toString() {
         return "[" + first.toString() + "," + second.toString() + "]";
+    }
+
+    public static <L extends Comparable<L>, R> Comparator<Pair<L, R>> compareFirst() {
+        return Comparator.comparing(Pair::getFirst);
+    }
+
+    public static <L, R extends Comparable<R>> Comparator<Pair<L, R>> compareSecond() {
+        return Comparator.comparing(Pair::getSecond);
     }
 }

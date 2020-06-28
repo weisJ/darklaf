@@ -277,12 +277,11 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     public Area getBubbleArea(final float x, final float y, final float width, final float height,
-                              final boolean inner) {
-        int adj = inner ? getThickness() : 0;
+                              final float adj) {
         float w = width - 2 * adj;
         float h = height - 2 * adj;
-        double pSize = inner ? getPointerSize() - getThickness() : getPointerSize();
-        double pWidth = inner ? getPointerWidth() - 2 * getThickness() : getPointerWidth();
+        double pSize = getPointerSize() - adj;
+        double pWidth = getPointerWidth() - 2 * adj;
         RoundRectangle2D.Float bubble = calculateBubbleRect(x + adj, y + adj, w, h);
         final Area area = new Area(bubble);
         if (pointerSide != Alignment.CENTER) {
@@ -290,11 +289,11 @@ public class BubbleBorder extends AbstractBorder {
             switch (pointerSide) {
                 case SOUTH_EAST :
                 case NORTH_EAST :
-                    if (inner) pointerPad += adj;
+                    pointerPad += adj;
                     break;
                 case NORTH_WEST :
                 case SOUTH_WEST :
-                    if (inner) pointerPad -= adj;
+                    pointerPad -= adj;
                     break;
                 default :
                     break;
@@ -306,8 +305,8 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     public Area getBorderArea(final int x, final int y, final int width, final int height) {
-        Area outer = getBubbleArea(x, y, width, height, false);
-        Area inner = getBubbleArea(x, y, width, height, true);
+        Area outer = getBubbleArea(x, y, width, height, 0);
+        Area inner = getBubbleArea(x, y, width, height, getThickness());
         outer.subtract(inner);
         return outer;
     }

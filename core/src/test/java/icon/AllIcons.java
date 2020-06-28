@@ -25,46 +25,47 @@
 package icon;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
 
 import ui.ComponentDemo;
+import util.ClassFinder;
+import util.ResourceWalker;
 
-import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.ThemedSVGIcon;
+import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.util.Pair;
 import com.kitfox.svg.app.beans.SVGIcon;
 
 public class AllIcons implements ComponentDemo {
 
     private static final int ICON_SIZE = 50;
-    private static final String[] FOLDERS = new String[]{"icons/control", "icons/dialog", "icons/files",
-                                                         "icons/indicator", "icons/menu", "icons/misc",
-                                                         "icons/navigation", "platform/windows/icons/window",
-                                                         "platform/windows/icons"};
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new AllIcons());
     }
 
+    public AllIcons() {
+        List<DecorationsProvider> decorationsProviders = ClassFinder.getInstancesOfType(DecorationsProvider.class,
+                                                                                        "com.github.weisj");
+        LafManager.registerInitTask((currentTheme, defaults) -> {
+            Properties props = new Properties();
+            decorationsProviders.forEach(provider -> provider.loadDecorationProperties(props, defaults));
+            defaults.putAll(props);
+        });
+    }
+
     @Override
     public JComponent createComponent() {
-        JList<Pair<String, Icon>> list = new JList<>(new ListModel<Pair<String, Icon>>() {
-            final List<Pair<String, Icon>> elements = loadIcons();
+        JList<Pair<String, ? extends Icon>> list = new JList<>(new ListModel<Pair<String, ? extends Icon>>() {
+            final List<Pair<String, ? extends Icon>> elements = loadIcons();
 
             @Override
             public int getSize() {
@@ -72,7 +73,7 @@ public class AllIcons implements ComponentDemo {
             }
 
             @Override
-            public Pair<String, Icon> getElementAt(final int index) {
+            public Pair<String, ? extends Icon> getElementAt(final int index) {
                 return elements.get(index);
             }
 
@@ -87,54 +88,33 @@ public class AllIcons implements ComponentDemo {
         return new OverlayScrollPane(list);
     }
 
-    private List<Pair<String, Icon>> loadIcons() {
-        List<Pair<String, Icon>> list = new ArrayList<>();
-        try {
-            for (String folder : FOLDERS) {
-                Pair<Stream<Path>, Optional<FileSystem>> files = walk(folder, DarkLaf.class);
-                try (FileSystem fs = files.getSecond().isPresent() ? files.getSecond().get() : null) {
-                    files.getFirst().forEach(p -> {
-                        if (p.getFileName().toString().endsWith(".svg")) {
-                            int size = ICON_SIZE;
-                            ThemedSVGIcon icon = (ThemedSVGIcon) IconLoader.get(DarkLaf.class)
-                                                                           .loadSVGIcon(folder + "/" + p.getFileName(),
-                                                                                        size, size, true);
-                            SVGIcon svgIcon = icon.getSVGIcon();
-                            int autosize = svgIcon.getAutosize();
-                            svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
-                            int width = size;
-                            int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
-                            if (height > size) {
-                                height = size;
-                                width = (int) (((double) height / svgIcon.getIconHeight()) * svgIcon.getIconWidth());
-                            }
+    private List<Pair<String, ? extends Icon>> loadIcons() {
+        IconLoader loader = IconLoader.get();
+        try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
+            return walker.stream().parallel()
+                         .filter(p -> p.endsWith("svg"))
+                         .map(p -> {
+                             int size = ICON_SIZE;
+                             ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, size, size, true);
+                             SVGIcon svgIcon = icon.getSVGIcon();
+                             int autosize = svgIcon.getAutosize();
+                             svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
+                             int width = size;
+                             int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
+                             if (height > size) {
+                                 height = size;
+                                 width = (int) (((double) height / svgIcon.getIconHeight()) * svgIcon.getIconWidth());
+                             }
 
-                            icon.setDisplaySize(width, height);
-                            svgIcon.setAutosize(autosize);
-                            list.add(new Pair<>(p.getFileName().toString(), new CenterIcon(icon, size, size)));
-                        }
-                    });
-                }
-            }
-        } catch (final IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+                             icon.setDisplaySize(width, height);
+                             svgIcon.setAutosize(autosize);
 
-    public Pair<Stream<Path>, Optional<FileSystem>> walk(final String path,
-                                                         final Class<?> clazz) throws URISyntaxException, IOException {
-        URI uri = clazz.getResource(path).toURI();
-        if ("jar".equals(uri.getScheme())) {
-            FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
-            Path resourcePath = fileSystem.getPath("com/github/weisj/darklaf/" + path);
-            // Get all contents of a resource (skip resource itself), if entry is a directory remove trailing /
-            return new Pair<>(Files.walk(resourcePath, 1), Optional.of(fileSystem));
-        } else {
-            return new Pair<>(Arrays.stream(Optional.ofNullable(new File(uri).listFiles())
-                                                    .orElse(new File[0]))
-                                    .map(File::toPath),
-                              Optional.empty());
+                             String name = p.substring(p.lastIndexOf('/') + 1);
+
+                             return new Pair<>(name, new CenterIcon(icon, size, size));
+                         })
+                         .sorted(Pair.compareFirst())
+                         .collect(Collectors.toList());
         }
     }
 
@@ -143,15 +123,16 @@ public class AllIcons implements ComponentDemo {
         return "All Icons";
     }
 
-    private static final class IconListRenderer extends JLabel implements ListCellRenderer<Pair<String, Icon>> {
+    private static final class IconListRenderer extends JLabel
+                                                implements ListCellRenderer<Pair<String, ? extends Icon>> {
 
         private IconListRenderer() {
             setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList<? extends Pair<String, Icon>> list,
-                                                      final Pair<String, Icon> value, final int index,
+        public Component getListCellRendererComponent(final JList<? extends Pair<String, ? extends Icon>> list,
+                                                      final Pair<String, ? extends Icon> value, final int index,
                                                       final boolean isSelected, final boolean cellHasFocus) {
             setIcon(value.getSecond());
             setText(value.getFirst());

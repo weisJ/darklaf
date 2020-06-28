@@ -169,18 +169,16 @@ public class DarkComboPopup extends BasicComboPopup {
     protected Rectangle computePopupBounds(final int px, final int py, final int pw, final int ph) {
         Rectangle screenBounds = DarkUIUtil.getScreenBounds(comboBox, null);
 
-        Point relativeOrigin = new Point();
-        SwingUtilities.convertPointFromScreen(relativeOrigin, comboBox);
-        screenBounds.setLocation(relativeOrigin);
+        Point pos = comboBox.getLocationOnScreen();
 
         Rectangle rect = new Rectangle(px, py, pw, ph);
-        if (py + ph > screenBounds.y + screenBounds.height) {
-            if (ph <= -screenBounds.y) {
+        if (pos.y + py + ph > screenBounds.y + screenBounds.height) {
+            if (pos.y - ph - borderSize >= screenBounds.y) {
                 // popup goes above
                 rect.y = -ph + borderSize;
             } else {
                 // a full screen height popup
-                rect.y = screenBounds.y + Math.max(0, (screenBounds.height - ph) / 2);
+                rect.y = screenBounds.y + Math.max(0, (screenBounds.height - ph) / 2) - pos.y;
                 rect.height = Math.min(screenBounds.height, ph);
             }
         }
