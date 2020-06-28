@@ -91,7 +91,7 @@ public class DarkPopupFactory extends PopupFactory {
         return new Pair<>(popup, type);
     }
 
-    protected PopupType getPopupType(final Popup popup) {
+    public static PopupType getPopupType(final Popup popup) {
         String popupClassName = popup.getClass().getSimpleName();
         if (popupClassName.endsWith("LightWeightPopup")) return PopupType.LIGHT_WEIGHT;
         if (popupClassName.endsWith("MediumWeightPopup")) return PopupType.MEDIUM_WEIGHT;

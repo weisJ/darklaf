@@ -78,16 +78,20 @@ public class ResourceWalker implements AutoCloseable {
         Stream<URL> stream = enumerationAsStream(orDefault(classLoader::getResources,
                                                            Collections.<URL>emptyEnumeration()).apply(pathName));
         return stream.map(wrap(URL::toURI))
-                     .flatMap(orDefault(uri -> {
+                     .flatMap(uri -> {
                          if ("jar".equals(uri.getScheme())) {
-                             FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
-                             Path resourcePath = fileSystem.getPath(pathName);
-                             fileSystemList.add(fileSystem);
-                             return Files.walk(resourcePath, Integer.MAX_VALUE);
+                             try {
+                                 FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+                                 Path resourcePath = fileSystem.getPath(pathName);
+                                 fileSystemList.add(fileSystem);
+                                 return Files.walk(resourcePath, Integer.MAX_VALUE);
+                             } catch (IOException e) {
+                                 return Stream.empty();
+                             }
                          } else {
                              return walkFolder(new File(uri)).map(File::toPath);
                          }
-                     }, Stream.empty()))
+                     })
                      .map(Path::toString)
                      .map(p -> p.replace(File.separatorChar, '/'))
                      .map(p -> {
