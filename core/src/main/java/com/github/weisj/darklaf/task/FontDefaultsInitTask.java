@@ -114,6 +114,11 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             if (aaHint != null
                 && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
                 && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
+                LOGGER.fine(String.format("Setting '%s' = '%s'",
+                                          RenderingHints.KEY_TEXT_ANTIALIASING, aaHint));
+                LOGGER.fine(String.format("Setting '%s' = '%s'",
+                                          RenderingHints.KEY_TEXT_LCD_CONTRAST,
+                                          RenderingHints.KEY_TEXT_LCD_CONTRAST));
                 defaults.put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
                 defaults.put(RenderingHints.KEY_TEXT_LCD_CONTRAST,
                              desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST));

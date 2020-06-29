@@ -35,10 +35,10 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.util.*;
+
+import sun.swing.SwingUtilities2;
 
 public class StringPainter {
 
@@ -264,23 +264,27 @@ public class StringPainter {
         return g;
     }
 
-    public static void paintOpacityBuffered(final Graphics g, final JComponent c, final OpacityBufferedUI ui) {
+    public static void paintOpacityBufferedUI(final Graphics g, final JComponent c, final OpacityBufferedUI ui) {
         boolean opaqueBuffered = translucentAAPaintingEnabled && GraphicsUtil.isOpaqueBuffered(c);
         if (opaqueBuffered) {
-            double scaleX = Scale.getScaleX((Graphics2D) g);
-            double scaleY = Scale.getScaleX((Graphics2D) g);
-            BufferedImage img = ImageUtil.createCompatibleImage((int) Math.round(scaleX * c.getWidth()),
-                                                                (int) Math.round(scaleY * c.getHeight()));
-            Graphics imgGraphics = img.getGraphics();
-            imgGraphics.setColor(c.getBackground());
-            imgGraphics.fillRect(0, 0, c.getWidth(), c.getHeight());
-            imgGraphics.setClip(0, 0, img.getWidth(), img.getHeight());
-            ((Graphics2D) imgGraphics).scale(scaleX, scaleY);
-            ui.updateUI(imgGraphics, c);
-            imgGraphics.dispose();
-            g.drawImage(img, 0, 0, c.getWidth(), c.getHeight(), null);
+            paintOpacityBuffered(g, c, ui);
         } else {
             ui.updateUI(g, c);
         }
+    }
+
+    public static void paintOpacityBuffered(final Graphics g, final JComponent c, final OpacityBufferedUI ui) {
+        double scaleX = Scale.getScaleX((Graphics2D) g);
+        double scaleY = Scale.getScaleX((Graphics2D) g);
+        BufferedImage img = ImageUtil.createCompatibleImage((int) Math.round(scaleX * c.getWidth()),
+                                                            (int) Math.round(scaleY * c.getHeight()));
+        Graphics imgGraphics = img.getGraphics();
+        imgGraphics.setColor(c.getBackground());
+        imgGraphics.fillRect(0, 0, c.getWidth(), c.getHeight());
+        imgGraphics.setClip(0, 0, img.getWidth(), img.getHeight());
+        ((Graphics2D) imgGraphics).scale(scaleX, scaleY);
+        ui.updateUI(imgGraphics, c);
+        imgGraphics.dispose();
+        g.drawImage(img, 0, 0, c.getWidth(), c.getHeight(), null);
     }
 }

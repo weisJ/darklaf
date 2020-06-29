@@ -307,7 +307,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     @Override
     public void update(final Graphics g, final JComponent c) {
-        StringPainter.paintOpacityBuffered(g, c, this);
+        StringPainter.paintOpacityBufferedUI(g, c, this);
     }
 
     @Override
