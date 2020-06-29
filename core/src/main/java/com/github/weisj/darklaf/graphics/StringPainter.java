@@ -35,10 +35,10 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
+import sun.swing.SwingUtilities2;
+
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.util.*;
-
-import sun.swing.SwingUtilities2;
 
 public class StringPainter {
 
