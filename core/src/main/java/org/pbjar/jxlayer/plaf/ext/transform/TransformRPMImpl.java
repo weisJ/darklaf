@@ -63,13 +63,6 @@ public final class TransformRPMImpl {
      */
     public static final boolean hack = false;
 
-    static {
-        LOGGER.setUseParentHandlers(false);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new LogFormatter());
-        LOGGER.addHandler(handler);
-    }
-
     private TransformRPMImpl() {}
 
     /**

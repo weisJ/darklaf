@@ -57,13 +57,6 @@ public final class RepaintManagerUtils {
      */
     private static final boolean swingX = isSwingXAvailable();
 
-    static {
-        LOGGER.setUseParentHandlers(false);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new LogFormatter());
-        LOGGER.addHandler(handler);
-    }
-
     private RepaintManagerUtils() {}
 
     /**
@@ -156,8 +149,6 @@ public final class RepaintManagerUtils {
     }
 
     private static class DisplayAction extends AbstractAction {
-
-        private static final long serialVersionUID = 1L;
 
         public DisplayAction() {
             super("RPM tree");

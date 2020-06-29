@@ -197,40 +197,23 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         Point point = mouseEvent.getPoint();
         SwingUtilities.convertPointToScreen(point, mouseEvent.getComponent());
         SwingUtilities.convertPointFromScreen(point, layer);
-        /*
-         * Removed the contains check because it results in jumping when
-         * dragging internal frames in a desktop pane and dragging outside the
-         * boundaries of the desktop.
-         *
-         * Introduced this check to solve some scrolling problem, but don't
-         * quite remember the specifics. Maybe that problem is gone by other
-         * changes.
-         */
-        // Rectangle layerBounds = layer.getBounds();
-        // Container parent = layer.getParent();
-        // Rectangle parentRectangle = new Rectangle(-layerBounds.x,
-        // -layerBounds.y, parent.getWidth(), parent.getHeight());
-        // if (parentRectangle.contains(point)) {
+
         return transformPoint(layer, point);
-        // } else {
-        // return new Point(-1, -1);
-        // }
     }
 
     private MouseWheelEvent createMouseWheelEvent(final MouseWheelEvent mouseWheelEvent, final Point point,
                                                   final Component target) {
-        return new MouseWheelEvent(target, //
-                                   mouseWheelEvent.getID(), //
-                                   mouseWheelEvent.getWhen(), //
-                                   mouseWheelEvent.getModifiersEx(), //
-                                   point.x, //
-                                   point.y, //
-                                   mouseWheelEvent.getClickCount(), //
-                                   mouseWheelEvent.isPopupTrigger(), //
-                                   mouseWheelEvent.getScrollType(), //
-                                   mouseWheelEvent.getScrollAmount(), //
-                                   mouseWheelEvent.getWheelRotation() //
-        );
+        return new MouseWheelEvent(target,
+                                   mouseWheelEvent.getID(),
+                                   mouseWheelEvent.getWhen(),
+                                   mouseWheelEvent.getModifiersEx(),
+                                   point.x,
+                                   point.y,
+                                   mouseWheelEvent.getClickCount(),
+                                   mouseWheelEvent.isPopupTrigger(),
+                                   mouseWheelEvent.getScrollType(),
+                                   mouseWheelEvent.getScrollAmount(),
+                                   mouseWheelEvent.getWheelRotation());
     }
 
     private void dispatchMouseEvent(final MouseEvent mouseEvent) {
@@ -300,8 +283,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    @SuppressWarnings("Duplicates")
-
     private Component getMouseMotionListeningComponent(final Component component) {
         /*
          * Mouse motion events may result in MOUSE_ENTERED and MOUSE_EXITED.
@@ -340,10 +321,8 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         if (view == null) {
             return null;
         } else {
-            Point viewPoint = SwingUtilities.convertPoint(layer, targetPoint,
-                                                          view);
-            return SwingUtilities.getDeepestComponentAt(view, viewPoint.x,
-                                                        viewPoint.y);
+            Point viewPoint = SwingUtilities.convertPoint(layer, targetPoint, view);
+            return SwingUtilities.getDeepestComponentAt(view, viewPoint.x, viewPoint.y);
         }
     }
 
@@ -417,14 +396,14 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
             Point newPoint = new Point(targetPoint);
             SwingUtilities.convertPointToScreen(newPoint, layer);
             SwingUtilities.convertPointFromScreen(newPoint, target);
-            return new MouseEvent(target, //
-                                  id, //
-                                  mouseEvent.getWhen(), //
-                                  mouseEvent.getModifiersEx(), //
-                                  newPoint.x, //
-                                  newPoint.y, //
-                                  mouseEvent.getClickCount(), //
-                                  mouseEvent.isPopupTrigger(), //
+            return new MouseEvent(target,
+                                  id,
+                                  mouseEvent.getWhen(),
+                                  mouseEvent.getModifiersEx(),
+                                  newPoint.x,
+                                  newPoint.y,
+                                  mouseEvent.getClickCount(),
+                                  mouseEvent.isPopupTrigger(),
                                   mouseEvent.getButton());
         }
     }
