@@ -76,7 +76,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
         if (window.isDisplayable()) {
             long hwnd = PointerUtil.getHWND(window);
             if (hwnd != 0) {
-                JNIDecorationsWindows.uninstallDecorations(hwnd);
+                JNIDecorationsWindows.uninstallDecorations(hwnd, false);
             }
             window.dispose();
         }

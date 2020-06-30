@@ -303,6 +303,28 @@ bool InstallDecorations(HWND handle, bool is_popup) {
     return true;
 }
 
+void UninstallDecorations(WindowWrapper *wrapper, bool decorated) {
+    HWND handle = wrapper->window;
+
+    // Restore old window procedure.
+    SetWindowLongPtr(handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wrapper->prev_proc));
+
+    // Restore old client area.
+    MARGINS margins = { 0, 0, 0, 0 };
+    DwmExtendFrameIntoClientArea(handle, &margins);
+
+    auto style = GetWindowLongPtr(handle, GWL_STYLE);
+    if (!decorated) {
+        style &= ~WS_THICKFRAME;
+    } else {
+        style |= WS_THICKFRAME;
+    }
+    SetWindowLongPtr(handle, GWL_STYLE, style);
+
+    UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED;
+    SetWindowPos(handle, NULL, 0, 0, 0, 0, flags);
+}
+
 // @formatter:off
 LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
@@ -402,11 +424,11 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDeco
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd, jboolean decorated) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
     if (wrap) {
-        SetWindowLongPtr(handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wrap->prev_proc));
+        UninstallDecorations(wrap, decorated);
         wrapper_map.erase(handle);
         delete (wrap);
     }

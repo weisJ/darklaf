@@ -103,14 +103,15 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String propertyName = e.getPropertyName();
-        if (PropertyKey.ANCESTOR.equals(propertyName)) {
+        if (PropertyKey.ANCESTOR.equals(propertyName) || KEY_NO_DECORATIONS.equals(propertyName)) {
             updateWindow(rootPane.getParent());
         }
     }
 
     protected int decorationsStyleFromWindow(final Window window, final int windowDecorationsStyle) {
+        if (DarkUIUtil.isUndecorated(window)
+            || PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS)) return JRootPane.NONE;
         if (windowDecorationsStyle != JRootPane.NONE) return windowDecorationsStyle;
-        if (DarkUIUtil.isUndecorated(window)) return JRootPane.NONE;
         if (window instanceof JFrame) return JRootPane.FRAME;
         if (window instanceof JDialog) return JRootPane.PLAIN_DIALOG;
         return windowDecorationsStyle;
@@ -183,6 +184,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private void updateWindow(final Component parent) {
         window = DarkUIUtil.getWindow(parent);
         windowDecorationsStyle = decorationsStyleFromWindow(window, windowDecorationsStyle);
+        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
         installBorder(rootPane);
     }
 

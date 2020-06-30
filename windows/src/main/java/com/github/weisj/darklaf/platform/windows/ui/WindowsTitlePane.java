@@ -130,7 +130,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         this.rootPane = root;
         this.window = window;
         bundle = ResourceBundle.getBundle("com.github.weisj.darklaf.bundles.actions", getLocale());
-        setDecorationsStyle(decorationStyle);
+        this.decorationStyle = decorationStyle;
         rootPane.addContainerListener(rootPaneContainerListener);
         rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
         state = -1;
@@ -194,7 +194,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     protected void uninstallDecorations() {
         if (windowHandle != 0) {
-            JNIDecorationsWindows.uninstallDecorations(windowHandle);
+            JNIDecorationsWindows.uninstallDecorations(windowHandle, decorationStyle != JRootPane.NONE);
             windowHandle = 0;
         }
         rootPane.removeContainerListener(rootPaneContainerListener);
@@ -224,7 +224,19 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
+    @Override
+    public void setDecorationsStyle(final int style) {
+        super.setDecorationsStyle(style);
+        if (style == JRootPane.NONE && windowHandle != 0) {
+            uninstall();
+        } else if (windowHandle == 0) {
+            install();
+        }
+    }
+
     private boolean installDecorations() {
+        if (getDecorationStyle() == JRootPane.NONE) return false;
+        if (!window.isDisplayable()) return false;
         if (window instanceof Dialog || window instanceof Frame) {
             windowHandle = PointerUtil.getHWND(window);
             if (windowHandle != 0) {

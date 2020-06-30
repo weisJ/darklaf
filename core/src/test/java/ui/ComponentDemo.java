@@ -206,6 +206,12 @@ public interface ComponentDemo {
         dev.add(logging);
         dev.add(aaPainting);
         dev.add(experimentalAA);
+        dev.add(new JCheckBoxMenuItem("Custom Decorations") {
+            {
+                setSelected(LafManager.isDecorationsEnabled());
+                addActionListener(e -> LafManager.setDecorationsEnabled(isSelected()));
+            }
+        });
         return dev;
     }
 
