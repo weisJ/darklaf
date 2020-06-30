@@ -37,10 +37,10 @@ public class DefaultDecorationsProvider implements DecorationsProvider {
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
         return new CustomTitlePane() {
             @Override
-            public void install() {}
+            public void uninstall(final boolean removeDecorations) {}
 
             @Override
-            public void uninstall() {}
+            public void install() {}
         };
     }
 

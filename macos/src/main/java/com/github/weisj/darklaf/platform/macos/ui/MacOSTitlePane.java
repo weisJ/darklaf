@@ -138,7 +138,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     @Override
-    public void uninstall() {
+    public void uninstall(final boolean removeDecorations) {
         if (titleLabel != null) {
             remove(titleLabel);
             titleLabel = null;

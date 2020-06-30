@@ -172,9 +172,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         return button;
     }
 
-    public void uninstall() {
+    @Override
+    public void uninstall(final boolean removeDecorations) {
         uninstallListeners();
-        uninstallDecorations();
+        uninstallDecorations(removeDecorations);
         removeAll();
         if (menuBar != null) {
             getRootPane().setJMenuBar(menuBar);
@@ -192,9 +193,11 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
-    protected void uninstallDecorations() {
+    protected void uninstallDecorations(final boolean removeDecorations) {
         if (windowHandle != 0) {
-            JNIDecorationsWindows.uninstallDecorations(windowHandle, decorationStyle != JRootPane.NONE);
+            if (removeDecorations) {
+                JNIDecorationsWindows.uninstallDecorations(windowHandle, decorationStyle != JRootPane.NONE);
+            }
             windowHandle = 0;
         }
         rootPane.removeContainerListener(rootPaneContainerListener);
@@ -228,7 +231,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     public void setDecorationsStyle(final int style) {
         super.setDecorationsStyle(style);
         if (style == JRootPane.NONE && windowHandle != 0) {
-            uninstall();
+            uninstall(true);
         } else if (windowHandle == 0) {
             install();
         }
@@ -245,7 +248,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 Color color = rootPane.getBackground();
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             } else {
-                uninstall();
+                uninstall(decorationStyle != JRootPane.NONE);
                 return false;
             }
         }

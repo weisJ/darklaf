@@ -32,7 +32,7 @@ public abstract class CustomTitlePane extends JComponent {
 
     protected int decorationStyle;
 
-    public abstract void uninstall();
+    public abstract void uninstall(final boolean removeDecorations);
 
     /**
      * Do not call directly.
