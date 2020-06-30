@@ -133,9 +133,10 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     @Override
     protected Color getForeground(final AbstractButton button) {
         if (button.isSelected()
+            && button.isEnabled()
+            && button.getForeground() instanceof UIResource
             && !ToggleButtonConstants.isSlider(button)
-            && !ButtonConstants.isBorderlessVariant(button)
-            && button.getForeground() instanceof UIResource) {
+            && !ButtonConstants.isBorderlessVariant(button)) {
             return selectedForeground;
         }
         return super.getForeground(button);
