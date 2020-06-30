@@ -269,7 +269,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected void paintIcon(final Graphics g, final AbstractButton b, final JComponent c) {
         if (b.getIcon() != null) {
-            g.setClip(iconRect);
+            g.clipRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height);
             paintIcon(g, c, iconRect);
         }
     }
