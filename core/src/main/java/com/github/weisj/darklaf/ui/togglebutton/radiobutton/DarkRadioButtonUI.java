@@ -217,7 +217,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
                                                          b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
                                                          viewRect, iconRect, textRect, b.getIconTextGap());
         iconRect.y += iconBaselineOffset;
-        if (ToggleButtonConstants.isTreeOrTableCellEditor(b)) {
+        if (ToggleButtonConstants.isInCell(b)) {
             hitArea = calculateHitArea();
         } else {
             int x = Math.min(iconRect.x, textRect.x);
@@ -261,6 +261,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             } else {
                 iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + "iconBaselineOffset");
             }
+        } else if (PropertyKey.BORDER.equals(key)) {
+            hitArea.setFrame(0, 0, 0, 0);
         }
     }
 }

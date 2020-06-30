@@ -79,7 +79,7 @@ public class StateIcon implements Icon {
         AbstractButton b = (AbstractButton) c;
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
-        boolean hasFocus = b.hasFocus();
+        boolean hasFocus = b.isFocusPainted() && b.hasFocus();
         Icon icn = selected ? enabled ? hasFocus ? selectedFocusedIcon : selectedIcon
                 : selectedDisabledIcon
                 : enabled ? hasFocus ? focusedIcon : icon
