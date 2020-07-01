@@ -110,7 +110,6 @@ public class WindowsTitlePane extends CustomTitlePane {
         bundle = ResourceBundle.getBundle("com.github.weisj.darklaf.bundles.actions", getLocale());
         this.decorationStyle = decorationStyle;
 
-
         state = -1;
         oldResizable = true;
         installSubcomponents();

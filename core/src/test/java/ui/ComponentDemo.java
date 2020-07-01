@@ -225,7 +225,7 @@ public interface ComponentDemo {
                                                                         isSelected()));
             }
         });
-        dev.add(new JCheckBoxMenuItem("Darklaf/System Laf"){
+        dev.add(new JCheckBoxMenuItem("Darklaf/System Laf") {
             {
                 setSelected(true);
                 addActionListener(e -> {
@@ -236,9 +236,9 @@ public interface ComponentDemo {
                             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                             LafManager.updateLaf();
                         } catch (ClassNotFoundException
-                            | UnsupportedLookAndFeelException
-                            | IllegalAccessException
-                            | InstantiationException classNotFoundException) {
+                                 | UnsupportedLookAndFeelException
+                                 | IllegalAccessException
+                                 | InstantiationException classNotFoundException) {
                             classNotFoundException.printStackTrace();
                         }
                     }
