@@ -44,6 +44,7 @@ import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.platform.windows.PointerUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.Scale;
 
 /**
@@ -59,22 +60,14 @@ public class WindowsTitlePane extends CustomTitlePane {
     private static final int ICON_WIDTH = 32;
     private static final int ICON_SIZE = ICON_WIDTH - 3 * PAD;
     private final JRootPane rootPane;
-    private final ContainerListener layeredPaneContainerListener = new ContainerListener() {
-        @Override
-        public void componentAdded(final ContainerEvent e) {
-            if (e.getChild() instanceof JMenuBar) {
-                addMenuBar(getRootPane().getJMenuBar());
-            }
-            if (getRootPane().getJMenuBar() == null && menuBar != null) {
-                removeMenuBar();
-            }
-        }
 
-        @Override
-        public void componentRemoved(final ContainerEvent e) {}
-    };
+    private boolean unifiedMenuBar;
+    private ContainerListener rootPaneContainerListener;
+    private ContainerListener layeredPaneContainerListener;
+
     private boolean oldResizable;
-    private PropertyChangeListener propertyChangeListener;
+    private PropertyChangeListener windowPropertyChangeListener;
+    private PropertyChangeListener rootPanePropertyChangeListener;
     private WindowListener windowListener;
     private ToggleIcon closeIcon;
     private ToggleIcon maximizeIcon;
@@ -92,21 +85,6 @@ public class WindowsTitlePane extends CustomTitlePane {
     private final Window window;
     private long windowHandle;
     private JMenuBar menuBar;
-    private final ContainerListener rootPaneContainerListener = new ContainerListener() {
-        @Override
-        public void componentAdded(final ContainerEvent e) {
-            if (e.getChild() instanceof JLayeredPane) {
-                ((JLayeredPane) e.getChild()).addContainerListener(layeredPaneContainerListener);
-            }
-        }
-
-        @Override
-        public void componentRemoved(final ContainerEvent e) {
-            if (e.getChild() instanceof JLayeredPane) {
-                ((JLayeredPane) e.getChild()).removeContainerListener(layeredPaneContainerListener);
-            }
-        }
-    };
     private int state;
 
     private Color inactiveBackground;
@@ -131,13 +109,73 @@ public class WindowsTitlePane extends CustomTitlePane {
         this.window = window;
         bundle = ResourceBundle.getBundle("com.github.weisj.darklaf.bundles.actions", getLocale());
         this.decorationStyle = decorationStyle;
-        rootPane.addContainerListener(rootPaneContainerListener);
-        rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
+
+        updateMenuBar(true);
+
         state = -1;
         oldResizable = true;
         installSubcomponents();
         installDefaults();
         setLayout(createLayout());
+    }
+
+    private void updateMenuBar(final boolean install) {
+        unifiedMenuBar = PropertyUtil.getBooleanProperty(rootPane, "JRootPane.unifiedMenuBar");
+        if (unifiedMenuBar && install) {
+            if (rootPaneContainerListener == null) {
+                rootPaneContainerListener = createRootPaneContainerListener();
+            }
+            if (layeredPaneContainerListener == null) {
+                layeredPaneContainerListener = createLayeredPaneContainerListener();
+            }
+            rootPane.addContainerListener(rootPaneContainerListener);
+            rootPane.getLayeredPane().addContainerListener(layeredPaneContainerListener);
+            addMenuBar(getRootPane().getJMenuBar());
+        } else {
+            rootPane.removeContainerListener(rootPaneContainerListener);
+            rootPane.getLayeredPane().removeContainerListener(layeredPaneContainerListener);
+            if (menuBar != null) {
+                getRootPane().setJMenuBar(menuBar);
+                menuBar.setPreferredSize(null);
+                menuBar = null;
+            }
+        }
+        rootPane.revalidate();
+    }
+
+    private ContainerListener createRootPaneContainerListener() {
+        return new ContainerListener() {
+            @Override
+            public void componentAdded(final ContainerEvent e) {
+                if (e.getChild() instanceof JLayeredPane) {
+                    ((JLayeredPane) e.getChild()).addContainerListener(layeredPaneContainerListener);
+                }
+            }
+
+            @Override
+            public void componentRemoved(final ContainerEvent e) {
+                if (e.getChild() instanceof JLayeredPane) {
+                    ((JLayeredPane) e.getChild()).removeContainerListener(layeredPaneContainerListener);
+                }
+            }
+        };
+    }
+
+    private ContainerListener createLayeredPaneContainerListener() {
+        return new ContainerListener() {
+            @Override
+            public void componentAdded(final ContainerEvent e) {
+                if (e.getChild() instanceof JMenuBar) {
+                    addMenuBar(getRootPane().getJMenuBar());
+                }
+                if (getRootPane().getJMenuBar() == null && menuBar != null) {
+                    removeMenuBar();
+                }
+            }
+
+            @Override
+            public void componentRemoved(final ContainerEvent e) {}
+        };
     }
 
     private static JButton createButton(final Icon icon, final Action action) {
@@ -177,19 +215,16 @@ public class WindowsTitlePane extends CustomTitlePane {
         uninstallListeners();
         uninstallDecorations(removeDecorations);
         removeAll();
-        if (menuBar != null) {
-            getRootPane().setJMenuBar(menuBar);
-        }
+        updateMenuBar(false);
     }
 
     private void uninstallListeners() {
         if (window != null) {
             window.removeWindowListener(windowListener);
-            window.removePropertyChangeListener(propertyChangeListener);
+            window.removePropertyChangeListener(windowPropertyChangeListener);
         }
         if (rootPane != null) {
-            rootPane.removeContainerListener(rootPaneContainerListener);
-            rootPane.getLayeredPane().removeContainerListener(layeredPaneContainerListener);
+            rootPane.removePropertyChangeListener(rootPanePropertyChangeListener);
         }
     }
 
@@ -259,8 +294,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (window != null) {
             windowListener = createWindowListener();
             window.addWindowListener(windowListener);
-            propertyChangeListener = createWindowPropertyChangeListener();
-            window.addPropertyChangeListener(propertyChangeListener);
+            windowPropertyChangeListener = createWindowPropertyChangeListener();
+            rootPanePropertyChangeListener = createRootPanePropertyChangeListener();
+            rootPane.addPropertyChangeListener(rootPanePropertyChangeListener);
+            window.addPropertyChangeListener(windowPropertyChangeListener);
         }
     }
 
@@ -269,7 +306,11 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private PropertyChangeListener createWindowPropertyChangeListener() {
-        return new PropertyChangeHandler();
+        return new WindowPropertyChangeListener();
+    }
+
+    private PropertyChangeListener createRootPanePropertyChangeListener() {
+        return new RootPanePropertyChangeListener();
     }
 
     private void installSubcomponents() {
@@ -294,7 +335,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     protected void addMenuBar(final JMenuBar menuBar) {
-        if (menuBar != null) {
+        if (menuBar != null && unifiedMenuBar) {
             this.menuBar = menuBar;
             // Otherwise, a white bar will appear where the menuBar used to be.
             menuBar.setPreferredSize(new Dimension(0, 0));
@@ -809,7 +850,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
-    protected class PropertyChangeHandler implements PropertyChangeListener {
+    protected class WindowPropertyChangeListener implements PropertyChangeListener {
 
         @Override
         public void propertyChange(final PropertyChangeEvent pce) {
@@ -838,6 +879,16 @@ public class WindowsTitlePane extends CustomTitlePane {
                 Color color = (Color) pce.getNewValue();
                 if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
+            }
+        }
+    }
+
+    protected class RootPanePropertyChangeListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(final PropertyChangeEvent evt) {
+            if ("JRootPane.unifiedMenuBar".equals(evt.getPropertyName())) {
+                updateMenuBar(true);
             }
         }
     }

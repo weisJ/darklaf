@@ -49,6 +49,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     protected static final String KEY_PREFIX = "JRootPane.";
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
+    public static final String KEY_UNIFIED_MENUBAR = KEY_PREFIX + "unifiedMenuBar";
     protected static final String[] borderKeys = new String[]{"RootPane.border",
                                                               "RootPane.frameBorder",
                                                               "RootPane.plainDialogBorder",
@@ -76,10 +77,16 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         super.installUI(c);
         rootPane = (JRootPane) c;
         windowDecorationsStyle = rootPane.getWindowDecorationStyle();
-        LookAndFeel.installColors(rootPane, "RootPane.background", "RootPane.foreground");
         updateClientDecoration();
         installBorder(rootPane);
         installListeners(rootPane);
+    }
+
+    @Override
+    protected void installDefaults(final JRootPane c) {
+        super.installDefaults(c);
+        c.putClientProperty(KEY_UNIFIED_MENUBAR, UIManager.getBoolean("TitlePane.unifiedMenuBar"));
+        LookAndFeel.installColors(c, "RootPane.background", "RootPane.foreground");
     }
 
     protected void installBorder(final JRootPane root) {

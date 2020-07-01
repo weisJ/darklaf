@@ -43,6 +43,8 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
+import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public interface ComponentDemo {
 
@@ -210,6 +212,17 @@ public interface ComponentDemo {
             {
                 setSelected(LafManager.isDecorationsEnabled());
                 addActionListener(e -> LafManager.setDecorationsEnabled(isSelected()));
+            }
+        });
+        dev.add(new JCheckBoxMenuItem("Unified Menubar") {
+            {
+                SwingUtilities.invokeLater(() -> {
+                    setSelected(PropertyUtil.getBooleanProperty(SwingUtilities.getRootPane(dev),
+                                                                DarkRootPaneUI.KEY_UNIFIED_MENUBAR));
+                });
+                addActionListener(e -> SwingUtilities.getRootPane(dev)
+                                                     .putClientProperty(DarkRootPaneUI.KEY_UNIFIED_MENUBAR,
+                                                                        isSelected()));
             }
         });
         return dev;
