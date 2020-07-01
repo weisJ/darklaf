@@ -361,7 +361,7 @@ public final class LafManager {
      * @param theme the theme to install.
      */
     public static void installTheme(final Theme theme) {
-        if (theme == getTheme()) return;
+        if (theme == getTheme() && UIManager.getLookAndFeel() instanceof DarkLaf) return;
         setTheme(theme);
         install();
     }
