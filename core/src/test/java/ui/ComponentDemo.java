@@ -225,6 +225,26 @@ public interface ComponentDemo {
                                                                         isSelected()));
             }
         });
+        dev.add(new JCheckBoxMenuItem("Darklaf/System Laf"){
+            {
+                setSelected(true);
+                addActionListener(e -> {
+                    if (isSelected()) {
+                        LafManager.install();
+                    } else {
+                        try {
+                            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                            LafManager.updateLaf();
+                        } catch (ClassNotFoundException
+                            | UnsupportedLookAndFeelException
+                            | IllegalAccessException
+                            | InstantiationException classNotFoundException) {
+                            classNotFoundException.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
         return dev;
     }
 
