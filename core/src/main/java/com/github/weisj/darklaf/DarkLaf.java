@@ -124,6 +124,7 @@ public class DarkLaf extends BasicLookAndFeel {
         base.uninitialize();
         MouseGrabberUtil.uninstallMouseGrabber();
         isInitialized = false;
+        PopupFactory.setSharedInstance(new PopupFactory());
     }
 
     @Override
