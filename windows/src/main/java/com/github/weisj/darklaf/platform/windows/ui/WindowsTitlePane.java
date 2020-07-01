@@ -110,11 +110,11 @@ public class WindowsTitlePane extends CustomTitlePane {
         bundle = ResourceBundle.getBundle("com.github.weisj.darklaf.bundles.actions", getLocale());
         this.decorationStyle = decorationStyle;
 
-        updateMenuBar(true);
 
         state = -1;
         oldResizable = true;
         installSubcomponents();
+        updateMenuBar(true);
         installDefaults();
         setLayout(createLayout());
     }
@@ -331,7 +331,6 @@ public class WindowsTitlePane extends CustomTitlePane {
         setComponentZOrder(minimizeButton, 2);
         setComponentZOrder(windowIconButton, 3);
         setComponentZOrder(titleLabel, 4);
-        addMenuBar(getRootPane().getJMenuBar());
     }
 
     protected void addMenuBar(final JMenuBar menuBar) {
