@@ -1,10 +1,15 @@
+apply(from= "../gradle/loadProps.gradle.kts")
+
 plugins {
     `java-gradle-plugin`
+    `kotlin-dsl`
     groovy
 }
 
+val nokeeVersion = extra["nokee.version"]
+
 dependencies {
-    implementation(platform("dev.nokee:nokee-gradle-plugins:0.4.0-60cff2b"))
+    implementation(platform("dev.nokee:nokee-gradle-plugins:$nokeeVersion"))
 }
 
 repositories {
@@ -25,4 +30,8 @@ gradlePlugin {
             implementationClass = "UsePrebuiltBinariesWhenUnbuildablePlugin"
         }
     }
+}
+
+configure<KotlinDslPluginOptions> {
+    experimentalWarning.set(false)
 }

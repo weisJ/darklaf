@@ -31,7 +31,7 @@ tasks.test {
     workingDir.mkdirs()
 }
 
-tasks.jar {
+fun Jar.includeLicenses() {
     CrLfSpec(LineEndings.LF).run {
         into("META-INF") {
             filteringCharset = "UTF-8"
@@ -41,6 +41,10 @@ tasks.jar {
             textFrom("$rootDir/licenses/PBJAR_LICENSE.txt")
         }
     }
+}
+
+tasks.jar {
+    includeLicenses()
 }
 
 val makeDocumentation by tasks.registering(JavaExec::class) {
