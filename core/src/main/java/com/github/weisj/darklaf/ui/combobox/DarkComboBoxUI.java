@@ -320,11 +320,12 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     protected Rectangle rectangleForCurrentValue() {
         Rectangle rect = super.rectangleForCurrentValue();
         if (comboBox.isEditable()) {
-            if (comboBox.getComponentOrientation().isLeftToRight()) {
+            boolean ltr = comboBox.getComponentOrientation().isLeftToRight();
+            if (ltr) {
                 rect.x += boxPadding.left;
                 rect.width -= boxPadding.left;
             } else {
-                rect.width -= boxPadding.right - borderSize;
+                rect.width -= boxPadding.right - borderSize + 1;
             }
         }
         return rect;

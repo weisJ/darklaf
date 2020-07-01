@@ -107,13 +107,6 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        // OpenJDK BorderlessTextField has a bug with its setBorder implementation
-        // so we reset the border
-        // See https://mail.openjdk.java.net/pipermail/swing-dev/2020-March/010226.html
-        if (editor != null && "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(editor.getClass()
-                                                                                                            .getName())) {
-            editor.setBorder(null);
-        }
         if (editor != null) {
             PropertyUtil.installProperty(editor, ToolTipConstants.KEY_STYLE, ToolTipStyle.PLAIN);
             PropertyUtil.installBooleanProperty(editor, KEY_ROUNDED_SELECTION, "TextComponent.roundedSelection");
@@ -125,6 +118,12 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
         installBorder();
         installPopupMenu();
+    }
+
+    public static boolean isBorderlessTextField(final JTextComponent textComponent) {
+        if (textComponent == null) return false;
+        String className = textComponent.getClass().getName();
+        return "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(className);
     }
 
     protected void installPopupMenu() {
@@ -146,6 +145,13 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
     }
 
     protected void installBorder() {
+        if (isBorderlessTextField(editor)) {
+            // OpenJDK BorderlessTextField has a bug with its setBorder implementation
+            // so we reset the border
+            // See https://mail.openjdk.java.net/pipermail/swing-dev/2020-March/010226.html
+            if (editor.getBorder() != null) editor.setBorder(null);
+            return;
+        }
         if (uninstalling) return;
         MarginBorderWrapper.installBorder(editor);
     }

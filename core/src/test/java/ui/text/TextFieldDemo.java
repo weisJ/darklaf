@@ -46,7 +46,7 @@ public class TextFieldDemo implements ComponentDemo {
     public JComponent createComponent() {
         JTextField textField = createTextField();
         textField.putClientProperty(DarkTextUI.KEY_DEFAULT_TEXT, "Default Text");
-        textField.setFont(new Font("Roboto", Font.PLAIN, 13));
+        // textField.setFont(new Font("Roboto", Font.PLAIN, 13));
         DemoPanel panel = new DemoPanel(textField);
 
         JPanel controlPanel = panel.addControls();

@@ -142,14 +142,19 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     @Override
     protected Rectangle getVisibleEditorRect() {
+        return getVisibleEditorRect(true);
+    }
+
+    protected Rectangle getVisibleEditorRect(final boolean shrinkHeight) {
         Rectangle rect = super.getVisibleEditorRect();
-        if (rect != null) {
+        if (rect != null && shrinkHeight) {
             FontMetrics fm = SwingUtilities2.getFontMetrics(editor, editor.getFont());
             int asc = fm.getMaxAscent();
             Insets ins = editor.getInsets();
             int height = editor.getHeight() - ins.top - ins.bottom;
             rect.y = ins.top + (height - asc) / 2;
             rect.y -= fm.getDescent() / 2;
+            rect.height = fm.getHeight();
             adjustTextRect(getComponent(), rect);
         }
         return rect;
@@ -180,7 +185,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         if (oldClear != clearHovered) {
             editor.repaint();
         }
-        Rectangle textRect = getVisibleEditorRect();
+        Rectangle textRect = getVisibleEditorRect(false);
         if (textRect.contains(p)) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
