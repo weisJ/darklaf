@@ -118,30 +118,32 @@ public class DarkPopupFactory extends PopupFactory {
                                final boolean isFocusable, final boolean startHidden) {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
-        setupWindowBackground(window, opaque, !noDecorations);
+        JRootPane rootPane = window instanceof RootPaneContainer
+                ? ((RootPaneContainer) window).getRootPane()
+                : null;
+        setupWindowBackground(window, rootPane, opaque, !noDecorations);
         setupWindowFocusableState(isFocusable, window);
-        setupWindowDecorations(window, noDecorations);
+        setupWindowDecorations(window, rootPane, noDecorations);
         setupWindowOpacity(startHidden, window);
     }
 
-    protected void setupWindowBackground(final Window window, final boolean opaque, final boolean decorations) {
+    protected void setupWindowBackground(final Window window, final JRootPane rootPane,
+                                         final boolean opaque, final boolean decorations) {
         /*
          * Sometimes the background is java.awt.SystemColor[i=7]
          * It results in a flash of white background, that is repainted with
          * the proper popup background later.
          * That is why we set window background explicitly.
          */
-        if (window instanceof RootPaneContainer) {
-            JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
-            rootPane.setOpaque(opaque);
-            if (opaque) {
-                Color bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
-                window.setBackground(bg);
-            } else {
-                Color bg = getTranslucentPopupBackground(decorations);
-                window.setBackground(bg);
-                rootPane.setBackground(bg);
-            }
+        if (rootPane == null) return;
+        rootPane.setOpaque(opaque);
+        if (opaque) {
+            Color bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
+            window.setBackground(bg);
+        } else {
+            Color bg = getTranslucentPopupBackground(decorations);
+            window.setBackground(bg);
+            rootPane.setBackground(bg);
         }
     }
 
@@ -152,7 +154,14 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected void setupWindowDecorations(final Window window, final boolean noDecorations) {
+    protected void setupWindowDecorations(final Window window, final JRootPane rootPane, final boolean noDecorations) {
+        if (rootPane != null) {
+            /*
+             * To ensure truly undecorated windows we need to specify the Window.shadow property to
+             * remove shadows on macOS.
+             */
+            rootPane.putClientProperty("Window.shadow", !noDecorations);
+        }
         if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
             if (noDecorations) {
                 DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
