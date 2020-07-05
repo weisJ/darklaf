@@ -124,9 +124,9 @@ public class CreateUITable {
     }
 
     private UIDefaults setupThemeDefaults(final Theme theme) {
-        PropertyLoader.setAddReferenceInfo(true);
+        PropertyLoader.setDebugMode(true);
         UIDefaults defaults = new DarkLaf().getDefaults();
-        PropertyLoader.setAddReferenceInfo(false);
+        PropertyLoader.setDebugMode(false);
         LafManager.installTheme(theme);
         currentDefaults = UIManager.getLookAndFeelDefaults();
         return defaults;

@@ -97,6 +97,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
         applyFontRule(currentTheme, defaults);
         setupRenderingHints(defaults);
+        defaults.remove(KERNING_LIST);
     }
 
     private boolean systemKerningEnabled() {

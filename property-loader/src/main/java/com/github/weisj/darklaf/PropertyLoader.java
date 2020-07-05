@@ -46,10 +46,7 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.Pair;
-import com.github.weisj.darklaf.util.PropertyValue;
+import com.github.weisj.darklaf.util.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -80,12 +77,16 @@ public final class PropertyLoader {
     private static final char LIST_SEPARATOR = ';';
     private static final char PAIR_SEPARATOR = ':';
 
-    private static boolean addReferenceInfo;
+    private static boolean debugMode;
 
     private static final Map<AttributedCharacterIterator.Attribute, Integer> attributes = Collections.emptyMap();
 
-    public static void setAddReferenceInfo(final boolean addReferenceInfo) {
-        PropertyLoader.addReferenceInfo = addReferenceInfo;
+    public static void setDebugMode(final boolean debugMode) {
+        PropertyLoader.debugMode = debugMode;
+    }
+
+    public static boolean isDebugMode() {
+        return debugMode;
     }
 
     public static Properties loadProperties(final Class<?> clazz, final String name, final String path) {
@@ -163,7 +164,7 @@ public final class PropertyLoader {
     }
 
     private static String parseKey(final String key) {
-        if (addReferenceInfo) return key;
+        if (debugMode) return key;
         return key.startsWith(String.valueOf(REFERENCE_PREFIX)) ? key.substring(1) : key;
     }
 
@@ -249,15 +250,15 @@ public final class PropertyLoader {
         String val = parseKey(value);
         String referenceFreeKey = val.substring(1);
         boolean accumulatorContainsKey = accumulator.containsKey(val)
-                                         || (addReferenceInfo && accumulator.containsKey(referenceFreeKey));
+                                         || (debugMode && accumulator.containsKey(referenceFreeKey));
         boolean defaultsContainKey = currentDefault.containsKey(val)
-                                     || (addReferenceInfo && currentDefault.containsKey(referenceFreeKey));
+                                     || (debugMode && currentDefault.containsKey(referenceFreeKey));
         if (!defaultsContainKey && !accumulatorContainsKey) {
             LOGGER.warning("Could not reference value '" + val + "' while loading '" + key + "'. " +
                            "Maybe is a forward reference");
         }
         Object returnVal = accumulatorContainsKey ? accumulator.get(val) : currentDefault.get(val);
-        if (addReferenceInfo) {
+        if (debugMode) {
             if (returnVal == null) {
                 returnVal = accumulatorContainsKey ? accumulator.get(referenceFreeKey) : currentDefault.get(val);
             }
@@ -484,7 +485,7 @@ public final class PropertyLoader {
     }
 
     public static String asKey(final String key) {
-        if (addReferenceInfo) return REFERENCE_PREFIX + key;
+        if (debugMode) return REFERENCE_PREFIX + key;
         return key;
     }
 
