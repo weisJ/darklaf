@@ -120,12 +120,16 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
     @Override
     protected void installDefaults(final JComponent c) {
         super.installDefaults(c);
-        toolTip.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, true);
+        toolTip.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, !useDecoratedPopup());
         toolTip.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
         toolTip.putClientProperty(DarkPopupFactory.KEY_FORCE_HEAVYWEIGHT, true);
         fadeAnimator = new FadeInAnimator();
         updateTipText(toolTip);
         updateStyle();
+    }
+
+    protected boolean useDecoratedPopup() {
+        return false;
     }
 
     @Override
