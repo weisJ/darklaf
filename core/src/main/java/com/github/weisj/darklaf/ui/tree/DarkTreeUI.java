@@ -179,8 +179,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     @Override
     protected void installListeners() {
         super.installListeners();
-        popupListener = createPopupMouseListener();
-        popupListener.install();
+        if (UIManager.getBoolean("Tree.showFullRowInPopup")) {
+            popupListener = createPopupMouseListener();
+            popupListener.install();
+        }
         tree.addPropertyChangeListener(this);
         tree.addMouseListener(selectionListener);
     }
@@ -377,8 +379,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        popupListener.uninstall();
-        popupListener = null;
+        if (popupListener != null) {
+            popupListener.uninstall();
+            popupListener = null;
+        }
         tree.removeMouseListener(selectionListener);
         tree.removePropertyChangeListener(this);
     }
@@ -550,7 +554,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     @Override
     public void update(final Graphics g, final JComponent c) {
-        popupListener.repaint();
+        if (popupListener != null) popupListener.repaint();
         super.update(g, c);
     }
 
