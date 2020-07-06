@@ -341,6 +341,8 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
                 if (evt.getNewValue() == null) {
                     alpha = 0;
                 }
+            } else if (KEY_STYLE.equals(key)) {
+                updateStyle();
             }
         }
     }

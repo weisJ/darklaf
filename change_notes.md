@@ -22,7 +22,7 @@
 - `ColoredRadioButton` patches color of icon unnecessarily often. 6ff0ffc799dfb2a304d5bd4ddfe679059143226b
 - Minimize butten in title bar won't loose rollover status [Windows]. 1e3693b3a2f256df4d3e14a6cae8d18d4b359eea
 - Fast scrolling doesn't work when mouse is over the scrollbar of an `OverlayScrollPane`. c98b7a4f12f2b22319e4c9f84439e0d6687bc909
-- Heavyweight popups have an incorrect location after window is moved to second monitor with possibly different scaling mode. af00f15f6402c95b7127f30ca15769a3ae4f6556
+- Heavyweight popups have an incorrect location after frame is moved to second monitor with possibly different scaling mode. af00f15f6402c95b7127f30ca15769a3ae4f6556
 - Rounded and extended selection isn't painted correctly when text wrapping is enabled. 860680dc9374d3b5b37370f842c0cdab7f81b044
 - Icons of buttons aren't properly clipped. 87a5295f06461532bfe659a1c2837a179f573bc0
 - Selected and disabled `JToggleButton`s use the wrong foreground color. #191 6d4c3bc6df1a7a944cd40cf87ec15102f51759ec

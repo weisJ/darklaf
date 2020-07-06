@@ -46,6 +46,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
 
     private final DropShadowBorder shadowBorder;
     private final BubbleBorder bubbleBorder;
+    private final boolean paintShadow;
     private boolean skipShadow;
     private Insets margin;
     private Alignment alignment;
@@ -64,6 +65,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         shadowBorder = new DropShadowBorder(UIManager.getColor("ToolTip.borderShadowColor"),
                                             shadowSize, opacity, 2 * shadowSize,
                                             false, true, true, true);
+        paintShadow = UIManager.getBoolean("ToolTip.paintShadow");
     }
 
     public Area getBackgroundArea(final Component c, final int width, final int height) {
@@ -126,7 +128,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
                                                     width - ins.left - ins.right,
                                                     height - ins.top - ins.bottom,
                                                     bubbleBorder.getThickness());
-        if (!skipShadow && UIManager.getBoolean("ToolTip.paintShadow")) {
+        if (!skipShadow && paintShadow) {
             paintShadow(c, g, x, y, width, height, innerArea);
         }
         Area outerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
