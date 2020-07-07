@@ -26,6 +26,7 @@ package com.github.weisj.darklaf.ui.panel;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicPanelUI;
 
 /**
@@ -33,7 +34,10 @@ import javax.swing.plaf.basic.BasicPanelUI;
  */
 public class DarkPanelUI extends BasicPanelUI {
 
+    private static PanelUI darkPanelUI;
+
     public static ComponentUI createUI(final JComponent c) {
-        return new DarkPanelUI();
+        if (darkPanelUI == null) darkPanelUI = new DarkPanelUI();
+        return darkPanelUI;
     }
 }

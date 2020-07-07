@@ -44,7 +44,7 @@ import com.github.weisj.darklaf.util.PropertyKey;
  */
 public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener {
 
-    protected static final DarkLabelUI darkLabelUI = new DarkLabelUI();
+    protected static DarkLabelUI darkLabelUI;
 
     private Color inactiveForeground;
 
@@ -56,6 +56,7 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     }
 
     public static ComponentUI createUI(final JComponent c) {
+        if (darkLabelUI == null) darkLabelUI = new DarkLabelUI();
         return darkLabelUI;
     }
 
