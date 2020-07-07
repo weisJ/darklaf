@@ -243,6 +243,10 @@ public class PaintUtil {
         g.fillRect(x, y + height - thickness, width, thickness);
     }
 
+    public static void drawRect(final Graphics g, final Rectangle r, final Insets lineWidths) {
+        drawRect(g, r.x, r.y, r.width, r.height, lineWidths);
+    }
+
     public static void drawRect(final Graphics g, final int x, final int y,
                                 final int width, final int height, final Insets lineWidths) {
         g.fillRect(x, y, width, lineWidths.top);

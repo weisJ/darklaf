@@ -461,9 +461,10 @@ public class CellUtil {
         return c;
     }
 
-    protected static boolean hasFocus(final Component c, final Component comp) {
-        return comp.hasFocus()
-               || (DarkUIUtil.hasFocus(c) || DarkUIUtil.getParentOfType(JPopupMenu.class, c, 4) != null);
+    protected static boolean hasFocus(final Component cellComponent, final Component parentComponent) {
+        return parentComponent.hasFocus()
+               || (DarkUIUtil.hasFocus(cellComponent)
+                   || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null);
     }
 
     public static void setSelectedFlag(final Component comp, final boolean selected) {
