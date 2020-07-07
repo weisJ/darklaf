@@ -128,7 +128,7 @@ They can be found [here](https://github.com/weisJ/darklaf/wiki/Features#alternat
 
 This LookAndFeel supports custom window decorations (only on Windows at this point). In contrast to most other LaFs the native window behaviour is not compromised giving a seamless experience that still looks native.
 
-# Extensions
+## Extensions
 Check out the [darklaf-extension project](https://github.com/weisJ/darklaf-extensions) for additional artifacts which add
 support for some third-party projects.
 
