@@ -106,6 +106,18 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> implements Co
                 addActionListener(e -> button.setContentAreaFilled(isSelected()));
             }
         });
+        controlPanel.add(new JCheckBox("Border painted") {
+            {
+                setSelected(button.isBorderPainted());
+                addActionListener(e -> button.setBorderPainted(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("Focus Painted") {
+            {
+                setSelected(button.isFocusPainted());
+                addActionListener(e -> button.setFocusPainted(isSelected()));
+            }
+        });
         controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {
             {
                 setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));

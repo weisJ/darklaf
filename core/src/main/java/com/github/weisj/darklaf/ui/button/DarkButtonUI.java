@@ -28,7 +28,6 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
@@ -286,8 +285,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected boolean shouldDrawBackground(final AbstractButton c) {
-        Border border = c.getBorder();
-        return c.isEnabled() && border != null && button.isContentAreaFilled();
+        return button.isContentAreaFilled();
     }
 
     protected int getArc(final Component c) {
