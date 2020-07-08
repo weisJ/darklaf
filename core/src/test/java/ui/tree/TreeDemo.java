@@ -54,12 +54,23 @@ public class TreeDemo implements ComponentDemo {
         DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
         DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
         DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
+        DefaultMutableTreeNode parent3 = new DefaultMutableTreeNode("Nested");
+
+        DefaultMutableTreeNode current = parent3;
+        for (int i = 0; i < 10; i++) {
+            DefaultMutableTreeNode node1 = new DefaultMutableTreeNode("Nested1 " + i);
+            DefaultMutableTreeNode node2 = new DefaultMutableTreeNode("Nested2 " + i);
+            current.add(node1);
+            current.add(node2);
+            current = node1;
+        }
 
         parent1.add(child);
         parent1.add(child1);
         parent2.add(child2);
         root.add(parent1);
         root.add(parent2);
+        root.add(parent3);
 
         for (int i = 0; i < 100; i++) {
             root.add(new DefaultMutableTreeNode("Leaf " + i));
@@ -101,6 +112,12 @@ public class TreeDemo implements ComponentDemo {
                 setSelected(tree.getComponentOrientation().isLeftToRight());
                 addActionListener(e -> tree.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
                         : ComponentOrientation.RIGHT_TO_LEFT));
+            }
+        });
+        controlPanel.add(new JCheckBox("show root") {
+            {
+                setSelected(tree.isRootVisible());
+                addActionListener(e -> tree.setRootVisible(isSelected()));
             }
         });
         controlPanel.add(new JCheckBox("show root handles") {

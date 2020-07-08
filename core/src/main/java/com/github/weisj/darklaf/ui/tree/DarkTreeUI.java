@@ -34,7 +34,10 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTreeUI;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
@@ -62,6 +65,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     public static final String STYLE_NONE = "none";
     public static final String KEY_IS_TREE_EDITOR = "JComponent.isTreeEditor";
     public static final String KEY_IS_TREE_RENDERER = "JComponent.isTreeRenderer";
+    public static final String KEY_IS_TABLE_TREE = "JComponent.isTableTree";
+
+    protected static final Rectangle boundsBuffer = new Rectangle();
 
     protected MouseListener selectionListener;
     protected Color lineColor;
@@ -168,34 +174,33 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
         tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
 
-        final InputMap inputMap = tree.getInputMap(JComponent.WHEN_FOCUSED);
-        inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
-        inputMap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "expand_or_move_down");
-        inputMap.put(KeyStroke.getKeyStroke("pressed DOWN"), "move_down");
-        inputMap.put(KeyStroke.getKeyStroke("pressed UP"), "move_up");
-        inputMap.put(KeyStroke.getKeyStroke("pressed ENTER"), "toggle_edit");
+        installInputMap(tree.getInputMap(JComponent.WHEN_FOCUSED));
 
         final ActionMap actionMap = tree.getActionMap();
 
-        final Action expandAction = actionMap.get("expand");
-        if (expandAction != null) {
-            actionMap.put("expand_or_move_down", new TreeUIAction() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    JTree tree = getTree(e);
-                    if (tree == null) return;
-                    int selectionRow = tree.getLeadSelectionRow();
-                    if (selectionRow == -1) return;
+        actionMap.put("expand_or_move_down", new TreeUIAction() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                JTree tree = getTree(e);
+                if (tree == null) return;
+                int selectionRow = tree.getLeadSelectionRow();
+                if (selectionRow == -1) return;
 
-                    if (isLeaf(selectionRow) || tree.isExpanded(selectionRow)) {
+                if (isLeaf(selectionRow) || tree.isExpanded(selectionRow)) {
+                    if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
                         moveTo(tree, selectionRow + 1);
-                    } else {
-                        expandAction.actionPerformed(e);
                     }
-                    tree.repaint();
+                } else {
+                    tree.expandRow(selectionRow);
                 }
-            });
-        }
+                tree.repaint();
+            }
+
+            @Override
+            public boolean accept(final Object sender) {
+                return acceptExpandCollapseAction(sender, false);
+            }
+        });
 
         actionMap.put("collapse_or_move_up", new TreeUIAction() {
             @Override
@@ -206,11 +211,18 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 if (selectionRow == -1) return;
 
                 if (isLeaf(selectionRow) || tree.isCollapsed(selectionRow)) {
-                    moveTo(tree, selectionRow - 1);
+                    if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
+                        moveTo(tree, selectionRow - 1);
+                    }
                 } else {
                     tree.collapseRow(selectionRow);
                 }
                 tree.repaint();
+            }
+
+            @Override
+            public boolean accept(final Object sender) {
+                return acceptExpandCollapseAction(sender, true);
             }
         });
 
@@ -234,6 +246,28 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 toggleEdit(getTree(e));
             }
         });
+    }
+
+    protected boolean acceptExpandCollapseAction(final Object sender, final boolean collapsed) {
+        JTree tree = DarkUIUtil.nullableCast(JTree.class, sender);
+        if (tree == null) return false;
+        int selectionRow = tree.getLeadSelectionRow();
+        if (selectionRow == -1) return false;
+        final boolean collapsedOrExpanded = collapsed
+                ? tree.isCollapsed(selectionRow)
+                : tree.isExpanded(selectionRow);
+        if (isLeaf(selectionRow) || collapsedOrExpanded) {
+            return !PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE);
+        }
+        return true;
+    }
+
+    protected void installInputMap(final InputMap inputMap) {
+        inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
+        inputMap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "expand_or_move_down");
+        inputMap.put(KeyStroke.getKeyStroke("pressed DOWN"), "move_down");
+        inputMap.put(KeyStroke.getKeyStroke("pressed UP"), "move_up");
+        inputMap.put(KeyStroke.getKeyStroke("pressed ENTER"), "toggle_edit");
     }
 
     protected JTree getTree(final ActionEvent e) {
@@ -266,29 +300,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             bounds.width += extra;
         }
         tree.scrollRectToVisible(bounds);
-    }
-
-    protected void collapse(final JTree tree) {
-        int selectionRow = tree.getLeadSelectionRow();
-        if (selectionRow == -1) return;
-
-        TreePath selectionPath = tree.getPathForRow(selectionRow);
-        if (selectionPath == null) return;
-
-        if (tree.getModel().isLeaf(selectionPath.getLastPathComponent())
-            || tree.isCollapsed(selectionRow)) {
-            final TreePath parentPath = tree.getPathForRow(selectionRow).getParentPath();
-            if (parentPath != null) {
-                if (parentPath.getParentPath() != null || tree.isRootVisible()) {
-                    final int parentRow = tree.getRowForPath(parentPath);
-                    scrollRowToVisible(tree, parentRow);
-                    tree.setSelectionRow(parentRow);
-                }
-            }
-        } else {
-            tree.collapseRow(selectionRow);
-        }
-        tree.repaint();
     }
 
     protected void toggleEdit(final JTree tree) {
@@ -394,97 +405,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         Insets insets = tree.getInsets();
         TreePath initialPath = getClosestPathForLocation(tree, 0, paintBounds.y);
         Enumeration<?> paintingEnumerator = treeState.getVisiblePathsFrom(initialPath);
-        int row = treeState.getRowForPath(initialPath);
-        int endY = paintBounds.y + paintBounds.height;
-
-        drawingCache.clear();
 
         if (initialPath != null && paintingEnumerator != null) {
-            TreePath parentPath = initialPath;
-
-            // Draw the lines, knobs, and rows
+            int row = treeState.getRowForPath(initialPath);
 
             boolean done = false;
-            // Information for the node being rendered.
-            boolean isExpanded;
-            boolean hasBeenExpanded;
-            boolean isLeaf;
-            Rectangle boundsBuffer = new Rectangle();
-            Rectangle bounds;
-            TreePath path;
-            boolean rootVisible = isRootVisible();
-
-            final int containerWidth = tree.getParent() instanceof JViewport
-                    ? tree.getParent().getWidth()
-                    : tree.getWidth();
-            final int xOffset = tree.getParent() instanceof JViewport
-                    ? ((JViewport) tree.getParent()).getViewPosition().x
-                    : 0;
-
-            // Paint row backgrounds
-            Enumeration<?> backgroundEnumerator = treeState.getVisiblePathsFrom(initialPath);
-            while (backgroundEnumerator != null && backgroundEnumerator.hasMoreElements()) {
-                path = (TreePath) backgroundEnumerator.nextElement();
-                if (path != null) {
-                    bounds = getPathBounds(path, insets, boundsBuffer);
-                    if (bounds == null) return;
-                    bounds.x = xOffset;
-                    bounds.width = containerWidth;
-                    if (paintBounds.intersects(bounds)) {
-                        paintRowBackground(g, paintBounds, bounds, path, tree.getRowForPath(path));
-                    }
-                }
-            }
-
-            // Find each parent and have them draw a line to their last child
-            while (parentPath != null) {
-                paintVerticalPartOfLeg(g, paintBounds, insets, parentPath);
-                drawingCache.put(parentPath, Boolean.TRUE);
-                parentPath = parentPath.getParentPath();
-            }
-
             while (!done && paintingEnumerator.hasMoreElements()) {
-                path = (TreePath) paintingEnumerator.nextElement();
-                if (path != null) {
-                    isLeaf = treeModel.isLeaf(path.getLastPathComponent());
-                    if (isLeaf) {
-                        isExpanded = hasBeenExpanded = false;
-                    } else {
-                        isExpanded = treeState.getExpandedState(path);
-                        hasBeenExpanded = tree.hasBeenExpanded(path);
-                    }
-                    bounds = getPathBounds(path, insets, boundsBuffer);
-                    if (bounds == null)
-                    // This will only happen if the model changes out
-                    // from under us (usually in another thread).
-                    // Swing isn't multithreaded, but I'll put this
-                    // check in anyway.
-                    {
-                        return;
-                    }
-
-                    // See if the vertical line to the parent has been drawn.
-                    parentPath = path.getParentPath();
-                    if (parentPath != null) {
-                        if (drawingCache.get(parentPath) == null) {
-                            paintVerticalPartOfLeg(g, paintBounds, insets, parentPath);
-                            drawingCache.put(parentPath, Boolean.TRUE);
-                        }
-                        paintHorizontalPartOfLeg(g, paintBounds, insets, bounds, path, row, isExpanded,
-                                                 hasBeenExpanded, isLeaf);
-                    } else if (rootVisible && row == 0) {
-                        paintHorizontalPartOfLeg(g, paintBounds, insets, bounds, path, row, isExpanded,
-                                                 hasBeenExpanded, isLeaf);
-                    }
-                    if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
-                        paintExpandControl(g, paintBounds, insets, bounds, path, row, isExpanded,
-                                           hasBeenExpanded, isLeaf);
-                    }
-                    paintRow(g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
-                    if ((bounds.y + bounds.height) >= endY) {
-                        done = true;
-                    }
-                } else {
+                TreePath path = (TreePath) paintingEnumerator.nextElement();
+                if (!paintSingleRow(g, paintBounds, insets, path, row)) {
                     done = true;
                 }
                 row++;
@@ -493,7 +421,106 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         paintDropLine(g);
         // Empty out the renderer pane, allowing renderers to be gc'ed.
         rendererPane.removeAll();
-        drawingCache.clear();
+    }
+
+    public void paintRow(final Graphics g, final int row) {
+        TreePath path = getPathForRow(tree, row);
+        Rectangle paintBounds = g.getClipBounds();
+        Insets insets = tree.getInsets();
+        Rectangle rowBounds = getPathBounds(path, insets, boundsBuffer);
+        g.translate(0, -rowBounds.y);
+        paintBounds.y += rowBounds.y;
+        paintSingleRow(g, paintBounds, insets, path, row);
+        rendererPane.removeAll();
+        g.translate(0, rowBounds.y);
+    }
+
+    protected boolean paintSingleRow(final Graphics g, final Rectangle paintBounds, final Insets insets,
+                                     final TreePath path, final int row) {
+        if (path == null) return false;
+        final int xOffset = tree.getParent() instanceof JViewport
+                ? ((JViewport) tree.getParent()).getViewPosition().x
+                : 0;
+        final int containerWidth = tree.getParent() instanceof JViewport
+                ? tree.getParent().getWidth()
+                : tree.getWidth();
+        final Rectangle cellBounds = getPathBounds(path, insets, boundsBuffer);
+        if (cellBounds == null) return false;
+        final int boundsX = cellBounds.x;
+        final int boundsWidth = cellBounds.width;
+
+        cellBounds.x = xOffset;
+        cellBounds.width = containerWidth;
+        paintRowBackground(g, paintBounds, cellBounds, path, row);
+        cellBounds.x = boundsX;
+        cellBounds.width = boundsWidth;
+
+        if (path.getParentPath() != null) {
+            paintVerticalLegs(g, paintBounds, cellBounds, insets, path);
+        }
+
+        boolean isLeaf = treeModel.isLeaf(path.getLastPathComponent());
+        boolean isExpanded = !isLeaf && treeState.getExpandedState(path);
+        boolean hasBeenExpanded = !isLeaf && tree.hasBeenExpanded(path);
+
+        if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
+            paintExpandControl(g, paintBounds, insets, cellBounds, path, row, isExpanded,
+                               hasBeenExpanded, isLeaf);
+        }
+        paintRow(g, paintBounds, insets, cellBounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+        return (cellBounds.y + cellBounds.height) < paintBounds.y + paintBounds.height;
+    }
+
+    protected void paintRowBackground(final Graphics g, final Rectangle clipBounds,
+                                      final Rectangle bounds, final TreePath path,
+                                      final int row) {
+        if (path != null) {
+            boolean selected = tree.isPathSelected(path);
+            Graphics2D rowGraphics = (Graphics2D) g.create();
+            rowGraphics.setClip(clipBounds);
+
+            rowGraphics.setColor(CellUtil.getTreeBackground(tree, selected, row));
+            rowGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            if (!selected && tree.getLeadSelectionRow() == row && tree.hasFocus()) {
+                rowGraphics.setColor(CellUtil.getTreeBackground(tree, true, row));
+                PaintUtil.drawRect(rowGraphics, bounds, leadSelectionBorderInsets);
+            }
+            rowGraphics.dispose();
+        }
+    }
+
+    /*
+     * Paint all vertical legs for the whole tree in this row.
+     */
+    protected void paintVerticalLegs(final Graphics g, final Rectangle clipBounds,
+                                     final Rectangle rowBounds,
+                                     final Insets insets, final TreePath path) {
+        if (!shouldPaintLines()) return;
+        int depth = path.getPathCount() - 1;
+        if (depth == 0 && (!isRootVisible() || !getShowsRootHandles())) {
+            // Parent is the root, which isn't visible.
+            return;
+        }
+        int clipLeft = clipBounds.x;
+        int clipRight = clipBounds.x + (clipBounds.width - 1);
+
+        TreePath parentPath = path;
+        for (int currentDepth = depth - 1; currentDepth >= 0; currentDepth--) {
+            if (currentDepth == 0 && !isRootVisible()) continue;
+
+            int lineX = getRowX(-1, currentDepth);
+            if (tree.getComponentOrientation().isLeftToRight()) {
+                lineX = lineX - getRightChildIndent() + insets.left;
+            } else {
+                lineX = tree.getWidth() - lineX - insets.right + getRightChildIndent() - 1;
+            }
+
+            if (lineX > clipRight || lineX < clipLeft) continue;
+
+            parentPath = parentPath.getParentPath();
+            g.setColor(getLineColor(parentPath));
+            paintVerticalLine(g, tree, lineX, rowBounds.y, rowBounds.y + rowBounds.height);
+        }
     }
 
     @Override
@@ -515,36 +542,21 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             if (tree.getComponentOrientation().isLeftToRight()) {
                 bounds.x += insets.left;
             } else {
-                bounds.x = tree.getWidth() - (bounds.x + bounds.width) -
-                           insets.right;
+                bounds.x = tree.getWidth() - (bounds.x + bounds.width) - insets.right;
             }
             bounds.y += insets.top;
         }
         return bounds;
     }
 
-    protected void paintRowBackground(final Graphics g, final Rectangle clipBounds,
-                                      final Rectangle bounds, final TreePath path,
-                                      final int row) {
-        if (path != null) {
-            boolean selected = tree.isPathSelected(path);
-            Graphics2D rowGraphics = (Graphics2D) g.create();
-            rowGraphics.setClip(clipBounds);
-
-            rowGraphics.setColor(CellUtil.getTreeBackground(tree, selected, row));
-            rowGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            if (!selected && tree.getLeadSelectionRow() == row && tree.hasFocus()) {
-                rowGraphics.setColor(CellUtil.getTreeBackground(tree, true, row));
-                PaintUtil.drawRect(rowGraphics, bounds, leadSelectionBorderInsets);
-            }
-            rowGraphics.dispose();
-        }
-    }
-
     @Override
     public void update(final Graphics g, final JComponent c) {
         if (popupListener != null) popupListener.repaint();
         super.update(g, c);
+    }
+
+    public CellHintPopupListener<JTree, ?> getPopupListener() {
+        return popupListener;
     }
 
     @Override
@@ -628,89 +640,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     @Override
     protected void paintVerticalPartOfLeg(final Graphics g, final Rectangle clipBounds,
-                                          final Insets insets, final TreePath path) {
-        if (!shouldPaintLines()) return;
-        int depth = path.getPathCount() - 1;
-        if (depth == 0 && !getShowsRootHandles() && !isRootVisible()) {
-            return;
-        }
-        if (treeModel.isLeaf(path.getLastPathComponent()) || !tree.isExpanded(path)) return;
-
-        int clipLeft = clipBounds.x;
-        int clipRight = clipBounds.x + (clipBounds.width - 1);
-        int clipTop = clipBounds.y;
-        int clipBottom = clipBounds.y + tree.getHeight();
-
-        Rectangle parentBounds = getPathBounds(tree, path);
-
-        int top;
-        int bottom;
-        int lineX = getRowX(-1, depth);
-
-        if (tree.getComponentOrientation().isLeftToRight()) {
-            lineX = lineX - getRightChildIndent() + insets.left;
-        } else {
-            lineX = tree.getWidth() - lineX - insets.right + getRightChildIndent() - 1;
-        }
-
-        if (lineX > clipRight || lineX < clipLeft) return;
-
-        if (parentBounds == null) {
-            top = Math.max(insets.top + getVerticalLegBuffer(), clipTop);
-        } else {
-            top = Math.max(parentBounds.y + parentBounds.height + getVerticalLegBuffer(), clipTop);
-        }
-
-        if (depth == 0 && !isRootVisible()) {
-            TreeModel model = getModel();
-
-            if (model != null) {
-                Object root = model.getRoot();
-
-                if (model.getChildCount(root) > 0) {
-                    parentBounds = getPathBounds(tree, path.pathByAddingChild(model.getChild(root, 0)));
-                    if (parentBounds != null) {
-                        top = Math.max(insets.top + getVerticalLegBuffer(), parentBounds.y + parentBounds.height / 2);
-                    }
-                }
-            }
-        }
-
-        int childCount = treeModel.getChildCount(path.getLastPathComponent());
-        g.setColor(getLineColor(path));
-        for (int i = 0; i < childCount - 1; i++) {
-            TreePath childPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(), i));
-            Rectangle childBounds = getPathBounds(tree, childPath);
-            if (childBounds != null) {
-                bottom = Math.min(childBounds.y + childBounds.height, clipBottom);
-                paintVerticalLine(g, tree, lineX, top, bottom);
-                top = bottom;
-                if (clipBottom < top) return;
-            }
-        }
-
-        // Descend to deepest last child.
-        TreePath lastChildPath = path.pathByAddingChild(treeModel.getChild(path.getLastPathComponent(),
-                                                                           childCount - 1));
-        while (tree.isExpanded(lastChildPath)) {
-            int count = treeModel.getChildCount(lastChildPath.getLastPathComponent());
-            if (count == 0) break;
-            lastChildPath = lastChildPath.pathByAddingChild(treeModel.getChild(lastChildPath.getLastPathComponent(),
-                                                                               count - 1));
-        }
-        Rectangle childBounds = getPathBounds(tree, lastChildPath);
-        if (childBounds != null) {
-            bottom = Math.min(childBounds.y + childBounds.height, clipBottom);
-            paintVerticalLine(g, tree, lineX, top, bottom);
-        }
-    }
+                                          final Insets insets, final TreePath path) {}
 
     @Override
     protected void paintExpandControl(final Graphics g, final Rectangle clipBounds, final Insets insets,
                                       final Rectangle bounds, final TreePath path, final int row,
                                       final boolean isExpanded, final boolean hasBeenExpanded, final boolean isLeaf) {
         if (!isLeaf(row)) {
-            boolean isPathSelected = tree.getSelectionModel().isPathSelected(path);
+            boolean isPathSelected = tree.isPathSelected(path);
             setExpandedIcon(getExpandedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
             setCollapsedIcon(getCollapsedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
         }

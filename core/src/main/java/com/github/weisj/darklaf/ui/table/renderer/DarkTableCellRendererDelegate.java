@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.ui.table.renderer;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -64,7 +65,7 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
         if (component instanceof JComponent) {
-            setupBorderStyle(table, row, column, (JComponent) component, isRowFocus);
+            setupBorderStyle(table, row, column, (JComponent) component, isLeadSelectionCell, isRowFocus);
         }
         CellUtil.setupTableForeground(component, table, paintSelected);
         CellUtil.setupTableBackground(component, table, paintSelected, row);
@@ -72,26 +73,32 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
     }
 
     public void setupBorderStyle(final JTable table, final int row, final int column,
-                                 final JComponent component, final boolean isRowFocus) {
-        if (isRowFocus
+                                 final JComponent component, final boolean isLeadSelectionCell,
+                                 final boolean isRowFocus) {
+        Border focusBorder = UIManager.getBorder("Table.focusSelectedCellHighlightBorder");
+        if (isLeadSelectionCell
             && table.getSelectionModel().getLeadSelectionIndex() == row
             && DarkUIUtil.hasFocus(table)
             && !table.isEditing()) {
-            LookAndFeel.installBorder(component, "Table.focusSelectedCellHighlightBorder");
-            component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, true);
-            JTableHeader header = table.getTableHeader();
-            TableColumn draggedColumn = (header == null) ? null : header.getDraggedColumn();
-            boolean forceLeft = false;
-            boolean forceRight = false;
-            if (draggedColumn != null) {
-                int index = DarkTableUI.viewIndexForColumn(draggedColumn, table);
-                forceLeft = column == index + 1 || column == index;
-                forceRight = column == index - 1 || column == index;
+            PropertyUtil.installBorder(component, focusBorder);
+            if (isRowFocus) {
+                component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, true);
+                JTableHeader header = table.getTableHeader();
+                TableColumn draggedColumn = (header == null) ? null : header.getDraggedColumn();
+                boolean forceLeft = false;
+                boolean forceRight = false;
+                if (draggedColumn != null) {
+                    int index = DarkTableUI.viewIndexForColumn(draggedColumn, table);
+                    forceLeft = column == index + 1 || column == index;
+                    forceRight = column == index - 1 || column == index;
+                }
+                component.putClientProperty(KEY_FORCE_RIGHT_BORDER, forceRight);
+                component.putClientProperty(KEY_FORCE_LEFT_BORDER, forceLeft);
+            } else {
+                component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, false);
             }
-            component.putClientProperty(KEY_FORCE_RIGHT_BORDER, forceRight);
-            component.putClientProperty(KEY_FORCE_LEFT_BORDER, forceLeft);
-        } else {
-            component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, false);
+        } else if (component.getBorder() == focusBorder) {
+            component.setBorder(null);
         }
     }
 

@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 
 public class PropertyUtil {
@@ -48,6 +49,14 @@ public class PropertyUtil {
         Color c = component.getForeground();
         if (c == null || c instanceof UIResource) {
             component.setForeground(color);
+        }
+    }
+
+    public static void installBorder(final JComponent component, final Border border) {
+        if (component == null) return;
+        Border b = component.getBorder();
+        if (b == null || b instanceof UIResource) {
+            component.setBorder(border);
         }
     }
 
