@@ -100,10 +100,10 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> implements Co
                 addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, isSelected()));
             }
         });
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_NO_BACKGROUND) {
+        controlPanel.add(new JCheckBox("Content area filled") {
             {
-                setSelected(false);
-                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, isSelected()));
+                setSelected(button.isContentAreaFilled());
+                addActionListener(e -> button.setContentAreaFilled(isSelected()));
             }
         });
         controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {

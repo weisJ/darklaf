@@ -31,13 +31,13 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 class CloseButton extends JButton {
 
     protected CloseButton() {
-        putClientProperty(DarkButtonUI.KEY_NO_BACKGROUND, true);
         putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
         putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
         putClientProperty(DarkButtonUI.KEY_THIN, true);
         setOpaque(false);
         setRolloverEnabled(true);
         setBorderPainted(false);
+        setContentAreaFilled(false);
         setIcon(UIManager.getIcon("CloseButton.closeIcon"));
         setDisabledIcon(UIManager.getIcon("CloseButton.closeDisabledIcon"));
         setRolloverIcon(UIManager.getIcon("CloseButton.closeHoverIcon"));

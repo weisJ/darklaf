@@ -286,7 +286,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected boolean shouldDrawBackground(final AbstractButton c) {
-        if (ButtonConstants.isNoBackground(c)) return false;
         Border border = c.getBorder();
         return c.isEnabled() && border != null && button.isContentAreaFilled();
     }

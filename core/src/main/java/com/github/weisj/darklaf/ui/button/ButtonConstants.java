@@ -42,7 +42,6 @@ public interface ButtonConstants {
     String KEY_NO_BORDERLESS_OVERWRITE = "JButton.noBorderlessOverwrite";
     String KEY_CORNER = "JButton.cornerFlag";
     String KEY_ROUND = "JButton.round";
-    String KEY_NO_BACKGROUND = "JButton.noBackground";
 
     String KEY_LEFT_NEIGHBOUR = "JButton.leftNeighbour";
     String KEY_RIGHT_NEIGHBOUR = "JButton.rightNeighbour";
@@ -128,9 +127,5 @@ public interface ButtonConstants {
 
     static JComponent getNeighbour(final String key, final Component comp) {
         return PropertyUtil.getObject(comp, key, JComponent.class);
-    }
-
-    static boolean isNoBackground(final AbstractButton b) {
-        return PropertyUtil.getBooleanProperty(b, KEY_NO_BACKGROUND);
     }
 }
