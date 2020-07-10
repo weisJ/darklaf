@@ -196,7 +196,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 tree.repaint();
             }
 
-            @Override
             public boolean accept(final Object sender) {
                 return acceptExpandCollapseAction(sender, false);
             }
@@ -220,7 +219,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 tree.repaint();
             }
 
-            @Override
             public boolean accept(final Object sender) {
                 return acceptExpandCollapseAction(sender, true);
             }
