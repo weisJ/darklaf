@@ -44,9 +44,9 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
+import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.text.action.DarkKeyTypedAction;
 import com.github.weisj.darklaf.ui.text.action.ToggleInsertAction;
 import com.github.weisj.darklaf.ui.text.popup.DarkTextPopupMenu;
@@ -271,7 +271,7 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
             paintBorderBackground((Graphics2D) g, editor, (DarkTextBorder) border);
         } else {
             Insets ins = null;
-            if (border instanceof TextTableCellEditorBorder) {
+            if (border instanceof DarkCellBorder) {
                 ins = new Insets(0, 0, 0, 0);
             } else if (border != null) {
                 ins = border.getBorderInsets(editor);

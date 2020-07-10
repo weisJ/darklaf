@@ -28,23 +28,22 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTreeCellBorder implements Border, UIResource {
+public class DarkTreeCellBorder extends DarkCellBorder implements Border, UIResource {
 
     protected final Color borderColor;
     protected Insets insets;
 
     public DarkTreeCellBorder() {
+        super(UIManager.getInsets("Tree.editorBorderInsets"));
         borderColor = UIManager.getColor("Tree.editorBorderColor");
-        insets = UIManager.getInsets("Tree.editorBorderInsets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
     @Override
@@ -52,11 +51,6 @@ public class DarkTreeCellBorder implements Border, UIResource {
                             final int y, final int width, final int height) {
         g.setColor(borderColor);
         PaintUtil.drawRect(g, 0, 0, width, height, 1);
-    }
-
-    @Override
-    public Insets getBorderInsets(final Component c) {
-        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }
 
     @Override
