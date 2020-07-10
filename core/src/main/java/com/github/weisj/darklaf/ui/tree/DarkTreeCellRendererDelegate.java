@@ -74,6 +74,7 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
             renderer = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
         }
         CellUtil.setupTreeForeground(renderer, tree, selected);
+        CellUtil.setupTreeBackground(renderer, tree, selected, row);
         return renderer;
     }
 

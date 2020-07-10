@@ -31,13 +31,13 @@ import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 
+import ui.ComponentDemo;
+import ui.DemoPanel;
+
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
-
-import ui.ComponentDemo;
-import ui.DemoPanel;
 
 public class TableDemo implements ComponentDemo {
 

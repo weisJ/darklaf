@@ -27,7 +27,10 @@ package com.github.weisj.darklaf.ui.cell;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.plaf.UIResource;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
+import com.github.weisj.darklaf.graphics.ColorWrapper;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;
@@ -334,7 +337,14 @@ public class CellUtil {
 
     public static void setupTreeBackground(final Component comp, final JTree parent, final boolean selected,
                                            final int row) {
-        setupBackground(comp, getTreeBackground(comp, parent, selected, row));
+        Color bg = getTreeBackground(comp, parent, selected, row);
+        setupBackground(comp, bg);
+        if (comp instanceof DefaultTreeCellRenderer) {
+            Color c = comp.getBackground();
+            if (c == null || c instanceof UIResource || c instanceof NonUIResourceColorWrapper) {
+                comp.setBackground(new NonUIResourceColorWrapper(bg));
+            }
+        }
     }
 
     public static Color getTreeBackground(final JTree tree, final boolean selected, final int row) {
@@ -553,5 +563,12 @@ public class CellUtil {
     public static int getMinRowIndex(final JTable table) {
         Rectangle rect = table.getVisibleRect();
         return table.rowAtPoint(rect.getLocation());
+    }
+
+    private static class NonUIResourceColorWrapper extends ColorWrapper {
+
+        public NonUIResourceColorWrapper(final Color color) {
+            super(color);
+        }
     }
 }

@@ -38,18 +38,12 @@ public class PropertyUtil {
 
     public static void installBackground(final Component component, final Color color) {
         if (component == null || color == null) return;
-        Color c = component.getBackground();
-        if (c == null || c instanceof UIResource) {
-            component.setBackground(color);
-        }
+        component.setBackground(chooseColor(component.getBackground(), color));
     }
 
     public static void installForeground(final Component component, final Color color) {
         if (component == null || color == null) return;
-        Color c = component.getForeground();
-        if (c == null || c instanceof UIResource) {
-            component.setForeground(color);
-        }
+        component.setForeground(chooseColor(component.getForeground(), color));
     }
 
     public static void installBorder(final JComponent component, final Border border) {
@@ -186,5 +180,10 @@ public class PropertyUtil {
                    .filter(t -> type.isAssignableFrom(t.getClass()))
                    .map(type::cast)
                    .collect(Collectors.toList());
+    }
+
+    public static Color chooseColor(final Color currentColor, final Color newColor) {
+        if (currentColor == null || currentColor instanceof UIResource) return newColor;
+        return currentColor;
     }
 }

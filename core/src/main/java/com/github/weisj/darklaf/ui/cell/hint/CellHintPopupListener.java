@@ -95,8 +95,8 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             if (visibleBounds.contains(p)) {
                 final Component comp = cellContainer.getEffectiveCellRendererComponent(index, isEditing);
                 final Dimension prefSize = isEditing
-                                           ? comp.getBounds().getSize()
-                                           : comp.getPreferredSize();
+                        ? comp.getBounds().getSize()
+                        : comp.getPreferredSize();
                 if (!(visibleBounds.width >= prefSize.width && visibleBounds.height >= prefSize.height)) {
                     Point popupLocation = cellContainer.getComponent().getLocationOnScreen();
                     Rectangle rect = calculatePopupBounds(cellBounds, visibleBounds, !isEditing);
