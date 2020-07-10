@@ -227,11 +227,10 @@ public final class DarkUIUtil {
 
     public static boolean isInCell(final Component c) {
         if (getParentOfType(DarkTableHeaderRendererPane.class, c, CELL_SEARCH_DEPTH) != null) return false;
-        boolean inCellRenderer = getParentOfType(c, CELL_SEARCH_DEPTH, CellRendererPane.class, CellEditor.class,
-                                                 TableCellRenderer.class, TableCellEditor.class,
-                                                 TreeCellRenderer.class, TreeCellEditor.class,
-                                                 ListCellRenderer.class, CellRenderer.class) != null;
-        return inCellRenderer && getParentOfType(JComboBox.class, c) == null;
+        return getParentOfType(c, CELL_SEARCH_DEPTH, CellRendererPane.class, CellEditor.class,
+                               TableCellRenderer.class, TableCellEditor.class,
+                               TreeCellRenderer.class, TreeCellEditor.class,
+                               ListCellRenderer.class, CellRenderer.class) != null;
     }
 
     public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {

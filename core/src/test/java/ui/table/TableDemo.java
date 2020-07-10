@@ -31,13 +31,13 @@ import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 
-import ui.ComponentDemo;
-import ui.DemoPanel;
-
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
+
+import ui.ComponentDemo;
+import ui.DemoPanel;
 
 public class TableDemo implements ComponentDemo {
 
@@ -54,6 +54,8 @@ public class TableDemo implements ComponentDemo {
                                          {3, "Zorro", 60.0, true, "cell"}};
         AtomicBoolean editable = new AtomicBoolean(true);
         JTable table = new JTable(data, columns) {
+            final Class<?>[] columnClasses = {Integer.class, String.class, Double.class, Boolean.class, Object.class};
+
             final TableCellEditor comboEditor = new DarkTableCellEditor(new JComboBox<>());
             final TableCellEditor spinnerEditor = new DarkTableCellEditor(new JSpinner());
 
@@ -71,6 +73,11 @@ public class TableDemo implements ComponentDemo {
                 } else {
                     return super.getCellEditor(row, column);
                 }
+            }
+
+            @Override
+            public Class<?> getColumnClass(final int column) {
+                return columnClasses[column];
             }
         };
         JTableHeader header = table.getTableHeader();

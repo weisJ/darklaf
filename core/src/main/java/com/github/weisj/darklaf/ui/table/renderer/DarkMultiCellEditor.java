@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.ui.table.renderer;
 
 import java.awt.*;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -34,7 +35,8 @@ import com.github.weisj.darklaf.util.LazyValue;
 
 public class DarkMultiCellEditor extends TableCellEditorDelegate {
 
-    private final LazyValue<DarkTableCellEditor> spinnerEditor = new LazyValue<>(() -> new DarkTableCellEditor(new JSpinner()));
+    private final LazyValue<DarkTableCellEditor> numberEditor = new LazyValue<>(() -> new DarkTableCellEditor(new JSpinner()));
+    private final LazyValue<DarkTableCellEditor> dateEditor = new LazyValue<>(() -> new DarkTableCellEditor(new JSpinner(new SpinnerDateModel())));
     private TableCellEditor currentEditor;
 
     public DarkMultiCellEditor() {
@@ -44,16 +46,20 @@ public class DarkMultiCellEditor extends TableCellEditorDelegate {
     @Override
     public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
                                                  final int row, final int column) {
-        currentEditor = getEditor(value);
+        currentEditor = getEditor(table, value, column);
         return super.getTableCellEditorComponent(table, value, isSelected, row, column);
     }
 
-    private TableCellEditor getEditor(final Object value) {
-        if (value instanceof Number) {
-            return spinnerEditor.get();
-        } else {
-            return getDelegate();
+    private TableCellEditor getEditor(final JTable table, final Object value, final int column) {
+        Class<?> columnClass = table.getColumnClass(column);
+        if (columnClass != null && columnClass.isInstance(value)) {
+            if (Number.class.isAssignableFrom(columnClass)) {
+                return numberEditor.get();
+            } else if (Date.class.isAssignableFrom(columnClass)) {
+                return dateEditor.get();
+            }
         }
+        return getDelegate();
     }
 
     @Override

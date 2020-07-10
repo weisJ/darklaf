@@ -50,7 +50,9 @@ public interface TableConstants extends CellConstants {
         return PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX);
     }
 
-    static boolean useBooleanEditorForValue(final Object value, final JTable table) {
-        return value instanceof Boolean && TableConstants.isBooleanRenderingEnabled(table);
+    static boolean useBooleanEditorForValue(final Object value, final JTable table, final int column) {
+        return value instanceof Boolean
+               && (TableConstants.isBooleanRenderingEnabled(table)
+                   || Boolean.class.isAssignableFrom(table.getColumnClass(column)));
     }
 }

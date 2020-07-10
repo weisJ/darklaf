@@ -30,11 +30,11 @@ import java.util.Random;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.components.treetable.JTreeTable;
-import com.github.weisj.darklaf.components.treetable.model.*;
-
 import ui.ComponentDemo;
 import ui.DemoPanel;
+
+import com.github.weisj.darklaf.components.treetable.JTreeTable;
+import com.github.weisj.darklaf.components.treetable.model.*;
 
 public class TreeTableDemo implements ComponentDemo {
 

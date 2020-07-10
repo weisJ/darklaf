@@ -81,7 +81,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
             int col = table.columnAtPoint(p);
             if (row >= 0 && row < table.getRowCount() && col >= 0 && col < table.getColumnCount()) {
                 Object value = table.getValueAt(row, col);
-                if (TableConstants.useBooleanEditorForValue(value, table)) {
+                if (TableConstants.useBooleanEditorForValue(value, table, col)) {
                     Rectangle rect = table.getCellRect(row, col, false);
                     p.x -= rect.x;
                     p.y -= rect.y;
@@ -98,7 +98,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     @Override
     public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
                                                  final int row, final int column) {
-        isBooleanEditor = TableConstants.useBooleanEditorForValue(value, table);
+        isBooleanEditor = TableConstants.useBooleanEditorForValue(value, table, column);
         currentEditor = isBooleanEditor ? getBooleanEditor(table) : getDelegate();
 
         Component editor = currentEditor.getTableCellEditorComponent(table, value, isSelected, row, column);

@@ -129,6 +129,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         table.setDefaultRenderer(Color.class, colorRendererEditor);
 
         table.setDefaultEditor(Object.class, cellEditor);
+        table.setDefaultEditor(Number.class, cellEditor);
+        table.setDefaultEditor(Boolean.class, cellEditor);
         table.setDefaultEditor(Color.class, colorRendererEditor);
     }
 

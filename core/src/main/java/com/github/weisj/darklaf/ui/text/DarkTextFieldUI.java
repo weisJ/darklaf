@@ -142,7 +142,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     @Override
     protected Rectangle getVisibleEditorRect() {
-        return getVisibleEditorRect(true);
+        return getVisibleEditorRect(!isInCell(editor));
     }
 
     protected Rectangle getVisibleEditorRect(final boolean shrinkHeight) {

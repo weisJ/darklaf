@@ -130,9 +130,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                             }
                         }
                     }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                } catch (ParseException ignore) { }
             }
 
             public boolean shouldSelectCell(final EventObject anEvent) {
