@@ -90,29 +90,31 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
         final boolean isEditing = cellContainer.isEditingCell(index);
         final Rectangle allocation = cellContainer.getAllocation();
         final Rectangle cellBounds = cellContainer.getCellBoundsAt(index, isEditing);
-        final Rectangle visibleBounds = allocation.intersection(cellBounds);
-        if (visibleBounds.contains(p)) {
-            final Component comp = cellContainer.getEffectiveCellRendererComponent(index, isEditing);
-            final Dimension prefSize = isEditing
-                    ? comp.getBounds().getSize()
-                    : comp.getPreferredSize();
-            if (!(visibleBounds.width >= prefSize.width && visibleBounds.height >= prefSize.height)) {
-                Point popupLocation = cellContainer.getComponent().getLocationOnScreen();
-                Rectangle rect = calculatePopupBounds(cellBounds, visibleBounds, !isEditing);
-                if (!visibleBounds.contains(rect)) {
-                    cellBounds.x = rect.x - cellBounds.x;
-                    cellBounds.y = rect.y - cellBounds.y;
-                    rect.x += popupLocation.x;
-                    rect.y += popupLocation.y;
-                    enter(index, rect, cellBounds);
-                    return;
-                } else {
-                    lastIndex = index;
+        if (cellBounds != null && allocation != null) {
+            final Rectangle visibleBounds = allocation.intersection(cellBounds);
+            if (visibleBounds.contains(p)) {
+                final Component comp = cellContainer.getEffectiveCellRendererComponent(index, isEditing);
+                final Dimension prefSize = isEditing
+                                           ? comp.getBounds().getSize()
+                                           : comp.getPreferredSize();
+                if (!(visibleBounds.width >= prefSize.width && visibleBounds.height >= prefSize.height)) {
+                    Point popupLocation = cellContainer.getComponent().getLocationOnScreen();
+                    Rectangle rect = calculatePopupBounds(cellBounds, visibleBounds, !isEditing);
+                    if (!visibleBounds.contains(rect)) {
+                        cellBounds.x = rect.x - cellBounds.x;
+                        cellBounds.y = rect.y - cellBounds.y;
+                        rect.x += popupLocation.x;
+                        rect.y += popupLocation.y;
+                        enter(index, rect, cellBounds);
+                        return;
+                    } else {
+                        lastIndex = index;
+                    }
                 }
+                return;
             }
-        } else {
-            lastIndex = null;
         }
+        lastIndex = null;
         leave();
     }
 
