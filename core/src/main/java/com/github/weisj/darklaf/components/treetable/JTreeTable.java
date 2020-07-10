@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.components.treetable.model.TreeTableModel;
 import com.github.weisj.darklaf.ui.cell.hint.CellHintPopupListener;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class JTreeTable extends JTable implements TreeSelectionListener {
 
@@ -101,6 +102,8 @@ public class JTreeTable extends JTable implements TreeSelectionListener {
 
     @Override
     public void valueChanged(final TreeSelectionEvent e) {
-        repaint(0, 0, getColumnModel().getColumn(0).getWidth(), getHeight());
+        if (!DarkTreeUI.STYLE_NONE.equals(PropertyUtil.getString(tree, DarkTreeUI.KEY_LINE_STYLE, ""))) {
+            repaint(0, 0, getColumnModel().getColumn(0).getWidth(), getHeight());
+        }
     }
 }
