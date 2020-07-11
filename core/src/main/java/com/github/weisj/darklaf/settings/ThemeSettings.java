@@ -389,6 +389,10 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Updates all values according to the current settings.
      */
     public void refresh() {
+        Theme theme = LafManager.getTheme();
+        currentConfiguration.setTheme(theme);
+        currentConfiguration.setFontSizeRule(theme.getFontSizeRule());
+        currentConfiguration.setAccentColorRule(theme.getAccentColorRule());
         currentConfiguration.setSystemPreferencesEnabled(LafManager.isPreferenceChangeReportingEnabled());
         updateSettingsPanel();
     }
