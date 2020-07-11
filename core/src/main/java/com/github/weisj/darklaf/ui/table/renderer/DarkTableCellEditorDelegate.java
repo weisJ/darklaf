@@ -126,14 +126,24 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     protected static void setupEditorComponent(final Component editorComponent, final Object value,
                                                final Component rendererComp) {
         if (editorComponent instanceof JSpinner) {
-            if (rendererComp instanceof JTextField) {
-                ((JComponent) editorComponent).putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT,
-                                                                 ((JTextField) rendererComp).getHorizontalAlignment());
-            } else if (rendererComp instanceof JLabel) {
-                ((JComponent) editorComponent).putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT,
-                                                                 ((JLabel) rendererComp).getHorizontalAlignment());
+            int alignment = getHorizontalAlignment(rendererComp);
+            if (alignment >= 0) {
+                ((JComponent) editorComponent).putClientProperty(DarkSpinnerUI.KEY_EDITOR_ALIGNMENT, alignment);
             }
         }
+        if (editorComponent instanceof JTextField) {
+            int alignment = getHorizontalAlignment(rendererComp);
+            if (alignment >= 0) ((JTextField) editorComponent).setHorizontalAlignment(alignment);
+        }
+    }
+
+    protected static int getHorizontalAlignment(final Component rendererComp) {
+        if (rendererComp instanceof JTextField) {
+            return ((JTextField) rendererComp).getHorizontalAlignment();
+        } else if (rendererComp instanceof JLabel) {
+            return ((JLabel) rendererComp).getHorizontalAlignment();
+        }
+        return -1;
     }
 
     protected static Component applyRendererIcon(final Component component, final Component rendererComp) {

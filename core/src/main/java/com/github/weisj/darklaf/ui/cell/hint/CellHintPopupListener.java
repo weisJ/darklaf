@@ -355,8 +355,12 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             Component renderer = cellHintPopupListener.getRenderer();
             if (rendererBounds != null && renderer != null) {
                 Color bg = cellHintPopupListener.getBackground(renderer);
-                g.setColor(bg);
-                g.fillRect(0, 0, getWidth(), getHeight());
+                if (bg == null) bg = cellHintPopupListener.cellContainer.getComponent().getBackground();
+                if (bg == null) bg = getBackground();
+                if (bg != null) {
+                    g.setColor(bg);
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
                 g.translate(-rendererBounds.x, -rendererBounds.y);
 
                 // If the renderer is an editor we need to restore the bounds.

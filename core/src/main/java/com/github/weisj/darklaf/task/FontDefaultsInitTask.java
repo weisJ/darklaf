@@ -52,7 +52,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String FONT_PROPERTY_PATH = "properties/";
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";
-    private static final String KERNING_LIST = "fontList.kerningEnabled";
+    private static final String KERNING_ALLOW_LIST = "kerning.allowList";
+    private static final String KERNING_BLOCK_LIST = "kerning.blockList";
 
     private static final String ALL_FONTS = "__all__";
 
@@ -85,19 +86,23 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         }
 
         if (systemKerningEnabled()) {
-            List<String> kerningFontsList = PropertyUtil.getList(defaults, KERNING_LIST, String.class);
+            List<String> allowedFonts = PropertyUtil.getList(defaults, KERNING_ALLOW_LIST, String.class);
+            List<String> blockedFonts = PropertyUtil.getList(defaults, KERNING_BLOCK_LIST, String.class);
 
-            if (!kerningFontsList.isEmpty()) {
-                Set<String> kerningFonts = new HashSet<>(kerningFontsList);
-                boolean enabledAll = ALL_FONTS.equals(kerningFontsList.get(0));
+            if (!allowedFonts.isEmpty()) {
+                Set<String> allowedFontsSet = new HashSet<>(allowedFonts);
+                Set<String> blockedFontSet = new HashSet<>(blockedFonts);
+                boolean enabledAll = ALL_FONTS.equals(allowedFonts.get(0));
 
-                setupKerningPerFont(defaults, key -> enabledAll || kerningFonts.contains(key));
+                setupKerningPerFont(defaults, key -> (enabledAll || allowedFontsSet.contains(key))
+                                                     && !blockedFontSet.contains(key));
             }
         }
 
         applyFontRule(currentTheme, defaults);
         setupRenderingHints(defaults);
-        defaults.remove(KERNING_LIST);
+        defaults.remove(KERNING_ALLOW_LIST);
+        defaults.remove(KERNING_BLOCK_LIST);
     }
 
     private boolean systemKerningEnabled() {

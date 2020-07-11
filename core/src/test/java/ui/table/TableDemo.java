@@ -28,14 +28,16 @@ import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellEditor;
+import javax.swing.table.*;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -47,15 +49,47 @@ public class TableDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        String[] columns = new String[]{"Id", "Name", "Hourly Rate", "Part Time", "Components"};
+        String[] columns = {"Id", "Name", "Hourly Rate", "Part Time", "Components"};
 
-        Object[][] data = new Object[][]{{1, "John", 40.0, false, "Item"},
-                                         {2, "Rambo", 70.0, false, 10},
-                                         {3, "Zorro", 60.0, true, "cell"}};
+        Object[][] data = {{1, "John", 40.0, false, "Item"},
+                           {2, "Rambo", 70.0, false, 10},
+                           {3, "Zorro", 60.0, true, "cell"}};
+        Class<?>[] columnClasses = {Integer.class, String.class, Double.class, Boolean.class, Object.class};
         AtomicBoolean editable = new AtomicBoolean(true);
-        JTable table = new JTable(data, columns) {
-            final Class<?>[] columnClasses = {Integer.class, String.class, Double.class, Boolean.class, Object.class};
+        TableModel model = new DefaultTableModel() {
 
+            @Override
+            public int getColumnCount() {
+                return columns.length;
+            }
+
+            @Override
+            public int getRowCount() {
+                return 40;
+            }
+
+            @Override
+            public Class<?> getColumnClass(final int columnIndex) {
+                return columnIndex < columnClasses.length ? columnClasses[columnIndex] : Object.class;
+            }
+
+            @Override
+            public Object getValueAt(final int row, final int column) {
+                return data[Math.min(row, data.length - 1)][Math.min(column, columns.length - 1)];
+            }
+
+            @Override
+            public void setValueAt(final Object aValue, final int row, final int column) {
+                data[Math.min(row, data.length - 1)][Math.min(column, columns.length - 1)] = aValue;
+            }
+
+            @Override
+            public String getColumnName(final int column) {
+                return columns[column];
+            }
+        };
+
+        JTable table = new JTable(model) {
             final TableCellEditor comboEditor = new DarkTableCellEditor(new JComboBox<>());
             final TableCellEditor spinnerEditor = new DarkTableCellEditor(new JSpinner());
 
@@ -75,15 +109,17 @@ public class TableDemo implements ComponentDemo {
                 }
             }
 
+            private final TableCellRenderer renderer = new DarkTableCellRendererDelegate(new DarkTableCellRenderer());
+
             @Override
-            public Class<?> getColumnClass(final int column) {
-                return columnClasses[column];
+            public TableCellRenderer getCellRenderer(final int row, final int column) {
+                return renderer;
             }
         };
         JTableHeader header = table.getTableHeader();
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        DemoPanel panel = new DemoPanel(scrollPane, new BorderLayout(), 10);
+        DemoPanel panel = new DemoPanel(new OverlayScrollPane(scrollPane), new BorderLayout(), 10);
 
         JPanel controlPanel = panel.addControls(3);
         controlPanel.add(new JCheckBox("enabled") {

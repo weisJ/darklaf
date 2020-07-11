@@ -59,7 +59,7 @@ public class DarkMultiCellEditor extends TableCellEditorDelegate {
                 return dateEditor.get();
             }
         }
-        return getDelegate();
+        return null;
     }
 
     @Override

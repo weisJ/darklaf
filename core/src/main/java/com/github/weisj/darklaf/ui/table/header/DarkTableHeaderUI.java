@@ -48,6 +48,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
     protected Color background;
     protected int defaultHeight;
     protected DarkTableHeaderRendererDelegate rendererDelegate;
+    private int lastMaxVisible = -1;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableHeaderUI();
@@ -110,19 +111,26 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         boolean ltr = header.getComponentOrientation().isLeftToRight();
 
         Rectangle clip = g.getClipBounds();
-        Point left = clip.getLocation();
-        Point right = new Point(clip.x + clip.width - 1, clip.y);
+        Point leftClip = clip.getLocation();
+        Point rightCip = new Point(clip.x + clip.width - 1, clip.y);
         TableColumnModel cm = header.getColumnModel();
-        int cMin = header.columnAtPoint(ltr ? left : right);
-        int cMax = header.columnAtPoint(ltr ? right : left);
-        // This should never happen.
-        if (cMin == -1) {
-            cMin = 0;
-        }
+        int cMin = Math.max(header.columnAtPoint(ltr ? leftClip : rightCip), 0);
+        int cMax = header.columnAtPoint(ltr ? rightCip : leftClip);
+
         // If the table does not have enough columns to fill the view we'll get -1.
         // Replace this with the index of the last column.
         if (cMax == -1) {
             cMax = cm.getColumnCount() - 1;
+        }
+
+        Rectangle bounds = c.getVisibleRect();
+        Point left = bounds.getLocation();
+        Point right = new Point(bounds.x + bounds.width - 1, bounds.y);
+        int cMinVisible = Math.max(header.columnAtPoint(ltr ? left : right), 0);
+        int cMaxVisible = header.columnAtPoint(ltr ? right : left);
+
+        if (cMaxVisible == -1) {
+            cMaxVisible = cm.getColumnCount() - 1;
         }
 
         Color borderColor = c.getBorder() instanceof DarkTableScrollPaneBorder
@@ -132,7 +140,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
 
         TableColumn draggedColumn = header.getDraggedColumn();
         Rectangle cellRect = header.getHeaderRect(ltr ? cMin : cMax);
-        paintCells(g, h, ltr, cm, cMin, cMax, borderColor, draggedColumn, cellRect);
+        paintCells(g, h, ltr, cm, cMin, cMax, cMinVisible, cMaxVisible, borderColor, draggedColumn, cellRect);
 
         // Paint the dragged column if we are dragging.
         if (draggedColumn != null) {
@@ -142,26 +150,42 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         // Remove all components in the rendererPane.
         rendererPane.removeAll();
         config.restore();
+
+        /*
+         * If the table is in a scroll pane which uses buffer backed viewports scrolling leads to the previously
+         * last cell missing part of its border. We manually repaint it to prevent the appearance of joint cells.
+         */
+        if (lastMaxVisible != cMaxVisible) {
+            if (lastMaxVisible >= 0) {
+                Rectangle r = header.getHeaderRect(lastMaxVisible);
+                SwingUtilities.invokeLater(() -> header.repaint(r));
+            }
+            lastMaxVisible = cMaxVisible;
+        }
     }
 
     public void paintCells(final Graphics2D g, final int h, final boolean ltr,
                            final TableColumnModel cm,
-                           final int cMin, final int cMax, final Color borderColor,
+                           final int cMin, final int cMax,
+                           final int cMinVisible, final int cMaxVisible,
+                           final Color borderColor,
                            final TableColumn draggedColumn, final Rectangle cellRect) {
         if (ltr) {
             for (int column = cMin; column <= cMax; column++) {
-                paintSingleCell(g, h, cm, cMax, borderColor, draggedColumn, cellRect, column);
+                paintSingleCell(g, h, cm, cMinVisible, cMaxVisible,
+                                borderColor, draggedColumn, cellRect, column);
             }
         } else {
             for (int column = cMax; column >= cMin; column--) {
-                paintSingleCell(g, h, cm, cMin, borderColor, draggedColumn, cellRect, column);
+                paintSingleCell(g, h, cm, cMinVisible, cMaxVisible,
+                                borderColor, draggedColumn, cellRect, column);
             }
         }
     }
 
     public void paintSingleCell(final Graphics2D g, final int h, final TableColumnModel cm,
-                                final int cMax, final Color borderColor,
-                                final TableColumn draggedColumn,
+                                final int cMinVisible, final int cMaxVisible,
+                                final Color borderColor, final TableColumn draggedColumn,
                                 final Rectangle cellRect, final int column) {
         TableColumn aColumn;
         int columnWidth;
@@ -171,11 +195,11 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         if (aColumn != draggedColumn) {
             paintCell(g, cellRect, column);
         }
-        cellRect.x += columnWidth;
-        if (column != cMax) {
-            g.setColor(borderColor);
-            g.fillRect(cellRect.x - 1, 0, 1, h);
+        g.setColor(borderColor);
+        if (column < cMaxVisible) {
+            g.fillRect(cellRect.x + cellRect.width - 1, 0, 1, h);
         }
+        cellRect.x += cellRect.width;
     }
 
     public void paintDraggedArea(final Graphics2D g, final boolean ltr,

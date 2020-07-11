@@ -38,9 +38,13 @@ import javax.swing.table.*;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
-import com.github.weisj.darklaf.ui.table.renderer.*;
+import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -205,8 +209,9 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
     protected boolean scrollBarVisible() {
         JScrollPane comp = DarkUIUtil.getParentOfType(JScrollPane.class, table, 2);
+        if (comp == null) return false;
         OverlayScrollPane overlayScrollPane = DarkUIUtil.getParentOfType(OverlayScrollPane.class, table, 3);
-        return comp != null && overlayScrollPane == null && comp.getVerticalScrollBar().isVisible();
+        return overlayScrollPane == null && comp.getVerticalScrollBar().isVisible();
     }
 
     protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible,
@@ -272,10 +277,16 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         }
         int tableHeight = getPreferredSize(table).height;
         g.setColor(parent.getBackground());
-        g.fillRect(vacatedColumnRect.x, 0, vacatedColumnRect.width - 1, tableHeight);
+        int width = vacatedColumnRect.width;
+        if (draggedColumnIndex < cMax) width--;
+
+        g.fillRect(vacatedColumnRect.x, 0, width, tableHeight);
 
         // Move to the where the cell has been dragged.
         vacatedColumnRect.x += dist;
+
+        g.setColor(Color.RED);
+        PaintUtil.drawRect(g, vacatedColumnRect);
 
         boolean ltr = table.getComponentOrientation().isLeftToRight();
 
@@ -315,9 +326,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             // Render the cell value
             Rectangle r = table.getCellRect(row, draggedColumnIndex, false);
             r.x += dist;
-            paintCell(g, r, row, draggedColumnIndex);
+            paintCell(g, r, row, draggedColumnIndex, cMin, cMax);
 
-            // Paint the (lower) horizontal grid line if necessary.
             if (table.getShowHorizontalLines()) {
                 g.setColor(table.getGridColor());
                 Rectangle rcr = table.getCellRect(row, draggedColumnIndex, true);
@@ -329,6 +339,24 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 g.fillRect(x1, y2, x2 - x1, 1);
             }
         }
+    }
+
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        /*
+         * JTable always subtracts the cell margins even if for the last column. This results in
+         * part of the cell not being repainted. Dispatch repaint here manually.
+         */
+        if (table.getShowVerticalLines()) {
+            Rectangle r = g.getClipBounds();
+            int spacing = table.getColumnModel().getColumnMargin();
+            if (r.x + r.width == c.getWidth() - spacing) {
+                r.x = r.x + r.width;
+                r.width = spacing;
+                c.repaint(r);
+            }
+        }
+        super.paint(g, c);
     }
 
     public static boolean ignoreKeyCodeOnEdit(final KeyEvent event, final JTable table) {
@@ -364,74 +392,43 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         return false;
     }
 
-    @Override
-    protected void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {
-        Rectangle bounds = table.getVisibleRect();
-        Point upperLeft = bounds.getLocation();
-        Point lowerRight = new Point(upperLeft.x + bounds.width - 1, upperLeft.y + bounds.height - 1);
-        int cMin = table.columnAtPoint(upperLeft);
-        int cMax = table.columnAtPoint(lowerRight);
-
-        boolean scrollLtR = !isScrollPaneRtl();
-        boolean ltr = table.getComponentOrientation().isLeftToRight();
+    protected void paintCell(final Graphics g, final Rectangle r, final int row, final int column,
+                             final int cMin, final int cMax) {
+        // if (true) return;
         boolean isEditorCell = table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column;
 
-        JTableHeader header = table.getTableHeader();
-        int draggedIndex = header != null ? viewIndexForColumn(header.getDraggedColumn())
-                : -1;
-        int dist = header != null ? adjustDistance(header.getDraggedDistance(),
-                                                   table.getCellRect(row, draggedIndex, true),
-                                                   table)
-                : 0;
-        boolean isDragged = column == draggedIndex && dist != 0;
-        Rectangle rectWithSpacing = table.getCellRect(row, cMin, true);
-        Rectangle r = new Rectangle(cellRect);
-        r.y = rectWithSpacing.y;
-        r.height = rectWithSpacing.height;
-        if (table.getShowHorizontalLines()) {
-            r.height--;
-        }
-        if (!scrollBarVisible()) {
-            if (ltr) {
-                if (column == cMax && !isDragged) r.width += 1;
-            } else {
-                if (column == cMin && !isDragged) r.width += 1;
-            }
-        } else if (!scrollLtR) {
-            if (ltr) {
-                if (column == cMax && !isDragged) r.width += 1;
-                if (column == cMin && !isDragged) {
-                    r.width -= 1;
-                    r.x += 1;
-                }
-            } else {
-                if (column == cMin && !isDragged) r.width += 1;
-                if (column == cMax && !isDragged) {
-                    r.width -= 1;
-                    r.x += 1;
-                }
+        int x = r.x;
+        int y = r.y;
+        int w = r.width;
+        int h = r.height;
+
+        if (table.getShowVerticalLines() && !scrollBarVisible()) {
+            if (column == table.getColumnCount() - 1) {
+                w++;
             }
         }
+
         if (isEditorCell) {
             if (!table.getShowVerticalLines()) {
-                if (column > cMin) r.x -= 1;
-                if (column > cMin && column < cMax) r.width += 1;
+                if (column > cMin) x--;
+                if (column > cMin && column < cMax) w++;
             }
         }
         if (isEditorCell) {
             Component component = getCellEditorComponent();
-            component.setBounds(r);
+            component.setBounds(x, y, w, h);
             component.validate();
         } else {
             TableCellRenderer renderer = getCellRenderer(row, column);
             Component component = table.prepareRenderer(renderer, row, column);
             CellUtil.setSelectedFlag(component, table.isCellSelected(row, column));
-            rendererPane.paintComponent(g, component, table, r.x, r.y, r.width, r.height, true);
+            rendererPane.paintComponent(g, component, table, x, y, w, h, true);
         }
     }
 
     protected TableCellRenderer getCellRenderer(final int row, final int column) {
         TableCellRenderer renderer = table.getCellRenderer(row, column);
+        if (renderer instanceof DarkTableCellRendererDelegate) return renderer;
         if (rendererDelegate == null) {
             rendererDelegate = new DarkTableCellRendererDelegate(renderer);
         }
@@ -455,7 +452,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                                      final JTable comp) {
         int dist = distance;
         int min = 0;
-        int max = comp.getX() + comp.getWidth();
+        int max = comp.getWidth();
         if (rect.x + dist <= min) {
             dist = min - rect.x;
         }
@@ -490,14 +487,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 } else {
                     lastIndex = row;
                 }
-            }
-        }
-
-        @Override
-        public void mousePressed(final MouseEvent e) {
-            super.mousePressed(e);
-            if (SwingUtilities.isLeftMouseButton(e)) {
-                table.repaint();
             }
         }
 
@@ -540,7 +529,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 table.setRowMargin(b ? 1 : 0);
             } else if (KEY_VERTICAL_LINES.equals(key)) {
                 boolean b = Boolean.TRUE.equals(e.getNewValue());
-                table.getColumnModel().setColumnMargin(b ? 1 : 0);
+                TableColumnModel cm = table.getColumnModel();
+                cm.setColumnMargin(b ? 1 : 0);
             } else if (PropertyKey.ANCESTOR.equals(key)) {
                 Object oldVal = e.getOldValue();
                 Object newVal = e.getNewValue();

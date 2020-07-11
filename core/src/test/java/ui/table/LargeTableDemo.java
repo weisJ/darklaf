@@ -24,7 +24,10 @@
  */
 package ui.table;
 
+import java.awt.*;
+
 import javax.swing.*;
+import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 import ui.ComponentDemo;
@@ -42,7 +45,21 @@ public class LargeTableDemo implements ComponentDemo {
     public JComponent createComponent() {
         JPanel holder = new JPanel();
         holder.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        JTable table = new JTable();
+        JTable table = new JTable() {
+            @Override
+            public void columnMoved(final TableColumnModelEvent e) {
+                int fromIndex = e.getFromIndex();
+                int toIndex = e.getToIndex();
+                int start = Math.max(Math.min(fromIndex, toIndex) - 1, 0);
+                int end = Math.min(Math.max(fromIndex, toIndex) + 1, getColumnCount() - 1);
+                Rectangle visible = getVisibleRect();
+                for (int i = start; i <= end; i++) {
+                    Rectangle cell = getCellRect(0, i, true);
+                    cell.height = visible.height;
+                    repaint(cell);
+                }
+            }
+        };
         table.setModel(new DarkTableModel(CELL_COUNT / COLUMN_COUNT, COLUMN_COUNT));
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         holder.add(new JScrollPane(table));

@@ -46,7 +46,10 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.util.PropertyValue;
 
 /**
  * @author Konstantin Bulenkov
@@ -63,6 +66,7 @@ public final class PropertyLoader {
     private static final String ICON_EMPTY = "empty";
 
     private static final char REFERENCE_PREFIX = '%';
+    private static final String FALLBACK_PREFIX = "?:";
 
     private static final String FONT_FROM = "from";
     private static final String FONT_SIZE = "withSize";
@@ -126,6 +130,8 @@ public final class PropertyLoader {
             final String value = properties.get(key).toString();
             Object parsed = parseValue(key, value, accumulator, currentDefaults, iconLoader);
             if (parsed != null) {
+                String k = parseKey(key);
+                if (parsed instanceof FallbackValue && accumulator.containsKey(k)) continue;
                 accumulator.put(parseKey(key), parsed);
             } else {
                 currentDefaults.remove(parseKey(key));
@@ -168,18 +174,21 @@ public final class PropertyLoader {
         return key.startsWith(String.valueOf(REFERENCE_PREFIX)) ? key.substring(1) : key;
     }
 
-    public static Object parseValue(final String propertyKey, final String value,
+    public static Object parseValue(final String propertyKey, final String val,
                                     final Map<Object, Object> accumulator,
                                     final UIDefaults currentDefaults, final IconLoader iconLoader) {
-        if (value == null || PropertyValue.NULL.equals(value)) {
+        if (val == null || PropertyValue.NULL.equals(val)) {
             return null;
         }
         String key = propertyKey;
+        boolean isFallback = val.startsWith(FALLBACK_PREFIX);
+        String value = !isFallback ? val : val.substring(FALLBACK_PREFIX.length());
+
         boolean skipObjects = false;
         if (key.startsWith(String.valueOf(REFERENCE_PREFIX))) {
-            key = parseKey(key);
             skipObjects = true;
         }
+        key = parseKey(key);
 
         final Color color = ColorUtil.fromHex(value, null);
         final Integer invVal = getInteger(value);
@@ -187,11 +196,11 @@ public final class PropertyLoader {
                 ? Boolean.TRUE
                 : PropertyValue.FALSE.equalsIgnoreCase(value) ? Boolean.FALSE : null;
         if (color != null && (value.length() == 6 || value.length() == 8)) {
-            return new DarkColorUIResource(color);
+            return maybeWrap(new DarkColorUIResource(color), isFallback);
         } else if (invVal != null) {
-            return invVal;
+            return maybeWrap(invVal, isFallback);
         } else if (boolVal != null) {
-            return boolVal;
+            return maybeWrap(boolVal, isFallback);
         }
 
         Object returnVal = new LoadError();
@@ -201,9 +210,9 @@ public final class PropertyLoader {
                    && (key.endsWith("Border")
                        || key.endsWith(".border")
                        || key.endsWith("Renderer"))) {
-            return (UIDefaults.LazyValue) def -> parseObject(value);
+            return maybeWrap((UIDefaults.LazyValue) def -> parseObject(value), isFallback);
         } else if (key.endsWith(".component") || key.endsWith("Component")) {
-            return (UIDefaults.ActiveValue) (def) -> parseObject(value);
+            return maybeWrap((UIDefaults.ActiveValue) (def) -> parseObject(value), isFallback);
         } else if (key.toLowerCase().endsWith("font")) {
             returnVal = parseFont(key, value, accumulator, currentDefaults);
         } else if (key.endsWith(".icon") || key.endsWith("Icon") || key.endsWith("Image")) {
@@ -226,8 +235,12 @@ public final class PropertyLoader {
         } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
             returnVal = parseReference(key, value, accumulator, currentDefaults);
         }
-        if (!(returnVal instanceof LoadError)) return returnVal;
-        return value;
+        if (!(returnVal instanceof LoadError)) return maybeWrap(returnVal, isFallback);
+        return maybeWrap(value, isFallback);
+    }
+
+    private static Object maybeWrap(final Object value, final boolean isDefaultValue) {
+        return !isDefaultValue ? value : new FallbackValue(value);
     }
 
     private static <T> Pair<T, T> parsePair(final ParseFunction<T> mapper,
@@ -522,6 +535,14 @@ public final class PropertyLoader {
 
         public T getValue() {
             return getSecond();
+        }
+    }
+
+    private static class FallbackValue {
+        private final Object value;
+
+        private FallbackValue(final Object value) {
+            this.value = value;
         }
     }
 }

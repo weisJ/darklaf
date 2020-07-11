@@ -447,9 +447,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         final int boundsX = cellBounds.x;
         final int boundsWidth = cellBounds.width;
 
+        final boolean selected = tree.isPathSelected(path);
+
         cellBounds.x = xOffset;
         cellBounds.width = containerWidth;
-        paintRowBackground(g, paintBounds, cellBounds, path, row);
+        paintRowBackground(g, cellBounds, path, row, selected);
         cellBounds.x = boundsX;
         cellBounds.width = boundsWidth;
 
@@ -466,24 +468,22 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                                hasBeenExpanded, isLeaf);
         }
         paintRow(g, paintBounds, insets, cellBounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+
+        if (!selected && tree.getLeadSelectionRow() == row && tree.hasFocus()) {
+            g.setColor(CellUtil.getTreeBackground(tree, true, row));
+            cellBounds.x = xOffset;
+            cellBounds.width = containerWidth;
+            PaintUtil.drawRect(g, cellBounds, leadSelectionBorderInsets);
+        }
+
         return (cellBounds.y + cellBounds.height) < paintBounds.y + paintBounds.height;
     }
 
-    protected void paintRowBackground(final Graphics g, final Rectangle clipBounds,
-                                      final Rectangle bounds, final TreePath path,
-                                      final int row) {
+    protected void paintRowBackground(final Graphics g, final Rectangle bounds, final TreePath path,
+                                      final int row, final boolean selected) {
         if (path != null) {
-            boolean selected = tree.isPathSelected(path);
-            Graphics2D rowGraphics = (Graphics2D) g.create();
-            rowGraphics.setClip(clipBounds);
-
-            rowGraphics.setColor(CellUtil.getTreeBackground(tree, selected, row));
-            rowGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            if (!selected && tree.getLeadSelectionRow() == row && tree.hasFocus()) {
-                rowGraphics.setColor(CellUtil.getTreeBackground(tree, true, row));
-                PaintUtil.drawRect(rowGraphics, bounds, leadSelectionBorderInsets);
-            }
-            rowGraphics.dispose();
+            g.setColor(CellUtil.getTreeBackground(tree, selected, row));
+            g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
         }
     }
 

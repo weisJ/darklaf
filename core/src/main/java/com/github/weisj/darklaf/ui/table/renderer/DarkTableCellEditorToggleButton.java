@@ -28,7 +28,10 @@ import java.awt.*;
 import java.util.EventObject;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.TableCellEditor;
+
+import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 
 /**
  * @author vincencopalazzo
@@ -38,6 +41,7 @@ import javax.swing.table.TableCellEditor;
 public class DarkTableCellEditorToggleButton extends AbstractCellEditor implements TableCellEditor, SwingConstants {
 
     private final JToggleButton toggleButton;
+    private final Border editorBorder = new DarkTableCellBorder();
 
     public DarkTableCellEditorToggleButton(final JToggleButton toggleButton) {
         this.toggleButton = toggleButton;
@@ -50,6 +54,7 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         }
+        toggleButton.setBorder(editorBorder);
         return toggleButton;
     }
 

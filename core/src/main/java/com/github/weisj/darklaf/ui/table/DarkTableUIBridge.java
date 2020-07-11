@@ -215,7 +215,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
                     columnWidth = aColumn.getWidth();
                     cellRect.width = columnWidth - columnMargin;
                     if (aColumn != draggedColumn) {
-                        paintCell(g, cellRect, row, column);
+                        paintCell(g, cellRect, row, column, rMin, rMax);
                     }
                     cellRect.x += columnWidth;
                 }
@@ -227,7 +227,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
                 if (aColumn != draggedColumn) {
                     columnWidth = aColumn.getWidth();
                     cellRect.width = columnWidth - columnMargin;
-                    paintCell(g, cellRect, row, cMin);
+                    paintCell(g, cellRect, row, cMin, cMin, cMax);
                 }
                 for (int column = cMin + 1; column <= cMax; column++) {
                     aColumn = cm.getColumn(column);
@@ -235,7 +235,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
                     cellRect.width = columnWidth - columnMargin;
                     cellRect.x -= columnWidth;
                     if (aColumn != draggedColumn) {
-                        paintCell(g, cellRect, row, column);
+                        paintCell(g, cellRect, row, column, cMin, cMax);
                     }
                 }
             }
@@ -250,8 +250,11 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         rendererPane.removeAll();
     }
 
-    @Override
-    protected abstract void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column);
+    @Deprecated
+    protected final void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {}
+
+    protected abstract void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column,
+                                      final int cMin, final int cMax);
 
     @Override
     protected int viewIndexForColumn(final TableColumn aColumn) {

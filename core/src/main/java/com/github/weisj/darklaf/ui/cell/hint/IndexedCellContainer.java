@@ -38,7 +38,9 @@ public interface IndexedCellContainer<T extends JComponent, I> extends CellConta
 
     I getCellPosition(final Point p);
 
-    Color getBackgroundAt(final I position, final Component renderer);
+    default Color getBackgroundAt(final I position, final Component renderer) {
+        return renderer != null ? renderer.getBackground() : null;
+    }
 
     default Component getEffectiveCellRendererComponent(final I position, final boolean isEditing) {
         if (isEditing) {

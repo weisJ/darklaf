@@ -27,6 +27,7 @@ package com.github.weisj.darklaf.ui.cell;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
@@ -41,6 +42,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
                                          implements TableCellRenderer, TreeCellRenderer, SwingConstants {
 
     private final T toggleButton;
+    private final Border border = new DarkCellBorder();
 
     public DarkCellRendererToggleButton(final T toggleButton) {
         this.toggleButton = toggleButton;
@@ -54,6 +56,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
             toggleButton.setSelected((Boolean) value);
         }
         toggleButton.setHasFocus(focus);
+        toggleButton.setBorder(border);
         return toggleButton;
     }
 
@@ -85,6 +88,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellCheckBox(final boolean opaque) {
             setOpaque(opaque);
+            setHorizontalAlignment(CENTER);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
@@ -111,6 +115,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
 
         public CellRadioButton(final boolean opaque) {
             setOpaque(opaque);
+            setHorizontalAlignment(CENTER);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
