@@ -24,11 +24,7 @@
  */
 package com.github.weisj.darklaf.theme;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Properties;
@@ -265,25 +261,6 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      */
     public final StyleSheet loadStyleSheet() {
         return new StyleSheet();
-    }
-
-    /**
-     * Load the css style sheet used for html display in text components with a {@link
-     * javax.swing.text.html.HTMLEditorKit}.
-     *
-     * @param  loaderClass the class to resolve the location of the style sheet.
-     * @return             the {@link StyleSheet}.
-     */
-    public final StyleSheet loadStyleSheetWithClass(final Class<?> loaderClass) {
-        StyleSheet styleSheet = new StyleSheet();
-        try (InputStream in = loaderClass.getResourceAsStream(getResourcePath() + getPrefix() + "_styleSheet.css");
-             InputStreamReader inReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-             BufferedReader r = new BufferedReader(inReader)) {
-            styleSheet.loadRules(r, null);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e.getStackTrace());
-        }
-        return styleSheet;
     }
 
     @Override
