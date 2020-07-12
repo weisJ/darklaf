@@ -63,9 +63,6 @@ public final class LafManager {
     static {
         setLogLevel(Level.WARNING);
         ServiceLoader.load(Theme.class).forEach(LafManager::registerTheme);
-        for (UIManager.LookAndFeelInfo info : getRegisteredThemeInfos()) {
-            UIManager.installLookAndFeel(info);
-        }
     }
 
     /**
