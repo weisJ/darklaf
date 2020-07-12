@@ -25,9 +25,7 @@
 package com.github.weisj.darklaf;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +35,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.settings.ThemeSettings;
+import com.github.weisj.darklaf.synthesised.ThemedDarklafInfo;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.task.DefaultsInitTask;
 import com.github.weisj.darklaf.theme.*;
@@ -63,13 +62,10 @@ public final class LafManager {
 
     static {
         setLogLevel(Level.WARNING);
-        registerTheme(new IntelliJTheme(),
-                      new DarculaTheme(),
-                      new SolarizedLightTheme(),
-                      new SolarizedDarkTheme(),
-                      new OneDarkTheme(),
-                      new HighContrastLightTheme(),
-                      new HighContrastDarkTheme());
+        ServiceLoader.load(Theme.class).forEach(LafManager::registerTheme);
+        for (UIManager.LookAndFeelInfo info : getRegisteredThemeInfos()) {
+            UIManager.installLookAndFeel(info);
+        }
     }
 
     /**
@@ -285,6 +281,26 @@ public final class LafManager {
         return themes;
     }
 
+    /**
+     * Get {@link javax.swing.UIManager.LookAndFeelInfo}s for all currently registered themes.
+     * These can be directly used to install the specified theme.
+     * Only themes that are annotated using @SynthesiseLaf and compiled with the corresponding
+     * annotations processor may contribute to this list.
+     *
+     * @return all look and feel infos for currently registered themes as array.
+     */
+    public static UIManager.LookAndFeelInfo[] getRegisteredThemeInfos() {
+        return Arrays.stream(getRegisteredThemes())
+                     .map(ThemedDarklafInfo::new)
+                     .filter(ThemedDarklafInfo::exists)
+                     .toArray(UIManager.LookAndFeelInfo[]::new);
+    }
+
+    /**
+     * Get a combobox model for all currently registered themes.
+     *
+     * @return the combo box model.
+     */
     public static ComboBoxModel<Theme> getThemeComboBoxModel() {
         return new DefaultComboBoxModel<>(getRegisteredThemes());
     }

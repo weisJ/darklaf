@@ -22,20 +22,35 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf;
+package com.github.weisj.darklaf.theme.laf;
+
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 
-/**
- * {@link javax.swing.UIManager.LookAndFeelInfo} for {@link com.github.weisj.darklaf.DarkLaf}.
- *
- * @author Jannis Weis
- */
-public class DarkLafInfo extends UIManager.LookAndFeelInfo {
-    /**
-     * Constructs a {@link UIManager}s {@link javax.swing.UIManager.LookAndFeelInfo} object.
-     */
-    public DarkLafInfo() {
-        super("Darklaf", DarkLaf.class.getCanonicalName());
+import com.github.weisj.darklaf.theme.Theme;
+
+public class ReflectiveDelegatingThemedLaf extends DelegatingThemedLaf {
+
+    public ReflectiveDelegatingThemedLaf(final Theme theme, final String baseLafClass) {
+        super(theme, getLaf(baseLafClass));
+    }
+
+    @Override
+    public UIDefaults getDefaults() {
+        return super.getDefaults();
+    }
+
+    private static ThemedLookAndFeel getLaf(final String baseLafClass) {
+        try {
+            Class<?> base = Class.forName(baseLafClass);
+            if (!ThemedLookAndFeel.class.isAssignableFrom(base)) {
+                throw new IllegalArgumentException(base + " is not of type " + ThemedLookAndFeel.class);
+            }
+            return (ThemedLookAndFeel) base.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException
+                 | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

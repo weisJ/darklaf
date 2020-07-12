@@ -24,16 +24,17 @@
  */
 package com.github.weisj.darklaf;
 
+import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.task.*;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.MouseGrabberUtil;
 import com.github.weisj.darklaf.util.LogUtil;
@@ -42,7 +43,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
 /**
  * @author Jannis Weis
  */
-public class DarkLaf extends BasicLookAndFeel {
+public class DarkLaf extends ThemedLookAndFeel {
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
     public static final String ALLOW_NATIVE_CODE_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "allowNativeCode";
@@ -130,12 +131,45 @@ public class DarkLaf extends BasicLookAndFeel {
     @Override
     public UIDefaults getDefaults() {
         final UIDefaults defaults = base.getDefaults();
-        final Theme currentTheme = LafManager.getTheme();
+        final Theme currentTheme = getTheme();
+        if (isInitialized && !LafManager.getTheme().equals(currentTheme)) {
+            LafManager.setTheme(currentTheme);
+        }
         for (DefaultsInitTask task : INIT_TASKS) {
             if (task.onlyDuringInstallation() && !isInitialized) continue;
             task.run(currentTheme, defaults);
         }
         return defaults;
+    }
+
+    @Override
+    public LayoutStyle getLayoutStyle() {
+        return base.getLayoutStyle();
+    }
+
+    @Override
+    public void provideErrorFeedback(final Component component) {
+        base.provideErrorFeedback(component);
+    }
+
+    @Override
+    public Icon getDisabledIcon(final JComponent component, final Icon icon) {
+        return base.getDisabledIcon(component, icon);
+    }
+
+    @Override
+    public Icon getDisabledSelectedIcon(final JComponent component, final Icon icon) {
+        return base.getDisabledSelectedIcon(component, icon);
+    }
+
+    @Override
+    protected void setTheme(final Theme theme) {
+        // Do nothing.
+    }
+
+    @Override
+    public Theme getTheme() {
+        return LafManager.getTheme();
     }
 
     @Override
@@ -150,7 +184,7 @@ public class DarkLaf extends BasicLookAndFeel {
 
     @Override
     public String getDescription() {
-        return "Dark Look and feel based on Darcula-LAF";
+        return "A themeable Look and Feel";
     }
 
     @Override

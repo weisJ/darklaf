@@ -28,12 +28,16 @@ import java.util.Properties;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
+import com.google.auto.service.AutoService;
 
 /**
  * @author Jannis Weis
  */
+@AutoService(Theme.class)
+@SynthesiseLaf
 public class IntelliJTheme extends Theme {
 
     @Override

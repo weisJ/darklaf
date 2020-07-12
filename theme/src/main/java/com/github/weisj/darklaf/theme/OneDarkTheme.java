@@ -28,9 +28,13 @@ import java.util.Properties;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
+import com.google.auto.service.AutoService;
 
+@AutoService(Theme.class)
+@SynthesiseLaf
 public class OneDarkTheme extends Theme {
     @Override
     protected PresetIconRule getPresetIconRule() {

@@ -15,6 +15,8 @@ rootProject.name = "darklaf"
 
 include(
     "dependencies-bom",
+    "annotations",
+    "annotations-processor",
     "native-utils",
     "core",
     "theme",

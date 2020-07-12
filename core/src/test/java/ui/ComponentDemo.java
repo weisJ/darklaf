@@ -129,7 +129,7 @@ public interface ComponentDemo {
     static JMenu createThemeMenu() {
         JMenu menu = new JMenu("Theme");
         ButtonGroup bg = new ButtonGroup();
-        for (Theme theme : LafManager.getRegisteredThemes()) {
+        for (UIManager.LookAndFeelInfo theme : LafManager.getRegisteredThemeInfos()) {
             createThemeItem(menu, bg, theme);
         }
         menu.addMenuListener(new MenuListener() {
@@ -157,7 +157,7 @@ public interface ComponentDemo {
         String currentThemeName = LafManager.getTheme().getName();
         Enumeration<AbstractButton> enumeration = bg.getElements();
         while (enumeration.hasMoreElements()) {
-            ThemeMenuItem mi = (ThemeMenuItem) enumeration.nextElement();
+            JMenuItem mi = (JMenuItem) enumeration.nextElement();
             if (Objects.equals(currentThemeName, mi.getName())) return mi;
         }
         return null;
@@ -169,8 +169,20 @@ public interface ComponentDemo {
         return menu;
     }
 
-    static void createThemeItem(final JMenu menu, final ButtonGroup bg, final Theme theme) {
-        final ThemeMenuItem mi = new ThemeMenuItem(theme);
+    static void createThemeItem(final JMenu menu, final ButtonGroup bg, final UIManager.LookAndFeelInfo info) {
+        // final ThemeMenuItem mi = new ThemeMenuItem(theme);
+        JMenuItem mi = new JRadioButtonMenuItem(info.getName());
+        mi.addActionListener(event -> {
+            try {
+                UIManager.setLookAndFeel(info.getClassName());
+            } catch (ClassNotFoundException
+                     | InstantiationException
+                     | IllegalAccessException
+                     | UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
+            LafManager.updateLaf();
+        });
         menu.add(mi);
         bg.add(mi);
     }

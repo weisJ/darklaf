@@ -38,5 +38,7 @@ dependencies {
         apiv("com.miglayout:miglayout-swing", "miglayout")
         apiv("org.junit.jupiter:junit-jupiter-api", "junit")
         apiv("org.junit.jupiter:junit-jupiter-engine", "junit")
+        apiv("com.google.auto.service:auto-service-annotations", "auto-service")
+        apiv("com.google.auto.service:auto-service", "auto-service")
     }
 }

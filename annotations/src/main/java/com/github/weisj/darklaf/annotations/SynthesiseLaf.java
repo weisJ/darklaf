@@ -22,20 +22,15 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf;
+package com.github.weisj.darklaf.annotations;
 
-import javax.swing.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * {@link javax.swing.UIManager.LookAndFeelInfo} for {@link com.github.weisj.darklaf.DarkLaf}.
- *
- * @author Jannis Weis
- */
-public class DarkLafInfo extends UIManager.LookAndFeelInfo {
-    /**
-     * Constructs a {@link UIManager}s {@link javax.swing.UIManager.LookAndFeelInfo} object.
-     */
-    public DarkLafInfo() {
-        super("Darklaf", DarkLaf.class.getCanonicalName());
-    }
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
+public @interface SynthesiseLaf {
+    String baseLaf() default "com.github.weisj.darklaf.synthesised.ThemedDarkLaf";
 }

@@ -22,20 +22,15 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf;
+package com.github.weisj.darklaf.theme.laf;
 
 import javax.swing.*;
 
-/**
- * {@link javax.swing.UIManager.LookAndFeelInfo} for {@link com.github.weisj.darklaf.DarkLaf}.
- *
- * @author Jannis Weis
- */
-public class DarkLafInfo extends UIManager.LookAndFeelInfo {
-    /**
-     * Constructs a {@link UIManager}s {@link javax.swing.UIManager.LookAndFeelInfo} object.
-     */
-    public DarkLafInfo() {
-        super("Darklaf", DarkLaf.class.getCanonicalName());
-    }
+import com.github.weisj.darklaf.theme.Theme;
+
+public abstract class ThemedLookAndFeel extends LookAndFeel {
+
+    protected abstract void setTheme(final Theme theme);
+
+    public abstract Theme getTheme();
 }
