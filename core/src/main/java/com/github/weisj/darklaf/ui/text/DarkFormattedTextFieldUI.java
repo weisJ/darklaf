@@ -26,13 +26,15 @@ package com.github.weisj.darklaf.ui.text;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.ParseException;
+import java.text.Format;
+import java.text.ParsePosition;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.Document;
+import javax.swing.text.InternationalFormatter;
 
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -86,12 +88,12 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
 
     @Override
     public void insertUpdate(final DocumentEvent e) {
-        update();
+        SwingUtilities.invokeLater(this::update);
     }
 
     @Override
     public void removeUpdate(final DocumentEvent e) {
-        update();
+        SwingUtilities.invokeLater(this::update);
     }
 
     @Override
@@ -99,11 +101,19 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
 
     protected void update() {
         if (textField == null) return;
-        try {
-            textField.getFormatter().stringToValue(textField.getText());
-            textField.putClientProperty("JTextComponent.hasError", false);
-        } catch (ParseException e) {
-            textField.putClientProperty("JTextComponent.hasError", true);
+        textField.putClientProperty(DarkTextUI.KEY_HAS_ERROR, !isInputValid(textField));
+    }
+
+    protected boolean isInputValid(final JFormattedTextField textField) {
+        String value = textField.getText();
+        JFormattedTextField.AbstractFormatter formatter = textField.getFormatter();
+        if (formatter instanceof InternationalFormatter) {
+            Format format = ((InternationalFormatter) formatter).getFormat();
+            ParsePosition position = new ParsePosition(0);
+            format.parseObject(value, position);
+            return position.getIndex() == value.length();
+        } else {
+            return textField.isEditValid();
         }
     }
 }

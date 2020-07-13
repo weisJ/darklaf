@@ -45,7 +45,7 @@ public class TextFieldDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         JTextField textField = createTextField();
-        textField.putClientProperty(DarkTextUI.KEY_DEFAULT_TEXT, "Default Text");
+        textField.putClientProperty(DarkTextUI.KEY_DEFAULT_TEXT, getDefaultText());
         // textField.setFont(new Font("Roboto", Font.PLAIN, 13));
         DemoPanel panel = new DemoPanel(textField);
 
@@ -102,6 +102,10 @@ public class TextFieldDemo implements ComponentDemo {
             }
         });
         return panel;
+    }
+
+    protected String getDefaultText() {
+        return "Default Text";
     }
 
     protected JTextField createTextField() {

@@ -24,6 +24,8 @@
  */
 package ui.text;
 
+import java.text.NumberFormat;
+
 import javax.swing.*;
 
 import ui.ComponentDemo;
@@ -36,7 +38,14 @@ public class FormattedTextFieldDemo extends TextFieldDemo {
 
     @Override
     protected JTextField createTextField() {
-        return new JFormattedTextField("Demo FormattedTextField");
+        JFormattedTextField textField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+        textField.setValue(1234);
+        return textField;
+    }
+
+    @Override
+    protected String getDefaultText() {
+        return "Only accepts numbers";
     }
 
     @Override
