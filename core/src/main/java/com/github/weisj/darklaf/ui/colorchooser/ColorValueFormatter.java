@@ -40,6 +40,7 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.DocumentFilter;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
+import com.github.weisj.darklaf.ui.text.DarkTextUI;
 
 /**
  * @author Jannis Weis
@@ -122,19 +123,19 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     }
 
     protected void error() {
-        text.putClientProperty("JTextComponent.hasError", true);
+        text.putClientProperty(DarkTextUI.KEY_HAS_ERROR, true);
         text.repaint();
         errorTimer.restart();
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        text.putClientProperty("JTextComponent.hasError", false);
+        text.putClientProperty(DarkTextUI.KEY_HAS_ERROR, false);
         text.repaint();
     }
 
     private void commit() {
-        text.putClientProperty("JTextComponent.hasError", false);
+        text.putClientProperty(DarkTextUI.KEY_HAS_ERROR, false);
         text.repaint();
         SwingUtilities.invokeLater(() -> {
             try {

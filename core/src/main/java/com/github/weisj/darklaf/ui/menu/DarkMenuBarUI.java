@@ -29,23 +29,15 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.metal.MetalMenuBarUI;
+import javax.swing.plaf.basic.BasicMenuBarUI;
 
 /**
  * @author Jannis Weis
  */
-public class DarkMenuBarUI extends MetalMenuBarUI {
-
-    protected Color background;
+public class DarkMenuBarUI extends BasicMenuBarUI {
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkMenuBarUI();
-    }
-
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        background = UIManager.getColor("MenuBar.background");
     }
 
     @Override
@@ -56,13 +48,5 @@ public class DarkMenuBarUI extends MetalMenuBarUI {
             // Fixes popup graphics creeping into the component when it is not opaque.
             menuBar.repaint();
         };
-    }
-
-    @Override
-    public void paint(final Graphics g, final JComponent c) {
-        if (c.isOpaque()) {
-            g.setColor(background);
-            g.fillRect(0, 0, c.getWidth(), c.getHeight());
-        }
     }
 }
