@@ -32,23 +32,23 @@
 #include <winreg.h>
 #include <winuser.h>
 
-#define DARK_MODE_PATH ("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize")
-#define DARK_MODE_KEY ("AppsUseLightTheme")
+constexpr auto DARK_MODE_PATH = "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
+constexpr auto DARK_MODE_KEY = "AppsUseLightTheme";
 
-#define FONT_SCALE_PATH ("Software\\Microsoft\\Accessibility")
-#define FONT_SCALE_KEY ("TextScaleFactor")
+constexpr auto FONT_SCALE_PATH = "Software\\Microsoft\\Accessibility";
+constexpr auto FONT_SCALE_KEY = "TextScaleFactor";
 
-#define HIGH_CONTRAST_PATH ("Control Panel\\Accessibility\\HighContrast")
-#define HIGH_CONTRAST_THEME_KEY ("High Contrast Scheme")
-#define HIGH_CONTRAST_LIGHT_THEME ("High Contrast White")
+constexpr auto HIGH_CONTRAST_PATH = "Control Panel\\Accessibility\\HighContrast";
+constexpr auto HIGH_CONTRAST_THEME_KEY = "High Contrast Scheme";
+constexpr auto HIGH_CONTRAST_LIGHT_THEME = "High Contrast White";
 
-#define ACCENT_COLOR_PATH "SOFTWARE\\Microsoft\\Windows\\DWM"
-#define ACCENT_COLOR_KEY "ColorizationColor"
+constexpr auto ACCENT_COLOR_PATH = "SOFTWARE\\Microsoft\\Windows\\DWM";
+constexpr auto ACCENT_COLOR_KEY = "ColorizationColor";
 
-#define DARK_MODE_DEFAULT_VALUE false
-#define HIGH_CONTRAST_DEFAULT_VALUE false
-#define FONT_SCALE_DEFAULT_VALUE 100
-#define ACCENT_COLOR_DEFAULT_VALUE 0
+constexpr auto DARK_MODE_DEFAULT_VALUE = false;
+constexpr auto HIGH_CONTRAST_DEFAULT_VALUE = false;
+constexpr auto FONT_SCALE_DEFAULT_VALUE = 100;
+constexpr auto ACCENT_COLOR_DEFAULT_VALUE = 0;
 
 void ModifyFlags(DWORD &flags) {
 #ifdef _WIN64
@@ -97,13 +97,11 @@ bool IsHighContrastMode() {
 
 bool IsDarkMode() {
     try {
-        bool appsUseDark = (0 == RegGetDword(HKEY_CURRENT_USER, DARK_MODE_PATH,
-        DARK_MODE_KEY));
+        bool appsUseDark = (0 == RegGetDword(HKEY_CURRENT_USER, DARK_MODE_PATH, DARK_MODE_KEY));
         bool isHighContrast = IsHighContrastMode();
         if (!isHighContrast) return appsUseDark;
 
-        std::string themeValue = RegGetString(HKEY_CURRENT_USER,
-        HIGH_CONTRAST_PATH, HIGH_CONTRAST_THEME_KEY);
+        std::string themeValue = RegGetString(HKEY_CURRENT_USER, HIGH_CONTRAST_PATH, HIGH_CONTRAST_THEME_KEY);
         return (strcmp(themeValue.c_str(), HIGH_CONTRAST_LIGHT_THEME) != 0);
     } catch (LONG e) {
         return DARK_MODE_DEFAULT_VALUE;
@@ -133,35 +131,30 @@ bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event) {
 
 int GetAccentColor() {
     try {
-        return RegGetDword(HKEY_CURRENT_USER, ACCENT_COLOR_PATH,
-        ACCENT_COLOR_KEY);
+        return RegGetDword(HKEY_CURRENT_USER, ACCENT_COLOR_PATH, ACCENT_COLOR_KEY);
     } catch (LONG e) {
         return ACCENT_COLOR_DEFAULT_VALUE;
     }
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isDarkThemeEnabled(JNIEnv *env, jclass obj)
-{
-    return (jboolean) IsDarkMode();
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
+    return static_cast<jboolean>(IsDarkMode());
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isHighContrastEnabled(JNIEnv *env, jclass obj)
-{
-    return (jboolean) IsHighContrastMode();
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isHighContrastEnabled(JNIEnv *env, jclass obj) {
+    return static_cast<jboolean>(IsHighContrastMode());
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getFontScaleFactor(JNIEnv *env, jclass obj)
-{
-    return (jlong) GetTextScaleFactor();
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getFontScaleFactor(JNIEnv *env, jclass obj) {
+    return static_cast<jlong>(GetTextScaleFactor());
 }
 
 JNIEXPORT jint JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColor(JNIEnv *env, jclass obj)
-{
-    return (jint) GetAccentColor();
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColor(JNIEnv *env, jclass obj) {
+    return static_cast<jint>(GetAccentColor());
 }
 
 struct EventHandler {
@@ -223,25 +216,21 @@ struct EventHandler {
 };
 
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_createEventHandler(JNIEnv *env, jclass obj, jobject callback)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_createEventHandler(JNIEnv *env, jclass obj, jobject callback) {
     JavaVM *jvm;
-    if (env->GetJavaVM(&jvm) == 0)
-    {
+    if (env->GetJavaVM(&jvm) == JNI_OK) {
         jobject callbackRef = env->NewGlobalRef(callback);
         HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
         EventHandler* eventHandler = new EventHandler(jvm, callbackRef, event);
         return reinterpret_cast<jlong>(eventHandler);
     }
-    return (jlong) 0;
+    return static_cast<jlong>(0);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_deleteEventHandler(JNIEnv *env, jclass obj, jlong eventHandler)
-{
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_deleteEventHandler(JNIEnv *env, jclass obj, jlong eventHandler) {
     EventHandler *handler = reinterpret_cast<EventHandler *>(eventHandler);
-    if (handler)
-    {
+    if (handler) {
         env->DeleteGlobalRef(handler->callback);
         handler->stop();
         delete handler;
