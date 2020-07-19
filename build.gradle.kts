@@ -133,12 +133,21 @@ allprojects {
                     include("**/*.sh", "**/*.bsh", "**/*.cmd", "**/*.bat")
                     include("**/*.yml")
                     include("**/*.xsd", "**/*.xsl", "**/*.xml")
+                    exclude("**/*.eclipseformat.xml")
                 }
                 license()
             }
             format("markdown") {
                 filter.include("**/*.md")
                 endWithNewline()
+            }
+            cpp {
+                trimTrailingWhitespace()
+                endWithNewline()
+                license()
+                eclipse {
+                    configFile("${project.rootDir}/darklaf_cpp.eclipseformat.xml")
+                }
             }
         }
     }
@@ -153,45 +162,7 @@ allprojects {
 
     plugins.withType<JavaLibraryPlugin> {
         dependencies {
-            // cpp-library is not compatible with java-library
-            // they both use api and implementation configurations
-            val bom = platform(project(":darklaf-dependencies-bom"))
-            if (!plugins.hasPlugin("cpp-library")) {
-                "api"(bom)
-            } else {
-                // cpp-library does not know these configurations, so they are for Java
-                "compileOnly"(bom)
-                "runtimeOnly"(bom)
-            }
-        }
-    }
-
-    plugins.withId("cpp-library") {
-        listOf(AbstractPublishToMaven::class, GenerateMavenPom::class, GenerateModuleMetadata::class)
-            .forEach { type ->
-                tasks.withType(type)
-                    .matching {
-                        it.name.startsWith("publishMain") ||
-                                it.name.startsWith("signMain") ||
-                                it.name.startsWith("generatePomFileForMain") ||
-                                it.name.startsWith("generateMetadataFileForMain")
-                    }
-                    .configureEach {
-                        // We don't need to publish CPP artifacts (e.g. header files)
-                        enabled = false
-                    }
-            }
-        if (!skipAutostyle) {
-            autostyle {
-                cpp {
-                    licenseHeader(File("${project.rootDir}/LICENSE").readText())
-                    trimTrailingWhitespace()
-                    endWithNewline()
-                    eclipse {
-                        configFile("${project.rootDir}/darklaf_cpp.eclipseformat.xml")
-                    }
-                }
-            }
+            "api"(platform(project(":darklaf-dependencies-bom")))
         }
     }
 

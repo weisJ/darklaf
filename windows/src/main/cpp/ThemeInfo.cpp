@@ -165,61 +165,61 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColo
 }
 
 struct EventHandler {
-        JavaVM *jvm;
-        JNIEnv *env;
-        jobject callback;
-        HANDLE eventHandle;
-        std::thread notificationLoop;
-        std::atomic<bool> running = FALSE;
+    JavaVM *jvm;
+    JNIEnv *env;
+    jobject callback;
+    HANDLE eventHandle;
+    std::thread notificationLoop;
+    std::atomic<bool> running = FALSE;
 
-        void runCallBack() {
-            jclass runnableClass = env->GetObjectClass(callback);
-            jmethodID runMethodId = env->GetMethodID(runnableClass, "run", "()V");
-            if (runMethodId) {
-                env->CallVoidMethod(callback, runMethodId);
-            }
+    void runCallBack() {
+        jclass runnableClass = env->GetObjectClass(callback);
+        jmethodID runMethodId = env->GetMethodID(runnableClass, "run", "()V");
+        if (runMethodId) {
+            env->CallVoidMethod(callback, runMethodId);
         }
+    }
 
-        bool awaitPreferenceChange() {
-            if (!RegisterRegistryEvent(FONT_SCALE_PATH, eventHandle)) return FALSE;
-            if (!RegisterRegistryEvent(DARK_MODE_PATH, eventHandle)) return FALSE;
-            if (!RegisterRegistryEvent(HIGH_CONTRAST_PATH, eventHandle)) return FALSE;
-            if (!RegisterRegistryEvent(ACCENT_COLOR_PATH, eventHandle)) return FALSE;
-            return WaitForSingleObject(eventHandle, INFINITE) != WAIT_FAILED;
+    bool awaitPreferenceChange() {
+        if (!RegisterRegistryEvent(FONT_SCALE_PATH, eventHandle)) return FALSE;
+        if (!RegisterRegistryEvent(DARK_MODE_PATH, eventHandle)) return FALSE;
+        if (!RegisterRegistryEvent(HIGH_CONTRAST_PATH, eventHandle)) return FALSE;
+        if (!RegisterRegistryEvent(ACCENT_COLOR_PATH, eventHandle)) return FALSE;
+        return WaitForSingleObject(eventHandle, INFINITE) != WAIT_FAILED;
+    }
+
+    void run() {
+        int getEnvStat = jvm->GetEnv((void**) &env, JNI_VERSION_1_6);
+        if (getEnvStat == JNI_EDETACHED) {
+            if (jvm->AttachCurrentThread((void**) &env, NULL) != 0) return;
+        } else if (getEnvStat == JNI_EVERSION) {
+            return;
         }
-
-        void run() {
-            int getEnvStat = jvm->GetEnv((void**) &env, JNI_VERSION_1_6);
-            if (getEnvStat == JNI_EDETACHED) {
-                if (jvm->AttachCurrentThread((void**) &env, NULL) != 0) return;
-            } else if (getEnvStat == JNI_EVERSION) {
-                return;
-            }
-            while (running && awaitPreferenceChange()) {
-                if (running) {
-                    runCallBack();
-                    if (env->ExceptionCheck()) {
-                        env->ExceptionDescribe();
-                        break;
-                    }
+        while (running && awaitPreferenceChange()) {
+            if (running) {
+                runCallBack();
+                if (env->ExceptionCheck()) {
+                    env->ExceptionDescribe();
+                    break;
                 }
             }
-            jvm->DetachCurrentThread();
         }
+        jvm->DetachCurrentThread();
+    }
 
-        void stop() {
-            running = FALSE;
-            SetEvent(eventHandle);
-            notificationLoop.join();
-        }
+    void stop() {
+        running = FALSE;
+        SetEvent(eventHandle);
+        notificationLoop.join();
+    }
 
-        EventHandler(JavaVM *jvm_, jobject callback_, HANDLE eventHandle_) {
-            jvm = jvm_;
-            callback = callback_;
-            eventHandle = eventHandle_;
-            running = TRUE;
-            notificationLoop = std::thread(&EventHandler::run, this);
-        }
+    EventHandler(JavaVM *jvm_, jobject callback_, HANDLE eventHandle_) {
+        jvm = jvm_;
+        callback = callback_;
+        eventHandle = eventHandle_;
+        running = TRUE;
+        notificationLoop = std::thread(&EventHandler::run, this);
+    }
 };
 
 JNIEXPORT jlong JNICALL

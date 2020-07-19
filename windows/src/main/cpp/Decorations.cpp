@@ -42,7 +42,7 @@ bool Maximized(HWND hwnd) {
 
 bool IsLeftMousePressed(WindowWrapper *wrapper) {
     if (wrapper->left_pressed) return true;
-    if (GetSystemMetrics(SM_SWAPBUTTON)) {
+    if (GetSystemMetrics (SM_SWAPBUTTON)) {
         return GetAsyncKeyState(VK_RBUTTON) < 0;
     } else {
         return GetAsyncKeyState(VK_LBUTTON) < 0;
@@ -185,8 +185,8 @@ void AdjustMaximizedClientArea(HWND window, RECT &rect) {
  */
 void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam) {
     union {
-            LPARAM lparam;
-            RECT *rect;
+        LPARAM lparam;
+        RECT *rect;
     } params;
     params.lparam = lparam;
 

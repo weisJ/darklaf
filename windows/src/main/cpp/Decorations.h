@@ -33,31 +33,31 @@
 
 class WindowWrapper {
     public:
-        bool resizable = true;
-        bool popup_menu = false;
-        bool moving = false;
-        bool move_mode = false;
-        bool maximized = false;
-        bool skipEraseBg = true;
-        bool left_pressed = false;
+    bool resizable = true;
+    bool popup_menu = false;
+    bool moving = false;
+    bool move_mode = false;
+    bool maximized = false;
+    bool skipEraseBg = true;
+    bool left_pressed = false;
 
-        // The original window procedure.
-        WNDPROC prev_proc;
+    // The original window procedure.
+    WNDPROC prev_proc;
 
-        // The background brush.
-        HBRUSH bgBrush;
+    // The background brush.
+    HBRUSH bgBrush;
 
-        HWND window;
-        int width;
-        int height;
+    HWND window;
+    int width;
+    int height;
 
-        // The window region.
-        RECT rgn;
+    // The window region.
+    RECT rgn;
 
-        // The insets for the title bar area that is draggable.
-        int left = 0;
-        int right = 0;
-        int title_height = 0;
+    // The insets for the title bar area that is draggable.
+    int left = 0;
+    int right = 0;
+    int title_height = 0;
 
-        static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
+    static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 };
