@@ -128,12 +128,18 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         int leadIndex = adjustIndex(list.getLeadSelectionIndex(), list);
         int rowIncrement = (layoutOrientation == JList.HORIZONTAL_WRAP) ? columnCount : 1;
 
-        Rectangle rowBounds;
-        for (int colCounter = startColumn; colCounter <= endColumn; colCounter++) {
+        Rectangle rowBounds = new Rectangle();
+        for (int colCounter = startColumn; rowBounds.x < maxX; colCounter++) {
             int row = convertLocationToRowInColumn(paintBounds.y, colCounter);
             int rowCount = Math.max(rowsPerColumn, getRowCount(colCounter));
             int index = getModelIndex(colCounter, row);
-            rowBounds = getCellBounds(list, index);
+            if (colCounter <= endColumn) {
+                rowBounds = getCellBounds(list, index);
+            } else {
+                rowBounds.x += rowBounds.width;
+                rowBounds.width = maxX - rowBounds.x;
+                rowBounds.y = paintBounds.y;
+            }
 
             if (rowBounds == null) {
                 // Not valid, bail!
@@ -144,14 +150,19 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                                  && colCounter * rowsPerColumn + rowCount >= dataModel.getSize();
             int bgWidth = lastColumn ? maxX - rowBounds.x : 0;
             int maxRow = lastColumn ? Integer.MAX_VALUE : rowCount;
-            while (row < maxRow && rowBounds.y < maxY) {
+            while (rowBounds.y < maxY) {
                 rowBounds.height = getHeight(colCounter, row);
                 if (rowBounds.height <= 0) {
-                    rowBounds.height = colCounter >= 1 ? getHeight(colCounter - 1, row) : getRowHeight(row);
+                    rowBounds.height = colCounter >= 1
+                            ? getHeight(colCounter - 1, row)
+                            : getRowHeight(row);
                 }
                 g.setClip(rowBounds.x, rowBounds.y, bgWidth > 0 ? bgWidth : rowBounds.width, rowBounds.height);
                 g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);
-                paintCell(g, index, rowBounds, renderer, dataModel, selModel, leadIndex, row, bgWidth);
+                int cellIndex = row < maxRow && colCounter <= endColumn ? index : -1;
+                int rowIndex = row;
+                paintCell(g, cellIndex, rowBounds,
+                          renderer, dataModel, selModel, leadIndex, rowIndex, bgWidth);
                 rowBounds.y += rowBounds.height;
                 index += rowIncrement;
                 row++;
@@ -172,7 +183,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                              final ListModel<Object> dataModel,
                              final ListSelectionModel selModel, final int leadIndex, final int row,
                              final int bgWidth) {
-        boolean empty = index >= list.getModel().getSize();
+        boolean empty = index < 0 || index >= list.getModel().getSize();
         Object value = empty ? null : dataModel.getElementAt(index);
         boolean cellHasFocus = list.hasFocus() && (index == leadIndex);
         boolean isSelected = selModel.isSelectedIndex(index);
@@ -184,7 +195,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
 
         if (empty) {
             g.setColor(CellUtil.getListBackground(list, list, false, row));
-            // g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
+            g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
         } else {
             Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, index, isSelected,
                                                                                     cellHasFocus);
