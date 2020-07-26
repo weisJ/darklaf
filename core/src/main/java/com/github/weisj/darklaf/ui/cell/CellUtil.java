@@ -410,11 +410,20 @@ public class CellUtil {
     }
 
     public static void setupStandardBackground(final Component comp, final JComponent parent, final boolean selected) {
+        setupStandardBackground(comp, parent, selected, false);
+    }
+
+    public static void setupStandardBackground(final Component comp, final JComponent parent,
+                                               final boolean selected, final boolean alt) {
         setupBackground(comp, getColor(comp, hasFocus(parent, comp), selected,
-                                       cellBackground, cellBackgroundSelected,
-                                       cellBackgroundNoFocus, cellBackgroundSelectedNoFocus,
-                                       cellInactiveBackground, cellInactiveBackgroundSelected,
-                                       cellInactiveBackgroundNoFocus, cellInactiveBackgroundSelectedNoFocus));
+                                       alt ? cellBackgroundAlternative : cellBackground,
+                                       cellBackgroundSelected,
+                                       alt ? cellBackgroundNoFocusAlternative : cellBackgroundNoFocus,
+                                       cellBackgroundSelectedNoFocus,
+                                       alt ? cellInactiveBackgroundAlternative : cellInactiveBackground,
+                                       cellInactiveBackgroundSelected,
+                                       alt ? cellInactiveBackgroundNoFocusAlternative : cellInactiveBackgroundNoFocus,
+                                       cellInactiveBackgroundSelectedNoFocus));
     }
 
     public static void setupBackground(final Component comp, final Color c) {
