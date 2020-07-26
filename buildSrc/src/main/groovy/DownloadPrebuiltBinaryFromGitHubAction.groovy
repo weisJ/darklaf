@@ -148,7 +148,7 @@ class DownloadPrebuiltBinaryFromGitHubAction extends DefaultTask {
             cacheInfo.put(variantName, entry)
             getCacheInfoFile().write(JsonOutput.prettyPrint(JsonOutput.toJson(cacheInfo)))
         } finally {
-
+            LOCK.writeLock().unlock()
         }
     }
 
