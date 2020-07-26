@@ -25,10 +25,7 @@
 package com.github.weisj.darklaf.components.tristate;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -38,6 +35,10 @@ import com.github.weisj.darklaf.DarkLaf;
 public class TristateCheckBox extends JCheckBox {
     private final ChangeListener enableListener = e -> TristateCheckBox.this.setFocusable(getModel().isEnabled());
 
+    public TristateCheckBox() {
+        this(null);
+    }
+
     public TristateCheckBox(final String text) {
         this(text, null, TristateState.DESELECTED);
     }
@@ -45,31 +46,12 @@ public class TristateCheckBox extends JCheckBox {
     public TristateCheckBox(final String text, final Icon icon, final TristateState initial) {
         super(text, icon);
         setModel(new TristateButtonModel(initial));
-        // override action behaviour
-        super.addMouseListener(new MouseAdapter() {
-            public void mousePressed(final MouseEvent e) {
-                TristateCheckBox.this.iterateState();
-            }
-        });
+        addActionListener(e -> iterateState());
     }
 
     private void iterateState() {
         if (!getModel().isEnabled()) return;
-
-        grabFocus();
         getTristateModel().iterateState();
-        repaint();
-
-        int modifiers = 0;
-        AWTEvent currentEvent = EventQueue.getCurrentEvent();
-        if (currentEvent instanceof InputEvent) {
-            modifiers = ((InputEvent) currentEvent).getModifiersEx();
-        } else if (currentEvent instanceof ActionEvent) {
-            modifiers = ((ActionEvent) currentEvent).getModifiers();
-        }
-        fireActionPerformed(new ActionEvent(this,
-                                            ActionEvent.ACTION_PERFORMED, getText(),
-                                            System.currentTimeMillis(), modifiers));
     }
 
     public TristateButtonModel getTristateModel() {
@@ -84,6 +66,14 @@ public class TristateCheckBox extends JCheckBox {
         }
     }
 
+    public boolean allowsIndeterminate() {
+        return getTristateModel().allowsIndeterminate();
+    }
+
+    public void setAllowsIndeterminate(final boolean allowsIndeterminate) {
+        getTristateModel().setAllowsIndeterminate(allowsIndeterminate);
+    }
+
     @Override
     public void setSelected(final boolean b) {
         setState(b ? TristateState.SELECTED : TristateState.DESELECTED);
@@ -91,6 +81,10 @@ public class TristateCheckBox extends JCheckBox {
 
     @Override
     public void setModel(final ButtonModel newModel) {
+        ButtonModel model = getModel();
+        if (model instanceof TristateButtonModel) {
+            model.removeChangeListener(enableListener);
+        }
         super.setModel(newModel);
 
         if (model instanceof TristateButtonModel) {

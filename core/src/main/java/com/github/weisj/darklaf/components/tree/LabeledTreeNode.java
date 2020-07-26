@@ -22,39 +22,9 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.components.tristate;
+package com.github.weisj.darklaf.components.tree;
 
-public enum TristateState {
-    SELECTED(false) {
-        public TristateState next() {
-            return DESELECTED;
-        }
-    },
-    INDETERMINATE_SEL(true) {
-        public TristateState next() {
-            return SELECTED;
-        }
-    },
-    INDETERMINATE_DES(true) {
-        public TristateState next() {
-            return DESELECTED;
-        }
-    },
-    DESELECTED(false) {
-        public TristateState next() {
-            return INDETERMINATE_SEL;
-        }
-    };
+public interface LabeledTreeNode {
 
-    TristateState(final boolean indeterminate) {
-        this.indeterminate = indeterminate;
-    }
-
-    public abstract TristateState next();
-
-    private final boolean indeterminate;
-
-    public boolean isIndeterminate() {
-        return indeterminate;
-    }
+    String getLabel();
 }

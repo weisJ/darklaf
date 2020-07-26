@@ -31,19 +31,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
+import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.delegate.TreeCellRendererDelegate;
-import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererCheckBox;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererRadioButton;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
+import com.github.weisj.darklaf.ui.cell.*;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.PropertyValue;
 
 public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate implements TreeRendererSupport {
 
     private final DarkCellRendererCheckBox checkBoxRenderer = new DarkCellRendererCheckBox(false);
     private final DarkCellRendererRadioButton radioRenderer = new DarkCellRendererRadioButton(false);
+    private final DarkCellRendererTristateButton tristateRenderer = new DarkCellRendererTristateButton(false);
     private final TreeRendererComponent rendererComponent = new TreeRendererComponent();
 
     public DarkTreeCellRendererDelegate(final TreeCellRenderer renderer) {
@@ -55,17 +53,16 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
                                                   final boolean selected, final boolean expanded,
                                                   final boolean leaf, final int row, final boolean hasFocus) {
         boolean isFocused = DarkUIUtil.hasFocus(tree);
-        Object unwrapped = unwrapBooleanIfPossible(value);
+        Object unwrapped = unwrapValue(value);
         Component renderer;
         if (unwrapped instanceof Boolean && isBooleanRenderingEnabled(tree)) {
             Component comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded,
                                                                                    leaf, row, isFocused);
-            rendererComponent.setComponentOrientation(tree.getComponentOrientation());
-            comp.setComponentOrientation(tree.getComponentOrientation());
-            comp.setFont(tree.getFont());
-            rendererComponent.setRenderer(this);
-            rendererComponent.setRenderComponent(comp);
-            renderer = rendererComponent;
+            renderer = prepareRendererComponent(tree, comp);
+        } else if (unwrapped instanceof TristateState) {
+            Component comp = getTristateRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded,
+                                                                                    leaf, row, isFocused);
+            renderer = prepareRendererComponent(tree, comp);
         } else {
             if (getDelegate() instanceof DefaultTreeCellRenderer) {
                 ((DefaultTreeCellRenderer) getDelegate()).setIcon(null);
@@ -78,15 +75,19 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
         return renderer;
     }
 
-    public static Object unwrapBooleanIfPossible(final Object value) {
+    protected Component prepareRendererComponent(final JTree tree, final Component comp) {
+        rendererComponent.setComponentOrientation(tree.getComponentOrientation());
+        comp.setComponentOrientation(tree.getComponentOrientation());
+        comp.setFont(tree.getFont());
+        rendererComponent.setRenderer(this);
+        rendererComponent.setRenderComponent(comp);
+        return rendererComponent;
+    }
+
+    public static Object unwrapValue(final Object value) {
         Object val = value;
         if (val instanceof DefaultMutableTreeNode) {
             val = ((DefaultMutableTreeNode) val).getUserObject();
-        }
-        if (!(val instanceof Boolean)) {
-            String str = String.valueOf(val);
-            if (PropertyValue.TRUE.equals(str)) val = true;
-            if (PropertyValue.FALSE.equals(str)) val = false;
         }
         return val;
     }
@@ -95,12 +96,16 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
         return PropertyUtil.getBooleanProperty(tree, DarkTreeUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX);
     }
 
-    protected DarkCellRendererToggleButton<?> getBooleanRenderer(final JTree table) {
-        if (PropertyUtil.isPropertyEqual(table, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE,
+    protected DarkCellRendererToggleButton<?> getBooleanRenderer(final JTree tree) {
+        if (PropertyUtil.isPropertyEqual(tree, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE,
                                          DarkTreeUI.RENDER_TYPE_RADIOBUTTON)) {
             return radioRenderer;
         }
         return checkBoxRenderer;
+    }
+
+    protected DarkCellRendererToggleButton<?> getTristateRenderer(final JTree tree) {
+        return tristateRenderer;
     }
 
     @Override

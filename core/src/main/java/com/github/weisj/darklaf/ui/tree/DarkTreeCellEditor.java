@@ -38,7 +38,10 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.tree.TreeCellEditor;
 
-import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.components.tree.LabeledTreeNode;
+import com.github.weisj.darklaf.components.tristate.TristateButtonModel;
+import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
+import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
@@ -73,10 +76,14 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             }
 
             public void setValue(final Object value) {
-                boolean selected = Boolean.TRUE.equals(DarkTreeCellRendererDelegate.unwrapBooleanIfPossible(value));
-                toggleButton.setSelected(selected);
-                if (value instanceof SelectableTreeNode) {
-                    toggleButton.setText(((SelectableTreeNode) value).getLabel());
+                Object unwrapped = DarkTreeCellRendererDelegate.unwrapValue(value);
+                if (unwrapped instanceof TristateState && toggleButton instanceof TristateCheckBox) {
+                    ((TristateCheckBox) toggleButton).setState((TristateState) unwrapped);
+                } else {
+                    toggleButton.setSelected(Boolean.TRUE.equals(unwrapped));
+                }
+                if (value instanceof LabeledTreeNode) {
+                    toggleButton.setText(((LabeledTreeNode) value).getLabel());
                 }
             }
         };
@@ -159,7 +166,12 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
             ((JComboBox<Object>) editorComponent).addItem(value);
             ((JComboBox<?>) editorComponent).setSelectedItem(value);
         } else if (editorComponent instanceof JToggleButton) {
-            ((JToggleButton) editorComponent).setSelected(!(((JToggleButton) editorComponent).isSelected()));
+            ButtonModel model = ((JToggleButton) editorComponent).getModel();
+            if (model instanceof TristateButtonModel) {
+                ((TristateButtonModel) model).iterateState();
+            } else {
+                model.setSelected(!model.isSelected());
+            }
             SwingUtilities.invokeLater(tree::stopEditing);
         }
         editorComponent.setOpaque(true);

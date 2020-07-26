@@ -29,6 +29,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
+import java.util.Objects;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -383,13 +384,6 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     @Override
-    protected boolean startEditing(final TreePath path, final MouseEvent event) {
-        boolean editing = super.startEditing(path, event);
-        if (editing) tree.repaint();
-        return editing;
-    }
-
-    @Override
     public void paint(final Graphics g, final JComponent c) {
         if (tree != c) {
             throw new InternalError("incorrect component");
@@ -571,7 +565,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected Color getLineColor(final TreePath path) {
-        if (selectedChildOf(path)) {
+        if (isChildOfSelectionPath(path)) {
             if (tree.hasFocus() || tree.isEditing()) {
                 return focusSelectedLineColor;
             } else {
@@ -601,12 +595,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         return PropertyUtil.getString(tree, KEY_LINE_STYLE, "");
     }
 
-    protected boolean selectedChildOf(final TreePath path) {
-        TreePath p = tree.getSelectionPath();
+    protected boolean isChildOfSelectionPath(final TreePath path) {
+        TreePath p = tree.isEditing() ? tree.getEditingPath() : tree.getSelectionPath();
         if (p == null) return false;
-        if (p == path) return true;
+        if (Objects.equals(p, path)) return true;
         if (tree.isExpanded(p)) return false;
-        return p.getParentPath() == path;
+        return Objects.equals(p.getParentPath().getLastPathComponent(), path.getLastPathComponent());
     }
 
     protected boolean isDashedLine() {

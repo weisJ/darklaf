@@ -26,10 +26,12 @@ package com.github.weisj.darklaf.components;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.github.weisj.darklaf.components.tree.LabeledTreeNode;
+
 /**
  * @author Jannis Weis
  */
-public class SelectableTreeNode extends DefaultMutableTreeNode {
+public class SelectableTreeNode extends DefaultMutableTreeNode implements LabeledTreeNode {
 
     private String label;
 
@@ -49,10 +51,15 @@ public class SelectableTreeNode extends DefaultMutableTreeNode {
         this.label = label;
     }
 
-    public void setSelected(final boolean selected) {
-        this.userObject = selected;
+    public boolean isSelected() {
+        return Boolean.TRUE.equals(getUserObject());
     }
 
+    public void setSelected(final boolean selected) {
+        setUserObject(selected);
+    }
+
+    @Override
     public String getLabel() {
         return label;
     }

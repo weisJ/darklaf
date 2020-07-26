@@ -48,46 +48,7 @@ public class TreeDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Very very very very very long node A");
-        DefaultMutableTreeNode child = new DefaultMutableTreeNode("A loooooooooooooooooooooooooooooooooooooong leaf A");
-        DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
-        DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
-        DefaultMutableTreeNode parent3 = new DefaultMutableTreeNode("Nested");
-
-        DefaultMutableTreeNode current = parent3;
-        for (int i = 0; i < 10; i++) {
-            DefaultMutableTreeNode node1 = new DefaultMutableTreeNode("Nested1 " + i);
-            DefaultMutableTreeNode node2 = new DefaultMutableTreeNode("Nested2 " + i);
-            current.add(node1);
-            current.add(node2);
-            current = node1;
-        }
-
-        parent1.add(child);
-        parent1.add(child1);
-        parent2.add(child2);
-        root.add(parent1);
-        root.add(parent2);
-        root.add(parent3);
-
-        for (int i = 0; i < 100; i++) {
-            root.add(new DefaultMutableTreeNode("Leaf " + i));
-        }
-
-        JTree tree = new JTree(root);
-        tree.setCellRenderer(new DefaultTreeCellRenderer() {
-            @Override
-            public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
-                                                          final boolean expanded,
-                                                          final boolean leaf, final int row, final boolean hasFocus) {
-                Component component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
-                                                                         hasFocus);
-                component.setEnabled(tree.isEnabled() && (value != parent1 && value != child));
-                return component;
-            }
-        });
+        JTree tree = createTree();
         JSplitPane splitPane = new JSplitPane();
         splitPane.setLeftComponent(new OverlayScrollPane(tree));
         splitPane.setRightComponent(new JPanel());
@@ -161,6 +122,50 @@ public class TreeDemo implements ComponentDemo {
         });
         tree.setLargeModel(true);
         return panel;
+    }
+
+    private JTree createTree() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+        DefaultMutableTreeNode parent1 = new DefaultMutableTreeNode("Very very very very very long node A");
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode("A loooooooooooooooooooooooooooooooooooooong leaf A");
+        DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
+        DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
+        DefaultMutableTreeNode parent3 = new DefaultMutableTreeNode("Nested");
+
+        DefaultMutableTreeNode current = parent3;
+        for (int i = 0; i < 10; i++) {
+            DefaultMutableTreeNode node1 = new DefaultMutableTreeNode("Nested1 " + i);
+            DefaultMutableTreeNode node2 = new DefaultMutableTreeNode("Nested2 " + i);
+            current.add(node1);
+            current.add(node2);
+            current = node1;
+        }
+
+        parent1.add(child);
+        parent1.add(child1);
+        parent2.add(child2);
+        root.add(parent1);
+        root.add(parent2);
+        root.add(parent3);
+
+        for (int i = 0; i < 100; i++) {
+            root.add(new DefaultMutableTreeNode("Leaf " + i));
+        }
+
+        JTree tree = new JTree(root);
+        tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
+                                                          final boolean expanded,
+                                                          final boolean leaf, final int row, final boolean hasFocus) {
+                Component component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
+                                                                         hasFocus);
+                component.setEnabled(tree.isEnabled() && (value != parent1 && value != child));
+                return component;
+            }
+        });
+        return tree;
     }
 
     @Override

@@ -30,6 +30,7 @@ import javax.swing.*;
 
 public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     private TristateState state = TristateState.DESELECTED;
+    private boolean allowsIndeterminate = true;
 
     public TristateButtonModel() {
         this(TristateState.DESELECTED);
@@ -44,7 +45,7 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     }
 
     public void setIndeterminate() {
-        if (isIndeterminate()) return;
+        if (!allowsIndeterminate || isIndeterminate()) return;
         setState(isSelected() ? TristateState.INDETERMINATE_DES : TristateState.INDETERMINATE_SEL);
     }
 
@@ -61,8 +62,18 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
         return state == TristateState.DESELECTED;
     }
 
-    protected void iterateState() {
-        setState(state.next());
+    public void iterateState() {
+        if (allowsIndeterminate) {
+            setState(state.next());
+        } else {
+            if (state == TristateState.SELECTED) {
+                setState(TristateState.DESELECTED);
+            } else if (state == TristateState.DESELECTED) {
+                setState(TristateState.SELECTED);
+            } else {
+                setState(state.next());
+            }
+        }
     }
 
     public TristateState getState() {
@@ -71,11 +82,25 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
 
     public void setState(final TristateState state) {
         if (this.state == state) return;
+        if (!allowsIndeterminate && state.isIndeterminate()) {
+            return;
+        }
         this.state = state;
         displayState();
         fireStateChanged();
         int indeterminate = 3;
         // noinspection MagicConstant
         fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this, indeterminate));
+    }
+
+    public boolean allowsIndeterminate() {
+        return allowsIndeterminate;
+    }
+
+    public void setAllowsIndeterminate(final boolean allowsIndeterminate) {
+        this.allowsIndeterminate = allowsIndeterminate;
+        if (!allowsIndeterminate && state.isIndeterminate()) {
+            setState(state.next());
+        }
     }
 }

@@ -31,7 +31,8 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
-import com.github.weisj.darklaf.components.SelectableTreeNode;
+import com.github.weisj.darklaf.components.tree.LabeledTreeNode;
+import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRendererDelegate;
 
@@ -61,16 +62,15 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
     }
 
     @Override
-    public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
-                                                  final boolean expanded, final boolean leaf, final int row,
-                                                  final boolean focus) {
+    public T getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
+                                          final boolean expanded, final boolean leaf, final int row,
+                                          final boolean focus) {
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         } else {
-            boolean sel = Boolean.TRUE.equals(DarkTreeCellRendererDelegate.unwrapBooleanIfPossible(value));
-            toggleButton.setSelected(sel);
-            if (value instanceof SelectableTreeNode) {
-                toggleButton.setText(((SelectableTreeNode) value).getLabel());
+            setValue(value);
+            if (value instanceof LabeledTreeNode) {
+                toggleButton.setText(((LabeledTreeNode) value).getLabel());
             }
         }
         toggleButton.setHasFocus(false);
@@ -78,7 +78,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         return toggleButton;
     }
 
-    public JToggleButton getButton() {
+    protected void setValue(final Object value) {
+        toggleButton.setSelected(Boolean.TRUE.equals(DarkTreeCellRendererDelegate.unwrapValue(value)));
+    }
+
+    public T getButton() {
         return toggleButton;
     }
 
@@ -121,6 +125,11 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
             putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
         }
 
+        @Override
+        public void setSelected(final boolean b) {
+            super.setSelected(b);
+        }
+
         public void setHasFocus(final boolean hasFocus) {
             this.hasFocus = hasFocus;
         }
@@ -128,6 +137,34 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         @Override
         public boolean hasFocus() {
             return hasFocus || super.hasFocus();
+        }
+
+        @Override
+        public boolean isFocusOwner() {
+            return super.hasFocus();
+        }
+    }
+
+    public static class CellTristateButton extends TristateCheckBox implements CellRenderer, CellEditorToggleButton {
+
+        private boolean hasFocus;
+
+        public CellTristateButton(final boolean opaque) {
+            setOpaque(opaque);
+            setHorizontalAlignment(CENTER);
+            putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
+            putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
+        }
+
+        @Override
+        public boolean hasFocus() {
+            return hasFocus || super.hasFocus();
+        }
+
+        @Override
+        public void setHasFocus(final boolean hasFocus) {
+            this.hasFocus = hasFocus;
         }
 
         @Override
