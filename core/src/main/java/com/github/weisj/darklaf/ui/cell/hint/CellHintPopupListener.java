@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.MouseInputAdapter;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
@@ -97,6 +98,15 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                 final Dimension prefSize = isEditing
                         ? comp.getBounds().getSize()
                         : comp.getPreferredSize();
+                if (comp instanceof JComponent) {
+                    // Avoid showing the popup if only the border is obscured.
+                    Border border = ((JComponent) comp).getBorder();
+                    if (border != null) {
+                        Insets borderInsets = border.getBorderInsets(comp);
+                        prefSize.width -= borderInsets.left + borderInsets.right;
+                        prefSize.height -= borderInsets.top + borderInsets.bottom;
+                    }
+                }
                 if (!(visibleBounds.width >= prefSize.width && visibleBounds.height >= prefSize.height)) {
                     Point popupLocation = cellContainer.getComponent().getLocationOnScreen();
                     Rectangle rect = calculatePopupBounds(cellBounds, visibleBounds, !isEditing);
@@ -105,6 +115,9 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                         cellBounds.y = rect.y - cellBounds.y;
                         rect.x += popupLocation.x;
                         rect.y += popupLocation.y;
+                        System.out.println("Allocation " + allocation);
+                        System.out.println("CellBounds " + cellBounds);
+                        System.out.println("PreffeSize " + prefSize);
                         enter(index, rect, cellBounds);
                         return;
                     } else {
@@ -228,7 +241,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                 popup.show();
                 if (DarkPopupFactory.getPopupType(popup) == DarkPopupFactory.PopupType.HEAVY_WEIGHT) {
                     // Ensure heavy weight popup is at desired location.
-                    movePopup(bounds);
+                    SwingUtilities.invokeLater(() -> movePopup(bounds));
                 }
             }
         }

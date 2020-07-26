@@ -28,9 +28,11 @@ import java.awt.*;
 import java.util.function.BiConsumer;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
+import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -180,6 +182,12 @@ public class ToolTipUtil {
         Point p = new Point(x, y);
         SwingUtilities.convertPointToScreen(p, target);
         window.setLocation(p);
-        SwingUtilities.invokeLater(() -> window.setLocation(p));
+        toolTip.addAncestorListener(new AncestorAdapter() {
+            @Override
+            public void ancestorAdded(final AncestorEvent event) {
+                window.setLocation(p.x, p.y);
+                toolTip.removeAncestorListener(this);
+            }
+        });
     }
 }

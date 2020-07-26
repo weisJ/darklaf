@@ -43,7 +43,6 @@ import javax.swing.text.Position;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.list.DarkListCellRendererDelegate;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
