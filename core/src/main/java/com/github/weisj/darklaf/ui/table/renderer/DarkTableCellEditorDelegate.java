@@ -151,9 +151,9 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
         if (rendererComp instanceof JLabel && comp instanceof JComponent) {
             Icon icon = ((JLabel) rendererComp).getIcon();
             if (icon != null) {
-                comp = iconWrapper;
                 iconWrapper.init((JComponent) comp, icon, rendererComp.getComponentOrientation().isLeftToRight());
                 iconWrapper.setIconGap(((JLabel) rendererComp).getIconTextGap() - 1);
+                comp = iconWrapper;
             }
         }
         return comp;
