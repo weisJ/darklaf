@@ -469,7 +469,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         }
     }
 
-    public class DarkFileRenderer extends DarkListCellRendererDelegate {
+    public class DarkFileRenderer extends DefaultListCellRenderer {
 
         @Override
         public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
