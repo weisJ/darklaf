@@ -2,7 +2,6 @@ apply(from= "../gradle/loadProps.gradle.kts")
 
 plugins {
     `java-gradle-plugin`
-    `kotlin-dsl`
     groovy
 }
 
@@ -30,8 +29,4 @@ gradlePlugin {
             implementationClass = "UsePrebuiltBinariesWhenUnbuildablePlugin"
         }
     }
-}
-
-configure<KotlinDslPluginOptions> {
-    experimentalWarning.set(false)
 }

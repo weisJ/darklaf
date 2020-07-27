@@ -1,5 +1,5 @@
-import dev.nokee.platform.nativebase.OperatingSystemFamily
-import dev.nokee.platform.nativebase.TargetMachine
+import dev.nokee.runtime.nativebase.OperatingSystemFamily
+import dev.nokee.runtime.nativebase.TargetMachine
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
@@ -8,10 +8,12 @@ class JniUtils {
         String operatingSystemFamily = 'macos'
         if (targetMachine.operatingSystemFamily.windows) {
             operatingSystemFamily = 'windows'
+        } else if (targetMachine.operatingSystemFamily.linux) {
+            operatingSystemFamily = 'linux'
         }
 
         String architecture = 'x86-64'
-        if (targetMachine.architecture.'32Bit') {
+        if (targetMachine.architecture.is32Bit()) {
             architecture = 'x86'
         }
 
