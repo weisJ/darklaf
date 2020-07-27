@@ -26,7 +26,6 @@ package com.github.weisj.darklaf.components.tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
 
 import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.util.DarkUIUtil;
