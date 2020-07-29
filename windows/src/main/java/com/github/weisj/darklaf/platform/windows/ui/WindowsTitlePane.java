@@ -717,8 +717,11 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (title == null) title = "";
         return windowHandle == 0
                || (getDecorationStyle() == JRootPane.NONE
-                   && menuBar == null
-                   && title.length() == 0);
+                   && (menuBar == null || !menuBar.isVisible())
+                   && title.length() == 0)
+               // e.g. VCLJ achieves fullscreen by hiding the titlebar through jni and setting visibility of
+               // the menubar.
+               || (menuBar != null && !menuBar.isVisible());
     }
 
     @Override
