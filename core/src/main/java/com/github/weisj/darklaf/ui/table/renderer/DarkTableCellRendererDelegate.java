@@ -60,13 +60,14 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
         Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table);
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && hasFocus && !isRowFocus;
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
+                                      && table.getSelectionModel().getLeadSelectionIndex() == row;
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
         if (component instanceof JComponent) {
             setupBorderStyle(table, row, column, (JComponent) component, isLeadSelectionCell, isRowFocus);
         }
-        CellUtil.setupTableForeground(component, table, paintSelected);
+        CellUtil.setupTableForeground(component, table, paintSelected, row);
         CellUtil.setupTableBackground(component, table, paintSelected, row);
         return component;
     }
@@ -75,10 +76,7 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
                                  final JComponent component, final boolean isLeadSelectionCell,
                                  final boolean isRowFocus) {
         Border focusBorder = UIManager.getBorder("Table.focusSelectedCellHighlightBorder");
-        if (isLeadSelectionCell
-            && table.getSelectionModel().getLeadSelectionIndex() == row
-            && DarkUIUtil.hasFocus(table)
-            && !table.isEditing()) {
+        if (isLeadSelectionCell && !table.isEditing()) {
             PropertyUtil.installBorder(component, focusBorder);
             if (isRowFocus) {
                 component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, true);
@@ -97,7 +95,7 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
                 component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, false);
             }
         } else if (component.getBorder() == focusBorder) {
-            component.setBorder(null);
+            component.setBorder(UIManager.getBorder("Table.cellNoFocusBorder"));
         }
     }
 

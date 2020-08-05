@@ -22,39 +22,33 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.tree;
+package com.github.weisj.darklaf.components.border;
 
 import java.awt.*;
 
-import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
+public class BorderWrapper implements Border {
 
-/**
- * @author Jannis Weis
- */
-public class DarkTreeCellBorder extends DarkCellBorderUIResource implements Border, UIResource {
+    private final Border border;
 
-    protected final Color borderColor;
-    protected Insets insets;
-
-    public DarkTreeCellBorder() {
-        super(UIManager.getInsets("Tree.editorBorderInsets"));
-        borderColor = UIManager.getColor("Tree.editorBorderColor");
+    public BorderWrapper(final Border border) {
+        this.border = border;
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g, final int x,
-                            final int y, final int width, final int height) {
-        g.setColor(borderColor);
-        PaintUtil.drawRect(g, 0, 0, width, height, 1);
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+                            final int height) {
+        border.paintBorder(c, g, x, y, width, height);
+    }
+
+    @Override
+    public Insets getBorderInsets(final Component c) {
+        return border.getBorderInsets(c);
     }
 
     @Override
     public boolean isBorderOpaque() {
-        return true;
+        return border.isBorderOpaque();
     }
 }

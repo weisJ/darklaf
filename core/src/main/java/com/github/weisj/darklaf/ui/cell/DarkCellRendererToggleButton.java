@@ -43,7 +43,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
                                          implements TableCellRenderer, TreeCellRenderer, SwingConstants {
 
     private final T toggleButton;
-    private final Border border = new DarkCellBorder();
+    private final Border border = new DarkCellBorderUIResource();
 
     public DarkCellRendererToggleButton(final T toggleButton) {
         this.toggleButton = toggleButton;

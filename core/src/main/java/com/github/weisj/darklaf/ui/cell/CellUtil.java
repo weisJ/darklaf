@@ -33,6 +33,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import com.github.weisj.darklaf.graphics.ColorWrapper;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
+import com.github.weisj.darklaf.ui.table.TableConstants;
 import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -248,8 +249,13 @@ public class CellUtil {
         listCellInactiveBackgroundSelectedNoFocus = d.getColor("List.inactiveBackgroundSelectedNoFocus");
     }
 
-    public static void setupTableForeground(final Component comp, final JTable parent, final boolean selected) {
-        setupForeground(comp, parent, selected,
+    public static void setupTableForeground(final Component comp, final JTable parent, final boolean selected,
+                                            final int row) {
+        boolean sel = selected;
+        if (parent.getSelectionModel().getLeadSelectionIndex() == row) {
+            sel = !PropertyUtil.getBooleanProperty(parent, TableConstants.KEY_FULL_ROW_FOCUS_BORDER);
+        }
+        setupForeground(comp, parent, sel,
                         tableCellForeground, tableCellForegroundSelected,
                         tableCellForegroundNoFocus, tableCellForegroundSelectedNoFocus,
                         tableCellInactiveForeground, tableCellInactiveForegroundSelected,
@@ -305,7 +311,11 @@ public class CellUtil {
     public static Color getTableBackground(final Component comp, final JTable parent, final boolean selected,
                                            final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTableUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(comp, hasFocus(parent, comp), selected,
+        boolean sel = selected;
+        if (parent.getSelectionModel().getLeadSelectionIndex() == row) {
+            sel = !PropertyUtil.getBooleanProperty(parent, TableConstants.KEY_FULL_ROW_FOCUS_BORDER);
+        }
+        return getColor(comp, hasFocus(parent, comp), sel,
                         alt ? tableCellBackgroundAlternative : tableCellBackground,
                         tableCellBackgroundSelected,
                         alt ? tableCellBackgroundNoFocusAlternative : tableCellBackgroundNoFocus,
@@ -500,9 +510,13 @@ public class CellUtil {
             if (row > CellUtil.getMinRowIndex(table)) g.fillRect(0, 0, width, 1);
             g.fillRect(0, height - 1, width, 1);
         }
+        boolean isWrapper = isInWrapper(c);
+        ComponentOrientation orientation = table.getComponentOrientation();
         if (!table.getShowVerticalLines()) {
-            if (col > CellUtil.getMinColumnIndex(table)) g.fillRect(0, 0, 1, height);
-            if (col < CellUtil.getMaxColumnIndex(table)) g.fillRect(width - 1, 0, 1, height);
+            if ((isWrapper && orientation.isLeftToRight())
+                || col > CellUtil.getMinColumnIndex(table)) g.fillRect(0, 0, 1, height);
+            if ((isWrapper && orientation.isLeftToRight())
+                || col < CellUtil.getMaxColumnIndex(table)) g.fillRect(width - 1, 0, 1, height);
         } else if (isInWrapper(c)) {
             if (table.getComponentOrientation().isLeftToRight()) {
                 g.fillRect(0, 0, 1, height);

@@ -29,13 +29,13 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
+import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTableCellFocusBorder extends DarkCellBorder {
+public class DarkTableCellFocusBorder extends DarkCellBorderUIResource {
 
     protected final Color rowBorderColor;
     protected final Color borderColor;

@@ -44,7 +44,7 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
     @Override
     public Rectangle getCellBoundsAt(final Pair<Integer, Integer> position, final boolean isEditing) {
         return isEditing
-                ? ui.getCellEditorComponent().getBounds()
+                ? table.getEditorComponent().getBounds()
                 : table.getCellRect(position.getFirst(), position.getSecond(), false);
     }
 
@@ -90,6 +90,6 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
 
     @Override
     public Component getCellEditorComponent(final Pair<Integer, Integer> position) {
-        return ui.getCellEditorComponent();
+        return table.getEditorComponent();
     }
 }

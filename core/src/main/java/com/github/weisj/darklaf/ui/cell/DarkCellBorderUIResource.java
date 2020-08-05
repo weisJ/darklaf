@@ -22,39 +22,21 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.tree;
+package com.github.weisj.darklaf.ui.cell;
 
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
-
-import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
 
 /**
  * @author Jannis Weis
  */
-public class DarkTreeCellBorder extends DarkCellBorderUIResource implements Border, UIResource {
+public class DarkCellBorderUIResource extends DarkCellBorder implements UIResource {
 
-    protected final Color borderColor;
-    protected Insets insets;
+    public DarkCellBorderUIResource() {}
 
-    public DarkTreeCellBorder() {
-        super(UIManager.getInsets("Tree.editorBorderInsets"));
-        borderColor = UIManager.getColor("Tree.editorBorderColor");
-    }
-
-    @Override
-    public void paintBorder(final Component c, final Graphics g, final int x,
-                            final int y, final int width, final int height) {
-        g.setColor(borderColor);
-        PaintUtil.drawRect(g, 0, 0, width, height, 1);
-    }
-
-    @Override
-    public boolean isBorderOpaque() {
-        return true;
+    public DarkCellBorderUIResource(final Insets insets) {
+        super(insets);
     }
 }

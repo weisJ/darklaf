@@ -44,8 +44,6 @@ import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.util.PropertyValue;
 
 /**
- * @author vincencopalazzo
- * @author atarw
  * @author Jannis Weis
  */
 public class DarkTableCellEditor extends DefaultCellEditor {

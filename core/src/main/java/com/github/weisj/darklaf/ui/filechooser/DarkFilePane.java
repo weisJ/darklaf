@@ -34,21 +34,29 @@ import java.util.function.Supplier;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
+import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DarkFilePane extends DarkFilePaneUIBridge {
+
+    protected TableCellEditor tableCellEditor;
 
     public DarkFilePane(final FileChooserUIAccessor fileChooserUIAccessor) {
         super(fileChooserUIAccessor);
@@ -61,6 +69,8 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         megaByteString = UIManager.getString("FileChooser.fileSizeMegaBytes");
         gigaByteString = UIManager.getString("FileChooser.fileSizeGigaBytes");
         editCell = new JTextField();
+        editCell.setName("FileChooser.listEditCell");
+        editCell.addActionListener(new EditActionListener());
         editCell.setBorder(new TextTableCellEditorBorder());
         editCell.putClientProperty("JTextField.listCellEditor", true);
         editCell.putClientProperty(DarkTextUI.KEY_IS_LIST_EDITOR, true);
@@ -87,6 +97,16 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                     }
                 }
                 return -1;
+            }
+
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                // for (Component c = this; c != null; c = c.getParent()) {
+                // System.out.println(c);
+                // System.out.println(c.getBackground());
+                // System.out.println(c.isOpaque());
+                // }
             }
         };
         list.setCellRenderer(new DarkFileRenderer());
@@ -136,6 +156,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         JScrollPane scrollPane = overlayScrollPane.getScrollPane();
         if (listViewBackground != null) {
             list.setBackground(listViewBackground);
+            p.setBackground(listViewBackground);
         }
         if (listViewBorder != null) {
             scrollPane.setBorder(listViewBorder);
@@ -187,8 +208,9 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         detailsTable.setShowGrid(false);
         detailsTable.putClientProperty("JTable.autoStartsEdit", Boolean.FALSE);
         detailsTable.addKeyListener(detailsKeyListener);
-        detailsTable.putClientProperty("JTable.rowFocusBorder", true);
-        detailsTable.putClientProperty("JTable.fileChooserParent", (Supplier<JFileChooser>) this::getFileChooser);
+        detailsTable.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, true);
+        detailsTable.putClientProperty(DarkTableUI.KEY_FILE_CHOOSER_PARENT,
+                                       (Supplier<JFileChooser>) this::getFileChooser);
         detailsTable.putClientProperty("JTable.fileNameColumnIndex", COLUMN_FILENAME);
 
         Font font = list.getFont();
@@ -284,13 +306,6 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
             case VIEWTYPE_LIST :
                 editFile = (File) getModel().getElementAt(getRowSorter().convertRowIndexToModel(index));
                 Rectangle r = list.getCellBounds(index, index);
-                if (editCell == null) {
-                    editCell = new JTextField();
-                    editCell.setName("Tree.cellEditor");
-                    editCell.addActionListener(new EditActionListener());
-                    editCell.addFocusListener(editorFocusListener);
-                    editCell.setNextFocusableComponent(list);
-                }
                 list.add(editCell);
                 editCell.setText(chooser.getName(editFile));
                 ComponentOrientation orientation = list.getComponentOrientation();
@@ -488,6 +503,37 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 }
             }
             return comp;
+        }
+    }
+
+    protected TableCellEditor getDetailsTableCellEditor() {
+        if (tableCellEditor == null) {
+            tableCellEditor = new DarkTableCellEditorDelegate(new DetailsTableCellEditor());
+        }
+        return tableCellEditor;
+    }
+
+    protected class DetailsTableCellEditor extends DarkTableCellEditor {
+
+        public DetailsTableCellEditor() {
+            editorComponent.addFocusListener(editorFocusListener);
+            editorComponent.addAncestorListener(new AncestorAdapter() {
+                @Override
+                public void ancestorAdded(final AncestorEvent event) {
+                    SwingUtilities.invokeLater(() -> {
+                        editorComponent.requestFocus();
+                        ((JTextComponent) editorComponent).selectAll();
+                    });
+                }
+            });
+        }
+
+        public Component getTableCellEditorComponent(final JTable table, final Object value,
+                                                     final boolean isSelected, final int row, final int column) {
+            Object realValue = value instanceof File
+                    ? getFileChooser().getName((File) value)
+                    : value;
+            return super.getTableCellEditorComponent(table, realValue, isSelected, row, column);
         }
     }
 }

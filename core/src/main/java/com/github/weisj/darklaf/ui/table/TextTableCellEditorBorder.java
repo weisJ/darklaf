@@ -27,17 +27,20 @@ package com.github.weisj.darklaf.ui.table;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Jannis Weis
  */
-public class TextTableCellEditorBorder extends DarkTableCellBorder {
+public class TextTableCellEditorBorder extends DarkCellBorder {
 
     protected final Color borderColor;
+    private final Border base = new DarkTableCellBorder();
 
     public TextTableCellEditorBorder() {
         borderColor = UIManager.getColor("TextField.border.enabled");
@@ -56,11 +59,11 @@ public class TextTableCellEditorBorder extends DarkTableCellBorder {
     }
 
     private JTable getTable(final Component c) {
-        return DarkUIUtil.getParentOfType(JTable.class, c, 2);
+        return DarkUIUtil.getParentOfType(JTable.class, c, 3);
     }
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        return CellUtil.adjustEditorInsets(super.getBorderInsets(), c, getTable(c));
+        return CellUtil.adjustEditorInsets(base.getBorderInsets(c), c, getTable(c));
     }
 }

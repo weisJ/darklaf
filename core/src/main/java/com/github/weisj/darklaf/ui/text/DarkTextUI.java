@@ -166,10 +166,10 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
 
     @Override
     protected void uninstallDefaults() {
-        super.uninstallDefaults();
         uninstalling = true;
         uninstallBorder();
         uninstallPopupMenu();
+        super.uninstallDefaults();
     }
 
     @Override

@@ -28,12 +28,11 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.UIResource;
 
 /**
  * @author Jannis Weis
  */
-public class DarkCellBorder extends EmptyBorder implements UIResource {
+public class DarkCellBorder extends EmptyBorder {
 
     public DarkCellBorder() {
         this(UIManager.getInsets("Cell.borderInsets"));

@@ -415,7 +415,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             }
         }
         if (isEditorCell) {
-            Component component = getCellEditorComponent();
+            Component component = table.getEditorComponent();
             component.setBounds(x, y, w, h);
             component.validate();
         } else {
@@ -434,18 +434,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         }
         rendererDelegate.setDelegate(renderer);
         return rendererDelegate;
-    }
-
-    public Component getCellEditorComponent() {
-        Component c = table.getEditorComponent();
-        if (!(table.getCellEditor() instanceof DarkTableCellEditorDelegate)) {
-            int row = table.getEditingRow();
-            int column = table.getEditingColumn();
-            Object value = table.getValueAt(row, column);
-            c = DarkTableCellEditorDelegate.prepareEditor(c, table, value,
-                                                          table.isCellSelected(row, column), row, column);
-        }
-        return c;
     }
 
     public static int adjustDistance(final int distance, final Rectangle rect,

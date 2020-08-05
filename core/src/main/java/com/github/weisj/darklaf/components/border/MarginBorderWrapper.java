@@ -30,7 +30,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicBorders;
 
-public class MarginBorderWrapper extends CompoundBorder implements UIResource {
+public class MarginBorderWrapper extends CompoundBorder {
 
     public MarginBorderWrapper(final Border border) {
         super(border, new BasicBorders.MarginBorder());
@@ -39,7 +39,15 @@ public class MarginBorderWrapper extends CompoundBorder implements UIResource {
     public static void installBorder(final JComponent c) {
         Border border = c.getBorder();
         if (!(border instanceof MarginBorderWrapper)) {
-            c.setBorder(new MarginBorderWrapper(border));
+            c.setBorder(wrapBorder(border));
+        }
+    }
+
+    private static MarginBorderWrapper wrapBorder(final Border border) {
+        if (border instanceof UIResource) {
+            return new MarginBorderWrapper.UIBorder(border);
+        } else {
+            return new MarginBorderWrapper(border);
         }
     }
 
@@ -56,5 +64,12 @@ public class MarginBorderWrapper extends CompoundBorder implements UIResource {
             border = ((MarginBorderWrapper) border).getOutsideBorder();
         }
         return border;
+    }
+
+    public static class UIBorder extends MarginBorderWrapper implements UIResource {
+
+        public UIBorder(final Border border) {
+            super(border);
+        }
     }
 }

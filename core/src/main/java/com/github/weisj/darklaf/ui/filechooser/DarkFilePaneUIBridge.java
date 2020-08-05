@@ -47,8 +47,6 @@ import sun.awt.shell.ShellFolder;
 import sun.awt.shell.ShellFolderColumnInfo;
 import sun.swing.FilePane;
 
-import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
-import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -269,7 +267,6 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             return -1;
         }
     };
-    protected DetailsTableCellEditor tableCellEditor;
     protected Action newFolderAction;
     protected Handler handler;
     int lastIndex = -1;
@@ -277,8 +274,9 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
     JTextField editCell = null;
     protected final FocusListener editorFocusListener = new FocusAdapter() {
         public void focusLost(final FocusEvent e) {
+            // Todo
             if (!e.isTemporary()) {
-                applyEdit();
+                // applyEdit();
             }
         }
     };
@@ -627,19 +625,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         }
     }
 
-    protected DetailsTableCellEditor getDetailsTableCellEditor() {
-        if (tableCellEditor == null) {
-            tableCellEditor = new DetailsTableCellEditor(new JTextField() {
-                {
-                    super.setBorder(new TextTableCellEditorBorder());
-                }
-
-                @Override
-                public void setBorder(final Border border) {}
-            });
-        }
-        return tableCellEditor;
-    }
+    protected abstract TableCellEditor getDetailsTableCellEditor();
 
     public abstract JPanel createDetailsView();
 
@@ -1398,30 +1384,6 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         }
     }
 
-    protected class DetailsTableCellEditor extends DarkTableCellEditor {
-        public DetailsTableCellEditor(final JTextField tf) {
-            super(tf);
-            tf.addFocusListener(editorFocusListener);
-        }
-
-        public Component getTableCellEditorComponent(final JTable table, final Object value,
-                                                     final boolean isSelected, final int row, final int column) {
-            Component comp = super.getTableCellEditorComponent(table, value,
-                                                               isSelected, row, column);
-            if (value instanceof File) {
-                delegate.setValue(getFileChooser().getName((File) value));
-            }
-            if (editorComponent instanceof JTextField) {
-                SwingUtilities.invokeLater(() -> {
-                    ((JTextField) editorComponent).selectAll();
-                    editorComponent.requestFocus();
-                });
-            }
-
-            return comp;
-        }
-    }
-
     @SuppressWarnings("serial")
     // JDK-implementation class
     public class DetailsTableCellRenderer extends DarkTableCellRenderer {
@@ -1551,7 +1513,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         }
     }
 
-    class EditActionListener implements ActionListener {
+    protected class EditActionListener implements ActionListener {
         public void actionPerformed(final ActionEvent e) {
             applyEdit();
         }

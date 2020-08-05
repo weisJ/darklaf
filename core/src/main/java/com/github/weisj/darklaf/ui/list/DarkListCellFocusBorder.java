@@ -29,9 +29,9 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
+import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
 
-public class DarkListCellFocusBorder extends DarkCellBorder {
+public class DarkListCellFocusBorder extends DarkCellBorderUIResource {
 
     protected final Color borderColor;
 

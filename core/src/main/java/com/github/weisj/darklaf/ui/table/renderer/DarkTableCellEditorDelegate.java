@@ -70,7 +70,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
 
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
-        if (anEvent == null) return super.isCellEditable(anEvent);
+        if (anEvent == null) return super.isCellEditable(null);
         JTable table = ((JTable) anEvent.getSource());
         if (anEvent instanceof KeyEvent) {
             if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
@@ -119,7 +119,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
                                   .getTableCellRendererComponent(table, value, isSelected, false, row, column);
         setupEditorComponent(editor, value, renderer);
         Component comp = applyRendererIcon(editor, renderer);
-        CellUtil.setupTableBackground(editor, table, false, row);
+        CellUtil.setupTableBackground(comp, table, false, row);
         return comp;
     }
 
@@ -146,13 +146,13 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
         return -1;
     }
 
-    protected static Component applyRendererIcon(final Component component, final Component rendererComp) {
-        Component comp = component;
-        if (rendererComp instanceof JLabel && comp instanceof JComponent) {
-            Icon icon = ((JLabel) rendererComp).getIcon();
+    protected static Component applyRendererIcon(final Component editorComponent, final Component rendererComponent) {
+        Component comp = editorComponent;
+        if (rendererComponent instanceof JLabel && comp instanceof JComponent) {
+            Icon icon = ((JLabel) rendererComponent).getIcon();
             if (icon != null) {
-                iconWrapper.init((JComponent) comp, icon, rendererComp.getComponentOrientation().isLeftToRight());
-                iconWrapper.setIconGap(((JLabel) rendererComp).getIconTextGap() - 1);
+                iconWrapper.init((JComponent) comp, icon, rendererComponent.getComponentOrientation());
+                iconWrapper.setIconGap(((JLabel) rendererComponent).getIconTextGap() - 1);
                 comp = iconWrapper;
             }
         }

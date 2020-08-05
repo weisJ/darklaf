@@ -36,7 +36,7 @@ public class IconWrapper extends JPanel {
     private int iconGap;
 
     protected IconWrapper() {
-        setLayout(null);
+        setLayout(new BorderLayout());
         label = new JLabel();
         label.setIconTextGap(0);
         add(label);
@@ -46,12 +46,14 @@ public class IconWrapper extends JPanel {
         this.iconGap = iconGap;
     }
 
-    protected void init(final JComponent component, final Icon icon, final boolean ltr) {
-        setComponentOrientation(ltr ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT);
+    protected void init(final JComponent component, final Icon icon, final ComponentOrientation orientation) {
+        setComponentOrientation(orientation);
         if (c != null) {
             remove(c);
         }
         add(component);
+        setComponentZOrder(component, 0);
+        setComponentZOrder(label, 1);
         this.c = component;
         label.setIcon(icon);
     }
