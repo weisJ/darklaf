@@ -248,6 +248,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private void movePopup(final Rectangle bounds) {
+        if (popup == null) return;
         DarkPopupFactory.PopupType popupType = DarkPopupFactory.getPopupType(popup);
         Window w = DarkUIUtil.getWindow(popupComponent);
         if (popupType == DarkPopupFactory.PopupType.HEAVY_WEIGHT) {
