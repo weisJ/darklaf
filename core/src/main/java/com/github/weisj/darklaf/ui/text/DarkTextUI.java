@@ -229,7 +229,9 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 dim.height = Math.max(dim.height, prefSize.height);
             }
         }
-        dim.width += getCaretWidth();
+        if (c.getSize().width < dim.width) {
+            dim.width += getCaretWidth();
+        }
         return dim;
     }
 

@@ -98,16 +98,6 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 }
                 return -1;
             }
-
-            @Override
-            protected void paintComponent(final Graphics g) {
-                super.paintComponent(g);
-                // for (Component c = this; c != null; c = c.getParent()) {
-                // System.out.println(c);
-                // System.out.println(c.getBackground());
-                // System.out.println(c.isOpaque());
-                // }
-            }
         };
         list.setCellRenderer(new DarkFileRenderer());
         list.setLayoutOrientation(JList.VERTICAL_WRAP);
