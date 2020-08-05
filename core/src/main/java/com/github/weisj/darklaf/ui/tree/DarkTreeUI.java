@@ -600,7 +600,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         if (p == null) return false;
         if (Objects.equals(p, path)) return true;
         if (tree.isExpanded(p)) return false;
-        return Objects.equals(p.getParentPath().getLastPathComponent(), path.getLastPathComponent());
+        TreePath parent = p.getParentPath();
+        if (parent == null) return false;
+        return Objects.equals(parent.getLastPathComponent(), path.getLastPathComponent());
     }
 
     protected boolean isDashedLine() {

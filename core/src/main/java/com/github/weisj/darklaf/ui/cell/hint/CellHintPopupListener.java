@@ -115,9 +115,6 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                         cellBounds.y = rect.y - cellBounds.y;
                         rect.x += popupLocation.x;
                         rect.y += popupLocation.y;
-                        System.out.println("Allocation " + allocation);
-                        System.out.println("CellBounds " + cellBounds);
-                        System.out.println("PreffeSize " + prefSize);
                         enter(index, rect, cellBounds);
                         return;
                     } else {
