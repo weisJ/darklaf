@@ -78,10 +78,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     protected Icon expandedSelected;
     protected Icon expandedFocus;
     protected Icon expanded;
+    protected Icon expandedDisabled;
     protected Icon collapsedFocusSelected;
     protected Icon collapsedSelected;
     protected Icon collapsedFocus;
     protected Icon collapsed;
+    protected Icon collapsedDisabled;
 
     protected Insets leadSelectionBorderInsets;
 
@@ -131,10 +133,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         expandedSelected = UIManager.getIcon("Tree.expanded.selected.unfocused.icon");
         expandedFocus = UIManager.getIcon("Tree.expanded.unselected.focused.icon");
         expanded = UIManager.getIcon("Tree.expanded.unselected.unfocused.icon");
+        expandedDisabled = UIManager.getIcon("Tree.expanded.disabled.icon");
         collapsedFocusSelected = UIManager.getIcon("Tree.collapsed.selected.focused.icon");
         collapsedSelected = UIManager.getIcon("Tree.collapsed.selected.unfocused.icon");
         collapsedFocus = UIManager.getIcon("Tree.collapsed.unselected.focused.icon");
         collapsed = UIManager.getIcon("Tree.collapsed.unselected.unfocused.icon");
+        collapsedDisabled = UIManager.getIcon("Tree.collapsed.disabled.icon");
         leadSelectionBorderInsets = UIManager.getInsets("Tree.leadSelectionBorderInsets");
         if (leadSelectionBorderInsets == null) leadSelectionBorderInsets = new Insets(1, 1, 1, 1);
         PropertyUtil.installBooleanProperty(tree, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Tree.renderBooleanAsCheckBox");
@@ -576,6 +580,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected Icon getExpandedIcon(final boolean selected, final boolean focused) {
+        if (!tree.isEnabled()) return expandedDisabled;
         if (selected) {
             return focused ? expandedFocusSelected : expandedSelected;
         } else {
@@ -584,6 +589,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected Icon getCollapsedIcon(final boolean selected, final boolean focused) {
+        if (!tree.isEnabled()) return collapsedDisabled;
         if (selected) {
             return focused ? collapsedFocusSelected : collapsedSelected;
         } else {

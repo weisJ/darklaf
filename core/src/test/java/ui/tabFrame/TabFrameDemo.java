@@ -59,7 +59,7 @@ public class TabFrameDemo implements ComponentDemo {
             }
         });
         NumberingPane numbering = numberPane.getNumberingPane();
-        Icon icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/arrowRight.svg");
+        Icon icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRight.svg");
         try {
             numbering.addIconAtLine(5, icon);
             numbering.addIconAtLine(10, icon);
