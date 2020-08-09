@@ -21,6 +21,7 @@ to the description of the Bug and **does not** replace it.
 **Additional Information:**
  - OS: [e.g. macOS]
  - OS Version: [e.g. 10.14]
+   - For issues with frame decorations on Windows please provide the explicit [Windows build number](https://docs.microsoft.com/en-gb/windows/release-information/).
 - Darklaf Version: [e.g. 2.0.2]
   - **Note**: If you are using the `latest.integration` version please try to replicate the issue with the latest stable release.
 
