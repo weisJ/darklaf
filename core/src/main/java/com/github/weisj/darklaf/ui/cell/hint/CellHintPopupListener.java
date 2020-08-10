@@ -35,6 +35,7 @@ import javax.swing.event.MouseInputAdapter;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.WindowUtil;
 
 public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAdapter {
 
@@ -109,18 +110,19 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                 }
                 if (!(visibleBounds.width >= prefSize.width && visibleBounds.height >= prefSize.height)) {
                     Point popupLocation = cellContainer.getComponent().getLocationOnScreen();
-                    Rectangle rect = calculatePopupBounds(cellBounds, visibleBounds, !isEditing);
-                    if (!visibleBounds.contains(rect)) {
-                        cellBounds.x = rect.x - cellBounds.x;
-                        cellBounds.y = rect.y - cellBounds.y;
-                        rect.x += popupLocation.x;
-                        rect.y += popupLocation.y;
-                        enter(index, rect, cellBounds);
+                    Rectangle popupBounds = calculatePopupBounds(cellBounds, visibleBounds, !isEditing);
+                    if (!visibleBounds.contains(popupBounds)) {
+                        cellBounds.x = popupBounds.x - cellBounds.x;
+                        cellBounds.y = popupBounds.y - cellBounds.y;
+                        popupBounds.x += popupLocation.x;
+                        popupBounds.y += popupLocation.y;
+                        enter(index, popupBounds, cellBounds);
                         return;
                     } else {
                         lastIndex = index;
                     }
                 }
+                leave();
                 return;
             }
         }
@@ -238,7 +240,11 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                 popup.show();
                 if (DarkPopupFactory.getPopupType(popup) == DarkPopupFactory.PopupType.HEAVY_WEIGHT) {
                     // Ensure heavy weight popup is at desired location.
-                    SwingUtilities.invokeLater(() -> movePopup(bounds));
+                    SwingUtilities.invokeLater(() -> {
+                        Window w = DarkUIUtil.getWindow(popupComponent);
+                        w.setBounds(bounds);
+                        WindowUtil.moveWindow(w, popupComponent, bounds.x, bounds.y);
+                    });
                 }
             }
         }
@@ -264,17 +270,19 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             popup = null;
         } else {
             popupWindow.setBounds(bounds);
+            WindowUtil.moveWindow(popupWindow, popupComponent, bounds.x, bounds.y);
         }
     }
 
     private void moveMediumLightWeightPopup(final Rectangle bounds, final Window parentWindow) {
         JLayeredPane layeredPane = ((RootPaneContainer) parentWindow).getLayeredPane();
+        JRootPane rootPane = ((RootPaneContainer) parentWindow).getRootPane();
         Component comp = DarkUIUtil.getParentBeforeMatching(popupComponent.getParent(),
                                                             c -> c == layeredPane);
         Rectangle windowBounds = parentWindow.getBounds();
         if (windowBounds.contains(bounds.x, bounds.y)
             && windowBounds.contains(bounds.x + bounds.width, bounds.y + bounds.height)) {
-            Point windowPos = parentWindow.getLocationOnScreen();
+            Point windowPos = rootPane.getLocationOnScreen();
             bounds.x -= windowPos.x;
             bounds.y -= windowPos.y;
             comp.setBounds(bounds);
@@ -376,7 +384,8 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
 
                 // If the renderer is an editor we need to restore the bounds.
                 Rectangle bounds = renderer.getBounds();
-                renderer.setBounds(rendererBounds);
+                renderer.setBounds(0, 0, rendererBounds.width, rendererBounds.height);
+                renderer.doLayout();
                 renderer.paint(g);
                 renderer.setBounds(bounds);
 

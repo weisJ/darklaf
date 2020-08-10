@@ -33,6 +33,7 @@ import javax.swing.*;
  */
 public class TreeRendererComponent extends Container {
 
+    private static final int PAD = 5;
     private TreeRendererSupport defaultRenderer;
     private Component renderComponent;
 
@@ -80,7 +81,7 @@ public class TreeRendererComponent extends Container {
     public Dimension getPreferredSize() {
         if (defaultRenderer != null) {
             Dimension pSize = renderComponent.getPreferredSize();
-            pSize.width += getOffset() + 5;
+            pSize.width += getOffset() + PAD;
 
             Dimension rSize = defaultRenderer.getPreferredSize();
 
@@ -98,6 +99,9 @@ public class TreeRendererComponent extends Container {
 
     @Override
     public void paint(final Graphics g) {
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+
         int width = getWidth();
 
         Icon icon = defaultRenderer.getIcon();
@@ -111,7 +115,7 @@ public class TreeRendererComponent extends Container {
                 icon.paintIcon(this, g, width - icon.getIconWidth(), yLoc);
             }
         }
-        super.paint(g);
+        if (renderComponent != null) renderComponent.paint(g);
     }
 
     /**
@@ -125,6 +129,12 @@ public class TreeRendererComponent extends Container {
         int totalHeight = Math.max(iconHeight, textY + textHeight) -
                           totalY;
         return getHeight() / 2 - (totalY + (totalHeight / 2));
+    }
+
+    @Override
+    public void setFont(final Font f) {
+        super.setFont(f);
+        if (renderComponent != null) renderComponent.setFont(f);
     }
 
     @Override

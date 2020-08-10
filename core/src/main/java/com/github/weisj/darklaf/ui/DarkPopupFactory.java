@@ -163,12 +163,10 @@ public class DarkPopupFactory extends PopupFactory {
              */
             rootPane.putClientProperty("Window.shadow", !noDecorations);
         }
-        if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
-            if (noDecorations) {
-                DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
-            } else {
-                DecorationsHandler.getSharedInstance().installPopupWindow(window);
-            }
+        if (noDecorations) {
+            DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
+        } else if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
+            DecorationsHandler.getSharedInstance().installPopupWindow(window);
         }
     }
 
