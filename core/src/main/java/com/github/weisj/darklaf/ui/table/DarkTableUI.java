@@ -102,11 +102,13 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         if (rowHeight > 0) {
             LookAndFeel.installProperty(table, "rowHeight", ROW_HEIGHT_FALLBACK);
         }
-        table.setDefaultEditor(Object.class, new DarkTableCellEditorDelegate());
         PropertyUtil.installBooleanProperty(table, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Table.renderBooleanAsCheckBox");
         PropertyUtil.installBooleanProperty(table, KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowColor");
+        PropertyUtil.installBooleanProperty(table, "terminateEditOnFocusLost", "Table.terminateEditOnFocusLost");
         PropertyUtil.installProperty(table, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
+
         setupRendererComponents(table);
+
         borderColor = UIManager.getColor("TableHeader.borderColor");
         selectionBackground = UIManager.getColor("Table.backgroundSelected");
         selectionBackgroundNoFocus = UIManager.getColor("Table.backgroundSelectedNoFocus");
@@ -504,7 +506,10 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
         @Override
         public void keyTyped(final KeyEvent e) {
-            if (ignoreKeyCodeOnEdit(e, table)) return;
+            if (ignoreKeyCodeOnEdit(e, table)) {
+                e.consume();
+                return;
+            }
             super.keyTyped(e);
         }
 
@@ -551,6 +556,11 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             if (bg instanceof UIResource) {
                 table.setSelectionBackground(selectionBackground);
             }
+            Component comp = table.getEditorComponent();
+            if (comp != null) {
+                Color newBg = CellUtil.getTableBackground(comp, table, true, true, table.getEditingRow());
+                CellUtil.setupBackground(comp, newBg);
+            }
             table.repaint();
         }
 
@@ -563,6 +573,11 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 } else {
                     table.setSelectionBackground(selectionBackgroundNoFocus);
                 }
+            }
+            Component comp = table.getEditorComponent();
+            if (comp != null) {
+                Color newBg = CellUtil.getTableBackground(comp, table, true, false, table.getEditingRow());
+                CellUtil.setupBackground(comp, newBg);
             }
             table.repaint();
         }

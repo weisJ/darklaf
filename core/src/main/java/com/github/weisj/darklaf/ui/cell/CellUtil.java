@@ -308,14 +308,15 @@ public class CellUtil {
         PropertyUtil.installForeground(comp, c);
     }
 
-    public static Color getTableBackground(final Component comp, final JTable parent, final boolean selected,
+    public static Color getTableBackground(final Component comp, final JTable parent,
+                                           final boolean selected, final boolean focus,
                                            final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTableUI.KEY_ALTERNATE_ROW_COLOR);
         boolean sel = selected;
         if (parent.getSelectionModel().getLeadSelectionIndex() == row) {
             sel = !PropertyUtil.getBooleanProperty(parent, TableConstants.KEY_FULL_ROW_FOCUS_BORDER);
         }
-        return getColor(comp, hasFocus(parent, comp), sel,
+        return getColor(comp, focus, sel,
                         alt ? tableCellBackgroundAlternative : tableCellBackground,
                         tableCellBackgroundSelected,
                         alt ? tableCellBackgroundNoFocusAlternative : tableCellBackgroundNoFocus,
@@ -328,13 +329,13 @@ public class CellUtil {
 
     public static void setupTableBackground(final Component comp, final JTable parent, final boolean selected,
                                             final int row) {
-        setupBackground(comp, getTableBackground(comp, parent, selected, row));
+        setupBackground(comp, getTableBackground(comp, parent, selected, hasFocus(parent, comp), row));
     }
 
-    public static Color getTreeBackground(final Component comp, final JTree parent, final boolean selected,
-                                          final int row) {
+    public static Color getTreeBackground(final Component comp, final JTree parent,
+                                          final boolean selected, final boolean focus, final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(comp, hasFocus(parent, comp), selected,
+        return getColor(comp, focus, selected,
                         alt ? treeCellBackgroundAlternative : treeCellBackground,
                         treeCellBackgroundSelected,
                         alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
@@ -347,7 +348,7 @@ public class CellUtil {
 
     public static void setupTreeBackground(final Component comp, final JTree parent, final boolean selected,
                                            final int row) {
-        Color bg = getTreeBackground(comp, parent, selected, row);
+        Color bg = getTreeBackground(comp, parent, selected, hasFocus(parent, comp), row);
         setupBackground(comp, bg);
         if (comp instanceof DefaultTreeCellRenderer) {
             Color c = comp.getBackground();

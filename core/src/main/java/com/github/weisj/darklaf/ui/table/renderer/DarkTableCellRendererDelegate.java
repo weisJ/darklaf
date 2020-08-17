@@ -59,9 +59,11 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
         TableCellRenderer renderer = booleanRenderer ? getBooleanRenderer(table) : super.getDelegate();
         Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-        boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table);
+        boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table)
+                             && table.getSelectionModel().getLeadSelectionIndex() == row;
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
-                                      && table.getSelectionModel().getLeadSelectionIndex() == row;
+                                      && table.getSelectionModel().getLeadSelectionIndex() == row
+                                      && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
         boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
 
         if (component instanceof JComponent) {
@@ -76,7 +78,7 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
                                  final JComponent component, final boolean isLeadSelectionCell,
                                  final boolean isRowFocus) {
         Border focusBorder = UIManager.getBorder("Table.focusSelectedCellHighlightBorder");
-        if (isLeadSelectionCell && !table.isEditing()) {
+        if ((isRowFocus || isLeadSelectionCell) && !table.isEditing()) {
             PropertyUtil.installBorder(component, focusBorder);
             if (isRowFocus) {
                 component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, true);

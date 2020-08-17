@@ -24,18 +24,16 @@
  */
 package com.github.weisj.darklaf.ui.table.renderer;
 
-import java.awt.*;
 import java.util.EventObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellEditor;
 
+import com.github.weisj.darklaf.ui.cell.CellEditorToggleButton;
 import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 
 /**
- * @author vincencopalazzo
- * @author atarw
  * @author Jannis Weis
  */
 public class DarkTableCellEditorToggleButton extends AbstractCellEditor implements TableCellEditor, SwingConstants {
@@ -45,16 +43,24 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
 
     public DarkTableCellEditorToggleButton(final JToggleButton toggleButton) {
         this.toggleButton = toggleButton;
+        toggleButton.setFocusable(false);
         toggleButton.setOpaque(true);
     }
 
     @Override
-    public Component getTableCellEditorComponent(final JTable table, final Object value,
-                                                 final boolean isSelected, final int row, final int column) {
+    public JToggleButton getTableCellEditorComponent(final JTable table, final Object value,
+                                                     final boolean isSelected, final int row, final int column) {
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         }
+        if (toggleButton instanceof CellEditorToggleButton) {
+            ((CellEditorToggleButton) toggleButton).setHasFocus(true);
+        }
         toggleButton.setBorder(editorBorder);
+        return toggleButton;
+    }
+
+    public JToggleButton getToggleButton() {
         return toggleButton;
     }
 
@@ -70,6 +76,6 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
 
     @Override
     public boolean shouldSelectCell(final EventObject anEvent) {
-        return false;
+        return true;
     }
 }
