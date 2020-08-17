@@ -108,13 +108,6 @@ public class TableDemo implements ComponentDemo {
                     return super.getCellEditor(row, column);
                 }
             }
-
-            private final TableCellRenderer renderer = new DarkTableCellRendererDelegate(new DarkTableCellRenderer());
-
-            @Override
-            public TableCellRenderer getCellRenderer(final int row, final int column) {
-                return renderer;
-            }
         };
         JTableHeader header = table.getTableHeader();
         JScrollPane scrollPane = new JScrollPane(table);
