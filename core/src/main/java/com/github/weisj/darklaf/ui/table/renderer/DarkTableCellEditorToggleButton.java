@@ -30,7 +30,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellEditor;
 
-import com.github.weisj.darklaf.ui.cell.CellEditorToggleButton;
+import com.github.weisj.darklaf.ui.cell.CellToggleButton;
 import com.github.weisj.darklaf.ui.table.DarkTableCellBorder;
 
 /**
@@ -53,8 +53,8 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         }
-        if (toggleButton instanceof CellEditorToggleButton) {
-            ((CellEditorToggleButton) toggleButton).setHasFocus(true);
+        if (toggleButton instanceof CellToggleButton) {
+            ((CellToggleButton) toggleButton).setHasFocus(true);
         }
         toggleButton.setBorder(editorBorder);
         return toggleButton;

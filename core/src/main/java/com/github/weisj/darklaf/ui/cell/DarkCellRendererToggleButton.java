@@ -39,7 +39,7 @@ import com.github.weisj.darklaf.ui.tree.DarkTreeCellRendererDelegate;
 /**
  * @author Jannis Weis
  */
-public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorToggleButton>
+public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleButton>
                                          implements TableCellRenderer, TreeCellRenderer, SwingConstants {
 
     private final T toggleButton;
@@ -86,7 +86,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         return toggleButton;
     }
 
-    public static class CellCheckBox extends JCheckBox implements CellRenderer, CellEditorToggleButton {
+    public static class CellCheckBox extends JCheckBox implements CellRenderer, CellToggleButton {
 
         private boolean hasFocus;
 
@@ -113,7 +113,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         }
     }
 
-    public static class CellRadioButton extends JRadioButton implements CellRenderer, CellEditorToggleButton {
+    public static class CellRadioButton extends JRadioButton implements CellRenderer, CellToggleButton {
 
         private boolean hasFocus;
 
@@ -145,7 +145,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellEditorTo
         }
     }
 
-    public static class CellTristateButton extends TristateCheckBox implements CellRenderer, CellEditorToggleButton {
+    public static class CellTristateButton extends TristateCheckBox implements CellRenderer, CellToggleButton {
 
         private boolean hasFocus;
 

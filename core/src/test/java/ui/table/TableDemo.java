@@ -36,8 +36,6 @@ import ui.DemoPanel;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
-import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
-import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
