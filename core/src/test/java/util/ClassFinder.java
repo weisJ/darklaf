@@ -43,7 +43,8 @@ public class ClassFinder {
                          .filter(type::isAssignableFrom)
                          .filter(cls -> !cls.isInterface())
                          .filter(cls -> !Modifier.isAbstract(cls.getModifiers()))
-                         .map(clazz -> getInstance(type))
+                         .map(cls -> (Class<T>)cls)
+                         .map(ClassFinder::getInstance)
                          .filter(Objects::nonNull)
                          .map(type::cast)
                          .collect(Collectors.toList());
@@ -57,6 +58,7 @@ public class ClassFinder {
                  | IllegalAccessException
                  | InvocationTargetException
                  | NoSuchMethodException e) {
+            e.printStackTrace();
             return null;
         }
     }
