@@ -35,7 +35,6 @@ public class ClassFinder {
     public static <T> List<T> getInstancesOfType(final Class<T> type, final String... packages) {
         try (ResourceWalker walker = ResourceWalker.walkResources(packages)) {
             return walker.stream()
-                         .parallel()
                          .filter(p -> p.endsWith(".class"))
                          .map(p -> p.replace('/', '.'))
                          .map(p -> p.substring(0, p.length() - 6))
@@ -44,7 +43,7 @@ public class ClassFinder {
                          .filter(type::isAssignableFrom)
                          .filter(cls -> !cls.isInterface())
                          .filter(cls -> !Modifier.isAbstract(cls.getModifiers()))
-                         .map(ClassFinder::getInstance)
+                         .map(clazz -> getInstance(type))
                          .filter(Objects::nonNull)
                          .map(type::cast)
                          .collect(Collectors.toList());

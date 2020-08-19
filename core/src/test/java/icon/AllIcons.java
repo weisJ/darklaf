@@ -91,7 +91,7 @@ public class AllIcons implements ComponentDemo {
     private List<Pair<String, ? extends Icon>> loadIcons() {
         IconLoader loader = IconLoader.get();
         try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
-            return walker.stream().parallel()
+            return walker.stream()
                          .filter(p -> p.endsWith("svg"))
                          .map(p -> {
                              int size = ICON_SIZE;
@@ -109,13 +109,39 @@ public class AllIcons implements ComponentDemo {
                              icon.setDisplaySize(width, height);
                              svgIcon.setAutosize(autosize);
 
-                             String name = p.substring(p.lastIndexOf('/') + 1);
-
-                             return new Pair<>(name, new CenterIcon(icon, size, size));
+                             return new Pair<>(p, new CenterIcon(icon, size, size));
                          })
-                         .sorted(Pair.compareFirst())
+                         .collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst())))
+                         .values()
+                         .stream()
+                         .peek(list -> makeUnique(list, 1))
+                         .flatMap(List::stream)
+                         .sorted(Pair.compareFirst(AllIcons::pathToIconName))
                          .collect(Collectors.toList());
         }
+    }
+
+    private static <T> void makeUnique(final List<Pair<String, T>> iconList, final int depth) {
+        if (iconList.size() <= 1) {
+            iconList.forEach(p -> p.setFirst(pathToIconName(p.getFirst(), depth)));
+        } else {
+            iconList.stream()
+                    .collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1)))
+                    .values()
+                    .forEach(list -> makeUnique(list, depth + 1));
+        }
+    }
+
+    private static String pathToIconName(final String p) {
+        return pathToIconName(p, 1);
+    }
+
+    private static String pathToIconName(final String p, final int subPathLength) {
+        int index = p.length();
+        for (int i = 0; i < subPathLength; i++) {
+            index = p.lastIndexOf('/', index - 1);
+        }
+        return p.substring(index + 1);
     }
 
     @Override

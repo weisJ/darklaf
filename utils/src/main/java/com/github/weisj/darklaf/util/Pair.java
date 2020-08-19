@@ -25,6 +25,7 @@
 package com.github.weisj.darklaf.util;
 
 import java.util.Comparator;
+import java.util.function.Function;
 
 public class Pair<T, H> {
 
@@ -58,10 +59,18 @@ public class Pair<T, H> {
     }
 
     public static <L extends Comparable<L>, R> Comparator<Pair<L, R>> compareFirst() {
-        return Comparator.comparing(Pair::getFirst);
+        return compareFirst(first -> first);
+    }
+
+    public static <L, R, C extends Comparable<C>> Comparator<Pair<L, R>> compareFirst(final Function<L, C> mapping) {
+        return Comparator.comparing(pair -> mapping.apply(pair.first));
     }
 
     public static <L, R extends Comparable<R>> Comparator<Pair<L, R>> compareSecond() {
-        return Comparator.comparing(Pair::getSecond);
+        return compareSecond(second -> second);
+    }
+
+    public static <L, R, C extends Comparable<C>> Comparator<Pair<L, R>> compareSecond(final Function<R, C> mapping) {
+        return Comparator.comparing(pair -> mapping.apply(pair.second));
     }
 }
