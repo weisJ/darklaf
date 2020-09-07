@@ -61,10 +61,14 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
 
         boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table)
                              && table.getSelectionModel().getLeadSelectionIndex() == row;
-        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table)
-                                      && table.getSelectionModel().getLeadSelectionIndex() == row
-                                      && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
-        boolean paintSelected = isSelected && !isLeadSelectionCell && !table.isEditing();
+        boolean rowLeadSelection = table.getSelectionModel().getLeadSelectionIndex() == row;
+        boolean columnLeadSelection = table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
+        if (rowLeadSelection && !columnLeadSelection
+            && PropertyUtil.getBooleanProperty(table, TableConstants.KEY_FULL_ROW_FOCUS_BORDER)) {
+            columnLeadSelection = true;
+        }
+        boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && rowLeadSelection && columnLeadSelection;
+        boolean paintSelected = isSelected && !isLeadSelectionCell;
 
         if (component instanceof JComponent) {
             setupBorderStyle(table, row, column, (JComponent) component, isLeadSelectionCell, isRowFocus);

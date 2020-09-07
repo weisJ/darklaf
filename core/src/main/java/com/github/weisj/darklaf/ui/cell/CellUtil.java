@@ -33,7 +33,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import com.github.weisj.darklaf.graphics.ColorWrapper;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.ui.table.TableConstants;
 import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -251,11 +250,7 @@ public class CellUtil {
 
     public static void setupTableForeground(final Component comp, final JTable parent, final boolean selected,
                                             final int row) {
-        boolean sel = selected;
-        if (parent.getSelectionModel().getLeadSelectionIndex() == row) {
-            sel = !PropertyUtil.getBooleanProperty(parent, TableConstants.KEY_FULL_ROW_FOCUS_BORDER);
-        }
-        setupForeground(comp, parent, sel,
+        setupForeground(comp, parent, selected,
                         tableCellForeground, tableCellForegroundSelected,
                         tableCellForegroundNoFocus, tableCellForegroundSelectedNoFocus,
                         tableCellInactiveForeground, tableCellInactiveForegroundSelected,
@@ -312,11 +307,7 @@ public class CellUtil {
                                            final boolean selected, final boolean focus,
                                            final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTableUI.KEY_ALTERNATE_ROW_COLOR);
-        boolean sel = selected;
-        if (parent.getSelectionModel().getLeadSelectionIndex() == row) {
-            sel = !PropertyUtil.getBooleanProperty(parent, TableConstants.KEY_FULL_ROW_FOCUS_BORDER);
-        }
-        return getColor(comp, focus, sel,
+        return getColor(comp, focus, selected,
                         alt ? tableCellBackgroundAlternative : tableCellBackground,
                         tableCellBackgroundSelected,
                         alt ? tableCellBackgroundNoFocusAlternative : tableCellBackgroundNoFocus,

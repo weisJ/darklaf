@@ -93,6 +93,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
         public CellCheckBox(final boolean opaque) {
             setOpaque(opaque);
             setHorizontalAlignment(CENTER);
+            setBorderPainted(true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
@@ -120,6 +121,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
         public CellRadioButton(final boolean opaque) {
             setOpaque(opaque);
             setHorizontalAlignment(CENTER);
+            setBorderPainted(true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);
@@ -152,6 +154,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
         public CellTristateButton(final boolean opaque) {
             setOpaque(opaque);
             setHorizontalAlignment(CENTER);
+            setBorderPainted(true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TREE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
             putClientProperty(ToggleButtonConstants.KEY_VERTICAL_ICON_OFFSET, 0);

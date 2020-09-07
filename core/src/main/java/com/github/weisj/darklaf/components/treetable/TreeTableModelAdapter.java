@@ -63,11 +63,6 @@ public class TreeTableModelAdapter extends AbstractTableModel {
         });
     }
 
-    @Override
-    public void fireTableRowsDeleted(final int firstRow, final int lastRow) {
-        super.fireTableRowsDeleted(firstRow, lastRow);
-    }
-
     public int getColumnCount() {
         return treeTableModel.getColumnCount();
     }

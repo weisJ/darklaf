@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="Icons.undo.color">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#Icons.undo.color)"
+          d="M8.002 4.667c-1.767 0-3.368.66-4.601 1.733L1 4v6h6.001L4.588 7.587a5.304 5.304 0 0 1 3.414-1.254c2.36 0 4.367 1.54 5.068 3.667l1.58-.52c-.927-2.793-3.548-4.813-6.648-4.813z"/>
+</svg>

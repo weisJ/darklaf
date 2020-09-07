@@ -43,7 +43,7 @@ public class ClassFinder {
                          .filter(type::isAssignableFrom)
                          .filter(cls -> !cls.isInterface())
                          .filter(cls -> !Modifier.isAbstract(cls.getModifiers()))
-                         .map(cls -> (Class<T>)cls)
+                         .map(cls -> (Class<T>) cls)
                          .map(ClassFinder::getInstance)
                          .filter(Objects::nonNull)
                          .map(type::cast)

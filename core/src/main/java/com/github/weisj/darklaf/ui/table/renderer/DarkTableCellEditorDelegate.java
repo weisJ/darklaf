@@ -126,7 +126,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
                                   .getTableCellRendererComponent(table, value, isSelected, false, row, column);
         setupEditorComponent(editor, value, renderer);
         Component comp = applyRendererIcon(editor, renderer);
-        CellUtil.setupTableBackground(comp, table, true, row);
+        CellUtil.setupTableBackground(comp, table, false, row);
         return comp;
     }
 

@@ -233,13 +233,17 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                                           final GraphicsContext context,
                                           final boolean rounded, final boolean extendLines,
                                           final boolean isPaintingPreceding) {
+        final int selectionStart = c.getSelectionStart();
+        final int selectionEnd = c.getSelectionEnd();
+
         Insets ins = c.getInsets();
 
         Rectangle posOffs0 = getPosRect(c, offs0);
         Rectangle posOffs1 = getPosRect(c, offs1, Position.Bias.Backward);
 
-        Rectangle posStart = getPosRect(c, c.getSelectionStart());
-        Rectangle posEnd = getPosRect(c, c.getSelectionEnd());
+        Rectangle posStart = getPosRect(c, selectionStart);
+        Rectangle posEnd = getPosRect(c, selectionEnd);
+
 
         int currentLineStart = isPaintingPreceding ? offs0 : getOffset(c, 0, posOffs0.y);
         int currentLineEnd = isPaintingPreceding ? offs1 : getOffset(c, c.getWidth(), posOffs1.y);
@@ -286,8 +290,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             currentLineRect.width = posEnd.x + posEnd.width - currentLineRect.x;
         }
 
-        boolean hasLineAbove = previousLineEnd >= c.getSelectionStart();
-        boolean hasLineBelow = nextLineStart <= c.getSelectionEnd();
+        boolean hasLineAbove = previousLineEnd >= selectionStart;
+        boolean hasLineBelow = nextLineStart <= selectionEnd;
 
         boolean previousLineVisible = hasLineAbove
                                       && previousLineRect.width > 0
@@ -301,26 +305,26 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         if (extendLines) {
             // Adjust the line rects for the adjacent lines for correct rounded corner placement.
             extendLine(c, ins, previousLineRect,
-                       hasLineAbove && previousLineStart >= c.getSelectionStart(),
-                       hasLineAbove && previousLineEnd <= c.getSelectionEnd());
+                       hasLineAbove && previousLineStart >= selectionStart,
+                       hasLineAbove && previousLineEnd <= selectionEnd);
 
             boolean extendNextRight = hasLineBelow
                                       && nextLineEnd < c.getDocument().getLength()
-                                      && getOffset(c, getPosRect(c, nextLineEnd + 1)) <= c.getSelectionEnd();
+                                      && getOffset(c, getPosRect(c, nextLineEnd + 1)) <= selectionEnd;
 
             extendLine(c, ins, nextLineRect,
-                       hasLineBelow && nextLineStart >= c.getSelectionStart(),
+                       hasLineBelow && nextLineStart >= selectionStart,
                        extendNextRight);
 
             paintPreviousLine = hasLineAbove
-                                && (previousLineStart == previousLineEnd || previousLineEnd == c.getSelectionStart());
+                                && (previousLineStart == previousLineEnd || previousLineEnd == selectionStart);
             previousLineVisible = hasLineAbove;
             if (nextLineRect.y != posEnd.y) nextLineVisible = hasLineBelow;
 
             boolean extendRight = isPaintingPreceding || (hasLineBelow && (endX(layerRect) == endX(currentLineRect)));
-            extendRight &= offs1 < c.getSelectionEnd();
+            extendRight &= offs1 < selectionEnd;
             boolean extendLeft = isPaintingPreceding || (hasLineAbove && startX(layerRect) == startX(currentLineRect));
-            extendLeft &= offs0 > c.getSelectionStart();
+            extendLeft &= offs0 > selectionStart;
 
             extendLine(c, ins, layerRect, extendLeft, extendRight);
             extendLine(c, ins, currentLineRect, extendLeft, extendRight);
@@ -344,6 +348,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean arcBottomRight = nextLineVisible && !roundedBottomRight
                                  && rightArcVisible(currentLineRect, nextLineRect);
 
+        System.out.println(selectionStart + " " + selectionEnd);
+        System.out.println(posOffs0 + " " + posOffs1);
+
         layerRect = paintRoundRect(g, context, layerRect,
                                    canRoundLeft && roundedTopLeft,
                                    canRoundRight && roundedTopRight,
@@ -357,8 +364,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
         if (paintPreviousLine && !isPaintingPreceding) {
             Rectangle prev = paintRoundedLayer(g, c,
-                                               Math.max(previousLineStart, c.getSelectionStart()),
-                                               Math.min(previousLineEnd, c.getSelectionEnd()),
+                                               Math.max(previousLineStart, selectionStart),
+                                               Math.min(previousLineEnd, selectionEnd),
                                                context,
                                                rounded, extendLines, true);
             convexHull(r, prev);

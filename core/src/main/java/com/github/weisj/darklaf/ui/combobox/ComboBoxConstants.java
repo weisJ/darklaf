@@ -26,8 +26,6 @@ package com.github.weisj.darklaf.ui.combobox;
 
 import java.awt.*;
 
-import javax.swing.*;
-
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.PropertyUtil;
