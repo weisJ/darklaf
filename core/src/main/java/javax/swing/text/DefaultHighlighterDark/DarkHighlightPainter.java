@@ -244,7 +244,6 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         Rectangle posStart = getPosRect(c, selectionStart);
         Rectangle posEnd = getPosRect(c, selectionEnd);
 
-
         int currentLineStart = isPaintingPreceding ? offs0 : getOffset(c, 0, posOffs0.y);
         int currentLineEnd = isPaintingPreceding ? offs1 : getOffset(c, c.getWidth(), posOffs1.y);
 
