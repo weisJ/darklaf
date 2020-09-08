@@ -46,8 +46,8 @@
 #define VALUE_NO_ACCENT_COLOR (-100)
 #define VALUE_NO_SELECTION_COLOR (-1)
 
-BOOL patched = NO;
-BOOL catalinaEnabled = NO;
+BOOL isPatched = NO;
+BOOL manuallyPatched = NO;
 
 @interface PreferenceChangeListener:NSObject {
     @public JavaVM *jvm;
@@ -67,12 +67,23 @@ BOOL catalinaEnabled = NO;
     [self listenToKey:EVENT_THEME_CHANGE onCenter:center];
     [self listenToKey:EVENT_HIGH_CONTRAST onCenter:center];
     [self listenToKey:EVENT_COLOR_CHANGE onCenter:center];
+
+    if(@available(macOS 10.15, *)) {
+        [NSApp addObserver:self
+                forKeyPath:NSStringFromSelector(@selector(effectiveAppearance))
+                   options:0
+                   context:nil];
+    }
     return self;
 }
 
 - (void)dealloc {
     NSDistributedNotificationCenter *center = [NSDistributedNotificationCenter defaultCenter];
     [center removeObserver:self]; // Removes all registered notifications.
+    if(@available(macOS 10.15, *)) {
+        [NSApp removeObserver:self
+                   forKeyPath:NSStringFromSelector(@selector(effectiveAppearance))];
+    }
     [super dealloc];
 }
 
@@ -105,10 +116,21 @@ BOOL catalinaEnabled = NO;
     if (detach) jvm->DetachCurrentThread();
 }
 
-- (void)notificationEvent:(NSNotification *)notification {
+- (void)dispatchCallback {
     [JNFRunLoop performOnMainThreadWaiting:NO withBlock:^{
         [self runCallback];
     }];
+}
+
+- (void)notificationEvent:(NSNotification *)notification {
+    [self dispatchCallback];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+    [self dispatchCallback];
 }
 
 @end
@@ -125,12 +147,15 @@ BOOL isDarkModeMojave() {
     return [VALUE_DARK caseInsensitiveCompare:interfaceStyle] == NSOrderedSame;
 }
 
+BOOL isAutoMode() {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SWITCHES_AUTOMATICALLY];
+}
+
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
-    BOOL isAutoMode = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_SWITCHES_AUTOMATICALLY];
     if(@available(macOS 10.15, *)) {
-        if (catalinaEnabled && isAutoMode) {
+        if (isPatched && isAutoMode()) {
             /*
              * The newer method is more unsafe with regards to the JDK version nad the apps info.plist
              * We only use it if necessary i.e. 'Auto' mode is selected and the app bundle is correctly patched.
@@ -223,16 +248,17 @@ JNF_COCOA_ENTER(env);
         CFStringRef bundleName = (__bridge CFStringRef)name;
 
         Boolean exists = false;
-        CFPreferencesGetAppBooleanValue(NSRequiresAquaSystemAppearance, bundleName, &exists);
-
-        catalinaEnabled = preJava11 || exists;
+        Boolean value = CFPreferencesGetAppBooleanValue(NSRequiresAquaSystemAppearance, bundleName, &exists);
+        isPatched = preJava11 || (value ? YES : NO);
 
         if (!exists) {
             // Only patch if value hasn't been explicitly set
             CFPreferencesSetAppValue(NSRequiresAquaSystemAppearance, kCFBooleanFalse, bundleName);
             CFPreferencesAppSynchronize(bundleName);
-            patched = YES;
+            manuallyPatched = YES;
         }
+    } else {
+        isPatched = NO;
     }
 JNF_COCOA_EXIT(env);
 }
