@@ -22,35 +22,41 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.synthesised;
+package com.github.weisj.darklaf.theme.laf;
+
+import java.util.ServiceLoader;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf;
 
-public class ThemedDarklafInfo extends UIManager.LookAndFeelInfo {
+public class SynthesisedThemedLaf extends DelegatingThemedLaf {
 
-    private final String className;
-
-    public ThemedDarklafInfo(final Theme theme) {
-        super(theme.getName(), "");
-        String themeName = theme.getClass().getSimpleName();
-        String packageName = SynthesisedThemedLaf.class.getPackage().getName();
-        className = packageName + "." + themeName + "DarklafLookAndFeel";
-    }
-
-    public boolean exists() {
-        try {
-            Class.forName(className);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+    public SynthesisedThemedLaf(final Theme theme) {
+        super(theme, BaseLafProvider.INSTANCE.createBaseLaf());
     }
 
     @Override
-    public String getClassName() {
-        return className;
+    public UIDefaults getDefaults() {
+        return super.getDefaults();
+    }
+
+    public interface ThemedLafProvider { ThemedLookAndFeel create(); }
+
+    private enum BaseLafProvider {
+        INSTANCE {
+            private final ThemedLafProvider provider = ServiceLoader.load(ThemedLafProvider.class).iterator().next();
+
+            @Override
+            ThemedLookAndFeel createBaseLaf() {
+                return provider.create();
+            }
+        };
+
+        abstract ThemedLookAndFeel createBaseLaf();
+    }
+
+    private static ThemedLookAndFeel getBaseLaf() {
+        return null;
     }
 }

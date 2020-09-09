@@ -50,14 +50,13 @@ public class SynthesisesLafProcessor extends AbstractProcessor {
         Collection<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(SynthesiseLaf.class);
         List<TypeElement> types = ElementFilter.typesIn(annotatedElements);
         String packageName = "com.github.weisj.darklaf.theme.laf";
-        String baseClassName = "ReflectiveDelegatingThemedLaf";
+        String baseClassName = "SynthesisedThemedLaf";
 
         for (TypeElement typeElement : types) {
             String themeName = typeElement.getSimpleName().toString();
             String themePath = typeElement.getQualifiedName().toString();
             String synthesisedClassName = themeName + "DarklafLookAndFeel";
             String synthesisedName = packageName + "." + synthesisedClassName;
-            String baseLaf = typeElement.getAnnotation(SynthesiseLaf.class).baseLaf();
 
             StringBuilder builder = new StringBuilder();
             builder.append("package ").append(packageName).append(";\n\n")
@@ -67,7 +66,7 @@ public class SynthesisesLafProcessor extends AbstractProcessor {
                    .append(IDENT)
                    .append("public ").append(synthesisedClassName).append("() {\n")
                    .append(IDENT).append(IDENT)
-                   .append("super(new ").append(themeName).append("(), \"").append(baseLaf).append("\");\n")
+                   .append("super(new ").append(themeName).append("());\n")
                    .append(IDENT)
                    .append("}\n")
                    .append("}");

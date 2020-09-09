@@ -163,6 +163,7 @@ allprojects {
     plugins.withType<JavaLibraryPlugin> {
         dependencies {
             "api"(platform(project(":darklaf-dependencies-bom")))
+            "annotationProcessor"(platform(project(":darklaf-dependencies-bom")))
         }
     }
 

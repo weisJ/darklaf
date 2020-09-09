@@ -183,6 +183,9 @@ public interface ComponentDemo {
             }
             LafManager.updateLaf();
         });
+        if (LafManager.getTheme().getName().equals(mi.getText())) {
+            mi.setSelected(true);
+        }
         menu.add(mi);
         bg.add(mi);
     }

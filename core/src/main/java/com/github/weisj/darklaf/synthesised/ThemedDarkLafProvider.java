@@ -24,33 +24,14 @@
  */
 package com.github.weisj.darklaf.synthesised;
 
-import javax.swing.*;
-
-import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf;
+import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
+import com.google.auto.service.AutoService;
 
-public class ThemedDarklafInfo extends UIManager.LookAndFeelInfo {
-
-    private final String className;
-
-    public ThemedDarklafInfo(final Theme theme) {
-        super(theme.getName(), "");
-        String themeName = theme.getClass().getSimpleName();
-        String packageName = SynthesisedThemedLaf.class.getPackage().getName();
-        className = packageName + "." + themeName + "DarklafLookAndFeel";
-    }
-
-    public boolean exists() {
-        try {
-            Class.forName(className);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
+@AutoService(SynthesisedThemedLaf.ThemedLafProvider.class)
+public class ThemedDarkLafProvider implements SynthesisedThemedLaf.ThemedLafProvider {
     @Override
-    public String getClassName() {
-        return className;
+    public ThemedLookAndFeel create() {
+        return new ThemedDarkLaf();
     }
 }

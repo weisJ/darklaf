@@ -14,13 +14,13 @@ fun DependencyConstraintHandlerScope.apiv(
     notation: String,
     versionProp: String = notation.substringAfterLast(':')
 ) =
-    "api"(notation + ":" + versionProp.v)
+    "api"("$notation:${versionProp.v}")
 
 fun DependencyConstraintHandlerScope.runtimev(
     notation: String,
     versionProp: String = notation.substringAfterLast(':')
 ) =
-    "runtime"(notation + ":" + versionProp.v)
+    "runtimeOnly"("$notation:${versionProp.v}")
 
 dependencies {
     // Parenthesis are needed here: https://github.com/gradle/gradle/issues/9248

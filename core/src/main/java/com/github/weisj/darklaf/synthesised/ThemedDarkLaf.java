@@ -22,35 +22,22 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.theme.laf;
+package com.github.weisj.darklaf.synthesised;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.*;
-
+import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.theme.Theme;
 
-public class ReflectiveDelegatingThemedLaf extends DelegatingThemedLaf {
+public class ThemedDarkLaf extends DarkLaf {
 
-    public ReflectiveDelegatingThemedLaf(final Theme theme, final String baseLafClass) {
-        super(theme, getLaf(baseLafClass));
+    private Theme theme;
+
+    @Override
+    protected void setTheme(final Theme theme) {
+        this.theme = theme;
     }
 
     @Override
-    public UIDefaults getDefaults() {
-        return super.getDefaults();
-    }
-
-    private static ThemedLookAndFeel getLaf(final String baseLafClass) {
-        try {
-            Class<?> base = Class.forName(baseLafClass);
-            if (!ThemedLookAndFeel.class.isAssignableFrom(base)) {
-                throw new IllegalArgumentException(base + " is not of type " + ThemedLookAndFeel.class);
-            }
-            return (ThemedLookAndFeel) base.getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException | NoSuchMethodException
-                 | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public Theme getTheme() {
+        return theme != null ? theme : super.getTheme();
     }
 }

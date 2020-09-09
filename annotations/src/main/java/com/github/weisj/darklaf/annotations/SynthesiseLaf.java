@@ -31,6 +31,4 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface SynthesiseLaf {
-    String baseLaf() default "com.github.weisj.darklaf.synthesised.ThemedDarkLaf";
-}
+public @interface SynthesiseLaf {}

@@ -9,6 +9,6 @@ dependencies {
     compileOnly(project(":darklaf-annotations"))
     annotationProcessor(project(":darklaf-annotations-processor"))
 
-    compileOnly("com.google.auto.service:auto-service-annotations")
     annotationProcessor("com.google.auto.service:auto-service")
+    compileOnly("com.google.auto.service:auto-service-annotations")
 }

@@ -24,6 +24,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("com.fifesoft:rsyntaxtextarea")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
+    annotationProcessor("com.google.auto.service:auto-service")
+    compileOnly("com.google.auto.service:auto-service-annotations")
 }
 
 tasks.test {
