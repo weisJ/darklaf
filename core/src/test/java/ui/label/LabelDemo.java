@@ -24,8 +24,6 @@
  */
 package ui.label;
 
-import java.awt.*;
-
 import javax.swing.*;
 
 import ui.ComponentDemo;

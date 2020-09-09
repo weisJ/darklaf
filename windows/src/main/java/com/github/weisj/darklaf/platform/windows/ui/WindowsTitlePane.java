@@ -727,8 +727,9 @@ public class WindowsTitlePane extends CustomTitlePane {
     @Override
     public Dimension getPreferredSize() {
         if (hideTitleBar()) return new Dimension(0, 0);
-        int size = computeHeight();
-        return new Dimension(size + 1, size + 1);
+        int height = computeHeight();
+        int width = computeWidth();
+        return new Dimension(width, height + 1);
     }
 
     private int computeHeight() {
@@ -741,11 +742,49 @@ public class WindowsTitlePane extends CustomTitlePane {
         return Math.max(BAR_HEIGHT, height);
     }
 
+    private int computeWidth() {
+        int width = 0;
+        Icon windowIcon = windowIconButton.getIcon();
+        if (windowIcon != null) {
+            width += Math.min(ICON_WIDTH, Math.max(windowIcon.getIconHeight(), windowIcon.getIconWidth()));
+            width += 2 * PAD;
+        }
+        if (menuBar != null) {
+            width += getPreferredMenuSize().width;
+            width += PAD;
+        }
+        boolean frame = getDecorationStyle() == JRootPane.FRAME;
+        boolean undecorated = getDecorationStyle() == JRootPane.NONE;
+        if (!undecorated) {
+            width += BUTTON_WIDTH;
+        }
+        if (frame) {
+            width += BUTTON_WIDTH;
+            if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
+                width += BUTTON_WIDTH;
+            }
+        }
+        if (!titleLabel.getText().isEmpty()) {
+            width += titleLabel.getPreferredSize().width;
+            width += PAD;
+        }
+        return width;
+    }
+
     protected void updateDragArea(final GraphicsConfiguration gc) {
         JNIDecorationsWindows.updateValues(windowHandle,
                                            (int) Scale.scaleWidth(left, gc),
                                            (int) Scale.scaleWidth(right, gc),
                                            (int) Scale.scaleHeight(height, gc));
+    }
+
+    private Dimension getPreferredMenuSize() {
+        LayoutManager menuBarLayout = menuBar.getLayout();
+        Dimension size = null;
+        if (menuBarLayout != null) {
+            size = menuBarLayout.preferredLayoutSize(menuBar);
+        }
+        return (size != null) ? size : menuBar.getPreferredSize();
     }
 
     private class TitlePaneLayout implements LayoutManager {
@@ -781,12 +820,9 @@ public class WindowsTitlePane extends CustomTitlePane {
             left = 0;
             right = 0;
 
-            if (windowIconButton.getIcon() != null) {
-                int windowButtonWidth = windowIconButton.getIcon() != null ? Math.max(windowIconButton.getIcon()
-                                                                                                      .getIconHeight(),
-                                                                                      windowIconButton.getIcon()
-                                                                                                      .getIconWidth())
-                        : ICON_WIDTH;
+            Icon windowIcon = windowIconButton.getIcon();
+            if (windowIcon != null) {
+                int windowButtonWidth = Math.max(windowIcon.getIconHeight(), windowIcon.getIconWidth());
                 windowButtonWidth = Math.min(ICON_WIDTH, windowButtonWidth);
                 windowIconButton.setBounds(start + PAD, y, windowButtonWidth, height);
                 start += windowButtonWidth + 2 * PAD;
@@ -815,9 +851,18 @@ public class WindowsTitlePane extends CustomTitlePane {
                 x -= BUTTON_WIDTH;
                 right += BUTTON_WIDTH;
                 minimizeButton.setBounds(x, y, BUTTON_WIDTH, height);
+                x -= PAD;
             }
             start = Math.max(start, PAD);
-            titleLabel.setBounds(start, 0, x - start, height);
+            x = Math.min(getWidth() - PAD, x);
+            int labelWidth = x - start;
+            int prefLabelWidth = titleLabel.getPreferredSize().width;
+            if (prefLabelWidth > labelWidth) {
+                int extra = Math.min(prefLabelWidth - labelWidth, 2 * PAD);
+                start -= extra / 2;
+                labelWidth += extra;
+            }
+            titleLabel.setBounds(start, 0, labelWidth, height);
 
             if (!leftToRight) {
                 mirror(windowIconButton, w);
@@ -839,15 +884,6 @@ public class WindowsTitlePane extends CustomTitlePane {
                 component.setLocation(w - component.getX() - component.getWidth(),
                                       component.getY());
             }
-        }
-
-        private Dimension getPreferredMenuSize() {
-            LayoutManager menuBarLayout = menuBar.getLayout();
-            Dimension size = null;
-            if (menuBarLayout != null) {
-                size = menuBarLayout.preferredLayoutSize(menuBar);
-            }
-            return (size != null) ? size : menuBar.getPreferredSize();
         }
     }
 
