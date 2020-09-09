@@ -33,6 +33,13 @@ public class FontUtil {
     public static Font createFont(final String family, final int style, final int size) {
         // This method calls FontUtilities.getCompositeFontUIResource(Font) internally which
         // creates a composite font with fallback support.
-        return StyleContext.getDefaultStyleContext().getFont(family, style, size);
+        return new NonUIResourceFont(StyleContext.getDefaultStyleContext().getFont(family, style, size));
+    }
+
+    public static class NonUIResourceFont extends Font {
+
+        public NonUIResourceFont(final Font font) {
+            super(font);
+        }
     }
 }
