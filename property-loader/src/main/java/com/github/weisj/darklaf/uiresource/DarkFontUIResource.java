@@ -33,6 +33,16 @@ import javax.swing.plaf.FontUIResource;
 
 public class DarkFontUIResource extends FontUIResource {
 
+    /**
+     * Creates a new DarkFontUIResource.
+     * Use {@link com.github.weisj.darklaf.util.FontUtil#createFont(String, int, int)} in combination with
+     * {@link #DarkFontUIResource(Font)} instead.
+     *
+     * @param name  the name of the font family
+     * @param style the style of the font
+     * @param size  the size of the font
+     */
+    @Deprecated
     public DarkFontUIResource(final String name, final int style, final int size) {
         super(name, style, size);
     }

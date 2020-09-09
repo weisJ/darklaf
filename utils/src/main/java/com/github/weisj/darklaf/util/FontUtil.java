@@ -22,42 +22,17 @@
  * SOFTWARE.
  *
  */
-package ui.label;
+package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 
-import javax.swing.*;
+import javax.swing.text.StyleContext;
 
-import ui.ComponentDemo;
-import ui.DemoPanel;
+public class FontUtil {
 
-public abstract class LabelDemoBase<T extends JLabel> implements ComponentDemo {
-
-    @Override
-    public JComponent createComponent() {
-        T label = createLabel();
-        DemoPanel panel = new DemoPanel(label);
-        createControlPanel(panel, label);
-        return panel;
+    public static Font createFont(final String family, final int style, final int size) {
+        // This method calls FontUtilities.getCompositeFontUIResource(Font) internally which
+        // creates a composite font with fallback support.
+        return StyleContext.getDefaultStyleContext().getFont(family, style, size);
     }
-
-    protected JPanel createControlPanel(final DemoPanel panel, final T label) {
-        JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {
-            {
-                setSelected(label.isEnabled());
-                addActionListener(e -> label.setEnabled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("LeftToRight") {
-            {
-                setSelected(label.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> label.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                        : ComponentOrientation.RIGHT_TO_LEFT));
-            }
-        });
-        return controlPanel;
-    }
-
-    protected abstract T createLabel();
 }

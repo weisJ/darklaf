@@ -46,10 +46,7 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.Pair;
-import com.github.weisj.darklaf.util.PropertyValue;
+import com.github.weisj.darklaf.util.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -318,7 +315,7 @@ public final class PropertyLoader {
         if (base == null) base = parseExplicitFont(value);
         if (base == null && accumulator.get(key) instanceof Font) base = (Font) accumulator.get(key);
         if (base == null) base = currentDefaults.getFont(key);
-        if (base == null) base = new Font(null, Font.PLAIN, 12);
+        if (base == null) base = FontUtil.createFont(null, Font.PLAIN, 12);
         if (size <= 0) size = base.getSize();
         if (style < 0) style = base.getStyle();
         Font font = base.deriveFont(style, size);
@@ -329,7 +326,7 @@ public final class PropertyLoader {
     private static Font parseExplicitFont(final String value) {
         try {
             final String[] decode = value.split(String.valueOf(FONT_DELIMITER));
-            return new DarkFontUIResource(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
+            return FontUtil.createFont(decode[0], Integer.parseInt(decode[1]), Integer.parseInt(decode[2]));
         } catch (final Exception e) {
             return null;
         }

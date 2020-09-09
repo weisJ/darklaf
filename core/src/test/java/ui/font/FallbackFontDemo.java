@@ -22,42 +22,29 @@
  * SOFTWARE.
  *
  */
-package ui.label;
-
-import java.awt.*;
+package ui.font;
 
 import javax.swing.*;
 
 import ui.ComponentDemo;
-import ui.DemoPanel;
+import ui.DemoResources;
 
-public abstract class LabelDemoBase<T extends JLabel> implements ComponentDemo {
+public class FallbackFontDemo implements ComponentDemo {
+
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new FallbackFontDemo());
+    }
 
     @Override
     public JComponent createComponent() {
-        T label = createLabel();
-        DemoPanel panel = new DemoPanel(label);
-        createControlPanel(panel, label);
-        return panel;
+        JTextArea textArea = new JTextArea();
+        textArea.setText(DemoResources.FONT_FALLBACK_TEST);
+        textArea.setEditable(false);
+        return new JScrollPane(textArea);
     }
 
-    protected JPanel createControlPanel(final DemoPanel panel, final T label) {
-        JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {
-            {
-                setSelected(label.isEnabled());
-                addActionListener(e -> label.setEnabled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("LeftToRight") {
-            {
-                setSelected(label.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> label.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                        : ComponentOrientation.RIGHT_TO_LEFT));
-            }
-        });
-        return controlPanel;
+    @Override
+    public String getTitle() {
+        return "Font-Fallback Demo";
     }
-
-    protected abstract T createLabel();
 }

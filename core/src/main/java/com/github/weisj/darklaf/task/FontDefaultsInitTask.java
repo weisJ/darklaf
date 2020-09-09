@@ -42,6 +42,7 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
+import com.github.weisj.darklaf.util.FontUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -150,7 +151,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private Font mapMacOSFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME_FALLBACK : MAC_OS_FONT_NAME;
-        Font macFont = new Font(fontName, font.getStyle(), font.getSize());
+        Font macFont = FontUtil.createFont(fontName, font.getStyle(), font.getSize());
         if (SystemInfo.isMacOSMojave) macFont = macFont.deriveFont(ENABLE_KERNING);
         if (font instanceof UIResource) {
             macFont = new DarkFontUIResource(macFont);
@@ -161,7 +162,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private Font mapWindowsFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
         if (!SystemInfo.isWindowsVista) return font;
-        Font windowsFont = new Font(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
+        Font windowsFont = FontUtil.createFont(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);
         }
