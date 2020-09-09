@@ -29,9 +29,9 @@ import java.util.function.Function;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
 
 public class DarkLineBorder extends MutableLineBorder {
 
@@ -57,7 +57,7 @@ public class DarkLineBorder extends MutableLineBorder {
     }
 
     protected Color getColor(final Component c) {
-        if (!(UIManager.getLookAndFeel() instanceof DarkLaf)) {
+        if (!(UIManager.getLookAndFeel() instanceof ThemedLookAndFeel)) {
             currentTheme = null;
             Color bg = c.getBackground();
             return bg != null ? fallbackSupplier.apply(bg) : null;

@@ -33,10 +33,10 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicRootPaneUI;
 
-import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -131,7 +131,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
             uninstallBorder(root);
             root.removeHierarchyListener(this);
             if (titlePane != null) {
-                boolean removeDecorations = !(UIManager.getLookAndFeel() instanceof DarkLaf)
+                boolean removeDecorations = !(UIManager.getLookAndFeel() instanceof ThemedLookAndFeel)
                                             || !LafManager.isDecorationsEnabled();
                 titlePane.uninstall(removeDecorations);
                 setTitlePane(root, null);

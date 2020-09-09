@@ -43,6 +43,7 @@ import com.github.weisj.darklaf.theme.event.*;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemeProvider;
+import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
 import com.github.weisj.darklaf.util.LogUtil;
 
 /**
@@ -320,7 +321,7 @@ public final class LafManager {
      * @return true if installed.
      */
     public static boolean isInstalled() {
-        return theme != null && UIManager.getLookAndFeel() instanceof DarkLaf;
+        return theme != null && UIManager.getLookAndFeel() instanceof ThemedLookAndFeel;
     }
 
     /**
@@ -374,7 +375,7 @@ public final class LafManager {
      * @param theme the theme to install.
      */
     public static void installTheme(final Theme theme) {
-        if (theme == getTheme() && UIManager.getLookAndFeel() instanceof DarkLaf) return;
+        if (theme == getTheme() && UIManager.getLookAndFeel() instanceof ThemedLookAndFeel) return;
         setTheme(theme);
         install();
     }

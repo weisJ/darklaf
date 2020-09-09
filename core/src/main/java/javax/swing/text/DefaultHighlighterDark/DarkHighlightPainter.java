@@ -347,9 +347,6 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean arcBottomRight = nextLineVisible && !roundedBottomRight
                                  && rightArcVisible(currentLineRect, nextLineRect);
 
-        System.out.println(selectionStart + " " + selectionEnd);
-        System.out.println(posOffs0 + " " + posOffs1);
-
         layerRect = paintRoundRect(g, context, layerRect,
                                    canRoundLeft && roundedTopLeft,
                                    canRoundRight && roundedTopRight,
