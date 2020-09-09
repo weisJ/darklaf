@@ -182,7 +182,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             Composite comp = g.getComposite();
             g.setComposite(PaintUtil.getShadowComposite());
             int stroke = (int) PaintUtil.getStrokeWidth(g);
-            paintBackgroundRect(g, effectiveArc, bgRect.x, bgRect.y + shadow + stroke,
+            paintBackgroundRect(g, effectiveArc * 2, bgRect.x, bgRect.y + shadow + stroke,
                                 bgRect.width, bgRect.height);
             g.setComposite(comp);
         }
