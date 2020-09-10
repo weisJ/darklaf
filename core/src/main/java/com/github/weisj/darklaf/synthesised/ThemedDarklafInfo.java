@@ -34,8 +34,8 @@ public class ThemedDarklafInfo extends UIManager.LookAndFeelInfo {
     private final String className;
 
     public ThemedDarklafInfo(final Theme theme) {
-        super(theme.getName(), "");
-        String themeName = theme.getClass().getSimpleName();
+        super(theme.getDisplayName(), "");
+        String themeName = theme.getThemeClass().getSimpleName();
         String packageName = SynthesisedThemedLaf.class.getPackage().getName();
         className = packageName + "." + themeName + "DarklafLookAndFeel";
     }
