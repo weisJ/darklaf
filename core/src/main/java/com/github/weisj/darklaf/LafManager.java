@@ -263,10 +263,11 @@ public final class LafManager {
     /**
      * Remove a register a theme. Registered themes are returned in {@link #getRegisteredThemes()}.
      *
-     * @param theme the theme to register.
+     * @param  theme the theme to register.
+     * @return       returns whether the theme was previously registered.
      */
-    public static void unregisterTheme(final Theme theme) {
-        registeredThemes.remove(theme);
+    public static boolean unregisterTheme(final Theme theme) {
+        return registeredThemes.remove(theme);
     }
 
     /**
@@ -293,6 +294,18 @@ public final class LafManager {
                                .map(ThemedDarklafInfo::new)
                                .filter(ThemedDarklafInfo::exists)
                                .toArray(UIManager.LookAndFeelInfo[]::new);
+    }
+
+    /**
+     * Replaces a registered theme. The newTheme is only registered if the old theme is currently registerd.
+     *
+     * @param oldTheme the old theme to unregister.
+     * @param newTheme the new theme to register.
+     */
+    public static void replaceTheme(final Theme oldTheme, final Theme newTheme) {
+        if (unregisterTheme(oldTheme)) {
+            registerTheme(newTheme);
+        }
     }
 
     /**

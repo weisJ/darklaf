@@ -36,6 +36,7 @@ import javax.swing.text.html.StyleSheet;
 
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.theme.info.*;
+import com.github.weisj.darklaf.theme.laf.RenamedTheme;
 import com.github.weisj.darklaf.util.LogUtil;
 
 /**
@@ -54,6 +55,16 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     public Theme(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
         this.fontSizeRule = fontSizeRule != null ? fontSizeRule : FontSizeRule.getDefault();
         this.accentColorRule = accentColorRule != null ? accentColorRule : AccentColorRule.getDefault();
+    }
+
+    /**
+     * Create a derived theme with the given display name.
+     *
+     * @param  newName the new display name.
+     * @return         the derived theme.
+     */
+    public Theme withDisplayName(final String newName) {
+        return new RenamedTheme(this, newName);
     }
 
     /**
