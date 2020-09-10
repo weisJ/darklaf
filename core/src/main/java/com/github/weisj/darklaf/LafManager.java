@@ -32,13 +32,14 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.synthesised.ThemedDarklafInfo;
 import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.task.DefaultsInitTask;
-import com.github.weisj.darklaf.theme.*;
+import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.*;
 import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
@@ -288,10 +289,10 @@ public final class LafManager {
      * @return all look and feel infos for currently registered themes as array.
      */
     public static UIManager.LookAndFeelInfo[] getRegisteredThemeInfos() {
-        return Arrays.stream(getRegisteredThemes())
-                     .map(ThemedDarklafInfo::new)
-                     .filter(ThemedDarklafInfo::exists)
-                     .toArray(UIManager.LookAndFeelInfo[]::new);
+        return registeredThemes.stream()
+                               .map(ThemedDarklafInfo::new)
+                               .filter(ThemedDarklafInfo::exists)
+                               .toArray(UIManager.LookAndFeelInfo[]::new);
     }
 
     /**
@@ -301,6 +302,15 @@ public final class LafManager {
      */
     public static ComboBoxModel<Theme> getThemeComboBoxModel() {
         return new DefaultComboBoxModel<>(getRegisteredThemes());
+    }
+
+    /**
+     * Creates a {@link ListCellRenderer} for themes.
+     *
+     * @return the list cell render.
+     */
+    public static ListCellRenderer<Theme> getThemeListCellRenderer() {
+        return SimpleListCellRenderer.create(Theme::getDisplayName);
     }
 
     /**
@@ -316,12 +326,26 @@ public final class LafManager {
     }
 
     /**
+     * Returns the currently installed theme. This differs from {@link #getTheme()} by the fact that
+     * {@link #getTheme()} can return a different theme than the currently installed one.
+     *
+     * @return the currently installed theme.
+     */
+    public static Theme getInstalledTheme() {
+        LookAndFeel laf = UIManager.getLookAndFeel();
+        if (laf instanceof ThemedLookAndFeel) {
+            return ((ThemedLookAndFeel) laf).getTheme();
+        }
+        return getTheme();
+    }
+
+    /**
      * Checks whether darklaf is currently installed.
      *
      * @return true if installed.
      */
     public static boolean isInstalled() {
-        return theme != null && UIManager.getLookAndFeel() instanceof ThemedLookAndFeel;
+        return UIManager.getLookAndFeel() instanceof ThemedLookAndFeel;
     }
 
     /**
@@ -375,7 +399,7 @@ public final class LafManager {
      * @param theme the theme to install.
      */
     public static void installTheme(final Theme theme) {
-        if (theme == getTheme() && UIManager.getLookAndFeel() instanceof ThemedLookAndFeel) return;
+        if (theme == getTheme() && isInstalled()) return;
         setTheme(theme);
         install();
     }

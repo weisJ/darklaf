@@ -169,7 +169,6 @@ public interface ComponentDemo {
     }
 
     static void createThemeItem(final JMenu menu, final ButtonGroup bg, final UIManager.LookAndFeelInfo info) {
-        // final ThemeMenuItem mi = new ThemeMenuItem(theme);
         JMenuItem mi = new JRadioButtonMenuItem(info.getName());
         mi.addActionListener(event -> {
             try {

@@ -36,7 +36,7 @@ import javax.swing.text.*;
 
 import sun.swing.SwingUtilities2;
 
-import com.github.weisj.darklaf.graphics.ColorWrapper;
+import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;

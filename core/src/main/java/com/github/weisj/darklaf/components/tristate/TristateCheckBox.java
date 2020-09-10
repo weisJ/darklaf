@@ -30,7 +30,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
-import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
+import com.github.weisj.darklaf.LafManager;
 
 public class TristateCheckBox extends JCheckBox {
     private final ChangeListener enableListener = e -> TristateCheckBox.this.setFocusable(getModel().isEnabled());
@@ -59,7 +59,7 @@ public class TristateCheckBox extends JCheckBox {
     }
 
     public String getUIClassID() {
-        if (UIManager.getLookAndFeel() instanceof ThemedLookAndFeel) {
+        if (LafManager.isInstalled()) {
             return "TristateCheckBoxUI";
         } else {
             return super.getUIClassID();

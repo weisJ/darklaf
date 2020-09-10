@@ -32,7 +32,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
+import com.github.weisj.darklaf.LafManager;
 
 public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
 
@@ -112,7 +112,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
     }
 
     public String getUIClassID() {
-        if (UIManager.getLookAndFeel() instanceof ThemedLookAndFeel) {
+        if (LafManager.isInstalled()) {
             return "TristateCheckBoxMenuItemUI";
         } else {
             return super.getUIClassID();

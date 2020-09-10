@@ -184,13 +184,13 @@ public class ColoredRadioButton extends JRadioButton {
             this.patchedColor = color;
             this.patchedFocusColor = focusColor;
             IconLoader loader = DarkUIUtil.ICON_LOADER;
-            Theme theme = LafManager.getTheme();
+            Theme theme = LafManager.getInstalledTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             theme.loadDefaults(props, defaults);
             Color accentCol = color == DEFAULT_COLOR ? (Color) props.get("widgetFillDefault") : color;
             Color focusCol = focusColor == DEFAULT_COLOR ? accentCol : focusColor;
-            adjustment.applyColors(LafManager.getTheme(), props, accentCol, null);
+            adjustment.applyColors(theme, props, accentCol, null);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton",
                                                                        "properties/ui/"),
                                          props, defaults);

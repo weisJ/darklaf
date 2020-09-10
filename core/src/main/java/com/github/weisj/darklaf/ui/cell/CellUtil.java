@@ -30,7 +30,7 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import com.github.weisj.darklaf.graphics.ColorWrapper;
+import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;

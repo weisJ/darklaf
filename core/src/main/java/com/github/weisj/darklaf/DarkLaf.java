@@ -71,6 +71,11 @@ public class DarkLaf extends ThemedLookAndFeel {
      */
     private boolean isInitialized;
 
+    /*
+     * The current theme.
+     */
+    private Theme theme;
+
     /**
      * Create Custom Darcula LaF.
      */
@@ -114,6 +119,9 @@ public class DarkLaf extends ThemedLookAndFeel {
         PopupFactory.setSharedInstance(new DarkPopupFactory());
         setupDecorations();
         isInitialized = true;
+        if (theme == null) {
+            theme = LafManager.getTheme();
+        }
     }
 
     private void setupDecorations() {
@@ -164,12 +172,12 @@ public class DarkLaf extends ThemedLookAndFeel {
 
     @Override
     protected void setTheme(final Theme theme) {
-        // Do nothing.
+        this.theme = theme;
     }
 
     @Override
     public Theme getTheme() {
-        return LafManager.getTheme();
+        return theme;
     }
 
     @Override

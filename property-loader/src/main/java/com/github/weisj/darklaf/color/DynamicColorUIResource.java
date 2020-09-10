@@ -22,24 +22,17 @@
  * SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.graphics;
+package com.github.weisj.darklaf.color;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.color.DynamicColor;
-import com.github.weisj.darklaf.theme.Theme;
+import javax.swing.plaf.UIResource;
 
-public class ThemedColor extends DynamicColor {
+public class DynamicColorUIResource extends DynamicColor implements UIResource {
 
-    public ThemedColor() {
+    public DynamicColorUIResource() {
         this(null);
     }
 
-    public ThemedColor(final String key) {
+    public DynamicColorUIResource(final String key) {
         super(key);
-    }
-
-    @Override
-    protected Theme getCurrentDynamicKey() {
-        return LafManager.getTheme();
     }
 }
