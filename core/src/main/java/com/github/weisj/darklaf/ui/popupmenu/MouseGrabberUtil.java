@@ -37,9 +37,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class MouseGrabberUtil {
 
-    private MouseGrabberUtil() {
-
-    }
+    private MouseGrabberUtil() {}
 
     private static MouseGrabber mouseGrabber;
 
@@ -58,7 +56,7 @@ public class MouseGrabberUtil {
         }
     }
 
-    public static ChangeListener getOldMouseGrabber() {
+    private static ChangeListener getOldMouseGrabber() {
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
         for (ChangeListener listener : menuSelectionManager.getChangeListeners()) {
             if (listener == null) continue;
@@ -78,7 +76,7 @@ public class MouseGrabberUtil {
      * This Method is responsible for removing the old MouseGrabber from the AppContext, to be able to add our own
      * implementation for it that is a bit more generous with closing the popup.
      */
-    public static void uninstallOldMouseGrabber(final ChangeListener oldMouseGrabber) {
+    private static void uninstallOldMouseGrabber(final ChangeListener oldMouseGrabber) {
         if (oldMouseGrabber == null) return;
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
         menuSelectionManager.removeChangeListener(oldMouseGrabber);

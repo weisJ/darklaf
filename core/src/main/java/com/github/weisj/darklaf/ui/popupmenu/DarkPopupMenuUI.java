@@ -56,6 +56,10 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         return new DarkPopupMenuUI();
     }
 
+    public DarkPopupMenuUI() {
+        EventHelperUtil.installEventHelper();
+    }
+
     @Override
     public void paint(final Graphics g, final JComponent c) {
         Window window = SwingUtilities.getWindowAncestor(c);
