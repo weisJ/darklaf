@@ -259,7 +259,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      *
      * @return the {@link StyleSheet}.
      */
-    public final StyleSheet loadStyleSheet() {
+    public StyleSheet loadStyleSheet() {
         return new StyleSheet();
     }
 
@@ -290,6 +290,15 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @return the name of the theme.
      */
     public abstract String getName();
+
+    /**
+     * Get the display name of this theme.
+     *
+     * @return the display name of the theme.
+     */
+    public String getDisplayName() {
+        return getName();
+    }
 
     /**
      * The class used to determine the runtime location of resources. It is advised to explicitly return the class

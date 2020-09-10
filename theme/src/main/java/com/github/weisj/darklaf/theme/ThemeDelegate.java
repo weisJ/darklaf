@@ -135,11 +135,6 @@ public class ThemeDelegate extends Theme {
     }
 
     @Override
-    public String toString() {
-        return getDelegate().getName();
-    }
-
-    @Override
     protected String getResourcePath() {
         return getDelegate().getResourcePath();
     }
@@ -152,6 +147,11 @@ public class ThemeDelegate extends Theme {
     @Override
     public String getName() {
         return getDelegate().getName();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getDelegate().getDisplayName();
     }
 
     @Override

@@ -24,30 +24,29 @@
  */
 package com.github.weisj.darklaf.theme.laf;
 
-import java.util.ServiceLoader;
-
-import javax.swing.*;
-
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.ThemeDelegate;
+import com.github.weisj.darklaf.theme.info.AccentColorRule;
+import com.github.weisj.darklaf.theme.info.FontSizeRule;
 
-public class SynthesisedThemedLaf extends DelegatingThemedLaf {
+public class RenamedTheme extends ThemeDelegate {
 
-    public SynthesisedThemedLaf(final Theme theme) {
-        super(theme, BaseLafProvider.INSTANCE.createBaseLaf());
+    private final String name;
+
+    public RenamedTheme(final Theme delegate, final String name) {
+        super(delegate);
+        this.name = name;
     }
 
-    public interface ThemedLafProvider { ThemedLookAndFeel create(); }
+    @Override
+    public Theme derive(final FontSizeRule fontSizeRule,
+                        final AccentColorRule accentColorRule) {
+        return new RenamedTheme(getDelegate().derive(fontSizeRule, accentColorRule), name);
+    }
 
-    private enum BaseLafProvider {
-        INSTANCE {
-            private final ThemedLafProvider provider = ServiceLoader.load(ThemedLafProvider.class).iterator().next();
-
-            @Override
-            ThemedLookAndFeel createBaseLaf() {
-                return provider.create();
-            }
-        };
-
-        abstract ThemedLookAndFeel createBaseLaf();
+    @Override
+    public String getDisplayName() {
+        if (name != null) return name;
+        return super.getDisplayName();
     }
 }

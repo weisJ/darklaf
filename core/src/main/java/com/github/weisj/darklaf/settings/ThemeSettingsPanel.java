@@ -150,6 +150,7 @@ public class ThemeSettingsPanel extends JPanel {
     private Component createGeneralSettings() {
         JLabel themeLabel = new JLabel(resourceBundle.getString("label_theme"));
         themeComboBox = new JComboBox<>(LafManager.getThemeComboBoxModel());
+        themeComboBox.setRenderer(LafManager.getThemeListCellRenderer());
         themeComboBox.setSelectedItem(LafManager.getTheme());
 
         themeComboBox.putClientProperty(ComboBoxConstants.KEY_DO_NOT_UPDATE_WHEN_SCROLLED, true);
