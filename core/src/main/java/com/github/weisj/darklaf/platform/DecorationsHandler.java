@@ -89,7 +89,7 @@ public class DecorationsHandler {
     public boolean isCustomDecorationSupported() {
         return decorationsProvider.isCustomDecorationSupported()
                && decorationsEnabled
-               && LafManager.getTheme().useCustomDecorations();
+               && LafManager.getInstalledTheme().useCustomDecorations();
     }
 
     private boolean isNativeDecorationsEnabled() {

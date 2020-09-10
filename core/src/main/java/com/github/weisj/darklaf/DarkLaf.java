@@ -122,6 +122,7 @@ public class DarkLaf extends ThemedLookAndFeel {
         if (theme == null) {
             theme = LafManager.getTheme();
         }
+        SwingUtilities.invokeLater(LafManager::notifyThemeInstalled);
     }
 
     private void setupDecorations() {

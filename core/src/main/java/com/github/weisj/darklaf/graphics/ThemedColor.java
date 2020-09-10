@@ -40,6 +40,6 @@ public class ThemedColor extends DynamicColor {
 
     @Override
     protected Theme getCurrentDynamicKey() {
-        return LafManager.getTheme();
+        return LafManager.getInstalledTheme();
     }
 }

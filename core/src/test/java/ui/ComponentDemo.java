@@ -200,7 +200,8 @@ public interface ComponentDemo {
         JMenu dev = new JMenu("Dev");
         JMenu logging = new JMenu("Logging");
         ButtonGroup bg = new ButtonGroup();
-        Level[] levels = new Level[]{Level.ALL, Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE, Level.OFF};
+        Level[] levels = new Level[]{Level.ALL, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING,
+                                     Level.SEVERE, Level.OFF};
         Level currentLevel = LafManager.getLogLevel();
         for (Level level : levels) {
             JRadioButtonMenuItem mi = new JRadioButtonMenuItem(level.getName());

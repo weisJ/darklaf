@@ -291,6 +291,7 @@ public final class LafManager {
      */
     public static UIManager.LookAndFeelInfo[] getRegisteredThemeInfos() {
         return registeredThemes.stream()
+                               .sorted()
                                .map(ThemedDarklafInfo::new)
                                .filter(ThemedDarklafInfo::exists)
                                .toArray(UIManager.LookAndFeelInfo[]::new);
@@ -418,13 +419,6 @@ public final class LafManager {
     }
 
     /**
-     * Reloads the theme. Forces all properties to be reloaded.
-     */
-    public static void reloadTheme() {
-        setTheme(getTheme().copy());
-    }
-
-    /**
      * Overload for {@link #installTheme(Theme)}.
      *
      * @param theme the theme to install.
@@ -444,11 +438,15 @@ public final class LafManager {
             LOGGER.fine(() -> "Installing theme " + theme);
             UIManager.setLookAndFeel(new DarkLaf());
             updateLaf();
-            eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
-                                       ThemeChangeListener::themeInstalled);
+            notifyThemeInstalled();
         } catch (final UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
+    }
+
+    /* default */ static void notifyThemeInstalled() {
+        eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
+                                   ThemeChangeListener::themeInstalled);
     }
 
     /**

@@ -238,7 +238,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     public Dimension getPreferredSize(final JComponent c) {
         Dimension d = super.getPreferredSize(c);
         if (ToggleButtonConstants.isSlider(c)) {
-            d.width += sliderSize.width + borderSize;
+            d.width += sliderSize.width + 2 * borderSize;
         }
         return d;
     }

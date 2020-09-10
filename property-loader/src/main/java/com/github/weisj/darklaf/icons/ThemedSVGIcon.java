@@ -68,7 +68,6 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
         Object theme = IconLoader.getThemeStatus();
         if (currentTheme != theme) {
             patchColors();
-
             currentTheme = theme;
             updatedNotDuringPaint = !painting;
             return true;

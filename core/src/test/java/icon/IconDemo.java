@@ -35,8 +35,9 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.UIAwareIcon;
-import com.github.weisj.darklaf.theme.DarculaTheme;
-import com.github.weisj.darklaf.theme.IntelliJTheme;
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class IconDemo implements ComponentDemo {
 
@@ -44,9 +45,11 @@ public class IconDemo implements ComponentDemo {
         ComponentDemo.showDemo(new IconDemo());
     }
 
+    private JPanel iconPanel;
+
     @Override
     public JComponent createComponent() {
-        JPanel iconPanel = new JPanel(new GridLayout(3, 2));
+        iconPanel = new JPanel(new GridLayout(3, 2));
         iconPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         UIManager.put("TestIcon.color", new Color(255, 35, 181));
@@ -68,24 +71,30 @@ public class IconDemo implements ComponentDemo {
 
         DemoPanel panel = new DemoPanel(iconPanel, new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
-        controlPanel.setLayout(new FlowLayout());
+        controlPanel.setLayout(new GridLayout(1, 2));
 
         controlPanel.add(new JToggleButton("Light/Dark") {
             {
+                LafManager.addThemeChangeListener((ThemeInstalledListener) e -> setSelected(Theme.isDark(e.getNewTheme())));
                 putClientProperty("JToggleButton.variant", "slider");
-                addActionListener(e -> LafManager.installTheme(isSelected() ? new DarculaTheme()
-                        : new IntelliJTheme()));
+                addActionListener(e -> updateAwareIconStyle());
             }
         });
         controlPanel.add(new QuickColorChooser("Themed icon color", UIManager.getColor("TestIcon.color"),
-                                               IconDemo::updateThemedIconColor));
+                                               this::updateThemedIconColor));
 
         return panel;
     }
 
-    private static void updateThemedIconColor(final Color c) {
+    private void updateThemedIconColor(final Color c) {
         UIManager.put("TestIcon.color", c);
-        LafManager.reloadTheme();
+        IconLoader.updateThemeStatus(LafManager.getInstalledTheme().copy());
+        DarkUIUtil.repaint(iconPanel);
+    }
+
+    private void updateAwareIconStyle() {
+        IconLoader.updateAwareStyle(IconLoader.getAwareStyle().toggle());
+        DarkUIUtil.repaint(iconPanel);
     }
 
     @Override

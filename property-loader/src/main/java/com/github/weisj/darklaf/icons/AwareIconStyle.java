@@ -26,5 +26,15 @@ package com.github.weisj.darklaf.icons;
 
 public enum AwareIconStyle {
     DARK,
-    LIGHT
+    LIGHT;
+
+    public AwareIconStyle toggle() {
+        switch (this) {
+            case DARK :
+                return LIGHT;
+            case LIGHT :
+                return DARK;
+        }
+        throw new IllegalStateException();
+    }
 }
