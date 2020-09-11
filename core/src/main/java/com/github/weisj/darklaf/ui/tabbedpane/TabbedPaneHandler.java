@@ -171,7 +171,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
             } else if (ui.tabPane.isRequestFocusEnabled()) {
                 // Clicking on selected tab, try and give the tabbedpane
                 // focus. Repaint will occur in focusGained.
-                ui.tabPane.requestFocus();
+                ui.tabPane.requestFocusInWindow();
             }
         }
     }

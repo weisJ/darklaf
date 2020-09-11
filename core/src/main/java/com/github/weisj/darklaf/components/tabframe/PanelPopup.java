@@ -193,7 +193,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
             parent.openTab(getAlignment(), getIndex());
             open = true;
             firePropertyChange(KEY_OPEN, oldOpen, true);
-            requestFocus();
+            requestFocusInWindow();
         }
     }
 

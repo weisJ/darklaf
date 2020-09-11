@@ -235,7 +235,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
                     // and invocation of action.
                     ui.tabPane.setSelectedComponent(comp);
                     ui.tabPane.doLayout();
-                    comp.requestFocus();
+                    comp.requestFocusInWindow();
                 }
             }
         });

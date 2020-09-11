@@ -169,7 +169,7 @@ public class DarkTabbedPaneHandler extends TabbedPaneHandler {
     @Override
     public void mousePressed(final MouseEvent e) {
         super.mousePressed(e);
-        ui.tabPane.requestFocus();
+        ui.tabPane.requestFocusInWindow();
         origin = e.getPoint();
         pressedIndex = ui.tabForCoordinate(ui.tabPane, e.getX(), e.getY());
     }

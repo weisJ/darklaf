@@ -43,7 +43,7 @@ public class DarkComboBoxListener extends MouseAdapter implements PropertyChange
 
     @Override
     public void mousePressed(final MouseEvent e) {
-        comboBox.getEditor().getEditorComponent().requestFocus();
+        comboBox.getEditor().getEditorComponent().requestFocusInWindow();
     }
 
     @Override

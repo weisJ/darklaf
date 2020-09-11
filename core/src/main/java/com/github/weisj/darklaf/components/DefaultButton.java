@@ -43,7 +43,7 @@ public class DefaultButton extends JButton {
     @Override
     public void addNotify() {
         super.addNotify();
-        if (requestFocusOnDisplay) requestFocus();
+        if (requestFocusOnDisplay) requestFocusInWindow();
         SwingUtilities.getRootPane(this).setDefaultButton(this);
     }
 }

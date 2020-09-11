@@ -552,7 +552,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
             MouseEvent e = (MouseEvent) event;
             Component comp = e.getComponent().getComponentAt(e.getPoint());
             if (comp instanceof TabFramePopup || comp instanceof PopupContainer || comp instanceof JTabFrame) {
-                comp.requestFocus();
+                comp.requestFocusInWindow();
             }
         }
     }

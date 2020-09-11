@@ -2209,7 +2209,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         public void actionPerformed(final ActionEvent e) {
             String key = getName();
             JTabbedPane pane = (JTabbedPane) e.getSource();
-            DarkTabbedPaneUIBridge ui = (DarkTabbedPaneUIBridge) DarkUIUtil
+            DarkTabbedPaneUIBridge ui = DarkUIUtil
                                                                            .getUIOfType(pane.getUI(),
                                                                                         DarkTabbedPaneUIBridge.class);
 
@@ -2243,7 +2243,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     ui.navigateSelectedTab(SwingConstants.SOUTH);
                 }
             } else if (Objects.equals(key, REQUEST_FOCUS)) {
-                pane.requestFocus();
+                pane.requestFocusInWindow();
             } else if (Objects.equals(key, REQUEST_FOCUS_FOR_VISIBLE)) {
                 ui.requestFocusForVisibleComponent();
             } else if (Objects.equals(key, SET_SELECTED)) {

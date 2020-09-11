@@ -290,7 +290,7 @@ public class TabbedPaneUtil implements SwingConstants {
     protected static void selectTab(final JTabbedPane tabbedPane, final int index) {
         SwingUtilities.invokeLater(() -> {
             tabbedPane.setSelectedIndex(index);
-            tabbedPane.requestFocus();
+            tabbedPane.requestFocusInWindow();
         });
     }
 }

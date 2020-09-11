@@ -302,7 +302,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             if (inWindow) {
                 textArea.requestFocusInWindow();
             } else {
-                textArea.requestFocus();
+                textArea.requestFocusInWindow();
             }
         }
     }

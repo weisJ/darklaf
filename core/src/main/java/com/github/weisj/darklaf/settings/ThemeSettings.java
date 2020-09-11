@@ -130,7 +130,7 @@ public class ThemeSettings implements ThemePreferenceListener {
             throw new IllegalStateException("Can't show dialog while settings panel is used elsewhere");
         }
         if (dialog != null && dialog.isVisible()) {
-            dialog.requestFocus();
+            dialog.requestFocusInWindow();
             return;
         }
         refresh();

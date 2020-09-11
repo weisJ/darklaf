@@ -193,7 +193,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
         layoutTabComponents();
         if (shouldChangeFocus) {
             if (!ui.requestFocusForVisibleComponent()) {
-                ui.tabPane.requestFocus();
+                ui.tabPane.requestFocusInWindow();
             }
         }
     }

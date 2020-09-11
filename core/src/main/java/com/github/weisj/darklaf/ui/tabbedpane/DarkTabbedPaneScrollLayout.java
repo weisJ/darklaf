@@ -213,7 +213,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             layoutTabComponents();
             if (shouldChangeFocus) {
                 if (!ui.requestFocusForVisibleComponent()) {
-                    ui.tabPane.requestFocus();
+                    ui.tabPane.requestFocusInWindow();
                 }
             }
         }

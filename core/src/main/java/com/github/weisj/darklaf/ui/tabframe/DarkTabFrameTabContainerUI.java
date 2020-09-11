@@ -114,7 +114,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
                 } else {
                     Component popup = tabFrame.getPopupComponentAt(a, index);
                     if (!DarkUIUtil.hasFocus(popup)) {
-                        popup.requestFocus();
+                        popup.requestFocusInWindow();
                     } else {
                         tabFrame.toggleTab(a, index, false);
                     }

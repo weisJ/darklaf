@@ -556,7 +556,7 @@ public class JTabFrame extends JComponent {
         setPopupVisibility(compAtIndex, enabled);
         if (enabled) {
             getPopupComponentAt(a).doLayout();
-            getPopupComponentAt(a).requestFocus();
+            getPopupComponentAt(a).requestFocusInWindow();
         }
         firePropertyChange(TabFramePopup.KEY_VISIBLE_TAB, new TabFramePosition(a, oldIndex),
                            new TabFramePosition(a, index));

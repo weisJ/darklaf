@@ -172,7 +172,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         layoutTabComponents();
         if (shouldChangeFocus) {
             if (!ui.requestFocusForVisibleComponent()) {
-                ui.tabPane.requestFocus();
+                ui.tabPane.requestFocusInWindow();
             }
         }
     }

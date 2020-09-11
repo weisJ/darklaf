@@ -106,7 +106,7 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         textHex.addAncestorListener(new AncestorAdapter() {
             @Override
             public void ancestorAdded(final AncestorEvent event) {
-                textHex.requestFocus();
+                textHex.requestFocusInWindow();
                 textHex.removeAncestorListener(this);
             }
         });

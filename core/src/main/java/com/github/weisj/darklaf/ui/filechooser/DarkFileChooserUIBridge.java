@@ -264,7 +264,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                     if (e.getOldValue() == null && e.getNewValue() != null) {
                         // Ancestor was added, set initial focus
                         fileNameTextField.selectAll();
-                        fileNameTextField.requestFocus();
+                        fileNameTextField.requestFocusInWindow();
                     }
                     break;
             }

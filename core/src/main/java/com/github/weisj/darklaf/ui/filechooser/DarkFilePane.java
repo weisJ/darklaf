@@ -317,7 +317,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                     editCell.setBounds(r.x, r.y, r.width - editX - gap, r.height);
                 }
                 list.putClientProperty("JList.isEditing", true);
-                editCell.requestFocus();
+                editCell.requestFocusInWindow();
                 editCell.selectAll();
                 break;
 
@@ -511,7 +511,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 @Override
                 public void ancestorAdded(final AncestorEvent event) {
                     SwingUtilities.invokeLater(() -> {
-                        editorComponent.requestFocus();
+                        editorComponent.requestFocusInWindow();
                         ((JTextComponent) editorComponent).selectAll();
                     });
                 }

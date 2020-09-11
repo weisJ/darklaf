@@ -50,7 +50,7 @@ public class DarkSpinnerListener extends MouseAdapter implements PropertyChangeL
     @Override
     public void mousePressed(final MouseEvent e) {
         super.mousePressed(e);
-        spinner.getEditor().requestFocus();
+        spinner.getEditor().requestFocusInWindow();
     }
 
     @Override
