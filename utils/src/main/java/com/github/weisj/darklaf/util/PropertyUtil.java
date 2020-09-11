@@ -177,7 +177,7 @@ public class PropertyUtil {
     }
 
     public static Color chooseColor(final Color currentColor, final Color newColor) {
-        if (currentColor == null || currentColor instanceof UIResource) return newColor;
+        if (ColorUtil.canOverwriteColor(currentColor)) return newColor;
         return currentColor;
     }
 }

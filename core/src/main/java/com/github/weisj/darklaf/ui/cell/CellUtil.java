@@ -24,14 +24,13 @@ package com.github.weisj.darklaf.ui.cell;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -347,8 +346,8 @@ public class CellUtil {
         setupBackground(comp, bg);
         if (comp instanceof DefaultTreeCellRenderer) {
             Color c = comp.getBackground();
-            if (c == null || c instanceof UIResource || c instanceof NonUIResourceColorWrapper) {
-                comp.setBackground(new NonUIResourceColorWrapper(bg));
+            if (ColorUtil.canOverwriteColor(c)) {
+                comp.setBackground(ColorUtil.stripUIResource(c));
             }
         }
     }
@@ -573,12 +572,5 @@ public class CellUtil {
     public static int getMinRowIndex(final JTable table) {
         Rectangle rect = table.getVisibleRect();
         return table.rowAtPoint(rect.getLocation());
-    }
-
-    private static class NonUIResourceColorWrapper extends ColorWrapper {
-
-        public NonUIResourceColorWrapper(final Color color) {
-            super(color);
-        }
     }
 }

@@ -279,7 +279,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     }
 
     protected Color getBackground(final JComponent c) {
-        return c == null || !c.isEnabled() ? inactiveBackground : background;
+        return c == null ? inactiveBackground : c.getBackground();
     }
 
     protected Color getArrowBackground(final JComponent c) {

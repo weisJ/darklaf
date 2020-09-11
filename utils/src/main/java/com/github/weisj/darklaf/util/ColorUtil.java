@@ -23,6 +23,8 @@ package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 
+import javax.swing.plaf.UIResource;
+
 /**
  * @author Jannis Weis
  */
@@ -88,6 +90,14 @@ public final class ColorUtil {
         }
     }
 
+    public static boolean canOverwriteColor(final Color c) {
+        return c == null || c instanceof UIResource || c instanceof NonUIResourceColorWrapper;
+    }
+
+    public static Color stripUIResource(final Color c) {
+        return c instanceof UIResource ? new NonUIResourceColorWrapper(c) : c;
+    }
+
     public static Color removeAlpha(final Color color) {
         return toAlpha(color, 255);
     }
@@ -116,5 +126,12 @@ public final class ColorUtil {
         double G = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
         double B = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
         return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    }
+
+    public static class NonUIResourceColorWrapper extends ColorWrapper {
+
+        public NonUIResourceColorWrapper(final Color color) {
+            super(color);
+        }
     }
 }

@@ -33,12 +33,12 @@ import javax.swing.text.*;
 
 import sun.swing.SwingUtilities2;
 
-import com.github.weisj.darklaf.color.ColorWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.ColorWrapper;
 
 /**
  * Note this class only sits inside this weird package because of a hack used in

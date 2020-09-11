@@ -574,7 +574,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 }
             }
             Component comp = table.getEditorComponent();
-            if (comp != null && !(e.getOppositeComponent() == comp || DarkUIUtil.hasFocus(comp))) {
+            if (comp != null && !DarkUIUtil.hasFocus(comp, e)) {
                 Color newBg = CellUtil.getTableBackground(comp, table, true, false, table.getEditingRow());
                 CellUtil.setupBackground(comp, newBg);
             }

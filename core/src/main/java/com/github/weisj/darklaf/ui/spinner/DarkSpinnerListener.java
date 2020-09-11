@@ -32,6 +32,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkSpinnerListener extends MouseAdapter
         implements PropertyChangeListener, FocusListener, SpinnerConstants {
@@ -92,6 +93,8 @@ public class DarkSpinnerListener extends MouseAdapter
         } else if (KEY_IS_TREE_EDITOR.equals(key)) {
             spinner.revalidate();
             spinner.repaint();
+        } else if (PropertyKey.ENABLED.equals(key)) {
+            PropertyUtil.installBackground(spinner, spinner.isEnabled() ? ui.background : ui.inactiveBackground);
         }
     }
 }

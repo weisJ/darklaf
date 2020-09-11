@@ -25,6 +25,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.ColorWrapper;
+
 public class DynamicColor extends ColorWrapper {
 
     private static Object currentDynamicKey;
